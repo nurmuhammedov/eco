@@ -1,3 +1,1 @@
-import { QueryProvider } from './QueryProvider';
-
-export { QueryProvider };
+export { QueryProvider } from './QueryProvider';

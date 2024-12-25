@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint --fix .",
-    "preview": "vite preview",
     "format": "prettier --ignore-unknown --write .",
-    "prepare": "husky"
+    "lint": "eslint --fix .",
+    "prepare": "husky",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.62.10",

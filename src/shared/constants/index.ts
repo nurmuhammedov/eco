@@ -1,1 +1,1 @@
-// App-wide constants/enums
+export { queryClient } from './query-client-config';

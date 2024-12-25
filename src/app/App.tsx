@@ -2,12 +2,10 @@ import { router } from './routes';
 import { QueryProvider } from './providers';
 import { RouterProvider } from 'react-router-dom';
 
-function App() {
+export default function App() {
   return (
     <QueryProvider>
       <RouterProvider router={router} />
     </QueryProvider>
   );
 }
-
-export default App;
