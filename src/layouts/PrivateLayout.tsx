@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
-const isAuthenticated = true; // Replace with real authentication logic
+const isAuthenticated = true;
 
 export default function PrivateLayout() {
   if (!isAuthenticated) return <Navigate to="/login" />;

@@ -1,4 +1,2 @@
-import { apiClient } from './api-client';
-import { axiosInstance } from './axios-instance';
-
-export { apiClient, axiosInstance };
+export { apiClient } from './api-client';
+export { axiosInstance } from './axios-instance';
