@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint --fix .",
     "preview": "vite preview",
     "format": "prettier --ignore-unknown --write .",
     "prepare": "husky"
@@ -27,7 +27,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
     "prettier": "3.4.2",
-    "typescript": "~5.7.2",
+    "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.2",
     "vite": "^6.0.5"
   }
