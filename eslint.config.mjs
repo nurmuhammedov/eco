@@ -43,6 +43,10 @@ export default tslint.config(
           varsIgnorePattern: '^_',
         },
       ],
+      '@typescript-eslint/no-explicit-any': ['warn'],
+      '@typescript-eslint/no-unsafe-assignment': ['warn'],
+      '@typescript-eslint/prefer-promise-reject-errors': ['warn'],
+      '@typescript-eslint/no-unsafe-member-access': ['warn'],
     },
   },
 );
