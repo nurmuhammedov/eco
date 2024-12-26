@@ -1,11 +1,15 @@
 import { Fragment } from 'react';
+import { pick } from '@/shared/utils';
+import { shallowEqual } from 'react-redux';
+import { useAppSelector } from '@/store/hooks';
 import { Navigate, Outlet } from 'react-router-dom';
 
-const isAuthenticated = true;
-
 export default function PrivateLayout() {
+  const { isAuthenticated } = useAppSelector(
+    (state) => pick(state.auth, ['isAuthenticated']),
+    shallowEqual,
+  );
   if (!isAuthenticated) return <Navigate to="/login" />;
-
   return (
     <Fragment>
       <header className="shadow bg-white p-5 rounded-md w-full">

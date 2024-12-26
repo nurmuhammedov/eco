@@ -1,5 +1,4 @@
 import { lazy, Suspense } from 'react';
-import { UserRoles } from '@/shared/types';
 import { PrivateLayout, PublicLayout } from '@/layouts';
 import { filterRoutesByAuth, getHomeRoute, moduleRoutes } from '@/app/routes';
 import {
@@ -7,15 +6,22 @@ import {
   Navigate,
   RouterProvider,
 } from 'react-router-dom';
+import { pick } from '@/shared/utils';
+import { shallowEqual } from 'react-redux';
+import { useAppSelector } from '@/store/hooks';
 
 const Error = lazy(() => import('@/modules/error/pages'));
 
 const AppRouter = () => {
+  const { isAuthenticated, user } = useAppSelector(
+    (state) => pick(state.auth, ['isAuthenticated', 'user']),
+    shallowEqual,
+  );
   const filteredRoutes = filterRoutesByAuth(
     moduleRoutes,
-    [UserRoles.ADMIN],
-    ['dashboard'],
-    true,
+    user.roles,
+    user.permissions,
+    isAuthenticated,
   );
 
   const router = createBrowserRouter([

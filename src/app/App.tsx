@@ -1,10 +1,12 @@
 import { AppRouter } from '@/app/routes';
-import { QueryProvider } from './providers';
+import { QueryProvider, ReduxProvider } from './providers';
 
 export default function App() {
   return (
-    <QueryProvider>
-      <AppRouter />
-    </QueryProvider>
+    <ReduxProvider>
+      <QueryProvider>
+        <AppRouter />
+      </QueryProvider>
+    </ReduxProvider>
   );
 }

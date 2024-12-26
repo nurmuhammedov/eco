@@ -1,9 +1,15 @@
+import { pick } from '@/shared/utils';
 import { UserRoles } from '@/shared/types';
+import { shallowEqual } from 'react-redux';
+import { useAppSelector } from '@/store/hooks';
 import { Navigate, Outlet } from 'react-router-dom';
-import { getHomeRouteForLoggedInUser } from '@/app/routes/routeUtils';
+import { getHomeRouteForLoggedInUser } from '@/app/routes';
 
 export default function PublicLayout() {
-  const isAuthenticated = false;
+  const { isAuthenticated } = useAppSelector(
+    (state) => pick(state.auth, ['isAuthenticated']),
+    shallowEqual,
+  );
 
   if (isAuthenticated) {
     return <Navigate to={getHomeRouteForLoggedInUser(UserRoles.ADMIN)} />;

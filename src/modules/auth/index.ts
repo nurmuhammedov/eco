@@ -1,2 +1,3 @@
-export { default as Login } from './pages/login';
-export { default as Unauthorized } from './pages/unauthorized';
+export { authSlice } from './store/authSlice';
+export type { User, AuthState } from './types';
+export { setUser } from './store/authSlice';
