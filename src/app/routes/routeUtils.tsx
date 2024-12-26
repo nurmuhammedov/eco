@@ -1,10 +1,14 @@
+import { lazy } from 'react';
+import { UserRoles } from '@/shared/types';
 import type { AppRoute } from '@/app/routes';
-import { moduleRoutes } from '@/app/routes';
-import Unauthorized from '@/modules/auth/pages/unauthorized.tsx';
+
+const UnAuthorized = lazy(() => import('@/modules/auth/pages/unauthorized'));
+
+export const DefaultRoute = '/app';
 
 export const filterRoutesByAuth = (
   routes: AppRoute[],
-  roles: string[],
+  roles: UserRoles[],
   permissions: string[],
   isAuthenticated: boolean,
 ): AppRoute[] => {
@@ -13,31 +17,31 @@ export const filterRoutesByAuth = (
     if (!isAuthenticated && route.meta?.restricted) {
       return {
         ...route,
-        element: <Unauthorized />, // Redirect to Unauthorized
+        element: <UnAuthorized />,
       };
     }
 
     // Role-based filtering
     if (
       route.meta?.roles &&
-      !route.meta?.roles.some((role) => roles.includes(role))
+      !route.meta?.roles.some((role: UserRoles) => roles.includes(role))
     ) {
       return {
         ...route,
-        element: <Unauthorized />, // Redirect to Unauthorized
+        element: <UnAuthorized />,
       };
     }
 
     // Permission-based filtering
     if (
       route.meta?.permissions &&
-      !route.meta?.permissions.some((permission) =>
+      !route.meta?.permissions.some((permission: string) =>
         permissions.includes(permission),
       )
     ) {
       return {
         ...route,
-        element: <Unauthorized />, // Redirect to Unauthorized
+        element: <UnAuthorized />, // Redirect to Unauthorized
       };
     }
 
@@ -45,7 +49,18 @@ export const filterRoutesByAuth = (
   });
 };
 
-export const useDynamicRoutes = () => {
-  // const { roles, permissions, isAuthenticated } = useAuth();
-  return filterRoutesByAuth(moduleRoutes, ['admin'], ['dashboard'], true);
+export const getHomeRouteForLoggedInUser = (role: UserRoles) => {
+  if (role === UserRoles.ADMIN) {
+    return DefaultRoute;
+  }
+  return '/';
+};
+
+export const getHomeRoute = () => {
+  const user = true;
+
+  if (user) {
+    return getHomeRouteForLoggedInUser(UserRoles.ADMIN); // user.role berilishi kerak
+  }
+  return '/login';
 };

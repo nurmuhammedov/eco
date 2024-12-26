@@ -1,4 +1,8 @@
-import { Dashboard } from '@/modules/dashboard';
+// import { Dashboard } from '@/modules/dashboard';
+import { UserRoles } from '@/shared/types';
+import { lazy } from 'react';
+
+const Dashboard = lazy(() => import('./pages/dashboard'));
 
 export default [
   {
@@ -6,7 +10,7 @@ export default [
     element: <Dashboard />,
     meta: {
       restricted: true,
-      roles: ['admin'],
+      roles: [UserRoles.ADMIN],
     },
   },
 ];
