@@ -6,23 +6,11 @@ import {
   Navigate,
   RouterProvider,
 } from 'react-router-dom';
-import { pick } from '@/shared/utils';
-import { shallowEqual } from 'react-redux';
-import { useAppSelector } from '@/store/hooks';
 
 const Error = lazy(() => import('@/modules/error/pages'));
 
 const AppRouter = () => {
-  const { isAuthenticated, user } = useAppSelector(
-    (state) => pick(state.auth, ['isAuthenticated', 'user']),
-    shallowEqual,
-  );
-  const filteredRoutes = filterRoutesByAuth(
-    moduleRoutes,
-    user.roles,
-    user.permissions,
-    isAuthenticated,
-  );
+  const filteredRoutes = filterRoutesByAuth(moduleRoutes);
 
   const router = createBrowserRouter([
     {
@@ -37,7 +25,9 @@ const AppRouter = () => {
     },
     {
       path: '/app',
-      element: <Suspense fallback="Loading..." children={<PrivateLayout />} />,
+      element: (
+        <Suspense fallback="Yuklanmoqda..." children={<PrivateLayout />} />
+      ),
       children: filteredRoutes.filter((route) => route.meta?.restricted),
     },
     {

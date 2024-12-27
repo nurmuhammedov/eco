@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { pick } from '@/shared/utils';
 import { shallowEqual } from 'react-redux';
 import { useAppSelector } from '@/store/hooks';
@@ -9,24 +8,20 @@ export default function PrivateLayout() {
     (state) => pick(state.auth, ['isAuthenticated']),
     shallowEqual,
   );
+
   if (!isAuthenticated) return <Navigate to="/login" />;
+
   return (
-    <Fragment>
-      <header className="shadow bg-white p-5 rounded-md w-full">
-        <nav>
-          <ul className="flex gap-4">
-            <li>
-              <a href="#">Home</a>
-            </li>
-            <li>
-              <a href="#">About</a>
-            </li>
-          </ul>
-        </nav>
-      </header>
-      <main>
-        <Outlet />
+    <section className="flex">
+      <aside className="border-r w-1/5 h-screen">Sidebar</aside>
+      <main className="h-full w-full">
+        <header className="shadow bg-white p-5 rounded-md w-full">
+          <nav>Navbar</nav>
+        </header>
+        <section>
+          <Outlet />
+        </section>
       </main>
-    </Fragment>
+    </section>
   );
 }

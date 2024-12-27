@@ -1,15 +1,15 @@
 import { UserRoles } from '@/shared/types';
 
-export type User = {
+export type AuthUser = {
   id: number;
   email: string;
-  roles: UserRoles[];
+  role: UserRoles;
   last_name: string;
   first_name: string;
   permissions: string[];
 };
 
 export type AuthState = {
-  user: User;
+  user: AuthUser;
   isAuthenticated: boolean;
 };
