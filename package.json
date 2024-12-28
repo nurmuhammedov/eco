@@ -1,7 +1,7 @@
 {
-  "name": "starter-project",
-  "private": true,
+  "name": "nuclear-industry",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
