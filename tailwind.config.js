@@ -8,6 +8,15 @@ export default {
   ],
   theme: {
     extend: {
+      fontSize: {
+        xm: '10px',
+      },
+      fontFamily: {
+        sans: ['var(--font-sans)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
+        inter: ['Inter', 'sans-serif'],
+        'golos-text': ['Golos Text', 'sans-serif'],
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -44,6 +53,26 @@ export default {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
         },
+        red: {
+          550: '#DF3E3E',
+        },
+        blue: {
+          400: '#4E75FF',
+          600: '#3344DE',
+          950: '#10384F',
+        },
+        teal: {
+          800: '#016B7B',
+        },
+        neutral: {
+          200: '#E5E7EB',
+          350: '#C0C7D3',
+          450: '#8E8C94',
+          550: '#77757F',
+          700: '#3E4450',
+          850: '#262626',
+          950: '#1D1929',
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -55,12 +84,12 @@ export default {
           5: 'hsl(var(--chart-5))',
         },
         sidebar: {
-          DEFAULT: 'hsl(var(--sidebar-background))',
-          foreground: 'hsl(var(--sidebar-foreground))',
+          DEFAULT: 'var(--sidebar-background)',
+          foreground: 'var(--sidebar-foreground)',
           primary: 'hsl(var(--sidebar-primary))',
           'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
           accent: 'hsl(var(--sidebar-accent))',
-          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+          'accent-foreground': 'var(--sidebar-accent-foreground)',
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
