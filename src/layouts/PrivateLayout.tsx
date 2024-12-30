@@ -1,7 +1,11 @@
 import { pick } from '@/shared/utils';
+import { AppSidebar } from '@/layouts';
 import { shallowEqual } from 'react-redux';
+import { SIDEBAR_OPEN } from '@/app/config';
 import { useAppSelector } from '@/store/hooks';
+import Header from '@/layouts/components/Header';
 import { Navigate, Outlet } from 'react-router-dom';
+import { SidebarProvider } from '@/shared/components/ui/sidebar';
 
 export default function PrivateLayout() {
   const { isAuthenticated } = useAppSelector(
@@ -12,16 +16,14 @@ export default function PrivateLayout() {
   if (!isAuthenticated) return <Navigate to="/login" />;
 
   return (
-    <section className="flex">
-      <aside className="border-r w-1/5 h-screen">Sidebar</aside>
+    <SidebarProvider className="flex text-sm" defaultOpen={SIDEBAR_OPEN}>
+      <AppSidebar />
       <main className="h-full w-full">
-        <header className="shadow bg-white p-5 rounded-md w-full">
-          <nav>Navbar</nav>
-        </header>
-        <section>
+        <Header />
+        <section className="p-5">
           <Outlet />
         </section>
       </main>
-    </section>
+    </SidebarProvider>
   );
 }

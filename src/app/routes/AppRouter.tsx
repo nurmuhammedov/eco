@@ -25,14 +25,12 @@ const AppRouter = () => {
     },
     {
       path: '/app',
-      element: (
-        <Suspense fallback="Yuklanmoqda..." children={<PrivateLayout />} />
-      ),
+      element: <Suspense fallback={null} children={<PrivateLayout />} />,
       children: filteredRoutes.filter((route) => route.meta?.restricted),
     },
     {
       path: '*',
-      element: <Suspense fallback="Loading..." children={<PublicLayout />} />,
+      element: <Suspense fallback={null} children={<PublicLayout />} />,
       children: [
         {
           path: '*',
