@@ -1,5 +1,10 @@
+// ** Utils **
 import { cn } from '@/lib/utils';
+
+// ** Constants **
 import { APP_LOGO, APP_NAME } from '@/app/config';
+
+// ** Hooks **
 import { useSidebar } from '@/shared/components/ui/sidebar';
 
 export function AppLogo() {

@@ -1,10 +1,20 @@
+// ** Utils **
 import { pick } from '@/shared/utils';
-import { AppSidebar } from '@/layouts';
-import { shallowEqual } from 'react-redux';
+
+// ** Constants **
 import { SIDEBAR_OPEN } from '@/app/config';
+
+// ** Hooks **
 import { useAppSelector } from '@/store/hooks';
-import Header from '@/layouts/components/Header';
+
+// ** Secondary party **
+import { AppSidebar, Header } from '@/layouts';
+
+// ** React **
+import { shallowEqual } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
+
+// ** UI components **
 import { SidebarProvider } from '@/shared/components/ui/sidebar';
 
 export default function PrivateLayout() {

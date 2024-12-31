@@ -1,4 +1,4 @@
-import AppLogo from '@/assets/logo.svg';
+import AppLogo from '@/assets/logo.webp';
 import { getStorage } from '@/shared/utils';
 import { SIDEBAR_COOKIE_NAME } from '@/shared/components/ui/sidebar';
 
