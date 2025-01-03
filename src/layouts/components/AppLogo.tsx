@@ -19,7 +19,9 @@ export function AppLogo() {
         height={48}
         src={APP_LOGO}
         alt="App Logo"
-        className="w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12"
+        className={cn('w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12', {
+          hidden: !sidebarOpen,
+        })}
       />
       <h6
         className={cn('text-xm leading-4 font-inter', {
