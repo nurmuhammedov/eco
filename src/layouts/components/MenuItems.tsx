@@ -37,8 +37,8 @@ export function MenuItems() {
             tooltip={item.title}
             isActive={pathname === item.url}
           >
-            <Link to={item.url} className="flex items-center gap-x-2">
-              <item.icon className="w-5 h-5" />
+            <Link to={item.url} className="flex items-center gap-x-2.5">
+              <item.icon />
               <span>{item.title}</span>
             </Link>
           </SidebarMenuButton>

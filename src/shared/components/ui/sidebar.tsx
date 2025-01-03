@@ -363,7 +363,7 @@ const SidebarHeader = React.forwardRef<
     <div
       ref={ref}
       data-sidebar="header"
-      className={cn('flex flex-col gap-2 px-2 py-2.5', className)}
+      className={cn('flex flex-col gap-2 px-2 py-3', className)}
       {...props}
     />
   );
