@@ -11,6 +11,8 @@ import { DataTableRowActions } from './data-table-row-actions';
 export const columns: ColumnDef<Task>[] = [
   {
     id: 'select',
+    maxSize: 100,
+    minSize: 100,
     header: ({ table }) => (
       <Checkbox
         checked={
