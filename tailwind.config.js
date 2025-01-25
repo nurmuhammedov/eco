@@ -67,6 +67,7 @@ export default {
         neutral: {
           100: '#F6F6F6',
           200: '#E5E7EB',
+          300: '#B7C3DA',
           350: '#C0C7D3',
           450: '#8E8C94',
           550: '#77757F',
