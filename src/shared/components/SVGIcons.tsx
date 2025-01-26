@@ -6,6 +6,108 @@ interface SVGIconsProps {
   className?: string;
 }
 
+export const UZBFlagIcon = ({ width = 20, height = 20 }: SVGIconsProps) => (
+  <svg
+    width={width}
+    height={height}
+    xmlns="http://www.w3.org/2000/svg"
+    xmlnsXlink="http://www.w3.org/1999/xlink"
+    id="flag-icons-uz"
+    viewBox="0 0 640 480"
+  >
+    <path fill="#1eb53a" d="M0 320h640v160H0z" />
+    <path fill="#0099b5" d="M0 0h640v160H0z" />
+    <path fill="#ce1126" d="M0 153.6h640v172.8H0z" />
+    <path fill="#fff" d="M0 163.2h640v153.6H0z" />
+    <circle cx="134.4" cy="76.8" r="57.6" fill="#fff" />
+    <circle cx="153.6" cy="76.8" r="57.6" fill="#0099b5" />
+    <g fill="#fff" transform="translate(261.1 122.9)scale(1.92)">
+      <g id="uz-e">
+        <g id="uz-d">
+          <g id="uz-c">
+            <g id="uz-b">
+              <path id="uz-a" d="M0-6-1.9-.3 1 .7" />
+              <use
+                xlinkHref="#uz-a"
+                width="100%"
+                height="100%"
+                transform="scale(-1 1)"
+              />
+            </g>
+            <use
+              xlinkHref="#uz-b"
+              width="100%"
+              height="100%"
+              transform="rotate(72)"
+            />
+          </g>
+          <use
+            xlinkHref="#uz-b"
+            width="100%"
+            height="100%"
+            transform="rotate(-72)"
+          />
+          <use
+            xlinkHref="#uz-c"
+            width="100%"
+            height="100%"
+            transform="rotate(144)"
+          />
+        </g>
+        <use xlinkHref="#uz-d" width="100%" height="100%" y="-24" />
+        <use xlinkHref="#uz-d" width="100%" height="100%" y="-48" />
+      </g>
+      <use xlinkHref="#uz-e" width="100%" height="100%" x="24" />
+      <use xlinkHref="#uz-e" width="100%" height="100%" x="48" />
+      <use xlinkHref="#uz-d" width="100%" height="100%" x="-48" />
+      <use xlinkHref="#uz-d" width="100%" height="100%" x="-24" />
+      <use xlinkHref="#uz-d" width="100%" height="100%" x="-24" y="-24" />
+    </g>
+  </svg>
+);
+
+export const RUFlagIcon = ({ width = 20, height = 20 }: SVGIconsProps) => (
+  <svg
+    width={width}
+    height={height}
+    xmlns="http://www.w3.org/2000/svg"
+    id="flag-icons-ru"
+    viewBox="0 0 640 480"
+  >
+    <g fillRule="evenodd" strokeWidth="1pt">
+      <path fill="#fff" d="M0 0h640v480H0z" />
+      <path fill="#0039a6" d="M0 160h640v320H0z" />
+      <path fill="#d52b1e" d="M0 320h640v160H0z" />
+    </g>
+  </svg>
+);
+
+export const USAFlagIcon = ({ width = 20, height = 20 }: SVGIconsProps) => (
+  <svg
+    width={width}
+    height={height}
+    xmlns="http://www.w3.org/2000/svg"
+    id="flag-icons-us"
+    viewBox="0 0 640 480"
+  >
+    <path fill="#bd3d44" d="M0 0h640v480H0" />
+    <path
+      stroke="#fff"
+      strokeWidth="37"
+      d="M0 55.3h640M0 129h640M0 203h640M0 277h640M0 351h640M0 425h640"
+    />
+    <path fill="#192f5d" d="M0 0h364.8v258.5H0" />
+    <marker id="us-a" markerHeight="30" markerWidth="30">
+      <path fill="#fff" d="m14 0 9 27L0 10h28L5 27z" />
+    </marker>
+    <path
+      fill="none"
+      markerMid="url(#us-a)"
+      d="m0 0 16 11h61 61 61 61 60L47 37h61 61 60 61L16 63h61 61 61 61 60L47 89h61 61 60 61L16 115h61 61 61 61 60L47 141h61 61 60 61L16 166h61 61 61 61 60L47 192h61 61 60 61L16 218h61 61 61 61 60z"
+    />
+  </svg>
+);
+
 export const AppealsIcon = ({ width, height, className }: SVGIconsProps) => (
   <svg
     width={width}
