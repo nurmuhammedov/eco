@@ -16,10 +16,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/shared/components/ui/tooltip';
-import { setStorage } from '@/shared/utils/storage.ts';
+import { setStorage } from '@/shared/utils/storage';
 
 export const SIDEBAR_COOKIE_NAME = 'sidebar:state';
-const SIDEBAR_WIDTH = '16rem';
+const SIDEBAR_WIDTH = '15rem';
 const SIDEBAR_WIDTH_MOBILE = '18rem';
 const SIDEBAR_WIDTH_ICON = '3rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
