@@ -17,8 +17,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/shared/components/ui/sidebar';
+import { useTranslation } from 'react-i18next';
 
 export function MenuItems() {
+  const { t } = useTranslation(['common']);
   const { pathname } = useLocation();
   const { user } = useAppSelector(
     (state) => pick(state.auth, ['user']),
@@ -39,7 +41,7 @@ export function MenuItems() {
           >
             <Link to={item.url} className="flex items-center gap-x-2.5">
               <item.icon />
-              <span>{item.title}</span>
+              <span>{t(item.title)}</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>

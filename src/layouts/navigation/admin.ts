@@ -16,47 +16,47 @@ import {
 
 export default [
   {
-    title: 'Murojaatlar',
+    title: 'menu.appeals',
     url: '/app',
     icon: AppealsIcon,
   },
   {
-    title: 'Arizalar',
+    title: 'menu.applications',
     url: '/app/applications',
     icon: ApplicationsIcon,
   },
   {
-    title: 'Reestr',
+    title: 'menu.register',
     url: '/app/register',
     icon: RegistryIcon,
   },
   {
-    title: 'Xavf tahlili',
+    title: 'menu.risk_analysis',
     url: '/app/risk-analysis',
     icon: RiskAnalysisIcon,
   },
   {
-    title: 'Profilaktika',
+    title: 'menu.prophylactic',
     url: '/app/prophylactic',
     icon: ProphylacticIcon,
   },
   {
-    title: 'Attestatsiya',
+    title: 'menu.attestation',
     url: '/app/attestation',
     icon: AttestationIcon,
   },
   {
-    title: 'Davlat qabuli',
+    title: 'menu.state_reception',
     url: '/app/state-reception',
     icon: StateReception,
   },
   {
-    title: 'Monitoring',
+    title: 'menu.monitoring',
     url: '/app/monitoring',
     icon: MonitoringIcon,
   },
   {
-    title: 'Hisobot',
+    title: 'menu.reports',
     url: '/app/reports',
     icon: ReportIcon,
   },

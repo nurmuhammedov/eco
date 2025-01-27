@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import {
   Tabs,
   TabsContent,
@@ -6,9 +7,12 @@ import {
 } from '@/shared/components/ui/tabs';
 
 export default function Applications() {
+  const { t } = useTranslation(['auth', 'common']);
   return (
     <div>
-      <Tabs defaultValue="account" className="w-[400px]">
+      {t('menu.applications')}
+      <Tabs defaultValue="account">
+        {t('login')}
         <TabsList>
           <TabsTrigger value="account">Юридик шахс</TabsTrigger>
           <TabsTrigger value="password">Жисмоний шахс</TabsTrigger>

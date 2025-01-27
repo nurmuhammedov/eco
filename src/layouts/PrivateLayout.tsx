@@ -28,7 +28,7 @@ export default function PrivateLayout() {
   return (
     <SidebarProvider className="flex text-sm" defaultOpen={SIDEBAR_OPEN}>
       <AppSidebar />
-      <main className="h-full w-full bg-gray-200">
+      <main className="h-full w-full bg-[#EDEEEE]">
         <Header />
         <section className="h-full p-5">
           <Outlet />

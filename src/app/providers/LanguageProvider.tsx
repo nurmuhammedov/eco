@@ -1,10 +1,9 @@
-import i18n from 'i18next';
 import { setStorage } from '@/shared/utils';
-import { currentLanguage } from '@/i18-next';
+import { I18nextProvider } from 'react-i18next';
+import i18n, { currentLanguage } from '@/i18-next';
 import { Language } from '@/shared/types/language';
 import { LanguageContext } from '@/context/Language';
 import React, { useEffect, useMemo, useState } from 'react';
-import '@/i18-next';
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -12,19 +11,26 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
   const [language, setLang] = useState<Language>(currentLanguage);
 
   useEffect(() => {
-    void i18n.changeLanguage(language);
-    setStorage('language', language);
+    if (i18n.isInitialized) {
+      void i18n.changeLanguage(language);
+      setStorage('language', language);
+    } else {
+      i18n.on('initialized', () => {
+        void i18n.changeLanguage(language);
+        setStorage('language', language);
+      });
+    }
   }, [language]);
 
-  const setLanguage = (lng: Language) => {
-    setLang(lng);
-  };
+  const setLanguage = (lng: Language) => setLang(lng);
 
   const value = useMemo(() => ({ language, setLanguage }), [language]);
 
   return (
-    <LanguageContext.Provider value={value}>
-      {children}
-    </LanguageContext.Provider>
+    <I18nextProvider i18n={i18n}>
+      <LanguageContext.Provider value={value}>
+        {children}
+      </LanguageContext.Provider>
+    </I18nextProvider>
   );
 };

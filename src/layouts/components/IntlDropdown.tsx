@@ -29,7 +29,7 @@ const IntlDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" size="sm">
+        <Button variant="secondary">
           <Globe /> <span className="!text-sm">{selectedLang.text}</span>
         </Button>
       </DropdownMenuTrigger>

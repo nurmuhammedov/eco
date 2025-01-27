@@ -1,0 +1,18 @@
+{
+  "actions": {
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "delete": "O'chirish"
+  },
+  "menu": {
+    "appeals": "Murojaatlar",
+    "applications": "Arizalar",
+    "register": "Reestr",
+    "risk_analysis": "Xavf tahlili",
+    "prophylactic": "Profilaktika",
+    "attestation": "Attestatsiya",
+    "state_reception": "Davlat qabuli",
+    "monitoring": "Monitoring",
+    "reports": "Hisobotlar"
+  }
+}

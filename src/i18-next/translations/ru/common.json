@@ -1,0 +1,18 @@
+{
+  "actions": {
+    "save": "Сохранить",
+    "cancel": "Отменить",
+    "delete": "Удалить"
+  },
+  "menu": {
+    "appeals": "Обращения",
+    "applications": "Заявления",
+    "register": "Реестр",
+    "risk_analysis": "Анализ рисков",
+    "prophylactic": "Профилактический",
+    "attestation": "Аттестация",
+    "state_reception": "Государственный приём",
+    "monitoring": "Мониторинг",
+    "reports": "Отчеты"
+  }
+}

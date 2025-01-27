@@ -1,0 +1,18 @@
+{
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "menu": {
+    "appeals": "Appeals",
+    "applications": "Applications",
+    "register": "Registry",
+    "risk_analysis": "Risk analysis",
+    "prophylactic": "Prophylactic",
+    "attestation": "Attestation",
+    "state_reception": "State reception",
+    "monitoring": "Monitoring",
+    "reports": "Reports"
+  }
+}

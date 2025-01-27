@@ -1,0 +1,19 @@
+{
+  "actions": {
+    "save": "Сақлаш",
+    "cancel": "Бекор қилиш",
+    "delete": "Ўчириш"
+  },
+  "menu.applications": "1212121",
+  "menu": {
+    "appeals": "Мурожаатлар",
+    "applications": "Аризалар",
+    "register": "Реэстр",
+    "risk_analysis": "Хавф таҳлили",
+    "prophylactic": "Профилактика",
+    "attestation": "Аттестация",
+    "state_reception": "Давлат қабули",
+    "monitoring": "Мониторинг",
+    "reports": "Ҳисоботлар"
+  }
+}

@@ -1,25 +1,28 @@
 import i18n from 'i18next';
 import { getStorage } from '@/shared/utils';
 import { initReactI18next } from 'react-i18next';
-import uzTranslation from './translations/uz.json';
-import enTranslation from './translations/en.json';
-import krTranslation from './translations/kr.json';
-import ruTranslation from './translations/ru.json';
 import { Language } from '@/shared/types/language';
+import { loadResources, namespaces } from './utils';
 
 export const currentLanguage =
   (getStorage('language') as Language) || Language.UZ;
 
-void i18n.use(initReactI18next).init({
-  resources: {
-    uz: { translation: uzTranslation },
-    en: { translation: enTranslation },
-    kr: { translation: krTranslation },
-    ru: { translation: ruTranslation },
-  },
-  lng: currentLanguage,
-  fallbackLng: Language.UZ,
-  interpolation: { escapeValue: false },
-});
+const initI18n = async () => {
+  const resources = await loadResources();
+  await i18n.use(initReactI18next).init({
+    defaultNS: 'common',
+    lng: currentLanguage,
+    fallbackNS: 'common',
+    ns: namespaces,
+    fallbackLng: Language.UZ,
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage'],
+    },
+    interpolation: { escapeValue: false },
+    resources,
+  });
+};
+void initI18n();
 
 export default i18n;
