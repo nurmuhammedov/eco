@@ -1,18 +1,12 @@
-import { Language } from '@/shared/types/language';
+import { SUPPORTED_TRANSLATION_LANGUAGES } from '@/app/config';
 
-const languages: Language[] = [
-  Language.KR,
-  Language.UZ,
-  Language.RU,
-  Language.EN,
-];
 export const namespaces: string[] = ['common', 'auth'];
 
 export const loadResources = async () => {
   const resources: Record<string, any> = {};
 
   await Promise.all(
-    languages.map(async (lng) => {
+    SUPPORTED_TRANSLATION_LANGUAGES.map(async (lng) => {
       resources[lng] = {};
       await Promise.all(
         namespaces.map(async (ns) => {

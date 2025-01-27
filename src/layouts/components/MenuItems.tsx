@@ -36,7 +36,7 @@ export function MenuItems() {
           <SidebarMenuButton
             asChild
             size="lg"
-            tooltip={item.title}
+            tooltip={t(item.title)}
             isActive={pathname === item.url}
           >
             <Link to={item.url} className="flex items-center gap-x-2.5">
