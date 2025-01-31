@@ -26,11 +26,11 @@ export default function PrivateLayout() {
   if (!isAuthenticated) return <Navigate to="/login" />;
 
   return (
-    <SidebarProvider className="flex text-sm" defaultOpen={SIDEBAR_OPEN}>
+    <SidebarProvider defaultOpen={SIDEBAR_OPEN}>
       <AppSidebar />
       <SidebarInset>
         <Header />
-        <section className="h-full p-5 bg-gray-200">
+        <section className="h-full p-5">
           <Outlet />
         </section>
       </SidebarInset>

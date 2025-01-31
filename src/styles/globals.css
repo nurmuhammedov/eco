@@ -2,7 +2,7 @@
 
 @plugin 'tailwindcss-animate';
 
-@custom-variant dark (&:is(.dark *));
+/*@custom-variant dark (&:is(.dark *));*/
 
 @theme {
   --text-xm: 10px;
@@ -48,6 +48,7 @@
 
   --color-teal-800: #016b7b;
 
+  --color-neutral-50: #f6f7fa;
   --color-neutral-100: #f6f6f6;
   --color-neutral-200: #e5e7eb;
   --color-neutral-350: #c0c7d3;

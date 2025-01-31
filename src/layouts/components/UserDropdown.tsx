@@ -23,7 +23,7 @@ export default function UserDropdown() {
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <span>Doniyor Rahmanov</span>
+          <span className="text-sm">Doniyor Rahmanov</span>
           <ChevronDown size={16} />
         </div>
       </DropdownMenuTrigger>
