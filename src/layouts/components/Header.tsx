@@ -1,7 +1,7 @@
 // ** UI components **
 import UserDropdown from '@/layouts/components/UserDropdown';
 import { SidebarTrigger } from '@/shared/components/ui/sidebar';
-import LanguageSwitcher from '@/layouts/components/IntlDropdown.tsx';
+import LanguageSwitcher from '@/layouts/components/IntlDropdown';
 
 export function Header() {
   return (

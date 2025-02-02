@@ -7,8 +7,10 @@
   "menu": {
     "appeals": "Appeals",
     "applications": "Applications",
-    "register": "Registry",
+    "accreditation": "Accreditation",
+    "register": "Registers",
     "risk_analysis": "Risk analysis",
+    "cadastre": "Cadastre",
     "prophylactic": "Prophylactic",
     "attestation": "Attestation",
     "state_reception": "State reception",

@@ -7,8 +7,10 @@
   "menu": {
     "appeals": "Обращения",
     "applications": "Заявления",
-    "register": "Реестр",
+    "accreditation": "Аккредитация",
+    "register": "Реестры",
     "risk_analysis": "Анализ рисков",
+    "cadastre": "Кадастр",
     "prophylactic": "Профилактический",
     "attestation": "Аттестация",
     "state_reception": "Государственный приём",

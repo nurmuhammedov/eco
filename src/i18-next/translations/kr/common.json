@@ -4,12 +4,13 @@
     "cancel": "Бекор қилиш",
     "delete": "Ўчириш"
   },
-  "menu.applications": "1212121",
   "menu": {
     "appeals": "Мурожаатлар",
     "applications": "Аризалар",
-    "register": "Реэстр",
+    "accreditation": "Аккредитация",
+    "register": "Реестрлар",
     "risk_analysis": "Хавф таҳлили",
+    "cadastre": "Кадастр",
     "prophylactic": "Профилактика",
     "attestation": "Аттестация",
     "state_reception": "Давлат қабули",

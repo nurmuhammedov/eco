@@ -23,7 +23,7 @@ export default function PrivateLayout() {
     shallowEqual,
   );
 
-  if (!isAuthenticated) return <Navigate to="/login" />;
+  if (!isAuthenticated) return <Navigate to="/auth/login" />;
 
   return (
     <SidebarProvider defaultOpen={SIDEBAR_OPEN}>

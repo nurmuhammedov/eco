@@ -48,6 +48,12 @@ export const getHomeRouteForLoggedInUser = (role: UserRoles) => {
   if (role === UserRoles.ADMIN) {
     return DefaultRoute;
   }
+  if (role === UserRoles.USER) {
+    return '/app/applications';
+  }
+  if (role === UserRoles.INSPECTOR) {
+    return '/app/applications';
+  }
   return '/';
 };
 
@@ -57,5 +63,7 @@ export const getHomeRoute = () => {
     'user',
   ]);
 
-  return isAuthenticated ? getHomeRouteForLoggedInUser(user.role) : '/login';
+  return isAuthenticated
+    ? getHomeRouteForLoggedInUser(user.role)
+    : '/auth/login';
 };

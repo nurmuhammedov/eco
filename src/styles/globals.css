@@ -46,12 +46,16 @@
   --color-blue-600: #3344de;
   --color-blue-950: #10384f;
 
-  --color-teal-800: #016b7b;
+  --color-teal: #016b7b;
 
   --color-neutral-50: #f6f7fa;
   --color-neutral-100: #f6f6f6;
+  --color-neutral-150: #f9f9f9;
   --color-neutral-200: #e5e7eb;
+  --color-neutral-250: #edeeee;
+  --color-neutral-300: #b7c3da;
   --color-neutral-350: #c0c7d3;
+  --color-neutral-400: #929db2;
   --color-neutral-450: #8e8c94;
   --color-neutral-550: #77757f;
   --color-neutral-700: #3e4450;
@@ -181,5 +185,9 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .card-title {
+    @apply font-semibold leading-normal text-neutral-850;
   }
 }
