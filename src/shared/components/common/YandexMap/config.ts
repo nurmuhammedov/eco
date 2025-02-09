@@ -1,0 +1,6 @@
+export const MAP_DEFAULTS = {
+  center: [41.2995, 69.2401],
+  zoom: 10,
+  width: '100%',
+  height: '400px',
+};

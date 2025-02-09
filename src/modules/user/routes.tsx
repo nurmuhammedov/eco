@@ -1,7 +1,6 @@
 import { lazy } from 'react';
 import { UserRoles } from '@/shared/types';
 
-const Appeals = lazy(() => import('./appeals/pages'));
 const Applications = lazy(() => import('./applications/pages'));
 const Register = lazy(() => import('./register/pages'));
 const RiskAnalysis = lazy(() => import('./risk-analysis/pages'));
@@ -12,14 +11,6 @@ const Attestation = lazy(() => import('./attestation/pages'));
 const StateReception = lazy(() => import('./state-reception/pages'));
 
 export default [
-  {
-    path: 'appeals',
-    element: <Appeals />,
-    meta: {
-      restricted: true,
-      roles: [UserRoles.USER],
-    },
-  },
   {
     path: 'applications',
     element: <Applications />,

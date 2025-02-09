@@ -1,26 +1,7 @@
-import { useTranslation } from 'react-i18next';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/shared/components/ui/tabs';
+import { DataTable } from '@/modules/user/applications/components/data-table.tsx';
+import { columns } from '../components/columns';
+import tasks from '../data/tasks.json';
 
 export default function Index() {
-  const { t } = useTranslation(['auth', 'common']);
-  return (
-    <div>
-      {t('menu.applications')}
-      <Tabs defaultValue="account">
-        <TabsList className="bg-white">
-          <TabsTrigger value="account">Юридик шахс</TabsTrigger>
-          <TabsTrigger value="password">Жисмоний шахс</TabsTrigger>
-        </TabsList>
-        <TabsContent value="account">
-          Make changes to your account here.
-        </TabsContent>
-        <TabsContent value="password">Change your password here.</TabsContent>
-      </Tabs>
-    </div>
-  );
+  return <DataTable data={tasks} columns={columns} />;
 }
