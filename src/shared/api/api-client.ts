@@ -9,7 +9,7 @@ export const apiClient = {
     url: string,
     params?: RequestParams,
   ): Promise<AxiosResponse<T>> => {
-    return await axiosInstance.get<T>(url, { params }); // ✅ Endi butun `AxiosResponse` qaytariladi
+    return await axiosInstance.get<T>(url, { params }); // ✅ Return full `AxiosResponse`
   },
 
   // ✅ POST

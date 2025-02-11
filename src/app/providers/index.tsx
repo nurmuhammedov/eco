@@ -1,7 +1,7 @@
 import { store } from '@/store';
 import { Provider } from 'react-redux';
 import { AppRouter } from '@/app/routes';
-import { queryClient } from '@/shared/api/query-client';
+import { queryClient } from '@/shared/api';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { LanguageProvider } from './LanguageProvider';
 
