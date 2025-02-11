@@ -1,2 +1,2 @@
-export { useGet, useGetById } from './useQuery';
-export { useDelete, usePatch, usePost, usePut } from './useMutations';
+export { useGet, useGetById } from '../../api/queries.ts';
+export { useDelete, usePatch, usePost, usePut } from '../../api/mutations.ts';

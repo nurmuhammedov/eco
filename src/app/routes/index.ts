@@ -5,4 +5,4 @@ export {
   filterRoutesByAuth,
   getHomeRoute,
   getHomeRouteForLoggedInUser,
-} from './routeUtils';
+} from './utils.tsx';

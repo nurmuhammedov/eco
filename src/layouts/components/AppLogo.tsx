@@ -18,7 +18,7 @@ export function AppLogo() {
         width={48}
         height={48}
         src={APP_LOGO}
-        alt="App Logo"
+        alt="Index Logo"
         className={cn('w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12', {
           hidden: !sidebarOpen,
         })}
