@@ -1,1 +1,1 @@
-// Shared UI components (Button, Modal)
+// Shared UI ui (Button, Modal)

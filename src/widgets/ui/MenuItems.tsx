@@ -2,21 +2,21 @@
 import { pick } from '@/shared/utils';
 
 // ** Store **
-import { useAppSelector } from '@/app/store/hooks';
+import { useAppSelector } from '@/app/store/hooks.ts';
 
 // ** Navigation **
-import { NAVIGATIONS } from '@/layouts/navigation';
+import { NAVIGATIONS } from '@/widgets/navigation';
 
 // ** Third party **
 import { shallowEqual } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
-// ** UI components **
+// ** UI ui **
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/shared/components/ui/sidebar';
+} from '@/shared/components/ui/sidebar.tsx';
 import { useTranslation } from 'react-i18next';
 
 export function MenuItems() {

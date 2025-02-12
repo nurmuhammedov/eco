@@ -8,13 +8,13 @@ import { SIDEBAR_OPEN } from '@/app/config';
 import { useAppSelector } from '@/app/store/hooks';
 
 // ** Secondary party **
-import { AppSidebar, Header } from '@/layouts';
+import { AppSidebar, Header } from '@/widgets';
 
 // ** React **
 import { shallowEqual } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 
-// ** UI components **
+// ** UI ui **
 import { SidebarInset, SidebarProvider } from '@/shared/components/ui/sidebar';
 
 export default function PrivateLayout() {

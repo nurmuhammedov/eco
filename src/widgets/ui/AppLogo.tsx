@@ -1,11 +1,11 @@
 // ** Utils **
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/utils.ts';
 
 // ** Constants **
 import { APP_LOGO, APP_NAME } from '@/app/config';
 
 // ** Hooks **
-import { useSidebar } from '@/shared/components/ui/sidebar';
+import { useSidebar } from '@/shared/components/ui/sidebar.tsx';
 
 export function AppLogo() {
   const { state } = useSidebar();

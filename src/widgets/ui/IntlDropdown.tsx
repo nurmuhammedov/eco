@@ -2,23 +2,17 @@ import { Globe } from 'lucide-react';
 import { Language } from '@/shared/types/language';
 import { Button } from '@/shared/components/ui/button';
 import { useLanguage } from '@/shared/hooks/useLanguage';
+import { UZBFlagIcon } from '@/shared/components/SVGIcons';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
-import {
-  RUFlagIcon,
-  USAFlagIcon,
-  UZBFlagIcon,
-} from '@/shared/components/SVGIcons';
 
 const systemLanguages = [
   { value: Language.KR, text: 'Ўзб', label: 'Ўзбек', flag: <UZBFlagIcon /> },
   { value: Language.UZ, text: "O'zb", label: "O'zbek", flag: <UZBFlagIcon /> },
-  { value: Language.RU, text: 'Рус', label: 'Русский', flag: <RUFlagIcon /> },
-  { value: Language.EN, text: 'Eng', label: 'English', flag: <USAFlagIcon /> },
 ];
 
 const IntlDropdown = () => {

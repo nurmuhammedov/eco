@@ -1,4 +1,4 @@
-import { Navigation } from '@/layouts/types';
+import { Navigation } from '@/widgets/types.ts';
 
 // ** Icons
 import {
@@ -10,7 +10,7 @@ import {
   ReportIcon,
   RiskAnalysisIcon,
   StateReception,
-} from '@/shared/components/SVGIcons';
+} from '@/shared/components/SVGIcons.tsx';
 
 export default [
   {

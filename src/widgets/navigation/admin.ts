@@ -1,8 +1,8 @@
 // ** Types
-import type { Navigation } from '@/layouts/types';
+import type { Navigation } from '@/widgets/types.ts';
 
-// ** UI components
-import { StateReception } from '@/shared/components/SVGIcons';
+// ** UI ui
+import { StateReception } from '@/shared/components/SVGIcons.tsx';
 
 export default [
   {

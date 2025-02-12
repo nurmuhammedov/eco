@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { PrivateLayout, PublicLayout } from '@/layouts';
+import { PrivateLayout, PublicLayout } from '@/widgets';
 import { filterRoutesByAuth, getHomeRoute, moduleRoutes } from '@/app/routes';
 import {
   createBrowserRouter,

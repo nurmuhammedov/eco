@@ -1,7 +1,7 @@
 import { pick } from '@/shared/utils';
 import { UserRoles } from '@/shared/types';
 import { shallowEqual } from 'react-redux';
-import { useAppSelector } from '@/app/store/hooks';
+import { useAppSelector } from '@/app/store/hooks.ts';
 import { Navigate, Outlet } from 'react-router-dom';
 import { getHomeRouteForLoggedInUser } from '@/app/routes';
 

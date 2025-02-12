@@ -1,5 +1,6 @@
 // ** Utils **
 import { cn } from '@/shared/lib/utils';
+import { getSidebarCollapse } from '@/widgets/utils';
 
 // ** Secondary Components **
 import { AppLogo } from './AppLogo';
@@ -8,7 +9,7 @@ import { MenuItems } from './MenuItems';
 // ** SVG Icons **
 import { TechnocorpLogo } from '@/shared/components/SVGIcons';
 
-// ** UI components **
+// ** UI ui **
 import {
   Sidebar,
   SidebarContent,
@@ -38,7 +39,7 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const sidebarOpen = state === 'expanded';
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible={getSidebarCollapse()}>
       <SidebarContent>
         <SidebarGroup>
           <SidebarHeader
