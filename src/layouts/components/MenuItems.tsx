@@ -2,7 +2,7 @@
 import { pick } from '@/shared/utils';
 
 // ** Store **
-import { useAppSelector } from '@/store/hooks';
+import { useAppSelector } from '@/app/store/hooks';
 
 // ** Navigation **
 import { NAVIGATIONS } from '@/layouts/navigation';

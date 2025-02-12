@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { store } from '@/store';
+import { store } from '@/app/store';
 import { pick } from '@/shared/utils';
 import { UserRoles } from '@/shared/types';
 import type { AppRoute } from '@/app/routes';

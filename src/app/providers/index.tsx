@@ -1,4 +1,4 @@
-import { store } from '@/store';
+import { store } from '@/app/store';
 import { Provider } from 'react-redux';
 import { AppRouter } from '@/app/routes';
 import { queryClient } from '@/shared/api';

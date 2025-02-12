@@ -5,7 +5,7 @@ import { pick } from '@/shared/utils';
 import { SIDEBAR_OPEN } from '@/app/config';
 
 // ** Hooks **
-import { useAppSelector } from '@/store/hooks';
+import { useAppSelector } from '@/app/store/hooks';
 
 // ** Secondary party **
 import { AppSidebar, Header } from '@/layouts';
