@@ -1,22 +1,22 @@
 import * as React from 'react';
+import { PanelLeft } from 'lucide-react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, VariantProps } from 'class-variance-authority';
-import { PanelLeft } from 'lucide-react';
 
-import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
-import { Button } from '@/shared/components/ui/button';
+import { cn } from '@/shared/lib/utils';
+import { setStorage } from '@/shared/utils/storage';
 import { Input } from '@/shared/components/ui/input';
+import { Button } from '@/shared/components/ui/button';
+import { useIsMobile } from '@/shared/hooks/use-mobile';
+import { Skeleton } from '@/shared/components/ui/skeleton';
 import { Separator } from '@/shared/components/ui/separator';
 import { Sheet, SheetContent } from '@/shared/components/ui/sheet';
-import { Skeleton } from '@/shared/components/ui/skeleton';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/shared/components/ui/tooltip';
-import { setStorage } from '@/shared/utils/storage';
 
 export const SIDEBAR_COOKIE_NAME = 'sidebar:state';
 const SIDEBAR_WIDTH = '15rem';

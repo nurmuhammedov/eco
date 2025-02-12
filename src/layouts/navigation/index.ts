@@ -4,5 +4,11 @@ import { UserRoles } from '@/shared/types';
 
 export const NAVIGATIONS = {
   [UserRoles.ADMIN]: adminNavigation,
-  [UserRoles.USER]: userNavigation,
+  [UserRoles.LEGAL]: userNavigation,
+  [UserRoles.INDIVIDUAL]: userNavigation,
+  [UserRoles.CHAIRMAN]: [],
+  [UserRoles.HEAD]: [],
+  [UserRoles.INSPECTOR]: [],
+  [UserRoles.MANAGER]: [],
+  [UserRoles.REGIONAL]: [],
 };

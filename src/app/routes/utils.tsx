@@ -48,7 +48,7 @@ export const getHomeRouteForLoggedInUser = (role: UserRoles) => {
   if (role === UserRoles.ADMIN) {
     return DefaultRoute;
   }
-  if (role === UserRoles.USER) {
+  if (role === UserRoles.LEGAL) {
     return '/app/applications';
   }
   if (role === UserRoles.INSPECTOR) {

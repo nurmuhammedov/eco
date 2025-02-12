@@ -1,5 +1,5 @@
 // ** Utils **
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/lib/utils';
 
 // ** Constants **
 import { APP_LOGO, APP_NAME } from '@/app/config';

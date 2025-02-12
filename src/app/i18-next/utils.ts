@@ -12,7 +12,7 @@ export const loadResources = async () => {
         namespaces.map(async (ns) => {
           try {
             const module = await import(
-              `@/i18-next/translations/${lng}/${ns}.json`
+              `@/app/i18-next/translations/${lng}/${ns}.json`
             );
             resources[lng][ns] = module.default;
           } catch (error) {

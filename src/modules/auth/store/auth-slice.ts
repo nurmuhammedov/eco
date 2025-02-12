@@ -11,7 +11,7 @@ const initialState: AuthState = {
     first_name: 'Admin',
     last_name: 'Adminov',
     permissions: ['all'],
-    role: UserRoles.USER,
+    role: UserRoles.LEGAL,
   } as AuthUser,
 };
 

@@ -1,11 +1,12 @@
 // Global TypeScript types.ts
 
 export enum UserRoles {
-  USER = 'user',
+  LEGAL = 'LEGAL',
+  INDIVIDUAL = 'INDIVIDUAL',
   ADMIN = 'admin',
   CHAIRMAN = 'chairman',
   INSPECTOR = 'inspector',
-  TERRITORIAL_DEPARTMENT = 'department',
-  HEAD_OF_DEPARTMENT = 'head_of_department',
-  RESPONSIBLE_OF_DEPARTMENT = 'responsible_of_department',
+  MANAGER = 'MANAGER',
+  HEAD = 'HEAD',
+  REGIONAL = 'REGIONAL',
 }

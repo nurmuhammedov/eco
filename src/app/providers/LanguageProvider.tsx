@@ -1,9 +1,9 @@
-import i18n from '@/i18-next';
+import i18n from '@/app/i18-next';
 import { setStorage } from '@/shared/utils';
 import { I18nextProvider } from 'react-i18next';
 import { DEFAULT_LANG_CODE } from '@/app/config';
 import { Language } from '@/shared/types/language';
-import { LanguageContext } from '@/context/Language';
+import { LanguageContext } from '@/app/context/Language';
 import React, { useEffect, useMemo, useState } from 'react';
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({

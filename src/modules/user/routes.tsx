@@ -16,7 +16,7 @@ export default [
     element: <Applications />,
     meta: {
       restricted: true,
-      roles: [UserRoles.USER],
+      roles: [UserRoles.LEGAL],
     },
   },
   {
@@ -24,7 +24,7 @@ export default [
     element: <Register />,
     meta: {
       restricted: true,
-      roles: [UserRoles.USER],
+      roles: [UserRoles.LEGAL],
     },
   },
   {
@@ -32,7 +32,7 @@ export default [
     element: <RiskAnalysis />,
     meta: {
       restricted: true,
-      roles: [UserRoles.USER],
+      roles: [UserRoles.LEGAL],
     },
   },
   {
@@ -40,7 +40,7 @@ export default [
     element: <Prophylactic />,
     meta: {
       restricted: true,
-      roles: [UserRoles.USER],
+      roles: [UserRoles.LEGAL],
     },
   },
   {
@@ -48,7 +48,7 @@ export default [
     element: <Prophylactic />,
     meta: {
       restricted: true,
-      roles: [UserRoles.USER],
+      roles: [UserRoles.LEGAL],
     },
   },
   {
@@ -56,7 +56,7 @@ export default [
     element: <Attestation />,
     meta: {
       restricted: true,
-      roles: [UserRoles.USER],
+      roles: [UserRoles.LEGAL],
     },
   },
   {
@@ -64,7 +64,7 @@ export default [
     element: <StateReception />,
     meta: {
       restricted: true,
-      roles: [UserRoles.USER],
+      roles: [UserRoles.LEGAL],
     },
   },
   {
@@ -72,7 +72,7 @@ export default [
     element: <Monitoring />,
     meta: {
       restricted: true,
-      roles: [UserRoles.USER],
+      roles: [UserRoles.LEGAL],
     },
   },
   {
@@ -80,7 +80,7 @@ export default [
     element: <Reports />,
     meta: {
       restricted: true,
-      roles: [UserRoles.USER],
+      roles: [UserRoles.LEGAL],
     },
   },
 ];

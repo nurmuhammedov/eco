@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import AppLogo from '@/assets/images/logo.svg';
-import IDLogo from '@/assets/images/id-gov.svg';
+import AppLogo from '@/shared/assets/images/logo.svg';
+import IDLogo from '@/shared/assets/images/id-gov.svg';
 
 export default function Login() {
   return (
