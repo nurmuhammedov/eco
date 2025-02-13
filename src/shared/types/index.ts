@@ -2,11 +2,11 @@
 
 export enum UserRoles {
   LEGAL = 'LEGAL',
-  INDIVIDUAL = 'INDIVIDUAL',
-  ADMIN = 'admin',
-  CHAIRMAN = 'chairman',
-  INSPECTOR = 'inspector',
-  MANAGER = 'MANAGER',
   HEAD = 'HEAD',
+  ADMIN = 'ADMIN',
+  MANAGER = 'MANAGER',
+  CHAIRMAN = 'CHAIRMAN',
   REGIONAL = 'REGIONAL',
+  INSPECTOR = 'INSPECTOR',
+  INDIVIDUAL = 'INDIVIDUAL',
 }
