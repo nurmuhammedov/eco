@@ -7,7 +7,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
-const Error = lazy(() => import('@/modules/error/pages'));
+const Error = lazy(() => import('@/pages/error/ui/page-not-found'));
 
 const AppRouter = () => {
   const filteredRoutes = filterRoutesByAuth(moduleRoutes);

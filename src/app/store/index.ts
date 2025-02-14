@@ -1,10 +1,13 @@
-import { authSlice } from '@/modules/auth';
+import authSlice from './auth-slice';
 import { configureStore } from '@reduxjs/toolkit';
 
 export const store = configureStore({
   reducer: {
-    auth: authSlice.reducer,
+    auth: authSlice,
   },
+  devTools: process.env.NODE_ENV !== 'production',
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

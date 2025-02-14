@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { axiosInstance } from './axios-instance';
 
-type RequestParams = Record<string, string | number | boolean>;
+type RequestParams = Record<string, string | number | boolean | object>;
 
 export const apiClient = {
   // ✅ GET

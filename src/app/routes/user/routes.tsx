@@ -1,14 +1,16 @@
 import { lazy } from 'react';
 import { UserRoles } from '@/shared/types';
 
-const Applications = lazy(() => import('./applications/ui'));
-const Register = lazy(() => import('./register/pages'));
-const RiskAnalysis = lazy(() => import('./risk-analysis/pages'));
-const Prophylactic = lazy(() => import('./prophylactic/pages'));
-const Monitoring = lazy(() => import('./monitoring/pages'));
-const Reports = lazy(() => import('./reports/pages'));
-const Attestation = lazy(() => import('./attestation/pages'));
-const StateReception = lazy(() => import('./state-reception/pages'));
+const Applications = lazy(() => import('@/pages/user/applications'));
+const Register = lazy(() => import('@/features/user/register/pages'));
+const RiskAnalysis = lazy(() => import('@/features/user/risk-analysis/pages'));
+const Prophylactic = lazy(() => import('@/features/user/prophylactic/pages'));
+const Monitoring = lazy(() => import('@/features/user/monitoring/pages'));
+const Reports = lazy(() => import('@/features/user/reports/pages'));
+const Attestation = lazy(() => import('@/features/user/attestation/pages'));
+const StateReception = lazy(
+  () => import('@/features/user/state-reception/pages'),
+);
 
 export default [
   {

@@ -1,69 +1,60 @@
 import { lazy } from 'react';
-import { store } from '@/app/store';
-import { pick } from '@/shared/utils';
 import { UserRoles } from '@/shared/types';
 import type { AppRoute } from '@/app/routes';
+import { useAuth } from '@/shared/hooks/useAuth';
 
-const UnAuthorized = lazy(() => import('@/modules/auth/pages/unauthorized'));
+const UnAuthorized = lazy(() => import('@/features/auth/unauthorized.tsx'));
 
-export const DefaultRoute = '/app';
+export const DefaultRoute = '/app/applications';
 
 const hasAccess = (
   userRole: UserRoles,
-  userPermissions: string[],
-  meta: AppRoute['meta'],
+  permissionList: string[],
+  meta?: AppRoute['meta'],
 ): boolean => {
-  const roleMatch = meta?.roles ? meta.roles.includes(userRole) : true;
-  const permissionMatch = meta?.permissions
-    ? meta?.permissions.some((permission) =>
-        userPermissions.includes(permission),
-      )
+  if (!meta) return true;
+
+  const { roles, permissions } = meta;
+  const roleMatch = roles ? roles.includes(userRole) : true;
+  const permissionMatch = permissions
+    ? permissions.some((perm) => permissionList.includes(perm))
     : true;
 
   return roleMatch && permissionMatch;
 };
 
 export const filterRoutesByAuth = (routes: AppRoute[]): AppRoute[] => {
-  const { user, isAuthenticated } = pick(store.getState().auth, [
-    'isAuthenticated',
-    'user',
-  ]);
+  const { user } = useAuth();
 
-  return routes.map((route) => {
-    if (route.meta?.isPublic) return route;
+  if (!user) {
+    return routes.map((route) =>
+      route.meta?.restricted ? { ...route, element: <UnAuthorized /> } : route,
+    );
+  }
 
-    if (!isAuthenticated && route.meta?.restricted) {
-      return { ...route, element: <UnAuthorized /> };
-    }
-
-    if (!hasAccess(user.role, user.permissions, route.meta)) {
-      return { ...route, element: <UnAuthorized /> };
-    }
-
-    return route;
-  });
+  return routes.map((route) =>
+    hasAccess(user.role, user.permissions, route.meta)
+      ? route
+      : { ...route, element: <UnAuthorized /> },
+  );
 };
 
-export const getHomeRouteForLoggedInUser = (role: UserRoles) => {
-  if (role === UserRoles.ADMIN) {
-    return DefaultRoute;
-  }
-  if (role === UserRoles.LEGAL) {
-    return '/app/applications';
-  }
-  if (role === UserRoles.INSPECTOR) {
-    return '/app/applications';
-  }
-  return '/';
+const roleHomeRoutes: Record<UserRoles, string> = {
+  [UserRoles.ADMIN]: DefaultRoute,
+  [UserRoles.LEGAL]: DefaultRoute,
+  [UserRoles.INSPECTOR]: DefaultRoute,
+  [UserRoles.REGIONAL]: DefaultRoute,
+  [UserRoles.CHAIRMAN]: DefaultRoute,
+  [UserRoles.HEAD]: DefaultRoute,
+  [UserRoles.MANAGER]: DefaultRoute,
+  [UserRoles.INDIVIDUAL]: DefaultRoute,
 };
+
+export const getHomeRouteForLoggedInUser = (role: UserRoles) =>
+  roleHomeRoutes[role] || '/';
 
 export const getHomeRoute = () => {
-  const { isAuthenticated, user } = pick(store.getState().auth, [
-    'isAuthenticated',
-    'user',
-  ]);
+  const { user } = useAuth();
 
-  return isAuthenticated
-    ? getHomeRouteForLoggedInUser(user.role)
-    : '/auth/login';
+  return user ? getHomeRouteForLoggedInUser(user.role) : '/auth/login';
 };

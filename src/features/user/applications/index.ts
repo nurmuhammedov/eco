@@ -1,1 +1,1 @@
-export { default as Dashboard } from './pages';
+export { default as Dashboard } from './ui';

@@ -1,6 +1,6 @@
-import PublicLayout from './PublicLayout.tsx';
-import PrivateLayout from './PrivateLayout.tsx';
-import { Header } from '@/widgets/ui/Header.tsx';
-import { AppSidebar } from '@/widgets/ui/AppSidebar.tsx';
+import PublicLayout from './public-layout.tsx';
+import PrivateLayout from './private-layout.tsx';
+import { Header } from '@/widgets/header/ui/Header.tsx';
+import { AppSidebar } from '@/widgets/sidebar/ui/app-sidebar';
 
 export { PublicLayout, PrivateLayout, AppSidebar, Header };

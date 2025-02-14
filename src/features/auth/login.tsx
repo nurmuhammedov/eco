@@ -5,7 +5,7 @@ import IDLogo from '@/shared/assets/images/id-gov.svg';
 export default function Login() {
   return (
     <section className="flex h-screen font-inter">
-      <div className="w-1/2 flex flex-col items-center justify-center pt-20 pb-8 bg-no-repeat bg-cover bg-[url(@/assets/images/login-hero.png)]">
+      <div className="w-1/2 flex flex-col items-center justify-center pt-20 pb-8 bg-no-repeat bg-cover bg-[url(@/shared/assets/images/login-hero.png)]">
         <div className="flex flex-col items-center justify-center">
           <h4 className="text-white max-w-lg text-center font-bold text-2xl mb-8">
             O&rsquo;zbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Sanoat,

@@ -1,8 +1,8 @@
 import { lazy } from 'react';
-import { useYandexMap } from '@/shared/components/common/YandexMap';
+import { useYandexMap } from 'src/shared/components/common/yandex-map';
 
 const YandexMap = lazy(
-  () => import('@/shared/components/common/YandexMap/YandexMap'),
+  () => import('@/shared/components/common/yandex-map/yandex-map.tsx'),
 );
 
 export default function Index() {
