@@ -1,24 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
-import { ApiResponse } from '@/shared/types/api';
+import type { ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import { useTableFilters } from '@/shared/lib/use-table-filter';
-
-export interface Application {
-  id: string;
-  objectName: string;
-  objectId: string;
-  totalScore: number;
-  builder: string;
-  inspector: string;
-  completedDate: string;
-}
+import { IApplication } from '@/entities/user/applications/model/model';
 
 export const fetchApplications = () => {
   const { filters } = useTableFilters('applications');
-  return useQuery<ApiResponse<Application>>({
+  return useQuery<ApiResponse<IApplication>>({
     queryKey: ['applications', filters],
     queryFn: async () => {
-      const response = await apiClient.get<ApiResponse<Application>>(
+      const response = await apiClient.get<ApiResponse<IApplication>>(
         API_ENDPOINTS.LOGOUT,
         {
           page: filters.page,

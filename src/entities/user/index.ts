@@ -1,1 +1,1 @@
-export { fetchApplications } from './applications/application.service';
+export { fetchApplications } from './applications/api';

@@ -6,12 +6,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@/shared/components/ui/dropdown-menu.tsx';
+} from '@/shared/components/ui/dropdown-menu';
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from '@/shared/components/ui/avatar.tsx';
+} from '@/shared/components/ui/avatar';
 import { ChevronDown } from 'lucide-react';
 
 export default function UserDropdown() {
