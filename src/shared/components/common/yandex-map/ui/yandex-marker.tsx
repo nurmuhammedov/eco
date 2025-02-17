@@ -1,5 +1,5 @@
 import React from 'react';
-import { Marker } from './types';
+import { Marker } from '../model/yandex-map-types.ts';
 import { Placemark } from '@pbe/react-yandex-maps';
 
 interface YandexMarkerProps {

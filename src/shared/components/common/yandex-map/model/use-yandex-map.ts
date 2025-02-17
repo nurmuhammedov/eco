@@ -1,18 +1,19 @@
 import { useCallback, useState } from 'react';
+import { MAP_DEFAULTS } from './yandex-map-config';
 
 export interface Marker {
+  id: string;
+  hint?: string;
   balloonContent?: string;
   coords: [number, number];
-  hint?: string;
-  id: string;
 }
 
 export const useYandexMap = (
-  initialCenter: [number, number] = [41.2995, 69.2401],
+  initialCenter: [number, number] = MAP_DEFAULTS.center,
 ) => {
   const [markers, setMarkers] = useState<Marker[]>([]);
   const [center, setCenter] = useState<[number, number]>(initialCenter);
-  const [zoom, setZoom] = useState<number>(10);
+  const [zoom, setZoom] = useState<number>(MAP_DEFAULTS.zoom);
 
   const addMarker = useCallback((coords: [number, number]) => {
     setMarkers((prev) => [...prev, { id: Date.now().toString(), coords }]);
