@@ -2,12 +2,11 @@
 import type { Navigation } from '@/widgets/models';
 
 // ** UI ui
-import { StateReception } from '@/shared/components/SVGIcons.tsx';
 
 export default [
   {
     url: '/app/applications',
     title: 'Murojaatlar',
-    icon: StateReception,
+    icon: 'note-text',
   },
 ] as Navigation;

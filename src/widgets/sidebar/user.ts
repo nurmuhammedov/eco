@@ -1,56 +1,46 @@
 import { Navigation } from '@/widgets/models';
 
 // ** Icons
-import {
-  ApplicationsIcon,
-  AttestationIcon,
-  MonitoringIcon,
-  ProphylacticIcon,
-  RegistryIcon,
-  ReportIcon,
-  RiskAnalysisIcon,
-  StateReception,
-} from '@/shared/components/SVGIcons.tsx';
 
 export default [
   {
     title: 'menu.applications',
     url: '/app/applications',
-    icon: ApplicationsIcon,
+    icon: 'note-text',
   },
   {
     title: 'menu.register',
     url: '/app/register',
-    icon: RegistryIcon,
+    icon: 'external-drive',
   },
   {
     title: 'menu.accreditation',
     url: '/app/accreditation',
-    icon: RiskAnalysisIcon,
+    icon: 'danger',
   },
   {
     title: 'menu.cadastre',
     url: '/app/cadastre',
-    icon: ProphylacticIcon,
+    icon: 'box-search',
   },
   {
     title: 'menu.prophylactic',
     url: '/app/prophylactic',
-    icon: StateReception,
+    icon: 'direct-inbox',
   },
   {
     title: 'menu.attestation',
     url: '/app/attestation',
-    icon: AttestationIcon,
+    icon: 'document',
   },
   {
     title: 'menu.monitoring',
     url: '/app/monitoring',
-    icon: MonitoringIcon,
+    icon: 'diagram',
   },
   {
     title: 'menu.reports',
     url: '/app/reports',
-    icon: ReportIcon,
+    icon: 'report',
   },
 ] as Navigation;
