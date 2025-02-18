@@ -1,2 +1,2 @@
-export { DetailCard } from './detail-card';
-export { DetailCardAccordion } from './detail-card-accordion';
+export { DetailCard } from './ui/detail-card.tsx';
+export { DetailCardAccordion } from './ui/detail-card-accordion.tsx';

@@ -10,7 +10,7 @@ const formattedIcons: Record<
 > = {};
 
 Object.entries(icons).forEach(([fullPath, module]) => {
-  const iconName = fullPath.split('/').pop()?.replace('.svg', ''); // ✅ Fayl nomini olish
+  const iconName = fullPath.split('/').pop()?.replace('.svg', '');
   if (iconName && module.default) {
     formattedIcons[iconName] = module.default;
   }

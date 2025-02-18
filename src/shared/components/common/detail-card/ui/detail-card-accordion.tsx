@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import { cn } from '@/shared/lib/utils';
 import {
   Accordion,
@@ -6,20 +6,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/shared/components/ui/accordion';
-import Icon, { IconName } from '@/shared/components/common/icon';
-
-interface DetailCardAccordionProps {
-  multiple?: boolean;
-  children: ReactNode;
-}
-
-interface DetailCardAccordionItemProps {
-  id: string;
-  title: string;
-  icon?: IconName;
-  className?: string;
-  children: ReactNode;
-}
+import Icon from '@/shared/components/common/icon';
+import type {
+  DetailCardAccordionItemProps,
+  DetailCardAccordionProps,
+} from '../model/detail-card-types';
 
 export const DetailCardAccordion: FC<DetailCardAccordionProps> & {
   Item: FC<DetailCardAccordionItemProps>;
@@ -33,7 +24,7 @@ export const DetailCardAccordion: FC<DetailCardAccordionProps> & {
 };
 
 DetailCardAccordion.Item = ({
-  id,
+  value,
   title,
   children,
   className,
@@ -41,12 +32,12 @@ DetailCardAccordion.Item = ({
 }) => {
   return (
     <AccordionItem
-      value={id}
+      value={value}
       className={cn('bg-blue-200 rounded-lg', className)}
     >
-      <AccordionTrigger className="text-blue-400 px-4 py-5">
-        <div className="flex items-center gap-2 text-lg text-blue-400 font-semibold">
-          {icon && <Icon name={icon} />}
+      <AccordionTrigger className="text-blue-400 px-4 py-4 3xl:py-5">
+        <div className="flex items-center gap-2 3xl:text-lg text-blue-400 font-semibold">
+          {icon && <Icon name={icon} className="size-5 3xl:size-6" />}
           {title}
         </div>
       </AccordionTrigger>

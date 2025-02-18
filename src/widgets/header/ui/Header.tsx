@@ -5,7 +5,7 @@ import LanguageSwitcher from '@/widgets/header/ui/IntlDropdown';
 
 export function Header() {
   return (
-    <header className="sticky top-0 border-b border-neutral-200 flex justify-between items-center bg-white z-10 px-6 py-4 2xl:py-5 w-full">
+    <header className="sticky top-0 border-b border-neutral-200 flex justify-between items-center bg-white z-10 px-4 3xl:px-6 py-4 3xl:py-5 w-full">
       <SidebarTrigger className="-ml-1" />
       <div className="flex items-center gap-x-4">
         <LanguageSwitcher />

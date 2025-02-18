@@ -1,5 +1,5 @@
-import { StatusBadge, YandexMap } from '@/shared/components/common';
 import { ApplicationStatus } from '@/shared/types/enums';
+import { StatusBadge, YandexMap } from '@/shared/components/common';
 import { useYandexMap } from '@/shared/components/common/yandex-map';
 import {
   DetailCard,
@@ -34,7 +34,7 @@ export default function Index() {
       </DetailCard>
       <DetailCardAccordion>
         <DetailCardAccordion.Item
-          id="execution"
+          value="execution"
           className="my-4"
           title="Ижро (Тадбиркор томонидан текшириш натижаси буйича килинган ишлар, такдим этилган хужжатлар)"
         >
@@ -46,7 +46,7 @@ export default function Index() {
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item
-          id="another-item"
+          value="another-item"
           title="Текшириш маълумотлари"
         >
           <YandexMap

@@ -25,7 +25,7 @@ export default function PrivateLayout() {
       <AppSidebar />
       <SidebarInset>
         <Header />
-        <section className="h-full p-5">
+        <section className="h-full p-4 3xl:p-5">
           <Outlet />
         </section>
       </SidebarInset>
