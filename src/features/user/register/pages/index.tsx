@@ -11,13 +11,13 @@ export default function Index() {
   return (
     <div>
       <YandexMap
-        center={center}
         zoom={zoom}
-        markers={markers}
-        onMapClick={(coords) => addMarker(coords)}
-        onMarkerClick={removeMarker}
-        height="500px"
         width="100%"
+        height="500"
+        center={center}
+        markers={markers}
+        onMarkerClick={removeMarker}
+        onMapClick={(coords) => addMarker(coords)}
       />
     </div>
   );

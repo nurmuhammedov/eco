@@ -23,12 +23,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
   );
 
   return (
-    <YMaps
-      query={{
-        lang: 'en_RU',
-        apikey: '5e5bbce4-d5fd-4a66-80ae-db0578837b3a',
-      }}
-    >
+    <YMaps>
       <Map
         width={width}
         height={height}

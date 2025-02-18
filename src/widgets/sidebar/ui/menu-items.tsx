@@ -6,6 +6,7 @@ import { useAppSelector } from '@/shared/hooks/useStore';
 
 // ** Navigation **
 import { NAVIGATIONS } from '@/widgets/sidebar';
+import Icon from '@/shared/components/common/icon';
 
 // ** Third party **
 import { shallowEqual } from 'react-redux';
@@ -40,7 +41,7 @@ export function MenuItems() {
             isActive={pathname === item.url}
           >
             <Link to={item.url} className="flex items-center gap-x-2.5">
-              <item.icon />
+              <Icon name={item.icon} className="size-6" />
               <span>{t(item.title)}</span>
             </Link>
           </SidebarMenuButton>

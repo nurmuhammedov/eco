@@ -1,9 +1,9 @@
-import React from 'react';
+import { IconName } from '@/shared/components/common/icon';
 
 export type NavigationItem = {
   url: string;
   title: string;
-  icon: React.ElementType;
+  icon: IconName;
 };
 
 export type Navigation = NavigationItem[];
