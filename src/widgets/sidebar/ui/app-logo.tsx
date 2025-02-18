@@ -2,13 +2,15 @@
 import { cn } from '@/shared/lib/utils';
 
 // ** Constants **
-import { APP_LOGO, APP_NAME } from '@/app/config';
+import { APP_LOGO } from '@/app/config';
 
 // ** Hooks **
 import { useSidebar } from '@/shared/components/ui/sidebar';
+import { useTranslation } from 'react-i18next';
 
 export function AppLogo() {
   const { state } = useSidebar();
+  const { t } = useTranslation(['common']);
 
   const sidebarOpen = state === 'expanded';
 
@@ -28,7 +30,7 @@ export function AppLogo() {
           hidden: !sidebarOpen,
         })}
       >
-        {APP_NAME}
+        {t('app.name')}
       </h6>
     </div>
   );

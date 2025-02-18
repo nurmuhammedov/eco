@@ -16,5 +16,8 @@
     "state_reception": "Davlat qabuli",
     "monitoring": "Monitoring",
     "reports": "Hisobotlar"
+  },
+  "app": {
+    "name": "Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi ekotizimi"
   }
 }
