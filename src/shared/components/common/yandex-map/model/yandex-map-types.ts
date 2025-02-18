@@ -8,8 +8,8 @@ export interface Marker {
 export interface YandexMapProps {
   zoom?: number;
   width?: string;
+  height?: string;
   markers?: Marker[];
-  height?: number | string;
   center?: [number, number];
   onMarkerClick?: (id: string) => void;
   onMapClick?: (coords: [number, number]) => void;

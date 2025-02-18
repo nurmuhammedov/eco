@@ -35,7 +35,7 @@ export default function Index() {
       <DetailCardAccordion>
         <DetailCardAccordion.Item
           id="execution"
-          className="mb-4"
+          className="my-4"
           title="Ижро (Тадбиркор томонидан текшириш натижаси буйича килинган ишлар, такдим этилган хужжатлар)"
         >
           <p>
@@ -45,7 +45,10 @@ export default function Index() {
           </p>
         </DetailCardAccordion.Item>
 
-        <DetailCardAccordion.Item id="another-item" title="Янги бўлим">
+        <DetailCardAccordion.Item
+          id="another-item"
+          title="Текшириш маълумотлари"
+        >
           <YandexMap
             zoom={zoom}
             width="100%"

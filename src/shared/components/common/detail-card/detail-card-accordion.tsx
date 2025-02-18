@@ -1,4 +1,5 @@
 import { FC, ReactNode } from 'react';
+import { cn } from '@/shared/lib/utils';
 import {
   Accordion,
   AccordionContent,
@@ -6,9 +7,9 @@ import {
   AccordionTrigger,
 } from '@/shared/components/ui/accordion';
 import Icon, { IconName } from '@/shared/components/common/icon';
-import { cn } from '@/shared/lib/utils.ts';
 
 interface DetailCardAccordionProps {
+  multiple?: boolean;
   children: ReactNode;
 }
 
@@ -22,9 +23,10 @@ interface DetailCardAccordionItemProps {
 
 export const DetailCardAccordion: FC<DetailCardAccordionProps> & {
   Item: FC<DetailCardAccordionItemProps>;
-} = ({ children }) => {
+} = ({ multiple = true, children }) => {
+  const type = multiple ? 'multiple' : 'single';
   return (
-    <Accordion type="single" collapsible className="w-full rounded-lg">
+    <Accordion type={type} collapsible className="w-full rounded-lg">
       {children}
     </Accordion>
   );
