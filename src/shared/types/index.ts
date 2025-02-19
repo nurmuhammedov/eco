@@ -1,5 +1,3 @@
-// Global TypeScript index.ts
-
 export enum UserRoles {
   LEGAL = 'LEGAL',
   HEAD = 'HEAD',

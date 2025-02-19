@@ -2,6 +2,9 @@ import { lazy } from 'react';
 import { UserRoles } from '@/shared/types';
 
 const Applications = lazy(() => import('@/pages/user/applications'));
+const ApplicationCreate = lazy(
+  () => import('@/pages/user/applications/create-application'),
+);
 const Register = lazy(() => import('@/features/user/register/pages'));
 const RiskAnalysis = lazy(() => import('@/features/user/risk-analysis/pages'));
 const Prophylactic = lazy(() => import('@/features/user/prophylactic/pages'));
@@ -16,6 +19,14 @@ export default [
   {
     path: 'applications',
     element: <Applications />,
+    meta: {
+      restricted: true,
+      roles: [UserRoles.LEGAL],
+    },
+  },
+  {
+    path: 'applications/create',
+    element: <ApplicationCreate />,
     meta: {
       restricted: true,
       roles: [UserRoles.LEGAL],
