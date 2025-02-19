@@ -1,16 +1,22 @@
 import { z } from 'zod';
-import { ApplicationType } from '@/entities/user/applications/model/application.types.ts';
+import { ApplicationType } from './application.types';
+
+const defaultRequiredMessage = { message: 'Majburiy maydon' };
 
 export const ApplicationBaseSchema = z.object({
-  applicantName: z.string().min(3, 'Ism kamida 3 ta harf bo‘lishi kerak'),
-  applicantEmail: z.string().email('Noto‘g‘ri email'),
-  organizationName: z.string().min(3, 'Tashkilot nomi noto‘g‘ri'),
+  phone: z
+    .string(defaultRequiredMessage)
+    .trim()
+    .refine((value) => /^(\+998\d{9})$/.test(value), {
+      message: "Telefon raqami noto'g'ri!",
+    }),
+  email: z.string(defaultRequiredMessage).email('Noto‘g‘ri email'),
 });
 
 export const CreateRegisterHPOSchema = ApplicationBaseSchema.extend({
-  name: z.string().nonempty(),
-  description: z.string().nonempty(),
-  hpoId: z.string().nonempty(),
+  name: z.string().optional(),
+  description: z.string().optional(),
+  hpoId: z.string().optional(),
 });
 
 export const ApplicationSchema = {

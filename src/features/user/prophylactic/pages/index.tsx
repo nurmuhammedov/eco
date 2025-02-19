@@ -10,17 +10,19 @@ export default function Index() {
   const { markers, addMarker, removeMarker, center, zoom } = useYandexMap();
   return (
     <div className="">
-      <StatusBadge status={ApplicationStatus.NEW}>Yangi</StatusBadge>
-      <StatusBadge status={ApplicationStatus.PROCESS}>Ijroda</StatusBadge>
-      <StatusBadge status={ApplicationStatus.AGREEMENT}>
-        Kelishishda
-      </StatusBadge>
-      <StatusBadge status={ApplicationStatus.REJECTED}>
-        Qaytarib yuborilgan
-      </StatusBadge>
-      <StatusBadge status={ApplicationStatus.CONFIRMATION}>
-        Tasdiqlashda
-      </StatusBadge>
+      <div className="flex gap-2">
+        <StatusBadge status={ApplicationStatus.NEW}>Yangi</StatusBadge>
+        <StatusBadge status={ApplicationStatus.PROCESS}>Ijroda</StatusBadge>
+        <StatusBadge status={ApplicationStatus.AGREEMENT}>
+          Kelishishda
+        </StatusBadge>
+        <StatusBadge status={ApplicationStatus.REJECTED}>
+          Qaytarib yuborilgan
+        </StatusBadge>
+        <StatusBadge status={ApplicationStatus.CONFIRMATION}>
+          Tasdiqlashda
+        </StatusBadge>
+      </div>
       <DetailCard title="Ариза тўғрисида маълумот">
         <YandexMap
           zoom={zoom}

@@ -16,12 +16,12 @@ interface Props {
 
 export const ApplicantInfo = ({ form }: Props) => {
   return (
-    <Card className="px-6 py-5">
+    <Card className="px-6 py-5 mt-5 rounded-lg">
       <h5 className="font-semibold">Аризачи тўғрисида маълумот</h5>
-      <section className="flex gap-3 mt-4">
+      <section className="flex gap-3 mt-3 3xl:mt-4">
         <FormField
           control={form.control}
-          name="applicantName"
+          name="phone"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Ташкилот телефон рақами</FormLabel>
@@ -38,7 +38,7 @@ export const ApplicantInfo = ({ form }: Props) => {
         />
         <FormField
           control={form.control}
-          name="applicantEmail"
+          name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Ташкилот электрон почтаси</FormLabel>

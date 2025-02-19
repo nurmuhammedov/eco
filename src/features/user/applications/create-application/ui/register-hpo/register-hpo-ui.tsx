@@ -1,8 +1,6 @@
 import { Form } from '@/shared/components/ui/form';
-import { GoBack } from '@/shared/components/common';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
-import { ApplicantInfo } from '@/entities/user/applications/ui/applicant-info';
 import {
   ApplicationType,
   CreateRegisterHpoDTO,
@@ -16,10 +14,8 @@ export const RegisterHPOForm = () => {
     console.log("Yuborilgan ma'lumot:", data);
   return (
     <Form {...form}>
-      <GoBack title="Ариза яратиш" />
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <ApplicantInfo form={form} />
+      <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <Input {...form.register('name')} placeholder="Kompaniya kodi" />
         <Button type="submit">Ариза яратиш</Button>
       </form>
