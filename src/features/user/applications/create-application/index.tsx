@@ -43,9 +43,10 @@ const ApplicationForm = () => {
               </FormLabel>
               <FormControl>
                 <Select
-                  onValueChange={(value) =>
-                    setApplicationType(value as ApplicationType)
-                  }
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    setApplicationType(value as ApplicationType);
+                  }}
                   {...field}
                 >
                   <SelectTrigger className="max-w-sm">
