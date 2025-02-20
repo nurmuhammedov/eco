@@ -1,5 +1,16 @@
 import { useState } from 'react';
 import { GoBack } from '@/shared/components/common';
+import { DynamicApplicationForm } from './ui/dynamic-application-form';
+import { ApplicantInfo } from '@/entities/user/applications/ui/applicant-info';
+import { ApplicationType } from '@/entities/user/applications/model/application.types';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form';
 import {
   Select,
   SelectContent,
@@ -7,11 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { DynamicApplicationForm } from './ui/dynamic-application-form';
-import { ApplicationType } from '@/entities/user/applications/model/application.types';
-import { Form } from '@/shared/components/ui/form';
-import { useApplicationForm } from '@/features/user/applications/create-application/models/useApplicationForm.ts';
-import { ApplicantInfo } from '@/entities/user/applications/ui/applicant-info.tsx';
+import { APPLICATIONS_TYPES } from '@/entities/user/applications/data';
+import { useApplicationForm } from '@/features/user/applications/create-application/models/useApplicationForm';
 
 const ApplicationForm = () => {
   const [applicationType, setApplicationType] = useState<ApplicationType>(
@@ -21,23 +29,42 @@ const ApplicationForm = () => {
   const form = useApplicationForm(applicationType);
 
   return (
-    <Form {...form}>
-      <GoBack title="Ариза яратиш" />
-      <ApplicantInfo form={form} />
-      <Select
-        onValueChange={(value) => setApplicationType(value as ApplicationType)}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Theme" />
-        </SelectTrigger>
-        <SelectContent>
-          {Object.values(ApplicationType).map((type) => (
-            <SelectItem value={type}>{type}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <DynamicApplicationForm applicationType={applicationType} />
-    </Form>
+    <div className="2xl:w-5/6 3xl:w-4/5">
+      <Form {...form}>
+        <GoBack title="Ариза яратиш" />
+        <ApplicantInfo form={form} />
+        <FormField
+          control={form.control}
+          name="application_type"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold text-base">
+                Ариза тури
+              </FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={(value) =>
+                    setApplicationType(value as ApplicationType)
+                  }
+                  {...field}
+                >
+                  <SelectTrigger className="max-w-sm">
+                    <SelectValue placeholder="Ариза тури" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {APPLICATIONS_TYPES.map((type) => (
+                      <SelectItem value={type.value}>{type.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <DynamicApplicationForm applicationType={applicationType} form={form} />
+      </Form>
+    </div>
   );
 };
 export default ApplicationForm;

@@ -1,14 +1,16 @@
 import { RegisterHPOForm } from './register-hpo/register-hpo-ui';
 import { ApplicationType } from '@/entities/user/applications/model/application.types';
+import { UseFormReturn } from 'react-hook-form';
 
 interface Props {
+  form: UseFormReturn<any>;
   applicationType: ApplicationType;
 }
 
-export const DynamicApplicationForm = ({ applicationType }: Props) => {
+export const DynamicApplicationForm = ({ applicationType, form }: Props) => {
   switch (applicationType) {
     case ApplicationType.RegisterHPO:
-      return <RegisterHPOForm />;
+      return <RegisterHPOForm form={form} />;
     default:
       return null;
   }

@@ -1,21 +1,38 @@
 import { z } from 'zod';
 import { ApplicationType } from './application.types';
 
-const defaultRequiredMessage = { message: 'Majburiy maydon' };
+const emailMessage = 'Яроқсиз почта манзили';
+const defaultRequiredMessage = { message: 'Мажбурий майдон' };
 
 export const ApplicationBaseSchema = z.object({
   phone: z
     .string(defaultRequiredMessage)
     .trim()
     .refine((value) => /^(\+998\d{9})$/.test(value), {
-      message: "Telefon raqami noto'g'ri!",
+      message: 'Телефон рақами нотўғри',
     }),
-  email: z.string(defaultRequiredMessage).email('Noto‘g‘ri email'),
+  email: z.string(defaultRequiredMessage).email(emailMessage),
+  application_type: z.string(),
 });
 
 export const CreateRegisterHPOSchema = ApplicationBaseSchema.extend({
-  name: z.string().optional(),
-  description: z.string().optional(),
+  account_number: z.string(defaultRequiredMessage),
+  parent_name: z.string(defaultRequiredMessage),
+  organization_name: z.string(defaultRequiredMessage),
+  organization_email: z.string(defaultRequiredMessage).email(emailMessage),
+  tin: z
+    .string(defaultRequiredMessage)
+    .length(9, 'СТИР 9 хоналик сондан иборат'),
+  hpo_name: z.string(defaultRequiredMessage),
+  hpo_type: z.string(defaultRequiredMessage),
+  hpo_objects_name: z.string(defaultRequiredMessage),
+  hazardous_name: z.string(defaultRequiredMessage),
+  reason: z.string(defaultRequiredMessage),
+  networks: z.string(defaultRequiredMessage),
+  region: z.string(defaultRequiredMessage),
+  district: z.string(defaultRequiredMessage),
+  address: z.string(defaultRequiredMessage),
+  description: z.string(defaultRequiredMessage),
   hpoId: z.string().optional(),
 });
 
