@@ -29,7 +29,7 @@ const ApplicationForm = () => {
   const form = useApplicationForm(applicationType);
 
   return (
-    <div className="2xl:w-5/6 3xl:w-4/5">
+    <div className="2xl:w-full 3xl:w-4/5">
       <Form {...form}>
         <GoBack title="Ариза яратиш" />
         <ApplicantInfo form={form} />
