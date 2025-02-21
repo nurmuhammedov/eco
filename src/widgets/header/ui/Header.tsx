@@ -1,4 +1,3 @@
-// ** UI ui **
 import UserDropdown from '@/widgets/header/ui/UserDropdown';
 import { SidebarTrigger } from '@/shared/components/ui/sidebar';
 import LanguageSwitcher from '@/widgets/header/ui/IntlDropdown';

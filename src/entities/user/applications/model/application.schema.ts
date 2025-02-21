@@ -12,12 +12,16 @@ export const ApplicationBaseSchema = z.object({
       message: 'Телефон рақами нотўғри',
     }),
   email: z.string(defaultRequiredMessage).email(emailMessage),
-  application_type: z.string(),
+  application_type: z.string(defaultRequiredMessage),
 });
 
 export const CreateRegisterHPOSchema = ApplicationBaseSchema.extend({
   account_number: z.string(defaultRequiredMessage),
   parent_name: z.string(defaultRequiredMessage),
+  fileUrls: z
+    .array(z.string().url())
+    .min(1, 'At least one file is required')
+    .default([]),
   organization_name: z.string(defaultRequiredMessage),
   organization_email: z.string(defaultRequiredMessage).email(emailMessage),
   tin: z

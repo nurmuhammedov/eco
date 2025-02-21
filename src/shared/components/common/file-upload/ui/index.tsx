@@ -1,0 +1,65 @@
+import React, { Fragment, useCallback, useMemo, useRef } from 'react';
+import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
+import { FileTypes } from '../models/file-upload-types';
+import { useUploadFiles } from '../api/use-upload-files';
+import Icon from '@/shared/components/common/icon';
+import { Input } from '@/shared/components/ui/input';
+
+interface InputFileProps<T extends FieldValues> {
+  name: Path<T>;
+  accept: FileTypes[];
+  form: UseFormReturn<T>;
+}
+
+export function InputFile<T extends FieldValues>({
+  name,
+  accept,
+  form,
+}: InputFileProps<T>) {
+  const { setValue, watch, clearErrors } = form;
+  const { mutate, isPending } = useUploadFiles();
+  const fileUrls: string[] = watch(name) || [];
+
+  const acceptTypes = useMemo(() => accept.join(','), [accept]);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const openFileDialog = () => fileInputRef.current?.click();
+
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files ? Array.from(event.target.files) : [];
+      if (files.length > 0) {
+        clearErrors(name);
+
+        mutate(files, {
+          onSuccess: (data) =>
+            setValue(name, [...fileUrls, ...data.urls] as any, {
+              shouldValidate: true,
+            }),
+        });
+      }
+    },
+    [clearErrors, mutate, setValue, name, fileUrls],
+  );
+
+  return (
+    <Fragment>
+      <button
+        type="button"
+        onClick={openFileDialog}
+        className="inline-flex gap-2 items-center rounded-sm text-sm font-medium px-4 py-2 border border-blue-400 text-blue-400"
+      >
+        <Icon name="new-document" className="size-5" /> Fayl biriktirish
+      </button>
+      <Input
+        ref={fileInputRef}
+        hidden
+        type="file"
+        multiple
+        accept={acceptTypes}
+        disabled={isPending}
+        onChange={handleFileChange}
+      />
+    </Fragment>
+  );
+}

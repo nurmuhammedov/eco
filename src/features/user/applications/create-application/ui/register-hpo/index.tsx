@@ -21,6 +21,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select.tsx';
+import { InputFile } from '@/shared/components/common/file-upload/ui';
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
 
 interface Props {
   form: UseFormReturn<CreateRegisterHpoDTO>;
@@ -33,7 +35,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-      <CardForm className="mt-2 mb-5">
+      <CardForm className="my-2">
         <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
           <FormField
             control={form.control}
@@ -289,7 +291,234 @@ export const RegisterHPOForm = ({ form }: Props) => {
           )}
         />
       </CardForm>
-      <Button type="submit" className="bg-blue-400">
+      <CardForm className="grid grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-8">
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel>Файл Лойиҳа ҳужжатлари</FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem className="text-right">
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel>Файл Суғурта полиси</FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel className="max-w-[190px]">
+                  Файл Масъул ходим тайинланганлиги буйруғи
+                </FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel>Файл Экспертиза хулосаси</FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel>Файл Лицензия</FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel className="max-w-[190px]">
+                  Файл Экология қўмитасидан хулосаси*
+                </FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel>Файл Идентификация варағи</FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel>Файл Рухсатнома</FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel className="max-w-[210px]">
+                  Файл ХИЧОни рўйхатга олиш учун тўлов квитанцияси
+                </FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel className="max-w-[210px]">
+                  Файл ХИЧО ходимларнинг Саноат хавфсизлиги бўйича аттестациядан
+                  ўтганлиги
+                </FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel>Файл ХИЧО Кадастр паспорти</FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel className="max-w-[200px]">
+                  Файл Ёнғин хавфсизлиги хулосаси
+                </FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel className="max-w-[200px]">
+                  Файл Саноат хавфсизлиги Декларацияси
+                </FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="fileUrls"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center justify-between gap-2">
+                <FormLabel className="max-w-[200px]">
+                  Файл Қурилмаларни синовдан ўтганлиги
+                </FormLabel>
+                <FormControl>
+                  <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                </FormControl>
+              </div>
+              <FormMessage className="text-right" />
+            </FormItem>
+          )}
+        />
+      </CardForm>
+      <Button type="submit" className="bg-blue-400 mt-5">
         Ариза яратиш
       </Button>
     </form>

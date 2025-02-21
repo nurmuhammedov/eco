@@ -1,4 +1,4 @@
-import { RegisterHPOForm } from './register-hpo/register-hpo-ui';
+import { RegisterHPOForm } from './register-hpo';
 import { ApplicationType } from '@/entities/user/applications/model/application.types';
 import { UseFormReturn } from 'react-hook-form';
 
