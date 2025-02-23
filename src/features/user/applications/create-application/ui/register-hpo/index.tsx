@@ -297,8 +297,10 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel>Файл Лойиҳа ҳужжатлари</FormLabel>
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                  Файл Лойиҳа ҳужжатлари
+                </FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -312,8 +314,10 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem className="text-right">
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel>Файл Суғурта полиси</FormLabel>
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                  Файл Суғурта полиси
+                </FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -327,8 +331,8 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel className="max-w-[190px]">
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Масъул ходим тайинланганлиги буйруғи
                 </FormLabel>
                 <FormControl>
@@ -344,8 +348,10 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel>Файл Экспертиза хулосаси</FormLabel>
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                  Файл Экспертиза хулосаси
+                </FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -359,8 +365,10 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel>Файл Лицензия</FormLabel>
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                  Файл Лицензия
+                </FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -374,8 +382,8 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel className="max-w-[190px]">
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Экология қўмитасидан хулосаси*
                 </FormLabel>
                 <FormControl>
@@ -391,8 +399,10 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel>Файл Идентификация варағи</FormLabel>
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                  Файл Идентификация варағи
+                </FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -406,8 +416,10 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel>Файл Рухсатнома</FormLabel>
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                  Файл Рухсатнома
+                </FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -421,8 +433,8 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel className="max-w-[210px]">
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл ХИЧОни рўйхатга олиш учун тўлов квитанцияси
                 </FormLabel>
                 <FormControl>
@@ -438,8 +450,8 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel className="max-w-[210px]">
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл ХИЧО ходимларнинг Саноат хавфсизлиги бўйича аттестациядан
                   ўтганлиги
                 </FormLabel>
@@ -456,8 +468,10 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel>Файл ХИЧО Кадастр паспорти</FormLabel>
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                  Файл ХИЧО Кадастр паспорти
+                </FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -471,8 +485,8 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel className="max-w-[200px]">
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Ёнғин хавфсизлиги хулосаси
                 </FormLabel>
                 <FormControl>
@@ -488,8 +502,8 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel className="max-w-[200px]">
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Саноат хавфсизлиги Декларацияси
                 </FormLabel>
                 <FormControl>
@@ -505,8 +519,8 @@ export const RegisterHPOForm = ({ form }: Props) => {
           name="fileUrls"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between gap-2">
-                <FormLabel className="max-w-[200px]">
+              <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Қурилмаларни синовдан ўтганлиги
                 </FormLabel>
                 <FormControl>

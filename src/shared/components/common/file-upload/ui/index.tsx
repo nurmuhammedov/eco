@@ -28,6 +28,7 @@ export function InputFile<T extends FieldValues>({
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files ? Array.from(event.target.files) : [];
+      console.log('files', files);
       if (files.length > 0) {
         clearErrors(name);
 
@@ -47,7 +48,7 @@ export function InputFile<T extends FieldValues>({
       <button
         type="button"
         onClick={openFileDialog}
-        className="inline-flex gap-2 items-center rounded-sm text-sm font-medium px-4 py-2 border border-blue-400 text-blue-400"
+        className="cursor-pointer inline-flex gap-2 items-center rounded-sm text-sm font-medium px-4 py-2 border border-blue-400 hover:border-blue-400/70 text-blue-400"
       >
         <Icon name="new-document" className="size-5" /> Fayl biriktirish
       </button>
