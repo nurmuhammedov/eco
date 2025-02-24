@@ -20,3 +20,15 @@ export const fetchApplications = () => {
     initialData: [] as any,
   });
 };
+
+export function useFetchHPOTypes() {
+  return useQuery<ApiResponse<any>>({
+    queryKey: ['hpotypes'],
+    queryFn: async () => {
+      const response = await apiClient.get<ApiResponse<any>>(
+        API_ENDPOINTS.USERS,
+      );
+      return response.data;
+    },
+  });
+}

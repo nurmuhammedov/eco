@@ -47,6 +47,8 @@ export enum ApplicationType {
 
   // Ekspert tashkilotini akkreditatsiya qilish
   AccreditExpertOrganization = 'ACCREDIT_EXPERT_ORGANIZATION', // Ekspert tashkilotini akkreditatsiya qilish
+  ReaccreditExpertOrganization = 'REACCREDIT_EXPERT_ORGANIZATION', // Ekspert tashkilotini qayta akkreditatsiya qilish
+  ExpandAccreditationScope = 'EXPAND_ACCREDITATION_SCOPE', // Ekspert tashkilotining akkreditatsiya sohasini kengaytirish
 
   // Sanoat xavfsizligi bo‘yicha ekspertiza xulosalari
   RegisterSafetyExpertConclusion = 'REGISTER_SAFETY_EXPERT_CONCLUSION', // Sanoat xavfsizligi ekspertiza xulosalarini ro‘yxatga olish

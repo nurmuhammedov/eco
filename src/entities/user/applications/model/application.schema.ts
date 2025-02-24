@@ -16,17 +16,14 @@ export const ApplicationBaseSchema = z.object({
 });
 
 export const CreateRegisterHPOSchema = ApplicationBaseSchema.extend({
-  account_number: z.string(defaultRequiredMessage),
   parent_name: z.string(defaultRequiredMessage),
   fileUrls: z
     .array(z.string().url())
-    .min(1, 'At least one file is required')
+    .min(1, 'Камида 1 та файл юкланиши керак')
     .default([]),
   organization_name: z.string(defaultRequiredMessage),
   organization_email: z.string(defaultRequiredMessage).email(emailMessage),
-  tin: z
-    .string(defaultRequiredMessage)
-    .length(9, 'СТИР 9 хоналик сондан иборат'),
+  tin: z.string(defaultRequiredMessage).length(9, 'СТИР 9 хона сондан иборат'),
   hpo_name: z.string(defaultRequiredMessage),
   hpo_type: z.string(defaultRequiredMessage),
   hpo_objects_name: z.string(defaultRequiredMessage),
@@ -76,6 +73,8 @@ export const ApplicationSchema = {
   [ApplicationType.DeregisterElevator]: ApplicationBaseSchema,
   [ApplicationType.DeregisterPipeline]: ApplicationBaseSchema,
   [ApplicationType.CertifyHPOEmployee]: ApplicationBaseSchema,
+  [ApplicationType.ReaccreditExpertOrganization]: ApplicationBaseSchema,
+  [ApplicationType.ExpandAccreditationScope]: ApplicationBaseSchema,
   [ApplicationType.AccreditExpertOrganization]: ApplicationBaseSchema,
   [ApplicationType.RegisterSafetyDeclaration]: ApplicationBaseSchema,
   [ApplicationType.DeregisterSafetyDeclaration]: ApplicationBaseSchema,
@@ -84,4 +83,16 @@ export const ApplicationSchema = {
   [ApplicationType.DeregisterINM]: ApplicationBaseSchema,
   [ApplicationType.RegisterAttractionPassport]: ApplicationBaseSchema,
   [ApplicationType.Other]: ApplicationBaseSchema,
+};
+
+export const defaultApplicationValues = {
+  [ApplicationType.RegisterHPO]: {
+    application_type: ApplicationType.RegisterHPO,
+  },
+  [ApplicationType.DeregisterHPO]: {
+    application_type: ApplicationType.DeregisterHPO,
+  },
+  [ApplicationType.RegisterCrane]: {
+    application_type: ApplicationType.RegisterCrane,
+  },
 };

@@ -50,7 +50,7 @@ export function InputFile<T extends FieldValues>({
         onClick={openFileDialog}
         className="cursor-pointer inline-flex gap-2 items-center rounded-sm text-sm font-medium px-4 py-2 border border-blue-400 hover:border-blue-400/70 text-blue-400"
       >
-        <Icon name="new-document" className="size-5" /> Fayl biriktirish
+        <Icon name="new-document" className="size-5" /> Файлни бириктириш
       </button>
       <Input
         ref={fileInputRef}

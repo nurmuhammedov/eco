@@ -3,10 +3,7 @@ import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { CardForm } from '@/entities/user/applications/ui/application-form-card';
-import {
-  ApplicationType,
-  CreateRegisterHpoDTO,
-} from '@/entities/user/applications/model/application.types';
+import { CreateRegisterHpoDTO } from '@/entities/user/applications/model/application.types';
 import {
   FormControl,
   FormField,
@@ -20,40 +17,40 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/shared/components/ui/select.tsx';
+} from '@/shared/components/ui/select';
+import { useFetchHPOTypes } from '@/entities/user/applications/api';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
+import { useCreateRegisterHPOMutation } from '@/features/user/applications/create-application/models/register-hpo.mutations';
 
 interface Props {
   form: UseFormReturn<CreateRegisterHpoDTO>;
 }
 
 export const RegisterHPOForm = ({ form }: Props) => {
-  const onSubmit = (data: CreateRegisterHpoDTO) =>
+  const { mutate, isPending } = useCreateRegisterHPOMutation();
+
+  const onSubmit = (data: CreateRegisterHpoDTO) => {
     console.log("Yuborilgan ma'lumot:", data);
+
+    mutate(data);
+  };
+
+  const { data: _HPOTypes } = useFetchHPOTypes();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { isDirty, isValid },
+  } = form;
+
+  const canSubmit = [isDirty, isValid, !isPending].every(Boolean);
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
+    <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
       <CardForm className="my-2">
-        <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
-          <FormField
-            control={form.control}
-            name="account_number"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Ҳисобга олиш рақами</FormLabel>
-                <FormControl>
-                  <Input
-                    className="w-2xs 3xl:w-sm"
-                    placeholder="Ҳисобга олиш рақами"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
           <FormField
             control={form.control}
             name="parent_name"
@@ -64,6 +61,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
                   <Input
                     className="w-2xs 3xl:w-sm"
                     placeholder="Юқори ташкилотнинг номи"
+                    {...register('parent_name')}
                     {...field}
                   />
                 </FormControl>
@@ -153,9 +151,10 @@ export const RegisterHPOForm = ({ form }: Props) => {
                       <SelectValue placeholder="Ариза тури" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.values(ApplicationType).map((type) => (
-                        <SelectItem value={type}>{type}</SelectItem>
-                      ))}
+                      {/*{Object.values(ApplicationType).map((type) => (*/}
+                      {/*  <SelectItem value={type}>{type}</SelectItem>*/}
+                      {/*))}*/}
+                      <SelectItem value={'null'}>Mavjud emas</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -210,11 +209,14 @@ export const RegisterHPOForm = ({ form }: Props) => {
               <FormItem>
                 <FormLabel>Тармоқлар</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-2xs 3xl:w-sm"
-                    placeholder="Тармоқлар"
-                    {...field}
-                  />
+                  <Select {...field}>
+                    <SelectTrigger className="w-2xs 3xl:w-sm">
+                      <SelectValue placeholder="Тармоқлар" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={'null'}>Mavjud emas</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -227,11 +229,14 @@ export const RegisterHPOForm = ({ form }: Props) => {
               <FormItem>
                 <FormLabel>ХИЧО вилояти</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-2xs 3xl:w-sm"
-                    placeholder="ХИЧО вилояти"
-                    {...field}
-                  />
+                  <Select {...field}>
+                    <SelectTrigger className="w-2xs 3xl:w-sm">
+                      <SelectValue placeholder="ХИЧО вилояти" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={'null'}>Mavjud emas</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -244,11 +249,14 @@ export const RegisterHPOForm = ({ form }: Props) => {
               <FormItem>
                 <FormLabel>ХИЧО тумани</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-2xs 3xl:w-sm"
-                    placeholder="ХИЧО тумани"
-                    {...field}
-                  />
+                  <Select {...field}>
+                    <SelectTrigger className="w-2xs 3xl:w-sm">
+                      <SelectValue placeholder="ХИЧО тумани" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={'null'}>Mavjud emas</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -291,12 +299,12 @@ export const RegisterHPOForm = ({ form }: Props) => {
           )}
         />
       </CardForm>
-      <CardForm className="grid grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-8">
+      <CardForm className="grid grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4">
         <FormField
-          control={form.control}
           name="fileUrls"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Лойиҳа ҳужжатлари
@@ -313,7 +321,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem className="text-right">
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Суғурта полиси
@@ -330,7 +338,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Масъул ходим тайинланганлиги буйруғи
@@ -347,7 +355,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Экспертиза хулосаси
@@ -364,7 +372,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Лицензия
@@ -381,7 +389,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Экология қўмитасидан хулосаси*
@@ -398,7 +406,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Идентификация варағи
@@ -415,7 +423,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Рухсатнома
@@ -432,7 +440,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл ХИЧОни рўйхатга олиш учун тўлов квитанцияси
@@ -449,7 +457,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл ХИЧО ходимларнинг Саноат хавфсизлиги бўйича аттестациядан
@@ -467,7 +475,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл ХИЧО Кадастр паспорти
@@ -484,7 +492,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Ёнғин хавфсизлиги хулосаси
@@ -501,7 +509,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Саноат хавфсизлиги Декларацияси
@@ -518,7 +526,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           control={form.control}
           name="fileUrls"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/5">
                   Файл Қурилмаларни синовдан ўтганлиги
@@ -532,7 +540,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           )}
         />
       </CardForm>
-      <Button type="submit" className="bg-blue-400 mt-5">
+      <Button type="submit" className="bg-blue-400 mt-5" disabled={!canSubmit}>
         Ариза яратиш
       </Button>
     </form>

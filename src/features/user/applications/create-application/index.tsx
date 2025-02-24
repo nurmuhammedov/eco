@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select';
 import { APPLICATIONS_TYPES } from '@/entities/user/applications/data';
-import { useApplicationForm } from '@/features/user/applications/create-application/models/useApplicationForm';
+import { useApplicationForm } from '@/features/user/applications/create-application/models/use-application-form.ts';
 
 const ApplicationForm = () => {
   const [applicationType, setApplicationType] = useState<ApplicationType>(

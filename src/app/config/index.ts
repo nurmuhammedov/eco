@@ -15,4 +15,4 @@ export const SUPPORTED_TRANSLATION_LANGUAGES: Language[] = [
 ];
 
 export const DEFAULT_LANG_CODE =
-  (getStorage('language') as Language) || Language.UZ;
+  (getStorage('language') as Language) || Language.KR;
