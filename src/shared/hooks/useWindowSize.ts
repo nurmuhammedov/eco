@@ -1,6 +1,6 @@
 import { DeviceType } from '@/shared/types/enums';
 import { useCallback, useEffect, useState } from 'react';
-import { getDeviceType } from '@/shared/utils/getDeviceType';
+import { detectDeviceType } from '@/shared/utils/detectDeviceType';
 
 interface WindowSize {
   width: number;
@@ -16,7 +16,7 @@ export const useWindowSize = (): Readonly<WindowSize> => {
     return {
       width: window.innerWidth,
       height: window.innerHeight,
-      deviceType: getDeviceType(window.innerWidth),
+      deviceType: detectDeviceType(window.innerWidth),
     };
   });
 
@@ -24,7 +24,7 @@ export const useWindowSize = (): Readonly<WindowSize> => {
     setWindowSize({
       width: window.innerWidth,
       height: window.innerHeight,
-      deviceType: getDeviceType(window.innerWidth),
+      deviceType: detectDeviceType(window.innerWidth),
     });
   }, []);
 

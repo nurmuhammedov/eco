@@ -1,30 +1,19 @@
-import { useCallback, useState } from 'react';
-import { MAP_DEFAULTS } from './yandex-map-config';
-
-export interface Marker {
-  id: string;
-  hint?: string;
-  balloonContent?: string;
-  coords: [number, number];
-}
+import { useCallback, useRef, useState } from 'react';
+import { Coordinate } from '../model/yandex-map-types';
+import { MAP_DEFAULTS } from '../model/yandex-map-config';
 
 export const useYandexMap = (
-  initialCenter: [number, number] = MAP_DEFAULTS.center,
+  initialCenter: Coordinate = MAP_DEFAULTS.center,
 ) => {
-  const [markers, setMarkers] = useState<Marker[]>([]);
-  const [center, setCenter] = useState<[number, number]>(initialCenter);
+  const mapRef = useRef<ymaps.Map | null>(null);
+  const [coords, setCoords] = useState<Coordinate[]>([]);
+  const [center, setCenter] = useState<Coordinate>(initialCenter);
   const [zoom, setZoom] = useState<number>(MAP_DEFAULTS.zoom);
 
-  const addMarker = useCallback((coords: [number, number]) => {
-    setMarkers((prev) => [...prev, { id: Date.now().toString(), coords }]);
-  }, []);
+  const addCoord = useCallback((coord: Coordinate[]) => setCoords(coord), []);
 
-  const removeMarker = useCallback((id: string) => {
-    setMarkers((prev) => prev.filter((marker) => marker.id !== id));
-  }, []);
-
-  const updateCenter = useCallback((coords: [number, number]) => {
-    setCenter(coords);
+  const updateCenter = useCallback((coord: Coordinate) => {
+    setCenter(coord);
   }, []);
 
   const updateZoom = useCallback((zoomLevel: number) => {
@@ -32,9 +21,9 @@ export const useYandexMap = (
   }, []);
 
   return {
-    markers,
-    addMarker,
-    removeMarker,
+    mapRef,
+    coords,
+    addCoord,
     center,
     zoom,
     updateCenter,

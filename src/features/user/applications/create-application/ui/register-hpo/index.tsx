@@ -22,6 +22,7 @@ import { useFetchHPOTypes } from '@/entities/user/applications/api';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
 import { useCreateRegisterHPOMutation } from '@/features/user/applications/create-application/models/register-hpo.mutations';
+import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
 
 interface Props {
   form: UseFormReturn<CreateRegisterHpoDTO>;
@@ -40,6 +41,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { isDirty, isValid },
   } = form;
@@ -266,13 +268,14 @@ export const RegisterHPOForm = ({ form }: Props) => {
             control={form.control}
             name="address"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full 3xl:w-sm">
                 <FormLabel>ХИЧО манзили</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-2xs 3xl:w-sm"
-                    placeholder="ХИЧО манзили"
-                    {...field}
+                  <YandexMapModal
+                    initialCoords={field.value}
+                    onConfirm={(coords) => {
+                      setValue('address', coords);
+                    }}
                   />
                 </FormControl>
                 <FormMessage />

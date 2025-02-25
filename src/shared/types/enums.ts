@@ -3,6 +3,9 @@ export enum DeviceType {
   TABLET = 'tablet',
   LAPTOP = 'laptop',
   DESKTOP = 'desktop',
+  LARGE_SCREEN = 'large-screen',
+  QHD_2K = 'qhd-2k',
+  UHD_4K = 'uhd-4k',
 }
 
 export enum ApplicationStatus {

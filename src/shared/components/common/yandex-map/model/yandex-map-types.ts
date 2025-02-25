@@ -1,3 +1,5 @@
+export type Coordinate = [number, number];
+
 export interface Marker {
   id: string;
   hint?: string;
@@ -9,8 +11,7 @@ export interface YandexMapProps {
   zoom?: number;
   width?: string;
   height?: string;
-  markers?: Marker[];
+  coords?: Coordinate[];
   center?: [number, number];
-  onMarkerClick?: (id: string) => void;
-  onMapClick?: (coords: [number, number]) => void;
+  onMapClick?: (coords: Coordinate[]) => void;
 }

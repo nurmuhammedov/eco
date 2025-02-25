@@ -32,7 +32,7 @@ export const CreateRegisterHPOSchema = ApplicationBaseSchema.extend({
   networks: z.string(defaultRequiredMessage),
   region: z.string(defaultRequiredMessage),
   district: z.string(defaultRequiredMessage),
-  address: z.string(defaultRequiredMessage),
+  address: z.tuple([z.number(), z.number()]),
   description: z.string(defaultRequiredMessage),
   hpoId: z.string().optional(),
 });
@@ -85,7 +85,7 @@ export const ApplicationSchema = {
   [ApplicationType.Other]: ApplicationBaseSchema,
 };
 
-export const defaultApplicationValues = {
+export const defaultApplicationValues: Record<string, any> = {
   [ApplicationType.RegisterHPO]: {
     application_type: ApplicationType.RegisterHPO,
   },

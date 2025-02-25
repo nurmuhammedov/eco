@@ -7,7 +7,7 @@ import {
 } from '@/shared/components/common/detail-card';
 
 export default function Index() {
-  const { markers, addMarker, removeMarker, center, zoom } = useYandexMap();
+  const { coords, addCoord, center, zoom } = useYandexMap();
   return (
     <div className="">
       <div className="flex gap-2">
@@ -29,9 +29,8 @@ export default function Index() {
           width="100%"
           height="500px"
           center={center}
-          markers={markers}
-          onMarkerClick={removeMarker}
-          onMapClick={(coords) => addMarker(coords)}
+          coords={coords}
+          onMapClick={(coords) => addCoord(coords)}
         />
       </DetailCard>
       <DetailCardAccordion>
@@ -56,9 +55,8 @@ export default function Index() {
             width="100%"
             height="500px"
             center={center}
-            markers={markers}
-            onMarkerClick={removeMarker}
-            onMapClick={(coords) => addMarker(coords)}
+            coords={coords}
+            onMapClick={(coords) => addCoord(coords)}
           />
         </DetailCardAccordion.Item>
       </DetailCardAccordion>

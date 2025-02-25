@@ -1,25 +1,17 @@
 import React from 'react';
-import { Marker } from '../model/yandex-map-types.ts';
+import { Coordinate } from '../model/yandex-map-types.ts';
 import { Placemark } from '@pbe/react-yandex-maps';
 
 interface YandexMarkerProps {
-  marker: Marker;
+  coordinate: Coordinate;
   onClick?: (id: string) => void;
 }
 
-export const YandexMarker: React.FC<YandexMarkerProps> = ({
-  marker,
-  onClick,
-}) => {
+export const YandexMarker: React.FC<YandexMarkerProps> = ({ coordinate }) => {
   return (
     <Placemark
-      geometry={marker.coords}
-      properties={{
-        hintContent: marker.hint,
-        balloonContent: marker.balloonContent,
-      }}
+      geometry={coordinate}
       options={{ preset: 'islands#blueDotIcon' }}
-      onClick={() => onClick?.(marker.id)}
     />
   );
 };

@@ -1,12 +1,11 @@
 import React, { useCallback, useRef } from 'react';
 import { MAP_DEFAULTS } from '../model/yandex-map-config';
 import { Map, Placemark, YMaps } from '@pbe/react-yandex-maps';
-import type { YandexMapProps } from '../model/yandex-map-types';
+import type { Coordinate, YandexMapProps } from '../model/yandex-map-types';
 
 const YandexMap: React.FC<YandexMapProps> = ({
   onMapClick,
-  markers = [],
-  onMarkerClick,
+  coords = [],
   zoom = MAP_DEFAULTS.zoom,
   width = MAP_DEFAULTS.width,
   height = MAP_DEFAULTS.height,
@@ -16,8 +15,8 @@ const YandexMap: React.FC<YandexMapProps> = ({
 
   const handleMapClick = useCallback(
     (e: ymaps.IEvent) => {
-      const coords = e.get('coords') as [number, number];
-      onMapClick?.(coords);
+      const coords = e.get('coords') as Coordinate;
+      onMapClick?.([coords]);
     },
     [onMapClick],
   );
@@ -31,13 +30,11 @@ const YandexMap: React.FC<YandexMapProps> = ({
         defaultState={{ center, zoom }}
         instanceRef={(ref) => (mapRef.current = ref)}
       >
-        {markers.map(({ id, coords, hint, balloonContent }) => (
+        {coords.map((coordinate, index) => (
           <Placemark
-            key={id}
-            geometry={coords}
+            key={index}
+            geometry={coordinate}
             options={{ preset: 'islands#blueDotIcon' }}
-            onClick={() => onMarkerClick?.(id)}
-            properties={{ hintContent: hint, balloonContent }}
           />
         ))}
       </Map>
