@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import {
-  ApplicationBaseSchema,
-  CreateRegisterHPOSchema,
-} from './application.schema';
+import { CreateRegisterHPOSchema } from './application-hpo.schema';
+import { CreateRegisterCrane } from './application-crane.schema';
+import { ApplicationBaseSchema } from './application-base.schema';
 
 export type CreateRegisterHpoDTO = z.infer<typeof CreateRegisterHPOSchema>;
+export type CreateRegisterCraneDTO = z.infer<typeof CreateRegisterCrane>;
 
 export type ApplicationBaseDTO = z.infer<typeof ApplicationBaseSchema>;
 

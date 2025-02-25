@@ -1,20 +1,23 @@
-import React, { Fragment, useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 import { FileTypes } from '../models/file-upload-types';
 import { useUploadFiles } from '../api/use-upload-files';
 import Icon from '@/shared/components/common/icon';
 import { Input } from '@/shared/components/ui/input';
+import { cn } from '@/shared/lib/utils.ts';
 
 interface InputFileProps<T extends FieldValues> {
   name: Path<T>;
   accept: FileTypes[];
   form: UseFormReturn<T>;
+  className?: string;
 }
 
 export function InputFile<T extends FieldValues>({
   name,
   accept,
   form,
+  className,
 }: InputFileProps<T>) {
   const { setValue, watch, clearErrors } = form;
   const { mutate, isPending } = useUploadFiles();
@@ -28,7 +31,6 @@ export function InputFile<T extends FieldValues>({
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files ? Array.from(event.target.files) : [];
-      console.log('files', files);
       if (files.length > 0) {
         clearErrors(name);
 
@@ -44,11 +46,14 @@ export function InputFile<T extends FieldValues>({
   );
 
   return (
-    <Fragment>
+    <div>
       <button
         type="button"
         onClick={openFileDialog}
-        className="cursor-pointer inline-flex gap-2 items-center rounded-sm text-sm font-medium px-4 py-2 border border-blue-400 hover:border-blue-400/70 text-blue-400"
+        className={cn(
+          'cursor-pointer inline-flex gap-2 items-center rounded-sm text-sm font-medium px-4 py-2 border border-blue-400 hover:border-blue-400/70 text-blue-400',
+          className,
+        )}
       >
         <Icon name="new-document" className="size-5" /> Файлни бириктириш
       </button>
@@ -61,6 +66,6 @@ export function InputFile<T extends FieldValues>({
         disabled={isPending}
         onChange={handleFileChange}
       />
-    </Fragment>
+    </div>
   );
 }

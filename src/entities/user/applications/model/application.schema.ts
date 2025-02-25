@@ -1,51 +1,17 @@
-import { z } from 'zod';
 import { ApplicationType } from './application.types';
-
-const emailMessage = 'Яроқсиз почта манзили';
-const defaultRequiredMessage = { message: 'Мажбурий майдон' };
-
-export const ApplicationBaseSchema = z.object({
-  phone: z
-    .string(defaultRequiredMessage)
-    .trim()
-    .refine((value) => /^(\+998\d{9})$/.test(value), {
-      message: 'Телефон рақами нотўғри',
-    }),
-  email: z.string(defaultRequiredMessage).email(emailMessage),
-  application_type: z.string(defaultRequiredMessage),
-});
-
-export const CreateRegisterHPOSchema = ApplicationBaseSchema.extend({
-  parent_name: z.string(defaultRequiredMessage),
-  fileUrls: z
-    .array(z.string().url())
-    .min(1, 'Камида 1 та файл юкланиши керак')
-    .default([]),
-  organization_name: z.string(defaultRequiredMessage),
-  organization_email: z.string(defaultRequiredMessage).email(emailMessage),
-  tin: z.string(defaultRequiredMessage).length(9, 'СТИР 9 хона сондан иборат'),
-  hpo_name: z.string(defaultRequiredMessage),
-  hpo_type: z.string(defaultRequiredMessage),
-  hpo_objects_name: z.string(defaultRequiredMessage),
-  hazardous_name: z.string(defaultRequiredMessage),
-  reason: z.string(defaultRequiredMessage),
-  networks: z.string(defaultRequiredMessage),
-  region: z.string(defaultRequiredMessage),
-  district: z.string(defaultRequiredMessage),
-  address: z.tuple([z.number(), z.number()]),
-  description: z.string(defaultRequiredMessage),
-  hpoId: z.string().optional(),
-});
+import { CreateRegisterHPOSchema } from './application-hpo.schema';
+import { CreateRegisterCrane } from '@/entities/user/applications/model/application-crane.schema';
+import { ApplicationBaseSchema } from './application-base.schema';
 
 export const ApplicationSchema = {
   [ApplicationType.RegisterHPO]: CreateRegisterHPOSchema,
   [ApplicationType.DeregisterHPO]: CreateRegisterHPOSchema,
+  [ApplicationType.RegisterCrane]: CreateRegisterCrane,
   [ApplicationType.ObtainLicense]: ApplicationBaseSchema,
   [ApplicationType.ObtainPermit]: ApplicationBaseSchema,
   [ApplicationType.ObtainINM]: ApplicationBaseSchema,
   [ApplicationType.DeregisterHPOCadastrePassport]: ApplicationBaseSchema,
   [ApplicationType.ObtainConclusion]: ApplicationBaseSchema,
-  [ApplicationType.RegisterCrane]: ApplicationBaseSchema,
   [ApplicationType.DeregisterSafetyExpertConclusion]: ApplicationBaseSchema,
   [ApplicationType.RegisterSafetyExpertConclusion]: ApplicationBaseSchema,
   [ApplicationType.RegisterPressureVesselLPG]: ApplicationBaseSchema,
