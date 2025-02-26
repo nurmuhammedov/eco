@@ -1,69 +1,69 @@
-import { ApplicationType } from './application.types';
-import { CreateRegisterHPOSchema } from './application-hpo.schema';
-import { CreateRegisterCrane } from '@/entities/user/applications/model/application-crane.schema';
+import { ApplicationTypeEnum } from './application.types';
+import { CreateRegisterCrane } from './application-crane.schema';
 import { ApplicationBaseSchema } from './application-base.schema';
-import { CreateRegisterPressureVesselChemicalSchema } from '@/entities/user/applications/model/application-pressure-vessel-chemical.schema.ts';
+import { CreateRegisterHPOSchema } from './application-hpo.schema';
+import { CreateRegisterPressureVesselChemicalSchema } from './application-pressure-vessel-chemical.schema';
 
 export const ApplicationSchema = {
-  [ApplicationType.RegisterHPO]: CreateRegisterHPOSchema,
-  [ApplicationType.DeregisterHPO]: CreateRegisterHPOSchema,
-  [ApplicationType.RegisterCrane]: CreateRegisterCrane,
-  [ApplicationType.ObtainLicense]: ApplicationBaseSchema,
-  [ApplicationType.ObtainPermit]: ApplicationBaseSchema,
-  [ApplicationType.ObtainINM]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterHPOCadastrePassport]: ApplicationBaseSchema,
-  [ApplicationType.ObtainConclusion]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterSafetyExpertConclusion]: ApplicationBaseSchema,
-  [ApplicationType.RegisterSafetyExpertConclusion]: ApplicationBaseSchema,
-  [ApplicationType.RegisterPressureVesselLPG]: ApplicationBaseSchema,
-  [ApplicationType.RegisterHighGasUsageEquipment]: ApplicationBaseSchema,
-  [ApplicationType.RegisterVessel]: ApplicationBaseSchema,
-  [ApplicationType.RegisterBoiler]: ApplicationBaseSchema,
-  [ApplicationType.RegisterLift]: ApplicationBaseSchema,
-  [ApplicationType.RegisterAttraction]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterAttractionPassport]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterAttraction]: ApplicationBaseSchema,
-  [ApplicationType.RegisterHPOCadastrePassport]: ApplicationBaseSchema,
-  [ApplicationType.RegisterBoilerUtilizer]: ApplicationBaseSchema,
-  [ApplicationType.RegisterSteamAndHotWaterPipeline]: ApplicationBaseSchema,
-  [ApplicationType.RegisterPressureVesselChemical]:
+  [ApplicationTypeEnum.RegisterHPO]: CreateRegisterHPOSchema,
+  [ApplicationTypeEnum.DeregisterHPO]: CreateRegisterHPOSchema,
+  [ApplicationTypeEnum.RegisterCrane]: CreateRegisterCrane,
+  [ApplicationTypeEnum.ObtainLicense]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.ObtainPermit]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.ObtainINM]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterHPOCadastrePassport]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.ObtainConclusion]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterSafetyExpertConclusion]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterSafetyExpertConclusion]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterPressureVesselLPG]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterHighGasUsageEquipment]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterVessel]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterBoiler]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterLift]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterAttraction]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterAttractionPassport]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterAttraction]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterHPOCadastrePassport]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterBoilerUtilizer]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterSteamAndHotWaterPipeline]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterPressureVesselChemical]:
     CreateRegisterPressureVesselChemicalSchema,
-  [ApplicationType.RegisterEscalator]: ApplicationBaseSchema,
-  [ApplicationType.RegisterBridgeOrRoad]: ApplicationBaseSchema,
-  [ApplicationType.RegisterElevator]: ApplicationBaseSchema,
-  [ApplicationType.RegisterPipeline]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterCrane]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterVessel]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterBoiler]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterLift]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterEscalator]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterBridgeOrRoad]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterElevator]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterPipeline]: ApplicationBaseSchema,
-  [ApplicationType.CertifyHPOEmployee]: ApplicationBaseSchema,
-  [ApplicationType.ReaccreditExpertOrganization]: ApplicationBaseSchema,
-  [ApplicationType.ExpandAccreditationScope]: ApplicationBaseSchema,
-  [ApplicationType.AccreditExpertOrganization]: ApplicationBaseSchema,
-  [ApplicationType.RegisterSafetyDeclaration]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterSafetyDeclaration]: ApplicationBaseSchema,
-  [ApplicationType.IssueINM]: ApplicationBaseSchema,
-  [ApplicationType.RegisterINM]: ApplicationBaseSchema,
-  [ApplicationType.DeregisterINM]: ApplicationBaseSchema,
-  [ApplicationType.RegisterAttractionPassport]: ApplicationBaseSchema,
-  [ApplicationType.Other]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterEscalator]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterBridgeOrRoad]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterElevator]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterPipeline]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterCrane]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterVessel]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterBoiler]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterLift]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterEscalator]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterBridgeOrRoad]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterElevator]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterPipeline]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.CertifyHPOEmployee]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.ReaccreditExpertOrganization]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.ExpandAccreditationScope]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.AccreditExpertOrganization]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterSafetyDeclaration]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterSafetyDeclaration]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.IssueINM]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterINM]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.DeregisterINM]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterAttractionPassport]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.Other]: ApplicationBaseSchema,
 };
 
 export const defaultApplicationValues: Record<string, any> = {
-  [ApplicationType.RegisterHPO]: {
-    application_type: ApplicationType.RegisterHPO,
+  [ApplicationTypeEnum.RegisterHPO]: {
+    application_type: ApplicationTypeEnum.RegisterHPO,
   },
-  [ApplicationType.DeregisterHPO]: {
-    application_type: ApplicationType.DeregisterHPO,
+  [ApplicationTypeEnum.DeregisterHPO]: {
+    application_type: ApplicationTypeEnum.DeregisterHPO,
   },
-  [ApplicationType.RegisterCrane]: {
-    application_type: ApplicationType.RegisterCrane,
+  [ApplicationTypeEnum.RegisterCrane]: {
+    application_type: ApplicationTypeEnum.RegisterCrane,
   },
-  [ApplicationType.RegisterPressureVesselChemical]: {
-    application_type: ApplicationType.RegisterPressureVesselChemical,
+  [ApplicationTypeEnum.RegisterPressureVesselChemical]: {
+    application_type: ApplicationTypeEnum.RegisterPressureVesselChemical,
   },
 };

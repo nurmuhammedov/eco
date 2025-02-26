@@ -1,7 +1,7 @@
 import { UseFormReturn } from 'react-hook-form';
 import { Input } from '@/shared/components/ui/input';
-import { CardForm } from '@/entities/user/applications/ui/application-form-card';
-import { ApplicationBaseDTO } from '@/entities/user/applications/model/application.types';
+import { CardForm } from '@/entities/user/applications/ui';
+import { ApplicationBaseDTO } from '@/entities/user/applications/model/application.dto';
 import {
   Form,
   FormControl,

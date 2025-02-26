@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ApplicationType } from '@/entities/user/applications/model/application.types';
+import { ApplicationTypeEnum } from '@/entities/user/applications/model/application.types';
 
 const initialState = {
-  applicationType: ApplicationType.RegisterHPO,
+  applicationType: ApplicationTypeEnum.RegisterHPO,
 };
 
 export const createApplicationStore = createSlice({
   name: 'createApplication',
   initialState,
   reducers: {
-    setApplicationType: (state, action: PayloadAction<ApplicationType>) => {
+    setApplicationType: (state, action: PayloadAction<ApplicationTypeEnum>) => {
       return { ...state, applicationType: action.payload };
     },
   },

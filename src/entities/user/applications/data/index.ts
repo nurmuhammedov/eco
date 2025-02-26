@@ -1,179 +1,179 @@
-import { ApplicationType } from '@/entities/user/applications/model/application.types';
+import { ApplicationTypeEnum } from '@/entities/user/applications/model/application.types';
 
 export const APPLICATIONS_TYPES = [
   {
-    value: ApplicationType.RegisterHPO,
+    value: ApplicationTypeEnum.RegisterHPO,
     label: 'XICHO ni ro‘yxatdan o‘tkazish',
   },
   {
-    value: ApplicationType.DeregisterHPO,
+    value: ApplicationTypeEnum.DeregisterHPO,
     label: 'XICHO ni ro‘yxatdan chiqarish',
   },
   {
-    value: ApplicationType.RegisterCrane,
+    value: ApplicationTypeEnum.RegisterCrane,
     label: 'Kranni ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterVessel,
+    value: ApplicationTypeEnum.RegisterVessel,
     label: 'Sosudni ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterBoiler,
+    value: ApplicationTypeEnum.RegisterBoiler,
     label: 'Qozonni ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterLift,
+    value: ApplicationTypeEnum.RegisterLift,
     label: 'Liftni ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterEscalator,
+    value: ApplicationTypeEnum.RegisterEscalator,
     label: 'Eskalatorni ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterBridgeOrRoad,
+    value: ApplicationTypeEnum.RegisterBridgeOrRoad,
     label: "Ko'prik/yo'lni ro‘yxatga olish",
   },
   {
-    value: ApplicationType.RegisterElevator,
+    value: ApplicationTypeEnum.RegisterElevator,
     label: 'Ko‘tarmani ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterPipeline,
+    value: ApplicationTypeEnum.RegisterPipeline,
     label: 'Quvurni ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterAttraction,
+    value: ApplicationTypeEnum.RegisterAttraction,
     label: 'Attraksionni ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterAttractionPassport,
+    value: ApplicationTypeEnum.RegisterAttractionPassport,
     label: 'Attraksion pasportini ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterPressureVesselChemical,
+    value: ApplicationTypeEnum.RegisterPressureVesselChemical,
     label: 'Bosim ostida ishlovchi idishlar(kimyo)ni ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterPressureVesselLPG,
+    value: ApplicationTypeEnum.RegisterPressureVesselLPG,
     label: 'Bosim ostida ishlovchi idishlar(SUG)ni ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterSteamAndHotWaterPipeline,
+    value: ApplicationTypeEnum.RegisterSteamAndHotWaterPipeline,
     label: 'Bug‘ va issiq suv quvurlarini ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterBoilerUtilizer,
+    value: ApplicationTypeEnum.RegisterBoilerUtilizer,
     label: 'Qozon utilizatorlarini ro‘yxatga olish',
   },
   {
-    value: ApplicationType.RegisterHighGasUsageEquipment,
+    value: ApplicationTypeEnum.RegisterHighGasUsageEquipment,
     label:
       'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni ro‘yxatga olish',
   },
   // ro'yxatdan chiqarish
   {
-    value: ApplicationType.DeregisterCrane,
+    value: ApplicationTypeEnum.DeregisterCrane,
     label: 'Kranni ro‘yxatdan chiqarish',
   },
   {
-    value: ApplicationType.DeregisterVessel,
+    value: ApplicationTypeEnum.DeregisterVessel,
     label: 'Sosudni ro‘yxatdan chiqarish',
   },
   {
-    value: ApplicationType.DeregisterBoiler,
+    value: ApplicationTypeEnum.DeregisterBoiler,
     label: 'Qozonni ro‘yxatdan chiqarish',
   },
   {
-    value: ApplicationType.DeregisterLift,
+    value: ApplicationTypeEnum.DeregisterLift,
     label: 'Liftni ro‘yxatdan chiqarish',
   },
   {
-    value: ApplicationType.DeregisterEscalator,
+    value: ApplicationTypeEnum.DeregisterEscalator,
     label: 'Eskalatorni ro‘yxatdan chiqarish',
   },
   {
-    value: ApplicationType.DeregisterBridgeOrRoad,
+    value: ApplicationTypeEnum.DeregisterBridgeOrRoad,
     label: "Ko'prik/yo'lni ro‘yxatdan chiqarish",
   },
   {
-    value: ApplicationType.DeregisterElevator,
+    value: ApplicationTypeEnum.DeregisterElevator,
     label: "Ko'tarmani' ro‘yxatdan chiqarish",
   },
   {
-    value: ApplicationType.DeregisterPipeline,
+    value: ApplicationTypeEnum.DeregisterPipeline,
     label: 'Quvurni ro‘yxatdan chiqarish',
   },
   {
-    value: ApplicationType.DeregisterAttraction,
+    value: ApplicationTypeEnum.DeregisterAttraction,
     label: "Attraksionni' ro‘yxatdan chiqarish",
   },
   {
-    value: ApplicationType.DeregisterAttractionPassport,
+    value: ApplicationTypeEnum.DeregisterAttractionPassport,
     label: "Attraksion pasportini' ro‘yxatdan chiqarish",
   },
   //
   {
-    value: ApplicationType.CertifyHPOEmployee,
+    value: ApplicationTypeEnum.CertifyHPOEmployee,
     label: 'XICHO xodimlarini attestatsiyadan o‘tkazish',
   },
   {
-    value: ApplicationType.AccreditExpertOrganization,
+    value: ApplicationTypeEnum.AccreditExpertOrganization,
     label: 'Ekspert tashkilotini akkreditatsiya qilish',
   },
   {
-    value: ApplicationType.RegisterSafetyExpertConclusion,
+    value: ApplicationTypeEnum.RegisterSafetyExpertConclusion,
     label: 'Sanoat xavfsizligi ekspertiza xulosalarini ro‘yxatga olish',
   },
   {
-    value: ApplicationType.DeregisterSafetyExpertConclusion,
+    value: ApplicationTypeEnum.DeregisterSafetyExpertConclusion,
     label: 'Sanoat xavfsizligi ekspertiza xulosalarini ro‘yxatdan chiqarish',
   },
   {
-    value: ApplicationType.ObtainLicense,
+    value: ApplicationTypeEnum.ObtainLicense,
     label: 'Litsenziya olish',
   },
   {
-    value: ApplicationType.ObtainPermit,
+    value: ApplicationTypeEnum.ObtainPermit,
     label: 'Ruxsatnoma olish',
   },
   {
-    value: ApplicationType.ObtainConclusion,
+    value: ApplicationTypeEnum.ObtainConclusion,
     label: 'Xulosa olish',
   },
   {
-    value: ApplicationType.RegisterHPOCadastrePassport,
+    value: ApplicationTypeEnum.RegisterHPOCadastrePassport,
     label: 'XICHO ning kadastr passportini ro‘yxatga olish',
   },
   {
-    value: ApplicationType.DeregisterHPOCadastrePassport,
+    value: ApplicationTypeEnum.DeregisterHPOCadastrePassport,
     label: 'XICHO ning kadastr passportini ro‘yxatdan chiqarish',
   },
   {
-    value: ApplicationType.RegisterSafetyDeclaration,
+    value: ApplicationTypeEnum.RegisterSafetyDeclaration,
     label: 'Sanoat xavfsizligi deklaratsiyasini ro‘yxatga olish',
   },
   {
-    value: ApplicationType.DeregisterSafetyDeclaration,
+    value: ApplicationTypeEnum.DeregisterSafetyDeclaration,
     label: 'Sanoat xavfsizligi deklaratsiyasini ro‘yxatdan chiqarish',
   },
   {
-    value: ApplicationType.ObtainINM,
+    value: ApplicationTypeEnum.ObtainINM,
     label: 'INM ni olish',
   },
   {
-    value: ApplicationType.IssueINM,
+    value: ApplicationTypeEnum.IssueINM,
     label: 'INM ni berish',
   },
   {
-    value: ApplicationType.RegisterINM,
+    value: ApplicationTypeEnum.RegisterINM,
     label: 'INM ni ro‘yxatga olish',
   },
   {
-    value: ApplicationType.DeregisterINM,
+    value: ApplicationTypeEnum.DeregisterINM,
     label: 'INM ni ro‘yxatdan chiqarish',
   },
   {
-    value: ApplicationType.Other,
+    value: ApplicationTypeEnum.Other,
     label: 'Boshqa yo‘nalishlar',
   },
 ];

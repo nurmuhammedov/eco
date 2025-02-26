@@ -17,13 +17,13 @@ export enum ApplicationStatus {
 }
 
 export enum CraneTypes {
-  Bridge, // "Ko'prikli",
-  Crawler, // "O'zi sudralib yuruvchi",
-  Funicular, // "Funikulyar",
-  Gantry, // "Kozlovoy",
-  Manipulator, // "Manipulyator",
-  PipeLayer, // "Truboukladchik";
-  TireTrimmed, // "Pnevmoxodli",
-  Tower, // "Minorali",
-  Truck, //"Avtokran",
+  Bridge = 'Bridge', // "Ko'prikli",
+  Crawler = 'Crawler', // "O'zi sudralib yuruvchi",
+  Funicular = 'Funicular', // "Funikulyar",
+  Gantry = 'Gantry', // "Kozlovoy",
+  Manipulator = 'Manipulator', // "Manipulyator",
+  PipeLayer = 'PipeLayer', // "Truboukladchik";
+  TireTrimmed = 'TireTrimmed', // "Pnevmoxodli",
+  Tower = 'Tower', // "Minorali",
+  Truck = 'Truck', //"Avtokran",
 }

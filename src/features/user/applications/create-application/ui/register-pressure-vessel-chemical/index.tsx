@@ -14,7 +14,7 @@ import { InputFile } from '@/shared/components/common/file-upload/ui';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
 import { CardForm } from '@/entities/user/applications/ui/application-form-card';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
-import { CreateRegisterPressureVesselChemicalDTO } from '@/entities/user/applications/model/application.types';
+import { CreateRegisterPressureVesselChemicalDTO } from '@/entities/user/applications/model/application.dto';
 import {
   FormControl,
   FormField,

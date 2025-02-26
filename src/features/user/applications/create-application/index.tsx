@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { GoBack } from '@/shared/components/common';
+import { ApplicantInfo } from '@/entities/user/applications/ui';
 import { useApplicationForm } from './models/use-application-form';
 import { getSelectOptions } from '@/shared/utils/get-select-options';
 import { DynamicApplicationForm } from './ui/dynamic-application-form';
 import { APPLICATIONS_TYPES } from '@/entities/user/applications/data';
-import { ApplicantInfo } from '@/entities/user/applications/ui/applicant-info';
-import { ApplicationType } from '@/entities/user/applications/model/application.types';
+import { ApplicationTypeEnum } from '@/entities/user/applications/model/application.types';
 import {
   Form,
   FormControl,
@@ -22,13 +22,13 @@ import {
 } from '@/shared/components/ui/select';
 
 const ApplicationForm = () => {
-  const [applicationType, setApplicationType] = useState<ApplicationType>(
-    ApplicationType.RegisterPressureVesselChemical,
+  const [applicationType, setApplicationType] = useState<ApplicationTypeEnum>(
+    ApplicationTypeEnum.RegisterPressureVesselChemical,
   );
 
   const form = useApplicationForm(applicationType);
 
-  const appicationTypeList = getSelectOptions(APPLICATIONS_TYPES);
+  const applicationTypeList = getSelectOptions(APPLICATIONS_TYPES);
 
   return (
     <div className="2xl:w-full 3xl:w-4/5">
@@ -47,14 +47,14 @@ const ApplicationForm = () => {
                 <Select
                   onValueChange={(value) => {
                     field.onChange(value);
-                    setApplicationType(value as ApplicationType);
+                    setApplicationType(value as ApplicationTypeEnum);
                   }}
                   {...field}
                 >
                   <SelectTrigger className="max-w-sm">
                     <SelectValue placeholder="Ариза тури" />
                   </SelectTrigger>
-                  <SelectContent>{appicationTypeList}</SelectContent>
+                  <SelectContent>{applicationTypeList}</SelectContent>
                 </Select>
               </FormControl>
               <FormMessage />
