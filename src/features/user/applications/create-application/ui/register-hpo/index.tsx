@@ -20,16 +20,16 @@ import {
 } from '@/shared/components/ui/select';
 import { useFetchHPOTypes } from '@/entities/user/applications/api';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
+import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
 import { useCreateRegisterHPOMutation } from '@/features/user/applications/create-application/models/register-hpo.mutations';
-import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
 
 interface Props {
   form: UseFormReturn<CreateRegisterHpoDTO>;
 }
 
 export const RegisterHPOForm = ({ form }: Props) => {
-  const { mutate, isPending } = useCreateRegisterHPOMutation();
+  const { mutate } = useCreateRegisterHPOMutation();
 
   const onSubmit = (data: CreateRegisterHpoDTO) => {
     console.log("Yuborilgan ma'lumot:", data);
@@ -39,14 +39,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
 
   const { data: _HPOTypes } = useFetchHPOTypes();
 
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: { isDirty, isValid },
-  } = form;
-
-  const canSubmit = [isDirty, isValid, !isPending].every(Boolean);
+  const { register, handleSubmit } = form;
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -273,9 +266,8 @@ export const RegisterHPOForm = ({ form }: Props) => {
                 <FormControl>
                   <YandexMapModal
                     initialCoords={field.value}
-                    onConfirm={(coords) => {
-                      setValue('address', coords);
-                    }}
+                    onConfirm={(coords) => field.onChange(coords)}
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -309,7 +301,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл Лойиҳа ҳужжатлари
                 </FormLabel>
                 <FormControl>
@@ -326,7 +318,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл Суғурта полиси
                 </FormLabel>
                 <FormControl>
@@ -343,7 +335,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл Масъул ходим тайинланганлиги буйруғи
                 </FormLabel>
                 <FormControl>
@@ -360,7 +352,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл Экспертиза хулосаси
                 </FormLabel>
                 <FormControl>
@@ -377,7 +369,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл Лицензия
                 </FormLabel>
                 <FormControl>
@@ -394,7 +386,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл Экология қўмитасидан хулосаси*
                 </FormLabel>
                 <FormControl>
@@ -411,7 +403,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл Идентификация варағи
                 </FormLabel>
                 <FormControl>
@@ -428,7 +420,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл Рухсатнома
                 </FormLabel>
                 <FormControl>
@@ -445,7 +437,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл ХИЧОни рўйхатга олиш учун тўлов квитанцияси
                 </FormLabel>
                 <FormControl>
@@ -462,7 +454,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл ХИЧО ходимларнинг Саноат хавфсизлиги бўйича аттестациядан
                   ўтганлиги
                 </FormLabel>
@@ -480,7 +472,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл ХИЧО Кадастр паспорти
                 </FormLabel>
                 <FormControl>
@@ -497,7 +489,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл Ёнғин хавфсизлиги хулосаси
                 </FormLabel>
                 <FormControl>
@@ -514,7 +506,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл Саноат хавфсизлиги Декларацияси
                 </FormLabel>
                 <FormControl>
@@ -531,7 +523,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/5">
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                   Файл Қурилмаларни синовдан ўтганлиги
                 </FormLabel>
                 <FormControl>
@@ -543,7 +535,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
           )}
         />
       </CardForm>
-      <Button type="submit" className="bg-blue-400 mt-5" disabled={!canSubmit}>
+      <Button type="submit" className="mt-5">
         Ариза яратиш
       </Button>
     </form>

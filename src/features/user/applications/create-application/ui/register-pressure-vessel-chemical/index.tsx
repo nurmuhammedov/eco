@@ -4,15 +4,17 @@ import { CalendarIcon } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
+import { CRANE_TYPES } from '@/shared/data/crane-types';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Calendar } from '@/shared/components/ui/calendar';
 import { DATE_FORMAT } from '@/shared/constants/date-formats';
-import { useFetchHPOTypes } from '@/entities/user/applications/api';
+import { getDisabledDates } from '@/shared/lib/get-disabled-dates';
+import { getSelectOptions } from '@/shared/utils/get-select-options';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
 import { CardForm } from '@/entities/user/applications/ui/application-form-card';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
-import { CreateRegisterCraneDTO } from '@/entities/user/applications/model/application.types';
+import { CreateRegisterPressureVesselChemicalDTO } from '@/entities/user/applications/model/application.types';
 import {
   FormControl,
   FormField,
@@ -33,24 +35,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/shared/components/ui/popover';
-import { getSelectOptions } from '@/shared/utils/get-select-options.tsx';
-import { CRANE_TYPES } from '@/shared/data/crane-types.ts';
-import { getDisabledDates } from '@/shared/lib/get-disabled-dates.ts';
 
 interface Props {
-  form: UseFormReturn<CreateRegisterCraneDTO>;
+  form: UseFormReturn<CreateRegisterPressureVesselChemicalDTO>;
 }
 
-export const RegisterCrane = ({ form }: Props) => {
+export const RegisterPressureVesselChemical = ({ form }: Props) => {
   const { mutate } = useCreateRegisterHPOMutation();
 
-  const onSubmit = (data: CreateRegisterCraneDTO) => {
+  const onSubmit = (data: CreateRegisterPressureVesselChemicalDTO) => {
     console.log("Yuborilgan ma'lumot:", data);
 
     mutate(data);
   };
-
-  const { data: _HPOTypes } = useFetchHPOTypes();
 
   const craneTypeList = getSelectOptions(CRANE_TYPES);
 

@@ -3,7 +3,6 @@ import { DayPicker } from 'react-day-picker';
 
 import { cn } from '@/shared/lib/utils';
 import { buttonVariants } from '@/shared/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -15,7 +14,6 @@ function Calendar({
 }: CalendarProps) {
   return (
     <div>
-      <ChevronLeft className={cn('size-4', className)} />
       <DayPicker
         showOutsideDays={showOutsideDays}
         className={cn('p-3', className)}
@@ -45,7 +43,7 @@ function Calendar({
           ),
           day: cn(
             buttonVariants({ variant: 'ghost' }),
-            'h-8 w-8 p-0 font-normal aria-selected:opacity-100',
+            'size-8 p-0 font-normal aria-selected:opacity-100',
           ),
           day_range_start: 'day-range-start',
           day_range_end: 'day-range-end',
@@ -62,7 +60,6 @@ function Calendar({
         }}
         {...props}
       />
-      <ChevronRight className={cn('h-4 w-4', className)} />
     </div>
   );
 }

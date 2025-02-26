@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { GoBack } from '@/shared/components/common';
+import { useApplicationForm } from './models/use-application-form';
+import { getSelectOptions } from '@/shared/utils/get-select-options';
 import { DynamicApplicationForm } from './ui/dynamic-application-form';
+import { APPLICATIONS_TYPES } from '@/entities/user/applications/data';
 import { ApplicantInfo } from '@/entities/user/applications/ui/applicant-info';
 import { ApplicationType } from '@/entities/user/applications/model/application.types';
 import {
@@ -14,19 +17,18 @@ import {
 import {
   Select,
   SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { APPLICATIONS_TYPES } from '@/entities/user/applications/data';
-import { useApplicationForm } from '@/features/user/applications/create-application/models/use-application-form.ts';
 
 const ApplicationForm = () => {
   const [applicationType, setApplicationType] = useState<ApplicationType>(
-    ApplicationType.RegisterHPO,
+    ApplicationType.RegisterPressureVesselChemical,
   );
 
   const form = useApplicationForm(applicationType);
+
+  const appicationTypeList = getSelectOptions(APPLICATIONS_TYPES);
 
   return (
     <div className="2xl:w-full 3xl:w-4/5">
@@ -52,11 +54,7 @@ const ApplicationForm = () => {
                   <SelectTrigger className="max-w-sm">
                     <SelectValue placeholder="Ариза тури" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {APPLICATIONS_TYPES.map((type) => (
-                      <SelectItem value={type.value}>{type.label}</SelectItem>
-                    ))}
-                  </SelectContent>
+                  <SelectContent>{appicationTypeList}</SelectContent>
                 </Select>
               </FormControl>
               <FormMessage />

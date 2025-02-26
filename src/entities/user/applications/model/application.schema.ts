@@ -2,6 +2,7 @@ import { ApplicationType } from './application.types';
 import { CreateRegisterHPOSchema } from './application-hpo.schema';
 import { CreateRegisterCrane } from '@/entities/user/applications/model/application-crane.schema';
 import { ApplicationBaseSchema } from './application-base.schema';
+import { CreateRegisterPressureVesselChemicalSchema } from '@/entities/user/applications/model/application-pressure-vessel-chemical.schema.ts';
 
 export const ApplicationSchema = {
   [ApplicationType.RegisterHPO]: CreateRegisterHPOSchema,
@@ -25,7 +26,8 @@ export const ApplicationSchema = {
   [ApplicationType.RegisterHPOCadastrePassport]: ApplicationBaseSchema,
   [ApplicationType.RegisterBoilerUtilizer]: ApplicationBaseSchema,
   [ApplicationType.RegisterSteamAndHotWaterPipeline]: ApplicationBaseSchema,
-  [ApplicationType.RegisterPressureVesselChemical]: ApplicationBaseSchema,
+  [ApplicationType.RegisterPressureVesselChemical]:
+    CreateRegisterPressureVesselChemicalSchema,
   [ApplicationType.RegisterEscalator]: ApplicationBaseSchema,
   [ApplicationType.RegisterBridgeOrRoad]: ApplicationBaseSchema,
   [ApplicationType.RegisterElevator]: ApplicationBaseSchema,
@@ -60,5 +62,8 @@ export const defaultApplicationValues: Record<string, any> = {
   },
   [ApplicationType.RegisterCrane]: {
     application_type: ApplicationType.RegisterCrane,
+  },
+  [ApplicationType.RegisterPressureVesselChemical]: {
+    application_type: ApplicationType.RegisterPressureVesselChemical,
   },
 };

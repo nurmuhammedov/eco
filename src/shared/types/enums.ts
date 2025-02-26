@@ -15,3 +15,15 @@ export enum ApplicationStatus {
   REJECTED = 'rejected',
   CONFIRMATION = 'confirmation',
 }
+
+export enum CraneTypes {
+  Bridge, // "Ko'prikli",
+  Crawler, // "O'zi sudralib yuruvchi",
+  Funicular, // "Funikulyar",
+  Gantry, // "Kozlovoy",
+  Manipulator, // "Manipulyator",
+  PipeLayer, // "Truboukladchik";
+  TireTrimmed, // "Pnevmoxodli",
+  Tower, // "Minorali",
+  Truck, //"Avtokran",
+}

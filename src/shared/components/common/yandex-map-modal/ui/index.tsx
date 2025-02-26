@@ -2,6 +2,8 @@ import { MapPinned } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Coordinate, YandexMap } from '@/shared/components/common/yandex-map';
+import { getMapContentSize } from '@/shared/components/common/yandex-map-modal/lib';
+import { MAP_DEFAULTS } from '@/shared/components/common/yandex-map/model/yandex-map-config';
 import {
   Dialog,
   DialogClose,
@@ -11,8 +13,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/components/ui/dialog';
-import { MAP_DEFAULTS } from '@/shared/components/common/yandex-map/model/yandex-map-config.ts';
-import { getMapContentSize } from '@/shared/components/common/yandex-map-modal/lib';
 
 interface YandexMapModalProps {
   label?: string;
@@ -51,52 +51,50 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({
   }, [selectedCoords, onConfirm]);
 
   return (
-    <>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full justify-between text-neutral-350"
-          >
-            {selectedCoords?.length ? (
-              selectedCoords.join(', ')
-            ) : (
-              <Fragment>
-                {label} <MapPinned />
-              </Fragment>
-            )}
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="max-w-9/10">
-          <DialogHeader>
-            <DialogTitle>Харитадан манзилни белгиланг</DialogTitle>
-          </DialogHeader>
-          <div className="w-full">
-            <YandexMap
-              zoom={12}
-              width="100%"
-              height={mapHeight}
-              onMapClick={handleMapClick}
-              center={selectedCoords || MAP_DEFAULTS.center}
-              coords={selectedCoords ? [selectedCoords] : []}
-            />
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" onClick={() => setOpen(false)}>
-                Бекор қилиш
-              </Button>
-            </DialogClose>
-            <DialogClose asChild>
-              <Button onClick={handleConfirm} disabled={!selectedCoords}>
-                Сақлаш
-              </Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full justify-between text-neutral-350"
+        >
+          {selectedCoords?.length ? (
+            selectedCoords.join(', ')
+          ) : (
+            <Fragment>
+              {label} <MapPinned />
+            </Fragment>
+          )}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-9/10">
+        <DialogHeader>
+          <DialogTitle>Харитадан манзилни белгиланг</DialogTitle>
+        </DialogHeader>
+        <div className="w-full">
+          <YandexMap
+            zoom={12}
+            width="100%"
+            height={mapHeight}
+            onMapClick={handleMapClick}
+            center={selectedCoords || MAP_DEFAULTS.center}
+            coords={selectedCoords ? [selectedCoords] : []}
+          />
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              Бекор қилиш
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button onClick={handleConfirm} disabled={!selectedCoords}>
+              Сақлаш
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
