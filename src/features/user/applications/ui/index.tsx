@@ -1,5 +1,5 @@
 import tasks from '../data/tasks.json';
-import { fetchApplications } from '@/entities/user';
+import { fetchApplications } from '@/entities/user/applications/create-application';
 import { dataTableColumns } from './data-table-columns';
 import { DataTable } from '@/shared/components/common/data-table';
 

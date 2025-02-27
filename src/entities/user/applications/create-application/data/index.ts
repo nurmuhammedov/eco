@@ -1,5 +1,9 @@
-import { ApplicationTypeEnum } from '../model/application.types';
-import { ContainerTypes, CraneTypes } from '../model/application.enums';
+import { ApplicationTypeEnum } from '../model/application.types.ts';
+import {
+  ContainerType,
+  CraneType,
+  LiftType,
+} from '../model/application.enums.ts';
 
 export const APPLICATIONS_TYPES = [
   {
@@ -181,66 +185,77 @@ export const APPLICATIONS_TYPES = [
 
 export const CONTAINER_TYPES = [
   {
-    value: ContainerTypes.Steam,
+    value: ContainerType.Steam,
     label: "Bug'li",
   },
   {
-    value: ContainerTypes.AccumulatorCylinder,
+    value: ContainerType.AccumulatorCylinder,
     label: 'Akkumlyator balloni',
   },
   {
-    value: ContainerTypes.MobileVessel,
+    value: ContainerType.MobileVessel,
     label: 'Harakatlanuvchi idish',
   },
   {
-    value: ContainerTypes.AirCollector,
+    value: ContainerType.AirCollector,
     label: "Havo yig'gich",
   },
   {
-    value: ContainerTypes.Receiver,
+    value: ContainerType.Receiver,
     label: 'Qabul qiluvchi',
   },
   {
-    value: ContainerTypes.Separator,
+    value: ContainerType.Separator,
     label: 'Separator',
   },
 ];
 
 export const CRANE_TYPES = [
   {
-    value: CraneTypes.Bridge,
+    value: CraneType.Bridge,
     label: "Ko'prikli",
   },
   {
-    value: CraneTypes.Crawler,
+    value: CraneType.Crawler,
     label: "O'zi sudralib yuruvchi",
   },
   {
-    value: CraneTypes.Funicular,
+    value: CraneType.Funicular,
     label: 'Funikulyar',
   },
   {
-    value: CraneTypes.Gantry,
+    value: CraneType.Gantry,
     label: 'Kozlovoy',
   },
   {
-    value: CraneTypes.Manipulator,
+    value: CraneType.Manipulator,
     label: 'Manipulyator',
   },
   {
-    value: CraneTypes.PipeLayer,
+    value: CraneType.PipeLayer,
     label: 'Truboukladchik',
   },
   {
-    value: CraneTypes.TireTrimmed,
+    value: CraneType.TireTrimmed,
     label: 'Pnevmoxodli',
   },
   {
-    value: CraneTypes.Tower,
+    value: CraneType.Tower,
     label: 'Minorali',
   },
   {
-    value: CraneTypes.Truck,
+    value: CraneType.Truck,
     label: 'Avtokran',
+  },
+];
+
+export const LIFT_TYPES = [
+  {
+    value: LiftType.Hospital,
+    label: 'Kasalxonalar uchun',
+  },
+  {
+    value: LiftType.Freight,
+    label: "Yuk ko'taruvchi",
   },
 ];

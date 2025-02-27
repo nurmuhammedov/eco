@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { ApplicationTypeEnum } from '@/entities/user/applications/model/application.types';
+import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
 
 // **📌 Avtomatik import qilish (Vite Import Meta.glob)**
 const modules = import.meta.glob('../ui/**/index.tsx');

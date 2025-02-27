@@ -2,7 +2,7 @@ import { z } from 'zod';
 import {
   ApplicationBaseSchema,
   defaultRequiredMessage,
-} from './application-base.schema';
+} from './application-base.schema.ts';
 
 export const CreateRegisterPressureVesselChemicalSchema =
   ApplicationBaseSchema.extend({

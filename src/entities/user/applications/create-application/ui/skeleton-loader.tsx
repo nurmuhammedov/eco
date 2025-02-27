@@ -1,5 +1,5 @@
-import { CardForm } from './application-form-card';
-import { Skeleton } from '@/shared/components/ui/skeleton';
+import { CardForm } from './application-form-card.tsx';
+import { Skeleton } from '@/shared/components/ui/skeleton.tsx';
 
 export const SkeletonFormLoader = () => {
   return (

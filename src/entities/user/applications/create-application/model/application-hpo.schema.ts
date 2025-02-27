@@ -3,7 +3,7 @@ import {
   ApplicationBaseSchema,
   defaultRequiredMessage,
   emailMessage,
-} from './application-base.schema';
+} from './application-base.schema.ts';
 
 export const CreateRegisterHPOSchema = ApplicationBaseSchema.extend({
   parent_name: z.string(defaultRequiredMessage),

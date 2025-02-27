@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { GoBack } from '@/shared/components/common';
-import { ApplicantInfo } from '@/entities/user/applications/ui';
+import { ApplicantInfo } from 'src/entities/user/applications/create-application/ui';
 import { useApplicationForm } from '@/features/user/applications/create-application/lib/use-application-form';
 import { getSelectOptions } from '@/shared/utils/get-select-options';
 import { DynamicApplicationForm } from './ui/dynamic-application-form';
-import { APPLICATIONS_TYPES } from '@/entities/user/applications/data';
-import { ApplicationTypeEnum } from '@/entities/user/applications/model/application.types';
+import { APPLICATIONS_TYPES } from 'src/entities/user/applications/create-application/data';
+import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
 import {
   Form,
   FormControl,
@@ -23,7 +23,7 @@ import {
 
 const ApplicationForm = () => {
   const [applicationType, setApplicationType] = useState<ApplicationTypeEnum>(
-    ApplicationTypeEnum.RegisterPressureVesselChemical,
+    ApplicationTypeEnum.RegisterBoiler,
   );
 
   const form = useApplicationForm(applicationType);

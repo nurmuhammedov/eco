@@ -1,9 +1,9 @@
-import { ApplicationTypeEnum } from './application.types';
-import { CreateRegisterCrane } from './application-crane.schema';
-import { ApplicationBaseSchema } from './application-base.schema';
-import { CreateRegisterHPOSchema } from './application-hpo.schema';
-import { CreateRegisterBoiler } from './application-boiler.schema';
-import { CreateRegisterPressureVesselChemicalSchema } from './application-pressure-vessel-chemical.schema';
+import { ApplicationTypeEnum } from './application.types.ts';
+import { CreateRegisterCrane } from './application-crane.schema.ts';
+import { ApplicationBaseSchema } from './application-base.schema.ts';
+import { CreateRegisterHPOSchema } from './application-hpo.schema.ts';
+import { CreateRegisterBoiler } from './application-boiler.schema.ts';
+import { CreateRegisterPressureVesselChemicalSchema } from './application-pressure-vessel-chemical.schema.ts';
 
 export const ApplicationSchema = {
   [ApplicationTypeEnum.RegisterHPO]: CreateRegisterHPOSchema,

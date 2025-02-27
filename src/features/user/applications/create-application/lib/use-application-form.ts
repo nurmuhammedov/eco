@@ -1,10 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApplicationTypeEnum } from '@/entities/user/applications/model/application.types';
+import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
 import {
   ApplicationSchema,
   defaultApplicationValues,
-} from '@/entities/user/applications/model/application.schema';
+} from '@/entities/user/applications/create-application/model/application.schema';
 
 export function useApplicationForm(applicationType: ApplicationTypeEnum) {
   const schema = ApplicationSchema[applicationType];

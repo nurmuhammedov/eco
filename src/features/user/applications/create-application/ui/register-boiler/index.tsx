@@ -11,9 +11,9 @@ import { getDisabledDates } from '@/shared/lib/get-disabled-dates';
 import { getSelectOptions } from '@/shared/utils/get-select-options';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
-import { CardForm } from '@/entities/user/applications/ui/application-form-card';
+import { CardForm } from '@/entities/user/applications/create-application/ui/application-form-card';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
-import { CreateRegisterBoilerDTO } from '@/entities/user/applications/model/application.dto';
+import { CreateRegisterBoilerDTO } from '@/entities/user/applications/create-application/model/application.dto';
 import {
   FormControl,
   FormField,
@@ -33,7 +33,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/shared/components/ui/popover';
-import { CONTAINER_TYPES } from '@/entities/user/applications/data';
+import { CONTAINER_TYPES } from 'src/entities/user/applications/create-application/data';
 import { useCreateRegisterPressureVesselMutation } from '../../api/register-pressure-vessel-chemical.api';
 
 interface Props {
@@ -123,6 +123,23 @@ export default ({ form }: Props) => {
                   <Input
                     className="w-full 3xl:w-sm"
                     placeholder="Ишлаб чиқарган завод номи"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="factoryNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Модель, марка</FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-full 3xl:w-sm"
+                    placeholder="Модель, марка"
                     {...field}
                   />
                 </FormControl>

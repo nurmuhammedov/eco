@@ -2,9 +2,9 @@ import { z } from 'zod';
 import {
   ApplicationBaseSchema,
   defaultRequiredMessage,
-} from './application-base.schema';
+} from './application-base.schema.ts';
 
-export const CreateRegisterCrane = ApplicationBaseSchema.extend({
+export const CreateRegisterLift = ApplicationBaseSchema.extend({
   hpo_id: z.string(defaultRequiredMessage),
   crane_type: z.string(defaultRequiredMessage),
   fileUrls: z

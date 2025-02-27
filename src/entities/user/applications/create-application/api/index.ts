@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import type { ApiResponse } from '@/shared/types/api';
+import type { ApiResponse } from '@/shared/types/api.ts';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
-import { useTableFilters } from '@/shared/lib/use-table-filter';
+import { useTableFilters } from '@/shared/lib/use-table-filter.ts';
 
 export const fetchApplications = () => {
   const { filters } = useTableFilters('applications');

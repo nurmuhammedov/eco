@@ -1,8 +1,8 @@
 import { lazy } from 'react';
-import { CardForm } from '@/entities/user/applications/ui';
+import { CardForm } from 'src/entities/user/applications/create-application/ui';
 import { useApplicationTypeMap } from './use-application-type-map';
-import { APPLICATIONS_TYPES } from '@/entities/user/applications/data';
-import { ApplicationTypeEnum } from '@/entities/user/applications/model/application.types';
+import { APPLICATIONS_TYPES } from 'src/entities/user/applications/create-application/data';
+import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
 
 export const loadComponent = (type: ApplicationTypeEnum) => {
   const applicationTypeMap = useApplicationTypeMap();
@@ -12,8 +12,10 @@ export const loadComponent = (type: ApplicationTypeEnum) => {
     return () => (
       <CardForm className="flex items-center justify-center h-96 mt-3">
         <p className="text-red-500">
-          {APPLICATIONS_TYPES.find((obj) => obj.value === type)?.label ||
-            "Noma'lum"}
+          <b>
+            {APPLICATIONS_TYPES.find((obj) => obj.value === type)?.label ||
+              "Noma'lum"}
+          </b>
           &nbsp;ariza turi topilmadi!
         </p>
       </CardForm>

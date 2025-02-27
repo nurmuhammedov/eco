@@ -11,9 +11,9 @@ import { getDisabledDates } from '@/shared/lib/get-disabled-dates';
 import { getSelectOptions } from '@/shared/utils/get-select-options';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
-import { CardForm } from '@/entities/user/applications/ui/application-form-card';
+import { CardForm } from '@/entities/user/applications/create-application/ui/application-form-card';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
-import { CreateRegisterPressureVesselChemicalDTO } from '@/entities/user/applications/model/application.dto';
+import { CreateRegisterPressureVesselChemicalDTO } from '@/entities/user/applications/create-application/model/application.dto';
 import {
   FormControl,
   FormField,
@@ -33,7 +33,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/shared/components/ui/popover';
-import { CONTAINER_TYPES } from '@/entities/user/applications/data';
+import { CONTAINER_TYPES } from 'src/entities/user/applications/create-application/data';
 import { useCreateRegisterPressureVesselMutation } from '../../api/register-pressure-vessel-chemical.api';
 
 interface Props {
@@ -149,7 +149,7 @@ export default ({ form }: Props) => {
           />
           <FormField
             control={form.control}
-            name="nextInspectionDate"
+            name="productionDate"
             render={({ field }) => (
               <FormItem className="w-full 3xl:w-sm">
                 <FormLabel>Ишлаб чиқарилган сана</FormLabel>

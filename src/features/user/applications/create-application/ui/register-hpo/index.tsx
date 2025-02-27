@@ -2,7 +2,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { Textarea } from '@/shared/components/ui/textarea';
-import { CardForm } from '@/entities/user/applications/ui/application-form-card';
+import { CardForm } from '@/entities/user/applications/create-application/ui/application-form-card';
 import {
   FormControl,
   FormField,
@@ -19,7 +19,7 @@ import {
 } from '@/shared/components/ui/select';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
-import { CreateRegisterHpoDTO } from '@/entities/user/applications/model/application.dto';
+import { CreateRegisterHpoDTO } from '@/entities/user/applications/create-application/model/application.dto';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
 import { useCreateRegisterHPOMutation } from '@/features/user/applications/create-application/api/register-hpo.api';
 
