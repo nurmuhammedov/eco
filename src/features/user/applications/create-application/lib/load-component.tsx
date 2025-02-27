@@ -1,7 +1,7 @@
 import { lazy } from 'react';
-import { CardForm } from 'src/entities/user/applications/create-application/ui';
+import { CardForm } from '@/entities/user/applications/create-application/ui';
 import { useApplicationTypeMap } from './use-application-type-map';
-import { APPLICATIONS_TYPES } from 'src/entities/user/applications/create-application/data';
+import { APPLICATIONS_TYPES } from '@/entities/user/applications/create-application/data';
 import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
 
 export const loadComponent = (type: ApplicationTypeEnum) => {

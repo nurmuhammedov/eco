@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { GoBack } from '@/shared/components/common';
-import { ApplicantInfo } from 'src/entities/user/applications/create-application/ui';
-import { useApplicationForm } from '@/features/user/applications/create-application/lib/use-application-form';
 import { getSelectOptions } from '@/shared/utils/get-select-options';
 import { DynamicApplicationForm } from './ui/dynamic-application-form';
-import { APPLICATIONS_TYPES } from 'src/entities/user/applications/create-application/data';
+import { ApplicantInfo } from '@/entities/user/applications/create-application/ui';
+import { APPLICATIONS_TYPES } from '@/entities/user/applications/create-application/data';
+import { useApplicationForm } from '@/features/user/applications/create-application/lib/use-application-form';
 import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
 import {
   Form,

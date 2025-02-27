@@ -33,7 +33,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/shared/components/ui/popover';
-import { CONTAINER_TYPES } from 'src/entities/user/applications/create-application/data';
+import { CONTAINER_TYPES } from '@/entities/user/applications/create-application/data';
 import { useCreateRegisterPressureVesselMutation } from '../../api/register-pressure-vessel-chemical.api';
 
 interface Props {
