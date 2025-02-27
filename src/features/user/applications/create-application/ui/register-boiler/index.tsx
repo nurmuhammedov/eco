@@ -7,14 +7,13 @@ import { Button } from '@/shared/components/ui/button';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Calendar } from '@/shared/components/ui/calendar';
 import { DATE_FORMAT } from '@/shared/constants/date-formats';
-import { CRANE_TYPES } from '@/entities/user/applications/data';
 import { getDisabledDates } from '@/shared/lib/get-disabled-dates';
 import { getSelectOptions } from '@/shared/utils/get-select-options';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
 import { CardForm } from '@/entities/user/applications/ui/application-form-card';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
-import { CreateRegisterCraneDTO } from '@/entities/user/applications/model/application.dto';
+import { CreateRegisterBoilerDTO } from '@/entities/user/applications/model/application.dto';
 import {
   FormControl,
   FormField,
@@ -29,27 +28,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { useCreateRegisterHPOMutation } from '@/features/user/applications/create-application/api/register-hpo.api.tsx';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/shared/components/ui/popover';
+import { CONTAINER_TYPES } from '@/entities/user/applications/data';
+import { useCreateRegisterPressureVesselMutation } from '../../api/register-pressure-vessel-chemical.api';
 
 interface Props {
-  form: UseFormReturn<CreateRegisterCraneDTO>;
+  form: UseFormReturn<CreateRegisterBoilerDTO>;
 }
 
 export default ({ form }: Props) => {
-  const { mutate } = useCreateRegisterHPOMutation();
+  const { mutate } = useCreateRegisterPressureVesselMutation();
 
-  const onSubmit = (data: CreateRegisterCraneDTO) => {
+  const onSubmit = (data: CreateRegisterBoilerDTO) => {
     console.log("Yuborilgan ma'lumot:", data);
 
     mutate(data);
   };
 
-  const craneTypeList = getSelectOptions(CRANE_TYPES);
+  const containerTypeOptions = getSelectOptions(CONTAINER_TYPES);
 
   const { handleSubmit } = form;
 
@@ -83,13 +83,13 @@ export default ({ form }: Props) => {
             name="crane_type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Кран турини танланг</FormLabel>
+                <FormLabel>Идиш турини танланг</FormLabel>
                 <FormControl>
                   <Select onValueChange={field.onChange} {...field}>
                     <SelectTrigger className="w-full 3xl:w-sm">
-                      <SelectValue placeholder="Кран турини танланг" />
+                      <SelectValue placeholder="Идиш турини танланг" />
                     </SelectTrigger>
-                    <SelectContent>{craneTypeList}</SelectContent>
+                    <SelectContent>{containerTypeOptions}</SelectContent>
                   </Select>
                 </FormControl>
                 <FormMessage />
@@ -115,14 +115,14 @@ export default ({ form }: Props) => {
           />
           <FormField
             control={form.control}
-            name="factoryNumber"
+            name="address"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Модель, марка</FormLabel>
+                <FormLabel>Ишлаб чиқарган завод номи</FormLabel>
                 <FormControl>
                   <Input
                     className="w-full 3xl:w-sm"
-                    placeholder="Модель, марка"
+                    placeholder="Ишлаб чиқарган завод номи"
                     {...field}
                   />
                 </FormControl>
@@ -174,15 +174,13 @@ export default ({ form }: Props) => {
             name="boomLength"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="w-full 3xl:w-sm">
-                  Стреласининг узинлиги
-                </FormLabel>
+                <FormLabel className="w-full 3xl:w-sm">Ҳажми</FormLabel>
                 <FormControl>
                   <Input
                     min={1}
                     type="number"
                     className="w-full 3xl:w-sm"
-                    placeholder="Стреласининг узинлиги"
+                    placeholder="Ҳажми"
                     {...field}
                   />
                 </FormControl>
@@ -195,13 +193,32 @@ export default ({ form }: Props) => {
             name="loadCapacity"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Юк кўтара олиш</FormLabel>
+                <FormLabel>Мухит</FormLabel>
                 <FormControl>
                   <Input
                     min={1}
                     type="number"
                     className="w-full 3xl:w-sm"
-                    placeholder="Юк кўтара олиш"
+                    placeholder="Мухит"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="loadCapacity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Рухсат этилган босим</FormLabel>
+                <FormControl>
+                  <Input
+                    min={1}
+                    type="number"
+                    className="w-full 3xl:w-sm"
+                    placeholder="Рухсат этилган босим"
                     {...field}
                   />
                 </FormControl>
@@ -254,11 +271,11 @@ export default ({ form }: Props) => {
             name="address"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Қурилма жойлашган манзил*</FormLabel>
+                <FormLabel>Қурилма жойлашган манзил</FormLabel>
                 <FormControl>
                   <Input
                     className="w-full 3xl:w-sm"
-                    placeholder="Қурилма жойлашган манзил*"
+                    placeholder="Қурилма жойлашган манзил"
                     {...field}
                   />
                 </FormControl>
@@ -288,7 +305,7 @@ export default ({ form }: Props) => {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Краннинг биркаси билан сурати</FormLabel>
+                <FormLabel>Идишнинг биркаси билан сурати</FormLabel>
                 <FormControl>
                   <InputFile
                     className="w-full 3xl:w-sm"
@@ -397,7 +414,7 @@ export default ({ form }: Props) => {
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Монтаж гувоҳномаси файли(автокрандан ташқари)
+                  Монтаж гувоҳномаси файли
                 </FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />

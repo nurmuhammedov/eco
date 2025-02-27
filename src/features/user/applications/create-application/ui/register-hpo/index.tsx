@@ -17,18 +17,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { useFetchHPOTypes } from '@/entities/user/applications/api';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
 import { CreateRegisterHpoDTO } from '@/entities/user/applications/model/application.dto';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
-import { useCreateRegisterHPOMutation } from '@/features/user/applications/create-application/models/register-hpo.mutations';
+import { useCreateRegisterHPOMutation } from '@/features/user/applications/create-application/api/register-hpo.api';
 
 interface Props {
   form: UseFormReturn<CreateRegisterHpoDTO>;
 }
 
-export const RegisterHPOForm = ({ form }: Props) => {
+export default ({ form }: Props) => {
   const { mutate } = useCreateRegisterHPOMutation();
 
   const onSubmit = (data: CreateRegisterHpoDTO) => {
@@ -36,8 +35,6 @@ export const RegisterHPOForm = ({ form }: Props) => {
 
     mutate(data);
   };
-
-  const { data: _HPOTypes } = useFetchHPOTypes();
 
   const { register, handleSubmit } = form;
 
@@ -54,7 +51,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
                 <FormLabel>Юқори ташкилотнинг номи (мавжуд бўлса)</FormLabel>
                 <FormControl>
                   <Input
-                    className="w-2xs 3xl:w-sm"
+                    className="w-full 3xl:w-sm"
                     placeholder="Юқори ташкилотнинг номи"
                     {...register('parent_name')}
                     {...field}
@@ -72,7 +69,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
                 <FormLabel>ХИЧО дан фойдаланувчи ташкилот номи</FormLabel>
                 <FormControl>
                   <Input
-                    className="w-2xs 3xl:w-sm"
+                    className="w-full 3xl:w-sm"
                     placeholder="Юқори ташкилотнинг номи"
                     {...field}
                   />
@@ -91,7 +88,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    className="w-2xs 3xl:w-sm"
+                    className="w-full 3xl:w-sm"
                     placeholder="ХИЧОдан фойдаланувчи ташкилот почта манзили"
                     {...field}
                   />
@@ -108,7 +105,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
                 <FormLabel>СТИР</FormLabel>
                 <FormControl>
                   <Input
-                    className="w-2xs 3xl:w-sm"
+                    className="w-full 3xl:w-sm"
                     placeholder="Солиқ тўловчининг идентификацион рақами"
                     {...field}
                   />
@@ -125,7 +122,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
                 <FormLabel>ХИЧО нинг номи</FormLabel>
                 <FormControl>
                   <Input
-                    className="w-2xs 3xl:w-sm"
+                    className="w-full 3xl:w-sm"
                     placeholder="ХИЧО нинг номи"
                     {...field}
                   />
@@ -142,7 +139,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
                 <FormLabel>ХИЧО нинг тури</FormLabel>
                 <FormControl>
                   <Select {...field}>
-                    <SelectTrigger className="w-2xs 3xl:w-sm">
+                    <SelectTrigger className="w-full 3xl:w-sm">
                       <SelectValue placeholder="Ариза тури" />
                     </SelectTrigger>
                     <SelectContent>
@@ -162,13 +159,13 @@ export const RegisterHPOForm = ({ form }: Props) => {
             name="hpo_objects_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="w-2xs 3xl:w-sm">
+                <FormLabel className="w-full 3xl:w-sm">
                   ХИЧО цехлари, участкалари, майдончалари ва бошқа ишлаб чиқариш
                   объектларининг номи
                 </FormLabel>
                 <FormControl>
                   <Input
-                    className="w-2xs 3xl:w-sm"
+                    className="w-full 3xl:w-sm"
                     placeholder="ХИЧО цехлари, участкалари, майдончалари ва бошқа ишлаб чиқариш объектларининг номи"
                     {...field}
                   />
@@ -182,13 +179,13 @@ export const RegisterHPOForm = ({ form }: Props) => {
             name="hazardous_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="w-2xs 3xl:w-sm">
+                <FormLabel className="w-full 3xl:w-sm">
                   ВМнинг 2008 йил 10 декабрдаги 271-сон қарорига мувофиқ хавфли
                   моддаларнинг номи ва миқдори
                 </FormLabel>
                 <FormControl>
                   <Input
-                    className="w-2xs 3xl:w-sm"
+                    className="w-full 3xl:w-sm"
                     placeholder="ВМнинг 2008 йил 10 декабрдаги 271-сон қарорига мувофиқ хавфли моддаларнинг номи ва миқдори"
                     {...field}
                   />
@@ -205,7 +202,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
                 <FormLabel>Тармоқлар</FormLabel>
                 <FormControl>
                   <Select {...field}>
-                    <SelectTrigger className="w-2xs 3xl:w-sm">
+                    <SelectTrigger className="w-full 3xl:w-sm">
                       <SelectValue placeholder="Тармоқлар" />
                     </SelectTrigger>
                     <SelectContent>
@@ -225,7 +222,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
                 <FormLabel>ХИЧО вилояти</FormLabel>
                 <FormControl>
                   <Select {...field}>
-                    <SelectTrigger className="w-2xs 3xl:w-sm">
+                    <SelectTrigger className="w-full 3xl:w-sm">
                       <SelectValue placeholder="ХИЧО вилояти" />
                     </SelectTrigger>
                     <SelectContent>
@@ -245,7 +242,7 @@ export const RegisterHPOForm = ({ form }: Props) => {
                 <FormLabel>ХИЧО тумани</FormLabel>
                 <FormControl>
                   <Select {...field}>
-                    <SelectTrigger className="w-2xs 3xl:w-sm">
+                    <SelectTrigger className="w-full 3xl:w-sm">
                       <SelectValue placeholder="ХИЧО тумани" />
                     </SelectTrigger>
                     <SelectContent>

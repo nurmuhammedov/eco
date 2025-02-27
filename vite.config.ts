@@ -2,6 +2,7 @@ import * as path from 'path';
 import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
 import react from '@vitejs/plugin-react';
+import compression from 'vite-plugin-compression';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -16,15 +17,17 @@ export default defineConfig({
     react(),
     svgr({
       include: '**/*.svg',
-      esbuildOptions: {
-        loader: 'tsx',
-      },
+      esbuildOptions: { loader: 'tsx' },
+    }),
+    compression({
+      algorithm: 'brotliCompress', // 🔥 Brotli ni ishlatamiz
+      threshold: 1024, // 1KB dan katta fayllarni siqish
+      deleteOriginFile: false, // Asl fayllarni o‘chirmaslik
     }),
   ],
   server: {
     host: true,
     port: 5173,
-    open: true,
   },
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },

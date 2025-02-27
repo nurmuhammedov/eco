@@ -43,15 +43,8 @@ export const CreateRegisterPressureVesselChemicalSchema =
       .string(defaultRequiredMessage)
       .min(1, 'Қурилма эгасининг номи мажбурий')
       .describe('Қурилма эгасининг номи'),
-    nextInspectionDate: z
-      .date(defaultRequiredMessage)
-      .describe('Кейинги текшириш санаси'),
     productionDate: z
-      .string(defaultRequiredMessage)
-      .refine(
-        (date) => !isNaN(Date.parse(date)),
-        'Ишлаб чиқарилган сана яроқли сана бўлиши керак',
-      )
+      .date(defaultRequiredMessage)
       .describe('Қурилманинг ишлаб чиқарилган санаси'),
     boomLength: z
       .string(defaultRequiredMessage)

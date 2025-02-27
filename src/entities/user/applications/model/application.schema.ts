@@ -2,6 +2,7 @@ import { ApplicationTypeEnum } from './application.types';
 import { CreateRegisterCrane } from './application-crane.schema';
 import { ApplicationBaseSchema } from './application-base.schema';
 import { CreateRegisterHPOSchema } from './application-hpo.schema';
+import { CreateRegisterBoiler } from './application-boiler.schema';
 import { CreateRegisterPressureVesselChemicalSchema } from './application-pressure-vessel-chemical.schema';
 
 export const ApplicationSchema = {
@@ -18,7 +19,7 @@ export const ApplicationSchema = {
   [ApplicationTypeEnum.RegisterPressureVesselLPG]: ApplicationBaseSchema,
   [ApplicationTypeEnum.RegisterHighGasUsageEquipment]: ApplicationBaseSchema,
   [ApplicationTypeEnum.RegisterVessel]: ApplicationBaseSchema,
-  [ApplicationTypeEnum.RegisterBoiler]: ApplicationBaseSchema,
+  [ApplicationTypeEnum.RegisterBoiler]: CreateRegisterBoiler,
   [ApplicationTypeEnum.RegisterLift]: ApplicationBaseSchema,
   [ApplicationTypeEnum.RegisterAttraction]: ApplicationBaseSchema,
   [ApplicationTypeEnum.DeregisterAttractionPassport]: ApplicationBaseSchema,
@@ -65,5 +66,8 @@ export const defaultApplicationValues: Record<string, any> = {
   },
   [ApplicationTypeEnum.RegisterPressureVesselChemical]: {
     application_type: ApplicationTypeEnum.RegisterPressureVesselChemical,
+  },
+  [ApplicationTypeEnum.RegisterBoiler]: {
+    application_type: ApplicationTypeEnum.RegisterBoiler,
   },
 };

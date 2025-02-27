@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { GoBack } from '@/shared/components/common';
 import { ApplicantInfo } from '@/entities/user/applications/ui';
-import { useApplicationForm } from './models/use-application-form';
+import { useApplicationForm } from '@/features/user/applications/create-application/lib/use-application-form';
 import { getSelectOptions } from '@/shared/utils/get-select-options';
 import { DynamicApplicationForm } from './ui/dynamic-application-form';
 import { APPLICATIONS_TYPES } from '@/entities/user/applications/data';

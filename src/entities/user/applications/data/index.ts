@@ -1,4 +1,5 @@
-import { ApplicationTypeEnum } from '@/entities/user/applications/model/application.types';
+import { ApplicationTypeEnum } from '../model/application.types';
+import { ContainerTypes, CraneTypes } from '../model/application.enums';
 
 export const APPLICATIONS_TYPES = [
   {
@@ -175,5 +176,71 @@ export const APPLICATIONS_TYPES = [
   {
     value: ApplicationTypeEnum.Other,
     label: 'Boshqa yo‘nalishlar',
+  },
+];
+
+export const CONTAINER_TYPES = [
+  {
+    value: ContainerTypes.Steam,
+    label: "Bug'li",
+  },
+  {
+    value: ContainerTypes.AccumulatorCylinder,
+    label: 'Akkumlyator balloni',
+  },
+  {
+    value: ContainerTypes.MobileVessel,
+    label: 'Harakatlanuvchi idish',
+  },
+  {
+    value: ContainerTypes.AirCollector,
+    label: "Havo yig'gich",
+  },
+  {
+    value: ContainerTypes.Receiver,
+    label: 'Qabul qiluvchi',
+  },
+  {
+    value: ContainerTypes.Separator,
+    label: 'Separator',
+  },
+];
+
+export const CRANE_TYPES = [
+  {
+    value: CraneTypes.Bridge,
+    label: "Ko'prikli",
+  },
+  {
+    value: CraneTypes.Crawler,
+    label: "O'zi sudralib yuruvchi",
+  },
+  {
+    value: CraneTypes.Funicular,
+    label: 'Funikulyar',
+  },
+  {
+    value: CraneTypes.Gantry,
+    label: 'Kozlovoy',
+  },
+  {
+    value: CraneTypes.Manipulator,
+    label: 'Manipulyator',
+  },
+  {
+    value: CraneTypes.PipeLayer,
+    label: 'Truboukladchik',
+  },
+  {
+    value: CraneTypes.TireTrimmed,
+    label: 'Pnevmoxodli',
+  },
+  {
+    value: CraneTypes.Tower,
+    label: 'Minorali',
+  },
+  {
+    value: CraneTypes.Truck,
+    label: 'Avtokran',
   },
 ];

@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AuthState, AuthUser } from '@/entities/auth/models/auth.model.ts';
 import { UserRoles } from '@/shared/types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AuthState, AuthUser } from '@/entities/auth/models/auth.model';
 
 const initialState: AuthState = {
   isAuthenticated: true,

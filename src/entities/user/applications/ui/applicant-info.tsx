@@ -18,7 +18,7 @@ interface Props {
 export const ApplicantInfo = ({ form }: Props) => {
   return (
     <Form {...form}>
-      <CardForm className="mt-5 mb-2">
+      <CardForm className="mt-4 2xl:mt-5 mb-2">
         <h5 className="font-semibold">Аризачи тўғрисида маълумот</h5>
         <section className="flex gap-3 mt-3 3xl:mt-4">
           <FormField

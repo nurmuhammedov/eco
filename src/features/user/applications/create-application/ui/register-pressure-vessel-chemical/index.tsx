@@ -4,7 +4,6 @@ import { CalendarIcon } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
-import { CRANE_TYPES } from '@/shared/data/crane-types';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Calendar } from '@/shared/components/ui/calendar';
 import { DATE_FORMAT } from '@/shared/constants/date-formats';
@@ -29,19 +28,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { useCreateRegisterHPOMutation } from '@/features/user/applications/create-application/models/register-hpo.mutations';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/shared/components/ui/popover';
+import { CONTAINER_TYPES } from '@/entities/user/applications/data';
+import { useCreateRegisterPressureVesselMutation } from '../../api/register-pressure-vessel-chemical.api';
 
 interface Props {
   form: UseFormReturn<CreateRegisterPressureVesselChemicalDTO>;
 }
 
-export const RegisterPressureVesselChemical = ({ form }: Props) => {
-  const { mutate } = useCreateRegisterHPOMutation();
+export default ({ form }: Props) => {
+  const { mutate } = useCreateRegisterPressureVesselMutation();
 
   const onSubmit = (data: CreateRegisterPressureVesselChemicalDTO) => {
     console.log("Yuborilgan ma'lumot:", data);
@@ -49,7 +49,7 @@ export const RegisterPressureVesselChemical = ({ form }: Props) => {
     mutate(data);
   };
 
-  const craneTypeList = getSelectOptions(CRANE_TYPES);
+  const containerTypeOptions = getSelectOptions(CONTAINER_TYPES);
 
   const { handleSubmit } = form;
 
@@ -63,11 +63,11 @@ export const RegisterPressureVesselChemical = ({ form }: Props) => {
             name="hpo_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>ХИЧО танланг</FormLabel>
+                <FormLabel>ХИЧО ни танланг</FormLabel>
                 <FormControl>
                   <Select {...field}>
-                    <SelectTrigger className="w-2xs 3xl:w-sm">
-                      <SelectValue placeholder="ХИЧО танланг" />
+                    <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectValue placeholder="ХИЧО ни танланг" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value={'null'}>Mavjud emas</SelectItem>
@@ -83,13 +83,13 @@ export const RegisterPressureVesselChemical = ({ form }: Props) => {
             name="crane_type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Кран турини танланг</FormLabel>
+                <FormLabel>Идиш турини танланг</FormLabel>
                 <FormControl>
                   <Select onValueChange={field.onChange} {...field}>
-                    <SelectTrigger className="w-2xs 3xl:w-sm">
-                      <SelectValue placeholder="Кран турини танланг" />
+                    <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectValue placeholder="Идиш турини танланг" />
                     </SelectTrigger>
-                    <SelectContent>{craneTypeList}</SelectContent>
+                    <SelectContent>{containerTypeOptions}</SelectContent>
                   </Select>
                 </FormControl>
                 <FormMessage />
@@ -104,7 +104,7 @@ export const RegisterPressureVesselChemical = ({ form }: Props) => {
                 <FormLabel>Қурилманинг завод рақами</FormLabel>
                 <FormControl>
                   <Input
-                    className="w-2xs 3xl:w-sm"
+                    className="w-full 3xl:w-sm"
                     placeholder="Қурилманинг завод рақами"
                     {...field}
                   />
@@ -115,54 +115,14 @@ export const RegisterPressureVesselChemical = ({ form }: Props) => {
           />
           <FormField
             control={form.control}
-            name="region"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Қурилма жойлашган вилоят</FormLabel>
-                <FormControl>
-                  <Select {...field}>
-                    <SelectTrigger className="w-2xs 3xl:w-sm">
-                      <SelectValue placeholder="Қурилма жойлашган вилоят" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={'null'}>Mavjud emas</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="district"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Қурилма жойлашган туман</FormLabel>
-                <FormControl>
-                  <Select {...field}>
-                    <SelectTrigger className="w-2xs 3xl:w-sm">
-                      <SelectValue placeholder="Қурилма жойлашган туман" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={'null'}>Mavjud emas</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="address"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Қурилма жойлашган манзил*</FormLabel>
+                <FormLabel>Ишлаб чиқарган завод номи</FormLabel>
                 <FormControl>
                   <Input
-                    className="w-2xs 3xl:w-sm"
-                    placeholder="Қурилма жойлашган манзил*"
+                    className="w-full 3xl:w-sm"
+                    placeholder="Ишлаб чиқарган завод номи"
                     {...field}
                   />
                 </FormControl>
@@ -172,56 +132,17 @@ export const RegisterPressureVesselChemical = ({ form }: Props) => {
           />
           <FormField
             control={form.control}
-            name="geolocation"
+            name="factoryNumber"
             render={({ field }) => (
-              <FormItem className="w-full 3xl:w-sm">
-                <FormLabel>Геолокация</FormLabel>
+              <FormItem>
+                <FormLabel>Модель, марка</FormLabel>
                 <FormControl>
-                  <YandexMapModal
-                    initialCoords={field.value}
-                    onConfirm={(coords) => field.onChange(coords)}
+                  <Input
+                    className="w-full 3xl:w-sm"
+                    placeholder="Модель, марка"
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="nextInspectionDate"
-            render={({ field }) => (
-              <FormItem className="w-full 3xl:w-sm">
-                <FormLabel>Кейинги текшириш санаси</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={'outline'}
-                        className={cn(
-                          'w-full pl-3 text-left hover:text-neutral-350 font-normal',
-                          !field.value && 'text-neutral-350',
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, DATE_FORMAT)
-                        ) : (
-                          <span>Кейинги текшириш санаси</span>
-                        )}
-                        <CalendarIcon className="ml-auto size-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) => getDisabledDates(date, 'before')}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
                 <FormMessage />
               </FormItem>
             )}
@@ -270,15 +191,13 @@ export const RegisterPressureVesselChemical = ({ form }: Props) => {
             name="boomLength"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="w-2xs 3xl:w-sm">
-                  Стреласининг узинлиги
-                </FormLabel>
+                <FormLabel className="w-full 3xl:w-sm">Ҳажми</FormLabel>
                 <FormControl>
                   <Input
                     min={1}
                     type="number"
-                    className="w-2xs 3xl:w-sm"
-                    placeholder="Стреласининг узинлиги"
+                    className="w-full 3xl:w-sm"
+                    placeholder="Ҳажми"
                     {...field}
                   />
                 </FormControl>
@@ -291,13 +210,106 @@ export const RegisterPressureVesselChemical = ({ form }: Props) => {
             name="loadCapacity"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Юк кўтара олиш</FormLabel>
+                <FormLabel>Мухит</FormLabel>
                 <FormControl>
                   <Input
                     min={1}
                     type="number"
-                    className="w-2xs 3xl:w-sm"
-                    placeholder="Юк кўтара олиш"
+                    className="w-full 3xl:w-sm"
+                    placeholder="Мухит"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="loadCapacity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Рухсат этилган босим</FormLabel>
+                <FormControl>
+                  <Input
+                    min={1}
+                    type="number"
+                    className="w-full 3xl:w-sm"
+                    placeholder="Рухсат этилган босим"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="region"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Қурилма жойлашган вилоят</FormLabel>
+                <FormControl>
+                  <Select {...field}>
+                    <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectValue placeholder="Қурилма жойлашган вилоят" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={'null'}>Mavjud emas</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="district"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Қурилма жойлашган туман</FormLabel>
+                <FormControl>
+                  <Select {...field}>
+                    <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectValue placeholder="Қурилма жойлашган туман" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={'null'}>Mavjud emas</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Қурилма жойлашган манзил</FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-full 3xl:w-sm"
+                    placeholder="Қурилма жойлашган манзил"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="geolocation"
+            render={({ field }) => (
+              <FormItem className="w-full 3xl:w-sm">
+                <FormLabel>Геолокация</FormLabel>
+                <FormControl>
+                  <YandexMapModal
+                    initialCoords={field.value}
+                    onConfirm={(coords) => field.onChange(coords)}
                     {...field}
                   />
                 </FormControl>
@@ -310,10 +322,10 @@ export const RegisterPressureVesselChemical = ({ form }: Props) => {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Краннинг биркаси билан сурати</FormLabel>
+                <FormLabel>Идишнинг биркаси билан сурати</FormLabel>
                 <FormControl>
                   <InputFile
-                    className="w-2xs 3xl:w-sm"
+                    className="w-full 3xl:w-sm"
                     form={form}
                     accept={[FileTypes.PDF]}
                     {...field}
@@ -419,7 +431,7 @@ export const RegisterPressureVesselChemical = ({ form }: Props) => {
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Монтаж гувоҳномаси файли(автокрандан ташқари)
+                  Монтаж гувоҳномаси файли
                 </FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />

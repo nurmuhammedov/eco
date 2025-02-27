@@ -1,23 +1,26 @@
-import { UseFormReturn } from 'react-hook-form';
-import { RegisterHPOForm } from './register-hpo';
-import { RegisterCrane } from './register-crane';
-import { RegisterPressureVesselChemical } from './register-pressure-vessel-chemical';
+import { Suspense, useMemo } from 'react';
+import { loadComponent } from '../lib/load-component';
+import { FieldValues, UseFormReturn } from 'react-hook-form';
+import { SkeletonFormLoader } from '@/entities/user/applications/ui/skeleton-loader';
 import { ApplicationTypeEnum } from '@/entities/user/applications/model/application.types';
 
-interface Props {
-  form: UseFormReturn<any>;
+interface Props<TFormValues extends FieldValues> {
+  form: UseFormReturn<TFormValues>;
   applicationType: ApplicationTypeEnum;
 }
 
-export const DynamicApplicationForm = ({ applicationType, form }: Props) => {
-  switch (applicationType) {
-    case ApplicationTypeEnum.RegisterHPO:
-      return <RegisterHPOForm form={form} />;
-    case ApplicationTypeEnum.RegisterCrane:
-      return <RegisterCrane form={form} />;
-    case ApplicationTypeEnum.RegisterPressureVesselChemical:
-      return <RegisterPressureVesselChemical form={form} />;
-    default:
-      return null;
-  }
+export const DynamicApplicationForm = <TFormValues extends FieldValues>({
+  form,
+  applicationType,
+}: Props<TFormValues>) => {
+  const Component = useMemo(
+    () => loadComponent(applicationType),
+    [applicationType],
+  );
+
+  return (
+    <Suspense fallback={<SkeletonFormLoader />}>
+      <Component form={form} />
+    </Suspense>
+  );
 };
