@@ -4,7 +4,6 @@ import { getSidebarCollapse } from '@/widgets/utils';
 
 // ** Secondary Components **
 import { AppLogo } from './app-logo';
-import { MenuItems } from './menu-items';
 
 // ** SVG Icons **
 import { TechnocorpLogo } from '@/shared/components/SVGIcons';
@@ -21,6 +20,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/shared/components/ui/sidebar';
+import { NAVIGATIONS } from '@/widgets/sidebar/navigations.ts';
+import { useAppSelector } from '@/shared/hooks/useStore.ts';
+import { pick } from '@/shared/utils';
+import { shallowEqual } from 'react-redux';
+import { NavMain } from '@/widgets/sidebar/ui/nav-main.tsx';
 
 function Footer() {
   return (
@@ -38,6 +42,13 @@ function Footer() {
 export function AppSidebar() {
   const { state } = useSidebar();
   const sidebarOpen = state === 'expanded';
+  const { user } = useAppSelector(
+    (state) => pick(state.auth, ['user']),
+    shallowEqual,
+  );
+
+  if (!user) return null;
+
   return (
     <Sidebar collapsible={getSidebarCollapse()}>
       <SidebarContent>
@@ -50,7 +61,9 @@ export function AppSidebar() {
             <AppLogo />
           </SidebarHeader>
           <SidebarGroupContent>
-            <MenuItems />
+            {NAVIGATIONS[user.role].map((item) => (
+              <NavMain item={item} />
+            ))}
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

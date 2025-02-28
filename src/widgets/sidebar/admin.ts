@@ -1,12 +1,25 @@
 // ** Types
 import type { Navigation } from '@/widgets/models';
 
-// ** UI ui
-
 export default [
   {
-    url: '/app/applications',
-    title: 'Murojaatlar',
+    url: '/app/admin/regions',
+    title: 'Hududlar',
+    icon: 'note-text',
+    items: [
+      {
+        url: '/app/admin/regions',
+        title: 'Viloyatlar',
+      },
+      {
+        url: '/app/admin/districts',
+        title: 'Tumanlar',
+      },
+    ],
+  },
+  {
+    url: '/app/admin/staffs',
+    title: 'Xodimlar',
     icon: 'note-text',
   },
 ] as Navigation;
