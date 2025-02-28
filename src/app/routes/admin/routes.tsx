@@ -1,11 +1,15 @@
 import { lazy } from 'react';
+import { UserRoles } from '@/shared/types';
 
-const Login = lazy(() => import('@/pages/auth/ui/login-page'));
+const RegionsDictionary = lazy(() => import('@/widgets/admin/region/ui'));
 
 export default [
   {
-    path: 'login',
-    element: <Login />,
-    meta: { isPublic: true },
+    path: 'admin/regions',
+    element: <RegionsDictionary />,
+    meta: {
+      restricted: true,
+      roles: [UserRoles.ADMIN],
+    },
   },
 ];

@@ -1,11 +1,17 @@
 import { lazy } from 'react';
 
-const LoginPage = lazy(() => import('@/pages/auth'));
+const Login = lazy(() => import('@/pages/auth/ui/login-page'));
+const AdminLogin = lazy(() => import('@/pages/auth/ui/admin-login'));
 
 export default [
   {
     path: 'login',
-    element: <LoginPage />,
+    element: <Login />,
+    meta: { isPublic: true },
+  },
+  {
+    path: 'login/admin',
+    element: <AdminLogin />,
     meta: { isPublic: true },
   },
 ];

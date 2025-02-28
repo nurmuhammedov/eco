@@ -3,7 +3,7 @@ import { UserRoles } from '@/shared/types';
 import type { AppRoute } from '@/app/routes';
 import { useAuth } from '@/shared/hooks/useAuth';
 
-const UnAuthorized = lazy(() => import('@/features/auth/unauthorized.tsx'));
+const UnAuthorized = lazy(() => import('@/features/auth/ui/unauthorized.tsx'));
 
 export const DefaultRoute = '/app/applications';
 
