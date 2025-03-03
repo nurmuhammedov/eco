@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { UserRoles } from '@/shared/types';
 import { setUser } from '@/app/store/auth-slice.ts';
 import Icon from '@/shared/components/common/icon';
-import { useAppDispatch } from '@/shared/hooks/useStore.ts';
+import { useAppDispatch } from '@/shared/hooks/use-store.ts';
 import { AuthUser } from '@/entities/auth/models/auth.model.ts';
 
 const mockUser = {

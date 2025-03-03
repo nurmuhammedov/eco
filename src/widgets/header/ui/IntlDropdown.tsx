@@ -1,7 +1,7 @@
 import { Globe } from 'lucide-react';
 import { Language } from '@/shared/types/language';
 import { Button } from '@/shared/components/ui/button';
-import { useLanguage } from '@/shared/hooks/useLanguage';
+import { useLanguage } from '@/shared/hooks/use-language.ts';
 import { UZBFlagIcon } from '@/shared/components/SVGIcons';
 import {
   DropdownMenu,

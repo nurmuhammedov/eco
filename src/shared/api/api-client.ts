@@ -1,37 +1,57 @@
-import { AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 import { axiosInstance } from './axios-instance';
+import { ApiResponse, ResponseData } from '@/shared/types/api';
 
 type RequestParams = Record<string, string | number | boolean | object>;
 
+async function fetcher<T>(
+  method: 'get' | 'post' | 'put' | 'patch' | 'delete',
+  url: string,
+  paramsOrBody?: RequestParams | object,
+  isPaginated: boolean = false,
+): Promise<ApiResponse<T>> {
+  try {
+    const response = await axiosInstance.request<T | ResponseData<T>>({
+      method,
+      url,
+      ...(method === 'get' || method === 'delete'
+        ? { params: paramsOrBody as RequestParams }
+        : { data: paramsOrBody as object }),
+    });
+
+    return {
+      success: true,
+      status: response.status,
+      data: isPaginated
+        ? (response.data as ResponseData<T>)
+        : (response.data as T),
+    };
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    return {
+      success: false,
+      status: axiosError.response?.status || 500,
+      errors: axiosError.response?.data?.message || 'An unknown error occurred',
+    };
+  }
+}
+
 export const apiClient = {
-  // ✅ GET
-  get: async <T>(
-    url: string,
-    params?: RequestParams,
-  ): Promise<AxiosResponse<T>> => {
-    return await axiosInstance.get<T>(url, { params }); // ✅ Return full `AxiosResponse`
-  },
+  get: <T>(url: string, params?: RequestParams) =>
+    fetcher<T>('get', url, params, false),
 
-  // ✅ POST
-  post: async <T, B>(url: string, body: B): Promise<AxiosResponse<T>> => {
-    return await axiosInstance.post<T>(url, body);
-  },
+  getPaged: <T>(url: string, params?: RequestParams) =>
+    fetcher<T>('get', url, params, true),
 
-  // ✅ PUT
-  put: async <T, B>(url: string, body: B): Promise<AxiosResponse<T>> => {
-    return await axiosInstance.put<T>(url, body);
-  },
+  post: <T, B extends object>(url: string, body: B) =>
+    fetcher<T>('post', url, body, false),
 
-  // ✅ PATCH
-  patch: async <T, B>(url: string, body: B): Promise<AxiosResponse<T>> => {
-    return await axiosInstance.patch<T>(url, body);
-  },
+  put: <T, B extends object>(url: string, body: B) =>
+    fetcher<T>('put', url, body, false),
 
-  // ✅ DELETE
-  delete: async <T>(
-    url: string,
-    params?: RequestParams,
-  ): Promise<AxiosResponse<T>> => {
-    return await axiosInstance.delete<T>(url, { params });
-  },
+  patch: <T, B extends object>(url: string, body: B) =>
+    fetcher<T>('patch', url, body, false),
+
+  delete: <T>(url: string, params?: RequestParams) =>
+    fetcher<T>('delete', url, params, false),
 };

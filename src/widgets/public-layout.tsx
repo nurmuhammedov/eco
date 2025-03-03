@@ -1,5 +1,5 @@
 import { UserRoles } from '@/shared/types';
-import { useAuth } from '@/shared/hooks/useAuth';
+import { useAuth } from '@/shared/hooks/use-auth.ts';
 import { Navigate, Outlet } from 'react-router-dom';
 import { getHomeRouteForLoggedInUser } from '@/app/routes';
 

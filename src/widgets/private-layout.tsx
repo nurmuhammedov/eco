@@ -2,7 +2,7 @@
 import { SIDEBAR_OPEN } from '@/app/config';
 
 // ** Hooks **
-import { useAuth } from '@/shared/hooks/useAuth';
+import { useAuth } from '@/shared/hooks/use-auth.ts';
 
 // ** Secondary party **
 import { AppSidebar, Header } from '@/widgets';

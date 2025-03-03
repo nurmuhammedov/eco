@@ -13,7 +13,7 @@ export interface Pageable {
   unpaged: boolean;
 }
 
-export interface ApiResponse<T> {
+export interface ResponseData<T> {
   content: T[];
   pageable: Pageable;
   totalElements: number;
@@ -25,4 +25,11 @@ export interface ApiResponse<T> {
   size: number;
   number: number;
   empty: boolean;
+}
+
+export interface ApiResponse<T> {
+  status: number;
+  success: boolean;
+  errors?: string;
+  data?: T | ResponseData<T>;
 }

@@ -15,3 +15,9 @@ export enum ApplicationStatus {
   REJECTED = 'rejected',
   CONFIRMATION = 'confirmation',
 }
+
+export enum DrawerMode {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  VIEW = 'VIEW',
+}

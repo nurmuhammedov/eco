@@ -21,7 +21,7 @@ import {
   useSidebar,
 } from '@/shared/components/ui/sidebar';
 import { NAVIGATIONS } from '@/widgets/sidebar/navigations.ts';
-import { useAppSelector } from '@/shared/hooks/useStore.ts';
+import { useAppSelector } from '@/shared/hooks/use-store.ts';
 import { pick } from '@/shared/utils';
 import { shallowEqual } from 'react-redux';
 import { NavMain } from '@/widgets/sidebar/ui/nav-main.tsx';

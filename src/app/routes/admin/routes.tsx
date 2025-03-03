@@ -1,7 +1,9 @@
 import { lazy } from 'react';
 import { UserRoles } from '@/shared/types';
 
-const RegionsDictionary = lazy(() => import('@/widgets/admin/region/ui'));
+const RegionsDictionary = lazy(
+  () => import('@/widgets/admin/region/regions-dictionary-table.tsx'),
+);
 
 export default [
   {
