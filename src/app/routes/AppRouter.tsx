@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { PrivateLayout, PublicLayout } from '@/widgets';
+import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
 import { filterRoutesByAuth, getHomeRoute, moduleRoutes } from '@/app/routes';
 import {
   createBrowserRouter,
@@ -40,7 +41,11 @@ const AppRouter = () => {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <NuqsAdapter>
+      <RouterProvider router={router} />
+    </NuqsAdapter>
+  );
 };
 
 export default AppRouter;

@@ -5,7 +5,6 @@ export const useFilters = <T extends Record<string, string | number>>(
   namespace: string,
   defaultFilters?: T,
 ) => {
-  console.log(namespace);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const filters = useMemo(() => {
@@ -18,7 +17,6 @@ export const useFilters = <T extends Record<string, string | number>>(
         obj[key.replace(`${namespace}_`, '')] = value;
       }
     });
-    console.log('obj', obj);
     return obj;
   }, [searchParams, defaultFilters, namespace]);
 
