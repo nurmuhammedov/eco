@@ -1,14 +1,12 @@
 import { lazy } from 'react';
 import { UserRoles } from '@/shared/types';
 
-const RegionsDictionary = lazy(
-  () => import('@/widgets/admin/region/regions-dictionary-table.tsx'),
-);
+const DistrictPage = lazy(() => import('@/pages/admin/district/ui'));
 
 export default [
   {
-    path: 'admin/regions',
-    element: <RegionsDictionary />,
+    path: 'admin/districts',
+    element: <DistrictPage />,
     meta: {
       restricted: true,
       roles: [UserRoles.ADMIN],

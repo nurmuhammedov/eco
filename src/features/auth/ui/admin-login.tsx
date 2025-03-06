@@ -41,7 +41,6 @@ export default function AdminLoginForm({
           'w-1/2 flex flex-col items-center justify-center gap-6',
           className,
         )}
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={form.handleSubmit(handleLogin)}
       >
         <div className="w-3/5 3xl:w-2/5">

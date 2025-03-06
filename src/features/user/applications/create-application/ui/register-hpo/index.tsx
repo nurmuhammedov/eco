@@ -39,7 +39,6 @@ export default ({ form }: Props) => {
   const { register, handleSubmit } = form;
 
   return (
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
       <CardForm className="my-2">
         <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">

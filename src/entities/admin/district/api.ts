@@ -9,19 +9,23 @@ import {
   fetchDistricts,
 } from './fetcher';
 
-export const useDistrictsPaged = (page: number, size: number) =>
+export const useDistrictsPaged = <T extends Record<string, unknown>>(
+  params: T,
+) =>
   useQuery({
-    queryKey: districtQueryKeys.list({ page, size }),
-    queryFn: () => fetchDistricts(page, size),
     staleTime: 10 * 60 * 1000,
+    queryFn: () => fetchDistricts(params),
+    queryKey: districtQueryKeys.list(params),
+    placeholderData: (previousData) => previousData,
   });
 
 export const useDistrictById = (id: number) =>
   useQuery({
-    queryKey: districtQueryKeys.detail(id),
-    queryFn: () => fetchDistrictById(id),
     enabled: !!id,
     staleTime: 10 * 60 * 1000,
+    queryFn: () => fetchDistrictById(id),
+    queryKey: districtQueryKeys.detail(id),
+    placeholderData: (previousData) => previousData,
   });
 
 export const useSaveDistrict = () => {

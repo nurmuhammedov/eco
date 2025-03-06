@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const districtSchema = z.object({
-  name: z.string(),
-  region_id: z.number().positive('Invalid region ID'),
+  name: z.string().min(1, 'Tuman nomi majburiy'),
+  region_id: z.string().min(1, 'Viloyat tanlash majburiy'),
 });
 
 export type DistrictFormValues = z.infer<typeof districtSchema>;

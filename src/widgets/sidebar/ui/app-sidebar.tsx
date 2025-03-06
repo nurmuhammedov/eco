@@ -1,9 +1,13 @@
 // ** Utils **
+import { pick } from '@/shared/utils';
+import { shallowEqual } from 'react-redux';
 import { cn } from '@/shared/lib/utils';
 import { getSidebarCollapse } from '@/widgets/utils';
+import { NavMain } from '@/widgets/sidebar/ui/nav-main';
 
 // ** Secondary Components **
 import { AppLogo } from './app-logo';
+import { NAVIGATIONS } from '@/widgets/sidebar/navigations';
 
 // ** SVG Icons **
 import { TechnocorpLogo } from '@/shared/components/SVGIcons';
@@ -20,11 +24,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/shared/components/ui/sidebar';
-import { NAVIGATIONS } from '@/widgets/sidebar/navigations.ts';
-import { useAppSelector } from '@/shared/hooks/use-store.ts';
-import { pick } from '@/shared/utils';
-import { shallowEqual } from 'react-redux';
-import { NavMain } from '@/widgets/sidebar/ui/nav-main.tsx';
+import { useAppSelector } from '@/shared/hooks/use-store';
 
 function Footer() {
   return (
@@ -62,7 +62,7 @@ export function AppSidebar() {
           </SidebarHeader>
           <SidebarGroupContent>
             {NAVIGATIONS[user.role].map((item) => (
-              <NavMain item={item} />
+              <NavMain key={item.title} item={item} />
             ))}
           </SidebarGroupContent>
         </SidebarGroup>

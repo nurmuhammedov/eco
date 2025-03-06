@@ -3,7 +3,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
 
 // **📌 Avtomatik import qilish (Vite Import Meta.glob)**
-const modules = import.meta.glob('../ui/**/regions-dictionary-table.tsx');
+const modules = import.meta.glob('../ui/**/index.tsx');
 
 export const useApplicationTypeMap = () => {
   return Object.entries(modules).reduce(

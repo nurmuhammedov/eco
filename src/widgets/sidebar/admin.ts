@@ -3,7 +3,7 @@ import type { Navigation } from '@/widgets/models';
 
 export default [
   {
-    url: '/app/admin/regions',
+    url: '/app/admin/districts',
     title: 'Hududlar',
     icon: 'note-text',
     items: [

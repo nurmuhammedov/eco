@@ -1,17 +1,12 @@
-'use client';
-
-import { Table } from '@tanstack/react-table';
 import { X } from 'lucide-react';
+import { Table } from '@tanstack/react-table';
 
 import { Button } from '@/shared/components/ui/button.tsx';
 import { Input } from '@/shared/components/ui/input.tsx';
 import { DataTableViewOptions } from '@/shared/components/common/data-table/data-table-view-options.tsx';
 
-import {
-  priorities,
-  statuses,
-} from '../../../../features/user/applications/data/data.tsx';
-import { DataTableFacetedFilter } from '../../../../features/user/applications/ui/data-table-faceted-filter.tsx';
+import { priorities, statuses } from '@/features/user/applications/data/data';
+import { DataTableFacetedFilter } from '@/features/user/applications/ui/data-table-faceted-filter';
 import {
   Select,
   SelectContent,

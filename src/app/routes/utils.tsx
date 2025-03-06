@@ -40,7 +40,7 @@ export const filterRoutesByAuth = (routes: AppRoute[]): AppRoute[] => {
 };
 
 const roleHomeRoutes: Record<UserRoles, string> = {
-  [UserRoles.ADMIN]: '/app/admin/regions',
+  [UserRoles.ADMIN]: '/app/admin/districts',
   [UserRoles.LEGAL]: DefaultRoute,
   [UserRoles.INSPECTOR]: DefaultRoute,
   [UserRoles.REGIONAL]: DefaultRoute,

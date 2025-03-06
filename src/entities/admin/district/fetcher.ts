@@ -1,12 +1,11 @@
 import { apiClient } from '@/shared/api';
 import type { CreateUpdateDistrictDto, District } from './types';
-import { ResponseData } from '@/shared/types/api.ts';
+import { ResponseData } from '@/shared/types/api';
 
-export const fetchDistricts = async (page: number, size: number) => {
-  const { data } = await apiClient.getPaged<District>('/districts', {
-    page,
-    size,
-  });
+export const fetchDistricts = async <T extends Record<string, unknown>>(
+  params: T,
+) => {
+  const { data } = await apiClient.getPaged<District>('/districts', { params });
   return (data as ResponseData<District>) || [];
 };
 

@@ -44,6 +44,7 @@ export default tslint.config(
         },
       ],
       '@typescript-eslint/no-explicit-any': ['off'],
+      '@typescript-eslint/no-misused-promises': ['off'],
       '@typescript-eslint/no-unsafe-argument': ['off'],
       '@typescript-eslint/no-unsafe-assignment': ['off'],
       '@typescript-eslint/prefer-promise-reject-errors': ['off'],
