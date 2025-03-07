@@ -1,4 +1,5 @@
 import { X } from 'lucide-react';
+import { cn } from '@/shared/lib/utils';
 import type { BaseDrawerProps } from '../types';
 import { DrawerFooterActions } from './footer-action';
 import { Button } from '@/shared/components/ui/button';
@@ -28,7 +29,7 @@ export function BaseDrawer({
 }: BaseDrawerProps) {
   return (
     <Drawer open={open} direction={direction} onClose={onClose} {...props}>
-      <DrawerContent className={`sm:!max-w-sm 3xl:!max-w-lg ${className}`}>
+      <DrawerContent className={cn('sm:!max-w-sm 3xl:!max-w-md', className)}>
         <DrawerHeader className="text-left shadow-xs border-b py-4 flex flex-row items-center gap-2">
           <Button
             size="icon"

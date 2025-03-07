@@ -3,7 +3,13 @@ import { OptionItem } from '@/shared/types/general';
 import { SelectItem } from '@/shared/components/ui/select';
 
 export function getSelectOptions<T>(list: OptionItem<T>[]): JSX.Element[] {
-  if (!Array.isArray(list) || list.length === 0) return [];
+  if (!Array.isArray(list) || list.length === 0) {
+    return [
+      <SelectItem value="null" key="no-options">
+        Mavjud emas
+      </SelectItem>,
+    ];
+  }
 
   return list
     .map((option) =>

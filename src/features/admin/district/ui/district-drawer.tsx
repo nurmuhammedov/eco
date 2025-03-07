@@ -2,7 +2,10 @@ import { useUI } from '@/entities/ui';
 import { useForm } from 'react-hook-form';
 import { useCallback, useMemo } from 'react';
 import { withUI } from '@/shared/hoc/with-ui';
+import { Input } from '@/shared/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BaseDrawer } from '@/shared/components/common/base-drawer';
+import { getSelectOptions } from '@/shared/utils/get-select-options';
 import {
   useDistrictById,
   useSaveDistrict,
@@ -22,23 +25,45 @@ import {
 import {
   Select,
   SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { Input } from '@/shared/components/ui/input';
-import { BaseDrawer } from '@/shared/components/common/base-drawer/ui';
+
+const regions = [
+  {
+    value: 1,
+    label: 'Toshkent shahri',
+  },
+  {
+    value: 2,
+    label: 'Toshkent viloyati',
+  },
+  {
+    value: 3,
+    label: 'Samarqand viloyati',
+  },
+  {
+    value: 4,
+    label: 'Sirdaryo viloyati',
+  },
+  {
+    value: 5,
+    label: 'Andijon viloyati',
+  },
+];
 
 function DistrictDrawerBase() {
   const { mutate } = useSaveDistrict();
   const { isOpen, data: districtId, onClose } = useUI();
 
-  const { data: district } = useDistrictById(districtId);
+  const { data: _district } = useDistrictById(districtId);
+
+  const regionOptions = getSelectOptions(regions);
 
   const defaultValues = useMemo<DistrictFormValues>(
     () => ({
       name: '',
-      region_id: String(district?.id) || '',
+      region_id: '',
     }),
     [],
   );
@@ -46,7 +71,6 @@ function DistrictDrawerBase() {
   const form = useForm<DistrictFormValues>({
     resolver: zodResolver(districtSchema),
     defaultValues,
-    mode: 'onSubmit',
   });
 
   const onSubmit = useCallback(
@@ -84,13 +108,14 @@ function DistrictDrawerBase() {
             <FormItem>
               <FormLabel>Viloyat</FormLabel>
               <FormControl>
-                <Select {...field}>
+                <Select
+                  onValueChange={(value) => field.onChange(value)}
+                  {...field}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Viloyat tanlang" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={'null'}>Mavjud emas</SelectItem>
-                  </SelectContent>
+                  <SelectContent>{regionOptions}</SelectContent>
                 </Select>
               </FormControl>
               <FormMessage />

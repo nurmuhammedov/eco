@@ -6,4 +6,8 @@ export type CreateUpdateDistrictDto = {
 export type District = {
   id: number;
   name: string;
+  region: {
+    id: number;
+    name: string;
+  };
 };

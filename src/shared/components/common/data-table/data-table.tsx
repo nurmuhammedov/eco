@@ -22,10 +22,12 @@ import {
   TableRow,
 } from '@/shared/components/ui/table';
 import { DataTablePagination } from './data-table-pagination';
+import { cn } from '@/shared/lib/utils.ts';
 
 interface DataTableProps<TData, TValue> {
   data: TData[];
   namespace: string;
+  className?: string;
   pageCount?: number;
   columns: ColumnDef<TData, TValue>[];
 }
@@ -35,6 +37,7 @@ export function DataTable<TData, TValue>({
   columns,
   namespace,
   pageCount,
+  className,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -54,6 +57,7 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
     pageCount,
+    enableSorting: true,
     manualPagination: true,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
@@ -70,13 +74,24 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <div className="relative rounded-md bg-white overflow-auto h-[calc(100svh-13.8rem)]">
-        <Table className="p-2">
+      <div
+        className={cn('relative rounded-md bg-white overflow-auto', className)}
+      >
+        <Table
+          className="p-2"
+          // style={{
+          //   width: table.getCenterTotalSize(),
+          // }}
+        >
           <TableHeader className="p-2 font-semibold text-black">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} colSpan={header.colSpan}>
+                  <TableHead
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    style={{ width: header.getSize() }}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -96,7 +111,10 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      style={{ width: cell.column.getSize() }}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

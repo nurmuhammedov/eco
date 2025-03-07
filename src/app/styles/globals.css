@@ -185,13 +185,7 @@
   .card-title {
     @apply font-semibold leading-normal text-neutral-850;
   }
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
+  .page-sub-title {
+    @apply text-base 3xl:text-xl font-semibold;
   }
 }
