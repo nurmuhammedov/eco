@@ -2,27 +2,29 @@ import { AxiosError } from 'axios';
 import { axiosInstance } from './axios-instance';
 import { ApiResponse, ResponseData } from '@/shared/types/api';
 
+type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
+
 type RequestParams = Record<string, string | number | boolean | object>;
 
-async function fetcher<T>(
-  method: 'get' | 'post' | 'put' | 'patch' | 'delete',
+async function apiRequest<T>(
+  method: HttpMethod,
   url: string,
-  paramsOrBody?: RequestParams | object,
-  isPaginated: boolean = false,
+  payload?: RequestParams | object,
+  usePagination: boolean = false,
 ): Promise<ApiResponse<T>> {
   try {
     const response = await axiosInstance.request<T | ResponseData<T>>({
       method,
       url,
       ...(method === 'get' || method === 'delete'
-        ? { params: paramsOrBody as RequestParams }
-        : { data: paramsOrBody as object }),
+        ? { params: payload as RequestParams }
+        : { data: payload as object }),
     });
 
     return {
       success: true,
       status: response.status,
-      data: isPaginated
+      data: usePagination
         ? (response.data as ResponseData<T>)
         : (response.data as T),
     };
@@ -38,20 +40,20 @@ async function fetcher<T>(
 
 export const apiClient = {
   get: <T>(url: string, params?: RequestParams) =>
-    fetcher<T>('get', url, params, false),
+    apiRequest<T>('get', url, params, false),
 
-  getPaged: <T>(url: string, params?: RequestParams) =>
-    fetcher<T>('get', url, params, true),
+  getWithPagination: <T>(url: string, params?: RequestParams) =>
+    apiRequest<T>('get', url, params, true),
 
   post: <T, B extends object>(url: string, body: B) =>
-    fetcher<T>('post', url, body, false),
+    apiRequest<T>('post', url, body, false),
 
   put: <T, B extends object>(url: string, body: B) =>
-    fetcher<T>('put', url, body, false),
+    apiRequest<T>('put', url, body, false),
 
   patch: <T, B extends object>(url: string, body: B) =>
-    fetcher<T>('patch', url, body, false),
+    apiRequest<T>('patch', url, body, false),
 
   delete: <T>(url: string, params?: RequestParams) =>
-    fetcher<T>('delete', url, params, false),
+    apiRequest<T>('delete', url, params, false),
 };

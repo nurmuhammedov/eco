@@ -5,7 +5,9 @@ import { ResponseData } from '@/shared/types/api';
 export const fetchDistricts = async <T extends Record<string, unknown>>(
   params: T,
 ) => {
-  const { data } = await apiClient.getPaged<District>('/districts', { params });
+  const { data } = await apiClient.getWithPagination<District>('/districts', {
+    params,
+  });
   return (data as ResponseData<District>) || [];
 };
 
