@@ -1,5 +1,5 @@
 import type { District } from './types';
-import { districtQueryKeys } from './query-keys';
+import { districtKeys, districtQueryKeys } from './query-keys';
 import type { ResponseData } from '@/shared/types/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -15,7 +15,7 @@ export const useDistrictsPaged = <T extends Record<string, unknown>>(
   useQuery({
     staleTime: 10 * 60 * 1000,
     queryFn: () => fetchDistricts(params),
-    queryKey: districtQueryKeys.list(params),
+    queryKey: districtKeys.list('district', params),
     placeholderData: (previousData) => previousData,
   });
 
@@ -24,7 +24,7 @@ export const useDistrictById = (id: number) =>
     enabled: !!id,
     staleTime: 10 * 60 * 1000,
     queryFn: () => fetchDistrictById(id),
-    queryKey: districtQueryKeys.detail(id),
+    queryKey: districtKeys.detail('district', id),
     placeholderData: (previousData) => previousData,
   });
 
@@ -35,7 +35,9 @@ export const useSaveDistrict = () => {
     mutationFn: createOrUpdateDistrict,
 
     onMutate: async (newDistrict) => {
-      await queryClient.cancelQueries({ queryKey: districtQueryKeys.all() });
+      await queryClient.cancelQueries({
+        queryKey: districtKeys.entity('district'),
+      });
 
       const prevDistricts = queryClient.getQueryData<ResponseData<District>>(
         districtQueryKeys.all(),
