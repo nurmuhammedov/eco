@@ -60,6 +60,9 @@ export function DistrictTable() {
     {
       id: 'actions',
       maxSize: 200,
+      meta: {
+        isFixed: true,
+      },
       cell: ({ row }) => (
         <DataTableRowActions
           row={row}

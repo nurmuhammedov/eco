@@ -2,7 +2,12 @@
   "actions": {
     "save": "Saqlash",
     "cancel": "Bekor qilish",
-    "delete": "O'chirish"
+    "delete": "O'chirish",
+    "reload": "Yangilash"
+  },
+  "errors": {
+    "something_went_wrong": "Xatolik yuz berdi!",
+    "view_details": "Ma'lumotlar ko'rsatish"
   },
   "menu": {
     "appeals": "Murojaatlar",

@@ -31,7 +31,7 @@ const AppRouter = () => {
     },
     {
       path: '*',
-      element: <Suspense fallback={null} children={<PublicLayout />} />,
+      element: <Suspense fallback={null} children={<PrivateLayout />} />,
       children: [
         {
           path: '*',

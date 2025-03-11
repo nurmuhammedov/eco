@@ -2,7 +2,12 @@
   "actions": {
     "save": "Сақлаш",
     "cancel": "Бекор қилиш",
-    "delete": "Ўчириш"
+    "delete": "Ўчириш",
+    "reload": "Янгилаш"
+  },
+  "errors": {
+    "something_went_wrong": "Хатолик юз берди!",
+    "view_details": "Маълумотларни кўрсатиш"
   },
   "menu": {
     "appeals": "Мурожаатлар",

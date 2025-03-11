@@ -1,35 +1,139 @@
-import React, { ErrorInfo } from 'react';
-import { WithTranslation, withTranslation } from 'react-i18next';
+import { cn } from '@/shared/lib/utils';
+import { IS_DEV } from '@/shared/constants/general';
+import React, { Component, ErrorInfo, memo } from 'react';
+import { DefaultErrorFallback } from './default-error-fallback';
+import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import type {
+  ErrorBoundaryProps,
+  ErrorBoundaryState,
+  ErrorFallbackProps,
+} from '../types';
 
-type ErrorBoundaryProps = {
-  children: React.ReactNode;
-} & WithTranslation;
+/**
+ * High-performance ErrorBoundary core component
+ */
+class ErrorBoundaryCore extends Component<
+  ErrorBoundaryProps & { navigate: NavigateFunction; pathname: string },
+  ErrorBoundaryState
+> {
+  // Default properties
+  static defaultProps = {
+    resetOnRouteChange: true,
+  };
 
-type ErrorState = {
-  hasError: boolean;
-};
+  private previousPath: string;
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorState> {
-  state = { hasError: false };
-
-  static getDerivedStateFromError() {
-    return { hasError: true };
+  constructor(
+    props: ErrorBoundaryProps & {
+      pathname: string;
+      navigate: NavigateFunction;
+    },
+  ) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: undefined,
+    };
+    this.previousPath = props.pathname;
   }
+
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
+    return { hasError: true, error };
+  }
+
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string,@typescript-eslint/restrict-template-expressions
-    console.error(`Pay attention to the error. ${error}: ${errorInfo}`);
+    this.setState({ errorInfo });
+    if (this.props.onError) {
+      this.props.onError(error, errorInfo);
+    }
+
+    if (IS_DEV) {
+      console.group(
+        '%c ErrorBoundary caught an error',
+        'color: #ff0000; font-weight: bold;',
+      );
+      console.error(error);
+      console.error('Component Stack:', errorInfo.componentStack);
+      console.groupEnd();
+    }
   }
 
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="flex items-center justify-center flex-col h-screen">
-          {this.props.t('something_went_wrong')}
-        </div>
-      );
+  componentDidUpdate(): void {
+    const { resetOnRouteChange, pathname } = this.props;
+
+    if (
+      resetOnRouteChange &&
+      this.state.hasError &&
+      pathname !== this.previousPath
+    ) {
+      this.resetError();
     }
-    return this.props.children;
+
+    this.previousPath = pathname;
+  }
+
+  resetError = (): void => {
+    this.setState({
+      hasError: false,
+      error: null,
+      errorInfo: undefined,
+    });
+  };
+
+  reloadPage = (): void => {
+    window.location.reload();
+  };
+
+  goBack = (): void => {
+    this.resetError();
+    this.props.navigate(-1);
+  };
+
+  goHome = (): void => {
+    this.resetError();
+    this.props.navigate('/');
+  };
+
+  render(): React.ReactNode {
+    const { hasError, error, errorInfo } = this.state;
+    const { children, fallback: CustomFallback, className } = this.props;
+
+    if (!hasError) {
+      return <div className={cn(className)}>{children}</div>;
+    }
+
+    const fallbackProps: ErrorFallbackProps = {
+      error,
+      errorInfo,
+      isDev: IS_DEV,
+      goBack: this.goBack,
+      goHome: this.goHome,
+      resetError: this.resetError,
+      reloadPage: this.reloadPage,
+    };
+
+    if (CustomFallback) {
+      return <CustomFallback {...fallbackProps} />;
+    }
+
+    return <DefaultErrorFallback {...fallbackProps} />;
   }
 }
 
-export default withTranslation()(ErrorBoundary);
+const ErrorBoundary = memo((props: ErrorBoundaryProps) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  return (
+    <ErrorBoundaryCore
+      {...props}
+      navigate={navigate}
+      pathname={location.pathname}
+    />
+  );
+});
+
+ErrorBoundary.displayName = 'ErrorBoundary';
+
+export default ErrorBoundary;

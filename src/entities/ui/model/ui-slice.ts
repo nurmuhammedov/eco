@@ -5,7 +5,7 @@ const initialState: UIState = {
   isOpen: false,
   mode: undefined,
   name: undefined,
-  data: undefined,
+  data: null,
 };
 
 const uiSlice = createSlice({
