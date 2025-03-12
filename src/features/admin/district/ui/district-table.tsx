@@ -1,4 +1,4 @@
-import { PencilLine, Trash } from 'lucide-react';
+import { PencilLine, Trash2 } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useFilters } from '@/shared/hooks/use-filters';
 import { District } from '@/entities/admin/district/types';
@@ -38,11 +38,12 @@ export function DistrictTable() {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Nomi" />
       ),
-      size: 40,
+      size: 10,
       enableSorting: false,
       enableHiding: false,
     },
     {
+      enablePinning: true,
       accessorKey: 'name',
       enableSorting: false,
       header: ({ column }) => (
@@ -59,7 +60,7 @@ export function DistrictTable() {
     },
     {
       id: 'actions',
-      maxSize: 200,
+      size: 10,
       meta: {
         isFixed: true,
       },
@@ -69,12 +70,12 @@ export function DistrictTable() {
           actions={[
             {
               label: 'Tahrirlash',
-              icon: <PencilLine />,
+              icon: <PencilLine className="size-4" />,
               onClick: () => console.log('Edit clicked'),
             },
             {
               label: "O'chirish",
-              icon: <Trash className="text-red-500" />,
+              icon: <Trash2 className="size-4 hover:text-red-500" />,
               onClick: () => console.log('Delete clicked'),
             },
           ]}

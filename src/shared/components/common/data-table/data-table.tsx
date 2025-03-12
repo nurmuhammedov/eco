@@ -23,6 +23,7 @@ import {
 } from '@/shared/components/ui/table';
 import { DataTablePagination } from './data-table-pagination';
 import { cn } from '@/shared/lib/utils.ts';
+import { getCommonPinningStyles } from '@/shared/components/common/data-table/models/get-common-pinning.ts';
 
 interface DataTableProps<TData, TValue> {
   data: TData[];
@@ -90,7 +91,9 @@ export function DataTable<TData, TValue>({
                   <TableHead
                     key={header.id}
                     colSpan={header.colSpan}
-                    style={{ width: header.getSize() }}
+                    style={{
+                      ...getCommonPinningStyles({ column: header.column }),
+                    }}
                   >
                     {header.isPlaceholder
                       ? null
@@ -113,7 +116,10 @@ export function DataTable<TData, TValue>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      style={{ width: cell.column.getSize() }}
+                      style={{
+                        width: cell.column.getSize(),
+                        ...getCommonPinningStyles({ column: cell.column }),
+                      }}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,

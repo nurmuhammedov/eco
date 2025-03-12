@@ -1,8 +1,7 @@
 import { Globe } from 'lucide-react';
-import { Language } from '@/shared/types/language';
 import { Button } from '@/shared/components/ui/button';
-import { useLanguage } from '@/shared/hooks/use-language.ts';
-import { UZBFlagIcon } from '@/shared/components/SVGIcons';
+import { SYSTEM_LANGUAGES } from '@/shared/config/languages';
+import { useSelectedLanguage } from '../models/use-selected-language';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,30 +9,18 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
 
-const systemLanguages = [
-  { value: Language.UZ, text: 'Lotin', label: 'Lotin', flag: <UZBFlagIcon /> },
-  {
-    value: Language.KR,
-    text: 'Кирилл',
-    label: 'Кирилл',
-    flag: <UZBFlagIcon />,
-  },
-];
-
-const IntlDropdown = () => {
-  const { language, setLanguage } = useLanguage();
-
-  const selectedLang = systemLanguages.find((item) => item.value === language)!;
+const LanguageDropdown = () => {
+  const { selectedLang, setLanguage } = useSelectedLanguage();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="secondary">
-          <Globe /> <span className="!text-sm">{selectedLang.text}</span>
+          <Globe /> <span className="!text-sm">{selectedLang?.text}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="bottom" align="end" className="w-24">
-        {systemLanguages.map((langItem) => (
+        {SYSTEM_LANGUAGES.map((langItem) => (
           <DropdownMenuItem
             key={langItem.value}
             onClick={() => setLanguage(langItem.value)}
@@ -48,4 +35,5 @@ const IntlDropdown = () => {
     </DropdownMenu>
   );
 };
-export default IntlDropdown;
+
+export default LanguageDropdown;

@@ -1,13 +1,6 @@
-import { Row } from '@tanstack/react-table';
-import { MoreHorizontal } from 'lucide-react';
-import { Button } from '@/shared/components/ui/button.tsx';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/shared/components/ui/dropdown-menu.tsx';
 import { ReactNode } from 'react';
+import { cn } from '@/shared/lib/utils';
+import { Row } from '@tanstack/react-table';
 
 interface Action<TData> {
   label: string;
@@ -25,30 +18,20 @@ export function DataTableRowActions<TData>({
   row,
   actions,
 }: DataTableRowActionsProps<TData>) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+  return actions?.length
+    ? actions.map((action, index) => (
+        <button
+          key={index}
+          className={cn(
+            'p-1 flex items-center justify-center rounded hover:bg-gray-300',
+            action.className,
+          )}
+          onClick={() => action.onClick(row)}
         >
-          <MoreHorizontal />
-          <span className="sr-only">Open menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        {actions?.length
-          ? actions.map((action, index) => (
-              <DropdownMenuItem
-                key={index}
-                className={action.className}
-                onClick={() => action.onClick(row)}
-              >
-                {action.icon ? action.icon : null} {action.label}
-              </DropdownMenuItem>
-            ))
-          : 'No Result'}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+          <span className="size-5 flex items-center justify-center">
+            {action.icon ? action.icon : null}
+          </span>
+        </button>
+      ))
+    : 'No Result';
 }

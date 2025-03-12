@@ -24,9 +24,12 @@ export function AppLogo() {
         />
       </div>
       <h6
-        className={cn('text-xm leading-4 font-inter', {
-          hidden: !sidebarOpen,
-        })}
+        className={cn(
+          'text-xm 3xl:text-sm font-semibold leading-4 font-inter',
+          {
+            hidden: !sidebarOpen,
+          },
+        )}
       >
         {t('app.name')}
       </h6>
