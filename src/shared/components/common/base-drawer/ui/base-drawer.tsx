@@ -48,13 +48,13 @@ export const BaseDrawer = memo(function BaseDrawer({
 
   const drawerHeader = useMemo(
     () => (
-      <DrawerHeader className="text-left shadow-xs border-b py-4 flex flex-row items-center gap-2">
+      <DrawerHeader className="text-left shadow-xs border-b py-3 2xl:py-4 flex flex-row items-center gap-2">
         <Button
           size="icon"
           variant="ghost"
           onClick={handleClose}
           aria-label="Close Drawer"
-          className="border-none size-5 3xl:size-8 shadow-none"
+          className="border-none !size-6 3xl:!size-8 shadow-none"
         >
           <X className="text-neutral-400" />
         </Button>
