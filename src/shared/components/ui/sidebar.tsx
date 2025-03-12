@@ -17,9 +17,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/shared/components/ui/tooltip';
+import { DeviceType } from '@/shared/types/enums';
+import { useWindowSize } from '@/shared/hooks/use-window-size';
 
 export const SIDEBAR_COOKIE_NAME = 'sidebar:state';
-const SIDEBAR_WIDTH = '15rem';
 const SIDEBAR_WIDTH_MOBILE = '18rem';
 const SIDEBAR_WIDTH_ICON = '3rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
@@ -43,6 +44,35 @@ function useSidebar() {
   }
 
   return context;
+}
+
+function getSidebarWidth() {
+  const { deviceType } = useWindowSize();
+
+  switch (deviceType) {
+    case DeviceType.TABLET:
+    case DeviceType.LAPTOP:
+    case DeviceType.DESKTOP:
+      return '15rem';
+    case DeviceType.QHD_2K:
+    case DeviceType.UHD_4K:
+      return '18rem';
+
+    default:
+      return '15rem';
+  }
+
+  // const width: Record<DeviceType, string> = {
+  //   [DeviceType.MOBILE]: '18rem',
+  //   [DeviceType.TABLET]: '15rem',
+  //   [DeviceType.LAPTOP]: '15rem',
+  //   [DeviceType.DESKTOP]: '15rem',
+  //   [DeviceType.LARGE_SCREEN]: '16rem',
+  //   [DeviceType.QHD_2K]: '18rem',
+  //   [DeviceType.UHD_4K]: '18rem',
+  // };
+  //
+  // return width[deviceType] ?? '15rem';
 }
 
 const SidebarProvider = React.forwardRef<
@@ -140,7 +170,7 @@ const SidebarProvider = React.forwardRef<
           <div
             style={
               {
-                '--sidebar-width': SIDEBAR_WIDTH,
+                '--sidebar-width': getSidebarWidth(),
                 '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
                 ...style,
               } as React.CSSProperties
