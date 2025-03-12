@@ -61,18 +61,6 @@ function getSidebarWidth() {
     default:
       return '15rem';
   }
-
-  // const width: Record<DeviceType, string> = {
-  //   [DeviceType.MOBILE]: '18rem',
-  //   [DeviceType.TABLET]: '15rem',
-  //   [DeviceType.LAPTOP]: '15rem',
-  //   [DeviceType.DESKTOP]: '15rem',
-  //   [DeviceType.LARGE_SCREEN]: '16rem',
-  //   [DeviceType.QHD_2K]: '18rem',
-  //   [DeviceType.UHD_4K]: '18rem',
-  // };
-  //
-  // return width[deviceType] ?? '15rem';
 }
 
 const SidebarProvider = React.forwardRef<
