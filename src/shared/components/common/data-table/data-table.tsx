@@ -21,9 +21,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui/table';
+import { cn } from '@/shared/lib/utils';
 import { DataTablePagination } from './data-table-pagination';
-import { cn } from '@/shared/lib/utils.ts';
-import { getCommonPinningStyles } from '@/shared/components/common/data-table/models/get-common-pinning.ts';
+import { getCommonPinningStyles } from '@/shared/components/common/data-table/models/get-common-pinning';
 
 interface DataTableProps<TData, TValue> {
   data: TData[];

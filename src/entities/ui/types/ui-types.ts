@@ -1,5 +1,3 @@
-export type UIMode = 'drawer' | 'modal';
-
 export enum UIModeEnum {
   CREATE = 'CREATE',
   UPDATE = 'UPDATE',

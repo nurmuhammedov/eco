@@ -1,16 +1,19 @@
+import { memo } from 'react';
 import { Button } from '@/shared/components/ui/button';
 import type { DrawerFooterActionsProps } from '../types';
 
-export function DrawerFooterActions({
+export const DrawerFooterActions = memo(function DrawerFooterActions({
+  loading,
   onCancel,
   onSubmit,
-  loading,
   disabled,
   showCancel = true,
   showSubmit = true,
   submitLabel = 'Saqlash',
   cancelLabel = 'Bekor qilish',
 }: DrawerFooterActionsProps) {
+  if (!showCancel && !showSubmit) return null;
+
   return (
     <div className="flex gap-x-4 justify-between">
       {showCancel && (
@@ -36,4 +39,4 @@ export function DrawerFooterActions({
       )}
     </div>
   );
-}
+});

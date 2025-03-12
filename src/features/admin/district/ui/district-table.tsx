@@ -1,4 +1,4 @@
-import { PencilLine, Trash2 } from 'lucide-react';
+import { useUI } from '@/entities/ui';
 import { ColumnDef } from '@tanstack/react-table';
 import { useFilters } from '@/shared/hooks/use-filters';
 import { District } from '@/entities/admin/district/types';
@@ -8,10 +8,17 @@ import {
   DataTableColumnHeader,
   DataTableRowActions,
 } from '@/shared/components/common/data-table';
+import { UIModeEnum } from '@/entities/ui/types/ui-types';
 
 export function DistrictTable() {
+  const { onOpen } = useUI();
   const { filters } = useFilters();
   const { data } = useDistrictsPaged(filters);
+
+  const onEdit = (id: number) => {
+    onOpen(UIModeEnum.UPDATE, 'district-drawer', id);
+  };
+
   const list: District[] = [
     {
       id: 1,
@@ -24,10 +31,22 @@ export function DistrictTable() {
     {
       id: 2,
       name: 'Chilonzor tumani',
-      region: {
-        id: 1,
-        name: 'Toshkent shahri',
-      },
+      region: { id: 1, name: 'Toshkent shahri' },
+    },
+    {
+      id: 3,
+      name: 'Yashnobod tumani',
+      region: { id: 1, name: 'Toshkent shahri' },
+    },
+    {
+      id: 4,
+      name: 'Bektemir tumani',
+      region: { id: 1, name: 'Toshkent shahri' },
+    },
+    {
+      id: 4,
+      name: 'Uchtepa tumani',
+      region: { id: 1, name: 'Toshkent shahri' },
     },
   ];
 
@@ -61,24 +80,15 @@ export function DistrictTable() {
     {
       id: 'actions',
       size: 10,
-      meta: {
-        isFixed: true,
-      },
       cell: ({ row }) => (
         <DataTableRowActions
+          showEdit
+          showView
           row={row}
-          actions={[
-            {
-              label: 'Tahrirlash',
-              icon: <PencilLine className="size-4" />,
-              onClick: () => console.log('Edit clicked'),
-            },
-            {
-              label: "O'chirish",
-              icon: <Trash2 className="size-4 hover:text-red-500" />,
-              onClick: () => console.log('Delete clicked'),
-            },
-          ]}
+          showDelete
+          onEdit={(row) => onEdit(row.original.id)}
+          onView={(row) => console.log(row.original.id)}
+          onDelete={(row) => console.log(row.original.id)}
         />
       ),
     },
@@ -86,8 +96,8 @@ export function DistrictTable() {
 
   return (
     <DataTable
-      namespace="districts"
       data={list || []}
+      namespace="districts"
       pageCount={data?.totalPages}
       columns={districtTableColumns}
       className="h-[calc(100svh-14.5rem)]"

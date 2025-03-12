@@ -1,1 +1,1 @@
-export { BaseDrawer } from './ui';
+export { BaseDrawer } from './ui/base-drawer.tsx';
