@@ -7,7 +7,8 @@
   },
   "errors": {
     "something_went_wrong": "Хатолик юз берди!",
-    "view_details": "Маълумотларни кўрсатиш"
+    "view_details": "Маълумотларни кўрсатиш",
+    "page_not_found": "Саҳифа топилмади"
   },
   "menu": {
     "appeals": "Мурожаатлар",

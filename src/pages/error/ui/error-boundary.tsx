@@ -128,6 +128,7 @@ const ErrorBoundary = memo((props: ErrorBoundaryProps) => {
   return (
     <ErrorBoundaryCore
       {...props}
+      className="h-full"
       navigate={navigate}
       pathname={location.pathname}
     />

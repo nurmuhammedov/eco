@@ -6,16 +6,16 @@ export default [
     url: '/app/admin/districts',
     title: 'Hududlar',
     icon: 'note-text',
-    items: [
-      {
-        url: '/app/admin/regions',
-        title: 'Viloyatlar',
-      },
-      {
-        url: '/app/admin/districts',
-        title: 'Tumanlar',
-      },
-    ],
+    // items: [
+    //   {
+    //     url: '/app/admin/regions',
+    //     title: 'Viloyatlar',
+    //   },
+    //   {
+    //     url: '/app/admin/districts',
+    //     title: 'Tumanlar',
+    //   },
+    // ],
   },
   {
     url: '/app/admin/staffs',

@@ -7,7 +7,8 @@
   },
   "errors": {
     "something_went_wrong": "Xatolik yuz berdi!",
-    "view_details": "Ma'lumotlarni ko'rsatish"
+    "view_details": "Ma'lumotlarni ko'rsatish",
+    "page_not_found": "Sahifa topilmadi"
   },
   "menu": {
     "appeals": "Murojaatlar",

@@ -42,7 +42,7 @@ const AppRouter = () => {
   ]);
 
   return (
-    <NuqsAdapter>
+    <NuqsAdapter data-id={11}>
       <RouterProvider router={router} />
     </NuqsAdapter>
   );

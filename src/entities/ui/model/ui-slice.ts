@@ -1,5 +1,5 @@
+import type { PayloadUI, UIState } from '../types/ui-types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PayloadUI, UIState } from '../types/ui-types';
 
 const initialState: UIState = {
   isOpen: false,
