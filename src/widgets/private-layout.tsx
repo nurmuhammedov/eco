@@ -26,7 +26,7 @@ export default function PrivateLayout() {
       <AppSidebar />
       <SidebarInset>
         <Header />
-        <section className="h-full p-4 3xl:p-5">
+        <section className="h-full px-4 pt-4 3xl:p-5">
           <ErrorBoundary>
             <Outlet />
           </ErrorBoundary>
