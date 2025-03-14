@@ -1,3 +1,4 @@
+import React from 'react';
 import { Column } from '@tanstack/react-table';
 
 export function getCommonPinningStyles<TData>({
@@ -5,12 +6,12 @@ export function getCommonPinningStyles<TData>({
   withBorder = false,
 }: {
   column: Column<TData>;
-  /**
-   * Show box shadow between pinned and scrollable columns.
-   * @default false
-   */
   withBorder?: boolean;
 }): React.CSSProperties {
+  const columnSize = column.getSize();
+  const columnMinSize = column.columnDef.minSize;
+  const columnMaxSize = column.columnDef.maxSize;
+
   const isPinned = column.getIsPinned();
   const isLastLeftPinnedColumn =
     isPinned === 'left' && column.getIsLastColumn('left');
@@ -30,7 +31,9 @@ export function getCommonPinningStyles<TData>({
     opacity: isPinned ? 0.97 : 1,
     position: isPinned ? 'sticky' : 'relative',
     background: isPinned ? 'hsl(var(--background))' : 'bg-neutral-50',
-    width: column.getSize(),
+    width: `${columnSize}px`, // Explicit width with px
+    minWidth: columnMinSize ? `${columnMinSize}px` : undefined,
+    maxWidth: columnMaxSize ? `${columnMaxSize}px` : undefined,
     zIndex: isPinned ? 1 : 0,
   };
 }

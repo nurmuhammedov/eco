@@ -56,7 +56,7 @@ function DistrictDrawerBase() {
   const { mutate } = useSaveDistrict();
   const { isOpen, data: districtId, onClose } = useUI();
 
-  const { data: _district } = useDistrictById(districtId);
+  const { data: _district } = useDistrictById(districtId || 1);
 
   const regionOptions = getSelectOptions(regions);
 

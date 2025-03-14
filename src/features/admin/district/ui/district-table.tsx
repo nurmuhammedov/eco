@@ -80,6 +80,9 @@ export function DistrictTable() {
     {
       id: 'actions',
       size: 10,
+      minSize: 10,
+      maxSize: 40,
+      enableResizing: false,
       cell: ({ row }) => (
         <DataTableRowActions
           showEdit
