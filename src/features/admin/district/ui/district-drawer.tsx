@@ -1,9 +1,8 @@
-import { useUI } from '@/entities/ui';
 import { useForm } from 'react-hook-form';
 import { useCallback, useMemo } from 'react';
-import { withUI } from '@/shared/hoc/with-ui';
 import { Input } from '@/shared/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import { getSelectOptions } from '@/shared/utils/get-select-options';
 import {
@@ -15,6 +14,12 @@ import {
   districtSchema,
 } from '@/entities/admin/district/schema';
 import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/ui/select';
+import {
   Form,
   FormControl,
   FormField,
@@ -22,12 +27,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/components/ui/select';
 
 const regions = [
   {
@@ -52,11 +51,11 @@ const regions = [
   },
 ];
 
-function DistrictDrawerBase() {
+export const DistrictDrawer = () => {
   const { mutate } = useSaveDistrict();
-  const { isOpen, data: districtId, onClose } = useUI();
+  const { isOpen, onClose } = useDistrictDrawer();
 
-  const { data: _district } = useDistrictById(districtId || 1);
+  const { data: _district } = useDistrictById(1);
 
   const regionOptions = getSelectOptions(regions);
 
@@ -78,7 +77,7 @@ function DistrictDrawerBase() {
       mutate(
         {
           ...data,
-          id: districtId,
+          id: 1,
         },
         {
           onSuccess: () => {
@@ -138,6 +137,4 @@ function DistrictDrawerBase() {
       </Form>
     </BaseDrawer>
   );
-}
-
-export const DistrictDrawer = withUI(DistrictDrawerBase, 'district-drawer');
+};

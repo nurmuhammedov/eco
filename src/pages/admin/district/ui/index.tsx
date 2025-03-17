@@ -1,7 +1,8 @@
-import { lazy } from 'react';
+import { RegionsManagement } from '@/widgets/admin/regions-management/ui/regions-management.tsx';
 
-const DistrictWidget = lazy(() => import('@/widgets/admin/region/ui'));
+// const DistrictWidget = lazy(() => import('@/widgets/admin/region/ui'));
 
 export default function DistrictPage() {
-  return <DistrictWidget />;
+  // return <DistrictWidget />;
+  return <RegionsManagement />;
 }

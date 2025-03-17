@@ -1,38 +1,44 @@
 import { useState } from 'react';
-import { useUI } from '@/entities/ui';
-import { UIModeEnum } from '@/entities/ui/types/ui-types';
-
-export type ActiveTab = 'regions' | 'districts';
+import { UIModeEnum } from '@/shared/types/ui-types';
+import {
+  useDistrictDrawer,
+  useRegionDrawer,
+} from '@/shared/hooks/entity-hooks';
+import { ActiveTab } from '../types';
 
 export interface UseRegionsManagementProps {
   initialTab?: ActiveTab;
 }
 
 export const useRegionManagement = (props: UseRegionsManagementProps) => {
-  const { onOpen } = useUI();
+  const { onOpen: openRegionDrawer, isOpen: isOpenRegion } = useRegionDrawer();
+  const { onOpen: openDistrictDrawer, isOpen: isOpenDistrict } =
+    useDistrictDrawer();
   const [activeTab, setActiveTab] = useState<ActiveTab>(
-    props.initialTab || 'regions',
+    props.initialTab || 'districts',
   );
 
   const openAddRegionDrawer = () => {
-    onOpen(UIModeEnum.CREATE, 'region');
+    openRegionDrawer(UIModeEnum.CREATE);
   };
 
   const openEditRegionDrawer = () => {
-    onOpen(UIModeEnum.UPDATE, 'region');
+    openRegionDrawer(UIModeEnum.EDIT);
   };
 
   const openAddDistrictDrawer = () => {
-    onOpen(UIModeEnum.CREATE, 'district-drawer');
+    openDistrictDrawer(UIModeEnum.CREATE);
   };
 
   const openEditDistrictDrawer = () => {
-    onOpen(UIModeEnum.UPDATE, 'district-drawer');
+    openDistrictDrawer(UIModeEnum.EDIT);
   };
 
   return {
     activeTab,
     setActiveTab,
+    isOpenRegion,
+    isOpenDistrict,
     openAddRegionDrawer,
     openEditRegionDrawer,
     openAddDistrictDrawer,

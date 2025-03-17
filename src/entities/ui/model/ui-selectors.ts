@@ -5,5 +5,8 @@ export const selectUIState = (state: RootState) => state.ui;
 
 export const selectIsOpen = createSelector(selectUIState, (ui) => ui.isOpen);
 export const selectUIMode = createSelector(selectUIState, (ui) => ui.mode);
-export const selectUIName = createSelector(selectUIState, (ui) => ui.name);
+export const selectUIComponentName = createSelector(
+  selectUIState,
+  (ui) => ui.componentName,
+);
 export const selectUIData = createSelector(selectUIState, (ui) => ui.data);

@@ -1,5 +1,6 @@
 import { useUI } from '@/entities/ui';
 import { ColumnDef } from '@tanstack/react-table';
+import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
 import { District } from '@/entities/admin/district/types';
 import { useDistrictsPaged } from '@/entities/admin/district/api';
@@ -8,7 +9,6 @@ import {
   DataTableColumnHeader,
   DataTableRowActions,
 } from '@/shared/components/common/data-table';
-import { UIModeEnum } from '@/entities/ui/types/ui-types';
 
 export function DistrictTable() {
   const { onOpen } = useUI();
@@ -16,7 +16,7 @@ export function DistrictTable() {
   const { data } = useDistrictsPaged(filters);
 
   const onEdit = (id: number) => {
-    onOpen(UIModeEnum.UPDATE, 'district-drawer', id);
+    onOpen(UIModeEnum.EDIT, 'district-drawer', id);
   };
 
   const list: District[] = [
@@ -53,10 +53,9 @@ export function DistrictTable() {
   const districtTableColumns: ColumnDef<District>[] = [
     {
       accessorKey: 'id',
+      maxSize: 20,
       enableResizing: true,
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Nomi" />
-      ),
+      header: '№',
       size: 10,
       enableSorting: false,
       enableHiding: false,
@@ -103,7 +102,7 @@ export function DistrictTable() {
       namespace="districts"
       pageCount={data?.totalPages}
       columns={districtTableColumns}
-      className="h-[calc(100svh-14.5rem)]"
+      className="h-[calc(100svh-17.5rem)]"
     />
   );
 }
