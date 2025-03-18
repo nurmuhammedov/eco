@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { RootState } from '@/app/store';
 import { useSelector } from 'react-redux';
+import { createSelector } from '@reduxjs/toolkit';
 import { useAppDispatch } from '@/shared/hooks/use-store';
 import { closeUI, openUI } from '@/entities/ui/model/ui-slice';
 import {
@@ -12,27 +13,46 @@ import {
 export function createEntityDrawerHook<T extends UIComponentName>(
   componentName: T,
 ) {
+  const selectIsOpen = createSelector(
+    [
+      (state: RootState) => state.ui.isOpen,
+      (state: RootState) => state.ui.componentName,
+    ],
+    (isOpen, currentComponentName) =>
+      isOpen && currentComponentName === componentName,
+  );
+
+  const selectMode = createSelector(
+    [(state: RootState) => state.ui],
+    (ui) => ui.mode,
+  );
+
+  const selectData = createSelector(
+    [
+      (state: RootState) => state.ui.data,
+      (state: RootState) => state.ui.componentName,
+    ],
+    (data, currentComponentName) =>
+      currentComponentName === componentName
+        ? (data as UIComponentDataMap[T])
+        : undefined,
+  );
+
   return function useEntityDrawer() {
     const dispatch = useAppDispatch();
 
-    const isOpen = useSelector<RootState, boolean>(
-      (state) => state.ui.isOpen && state.ui.componentName === componentName,
-    );
-
-    const mode = useSelector<RootState, UIModeEnum | undefined>(
-      (state) => state.ui.mode,
-    );
-
-    const data = useSelector<RootState, UIComponentDataMap[T] | null>(
-      (state) =>
-        state.ui.componentName === componentName
-          ? (state.ui.data as UIComponentDataMap[T])
-          : null,
-    );
+    const isOpen = useSelector(selectIsOpen);
+    const mode = useSelector(selectMode);
+    const data = useSelector(selectData);
 
     const onOpen = useCallback(
-      (mode: UIModeEnum, data?: UIComponentDataMap[T] | null) =>
-        dispatch(openUI({ mode, componentName, data })),
+      (mode: UIModeEnum, data?: UIComponentDataMap[T]) => {
+        if (!mode) {
+          console.warn('Mode is required when opening UI component');
+          return;
+        }
+        dispatch(openUI({ mode, componentName, data }));
+      },
       [dispatch],
     );
 

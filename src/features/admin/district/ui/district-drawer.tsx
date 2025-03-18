@@ -6,13 +6,11 @@ import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import { getSelectOptions } from '@/shared/utils/get-select-options';
 import {
-  useDistrictById,
-  useSaveDistrict,
-} from '@/entities/admin/district/api';
-import {
-  DistrictFormValues,
   districtSchema,
-} from '@/entities/admin/district/schema';
+  useCreateDistrict,
+  useDistrictQuery,
+  useUpdateDistrict,
+} from '@/entities/admin/district';
 import {
   Select,
   SelectContent,
@@ -27,6 +25,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
+import {
+  CreateDistrictDTO,
+  DistrictFormValues,
+  UpdateDistrictDTO,
+} from '@/entities/admin/district/district.types.ts';
+import { UIModeEnum } from '@/shared/types/ui-types.ts';
 
 const regions = [
   {
@@ -52,10 +56,12 @@ const regions = [
 ];
 
 export const DistrictDrawer = () => {
-  const { mutate } = useSaveDistrict();
-  const { isOpen, onClose } = useDistrictDrawer();
+  const { mutate: createDistrict } = useCreateDistrict();
+  const { mutate: updateDistrict } = useUpdateDistrict();
+  const { isOpen, onClose, mode } = useDistrictDrawer();
+  const isCreate = mode === UIModeEnum.CREATE;
 
-  const { data: _district } = useDistrictById(1);
+  const { data: _district } = useDistrictQuery(1);
 
   const regionOptions = getSelectOptions(regions);
 
@@ -73,21 +79,10 @@ export const DistrictDrawer = () => {
   });
 
   const onSubmit = useCallback(
-    (data: DistrictFormValues) => {
-      mutate(
-        {
-          ...data,
-          id: 1,
-        },
-        {
-          onSuccess: () => {
-            // toast
-            form.reset();
-            onClose();
-          },
-        },
-      );
-    },
+    (data: unknown) =>
+      isCreate
+        ? createDistrict(data as CreateDistrictDTO)
+        : updateDistrict(data as UpdateDistrictDTO),
     [onClose],
   );
 

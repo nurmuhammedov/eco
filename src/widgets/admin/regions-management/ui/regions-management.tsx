@@ -1,27 +1,29 @@
 import { Fragment } from 'react';
 import { ActionButton } from './action-button';
-import { DistrictDrawer, DistrictTable } from '@/features/admin/district';
+import { RegionDrawer, RegionTable } from '@/features/admin/region';
+import { useRegionManagement } from '../model/use-region-management';
 import { ActiveTab } from '@/widgets/admin/regions-management/types';
+import { DistrictDrawer, DistrictTable } from '@/features/admin/district';
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from '@/shared/components/ui/tabs';
-import { useRegionManagement } from '@/widgets/admin/regions-management/model/use-region-management';
 
 export const RegionsManagement = ({
-  initialTab = 'districts',
+  initialTab = 'regions',
 }: {
   className?: string;
   initialTab?: ActiveTab;
 }) => {
   const {
-    openAddDistrictDrawer,
-    openAddRegionDrawer,
     activeTab,
+    isOpenRegion,
     setActiveTab,
     isOpenDistrict,
+    openAddRegionDrawer,
+    openAddDistrictDrawer,
   } = useRegionManagement({ initialTab });
   return (
     <Fragment>
@@ -41,12 +43,13 @@ export const RegionsManagement = ({
           <TabsTrigger value="districts">Туманлар</TabsTrigger>
         </TabsList>
         <TabsContent className="mt-4 w-full" value="regions">
-          Make changes to your account here.
+          <RegionTable />
         </TabsContent>
         <TabsContent className="mt-4 w-full" value="districts">
           <DistrictTable />
         </TabsContent>
       </Tabs>
+      {isOpenRegion && <RegionDrawer />}
       {isOpenDistrict && <DistrictDrawer />}
     </Fragment>
   );

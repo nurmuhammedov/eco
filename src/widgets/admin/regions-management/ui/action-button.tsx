@@ -1,6 +1,6 @@
 import { memo } from 'react';
+import { ActionButtonProps } from '../types';
 import { Button } from '@/shared/components/ui/button';
-import { ActionButtonProps } from '@/widgets/admin/regions-management/types';
 
 export const ActionButton = memo(
   ({ title, activeTab, onAddRegion, onAddDistrict }: ActionButtonProps) => {

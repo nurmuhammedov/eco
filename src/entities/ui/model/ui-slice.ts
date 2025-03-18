@@ -1,6 +1,10 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { PayloadUI, UIComponentName, UIState } from '@/shared/types/ui-types';
+import type {
+  PayloadUI,
+  UIComponentName,
+  UIState,
+} from '@/shared/types/ui-types';
 
 const initialState: UIState = {
   isOpen: false,
@@ -28,7 +32,6 @@ const uiSlice = createSlice({
   },
 });
 
-// Add proper generic typing at the action creator level
 export const openUIAction = <T extends UIComponentName>(
   payload: PayloadUI<T>,
 ) => uiSlice.actions.openUI(payload);

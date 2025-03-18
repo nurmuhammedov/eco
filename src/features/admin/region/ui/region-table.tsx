@@ -1,59 +1,56 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
-import { District } from '@/entities/admin/district/district.types.ts';
-import { useDistrictsQuery } from '@/entities/admin/district';
-import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
+import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
+import type { Region } from '@/entities/admin/region/region.types';
+import { useRegionsQuery } from '@/entities/admin/region/region.fetcher';
 import {
   DataTable,
   DataTableRowActions,
 } from '@/shared/components/common/data-table';
 
-export function DistrictTable() {
+export function RegionTable() {
   const { filters } = useFilters();
-  const { onOpen } = useDistrictDrawer();
-  const { data } = useDistrictsQuery(filters);
+  const { onOpen } = useRegionDrawer();
+  const { data } = useRegionsQuery(filters);
 
   const onEdit = (id: number) => {
     onOpen(UIModeEnum.EDIT, { id });
   };
 
-  const list: District[] = [
+  const list: Region[] = [
     {
       id: 1,
-      name: 'Mirobod tumani',
-      region: {
-        id: 1,
-        name: 'Toshkent shahri',
-      },
+      name: 'Toshkent shahri',
+      code: '1703',
     },
     {
       id: 2,
-      name: 'Chilonzor tumani',
-      region: { id: 1, name: 'Toshkent shahri' },
+      name: 'Samarqand viloyati',
+      code: '1703',
     },
     {
       id: 3,
-      name: 'Yashnobod tumani',
-      region: { id: 1, name: 'Toshkent shahri' },
+      name: 'Navoiy viloyati',
+      code: '1703',
     },
     {
       id: 4,
-      name: 'Bektemir tumani',
-      region: { id: 1, name: 'Toshkent shahri' },
+      name: 'Andijon viloyati',
+      code: '1703',
     },
     {
       id: 4,
-      name: 'Uchtepa tumani',
-      region: { id: 1, name: 'Toshkent shahri' },
+      name: 'Namangan viloyati',
+      code: '1703',
     },
   ];
 
-  const districtTableColumns: ColumnDef<District>[] = [
+  const regionTableColumns: ColumnDef<Region>[] = [
     {
-      accessorKey: 'id',
       maxSize: 20,
       header: '№',
+      accessorKey: 'id',
     },
     {
       enablePinning: true,
@@ -62,15 +59,8 @@ export function DistrictTable() {
       header: 'Nomi',
     },
     {
-      enableSorting: false,
-      accessorKey: 'region.name',
-      header: 'Viloyat',
-      cell: ({ row }) => row.original.region.name,
-    },
-    {
-      accessorKey: 'region.code',
+      accessorKey: 'code',
       header: 'Viloyat kodi(MXOBT kodi)',
-      cell: () => '1703',
     },
     {
       id: 'actions',
@@ -93,9 +83,9 @@ export function DistrictTable() {
   return (
     <DataTable
       data={list || []}
-      namespace="districts"
+      namespace="region"
       pageCount={data?.totalPages}
-      columns={districtTableColumns}
+      columns={regionTableColumns}
       className="h-[calc(100svh-17.5rem)]"
     />
   );

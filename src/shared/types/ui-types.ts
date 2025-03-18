@@ -23,15 +23,9 @@ export interface UIState<T = unknown> {
 export interface UIComponentDataMap {
   [UI_COMPONENTS.REGION_DRAWER]: {
     id: number;
-    name: string;
-    code: string;
   };
   [UI_COMPONENTS.DISTRICT_DRAWER]: {
     id: number;
-    name: string;
-    code: string;
-    regionId: number;
-    regionName?: string;
   };
 }
 

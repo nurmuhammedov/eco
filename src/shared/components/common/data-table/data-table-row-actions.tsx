@@ -2,12 +2,14 @@ import { cn } from '@/shared/lib/utils';
 import { Row } from '@tanstack/react-table';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 import React, { memo, ReactNode, useCallback } from 'react';
+import DeleteConfirmationDialog from '../delete-confirm-dialog';
 
 interface ActionButtonConfig {
   icon: ReactNode;
   className?: string;
   onClick: () => void;
   ariaLabel: string;
+  isDelete?: boolean;
 }
 
 export interface DataTableRowActionsProps<TData> {
@@ -29,7 +31,19 @@ export interface DataTableRowActionsProps<TData> {
 }
 
 const ActionButton = memo(
-  ({ icon, className, onClick, ariaLabel }: ActionButtonConfig) => {
+  ({
+    icon,
+    className,
+    onClick,
+    ariaLabel,
+    isDelete = false,
+  }: ActionButtonConfig) => {
+    // For delete button, wrap with confirmation dialog
+    if (isDelete) {
+      return <DeleteConfirmationDialog onConfirm={onClick} />;
+    }
+
+    // For non-delete buttons, render normally
     return (
       <button
         type="button"
@@ -67,8 +81,12 @@ function DataTableRowActions<TData>({
     if (onEdit) onEdit(row);
   }, [onEdit, row]);
 
-  const handleDelete = useCallback((): void => {
-    if (onDelete) onDelete(row);
+  // Make sure onDelete handler returns a Promise
+  const handleDelete = useCallback(async (): Promise<void> => {
+    if (onDelete) {
+      // Convert the result to a Promise if it's not already
+      await Promise.resolve(onDelete(row));
+    }
   }, [onDelete, row]);
 
   const handleView = useCallback((): void => {
@@ -103,6 +121,7 @@ function DataTableRowActions<TData>({
             onClick: handleDelete,
             className: cn(deleteClassName),
             icon: <Trash2 className="size-4" />,
+            isDelete: true, // Mark this as a delete button
           },
         ]
       : []),
@@ -125,6 +144,7 @@ function DataTableRowActions<TData>({
           onClick={button.onClick}
           className={button.className}
           ariaLabel={button.ariaLabel}
+          isDelete={button.isDelete}
         />
       ))}
     </div>
