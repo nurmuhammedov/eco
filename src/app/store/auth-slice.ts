@@ -1,18 +1,17 @@
-import { UserRoles } from '@/shared/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthState, AuthUser } from '@/entities/auth/models/auth.model';
 
 const initialState: AuthState = {
   isAuthenticated: true,
-  // user: null,
-  user: {
-    id: 1,
-    email: 'admin@gmail.com',
-    first_name: 'Admin',
-    last_name: 'Adminov',
-    permissions: ['all'],
-    role: UserRoles.ADMIN,
-  } as AuthUser,
+  user: null,
+  // user: {
+  //   id: 1,
+  //   email: 'admin@gmail.com',
+  //   first_name: 'Admin',
+  //   last_name: 'Adminov',
+  //   permissions: ['all'],
+  //   role: UserRoles.ADMIN,
+  // } as AuthUser,
 };
 
 export const authSlice = createSlice({

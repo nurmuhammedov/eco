@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { regionSchema } from '@/entities/admin/region';
@@ -25,6 +26,7 @@ import {
 } from '@/entities/admin/region/region.types';
 
 export const RegionDrawer = () => {
+  const { t } = useTranslation('common');
   const { mutate: createRegion } = useCreateRegion();
   const { mutate: updateRegion } = useUpdateRegion();
   const { isOpen, onClose, mode } = useRegionDrawer();
@@ -57,7 +59,7 @@ export const RegionDrawer = () => {
       open={isOpen}
       onClose={onClose}
       onSubmit={form.handleSubmit(onSubmit)}
-      title={isCreate ? "Viloyat qo'shish" : 'Viloyat tahrirlash'}
+      title={isCreate ? t('actions.add') : t('actions.edit')}
     >
       <Form {...form}>
         <FormField
@@ -65,9 +67,9 @@ export const RegionDrawer = () => {
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nomi</FormLabel>
+              <FormLabel>{t('name')}</FormLabel>
               <FormControl>
-                <Input placeholder="Nomi" {...field} />
+                <Input placeholder={t('name')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

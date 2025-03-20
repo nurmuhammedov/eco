@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import { UserRoles } from '@/shared/types';
 import type { AppRoute } from '@/app/routes';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
+import { useCurrentUser } from '@/entities/auth/models/auth.fetcher.ts';
 
 const UnAuthorized = lazy(() => import('@/features/auth/ui/unauthorized.tsx'));
 
@@ -54,7 +55,10 @@ export const getHomeRouteForLoggedInUser = (role: UserRoles) =>
   roleHomeRoutes[role] || '/';
 
 export const getHomeRoute = () => {
-  const { user } = useAuth();
+  const { user, isSuccess } = useCurrentUser();
+  console.log('isSuccess', isSuccess);
 
-  return user ? getHomeRouteForLoggedInUser(user.role) : '/auth/login';
+  return isSuccess
+    ? getHomeRouteForLoggedInUser(user.role)
+    : '/auth/login/admin'; // /auth/login
 };

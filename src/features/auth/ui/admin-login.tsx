@@ -13,9 +13,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
+import { useLogin } from '@/entities/auth/models/auth.fetcher.ts';
 
 const adminLoginFormSchema = z.object({
-  login: z.string(),
+  username: z.string(),
   password: z
     .string()
     .min(8, 'Пароль камида 8 та белгидан иборат бўлиши керак'),
@@ -29,9 +30,10 @@ export default function AdminLoginForm({
   const form = useForm<AdminLoginDTO>({
     resolver: zodResolver(adminLoginFormSchema),
   });
+  const login = useLogin();
 
-  const handleLogin = (data: AdminLoginDTO) => {
-    console.log('handleLogin', data);
+  const handleLogin = async (data: any) => {
+    await login.mutateAsync(data);
   };
 
   return (
@@ -50,7 +52,7 @@ export default function AdminLoginForm({
           <div className="grid gap-4">
             <FormField
               control={form.control}
-              name="login"
+              name="username"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Логин</FormLabel>

@@ -3,7 +3,14 @@
     "save": "Saqlash",
     "cancel": "Bekor qilish",
     "delete": "O'chirish",
-    "reload": "Yangilash"
+    "deleting": "O'chirilmoqda...",
+    "reload": "Yangilash",
+    "add": "Qo'shish",
+    "edit": "Tahrirlash",
+    "view": "Ko'rsatish",
+    "close": "Yopish",
+    "add_region": "Viloyat qo'shish",
+    "add_district": "Tuman qo'shish"
   },
   "errors": {
     "something_went_wrong": "Xatolik yuz berdi!",
@@ -25,5 +32,21 @@
   },
   "app": {
     "name": "Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi ekotizimi"
-  }
+  },
+  "confirmation": {
+    "are_you_sure_to_delete": "O'chirishni tasdiqlaysizmi?",
+    "delete_description": "Ushbu amalni tasdiqlash orqali ma'lumot serverdan o'chiriladi."
+  },
+  "territories": "Hududlar",
+  "regions": "Viloyatlar",
+  "districts": "Tumanlar",
+  "region_code": "Viloyat kodi(MXOBT kodi)",
+  "region_name": "Viloyat nomi",
+  "district_name": "Tuman nomi",
+  "district_code": "Tuman kodi(MXOBT kodi)",
+  "region": "Viloyat",
+  "district": "Tuman",
+  "select_region": "Viloyatni tanlang",
+  "select_district": "Tumanni tanlang",
+  "name": "Nomi"
 }

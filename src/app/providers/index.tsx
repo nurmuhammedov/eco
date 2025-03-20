@@ -1,18 +1,15 @@
-import { store } from '@/app/store';
-import { Provider } from 'react-redux';
-import { AppRouter } from '@/app/routes';
-import { queryClient } from '@/shared/api';
-import { LanguageProvider } from './LanguageProvider';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from '@/shared/components/ui/sonner';
+import { PrivateLayout, ProtectedRoute } from '@/widgets';
+import { Fragment } from 'react';
 
 export default function Providers() {
+  console.log('2222222888');
   return (
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <LanguageProvider>
-          <AppRouter />
-        </LanguageProvider>
-      </QueryClientProvider>
-    </Provider>
+    <Fragment>
+      <ProtectedRoute>
+        <PrivateLayout />
+      </ProtectedRoute>
+      <Toaster />
+    </Fragment>
   );
 }

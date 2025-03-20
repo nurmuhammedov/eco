@@ -10,6 +10,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/shared/components/ui/tabs';
+import { useTranslation } from 'react-i18next';
 
 export const RegionsManagement = ({
   initialTab = 'regions',
@@ -17,6 +18,7 @@ export const RegionsManagement = ({
   className?: string;
   initialTab?: ActiveTab;
 }) => {
+  const { t } = useTranslation('common');
   const {
     activeTab,
     isOpenRegion,
@@ -28,19 +30,19 @@ export const RegionsManagement = ({
   return (
     <Fragment>
       <ActionButton
-        title="Hududlar"
         activeTab={activeTab}
+        title={t('territories')}
         onAddRegion={openAddRegionDrawer}
         onAddDistrict={openAddDistrictDrawer}
       />
       <Tabs
-        onValueChange={(value: any) => setActiveTab(value)}
-        defaultValue={activeTab}
         className="mt-3"
+        defaultValue={activeTab}
+        onValueChange={(value: any) => setActiveTab(value)}
       >
         <TabsList>
-          <TabsTrigger value="regions">Вилоятлар</TabsTrigger>
-          <TabsTrigger value="districts">Туманлар</TabsTrigger>
+          <TabsTrigger value="regions">{t('regions')}</TabsTrigger>
+          <TabsTrigger value="districts">{t('districts')}</TabsTrigger>
         </TabsList>
         <TabsContent className="mt-4 w-full" value="regions">
           <RegionTable />

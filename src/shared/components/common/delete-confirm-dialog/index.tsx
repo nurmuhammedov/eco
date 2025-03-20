@@ -1,7 +1,8 @@
 import { cn } from '@/shared/lib/utils';
 import React, { useState } from 'react';
-import { Loader2, OctagonAlert, Trash2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { ButtonProps } from '@/shared/components/ui/button';
+import { Loader2, OctagonAlert, Trash2 } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,30 +18,29 @@ import {
 type DialogSize = 'sm' | 'md' | 'lg' | 'xl';
 
 export interface DeleteConfirmationDialogProps {
-  trigger?: React.ReactNode;
   title?: string;
-  description?: string;
+  isOpen?: boolean;
+  disabled?: boolean;
   cancelText?: string;
+  description?: string;
   confirmText?: string;
   loadingText?: string;
-  variant?: ButtonProps['variant'];
-  icon?: React.ReactElement;
-  onConfirm: () => Promise<void> | void;
   onCancel?: () => void;
-  isOpen?: boolean;
-  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  disabled?: boolean;
   dialogSize?: DialogSize;
-  itemName?: string;
+  trigger?: React.ReactNode;
   contentClassName?: string;
+  icon?: React.ReactElement;
+  variant?: ButtonProps['variant'];
+  onConfirm: () => Promise<void> | void;
+  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
-  title = "O'chirishni tasdiqlaysizmi?",
-  description = "Ushbu amalni tasdiqlash orqali ma'lumot serverdan o'chiriladi.",
-  cancelText = 'Bekor qilish',
-  confirmText = "O'chirish",
-  loadingText = "O'chirilmoqda...",
+  title = 'confirmation.are_you_sure_to_delete',
+  description = 'confirmation.delete_description',
+  cancelText = 'actions.cancel',
+  confirmText = 'actions.delete',
+  loadingText = 'actions.deleting',
   icon = <OctagonAlert className="size-5" />,
   onConfirm,
   onCancel,
@@ -48,9 +48,9 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
   setIsOpen,
   disabled = false,
   dialogSize = 'md',
-  itemName = '',
   contentClassName = '',
 }) => {
+  const { t } = useTranslation('common');
   const [internalLoading, setInternalLoading] = useState<boolean>(false);
 
   const dialogProps =
@@ -94,11 +94,6 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
   };
   const sizeClass = sizeClassMap[dialogSize] || sizeClassMap.md;
 
-  // Enhance description with item name if provided
-  const enhancedDescription = itemName
-    ? `${description} "${itemName}" will be permanently deleted.`
-    : description;
-
   return (
     <AlertDialog {...dialogProps}>
       <AlertDialogTrigger asChild disabled={disabled}>
@@ -125,15 +120,15 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
                 className: `${icon.props.className} text-destructive`,
               })}
             </div>
-            {title}
+            {t(title)}
           </AlertDialogTitle>
           <AlertDialogDescription className="text-base">
-            {enhancedDescription}
+            {t(description)}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel} disabled={internalLoading}>
-            {cancelText}
+            {t(cancelText)}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
@@ -143,10 +138,10 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
             {internalLoading ? (
               <span className="flex items-center gap-2">
                 <Loader2 className="size-4 animate-spin" />
-                {loadingText}
+                {t(loadingText)}
               </span>
             ) : (
-              confirmText
+              t(confirmText)
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

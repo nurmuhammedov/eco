@@ -1,12 +1,10 @@
-import { lazy, Suspense } from 'react';
-import { PrivateLayout, PublicLayout } from '@/widgets';
+import { lazy } from 'react';
+import Providers from '@/app/providers';
+import { PublicLayout } from '@/widgets';
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
-import { filterRoutesByAuth, getHomeRoute, moduleRoutes } from '@/app/routes';
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import moduleRoutes from '@/app/routes/load-modules.ts';
+import { filterRoutesByAuth } from '@/app/routes/utils.tsx';
 
 const Error = lazy(() => import('@/pages/error/ui/page-not-found'));
 
@@ -16,28 +14,22 @@ const AppRouter = () => {
   const router = createBrowserRouter([
     {
       path: '/',
-      index: true,
-      element: <Navigate replace to={getHomeRoute()} />,
-    },
-    {
-      path: '/auth',
-      element: <Suspense fallback={null} children={<PublicLayout />} />,
-      children: filteredRoutes.filter((route) => route.meta?.isPublic),
-    },
-    {
-      path: '/app',
-      element: <Suspense fallback={null} children={<PrivateLayout />} />,
+      element: <Providers />,
       children: filteredRoutes.filter((route) => route.meta?.restricted),
     },
     {
+      path: 'auth',
+      element: <PublicLayout />,
+      children: filteredRoutes.filter((route) => route.meta?.isPublic),
+    },
+    // {
+    //   path: '/app',
+    //   element: <Suspense fallback={null} children={<PrivateLayout />} />,
+    //   children: filteredRoutes.filter((route) => route.meta?.restricted),
+    // },
+    {
       path: '*',
-      element: <Suspense fallback={null} children={<PrivateLayout />} />,
-      children: [
-        {
-          path: '*',
-          element: <Error />,
-        },
-      ],
+      element: <Error />,
     },
   ]);
 

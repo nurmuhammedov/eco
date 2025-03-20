@@ -8,8 +8,10 @@ import {
   DataTable,
   DataTableRowActions,
 } from '@/shared/components/common/data-table';
+import { useTranslation } from 'react-i18next';
 
 export function RegionTable() {
+  const { t } = useTranslation('common');
   const { filters } = useFilters();
   const { onOpen } = useRegionDrawer();
   const { data } = useRegionsQuery(filters);
@@ -56,11 +58,11 @@ export function RegionTable() {
       enablePinning: true,
       accessorKey: 'name',
       enableSorting: false,
-      header: 'Nomi',
+      header: t('name'),
     },
     {
       accessorKey: 'code',
-      header: 'Viloyat kodi(MXOBT kodi)',
+      header: t('region_code'),
     },
     {
       id: 'actions',

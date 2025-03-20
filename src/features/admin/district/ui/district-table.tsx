@@ -8,8 +8,10 @@ import {
   DataTable,
   DataTableRowActions,
 } from '@/shared/components/common/data-table';
+import { useTranslation } from 'react-i18next';
 
 export function DistrictTable() {
+  const { t } = useTranslation('common');
   const { filters } = useFilters();
   const { onOpen } = useDistrictDrawer();
   const { data } = useDistrictsQuery(filters);
@@ -59,17 +61,17 @@ export function DistrictTable() {
       enablePinning: true,
       accessorKey: 'name',
       enableSorting: false,
-      header: 'Nomi',
+      header: t('name'),
     },
     {
       enableSorting: false,
       accessorKey: 'region.name',
-      header: 'Viloyat',
+      header: t('region_name'),
       cell: ({ row }) => row.original.region.name,
     },
     {
       accessorKey: 'region.code',
-      header: 'Viloyat kodi(MXOBT kodi)',
+      header: t('region_code'),
       cell: () => '1703',
     },
     {
