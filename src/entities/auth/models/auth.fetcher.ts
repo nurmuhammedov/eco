@@ -1,5 +1,4 @@
 import { toast } from 'sonner';
-import { AxiosError } from 'axios';
 import { setUser } from '@/app/store/auth-slice';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { authAPI } from '@/entities/auth/models/auth.api';
@@ -17,15 +16,9 @@ export const useCurrentUser = () => {
     isSuccess,
     error,
   } = useQuery({
-    // enabled: false,
     queryKey: ['me'],
     queryFn: async () => authAPI.getMe(),
-    retry: (failureCount, error: AxiosError) => {
-      if (error?.response?.status === 401) {
-        return false;
-      }
-      return failureCount < 1;
-    },
+    retry: 1,
   });
 
   return { user, error, isPending, isSuccess, isAuth: user && !error };
