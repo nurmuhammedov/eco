@@ -5,7 +5,7 @@ import { pick } from '@/shared/utils';
 import { shallowEqual } from 'react-redux';
 
 // ** Hooks **
-import { useAppSelector } from './use-store.ts';
+import { useAppSelector } from './use-store';
 
 export function useAuth() {
   const { user } = useAppSelector(

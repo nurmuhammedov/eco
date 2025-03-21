@@ -1,15 +1,14 @@
 import { Toaster } from '@/shared/components/ui/sonner';
 import { PrivateLayout, ProtectedRoute } from '@/widgets';
-import { Fragment } from 'react';
+import ErrorBoundary from '@/pages/error/ui/error-boundary';
 
 export default function Providers() {
-  console.log('2222222888');
   return (
-    <Fragment>
+    <ErrorBoundary>
       <ProtectedRoute>
         <PrivateLayout />
       </ProtectedRoute>
       <Toaster />
-    </Fragment>
+    </ErrorBoundary>
   );
 }

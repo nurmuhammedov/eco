@@ -3,7 +3,7 @@ import type { Navigation } from '@/widgets/models';
 
 export default [
   {
-    url: '/app/admin/districts',
+    url: '/admin/districts',
     title: 'Hududlar',
     icon: 'note-text',
     // items: [
@@ -18,7 +18,7 @@ export default [
     // ],
   },
   {
-    url: '/app/admin/staffs',
+    url: '/admin/staffs',
     title: 'Xodimlar',
     icon: 'note-text',
   },

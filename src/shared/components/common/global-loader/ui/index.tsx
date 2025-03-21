@@ -6,7 +6,7 @@ import { StandaloneLoaderProps } from '../model/types';
 const isBrowser = typeof window !== 'undefined';
 
 export const Loader: FC<StandaloneLoaderProps> = memo(
-  ({ message, size = 40, bgOpacity = 50, isVisible = false }) => {
+  ({ message, size = 40, bgOpacity = 0, isVisible = false }) => {
     const { t } = useTranslation('common');
     // Use ref to track if scroll was locked by this component instance
     const didLockScroll = useRef(false);

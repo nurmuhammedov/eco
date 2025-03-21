@@ -1,7 +1,7 @@
 // ** Utils **
 import { pick } from '@/shared/utils';
-import { shallowEqual } from 'react-redux';
 import { cn } from '@/shared/lib/utils';
+import { shallowEqual } from 'react-redux';
 import { getSidebarCollapse } from '@/widgets/utils';
 import { NavMain } from '@/widgets/sidebar/ui/nav-main';
 
@@ -61,7 +61,7 @@ export function AppSidebar() {
             <AppLogo />
           </SidebarHeader>
           <SidebarGroupContent>
-            {NAVIGATIONS[user.role].map((item) => (
+            {NAVIGATIONS[user.role]?.map((item) => (
               <NavMain key={item.title} item={item} />
             ))}
           </SidebarGroupContent>

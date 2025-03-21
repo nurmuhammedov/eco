@@ -17,8 +17,8 @@ export default function PrivateLayout() {
       <AppSidebar />
       <SidebarInset>
         <Header />
-        <Suspense fallback="Loading...!!!">
-          <section className="h-full px-4 pt-4 3xl:p-5">
+        <Suspense fallback="Loading...">
+          <section className="h-full p-4 3xl:p-5">
             <Outlet />
           </section>
         </Suspense>
