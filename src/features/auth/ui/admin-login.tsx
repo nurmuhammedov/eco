@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { cn } from '@/shared/lib/utils';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { ComponentPropsWithoutRef } from 'react';
 import { Input } from '@/shared/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
-import { useLogin } from '@/entities/auth/models/auth.fetcher.ts';
+import { useLogin } from '@/entities/auth/models/auth.fetcher';
 
 const adminLoginFormSchema = z.object({
   username: z.string(),
@@ -27,13 +28,14 @@ type AdminLoginDTO = z.infer<typeof adminLoginFormSchema>;
 export default function AdminLoginForm({
   className,
 }: ComponentPropsWithoutRef<'form'>) {
+  const { t } = useTranslation('admin');
   const form = useForm<AdminLoginDTO>({
     resolver: zodResolver(adminLoginFormSchema),
   });
-  const login = useLogin();
+  const { mutateAsync, isPending } = useLogin();
 
   const handleLogin = async (data: any) => {
-    await login.mutateAsync(data);
+    await mutateAsync(data);
   };
 
   return (
@@ -47,17 +49,17 @@ export default function AdminLoginForm({
       >
         <div className="w-3/5 3xl:w-2/5">
           <div className="flex flex-col items-center gap-2 text-center">
-            <h1 className="text-2xl font-bold">Маъмур панели</h1>
+            <h1 className="text-2xl font-bold">{t('admin_panel')}</h1>
           </div>
           <div className="grid gap-4">
             <FormField
-              control={form.control}
               name="username"
+              control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Логин</FormLabel>
+                  <FormLabel>{t('username')}</FormLabel>
                   <FormControl>
-                    <Input required placeholder="Логин" {...field} />
+                    <Input required placeholder={t('username')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -68,12 +70,12 @@ export default function AdminLoginForm({
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Пароль</FormLabel>
+                  <FormLabel>{t('password')}</FormLabel>
                   <FormControl>
                     <Input
                       required
                       type="password"
-                      placeholder="Пароль"
+                      placeholder={t('password')}
                       {...field}
                     />
                   </FormControl>
@@ -81,8 +83,8 @@ export default function AdminLoginForm({
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
-              Кириш
+            <Button disabled={isPending} type="submit" className="w-full">
+              {t('sign_in')}
             </Button>
           </div>
         </div>

@@ -4,11 +4,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 // ** Hooks **
 import { useCurrentUser } from '@/entities/auth/models/auth.fetcher';
+import { Loader } from '@/shared/components/common/global-loader/ui';
 
 export default function ProtectedRoute({ children }: PropsWithChildren) {
   const location = useLocation();
   const navigate = useNavigate();
-  // const { showLoader, hideLoader } = useLoader();
   const { isAuth, isPending } = useCurrentUser();
   useEffect(() => {
     if (!isPending && !isAuth) {
@@ -17,12 +17,17 @@ export default function ProtectedRoute({ children }: PropsWithChildren) {
   }, [isPending, isAuth]);
 
   if (isPending) {
-    return 'Loading....';
+    return (
+      <Loader
+        isVisible
+        bgOpacity={0}
+        message="loading"
+        containerBgColor={''}
+        containerShadow={''}
+        containerRounded={''}
+      />
+    );
   }
-
-  // if (isSuccess && isAuth) {
-  //   return navigate('/admin/districts');
-  // }
 
   if (isAuth) return children;
 }

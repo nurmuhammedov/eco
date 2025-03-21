@@ -37,6 +37,11 @@
     "are_you_sure_to_delete": "Ўчиришни тасдиқлайсизми?",
     "delete_description": "Ушбу амални тасдиқлаш орқали маълумот сервердан ўчирилади."
   },
+  "admin": {
+    "admin_panel": "Маъмур панели",
+    "username": "Логин",
+    "password": "Пароль"
+  },
   "territories": "Ҳудудлар",
   "regions": "Вилоятлар",
   "districts": "Туманлар",
@@ -48,5 +53,6 @@
   "district": "Туман",
   "select_region": "Вилоятни танланг",
   "select_district": "Туманни танланг",
-  "name": "Номи"
+  "name": "Номи",
+  "loading": "Юкланмоқда..."
 }

@@ -1,6 +1,6 @@
 import { SUPPORTED_TRANSLATION_LANGUAGES } from '@/app/config';
 
-export const namespaces: string[] = ['common', 'auth'];
+export const namespaces: string[] = ['common', 'auth', 'admin'];
 
 export const loadResources = async () => {
   const resources: Record<string, any> = {};
