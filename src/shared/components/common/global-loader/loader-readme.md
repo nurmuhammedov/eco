@@ -57,7 +57,6 @@
 
 5. **Tarjima fayllari bilan ishlash**:
    ```json
-   // locales/uz/common.json
    {
      "loading": {
        "data": "Ma'lumotlar yuklanmoqda...",
