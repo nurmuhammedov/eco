@@ -30,6 +30,7 @@ export interface ResponseData<T> {
 export interface ApiResponse<T> {
   status: number;
   success: boolean;
-  errors?: string;
-  data?: T | ResponseData<T>;
+  errors?: Record<string, string>;
+  data: T;
+  message?: string;
 }

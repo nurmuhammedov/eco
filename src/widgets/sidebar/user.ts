@@ -1,4 +1,4 @@
-import { Navigation } from '@/widgets/models';
+import { Navigation } from 'src/widgets/sidebar/models';
 
 // ** Icons
 

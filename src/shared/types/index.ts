@@ -1,7 +1,7 @@
 export enum UserRoles {
   LEGAL = 'LEGAL',
   HEAD = 'HEAD',
-  ADMIN = 'ROLE_SUPER_ADMIN',
+  ADMIN = 'ADMIN',
   MANAGER = 'MANAGER',
   CHAIRMAN = 'CHAIRMAN',
   REGIONAL = 'REGIONAL',

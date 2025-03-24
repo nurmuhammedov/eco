@@ -1,5 +1,5 @@
 // ** Types
-import type { Navigation } from '@/widgets/models';
+import type { Navigation } from 'src/widgets/sidebar/models';
 
 export default [
   {

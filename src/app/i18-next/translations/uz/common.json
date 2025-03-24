@@ -49,5 +49,7 @@
   "select_region": "Viloyatni tanlang",
   "select_district": "Tumanni tanlang",
   "name": "Nomi",
+  "number": "Raqami",
+  "soato": "MHOBT",
   "loading": "Yuklanmoqda..."
 }

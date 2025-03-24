@@ -1,6 +1,6 @@
-import UserDropdown from '@/widgets/header/ui/UserDropdown';
+import UserDropdown from '@/widgets/header/ui/user-dropdown';
 import { SidebarTrigger } from '@/shared/components/ui/sidebar';
-import LanguageSwitcher from '@/widgets/header/ui/IntlDropdown';
+import LanguageSwitcher from '@/widgets/header/ui/intl-dropdown';
 
 export function Header() {
   return (

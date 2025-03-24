@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { cn } from '@/shared/lib/utils';
 import { useForm } from 'react-hook-form';
+import { useLogin } from '@/entities/auth';
 import { useTranslation } from 'react-i18next';
 import { ComponentPropsWithoutRef } from 'react';
 import { Input } from '@/shared/components/ui/input';
@@ -14,7 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
-import { useLogin } from '@/entities/auth/models/auth.fetcher';
 
 const adminLoginFormSchema = z.object({
   username: z.string(),

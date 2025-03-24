@@ -11,11 +11,7 @@ export const createQueryKeys = (slice: string) => {
         ? ([...createQueryKeys(slice).entity(entity), 'list', filters] as const)
         : ([...createQueryKeys(slice).entity(entity), 'list'] as const),
     detail: (entity: string, id: string | number) =>
-      [
-        ...createQueryKeys(slice).entity(entity),
-        'detail',
-        id.toString(),
-      ] as const,
+      [...createQueryKeys(slice).entity(entity), 'detail', id] as const,
     operation: (
       entity: string,
       operation: string,

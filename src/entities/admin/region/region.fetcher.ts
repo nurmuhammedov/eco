@@ -1,6 +1,6 @@
+import { regionAPI } from './region.api';
+import { regionKeys } from './region.query-keys';
 import type { ResponseData } from '@/shared/types/api';
-import { regionAPI } from '@/entities/admin/region/region.api';
-import { regionKeys } from '@/entities/admin/region/region.query-keys';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { CreateRegionDTO, Region, UpdateRegionDTO } from './region.types';
 
@@ -9,8 +9,8 @@ const DISTRICT_STALE_TIME = 10 * 60 * 1000; // 10 minutes
 export const useRegionsQuery = (filters: any) => {
   return useQuery({
     staleTime: DISTRICT_STALE_TIME,
-    queryFn: () => regionAPI.fetchRegions(filters),
     queryKey: regionKeys.list('region', filters),
+    queryFn: () => regionAPI.fetchRegions(filters),
     placeholderData: (previousData) => previousData,
   });
 };
@@ -44,7 +44,7 @@ export const useCreateRegion = () => {
 
       if (previousRegionsList) {
         // Create a temporary region with fake ID
-        const temporaryDistrict: CreateRegionDTO & { id: number } = {
+        const temporaryRegion: CreateRegionDTO & { id: number } = {
           ...newRegionData,
           id: -Date.now(), // Temporary negative ID to identify new items
         };
@@ -52,7 +52,7 @@ export const useCreateRegion = () => {
         // Add to the list
         queryClient.setQueryData(regionKeys.list('region'), {
           ...previousRegionsList,
-          content: [...previousRegionsList.content, temporaryDistrict],
+          content: [...previousRegionsList.content, temporaryRegion],
         });
       }
 
@@ -61,13 +61,14 @@ export const useCreateRegion = () => {
 
     onSuccess: (createdRegion) => {
       // Invalidate list queries to get fresh data with correct ID
+      console.log('createdRegion', createdRegion);
       queryClient.invalidateQueries({
         queryKey: regionKeys.list('region'),
       });
 
       // Add the newly created district to cache
       queryClient.setQueryData(
-        regionKeys.detail('region', createdRegion.id),
+        regionKeys.detail('region', createdRegion.data.id),
         createdRegion,
       );
     },
@@ -134,7 +135,7 @@ export const useUpdateRegion = () => {
     onSuccess: (updatedDistrict) => {
       // Set the updated region in cache
       queryClient.setQueryData(
-        regionKeys.detail('region', updatedDistrict.id),
+        regionKeys.detail('region', updatedDistrict.data.id),
         updatedDistrict,
       );
 
@@ -164,9 +165,6 @@ export const useUpdateRegion = () => {
   });
 };
 
-/**
- * Hook for deleting a district
- */
 export const useDeleteRegion = () => {
   const queryClient = useQueryClient();
 

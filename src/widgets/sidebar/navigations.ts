@@ -1,5 +1,5 @@
-import userNavigation from './user.ts';
-import adminNavigation from './admin.ts';
+import userNavigation from './user';
+import adminNavigation from './admin';
 import { UserRoles } from '@/shared/types';
 
 export const NAVIGATIONS = {

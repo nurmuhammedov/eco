@@ -8,7 +8,7 @@ export default function Providers() {
       <ProtectedRoute>
         <PrivateLayout />
       </ProtectedRoute>
-      <Toaster />
+      <Toaster expand />
     </ErrorBoundary>
   );
 }

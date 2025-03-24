@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { cn } from '@/shared/lib/utils';
 import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { NavigationItem } from '@/widgets/models';
+import { NavigationItem } from 'src/widgets/sidebar/models';
 import Icon from '@/shared/components/common/icon';
 import { Link, useLocation } from 'react-router-dom';
 

@@ -1,11 +1,11 @@
 import { useForm } from 'react-hook-form';
-import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCallback, useEffect } from 'react';
 import { Input } from '@/shared/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { regionSchema } from '@/entities/admin/region';
 import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
+import { regionSchema, useRegionQuery } from '@/entities/admin/region';
 import {
   Form,
   FormControl,
@@ -27,30 +27,49 @@ import {
 
 export const RegionDrawer = () => {
   const { t } = useTranslation('common');
-  const { mutate: createRegion } = useCreateRegion();
-  const { mutate: updateRegion } = useUpdateRegion();
-  const { isOpen, onClose, mode } = useRegionDrawer();
-  const isCreate = mode === UIModeEnum.CREATE;
+  const { isOpen, onClose, mode, data } = useRegionDrawer();
+  const { mutateAsync: createRegion, isPending: createPending } =
+    useCreateRegion();
+  const { mutateAsync: updateRegion, isPending: updatePending } =
+    useUpdateRegion();
 
-  const defaultValues = useMemo<RegionFormValues>(
-    () => ({
-      name: '',
-      region_id: '',
-    }),
-    [],
-  );
+  const isCreate = mode === UIModeEnum.CREATE;
+  const isPending = createPending || updatePending;
+  const regionId = data?.id ? Number(data.id) : 0;
+
+  const { data: foundRegion } = useRegionQuery(regionId);
 
   const form = useForm<RegionFormValues>({
     resolver: zodResolver(regionSchema),
-    defaultValues,
+    defaultValues: { name: '', number: 1, soato: 1 },
   });
 
+  useEffect(() => {
+    if (foundRegion && !isCreate) form.reset(foundRegion);
+  }, [foundRegion, form]);
+
+  const handleClose = (success: boolean) =>
+    useCallback(() => {
+      if (success) {
+        form.reset();
+        onClose();
+      }
+    }, [onClose, form]);
+
   const onSubmit = useCallback(
-    (data: unknown) =>
-      isCreate
-        ? createRegion(data as CreateRegionDTO)
-        : updateRegion(data as UpdateRegionDTO),
-    [onClose],
+    (formData: RegionFormValues) => {
+      if (isCreate) {
+        return createRegion(formData as CreateRegionDTO).then((response) =>
+          handleClose(response.success),
+        );
+      }
+
+      return updateRegion({
+        ...formData,
+        id: regionId,
+      } as UpdateRegionDTO).then((response) => handleClose(response.success));
+    },
+    [isCreate, createRegion, updateRegion, regionId, handleClose],
   );
 
   return (
@@ -58,23 +77,52 @@ export const RegionDrawer = () => {
       asForm
       open={isOpen}
       onClose={onClose}
+      disabled={isPending}
       onSubmit={form.handleSubmit(onSubmit)}
       title={isCreate ? t('actions.add') : t('actions.edit')}
     >
       <Form {...form}>
-        <FormField
-          name="name"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t('name')}</FormLabel>
-              <FormControl>
-                <Input placeholder={t('name')} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="space-y-4">
+          <FormField
+            name="name"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('name')}</FormLabel>
+                <FormControl>
+                  <Input placeholder={t('name')} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="soato"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('soato')}</FormLabel>
+                <FormControl>
+                  <Input placeholder={t('soato')} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="number"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('number')}</FormLabel>
+                <FormControl>
+                  <Input placeholder={t('number')} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </Form>
     </BaseDrawer>
   );
