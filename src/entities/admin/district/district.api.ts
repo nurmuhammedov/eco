@@ -11,7 +11,7 @@ export const districtAPI = {
     const { data } = await apiClient.getWithPagination<District>('/districts', {
       params,
     });
-    return (data as ResponseData<District>) || [];
+    return data || [];
   },
   fetchDistrict: async (id: number) => {
     const response = await apiClient.get<District>(`/districts/${id}`);
@@ -19,7 +19,7 @@ export const districtAPI = {
       throw new Error(response.errors);
     }
 
-    return response.data as District;
+    return response.data;
   },
   createDistrict: async (district: CreateDistrictDTO) => {
     const response = await apiClient.post<District, CreateDistrictDTO>(
@@ -30,7 +30,7 @@ export const districtAPI = {
       throw new Error(response.errors as string);
     }
 
-    return response.data as District;
+    return response.data;
   },
   updateDistrict: async (
     district: UpdateDistrictDTO,
@@ -44,7 +44,7 @@ export const districtAPI = {
       throw new Error(response.errors as string);
     }
 
-    return response.data as UpdateDistrictDTO;
+    return response.data;
   },
   deleteDistrict: async (id: number) => {
     const response = await apiClient.delete(`/districts/${id}`);
