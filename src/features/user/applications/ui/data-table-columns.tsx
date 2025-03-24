@@ -1,4 +1,3 @@
-import { PencilLine, Trash } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/shared/components/ui/badge';
 
@@ -104,19 +103,13 @@ export const dataTableColumns: ColumnDef<Task>[] = [
     id: 'actions',
     cell: ({ row }) => (
       <DataTableRowActions
-        actions={[
-          {
-            label: 'Edit',
-            icon: <PencilLine />,
-            onClick: () => console.log('Edit clicked'),
-          },
-          {
-            label: 'Delete',
-            icon: <Trash />,
-            onClick: () => console.log('Delete clicked'),
-          },
-        ]}
+        showEdit
+        showView
         row={row}
+        showDelete
+        onEdit={(row) => console.log(row.original.id)}
+        onView={(row) => console.log(row.original.id)}
+        onDelete={(row) => console.log(row.original.id)}
       />
     ),
   },

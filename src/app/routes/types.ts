@@ -4,7 +4,7 @@ import { RouteObject } from 'react-router-dom';
 export type AppRoute = RouteObject & {
   meta?: {
     roles?: UserRoles[];
-    permissions?: string[];
+    directions?: string[];
     isPublic?: boolean;
     restricted?: boolean;
   };

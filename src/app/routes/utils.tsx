@@ -14,10 +14,10 @@ const hasAccess = (
 ): boolean => {
   if (!meta) return true;
 
-  const { roles, permissions } = meta;
+  const { roles, directions } = meta;
   const roleMatch = roles ? roles.includes(userRole) : true;
-  const permissionMatch = permissions
-    ? permissions.some((perm) => permissionList.includes(perm))
+  const permissionMatch = directions
+    ? directions.some((perm) => permissionList.includes(perm))
     : true;
 
   return roleMatch && permissionMatch;
@@ -33,7 +33,7 @@ export const filterRoutesByAuth = (routes: AppRoute[]): AppRoute[] => {
   }
 
   return routes.map((route) =>
-    hasAccess(user.role, user.permissions, route.meta)
+    hasAccess(user.role, user.directions, route.meta)
       ? route
       : { ...route, element: <UnAuthorized /> },
   );

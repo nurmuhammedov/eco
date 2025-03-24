@@ -6,7 +6,7 @@ export const authAPI = {
     const response = await apiClient.post<any, LoginDTO>('/auth/login', data);
 
     if (!response.success) {
-      throw new Error(response.errors);
+      throw new Error(response.message);
     }
 
     return response.data.data;
@@ -15,7 +15,7 @@ export const authAPI = {
     const response = await apiClient.post('/auth/logout');
 
     if (!response.success) {
-      throw new Error(response.errors);
+      throw new Error(response.message);
     }
 
     console.log('logout response', response);
@@ -25,7 +25,7 @@ export const authAPI = {
     const response = await apiClient.get<any>('/users/me');
 
     if (!response.success) {
-      throw new Error(response.errors);
+      throw new Error(response.message);
     }
 
     return response.data.data;

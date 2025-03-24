@@ -1,14 +1,14 @@
+import { useTranslation } from 'react-i18next';
 import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
+import { useRegionsQuery } from '@/entities/admin/region';
 import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
 import type { Region } from '@/entities/admin/region/region.types';
-import { useRegionsQuery } from '@/entities/admin/region/region.fetcher';
 import {
   DataTable,
   DataTableRowActions,
 } from '@/shared/components/common/data-table';
-import { useTranslation } from 'react-i18next';
 
 export function RegionTable() {
   const { t } = useTranslation('common');
@@ -24,7 +24,8 @@ export function RegionTable() {
     {
       maxSize: 20,
       header: '№',
-      accessorKey: 'id',
+      accessorKey: 'number',
+      cell: (cell) => cell.row.index + 1,
     },
     {
       enablePinning: true,
@@ -38,7 +39,7 @@ export function RegionTable() {
     },
     {
       id: 'actions',
-      maxSize: 20,
+      maxSize: 40,
       enableResizing: false,
       cell: ({ row }) => (
         <DataTableRowActions
@@ -60,7 +61,7 @@ export function RegionTable() {
       data={data?.content || []}
       pageCount={data?.totalPages}
       columns={regionTableColumns}
-      className="h-[calc(100svh-17.5rem)]"
+      className="h-[calc(100svh-15.5rem)]"
     />
   );
 }

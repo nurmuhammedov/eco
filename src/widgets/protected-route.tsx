@@ -13,13 +13,14 @@ import { useAppDispatch } from '@/shared/hooks/use-store';
 import { Loader } from '@/shared/components/common/global-loader/ui';
 
 export default function ProtectedRoute({ children }: PropsWithChildren) {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isAuth, isPending, user, isSuccess } = useCurrentUser();
+
   useEffect(() => {
     if (!isPending && !isAuth) {
-      navigate('/auth/login/admin', { state: { from: location } });
+      navigate('/auth/login/admin', { state: { from: pathname } });
     }
   }, [isPending, isAuth]);
 

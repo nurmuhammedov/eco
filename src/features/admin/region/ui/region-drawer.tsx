@@ -48,13 +48,15 @@ export const RegionDrawer = () => {
     if (foundRegion && !isCreate) form.reset(foundRegion);
   }, [foundRegion, form]);
 
-  const handleClose = (success: boolean) =>
-    useCallback(() => {
+  const handleClose = useCallback(
+    (success: boolean) => {
       if (success) {
         form.reset();
         onClose();
       }
-    }, [onClose, form]);
+    },
+    [onClose, form],
+  );
 
   const onSubmit = useCallback(
     (formData: RegionFormValues) => {

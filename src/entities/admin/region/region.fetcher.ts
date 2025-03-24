@@ -1,29 +1,8 @@
 import { regionAPI } from './region.api';
 import { regionKeys } from './region.query-keys';
 import type { ResponseData } from '@/shared/types/api';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { CreateRegionDTO, Region, UpdateRegionDTO } from './region.types';
-
-const DISTRICT_STALE_TIME = 10 * 60 * 1000; // 10 minutes
-
-export const useRegionsQuery = (filters: any) => {
-  return useQuery({
-    staleTime: DISTRICT_STALE_TIME,
-    queryKey: regionKeys.list('region', filters),
-    queryFn: () => regionAPI.fetchRegions(filters),
-    placeholderData: (previousData) => previousData,
-  });
-};
-
-export const useRegionQuery = (id: number) => {
-  return useQuery({
-    enabled: !!id,
-    staleTime: DISTRICT_STALE_TIME,
-    queryFn: () => regionAPI.fetchRegion(id),
-    queryKey: regionKeys.detail('region', id),
-    placeholderData: (previousData) => previousData,
-  });
-};
 
 export const useCreateRegion = () => {
   const queryClient = useQueryClient();

@@ -14,10 +14,12 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@/shared/components/ui/avatar';
+import { useAuth } from '@/shared/hooks/use-auth.ts';
 
 export default function UserDropdown() {
   const { t } = useTranslation('auth');
   const { mutateAsync, isPending } = useLogout();
+  const { user } = useAuth();
 
   if (isPending) {
     return <Loader isVisible={isPending} />;
@@ -31,7 +33,7 @@ export default function UserDropdown() {
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <span className="text-sm">Doniyor Rahmanov</span>
+          <span className="text-sm">{user?.name}</span>
           <ChevronDown size={16} />
         </div>
       </DropdownMenuTrigger>
@@ -39,8 +41,8 @@ export default function UserDropdown() {
         <DropdownMenuGroup>
           <DropdownMenuItem
             disabled={isPending}
-            onClick={() => mutateAsync()}
             className="flex justify-between"
+            onClick={() => mutateAsync()}
           >
             {t('logout')} <LogOut size={16} />
           </DropdownMenuItem>

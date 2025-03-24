@@ -1,23 +1,8 @@
 import { Link } from 'react-router-dom';
-import { UserRoles } from '@/shared/types';
-import { setUser } from '@/app/store/auth-slice.ts';
 import Icon from '@/shared/components/common/icon';
-import { useAppDispatch } from '@/shared/hooks/use-store.ts';
-import { AuthUser } from '@/entities/auth/models/auth.model.ts';
-
-const mockUser = {
-  id: 1,
-  email: 'admin@gmail.com',
-  first_name: 'Admin',
-  last_name: 'Adminov',
-  permissions: ['all'],
-  role: UserRoles.LEGAL,
-} as AuthUser;
 
 export default function LoginForm() {
-  const dispatch = useAppDispatch();
-
-  const handleLogin = () => dispatch(setUser(mockUser));
+  const handleLogin = () => {};
 
   return (
     <div className="w-1/2 flex flex-col items-center justify-center">

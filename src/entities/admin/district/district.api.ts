@@ -1,5 +1,4 @@
 import { apiClient } from '@/shared/api';
-import { ResponseData } from '@/shared/types/api';
 import {
   CreateDistrictDTO,
   District,
@@ -16,7 +15,7 @@ export const districtAPI = {
   fetchDistrict: async (id: number) => {
     const response = await apiClient.get<District>(`/districts/${id}`);
     if (!response.success) {
-      throw new Error(response.errors);
+      throw new Error(response.message);
     }
 
     return response.data;
@@ -27,7 +26,7 @@ export const districtAPI = {
       district,
     );
     if (!response.success) {
-      throw new Error(response.errors as string);
+      throw new Error(response.message);
     }
 
     return response.data;
@@ -41,7 +40,7 @@ export const districtAPI = {
     );
 
     if (!response.success) {
-      throw new Error(response.errors as string);
+      throw new Error(response.message);
     }
 
     return response.data;
@@ -49,7 +48,7 @@ export const districtAPI = {
   deleteDistrict: async (id: number) => {
     const response = await apiClient.delete(`/districts/${id}`);
     if (!response.success) {
-      throw new Error(response.errors);
+      throw new Error(response.message);
     }
   },
 };
