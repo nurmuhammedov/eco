@@ -58,9 +58,9 @@ export function RegionTable() {
 
   return (
     <DataTable
+      isPaginated
+      data={data || []}
       namespace="region"
-      data={data?.content || []}
-      pageCount={data?.totalPages}
       columns={regionTableColumns}
       className="h-[calc(100svh-270px)]"
     />

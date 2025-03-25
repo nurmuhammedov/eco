@@ -16,6 +16,7 @@ export const RegionDrawer = () => {
       asForm
       open={isOpen}
       onClose={onClose}
+      loading={isPending}
       disabled={isPending}
       onSubmit={form.handleSubmit(onSubmit)}
       title={isCreate ? t('actions.add') : t('actions.edit')}

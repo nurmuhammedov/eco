@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/shared/components/ui/button';
 import type { DrawerFooterActionsProps } from '../types';
 
@@ -9,9 +10,10 @@ export const DrawerFooterActions = memo(function DrawerFooterActions({
   disabled,
   showCancel = true,
   showSubmit = true,
-  submitLabel = 'Saqlash',
-  cancelLabel = 'Bekor qilish',
+  submitLabel = 'actions.save',
+  cancelLabel = 'actions.cancel',
 }: DrawerFooterActionsProps) {
+  const { t } = useTranslation('common');
   if (!showCancel && !showSubmit) return null;
 
   return (
@@ -23,7 +25,7 @@ export const DrawerFooterActions = memo(function DrawerFooterActions({
           className="w-full"
           onClick={onCancel}
         >
-          {cancelLabel}
+          {t(cancelLabel)}
         </Button>
       )}
       {showSubmit && (
@@ -34,7 +36,7 @@ export const DrawerFooterActions = memo(function DrawerFooterActions({
           onClick={onSubmit}
           disabled={disabled}
         >
-          {submitLabel}
+          {t(submitLabel)}
         </Button>
       )}
     </div>
