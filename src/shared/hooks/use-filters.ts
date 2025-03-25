@@ -6,7 +6,7 @@ type FilterParsers = Record<string, Parser<any>>;
 export function useFilters(moduleFilters?: FilterParsers) {
   const commonFilters: FilterParsers = {
     page: parseAsInteger.withDefault(1),
-    pageSize: parseAsInteger.withDefault(10),
+    size: parseAsInteger.withDefault(20),
   };
 
   const mergedFilters = { ...commonFilters, ...moduleFilters };

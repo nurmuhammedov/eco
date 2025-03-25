@@ -1,14 +1,12 @@
-import { apiClient } from '@/shared/api';
-import { CreateRegionDTO, Region, UpdateRegionDTO } from './region.types';
 import { toast } from 'sonner';
-import { ApiResponse } from '@/shared/types/api.ts';
-
-const REGION_API = '/regions';
+import { ApiResponse } from '@/shared/types/api';
+import { API_ENDPOINTS, apiClient } from '@/shared/api';
+import { CreateRegionDTO, Region, UpdateRegionDTO } from './region.types';
 
 export const regionAPI = {
   fetchRegions: async <T extends Record<string, unknown>>(params: T) => {
     const { data } = await apiClient.getWithPagination<Region>(
-      REGION_API,
+      API_ENDPOINTS.REGIONS,
       params as any,
     );
     return data || [];
@@ -16,13 +14,13 @@ export const regionAPI = {
 
   fetchRegion: async (id: number) => {
     const { data } = await apiClient.get<ApiResponse<Region>>(
-      `${REGION_API}/${id}`,
+      `${API_ENDPOINTS.REGIONS}/${id}`,
     );
     return data.data;
   },
   createRegion: async (district: CreateRegionDTO) => {
     const response = await apiClient.post<Region, CreateRegionDTO>(
-      REGION_API,
+      API_ENDPOINTS.REGIONS,
       district,
     );
     if (!response.success && response.errors) {
@@ -35,7 +33,7 @@ export const regionAPI = {
   },
   updateRegion: async (district: UpdateRegionDTO) => {
     const response = await apiClient.put<UpdateRegionDTO>(
-      `${REGION_API}/${district.id}`,
+      `${API_ENDPOINTS.REGIONS}/${district.id}`,
       district,
     );
 
@@ -46,7 +44,7 @@ export const regionAPI = {
     return response;
   },
   deleteRegion: async (id: number) => {
-    const response = await apiClient.delete(`/${REGION_API}/${id}`);
+    const response = await apiClient.delete(`${API_ENDPOINTS.REGIONS}/${id}`);
     if (!response.success) {
       throw new Error(response.message);
     }

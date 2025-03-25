@@ -121,7 +121,7 @@ function DataTableRowActions<TData>({
             onClick: handleDelete,
             className: cn(deleteClassName),
             icon: <Trash2 className="size-4" />,
-            isDelete: true, // Mark this as a delete button
+            isDelete: true,
           },
         ]
       : []),
