@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
 import {
   CreateRegionDTO,
-  RegionFormValues,
   UpdateRegionDTO,
 } from '@/entities/admin/region/region.types';
 import {
@@ -15,7 +14,7 @@ import {
   useUpdateRegion,
 } from '@/entities/admin/region';
 
-const DEFAULT_FORM_VALUES: RegionFormValues = {
+const DEFAULT_FORM_VALUES: CreateRegionDTO = {
   name: '',
   soato: 1,
   number: 1,
@@ -27,7 +26,7 @@ export function useRegionForm() {
   const isCreate = mode === UIModeEnum.CREATE;
   const regionId = data?.id ? Number(data.id) : 0;
 
-  const form = useForm<RegionFormValues>({
+  const form = useForm<CreateRegionDTO>({
     resolver: zodResolver(regionSchema),
     defaultValues: DEFAULT_FORM_VALUES,
     mode: 'onChange',
@@ -55,10 +54,10 @@ export function useRegionForm() {
   }, [form, onClose]);
 
   const handleSubmit = useCallback(
-    async (formData: RegionFormValues): Promise<boolean> => {
+    async (formData: CreateRegionDTO): Promise<boolean> => {
       try {
         if (isCreate) {
-          const response = await createRegion(formData as CreateRegionDTO);
+          const response = await createRegion(formData);
           if (response.success) {
             handleClose();
             return true;

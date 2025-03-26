@@ -1,8 +1,10 @@
-import { regionAPI } from '../region.api';
-import { regionKeys } from '../region.query-keys';
 import type { ResponseData } from '@/shared/types/api';
-import type { UpdateRegionDTO } from '../region.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  regionAPI,
+  regionKeys,
+  type UpdateRegionDTO,
+} from '@/entities/admin/region';
 
 export const useUpdateRegion = () => {
   const queryClient = useQueryClient();

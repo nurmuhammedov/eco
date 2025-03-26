@@ -1,7 +1,9 @@
-import { regionKeys } from '@/entities/admin/region';
+import {
+  regionAPI,
+  regionKeys,
+  type RegionResponse,
+} from '@/entities/admin/region';
 import type { ResponseData } from '@/shared/types/api';
-import { regionAPI } from '@/entities/admin/region/region.api';
-import type { Region } from '@/entities/admin/region/region.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useDeleteRegion = () => {
@@ -21,9 +23,9 @@ export const useDeleteRegion = () => {
 
       // Capture current state for rollback
       const previousRegionsList = queryClient.getQueryData<
-        ResponseData<Region>
+        ResponseData<RegionResponse>
       >(regionKeys.list('region'));
-      const previousRegionDetail = queryClient.getQueryData<Region>(
+      const previousRegionDetail = queryClient.getQueryData<RegionResponse>(
         regionKeys.detail('region', regionId),
       );
       console.log({ previousRegionDetail });

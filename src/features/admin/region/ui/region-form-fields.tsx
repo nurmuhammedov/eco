@@ -1,6 +1,8 @@
+import React, { Fragment } from 'react';
 import { Control } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
+import { CreateRegionDTO } from '@/entities/admin/region';
 import {
   FormControl,
   FormField,
@@ -8,11 +10,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
-import { RegionFormValues } from '@/entities/admin/region/region.types';
-import { Fragment } from 'react';
 
 interface RegionFormFieldsProps {
-  control: Control<RegionFormValues>;
+  control: Control<CreateRegionDTO>;
 }
 
 const MAX_INPUT_NUMBER = 32000;

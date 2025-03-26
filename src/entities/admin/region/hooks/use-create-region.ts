@@ -1,11 +1,11 @@
-import { regionKeys } from '@/entities/admin/region';
+import {
+  CreateRegionDTO,
+  regionKeys,
+  RegionResponse,
+} from '@/entities/admin/region';
 import type { ResponseData } from '@/shared/types/api';
 import { regionAPI } from '@/entities/admin/region/region.api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type {
-  CreateRegionDTO,
-  Region,
-} from '@/entities/admin/region/region.types';
 
 export const useCreateRegion = () => {
   const queryClient = useQueryClient();
@@ -21,7 +21,7 @@ export const useCreateRegion = () => {
 
       // Capture current state for rollback
       const previousRegionsList = queryClient.getQueryData<
-        ResponseData<Region>
+        ResponseData<RegionResponse>
       >(regionKeys.list('region'));
 
       if (previousRegionsList) {
@@ -43,14 +43,13 @@ export const useCreateRegion = () => {
 
     onSuccess: (createdRegion) => {
       // Invalidate list queries to get fresh data with correct ID
-      console.log('createdRegion', createdRegion);
       queryClient.invalidateQueries({
         queryKey: regionKeys.list('region'),
       });
 
-      // Add the newly created district to cache
+      // Add the newly created region to cache
       queryClient.setQueryData(
-        regionKeys.detail('region', createdRegion.data.id),
+        regionKeys.detail('region', createdRegion.data.id!),
         createdRegion,
       );
     },

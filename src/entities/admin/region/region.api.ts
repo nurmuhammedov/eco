@@ -1,11 +1,15 @@
 import { toast } from 'sonner';
 import { ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
-import { CreateRegionDTO, Region, UpdateRegionDTO } from './region.types';
+import {
+  CreateRegionDTO,
+  RegionResponse,
+  UpdateRegionDTO,
+} from './region.types';
 
 export const regionAPI = {
   fetchRegions: async <T extends Record<string, unknown>>(params: T) => {
-    const { data } = await apiClient.getWithPagination<Region>(
+    const { data } = await apiClient.getWithPagination<RegionResponse>(
       API_ENDPOINTS.REGIONS,
       params as any,
     );
@@ -13,13 +17,13 @@ export const regionAPI = {
   },
 
   fetchRegion: async (id: number) => {
-    const { data } = await apiClient.get<ApiResponse<Region>>(
+    const { data } = await apiClient.get<ApiResponse<RegionResponse>>(
       `${API_ENDPOINTS.REGIONS}/${id}`,
     );
     return data.data;
   },
   createRegion: async (district: CreateRegionDTO) => {
-    const response = await apiClient.post<Region, CreateRegionDTO>(
+    const response = await apiClient.post<RegionResponse, CreateRegionDTO>(
       API_ENDPOINTS.REGIONS,
       district,
     );

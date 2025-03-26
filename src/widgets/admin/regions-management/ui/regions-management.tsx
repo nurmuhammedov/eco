@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { ActionButton } from './action-button';
-import { RegionDrawer, RegionTable } from '@/features/admin/region';
+import { RegionDrawer, RegionList } from '@/features/admin/region';
 import { useRegionManagement } from '../model/use-region-management';
 import { ActiveTab } from '@/widgets/admin/regions-management/types';
 import { DistrictDrawer, DistrictTable } from '@/features/admin/district';
@@ -45,7 +45,7 @@ export const RegionsManagement = ({
           <TabsTrigger value="districts">{t('districts')}</TabsTrigger>
         </TabsList>
         <TabsContent className="mt-4 w-full" value="regions">
-          <RegionTable />
+          <RegionList />
         </TabsContent>
         <TabsContent className="mt-4 w-full" value="districts">
           <DistrictTable />

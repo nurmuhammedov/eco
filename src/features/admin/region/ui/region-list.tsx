@@ -2,26 +2,27 @@ import { useTranslation } from 'react-i18next';
 import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
-import { useDeleteRegion, useRegionsQuery } from '@/entities/admin/region';
+import {
+  type FilterRegionDTO,
+  type Region,
+  useDeleteRegion,
+  useRegionsQuery,
+} from '@/entities/admin/region';
 import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
-import type { Region } from '@/entities/admin/region/region.types';
 import {
   DataTable,
   DataTableRowActions,
 } from '@/shared/components/common/data-table';
 
-export function RegionTable() {
+export function RegionList() {
   const { filters } = useFilters();
-  const { t } = useTranslation('common');
   const { onOpen } = useRegionDrawer();
-  const { data, isLoading } = useRegionsQuery(filters);
+  const { t } = useTranslation('common');
+  const { data, isLoading } = useRegionsQuery(filters as FilterRegionDTO);
   const deleteRegion = useDeleteRegion();
-
   const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
 
-  const onDelete = async (id: number) => {
-    await deleteRegion.mutateAsync(id);
-  };
+  const onDelete = (id: number) => deleteRegion.mutate(id);
 
   const regionTableColumns: ColumnDef<Region>[] = [
     {
@@ -49,8 +50,8 @@ export function RegionTable() {
           showEdit
           row={row}
           showDelete
-          onEdit={(row) => onEdit(row.original.id)}
-          onDelete={(row) => onDelete(row.original.id)}
+          onEdit={(row) => onEdit(row.original.id!)}
+          onDelete={(row) => onDelete(row.original.id!)}
         />
       ),
     },
