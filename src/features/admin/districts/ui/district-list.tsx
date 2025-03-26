@@ -38,8 +38,14 @@ export function DistrictList() {
       header: t('name'),
     },
     {
+      enablePinning: true,
+      accessorKey: 'region',
+      enableSorting: false,
+      header: t('region'),
+    },
+    {
       accessorKey: 'soato',
-      header: t('region_code'),
+      header: t('district_code'),
     },
     {
       id: 'actions',

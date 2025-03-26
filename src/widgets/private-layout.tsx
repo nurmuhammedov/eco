@@ -20,7 +20,7 @@ export default function PrivateLayout() {
       <SidebarInset>
         <Header />
         <Suspense fallback={t('loading')}>
-          <section className="h-full p-4 3xl:p-5">
+          <section className="h-full px-4 pt-4 3xl:p-5">
             <Outlet />
           </section>
         </Suspense>

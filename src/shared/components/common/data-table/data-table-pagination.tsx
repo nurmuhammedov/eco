@@ -140,15 +140,20 @@ export function DataTablePagination<T>({
     handlePageChange(newPage);
   };
 
+  const hasPageItems = useMemo(
+    () => getPageItems.items.length > 1,
+    [getPageItems],
+  );
+
   return (
     <div
       className={cn(
-        'flex flex-col md:flex-row items-center justify-between gap-4 py-3.5',
+        'flex flex-col md:flex-row items-center justify-between gap-4 pt-3',
         className,
       )}
     >
       {showTotal && totalElements > 0 && (
-        <div className="flex flex-col md:flex-row items-center gap-2">
+        <div className="flex flex-row items-center gap-2">
           {showSizeChanger && (
             <Select
               disabled={isLoading}
@@ -184,9 +189,9 @@ export function DataTablePagination<T>({
           <Button
             variant="outline"
             size="icon"
-            className="size-9 hidden md:flex"
+            className="size-9 flex"
             onClick={() => handlePageChange(1)}
-            disabled={currentPage === 1 || isLoading}
+            disabled={currentPage === 1 || isLoading || !hasPageItems}
           >
             <span className="sr-only">{t('first_page')}</span>
             <ChevronsLeft className="size-4" />
@@ -197,7 +202,7 @@ export function DataTablePagination<T>({
         <Button
           className="h-9"
           variant="outline"
-          disabled={currentPage === 1 || isLoading}
+          disabled={currentPage === 1 || isLoading || !hasPageItems}
           onClick={() => handlePageChange(currentPage - 1)}
         >
           <ChevronLeft className="size-4" />
@@ -217,7 +222,7 @@ export function DataTablePagination<T>({
                   key="prev-ellipsis"
                   disabled={isLoading}
                   onClick={jumpPrevious}
-                  className="size-9 hidden sm:inline-flex"
+                  className="size-9 inline-flex"
                 >
                   <MoreHorizontal className="size-4" />
                 </Button>
@@ -278,7 +283,7 @@ export function DataTablePagination<T>({
           className="h-9"
           variant="outline"
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage >= totalPages || isLoading}
+          disabled={currentPage >= totalPages || isLoading || !hasPageItems}
         >
           <span>{t('next_page')}</span>
           <ChevronRight className="size-4" />
@@ -289,9 +294,9 @@ export function DataTablePagination<T>({
           <Button
             variant="outline"
             size="icon"
-            className="size-9 hidden md:flex"
+            className="size-9 flex"
             onClick={() => handlePageChange(totalPages)}
-            disabled={currentPage >= totalPages || isLoading}
+            disabled={currentPage >= totalPages || isLoading || !hasPageItems}
           >
             <span className="sr-only">{t('last_page')}</span>
             <ChevronsRight className="size-4" />
