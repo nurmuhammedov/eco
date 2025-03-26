@@ -5,10 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
 import {
   CreateRegionDTO,
-  UpdateRegionDTO,
-} from '@/entities/admin/region/region.types';
-import {
   regionSchema,
+  UpdateRegionDTO,
   useCreateRegion,
   useRegionQuery,
   useUpdateRegion,

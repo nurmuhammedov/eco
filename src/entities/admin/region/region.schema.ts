@@ -11,7 +11,6 @@ export const regionSchema = z.object({
   ...regionBaseSchema,
 });
 
-// DTO
 export const schemas = {
   create: z.object(regionBaseSchema),
   update: z.object({
