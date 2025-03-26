@@ -15,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
+import LanguageDropdown from '@/widgets/header/ui/intl-dropdown.tsx';
 
 const adminLoginFormSchema = z.object({
   username: z.string(),
@@ -34,7 +35,7 @@ export default function AdminLoginForm({
   });
   const { mutateAsync, isPending } = useLogin();
 
-  const handleLogin = async (data: any) => {
+  const handleLogin = async (data: z.infer<typeof adminLoginFormSchema>) => {
     await mutateAsync(data);
   };
 
@@ -48,6 +49,9 @@ export default function AdminLoginForm({
         onSubmit={form.handleSubmit(handleLogin)}
       >
         <div className="w-3/5 3xl:w-2/5">
+          <div className="fixed top-4 right-4">
+            <LanguageDropdown />
+          </div>
           <div className="flex flex-col items-center gap-2 text-center">
             <h1 className="text-2xl font-bold">{t('admin_panel')}</h1>
           </div>
@@ -83,7 +87,12 @@ export default function AdminLoginForm({
                 </FormItem>
               )}
             />
-            <Button disabled={isPending} type="submit" className="w-full">
+            <Button
+              type="submit"
+              className="w-full"
+              loading={isPending}
+              disabled={isPending}
+            >
               {t('sign_in')}
             </Button>
           </div>

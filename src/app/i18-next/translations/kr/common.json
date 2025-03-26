@@ -18,6 +18,7 @@
     "page_not_found": "Саҳифа топилмади"
   },
   "menu": {
+    "territories": "Ҳудудлар",
     "appeals": "Мурожаатлар",
     "applications": "Аризалар",
     "accreditation": "Аккредитация",
@@ -42,7 +43,6 @@
     "username": "Логин",
     "password": "Пароль"
   },
-  "territories": "Ҳудудлар",
   "regions": "Вилоятлар",
   "districts": "Туманлар",
   "region_code": "Вилоят коди(МХОБТ коди)",

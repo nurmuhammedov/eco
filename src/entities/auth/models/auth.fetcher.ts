@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import { queryClient } from '@/shared/api';
 import { setUser } from '@/app/store/auth-slice';
 import { authAPI } from '@/entities/auth/models/auth.api';
@@ -40,9 +39,6 @@ export const useLogin = () => {
         ? state?.from
         : getHomeRouteForLoggedInUser(data.role);
       navigate(redirectPath);
-    },
-    onError: (error) => {
-      toast(error.message);
     },
   });
 };

@@ -1,10 +1,10 @@
 // ** Types
-import type { Navigation } from '@/widgets/sidebar/models/types.ts';
+import type { Navigation } from '@/widgets/sidebar/models/types';
 
 export default [
   {
     url: '/territories',
-    title: 'territories',
+    title: 'menu.territories',
     icon: 'note-text',
   },
   {

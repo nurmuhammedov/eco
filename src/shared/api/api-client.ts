@@ -67,6 +67,7 @@ async function apiRequest<T>(
       message?: string;
       errors?: Record<string, string>;
     }>;
+
     toast.error(axiosError.response?.data?.message, { richColors: true });
 
     return {

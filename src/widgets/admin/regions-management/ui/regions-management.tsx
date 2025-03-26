@@ -31,7 +31,7 @@ const RegionsManagement = ({
     <Fragment>
       <ActionButton
         activeTab={activeTab}
-        title={t('territories')}
+        title={t('menu.territories')}
         onAddRegion={openAddRegionDrawer}
         onAddDistrict={openAddDistrictDrawer}
       />

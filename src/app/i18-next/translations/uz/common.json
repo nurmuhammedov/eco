@@ -18,6 +18,7 @@
     "page_not_found": "Sahifa topilmadi"
   },
   "menu": {
+    "territories": "Hududlar",
     "appeals": "Murojaatlar",
     "applications": "Arizalar",
     "accreditation": "Akkreditatsiya",
@@ -37,7 +38,6 @@
     "are_you_sure_to_delete": "O'chirishni tasdiqlaysizmi?",
     "delete_description": "Ushbu amalni tasdiqlash orqali ma'lumot serverdan o'chiriladi."
   },
-  "territories": "Hududlar",
   "regions": "Viloyatlar",
   "districts": "Tumanlar",
   "region_code": "Viloyat kodi(MHOBT kodi)",
