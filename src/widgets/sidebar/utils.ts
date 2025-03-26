@@ -1,4 +1,4 @@
-import { DeviceType } from '@/shared/types/enums';
+import { DeviceType } from '@/shared/types/enums.ts';
 import { useWindowSize } from '@/shared/hooks/use-window-size.ts';
 
 export function getSidebarCollapse() {

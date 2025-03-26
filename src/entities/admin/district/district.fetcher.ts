@@ -47,7 +47,7 @@ export const useCreateDistrict = () => {
       >(districtKeys.list('district'));
 
       if (previousDistrictsList) {
-        // Create a temporary district with fake ID
+        // Create a temporary regions with fake ID
         const temporaryDistrict: CreateDistrictDTO & { id: number } = {
           ...newDistrictData,
           id: -Date.now(), // Temporary negative ID to identify new items
@@ -69,7 +69,7 @@ export const useCreateDistrict = () => {
         queryKey: districtKeys.list('district'),
       });
 
-      // Add the newly created district to cache
+      // Add the newly created regions to cache
       queryClient.setQueryData(
         districtKeys.detail('district', createdDistrict.id),
         createdDistrict,
@@ -97,7 +97,7 @@ export const useUpdateDistrict = () => {
     onMutate: async (districtUpdate: UpdateDistrictDTO) => {
       // Ensure we have a valid ID
       if (!districtUpdate.id) {
-        throw new Error('Cannot update district without ID');
+        throw new Error('Cannot update regions without ID');
       }
 
       // Cancel in-flight queries
@@ -117,13 +117,13 @@ export const useUpdateDistrict = () => {
         ResponseData<UpdateDistrictDTO>
       >(districtKeys.list('district'));
 
-      // Update district detail
+      // Update regions detail
       queryClient.setQueryData(
         districtKeys.detail('district', districtUpdate.id),
         districtUpdate,
       );
 
-      // Update district in lists
+      // Update regions in lists
       if (previousDistrictsList) {
         queryClient.setQueryData(districtKeys.list('district'), {
           ...previousDistrictsList,
@@ -137,7 +137,7 @@ export const useUpdateDistrict = () => {
     },
 
     onSuccess: (updatedDistrict) => {
-      // Set the updated district in cache
+      // Set the updated regions in cache
       queryClient.setQueryData(
         districtKeys.detail('district', updatedDistrict.id),
         updatedDistrict,
@@ -150,7 +150,7 @@ export const useUpdateDistrict = () => {
     },
 
     onError: (_err, updatedDistrict, context) => {
-      // Revert district detail on error
+      // Revert regions detail on error
       if (context?.previousDistrictDetail) {
         queryClient.setQueryData(
           districtKeys.detail('district', updatedDistrict.id),
@@ -158,7 +158,7 @@ export const useUpdateDistrict = () => {
         );
       }
 
-      // Revert district in lists
+      // Revert regions in lists
       if (context?.previousDistrictsList) {
         queryClient.setQueryData(
           districtKeys.list('district'),
@@ -170,7 +170,7 @@ export const useUpdateDistrict = () => {
 };
 
 /**
- * Hook for deleting a district
+ * Hook for deleting a regions
  */
 export const useDeleteDistrict = () => {
   const queryClient = useQueryClient();

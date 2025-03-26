@@ -1,14 +1,14 @@
 // ** Types
-import type { Navigation } from 'src/widgets/sidebar/models';
+import type { Navigation } from '@/widgets/sidebar/models/types.ts';
 
 export default [
   {
-    url: '/admin/districts',
+    url: '/territories',
     title: 'territories',
     icon: 'note-text',
   },
   {
-    url: '/admin/staffs',
+    url: '/staffs',
     title: 'Xodimlar',
     icon: 'note-text',
   },

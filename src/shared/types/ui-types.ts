@@ -7,7 +7,7 @@ export enum UIModeEnum {
 
 export const UI_COMPONENTS = {
   REGION_DRAWER: 'region-drawer',
-  DISTRICT_DRAWER: 'district-drawer',
+  DISTRICT_DRAWER: 'regions-drawer',
 } as const;
 
 export type UIComponentName =

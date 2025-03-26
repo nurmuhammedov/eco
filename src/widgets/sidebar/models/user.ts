@@ -1,4 +1,4 @@
-import { Navigation } from 'src/widgets/sidebar/models';
+import { Navigation } from '@/widgets/sidebar/models/types.ts';
 
 // ** Icons
 

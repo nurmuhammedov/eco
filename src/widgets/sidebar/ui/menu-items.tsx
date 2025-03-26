@@ -1,5 +1,5 @@
 // ** Types **
-import { NavigationItem } from 'src/widgets/sidebar/models';
+import { NavigationItem } from '@/widgets/sidebar/models/types.ts';
 // ** Common components **
 import Icon from '@/shared/components/common/icon';
 

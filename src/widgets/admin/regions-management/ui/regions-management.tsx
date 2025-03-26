@@ -12,7 +12,7 @@ import {
 } from '@/shared/components/ui/tabs';
 import { useTranslation } from 'react-i18next';
 
-export const RegionsManagement = ({
+const RegionsManagement = ({
   initialTab = 'regions',
 }: {
   className?: string;
@@ -56,3 +56,4 @@ export const RegionsManagement = ({
     </Fragment>
   );
 };
+export default RegionsManagement;

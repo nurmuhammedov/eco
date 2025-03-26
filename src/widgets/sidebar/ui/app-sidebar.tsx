@@ -2,12 +2,12 @@
 import { pick } from '@/shared/utils';
 import { cn } from '@/shared/lib/utils';
 import { shallowEqual } from 'react-redux';
-import { getSidebarCollapse } from '@/widgets/utils';
+import { getSidebarCollapse } from '@/widgets/sidebar/utils.ts';
 import { NavMain } from '@/widgets/sidebar/ui/nav-main';
 
 // ** Secondary Components **
 import { AppLogo } from './app-logo';
-import { NAVIGATIONS } from '@/widgets/sidebar/navigations';
+import { NAVIGATIONS } from '@/widgets/sidebar/models/navigations.ts';
 
 // ** SVG Icons **
 import { TechnocorpLogo } from '@/shared/components/SVGIcons';
