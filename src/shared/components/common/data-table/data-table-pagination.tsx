@@ -1,4 +1,15 @@
+import { useMemo } from 'react';
+import { cn } from '@/shared/lib/utils';
+import { useTranslation } from 'react-i18next';
+import { ResponseData } from '@/shared/types/api';
 import { Button } from '@/shared/components/ui/button';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  MoreHorizontal,
+} from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -6,247 +17,287 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { cn } from '@/shared/lib/utils';
-
-// Spring Boot API response interface type
-export interface SpringPageResponse<T = any> {
-  content: T[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-    sort: {
-      sorted: boolean;
-      empty: boolean;
-      unsorted: boolean;
-    };
-    offset: number;
-    paged: boolean;
-    unpaged: boolean;
-  };
-  last: boolean;
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-  sort: {
-    sorted: boolean;
-    empty: boolean;
-    unsorted: boolean;
-  };
-  first: boolean;
-  numberOfElements: number;
-  empty: boolean;
-}
 
 interface PaginationProps<T = any> {
-  data?: SpringPageResponse<T>;
+  data?: ResponseData<T>;
+  className?: string;
+  showTotal?: boolean;
+  isLoading?: boolean;
+  showSizeChanger?: boolean;
+  showQuickJumper?: boolean;
+  pageSizeOptions?: number[];
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
-  pageSizeOptions?: number[];
-  isLoading?: boolean;
-  className?: string;
-  showPageSizeSelector?: boolean;
-  showItemCount?: boolean;
-  showFirstLastButtons?: boolean;
-  // Bu qismni o'zgartirdik - endi bu sahifalar soni emas, balki
-  // ko'rsatiladigan sahifa raqamlari maksimal soni
-  maxPageButtons?: number;
 }
 
-/**
- * Spring Boot API responselariga moslashtirilgan pagination komponenti
- */
 export function DataTablePagination<T>({
   data,
+  className,
   onPageChange,
   onPageSizeChange,
-  pageSizeOptions = [10, 20, 50, 100],
+  showTotal = true,
   isLoading = false,
-  className,
-  showPageSizeSelector = true,
-  showItemCount = true,
-  showFirstLastButtons = true,
-  maxPageButtons = 5,
+  showSizeChanger = true,
+  showQuickJumper = true,
+  pageSizeOptions = [10, 20, 50, 100],
 }: PaginationProps<T>) {
   const { t } = useTranslation('common');
 
-  // Ma'lumotlar bo'sh yoki mavjud bo'lmasa, paginatsiya ko'rsatilmaydi
+  // Return nothing if no data
   if (!data || data.empty || data.totalElements === 0) {
     return null;
   }
 
+  // Get base data
   const {
     totalPages,
-    number: currentPage,
+    number: apiPageIndex,
     size: pageSize,
     totalElements,
   } = data;
 
-  // Elementlar oralig'ini hisoblash
-  const startItem = currentPage * pageSize + 1;
-  const endItem = Math.min((currentPage + 1) * pageSize, totalElements);
+  // Current page - always 1-indexed for UI
+  // If the API is 0-indexed (Spring Boot standard), we add 1
+  const currentPage = apiPageIndex + 1;
 
-  // totalElements va pageSize asosida ko'rinadigan sahifa raqamlarini generatsiya qilish
-  const getPageButtons = () => {
-    if (totalPages <= 1) return [];
+  // Calculate item range based on current page (1-indexed)
+  const startItem = (currentPage - 1) * pageSize + 1;
+  const endItem = Math.min(startItem + pageSize - 1, totalElements);
 
-    // Agar maxPageButtons 0 yoki totalPages dan katta bo'lsa, barcha sahifalarni ko'rsatish
-    if (maxPageButtons <= 0 || maxPageButtons >= totalPages) {
-      return Array.from({ length: totalPages }, (_, i) => i);
+  // Calculate visible page range with Ant Design logic
+  const getPageItems = useMemo(() => {
+    // Skip if only one page
+    if (totalPages <= 1)
+      return { items: [1], jumpPrev: false, jumpNext: false };
+
+    // Always show first, last and up to 5 pages around current
+    const items: number[] = [];
+    let jumpPrev = false;
+    let jumpNext = false;
+
+    // Define constants
+    const allPages = Array.from({ length: totalPages }, (_, i) => i + 1);
+    const MIN_VISIBLE = 7; // min buttons: 1 ... 4 5 6 ... 100
+
+    // Logic for pages <= MIN_VISIBLE
+    if (totalPages <= MIN_VISIBLE) {
+      return { items: allPages, jumpPrev: false, jumpNext: false };
     }
 
-    // Sahifalar diapazoni boshlanishi va oxirini hisoblash
-    const halfButtons = Math.floor(maxPageButtons / 2);
-    let startPage = Math.max(0, currentPage - halfButtons);
-    const endPage = Math.min(totalPages - 1, startPage + maxPageButtons - 1);
+    // Logic for many pages (Ant Design algorithm)
+    // Always include first page
+    items.push(1);
 
-    // Agar oxiriga yaqin bo'lsa, boshlanishni sozlash
-    if (endPage - startPage + 1 < maxPageButtons) {
-      startPage = Math.max(0, endPage - maxPageButtons + 1);
+    // Show ellipsis before current
+    if (currentPage > 4) {
+      jumpPrev = true;
+    } else {
+      // Show 2,3,4 if near start
+      for (let i = 2; i < currentPage; i++) {
+        items.push(i);
+      }
     }
 
-    // Sahifa raqamlarini massiv sifatida qaytarish
-    return Array.from(
-      { length: endPage - startPage + 1 },
-      (_, i) => startPage + i,
-    );
+    // Pages around current
+    const leftBound = Math.max(2, currentPage - 1);
+    const rightBound = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = leftBound; i <= rightBound; i++) {
+      items.push(i);
+    }
+
+    // Show ellipsis after current
+    if (currentPage < totalPages - 3) {
+      jumpNext = true;
+    } else {
+      // Show pages if near end
+      for (let i = currentPage + 2; i < totalPages; i++) {
+        items.push(i);
+      }
+    }
+
+    // Always include last page
+    if (totalPages > 1) {
+      items.push(totalPages);
+    }
+
+    return { items, jumpPrev, jumpNext };
+  }, [currentPage, totalPages]);
+
+  // Handle page change - always use 1-indexed pages here
+  const handlePageChange = (page: number) => {
+    onPageChange(page);
   };
 
-  const pageButtons = getPageButtons();
+  // Jump to page groups
+  const jumpPrevious = () => {
+    const newPage = Math.max(1, currentPage - 5);
+    handlePageChange(newPage);
+  };
+
+  const jumpNext = () => {
+    const newPage = Math.min(totalPages, currentPage + 5);
+    handlePageChange(newPage);
+  };
 
   return (
     <div
       className={cn(
-        'flex flex-col md:flex-row items-center justify-between gap-4 py-4',
+        'flex flex-col md:flex-row items-center justify-between gap-4 py-3.5',
         className,
       )}
     >
-      {/* Elementlar soni ma'lumoti */}
-      {showItemCount && totalElements > 0 && (
-        <div className="text-sm text-muted-foreground order-2 md:order-1">
-          {t('showing_items', {
-            start: startItem,
-            end: endItem,
-            total: totalElements,
-          })}
+      {showTotal && totalElements > 0 && (
+        <div className="flex flex-col md:flex-row items-center gap-2">
+          {showSizeChanger && (
+            <Select
+              disabled={isLoading}
+              value={String(pageSize)}
+              onValueChange={(value) => onPageSizeChange(Number(value))}
+            >
+              <SelectTrigger className="h-8 w-20">
+                <SelectValue placeholder={pageSize} />
+              </SelectTrigger>
+              <SelectContent side="top">
+                {pageSizeOptions.map((size) => (
+                  <SelectItem key={size} value={String(size)}>
+                    {size}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          <div className="text-sm text-muted-foreground">
+            {t('showing_items', {
+              start: startItem,
+              end: endItem,
+              total: totalElements,
+            })}
+          </div>
         </div>
       )}
 
-      {/* Paginatsiya boshqaruvi */}
-      <div className="flex items-center gap-1 md:gap-2 order-1 md:order-2">
-        {/* Birinchi sahifa tugmasi */}
-        {showFirstLastButtons && (
+      {/* Pagination controls */}
+      <div className="flex items-center gap-2">
+        {/* First page */}
+        {showQuickJumper && (
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8 hidden md:flex"
-            onClick={() => onPageChange(0)}
-            disabled={currentPage === 0 || isLoading}
+            className="size-9 hidden md:flex"
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1 || isLoading}
           >
             <span className="sr-only">{t('first_page')}</span>
-            <ChevronsLeft className="h-4 w-4" />
+            <ChevronsLeft className="size-4" />
           </Button>
         )}
 
-        {/* Oldingi sahifa tugmasi */}
+        {/* Previous page */}
         <Button
+          className="h-9"
           variant="outline"
-          size="icon"
-          className="h-8 w-8"
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={currentPage === 0 || isLoading}
+          disabled={currentPage === 1 || isLoading}
+          onClick={() => handlePageChange(currentPage - 1)}
         >
-          <span className="sr-only">{t('previous_page')}</span>
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="size-4" />
+          <span className="">{t('previous_page')}</span>
         </Button>
 
-        {/* Sahifa raqamlari */}
-        {pageButtons.length > 0 && (
-          <div className="flex items-center gap-1">
-            {pageButtons.map((pageNumber) => (
+        {/* Page numbers with ellipsis */}
+        <div className="flex items-center gap-2.5">
+          {/* Render actual page numbers */}
+          {getPageItems.items.map((pageNumber, index) => {
+            // Show ellipsis after first page if needed
+            if (index === 1 && getPageItems.jumpPrev) {
+              return (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  key="prev-ellipsis"
+                  disabled={isLoading}
+                  onClick={jumpPrevious}
+                  className="size-9 hidden sm:inline-flex"
+                >
+                  <MoreHorizontal className="size-4" />
+                </Button>
+              );
+            }
+
+            // Show ellipsis before last page if needed
+            if (
+              index === getPageItems.items.length - 2 &&
+              getPageItems.jumpNext
+            ) {
+              return (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  key="next-ellipsis"
+                  onClick={jumpNext}
+                  disabled={isLoading}
+                  className="size-9 inline-flex"
+                >
+                  <MoreHorizontal className="size-4" />
+                </Button>
+              );
+            }
+
+            // Skip rendering duplicate items
+            if (
+              index > 0 &&
+              index < getPageItems.items.length - 1 &&
+              getPageItems.items.indexOf(pageNumber) !==
+                getPageItems.items.lastIndexOf(pageNumber)
+            ) {
+              return null;
+            }
+
+            return (
               <Button
-                key={pageNumber}
+                key={`page-${pageNumber}`}
                 variant={pageNumber === currentPage ? 'default' : 'outline'}
                 size="sm"
                 className={cn(
-                  'h-8 w-8 sm:h-9 sm:w-9',
+                  'size-9',
                   pageNumber === currentPage
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-blue-400 hover:bg-blue-400/90 text-white'
                     : '',
-                  'hidden sm:inline-flex',
+                  'inline-flex',
                 )}
-                onClick={() => onPageChange(pageNumber)}
+                onClick={() => handlePageChange(pageNumber)}
                 disabled={isLoading}
               >
-                {pageNumber + 1}
+                {pageNumber}
               </Button>
-            ))}
+            );
+          })}
+        </div>
 
-            {/* Mobil qurilmalar uchun joriy sahifa / jami sahifalar indikatori */}
-            <div className="sm:hidden px-2 text-sm font-medium">
-              {currentPage + 1} / {totalPages}
-            </div>
-          </div>
-        )}
-
-        {/* Keyingi sahifa tugmasi */}
         <Button
+          className="h-9"
           variant="outline"
-          size="icon"
-          className="h-8 w-8"
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage >= totalPages - 1 || isLoading}
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage >= totalPages || isLoading}
         >
-          <span className="sr-only">{t('next_page')}</span>
-          <ChevronRight className="h-4 w-4" />
+          <span>{t('next_page')}</span>
+          <ChevronRight className="size-4" />
         </Button>
 
-        {/* Oxirgi sahifa tugmasi */}
-        {showFirstLastButtons && (
+        {/* Last page */}
+        {showQuickJumper && (
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8 hidden md:flex"
-            onClick={() => onPageChange(totalPages - 1)}
-            disabled={currentPage >= totalPages - 1 || isLoading}
+            className="size-9 hidden md:flex"
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage >= totalPages || isLoading}
           >
             <span className="sr-only">{t('last_page')}</span>
-            <ChevronsRight className="h-4 w-4" />
+            <ChevronsRight className="size-4" />
           </Button>
         )}
       </div>
-
-      {/* Sahifa o'lchami selektori */}
-      {showPageSizeSelector && (
-        <div className="flex items-center gap-2 order-3">
-          <span className="text-sm font-medium whitespace-nowrap">
-            {t('rows_per_page')}:
-          </span>
-          <Select
-            value={String(pageSize)}
-            onValueChange={(value) => onPageSizeChange(Number(value))}
-            disabled={isLoading}
-          >
-            <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder={pageSize} />
-            </SelectTrigger>
-            <SelectContent side="top">
-              {pageSizeOptions.map((size) => (
-                <SelectItem key={size} value={String(size)}>
-                  {size}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
     </div>
   );
 }

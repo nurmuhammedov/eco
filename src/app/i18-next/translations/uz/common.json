@@ -52,5 +52,8 @@
   "number": "Raqami",
   "soato": "MHOBT",
   "loading": "Yuklanmoqda...",
-  "sequence_number": "T/r"
+  "sequence_number": "T/r",
+  "previous_page": "Oldingi sahifa",
+  "next_page": "Keyingi sahifa",
+  "showing_items": "{{start}} - {{end}} / Umumiy {{total}} ta ma'lumot"
 }

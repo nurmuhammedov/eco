@@ -14,7 +14,7 @@ export function RegionTable() {
   const { filters } = useFilters();
   const { t } = useTranslation('common');
   const { onOpen } = useRegionDrawer();
-  const { data } = useRegionsQuery(filters);
+  const { data, isLoading } = useRegionsQuery(filters);
   const deleteRegion = useDeleteRegion();
 
   const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
@@ -61,6 +61,7 @@ export function RegionTable() {
       isPaginated
       data={data || []}
       namespace="region"
+      isLoading={isLoading}
       columns={regionTableColumns}
       className="h-[calc(100svh-270px)]"
     />

@@ -57,5 +57,8 @@
   "number": "Рақами",
   "soato": "МХОБТ",
   "loading": "Юкланмоқда...",
-  "sequence_number": "Т/р"
+  "sequence_number": "Т/р",
+  "previous_page": "Олдинги сахифа",
+  "next_page": "Кейинги сахифа",
+  "showing_items": "{{start}} - {{end}} / Умумий {{total}} та маълумот"
 }

@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Fragment } from 'react';
+import { Fragment, useCallback } from 'react';
+import { cn } from '@/shared/lib/utils';
+import { useFilters } from '@/shared/hooks/use-filters';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -22,51 +24,38 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui/table';
-import { cn } from '@/shared/lib/utils';
-import { getCommonPinningStyles } from '@/shared/components/common/data-table/models/get-common-pinning';
-import {
-  DataTablePagination,
-  SpringPageResponse,
-} from './data-table-pagination';
-import { useFilters } from '@/shared/hooks/use-filters';
+import { ResponseData } from '@/shared/types/api';
+import { DataTablePagination } from './data-table-pagination';
+import { getCommonPinningStyles } from './models/get-common-pinning';
 
 interface DataTableProps<TData, TValue> {
-  // Data can now be a Spring Boot paginated response or a simple array
-  data: TData[] | SpringPageResponse<TData>;
   namespace: string;
   className?: string;
-  columns: ColumnDef<TData, TValue>[];
-  // Optional pagination props
+  isLoading?: boolean;
   isPaginated?: boolean;
+  pageSizeOptions?: number[];
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[] | ResponseData<TData>;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
-  isLoading?: boolean;
-  pageSizeOptions?: number[];
-  visiblePages?: number;
 }
 
 export function DataTable<TData, TValue>({
   data,
   columns,
   className,
-  // Pagination props with defaults
-  isPaginated = false,
   onPageChange,
   onPageSizeChange,
   isLoading = false,
-  pageSizeOptions = [10, 20, 50, 100],
-  visiblePages = 5,
+  isPaginated = false,
+  pageSizeOptions,
 }: DataTableProps<TData, TValue>) {
-  // Determine if we have Spring Boot pagination data
-  const isSpringData = data && typeof data === 'object' && 'content' in data;
+  const isContentData = data && typeof data === 'object' && 'content' in data;
 
-  // Extract the actual data array to use in the table
-  const tableData = isSpringData ? data.content : data;
+  const tableData = isContentData ? data.content : data;
 
-  // Get pagination info from Spring data if available
-  const pageCount = isSpringData ? data.totalPages : undefined;
+  const pageCount = isContentData ? data.totalPages : undefined;
 
-  // Access the filters context if needed
   const { filters, setFilters } = useFilters();
 
   const [rowSelection, setRowSelection] = React.useState({});
@@ -77,31 +66,26 @@ export function DataTable<TData, TValue>({
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
-  // Default page handlers if not provided
-  const handlePageChange = React.useCallback(
+  const handlePageChange = useCallback(
     (page: number) => {
       if (onPageChange) {
-        console.log('handlePageChange', page);
         onPageChange(page);
-      } else if (isSpringData) {
-        console.log('handlePageChange', page, isSpringData);
-        // Default implementation using filters
+      } else if (isContentData) {
         setFilters({ ...filters, page });
       }
     },
-    [filters, setFilters, onPageChange, isSpringData],
+    [filters, setFilters, onPageChange, isContentData],
   );
 
-  const handlePageSizeChange = React.useCallback(
+  const handlePageSizeChange = useCallback(
     (size: number) => {
       if (onPageSizeChange) {
         onPageSizeChange(size);
-      } else if (isSpringData) {
-        // Default implementation using filters
+      } else if (isContentData) {
         setFilters({ ...filters, page: 1, size });
       }
     },
-    [filters, setFilters, onPageSizeChange, isSpringData],
+    [filters, setFilters, onPageSizeChange, isContentData],
   );
 
   const table = useReactTable({
@@ -115,7 +99,7 @@ export function DataTable<TData, TValue>({
     },
     pageCount,
     enableSorting: true,
-    manualPagination: isPaginated || isSpringData,
+    manualPagination: isPaginated || isContentData,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -193,12 +177,10 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {/* Render pagination if data is paginated (Spring format) */}
-      {isPaginated && isSpringData && (
+      {isPaginated && isContentData && (
         <DataTablePagination
           data={data}
           isLoading={isLoading}
-          visiblePages={visiblePages}
           onPageChange={handlePageChange}
           pageSizeOptions={pageSizeOptions}
           onPageSizeChange={handlePageSizeChange}
