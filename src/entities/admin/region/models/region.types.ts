@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { regionSchema, schemas } from './region.schema';
+import { regionSchema, schemas } from './region.schema.ts';
 
 export type Region = z.infer<typeof regionSchema>;
 export type RegionResponse = z.infer<typeof schemas.single>;

@@ -4,7 +4,7 @@ import {
   RegionResponse,
 } from '@/entities/admin/region';
 import type { ResponseData } from '@/shared/types/api';
-import { regionAPI } from '@/entities/admin/region/region.api';
+import { regionAPI } from '@/entities/admin/region/models/region.api.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useCreateRegion = () => {

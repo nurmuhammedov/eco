@@ -1,7 +1,7 @@
-export * from './region.api';
-export * from './region.types';
-export { regionSchema } from './region.schema';
-export { regionKeys } from './region.query-keys';
+export * from './models/region.api';
+export * from './models/region.types';
+export { regionSchema } from './models/region.schema';
+export { regionKeys } from './models/region.query-keys';
 export { useCreateRegion } from './hooks/use-create-region';
 export { useUpdateRegion } from './hooks/use-update-region';
 export { useDeleteRegion } from './hooks/use-delete-region';
