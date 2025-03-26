@@ -28,7 +28,6 @@ export const useDeleteRegion = () => {
       const previousRegionDetail = queryClient.getQueryData<RegionResponse>(
         regionKeys.detail('region', regionId),
       );
-      console.log({ previousRegionDetail });
 
       // Optimistically remove from lists
       if (previousRegionsList) {

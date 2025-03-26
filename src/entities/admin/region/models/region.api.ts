@@ -1,12 +1,12 @@
 import { toast } from 'sonner';
-import { ApiResponse } from '@/shared/types/api.ts';
+import { ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import {
   CreateRegionDTO,
   type FilterRegionDTO,
   RegionResponse,
   UpdateRegionDTO,
-} from './region.types.ts';
+} from './region.types';
 
 export const regionAPI = {
   fetchRegions: async (params: FilterRegionDTO) => {

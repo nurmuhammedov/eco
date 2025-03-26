@@ -1,3 +1,3 @@
-import { createQueryKeys } from '@/shared/lib/create-query-keys.ts';
+import { createQueryKeys } from '@/shared/lib/create-query-keys';
 
 export const regionKeys = createQueryKeys('region');

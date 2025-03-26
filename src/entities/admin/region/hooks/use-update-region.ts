@@ -35,13 +35,6 @@ export const useUpdateRegion = () => {
         ResponseData<UpdateRegionDTO>
       >(regionKeys.list('region'));
 
-      const allData = queryClient
-        .getQueryCache()
-        .getAll()
-        .map((q) => ({ key: q.queryKey, data: q.state.data }));
-      console.log('All cached data:', allData);
-      console.log('All previousRegionsList data:', previousRegionsList);
-
       // Update region detail
       queryClient.setQueryData(
         regionKeys.detail('region', regionUpdate.id),

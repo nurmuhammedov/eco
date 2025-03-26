@@ -1,16 +1,16 @@
 import { Fragment } from 'react';
 import { ActionButton } from './action-button';
+import { useTranslation } from 'react-i18next';
 import { RegionDrawer, RegionList } from '@/features/admin/region';
 import { useRegionManagement } from '../model/use-region-management';
 import { ActiveTab } from '@/widgets/admin/regions-management/types';
-import { DistrictDrawer, DistrictTable } from '@/features/admin/district';
+import { DistrictDrawer, DistrictList } from '@/features/admin/districts';
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from '@/shared/components/ui/tabs';
-import { useTranslation } from 'react-i18next';
 
 const RegionsManagement = ({
   initialTab = 'regions',
@@ -48,7 +48,7 @@ const RegionsManagement = ({
           <RegionList />
         </TabsContent>
         <TabsContent className="mt-4 w-full" value="districts">
-          <DistrictTable />
+          <DistrictList />
         </TabsContent>
       </Tabs>
       {isOpenRegion && <RegionDrawer />}

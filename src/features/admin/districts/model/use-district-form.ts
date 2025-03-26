@@ -4,47 +4,51 @@ import { UIModeEnum } from '@/shared/types/ui-types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
 import {
-  CreateRegionDTO,
-  regionSchema,
-  UpdateRegionDTO,
-  useCreateRegion,
-  useRegionQuery,
-  useUpdateRegion,
-} from '@/entities/admin/region';
+  CreateDistrictDTO,
+  districtSchema,
+  UpdateDistrictDTO,
+  useCreateDistrict,
+  useDistrictQuery,
+  useRegionSelectQuery,
+  useUpdateDistrict,
+} from '@/entities/admin/districts';
 
-const DEFAULT_FORM_VALUES: CreateRegionDTO = {
+const DEFAULT_FORM_VALUES: CreateDistrictDTO = {
   name: '',
   soato: 1,
   number: 1,
+  regionId: null,
 };
 
-export function useRegionForm() {
+export function useDistrictForm() {
   const { mode, data, onClose } = useRegionDrawer();
 
   const isCreate = mode === UIModeEnum.CREATE;
-  const regionId = data?.id ? Number(data.id) : 0;
+  const districtId = data?.id ? Number(data.id) : 0;
 
-  const form = useForm<CreateRegionDTO>({
-    resolver: zodResolver(regionSchema),
+  const form = useForm<CreateDistrictDTO>({
+    resolver: zodResolver(districtSchema),
     defaultValues: DEFAULT_FORM_VALUES,
     mode: 'onChange',
   });
 
+  const { data: regions } = useRegionSelectQuery();
+
   const { mutateAsync: createRegion, isPending: isCreating } =
-    useCreateRegion();
+    useCreateDistrict();
 
   const { mutateAsync: updateRegion, isPending: isUpdating } =
-    useUpdateRegion();
+    useUpdateDistrict();
 
-  const { data: regionData, isLoading } = useRegionQuery(regionId, {
-    enabled: !isCreate && regionId > 0,
+  const { data: districtData, isLoading } = useDistrictQuery(districtId, {
+    enabled: !isCreate && districtId > 0,
   });
 
   useEffect(() => {
-    if (regionData && !isCreate) {
-      form.reset(regionData);
+    if (districtData && !isCreate) {
+      form.reset(districtData);
     }
-  }, [regionData, isCreate, form]);
+  }, [districtData, isCreate, form]);
 
   const handleClose = useCallback(() => {
     form.reset(DEFAULT_FORM_VALUES);
@@ -52,7 +56,7 @@ export function useRegionForm() {
   }, [form, onClose]);
 
   const handleSubmit = useCallback(
-    async (formData: CreateRegionDTO): Promise<boolean> => {
+    async (formData: CreateDistrictDTO): Promise<boolean> => {
       try {
         if (isCreate) {
           const response = await createRegion(formData);
@@ -62,9 +66,9 @@ export function useRegionForm() {
           }
         } else {
           const response = await updateRegion({
-            id: regionId,
+            id: districtId,
             ...formData,
-          } as UpdateRegionDTO);
+          } as UpdateDistrictDTO);
           if (response.success) {
             handleClose();
             return true;
@@ -77,16 +81,17 @@ export function useRegionForm() {
         return false;
       }
     },
-    [isCreate, regionId, createRegion, updateRegion, handleClose],
+    [isCreate, districtId, createRegion, updateRegion, handleClose],
   );
 
   const isPending = isCreating || isUpdating;
 
   return {
     form,
+    regions,
     isCreate,
     isPending,
-    regionData,
+    districtData,
     onSubmit: handleSubmit,
     isFetching: isLoading,
   };
