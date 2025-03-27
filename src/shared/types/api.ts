@@ -1,36 +1,19 @@
-export interface Sort {
-  sorted: boolean;
-  unsorted: boolean;
-  empty: boolean;
-}
-
-export interface Pageable {
-  sort: Sort;
-  pageSize: number;
-  pageNumber: number;
-  offset: number;
-  paged: boolean;
-  unpaged: boolean;
+export interface PageInfo {
+  size: number;
+  number: number;
+  totalPages: number;
+  totalElements: number;
 }
 
 export interface ResponseData<T> {
   content: T[];
-  pageable: Pageable;
-  totalElements: number;
-  totalPages: number;
-  last: boolean;
-  sort: Sort;
-  numberOfElements: number;
-  first: boolean;
-  size: number;
-  number: number;
-  empty: boolean;
+  page: PageInfo;
 }
 
 export interface ApiResponse<T> {
+  data: T;
   status: number;
   success: boolean;
-  errors?: Record<string, string>;
-  data: T;
   message?: string;
+  errors?: Record<string, string>;
 }

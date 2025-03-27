@@ -64,7 +64,7 @@ export function RegionList() {
       namespace="region"
       isLoading={isLoading}
       columns={regionTableColumns}
-      className="h-[calc(100svh-240px)]"
+      className="h-[calc(100svh-270px)]"
     />
   );
 }

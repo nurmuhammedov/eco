@@ -43,28 +43,18 @@ export function DataTablePagination<T>({
 }: PaginationProps<T>) {
   const { t } = useTranslation('common');
 
-  // Return nothing if no data
-  if (!data || data.empty || data.totalElements === 0) {
+  if (!data || !data.page || data.page.totalElements === 0) {
     return null;
   }
 
-  // Get base data
-  const {
-    totalPages,
-    number: apiPageIndex,
-    size: pageSize,
-    totalElements,
-  } = data;
+  const { totalPages, totalElements, size: pageSize, number: page } = data.page;
 
-  // Current page - always 1-indexed for UI
-  // If the API is 0-indexed (Spring Boot standard), we add 1
-  const currentPage = apiPageIndex + 1;
+  const currentPage = page + 1;
 
   // Calculate item range based on current page (1-indexed)
   const startItem = (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(startItem + pageSize - 1, totalElements);
 
-  // Calculate visible page range with Ant Design logic
   const getPageItems = useMemo(() => {
     // Skip if only one page
     if (totalPages <= 1)
