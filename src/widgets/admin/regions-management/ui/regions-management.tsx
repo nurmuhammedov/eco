@@ -3,7 +3,6 @@ import { ActionButton } from './action-button';
 import { useTranslation } from 'react-i18next';
 import { RegionDrawer, RegionList } from '@/features/admin/region';
 import { useRegionManagement } from '../model/use-region-management';
-import { ActiveTab } from '@/widgets/admin/regions-management/types';
 import { DistrictDrawer, DistrictList } from '@/features/admin/districts';
 import {
   Tabs,
@@ -12,12 +11,7 @@ import {
   TabsTrigger,
 } from '@/shared/components/ui/tabs';
 
-const RegionsManagement = ({
-  initialTab = 'regions',
-}: {
-  className?: string;
-  initialTab?: ActiveTab;
-}) => {
+const RegionsManagement = () => {
   const { t } = useTranslation('common');
   const {
     activeTab,
@@ -26,7 +20,7 @@ const RegionsManagement = ({
     handleChangeTab,
     openAddRegionDrawer,
     openAddDistrictDrawer,
-  } = useRegionManagement({ initialTab });
+  } = useRegionManagement();
 
   return (
     <Fragment>
@@ -45,10 +39,10 @@ const RegionsManagement = ({
           <TabsTrigger value="regions">{t('regions')}</TabsTrigger>
           <TabsTrigger value="districts">{t('districts')}</TabsTrigger>
         </TabsList>
-        <TabsContent className="mt-4 w-full" value="regions">
+        <TabsContent className="mt-4" value="regions">
           <RegionList />
         </TabsContent>
-        <TabsContent className="mt-4 w-full" value="districts">
+        <TabsContent className="mt-4" value="districts">
           <DistrictList />
         </TabsContent>
       </Tabs>

@@ -1,6 +1,6 @@
-# useFilters Hook
+# index Hook
 
-`useFilters` - React ilovalarida URL parametrlari asosidagi filtrlash tizimini boshqarish uchun kuchli va moslashuvchan Hook. Bu `nuqs` paketidan foydalanib, URL parametrlari va dastur holati o'rtasida ikki tomonlama sinxronizatsiyani ta'minlaydi.
+`index` - React ilovalarida URL parametrlari asosidagi filtrlash tizimini boshqarish uchun kuchli va moslashuvchan Hook. Bu `nuqs` paketidan foydalanib, URL parametrlari va dastur holati o'rtasida ikki tomonlama sinxronizatsiyani ta'minlaydi.
 
 ## O'rnatish
 
@@ -28,7 +28,7 @@ yarn add nuqs
 ### Asosiy foydalanish
 
 ```tsx
-import { useFilters, filterParsers } from '@/shared/hooks/use-filters';
+import { index, filterParsers } from '@/shared/hooks/use-filters';
 
 function ProductsPage() {
   // Filtrlarni e'lon qilish va hookni chaqirish
@@ -99,7 +99,7 @@ function ProductsPage() {
 ### Kengaytirilgan foydalanish
 
 ```tsx
-import { useFilters, filterParsers } from '@/shared/hooks/use-filters';
+import { index, filterParsers } from '@/shared/hooks/use-filters';
 import { useEffect } from 'react';
 
 function AdvancedFiltersPage() {
@@ -160,15 +160,6 @@ function AdvancedFiltersPage() {
 ```
 
 ## API Reference
-
-### `useFilters` Hook
-
-```tsx
-function useFilters(
-  moduleFilters?: FilterParsers,
-  config?: UseFiltersConfig,
-): UseFiltersResult;
-```
 
 #### Parametrlar
 
@@ -306,7 +297,7 @@ const toggleTag = (tag) => {
 
 ### URL Bilan Ishlaganda
 
-`useFilters` xuki URL parametrlarini boshqaradi. Misol uchun, agar filtrlar qo'llanilsa:
+`index` xuki URL parametrlarini boshqaradi. Misol uchun, agar filtrlar qo'llanilsa:
 
 ```
 https://example.com/products?category=electronics&minPrice=100&maxPrice=500&page=2&size=24
@@ -395,7 +386,7 @@ type ProductFilters = {
 };
 
 // Filtrlar sxemasini ishlatishda
-const { filters } = useFilters<ProductFilters>({
+const { filters } = index<ProductFilters>({
   category: filterParsers.string('all'),
   minPrice: filterParsers.integer(0),
   maxPrice: filterParsers.integer(1000),
@@ -408,7 +399,7 @@ const { filters } = useFilters<ProductFilters>({
 URL parametrlarini saqlash kerakligiga ishonch hosil qiling:
 
 ```tsx
-const { filters } = useFilters(moduleFilters, {
+const { filters } = index(moduleFilters, {
   preserveParams: true, // Bu parametr URL dagi boshqa parametrlarni saqlaydi
 });
 ```

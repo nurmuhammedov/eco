@@ -1,20 +1,13 @@
-import { useState } from 'react';
 import { ActiveTab } from '../types';
+import { useCallback, useMemo } from 'react';
 import { UIModeEnum } from '@/shared/types/ui-types';
-import {
-  filterParsers,
-  useFilters,
-} from '@/shared/hooks/use-filters/use-filters.ts';
+import { filterParsers, useFilters } from '@/shared/hooks/use-filters';
 import {
   useDistrictDrawer,
   useRegionDrawer,
 } from '@/shared/hooks/entity-hooks';
 
-export interface UseRegionsManagementProps {
-  initialTab?: ActiveTab;
-}
-
-export const useRegionManagement = (props: UseRegionsManagementProps) => {
+export const useRegionManagement = () => {
   const { filters, setFilters } = useFilters({
     'active-tab': filterParsers.string('regions'),
   });
@@ -24,34 +17,36 @@ export const useRegionManagement = (props: UseRegionsManagementProps) => {
   const { onOpen: openDistrictDrawer, isOpen: isOpenDistrict } =
     useDistrictDrawer();
 
-  const [activeTab, setActiveTab] = useState<ActiveTab>(
-    props.initialTab || 'districts',
+  const activeTab = useMemo<ActiveTab>(
+    () => filters['active-tab'] as ActiveTab,
+    [filters],
   );
 
-  const handleChangeTab = (tab: ActiveTab) => {
-    setActiveTab(tab);
-    setFilters({ ...filters, 'active-tab': tab });
-  };
+  const handleChangeTab = useCallback(
+    (tab: ActiveTab) =>
+      setFilters((prev: any) => ({ ...prev, 'active-tab': tab })),
+    [setFilters],
+  );
 
-  const openAddRegionDrawer = () => {
+  const openAddRegionDrawer = useCallback(() => {
     openRegionDrawer(UIModeEnum.CREATE);
-  };
+  }, [openRegionDrawer]);
 
-  const openEditRegionDrawer = () => {
+  const openEditRegionDrawer = useCallback(() => {
     openRegionDrawer(UIModeEnum.EDIT);
-  };
+  }, [openRegionDrawer]);
 
-  const openAddDistrictDrawer = () => {
+  const openAddDistrictDrawer = useCallback(() => {
     openDistrictDrawer(UIModeEnum.CREATE);
-  };
+  }, [openDistrictDrawer]);
 
-  const openEditDistrictDrawer = () => {
+  const openEditDistrictDrawer = useCallback(() => {
     openDistrictDrawer(UIModeEnum.EDIT);
-  };
+  }, [openDistrictDrawer]);
 
   return {
     filters,
-    setActiveTab,
+    activeTab,
     isOpenRegion,
     isOpenDistrict,
     handleChangeTab,
@@ -59,6 +54,5 @@ export const useRegionManagement = (props: UseRegionsManagementProps) => {
     openEditRegionDrawer,
     openAddDistrictDrawer,
     openEditDistrictDrawer,
-    activeTab: filters['active-tab'] || activeTab,
   };
 };

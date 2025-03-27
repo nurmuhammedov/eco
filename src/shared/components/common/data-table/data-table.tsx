@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Fragment, useCallback } from 'react';
 import { cn } from '@/shared/lib/utils';
-import { useFilters } from '@/shared/hooks/use-filters/use-filters.ts';
+import { useFilters } from '@/shared/hooks/use-filters';
 import {
   ColumnDef,
   ColumnFiltersState,
