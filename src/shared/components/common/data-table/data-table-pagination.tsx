@@ -121,12 +121,12 @@ export function DataTablePagination<T>({
 
   // Jump to page groups
   const jumpPrevious = () => {
-    const newPage = Math.max(1, currentPage - 5);
+    const newPage = Math.max(1, currentPage - 3);
     handlePageChange(newPage);
   };
 
   const jumpNext = () => {
-    const newPage = Math.min(totalPages, currentPage + 5);
+    const newPage = Math.min(totalPages, currentPage + 3);
     handlePageChange(newPage);
   };
 
@@ -177,8 +177,8 @@ export function DataTablePagination<T>({
         {/* First page */}
         {showQuickJumper && (
           <Button
-            variant="outline"
             size="icon"
+            variant="outline"
             className="size-9 flex"
             onClick={() => handlePageChange(1)}
             disabled={currentPage === 1 || isLoading || !hasPageItems}
@@ -196,7 +196,7 @@ export function DataTablePagination<T>({
           onClick={() => handlePageChange(currentPage - 1)}
         >
           <ChevronLeft className="size-4" />
-          <span className="">{t('previous_page')}</span>
+          <span className="">{t('previous')}</span>
         </Button>
 
         {/* Page numbers with ellipsis */}
@@ -275,7 +275,7 @@ export function DataTablePagination<T>({
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage >= totalPages || isLoading || !hasPageItems}
         >
-          <span>{t('next_page')}</span>
+          <span>{t('next')}</span>
           <ChevronRight className="size-4" />
         </Button>
 

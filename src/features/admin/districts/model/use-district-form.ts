@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
+import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
 import {
   CreateDistrictDTO,
   districtSchema,
@@ -17,19 +17,18 @@ const DEFAULT_FORM_VALUES: CreateDistrictDTO = {
   name: '',
   soato: 1,
   number: 1,
-  regionId: null,
+  regionId: '',
 };
 
 export function useDistrictForm() {
-  const { mode, data, onClose } = useRegionDrawer();
+  const { mode, data, onClose } = useDistrictDrawer();
 
   const isCreate = mode === UIModeEnum.CREATE;
-  const districtId = data?.id ? Number(data.id) : 0;
+  const districtId = useMemo(() => (data?.id ? data?.id : 0), [data]);
 
   const form = useForm<CreateDistrictDTO>({
     resolver: zodResolver(districtSchema),
     defaultValues: DEFAULT_FORM_VALUES,
-    mode: 'onChange',
   });
 
   const { data: regions } = useRegionSelectQuery();
@@ -40,19 +39,17 @@ export function useDistrictForm() {
   const { mutateAsync: updateRegion, isPending: isUpdating } =
     useUpdateDistrict();
 
-  const { data: districtData, isLoading } = useDistrictQuery(districtId, {
-    enabled: !isCreate && districtId > 0,
-  });
+  const { data: districtData, isLoading } = useDistrictQuery(districtId);
 
   useEffect(() => {
     if (districtData && !isCreate) {
-      form.reset(districtData);
+      form.reset({ ...districtData, regionId: String(districtData.regionId) });
     }
-  }, [districtData, isCreate, form]);
+  }, [districtData, form]);
 
   const handleClose = useCallback(() => {
-    form.reset(DEFAULT_FORM_VALUES);
     onClose();
+    form.reset(DEFAULT_FORM_VALUES);
   }, [form, onClose]);
 
   const handleSubmit = useCallback(

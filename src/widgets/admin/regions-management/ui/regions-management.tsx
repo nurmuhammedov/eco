@@ -22,11 +22,12 @@ const RegionsManagement = ({
   const {
     activeTab,
     isOpenRegion,
-    setActiveTab,
     isOpenDistrict,
+    handleChangeTab,
     openAddRegionDrawer,
     openAddDistrictDrawer,
   } = useRegionManagement({ initialTab });
+
   return (
     <Fragment>
       <ActionButton
@@ -38,7 +39,7 @@ const RegionsManagement = ({
       <Tabs
         className="mt-3"
         defaultValue={activeTab}
-        onValueChange={(value: any) => setActiveTab(value)}
+        onValueChange={(value: any) => handleChangeTab(value)}
       >
         <TabsList>
           <TabsTrigger value="regions">{t('regions')}</TabsTrigger>

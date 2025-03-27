@@ -53,7 +53,7 @@
   "soato": "MHOBT",
   "loading": "Yuklanmoqda...",
   "sequence_number": "T/r",
-  "previous_page": "Oldingi sahifa",
-  "next_page": "Keyingi sahifa",
+  "previous": "Oldingi",
+  "next": "Keyingi",
   "showing_items": "{{start}} - {{end}} / Umumiy {{total}} ta ma'lumot"
 }

@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
@@ -22,7 +22,7 @@ export function useRegionForm() {
   const { mode, data, onClose } = useRegionDrawer();
 
   const isCreate = mode === UIModeEnum.CREATE;
-  const regionId = data?.id ? Number(data.id) : 0;
+  const regionId = useMemo(() => (data?.id ? data?.id : 0), [data]);
 
   const form = useForm<CreateRegionDTO>({
     resolver: zodResolver(regionSchema),

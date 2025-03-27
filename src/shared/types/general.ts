@@ -1,4 +1,4 @@
 export type OptionItem<T> = {
-  label: string;
-  value: T;
+  id: T;
+  name: string;
 };

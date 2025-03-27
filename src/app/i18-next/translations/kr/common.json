@@ -58,7 +58,7 @@
   "soato": "МХОБТ",
   "loading": "Юкланмоқда...",
   "sequence_number": "Т/р",
-  "previous_page": "Олдинги сахифа",
-  "next_page": "Кейинги сахифа",
+  "previous": "Олдинги",
+  "next": "Кейинги",
   "showing_items": "{{start}} - {{end}} / Умумий {{total}} та маълумот"
 }

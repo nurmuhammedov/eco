@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Fragment, useCallback } from 'react';
 import { cn } from '@/shared/lib/utils';
-import { useFilters } from '@/shared/hooks/use-filters';
+import { useFilters } from '@/shared/hooks/use-filters/use-filters.ts';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -54,7 +54,7 @@ export function DataTable<TData, TValue>({
 
   const tableData = isContentData ? data.content : data;
 
-  const pageCount = isContentData ? data.totalPages : undefined;
+  const pageCount = isContentData ? data?.page?.totalPages : undefined;
 
   const { filters, setFilters } = useFilters();
 

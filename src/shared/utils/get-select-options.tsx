@@ -13,12 +13,12 @@ export function getSelectOptions<T>(list: OptionItem<T>[]): JSX.Element[] {
 
   return list
     .map((option) =>
-      option?.value ? (
+      option?.id ? (
         <SelectItem
-          value={String(option.value)}
-          key={String(option.value) || crypto.randomUUID()}
+          value={String(option.id)}
+          key={String(option.id) || crypto.randomUUID()}
         >
-          {option.label}
+          {option.name}
         </SelectItem>
       ) : null,
     )

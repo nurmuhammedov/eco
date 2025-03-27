@@ -1,12 +1,11 @@
+import { getTime } from '@/shared/lib/get-time';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { districtAPI, districtKeys } from '@/entities/admin/districts';
 import { DistrictResponse, FilterDistrictDTO } from '../models/district.types';
 
-const DISTRICT_STALE_TIME = 10 * 60 * 1000; // 10 minutes
-
 export const useDistrictsQuery = (filters: FilterDistrictDTO) => {
   return useQuery({
-    staleTime: DISTRICT_STALE_TIME,
+    staleTime: getTime(1, 'week'),
     queryKey: districtKeys.list('district', filters),
     queryFn: () => districtAPI.fetchDistricts(filters),
     placeholderData: (previousData) => previousData,
@@ -27,7 +26,7 @@ export const useDistrictQuery = (
 ) => {
   return useQuery({
     enabled: !!id,
-    staleTime: DISTRICT_STALE_TIME,
+    staleTime: getTime(1, 'day'),
     queryFn: () => districtAPI.fetchDistrict(id),
     queryKey: districtKeys.detail('district', id),
     placeholderData: (previousData) => previousData,
@@ -37,7 +36,7 @@ export const useDistrictQuery = (
 
 export const useRegionSelectQuery = () => {
   return useQuery({
-    staleTime: DISTRICT_STALE_TIME,
+    staleTime: getTime(1, 'week'),
     queryFn: () => districtAPI.fetchRegionSelect(),
     queryKey: districtKeys.entity('district-region-select'),
   });
