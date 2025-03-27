@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
-import { useCallback, useEffect, useMemo } from 'react';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
 import {
   CreateDistrictDTO,

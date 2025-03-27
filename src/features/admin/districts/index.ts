@@ -1,2 +1,2 @@
-export { DistrictList } from './ui/district-list.tsx';
-export { DistrictDrawer } from './ui/district-drawer.tsx';
+export { DistrictList } from './ui/district-list';
+export { DistrictDrawer } from './ui/district-drawer';

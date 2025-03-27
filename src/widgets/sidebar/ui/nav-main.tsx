@@ -35,7 +35,7 @@ export function NavMain({ item }: { item: NavigationItem }) {
                 asChild
                 size="lg"
                 isActive={isActive}
-                tooltip={item.title}
+                tooltip={t(item.title)}
               >
                 <Link to={item.url}>
                   <Icon name={item.icon} />
