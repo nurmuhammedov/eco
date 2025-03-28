@@ -10,6 +10,7 @@ import {
   useTerritorialDepartmentQuery,
   useUpdateTerritorialDepartments,
 } from '@/entities/admin/territorial-departments';
+import { useRegionSelectQuery } from '@/entities/admin/districts';
 
 const DEFAULT_FORM_VALUES: CreateTerritorialDepartmentsDTO = {
   name: '',
@@ -29,6 +30,13 @@ export function useTerritorialDepartmentsForm() {
     defaultValues: DEFAULT_FORM_VALUES,
     mode: 'onChange',
   });
+
+  const { data: regions } = useRegionSelectQuery();
+
+  const regionOptions = regions?.map((region: any) => ({
+    label: region.name,
+    value: region.id,
+  }));
 
   const { mutateAsync: create, isPending: isCreating } =
     useCreateTerritorialDepartment();
@@ -86,6 +94,7 @@ export function useTerritorialDepartmentsForm() {
     form,
     isPending,
     foundedData,
+    regionOptions,
     onSubmit: handleSubmit,
     isFetching: isLoading,
   };

@@ -50,7 +50,7 @@ const MultiSelect = React.forwardRef<
 
   // Get selected items for display
   const selectedOptions = React.useMemo(
-    () => options.filter((opt) => value.includes(opt.value)),
+    () => options?.filter((opt) => value.includes(opt.value)),
     [options, value],
   );
 
@@ -119,14 +119,14 @@ const MultiSelect = React.forwardRef<
 
   // Display text based on selected items
   const displayText = React.useMemo(() => {
-    if (selectedOptions.length === 0) {
+    if (selectedOptions?.length === 0) {
       return <span className="text-muted-foreground">{placeholder}</span>;
     }
 
-    if (selectedOptions.length <= maxDisplayItems) {
+    if (selectedOptions?.length <= maxDisplayItems) {
       return (
         <div className="flex flex-wrap gap-1 overflow-hidden">
-          {selectedOptions.map((option) => (
+          {selectedOptions?.map((option) => (
             <div
               key={option.value.toString()}
               className="flex items-center gap-1 rounded-sm bg-muted px-1 py-0.5 text-xs"
@@ -150,7 +150,7 @@ const MultiSelect = React.forwardRef<
 
     return (
       <span>
-        {t('selected_items_count', { count: selectedOptions.length })}
+        {t('selected_items_count', { count: selectedOptions?.length })}
       </span>
     );
   }, [selectedOptions, placeholder, maxDisplayItems, handleRemoveItem]);
@@ -203,7 +203,7 @@ const MultiSelect = React.forwardRef<
         >
           <SelectScrollUpButton />
           <SelectPrimitive.Viewport className="p-1">
-            {options.map((option) => (
+            {options?.map((option) => (
               <div
                 key={option.value.toString()}
                 className={cn(
@@ -223,7 +223,7 @@ const MultiSelect = React.forwardRef<
                 </div>
               </div>
             ))}
-            {options.length === 0 && (
+            {options?.length === 0 && (
               <div className="py-6 text-center text-sm">
                 No options available
               </div>

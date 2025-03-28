@@ -1,5 +1,7 @@
+import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
+import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks';
@@ -12,25 +14,13 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
-import { MultiSelect } from '@/shared/components/ui/multi-select';
-import { Fragment } from 'react';
-import { Cat, Dog, Fish, Rabbit, Turtle } from 'lucide-react';
 
 export const TerritorialDepartmentsDrawer = () => {
   const { t } = useTranslation('common');
   const { isOpen, onClose, isCreate } = useTerritorialDepartmentsDrawer();
-  const { form, onSubmit, isPending, isFetching } =
+  const { form, onSubmit, isPending, isFetching, regionOptions } =
     useTerritorialDepartmentsForm();
 
-  const frameworksList = [
-    { value: 1, label: 'React', icon: Turtle },
-    { value: 2, label: 'Angular', icon: Cat },
-    { value: 3, label: 'Vue', icon: Dog },
-    { value: 4, label: 'Svelte', icon: Rabbit },
-    { value: 5, label: 'Ember', icon: Fish },
-    { value: 6, label: 'React native', icon: Fish },
-    { value: 7, label: 'Cordova', icon: Fish },
-  ];
   return (
     <BaseDrawer
       asForm
@@ -47,7 +37,6 @@ export const TerritorialDepartmentsDrawer = () => {
             <FormSkeleton length={1} />
           ) : (
             <Fragment>
-              {JSON.stringify(form.formState)}
               <FormField
                 name="name"
                 control={form.control}
@@ -62,19 +51,16 @@ export const TerritorialDepartmentsDrawer = () => {
                 )}
               />
               <FormField
-                control={form.control}
                 name="regionIds"
+                control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Frameworks</FormLabel>
+                    <FormLabel>{t('region')}</FormLabel>
                     <FormControl>
                       <MultiSelect
-                        options={frameworksList}
-                        placeholder="Frameworks tanlang"
-                        value={field.value}
-                        onChange={field.onChange}
-                        onBlur={field.onBlur}
-                        name={field.name}
+                        {...field}
+                        options={regionOptions}
+                        placeholder={t('select_region')}
                       />
                     </FormControl>
                     <FormMessage />
