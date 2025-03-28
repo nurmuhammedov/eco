@@ -8,8 +8,13 @@ export default [
     icon: 'note-text',
   },
   {
+    url: '/department',
+    title: 'menu.departments',
+    icon: 'note-text',
+  },
+  {
     url: '/staffs',
-    title: 'Xodimlar',
+    title: 'menu.staffs',
     icon: 'note-text',
   },
 ] as Navigation;

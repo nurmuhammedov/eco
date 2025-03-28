@@ -20,8 +20,6 @@ export const authAPI = {
     if (!response.success) {
       throw new Error(response.message);
     }
-
-    console.log('logout response', response);
     return response.data;
   },
   getMe: async () => {

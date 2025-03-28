@@ -32,16 +32,8 @@ export const useRegionManagement = () => {
     openRegionDrawer(UIModeEnum.CREATE);
   }, [openRegionDrawer]);
 
-  const openEditRegionDrawer = useCallback(() => {
-    openRegionDrawer(UIModeEnum.EDIT);
-  }, [openRegionDrawer]);
-
   const openAddDistrictDrawer = useCallback(() => {
     openDistrictDrawer(UIModeEnum.CREATE);
-  }, [openDistrictDrawer]);
-
-  const openEditDistrictDrawer = useCallback(() => {
-    openDistrictDrawer(UIModeEnum.EDIT);
   }, [openDistrictDrawer]);
 
   return {
@@ -51,8 +43,6 @@ export const useRegionManagement = () => {
     isOpenDistrict,
     handleChangeTab,
     openAddRegionDrawer,
-    openEditRegionDrawer,
     openAddDistrictDrawer,
-    openEditDistrictDrawer,
   };
 };

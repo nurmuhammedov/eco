@@ -29,7 +29,6 @@ import { DataTablePagination } from './data-table-pagination';
 import { getCommonPinningStyles } from './models/get-common-pinning';
 
 interface DataTableProps<TData, TValue> {
-  namespace: string;
   className?: string;
   isLoading?: boolean;
   isPaginated?: boolean;

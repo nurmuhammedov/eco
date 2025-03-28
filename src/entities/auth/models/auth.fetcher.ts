@@ -1,5 +1,7 @@
 import { queryClient } from '@/shared/api';
+import { UserRoles } from '@/shared/types';
 import { setUser } from '@/app/store/auth-slice';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { authAPI } from '@/entities/auth/models/auth.api';
 import { useAppDispatch } from '@/shared/hooks/use-store';
 import { getHomeRouteForLoggedInUser } from '@/app/routes';
@@ -7,8 +9,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthUser } from '@/entities/auth/models/auth.model';
 import { LoginDTO } from '@/entities/auth/models/auth.types';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { UserRoles } from '@/shared/types';
-import { useAuth } from '@/shared/hooks/use-auth.ts';
 
 export const useCurrentUser = () => {
   const {
@@ -37,7 +37,7 @@ export const useLogin = () => {
       queryClient.setQueryData(['currentUser'], data);
       const redirectPath = state?.from
         ? state?.from
-        : getHomeRouteForLoggedInUser(data.role);
+        : getHomeRouteForLoggedInUser(data?.role);
       navigate(redirectPath);
     },
   });

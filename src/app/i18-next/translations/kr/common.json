@@ -10,7 +10,9 @@
     "view": "Кўрсатиш",
     "close": "Ёпиш",
     "add_region": "Вилоят қўшиш",
-    "add_district": "Туман қўшиш"
+    "add_district": "Туман қўшиш",
+    "add_central_apparatus": "Марказий аппарат қўшиш",
+    "add_territorial_department": "Ҳудудий бўлим қўшиш"
   },
   "errors": {
     "something_went_wrong": "Хатолик юз берди!",
@@ -18,6 +20,8 @@
     "page_not_found": "Саҳифа топилмади"
   },
   "menu": {
+    "staffs": "Ходимлар",
+    "departments": "Бўлимлар",
     "territories": "Ҳудудлар",
     "appeals": "Мурожаатлар",
     "applications": "Аризалар",
@@ -60,5 +64,7 @@
   "sequence_number": "Т/р",
   "previous": "Олдинги",
   "next": "Кейинги",
-  "showing_items": "{{start}} - {{end}} / Умумий {{total}} та маълумот"
+  "showing_items": "{{start}} - {{end}} / Умумий {{total}} та маълумот",
+  "central_apparatus": "Марказий аппарат",
+  "territorial_departments": "Худудий бўлимлар"
 }

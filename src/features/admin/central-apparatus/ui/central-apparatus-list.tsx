@@ -2,29 +2,32 @@ import { useTranslation } from 'react-i18next';
 import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
-import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
+import {
+  type CentralApparatus,
+  type FilterCentralApparatusDTO,
+  useCentralApparatusListQuery,
+  useDeleteCentralApparatus,
+} from '@/entities/admin/central-apparatus';
+import { useCentralApparatusDrawer } from '@/shared/hooks/entity-hooks';
 import {
   DataTable,
   DataTableRowActions,
 } from '@/shared/components/common/data-table';
-import {
-  District,
-  FilterDistrictDTO,
-  useDeleteDistrict,
-  useDistrictsQuery,
-} from '@/entities/admin/districts';
 
-export function DistrictList() {
+export function CentralApparatusList() {
   const { filters } = useFilters();
-  const { onOpen } = useDistrictDrawer();
   const { t } = useTranslation('common');
-  const deleteRegion = useDeleteDistrict();
-  const { data, isLoading } = useDistrictsQuery(filters as FilterDistrictDTO);
+  const { onOpen } = useCentralApparatusDrawer();
+  const { data, isLoading } = useCentralApparatusListQuery(
+    filters as FilterCentralApparatusDTO,
+  );
+  const deleteData = useDeleteCentralApparatus();
+
   const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
 
-  const onDelete = (id: number) => deleteRegion.mutate(id);
+  const onDelete = (id: number) => deleteData.mutate(id);
 
-  const districtTableColumns: ColumnDef<District>[] = [
+  const columns: ColumnDef<CentralApparatus>[] = [
     {
       maxSize: 20,
       accessorKey: 'number',
@@ -38,19 +41,9 @@ export function DistrictList() {
       header: t('name'),
     },
     {
-      enablePinning: true,
-      accessorKey: 'region',
-      enableSorting: false,
-      header: t('region'),
-    },
-    {
-      accessorKey: 'soato',
-      header: t('district_code'),
-    },
-    {
       id: 'actions',
-      maxSize: 40,
-      enableResizing: false,
+      maxSize: 20,
+      minSize: 10,
       cell: ({ row }) => (
         <DataTableRowActions
           showEdit
@@ -67,8 +60,8 @@ export function DistrictList() {
     <DataTable
       isPaginated
       data={data || []}
+      columns={columns}
       isLoading={isLoading}
-      columns={districtTableColumns}
       className="h-[calc(100svh-270px)]"
     />
   );

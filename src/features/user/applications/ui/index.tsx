@@ -3,12 +3,5 @@ import { dataTableColumns } from './data-table-columns';
 import { DataTable } from '@/shared/components/common/data-table';
 
 export default function Application() {
-  return (
-    <DataTable
-      data={tasks}
-      namespace="applications"
-      columns={dataTableColumns}
-      pageCount={1}
-    />
-  );
+  return <DataTable data={tasks} columns={dataTableColumns} />;
 }

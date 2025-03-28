@@ -8,6 +8,8 @@ export enum UIModeEnum {
 export const UI_COMPONENTS = {
   REGION_DRAWER: 'region-drawer',
   DISTRICT_DRAWER: 'regions-drawer',
+  CENTRAL_APPARATUS_DRAWER: 'central-apparatus',
+  TERRITORIAL_DEPARTMENTS_DRAWER: 'territorial-departments',
 } as const;
 
 export type UIComponentName =
@@ -25,6 +27,12 @@ export interface UIComponentDataMap {
     id: number;
   };
   [UI_COMPONENTS.DISTRICT_DRAWER]: {
+    id: number;
+  };
+  [UI_COMPONENTS.CENTRAL_APPARATUS_DRAWER]: {
+    id: number;
+  };
+  [UI_COMPONENTS.TERRITORIAL_DEPARTMENTS_DRAWER]: {
     id: number;
   };
 }

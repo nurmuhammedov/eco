@@ -58,6 +58,8 @@ export function createEntityDrawerHook<T extends UIComponentName>(
 
     const onClose = useCallback(() => dispatch(closeUI()), [dispatch]);
 
-    return { isOpen, mode, data, onOpen, onClose };
+    const isCreate = mode === UIModeEnum.CREATE;
+
+    return { isOpen, mode, data, onOpen, onClose, isCreate };
   };
 }
