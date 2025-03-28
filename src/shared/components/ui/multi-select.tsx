@@ -2,6 +2,7 @@ import * as React from 'react';
 import { cn } from '@/shared/lib/utils';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Type definitions for multi-select options
@@ -31,6 +32,7 @@ const MultiSelect = React.forwardRef<
     onBlur?: () => void;
   }
 >((props, ref) => {
+  const { t } = useTranslation('common');
   const {
     options,
     value = [],
@@ -134,7 +136,7 @@ const MultiSelect = React.forwardRef<
               <span className="truncate">{option.label}</span>
               <button
                 type="button"
-                className="ml-1 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                className="ml-1 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-teal"
                 onClick={(e) => handleRemoveItem(e, option.value)}
               >
                 <X className="size-3" />
@@ -146,7 +148,11 @@ const MultiSelect = React.forwardRef<
       );
     }
 
-    return <span>{selectedOptions.length} items selected</span>;
+    return (
+      <span>
+        {t('selected_items_count', { count: selectedOptions.length })}
+      </span>
+    );
   }, [selectedOptions, placeholder, maxDisplayItems, handleRemoveItem]);
 
   return (
@@ -164,7 +170,7 @@ const MultiSelect = React.forwardRef<
         onBlur={onBlur}
         disabled={disabled}
         className={cn(
-          'flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+          'flex h-10 w-full items-center justify-between rounded border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-teal disabled:cursor-not-allowed disabled:opacity-50',
           className,
         )}
         {...restProps}
@@ -177,7 +183,7 @@ const MultiSelect = React.forwardRef<
             <button
               type="button"
               onClick={handleClearAll}
-              className="mr-1 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              className="mr-1 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-teal"
             >
               <X className="size-4" />
               <span className="sr-only">Clear all</span>

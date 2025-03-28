@@ -66,5 +66,7 @@
   "next": "Кейинги",
   "showing_items": "{{start}} - {{end}} / Умумий {{total}} та маълумот",
   "central_apparatus": "Марказий аппарат",
-  "territorial_departments": "Худудий бўлимлар"
+  "territorial_departments": "Худудий бўлимлар",
+  "no_data": "Маълумот топилмади",
+  "selected_items_count": "{{count}} та элемент танланди"
 }

@@ -61,5 +61,7 @@
   "next": "Keyingi",
   "showing_items": "{{start}} - {{end}} / Umumiy {{total}} ta ma'lumot",
   "central_apparatus": "Markaziy apparat",
-  "territorial_departments": "Hududiy bo'limlar"
+  "territorial_departments": "Hududiy bo'limlar",
+  "no_data": "Ma'lumot topilmadi",
+  "selected_items_count": "{{count}} ta element tanlandi"
 }

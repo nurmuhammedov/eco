@@ -27,6 +27,8 @@ import {
 import { ResponseData } from '@/shared/types/api';
 import { DataTablePagination } from './data-table-pagination';
 import { getCommonPinningStyles } from './models/get-common-pinning';
+import Icon from '@/shared/components/common/icon';
+import { useTranslation } from 'react-i18next';
 
 interface DataTableProps<TData, TValue> {
   className?: string;
@@ -49,13 +51,14 @@ export function DataTable<TData, TValue>({
   isPaginated = false,
   pageSizeOptions,
 }: DataTableProps<TData, TValue>) {
+  const { t } = useTranslation('common');
+  const { filters, setFilters } = useFilters();
+
   const isContentData = data && typeof data === 'object' && 'content' in data;
 
   const tableData = isContentData ? data.content : data;
 
   const pageCount = isContentData ? data?.page?.totalPages : undefined;
-
-  const { filters, setFilters } = useFilters();
 
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -163,12 +166,12 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns?.length}
-                  className="h-24 text-center"
-                >
-                  No results.
+              <TableRow className="hover:bg-white">
+                <TableCell colSpan={columns?.length} className="text-center">
+                  <div className="flex flex-col items-center gap-4 justify-center h-80 w-full">
+                    <Icon name="no-data" size={160} />
+                    <p className="font-medium">{t('no_data')}</p>
+                  </div>
                 </TableCell>
               </TableRow>
             )}
