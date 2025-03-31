@@ -1,5 +1,5 @@
+import { UserRoles } from '@/entities/user';
 import { lazy } from 'react';
-import { UserRoles } from '@/shared/types';
 
 const Applications = lazy(() => import('./applications/ui'));
 const Register = lazy(() => import('./register/pages'));

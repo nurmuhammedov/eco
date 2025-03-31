@@ -1,6 +1,6 @@
 import userNavigation from './user.ts';
 import adminNavigation from './admin.ts';
-import { UserRoles } from '@/shared/types';
+import { UserRoles } from '@/entities/user';
 
 export const NAVIGATIONS = {
   [UserRoles.ADMIN]: adminNavigation,

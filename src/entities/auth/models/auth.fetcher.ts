@@ -1,12 +1,11 @@
 import { queryClient } from '@/shared/api';
-import { UserRoles } from '@/shared/types';
 import { setUser } from '@/app/store/auth-slice';
 import { useAuth } from '@/shared/hooks/use-auth';
+import { UserRoles, UserState } from '@/entities/user';
 import { authAPI } from '@/entities/auth/models/auth.api';
 import { useAppDispatch } from '@/shared/hooks/use-store';
 import { getHomeRouteForLoggedInUser } from '@/app/routes';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AuthUser } from '@/entities/auth/models/auth.model';
 import { LoginDTO } from '@/entities/auth/models/auth.types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
@@ -32,7 +31,7 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: async (data: LoginDTO) => authAPI.login(data),
 
-    onSuccess: (data: AuthUser) => {
+    onSuccess: (data: UserState) => {
       dispatch(setUser(data));
       queryClient.setQueryData(['currentUser'], data);
       const redirectPath = state?.from

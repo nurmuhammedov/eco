@@ -1,7 +1,7 @@
 import { lazy } from 'react';
-import { UserRoles } from '@/shared/types';
-import type { AppRoute } from '@/app/routes';
 import { useAuth } from '@/shared/hooks/use-auth';
+import { UserRoles } from '@/entities/user';
+import { AppRoute2 } from './types';
 
 const UnAuthorized = lazy(() => import('@/features/auth/ui/unauthorized.tsx'));
 
@@ -10,7 +10,7 @@ export const DefaultRoute = '/app/applications';
 const hasAccess = (
   userRole: UserRoles,
   permissionList: string[],
-  meta?: AppRoute['meta'],
+  meta?: AppRoute2['meta'],
 ): boolean => {
   if (!meta) return true;
 
@@ -23,7 +23,7 @@ const hasAccess = (
   return roleMatch && permissionMatch;
 };
 
-export const filterRoutesByAuth = (routes: AppRoute[]): AppRoute[] => {
+export const filterRoutesByAuth = (routes: AppRoute2[]): AppRoute2[] => {
   const { user } = useAuth();
 
   if (!user) {

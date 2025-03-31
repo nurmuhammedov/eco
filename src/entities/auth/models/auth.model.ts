@@ -1,13 +1,6 @@
-import { UserRoles } from '@/shared/types';
-
-export type AuthUser = {
-  id: string;
-  name: string;
-  role: UserRoles;
-  directions: string[];
-};
+import { UserState } from '@/entities/user';
 
 export type AuthState = {
-  user: AuthUser | null;
+  user: UserState | null;
   isAuthenticated: boolean;
 };

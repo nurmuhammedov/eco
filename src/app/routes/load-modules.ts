@@ -1,4 +1,4 @@
-import { AppRoute } from '@/app/routes';
+import { AppRoute2 } from '@/app/routes/types.ts';
 
 const routeModules: Record<string, unknown> = import.meta.glob(
   '@/app/routes/**/routes.tsx',
@@ -7,8 +7,8 @@ const routeModules: Record<string, unknown> = import.meta.glob(
   },
 );
 
-const moduleRoutes: AppRoute[] = Object.values(routeModules)
-  .map((module: any): AppRoute => module.default)
+const moduleRoutes: AppRoute2[] = Object.values(routeModules)
+  .map((module: any): AppRoute2 => module.default)
   .flat();
 
 export default moduleRoutes;
