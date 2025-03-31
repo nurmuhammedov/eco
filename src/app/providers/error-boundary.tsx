@@ -1,13 +1,13 @@
-import { cn } from '@/shared/lib/utils';
-import { IS_DEV } from '@/shared/constants/general';
+import { cn } from '@/shared/lib/utils.ts';
+import { IS_DEV } from '@/shared/constants/general.ts';
 import React, { Component, ErrorInfo, memo } from 'react';
-import { DefaultErrorFallback } from './default-error-fallback';
+import { DefaultErrorFallback } from '../../pages/error/ui/default-error-fallback.tsx';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import type {
   ErrorBoundaryProps,
   ErrorBoundaryState,
   ErrorFallbackProps,
-} from '../types';
+} from '../../pages/error/types';
 
 /**
  * High-performance ErrorBoundary core component

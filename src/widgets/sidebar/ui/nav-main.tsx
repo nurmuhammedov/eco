@@ -2,9 +2,9 @@ import { Fragment } from 'react';
 import { cn } from '@/shared/lib/utils';
 import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { NavigationItem } from '@/widgets/sidebar/models/types.ts';
 import Icon from '@/shared/components/common/icon';
 import { Link, useLocation } from 'react-router-dom';
+import { NavigationItem } from '@/widgets/sidebar/models/types';
 
 import {
   Collapsible,

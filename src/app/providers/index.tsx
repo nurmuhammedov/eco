@@ -1,11 +1,12 @@
-import { PrivateLayout, ProtectedRoute } from '@/widgets';
-import ErrorBoundary from '@/pages/error/ui/error-boundary';
+import { ProtectedRoute } from '@/widgets';
+import { MainLayout } from '@/shared/layouts';
+import ErrorBoundary from '@/app/providers/error-boundary';
 
 export default function Providers() {
   return (
     <ErrorBoundary>
       <ProtectedRoute>
-        <PrivateLayout />
+        <MainLayout />
       </ProtectedRoute>
     </ErrorBoundary>
   );

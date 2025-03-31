@@ -2,12 +2,13 @@
 import { pick } from '@/shared/utils';
 import { cn } from '@/shared/lib/utils';
 import { shallowEqual } from 'react-redux';
-import { getSidebarCollapse } from '@/widgets/sidebar/utils.ts';
 import { NavMain } from '@/widgets/sidebar/ui/nav-main';
+import { useAppSelector } from '@/shared/hooks/use-store';
+import { getSidebarCollapse } from '@/widgets/sidebar/utils';
 
 // ** Secondary Components **
 import { AppLogo } from './app-logo';
-import { NAVIGATIONS } from '@/widgets/sidebar/models/navigations.ts';
+import { NAVIGATIONS } from '@/widgets/sidebar/models/navigations';
 
 // ** SVG Icons **
 import { TechnocorpLogo } from '@/shared/components/SVGIcons';
@@ -24,7 +25,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/shared/components/ui/sidebar';
-import { useAppSelector } from '@/shared/hooks/use-store';
 
 function Footer() {
   return (

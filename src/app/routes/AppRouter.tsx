@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import Providers from '@/app/providers';
-import { PublicLayout } from '@/widgets';
+import { AuthLayout } from '@/shared/layouts';
 import moduleRoutes from '@/app/routes/load-modules';
 import { filterRoutesByAuth } from '@/app/routes/utils';
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
@@ -19,7 +19,7 @@ const AppRouter = () => {
     },
     {
       path: 'auth',
-      element: <PublicLayout />,
+      element: <AuthLayout />,
       children: filteredRoutes.filter((route) => route.meta?.isPublic),
     },
     {
