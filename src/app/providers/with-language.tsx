@@ -6,7 +6,7 @@ import { Language } from '@/shared/types/language';
 import { LanguageContext } from '@/app/context/Language';
 import React, { useEffect, useMemo, useState } from 'react';
 
-export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
+export const WithLanguage: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [language, setLang] = useState<Language>(DEFAULT_LANG_CODE);

@@ -1,6 +1,6 @@
 import { ProtectedRoute } from '@/widgets';
 import { MainLayout } from '@/shared/layouts';
-import ErrorBoundary from '@/app/providers/error-boundary';
+import ErrorBoundary from '@/widgets/error-boundary';
 
 export default function Providers() {
   return (

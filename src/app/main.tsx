@@ -6,16 +6,16 @@ import AppRouter from './routes/AppRouter';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from '@/shared/components/ui/sonner';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { LanguageProvider } from './providers/language-provider.tsx';
+import { WithLanguage } from './providers/with-language.tsx';
 import '@/app/styles/globals.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
-        <LanguageProvider>
+        <WithLanguage>
           <AppRouter />
-        </LanguageProvider>
+        </WithLanguage>
       </QueryClientProvider>
     </Provider>
     <Toaster expand />
