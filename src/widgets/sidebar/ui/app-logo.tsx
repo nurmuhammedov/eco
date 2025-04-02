@@ -19,18 +19,15 @@ export function AppLogo() {
       <div>
         <Icon
           name="logo"
-          className={cn('w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12', {
+          className={cn('size-8 md:size-9 lg:size-12', {
             hidden: !sidebarOpen,
           })}
         />
       </div>
       <h6
-        className={cn(
-          'text-xm 3xl:text-sm font-semibold leading-4 font-inter',
-          {
-            hidden: !sidebarOpen,
-          },
-        )}
+        className={cn('text-xm 3xl:text-sm font-semibold leading-4', {
+          hidden: !sidebarOpen,
+        })}
       >
         {t('app.name')}
       </h6>
