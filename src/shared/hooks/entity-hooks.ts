@@ -16,3 +16,11 @@ export const useCentralApparatusDrawer = createEntityDrawerHook(
 export const useTerritorialDepartmentsDrawer = createEntityDrawerHook(
   UI_COMPONENTS.TERRITORIAL_DEPARTMENTS_DRAWER,
 );
+
+export const useCommitteeStaffsDrawer = createEntityDrawerHook(
+  UI_COMPONENTS.CENTRAL_APPARATUS_DRAWER,
+);
+
+export const useTerritorialStaffsDrawer = createEntityDrawerHook(
+  UI_COMPONENTS.TERRITORIAL_DEPARTMENTS_DRAWER,
+);

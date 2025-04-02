@@ -34,7 +34,7 @@ export const TerritorialDepartmentsDrawer = () => {
       <Form {...form}>
         <div className="space-y-4">
           {isFetching && !isCreate ? (
-            <FormSkeleton length={1} />
+            <FormSkeleton length={2} />
           ) : (
             <Fragment>
               <FormField

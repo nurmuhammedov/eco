@@ -2,33 +2,32 @@ import { useTranslation } from 'react-i18next';
 import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
-import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks';
+import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
 import {
   DataTable,
   DataTableRowActions,
 } from '@/shared/components/common/data-table';
 import {
-  FilterTerritorialDepartmentsDTO,
-  TerritorialDepartment,
-  useDeleteTerritorialDepartments,
-  useTerritorialDepartmentsQuery,
-} from '@/entities/admin/territorial-departments';
+  CommitteeStaff,
+  FilterCommitteeStaffDTO,
+  useCommitteeStaffListQuery,
+  useDeleteCommitteeStaff,
+} from '@/entities/admin/committee-staffs';
 
-export function TerritorialDepartmentsList() {
+export function CommitteeStaffList() {
   const { filters } = useFilters();
   const { t } = useTranslation('common');
-  const { onOpen } = useTerritorialDepartmentsDrawer();
-  const { data, isLoading } = useTerritorialDepartmentsQuery(
-    filters as FilterTerritorialDepartmentsDTO,
+  const { onOpen } = useCommitteeStaffsDrawer();
+  const { data, isLoading } = useCommitteeStaffListQuery(
+    filters as FilterCommitteeStaffDTO,
   );
-
-  const deleteData = useDeleteTerritorialDepartments();
+  const deleteData = useDeleteCommitteeStaff();
 
   const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
 
   const onDelete = (id: number) => deleteData.mutate(id);
 
-  const columns: ColumnDef<TerritorialDepartment>[] = [
+  const columns: ColumnDef<CommitteeStaff>[] = [
     {
       maxSize: 20,
       accessorKey: 'number',
@@ -36,16 +35,39 @@ export function TerritorialDepartmentsList() {
       cell: (cell) => cell.row.index + 1,
     },
     {
-      enablePinning: true,
       accessorKey: 'name',
       enableSorting: false,
-      header: t('name'),
+      header: t('short.full_name'),
     },
     {
-      enablePinning: true,
-      accessorKey: 'regions',
+      accessorKey: 'pin',
       enableSorting: false,
-      header: t('regions'),
+      header: t('short.pin'),
+    },
+    {
+      accessorKey: 'pin',
+      enableSorting: false,
+      header: t('position'),
+    },
+    {
+      accessorKey: 'pin',
+      enableSorting: false,
+      header: t('committee_division_department'),
+    },
+    {
+      accessorKey: 'pin',
+      enableSorting: false,
+      header: t('role'),
+    },
+    {
+      accessorKey: 'pin',
+      enableSorting: false,
+      header: t('status'),
+    },
+    {
+      accessorKey: 'pin',
+      enableSorting: false,
+      header: t('phone'),
     },
     {
       id: 'actions',

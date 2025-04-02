@@ -3,11 +3,11 @@ import { PropsWithChildren, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // ** Store **
-import { setUser } from '@/app/store/auth-slice';
+import { setUser } from '@/app/store/auth-slice.ts';
 
 // ** Hooks **
 import { useCurrentUser } from '@/entities/auth';
-import { useAppDispatch } from '@/shared/hooks/use-store';
+import { useAppDispatch } from '@/shared/hooks/use-store.ts';
 
 // ** Components **
 import { Loader } from '@/shared/components/common/global-loader/ui';

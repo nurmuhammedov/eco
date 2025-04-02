@@ -12,7 +12,9 @@
     "add_region": "Viloyat qo'shish",
     "add_district": "Tuman qo'shish",
     "add_central_apparatus": "Markaziy apparat qo'shish",
-    "add_territorial_department": "Hududiy bo'lim qo'shish"
+    "add_territorial_department": "Hududiy bo'lim qo'shish",
+    "add_territorial_staff": "Hududiy xodim qo'shish",
+    "add_committee_staff": "Qo'mita xodimi qo'shish"
   },
   "errors": {
     "something_went_wrong": "Xatolik yuz berdi!",
@@ -38,6 +40,10 @@
   "app": {
     "name": "Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi ekotizimi"
   },
+  "short": {
+    "full_name": "FIO",
+    "pin": "JSHSHIR"
+  },
   "confirmation": {
     "are_you_sure_to_delete": "O'chirishni tasdiqlaysizmi?",
     "delete_description": "Ushbu amalni tasdiqlash orqali ma'lumot serverdan o'chiriladi."
@@ -62,6 +68,14 @@
   "showing_items": "{{start}} - {{end}} / Umumiy {{total}} ta ma'lumot",
   "central_apparatus": "Markaziy apparat",
   "territorial_departments": "Hududiy bo'limlar",
+  "committee_staffs": "Qo'mita xodimlari",
+  "territorial_staffs": "Hududiy bo'lim xodimlari",
+  "staffs": "Xodimlar",
   "no_data": "Ma'lumot topilmadi",
-  "selected_items_count": "{{count}} ta element tanlandi"
+  "selected_items_count": "{{count}} ta element tanlandi",
+  "position": "Lavozim",
+  "committee_division_department": "Qo'mita bo'limi, boshqarmasi, departament",
+  "role": "Roli",
+  "status": "Status",
+  "phone": "Telefon"
 }

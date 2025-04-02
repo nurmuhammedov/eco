@@ -8,4 +8,5 @@ export const API_ENDPOINTS: Record<string, string> = {
   DISTRICTS: '/districts',
   DEPARTMENTS: '/departments',
   OFFICES: '/offices',
+  COMMITTEE_USERS: '/users/committee-users',
 };

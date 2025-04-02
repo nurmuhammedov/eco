@@ -1,7 +1,7 @@
-import { UserRoles } from '@/entities/user';
 import { lazy } from 'react';
+import { UserRoles } from '@/entities/user';
 
-const StaffsPage = lazy(() => import('@/pages/admin/staffs'));
+const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'));
 const RegionsPage = lazy(() => import('@/pages/admin/regions/ui'));
 const DepartmentPage = lazy(() => import('@/pages/admin/department/ui'));
 

@@ -12,7 +12,9 @@
     "add_region": "Вилоят қўшиш",
     "add_district": "Туман қўшиш",
     "add_central_apparatus": "Марказий аппарат қўшиш",
-    "add_territorial_department": "Ҳудудий бўлим қўшиш"
+    "add_territorial_department": "Ҳудудий бўлим қўшиш",
+    "add_territorial_staff": "Ҳудудий ходим қўшиш",
+    "add_committee_staff": "Қўмита ходими қўшиш"
   },
   "errors": {
     "something_went_wrong": "Хатолик юз берди!",
@@ -37,6 +39,10 @@
   },
   "app": {
     "name": "Саноат, радиация ва ядро хавфсизлиги қўмитаси экотизими"
+  },
+  "short": {
+    "full_name": "ФИО",
+    "pin": "ЖШШИР"
   },
   "confirmation": {
     "are_you_sure_to_delete": "Ўчиришни тасдиқлайсизми?",
@@ -67,6 +73,14 @@
   "showing_items": "{{start}} - {{end}} / Умумий {{total}} та маълумот",
   "central_apparatus": "Марказий аппарат",
   "territorial_departments": "Худудий бўлимлар",
+  "committee_staffs": "Қўмита ходимлари",
+  "territorial_staffs": "Худудий бўлим ходимлари",
+  "staffs": "Ходимлар",
   "no_data": "Маълумот топилмади",
-  "selected_items_count": "{{count}} та элемент танланди"
+  "selected_items_count": "{{count}} та элемент танланди",
+  "position": "Лавозим",
+  "committee_division_department": "Қўмита бўлими, бошқармаси, департамент",
+  "role": "Роли",
+  "status": "Статус",
+  "phone": "Телефон"
 }

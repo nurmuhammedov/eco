@@ -6,10 +6,12 @@ export enum UIModeEnum {
 }
 
 export const UI_COMPONENTS = {
-  REGION_DRAWER: 'region-drawer',
-  DISTRICT_DRAWER: 'regions-drawer',
-  CENTRAL_APPARATUS_DRAWER: 'central-apparatus',
-  TERRITORIAL_DEPARTMENTS_DRAWER: 'territorial-departments',
+  REGION_DRAWER: 'region-drawer', // Viloyatlar
+  DISTRICT_DRAWER: 'regions-drawer', // Tumanlar
+  CENTRAL_APPARATUS_DRAWER: 'central-apparatus', // Markaziy apparat
+  TERRITORIAL_DEPARTMENTS_DRAWER: 'territorial-departments', // Hududiy bo'limlar
+  COMMITTEE_STAFFS_DRAWER: 'committee-staffs', // Qo'mita xodimlari
+  TERRITORIAL_STAFFS_DRAWER: 'territorial-staffs', // Hududiy bo'lim xodimlari
 } as const;
 
 export type UIComponentName =
@@ -33,6 +35,12 @@ export interface UIComponentDataMap {
     id: number;
   };
   [UI_COMPONENTS.TERRITORIAL_DEPARTMENTS_DRAWER]: {
+    id: number;
+  };
+  [UI_COMPONENTS.COMMITTEE_STAFFS_DRAWER]: {
+    id: number;
+  };
+  [UI_COMPONENTS.TERRITORIAL_STAFFS_DRAWER]: {
     id: number;
   };
 }
