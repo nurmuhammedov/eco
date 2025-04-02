@@ -29,7 +29,8 @@ export function CommitteeStaffList() {
 
   const columns: ColumnDef<CommitteeStaff>[] = [
     {
-      maxSize: 20,
+      maxSize: 50,
+      minSize: 50,
       accessorKey: 'number',
       header: t('sequence_number'),
       cell: (cell) => cell.row.index + 1,
@@ -37,14 +38,17 @@ export function CommitteeStaffList() {
     {
       accessorKey: 'name',
       enableSorting: false,
+      minSize: 250,
       header: t('short.full_name'),
     },
     {
+      minSize: 250,
       accessorKey: 'pin',
       enableSorting: false,
       header: t('short.pin'),
     },
     {
+      minSize: 200,
       accessorKey: 'pin',
       enableSorting: false,
       header: t('position'),
@@ -52,27 +56,29 @@ export function CommitteeStaffList() {
     {
       accessorKey: 'pin',
       enableSorting: false,
+      minSize: 300,
       header: t('committee_division_department'),
     },
     {
+      minSize: 150,
       accessorKey: 'pin',
       enableSorting: false,
       header: t('role'),
     },
     {
+      minSize: 200,
       accessorKey: 'pin',
-      enableSorting: false,
       header: t('status'),
     },
     {
+      minSize: 200,
       accessorKey: 'pin',
-      enableSorting: false,
       header: t('phone'),
     },
     {
       id: 'actions',
-      maxSize: 20,
-      minSize: 10,
+      maxSize: 200,
+      minSize: 100,
       cell: ({ row }) => (
         <DataTableRowActions
           showEdit
