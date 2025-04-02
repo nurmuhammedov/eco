@@ -68,7 +68,13 @@ async function apiRequest<T>(
       errors?: Record<string, string>;
     }>;
 
-    toast.error(axiosError.response?.data?.message, { richColors: true });
+    if (axiosError.response?.data?.message) {
+      toast.error(axiosError.response?.data?.message, { richColors: true });
+    }
+
+    if (axiosError?.response?.status === 401) {
+      toast.error('Avtorizatsiyadan o‘tmagan', { richColors: true });
+    }
 
     return {
       data: null,
