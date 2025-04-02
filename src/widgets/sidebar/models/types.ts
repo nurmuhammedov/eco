@@ -1,9 +1,9 @@
-import { IconName } from '@/shared/components/common/icon';
+import { ReactNode } from 'react';
 
 export type NavigationItem = {
   url: string;
   title: string;
-  icon: IconName;
+  icon: ReactNode;
   isActive?: boolean;
   items?: {
     url: string;

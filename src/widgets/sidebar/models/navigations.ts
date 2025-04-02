@@ -1,5 +1,5 @@
 import userNavigation from './user.ts';
-import adminNavigation from './admin.ts';
+import adminNavigation from './admin.tsx';
 import { UserRoles } from '@/entities/user';
 
 export const NAVIGATIONS = {
