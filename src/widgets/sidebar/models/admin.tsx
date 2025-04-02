@@ -1,20 +1,20 @@
-// ** Types
+import { ListTree, MapPinned, Users } from 'lucide-react';
 import type { Navigation } from '@/widgets/sidebar/models/types';
 
 export default [
   {
     url: '/territories',
     title: 'menu.territories',
-    icon: 'note-text',
+    icon: <MapPinned />,
   },
   {
     url: '/department',
     title: 'menu.departments',
-    icon: 'note-text',
+    icon: <ListTree />,
   },
   {
     url: '/staffs',
     title: 'menu.staffs',
-    icon: 'note-text',
+    icon: <Users />,
   },
 ] as Navigation;
