@@ -3,10 +3,11 @@ import { cn } from '@/shared/lib/utils';
 import { useForm } from 'react-hook-form';
 import { useLogin } from '@/entities/auth';
 import { useTranslation } from 'react-i18next';
-import { ComponentPropsWithoutRef } from 'react';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { Input } from '@/shared/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/components/ui/button';
+import { ComponentPropsWithoutRef, useState } from 'react';
 import {
   Form,
   FormControl,
@@ -15,7 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
-import LanguageDropdown from '@/widgets/header/ui/intl-dropdown.tsx';
+import LanguageDropdown from '@/widgets/header/ui/intl-dropdown';
 
 const adminLoginFormSchema = z.object({
   username: z.string(),
@@ -30,10 +31,19 @@ export default function AdminLoginForm({
   className,
 }: ComponentPropsWithoutRef<'form'>) {
   const { t } = useTranslation('admin');
+
+  const { mutateAsync, isPending } = useLogin();
+
+  const [showPassword, setShowPassword] = useState(false);
+
   const form = useForm<AdminLoginDTO>({
     resolver: zodResolver(adminLoginFormSchema),
   });
-  const { mutateAsync, isPending } = useLogin();
+
+  const togglePasswordVisibility = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setShowPassword(!showPassword);
+  };
 
   const handleLogin = async (data: z.infer<typeof adminLoginFormSchema>) => {
     await mutateAsync(data);
@@ -76,12 +86,21 @@ export default function AdminLoginForm({
                 <FormItem>
                   <FormLabel>{t('password')}</FormLabel>
                   <FormControl>
-                    <Input
-                      required
-                      type="password"
-                      placeholder={t('password')}
-                      {...field}
-                    />
+                    <div className="relative flex items-center rounded border border-neutral-300 focus-within:ring-1 focus-within:ring-teal pr-2">
+                      <Input
+                        {...field}
+                        placeholder={t('password')}
+                        type={showPassword ? 'text' : 'password'}
+                        className="border-0 focus-visible:ring-0 shadow-none"
+                      />
+                      <button onClick={togglePasswordVisibility}>
+                        {showPassword ? (
+                          <EyeOffIcon className="size-5 text-muted-foreground" />
+                        ) : (
+                          <EyeIcon className="size-5 text-muted-foreground" />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
