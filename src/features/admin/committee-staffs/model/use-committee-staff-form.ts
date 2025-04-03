@@ -12,6 +12,8 @@ import {
   useUpdateCommitteeStaff,
 } from '@/entities/admin/committee-staffs';
 import { useTranslation } from 'react-i18next';
+import { useDepartmentSelectQueries } from '@/shared/api/dictionaries/hooks/use-department-dictionary-query.ts';
+import { getSelectOptions } from '@/shared/utils/get-select-options.tsx';
 
 const DEFAULT_FORM_VALUES: CreateCommitteeStaffDTO = {
   pin: '',
@@ -27,6 +29,8 @@ export function useCommitteeStaffForm() {
   const { t } = useTranslation('common');
   const { data, onClose, isCreate } = useCommitteeStaffsDrawer();
 
+  const { data: departmentSelect } = useDepartmentSelectQueries();
+
   const userDirectionOptions = userDirections.map(({ label, value }) => ({
     value,
     label: t(`direction.${label}`),
@@ -36,6 +40,11 @@ export function useCommitteeStaffForm() {
     id,
     name: t(`userRoles.${name}`),
   }));
+
+  const departmentOptions = useMemo(
+    () => getSelectOptions(departmentSelect || []),
+    [departmentSelect],
+  );
 
   const committeeStaffId = useMemo(() => (data?.id ? data?.id : 0), [data]);
 
@@ -108,6 +117,7 @@ export function useCommitteeStaffForm() {
     isPending,
     fetchByIdData,
     userRoleOptions,
+    departmentOptions,
     userDirectionOptions,
     onSubmit: handleSubmit,
     isFetching: isLoading,

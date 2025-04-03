@@ -30,9 +30,10 @@ export const CommitteeStaffDrawer = () => {
   const {
     form,
     onSubmit,
-    isPending,
     isCreate,
+    isPending,
     isFetching,
+    departmentOptions,
     userDirectionOptions,
   } = useCommitteeStaffForm();
 
@@ -129,6 +130,32 @@ export const CommitteeStaffDrawer = () => {
                           <SelectValue placeholder={t('role')} />
                         </SelectTrigger>
                         <SelectContent>{roleOptions}</SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="departmentId"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('menu.departments')}</FormLabel>
+                    <FormControl>
+                      <Select
+                        {...field}
+                        value={field.value}
+                        onValueChange={(value) => {
+                          if (value) {
+                            field.onChange(value);
+                          }
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder={t('menu.departments')} />
+                        </SelectTrigger>
+                        <SelectContent>{departmentOptions}</SelectContent>
                       </Select>
                     </FormControl>
                     <FormMessage />

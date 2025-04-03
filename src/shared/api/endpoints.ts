@@ -6,7 +6,9 @@ export const API_ENDPOINTS: Record<string, string> = {
   REGIONS: '/regions',
   REGIONS_SELECT: '/regions/select',
   DISTRICTS: '/districts',
+  DISTRICT_SELECT: '/districts/select',
   DEPARTMENTS: '/departments',
+  DEPARTMENT_SELECT: '/departments/select',
   OFFICES: '/offices',
   COMMITTEE_USERS: '/users/committee-users',
 };
