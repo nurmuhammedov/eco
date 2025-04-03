@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { committeeStaffSchema, schemas } from './committee-staffs.schema.ts';
+import { committeeStaffSchema, schemas } from './committee-staffs.schema';
 
 export type CommitteeStaff = z.infer<typeof committeeStaffSchema>;
 export type CommitteeStaffResponse = z.infer<typeof schemas.single>;

@@ -1,17 +1,25 @@
 export enum UserRoles {
-  LEGAL = 'LEGAL',
-  HEAD = 'HEAD',
-  ADMIN = 'ADMIN',
-  MANAGER = 'MANAGER',
-  CHAIRMAN = 'CHAIRMAN',
-  REGIONAL = 'REGIONAL',
-  INSPECTOR = 'INSPECTOR',
-  INDIVIDUAL = 'INDIVIDUAL',
+  LEGAL = 'LEGAL', // Yuridik shaxs
+  HEAD = 'HEAD', // Ma'sul bo'lim boshlig'i
+  ADMIN = 'ADMIN', // Ma'mur
+  MANAGER = 'MANAGER', // Ma'sul xodim
+  CHAIRMAN = 'CHAIRMAN', // Rais
+  REGIONAL = 'REGIONAL', // Hududiy bo'lim boshlig'i
+  INSPECTOR = 'INSPECTOR', // Nazoratchi
+  INDIVIDUAL = 'INDIVIDUAL', // Jismoniy shaxs
+}
+
+export enum Direction {
+  HF = 'HF',
+  IRS = 'IRS',
+  CADASTRE = 'CADASTRE',
+  EQUIPMENT = 'EQUIPMENT',
+  ACCREDITATION = 'ACCREDITATION',
 }
 
 export type UserState = {
   id: string;
   name: string;
   role: UserRoles;
-  directions: string[];
+  directions: Direction[];
 };

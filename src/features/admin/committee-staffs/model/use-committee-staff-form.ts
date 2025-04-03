@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form';
+import { userDirections, userRoles, UserRoles } from '@/entities/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
@@ -10,13 +11,31 @@ import {
   useCreateCommitteeStaff,
   useUpdateCommitteeStaff,
 } from '@/entities/admin/committee-staffs';
+import { useTranslation } from 'react-i18next';
 
 const DEFAULT_FORM_VALUES: CreateCommitteeStaffDTO = {
-  name: '',
+  pin: '',
+  fullName: '',
+  position: '',
+  directions: [],
+  phoneNumber: '',
+  departmentId: '',
+  role: UserRoles.CHAIRMAN,
 };
 
 export function useCommitteeStaffForm() {
+  const { t } = useTranslation('common');
   const { data, onClose, isCreate } = useCommitteeStaffsDrawer();
+
+  const userDirectionOptions = userDirections.map(({ label, value }) => ({
+    value,
+    label: t(`direction.${label}`),
+  }));
+
+  const userRoleOptions = userRoles.map(({ id, name }) => ({
+    id,
+    name: t(`userRoles.${name}`),
+  }));
 
   const committeeStaffId = useMemo(() => (data?.id ? data?.id : 0), [data]);
 
@@ -88,6 +107,8 @@ export function useCommitteeStaffForm() {
     isCreate,
     isPending,
     fetchByIdData,
+    userRoleOptions,
+    userDirectionOptions,
     onSubmit: handleSubmit,
     isFetching: isLoading,
   };

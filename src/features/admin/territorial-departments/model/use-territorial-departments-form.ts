@@ -34,8 +34,8 @@ export function useTerritorialDepartmentsForm() {
   const { data: regions } = useRegionSelectQuery();
 
   const regionOptions = regions?.map((region: any) => ({
-    label: region.name,
     value: region.id,
+    label: region.name,
   }));
 
   const { mutateAsync: create, isPending: isCreating } =

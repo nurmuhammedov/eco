@@ -36,7 +36,7 @@ export function CommitteeStaffList() {
       cell: (cell) => cell.row.index + 1,
     },
     {
-      accessorKey: 'name',
+      accessorKey: 'fullName',
       enableSorting: false,
       minSize: 250,
       header: t('short.full_name'),
@@ -49,30 +49,30 @@ export function CommitteeStaffList() {
     },
     {
       minSize: 200,
-      accessorKey: 'pin',
+      accessorKey: 'position',
       enableSorting: false,
       header: t('position'),
     },
     {
-      accessorKey: 'pin',
+      accessorKey: 'departmentId',
       enableSorting: false,
       minSize: 300,
       header: t('committee_division_department'),
     },
     {
       minSize: 150,
-      accessorKey: 'pin',
+      accessorKey: 'role',
       enableSorting: false,
       header: t('role'),
     },
     {
       minSize: 200,
-      accessorKey: 'pin',
+      accessorKey: 'status',
       header: t('status'),
     },
     {
       minSize: 200,
-      accessorKey: 'pin',
+      accessorKey: 'phoneNumber',
       header: t('phone'),
     },
     {

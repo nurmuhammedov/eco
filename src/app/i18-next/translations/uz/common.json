@@ -48,6 +48,23 @@
     "are_you_sure_to_delete": "O'chirishni tasdiqlaysizmi?",
     "delete_description": "Ushbu amalni tasdiqlash orqali ma'lumot serverdan o'chiriladi."
   },
+  "userRoles": {
+    "CHAIRMAN": "Rais",
+    "LEGAL": "Yuridik shaxs",
+    "MANAGER": "Ma'sul xodim",
+    "INSPECTOR": "Nazoratchi",
+    "INDIVIDUAL": "Jismoniy shaxs",
+    "HEAD": "Ma'sul bo'lim boshlig'i",
+    "REGIONAL": "Hududiy bo'lim boshlig'i",
+    "ADMIN": "Administrator"
+  },
+  "direction": {
+    "IRS": "Ionlashtiruvchi nurlanish manbalari",
+    "EQUIPMENT": "Qurilma",
+    "HF": "Xavfli ishlab chiqarish obyektlari",
+    "ACCREDITATION": "Akkreditatsiya",
+    "CADASTRE": "Kadastr"
+  },
   "regions": "Viloyatlar",
   "districts": "Tumanlar",
   "region_code": "Viloyat kodi(MHOBT kodi)",
@@ -77,5 +94,6 @@
   "committee_division_department": "Qo'mita bo'limi, boshqarmasi, departament",
   "role": "Roli",
   "status": "Status",
-  "phone": "Telefon"
+  "phone": "Telefon",
+  "directions": "Ruxsatlar"
 }

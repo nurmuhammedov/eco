@@ -91,7 +91,7 @@ export default function AdminLoginForm({
                         {...field}
                         placeholder={t('password')}
                         type={showPassword ? 'text' : 'password'}
-                        className="border-0 focus-visible:ring-0 shadow-none"
+                        className="border-0 focus-visible:ring-0"
                       />
                       <button onClick={togglePasswordVisibility}>
                         {showPassword ? (
