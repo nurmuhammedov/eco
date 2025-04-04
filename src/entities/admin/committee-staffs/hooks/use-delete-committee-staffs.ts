@@ -12,7 +12,7 @@ export const useDeleteCommitteeStaff = () => {
   return useMutation({
     mutationFn: committeeStaffAPI.delete,
 
-    onMutate: async (id: number) => {
+    onMutate: async (id: string) => {
       // Cancel in-flight queries
       await queryClient.cancelQueries({
         queryKey: committeeStaffKeys.list('committee-staff'),

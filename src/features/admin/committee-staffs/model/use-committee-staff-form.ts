@@ -1,8 +1,11 @@
 import { useForm } from 'react-hook-form';
-import { userDirections, userRoles, UserRoles } from '@/entities/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Direction, UserRoles } from '@/entities/user';
 import { useCallback, useEffect, useMemo } from 'react';
+import { getSelectOptions } from '@/shared/utils/get-select-options';
+import { useDepartmentSelectQueries } from '@/shared/api/dictionaries';
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
+import { useTranslatedObject } from '@/shared/lib/hooks/use-translated-enum';
 import {
   committeeStaffSchema,
   CreateCommitteeStaffDTO,
@@ -11,9 +14,6 @@ import {
   useCreateCommitteeStaff,
   useUpdateCommitteeStaff,
 } from '@/entities/admin/committee-staffs';
-import { useTranslation } from 'react-i18next';
-import { useDepartmentSelectQueries } from '@/shared/api/dictionaries/hooks/use-department-dictionary-query.ts';
-import { getSelectOptions } from '@/shared/utils/get-select-options.tsx';
 
 const DEFAULT_FORM_VALUES: CreateCommitteeStaffDTO = {
   pin: '',
@@ -22,31 +22,31 @@ const DEFAULT_FORM_VALUES: CreateCommitteeStaffDTO = {
   directions: [],
   phoneNumber: '',
   departmentId: '',
-  role: UserRoles.CHAIRMAN,
+  role: UserRoles.HEAD,
 };
 
 export function useCommitteeStaffForm() {
-  const { t } = useTranslation('common');
   const { data, onClose, isCreate } = useCommitteeStaffsDrawer();
 
   const { data: departmentSelect } = useDepartmentSelectQueries();
 
-  const userDirectionOptions = userDirections.map(({ label, value }) => ({
-    value,
-    label: t(`direction.${label}`),
-  }));
+  const userRoleOptions = useTranslatedObject(
+    {
+      [UserRoles.HEAD]: UserRoles.HEAD,
+      [UserRoles.MANAGER]: UserRoles.MANAGER,
+      [UserRoles.CHAIRMAN]: UserRoles.CHAIRMAN,
+    },
+    'userRoles',
+  );
 
-  const userRoleOptions = userRoles.map(({ id, name }) => ({
-    id,
-    name: t(`userRoles.${name}`),
-  }));
+  const userDirectionOptions = useTranslatedObject(Direction, 'direction');
 
   const departmentOptions = useMemo(
     () => getSelectOptions(departmentSelect || []),
     [departmentSelect],
   );
 
-  const committeeStaffId = useMemo(() => (data?.id ? data?.id : 0), [data]);
+  const committeeStaffId = useMemo(() => (data?.id ? data?.id : ''), [data]);
 
   const form = useForm<CreateCommitteeStaffDTO>({
     resolver: zodResolver(committeeStaffSchema),
@@ -65,7 +65,15 @@ export function useCommitteeStaffForm() {
 
   useEffect(() => {
     if (fetchByIdData && !isCreate) {
-      form.reset(fetchByIdData);
+      form.reset({
+        directions: fetchByIdData.directions,
+        fullName: fetchByIdData.fullName,
+        pin: fetchByIdData.pin,
+        position: fetchByIdData.position,
+        role: fetchByIdData.role,
+        phoneNumber: fetchByIdData.phoneNumber,
+        departmentId: String(fetchByIdData.departmentId),
+      });
     }
   }, [fetchByIdData, isCreate, form]);
 
@@ -106,6 +114,7 @@ export function useCommitteeStaffForm() {
       createCommitteeStaff,
       updateCommitteeStaff,
       handleClose,
+      fetchByIdData,
     ],
   );
 

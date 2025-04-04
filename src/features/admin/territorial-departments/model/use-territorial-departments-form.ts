@@ -31,12 +31,7 @@ export function useTerritorialDepartmentsForm() {
     mode: 'onChange',
   });
 
-  const { data: regions } = useRegionSelectQuery();
-
-  const regionOptions = regions?.map((region: any) => ({
-    value: region.id,
-    label: region.name,
-  }));
+  const { data: regionOptions } = useRegionSelectQuery();
 
   const { mutateAsync: create, isPending: isCreating } =
     useCreateTerritorialDepartment();

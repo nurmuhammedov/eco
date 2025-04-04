@@ -4,11 +4,16 @@ import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
 import {
+  formatPhoneNumber,
+  getUserRoleDisplay,
+  getUserStatusDisplay,
+} from '@/shared/lib';
+import {
   DataTable,
   DataTableRowActions,
 } from '@/shared/components/common/data-table';
 import {
-  CommitteeStaff,
+  CommitteeStaffTableItem,
   FilterCommitteeStaffDTO,
   useCommitteeStaffListQuery,
   useDeleteCommitteeStaff,
@@ -23,57 +28,56 @@ export function CommitteeStaffList() {
   );
   const deleteData = useDeleteCommitteeStaff();
 
-  const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
+  const onDelete = (id: string) => deleteData.mutate(id);
 
-  const onDelete = (id: number) => deleteData.mutate(id);
+  const onEdit = (id: string) => onOpen(UIModeEnum.EDIT, { id });
 
-  const columns: ColumnDef<CommitteeStaff>[] = [
+  const onView = (id: string) => onOpen(UIModeEnum.VIEW, { id });
+
+  const columns: ColumnDef<CommitteeStaffTableItem>[] = [
     {
       maxSize: 50,
       minSize: 50,
-      accessorKey: 'number',
       header: t('sequence_number'),
       cell: (cell) => cell.row.index + 1,
     },
     {
       accessorKey: 'fullName',
-      enableSorting: false,
       minSize: 250,
       header: t('short.full_name'),
     },
     {
-      minSize: 250,
+      minSize: 170,
       accessorKey: 'pin',
-      enableSorting: false,
       header: t('short.pin'),
     },
     {
       minSize: 200,
       accessorKey: 'position',
-      enableSorting: false,
       header: t('position'),
     },
     {
-      accessorKey: 'departmentId',
-      enableSorting: false,
+      accessorKey: 'department',
       minSize: 300,
       header: t('committee_division_department'),
     },
     {
       minSize: 150,
       accessorKey: 'role',
-      enableSorting: false,
       header: t('role'),
+      cell: ({ row }) => getUserRoleDisplay(row.original.role),
     },
     {
-      minSize: 200,
-      accessorKey: 'status',
+      minSize: 150,
+      accessorKey: 'enabled',
       header: t('status'),
+      cell: ({ row }) => getUserStatusDisplay(row.original.enabled),
     },
     {
-      minSize: 200,
+      minSize: 150,
       accessorKey: 'phoneNumber',
       header: t('phone'),
+      cell: ({ row }) => formatPhoneNumber(row.original.phoneNumber),
     },
     {
       id: 'actions',
@@ -82,10 +86,12 @@ export function CommitteeStaffList() {
       cell: ({ row }) => (
         <DataTableRowActions
           showEdit
+          showView
           row={row}
           showDelete
-          onEdit={(row) => onEdit(row.original.id!)}
-          onDelete={(row) => onDelete(row.original.id!)}
+          onView={(row) => onView(row.original.id)}
+          onEdit={(row) => onEdit(row.original.id)}
+          onDelete={(row) => onDelete(row.original.id)}
         />
       ),
     },

@@ -1,5 +1,5 @@
+import { createEntityDrawerHook } from '@/shared/lib';
 import { UI_COMPONENTS } from '@/shared/types/ui-types';
-import { createEntityDrawerHook } from '@/shared/lib/create-entity-hooks';
 
 export const useRegionDrawer = createEntityDrawerHook(
   UI_COMPONENTS.REGION_DRAWER,
@@ -18,7 +18,7 @@ export const useTerritorialDepartmentsDrawer = createEntityDrawerHook(
 );
 
 export const useCommitteeStaffsDrawer = createEntityDrawerHook(
-  UI_COMPONENTS.CENTRAL_APPARATUS_DRAWER,
+  UI_COMPONENTS.COMMITTEE_STAFFS_DRAWER,
 );
 
 export const useTerritorialStaffsDrawer = createEntityDrawerHook(

@@ -5,7 +5,7 @@
     "delete": "O'chirish",
     "deleting": "O'chirilmoqda...",
     "reload": "Yangilash",
-    "add": "Qo'shish",
+    "create": "Qo'shish",
     "edit": "Tahrirlash",
     "view": "Ko'rsatish",
     "close": "Yopish",
@@ -59,11 +59,11 @@
     "ADMIN": "Administrator"
   },
   "direction": {
-    "IRS": "Ionlashtiruvchi nurlanish manbalari",
-    "EQUIPMENT": "Qurilma",
-    "HF": "Xavfli ishlab chiqarish obyektlari",
-    "ACCREDITATION": "Akkreditatsiya",
-    "CADASTRE": "Kadastr"
+    "APPEAL": "Arizalar",
+    "ATTESTAT": "Attestat",
+    "ATTESTATION": "Attestatsiya",
+    "CERTIFICATE": "Sertifikat",
+    "ACCREDITATION": "Akkreditatsiya"
   },
   "regions": "Viloyatlar",
   "districts": "Tumanlar",
@@ -95,5 +95,7 @@
   "role": "Roli",
   "status": "Status",
   "phone": "Telefon",
-  "directions": "Ruxsatlar"
+  "directions": "Ruxsatlar",
+  "in_work": "Ish faoliyatida",
+  "not_in_work": "Ish faoliyatida emas"
 }

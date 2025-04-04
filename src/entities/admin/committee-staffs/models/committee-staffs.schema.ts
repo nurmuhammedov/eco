@@ -1,7 +1,11 @@
 import { z } from 'zod';
 import { UserRoles } from '@/entities/user';
 
-const PATTERNS = { pin: /^\d{14}$/, phoneUz: /^\+998\d{9}$/ } as const;
+const PATTERNS = {
+  pin: /^\d{14}$/,
+  phoneUz: /^\+998\d{9}$/,
+  uuid: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+} as const;
 
 const ERROR_MESSAGES = {
   required: "Bu maydonni to'ldirish majburiy",
@@ -46,7 +50,7 @@ export const committeeBaseSchema = {
 
 export const committeeStaffSchema = z
   .object({
-    id: z.number().optional(),
+    id: z.string().optional(),
     ...committeeBaseSchema,
   })
   .strict() // Prevents additional properties
@@ -60,10 +64,35 @@ export const committeeStaffSchema = z
     fullName: data.fullName.replace(/\s+/g, ' '),
   }));
 
+export const committeeTableItemSchema = z.object({
+  id: z.union([
+    z.string().uuid(),
+    z.string().regex(PATTERNS.uuid, { message: 'Invalid UUID format' }),
+  ]),
+
+  fullName: z.string().trim().min(1),
+  pin: z.union([
+    z.number().transform((val) => val.toString()),
+    z.string().regex(/^\d+$/, { message: ERROR_MESSAGES.pin }),
+  ]),
+  role: z.nativeEnum(UserRoles),
+  directions: z.array(z.string()).default([]),
+  department: z.string(),
+  departmentId: z.union([
+    z.number().int().positive(),
+    z.string().transform((val) => parseInt(val)),
+  ]),
+  position: z.string(),
+  phoneNumber: z
+    .string()
+    .regex(PATTERNS.phoneUz, { message: ERROR_MESSAGES.phone }),
+  enabled: z.boolean().default(true),
+});
+
 export const schemas = {
   create: z.object(committeeBaseSchema),
   update: z.object({
-    id: z.number(),
+    id: z.string(),
     ...Object.fromEntries(
       Object.entries(committeeBaseSchema).map(([k, validator]) => [
         k,
@@ -81,5 +110,6 @@ export const schemas = {
     page: z.number().optional().default(1),
     size: z.number().optional().default(20),
   }),
-  single: committeeStaffSchema,
+  table: committeeTableItemSchema,
+  single: committeeTableItemSchema,
 };

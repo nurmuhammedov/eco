@@ -10,10 +10,10 @@ export enum UserRoles {
 }
 
 export enum Direction {
-  HF = 'HF',
-  IRS = 'IRS',
-  CADASTRE = 'CADASTRE',
-  EQUIPMENT = 'EQUIPMENT',
+  APPEAL = 'APPEAL',
+  ATTESTAT = 'ATTESTAT',
+  ATTESTATION = 'ATTESTATION',
+  CERTIFICATE = 'CERTIFICATE',
   ACCREDITATION = 'ACCREDITATION',
 }
 

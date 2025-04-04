@@ -17,9 +17,9 @@ export const committeeStaffAPI = {
     return data || [];
   },
 
-  byId: async (id: number) => {
+  byId: async (id: string) => {
     const { data } = await apiClient.get<ApiResponse<CommitteeStaffResponse>>(
-      `${API_ENDPOINTS.COMMITTEE_USERS}/${id}`,
+      `${API_ENDPOINTS.USERS}/${id}`,
     );
     return data.data;
   },
@@ -48,7 +48,7 @@ export const committeeStaffAPI = {
 
     return response;
   },
-  delete: async (id: number) => {
+  delete: async (id: string) => {
     const response = await apiClient.delete(
       `${API_ENDPOINTS.COMMITTEE_USERS}/${id}`,
     );

@@ -49,7 +49,7 @@ export const useCreateCommitteeStaff = () => {
 
       // Add the newly created committee-staff to cache
       queryClient.setQueryData(
-        committeeStaffKeys.detail('committee-staff', createdData.data.id!),
+        committeeStaffKeys.detail('committee-staff', createdData.data.id),
         createdData,
       );
     },

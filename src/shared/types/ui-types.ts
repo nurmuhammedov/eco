@@ -1,8 +1,8 @@
 export enum UIModeEnum {
-  CREATE = 'create',
   EDIT = 'edit',
   VIEW = 'view',
   DELETE = 'delete',
+  CREATE = 'create',
 }
 
 export const UI_COMPONENTS = {
@@ -38,10 +38,10 @@ export interface UIComponentDataMap {
     id: number;
   };
   [UI_COMPONENTS.COMMITTEE_STAFFS_DRAWER]: {
-    id: number;
+    id: string;
   };
   [UI_COMPONENTS.TERRITORIAL_STAFFS_DRAWER]: {
-    id: number;
+    id: string;
   };
 }
 

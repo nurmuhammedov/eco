@@ -19,7 +19,7 @@ export const useCommitteeStaffListQuery = (
 };
 
 export const useCommitteeStaffQuery = (
-  id: number,
+  id: string,
   options?: Omit<
     UseQueryOptions<
       CommitteeStaffResponse,
@@ -32,7 +32,7 @@ export const useCommitteeStaffQuery = (
 ) => {
   return useQuery({
     enabled: !!id,
-    staleTime: getTime(1, 'week'),
+    staleTime: getTime(1, 'day'),
     queryFn: () => committeeStaffAPI.byId(id),
     queryKey: committeeStaffKeys.detail('committee-staff', id),
     placeholderData: (previousData) => previousData,
