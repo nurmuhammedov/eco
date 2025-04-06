@@ -68,13 +68,13 @@ export function CommitteeStaffList() {
       cell: ({ row }) => getUserRoleDisplay(row.original.role),
     },
     {
-      minSize: 150,
+      minSize: 170,
       accessorKey: 'enabled',
       header: t('status'),
       cell: ({ row }) => getUserStatusDisplay(row.original.enabled),
     },
     {
-      minSize: 150,
+      minSize: 180,
       accessorKey: 'phoneNumber',
       header: t('phone'),
       cell: ({ row }) => formatPhoneNumber(row.original.phoneNumber),

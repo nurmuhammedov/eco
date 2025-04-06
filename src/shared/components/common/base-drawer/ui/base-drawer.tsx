@@ -1,10 +1,10 @@
-import React, { Fragment, memo, useCallback, useMemo } from 'react';
 import { X } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 import { BaseDrawerProps } from '../types';
 import { DrawerFooterActions } from './footer-action';
 import { Button } from '@/shared/components/ui/button';
 import { DialogDescription } from '@/shared/components/ui/dialog';
+import React, { Fragment, memo, useCallback, useMemo } from 'react';
 import {
   Drawer,
   DrawerContent,
@@ -12,15 +12,17 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/shared/components/ui/drawer';
+import { useAppSelector } from '@/shared/hooks/use-store.ts';
+import { UIModeEnum } from '@/shared/types';
 
 export const BaseDrawer = memo(function BaseDrawer({
   open,
   title,
   footer,
   onClose,
+  loading,
   children,
   onSubmit,
-  loading,
   disabled,
   asForm = false,
   className = '',
@@ -29,6 +31,7 @@ export const BaseDrawer = memo(function BaseDrawer({
   showSubmitButton = true,
   ...props
 }: BaseDrawerProps) {
+  const { mode } = useAppSelector((state) => state.ui);
   const handleClose = useCallback(() => {
     if (onClose) onClose();
   }, [onClose]);
@@ -65,7 +68,7 @@ export const BaseDrawer = memo(function BaseDrawer({
   );
 
   const footerComponent = useMemo(() => {
-    if (footer === null) return null;
+    if (footer === null || mode === UIModeEnum.VIEW) return null;
 
     return (
       <DrawerFooter className="border-t py-4 flex">

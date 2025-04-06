@@ -55,7 +55,7 @@ export const DescriptionItem = React.forwardRef<
         ref={ref}
         className={cn(span > 1 ? `col-span-${span}` : 'col-span-1', className)}
       >
-        <div className="text-sm text-gray-500">{label}:</div>
+        <div className="text-sm text-gray-500">{label}</div>
         <div className="mt-1 font-medium">{formattedValue}</div>
       </div>
     );

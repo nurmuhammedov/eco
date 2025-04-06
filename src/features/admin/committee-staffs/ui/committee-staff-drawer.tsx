@@ -53,11 +53,11 @@ export const CommitteeStaffDrawer = () => {
     <BaseDrawer
       asForm
       open={isOpen}
+      title={modeState}
       onClose={onClose}
       loading={isPending}
       disabled={isPending}
       onSubmit={form.handleSubmit(onSubmit)}
-      title={modeState}
     >
       {mode === UIModeEnum.VIEW ? (
         <Description>
