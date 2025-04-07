@@ -52,26 +52,26 @@ export function CommitteeStaffList() {
       header: t('short.pin'),
     },
     {
-      minSize: 200,
-      accessorKey: 'position',
-      header: t('position'),
-    },
-    {
       accessorKey: 'department',
       minSize: 300,
       header: t('committee_division_department'),
     },
     {
+      minSize: 200,
+      accessorKey: 'position',
+      header: t('position'),
+    },
+    {
       minSize: 150,
       accessorKey: 'role',
       header: t('role'),
-      cell: ({ row }) => getUserRoleDisplay(row.original.role),
+      cell: ({ row }) => getUserRoleDisplay(row.original.role, t),
     },
     {
-      minSize: 170,
+      minSize: 100,
       accessorKey: 'enabled',
       header: t('status'),
-      cell: ({ row }) => getUserStatusDisplay(row.original.enabled),
+      cell: ({ row }) => getUserStatusDisplay(row.original.enabled, t),
     },
     {
       minSize: 180,

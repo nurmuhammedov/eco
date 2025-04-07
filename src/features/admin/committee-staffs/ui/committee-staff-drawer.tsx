@@ -2,12 +2,14 @@ import { Fragment, useMemo } from 'react';
 import { UIModeEnum } from '@/shared/types';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
+import { CommitteeStaffView } from './committee-staff-view';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import { getSelectOptions } from '@/shared/utils/get-select-options';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
+import { useUIActionLabel } from '@/shared/lib/hooks/use-ui-action-label';
 import { useCommitteeStaffForm } from '../model/use-committee-staff-form';
 import {
   Form,
@@ -23,13 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { useUIActionLabel } from '@/shared/lib/hooks/use-ui-action-label.ts';
-import { Description } from '@/shared/components/common/description';
-import {
-  formatPhoneNumber,
-  getUserRoleDisplay,
-  getUserStatusDisplay,
-} from '@/shared/lib';
 
 export const CommitteeStaffDrawer = () => {
   const { t } = useTranslation('common');
@@ -41,9 +36,9 @@ export const CommitteeStaffDrawer = () => {
     isCreate,
     isPending,
     isFetching,
+    fetchByIdData,
     userRoleOptions,
     departmentOptions,
-    fetchByIdData,
     userDirectionOptions,
   } = useCommitteeStaffForm();
 
@@ -60,32 +55,7 @@ export const CommitteeStaffDrawer = () => {
       onSubmit={form.handleSubmit(onSubmit)}
     >
       {mode === UIModeEnum.VIEW ? (
-        <Description>
-          <Description.Item key="full_name" label={t('short.full_name')}>
-            {fetchByIdData?.fullName}
-          </Description.Item>
-          <Description.Item key="role" label={t('role')}>
-            {getUserRoleDisplay(fetchByIdData?.role)}
-          </Description.Item>
-          <Description.Item key="position" label={t('position')}>
-            {fetchByIdData?.position}
-          </Description.Item>
-          <Description.Item key="phone" label={t('phone')}>
-            {formatPhoneNumber(fetchByIdData?.phoneNumber)}
-          </Description.Item>
-          <Description.Item key="pin" label={t('short.pin')}>
-            {fetchByIdData?.pin}
-          </Description.Item>
-          <Description.Item
-            key="department"
-            label={t('committee_division_department')}
-          >
-            {fetchByIdData?.department}
-          </Description.Item>
-          <Description.Item key="status" label={t('status')}>
-            {getUserStatusDisplay(!!fetchByIdData?.enabled)}
-          </Description.Item>
-        </Description>
+        <CommitteeStaffView data={fetchByIdData as any} />
       ) : (
         <Form {...form}>
           <div className="space-y-4">

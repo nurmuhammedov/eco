@@ -1,12 +1,12 @@
+import { TFunction } from 'i18next';
 import { UserRoles } from '@/entities/user';
-import { useTranslation } from 'react-i18next';
 
 export const getUserRoleDisplay = (
   role: UserRoles | string | null | undefined,
+  translateFn: TFunction,
   includeOriginal: boolean = false,
   fallback: string = '',
 ): string => {
-  const { t } = useTranslation('common');
   if (!role) {
     return fallback;
   }
@@ -20,7 +20,7 @@ export const getUserRoleDisplay = (
   const userRole = role as UserRoles;
 
   // Rol uchun tarjimani olish
-  const translatedRole = t(`userRoles.${userRole}`, {
+  const translatedRole = translateFn(`userRoles.${userRole}`, {
     defaultValue: fallback || userRole,
   });
 

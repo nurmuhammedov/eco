@@ -96,6 +96,6 @@
   "status": "Status",
   "phone": "Telefon",
   "directions": "Ruxsatlar",
-  "in_work": "Ish faoliyatida",
-  "not_in_work": "Ish faoliyatida emas"
+  "active": "Faol",
+  "inactive": "Faol emas"
 }

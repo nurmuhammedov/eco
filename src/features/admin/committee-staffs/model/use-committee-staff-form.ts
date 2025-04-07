@@ -7,6 +7,7 @@ import { useDepartmentSelectQueries } from '@/shared/api/dictionaries';
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
 import { useTranslatedObject } from '@/shared/lib/hooks/use-translated-enum';
 import {
+  CommitteeStaffResponse,
   committeeStaffSchema,
   CreateCommitteeStaffDTO,
   UpdateCommitteeStaffDTO,
@@ -14,6 +15,7 @@ import {
   useCreateCommitteeStaff,
   useUpdateCommitteeStaff,
 } from '@/entities/admin/committee-staffs';
+import { UseQueryResult } from '@tanstack/react-query';
 
 const DEFAULT_FORM_VALUES: CreateCommitteeStaffDTO = {
   pin: '',
@@ -60,17 +62,18 @@ export function useCommitteeStaffForm() {
   const { mutateAsync: updateCommitteeStaff, isPending: isUpdating } =
     useUpdateCommitteeStaff();
 
-  const { data: fetchByIdData, isLoading } =
-    useCommitteeStaffQuery(committeeStaffId);
+  const { data: fetchByIdData, isLoading } = useCommitteeStaffQuery(
+    committeeStaffId,
+  ) as UseQueryResult<CommitteeStaffResponse>;
 
   useEffect(() => {
     if (fetchByIdData && !isCreate) {
       form.reset({
-        directions: fetchByIdData.directions,
-        fullName: fetchByIdData.fullName,
         pin: fetchByIdData.pin,
-        position: fetchByIdData.position,
         role: fetchByIdData.role,
+        fullName: fetchByIdData.fullName,
+        position: fetchByIdData.position,
+        directions: fetchByIdData.directions,
         phoneNumber: fetchByIdData.phoneNumber,
         departmentId: String(fetchByIdData.departmentId),
       });

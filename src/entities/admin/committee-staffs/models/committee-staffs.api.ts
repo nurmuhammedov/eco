@@ -49,9 +49,7 @@ export const committeeStaffAPI = {
     return response;
   },
   delete: async (id: string) => {
-    const response = await apiClient.delete(
-      `${API_ENDPOINTS.COMMITTEE_USERS}/${id}`,
-    );
+    const response = await apiClient.delete(`${API_ENDPOINTS.USERS}/${id}`);
     if (!response.success) {
       throw new Error(response.message);
     }
