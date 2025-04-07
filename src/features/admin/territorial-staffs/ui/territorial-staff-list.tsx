@@ -57,12 +57,12 @@ export function TerritorialStaffList() {
       header: t('territorial_department_name'),
     },
     {
-      minSize: 200,
+      minSize: 230,
       accessorKey: 'position',
       header: t('position'),
     },
     {
-      minSize: 150,
+      minSize: 200,
       accessorKey: 'role',
       header: t('role'),
       cell: ({ row }) => getUserRoleDisplay(row.original.role, t),

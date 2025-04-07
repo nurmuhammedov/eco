@@ -1,5 +1,4 @@
 import { useForm } from 'react-hook-form';
-import { UIModeEnum } from '@/shared/types/ui-types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
@@ -15,15 +14,14 @@ import {
 
 const DEFAULT_FORM_VALUES: CreateDistrictDTO = {
   name: '',
-  soato: 1,
-  number: 1,
+  soato: '',
+  number: '',
   regionId: '',
 };
 
 export function useDistrictForm() {
-  const { mode, data, onClose } = useDistrictDrawer();
+  const { data, onClose, isCreate } = useDistrictDrawer();
 
-  const isCreate = mode === UIModeEnum.CREATE;
   const districtId = useMemo(() => (data?.id ? data?.id : 0), [data]);
 
   const form = useForm<CreateDistrictDTO>({

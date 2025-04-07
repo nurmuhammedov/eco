@@ -5,7 +5,7 @@ import { Input } from '@/shared/components/ui/input';
 import { TerritorialStaffView } from './territorial-staff-view';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
-import { NumberInput } from '@/shared/components/ui/number-input';
+import { InputNumber } from '@/shared/components/ui/input-number.tsx';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
@@ -84,7 +84,7 @@ export const TerritorialStaffDrawer = () => {
                     <FormItem>
                       <FormLabel required>{t('short.pin')}</FormLabel>
                       <FormControl>
-                        <NumberInput
+                        <InputNumber
                           maxLength={14}
                           placeholder="142536945201203"
                           {...field}

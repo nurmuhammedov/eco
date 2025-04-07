@@ -34,7 +34,7 @@ export type NumberInputProps<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = BaseNumberInputProps & UseControllerProps<TFieldValues, TName>;
 
-function NumberInput<
+function InputNumber<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(props: NumberInputProps<TFieldValues, TName>) {
@@ -234,6 +234,6 @@ const ForwardedNumberInput = forwardRef<HTMLInputElement, BaseNumberInputProps>(
     return <Input {...props} type="text" ref={ref} />;
   },
 );
-ForwardedNumberInput.displayName = 'NumberInput';
+ForwardedNumberInput.displayName = 'InputNumber';
 
-export { NumberInput, ForwardedNumberInput };
+export { InputNumber, ForwardedNumberInput };

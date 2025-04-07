@@ -3,9 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
 import { useDistrictForm } from '../model/use-district-form';
 import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
+import { InputNumber } from '@/shared/components/ui/input-number';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
+import { useUIActionLabel } from '@/shared/lib/hooks/use-ui-action-label';
 import {
   Form,
   FormControl,
@@ -23,9 +25,9 @@ import {
 
 export const DistrictDrawer = () => {
   const { t } = useTranslation('common');
-  const { isOpen, onClose } = useDistrictDrawer();
-  const { form, onSubmit, isPending, isCreate, isFetching, regions } =
-    useDistrictForm();
+  const { isOpen, onClose, mode, isCreate } = useDistrictDrawer();
+  const modeState = useUIActionLabel(mode);
+  const { form, onSubmit, isPending, isFetching, regions } = useDistrictForm();
 
   const regionOptions = useMemo(() => getSelectOptions(regions), [regions]);
 
@@ -34,10 +36,10 @@ export const DistrictDrawer = () => {
       asForm
       open={isOpen}
       onClose={onClose}
+      title={modeState}
       loading={isPending}
       disabled={isPending}
       onSubmit={form.handleSubmit(onSubmit)}
-      title={isCreate ? t('actions.add') : t('actions.edit')}
     >
       <Form {...form}>
         <div className="space-y-4">
@@ -59,8 +61,8 @@ export const DistrictDrawer = () => {
                           if (value) {
                             field.onChange(value);
                             form.setValue('name', '');
-                            form.setValue('soato', 0);
-                            form.setValue('number', 0);
+                            form.setValue('soato', '');
+                            form.setValue('number', '');
                           }
                         }}
                       >
@@ -82,11 +84,7 @@ export const DistrictDrawer = () => {
                   <FormItem>
                     <FormLabel>{t('name')}</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder={t('name')}
-                        {...field}
-                        onChange={field.onChange}
-                      />
+                      <Input placeholder={t('name')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -99,12 +97,10 @@ export const DistrictDrawer = () => {
                   <FormItem>
                     <FormLabel>{t('soato')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
+                      <InputNumber
                         maxLength={10}
                         placeholder={t('soato')}
                         {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
@@ -119,12 +115,10 @@ export const DistrictDrawer = () => {
                   <FormItem>
                     <FormLabel>{t('number')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
+                      <InputNumber
                         maxLength={10}
                         placeholder={t('number')}
                         {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />

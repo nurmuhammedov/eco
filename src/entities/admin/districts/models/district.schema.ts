@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const districtBaseSchema = {
   name: z.string().min(1, 'Tuman nomi majburiy'),
-  soato: z.coerce.number().min(1, 'MHOBTni kiritish majburiy'),
-  number: z.coerce.number().min(1, 'Raqamni kiritish majburiy'),
+  soato: z.coerce.string().min(1, 'MHOBTni kiritish majburiy'),
+  number: z.coerce.string().min(1, 'Raqamni kiritish majburiy'),
   regionId: z.string().min(1, 'Viloyatni tanlash majburiy'),
 };
 
