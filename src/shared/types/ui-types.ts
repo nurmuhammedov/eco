@@ -12,6 +12,7 @@ export const UI_COMPONENTS = {
   TERRITORIAL_DEPARTMENTS_DRAWER: 'territorial-departments', // Hududiy bo'limlar
   COMMITTEE_STAFFS_DRAWER: 'committee-staffs', // Qo'mita xodimlari
   TERRITORIAL_STAFFS_DRAWER: 'territorial-staffs', // Hududiy bo'lim xodimlari
+  HAZARDOUS_FACILITY_TYPE_DRAWER: 'hazardous-facility-type', // Xavfli ishlab chiqarish obyektlari turlari
 } as const;
 
 export type UIComponentName =
@@ -42,6 +43,9 @@ export interface UIComponentDataMap {
   };
   [UI_COMPONENTS.TERRITORIAL_STAFFS_DRAWER]: {
     id: string;
+  };
+  [UI_COMPONENTS.HAZARDOUS_FACILITY_TYPE_DRAWER]: {
+    id: number;
   };
 }
 
