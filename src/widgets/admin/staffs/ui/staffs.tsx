@@ -1,7 +1,7 @@
 import { Fragment, memo } from 'react';
 import { StaffsActiveTab } from '../types';
 import { useTranslation } from 'react-i18next';
-import { useStaffs } from '../model/use-department';
+import { useStaffs } from '../model/use-staffs';
 import { StaffsActionButton } from './action-button';
 import {
   Tabs,
@@ -10,13 +10,13 @@ import {
   TabsTrigger,
 } from '@/shared/components/ui/tabs';
 import {
-  TerritorialDepartmentsDrawer,
-  TerritorialDepartmentsList,
-} from '@/features/admin/territorial-departments';
-import {
   CommitteeStaffDrawer,
   CommitteeStaffList,
 } from '@/features/admin/committee-staffs';
+import {
+  TerritorialStaffDrawer,
+  TerritorialStaffList,
+} from '@/features/admin/territorial-staffs';
 
 const StaffsWidget = () => {
   const { t } = useTranslation('common');
@@ -57,11 +57,11 @@ const StaffsWidget = () => {
           className="mt-4"
           value={StaffsActiveTab.TERRITORIAL_STAFFS}
         >
-          <TerritorialDepartmentsList />
+          <TerritorialStaffList />
         </TabsContent>
       </Tabs>
       {isOpenCommitteeStaffs && <CommitteeStaffDrawer />}
-      {isOpenTerritorialStaffs && <TerritorialDepartmentsDrawer />}
+      {isOpenTerritorialStaffs && <TerritorialStaffDrawer />}
     </Fragment>
   );
 };

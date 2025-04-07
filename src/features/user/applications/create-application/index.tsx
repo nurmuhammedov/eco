@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { GoBack } from '@/shared/components/common';
-import { getSelectOptions } from '@/shared/utils/get-select-options';
+import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import { DynamicApplicationForm } from './ui/dynamic-application-form';
 import { ApplicantInfo } from '@/entities/user/applications/create-application/ui';
 import { APPLICATIONS_TYPES } from '@/entities/user/applications/create-application/data';

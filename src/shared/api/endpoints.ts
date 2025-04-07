@@ -10,5 +10,7 @@ export const API_ENDPOINTS: Record<string, string> = {
   DEPARTMENTS: '/departments',
   DEPARTMENT_SELECT: '/departments/select',
   OFFICES: '/offices',
+  OFFICE_SELECT: '/offices/select',
+  OFFICE_USERS: '/users/office-users',
   COMMITTEE_USERS: '/users/committee-users',
 };

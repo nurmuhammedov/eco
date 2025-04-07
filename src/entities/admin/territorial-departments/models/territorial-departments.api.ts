@@ -24,11 +24,11 @@ export const territorialDepartmentsAPI = {
     >(`${API_ENDPOINTS.OFFICES}/${id}`);
     return data.data;
   },
-  create: async (district: CreateTerritorialDepartmentsDTO) => {
+  create: async (data: CreateTerritorialDepartmentsDTO) => {
     const response = await apiClient.post<
       TerritorialDepartmentResponse,
       CreateTerritorialDepartmentsDTO
-    >(API_ENDPOINTS.OFFICES, district);
+    >(API_ENDPOINTS.OFFICES, data);
     if (!response.success && response.errors) {
       toast.error(Object.values(response.errors).join(', '), {
         richColors: true,
@@ -37,10 +37,10 @@ export const territorialDepartmentsAPI = {
 
     return response;
   },
-  update: async (district: UpdateTerritorialDepartmentsDTO) => {
+  update: async (data: UpdateTerritorialDepartmentsDTO) => {
     const response = await apiClient.put<UpdateTerritorialDepartmentsDTO>(
-      `${API_ENDPOINTS.OFFICES}/${district.id}`,
-      district,
+      `${API_ENDPOINTS.OFFICES}/${data.id}`,
+      data,
     );
 
     if (!response.success) {

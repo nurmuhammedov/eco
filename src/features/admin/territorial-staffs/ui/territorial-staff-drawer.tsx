@@ -2,15 +2,15 @@ import { Fragment, useMemo } from 'react';
 import { UIModeEnum } from '@/shared/types';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
-import { CommitteeStaffView } from './committee-staff-view';
+import { TerritorialStaffView } from './territorial-staff-view';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
+import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks';
 import { useUIActionLabel } from '@/shared/lib/hooks/use-ui-action-label';
-import { useCommitteeStaffForm } from '../model/use-committee-staff-form';
+import { useTerritorialStaffForm } from '../model/use-territorial-staff-form';
 import {
   Form,
   FormControl,
@@ -26,9 +26,9 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select';
 
-export const CommitteeStaffDrawer = () => {
+export const TerritorialStaffDrawer = () => {
   const { t } = useTranslation('common');
-  const { isOpen, mode, onClose } = useCommitteeStaffsDrawer();
+  const { isOpen, mode, onClose } = useTerritorialStaffsDrawer();
   const modeState = useUIActionLabel(mode);
   const {
     form,
@@ -40,7 +40,7 @@ export const CommitteeStaffDrawer = () => {
     userRoleOptions,
     departmentOptions,
     userDirectionOptions,
-  } = useCommitteeStaffForm();
+  } = useTerritorialStaffForm();
 
   const roleOptions = useMemo(() => getSelectOptions(userRoleOptions), []);
 
@@ -55,7 +55,7 @@ export const CommitteeStaffDrawer = () => {
       onSubmit={form.handleSubmit(onSubmit)}
     >
       {mode === UIModeEnum.VIEW ? (
-        <CommitteeStaffView data={fetchByIdData as any} />
+        <TerritorialStaffView data={fetchByIdData as any} />
       ) : (
         <Form {...form}>
           <div className="space-y-4">
@@ -142,7 +142,7 @@ export const CommitteeStaffDrawer = () => {
                   )}
                 />
                 <FormField
-                  name="departmentId"
+                  name="officeId"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>

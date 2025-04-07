@@ -4,7 +4,7 @@ import { Input } from '@/shared/components/ui/input';
 import { useDistrictForm } from '../model/use-district-form';
 import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import { getSelectOptions } from '@/shared/utils/get-select-options';
+import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import {
   Form,

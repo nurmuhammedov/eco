@@ -9,7 +9,7 @@ import { Calendar } from '@/shared/components/ui/calendar';
 import { DATE_FORMAT } from '@/shared/constants/date-formats';
 import { CRANE_TYPES } from '@/entities/user/applications/create-application/data';
 import { getDisabledDates } from '@/shared/lib/get-disabled-dates';
-import { getSelectOptions } from '@/shared/utils/get-select-options';
+import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
 import { CardForm } from '@/entities/user/applications/create-application/ui/application-form-card';

@@ -1,6 +1,6 @@
 import { JSX } from 'react';
-import { OptionItem } from '@/shared/types/general';
-import { SelectItem } from '@/shared/components/ui/select';
+import { OptionItem } from '@/shared/types/general.ts';
+import { SelectItem } from '@/shared/components/ui/select.tsx';
 
 export function getSelectOptions<T>(list: OptionItem<T>[]): JSX.Element[] {
   if (!Array.isArray(list) || list.length === 0) {

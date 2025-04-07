@@ -22,5 +22,5 @@ export const useCommitteeStaffsDrawer = createEntityDrawerHook(
 );
 
 export const useTerritorialStaffsDrawer = createEntityDrawerHook(
-  UI_COMPONENTS.TERRITORIAL_DEPARTMENTS_DRAWER,
+  UI_COMPONENTS.TERRITORIAL_STAFFS_DRAWER,
 );

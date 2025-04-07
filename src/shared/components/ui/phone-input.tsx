@@ -1,7 +1,7 @@
-import React, { forwardRef } from 'react';
+import { cn } from '@/shared/lib/utils';
 import { PhoneIcon } from 'lucide-react';
-import { Input } from '@/shared/components/ui/input.tsx';
-import { cn } from '@/shared/lib/utils.ts';
+import React, { forwardRef } from 'react';
+import { Input } from '@/shared/components/ui/input';
 
 // Uzbekistan phone number validation pattern
 const UZ_PHONE_PATTERN = /^\+998\d{0,9}$/;
@@ -85,8 +85,8 @@ const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
             showIcon && 'pl-9', // Add padding for the icon
             className,
           )}
-          value={formatPhoneNumber((value as string) || '')}
           onChange={handleInputChange}
+          value={formatPhoneNumber((value as string) || '')}
           placeholder={props.placeholder || '+998 XX XXX XX XX'}
         />
       </div>

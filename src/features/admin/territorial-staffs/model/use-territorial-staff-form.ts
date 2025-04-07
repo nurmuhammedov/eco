@@ -1,42 +1,39 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { UseQueryResult } from '@tanstack/react-query';
 import { Direction, UserRoles } from '@/entities/user';
 import { useCallback, useEffect, useMemo } from 'react';
-import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
-import { useDepartmentSelectQueries } from '@/shared/api/dictionaries';
-import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
+import { useOfficeSelectQueries } from '@/shared/api/dictionaries';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
+import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks';
 import { useTranslatedObject } from '@/shared/lib/hooks/use-translated-enum';
 import {
-  CommitteeStaffResponse,
-  committeeStaffSchema,
-  CreateCommitteeStaffDTO,
-  UpdateCommitteeStaffDTO,
-  useCommitteeStaffQuery,
-  useCreateCommitteeStaff,
-  useUpdateCommitteeStaff,
-} from '@/entities/admin/committee-staffs';
+  CreateTerritorialStaffDTO,
+  territorialStaffSchema,
+  UpdateTerritorialStaffDTO,
+  useCreateTerritorialStaff,
+  useTerritorialStaffQuery,
+  useUpdateTerritorialStaff,
+} from '@/entities/admin/territorial-staffs';
 
-const DEFAULT_FORM_VALUES: CreateCommitteeStaffDTO = {
+const DEFAULT_FORM_VALUES: CreateTerritorialStaffDTO = {
   pin: '',
   fullName: '',
+  officeId: '',
   position: '',
   directions: [],
   phoneNumber: '',
-  departmentId: '',
-  role: UserRoles.HEAD,
+  role: UserRoles.REGIONAL,
 };
 
-export function useCommitteeStaffForm() {
-  const { data, onClose, isCreate } = useCommitteeStaffsDrawer();
+export function useTerritorialStaffForm() {
+  const { data, onClose, isCreate } = useTerritorialStaffsDrawer();
 
-  const { data: departmentSelect } = useDepartmentSelectQueries();
+  const { data: officeSelect } = useOfficeSelectQueries();
 
   const userRoleOptions = useTranslatedObject(
     {
-      [UserRoles.HEAD]: UserRoles.HEAD,
-      [UserRoles.MANAGER]: UserRoles.MANAGER,
-      [UserRoles.CHAIRMAN]: UserRoles.CHAIRMAN,
+      [UserRoles.REGIONAL]: UserRoles.REGIONAL,
+      [UserRoles.INSPECTOR]: UserRoles.INSPECTOR,
     },
     'userRoles',
   );
@@ -44,27 +41,26 @@ export function useCommitteeStaffForm() {
   const userDirectionOptions = useTranslatedObject(Direction, 'direction');
 
   const departmentOptions = useMemo(
-    () => getSelectOptions(departmentSelect || []),
-    [departmentSelect],
+    () => getSelectOptions(officeSelect || []),
+    [officeSelect],
   );
 
-  const committeeStaffId = useMemo(() => (data?.id ? data?.id : ''), [data]);
+  const territorialStaffId = useMemo(() => (data?.id ? data?.id : ''), [data]);
 
-  const form = useForm<CreateCommitteeStaffDTO>({
-    resolver: zodResolver(committeeStaffSchema),
+  const form = useForm<CreateTerritorialStaffDTO>({
+    resolver: zodResolver(territorialStaffSchema),
     defaultValues: DEFAULT_FORM_VALUES,
     mode: 'onChange',
   });
 
-  const { mutateAsync: createCommitteeStaff, isPending: isCreating } =
-    useCreateCommitteeStaff();
+  const { mutateAsync: createTerritorialStaff, isPending: isCreating } =
+    useCreateTerritorialStaff();
 
-  const { mutateAsync: updateCommitteeStaff, isPending: isUpdating } =
-    useUpdateCommitteeStaff();
+  const { mutateAsync: updateTerritorialStaff, isPending: isUpdating } =
+    useUpdateTerritorialStaff();
 
-  const { data: fetchByIdData, isLoading } = useCommitteeStaffQuery(
-    committeeStaffId,
-  ) as UseQueryResult<CommitteeStaffResponse>;
+  const { data: fetchByIdData, isLoading } =
+    useTerritorialStaffQuery(territorialStaffId);
 
   useEffect(() => {
     if (fetchByIdData && !isCreate) {
@@ -75,7 +71,7 @@ export function useCommitteeStaffForm() {
         position: fetchByIdData.position,
         directions: fetchByIdData.directions,
         phoneNumber: fetchByIdData.phoneNumber,
-        departmentId: String(fetchByIdData.departmentId),
+        officeId: String(fetchByIdData.officeId),
       });
     }
   }, [fetchByIdData, isCreate, form]);
@@ -86,19 +82,19 @@ export function useCommitteeStaffForm() {
   }, [form, onClose]);
 
   const handleSubmit = useCallback(
-    async (formData: CreateCommitteeStaffDTO): Promise<boolean> => {
+    async (formData: CreateTerritorialStaffDTO): Promise<boolean> => {
       try {
         if (isCreate) {
-          const response = await createCommitteeStaff(formData);
+          const response = await createTerritorialStaff(formData);
           if (response.success) {
             handleClose();
             return true;
           }
         } else {
-          const response = await updateCommitteeStaff({
-            id: committeeStaffId,
+          const response = await updateTerritorialStaff({
+            id: territorialStaffId,
             ...formData,
-          } as UpdateCommitteeStaffDTO);
+          } as UpdateTerritorialStaffDTO);
           if (response.success) {
             handleClose();
             return true;
@@ -113,9 +109,9 @@ export function useCommitteeStaffForm() {
     },
     [
       isCreate,
-      committeeStaffId,
-      createCommitteeStaff,
-      updateCommitteeStaff,
+      territorialStaffId,
+      createTerritorialStaff,
+      updateTerritorialStaff,
       handleClose,
       fetchByIdData,
     ],
