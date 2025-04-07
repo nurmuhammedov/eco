@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
+import { NumberInput } from '@/shared/components/ui/number-input.tsx';
 
 export const CommitteeStaffDrawer = () => {
   const { t } = useTranslation('common');
@@ -83,7 +84,11 @@ export const CommitteeStaffDrawer = () => {
                     <FormItem>
                       <FormLabel required>{t('short.pin')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="142536945201203" {...field} />
+                        <NumberInput
+                          maxLength={14}
+                          placeholder="142536945201203"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

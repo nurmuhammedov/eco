@@ -22,7 +22,7 @@ export const territorialBaseSchema = {
 
     .min(1, ERROR_MESSAGES.required),
   pin: z.coerce
-    .number({ message: ERROR_MESSAGES.pin })
+    .string({ message: ERROR_MESSAGES.pin })
     .transform((val) => val.toString())
     .refine((val) => USER_PATTERNS.pin.test(val), {
       message: ERROR_MESSAGES.pin,
@@ -61,7 +61,7 @@ export const territorialStaffSchema = z
     fullName: data.fullName.replace(/\s+/g, ' '),
   }));
 
-export const committeeTableItemSchema = z.object({
+export const territorialTableItemSchema = z.object({
   id: z.union([
     z.string().uuid(),
     z.string().regex(USER_PATTERNS.uuid, { message: 'Invalid UUID format' }),
@@ -107,6 +107,6 @@ export const schemas = {
     page: z.number().optional().default(1),
     size: z.number().optional().default(20),
   }),
-  table: committeeTableItemSchema,
-  single: committeeTableItemSchema,
+  table: territorialTableItemSchema,
+  single: territorialTableItemSchema,
 };
