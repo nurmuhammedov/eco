@@ -17,4 +17,9 @@ export default [
     title: 'menu.staffs',
     icon: <Users />,
   },
+  {
+    url: '/hazardous-facilities',
+    title: 'menu.hazardous_facilities',
+    icon: <Users />,
+  },
 ] as Navigation;

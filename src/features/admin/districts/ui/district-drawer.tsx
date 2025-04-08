@@ -1,13 +1,13 @@
 import { Fragment, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
+import { useUIActionLabel } from '@/shared/lib/hooks';
 import { useDistrictForm } from '../model/use-district-form';
 import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
 import { InputNumber } from '@/shared/components/ui/input-number';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { useUIActionLabel } from '@/shared/lib/hooks/use-ui-action-label';
 import {
   Form,
   FormControl,

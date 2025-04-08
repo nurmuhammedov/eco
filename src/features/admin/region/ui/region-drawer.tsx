@@ -13,6 +13,7 @@ import { useRegionForm } from '../model/use-region-form';
 import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
+import { InputNumber } from '@/shared/components/ui/input-number.tsx';
 
 export const RegionDrawer = () => {
   const { t } = useTranslation('common');
@@ -55,12 +56,7 @@ export const RegionDrawer = () => {
                   <FormItem>
                     <FormLabel>{t('soato')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder={t('soato')}
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
+                      <InputNumber placeholder={t('soato')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -74,12 +70,7 @@ export const RegionDrawer = () => {
                   <FormItem>
                     <FormLabel>{t('number')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder={t('number')}
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
+                      <InputNumber placeholder={t('number')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

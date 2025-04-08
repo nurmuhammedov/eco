@@ -14,8 +14,8 @@ import {
 
 const DEFAULT_FORM_VALUES: CreateRegionDTO = {
   name: '',
-  soato: 1,
-  number: 1,
+  soato: '',
+  number: '',
 };
 
 export function useRegionForm() {

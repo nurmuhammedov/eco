@@ -4,6 +4,9 @@ import { UserRoles } from '@/entities/user';
 const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'));
 const RegionsPage = lazy(() => import('@/pages/admin/regions/ui'));
 const DepartmentPage = lazy(() => import('@/pages/admin/department/ui'));
+const HazardousFacilitiesPage = lazy(
+  () => import('@/pages/admin/hazardous-facility/ui'),
+);
 
 export default [
   {
@@ -19,6 +22,11 @@ export default [
   {
     path: 'staffs',
     element: <StaffsPage />,
+    meta: { restricted: true, roles: [UserRoles.ADMIN] },
+  },
+  {
+    path: 'hazardous-facilities',
+    element: <HazardousFacilitiesPage />,
     meta: { restricted: true, roles: [UserRoles.ADMIN] },
   },
 ];

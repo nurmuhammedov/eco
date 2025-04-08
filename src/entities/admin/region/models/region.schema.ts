@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const regionBaseSchema = {
   name: z.string().min(1, 'Viloyat nomi majburiy'),
-  soato: z.coerce.number().min(1, 'МҲОБТni kiritish majburiy'),
-  number: z.coerce.number().min(1, 'Raqamni kiritish majburiy'),
+  soato: z.coerce.string().min(1, 'MHOBTni kiritish majburiy'),
+  number: z.coerce.string().min(1, 'Raqamni kiritish majburiy'),
 };
 
 export const regionSchema = z.object({

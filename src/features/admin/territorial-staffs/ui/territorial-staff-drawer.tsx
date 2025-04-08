@@ -2,15 +2,15 @@ import { Fragment, useMemo } from 'react';
 import { UIModeEnum } from '@/shared/types';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
+import { useUIActionLabel } from '@/shared/lib/hooks';
 import { TerritorialStaffView } from './territorial-staff-view';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
-import { InputNumber } from '@/shared/components/ui/input-number.tsx';
+import { InputNumber } from '@/shared/components/ui/input-number';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks';
-import { useUIActionLabel } from '@/shared/lib/hooks/use-ui-action-label';
 import { useTerritorialStaffForm } from '../model/use-territorial-staff-form';
 import {
   Form,

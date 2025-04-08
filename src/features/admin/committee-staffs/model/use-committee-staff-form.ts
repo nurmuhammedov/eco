@@ -3,10 +3,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { UseQueryResult } from '@tanstack/react-query';
 import { Direction, UserRoles } from '@/entities/user';
 import { useCallback, useEffect, useMemo } from 'react';
+import { useTranslatedObject } from '@/shared/lib/hooks';
 import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import { useDepartmentSelectQueries } from '@/shared/api/dictionaries';
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
-import { useTranslatedObject } from '@/shared/lib/hooks/use-translated-enum';
 import {
   CommitteeStaffResponse,
   committeeStaffSchema,

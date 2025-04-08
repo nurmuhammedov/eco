@@ -2,10 +2,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Direction, UserRoles } from '@/entities/user';
 import { useCallback, useEffect, useMemo } from 'react';
+import { useTranslatedObject } from '@/shared/lib/hooks';
 import { useOfficeSelectQueries } from '@/shared/api/dictionaries';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks';
-import { useTranslatedObject } from '@/shared/lib/hooks/use-translated-enum';
 import {
   CreateTerritorialStaffDTO,
   territorialStaffSchema,

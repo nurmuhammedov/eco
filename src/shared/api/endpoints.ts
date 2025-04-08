@@ -13,4 +13,5 @@ export const API_ENDPOINTS: Record<string, string> = {
   OFFICE_SELECT: '/offices/select',
   OFFICE_USERS: '/users/office-users',
   COMMITTEE_USERS: '/users/committee-users',
+  HAZARDOUS_FACILITY_TYPES: '/hazardous-facility-types',
 };

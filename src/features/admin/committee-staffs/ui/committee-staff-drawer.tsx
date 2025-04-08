@@ -2,14 +2,15 @@ import { Fragment, useMemo } from 'react';
 import { UIModeEnum } from '@/shared/types';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
+import { useUIActionLabel } from '@/shared/lib/hooks';
 import { CommitteeStaffView } from './committee-staff-view';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
+import { InputNumber } from '@/shared/components/ui/input-number';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
-import { useUIActionLabel } from '@/shared/lib/hooks/use-ui-action-label';
 import { useCommitteeStaffForm } from '../model/use-committee-staff-form';
 import {
   Form,
@@ -25,7 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { InputNumber } from '@/shared/components/ui/input-number.tsx';
 
 export const CommitteeStaffDrawer = () => {
   const { t } = useTranslation('common');
