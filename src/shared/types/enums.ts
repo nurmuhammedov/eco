@@ -15,3 +15,12 @@ export enum ApplicationStatus {
   REJECTED = 'rejected',
   CONFIRMATION = 'confirmation',
 }
+
+export enum HFSphere {
+  OIL = 'OIL',
+  GAS = 'GAS',
+  BOILER = 'BOILER',
+  CHEMISTRY = 'CHEMISTRY',
+  COAL = 'COAL',
+  GEOLOGY = 'GEOLOGY',
+}
