@@ -14,7 +14,8 @@
     "add_central_apparatus": "Markaziy apparat qo'shish",
     "add_territorial_department": "Hududiy bo'lim qo'shish",
     "add_territorial_staff": "Hududiy xodim qo'shish",
-    "add_committee_staff": "Qo'mita xodimi qo'shish"
+    "add_committee_staff": "Qo'mita xodimi qo'shish",
+    "add_hazardous_facility_type": "XICHO turi qo'shish"
   },
   "errors": {
     "something_went_wrong": "Xatolik yuz berdi!",
@@ -35,7 +36,8 @@
     "attestation": "Attestatsiya",
     "state_reception": "Davlat qabuli",
     "monitoring": "Monitoring",
-    "reports": "Hisobotlar"
+    "reports": "Hisobotlar",
+    "hazardous_facilities": "XICHOlar"
   },
   "app": {
     "name": "Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi ekotizimi"
@@ -64,6 +66,14 @@
     "ATTESTATION": "Attestatsiya",
     "CERTIFICATE": "Sertifikat",
     "ACCREDITATION": "Akkreditatsiya"
+  },
+  "application": {
+    "OIL": "Neft",
+    "GAS": "Gaz",
+    "BOILER": "Qozon",
+    "CHEMISTRY": "Kimyo",
+    "COAL": "Ko'mir",
+    "GEOLOGY": "Geologiya"
   },
   "regions": "Viloyatlar",
   "districts": "Tumanlar",
@@ -98,5 +108,9 @@
   "phone": "Telefon",
   "directions": "Ruxsatlar",
   "active": "Faol",
-  "inactive": "Faol emas"
+  "inactive": "Faol emas",
+  "hazardous_facility_type": "XICHO turi",
+  "hazardous_facility_type_description": "XICHO turi tavsifi",
+  "hazardous_facilities_type": "XICHO turlari",
+  "description": "Tavsif"
 }

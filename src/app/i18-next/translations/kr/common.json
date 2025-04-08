@@ -14,7 +14,8 @@
     "add_central_apparatus": "Марказий аппарат қўшиш",
     "add_territorial_department": "Ҳудудий бўлим қўшиш",
     "add_territorial_staff": "Ҳудудий ходим қўшиш",
-    "add_committee_staff": "Қўмита ходими қўшиш"
+    "add_committee_staff": "Қўмита ходими қўшиш",
+    "add_hazardous_facility_type": "ҲИЧО тури қўшиш"
   },
   "errors": {
     "something_went_wrong": "Хатолик юз берди!",
@@ -35,7 +36,8 @@
     "attestation": "Аттестация",
     "state_reception": "Давлат қабули",
     "monitoring": "Мониторинг",
-    "reports": "Ҳисоботлар"
+    "reports": "Ҳисоботлар",
+    "hazardous_facilities": "ҲИЧОлар"
   },
   "app": {
     "name": "Саноат, радиация ва ядро хавфсизлиги қўмитаси экотизими"
@@ -64,6 +66,14 @@
     "ATTESTATION": "Аттестация",
     "CERTIFICATE": "Сертификат",
     "ACCREDITATION": "Аккредитация"
+  },
+  "application": {
+    "OIL": "Нефт",
+    "GAS": "Газ",
+    "BOILER": "Қозон",
+    "CHEMISTRY": "Кимё",
+    "COAL": "Кўмир",
+    "GEOLOGY": "Геология"
   },
   "regions": "Вилоятлар",
   "districts": "Туманлар",
@@ -98,5 +108,9 @@
   "phone": "Телефон",
   "directions": "Рухсатлар",
   "active": "Фаол",
-  "inactive": "Фаол эмас"
+  "inactive": "Фаол эмас",
+  "hazardous_facility_type": "ҲИЧО тури",
+  "hazardous_facility_type_description": "ҲИЧО тури тавсифи",
+  "hazardous_facilities_type": "ҲИЧО турлари",
+  "description": "Тавсиф"
 }
