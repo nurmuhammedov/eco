@@ -12,7 +12,7 @@ export const hazardousFacilityTypeAPI = {
   list: async (params: FilterHazardousFacilityTypeDTO) => {
     const { data } =
       await apiClient.getWithPagination<HazardousFacilityTypeResponse>(
-        API_ENDPOINTS.REGIONS,
+        API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES,
         params,
       );
     return data || [];
@@ -21,14 +21,14 @@ export const hazardousFacilityTypeAPI = {
   byId: async (id: number) => {
     const { data } = await apiClient.get<
       ApiResponse<HazardousFacilityTypeResponse>
-    >(`${API_ENDPOINTS.REGIONS}/${id}`);
+    >(`${API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES}/${id}`);
     return data.data;
   },
   create: async (data: CreateHazardousFacilityTypeDTO) => {
     const response = await apiClient.post<
       HazardousFacilityTypeResponse,
       CreateHazardousFacilityTypeDTO
-    >(API_ENDPOINTS.REGIONS, data);
+    >(API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES, data);
     if (!response.success && response.errors) {
       toast.error(Object.values(response.errors).join(', '), {
         richColors: true,
@@ -38,8 +38,8 @@ export const hazardousFacilityTypeAPI = {
     return response;
   },
   update: async (data: UpdateHazardousFacilityTypeDTO) => {
-    const response = await apiClient.put<UpdateHazardousFacilityTypeDTO>(
-      `${API_ENDPOINTS.REGIONS}/${data.id}`,
+    const response = await apiClient.patch<UpdateHazardousFacilityTypeDTO>(
+      `${API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES}/${data.id}`,
       data,
     );
 
@@ -50,7 +50,9 @@ export const hazardousFacilityTypeAPI = {
     return response;
   },
   delete: async (id: number) => {
-    const response = await apiClient.delete(`${API_ENDPOINTS.REGIONS}/${id}`);
+    const response = await apiClient.delete(
+      `${API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES}/${id}`,
+    );
     if (!response.success) {
       throw new Error(response.message);
     }

@@ -1,11 +1,10 @@
-export enum StaffsActiveTab {
-  COMMITTEE_STAFFS = 'committee-staffs',
-  TERRITORIAL_STAFFS = 'territorial-staffs',
+export enum HazardousFacilityActiveTab {
+  HAZARDOUS_FACILITY_TYPE = 'hazardous-facility-type',
+  HAZARDOUS_FACILITY_ = 'territorial-staffs',
 }
 
-export type StaffsActiveTabActionButtonProps = {
+export type HazardousFacilityActiveTabActionButtonProps = {
   title: string;
-  activeTab: StaffsActiveTab;
-  onAddCommitteeStaffs: () => void;
-  onAddTerritorialStaffs: () => void;
+  activeTab: HazardousFacilityActiveTab;
+  onAddHazardousFacilityType: () => void;
 };

@@ -2,26 +2,28 @@ import { memo } from 'react';
 import { PlusCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/shared/components/ui/button';
-import { StaffsActiveTab, StaffsActiveTabActionButtonProps } from '../types';
+import {
+  HazardousFacilityActiveTab,
+  HazardousFacilityActiveTabActionButtonProps,
+} from '../types';
 
-export const StaffsActionButton = memo(
+export const HazardousFacilityActionButton = memo(
   ({
     title,
     activeTab,
-    onAddCommitteeStaffs,
-    onAddTerritorialStaffs,
-  }: StaffsActiveTabActionButtonProps) => {
+    onAddHazardousFacilityType,
+  }: HazardousFacilityActiveTabActionButtonProps) => {
     const { t } = useTranslation('common');
     return (
       <div className="flex justify-between">
         <h5 className="text-2xl font-semibold uppercase">{title}</h5>
-        {activeTab === StaffsActiveTab.COMMITTEE_STAFFS ? (
-          <Button onClick={onAddCommitteeStaffs}>
+        {activeTab === HazardousFacilityActiveTab.HAZARDOUS_FACILITY_TYPE ? (
+          <Button onClick={onAddHazardousFacilityType}>
             <PlusCircle />
-            {t('actions.add_committee_staff')}
+            {t('actions.add_hazardous_facility_type')}
           </Button>
         ) : (
-          <Button onClick={onAddTerritorialStaffs}>
+          <Button onClick={() => {}}>
             <PlusCircle /> {t('actions.add_territorial_staff')}
           </Button>
         )}
@@ -29,4 +31,4 @@ export const StaffsActionButton = memo(
     );
   },
 );
-StaffsActionButton.displayName = 'StaffsActionButton';
+HazardousFacilityActionButton.displayName = 'HazardousFacilityActionButton';

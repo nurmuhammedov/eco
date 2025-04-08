@@ -13,6 +13,7 @@ import {
   useDeleteHazardousFacilityType,
   useHazardousFacilityTypeListQuery,
 } from '@/entities/admin/hazardous-facility-type';
+import { objectToList } from '@/shared/constants/object-to-list';
 
 export function HazardousFacilityTypeList() {
   const { filters } = useFilters();
@@ -21,6 +22,9 @@ export function HazardousFacilityTypeList() {
   const { data, isLoading } = useHazardousFacilityTypeListQuery(
     filters as FilterHazardousFacilityTypeDTO,
   );
+  const { sphereOptions } = objectToList();
+
+  console.log(sphereOptions);
   const deleteData = useDeleteHazardousFacilityType();
   const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
 
@@ -35,11 +39,11 @@ export function HazardousFacilityTypeList() {
     },
     {
       accessorKey: 'name',
-      header: t('name'),
+      header: t('hazardous_facility_type'),
     },
     {
       accessorKey: 'description',
-      header: t('description'),
+      header: t('hazardous_facility_type_description'),
     },
     {
       id: 'actions',

@@ -1,10 +1,10 @@
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
+import { useUIActionLabel } from '@/shared/lib/hooks';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { useUIActionLabel } from '@/shared/lib/hooks/use-ui-action-label';
 import { useHazardousFacilityTypeDrawer } from '@/shared/hooks/entity-hooks';
 import { useHazardousFacilityTypeForm } from '../model/use-hazardous-facility-type-form';
 import {
