@@ -8,7 +8,6 @@ import { Textarea } from '@/shared/components/ui/textarea';
 import { Calendar } from '@/shared/components/ui/calendar';
 import { DATE_FORMAT } from '@/shared/constants/date-formats';
 import { getDisabledDates } from '@/shared/lib/get-disabled-dates';
-import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
 import { CardForm } from '@/entities/user/applications/create-application/ui/application-form-card';
@@ -33,7 +32,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/shared/components/ui/popover';
-import { CONTAINER_TYPES } from '@/entities/user/applications/create-application/data';
 import { useCreateRegisterPressureVesselMutation } from '../../api/register-pressure-vessel-chemical.api';
 
 interface Props {
@@ -49,7 +47,7 @@ export default ({ form }: Props) => {
     mutate(data);
   };
 
-  const containerTypeOptions = getSelectOptions(CONTAINER_TYPES);
+  // const containerTypeOptions = getSelectOptions(CONTAINER_TYPES);
 
   const { handleSubmit } = form;
 
@@ -88,7 +86,7 @@ export default ({ form }: Props) => {
                     <SelectTrigger className="w-full 3xl:w-sm">
                       <SelectValue placeholder="Идиш турини танланг" />
                     </SelectTrigger>
-                    <SelectContent>{containerTypeOptions}</SelectContent>
+                    {/*<SelectContent>{containerTypeOptions}</SelectContent>*/}
                   </Select>
                 </FormControl>
                 <FormMessage />

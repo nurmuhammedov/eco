@@ -5,9 +5,10 @@ import { UserRoles, UserState } from '@/entities/user';
 import { authAPI } from '@/entities/auth/models/auth.api';
 import { useAppDispatch } from '@/shared/hooks/use-store';
 import { getHomeRouteForLoggedInUser } from '@/app/routes';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { LoginDTO } from '@/entities/auth/models/auth.types';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useMemo } from 'react';
 
 export const useCurrentUser = () => {
   const {
@@ -40,6 +41,34 @@ export const useLogin = () => {
       navigate(redirectPath);
     },
   });
+};
+
+export const useLoginOneId = () => {
+  const { state } = useLocation();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
+  const resolvedParams = useMemo(
+    () => Object.fromEntries(searchParams),
+    [searchParams],
+  );
+  const { mutateAsync: handleLoginOneId } = useMutation({
+    retry: false,
+    mutationFn: authAPI.loginOneId,
+    onSuccess: (data: UserState) => {
+      dispatch(setUser(data));
+      queryClient.setQueryData(['currentUser'], data);
+      const redirectPath = state?.from
+        ? state?.from
+        : getHomeRouteForLoggedInUser(data?.role);
+      navigate(redirectPath);
+    },
+  });
+
+  useEffect(() => {
+    if (resolvedParams.code) handleLoginOneId(resolvedParams.code);
+  }, [resolvedParams.code]);
 };
 
 export const useLogout = () => {

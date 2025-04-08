@@ -61,7 +61,6 @@ export function RegionList() {
     <DataTable
       isPaginated
       data={data || []}
-      namespace="region"
       isLoading={isLoading}
       columns={regionTableColumns}
       className="h-[calc(100svh-270px)]"

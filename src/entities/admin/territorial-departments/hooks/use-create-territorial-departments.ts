@@ -55,7 +55,7 @@ export const useCreateTerritorialDepartment = () => {
       queryClient.setQueryData(
         territorialDepartmentsKeys.detail(
           'territorial-departments',
-          createdData.data.id,
+          createdData.data.id!,
         ),
         createdData,
       );

@@ -13,7 +13,7 @@ export const loadComponent = (type: ApplicationTypeEnum) => {
       <CardForm className="flex items-center justify-center h-96 mt-3">
         <p className="text-red-500">
           <b>
-            {APPLICATIONS_TYPES.find((obj) => obj.value === type)?.label ||
+            {APPLICATIONS_TYPES.find((obj) => obj.id === type)?.name ||
               "Noma'lum"}
           </b>
           &nbsp;ariza turi topilmadi!

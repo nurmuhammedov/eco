@@ -1,5 +1,6 @@
 export const API_ENDPOINTS: Record<string, string> = {
   LOGIN: '/auth/login',
+  LOGIN_ONE_ID: '/auth/one-id',
   LOGOUT: '/auth/logout',
   USER_ME: '/users/me',
   USERS: '/users',
