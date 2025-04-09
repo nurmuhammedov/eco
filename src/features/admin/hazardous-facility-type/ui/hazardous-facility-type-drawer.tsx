@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
-import { useUIActionLabel } from '@/shared/lib/hooks';
+import { useUIActionLabel } from '@/shared/hooks';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';

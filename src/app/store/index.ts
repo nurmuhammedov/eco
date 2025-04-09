@@ -1,13 +1,14 @@
 import authSlice from './auth-slice';
 import { configureStore } from '@reduxjs/toolkit';
 import uiSlice from '@/entities/ui/model/ui-slice.ts';
+import { IS_DEV } from '@/shared/constants/general.ts';
 
 export const store = configureStore({
   reducer: {
     ui: uiSlice,
     auth: authSlice,
   },
-  devTools: process.env.NODE_ENV !== 'production',
+  devTools: IS_DEV,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
 });

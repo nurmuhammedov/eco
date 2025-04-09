@@ -2,7 +2,7 @@ import { Fragment, useMemo } from 'react';
 import { UIModeEnum } from '@/shared/types';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
-import { useUIActionLabel } from '@/shared/lib/hooks';
+import { useUIActionLabel } from '@/shared/hooks';
 import { CommitteeStaffView } from './committee-staff-view';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { InputNumber } from '@/shared/components/ui/input-number';
@@ -40,7 +40,7 @@ export const CommitteeStaffDrawer = () => {
     fetchByIdData,
     userRoleOptions,
     departmentOptions,
-    userDirectionOptions,
+    userPermissionOptions,
   } = useCommitteeStaffForm();
 
   const roleOptions = useMemo(() => getSelectOptions(userRoleOptions), []);
@@ -183,7 +183,7 @@ export const CommitteeStaffDrawer = () => {
                           {...field}
                           maxDisplayItems={5}
                           placeholder={t('directions')}
-                          options={userDirectionOptions}
+                          options={userPermissionOptions}
                         />
                       </FormControl>
                       <FormMessage />

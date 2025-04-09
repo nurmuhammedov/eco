@@ -60,7 +60,7 @@
     "REGIONAL": "Ҳудудий бўлим бошлиғи",
     "ADMIN": "Администратор"
   },
-  "direction": {
+  "permission": {
     "APPEAL": "Аризалар",
     "ATTESTAT": "Аттестат",
     "ATTESTATION": "Аттестация",

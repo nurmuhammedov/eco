@@ -5,42 +5,42 @@ import { Navigation } from '@/widgets/sidebar/models/types.ts';
 export default [
   {
     title: 'menu.applications',
-    url: '/app/applications',
+    url: '/applications',
     icon: 'note-text',
   },
   {
     title: 'menu.register',
-    url: '/app/register',
+    url: '/register',
     icon: 'external-drive',
   },
   {
     title: 'menu.accreditation',
-    url: '/app/accreditation',
+    url: '/accreditation',
     icon: 'danger',
   },
   {
     title: 'menu.cadastre',
-    url: '/app/cadastre',
+    url: '/cadastre',
     icon: 'box-search',
   },
   {
     title: 'menu.prophylactic',
-    url: '/app/prophylactic',
+    url: '/prophylactic',
     icon: 'direct-inbox',
   },
   {
     title: 'menu.attestation',
-    url: '/app/attestation',
+    url: '/attestation',
     icon: 'document',
   },
   {
     title: 'menu.monitoring',
-    url: '/app/monitoring',
+    url: '/monitoring',
     icon: 'diagram',
   },
   {
     title: 'menu.reports',
-    url: '/app/reports',
+    url: '/reports',
     icon: 'report',
   },
 ] as Navigation;

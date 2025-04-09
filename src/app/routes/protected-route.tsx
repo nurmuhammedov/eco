@@ -3,14 +3,14 @@ import { PropsWithChildren, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // ** Store **
-import { setUser } from '@/app/store/auth-slice.ts';
+import { setUser } from '@/app/store/auth-slice';
 
 // ** Hooks **
 import { useCurrentUser } from '@/entities/auth';
-import { useAppDispatch } from '@/shared/hooks/use-store.ts';
+import { useAppDispatch } from '@/shared/hooks/use-store';
 
 // ** Components **
-import { Loader } from '@/shared/components/common/global-loader/ui';
+import { Loader } from '@/shared/components/common';
 
 export default function ProtectedRoute({ children }: PropsWithChildren) {
   const { pathname } = useLocation();

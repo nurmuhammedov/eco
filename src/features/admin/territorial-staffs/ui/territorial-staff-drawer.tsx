@@ -1,8 +1,8 @@
 import { Fragment, useMemo } from 'react';
 import { UIModeEnum } from '@/shared/types';
 import { useTranslation } from 'react-i18next';
+import { useUIActionLabel } from '@/shared/hooks';
 import { Input } from '@/shared/components/ui/input';
-import { useUIActionLabel } from '@/shared/lib/hooks';
 import { TerritorialStaffView } from './territorial-staff-view';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
@@ -40,7 +40,7 @@ export const TerritorialStaffDrawer = () => {
     fetchByIdData,
     userRoleOptions,
     departmentOptions,
-    userDirectionOptions,
+    userPermissionOptions,
   } = useTerritorialStaffForm();
 
   const roleOptions = useMemo(() => getSelectOptions(userRoleOptions), []);
@@ -183,7 +183,7 @@ export const TerritorialStaffDrawer = () => {
                           {...field}
                           maxDisplayItems={5}
                           placeholder={t('directions')}
-                          options={userDirectionOptions}
+                          options={userPermissionOptions}
                         />
                       </FormControl>
                       <FormMessage />

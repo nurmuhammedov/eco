@@ -1,7 +1,7 @@
 import { Fragment, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
-import { useUIActionLabel } from '@/shared/lib/hooks';
+import { useUIActionLabel } from '@/shared/hooks';
 import { useDistrictForm } from '../model/use-district-form';
 import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
 import { InputNumber } from '@/shared/components/ui/input-number';

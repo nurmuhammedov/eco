@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import { cn } from '@/shared/lib/utils';
 import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import Icon from '@/shared/components/common/icon';
 import { Link, useLocation } from 'react-router-dom';
 import { NavigationItem } from '@/widgets/sidebar/models/types';
 
@@ -37,7 +38,11 @@ export function NavMain({ item }: { item: NavigationItem }) {
                 tooltip={t(item.title)}
               >
                 <Link to={item.url}>
-                  {item.icon}
+                  {typeof item.icon === 'string' ? (
+                    <Icon name={item.icon} />
+                  ) : (
+                    item.icon
+                  )}
                   <span>{t(item.title)}</span>
                 </Link>
               </SidebarMenuButton>

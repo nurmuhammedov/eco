@@ -5,7 +5,7 @@ import { AppRoute2 } from './types';
 
 const UnAuthorized = lazy(() => import('@/features/auth/ui/unauthorized.tsx'));
 
-export const DefaultRoute = '/app/applications';
+export const DefaultRoute = '/applications';
 
 const hasAccess = (
   userRole: UserRoles,

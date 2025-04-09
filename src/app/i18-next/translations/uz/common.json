@@ -60,7 +60,7 @@
     "REGIONAL": "Hududiy bo'lim boshlig'i",
     "ADMIN": "Administrator"
   },
-  "direction": {
+  "permission": {
     "APPEAL": "Arizalar",
     "ATTESTAT": "Attestat",
     "ATTESTATION": "Attestatsiya",

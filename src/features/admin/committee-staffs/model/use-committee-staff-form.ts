@@ -1,9 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UseQueryResult } from '@tanstack/react-query';
-import { Direction, UserRoles } from '@/entities/user';
+import { UserRoles } from '@/entities/user';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useTranslatedObject } from '@/shared/lib/hooks';
+import { useTranslatedObject } from '@/shared/hooks';
 import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import { useDepartmentSelectQueries } from '@/shared/api/dictionaries';
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
@@ -16,6 +16,7 @@ import {
   useCreateCommitteeStaff,
   useUpdateCommitteeStaff,
 } from '@/entities/admin/committee-staffs';
+import { PERMISSIONS } from '@/entities/permission';
 
 const DEFAULT_FORM_VALUES: CreateCommitteeStaffDTO = {
   pin: '',
@@ -41,7 +42,7 @@ export function useCommitteeStaffForm() {
     'userRoles',
   );
 
-  const userDirectionOptions = useTranslatedObject(Direction, 'direction');
+  const userPermissionOptions = useTranslatedObject(PERMISSIONS, 'permission');
 
   const departmentOptions = useMemo(
     () => getSelectOptions(departmentSelect || []),
@@ -130,7 +131,7 @@ export function useCommitteeStaffForm() {
     fetchByIdData,
     userRoleOptions,
     departmentOptions,
-    userDirectionOptions,
+    userPermissionOptions,
     onSubmit: handleSubmit,
     isFetching: isLoading,
   };
