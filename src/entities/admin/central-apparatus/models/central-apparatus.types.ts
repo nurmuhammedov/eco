@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { centralApparatusSchema, schemas } from './central-apparatus.schema.ts';
+import { centralApparatusSchema, schemas } from './central-apparatus.schema';
 
 export type CentralApparatus = z.infer<typeof centralApparatusSchema>;
 export type CentralApparatusResponse = z.infer<typeof schemas.single>;

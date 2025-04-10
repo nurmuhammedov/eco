@@ -1,4 +1,4 @@
-import LoginForm from '@/features/auth/ui/login.tsx';
+import LoginForm from '@/features/auth/ui/login';
 import LoginInfoSection from '@/features/auth/ui/login-info-section';
 
 export default function LoginPage() {

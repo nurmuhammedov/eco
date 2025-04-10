@@ -1,3 +1,4 @@
+import { useEffect, useMemo } from 'react';
 import { queryClient } from '@/shared/api';
 import { setUser } from '@/app/store/auth-slice';
 import { useAuth } from '@/shared/hooks/use-auth';
@@ -8,7 +9,6 @@ import { getHomeRouteForLoggedInUser } from '@/app/routes';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { LoginDTO } from '@/entities/auth/models/auth.types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo } from 'react';
 
 export const useCurrentUser = () => {
   const {
