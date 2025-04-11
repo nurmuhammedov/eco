@@ -1,18 +1,15 @@
-import { cn } from '@/shared/lib/utils.ts';
-import { IS_DEV } from '@/shared/constants/general.ts';
-import React, { Component, ErrorInfo, memo } from 'react';
-import { DefaultErrorFallback } from '../pages/error/ui/default-error-fallback.tsx';
-import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import React, { Component, ErrorInfo } from 'react';
 import type {
   ErrorBoundaryProps,
   ErrorBoundaryState,
   ErrorFallbackProps,
-} from '../pages/error/types';
+} from '@/pages/error/types';
+import { NavigateFunction } from 'react-router-dom';
+import { IS_DEV } from '@/shared/constants/general.ts';
+import { cn } from '@/shared/lib/utils.ts';
+import { DefaultErrorFallback } from '@/widgets/error-boundary/ui/default-error-fallback.tsx';
 
-/**
- * High-performance ErrorBoundary core component
- */
-class ErrorBoundaryCore extends Component<
+export class ErrorBoundaryCore extends Component<
   ErrorBoundaryProps & { navigate: NavigateFunction; pathname: string },
   ErrorBoundaryState
 > {
@@ -120,21 +117,3 @@ class ErrorBoundaryCore extends Component<
     return <DefaultErrorFallback {...fallbackProps} />;
   }
 }
-
-const ErrorBoundary = memo((props: ErrorBoundaryProps) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  return (
-    <ErrorBoundaryCore
-      {...props}
-      className="h-full"
-      navigate={navigate}
-      pathname={location.pathname}
-    />
-  );
-});
-
-ErrorBoundary.displayName = 'ErrorBoundary';
-
-export default ErrorBoundary;

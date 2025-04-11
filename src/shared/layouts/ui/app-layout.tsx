@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 // ** UI **
 import { SidebarInset, SidebarProvider } from '@/shared/components/ui/sidebar';
 
-export default function MainLayout() {
+export default function AppLayout() {
   const { t } = useTranslation('common');
   return (
     <SidebarProvider defaultOpen={SIDEBAR_OPEN}>

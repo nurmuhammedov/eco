@@ -5,6 +5,7 @@ import { Button } from '@/shared/components/ui/button';
 import {
   ApplicationFilters as ApplicationFiltersType,
   ApplicationStatus,
+  FilterApplicationDTO,
 } from '@/entities/application';
 import {
   Select,
@@ -15,7 +16,7 @@ import {
 } from '@/shared/components/ui/select';
 
 interface ApplicationFiltersProps {
-  initialFilters?: ApplicationFiltersType;
+  initialFilters?: FilterApplicationDTO;
   onFilter: (filters: ApplicationFiltersType) => void;
 }
 

@@ -1,13 +1,12 @@
-import { MainLayout } from '@/shared/layouts';
-import ErrorBoundary from '@/widgets/error-boundary';
-import ProtectedRoute from '@/app/routes/protected-route';
+import { FC } from 'react';
+import { withStore } from './with-store';
+import { withQuery } from './with-query';
+import { withRouter } from './with-router';
+import { withLanguage } from './with-language';
+import { withErrorBoundary } from './with-error-boundary';
 
-export default function Providers() {
-  return (
-    <ErrorBoundary>
-      <ProtectedRoute>
-        <MainLayout />
-      </ProtectedRoute>
-    </ErrorBoundary>
+export const withProviders = (component: FC): FC => {
+  return withErrorBoundary(
+    withStore(withLanguage(withQuery(withRouter(component)))),
   );
-}
+};

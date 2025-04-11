@@ -4,7 +4,6 @@ import { cn } from '@/shared/lib/utils';
 import { shallowEqual } from 'react-redux';
 import { NavMain } from '@/widgets/sidebar/ui/nav-main';
 import { useAppSelector } from '@/shared/hooks/use-store';
-import { getSidebarCollapse } from '@/widgets/sidebar/utils';
 
 // ** Secondary Components **
 import { AppLogo } from './app-logo';
@@ -50,7 +49,7 @@ export function AppSidebar() {
   if (!user) return null;
 
   return (
-    <Sidebar collapsible={getSidebarCollapse()}>
+    <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <SidebarHeader

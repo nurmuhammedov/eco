@@ -5,9 +5,9 @@ import { useAuth } from '@/shared/hooks/use-auth';
 import { UserRoles, UserState } from '@/entities/user';
 import { authAPI } from '@/entities/auth/models/auth.api';
 import { useAppDispatch } from '@/shared/hooks/use-store';
-import { getHomeRouteForLoggedInUser } from '@/app/routes';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { LoginDTO } from '@/entities/auth/models/auth.types';
+import { getHomeRouteForLoggedInUser } from '@/shared/lib/router';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useCurrentUser = () => {
@@ -53,7 +53,7 @@ export const useLoginOneId = () => {
     () => Object.fromEntries(searchParams),
     [searchParams],
   );
-  const { mutateAsync: handleLoginOneId } = useMutation({
+  const { mutate: handleLoginOneId } = useMutation({
     retry: false,
     mutationFn: authAPI.loginOneId,
     onSuccess: (data: UserState) => {

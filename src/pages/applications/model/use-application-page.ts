@@ -32,9 +32,9 @@ export const useApplicationPage = () => {
     };
   }, [filters]);
 
-  const data = () => {
-    console.log(prepareFiltersForApi());
-  };
+  console.log(prepareFiltersForApi);
+
+  const data = () => [];
 
   const filterValues = {
     search: filters.search || '',
@@ -70,8 +70,8 @@ export const useApplicationPage = () => {
   }, [filters.page, filters.size, clearAllFilters, setFilters]);
 
   return {
-    applications: data?.applications || [],
-    totalApplications: data?.total || 0,
+    applications: data || [],
+    totalApplications: data || 0,
     filters: filterValues,
     handleFilterSubmit,
     handleResetFilters,

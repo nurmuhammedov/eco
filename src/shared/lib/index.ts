@@ -1,4 +1,3 @@
-export { compose } from './compose';
 export { getTime } from './get-time';
 export { createQueryKeys } from './create-query-keys';
 export { getDisabledDates } from './get-disabled-dates';
