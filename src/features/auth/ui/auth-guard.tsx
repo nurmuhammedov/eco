@@ -37,7 +37,7 @@ export default function AuthGuard({ children, allowedRoles }: Props) {
   }
 
   if (allowedRoles && allowedRoles.length > 0) {
-    const hasRequiredRole = allowedRoles.includes(user.role);
+    const hasRequiredRole = allowedRoles.includes(user?.role);
 
     if (!hasRequiredRole) {
       return <Navigate to="/unauthorized" replace />;
