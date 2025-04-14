@@ -2,13 +2,7 @@ import React, { Suspense } from 'react';
 import { Loader } from '@/shared/components/common';
 import { createBrowserRouter, Navigate, RouteObject } from 'react-router-dom';
 import RouterErrorBoundary from '@/widgets/error-boundary/ui/router-error-boundary';
-import {
-  appRoutes,
-  AuthGuardProps,
-  authRoutes,
-  RouteConfig,
-  specialComponents,
-} from '@/shared/config/routes';
+import { appRoutes, AuthGuardProps, authRoutes, RouteConfig, specialComponents } from '@/shared/config/routes';
 
 export const createProtectedRoute = (
   routeConfig: RouteConfig,
@@ -30,9 +24,7 @@ export const createProtectedRoute = (
   };
 
   if (routeConfig.children && routeConfig.children.length > 0) {
-    routeObject.children = routeConfig.children.map((child) =>
-      createProtectedRoute(child, AuthGuard),
-    );
+    routeObject.children = routeConfig.children.map((child) => createProtectedRoute(child, AuthGuard));
   }
 
   return routeObject;
@@ -56,9 +48,7 @@ export const createAppRouter = (
   AuthLayout: React.LazyExoticComponent<any>,
   AuthGuard: React.ComponentType<AuthGuardProps>,
 ) => {
-  const protectedRoutes = appRoutes.map((route) =>
-    createProtectedRoute(route, AuthGuard),
-  );
+  const protectedRoutes = appRoutes.map((route) => createProtectedRoute(route, AuthGuard));
 
   const publicRoutes = authRoutes.map(createAuthRoute);
 

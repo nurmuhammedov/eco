@@ -1,27 +1,24 @@
 import { lazy } from 'react';
 import { UserRoles } from '@/entities/user';
 
-const UnAuthorized = lazy(() => import('@/features/auth/ui/unauthorized.tsx'));
-const NotFound = lazy(() => import('@/pages/error/ui/page-not-found.tsx'));
-const Applications = lazy(
-  () => import('@/pages/applications/ui/application-page.tsx'),
-);
+// Error pages
+const NotFound = lazy(() => import('@/pages/error/ui/page-not-found'));
+const UnAuthorized = lazy(() => import('@/features/auth/ui/unauthorized'));
 
-const ApplicationCreate = lazy(
-  () => import('@/pages/user/applications/create-application'),
-);
+// Application pages
+const Applications = lazy(() => import('@/pages/applications/ui/application-page'));
+
+const ApplicationCreate = lazy(() => import('@/pages/user/applications/create-application'));
+
+// Auth pages
+const Login = lazy(() => import('@/pages/auth/ui/login-page'));
+const AdminLogin = lazy(() => import('@/pages/auth/ui/admin-login'));
 
 const Register = lazy(() => import('@/features/user/register/pages'));
-
-const Login = lazy(() => import('@/pages/auth/ui/login-page.tsx'));
-const AdminLogin = lazy(() => import('@/pages/auth/ui/admin-login.tsx'));
-
 const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'));
 const RegionsPage = lazy(() => import('@/pages/admin/regions/ui'));
 const DepartmentPage = lazy(() => import('@/pages/admin/department/ui'));
-const HazardousFacilitiesPage = lazy(
-  () => import('@/pages/admin/hazardous-facility/ui'),
-);
+const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facility/ui'));
 
 export const appRoutes = [
   {

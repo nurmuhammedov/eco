@@ -1,5 +1,4 @@
 import { useEffect, useMemo } from 'react';
-import { queryClient } from '@/shared/api';
 import { setUser } from '@/app/store/auth-slice';
 import { useAuth } from '@/shared/hooks/use-auth';
 import { UserRoles, UserState } from '@/entities/user';
@@ -26,6 +25,7 @@ export const useCurrentUser = () => {
 };
 
 export const useLogin = () => {
+  const queryClient = useQueryClient();
   const { state } = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -35,9 +35,7 @@ export const useLogin = () => {
     onSuccess: (data: UserState) => {
       dispatch(setUser(data));
       queryClient.setQueryData(['currentUser'], data);
-      const redirectPath = state?.from
-        ? state?.from
-        : getHomeRouteForLoggedInUser(data?.role);
+      const redirectPath = state?.from ? state?.from : getHomeRouteForLoggedInUser(data?.role);
       navigate(redirectPath);
     },
   });
@@ -49,19 +47,14 @@ export const useLoginOneId = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
-  const resolvedParams = useMemo(
-    () => Object.fromEntries(searchParams),
-    [searchParams],
-  );
+  const resolvedParams = useMemo(() => Object.fromEntries(searchParams), [searchParams]);
   const { mutate: handleLoginOneId } = useMutation({
     retry: false,
     mutationFn: authAPI.loginOneId,
     onSuccess: (data: UserState) => {
       dispatch(setUser(data));
       queryClient.setQueryData(['currentUser'], data);
-      const redirectPath = state?.from
-        ? state?.from
-        : getHomeRouteForLoggedInUser(data?.role);
+      const redirectPath = state?.from ? state?.from : getHomeRouteForLoggedInUser(data?.role);
       navigate(redirectPath);
     },
   });
@@ -74,8 +67,7 @@ export const useLoginOneId = () => {
 export const useLogout = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const redirectPath =
-    user?.role === UserRoles.ADMIN ? '/auth/login/admin' : '/auth/login';
+  const redirectPath = user?.role === UserRoles.ADMIN ? '/auth/login/admin' : '/auth/login';
   return useMutation({
     mutationFn: async () => authAPI.logout(),
     onSuccess: () => {
