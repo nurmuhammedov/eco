@@ -9,11 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/shared/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
 
 export default function UserDropdown() {
@@ -30,7 +26,7 @@ export default function UserDropdown() {
       <DropdownMenuTrigger asChild>
         <div className="flex items-center space-x-2 cursor-pointer">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage src="" alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <span className="text-sm">{user?.name}</span>
@@ -39,11 +35,7 @@ export default function UserDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-44">
         <DropdownMenuGroup>
-          <DropdownMenuItem
-            disabled={isPending}
-            className="flex justify-between"
-            onClick={() => mutateAsync()}
-          >
+          <DropdownMenuItem disabled={isPending} className="flex justify-between" onClick={() => mutateAsync()}>
             {t('logout')} <LogOut size={16} />
           </DropdownMenuItem>
         </DropdownMenuGroup>
