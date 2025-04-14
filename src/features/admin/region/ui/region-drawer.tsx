@@ -1,19 +1,12 @@
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
 import { useRegionForm } from '../model/use-region-form';
 import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
+import { InputNumber } from '@/shared/components/ui/input-number';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { InputNumber } from '@/shared/components/ui/input-number.tsx';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 
 export const RegionDrawer = () => {
   const { t } = useTranslation('common');

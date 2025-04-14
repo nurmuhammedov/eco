@@ -1,105 +1,162 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { Input } from '@/shared/components/ui/input';
-import { Button } from '@/shared/components/ui/button';
+import React, { useCallback, useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { FilterField, FilterRow } from '@/shared/components/common/filters';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import {
   ApplicationFilters as ApplicationFiltersType,
   ApplicationStatus,
   FilterApplicationDTO,
 } from '@/entities/application';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/components/ui/select';
+import { debounce } from '@/shared/lib';
+import SearchInput from '@/shared/components/common/search-input/ui/search-input.tsx';
+import { Button } from '@/shared/components/ui/button';
+import { RefreshCcw } from 'lucide-react';
+
+const DEFAULT_FILTERS: ApplicationFiltersType = {
+  search: '',
+  type: '',
+  status: undefined,
+  name: '',
+};
 
 interface ApplicationFiltersProps {
   initialFilters?: FilterApplicationDTO;
   onFilter: (filters: ApplicationFiltersType) => void;
 }
 
-export const ApplicationFilters: React.FC<ApplicationFiltersProps> = ({
-  onFilter,
-  initialFilters,
-}) => {
-  const { register, handleSubmit, setValue, watch, reset } =
-    useForm<ApplicationFiltersType>({
-      defaultValues: initialFilters || {
-        search: '',
-        type: '',
-        status: undefined,
-      },
-    });
+export const ApplicationFilters: React.FC<ApplicationFiltersProps> = ({ onFilter, initialFilters }) => {
+  const searchRef = useRef<HTMLInputElement>(null);
 
-  const onSubmit = (data: ApplicationFiltersType) => onFilter(data);
-
-  const handleReset = () => {
-    const clearableObject = {
-      name: '',
+  const { control, handleSubmit, setValue, reset } = useForm<ApplicationFiltersType>({
+    defaultValues: initialFilters || {
       search: '',
       type: '',
       status: undefined,
-    };
-    reset(clearableObject);
-    onFilter(clearableObject);
-  };
+    },
+  });
+
+  const debouncedFilter = useCallback(
+    debounce((data: ApplicationFiltersType) => onFilter(data), 300),
+    [onFilter],
+  );
+
+  const onSubmit = useCallback(
+    (data: ApplicationFiltersType) => {
+      onFilter(data);
+    },
+    [onFilter],
+  );
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setValue('search', value);
+      handleSubmit((data) => debouncedFilter(data))();
+    },
+    [setValue, handleSubmit, debouncedFilter],
+  );
+
+  const handleReset = useCallback(() => {
+    reset(DEFAULT_FILTERS);
+    if (searchRef.current) {
+      searchRef.current.value = '';
+    }
+    onFilter(DEFAULT_FILTERS);
+  }, [reset, onFilter]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div>
-          <Input placeholder="Қидирув" {...register('search')} />
-        </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mb-3">
+      <FilterRow>
+        <FilterField>
+          <SearchInput
+            ref={searchRef}
+            placeholder="Қидирув"
+            onChange={handleSearchChange}
+            defaultValue={initialFilters?.name}
+          />
+        </FilterField>
 
-        <div>
-          <Select
-            onValueChange={(value) => setValue('type', value)}
-            defaultValue={watch('type')}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Ариза тури" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="XICHONI_RUYHATGA_OLISH">
-                ХИЧОни рўйхатга олиш
-              </SelectItem>
-              <SelectItem value="KRANNI_RUYHATGA_OLISH">
-                Кранни рўйхатга олиш
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <FilterField>
+          <Controller
+            control={control}
+            name="type"
+            render={({ field }) => (
+              <Select
+                {...field}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  handleSubmit(onSubmit)();
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Ариза тури" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="XICHONI_RUYHATGA_OLISH">ХИЧОни рўйхатга олиш</SelectItem>
+                  <SelectItem value="KRANNI_RUYHATGA_OLISH">Кранни рўйхатга олиш</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </FilterField>
 
-        <div>
-          <Select
-            onValueChange={(value) =>
-              setValue('status', value as ApplicationStatus)
-            }
-            defaultValue={watch('status')}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Ариза ҳолати" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="YANGI">Янги</SelectItem>
-              <SelectItem value="IJRODA">Ижрода</SelectItem>
-              <SelectItem value="KELISHISHDA">Келишишда</SelectItem>
-              <SelectItem value="TASDIQLASHDA">Тасдиқлашда</SelectItem>
-              <SelectItem value="YAKUNLANGAN">Якунланган</SelectItem>
-              <SelectItem value="QAYTARILGAN">Қайтарилган</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={handleReset}>
-          Тозалаш
+        <FilterField>
+          <Controller
+            control={control}
+            name="status"
+            render={({ field }) => (
+              <Select
+                {...field}
+                onValueChange={(value) => {
+                  field.onChange(value as ApplicationStatus);
+                  handleSubmit(onSubmit)();
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Ижрочи ҳудудий бошқарма" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="YANGI">Янги</SelectItem>
+                  <SelectItem value="IJRODA">Ижрода</SelectItem>
+                  <SelectItem value="KELISHISHDA">Келишишда</SelectItem>
+                  <SelectItem value="TASDIQLASHDA">Тасдиқлашда</SelectItem>
+                  <SelectItem value="YAKUNLANGAN">Якунланган</SelectItem>
+                  <SelectItem value="QAYTARILGAN">Қайтарилган</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </FilterField>
+        <FilterField>
+          <Controller
+            control={control}
+            name="status"
+            render={({ field }) => (
+              <Select
+                {...field}
+                onValueChange={(value) => {
+                  field.onChange(value as ApplicationStatus);
+                  handleSubmit(onSubmit)();
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Маъсул ижрочи" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="YANGI">Янги</SelectItem>
+                  <SelectItem value="IJRODA">Ижрода</SelectItem>
+                  <SelectItem value="KELISHISHDA">Келишишда</SelectItem>
+                  <SelectItem value="TASDIQLASHDA">Тасдиқлашда</SelectItem>
+                  <SelectItem value="YAKUNLANGAN">Якунланган</SelectItem>
+                  <SelectItem value="QAYTARILGAN">Қайтарилган</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </FilterField>
+        <Button type="button" variant="outline" size="icon" onClick={handleReset} disabled>
+          <RefreshCcw size={16} />
         </Button>
-        <Button type="submit">Қидириш</Button>
-      </div>
+      </FilterRow>
     </form>
   );
 };

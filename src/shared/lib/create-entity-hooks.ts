@@ -4,38 +4,20 @@ import { useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { useAppDispatch } from '@/shared/hooks/use-store';
 import { closeUI, openUI } from '@/entities/ui/model/ui-slice';
-import {
-  UIComponentDataMap,
-  UIComponentName,
-  UIModeEnum,
-} from '@/shared/types/ui-types';
+import { UIComponentDataMap, UIComponentName, UIModeEnum } from '@/shared/types/ui-types';
 
-export function createEntityDrawerHook<T extends UIComponentName>(
-  componentName: T,
-) {
+export function createEntityDrawerHook<T extends UIComponentName>(componentName: T) {
   const selectIsOpen = createSelector(
-    [
-      (state: RootState) => state.ui.isOpen,
-      (state: RootState) => state.ui.componentName,
-    ],
-    (isOpen, currentComponentName) =>
-      isOpen && currentComponentName === componentName,
+    [(state: RootState) => state.ui.isOpen, (state: RootState) => state.ui.componentName],
+    (isOpen, currentComponentName) => isOpen && currentComponentName === componentName,
   );
 
-  const selectMode = createSelector(
-    [(state: RootState) => state.ui],
-    (ui) => ui.mode,
-  );
+  const selectMode = createSelector([(state: RootState) => state.ui], (ui) => ui.mode);
 
   const selectData = createSelector(
-    [
-      (state: RootState) => state.ui.data,
-      (state: RootState) => state.ui.componentName,
-    ],
+    [(state: RootState) => state.ui.data, (state: RootState) => state.ui.componentName],
     (data, currentComponentName) =>
-      currentComponentName === componentName
-        ? (data as UIComponentDataMap[T])
-        : undefined,
+      currentComponentName === componentName ? (data as UIComponentDataMap[T]) : undefined,
   );
 
   return function useEntityDrawer() {

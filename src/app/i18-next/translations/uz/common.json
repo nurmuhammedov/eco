@@ -75,6 +75,15 @@
     "COAL": "Ko'mir",
     "GEOLOGY": "Geologiya"
   },
+  "application_status": {
+    "ALL": "Barchasi",
+    "NEW": "Yangi",
+    "IN_PROCESS": "Ijroda",
+    "IN_AGREEMENT": "Kelishishda",
+    "IN_APPROVAL": "Tasdiqlashda",
+    "COMPLETED": "Yakunlangan",
+    "REJECTED": "Qaytarilgan"
+  },
   "regions": "Viloyatlar",
   "districts": "Tumanlar",
   "region_code": "Viloyat kodi(MHOBT kodi)",

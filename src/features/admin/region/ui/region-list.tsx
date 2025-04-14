@@ -2,17 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
-import {
-  type FilterRegionDTO,
-  type Region,
-  useDeleteRegion,
-  useRegionsQuery,
-} from '@/entities/admin/region';
 import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
-import {
-  DataTable,
-  DataTableRowActions,
-} from '@/shared/components/common/data-table';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
+import { type FilterRegionDTO, type Region, useDeleteRegion, useRegionsQuery } from '@/entities/admin/region';
 
 export function RegionList() {
   const { filters } = useFilters();

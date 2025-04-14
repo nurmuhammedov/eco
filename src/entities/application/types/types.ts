@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { applicationSchemas } from '../schema/application.schema';
 
 export enum ApplicationStatus {
+  ALL = 'ALL',
   NEW = 'NEW',
   IN_PROCESS = 'IN_PROCESS',
   IN_AGREEMENT = 'IN_AGREEMENT',
@@ -23,6 +24,4 @@ export type UpdateApplicationDTO = z.infer<typeof applicationSchemas.update>;
 export type FilterApplicationDTO = z.infer<typeof applicationSchemas.filter>;
 
 // API responses
-export type SingleApplicationResponse = z.infer<
-  typeof applicationSchemas.single
->;
+export type SingleApplicationResponse = z.infer<typeof applicationSchemas.single>;

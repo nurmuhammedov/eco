@@ -1,13 +1,13 @@
 import { ApplicationStatus } from '@/entities/application';
 import { cn } from '@/shared/lib/utils.ts';
+import { useTranslation } from 'react-i18next';
 
 interface ApplicationStatusBadgeProps {
   status: ApplicationStatus;
 }
 
-export const ApplicationStatusBadge = ({
-  status,
-}: ApplicationStatusBadgeProps) => {
+export const ApplicationStatusBadge = ({ status }: ApplicationStatusBadgeProps) => {
+  const { t } = useTranslation('common');
   const getStatusColor = () => {
     switch (status) {
       case ApplicationStatus.NEW:
@@ -30,30 +30,25 @@ export const ApplicationStatusBadge = ({
   const getStatusText = () => {
     switch (status) {
       case ApplicationStatus.NEW:
-        return 'Янги';
+        return 'application_status.NEW';
       case ApplicationStatus.IN_PROCESS:
-        return 'Ижрода';
+        return 'application_status.IN_PROCESS';
       case ApplicationStatus.IN_AGREEMENT:
-        return 'Келишишда';
+        return 'application_status.IN_AGREEMENT';
       case ApplicationStatus.IN_APPROVAL:
-        return 'Тасдиқлашда';
+        return 'application_status.IN_APPROVAL';
       case ApplicationStatus.COMPLETED:
-        return 'Якунланган';
+        return 'application_status.COMPLETED';
       case ApplicationStatus.REJECTED:
-        return 'Қайтарилган';
+        return 'application_status.REJECTED';
       default:
         return status;
     }
   };
 
   return (
-    <span
-      className={cn(
-        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-        getStatusColor(),
-      )}
-    >
-      {getStatusText()}
+    <span className={cn('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium', getStatusColor())}>
+      {t(getStatusText())}
     </span>
   );
 };
