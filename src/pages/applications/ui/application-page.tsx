@@ -7,8 +7,10 @@ import { Button } from '@/shared/components/ui/button';
 import { useApplicationPage } from '@/pages/applications';
 import { ApplicationTable } from '@/features/application-table';
 import { ApplicationFilters } from '@/features/application-filters';
+import { useNavigate } from 'react-router-dom';
 
 const ApplicationPage = () => {
+  const navigate = useNavigate();
   const { setFilters, activeTab, handleTabChange, applicationStatus } = useApplicationPage();
 
   const canCreateApplication = useHasPermission(PERMISSIONS.APPEAL);
@@ -16,7 +18,7 @@ const ApplicationPage = () => {
   const action = useMemo(() => {
     return (
       canCreateApplication && (
-        <Button>
+        <Button onClick={() => navigate('/applications/create')}>
           <PlusCircle /> Ариза яратиш
         </Button>
       )

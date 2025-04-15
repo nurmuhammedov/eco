@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
+import { cn } from '@/shared/lib/utils.ts';
 
 interface Tab {
   id: string;
@@ -13,6 +14,8 @@ interface TabsLayoutProps {
   className?: string;
   children: ReactNode;
   defaultValue?: string;
+  classNameTabList?: string;
+  classNameTrigger?: string;
   onTabChange: (value: string) => void;
 }
 
@@ -24,13 +27,15 @@ export const TabsLayout = ({
   onTabChange,
   children,
   className = '',
+  classNameTrigger = '',
+  classNameTabList = '',
 }: TabsLayoutProps) => {
   return (
     <Tabs defaultValue={defaultValue} value={activeTab} onValueChange={onTabChange} className={className}>
       <div className="flex justify-between">
-        <TabsList>
+        <TabsList className={classNameTabList}>
           {tabs.map((tab) => (
-            <TabsTrigger key={tab.id} value={tab.id}>
+            <TabsTrigger className={cn('hover:bg-neutral-100', classNameTrigger)} key={tab.id} value={tab.id}>
               {tab.name}
             </TabsTrigger>
           ))}

@@ -8,7 +8,7 @@ const UnAuthorized = lazy(() => import('@/features/auth/ui/unauthorized'));
 // Application pages
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'));
 
-const ApplicationCreate = lazy(() => import('@/pages/user/applications/create-application'));
+const ApplicationCreate = lazy(() => import('@/pages/applications/ui/application-create'));
 
 // Auth pages
 const Login = lazy(() => import('@/pages/auth/ui/login-page'));
