@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { cn } from '@/shared/lib/utils';
 import { CalendarIcon } from 'lucide-react';
-import { UseFormReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { Textarea } from '@/shared/components/ui/textarea';
@@ -10,25 +10,17 @@ import { DATE_FORMAT } from '@/shared/constants/date-formats';
 import { getDisabledDates } from '@/shared/lib/get-disabled-dates';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
 import { CardForm } from '@/entities/user/applications/create-application/ui/application-form-card';
 import { CreateRegisterBoilerDTO } from '@/entities/user/applications/create-application/model/application.dto';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
-import { useCreateRegisterPressureVesselMutation } from '../../api/register-pressure-vessel-chemical.api';
 
-interface Props {
-  form: UseFormReturn<CreateRegisterBoilerDTO>;
-}
-
-export default ({ form }: Props) => {
-  const { mutate } = useCreateRegisterPressureVesselMutation();
-
+export default () => {
+  const form = useForm<CreateRegisterBoilerDTO>({});
   const onSubmit = (data: CreateRegisterBoilerDTO) => {
     console.log("Yuborilgan ma'lumot:", data);
-
-    mutate(data);
   };
 
   // const containerTypeOptions = getSelectOptions(CONTAINER_TYPES);

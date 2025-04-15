@@ -8,7 +8,8 @@ const UnAuthorized = lazy(() => import('@/features/auth/ui/unauthorized'));
 // Application pages
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'));
 
-const ApplicationCreate = lazy(() => import('@/pages/applications/ui/application-create'));
+const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'));
+const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'));
 
 // Auth pages
 const Login = lazy(() => import('@/pages/auth/ui/login-page'));
@@ -28,7 +29,12 @@ export const appRoutes = [
   },
   {
     path: 'applications/create',
-    component: ApplicationCreate,
+    component: CreateApplicationGrids,
+    roles: [UserRoles.LEGAL],
+  },
+  {
+    path: 'applications/create/:type',
+    component: CreateApplicationForm,
     roles: [UserRoles.LEGAL],
   },
   {

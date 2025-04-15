@@ -1,3 +1,6 @@
+import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types.ts';
+import { ApplicationIcons } from '@/entities/application-create';
+
 export enum ApplicationCategory {
   INM = 'INM',
   HOKQ = 'HOKQ',
@@ -6,7 +9,12 @@ export enum ApplicationCategory {
   ACCREDITATION = 'ACCREDITATION',
   ATTESTATION_PREVENTION = 'ATTESTATION_PREVENTION',
 }
-export type ApplicationCategoryItem = {
-  name: string;
-  id: ApplicationCategory;
-};
+
+export interface ApplicationCardItem {
+  id: number;
+  title: string;
+  description: string;
+  type: ApplicationTypeEnum;
+  category: ApplicationCategory;
+  icon: keyof typeof ApplicationIcons;
+}

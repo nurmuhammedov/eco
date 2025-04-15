@@ -1,37 +1,31 @@
 import { format } from 'date-fns';
 import { cn } from '@/shared/lib/utils';
 import { CalendarIcon } from 'lucide-react';
-import { UseFormReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Calendar } from '@/shared/components/ui/calendar';
 import { DATE_FORMAT } from '@/shared/constants/date-formats';
 import { getDisabledDates } from '@/shared/lib/get-disabled-dates';
+import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
 import { CardForm } from '@/entities/user/applications/create-application/ui/application-form-card';
-import { CreateRegisterBoilerDTO } from '@/entities/user/applications/create-application/model/application.dto';
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
+import { CreateRegisterPressureVesselChemicalDTO } from '@/entities/user/applications/create-application/model/application.dto';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
-import { useCreateRegisterPressureVesselMutation } from '../../api/register-pressure-vessel-chemical.api';
+import { CONTAINER_TYPES } from '@/entities/user/applications/create-application/data';
 
-interface Props {
-  form: UseFormReturn<CreateRegisterBoilerDTO>;
-}
-
-export default ({ form }: Props) => {
-  const { mutate } = useCreateRegisterPressureVesselMutation();
-
-  const onSubmit = (data: CreateRegisterBoilerDTO) => {
+export default () => {
+  const form = useForm<CreateRegisterPressureVesselChemicalDTO>({});
+  const onSubmit = (data: CreateRegisterPressureVesselChemicalDTO) => {
     console.log("Yuborilgan ma'lumot:", data);
-
-    mutate(data);
   };
 
-  // const containerTypeOptions = getSelectOptions(CONTAINER_TYPES);
+  const containerTypeOptions = getSelectOptions(CONTAINER_TYPES);
 
   const { handleSubmit } = form;
 
@@ -70,7 +64,7 @@ export default ({ form }: Props) => {
                     <SelectTrigger className="w-full 3xl:w-sm">
                       <SelectValue placeholder="Идиш турини танланг" />
                     </SelectTrigger>
-                    {/*<SelectContent>{containerTypeOptions}</SelectContent>*/}
+                    <SelectContent>{containerTypeOptions}</SelectContent>
                   </Select>
                 </FormControl>
                 <FormMessage />

@@ -1,25 +1,5 @@
-import { ApplicationCategory, ApplicationIcons } from '@/entities/application-create';
-import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types.ts';
-
-export interface Application {
-  id: number;
-  title: string;
-  description: string;
-  type: ApplicationTypeEnum;
-  category: ApplicationCategory;
-  icon: keyof typeof ApplicationIcons;
-}
-
-export const elegantColors = {
-  navy: '#1E3A8A',
-  indigo: '#4F46E5',
-  teal: '#0D9488',
-  amber: '#B45309',
-  slate: '#475569',
-  neutral: '#737373',
-  light: '#F8FAFC',
-  paper: '#FFFFFF',
-};
+import { ApplicationCardItem, ApplicationCategory } from '@/entities/application-create';
+import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
 
 export const APPLICATION_CATEGORIES = [
   {
@@ -48,7 +28,7 @@ export const APPLICATION_CATEGORIES = [
   },
 ];
 
-export const APPLICATION_CARDS: Application[] = [
+export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   // {
   //   id: 1,
   //   title: 'Хавфли объект ва қурилмаларни рўйхатга олиш',
@@ -75,7 +55,7 @@ export const APPLICATION_CARDS: Application[] = [
     id: 4,
     title: 'Босим остида ишловчи идишни рўйхатга олиш',
     description: 'Босим остида ишлайдиган идишларни рўйхатга олиш',
-    category: ApplicationCategory.XICHO,
+    category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterPressureVesselLPG,
     icon: 'pressureVessel',
   },
@@ -83,7 +63,7 @@ export const APPLICATION_CARDS: Application[] = [
     id: 5,
     title: 'Буғқозонни рўйхатга олиш',
     description: 'Буғ қозонларини рўйхатга олиш учун ариза',
-    category: ApplicationCategory.XICHO,
+    category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterSteamAndHotWaterPipeline,
     icon: 'boiler',
   },
@@ -91,7 +71,7 @@ export const APPLICATION_CARDS: Application[] = [
     id: 6,
     title: 'Лифтни рўйхатга олиш',
     description: 'Лифт қурилмаларини рўйхатга олиш учун ариза',
-    category: ApplicationCategory.XICHO,
+    category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterLift,
     icon: 'elevator',
   },
@@ -99,7 +79,7 @@ export const APPLICATION_CARDS: Application[] = [
     id: 7,
     title: 'Эскалаторни рўйхатга олиш',
     description: 'Эскалатор қурилмаларини рўйхатга олиш',
-    category: ApplicationCategory.XICHO,
+    category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterEscalator,
     icon: 'escalator',
   },
@@ -107,7 +87,7 @@ export const APPLICATION_CARDS: Application[] = [
     id: 8,
     title: 'Аттракцион паспортини рўйхатга олиш',
     description: 'Аттракцион паспортларини расмийлаштириш',
-    category: ApplicationCategory.XICHO,
+    category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterAttractionPassport,
     icon: 'passport',
   },
@@ -115,7 +95,7 @@ export const APPLICATION_CARDS: Application[] = [
     id: 9,
     title: 'Аттракционни рўйхатга олиш',
     description: 'Аттракцион қурилмаларини рўйхатга олиш',
-    category: ApplicationCategory.XICHO,
+    category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterAttraction,
     icon: 'attraction',
   },
@@ -123,7 +103,7 @@ export const APPLICATION_CARDS: Application[] = [
     id: 10,
     title: 'Кранни рўйхатга олиш',
     description: 'Кран қурилмаларини рўйхатга олиш',
-    category: ApplicationCategory.XICHO,
+    category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterCrane,
     icon: 'crane',
   },
@@ -131,7 +111,7 @@ export const APPLICATION_CARDS: Application[] = [
     id: 11,
     title: 'Қувурни рўйхатга олиш',
     description: 'Қувурларни рўйхатга олиш учун ариза',
-    category: ApplicationCategory.XICHO,
+    category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterPipeline,
     icon: 'pipeSystem',
   },
