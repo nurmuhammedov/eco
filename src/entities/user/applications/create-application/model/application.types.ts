@@ -5,30 +5,30 @@ export enum ApplicationTypeEnum {
 
   // Xavfli ishlab chiqarish qurilmalarini ro‘yxatdan o‘tkazish
   RegisterCrane = 'REGISTER_CRANE', // Kranni ro‘yxatga olish
-  RegisterVessel = 'REGISTER_VESSEL', // Soudni ro‘yxatga olish
-  RegisterBoiler = 'REGISTER_BOILER', // Kotelni ro‘yxatga olish
+  RegisterVessel = 'REGISTER_VESSEL', // Bosim ostida ishlovchi idishni ro‘yxatga olish
+  RegisterBoiler = 'REGISTER_BOILER', // Qozonni ro‘yxatga olish
   RegisterLift = 'REGISTER_LIFT', // Liftni ro‘yxatga olish
   RegisterEscalator = 'REGISTER_ESCALATOR', // Eskalatorni ro‘yxatga olish
-  RegisterBridgeOrRoad = 'REGISTER_BRIDGE_OR_ROAD', // Ko‘prik/Yo‘lni ro‘yxatga olish
-  RegisterElevator = 'REGISTER_ELEVATOR', // Ko‘tarmani (podъемникni) ro‘yxatga olish
-  RegisterPipeline = 'REGISTER_PIPELINE', // Quvurni (truboprovodni) ro‘yxatga olish
+  RegisterBridgeOrRoad = 'REGISTER_BRIDGE_OR_ROAD', // Osma arqonli yuruvchi yo'lni ro‘yxatga olish
+  RegisterElevator = 'REGISTER_ELEVATOR', // Yuk ko'targichni ro‘yxatga olish
+  RegisterPipeline = 'REGISTER_PIPELINE', // Quvurni ro‘yxatga olish
   RegisterAttractionPassport = 'REGISTER_ATTRACTION_PASSPORT', // Attraksion pasportini ro‘yxatga olish
   RegisterAttraction = 'REGISTER_ATTRACTION', // Attraksionni ro‘yxatga olish
   RegisterPressureVesselChemical = 'REGISTER_PRESSURE_VESSEL_CHEMICAL', // Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatga olish
   RegisterSteamAndHotWaterPipeline = 'REGISTER_STEAM_AND_HOT_WATER_PIPELINE', // Bug‘ va issiq suv quvurlarini ro‘yxatga olish
-  RegisterBoilerUtilizer = 'REGISTER_BOILER_UTILIZER', // Kotel utilizatorlarini ro‘yxatga olish
+  RegisterBoilerUtilizer = 'REGISTER_BOILER_UTILIZER', // Qozon utilizatorlarini ro‘yxatga olish
   RegisterPressureVesselLPG = 'REGISTER_PRESSURE_VESSEL_LPG', // Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatga olish
   RegisterHighGasUsageEquipment = 'REGISTER_HIGH_GAS_USAGE_EQUIPMENT', // Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni ro‘yxatga olish
 
   // Xavfli ishlab chiqarish qurilmalarini ro‘yxatdan chiqarish
   DeregisterCrane = 'DEREGISTER_CRANE', // Kranni ro‘yxatdan chiqarish
-  DeregisterVessel = 'DEREGISTER_VESSEL', // Soudni ro‘yxatdan chiqarish
-  DeregisterBoiler = 'DEREGISTER_BOILER', // Kotelni ro‘yxatdan chiqarish
+  DeregisterVessel = 'DEREGISTER_VESSEL', // Bosim ostida ishlovchi idishni ro‘yxatdan chiqarish
+  DeregisterBoiler = 'DEREGISTER_BOILER', // Qozonni ro‘yxatdan chiqarish
   DeregisterLift = 'DEREGISTER_LIFT', // Liftni ro‘yxatdan chiqarish
   DeregisterEscalator = 'DEREGISTER_ESCALATOR', // Eskalatorni ro‘yxatdan chiqarish
-  DeregisterBridgeOrRoad = 'DEREGISTER_BRIDGE_OR_ROAD', // Ko‘prik/Yo‘lni ro‘yxatdan chiqarish
-  DeregisterElevator = 'DEREGISTER_ELEVATOR', // Ko‘tarmani (podъемникni) ro‘yxatdan chiqarish
-  DeregisterPipeline = 'DEREGISTER_PIPELINE', // Quvurni (truboprovodni) ro‘yxatdan chiqarish
+  DeregisterBridgeOrRoad = 'DEREGISTER_BRIDGE_OR_ROAD', // Osma arqonli yuruvchi yo'lni ro‘yxatdan chiqarish
+  DeregisterElevator = 'DEREGISTER_ELEVATOR', // Yuk ko'targichni ro‘yxatdan chiqarish
+  DeregisterPipeline = 'DEREGISTER_PIPELINE', // Quvurni ro‘yxatdan chiqarish
   DeregisterAttractionPassport = 'DEREGISTER_ATTRACTION_PASSPORT', // Attraksion pasportini ro‘yxatdan chiqarish
   DeregisterAttraction = 'DEREGISTER_ATTRACTION', // Attraksionni ro‘yxatdan chiqarish
 

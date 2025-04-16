@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ApplicationCardItem, ApplicationIcons } from '@/entities/application-create';
+import { ApplicationCardItem, ApplicationIcons } from '@/entities/create-application';
 import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
 
 interface ApplicationCardProps {
@@ -44,7 +44,7 @@ const AnimatedButton = ({ type }: { type: ApplicationTypeEnum }) => {
 
 function ApplicationCard({ application }: ApplicationCardProps) {
   return (
-    <div className="group p-6 relative border border-slate-100 bg-white flex flex-col justify-between rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+    <div className="group p-6 relative border border-slate-100 bg-white flex flex-col justify-between rounded-md overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
       <div className="mb-5 flex items-center">
         <div className="size-12 rounded-full flex items-center justify-center bg-[#E2E8F0] group-hover:bg-teal group-hover:scale-110 transition-all duration-300">
           <div className="size-6 text-teal group-hover:text-white">
@@ -54,9 +54,9 @@ function ApplicationCard({ application }: ApplicationCardProps) {
 
         <div className="h-px flex-grow ml-4 bg-[#E2E8F0] group-hover:bg-teal w-[40%] group-hover:w-[60%] opacity-50 group-hover:opacity-100 transition-all duration-300" />
       </div>
-      <h3 className="text-base font-medium text-slate-800 line-clamp-2 min-h-10">{application.title}</h3>
+      <h3 className="text-base font-medium text-slate-800 line-clamp-2 leading-5">{application.title}</h3>
 
-      <p className="text-sm text-gray-500 font-normal mb-6 line-clamp-2">{application.description}</p>
+      <p className="text-sm text-gray-500 font-normal mb-6 mt-2 line-clamp-2">{application.description}</p>
       <AnimatedButton type={application.type} />
     </div>
   );

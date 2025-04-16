@@ -1,5 +1,5 @@
 import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types.ts';
-import { ApplicationIcons } from '@/entities/application-create';
+import { ApplicationIcons } from '@/entities/create-application';
 
 export enum ApplicationCategory {
   INM = 'INM',

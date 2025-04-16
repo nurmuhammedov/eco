@@ -1,22 +1,20 @@
-import { useMemo, useState } from 'react';
 import TabsLayout from '@/shared/layouts/ui/tabs-layout';
-import { ApplicationCategory } from '@/entities/application-create';
-import ApplicationCard from '@/entities/application-create/ui/application-card';
-import { APPLICATION_CATEGORIES, APPLICATIONS_DATA } from '@/entities/application-create/model/constants.ts';
+import { useApplicationGrid } from '@/widgets/application-grid';
+import ApplicationCard from '@/entities/create-application/ui/application-card';
+import { APPLICATION_CATEGORIES, ApplicationCategory } from '@/entities/create-application';
 
 export const ApplicationsGrid = () => {
-  const [activeCategory, setActiveCategory] = useState<ApplicationCategory | null>(ApplicationCategory.XICHO);
-  const filteredCards = useMemo(() => {
-    return activeCategory ? APPLICATIONS_DATA.filter((app) => app.category === activeCategory) : APPLICATIONS_DATA;
-  }, [activeCategory]);
+  const { activeTab, filteredCards, handleChangeTab } = useApplicationGrid();
+
   return (
     <TabsLayout
+      activeTab={activeTab}
+      defaultValue={activeTab}
+      className="font-semibold"
       classNameTrigger="text-base"
       classNameTabList="px-4 py-6"
       tabs={APPLICATION_CATEGORIES}
-      className="px-5 py-2.5 font-medium"
-      activeTab={activeCategory as string}
-      onTabChange={(value) => setActiveCategory(value as ApplicationCategory)}
+      onTabChange={(value) => handleChangeTab(value as ApplicationCategory)}
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-6">
         {filteredCards.map((application) => (

@@ -3,7 +3,9 @@ import { ApplicationTypeEnum } from '@/entities/user/applications/create-applica
 
 const formComponentsMap: Record<string, LazyExoticComponent<any>> = {
   [ApplicationTypeEnum.RegisterLift]: lazy(() => import('../ui/forms/register-lift-form')),
+  [ApplicationTypeEnum.RegisterCrane]: lazy(() => import('../ui/forms/register-crane-form')),
   [ApplicationTypeEnum.RegisterBoiler]: lazy(() => import('../ui/forms/register-boiler-form')),
+  [ApplicationTypeEnum.RegisterSteamAndHotWaterPipeline]: lazy(() => import('../ui/forms/register-boiler-form')),
   [ApplicationTypeEnum.RegisterPressureVesselChemical]: lazy(
     () => import('../ui/forms/register-pressure-vessel-chemical'),
   ),

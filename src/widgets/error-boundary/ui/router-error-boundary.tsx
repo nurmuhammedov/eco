@@ -10,9 +10,9 @@ const RouterErrorBoundary = memo((props: ErrorBoundaryProps) => {
   return (
     <ErrorBoundaryCore
       {...props}
-      className="h-full"
       navigate={navigate}
       pathname={location.pathname}
+      className="h-[calc(100svh-80px)] overflow-auto px-4 pt-4 3xl:p-5"
     />
   );
 });

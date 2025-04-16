@@ -42,11 +42,63 @@ export const ApplicationIcons = {
       />
     </svg>
   ),
+  chemicalVessel: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+      <path
+        d="M9 3v5l-3 2v8a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-8l-3-2V3H9z"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M6 10h12M9 3h6" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M9 14h.01M12 16h.01M15 14h.01M12 12h.01"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
   pressureVessel: (color: string) => (
     <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
       <path d="M8 3h8M12 3v4" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M6 9c0-1.7 2.7-3 6-3s6 1.3 6 3v7c0 1.7-2.7 3-6 3s-6-1.3-6-3V9z" stroke={color} strokeWidth="1.5" />
       <path d="M6 13h12M6 17h12" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
+  gasVessel: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+      <path d="M8 4h8M12 4v3" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M7 7c0-1 2.25-2 5-2s5 1 5 2v9c0 1.66-2.25 3-5 3s-5-1.34-5-3V7z"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M7 12h10M7 16h10" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M16 9c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zM10 9c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1z"
+        fill={color}
+      />
+    </svg>
+  ),
+  recycleBoiler: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+      <path d="M7 8a5 5 0 0110 0v6a5 5 0 01-10 0V8z" stroke={color} strokeWidth="1.5" />
+      <path d="M7 12h10" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M9 4v2M15 4v2" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M5 20l2.5-3M19 20l-2.5-3"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M8 21h8" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M9 16l2 2 4-4" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
   boiler: (color: string) => (
@@ -115,6 +167,45 @@ export const ApplicationIcons = {
       />
       <path d="M9 13a3 3 0 106 0 3 3 0 00-6 0z" stroke={color} strokeWidth="1.5" />
       <path d="M9 19c0-1.5 1.5-3 3-3s3 1.5 3 3" stroke={color} strokeWidth="1.5" />
+    </svg>
+  ),
+  cableway: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+      <path d="M3 6h18M3 18h18" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M6 6l3 6M18 6l-3 6" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6 18l3-6M18 18l-3-6" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="9" y="10" width="6" height="4" rx="1" stroke={color} strokeWidth="1.5" />
+    </svg>
+  ),
+  steamPipe: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+      <path d="M3 6h18M3 12h18M3 18h18" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M7 6v6M17 12v6" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M12 6c0-1.1.9-2 2-2s2 .9 2 2" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M12 18c0 1.1.9 2 2 2s2-.9 2-2" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M12 6v6m0 6v-6" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeDasharray="0.5 2" />
+    </svg>
+  ),
+  naturalGas: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+      <path
+        d="M8 4c0 1.5 1.5 2 1.5 3.5S8 10 8 12c0 3 2 4 4 4s4-1 4-4c0-2-1.5-3-1.5-4.5S16 5.5 16 4"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M10 19h4M12 16v3" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M6 10h12M6 14h12" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeDasharray="1 2" />
+    </svg>
+  ),
+  heavyLift: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+      <path d="M5 5v14M19 5v14" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M9 4v16M15 4v16" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M5 12h14" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M3 5h4M3 19h4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M17 5h4M17 19h4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   ),
 };
