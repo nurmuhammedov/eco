@@ -1,4 +1,4 @@
-import { ApplicationCardItem, ApplicationCategory } from '@/entities/create-application';
+import { ApplicationCardItem, ApplicationCategory, MainApplicationCategory } from '@/entities/create-application';
 import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
 
 export const APPLICATION_CATEGORIES = [
@@ -31,19 +31,19 @@ export const APPLICATION_CATEGORIES = [
 export const MAIN_APPLICATION_BY_CATEGORY = {
   [ApplicationCategory.HOKQ]: [
     {
-      id: 'register',
+      id: MainApplicationCategory.REGISTER,
       title: 'Хавфли объект ва қурилмаларни рўйхатга олиш',
       description: 'Хавфли объектларни давлат рўйхатига киритиш учун ариза',
       icon: 'documentAdd',
     },
     {
-      id: 'unregister',
+      id: MainApplicationCategory.UNREGISTER,
       title: 'Хавфли объект ва қурилмаларни рўйхатдан чиқариш',
       description: 'Объектларни рўйхатдан чиқариш учун ариза',
       icon: 'documentRemove',
     },
     {
-      id: 'reregister',
+      id: MainApplicationCategory.REREGISTER,
       title: 'Хавфли объект ва қурилмаларни қайта рўйхатдан ўтказиш',
       description: 'Объектларни қайта рўйхатдан ўтказиш учун ариза',
       icon: 'documentRefresh',
@@ -63,6 +63,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Кран қурилмаларини рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterCrane,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'crane',
   },
   {
@@ -71,6 +72,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Босим остида ишлайдиган идишларни рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterVessel,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'pressureVessel',
   },
   {
@@ -79,6 +81,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Буғ қозонларини рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterSteamAndHotWaterPipeline,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'boiler',
   },
   {
@@ -87,6 +90,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Лифт қурилмаларини рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterLift,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'elevator',
   },
   {
@@ -95,6 +99,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Эскалатор қурилмаларини рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterEscalator,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'escalator',
   },
   {
@@ -103,6 +108,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Аттракцион паспортларини расмийлаштириш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterAttractionPassport,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'passport',
   },
   {
@@ -111,6 +117,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Аттракцион қурилмаларини рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterAttraction,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'attraction',
   },
   {
@@ -119,6 +126,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Қувурларни рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterPipeline,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'pipeSystem',
   },
   {
@@ -127,6 +135,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Босим остида ишловчи идишларни (кимё) рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterPressureVesselChemical,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'chemicalVessel',
   },
   {
@@ -135,6 +144,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Буғ ва иссиқ сув қувурларини рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterSteamAndHotWaterPipeline,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'steamPipe',
   },
   {
@@ -143,6 +153,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Қозон утилизаторларини рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterBoilerUtilizer,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'recycleBoiler',
   },
   {
@@ -151,6 +162,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Босим остида ишловчи идишларни (СУГ) рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterPressureVesselLPG,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'gasVessel',
   },
   {
@@ -160,6 +172,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
       'Йилига 100 минг ва ундан ортиқ кубометр табиий газдан фойдаланувчи қурилмаларни рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterHighGasUsageEquipment,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'naturalGas',
   },
   {
@@ -168,6 +181,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Юк кўтаргични рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterElevator,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'heavyLift',
   },
   {
@@ -176,6 +190,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Осма арқонли юрувчи йўлни рўйхатга олиш учун ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterBridgeOrRoad,
+    parentId: MainApplicationCategory.REGISTER,
     icon: 'cableway',
   },
 ];

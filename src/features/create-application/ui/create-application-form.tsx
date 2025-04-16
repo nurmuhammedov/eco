@@ -1,7 +1,7 @@
+import { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import { getFormComponentByType, isValidApplicationType } from '@/features/create-application';
 import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types.ts';
-import { Suspense } from 'react';
 
 export const CreateApplicationForm = () => {
   const { type } = useParams<{ type: ApplicationTypeEnum }>();

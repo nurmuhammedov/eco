@@ -10,10 +10,10 @@ export const ApplicationsGrid = () => {
     <TabsLayout
       activeTab={activeTab}
       defaultValue={activeTab}
-      className="font-semibold"
-      classNameTrigger="text-base"
+      classNameTrigger="text-base mx-1"
       classNameTabList="px-4 py-6"
       tabs={APPLICATION_CATEGORIES}
+      className="font-medium 3xl:font-semibold"
       onTabChange={(value) => handleChangeTab(value as ApplicationCategory)}
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-6">

@@ -1,5 +1,11 @@
-import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types.ts';
 import { ApplicationIcons } from '@/entities/create-application';
+import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types.ts';
+
+export enum MainApplicationCategory {
+  REGISTER = 'REGISTER',
+  UNREGISTER = 'UNREGISTER',
+  REREGISTER = 'REREGISTER',
+}
 
 export enum ApplicationCategory {
   INM = 'INM',
@@ -16,5 +22,6 @@ export interface ApplicationCardItem {
   description: string;
   type: ApplicationTypeEnum;
   category: ApplicationCategory;
+  parentId?: MainApplicationCategory;
   icon: keyof typeof ApplicationIcons;
 }
