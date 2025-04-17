@@ -1,45 +1,58 @@
 export const ApplicationIcons = {
-  documentAdd: (color: string) => (
-    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+  factoryRegisterIcon: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none">
       <path
-        d="M8 2v4h8V2M3 6v16h18V6H3z"
+        d="M2 22h20v-8l-6-3v-2l-8 2v-2L2 12v10z"
         stroke={color}
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M9 14h6m-3-3v6" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M6 14h3M6 17h3M15 14h3M15 17h3" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M11 22v-4M8 22v-2M17 22v-2" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M12 9l3.5-3.5M16 9a4 4 0 10-8 0"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M13 2.5v3" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   ),
-  documentRemove: (color: string) => (
-    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+  factoryDeregisterIcon: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none">
       <path
-        d="M8 2v4h8V2M3 6v16h18V6H3z"
+        d="M2 22h20v-8l-6-3v-2l-8 2v-2L2 12v10z"
         stroke={color}
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M9 14h6" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M6 14h3M6 17h3M15 14h3M15 17h3" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M11 22v-4M8 22v-2M17 22v-2" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M9.5 6.5l5 5m0-5l-5 5" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
-  documentRefresh: (color: string) => (
-    <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
+  factoryUpdateIcon: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none">
       <path
-        d="M8 2v4h8V2M3 6v16h18V6H3z"
+        d="M2 22h20v-8l-6-3v-2l-8 2v-2L2 12v10z"
         stroke={color}
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M9 12h6M9 16h6" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M6 14h3M6 17h3M15 14h3M15 17h3" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M11 22v-4M8 22v-2M17 22v-2" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
       <path
-        d="M16 9c-1.5-1.5-3.5-1.5-5 0s-1.5 3.5 0 5"
+        d="M16 5c0-1.5-1-3-3-3s-3 1.5-3 3 1 3 3 3"
         stroke={color}
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+      <path d="M13 8v-3h-3" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
   chemicalVessel: (color: string) => (
@@ -138,6 +151,7 @@ export const ApplicationIcons = {
       />
     </svg>
   ),
+  // Кранни рўйхатга олиш
   crane: (color: string) => (
     <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
       <path d="M4 4h16M12 4v8" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
@@ -146,6 +160,7 @@ export const ApplicationIcons = {
       <rect x="9" y="16" width="6" height="4" rx="1" stroke={color} strokeWidth="1.5" />
     </svg>
   ),
+  // Қувурни рўйхатга олиш
   pipeSystem: (color: string) => (
     <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
       <path d="M3 6h18M3 12h18M3 18h18" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
@@ -158,6 +173,7 @@ export const ApplicationIcons = {
       />
     </svg>
   ),
+  // Аттракцион паспортини рўйхатга олиш
   passport: (color: string) => (
     <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
       <path
@@ -169,6 +185,7 @@ export const ApplicationIcons = {
       <path d="M9 19c0-1.5 1.5-3 3-3s3 1.5 3 3" stroke={color} strokeWidth="1.5" />
     </svg>
   ),
+  // Осма арқонли юрувчи йўлни рўйхатга олиш
   cableway: (color: string) => (
     <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
       <path d="M3 6h18M3 18h18" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
@@ -177,6 +194,7 @@ export const ApplicationIcons = {
       <rect x="9" y="10" width="6" height="4" rx="1" stroke={color} strokeWidth="1.5" />
     </svg>
   ),
+  // Буғ ва иссиқ сув қувурларини рўйхатга олиш
   steamPipe: (color: string) => (
     <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
       <path d="M3 6h18M3 12h18M3 18h18" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
@@ -186,6 +204,7 @@ export const ApplicationIcons = {
       <path d="M12 6v6m0 6v-6" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeDasharray="0.5 2" />
     </svg>
   ),
+  // Йилига 100 минг ва ундан ортиқ кубометр табиий газдан фойдаланувчи қурилмаларни рўйхатга олиш
   naturalGas: (color: string) => (
     <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
       <path
@@ -199,6 +218,7 @@ export const ApplicationIcons = {
       <path d="M6 10h12M6 14h12" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeDasharray="1 2" />
     </svg>
   ),
+  // Осма арқонли юрувчи йўлни рўйхатга олиш
   heavyLift: (color: string) => (
     <svg viewBox="0 0 24 24" fill="none" className="w-full h-full">
       <path d="M5 5v14M19 5v14" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
@@ -206,6 +226,119 @@ export const ApplicationIcons = {
       <path d="M5 12h14" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
       <path d="M3 5h4M3 19h4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
       <path d="M17 5h4M17 19h4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
+  // Ионлаштирувчи нурланиш манбаларини рўйхатга олиш
+  radiationRegisterIcon: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M12 8v8M8 12h8" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="8" stroke={color} strokeWidth="1.5" />
+      <path d="M12 4v-2M12 22v-2M4 12H2M22 12h-2" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M6 6l-1.5-1.5M18 6l1.5-1.5M6 18l-1.5 1.5M18 18l1.5 1.5"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <rect x="17" y="2" width="5" height="5" rx="1" stroke={color} strokeWidth="1.5" />
+      <path d="M19.5 4.5v0m0 0v0m0 0v0" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
+  // Ионлаштирувчи нурланиш манбаларини олиниши
+  radiationReceiveIcon: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M9 12h6M12 9v6" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="8" stroke={color} strokeWidth="1.5" />
+      <path d="M12 4v-2M12 22v-2M4 12H2M22 12h-2" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M6 6l-1.5-1.5M18 6l1.5-1.5M6 18l-1.5 1.5M18 18l1.5 1.5"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path d="M20 3l-4 4M16 3l4 4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
+  // Ионлаштирувчи нурланиш манбаларини берилиши
+  radiationTransferIcon: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M9 12h6" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="8" stroke={color} strokeWidth="1.5" />
+      <path d="M12 4v-2M12 22v-2M4 12H2M22 12h-2" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M6 6l-1.5-1.5M18 6l1.5-1.5M6 18l-1.5 1.5M18 18l1.5 1.5"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path d="M17 2l3 3-3 3" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  // Эксперт ташкилотини аккредитациядан ўтказиш
+  expertOrgAccreditationIcon: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M3 6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6z" stroke={color} strokeWidth="1.5" />
+      <path d="M8 4v4M16 4v4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M3 10h18" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M16 14l-2 2-2-2" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M11 15a3 3 0 100-6 3 3 0 000 6z" stroke={color} strokeWidth="1.5" />
+    </svg>
+  ),
+  // Эксперт ташкилотини қайта аккредитациядан ўтказиш
+  expertOrgReaccreditationIcon: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M3 6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6z" stroke={color} strokeWidth="1.5" />
+      <path d="M8 4v4M16 4v4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M3 10h18" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M11 15a3 3 0 100-6 3 3 0 000 6z" stroke={color} strokeWidth="1.5" />
+      <path d="M17 13l-2 2 2 2" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M19 15h-4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
+  // Эксперт ташкилотининг аккредитация соҳасини кенгайтириш
+  expertOrgExpandAccreditationIcon: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M3 6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6z" stroke={color} strokeWidth="1.5" />
+      <path d="M8 4v4M16 4v4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M3 10h18" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M11 15a3 3 0 100-6 3 3 0 000 6z" stroke={color} strokeWidth="1.5" />
+      <path d="M16 12h4M18 10v4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
+  // Саноат хавфсизлиги экспертиза хулосаларини рўйхатга олиш
+  industrialSafetyExpertiseRegistrationIcon: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none">
+      <path
+        d="M4 4v16a2 2 0 002 2h12a2 2 0 002-2V8.342a2 2 0 00-.602-1.43l-4.364-4.536A2 2 0 0013.364 2H6a2 2 0 00-2 2z"
+        stroke={color}
+        strokeWidth="1.5"
+      />
+      <path d="M14 2v4a2 2 0 002 2h4" stroke={color} strokeWidth="1.5" />
+      <path d="M9 12h6M9 16h6" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M6 9l2 2 4-4" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  // Хавфли ишлаб чиқариш объекти ходимларини аттестациядан ўтказиш
+  staffAttestationIcon: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M9 9a3 3 0 100-6 3 3 0 000 6z" stroke={color} strokeWidth="1.5" />
+      <path d="M15 9a3 3 0 100-6 3 3 0 000 6z" stroke={color} strokeWidth="1.5" />
+      <path
+        d="M17 21H7a4 4 0 01-4-4v-2.4c0-.33.16-.63.43-.82l3.57-2.5a1 1 0 011.14 0l1.86 1.3 1.86-1.3a1 1 0 011.14 0l3.57 2.5c.27.19.43.49.43.82V17a4 4 0 01-4 4z"
+        stroke={color}
+        strokeWidth="1.5"
+      />
+      <path d="M16 14l-2 2-2-2" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  // Профилактика тадбирини ўтказиш
+  preventiveMeasuresIcon: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M5 7a2 2 0 012-2h10a2 2 0 012 2v11a2 2 0 01-2 2H7a2 2 0 01-2-2V7z" stroke={color} strokeWidth="1.5" />
+      <path d="M8 5V3M16 5V3" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M5 11h14" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M10 15l2 2 4-4" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 21h8" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   ),
 };

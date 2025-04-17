@@ -14,10 +14,10 @@ export const MainCardsList = React.memo(
   }: MainCardsListProps) => {
     // Precompute grid classes based on layout type
     const gridClasses = useMemo(() => {
-      const baseClasses = 'grid gap-6 mb-7 3xl:mb-8 mt-4';
+      const baseClasses = 'grid gap-4 mb-7 3xl:mb-8 mt-4';
 
       const layoutClasses = {
-        default: 'grid-cols-1 md:grid-cols-2 2xl:grid-cols-3',
+        default: 'grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3',
         compact: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
         wide: 'grid-cols-1 lg:grid-cols-2',
       };
@@ -42,9 +42,9 @@ export const MainCardsList = React.memo(
             .fill(0)
             .map((_, index) => (
               <div key={`skeleton-${index}`} className="bg-white border border-slate-200 p-6 rounded-md animate-pulse">
-                <div className="h-12 w-12 rounded-md bg-slate-200 mb-4"></div>
-                <div className="h-6 w-3/4 bg-slate-200 mb-2 rounded"></div>
-                <div className="h-4 bg-slate-200 rounded"></div>
+                <div className="size-12 rounded-md bg-slate-200 mb-4" />
+                <div className="h-6 w-3/4 bg-slate-200 mb-2 rounded" />
+                <div className="h-4 bg-slate-200 rounded" />
               </div>
             ))}
         </div>

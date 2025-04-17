@@ -1,7 +1,7 @@
 export enum ApplicationTypeEnum {
   // Xavfli Ishlab Chiqarish Obyektini ro‘yxatga olish va chiqarish
-  RegisterHPO = 'REGISTER_HPO', // Xavfli Ishlab Chiqarish Obyektini ro‘yxatdan o‘tkazish
-  DeregisterHPO = 'DEREGISTER_HPO', // Xavfli Ishlab Chiqarish Obyektini ro‘yxatdan chiqarish
+  RegisterHPO = 'REGISTER_HPO', // Xavfli ishlab chiqarish obyektini ro‘yxatdan o‘tkazish
+  DeregisterHPO = 'DEREGISTER_HPO', // Xavfli ishlab chiqarish obyektini ro‘yxatdan chiqarish
 
   // Xavfli ishlab chiqarish qurilmalarini ro‘yxatdan o‘tkazish
   RegisterCrane = 'REGISTER_CRANE', // Kranni ro‘yxatga olish

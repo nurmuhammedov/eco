@@ -34,19 +34,19 @@ export const MAIN_APPLICATION_BY_CATEGORY = {
     {
       id: MainApplicationCategory.REGISTER,
       title: 'Хавфли объект ва қурилмаларни рўйхатга олиш',
-      description: 'Хавфли объектларни давлат рўйхатига киритиш учун ариза',
+      description: 'Хавфли объект ва қурилмаларни давлат рўйхатига киритиш ариза шакллари',
       icon: FileInput,
     },
     {
       id: MainApplicationCategory.UNREGISTER,
       title: 'Хавфли объект ва қурилмаларни рўйхатдан чиқариш',
-      description: 'Объектларни рўйхатдан чиқариш учун ариза',
+      description: 'Хавфли объект ва қурилмаларни давлат рўйхатидан чиқариш ариза шакллари',
       icon: FileOutput,
     },
     {
       id: MainApplicationCategory.REREGISTER,
       title: 'Хавфли объект ва қурилмаларни қайта рўйхатдан ўтказиш',
-      description: 'Объектларни қайта рўйхатдан ўтказиш учун ариза',
+      description: 'Хавфли объект ва қурилмаларни қайта рўйхатдан ўтказиш ариза шакллари',
       icon: FilePlus,
     },
   ],
@@ -58,6 +58,31 @@ export const MAIN_APPLICATION_BY_CATEGORY = {
 };
 
 export const APPLICATIONS_DATA: ApplicationCardItem[] = [
+  // XICHO
+  {
+    id: 1,
+    title: 'ХИЧОни рўйхатга олиш',
+    description: 'ХИЧОни рўйхатга олиш учун ариза шакли',
+    category: ApplicationCategory.XICHO,
+    type: ApplicationTypeEnum.RegisterHPO,
+    icon: 'factoryRegisterIcon',
+  },
+  {
+    id: 2,
+    title: 'ХИЧОни рўйхатдан чиқариш',
+    description: 'ХИЧОни рўйхатдан чиқариш учун ариза шакли',
+    category: ApplicationCategory.XICHO,
+    type: ApplicationTypeEnum.DeregisterHPO,
+    icon: 'factoryDeregisterIcon',
+  },
+  {
+    id: 3,
+    title: 'ХИЧО реестрига ўзгартириш киритиш',
+    description: 'ХИЧО реестрига ўзгартириш киритиш учун ариза шакли',
+    category: ApplicationCategory.XICHO,
+    type: ApplicationTypeEnum.DeregisterHPO,
+    icon: 'factoryUpdateIcon',
+  },
   // Xavfli obyektlar va qurilmalar => Ro'yxatga olish
   {
     id: 10,
@@ -125,7 +150,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 11,
     title: 'Қувурни рўйхатга олиш',
-    description: 'Қувурларни рўйхатга олиш учун ариза',
+    description: 'Қувурларни рўйхатга олиш ариза шакли',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterPipeline,
     parentId: MainApplicationCategory.REGISTER,
@@ -189,11 +214,85 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 18,
     title: 'Осма арқонли юрувчи йўлни рўйхатга олиш',
-    description: 'Осма арқонли юрувчи йўлни рўйхатга олиш учун ариза',
+    description: 'Осма арқонли юрувчи йўлни рўйхатга олиш ариза',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.RegisterBridgeOrRoad,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'cableway',
   },
-  // Xavfli obyektlar va qurilmalar => Ro'yxatdan chiqarish
+  // INM
+  {
+    id: 19,
+    title: 'Ионлаштирувчи нурланиш манбаларини рўйхатга олиш',
+    description: 'Ионлаштирувчи нурланиш манбаларини рўйхатга олиш ариза шакли',
+    category: ApplicationCategory.INM,
+    type: ApplicationTypeEnum.RegisterINM,
+    icon: 'radiationRegisterIcon',
+  },
+  {
+    id: 20,
+    title: 'Ионлаштирувчи нурланиш манбаларини олиниши',
+    description: 'Ионлаштирувчи нурланиш манбаларини олиниши ариза шакли',
+    category: ApplicationCategory.INM,
+    type: ApplicationTypeEnum.ObtainINM,
+    icon: 'radiationReceiveIcon',
+  },
+  {
+    id: 21,
+    title: 'Ионлаштирувчи нурланиш манбаларини берилиши',
+    description: 'Ионлаштирувчи нурланиш манбаларини берилиши ариза шакли',
+    category: ApplicationCategory.INM,
+    type: ApplicationTypeEnum.IssueINM,
+    icon: 'radiationTransferIcon',
+  },
+  // Akkreditatsiya
+  {
+    id: 22,
+    title: 'Эксперт ташкилотини аккредитациядан ўтказиш',
+    description: 'Эксперт ташкилотини аккредитациядан ўтказиш ариза шакли',
+    category: ApplicationCategory.ACCREDITATION,
+    type: ApplicationTypeEnum.AccreditExpertOrganization,
+    icon: 'expertOrgAccreditationIcon',
+  },
+  {
+    id: 23,
+    title: 'Эксперт ташкилотини қайта аккредитациядан ўтказиш',
+    description: 'Эксперт ташкилотини қайта аккредитациядан ўтказиш ариза шакли',
+    category: ApplicationCategory.ACCREDITATION,
+    type: ApplicationTypeEnum.ReaccreditExpertOrganization,
+    icon: 'expertOrgReaccreditationIcon',
+  },
+  {
+    id: 24,
+    title: 'Эксперт ташкилотининг аккредитация соҳасини кенгайтириш',
+    description: 'Эксперт ташкилотининг аккредитация соҳасини кенгайтириш ариза шакли',
+    category: ApplicationCategory.ACCREDITATION,
+    type: ApplicationTypeEnum.ExpandAccreditationScope,
+    icon: 'expertOrgExpandAccreditationIcon',
+  },
+  {
+    id: 25,
+    title: 'Саноат хавфсизлиги экспертиза хулосаларини рўйхатга олиш',
+    description: 'Саноат хавфсизлиги экспертиза хулосаларини рўйхатга олиш ариза шакли',
+    category: ApplicationCategory.ACCREDITATION,
+    type: ApplicationTypeEnum.RegisterSafetyExpertConclusion,
+    icon: 'industrialSafetyExpertiseRegistrationIcon',
+  },
+  // Attestatsiya
+  {
+    id: 26,
+    title: 'ХИЧО ходимларини аттестациядан ўтказиш',
+    description: 'ХИЧО ходимларини аттестациядан ўтказиш ариза шакли',
+    category: ApplicationCategory.ATTESTATION_PREVENTION,
+    type: ApplicationTypeEnum.CertifyHPOEmployee,
+    icon: 'staffAttestationIcon',
+  },
+  {
+    id: 27,
+    title: 'Профилактика тадбирини ўтказиш',
+    description: 'Профилактика тадбирини ўтказиш ариза шакли',
+    category: ApplicationCategory.ATTESTATION_PREVENTION,
+    type: ApplicationTypeEnum.RegisterSafetyExpertConclusion, // enum registratsiya qilinmagan
+    icon: 'preventiveMeasuresIcon',
+  },
 ];
