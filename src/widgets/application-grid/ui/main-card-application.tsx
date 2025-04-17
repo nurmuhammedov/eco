@@ -1,63 +1,129 @@
-import React from 'react';
-import { FileInput } from 'lucide-react';
+import { cn } from '@/shared/lib/utils';
+import { MainCardsListProps } from '../types';
+import React, { useCallback, useMemo } from 'react';
 
-interface MainCard {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  color?: string;
-}
+export const MainCardsList = React.memo(
+  ({
+    cards = [],
+    selectedCard = null,
+    onCardSelect,
+    className = '',
+    gridLayout = 'default',
+    cardSize = 'md',
+    isLoading = false,
+  }: MainCardsListProps) => {
+    // Precompute grid classes based on layout type
+    const gridClasses = useMemo(() => {
+      const baseClasses = 'grid gap-6 mb-7 3xl:mb-8 mt-4';
 
-interface MainCardsListProps {
-  cards: MainCard[];
-  selectedCard: string | null;
-  onCardSelect: (cardId: string) => void;
-  setHoveredCard: (cardId: string | null) => void;
-}
+      const layoutClasses = {
+        default: 'grid-cols-1 md:grid-cols-2 2xl:grid-cols-3',
+        compact: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
+        wide: 'grid-cols-1 lg:grid-cols-2',
+      };
 
-export const MainCardsList: React.FC<MainCardsListProps> = ({ cards, selectedCard, onCardSelect, setHoveredCard }) => {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-      {cards.map((card) => {
-        const isSelected = selectedCard === card.id;
-        const cardColor = card.color || '#1E3A8A'; // Default navy color
+      return cn(baseClasses, layoutClasses[gridLayout], className);
+    }, [gridLayout, className]);
 
-        return (
-          <div
-            key={card.id}
-            className={`relative cursor-pointer transition-all duration-300 p-6 rounded-xl ${
-              isSelected
-                ? 'bg-blue-700 text-white shadow-md transform -translate-y-1'
-                : 'bg-white text-slate-800 hover:shadow-sm'
-            } border border-slate-200`}
-            onMouseEnter={() => setHoveredCard(`main-${card.id}`)}
-            onMouseLeave={() => setHoveredCard(null)}
-            onClick={() => onCardSelect(card.id)}
-            aria-selected={isSelected}
-            role="tab"
-          >
-            <div className="flex items-center">
-              <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 ${
-                  isSelected ? 'bg-white' : 'bg-opacity-10'
-                }`}
-                style={{
-                  backgroundColor: isSelected ? 'white' : `${cardColor}10`,
-                }}
-              >
-                <div className="w-6 h-6">
-                  <FileInput />
+    // Handle empty state
+    if (cards.length === 0 && !isLoading) {
+      return (
+        <div className="p-8 text-center bg-slate-50 rounded-md border border-slate-200">
+          <p className="text-slate-500">No cards available</p>
+        </div>
+      );
+    }
+
+    // Handle loading state
+    if (isLoading) {
+      return (
+        <div className={gridClasses}>
+          {Array(3)
+            .fill(0)
+            .map((_, index) => (
+              <div key={`skeleton-${index}`} className="bg-white border border-slate-200 p-6 rounded-md animate-pulse">
+                <div className="h-12 w-12 rounded-md bg-slate-200 mb-4"></div>
+                <div className="h-6 w-3/4 bg-slate-200 mb-2 rounded"></div>
+                <div className="h-4 bg-slate-200 rounded"></div>
+              </div>
+            ))}
+        </div>
+      );
+    }
+
+    // Memoized card click handler factory
+    const createCardClickHandler = useCallback(
+      (cardId: string) => () => {
+        // Prevent unnecessary state updates
+        if (cardId !== selectedCard) {
+          onCardSelect(cardId);
+        }
+      },
+      [selectedCard, onCardSelect],
+    );
+
+    // Card size styles
+    const getCardSizeClasses = (size: typeof cardSize) => {
+      switch (size) {
+        case 'sm':
+          return 'p-4';
+        case 'lg':
+          return 'p-8';
+        default:
+          return 'p-6';
+      }
+    };
+
+    return (
+      <div className={gridClasses} role="tablist">
+        {cards.map((card) => {
+          const isSelected = selectedCard === card.id;
+
+          // Performance optimization: only calculate these classes when needed
+          const cardClasses = cn(
+            'relative cursor-pointer transition-all duration-300 rounded-md border',
+            'outline-none focus-visible:ring-2 focus-visible:ring-teal-500',
+            getCardSizeClasses(cardSize),
+            isSelected
+              ? `bg-teal text-white shadow-md transform -translate-y-1 border-transparent ${card.color || ''}`
+              : 'bg-white text-slate-800 hover:shadow-sm hover:border-teal border-slate-200',
+          );
+
+          const IconComponent = card.icon;
+          const iconClasses = cn('size-12', isSelected ? 'text-white' : `text-teal ${card.color ? card.color : ''}`);
+
+          return (
+            <div
+              role="tab"
+              tabIndex={0}
+              key={card.id}
+              data-card-id={card.id}
+              className={cardClasses}
+              aria-selected={isSelected}
+              onClick={createCardClickHandler(card.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  createCardClickHandler(card.id)();
+                }
+              }}
+            >
+              <div className="flex flex-col h-full">
+                <div className="flex mr-4 mb-4">
+                  <IconComponent className={iconClasses} aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-xl mb-1">{card.title}</h3>
+                  <p className={cn('text-sm', isSelected ? 'text-white' : 'text-slate-500')}>{card.description}</p>
                 </div>
               </div>
-              <div>
-                <h3 className="font-medium text-lg mb-1">{card.title}</h3>
-                <p className={`text-sm ${isSelected ? 'text-blue-100' : 'text-slate-500'}`}>{card.description}</p>
-              </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
+          );
+        })}
+      </div>
+    );
+  },
+);
+
+// Component display name for development and debugging
+MainCardsList.displayName = 'MainCardsList';

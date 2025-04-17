@@ -1,5 +1,6 @@
-import { ApplicationCardItem, ApplicationCategory, MainApplicationCategory } from '@/entities/create-application';
+import { FileInput, FileOutput, FilePlus } from 'lucide-react';
 import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
+import { ApplicationCardItem, ApplicationCategory, MainApplicationCategory } from '@/entities/create-application';
 
 export const APPLICATION_CATEGORIES = [
   {
@@ -34,19 +35,19 @@ export const MAIN_APPLICATION_BY_CATEGORY = {
       id: MainApplicationCategory.REGISTER,
       title: 'Хавфли объект ва қурилмаларни рўйхатга олиш',
       description: 'Хавфли объектларни давлат рўйхатига киритиш учун ариза',
-      icon: 'documentAdd',
+      icon: FileInput,
     },
     {
       id: MainApplicationCategory.UNREGISTER,
       title: 'Хавфли объект ва қурилмаларни рўйхатдан чиқариш',
       description: 'Объектларни рўйхатдан чиқариш учун ариза',
-      icon: 'documentRemove',
+      icon: FileOutput,
     },
     {
       id: MainApplicationCategory.REREGISTER,
       title: 'Хавфли объект ва қурилмаларни қайта рўйхатдан ўтказиш',
       description: 'Объектларни қайта рўйхатдан ўтказиш учун ариза',
-      icon: 'documentRefresh',
+      icon: FilePlus,
     },
   ],
   [ApplicationCategory.INM]: [],
@@ -57,6 +58,7 @@ export const MAIN_APPLICATION_BY_CATEGORY = {
 };
 
 export const APPLICATIONS_DATA: ApplicationCardItem[] = [
+  // Xavfli obyektlar va qurilmalar => Ro'yxatga olish
   {
     id: 10,
     title: 'Кранни рўйхатга олиш',
@@ -193,4 +195,5 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     parentId: MainApplicationCategory.REGISTER,
     icon: 'cableway',
   },
+  // Xavfli obyektlar va qurilmalar => Ro'yxatdan chiqarish
 ];

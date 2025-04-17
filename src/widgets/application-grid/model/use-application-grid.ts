@@ -9,7 +9,7 @@ import {
 
 export function useApplicationGrid() {
   const { filters, setFilters } = useFilters({
-    'selected-main-card': filterParsers.string(''),
+    'selected-main-card': filterParsers.string(MainApplicationCategory.REGISTER),
     'active-application-tab': filterParsers.string(ApplicationCategory.XICHO),
   });
 
@@ -34,11 +34,10 @@ export function useApplicationGrid() {
   );
 
   const handleMainCardSelect = useCallback(
-    (cardId: string) => {
+    (cardId: string) =>
       setFilters({
         'selected-main-card': filters['selected-main-card'] === cardId ? null : cardId,
-      });
-    },
+      }),
     [filters, setFilters],
   );
 
@@ -52,25 +51,20 @@ export function useApplicationGrid() {
 
     // If there are main cards for this category
     if (MAIN_APPLICATION_BY_CATEGORY[activeTab]?.length > 0) {
-      // If a main card is selected, show its subcards
+      // If a main card is selected, show its sub applications
       if (selectedMainCard) {
         return APPLICATIONS_DATA.filter((card) => card.category === activeTab && card.parentId === selectedMainCard);
       }
-      return []; // No main card selected, show no subcards
+      return []; // No main card selected, show no applications
     }
 
-    // If no main cards for this category, show all subcards for the category with no parent
+    // If no main cards for this category, show all applications for the category with no parent
     return APPLICATIONS_DATA.filter((card) => card.category === activeTab && !card.parentId);
   }, [activeTab, selectedMainCard]);
-
-  const filteredCards = useMemo(() => {
-    return activeTab ? APPLICATIONS_DATA.filter((app) => app.category === activeTab) : APPLICATIONS_DATA;
-  }, [activeTab]);
 
   return {
     mainCards,
     activeTab,
-    filteredCards,
     handleChangeTab,
     selectedMainCard,
     displayedSubCards,
