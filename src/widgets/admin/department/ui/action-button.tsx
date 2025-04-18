@@ -5,12 +5,7 @@ import { Button } from '@/shared/components/ui/button';
 import { DepartmentActionButtonProps, DepartmentActiveTab } from '../types';
 
 export const DepartmentActionButton = memo(
-  ({
-    title,
-    activeTab,
-    onAddApparatus,
-    onAddDepartment,
-  }: DepartmentActionButtonProps) => {
+  ({ title, activeTab, onAddApparatus, onAddDepartment }: DepartmentActionButtonProps) => {
     const { t } = useTranslation('common');
     return (
       <div className="flex justify-between">

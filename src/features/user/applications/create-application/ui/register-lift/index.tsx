@@ -14,25 +14,9 @@ import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
 import { CardForm } from '@/entities/user/applications/create-application/ui/application-form-card';
 import { CreateRegisterLiftDTO } from '@/entities/user/applications/create-application/model/application.dto';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/components/ui/select';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/shared/components/ui/popover';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 import { LIFT_TYPES } from '@/entities/user/applications/create-application/data';
 import { useCreateRegisterPressureVesselMutation } from '../../api/register-pressure-vessel-chemical.api';
 
@@ -82,11 +66,7 @@ export default ({ form }: Props) => {
               <FormItem>
                 <FormLabel>Қурилманинг завод рақами</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-full 3xl:w-sm"
-                    placeholder="Қурилманинг завод рақами"
-                    {...field}
-                  />
+                  <Input className="w-full 3xl:w-sm" placeholder="Қурилманинг завод рақами" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -99,11 +79,7 @@ export default ({ form }: Props) => {
               <FormItem>
                 <FormLabel>Ишлаб чиқарган завод номи</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-full 3xl:w-sm"
-                    placeholder="Ишлаб чиқарган завод номи"
-                    {...field}
-                  />
+                  <Input className="w-full 3xl:w-sm" placeholder="Ишлаб чиқарган завод номи" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -116,11 +92,7 @@ export default ({ form }: Props) => {
               <FormItem>
                 <FormLabel>Модель, марка</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-full 3xl:w-sm"
-                    placeholder="Модель, марка"
-                    {...field}
-                  />
+                  <Input className="w-full 3xl:w-sm" placeholder="Модель, марка" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -142,11 +114,7 @@ export default ({ form }: Props) => {
                           !field.value && 'text-neutral-350',
                         )}
                       >
-                        {field.value ? (
-                          format(field.value, DATE_FORMAT)
-                        ) : (
-                          <span>Ишлаб чиқарилган сана</span>
-                        )}
+                        {field.value ? format(field.value, DATE_FORMAT) : <span>Ишлаб чиқарилган сана</span>}
                         <CalendarIcon className="ml-auto size-4 opacity-50" />
                       </Button>
                     </FormControl>
@@ -172,13 +140,7 @@ export default ({ form }: Props) => {
               <FormItem>
                 <FormLabel>Юк кўтара олиш</FormLabel>
                 <FormControl>
-                  <Input
-                    min={1}
-                    type="number"
-                    className="w-full 3xl:w-sm"
-                    placeholder="Юк кўтара олиш"
-                    {...field}
-                  />
+                  <Input min={1} type="number" className="w-full 3xl:w-sm" placeholder="Юк кўтара олиш" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -191,13 +153,7 @@ export default ({ form }: Props) => {
               <FormItem>
                 <FormLabel>Тўхташлар сони</FormLabel>
                 <FormControl>
-                  <Input
-                    min={1}
-                    type="number"
-                    className="w-full 3xl:w-sm"
-                    placeholder="Тўхташлар сони"
-                    {...field}
-                  />
+                  <Input min={1} type="number" className="w-full 3xl:w-sm" placeholder="Тўхташлар сони" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -250,11 +206,7 @@ export default ({ form }: Props) => {
               <FormItem>
                 <FormLabel>Қурилма жойлашган манзил</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-full 3xl:w-sm"
-                    placeholder="Қурилма жойлашган манзил"
-                    {...field}
-                  />
+                  <Input className="w-full 3xl:w-sm" placeholder="Қурилма жойлашган манзил" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -284,12 +236,7 @@ export default ({ form }: Props) => {
               <FormItem>
                 <FormLabel>Лифтнинг биркаси билан сурати</FormLabel>
                 <FormControl>
-                  <InputFile
-                    className="w-full 3xl:w-sm"
-                    form={form}
-                    accept={[FileTypes.PDF]}
-                    {...field}
-                  />
+                  <InputFile className="w-full 3xl:w-sm" form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
                 <FormMessage className="text-right" />
               </FormItem>
@@ -303,12 +250,7 @@ export default ({ form }: Props) => {
             <FormItem>
               <FormLabel>Ариза баёни</FormLabel>
               <FormControl>
-                <Textarea
-                  rows={6}
-                  className="3xl:w-4/6"
-                  placeholder="Ариза баёни"
-                  {...field}
-                />
+                <Textarea rows={6} className="3xl:w-4/6" placeholder="Ариза баёни" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -322,9 +264,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Сотиб олиш-сотиш шартномаси файли
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Сотиб олиш-сотиш шартномаси файли</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -339,9 +279,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Қурилма сертификати файли
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Қурилма сертификати файли</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -373,9 +311,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Экспертиза лойиҳаси файли
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Экспертиза лойиҳаси файли</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -390,9 +326,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Монтаж гувоҳномаси файли
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Монтаж гувоҳномаси файли</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -407,9 +341,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Ариза файли
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ариза файли</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>

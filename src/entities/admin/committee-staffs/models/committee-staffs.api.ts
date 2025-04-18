@@ -10,24 +10,19 @@ import {
 
 export const committeeStaffAPI = {
   list: async (params: FilterCommitteeStaffDTO) => {
-    const { data } = await apiClient.getWithPagination<CommitteeStaffResponse>(
-      API_ENDPOINTS.COMMITTEE_USERS,
-      params,
-    );
+    const { data } = await apiClient.getWithPagination<CommitteeStaffResponse>(API_ENDPOINTS.COMMITTEE_USERS, params);
     return data || [];
   },
 
   byId: async (id: string) => {
-    const { data } = await apiClient.get<ApiResponse<CommitteeStaffResponse>>(
-      `${API_ENDPOINTS.USERS}/${id}`,
-    );
+    const { data } = await apiClient.get<ApiResponse<CommitteeStaffResponse>>(`${API_ENDPOINTS.USERS}/${id}`);
     return data.data;
   },
   create: async (district: CreateCommitteeStaffDTO) => {
-    const response = await apiClient.post<
-      CommitteeStaffResponse,
-      CreateCommitteeStaffDTO
-    >(API_ENDPOINTS.COMMITTEE_USERS, district);
+    const response = await apiClient.post<CommitteeStaffResponse, CreateCommitteeStaffDTO>(
+      API_ENDPOINTS.COMMITTEE_USERS,
+      district,
+    );
     if (!response.success && response.errors) {
       toast.error(Object.values(response.errors).join(', '), {
         richColors: true,

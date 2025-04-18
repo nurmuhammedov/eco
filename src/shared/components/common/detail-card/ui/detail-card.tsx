@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/shared/components/ui/card.tsx';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card.tsx';
 import Icon from '@/shared/components/common/icon';
 import type { DetailCardProps } from '../model/detail-card-types';
 

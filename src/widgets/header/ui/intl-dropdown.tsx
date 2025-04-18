@@ -21,13 +21,8 @@ const LanguageDropdown = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent side="bottom" align="end" className="w-24">
         {SYSTEM_LANGUAGES.map((langItem) => (
-          <DropdownMenuItem
-            key={langItem.value}
-            onClick={() => setLanguage(langItem.value)}
-          >
-            <span className="inline-block rounded-full w-5 h-5">
-              {langItem.flag}
-            </span>
+          <DropdownMenuItem key={langItem.value} onClick={() => setLanguage(langItem.value)}>
+            <span className="inline-block rounded-full w-5 h-5">{langItem.flag}</span>
             {langItem.label}
           </DropdownMenuItem>
         ))}

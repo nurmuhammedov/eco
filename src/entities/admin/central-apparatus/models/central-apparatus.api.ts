@@ -10,25 +10,19 @@ import {
 
 export const centralApparatusAPI = {
   list: async (params: FilterCentralApparatusDTO) => {
-    const { data } =
-      await apiClient.getWithPagination<CentralApparatusResponse>(
-        API_ENDPOINTS.DEPARTMENTS,
-        params,
-      );
+    const { data } = await apiClient.getWithPagination<CentralApparatusResponse>(API_ENDPOINTS.DEPARTMENTS, params);
     return data || [];
   },
 
   byId: async (id: number) => {
-    const { data } = await apiClient.get<ApiResponse<CentralApparatusResponse>>(
-      `${API_ENDPOINTS.DEPARTMENTS}/${id}`,
-    );
+    const { data } = await apiClient.get<ApiResponse<CentralApparatusResponse>>(`${API_ENDPOINTS.DEPARTMENTS}/${id}`);
     return data.data;
   },
   create: async (district: CreateCentralApparatusDTO) => {
-    const response = await apiClient.post<
-      CentralApparatusResponse,
-      CreateCentralApparatusDTO
-    >(API_ENDPOINTS.DEPARTMENTS, district);
+    const response = await apiClient.post<CentralApparatusResponse, CreateCentralApparatusDTO>(
+      API_ENDPOINTS.DEPARTMENTS,
+      district,
+    );
     if (!response.success && response.errors) {
       toast.error(Object.values(response.errors).join(', '), {
         richColors: true,
@@ -50,9 +44,7 @@ export const centralApparatusAPI = {
     return response;
   },
   delete: async (id: number) => {
-    const response = await apiClient.delete(
-      `${API_ENDPOINTS.DEPARTMENTS}/${id}`,
-    );
+    const response = await apiClient.delete(`${API_ENDPOINTS.DEPARTMENTS}/${id}`);
     if (!response.success) {
       throw new Error(response.message);
     }

@@ -13,10 +13,7 @@ export const DynamicApplicationForm = <TFormValues extends FieldValues>({
   form,
   applicationType,
 }: Props<TFormValues>) => {
-  const Component = useMemo(
-    () => loadComponent(applicationType),
-    [applicationType],
-  );
+  const Component = useMemo(() => loadComponent(applicationType), [applicationType]);
 
   return (
     <Suspense fallback={<SkeletonFormLoader />}>

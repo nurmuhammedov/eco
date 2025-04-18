@@ -7,9 +7,7 @@ import {
   FilterCentralApparatusDTO,
 } from '@/entities/admin/central-apparatus';
 
-export const useCentralApparatusListQuery = (
-  filters: FilterCentralApparatusDTO,
-) => {
+export const useCentralApparatusListQuery = (filters: FilterCentralApparatusDTO) => {
   return useQuery({
     staleTime: getTime(1, 'week'),
     queryKey: centralApparatusKeys.list('central-apparatus', filters),

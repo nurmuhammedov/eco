@@ -49,10 +49,7 @@ const MultiSelect = React.forwardRef<
   const [open, setOpen] = React.useState(false);
 
   // Get selected items for display
-  const selectedOptions = React.useMemo(
-    () => options?.filter((opt) => value.includes(opt.id)),
-    [options, value],
-  );
+  const selectedOptions = React.useMemo(() => options?.filter((opt) => value.includes(opt.id)), [options, value]);
 
   // Handle selection of an item
   const handleSelect = React.useCallback(
@@ -127,12 +124,8 @@ const MultiSelect = React.forwardRef<
       return (
         <div className="flex flex-wrap gap-1 overflow-hidden">
           {selectedOptions?.map((option) => (
-            <div
-              key={option.id.toString()}
-              className="flex items-center gap-1 rounded-sm bg-muted px-1 py-0.5 text-xs"
-            >
-              {option.icon &&
-                React.createElement(option.icon, { className: 'size-3 mr-1' })}
+            <div key={option.id.toString()} className="flex items-center gap-1 rounded-sm bg-muted px-1 py-0.5 text-xs">
+              {option.icon && React.createElement(option.icon, { className: 'size-3 mr-1' })}
               <span className="truncate">{option.name}</span>
               <button
                 type="button"
@@ -148,11 +141,7 @@ const MultiSelect = React.forwardRef<
       );
     }
 
-    return (
-      <span>
-        {t('selected_items_count', { count: selectedOptions?.length })}
-      </span>
-    );
+    return <span>{t('selected_items_count', { count: selectedOptions?.length })}</span>;
   }, [selectedOptions, placeholder, maxDisplayItems, handleRemoveItem]);
 
   return (
@@ -175,9 +164,7 @@ const MultiSelect = React.forwardRef<
         )}
         {...restProps}
       >
-        <div className="flex flex-1 flex-wrap gap-1 overflow-hidden">
-          {displayText}
-        </div>
+        <div className="flex flex-1 flex-wrap gap-1 overflow-hidden">{displayText}</div>
         <div className="flex items-center self-stretch pl-1">
           {!!value.length && (
             <button
@@ -218,17 +205,12 @@ const MultiSelect = React.forwardRef<
                   {value.includes(option.id) && <Check className="size-3" />}
                 </div>
                 <div className="flex items-center gap-2 text-sm">
-                  {option.icon &&
-                    React.createElement(option.icon, { className: 'size-4' })}
+                  {option.icon && React.createElement(option.icon, { className: 'size-4' })}
                   <span>{option.name}</span>
                 </div>
               </div>
             ))}
-            {options?.length === 0 && (
-              <div className="py-6 text-center text-sm">
-                No options available
-              </div>
-            )}
+            {options?.length === 0 && <div className="py-6 text-center text-sm">No options available</div>}
           </SelectPrimitive.Viewport>
           <SelectScrollDownButton />
         </SelectPrimitive.Content>
@@ -245,10 +227,7 @@ const SelectScrollUpButton = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.ScrollUpButton
     ref={ref}
-    className={cn(
-      'flex cursor-default items-center justify-center py-1',
-      className,
-    )}
+    className={cn('flex cursor-default items-center justify-center py-1', className)}
     {...props}
   >
     <ChevronUp className="size-4" />
@@ -263,10 +242,7 @@ const SelectScrollDownButton = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.ScrollDownButton
     ref={ref}
-    className={cn(
-      'flex cursor-default items-center justify-center py-1',
-      className,
-    )}
+    className={cn('flex cursor-default items-center justify-center py-1', className)}
     {...props}
   >
     <ChevronDown className="size-4" />

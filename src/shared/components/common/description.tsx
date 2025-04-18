@@ -15,52 +15,40 @@ export const DescriptionItem = React.forwardRef<
     formatter?: (value: any) => React.ReactNode;
     className?: string;
   }
->(
-  (
-    { label, children, span = 1, valueType = 'text', formatter, className },
-    ref,
-  ) => {
-    // Format the value based on type
-    const formattedValue = React.useMemo(() => {
-      if (formatter) return formatter(children);
-      if (children === undefined || children === null) return '-';
+>(({ label, children, span = 1, valueType = 'text', formatter, className }, ref) => {
+  // Format the value based on type
+  const formattedValue = React.useMemo(() => {
+    if (formatter) return formatter(children);
+    if (children === undefined || children === null) return '-';
 
-      switch (valueType) {
-        case 'date':
-          return new Date(children as string).toLocaleString();
-        case 'status':
-          return (
-            <Badge variant={children === 'active' ? 'default' : 'secondary'}>
-              {children}
-            </Badge>
-          );
-        case 'tags':
-          if (!Array.isArray(children)) return children;
-          return (
-            <div className="flex flex-wrap gap-1">
-              {children.map((tag, i) => (
-                <Badge key={i} variant="outline">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          );
-        default:
-          return children;
-      }
-    }, [children, formatter, valueType]);
+    switch (valueType) {
+      case 'date':
+        return new Date(children as string).toLocaleString();
+      case 'status':
+        return <Badge variant={children === 'active' ? 'default' : 'secondary'}>{children}</Badge>;
+      case 'tags':
+        if (!Array.isArray(children)) return children;
+        return (
+          <div className="flex flex-wrap gap-1">
+            {children.map((tag, i) => (
+              <Badge key={i} variant="outline">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        );
+      default:
+        return children;
+    }
+  }, [children, formatter, valueType]);
 
-    return (
-      <div
-        ref={ref}
-        className={cn(span > 1 ? `col-span-${span}` : 'col-span-1', className)}
-      >
-        <div className="text-sm text-gray-500">{label}</div>
-        <div className="mt-1 font-medium">{formattedValue}</div>
-      </div>
-    );
-  },
-);
+  return (
+    <div ref={ref} className={cn(span > 1 ? `col-span-${span}` : 'col-span-1', className)}>
+      <div className="text-sm text-gray-500">{label}</div>
+      <div className="mt-1 font-medium">{formattedValue}</div>
+    </div>
+  );
+});
 DescriptionItem.displayName = 'DescriptionItem';
 
 // Main Description component
@@ -93,13 +81,7 @@ export function Description({
   // Render loading skeleton if needed
   if (loading) {
     return (
-      <div
-        className={cn(
-          'w-full space-y-4',
-          bordered && 'border rounded-md',
-          className,
-        )}
-      >
+      <div className={cn('w-full space-y-4', bordered && 'border rounded-md', className)}>
         {title && (
           <Fragment>
             <div className="flex justify-between items-center mb-3">

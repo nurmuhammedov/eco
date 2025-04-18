@@ -20,42 +20,30 @@ export const useUpdateCentralApparatus = () => {
 
       // Cancel in-flight queries
       await queryClient.cancelQueries({
-        queryKey: centralApparatusKeys.detail(
-          'central-apparatus',
-          updateData.id,
-        ),
+        queryKey: centralApparatusKeys.detail('central-apparatus', updateData.id),
       });
       await queryClient.cancelQueries({
         queryKey: centralApparatusKeys.list('central-apparatus'),
       });
 
       // Capture current states for rollback
-      const previousDetail =
-        queryClient.getQueryData<UpdateCentralApparatusDTO>(
-          centralApparatusKeys.detail('central-apparatus', updateData.id),
-        );
+      const previousDetail = queryClient.getQueryData<UpdateCentralApparatusDTO>(
+        centralApparatusKeys.detail('central-apparatus', updateData.id),
+      );
 
-      const previousList = queryClient.getQueryData<
-        ResponseData<UpdateCentralApparatusDTO>
-      >(centralApparatusKeys.list('central-apparatus'));
+      const previousList = queryClient.getQueryData<ResponseData<UpdateCentralApparatusDTO>>(
+        centralApparatusKeys.list('central-apparatus'),
+      );
 
       // Update central-apparatus detail
-      queryClient.setQueryData(
-        centralApparatusKeys.detail('central-apparatus', updateData.id),
-        updateData,
-      );
+      queryClient.setQueryData(centralApparatusKeys.detail('central-apparatus', updateData.id), updateData);
 
       // Update central-apparatus in lists
       if (previousList) {
-        queryClient.setQueryData(
-          centralApparatusKeys.list('central-apparatus'),
-          {
-            ...previousList,
-            content: previousList.content.map((district) =>
-              district.id === updateData.id ? updateData : district,
-            ),
-          },
-        );
+        queryClient.setQueryData(centralApparatusKeys.list('central-apparatus'), {
+          ...previousList,
+          content: previousList.content.map((district) => (district.id === updateData.id ? updateData : district)),
+        });
       }
 
       return { previousDetail, previousList };
@@ -64,10 +52,7 @@ export const useUpdateCentralApparatus = () => {
     onSuccess: (updatedData) => {
       // Set the updated central-apparatus in cache
       if (updatedData.data.id) {
-        queryClient.setQueryData(
-          centralApparatusKeys.detail('central-apparatus', updatedData.data.id),
-          updatedData,
-        );
+        queryClient.setQueryData(centralApparatusKeys.detail('central-apparatus', updatedData.data.id), updatedData);
       }
 
       // Invalidate lists to ensure they're up-to-date
@@ -87,10 +72,7 @@ export const useUpdateCentralApparatus = () => {
 
       // Revert central-apparatus in lists
       if (context?.previousList) {
-        queryClient.setQueryData(
-          centralApparatusKeys.list('central-apparatus'),
-          context.previousList,
-        );
+        queryClient.setQueryData(centralApparatusKeys.list('central-apparatus'), context.previousList);
       }
     },
   });

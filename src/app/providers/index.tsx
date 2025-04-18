@@ -6,7 +6,5 @@ import { withLanguage } from './with-language';
 import { withErrorBoundary } from './with-error-boundary';
 
 export const withProviders = (component: FC): FC => {
-  return withErrorBoundary(
-    withStore(withLanguage(withQuery(withRouter(component)))),
-  );
+  return withErrorBoundary(withStore(withLanguage(withQuery(withRouter(component)))));
 };

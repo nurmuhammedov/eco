@@ -12,8 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu.tsx';
 
-interface DataTableColumnHeaderProps<TData, TValue>
-  extends React.HTMLAttributes<HTMLDivElement> {
+interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
   title: string;
 }
@@ -24,19 +23,14 @@ export function DataTableColumnHeader<TData, TValue>({
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
-    return (
-      <div className={cn(className, 'text-black font-semibold')}>{title}</div>
-    );
+    return <div className={cn(className, 'text-black font-semibold')}>{title}</div>;
   }
 
   return (
     <div className={cn('flex items-center space-x-2', className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="-ml-3 h-8 data-[state=open]:bg-accent text-black font-semibold"
-          >
+          <Button variant="ghost" className="-ml-3 h-8 data-[state=open]:bg-accent text-black font-semibold">
             <span>{title}</span>
             {column.getIsSorted() === 'desc' ? (
               <ArrowDown />

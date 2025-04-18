@@ -1,8 +1,4 @@
-import {
-  CreateRegionDTO,
-  regionKeys,
-  RegionResponse,
-} from '@/entities/admin/region';
+import { CreateRegionDTO, regionKeys, RegionResponse } from '@/entities/admin/region';
 import type { ResponseData } from '@/shared/types/api';
 import { regionAPI } from '@/entities/admin/region/models/region.api.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -20,9 +16,7 @@ export const useCreateRegion = () => {
       });
 
       // Capture current state for rollback
-      const previousRegionsList = queryClient.getQueryData<
-        ResponseData<RegionResponse>
-      >(regionKeys.list('region'));
+      const previousRegionsList = queryClient.getQueryData<ResponseData<RegionResponse>>(regionKeys.list('region'));
 
       if (previousRegionsList) {
         // Create a temporary region with fake ID
@@ -48,19 +42,13 @@ export const useCreateRegion = () => {
       });
 
       // Add the newly created region to cache
-      queryClient.setQueryData(
-        regionKeys.detail('region', createdRegion.data.id!),
-        createdRegion,
-      );
+      queryClient.setQueryData(regionKeys.detail('region', createdRegion.data.id!), createdRegion);
     },
 
     onError: (_err, _newDistrict, context) => {
       // Revert optimistic updates on error
       if (context?.previousRegionsList) {
-        queryClient.setQueryData(
-          regionKeys.list('region'),
-          context.previousRegionsList,
-        );
+        queryClient.setQueryData(regionKeys.list('region'), context.previousRegionsList);
       }
     },
   });

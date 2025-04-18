@@ -6,11 +6,7 @@ import Icon from '@/shared/components/common/icon';
 import { Link, useLocation } from 'react-router-dom';
 import { NavigationItem } from '@/widgets/sidebar/models/types';
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/shared/components/ui/collapsible';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/shared/components/ui/collapsible';
 import {
   SidebarMenu,
   SidebarMenuAction,
@@ -31,18 +27,9 @@ export function NavMain({ item }: { item: NavigationItem }) {
         <Collapsible key={item.title} asChild defaultOpen={isActive}>
           <SidebarMenuItem>
             <CollapsibleTrigger asChild>
-              <SidebarMenuButton
-                asChild
-                size="lg"
-                isActive={isActive}
-                tooltip={t(item.title)}
-              >
+              <SidebarMenuButton asChild size="lg" isActive={isActive} tooltip={t(item.title)}>
                 <Link to={item.url}>
-                  {typeof item.icon === 'string' ? (
-                    <Icon name={item.icon} />
-                  ) : (
-                    item.icon
-                  )}
+                  {typeof item.icon === 'string' ? <Icon name={item.icon} /> : item.icon}
                   <span>{t(item.title)}</span>
                 </Link>
               </SidebarMenuButton>
@@ -63,11 +50,7 @@ export function NavMain({ item }: { item: NavigationItem }) {
                   <SidebarMenuSub>
                     {item.items?.map((subItem) => (
                       <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton
-                          asChild
-                          size="lg"
-                          isActive={pathname === subItem.url}
-                        >
+                        <SidebarMenuSubButton asChild size="lg" isActive={pathname === subItem.url}>
                           <Link to={subItem.url}>
                             <span>{t(subItem.title)}</span>
                           </Link>

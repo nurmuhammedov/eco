@@ -9,8 +9,7 @@ export const store = configureStore({
     auth: authSlice,
   },
   devTools: IS_DEV,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

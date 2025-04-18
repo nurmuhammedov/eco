@@ -31,11 +31,9 @@ export function useDistrictForm() {
 
   const { data: regions } = useRegionSelectQuery();
 
-  const { mutateAsync: createRegion, isPending: isCreating } =
-    useCreateDistrict();
+  const { mutateAsync: createRegion, isPending: isCreating } = useCreateDistrict();
 
-  const { mutateAsync: updateRegion, isPending: isUpdating } =
-    useUpdateDistrict();
+  const { mutateAsync: updateRegion, isPending: isUpdating } = useUpdateDistrict();
 
   const { data: districtData, isLoading } = useDistrictQuery(districtId);
 

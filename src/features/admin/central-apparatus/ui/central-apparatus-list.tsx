@@ -9,18 +9,13 @@ import {
   useDeleteCentralApparatus,
 } from '@/entities/admin/central-apparatus';
 import { useCentralApparatusDrawer } from '@/shared/hooks/entity-hooks';
-import {
-  DataTable,
-  DataTableRowActions,
-} from '@/shared/components/common/data-table';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 
 export function CentralApparatusList() {
   const { filters } = useFilters();
   const { t } = useTranslation('common');
   const { onOpen } = useCentralApparatusDrawer();
-  const { data, isLoading } = useCentralApparatusListQuery(
-    filters as FilterCentralApparatusDTO,
-  );
+  const { data, isLoading } = useCentralApparatusListQuery(filters as FilterCentralApparatusDTO);
   const deleteData = useDeleteCentralApparatus();
 
   const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });

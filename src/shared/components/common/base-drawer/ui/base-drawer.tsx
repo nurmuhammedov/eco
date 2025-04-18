@@ -5,13 +5,7 @@ import { DrawerFooterActions } from './footer-action';
 import { Button } from '@/shared/components/ui/button';
 import { DialogDescription } from '@/shared/components/ui/dialog';
 import React, { Fragment, memo, useCallback, useMemo } from 'react';
-import {
-  Drawer,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/shared/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/shared/components/ui/drawer';
 import { useAppSelector } from '@/shared/hooks/use-store.ts';
 import { UIModeEnum } from '@/shared/types';
 
@@ -44,10 +38,7 @@ export const BaseDrawer = memo(function BaseDrawer({
     [onSubmit],
   );
 
-  const contentClassName = useMemo(
-    () => cn('sm:!max-w-sm 3xl:!max-w-md', className),
-    [className],
-  );
+  const contentClassName = useMemo(() => cn('sm:!max-w-sm 3xl:!max-w-md', className), [className]);
 
   const drawerHeader = useMemo(
     () => (
@@ -84,20 +75,9 @@ export const BaseDrawer = memo(function BaseDrawer({
         )}
       </DrawerFooter>
     );
-  }, [
-    footer,
-    loading,
-    handleClose,
-    disabled,
-    handleSubmit,
-    showCancelButton,
-    showSubmitButton,
-  ]);
+  }, [footer, loading, handleClose, disabled, handleSubmit, showCancelButton, showSubmitButton]);
 
-  const contentElement = useMemo(
-    () => <div className="p-4 flex-1 overflow-auto">{children}</div>,
-    [children],
-  );
+  const contentElement = useMemo(() => <div className="p-4 flex-1 overflow-auto">{children}</div>, [children]);
 
   const containerElement = useMemo(() => {
     const commonProps = {
@@ -111,11 +91,7 @@ export const BaseDrawer = memo(function BaseDrawer({
       className: 'flex flex-col h-full',
     };
 
-    return asForm ? (
-      <form autoComplete="off" onSubmit={handleSubmit} {...commonProps} />
-    ) : (
-      <div {...commonProps} />
-    );
+    return asForm ? <form autoComplete="off" onSubmit={handleSubmit} {...commonProps} /> : <div {...commonProps} />;
   }, [asForm, drawerHeader, contentElement, footerComponent, handleSubmit]);
 
   if (!open) return null;

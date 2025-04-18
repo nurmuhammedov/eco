@@ -31,11 +31,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
         instanceRef={(ref) => (mapRef.current = ref)}
       >
         {coords.map((coordinate, index) => (
-          <Placemark
-            key={index}
-            geometry={coordinate}
-            options={{ preset: 'islands#blueDotIcon' }}
-          />
+          <Placemark key={index} geometry={coordinate} options={{ preset: 'islands#blueDotIcon' }} />
         ))}
       </Map>
     </YMaps>

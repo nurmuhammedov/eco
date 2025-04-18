@@ -6,9 +6,7 @@ export const userRoles = Object.entries(UserRoles).map(([label, value]) => ({
   name: label,
 }));
 
-export const userDirections = Object.entries(PERMISSIONS).map(
-  ([label, value]) => ({
-    value,
-    label,
-  }),
-);
+export const userDirections = Object.entries(PERMISSIONS).map(([label, value]) => ({
+  value,
+  label,
+}));

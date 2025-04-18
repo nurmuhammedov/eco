@@ -40,10 +40,7 @@ export function useTerritorialStaffForm() {
 
   const userPermissionOptions = useTranslatedObject(Direction, 'permission');
 
-  const departmentOptions = useMemo(
-    () => getSelectOptions(officeSelect || []),
-    [officeSelect],
-  );
+  const departmentOptions = useMemo(() => getSelectOptions(officeSelect || []), [officeSelect]);
 
   const territorialStaffId = useMemo(() => (data?.id ? data?.id : ''), [data]);
 
@@ -53,14 +50,11 @@ export function useTerritorialStaffForm() {
     mode: 'onChange',
   });
 
-  const { mutateAsync: createTerritorialStaff, isPending: isCreating } =
-    useCreateTerritorialStaff();
+  const { mutateAsync: createTerritorialStaff, isPending: isCreating } = useCreateTerritorialStaff();
 
-  const { mutateAsync: updateTerritorialStaff, isPending: isUpdating } =
-    useUpdateTerritorialStaff();
+  const { mutateAsync: updateTerritorialStaff, isPending: isUpdating } = useUpdateTerritorialStaff();
 
-  const { data: fetchByIdData, isLoading } =
-    useTerritorialStaffQuery(territorialStaffId);
+  const { data: fetchByIdData, isLoading } = useTerritorialStaffQuery(territorialStaffId);
 
   useEffect(() => {
     if (fetchByIdData && !isCreate) {
@@ -107,14 +101,7 @@ export function useTerritorialStaffForm() {
         return false;
       }
     },
-    [
-      isCreate,
-      territorialStaffId,
-      createTerritorialStaff,
-      updateTerritorialStaff,
-      handleClose,
-      fetchByIdData,
-    ],
+    [isCreate, territorialStaffId, createTerritorialStaff, updateTerritorialStaff, handleClose, fetchByIdData],
   );
 
   const isPending = isCreating || isUpdating;

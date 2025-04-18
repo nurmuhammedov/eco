@@ -1,11 +1,6 @@
 export function formatPhoneNumber(
   phoneNumber: string | undefined | null,
-  formatType:
-    | 'default'
-    | 'readable'
-    | 'groups'
-    | 'pretty'
-    | 'dashed' = 'groups',
+  formatType: 'default' | 'readable' | 'groups' | 'pretty' | 'dashed' = 'groups',
 ): string {
   // Agar telefon raqami mavjud bo'lmasa, bo'sh string qaytarish
   if (!phoneNumber) {

@@ -15,8 +15,7 @@ export const UI_COMPONENTS = {
   HAZARDOUS_FACILITY_TYPE_DRAWER: 'hazardous-facility-type', // Xavfli ishlab chiqarish obyektlari turlari
 } as const;
 
-export type UIComponentName =
-  (typeof UI_COMPONENTS)[keyof typeof UI_COMPONENTS];
+export type UIComponentName = (typeof UI_COMPONENTS)[keyof typeof UI_COMPONENTS];
 
 export interface UIState<T = unknown> {
   isOpen: boolean;

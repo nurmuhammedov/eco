@@ -27,32 +27,12 @@ export const UZBFlagIcon = ({ width = 20, height = 20 }: SVGIconsProps) => (
           <g id="uz-c">
             <g id="uz-b">
               <path id="uz-a" d="M0-6-1.9-.3 1 .7" />
-              <use
-                xlinkHref="#uz-a"
-                width="100%"
-                height="100%"
-                transform="scale(-1 1)"
-              />
+              <use xlinkHref="#uz-a" width="100%" height="100%" transform="scale(-1 1)" />
             </g>
-            <use
-              xlinkHref="#uz-b"
-              width="100%"
-              height="100%"
-              transform="rotate(72)"
-            />
+            <use xlinkHref="#uz-b" width="100%" height="100%" transform="rotate(72)" />
           </g>
-          <use
-            xlinkHref="#uz-b"
-            width="100%"
-            height="100%"
-            transform="rotate(-72)"
-          />
-          <use
-            xlinkHref="#uz-c"
-            width="100%"
-            height="100%"
-            transform="rotate(144)"
-          />
+          <use xlinkHref="#uz-b" width="100%" height="100%" transform="rotate(-72)" />
+          <use xlinkHref="#uz-c" width="100%" height="100%" transform="rotate(144)" />
         </g>
         <use xlinkHref="#uz-d" width="100%" height="100%" y="-24" />
         <use xlinkHref="#uz-d" width="100%" height="100%" y="-48" />
@@ -66,11 +46,7 @@ export const UZBFlagIcon = ({ width = 20, height = 20 }: SVGIconsProps) => (
   </svg>
 );
 
-export const TechnocorpLogo = ({
-  width = 121,
-  height = 16,
-  className,
-}: SVGIconsProps) => (
+export const TechnocorpLogo = ({ width = 121, height = 16, className }: SVGIconsProps) => (
   <svg
     width={width}
     height={height}

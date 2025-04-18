@@ -26,14 +26,11 @@ export function useCentralApparatusForm() {
     mode: 'onChange',
   });
 
-  const { mutateAsync: createCentralApparatus, isPending: isCreating } =
-    useCreateCentralApparatus();
+  const { mutateAsync: createCentralApparatus, isPending: isCreating } = useCreateCentralApparatus();
 
-  const { mutateAsync: updateCentralApparatus, isPending: isUpdating } =
-    useUpdateCentralApparatus();
+  const { mutateAsync: updateCentralApparatus, isPending: isUpdating } = useUpdateCentralApparatus();
 
-  const { data: regionData, isLoading } =
-    useCentralApparatusQuery(centralApparatusId);
+  const { data: regionData, isLoading } = useCentralApparatusQuery(centralApparatusId);
 
   useEffect(() => {
     if (regionData && !isCreate) {
@@ -72,13 +69,7 @@ export function useCentralApparatusForm() {
         return false;
       }
     },
-    [
-      isCreate,
-      centralApparatusId,
-      createCentralApparatus,
-      updateCentralApparatus,
-      handleClose,
-    ],
+    [isCreate, centralApparatusId, createCentralApparatus, updateCentralApparatus, handleClose],
   );
 
   const isPending = isCreating || isUpdating;

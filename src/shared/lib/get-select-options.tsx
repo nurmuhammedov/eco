@@ -14,10 +14,7 @@ export function getSelectOptions<T>(list: OptionItem<T>[]): JSX.Element[] {
   return list
     .map((option) =>
       option?.id ? (
-        <SelectItem
-          value={String(option.id)}
-          key={String(option.id) || crypto.randomUUID()}
-        >
+        <SelectItem value={String(option.id)} key={String(option.id) || crypto.randomUUID()}>
           {option.name}
         </SelectItem>
       ) : null,

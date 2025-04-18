@@ -30,36 +30,28 @@ export interface DataTableRowActionsProps<TData> {
   containerClassName?: string;
 }
 
-const ActionButton = memo(
-  ({
-    icon,
-    className,
-    onClick,
-    ariaLabel,
-    isDelete = false,
-  }: ActionButtonConfig) => {
-    // For delete button, wrap with confirmation dialog
-    if (isDelete) {
-      return <DeleteConfirmationDialog onConfirm={onClick} />;
-    }
+const ActionButton = memo(({ icon, className, onClick, ariaLabel, isDelete = false }: ActionButtonConfig) => {
+  // For delete button, wrap with confirmation dialog
+  if (isDelete) {
+    return <DeleteConfirmationDialog onConfirm={onClick} />;
+  }
 
-    // For non-delete buttons, render normally
-    return (
-      <button
-        type="button"
-        aria-label={ariaLabel}
-        className={cn(
-          'p-1 flex items-center justify-center rounded transition-colors',
-          'focus:outline-none hover:bg-neutral-250',
-          className,
-        )}
-        onClick={onClick}
-      >
-        <span className="size-5 flex items-center justify-center">{icon}</span>
-      </button>
-    );
-  },
-);
+  // For non-delete buttons, render normally
+  return (
+    <button
+      type="button"
+      aria-label={ariaLabel}
+      className={cn(
+        'p-1 flex items-center justify-center rounded transition-colors',
+        'focus:outline-none hover:bg-neutral-250',
+        className,
+      )}
+      onClick={onClick}
+    >
+      <span className="size-5 flex items-center justify-center">{icon}</span>
+    </button>
+  );
+});
 
 ActionButton.displayName = 'ActionButton';
 
@@ -132,11 +124,7 @@ function DataTableRowActions<TData>({
   }
 
   return (
-    <div
-      role="group"
-      aria-label="Row actions"
-      className={cn('flex gap-1', containerClassName)}
-    >
+    <div role="group" aria-label="Row actions" className={cn('flex gap-1', containerClassName)}>
       {buttons.map((button, index) => (
         <ActionButton
           key={index}

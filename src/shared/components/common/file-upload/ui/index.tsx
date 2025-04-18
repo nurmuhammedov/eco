@@ -32,7 +32,7 @@ function InputFileComponent<T extends FieldValues>({
   form,
   className,
   maxSize = 10, // 10MB default
-  maxFiles,
+  maxFiles = 1,
   disabled = false,
   multiple = true,
   showPreview = false,

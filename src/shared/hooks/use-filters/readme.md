@@ -54,42 +54,27 @@ function ProductsPage() {
 
       <div>
         <label>Kategoriya:</label>
-        <select
-          value={currentCategory}
-          onChange={(e) => handleCategoryChange(e.target.value)}
-        >
+        <select value={currentCategory} onChange={(e) => handleCategoryChange(e.target.value)}>
           <option value="all">Barchasi</option>
           <option value="electronics">Elektronika</option>
           <option value="clothing">Kiyimlar</option>
         </select>
 
         <label>
-          <input
-            type="checkbox"
-            checked={isInStock}
-            onChange={(e) => setFilters({ inStock: e.target.checked })}
-          />
+          <input type="checkbox" checked={isInStock} onChange={(e) => setFilters({ inStock: e.target.checked })} />
           Faqat mavjudlar
         </label>
 
-        <button onClick={() => clearFilter('category')}>
-          Kategoriyani tozalash
-        </button>
+        <button onClick={() => clearFilter('category')}>Kategoriyani tozalash</button>
 
-        <button onClick={() => clearAllFilters()}>
-          Barcha filtrlarni tozalash
-        </button>
+        <button onClick={() => clearAllFilters()}>Barcha filtrlarni tozalash</button>
       </div>
 
       {/* Sahifalashtirish avtomatik ravishda ishlaydi */}
       <div>
-        <button onClick={() => setFilters({ page: (filters.page || 1) - 1 })}>
-          Oldingi
-        </button>
+        <button onClick={() => setFilters({ page: (filters.page || 1) - 1 })}>Oldingi</button>
         <span>Sahifa {filters.page}</span>
-        <button onClick={() => setFilters({ page: (filters.page || 1) + 1 })}>
-          Keyingi
-        </button>
+        <button onClick={() => setFilters({ page: (filters.page || 1) + 1 })}>Keyingi</button>
       </div>
     </div>
   );
@@ -104,14 +89,7 @@ import { useEffect } from 'react';
 
 function AdvancedFiltersPage() {
   // Kengaytirilgan konfiguratsiya bilan foydalanish
-  const {
-    filters,
-    setFilters,
-    clearFilter,
-    clearAllFilters,
-    resetFilters,
-    metadata,
-  } = useFilters(
+  const { filters, setFilters, clearFilter, clearAllFilters, resetFilters, metadata } = useFilters(
     // Modul uchun filtrlar
     {
       search: filterParsers.string(''),

@@ -1,17 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { Description } from '@/shared/components/common/description';
 import { CommitteeStaffResponse } from '@/entities/admin/committee-staffs';
-import {
-  formatPhoneNumber,
-  getUserRoleDisplay,
-  getUserStatusDisplay,
-} from '@/shared/lib';
+import { formatPhoneNumber, getUserRoleDisplay, getUserStatusDisplay } from '@/shared/lib';
 
-export const CommitteeStaffView = ({
-  data,
-}: {
-  data: CommitteeStaffResponse | null;
-}) => {
+export const CommitteeStaffView = ({ data }: { data: CommitteeStaffResponse | null }) => {
   const { t } = useTranslation('common');
 
   if (!data) return null;
@@ -33,10 +25,7 @@ export const CommitteeStaffView = ({
       <Description.Item key="pin" label={t('short.pin')}>
         {data?.pin}
       </Description.Item>
-      <Description.Item
-        key="department"
-        label={t('committee_division_department')}
-      >
+      <Description.Item key="department" label={t('committee_division_department')}>
         {data?.department}
       </Description.Item>
       <Description.Item key="status" label={t('status')}>

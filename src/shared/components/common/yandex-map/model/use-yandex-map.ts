@@ -2,9 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import { Coordinate } from '../model/yandex-map-types';
 import { MAP_DEFAULTS } from '../model/yandex-map-config';
 
-export const useYandexMap = (
-  initialCenter: Coordinate = MAP_DEFAULTS.center,
-) => {
+export const useYandexMap = (initialCenter: Coordinate = MAP_DEFAULTS.center) => {
   const mapRef = useRef<ymaps.Map | null>(null);
   const [coords, setCoords] = useState<Coordinate[]>([]);
   const [center, setCenter] = useState<Coordinate>(initialCenter);

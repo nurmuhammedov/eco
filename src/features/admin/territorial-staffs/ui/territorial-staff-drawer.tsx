@@ -12,20 +12,8 @@ import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks';
 import { useTerritorialStaffForm } from '../model/use-territorial-staff-form';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/components/ui/select';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 
 export const TerritorialStaffDrawer = () => {
   const { t } = useTranslation('common');
@@ -84,11 +72,7 @@ export const TerritorialStaffDrawer = () => {
                     <FormItem>
                       <FormLabel required>{t('short.pin')}</FormLabel>
                       <FormControl>
-                        <InputNumber
-                          maxLength={14}
-                          placeholder="142536945201203"
-                          {...field}
-                        />
+                        <InputNumber maxLength={14} placeholder="142536945201203" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

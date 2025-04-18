@@ -8,20 +8,8 @@ import { InputNumber } from '@/shared/components/ui/input-number';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/components/ui/select';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 
 export const DistrictDrawer = () => {
   const { t } = useTranslation('common');
@@ -97,11 +85,7 @@ export const DistrictDrawer = () => {
                   <FormItem>
                     <FormLabel>{t('soato')}</FormLabel>
                     <FormControl>
-                      <InputNumber
-                        maxLength={10}
-                        placeholder={t('soato')}
-                        {...field}
-                      />
+                      <InputNumber maxLength={10} placeholder={t('soato')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -115,11 +99,7 @@ export const DistrictDrawer = () => {
                   <FormItem>
                     <FormLabel>{t('number')}</FormLabel>
                     <FormControl>
-                      <InputNumber
-                        maxLength={10}
-                        placeholder={t('number')}
-                        {...field}
-                      />
+                      <InputNumber maxLength={10} placeholder={t('number')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

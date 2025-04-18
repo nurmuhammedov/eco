@@ -6,25 +6,11 @@ import { ApplicantInfo } from '@/entities/user/applications/create-application/u
 import { APPLICATIONS_TYPES } from '@/entities/user/applications/create-application/data';
 import { useApplicationForm } from '@/features/user/applications/create-application/lib/use-application-form';
 import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/components/ui/select';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 
 const ApplicationForm = () => {
-  const [applicationType, setApplicationType] = useState<ApplicationTypeEnum>(
-    ApplicationTypeEnum.RegisterBoiler,
-  );
+  const [applicationType, setApplicationType] = useState<ApplicationTypeEnum>(ApplicationTypeEnum.RegisterBoiler);
 
   const form = useApplicationForm(applicationType);
 
@@ -40,9 +26,7 @@ const ApplicationForm = () => {
           name="application_type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold text-base">
-                Ариза тури
-              </FormLabel>
+              <FormLabel className="font-semibold text-base">Ариза тури</FormLabel>
               <FormControl>
                 <Select
                   onValueChange={(value) => {

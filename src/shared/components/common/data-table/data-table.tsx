@@ -16,14 +16,7 @@ import {
   VisibilityState,
 } from '@tanstack/react-table';
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/components/ui/table';
 import { ResponseData } from '@/shared/types/api';
 import { DataTablePagination } from './data-table-pagination';
 import { getCommonPinningStyles } from './models/get-common-pinning';
@@ -61,11 +54,8 @@ export function DataTable<TData, TValue>({
   const pageCount = isContentData ? data?.page?.totalPages : undefined;
 
   const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const handlePageChange = useCallback(
@@ -116,9 +106,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <Fragment>
-      <div
-        className={cn('relative rounded-md bg-white overflow-auto', className)}
-      >
+      <div className={cn('relative rounded-md bg-white overflow-auto', className)}>
         <Table className="p-2">
           <TableHeader className="p-2 font-semibold text-black">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -131,12 +119,7 @@ export function DataTable<TData, TValue>({
                       ...getCommonPinningStyles({ column: header.column }),
                     }}
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
@@ -145,10 +128,7 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
@@ -157,10 +137,7 @@ export function DataTable<TData, TValue>({
                         ...getCommonPinningStyles({ column: cell.column }),
                       }}
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>

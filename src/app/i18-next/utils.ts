@@ -11,9 +11,7 @@ export const loadResources = async () => {
       await Promise.all(
         namespaces.map(async (ns) => {
           try {
-            const module = await import(
-              `@/app/i18-next/translations/${lng}/${ns}.json`
-            );
+            const module = await import(`@/app/i18-next/translations/${lng}/${ns}.json`);
             resources[lng][ns] = module.default;
           } catch (error) {
             console.error(`Error loading ${lng}/${ns}:`, error);

@@ -20,9 +20,9 @@ export const useCreateTerritorialStaff = () => {
       });
 
       // Capture current state for rollback
-      const previousList = queryClient.getQueryData<
-        ResponseData<TerritorialStaffResponse>
-      >(territorialStaffKeys.list('territorial-staff'));
+      const previousList = queryClient.getQueryData<ResponseData<TerritorialStaffResponse>>(
+        territorialStaffKeys.list('territorial-staff'),
+      );
 
       if (previousList) {
         // Create a temporary territorial-staff with fake ID
@@ -32,13 +32,10 @@ export const useCreateTerritorialStaff = () => {
         };
 
         // Add to the list
-        queryClient.setQueryData(
-          territorialStaffKeys.list('territorial-staff'),
-          {
-            ...previousList,
-            content: [...previousList.content, temporaryData],
-          },
-        );
+        queryClient.setQueryData(territorialStaffKeys.list('territorial-staff'), {
+          ...previousList,
+          content: [...previousList.content, temporaryData],
+        });
       }
 
       return { previousList };
@@ -51,19 +48,13 @@ export const useCreateTerritorialStaff = () => {
       });
 
       // Add the newly created territorial-staff to cache
-      queryClient.setQueryData(
-        territorialStaffKeys.detail('territorial-staff', createdData.data.id),
-        createdData,
-      );
+      queryClient.setQueryData(territorialStaffKeys.detail('territorial-staff', createdData.data.id), createdData);
     },
 
     onError: (_err, _newData, context) => {
       // Revert optimistic updates on error
       if (context?.previousList) {
-        queryClient.setQueryData(
-          territorialStaffKeys.list('territorial-staff'),
-          context.previousList,
-        );
+        queryClient.setQueryData(territorialStaffKeys.list('territorial-staff'), context.previousList);
       }
     },
   });

@@ -13,5 +13,4 @@ const roleHomeRoutes: Record<UserRoles, string> = {
   [UserRoles.INDIVIDUAL]: DefaultRoute,
 };
 
-export const getHomeRouteForLoggedInUser = (role: UserRoles) =>
-  roleHomeRoutes[role] || '/';
+export const getHomeRouteForLoggedInUser = (role: UserRoles) => roleHomeRoutes[role] || '/';

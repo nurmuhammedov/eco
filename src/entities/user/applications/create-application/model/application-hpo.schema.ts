@@ -1,16 +1,9 @@
 import { z } from 'zod';
-import {
-  ApplicationBaseSchema,
-  defaultRequiredMessage,
-  emailMessage,
-} from './application-base.schema.ts';
+import { ApplicationBaseSchema, defaultRequiredMessage, emailMessage } from './application-base.schema.ts';
 
 export const CreateRegisterHPOSchema = ApplicationBaseSchema.extend({
   parent_name: z.string(defaultRequiredMessage),
-  fileUrls: z
-    .array(z.string().url())
-    .min(1, 'Камида 1 та файл юкланиши керак')
-    .default([]),
+  fileUrls: z.array(z.string().url()).min(1, 'Камида 1 та файл юкланиши керак').default([]),
   organization_name: z.string(defaultRequiredMessage),
   organization_email: z.string(defaultRequiredMessage).email(emailMessage),
   tin: z.string(defaultRequiredMessage).length(9, 'СТИР 9 хона сондан иборат'),

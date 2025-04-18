@@ -47,12 +47,7 @@
 
    ```jsx
    // Kattaroq loader va to'qroq fon bilan
-   <Loader
-     isVisible={loading}
-     message="loading.please_wait"
-     size={50}
-     bgOpacity={80}
-   />
+   <Loader isVisible={loading} message="loading.please_wait" size={50} bgOpacity={80} />
    ```
 
 5. **Tarjima fayllari bilan ishlash**:

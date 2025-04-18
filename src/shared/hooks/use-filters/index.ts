@@ -1,11 +1,4 @@
-import {
-  parseAsArrayOf,
-  parseAsBoolean,
-  parseAsInteger,
-  parseAsString,
-  type Parser,
-  useQueryStates,
-} from 'nuqs';
+import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, type Parser, useQueryStates } from 'nuqs';
 import { useCallback, useMemo } from 'react';
 
 export type FilterParser<T = any> = Parser<T>;
@@ -36,10 +29,7 @@ export interface UseFiltersResult {
   };
 }
 
-export function useFilters(
-  moduleFilters: FilterParsers = {},
-  config: UseFiltersConfig = {},
-): UseFiltersResult {
+export function useFilters(moduleFilters: FilterParsers = {}, config: UseFiltersConfig = {}): UseFiltersResult {
   const {
     baseFilters = {},
     defaultPage = 1,
@@ -101,9 +91,7 @@ export function useFilters(
   );
 
   const clearAllFilters = useCallback(() => {
-    const resetFilters = Object.keys(mergedFilters).reduce<
-      Record<string, null>
-    >((acc, key) => {
+    const resetFilters = Object.keys(mergedFilters).reduce<Record<string, null>>((acc, key) => {
       acc[key] = null;
       return acc;
     }, {});
@@ -119,9 +107,7 @@ export function useFilters(
     () => ({
       filterKeys: Object.keys(mergedFilters),
       hasFilters: Object.keys(filters).length > 0,
-      activeFiltersCount: Object.values(filters).filter(
-        (value) => value !== null && value !== undefined,
-      ).length,
+      activeFiltersCount: Object.values(filters).filter((value) => value !== null && value !== undefined).length,
     }),
     [mergedFilters, filters],
   );
@@ -137,14 +123,11 @@ export function useFilters(
 }
 
 export const filterParsers = {
-  integer: (defaultValue?: number): FilterParser<number> =>
-    parseAsInteger.withDefault(defaultValue ?? 0),
+  integer: (defaultValue?: number): FilterParser<number> => parseAsInteger.withDefault(defaultValue ?? 0),
 
-  string: (defaultValue?: string): FilterParser<string> =>
-    parseAsString.withDefault(defaultValue ?? ''),
+  string: (defaultValue?: string): FilterParser<string> => parseAsString.withDefault(defaultValue ?? ''),
 
-  boolean: (defaultValue?: boolean): FilterParser<boolean> =>
-    parseAsBoolean.withDefault(defaultValue ?? false),
+  boolean: (defaultValue?: boolean): FilterParser<boolean> => parseAsBoolean.withDefault(defaultValue ?? false),
 
   integerArray: (defaultValue?: number[]): FilterParser<number[]> =>
     parseAsArrayOf(parseAsInteger).withDefault(defaultValue ?? []),

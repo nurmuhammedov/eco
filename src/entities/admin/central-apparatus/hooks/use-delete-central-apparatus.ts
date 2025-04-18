@@ -22,24 +22,19 @@ export const useDeleteCentralApparatus = () => {
       });
 
       // Capture current state for rollback
-      const previousList = queryClient.getQueryData<
-        ResponseData<CentralApparatusResponse>
-      >(centralApparatusKeys.list('central-apparatus'));
+      const previousList = queryClient.getQueryData<ResponseData<CentralApparatusResponse>>(
+        centralApparatusKeys.list('central-apparatus'),
+      );
       const previousDetail = queryClient.getQueryData<CentralApparatusResponse>(
         centralApparatusKeys.detail('central-apparatus', id),
       );
 
       // Optimistically remove from lists
       if (previousList) {
-        queryClient.setQueryData(
-          centralApparatusKeys.list('central-apparatus'),
-          {
-            ...previousList,
-            content: previousList.content.filter(
-              (district) => district.id !== id,
-            ),
-          },
-        );
+        queryClient.setQueryData(centralApparatusKeys.list('central-apparatus'), {
+          ...previousList,
+          content: previousList.content.filter((district) => district.id !== id),
+        });
       }
 
       // Remove from detail cache
@@ -60,18 +55,12 @@ export const useDeleteCentralApparatus = () => {
     onError: (_err, id, context) => {
       // Restore detail cache if it existed
       if (context?.previousDetail) {
-        queryClient.setQueryData(
-          centralApparatusKeys.detail('central-apparatus', id),
-          context.previousDetail,
-        );
+        queryClient.setQueryData(centralApparatusKeys.detail('central-apparatus', id), context.previousDetail);
       }
 
       // Restore list cache
       if (context?.previousList) {
-        queryClient.setQueryData(
-          centralApparatusKeys.list('central-apparatus'),
-          context.previousList,
-        );
+        queryClient.setQueryData(centralApparatusKeys.list('central-apparatus'), context.previousList);
       }
     },
   });

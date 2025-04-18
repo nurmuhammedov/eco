@@ -10,8 +10,6 @@ export type CreateRegisterLiftDTO = z.infer<typeof CreateRegisterLift>;
 export type CreateRegisterCraneDTO = z.infer<typeof CreateRegisterCrane>;
 export type CreateRegisterHpoDTO = z.infer<typeof CreateRegisterHPOSchema>;
 export type CreateRegisterBoilerDTO = z.infer<typeof CreateRegisterBoiler>;
-export type CreateRegisterPressureVesselChemicalDTO = z.infer<
-  typeof CreateRegisterPressureVesselChemicalSchema
->;
+export type CreateRegisterPressureVesselChemicalDTO = z.infer<typeof CreateRegisterPressureVesselChemicalSchema>;
 
 export type ApplicationBaseDTO = z.infer<typeof ApplicationBaseSchema>;

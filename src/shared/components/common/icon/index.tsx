@@ -4,10 +4,7 @@ const icons = import.meta.glob<{
   default: React.FC<React.SVGProps<SVGSVGElement>>;
 }>('@/shared/assets/icons/*.svg', { eager: true });
 
-const formattedIcons: Record<
-  string,
-  React.FC<React.SVGProps<SVGSVGElement>>
-> = {};
+const formattedIcons: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {};
 
 Object.entries(icons).forEach(([fullPath, module]) => {
   const iconName = fullPath.split('/').pop()?.replace('.svg', '');

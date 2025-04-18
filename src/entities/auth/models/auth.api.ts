@@ -3,10 +3,7 @@ import { API_ENDPOINTS, apiClient } from '@/shared/api';
 
 export const authAPI = {
   login: async (data: LoginDTO) => {
-    const response = await apiClient.post<any, LoginDTO>(
-      API_ENDPOINTS.LOGIN,
-      data,
-    );
+    const response = await apiClient.post<any, LoginDTO>(API_ENDPOINTS.LOGIN, data);
 
     if (!response.success) {
       throw new Error(response.message);
@@ -15,10 +12,7 @@ export const authAPI = {
     return response.data.data;
   },
   loginOneId: async (code: string) => {
-    const response = await apiClient.post<any, any>(
-      API_ENDPOINTS.LOGIN_ONE_ID,
-      { code },
-    );
+    const response = await apiClient.post<any, any>(API_ENDPOINTS.LOGIN_ONE_ID, { code });
 
     if (!response.success) {
       throw new Error(response.message);

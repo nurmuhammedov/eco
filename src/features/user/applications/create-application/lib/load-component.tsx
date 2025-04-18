@@ -12,10 +12,7 @@ export const loadComponent = (type: ApplicationTypeEnum) => {
     return () => (
       <CardForm className="flex items-center justify-center h-96 mt-3">
         <p className="text-red-500">
-          <b>
-            {APPLICATIONS_TYPES.find((obj) => obj.id === type)?.name ||
-              "Noma'lum"}
-          </b>
+          <b>{APPLICATIONS_TYPES.find((obj) => obj.id === type)?.name || "Noma'lum"}</b>
           &nbsp;ariza turi topilmadi!
         </p>
       </CardForm>
@@ -30,9 +27,7 @@ export const loadComponent = (type: ApplicationTypeEnum) => {
         return {
           default: () => (
             <CardForm className="flex items-center justify-center h-96 mt-3">
-              <p className="text-red-500">
-                Ariza yuklanishda xatolik yuz berdi!
-              </p>
+              <p className="text-red-500">Ariza yuklanishda xatolik yuz berdi!</p>
             </CardForm>
           ),
         };

@@ -18,40 +18,28 @@ export const useDeleteHazardousFacilityType = () => {
         queryKey: hazardousFacilityTypeKeys.list('hazardous-facility-type'),
       });
       await queryClient.cancelQueries({
-        queryKey: hazardousFacilityTypeKeys.detail(
-          'hazardous-facility-type',
-          id,
-        ),
+        queryKey: hazardousFacilityTypeKeys.detail('hazardous-facility-type', id),
       });
 
       // Capture current state for rollback
-      const previousListData = queryClient.getQueryData<
-        ResponseData<HazardousFacilityTypeResponse>
-      >(hazardousFacilityTypeKeys.list('hazardous-facility-type'));
-      const previousDetail =
-        queryClient.getQueryData<HazardousFacilityTypeResponse>(
-          hazardousFacilityTypeKeys.detail('hazardous-facility-type', id),
-        );
+      const previousListData = queryClient.getQueryData<ResponseData<HazardousFacilityTypeResponse>>(
+        hazardousFacilityTypeKeys.list('hazardous-facility-type'),
+      );
+      const previousDetail = queryClient.getQueryData<HazardousFacilityTypeResponse>(
+        hazardousFacilityTypeKeys.detail('hazardous-facility-type', id),
+      );
 
       // Optimistically remove from lists
       if (previousListData) {
-        queryClient.setQueryData(
-          hazardousFacilityTypeKeys.list('hazardous-facility-type'),
-          {
-            ...previousListData,
-            content: previousListData.content.filter(
-              (district) => district.id !== id,
-            ),
-          },
-        );
+        queryClient.setQueryData(hazardousFacilityTypeKeys.list('hazardous-facility-type'), {
+          ...previousListData,
+          content: previousListData.content.filter((district) => district.id !== id),
+        });
       }
 
       // Remove from detail cache
       queryClient.removeQueries({
-        queryKey: hazardousFacilityTypeKeys.detail(
-          'hazardous-facility-type',
-          id,
-        ),
+        queryKey: hazardousFacilityTypeKeys.detail('hazardous-facility-type', id),
       });
 
       return { previousListData, previousDetail };
@@ -75,10 +63,7 @@ export const useDeleteHazardousFacilityType = () => {
 
       // Restore list cache
       if (context?.previousListData) {
-        queryClient.setQueryData(
-          hazardousFacilityTypeKeys.list('hazardous-facility-type'),
-          context.previousListData,
-        );
+        queryClient.setQueryData(hazardousFacilityTypeKeys.list('hazardous-facility-type'), context.previousListData);
       }
     },
   });

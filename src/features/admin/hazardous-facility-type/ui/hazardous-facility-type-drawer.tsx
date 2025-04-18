@@ -7,21 +7,13 @@ import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { useHazardousFacilityTypeDrawer } from '@/shared/hooks/entity-hooks';
 import { useHazardousFacilityTypeForm } from '../model/use-hazardous-facility-type-form';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 
 export const HazardousFacilityTypeDrawer = () => {
   const { t } = useTranslation('common');
   const { isOpen, mode, onClose } = useHazardousFacilityTypeDrawer();
   const modeState = useUIActionLabel(mode);
-  const { form, onSubmit, isPending, isCreate, isFetching } =
-    useHazardousFacilityTypeForm();
+  const { form, onSubmit, isPending, isCreate, isFetching } = useHazardousFacilityTypeForm();
 
   return (
     <BaseDrawer

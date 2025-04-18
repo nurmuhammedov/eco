@@ -22,24 +22,19 @@ export const useDeleteTerritorialStaff = () => {
       });
 
       // Capture current state for rollback
-      const previousList = queryClient.getQueryData<
-        ResponseData<TerritorialStaffResponse>
-      >(territorialStaffKeys.list('territorial-staff'));
+      const previousList = queryClient.getQueryData<ResponseData<TerritorialStaffResponse>>(
+        territorialStaffKeys.list('territorial-staff'),
+      );
       const previousDetail = queryClient.getQueryData<TerritorialStaffResponse>(
         territorialStaffKeys.detail('territorial-staff', id),
       );
 
       // Optimistically remove from lists
       if (previousList) {
-        queryClient.setQueryData(
-          territorialStaffKeys.list('territorial-staff'),
-          {
-            ...previousList,
-            content: previousList.content.filter(
-              (district) => district.id !== id,
-            ),
-          },
-        );
+        queryClient.setQueryData(territorialStaffKeys.list('territorial-staff'), {
+          ...previousList,
+          content: previousList.content.filter((district) => district.id !== id),
+        });
       }
 
       // Remove from detail cache
@@ -60,18 +55,12 @@ export const useDeleteTerritorialStaff = () => {
     onError: (_err, id, context) => {
       // Restore detail cache if it existed
       if (context?.previousDetail) {
-        queryClient.setQueryData(
-          territorialStaffKeys.detail('territorial-staff', id),
-          context.previousDetail,
-        );
+        queryClient.setQueryData(territorialStaffKeys.detail('territorial-staff', id), context.previousDetail);
       }
 
       // Restore list cache
       if (context?.previousList) {
-        queryClient.setQueryData(
-          territorialStaffKeys.list('territorial-staff'),
-          context.previousList,
-        );
+        queryClient.setQueryData(territorialStaffKeys.list('territorial-staff'), context.previousList);
       }
     },
   });

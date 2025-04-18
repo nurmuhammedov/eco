@@ -15,12 +15,7 @@ export const useDistrictsQuery = (filters: FilterDistrictDTO) => {
 export const useDistrictQuery = (
   id: number,
   options?: Omit<
-    UseQueryOptions<
-      DistrictResponse,
-      Error,
-      DistrictResponse,
-      ReturnType<typeof districtKeys.detail>
-    >,
+    UseQueryOptions<DistrictResponse, Error, DistrictResponse, ReturnType<typeof districtKeys.detail>>,
     'queryKey' | 'queryFn'
   >,
 ) => {

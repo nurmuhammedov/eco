@@ -20,10 +20,7 @@ const DEFAULT_FORM_VALUES: CreateTerritorialDepartmentsDTO = {
 export function useTerritorialDepartmentsForm() {
   const { data, onClose, isCreate } = useTerritorialDepartmentsDrawer();
 
-  const territorialDepartmentId = useMemo(
-    () => (data?.id ? data?.id : 0),
-    [data],
-  );
+  const territorialDepartmentId = useMemo(() => (data?.id ? data?.id : 0), [data]);
 
   const form = useForm<CreateTerritorialDepartmentsDTO>({
     resolver: zodResolver(territorialDepartmentsSchema),
@@ -33,15 +30,11 @@ export function useTerritorialDepartmentsForm() {
 
   const { data: regionOptions } = useRegionSelectQuery();
 
-  const { mutateAsync: create, isPending: isCreating } =
-    useCreateTerritorialDepartment();
+  const { mutateAsync: create, isPending: isCreating } = useCreateTerritorialDepartment();
 
-  const { mutateAsync: update, isPending: isUpdating } =
-    useUpdateTerritorialDepartments();
+  const { mutateAsync: update, isPending: isUpdating } = useUpdateTerritorialDepartments();
 
-  const { data: foundedData, isLoading } = useTerritorialDepartmentQuery(
-    territorialDepartmentId,
-  );
+  const { data: foundedData, isLoading } = useTerritorialDepartmentQuery(territorialDepartmentId);
 
   useEffect(() => {
     if (foundedData && !isCreate) {

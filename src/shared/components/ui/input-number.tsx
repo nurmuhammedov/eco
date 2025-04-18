@@ -1,24 +1,10 @@
 import { cn } from '@/shared/lib/utils';
 import { Input } from '@/shared/components/ui/input';
-import React, {
-  ChangeEvent,
-  forwardRef,
-  InputHTMLAttributes,
-  useCallback,
-  useMemo,
-} from 'react';
-import {
-  FieldPath,
-  FieldValues,
-  useController,
-  UseControllerProps,
-} from 'react-hook-form';
+import React, { ChangeEvent, forwardRef, InputHTMLAttributes, useCallback, useMemo } from 'react';
+import { FieldPath, FieldValues, useController, UseControllerProps } from 'react-hook-form';
 
 export interface BaseNumberInputProps
-  extends Omit<
-    InputHTMLAttributes<HTMLInputElement>,
-    'type' | 'onChange' | 'value'
-  > {
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange' | 'value'> {
   value?: string | undefined;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   min?: number;
@@ -153,11 +139,7 @@ function InputNumber<
             e.target.value = finalValue.toString();
           }
         }
-      } else if (
-        inputValue === '-' ||
-        inputValue === '.' ||
-        inputValue === '0.'
-      ) {
+      } else if (inputValue === '-' || inputValue === '.' || inputValue === '0.') {
         // Noto'g'ri qiymatlarni tozalash
         e.target.value = '';
         field.onChange(undefined);
@@ -211,10 +193,7 @@ function InputNumber<
     <Input
       {...inputProps}
       {...ariaAttributes}
-      className={cn(
-        error && 'border-red-500 focus-visible:ring-red-500',
-        className,
-      )}
+      className={cn(error && 'border-red-500 focus-visible:ring-red-500', className)}
       name={field.name}
       ref={field.ref}
       type="text"
@@ -229,11 +208,9 @@ function InputNumber<
 }
 
 // FormField bilan qo'llash uchun ForwardRef versiyasi
-const ForwardedNumberInput = forwardRef<HTMLInputElement, BaseNumberInputProps>(
-  (props, ref) => {
-    return <Input {...props} type="text" ref={ref} />;
-  },
-);
+const ForwardedNumberInput = forwardRef<HTMLInputElement, BaseNumberInputProps>((props, ref) => {
+  return <Input {...props} type="text" ref={ref} />;
+});
 ForwardedNumberInput.displayName = 'InputNumber';
 
 export { InputNumber, ForwardedNumberInput };

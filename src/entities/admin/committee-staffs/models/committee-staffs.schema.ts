@@ -19,9 +19,7 @@ const ERROR_MESSAGES = {
 } as const;
 
 export const committeeBaseSchema = {
-  fullName: z
-    .string({ message: ERROR_MESSAGES.fio })
-    .min(1, ERROR_MESSAGES.required),
+  fullName: z.string({ message: ERROR_MESSAGES.fio }).min(1, ERROR_MESSAGES.required),
   position: z
     .string({ message: ERROR_MESSAGES.position })
 
@@ -57,18 +55,13 @@ export const committeeStaffSchema = z
   .transform((data) => ({
     ...data,
     // Ensure consistent formatting of phone numbers
-    phoneNumber: data.phoneNumber.startsWith('+')
-      ? data.phoneNumber
-      : `+${data.phoneNumber}`,
+    phoneNumber: data.phoneNumber.startsWith('+') ? data.phoneNumber : `+${data.phoneNumber}`,
     // Additional data cleanup if needed
     fullName: data.fullName.replace(/\s+/g, ' '),
   }));
 
 export const committeeTableItemSchema = z.object({
-  id: z.union([
-    z.string().uuid(),
-    z.string().regex(PATTERNS.uuid, { message: 'Invalid UUID format' }),
-  ]),
+  id: z.union([z.string().uuid(), z.string().regex(PATTERNS.uuid, { message: 'Invalid UUID format' })]),
 
   fullName: z.string().trim().min(1),
   pin: z.union([
@@ -78,14 +71,9 @@ export const committeeTableItemSchema = z.object({
   role: z.nativeEnum(UserRoles),
   directions: z.array(z.string()).default([]),
   department: z.string(),
-  departmentId: z.union([
-    z.number().int().positive(),
-    z.string().transform((val) => parseInt(val)),
-  ]),
+  departmentId: z.union([z.number().int().positive(), z.string().transform((val) => parseInt(val))]),
   position: z.string(),
-  phoneNumber: z
-    .string()
-    .regex(PATTERNS.phoneUz, { message: ERROR_MESSAGES.phone }),
+  phoneNumber: z.string().regex(PATTERNS.phoneUz, { message: ERROR_MESSAGES.phone }),
   enabled: z.boolean().default(true),
 });
 
@@ -93,20 +81,10 @@ export const schemas = {
   create: z.object(committeeBaseSchema),
   update: z.object({
     id: z.string(),
-    ...Object.fromEntries(
-      Object.entries(committeeBaseSchema).map(([k, validator]) => [
-        k,
-        validator.optional(),
-      ]),
-    ),
+    ...Object.fromEntries(Object.entries(committeeBaseSchema).map(([k, validator]) => [k, validator.optional()])),
   }),
   filter: z.object({
-    ...Object.fromEntries(
-      Object.entries(committeeBaseSchema).map(([k, validator]) => [
-        k,
-        validator.optional(),
-      ]),
-    ),
+    ...Object.fromEntries(Object.entries(committeeBaseSchema).map(([k, validator]) => [k, validator.optional()])),
     page: z.number().optional().default(1),
     size: z.number().optional().default(20),
   }),

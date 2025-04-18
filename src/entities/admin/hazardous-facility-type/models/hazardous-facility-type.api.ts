@@ -10,25 +10,24 @@ import {
 
 export const hazardousFacilityTypeAPI = {
   list: async (params: FilterHazardousFacilityTypeDTO) => {
-    const { data } =
-      await apiClient.getWithPagination<HazardousFacilityTypeResponse>(
-        API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES,
-        params,
-      );
+    const { data } = await apiClient.getWithPagination<HazardousFacilityTypeResponse>(
+      API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES,
+      params,
+    );
     return data || [];
   },
 
   byId: async (id: number) => {
-    const { data } = await apiClient.get<
-      ApiResponse<HazardousFacilityTypeResponse>
-    >(`${API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES}/${id}`);
+    const { data } = await apiClient.get<ApiResponse<HazardousFacilityTypeResponse>>(
+      `${API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES}/${id}`,
+    );
     return data.data;
   },
   create: async (data: CreateHazardousFacilityTypeDTO) => {
-    const response = await apiClient.post<
-      HazardousFacilityTypeResponse,
-      CreateHazardousFacilityTypeDTO
-    >(API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES, data);
+    const response = await apiClient.post<HazardousFacilityTypeResponse, CreateHazardousFacilityTypeDTO>(
+      API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES,
+      data,
+    );
     if (!response.success && response.errors) {
       toast.error(Object.values(response.errors).join(', '), {
         richColors: true,
@@ -50,9 +49,7 @@ export const hazardousFacilityTypeAPI = {
     return response;
   },
   delete: async (id: number) => {
-    const response = await apiClient.delete(
-      `${API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES}/${id}`,
-    );
+    const response = await apiClient.delete(`${API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES}/${id}`);
     if (!response.success) {
       throw new Error(response.message);
     }

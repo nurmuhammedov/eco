@@ -7,9 +7,7 @@ import {
   TerritorialStaffResponse,
 } from '@/entities/admin/territorial-staffs';
 
-export const useTerritorialStaffListQuery = (
-  filters: FilterTerritorialStaffDTO,
-) => {
+export const useTerritorialStaffListQuery = (filters: FilterTerritorialStaffDTO) => {
   return useQuery({
     staleTime: getTime(1, 'week'),
     queryKey: territorialStaffKeys.list('territorial-staff', filters),

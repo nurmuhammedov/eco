@@ -6,15 +6,11 @@ import { useHazardousFacilityTypeDrawer } from '@/shared/hooks/entity-hooks';
 
 export const useHazardousFacility = () => {
   const { filters, setFilters } = useFilters({
-    'active-tab': filterParsers.string(
-      HazardousFacilityActiveTab.HAZARDOUS_FACILITY_TYPE,
-    ),
+    'active-tab': filterParsers.string(HazardousFacilityActiveTab.HAZARDOUS_FACILITY_TYPE),
   });
 
-  const {
-    onOpen: openHazardousFacilityTypeDrawer,
-    isOpen: isOpenHazardousFacilityType,
-  } = useHazardousFacilityTypeDrawer();
+  const { onOpen: openHazardousFacilityTypeDrawer, isOpen: isOpenHazardousFacilityType } =
+    useHazardousFacilityTypeDrawer();
 
   const activeTab = useMemo<HazardousFacilityActiveTab>(
     () => filters['active-tab'] as HazardousFacilityActiveTab,
@@ -22,8 +18,7 @@ export const useHazardousFacility = () => {
   );
 
   const handleChangeTab = useCallback(
-    (tab: HazardousFacilityActiveTab) =>
-      setFilters((prev: any) => ({ ...prev, 'active-tab': tab })),
+    (tab: HazardousFacilityActiveTab) => setFilters((prev: any) => ({ ...prev, 'active-tab': tab })),
     [setFilters],
   );
 

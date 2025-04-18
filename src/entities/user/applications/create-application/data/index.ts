@@ -1,9 +1,5 @@
 import { ApplicationTypeEnum } from '../model/application.types.ts';
-import {
-  ContainerType,
-  CraneType,
-  LiftType,
-} from '../model/application.enums.ts';
+import { ContainerType, CraneType, LiftType } from '../model/application.enums.ts';
 
 export const APPLICATIONS_TYPES = [
   {

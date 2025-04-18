@@ -20,48 +20,30 @@ export const useUpdateTerritorialDepartments = () => {
 
       // Cancel in-flight queries
       await queryClient.cancelQueries({
-        queryKey: territorialDepartmentsKeys.detail(
-          'territorial-departments',
-          updateData.id,
-        ),
+        queryKey: territorialDepartmentsKeys.detail('territorial-departments', updateData.id),
       });
       await queryClient.cancelQueries({
         queryKey: territorialDepartmentsKeys.list('territorial-departments'),
       });
 
       // Capture current states for rollback
-      const previousDetail =
-        queryClient.getQueryData<UpdateTerritorialDepartmentsDTO>(
-          territorialDepartmentsKeys.detail(
-            'territorial-departments',
-            updateData.id,
-          ),
-        );
+      const previousDetail = queryClient.getQueryData<UpdateTerritorialDepartmentsDTO>(
+        territorialDepartmentsKeys.detail('territorial-departments', updateData.id),
+      );
 
-      const previousList = queryClient.getQueryData<
-        ResponseData<UpdateTerritorialDepartmentsDTO>
-      >(territorialDepartmentsKeys.list('territorial-departments'));
+      const previousList = queryClient.getQueryData<ResponseData<UpdateTerritorialDepartmentsDTO>>(
+        territorialDepartmentsKeys.list('territorial-departments'),
+      );
 
       // Update territorial-departments detail
-      queryClient.setQueryData(
-        territorialDepartmentsKeys.detail(
-          'territorial-departments',
-          updateData.id,
-        ),
-        updateData,
-      );
+      queryClient.setQueryData(territorialDepartmentsKeys.detail('territorial-departments', updateData.id), updateData);
 
       // Update territorial-departments in lists
       if (previousList) {
-        queryClient.setQueryData(
-          territorialDepartmentsKeys.list('territorial-departments'),
-          {
-            ...previousList,
-            content: previousList.content.map((district) =>
-              district.id === updateData.id ? updateData : district,
-            ),
-          },
-        );
+        queryClient.setQueryData(territorialDepartmentsKeys.list('territorial-departments'), {
+          ...previousList,
+          content: previousList.content.map((district) => (district.id === updateData.id ? updateData : district)),
+        });
       }
 
       return { previousDetail, previousList };
@@ -71,10 +53,7 @@ export const useUpdateTerritorialDepartments = () => {
       // Set the updated territorial-departments in cache
       if (updatedData.data.id) {
         queryClient.setQueryData(
-          territorialDepartmentsKeys.detail(
-            'territorial-departments',
-            updatedData.data.id,
-          ),
+          territorialDepartmentsKeys.detail('territorial-departments', updatedData.data.id),
           updatedData,
         );
       }
@@ -89,20 +68,14 @@ export const useUpdateTerritorialDepartments = () => {
       // Revert territorial-departments detail on error
       if (context?.previousDetail) {
         queryClient.setQueryData(
-          territorialDepartmentsKeys.detail(
-            'territorial-departments',
-            updatedData.id,
-          ),
+          territorialDepartmentsKeys.detail('territorial-departments', updatedData.id),
           context.previousDetail,
         );
       }
 
       // Revert territorial-departments in lists
       if (context?.previousList) {
-        queryClient.setQueryData(
-          territorialDepartmentsKeys.list('territorial-departments'),
-          context.previousList,
-        );
+        queryClient.setQueryData(territorialDepartmentsKeys.list('territorial-departments'), context.previousList);
       }
     },
   });

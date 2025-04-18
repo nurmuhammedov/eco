@@ -3,16 +3,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
 import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
-import {
-  DataTable,
-  DataTableRowActions,
-} from '@/shared/components/common/data-table';
-import {
-  District,
-  FilterDistrictDTO,
-  useDeleteDistrict,
-  useDistrictsQuery,
-} from '@/entities/admin/districts';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
+import { District, FilterDistrictDTO, useDeleteDistrict, useDistrictsQuery } from '@/entities/admin/districts';
 
 export function DistrictList() {
   const { filters } = useFilters();

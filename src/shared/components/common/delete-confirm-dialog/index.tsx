@@ -53,10 +53,7 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
   const { t } = useTranslation('common');
   const [internalLoading, setInternalLoading] = useState<boolean>(false);
 
-  const dialogProps =
-    isOpen !== undefined && setIsOpen
-      ? { open: isOpen, onOpenChange: setIsOpen }
-      : {};
+  const dialogProps = isOpen !== undefined && setIsOpen ? { open: isOpen, onOpenChange: setIsOpen } : {};
 
   const handleConfirm = async () => {
     if (!onConfirm) return;
@@ -68,7 +65,7 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
       if (setIsOpen) {
         setIsOpen(false);
       }
-    } catch (err) {
+    } catch (_err) {
       setInternalLoading(false);
       // An error occurred during deletion
     } finally {
@@ -122,9 +119,7 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
             </div>
             {t(title)}
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-base">
-            {t(description)}
-          </AlertDialogDescription>
+          <AlertDialogDescription className="text-base">{t(description)}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel} disabled={internalLoading}>

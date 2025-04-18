@@ -20,9 +20,9 @@ export const useCreateCommitteeStaff = () => {
       });
 
       // Capture current state for rollback
-      const previousList = queryClient.getQueryData<
-        ResponseData<CommitteeStaffResponse>
-      >(committeeStaffKeys.list('committee-staff'));
+      const previousList = queryClient.getQueryData<ResponseData<CommitteeStaffResponse>>(
+        committeeStaffKeys.list('committee-staff'),
+      );
 
       if (previousList) {
         // Create a temporary committee-staff with fake ID
@@ -48,19 +48,13 @@ export const useCreateCommitteeStaff = () => {
       });
 
       // Add the newly created committee-staff to cache
-      queryClient.setQueryData(
-        committeeStaffKeys.detail('committee-staff', createdData.data.id),
-        createdData,
-      );
+      queryClient.setQueryData(committeeStaffKeys.detail('committee-staff', createdData.data.id), createdData);
     },
 
     onError: (_err, _newData, context) => {
       // Revert optimistic updates on error
       if (context?.previousList) {
-        queryClient.setQueryData(
-          committeeStaffKeys.list('committee-staff'),
-          context.previousList,
-        );
+        queryClient.setQueryData(committeeStaffKeys.list('committee-staff'), context.previousList);
       }
     },
   });

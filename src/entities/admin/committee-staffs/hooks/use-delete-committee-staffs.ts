@@ -1,10 +1,6 @@
 import type { ResponseData } from '@/shared/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  committeeStaffAPI,
-  committeeStaffKeys,
-  CommitteeStaffResponse,
-} from '@/entities/admin/committee-staffs';
+import { committeeStaffAPI, committeeStaffKeys, CommitteeStaffResponse } from '@/entities/admin/committee-staffs';
 
 export const useDeleteCommitteeStaff = () => {
   const queryClient = useQueryClient();
@@ -22,9 +18,9 @@ export const useDeleteCommitteeStaff = () => {
       });
 
       // Capture current state for rollback
-      const previousList = queryClient.getQueryData<
-        ResponseData<CommitteeStaffResponse>
-      >(committeeStaffKeys.list('committee-staff'));
+      const previousList = queryClient.getQueryData<ResponseData<CommitteeStaffResponse>>(
+        committeeStaffKeys.list('committee-staff'),
+      );
       const previousDetail = queryClient.getQueryData<CommitteeStaffResponse>(
         committeeStaffKeys.detail('committee-staff', id),
       );
@@ -33,9 +29,7 @@ export const useDeleteCommitteeStaff = () => {
       if (previousList) {
         queryClient.setQueryData(committeeStaffKeys.list('committee-staff'), {
           ...previousList,
-          content: previousList.content.filter(
-            (district) => district.id !== id,
-          ),
+          content: previousList.content.filter((district) => district.id !== id),
         });
       }
 
@@ -57,18 +51,12 @@ export const useDeleteCommitteeStaff = () => {
     onError: (_err, id, context) => {
       // Restore detail cache if it existed
       if (context?.previousDetail) {
-        queryClient.setQueryData(
-          committeeStaffKeys.detail('committee-staff', id),
-          context.previousDetail,
-        );
+        queryClient.setQueryData(committeeStaffKeys.detail('committee-staff', id), context.previousDetail);
       }
 
       // Restore list cache
       if (context?.previousList) {
-        queryClient.setQueryData(
-          committeeStaffKeys.list('committee-staff'),
-          context.previousList,
-        );
+        queryClient.setQueryData(committeeStaffKeys.list('committee-staff'), context.previousList);
       }
     },
   });

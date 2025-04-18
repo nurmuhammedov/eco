@@ -15,20 +15,10 @@ export const schemas = {
   create: z.object(regionBaseSchema),
   update: z.object({
     id: z.number(),
-    ...Object.fromEntries(
-      Object.entries(regionBaseSchema).map(([k, validator]) => [
-        k,
-        validator.optional(),
-      ]),
-    ),
+    ...Object.fromEntries(Object.entries(regionBaseSchema).map(([k, validator]) => [k, validator.optional()])),
   }),
   filter: z.object({
-    ...Object.fromEntries(
-      Object.entries(regionBaseSchema).map(([k, validator]) => [
-        k,
-        validator.optional(),
-      ]),
-    ),
+    ...Object.fromEntries(Object.entries(regionBaseSchema).map(([k, validator]) => [k, validator.optional()])),
     page: z.number().optional().default(1),
     size: z.number().optional().default(20),
   }),

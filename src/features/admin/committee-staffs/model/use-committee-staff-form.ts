@@ -44,10 +44,7 @@ export function useCommitteeStaffForm() {
 
   const userPermissionOptions = useTranslatedObject(PERMISSIONS, 'permission');
 
-  const departmentOptions = useMemo(
-    () => getSelectOptions(departmentSelect || []),
-    [departmentSelect],
-  );
+  const departmentOptions = useMemo(() => getSelectOptions(departmentSelect || []), [departmentSelect]);
 
   const committeeStaffId = useMemo(() => (data?.id ? data?.id : ''), [data]);
 
@@ -57,11 +54,9 @@ export function useCommitteeStaffForm() {
     mode: 'onChange',
   });
 
-  const { mutateAsync: createCommitteeStaff, isPending: isCreating } =
-    useCreateCommitteeStaff();
+  const { mutateAsync: createCommitteeStaff, isPending: isCreating } = useCreateCommitteeStaff();
 
-  const { mutateAsync: updateCommitteeStaff, isPending: isUpdating } =
-    useUpdateCommitteeStaff();
+  const { mutateAsync: updateCommitteeStaff, isPending: isUpdating } = useUpdateCommitteeStaff();
 
   const { data: fetchByIdData, isLoading } = useCommitteeStaffQuery(
     committeeStaffId,
@@ -112,14 +107,7 @@ export function useCommitteeStaffForm() {
         return false;
       }
     },
-    [
-      isCreate,
-      committeeStaffId,
-      createCommitteeStaff,
-      updateCommitteeStaff,
-      handleClose,
-      fetchByIdData,
-    ],
+    [isCreate, committeeStaffId, createCommitteeStaff, updateCommitteeStaff, handleClose, fetchByIdData],
   );
 
   const isPending = isCreating || isUpdating;

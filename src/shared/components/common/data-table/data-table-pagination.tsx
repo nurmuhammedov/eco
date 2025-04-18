@@ -3,20 +3,8 @@ import { cn } from '@/shared/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { ResponseData } from '@/shared/types/api';
 import { Button } from '@/shared/components/ui/button';
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-  MoreHorizontal,
-} from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/components/ui/select';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 
 interface PaginationProps<T = any> {
   data?: ResponseData<T>;
@@ -57,8 +45,7 @@ export function DataTablePagination<T>({
 
   const getPageItems = useMemo(() => {
     // Skip if only one page
-    if (totalPages <= 1)
-      return { items: [1], jumpPrev: false, jumpNext: false };
+    if (totalPages <= 1) return { items: [1], jumpPrev: false, jumpNext: false };
 
     // Always show first, last and up to 5 pages around current
     const items: number[] = [];
@@ -130,18 +117,10 @@ export function DataTablePagination<T>({
     handlePageChange(newPage);
   };
 
-  const hasPageItems = useMemo(
-    () => getPageItems.items.length > 1,
-    [getPageItems],
-  );
+  const hasPageItems = useMemo(() => getPageItems.items.length > 1, [getPageItems]);
 
   return (
-    <div
-      className={cn(
-        'flex flex-col md:flex-row items-center justify-between gap-4 pt-3',
-        className,
-      )}
-    >
+    <div className={cn('flex flex-col md:flex-row items-center justify-between gap-4 pt-3', className)}>
       {showTotal && totalElements > 0 && (
         <div className="flex flex-row items-center gap-2">
           {showSizeChanger && (
@@ -220,10 +199,7 @@ export function DataTablePagination<T>({
             }
 
             // Show ellipsis before last page if needed
-            if (
-              index === getPageItems.items.length - 2 &&
-              getPageItems.jumpNext
-            ) {
+            if (index === getPageItems.items.length - 2 && getPageItems.jumpNext) {
               return (
                 <Button
                   size="sm"
@@ -242,8 +218,7 @@ export function DataTablePagination<T>({
             if (
               index > 0 &&
               index < getPageItems.items.length - 1 &&
-              getPageItems.items.indexOf(pageNumber) !==
-                getPageItems.items.lastIndexOf(pageNumber)
+              getPageItems.items.indexOf(pageNumber) !== getPageItems.items.lastIndexOf(pageNumber)
             ) {
               return null;
             }
@@ -255,9 +230,7 @@ export function DataTablePagination<T>({
                 size="sm"
                 className={cn(
                   'size-9',
-                  pageNumber === currentPage
-                    ? 'bg-blue-400 hover:bg-blue-400/90 text-white'
-                    : '',
+                  pageNumber === currentPage ? 'bg-blue-400 hover:bg-blue-400/90 text-white' : '',
                   'inline-flex',
                 )}
                 onClick={() => handlePageChange(pageNumber)}

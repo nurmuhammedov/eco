@@ -1,10 +1,5 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import {
-  type FilterRegionDTO,
-  regionAPI,
-  regionKeys,
-  type RegionResponse,
-} from '@/entities/admin/region';
+import { type FilterRegionDTO, regionAPI, regionKeys, type RegionResponse } from '@/entities/admin/region';
 
 const DISTRICT_STALE_TIME = 10 * 60 * 1000; // 10 minutes
 
@@ -20,12 +15,7 @@ export const useRegionsQuery = (filters: FilterRegionDTO) => {
 export const useRegionQuery = (
   id: number,
   options?: Omit<
-    UseQueryOptions<
-      RegionResponse,
-      Error,
-      RegionResponse,
-      ReturnType<typeof regionKeys.detail>
-    >,
+    UseQueryOptions<RegionResponse, Error, RegionResponse, ReturnType<typeof regionKeys.detail>>,
     'queryKey' | 'queryFn'
   >,
 ) => {

@@ -7,15 +7,10 @@ import {
   HazardousFacilityTypeResponse,
 } from '@/entities/admin/hazardous-facility-type';
 
-export const useHazardousFacilityTypeListQuery = (
-  filters: FilterHazardousFacilityTypeDTO,
-) => {
+export const useHazardousFacilityTypeListQuery = (filters: FilterHazardousFacilityTypeDTO) => {
   return useQuery({
     staleTime: getTime(1, 'week'),
-    queryKey: hazardousFacilityTypeKeys.list(
-      'hazardous-facility-type',
-      filters,
-    ),
+    queryKey: hazardousFacilityTypeKeys.list('hazardous-facility-type', filters),
     queryFn: () => hazardousFacilityTypeAPI.list(filters),
     placeholderData: (previousData) => previousData,
   });

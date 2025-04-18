@@ -41,10 +41,7 @@ function Footer() {
 export function AppSidebar() {
   const { state } = useSidebar();
   const sidebarOpen = state === 'expanded';
-  const { user } = useAppSelector(
-    (state) => pick(state.auth, ['user']),
-    shallowEqual,
-  );
+  const { user } = useAppSelector((state) => pick(state.auth, ['user']), shallowEqual);
 
   if (!user) return null;
 
@@ -60,9 +57,7 @@ export function AppSidebar() {
             <AppLogo />
           </SidebarHeader>
           <SidebarGroupContent>
-            {NAVIGATIONS[user.role]?.map((item) => (
-              <NavMain key={item.title} item={item} />
-            ))}
+            {NAVIGATIONS[user.role]?.map((item) => <NavMain key={item.title} item={item} />)}
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

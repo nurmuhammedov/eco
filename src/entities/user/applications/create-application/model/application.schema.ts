@@ -27,8 +27,7 @@ export const ApplicationSchema = {
   [ApplicationTypeEnum.RegisterHPOCadastrePassport]: ApplicationBaseSchema,
   [ApplicationTypeEnum.RegisterBoilerUtilizer]: ApplicationBaseSchema,
   [ApplicationTypeEnum.RegisterSteamAndHotWaterPipeline]: ApplicationBaseSchema,
-  [ApplicationTypeEnum.RegisterPressureVesselChemical]:
-    CreateRegisterPressureVesselChemicalSchema,
+  [ApplicationTypeEnum.RegisterPressureVesselChemical]: CreateRegisterPressureVesselChemicalSchema,
   [ApplicationTypeEnum.RegisterEscalator]: ApplicationBaseSchema,
   [ApplicationTypeEnum.RegisterBridgeOrRoad]: ApplicationBaseSchema,
   [ApplicationTypeEnum.RegisterElevator]: ApplicationBaseSchema,

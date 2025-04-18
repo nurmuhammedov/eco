@@ -8,10 +8,5 @@ interface YandexMarkerProps {
 }
 
 export const YandexMarker: React.FC<YandexMarkerProps> = ({ coordinate }) => {
-  return (
-    <Placemark
-      geometry={coordinate}
-      options={{ preset: 'islands#blueDotIcon' }}
-    />
-  );
+  return <Placemark geometry={coordinate} options={{ preset: 'islands#blueDotIcon' }} />;
 };

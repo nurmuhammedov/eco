@@ -1,9 +1,5 @@
 import React, { Component, ErrorInfo } from 'react';
-import type {
-  ErrorBoundaryProps,
-  ErrorBoundaryState,
-  ErrorFallbackProps,
-} from '@/pages/error/types';
+import type { ErrorBoundaryProps, ErrorBoundaryState, ErrorFallbackProps } from '@/pages/error/types';
 import { NavigateFunction } from 'react-router-dom';
 import { IS_DEV } from '@/shared/constants/general.ts';
 import { cn } from '@/shared/lib/utils.ts';
@@ -46,10 +42,7 @@ export class ErrorBoundaryCore extends Component<
     }
 
     if (IS_DEV) {
-      console.group(
-        '%c ErrorBoundary caught an error',
-        'color: #ff0000; font-weight: bold;',
-      );
+      console.group('%c ErrorBoundary caught an error', 'color: #ff0000; font-weight: bold;');
       console.error(error);
       console.error('Component Stack:', errorInfo.componentStack);
       console.groupEnd();
@@ -59,11 +52,7 @@ export class ErrorBoundaryCore extends Component<
   componentDidUpdate(): void {
     const { resetOnRouteChange, pathname } = this.props;
 
-    if (
-      resetOnRouteChange &&
-      this.state.hasError &&
-      pathname !== this.previousPath
-    ) {
+    if (resetOnRouteChange && this.state.hasError && pathname !== this.previousPath) {
       this.resetError();
     }
 

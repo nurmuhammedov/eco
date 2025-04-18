@@ -20,9 +20,9 @@ export const useCreateCentralApparatus = () => {
       });
 
       // Capture current state for rollback
-      const previousList = queryClient.getQueryData<
-        ResponseData<CentralApparatusResponse>
-      >(centralApparatusKeys.list('central-apparatus'));
+      const previousList = queryClient.getQueryData<ResponseData<CentralApparatusResponse>>(
+        centralApparatusKeys.list('central-apparatus'),
+      );
 
       if (previousList) {
         // Create a temporary central-apparatus with fake ID
@@ -32,13 +32,10 @@ export const useCreateCentralApparatus = () => {
         };
 
         // Add to the list
-        queryClient.setQueryData(
-          centralApparatusKeys.list('central-apparatus'),
-          {
-            ...previousList,
-            content: [...previousList.content, temporaryData],
-          },
-        );
+        queryClient.setQueryData(centralApparatusKeys.list('central-apparatus'), {
+          ...previousList,
+          content: [...previousList.content, temporaryData],
+        });
       }
 
       return { previousList };
@@ -51,19 +48,13 @@ export const useCreateCentralApparatus = () => {
       });
 
       // Add the newly created central-apparatus to cache
-      queryClient.setQueryData(
-        centralApparatusKeys.detail('central-apparatus', createdData.data.id!),
-        createdData,
-      );
+      queryClient.setQueryData(centralApparatusKeys.detail('central-apparatus', createdData.data.id!), createdData);
     },
 
     onError: (_err, _newData, context) => {
       // Revert optimistic updates on error
       if (context?.previousList) {
-        queryClient.setQueryData(
-          centralApparatusKeys.list('central-apparatus'),
-          context.previousList,
-        );
+        queryClient.setQueryData(centralApparatusKeys.list('central-apparatus'), context.previousList);
       }
     },
   });

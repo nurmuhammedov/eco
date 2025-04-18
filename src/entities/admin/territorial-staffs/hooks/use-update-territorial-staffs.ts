@@ -20,42 +20,30 @@ export const useUpdateTerritorialStaff = () => {
 
       // Cancel in-flight queries
       await queryClient.cancelQueries({
-        queryKey: territorialStaffKeys.detail(
-          'territorial-staff',
-          updateData.id,
-        ),
+        queryKey: territorialStaffKeys.detail('territorial-staff', updateData.id),
       });
       await queryClient.cancelQueries({
         queryKey: territorialStaffKeys.list('territorial-staff'),
       });
 
       // Capture current states for rollback
-      const previousDetail =
-        queryClient.getQueryData<UpdateTerritorialStaffDTO>(
-          territorialStaffKeys.detail('territorial-staff', updateData.id),
-        );
+      const previousDetail = queryClient.getQueryData<UpdateTerritorialStaffDTO>(
+        territorialStaffKeys.detail('territorial-staff', updateData.id),
+      );
 
-      const previousList = queryClient.getQueryData<
-        ResponseData<UpdateTerritorialStaffDTO>
-      >(territorialStaffKeys.list('territorial-staff'));
+      const previousList = queryClient.getQueryData<ResponseData<UpdateTerritorialStaffDTO>>(
+        territorialStaffKeys.list('territorial-staff'),
+      );
 
       // Update territorial-staff detail
-      queryClient.setQueryData(
-        territorialStaffKeys.detail('territorial-staff', updateData.id),
-        updateData,
-      );
+      queryClient.setQueryData(territorialStaffKeys.detail('territorial-staff', updateData.id), updateData);
 
       // Update territorial-staff in lists
       if (previousList) {
-        queryClient.setQueryData(
-          territorialStaffKeys.list('territorial-staff'),
-          {
-            ...previousList,
-            content: previousList.content.map((district) =>
-              district.id === updateData.id ? updateData : district,
-            ),
-          },
-        );
+        queryClient.setQueryData(territorialStaffKeys.list('territorial-staff'), {
+          ...previousList,
+          content: previousList.content.map((district) => (district.id === updateData.id ? updateData : district)),
+        });
       }
 
       return { previousDetail, previousList };
@@ -64,10 +52,7 @@ export const useUpdateTerritorialStaff = () => {
     onSuccess: (updatedData) => {
       // Set the updated territorial-staff in cache
       if (updatedData.data.id) {
-        queryClient.setQueryData(
-          territorialStaffKeys.detail('territorial-staff', updatedData.data.id),
-          updatedData,
-        );
+        queryClient.setQueryData(territorialStaffKeys.detail('territorial-staff', updatedData.data.id), updatedData);
       }
 
       // Invalidate lists to ensure they're up-to-date
@@ -87,10 +72,7 @@ export const useUpdateTerritorialStaff = () => {
 
       // Revert territorial-staff in lists
       if (context?.previousList) {
-        queryClient.setQueryData(
-          territorialStaffKeys.list('territorial-staff'),
-          context.previousList,
-        );
+        queryClient.setQueryData(territorialStaffKeys.list('territorial-staff'), context.previousList);
       }
     },
   });

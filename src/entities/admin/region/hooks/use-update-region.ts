@@ -1,10 +1,6 @@
 import type { ResponseData } from '@/shared/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  regionAPI,
-  regionKeys,
-  type UpdateRegionDTO,
-} from '@/entities/admin/region';
+import { regionAPI, regionKeys, type UpdateRegionDTO } from '@/entities/admin/region';
 
 export const useUpdateRegion = () => {
   const queryClient = useQueryClient();
@@ -31,15 +27,10 @@ export const useUpdateRegion = () => {
         regionKeys.detail('region', regionUpdate.id),
       );
 
-      const previousRegionsList = queryClient.getQueryData<
-        ResponseData<UpdateRegionDTO>
-      >(regionKeys.list('region'));
+      const previousRegionsList = queryClient.getQueryData<ResponseData<UpdateRegionDTO>>(regionKeys.list('region'));
 
       // Update region detail
-      queryClient.setQueryData(
-        regionKeys.detail('region', regionUpdate.id),
-        regionUpdate,
-      );
+      queryClient.setQueryData(regionKeys.detail('region', regionUpdate.id), regionUpdate);
 
       // Update region in lists
       if (previousRegionsList) {
@@ -57,10 +48,7 @@ export const useUpdateRegion = () => {
     onSuccess: (updatedDistrict) => {
       // Set the updated region in cache
       if (updatedDistrict.data.id) {
-        queryClient.setQueryData(
-          regionKeys.detail('region', updatedDistrict.data.id),
-          updatedDistrict,
-        );
+        queryClient.setQueryData(regionKeys.detail('region', updatedDistrict.data.id), updatedDistrict);
       }
 
       // Invalidate lists to ensure they're up-to-date
@@ -72,18 +60,12 @@ export const useUpdateRegion = () => {
     onError: (_err, updatedDistrict, context) => {
       // Revert region detail on error
       if (context?.previousRegionDetail) {
-        queryClient.setQueryData(
-          regionKeys.detail('region', updatedDistrict.id),
-          context.previousRegionDetail,
-        );
+        queryClient.setQueryData(regionKeys.detail('region', updatedDistrict.id), context.previousRegionDetail);
       }
 
       // Revert region in lists
       if (context?.previousRegionsList) {
-        queryClient.setQueryData(
-          regionKeys.list('region'),
-          context.previousRegionsList,
-        );
+        queryClient.setQueryData(regionKeys.list('region'), context.previousRegionsList);
       }
     },
   });

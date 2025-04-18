@@ -6,6 +6,4 @@ interface LanguageContextType {
   setLanguage: (lng: Language) => void;
 }
 
-export const LanguageContext = createContext<LanguageContextType | undefined>(
-  undefined,
-);
+export const LanguageContext = createContext<LanguageContextType | undefined>(undefined);

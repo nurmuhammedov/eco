@@ -1,17 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { Description } from '@/shared/components/common/description';
-import {
-  formatPhoneNumber,
-  getUserRoleDisplay,
-  getUserStatusDisplay,
-} from '@/shared/lib';
+import { formatPhoneNumber, getUserRoleDisplay, getUserStatusDisplay } from '@/shared/lib';
 import { TerritorialStaffResponse } from '@/entities/admin/territorial-staffs';
 
-export const TerritorialStaffView = ({
-  data,
-}: {
-  data: TerritorialStaffResponse | null;
-}) => {
+export const TerritorialStaffView = ({ data }: { data: TerritorialStaffResponse | null }) => {
   const { t } = useTranslation('common');
 
   if (!data) return null;

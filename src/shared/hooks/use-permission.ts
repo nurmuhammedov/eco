@@ -15,15 +15,11 @@ export const useHasPermission = (permissionKey: string): boolean => {
 // Bir nechta permissionlardan birortasi borligini tekshirish (OR)
 export const useHasAnyPermission = (permissionCodes: string[]): boolean => {
   const permissions = useUserPermissions();
-  return permissionCodes.some((code) =>
-    permissions.some((permission) => permission === code),
-  );
+  return permissionCodes.some((code) => permissions.some((permission) => permission === code));
 };
 
 // Bir nechta permissionlarning hammasi borligini tekshirish (AND)
 export const useHasAllPermissions = (permissionCodes: string[]): boolean => {
   const permissions = useUserPermissions();
-  return permissionCodes.every((code) =>
-    permissions.some((permission) => permission === code),
-  );
+  return permissionCodes.every((code) => permissions.some((permission) => permission === code));
 };

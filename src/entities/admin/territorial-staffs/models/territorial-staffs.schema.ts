@@ -14,9 +14,7 @@ const ERROR_MESSAGES = {
 } as const;
 
 export const territorialBaseSchema = {
-  fullName: z
-    .string({ message: ERROR_MESSAGES.fio })
-    .min(1, ERROR_MESSAGES.required),
+  fullName: z.string({ message: ERROR_MESSAGES.fio }).min(1, ERROR_MESSAGES.required),
   position: z
     .string({ message: ERROR_MESSAGES.position })
 
@@ -54,18 +52,13 @@ export const territorialStaffSchema = z
   .transform((data) => ({
     ...data,
     // Ensure consistent formatting of phone numbers
-    phoneNumber: data.phoneNumber.startsWith('+')
-      ? data.phoneNumber
-      : `+${data.phoneNumber}`,
+    phoneNumber: data.phoneNumber.startsWith('+') ? data.phoneNumber : `+${data.phoneNumber}`,
     // Additional data cleanup if needed
     fullName: data.fullName.replace(/\s+/g, ' '),
   }));
 
 export const territorialTableItemSchema = z.object({
-  id: z.union([
-    z.string().uuid(),
-    z.string().regex(USER_PATTERNS.uuid, { message: 'Invalid UUID format' }),
-  ]),
+  id: z.union([z.string().uuid(), z.string().regex(USER_PATTERNS.uuid, { message: 'Invalid UUID format' })]),
 
   fullName: z.string().trim().min(1),
   pin: z.union([
@@ -75,14 +68,9 @@ export const territorialTableItemSchema = z.object({
   role: z.nativeEnum(UserRoles),
   directions: z.array(z.string()).default([]),
   office: z.string(),
-  officeId: z.union([
-    z.number().int().positive(),
-    z.string().transform((val) => parseInt(val)),
-  ]),
+  officeId: z.union([z.number().int().positive(), z.string().transform((val) => parseInt(val))]),
   position: z.string(),
-  phoneNumber: z
-    .string()
-    .regex(USER_PATTERNS.phone, { message: ERROR_MESSAGES.phone }),
+  phoneNumber: z.string().regex(USER_PATTERNS.phone, { message: ERROR_MESSAGES.phone }),
   enabled: z.boolean().default(true),
 });
 
@@ -90,20 +78,10 @@ export const schemas = {
   create: z.object(territorialBaseSchema),
   update: z.object({
     id: z.string(),
-    ...Object.fromEntries(
-      Object.entries(territorialBaseSchema).map(([k, validator]) => [
-        k,
-        validator.optional(),
-      ]),
-    ),
+    ...Object.fromEntries(Object.entries(territorialBaseSchema).map(([k, validator]) => [k, validator.optional()])),
   }),
   filter: z.object({
-    ...Object.fromEntries(
-      Object.entries(territorialBaseSchema).map(([k, validator]) => [
-        k,
-        validator.optional(),
-      ]),
-    ),
+    ...Object.fromEntries(Object.entries(territorialBaseSchema).map(([k, validator]) => [k, validator.optional()])),
     page: z.number().optional().default(1),
     size: z.number().optional().default(20),
   }),

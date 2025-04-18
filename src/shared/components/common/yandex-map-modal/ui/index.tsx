@@ -20,16 +20,10 @@ interface YandexMapModalProps {
   onConfirm: (coords: Coordinate) => void;
 }
 
-const YandexMapModal: React.FC<YandexMapModalProps> = ({
-  label = 'Харитадан белгилаш',
-  onConfirm,
-  initialCoords,
-}) => {
+const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Харитадан белгилаш', onConfirm, initialCoords }) => {
   const mapHeight = getMapContentSize();
   const [open, setOpen] = useState(false);
-  const [selectedCoords, setSelectedCoords] = useState<Coordinate | null>(
-    initialCoords || null,
-  );
+  const [selectedCoords, setSelectedCoords] = useState<Coordinate | null>(initialCoords || null);
 
   useEffect(() => {
     if (open && initialCoords) {
@@ -53,11 +47,7 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full justify-between text-neutral-350"
-        >
+        <Button type="button" variant="outline" className="w-full justify-between text-neutral-350">
           {selectedCoords?.length ? (
             selectedCoords.join(', ')
           ) : (

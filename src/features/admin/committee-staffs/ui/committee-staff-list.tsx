@@ -3,15 +3,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
-import {
-  formatPhoneNumber,
-  getUserRoleDisplay,
-  getUserStatusDisplay,
-} from '@/shared/lib';
-import {
-  DataTable,
-  DataTableRowActions,
-} from '@/shared/components/common/data-table';
+import { formatPhoneNumber, getUserRoleDisplay, getUserStatusDisplay } from '@/shared/lib';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import {
   CommitteeStaffTableItem,
   FilterCommitteeStaffDTO,
@@ -23,9 +16,7 @@ export function CommitteeStaffList() {
   const { filters } = useFilters();
   const { t } = useTranslation('common');
   const { onOpen } = useCommitteeStaffsDrawer();
-  const { data, isLoading } = useCommitteeStaffListQuery(
-    filters as FilterCommitteeStaffDTO,
-  );
+  const { data, isLoading } = useCommitteeStaffListQuery(filters as FilterCommitteeStaffDTO);
   const deleteData = useDeleteCommitteeStaff();
 
   const onDelete = (id: string) => deleteData.mutate(id);

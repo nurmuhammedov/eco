@@ -30,11 +30,9 @@ export function useRegionForm() {
     mode: 'onChange',
   });
 
-  const { mutateAsync: createRegion, isPending: isCreating } =
-    useCreateRegion();
+  const { mutateAsync: createRegion, isPending: isCreating } = useCreateRegion();
 
-  const { mutateAsync: updateRegion, isPending: isUpdating } =
-    useUpdateRegion();
+  const { mutateAsync: updateRegion, isPending: isUpdating } = useUpdateRegion();
 
   const { data: regionData, isLoading } = useRegionQuery(regionId, {
     enabled: !isCreate && regionId > 0,

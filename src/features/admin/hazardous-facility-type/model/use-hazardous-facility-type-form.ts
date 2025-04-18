@@ -27,14 +27,11 @@ export function useHazardousFacilityTypeForm() {
     mode: 'onChange',
   });
 
-  const { mutateAsync: createRegion, isPending: isCreating } =
-    useCreateHazardousFacilityType();
+  const { mutateAsync: createRegion, isPending: isCreating } = useCreateHazardousFacilityType();
 
-  const { mutateAsync: updateRegion, isPending: isUpdating } =
-    useUpdateHazardousFacilityType();
+  const { mutateAsync: updateRegion, isPending: isUpdating } = useUpdateHazardousFacilityType();
 
-  const { data: fetchedData, isLoading } =
-    useHazardousFacilityTypeQuery(selectedObjId);
+  const { data: fetchedData, isLoading } = useHazardousFacilityTypeQuery(selectedObjId);
 
   useEffect(() => {
     if (fetchedData && !isCreate) {

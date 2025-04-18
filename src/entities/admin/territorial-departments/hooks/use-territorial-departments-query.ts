@@ -7,15 +7,10 @@ import {
   territorialDepartmentsKeys,
 } from '@/entities/admin/territorial-departments';
 
-export const useTerritorialDepartmentsQuery = (
-  filters: FilterTerritorialDepartmentsDTO,
-) => {
+export const useTerritorialDepartmentsQuery = (filters: FilterTerritorialDepartmentsDTO) => {
   return useQuery({
     staleTime: getTime(1, 'week'),
-    queryKey: territorialDepartmentsKeys.list(
-      'territorial-departments',
-      filters,
-    ),
+    queryKey: territorialDepartmentsKeys.list('territorial-departments', filters),
     queryFn: () => territorialDepartmentsAPI.list(filters),
     placeholderData: (previousData) => previousData,
   });

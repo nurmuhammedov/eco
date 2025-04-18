@@ -1,10 +1,6 @@
 import type { ResponseData } from '@/shared/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  committeeStaffAPI,
-  committeeStaffKeys,
-  UpdateCommitteeStaffDTO,
-} from '@/entities/admin/committee-staffs';
+import { committeeStaffAPI, committeeStaffKeys, UpdateCommitteeStaffDTO } from '@/entities/admin/committee-staffs';
 
 export const useUpdateCommitteeStaff = () => {
   const queryClient = useQueryClient();
@@ -31,23 +27,18 @@ export const useUpdateCommitteeStaff = () => {
         committeeStaffKeys.detail('committee-staff', updateData.id),
       );
 
-      const previousList = queryClient.getQueryData<
-        ResponseData<UpdateCommitteeStaffDTO>
-      >(committeeStaffKeys.list('committee-staff'));
+      const previousList = queryClient.getQueryData<ResponseData<UpdateCommitteeStaffDTO>>(
+        committeeStaffKeys.list('committee-staff'),
+      );
 
       // Update committee-staff detail
-      queryClient.setQueryData(
-        committeeStaffKeys.detail('committee-staff', updateData.id),
-        updateData,
-      );
+      queryClient.setQueryData(committeeStaffKeys.detail('committee-staff', updateData.id), updateData);
 
       // Update committee-staff in lists
       if (previousList) {
         queryClient.setQueryData(committeeStaffKeys.list('committee-staff'), {
           ...previousList,
-          content: previousList.content.map((district) =>
-            district.id === updateData.id ? updateData : district,
-          ),
+          content: previousList.content.map((district) => (district.id === updateData.id ? updateData : district)),
         });
       }
 
@@ -57,10 +48,7 @@ export const useUpdateCommitteeStaff = () => {
     onSuccess: (updatedData) => {
       // Set the updated committee-staff in cache
       if (updatedData.data.id) {
-        queryClient.setQueryData(
-          committeeStaffKeys.detail('committee-staff', updatedData.data.id),
-          updatedData,
-        );
+        queryClient.setQueryData(committeeStaffKeys.detail('committee-staff', updatedData.data.id), updatedData);
       }
 
       // Invalidate lists to ensure they're up-to-date
@@ -72,18 +60,12 @@ export const useUpdateCommitteeStaff = () => {
     onError: (_err, updatedData, context) => {
       // Revert committee-staff detail on error
       if (context?.previousDetail) {
-        queryClient.setQueryData(
-          committeeStaffKeys.detail('committee-staff', updatedData.id),
-          context.previousDetail,
-        );
+        queryClient.setQueryData(committeeStaffKeys.detail('committee-staff', updatedData.id), context.previousDetail);
       }
 
       // Revert committee-staff in lists
       if (context?.previousList) {
-        queryClient.setQueryData(
-          committeeStaffKeys.list('committee-staff'),
-          context.previousList,
-        );
+        queryClient.setQueryData(committeeStaffKeys.list('committee-staff'), context.previousList);
       }
     },
   });

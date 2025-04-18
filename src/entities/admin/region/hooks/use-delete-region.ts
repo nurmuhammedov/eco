@@ -1,8 +1,4 @@
-import {
-  regionAPI,
-  regionKeys,
-  type RegionResponse,
-} from '@/entities/admin/region';
+import { regionAPI, regionKeys, type RegionResponse } from '@/entities/admin/region';
 import type { ResponseData } from '@/shared/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -22,20 +18,14 @@ export const useDeleteRegion = () => {
       });
 
       // Capture current state for rollback
-      const previousRegionsList = queryClient.getQueryData<
-        ResponseData<RegionResponse>
-      >(regionKeys.list('region'));
-      const previousRegionDetail = queryClient.getQueryData<RegionResponse>(
-        regionKeys.detail('region', regionId),
-      );
+      const previousRegionsList = queryClient.getQueryData<ResponseData<RegionResponse>>(regionKeys.list('region'));
+      const previousRegionDetail = queryClient.getQueryData<RegionResponse>(regionKeys.detail('region', regionId));
 
       // Optimistically remove from lists
       if (previousRegionsList) {
         queryClient.setQueryData(regionKeys.list('region'), {
           ...previousRegionsList,
-          content: previousRegionsList.content.filter(
-            (district) => district.id !== regionId,
-          ),
+          content: previousRegionsList.content.filter((district) => district.id !== regionId),
         });
       }
 
@@ -57,18 +47,12 @@ export const useDeleteRegion = () => {
     onError: (_err, regionId, context) => {
       // Restore detail cache if it existed
       if (context?.previousRegionDetail) {
-        queryClient.setQueryData(
-          regionKeys.detail('region', regionId),
-          context.previousRegionDetail,
-        );
+        queryClient.setQueryData(regionKeys.detail('region', regionId), context.previousRegionDetail);
       }
 
       // Restore list cache
       if (context?.previousRegionsList) {
-        queryClient.setQueryData(
-          regionKeys.list('region'),
-          context.previousRegionsList,
-        );
+        queryClient.setQueryData(regionKeys.list('region'), context.previousRegionsList);
       }
     },
   });

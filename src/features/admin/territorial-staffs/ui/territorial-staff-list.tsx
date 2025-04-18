@@ -3,15 +3,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
 import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks';
-import {
-  formatPhoneNumber,
-  getUserRoleDisplay,
-  getUserStatusDisplay,
-} from '@/shared/lib';
-import {
-  DataTable,
-  DataTableRowActions,
-} from '@/shared/components/common/data-table';
+import { formatPhoneNumber, getUserRoleDisplay, getUserStatusDisplay } from '@/shared/lib';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import {
   FilterTerritorialStaffDTO,
   TerritorialStaffTableItem,
@@ -23,9 +16,7 @@ export function TerritorialStaffList() {
   const { filters } = useFilters();
   const { t } = useTranslation('common');
   const { onOpen } = useTerritorialStaffsDrawer();
-  const { data, isLoading } = useTerritorialStaffListQuery(
-    filters as FilterTerritorialStaffDTO,
-  );
+  const { data, isLoading } = useTerritorialStaffListQuery(filters as FilterTerritorialStaffDTO);
   const deleteData = useDeleteTerritorialStaff();
 
   const onDelete = (id: string) => deleteData.mutate(id);

@@ -3,10 +3,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
 import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks';
-import {
-  DataTable,
-  DataTableRowActions,
-} from '@/shared/components/common/data-table';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import {
   FilterTerritorialDepartmentsDTO,
   TerritorialDepartment,
@@ -18,9 +15,7 @@ export function TerritorialDepartmentsList() {
   const { filters } = useFilters();
   const { t } = useTranslation('common');
   const { onOpen } = useTerritorialDepartmentsDrawer();
-  const { data, isLoading } = useTerritorialDepartmentsQuery(
-    filters as FilterTerritorialDepartmentsDTO,
-  );
+  const { data, isLoading } = useTerritorialDepartmentsQuery(filters as FilterTerritorialDepartmentsDTO);
 
   const deleteData = useDeleteTerritorialDepartments();
 

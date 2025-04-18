@@ -7,9 +7,7 @@ import {
   FilterCommitteeStaffDTO,
 } from '@/entities/admin/committee-staffs';
 
-export const useCommitteeStaffListQuery = (
-  filters: FilterCommitteeStaffDTO,
-) => {
+export const useCommitteeStaffListQuery = (filters: FilterCommitteeStaffDTO) => {
   return useQuery({
     staleTime: getTime(1, 'week'),
     queryKey: committeeStaffKeys.list('committee-staff', filters),

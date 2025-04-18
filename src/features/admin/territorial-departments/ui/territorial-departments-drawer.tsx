@@ -6,20 +6,12 @@ import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks';
 import { useTerritorialDepartmentsForm } from '../model/use-territorial-departments-form';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 
 export const TerritorialDepartmentsDrawer = () => {
   const { t } = useTranslation('common');
   const { isOpen, onClose, isCreate } = useTerritorialDepartmentsDrawer();
-  const { form, onSubmit, isPending, isFetching, regionOptions } =
-    useTerritorialDepartmentsForm();
+  const { form, onSubmit, isPending, isFetching, regionOptions } = useTerritorialDepartmentsForm();
 
   return (
     <BaseDrawer
@@ -57,11 +49,7 @@ export const TerritorialDepartmentsDrawer = () => {
                   <FormItem>
                     <FormLabel>{t('region')}</FormLabel>
                     <FormControl>
-                      <MultiSelect
-                        {...field}
-                        options={regionOptions}
-                        placeholder={t('select_region')}
-                      />
+                      <MultiSelect {...field} options={regionOptions} placeholder={t('select_region')} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

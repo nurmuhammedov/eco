@@ -12,20 +12,8 @@ import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
 import { useCommitteeStaffForm } from '../model/use-committee-staff-form';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/components/ui/select';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 
 export const CommitteeStaffDrawer = () => {
   const { t } = useTranslation('common');
@@ -84,11 +72,7 @@ export const CommitteeStaffDrawer = () => {
                     <FormItem>
                       <FormLabel required>{t('short.pin')}</FormLabel>
                       <FormControl>
-                        <InputNumber
-                          maxLength={14}
-                          placeholder="142536945201203"
-                          {...field}
-                        />
+                        <InputNumber maxLength={14} placeholder="142536945201203" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -3,10 +3,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { useFilters } from '@/shared/hooks/use-filters';
 import { useHazardousFacilityTypeDrawer } from '@/shared/hooks/entity-hooks';
-import {
-  DataTable,
-  DataTableRowActions,
-} from '@/shared/components/common/data-table';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import {
   FilterHazardousFacilityTypeDTO,
   HazardousFacilityTypeTableItem,
@@ -19,9 +16,7 @@ export function HazardousFacilityTypeList() {
   const { filters } = useFilters();
   const { t } = useTranslation('common');
   const { onOpen } = useHazardousFacilityTypeDrawer();
-  const { data, isLoading } = useHazardousFacilityTypeListQuery(
-    filters as FilterHazardousFacilityTypeDTO,
-  );
+  const { data, isLoading } = useHazardousFacilityTypeListQuery(filters as FilterHazardousFacilityTypeDTO);
   const { sphereOptions } = objectToList();
 
   console.log(sphereOptions);

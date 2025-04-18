@@ -4,20 +4,12 @@ import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { useCentralApparatusDrawer } from '@/shared/hooks/entity-hooks';
 import { useCentralApparatusForm } from '../model/use-central-apparatus-form';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 
 export const CentralApparatusDrawer = () => {
   const { t } = useTranslation('common');
   const { isOpen, onClose } = useCentralApparatusDrawer();
-  const { form, onSubmit, isPending, isCreate, isFetching } =
-    useCentralApparatusForm();
+  const { form, onSubmit, isPending, isCreate, isFetching } = useCentralApparatusForm();
 
   return (
     <BaseDrawer

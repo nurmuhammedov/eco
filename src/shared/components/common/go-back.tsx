@@ -20,16 +20,10 @@ const GoBack: React.FC<GoBackProps> = memo(({ title, fallbackPath = '/' }) => {
 
   return (
     <div className="flex items-center gap-2">
-      <button
-        aria-label="back"
-        onClick={handleGoBack}
-        className="flex items-center"
-      >
+      <button aria-label="back" onClick={handleGoBack} className="flex items-center">
         <ChevronLeft className="w-5 h-5" />
       </button>
-      <h1 className="text-xl font-semibold truncate text-neutral-850">
-        {title}
-      </h1>
+      <h1 className="text-xl font-semibold truncate text-neutral-850">{title}</h1>
     </div>
   );
 });

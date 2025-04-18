@@ -1,10 +1,6 @@
 import type { ResponseData } from '@/shared/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  districtAPI,
-  districtKeys,
-  UpdateDistrictDTO,
-} from '@/entities/admin/districts';
+import { districtAPI, districtKeys, UpdateDistrictDTO } from '@/entities/admin/districts';
 
 export const useUpdateDistrict = () => {
   const queryClient = useQueryClient();
@@ -31,15 +27,12 @@ export const useUpdateDistrict = () => {
         districtKeys.detail('district', districtUpdate.id),
       );
 
-      const previousDistrictsList = queryClient.getQueryData<
-        ResponseData<UpdateDistrictDTO>
-      >(districtKeys.list('district'));
+      const previousDistrictsList = queryClient.getQueryData<ResponseData<UpdateDistrictDTO>>(
+        districtKeys.list('district'),
+      );
 
       // Update district detail
-      queryClient.setQueryData(
-        districtKeys.detail('district', districtUpdate.id),
-        districtUpdate,
-      );
+      queryClient.setQueryData(districtKeys.detail('district', districtUpdate.id), districtUpdate);
 
       // Update district in lists
       if (previousDistrictsList) {
@@ -57,10 +50,7 @@ export const useUpdateDistrict = () => {
     onSuccess: (updatedDistrict) => {
       // Set the updated district in cache
       if (updatedDistrict.data.id) {
-        queryClient.setQueryData(
-          districtKeys.detail('district', updatedDistrict.data.id),
-          updatedDistrict,
-        );
+        queryClient.setQueryData(districtKeys.detail('district', updatedDistrict.data.id), updatedDistrict);
       }
 
       // Invalidate lists to ensure they're up-to-date
@@ -72,18 +62,12 @@ export const useUpdateDistrict = () => {
     onError: (_err, updatedDistrict, context) => {
       // Revert district detail on error
       if (context?.previousRegionDetail) {
-        queryClient.setQueryData(
-          districtKeys.detail('district', updatedDistrict.id),
-          context.previousRegionDetail,
-        );
+        queryClient.setQueryData(districtKeys.detail('district', updatedDistrict.id), context.previousRegionDetail);
       }
 
       // Revert district in lists
       if (context?.previousDistrictsList) {
-        queryClient.setQueryData(
-          districtKeys.list('district'),
-          context.previousDistrictsList,
-        );
+        queryClient.setQueryData(districtKeys.list('district'), context.previousDistrictsList);
       }
     },
   });

@@ -20,26 +20,22 @@ export const useCreateTerritorialDepartment = () => {
       });
 
       // Capture current state for rollback
-      const previousList = queryClient.getQueryData<
-        ResponseData<TerritorialDepartmentResponse>
-      >(territorialDepartmentsKeys.list('territorial-departments'));
+      const previousList = queryClient.getQueryData<ResponseData<TerritorialDepartmentResponse>>(
+        territorialDepartmentsKeys.list('territorial-departments'),
+      );
 
       if (previousList) {
         // Create a temporary territorial-departments with fake ID
-        const temporaryData: CreateTerritorialDepartmentsDTO & { id: number } =
-          {
-            ...newData,
-            id: -Date.now(), // Temporary negative ID to identify new items
-          };
+        const temporaryData: CreateTerritorialDepartmentsDTO & { id: number } = {
+          ...newData,
+          id: -Date.now(), // Temporary negative ID to identify new items
+        };
 
         // Add to the list
-        queryClient.setQueryData(
-          territorialDepartmentsKeys.list('territorial-departments'),
-          {
-            ...previousList,
-            content: [...previousList.content, temporaryData],
-          },
-        );
+        queryClient.setQueryData(territorialDepartmentsKeys.list('territorial-departments'), {
+          ...previousList,
+          content: [...previousList.content, temporaryData],
+        });
       }
 
       return { previousList };
@@ -53,10 +49,7 @@ export const useCreateTerritorialDepartment = () => {
 
       // Add the newly created territorial-departments to cache
       queryClient.setQueryData(
-        territorialDepartmentsKeys.detail(
-          'territorial-departments',
-          createdData.data.id!,
-        ),
+        territorialDepartmentsKeys.detail('territorial-departments', createdData.data.id!),
         createdData,
       );
     },
@@ -64,10 +57,7 @@ export const useCreateTerritorialDepartment = () => {
     onError: (_err, _newData, context) => {
       // Revert optimistic updates on error
       if (context?.previousList) {
-        queryClient.setQueryData(
-          territorialDepartmentsKeys.list('territorial-departments'),
-          context.previousList,
-        );
+        queryClient.setQueryData(territorialDepartmentsKeys.list('territorial-departments'), context.previousList);
       }
     },
   });

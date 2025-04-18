@@ -21,9 +21,6 @@ export const useApplicationTypeMap = () => {
 
       return acc;
     },
-    {} as Record<
-      ApplicationTypeEnum,
-      () => Promise<{ default: ComponentType<{ form: UseFormReturn<any> }> }>
-    >,
+    {} as Record<ApplicationTypeEnum, () => Promise<{ default: ComponentType<{ form: UseFormReturn<any> }> }>>,
   );
 };

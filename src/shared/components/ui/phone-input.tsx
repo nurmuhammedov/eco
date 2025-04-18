@@ -14,18 +14,7 @@ type PhoneInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 };
 
 const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
-  (
-    {
-      value,
-      onChange,
-      className,
-      onValueChange,
-      showIcon = false,
-      showCountryCode = true,
-      ...props
-    },
-    ref,
-  ) => {
+  ({ value, onChange, className, onValueChange, showIcon = false, showCountryCode = true, ...props }, ref) => {
     // Handle controlled input with formatting
     const formatPhoneNumber = (value: string): string => {
       // If empty, return empty or country code

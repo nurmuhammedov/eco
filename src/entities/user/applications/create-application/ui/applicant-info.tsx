@@ -2,14 +2,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { Input } from '@/shared/components/ui/input.tsx';
 import { CardForm } from '@/entities/user/applications/create-application/ui/index.ts';
 import { ApplicationBaseDTO } from '@/entities/user/applications/create-application/model/application.dto.ts';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 
 interface Props {
   form: UseFormReturn<ApplicationBaseDTO>;
@@ -28,11 +21,7 @@ export const ApplicantInfo = ({ form }: Props) => {
               <FormItem>
                 <FormLabel>Ташкилот телефон рақами</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-xs 3xl:w-sm"
-                    placeholder="Ташкилот телефон рақами"
-                    {...field}
-                  />
+                  <Input className="w-xs 3xl:w-sm" placeholder="Ташкилот телефон рақами" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -45,11 +34,7 @@ export const ApplicantInfo = ({ form }: Props) => {
               <FormItem>
                 <FormLabel>Ташкилот электрон почтаси</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-xs 3xl:w-sm"
-                    placeholder="Ташкилот электрон почтаси"
-                    {...field}
-                  />
+                  <Input className="w-xs 3xl:w-sm" placeholder="Ташкилот электрон почтаси" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

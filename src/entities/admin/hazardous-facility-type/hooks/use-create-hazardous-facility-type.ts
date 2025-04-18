@@ -20,26 +20,22 @@ export const useCreateHazardousFacilityType = () => {
       });
 
       // Capture current state for rollback
-      const previousListData = queryClient.getQueryData<
-        ResponseData<HazardousFacilityTypeResponse>
-      >(hazardousFacilityTypeKeys.list('hazardous-facility-type'));
+      const previousListData = queryClient.getQueryData<ResponseData<HazardousFacilityTypeResponse>>(
+        hazardousFacilityTypeKeys.list('hazardous-facility-type'),
+      );
 
       if (previousListData) {
         // Create a temporary hazardous-facility-type with fake ID
-        const temporaryRegion: CreateHazardousFacilityTypeDTO & { id: number } =
-          {
-            ...newRegionData,
-            id: -Date.now(), // Temporary negative ID to identify new items
-          };
+        const temporaryRegion: CreateHazardousFacilityTypeDTO & { id: number } = {
+          ...newRegionData,
+          id: -Date.now(), // Temporary negative ID to identify new items
+        };
 
         // Add to the list
-        queryClient.setQueryData(
-          hazardousFacilityTypeKeys.list('hazardous-facility-type'),
-          {
-            ...previousListData,
-            content: [...previousListData.content, temporaryRegion],
-          },
-        );
+        queryClient.setQueryData(hazardousFacilityTypeKeys.list('hazardous-facility-type'), {
+          ...previousListData,
+          content: [...previousListData.content, temporaryRegion],
+        });
       }
 
       return { previousListData };
@@ -53,10 +49,7 @@ export const useCreateHazardousFacilityType = () => {
 
       // Add the newly created hazardous-facility-type to cache
       queryClient.setQueryData(
-        hazardousFacilityTypeKeys.detail(
-          'hazardous-facility-type',
-          createdData.data.id!,
-        ),
+        hazardousFacilityTypeKeys.detail('hazardous-facility-type', createdData.data.id!),
         createdData,
       );
     },
@@ -64,10 +57,7 @@ export const useCreateHazardousFacilityType = () => {
     onError: (_err, _newDistrict, context) => {
       // Revert optimistic updates on error
       if (context?.previousListData) {
-        queryClient.setQueryData(
-          hazardousFacilityTypeKeys.list('hazardous-facility-type'),
-          context.previousListData,
-        );
+        queryClient.setQueryData(hazardousFacilityTypeKeys.list('hazardous-facility-type'), context.previousListData);
       }
     },
   });

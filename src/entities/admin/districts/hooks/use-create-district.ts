@@ -1,11 +1,6 @@
 import type { ResponseData } from '@/shared/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  CreateDistrictDTO,
-  districtAPI,
-  districtKeys,
-  DistrictResponse,
-} from '@/entities/admin/districts';
+import { CreateDistrictDTO, districtAPI, districtKeys, DistrictResponse } from '@/entities/admin/districts';
 
 export const useCreateDistrict = () => {
   const queryClient = useQueryClient();
@@ -20,9 +15,9 @@ export const useCreateDistrict = () => {
       });
 
       // Capture current state for rollback
-      const previousDistrictsList = queryClient.getQueryData<
-        ResponseData<DistrictResponse>
-      >(districtKeys.list('district'));
+      const previousDistrictsList = queryClient.getQueryData<ResponseData<DistrictResponse>>(
+        districtKeys.list('district'),
+      );
 
       if (previousDistrictsList) {
         // Create a temporary district with fake ID
@@ -48,19 +43,13 @@ export const useCreateDistrict = () => {
       });
 
       // Add the newly created district to cache
-      queryClient.setQueryData(
-        districtKeys.detail('district', createdDistrict.data.id!),
-        createdDistrict,
-      );
+      queryClient.setQueryData(districtKeys.detail('district', createdDistrict.data.id!), createdDistrict);
     },
 
     onError: (_err, _newDistrict, context) => {
       // Revert optimistic updates on error
       if (context?.previousDistrictsList) {
-        queryClient.setQueryData(
-          districtKeys.list('district'),
-          context.previousDistrictsList,
-        );
+        queryClient.setQueryData(districtKeys.list('district'), context.previousDistrictsList);
       }
     },
   });

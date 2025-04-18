@@ -7,13 +7,7 @@ export default tslint.config(
   js.configs.recommended,
   tslint.configs.recommendedTypeChecked,
   {
-    ignores: [
-      'dist/**/*.ts',
-      'dist/**',
-      '**/*.mjs',
-      'eslint.config.mjs',
-      '**/*.js',
-    ],
+    ignores: ['dist/**/*.ts', 'dist/**', '**/*.mjs', 'eslint.config.mjs', '**/*.js'],
   },
   {
     extends: [js.configs.recommended, tslint.configs.recommendedTypeChecked],

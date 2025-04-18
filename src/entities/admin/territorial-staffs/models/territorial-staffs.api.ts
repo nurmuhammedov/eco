@@ -10,25 +10,19 @@ import {
 
 export const territorialStaffAPI = {
   list: async (params: FilterTerritorialStaffDTO) => {
-    const { data } =
-      await apiClient.getWithPagination<TerritorialStaffResponse>(
-        API_ENDPOINTS.OFFICE_USERS,
-        params,
-      );
+    const { data } = await apiClient.getWithPagination<TerritorialStaffResponse>(API_ENDPOINTS.OFFICE_USERS, params);
     return data || [];
   },
 
   byId: async (id: string) => {
-    const { data } = await apiClient.get<ApiResponse<TerritorialStaffResponse>>(
-      `${API_ENDPOINTS.USERS}/${id}`,
-    );
+    const { data } = await apiClient.get<ApiResponse<TerritorialStaffResponse>>(`${API_ENDPOINTS.USERS}/${id}`);
     return data.data;
   },
   create: async (data: CreateTerritorialStaffDTO) => {
-    const response = await apiClient.post<
-      TerritorialStaffResponse,
-      CreateTerritorialStaffDTO
-    >(API_ENDPOINTS.OFFICE_USERS, data);
+    const response = await apiClient.post<TerritorialStaffResponse, CreateTerritorialStaffDTO>(
+      API_ENDPOINTS.OFFICE_USERS,
+      data,
+    );
     if (!response.success && response.errors) {
       toast.error(Object.values(response.errors).join(', '), {
         richColors: true,
@@ -38,10 +32,7 @@ export const territorialStaffAPI = {
     return response;
   },
   update: async (data: UpdateTerritorialStaffDTO) => {
-    const response = await apiClient.put<UpdateTerritorialStaffDTO>(
-      `${API_ENDPOINTS.OFFICE_USERS}/${data.id}`,
-      data,
-    );
+    const response = await apiClient.put<UpdateTerritorialStaffDTO>(`${API_ENDPOINTS.OFFICE_USERS}/${data.id}`, data);
 
     if (!response.success) {
       throw new Error(response.message);

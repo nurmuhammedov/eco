@@ -3,20 +3,9 @@ import { StaffsActiveTab } from '../types';
 import { useTranslation } from 'react-i18next';
 import { useStaffs } from '../model/use-staffs';
 import { StaffsActionButton } from './action-button';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/shared/components/ui/tabs';
-import {
-  CommitteeStaffDrawer,
-  CommitteeStaffList,
-} from '@/features/admin/committee-staffs';
-import {
-  TerritorialStaffDrawer,
-  TerritorialStaffList,
-} from '@/features/admin/territorial-staffs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
+import { CommitteeStaffDrawer, CommitteeStaffList } from '@/features/admin/committee-staffs';
+import { TerritorialStaffDrawer, TerritorialStaffList } from '@/features/admin/territorial-staffs';
 
 const StaffsWidget = () => {
   const { t } = useTranslation('common');
@@ -37,26 +26,15 @@ const StaffsWidget = () => {
         onAddCommitteeStaffs={onAddCommitteeStaffs}
         onAddTerritorialStaffs={onAddTerritorialStaffs}
       />
-      <Tabs
-        className="mt-3"
-        defaultValue={activeTab}
-        onValueChange={(value: any) => handleChangeTab(value)}
-      >
+      <Tabs className="mt-3" defaultValue={activeTab} onValueChange={(value: any) => handleChangeTab(value)}>
         <TabsList>
-          <TabsTrigger value={StaffsActiveTab.COMMITTEE_STAFFS}>
-            {t('committee_staffs')}
-          </TabsTrigger>
-          <TabsTrigger value={StaffsActiveTab.TERRITORIAL_STAFFS}>
-            {t('territorial_staffs')}
-          </TabsTrigger>
+          <TabsTrigger value={StaffsActiveTab.COMMITTEE_STAFFS}>{t('committee_staffs')}</TabsTrigger>
+          <TabsTrigger value={StaffsActiveTab.TERRITORIAL_STAFFS}>{t('territorial_staffs')}</TabsTrigger>
         </TabsList>
         <TabsContent className="mt-4" value={StaffsActiveTab.COMMITTEE_STAFFS}>
           <CommitteeStaffList />
         </TabsContent>
-        <TabsContent
-          className="mt-4"
-          value={StaffsActiveTab.TERRITORIAL_STAFFS}
-        >
+        <TabsContent className="mt-4" value={StaffsActiveTab.TERRITORIAL_STAFFS}>
           <TerritorialStaffList />
         </TabsContent>
       </Tabs>
