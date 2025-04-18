@@ -1,7 +1,7 @@
 export enum FileTypes {
-  IMAGES = 'image/*',
-  VIDEOS = 'video/*',
+  IMAGE = 'image/*',
   PDF = 'application/pdf',
-  DOCUMENTS = 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  ARCHIVES = 'application/zip, application/x-rar-compressed',
+  DOC = 'application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  EXCEL = 'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  ALL = '*/*',
 }

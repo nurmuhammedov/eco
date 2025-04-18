@@ -22,35 +22,35 @@ export const ApplicationTable = ({ data, onViewApplication }: ApplicationTablePr
     },
     {
       accessorKey: 'name',
-      header: 'Ариза рақами',
+      header: 'Ariza raqami',
     },
     {
       accessorKey: 'name',
-      header: 'Ариза санаси',
+      header: 'Ariza sanasi',
     },
     {
       accessorKey: 'name',
-      header: 'Ариза тури',
+      header: 'Ariza turi',
     },
     {
       accessorKey: 'name',
-      header: 'Қўмита маъсул бўлими',
+      header: 'Qo‘mita maʼsul bo‘limi',
     },
     {
       accessorKey: 'name',
-      header: 'Ижрочи ҳудудий бошқарма',
+      header: 'Ijrochi hududiy boshqarma',
     },
     {
       accessorKey: 'name',
-      header: 'Маъсул ижрочи',
+      header: 'Maʼsul ijrochi',
     },
     {
       accessorKey: 'name',
-      header: 'Ижро муддати',
+      header: 'Ijro muddati',
     },
     {
       accessorKey: 'name',
-      header: 'Ариза ҳолати',
+      header: 'Ariza holati',
     },
     {
       id: 'actions',

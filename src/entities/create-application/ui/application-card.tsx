@@ -35,7 +35,7 @@ const AnimatedButton = ({ type }: { type: ApplicationTypeEnum }) => {
     >
       <span className="relative z-10 flex items-center">
         <SendSVGIcon />
-        Ариза юбориш
+        Ariza yuborish
       </span>
       <span className="absolute inset-0 bg-white/10 transform -skew-x-12 -translate-x-full opacity-0 group-hover:opacity-100 group-hover:translate-x-full transition-transform ease-out duration-700" />
     </button>

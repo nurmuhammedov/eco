@@ -3,24 +3,12 @@ import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { CardForm } from '@/entities/user/applications/create-application/ui/application-form-card';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/components/ui/select';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { InputFile } from '@/shared/components/common/file-upload/ui';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
-import { CreateRegisterHpoDTO } from '@/entities/user/applications/create-application/model/application.dto';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
+import { CreateRegisterHpoDTO } from '@/entities/user/applications/create-application/model/application.dto';
 import { useCreateRegisterHPOMutation } from '@/features/user/applications/create-application/api/register-hpo.api';
 
 interface Props {
@@ -67,11 +55,7 @@ export default ({ form }: Props) => {
               <FormItem>
                 <FormLabel>ХИЧО дан фойдаланувчи ташкилот номи</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-full 3xl:w-sm"
-                    placeholder="Юқори ташкилотнинг номи"
-                    {...field}
-                  />
+                  <Input className="w-full 3xl:w-sm" placeholder="Юқори ташкилотнинг номи" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -82,9 +66,7 @@ export default ({ form }: Props) => {
             name="organization_email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  ХИЧО дан фойдаланувчи ташкилот почта манзили
-                </FormLabel>
+                <FormLabel>ХИЧО дан фойдаланувчи ташкилот почта манзили</FormLabel>
                 <FormControl>
                   <Input
                     className="w-full 3xl:w-sm"
@@ -103,11 +85,7 @@ export default ({ form }: Props) => {
               <FormItem>
                 <FormLabel>СТИР</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-full 3xl:w-sm"
-                    placeholder="Солиқ тўловчининг идентификацион рақами"
-                    {...field}
-                  />
+                  <Input className="w-full 3xl:w-sm" placeholder="Солиқ тўловчининг идентификацион рақами" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -120,11 +98,7 @@ export default ({ form }: Props) => {
               <FormItem>
                 <FormLabel>ХИЧО нинг номи</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-full 3xl:w-sm"
-                    placeholder="ХИЧО нинг номи"
-                    {...field}
-                  />
+                  <Input className="w-full 3xl:w-sm" placeholder="ХИЧО нинг номи" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -159,8 +133,7 @@ export default ({ form }: Props) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="w-full 3xl:w-sm">
-                  ХИЧО цехлари, участкалари, майдончалари ва бошқа ишлаб чиқариш
-                  объектларининг номи
+                  ХИЧО цехлари, участкалари, майдончалари ва бошқа ишлаб чиқариш объектларининг номи
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -179,8 +152,7 @@ export default ({ form }: Props) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="w-full 3xl:w-sm">
-                  ВМнинг 2008 йил 10 декабрдаги 271-сон қарорига мувофиқ хавфли
-                  моддаларнинг номи ва миқдори
+                  ВМнинг 2008 йил 10 декабрдаги 271-сон қарорига мувофиқ хавфли моддаларнинг номи ва миқдори
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -278,12 +250,7 @@ export default ({ form }: Props) => {
             <FormItem>
               <FormLabel>Ариза баёни</FormLabel>
               <FormControl>
-                <Textarea
-                  rows={6}
-                  className="3xl:w-4/6"
-                  placeholder="Ариза баёни"
-                  {...field}
-                />
+                <Textarea rows={6} className="3xl:w-4/6" placeholder="Ариза баёни" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -297,9 +264,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл Лойиҳа ҳужжатлари
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Файл Лойиҳа ҳужжатлари</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -314,9 +279,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл Суғурта полиси
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Файл Суғурта полиси</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -331,9 +294,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл Масъул ходим тайинланганлиги буйруғи
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Файл Масъул ходим тайинланганлиги буйруғи</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -348,9 +309,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл Экспертиза хулосаси
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Файл Экспертиза хулосаси</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -365,9 +324,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл Лицензия
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Файл Лицензия</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -382,9 +339,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл Экология қўмитасидан хулосаси*
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Файл Экология қўмитасидан хулосаси*</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -399,9 +354,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл Идентификация варағи
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Файл Идентификация варағи</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -416,9 +369,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл Рухсатнома
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Файл Рухсатнома</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -451,8 +402,7 @@ export default ({ form }: Props) => {
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
                 <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл ХИЧО ходимларнинг Саноат хавфсизлиги бўйича аттестациядан
-                  ўтганлиги
+                  Файл ХИЧО ходимларнинг Саноат хавфсизлиги бўйича аттестациядан ўтганлиги
                 </FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
@@ -468,9 +418,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл ХИЧО Кадастр паспорти
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Файл ХИЧО Кадастр паспорти</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -485,9 +433,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл Ёнғин хавфсизлиги хулосаси
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Файл Ёнғин хавфсизлиги хулосаси</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -502,9 +448,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл Саноат хавфсизлиги Декларацияси
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Файл Саноат хавфсизлиги Декларацияси</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>
@@ -519,9 +463,7 @@ export default ({ form }: Props) => {
           render={({ field }) => (
             <FormItem className="pb-4 border-b">
               <div className="flex items-end xl:items-center justify-between gap-2">
-                <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                  Файл Қурилмаларни синовдан ўтганлиги
-                </FormLabel>
+                <FormLabel className="max-w-1/2 2xl:max-w-3/7">Файл Қурилмаларни синовдан ўтганлиги</FormLabel>
                 <FormControl>
                   <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                 </FormControl>

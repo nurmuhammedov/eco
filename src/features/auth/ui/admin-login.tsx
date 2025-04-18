@@ -8,28 +8,16 @@ import { Input } from '@/shared/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/components/ui/button';
 import { ComponentPropsWithoutRef, useState } from 'react';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
-import LanguageDropdown from '@/widgets/header/ui/intl-dropdown';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 
 const adminLoginFormSchema = z.object({
   username: z.string(),
-  password: z
-    .string()
-    .min(8, 'Пароль камида 8 та белгидан иборат бўлиши керак'),
+  password: z.string().min(8, 'Пароль камида 8 та белгидан иборат бўлиши керак'),
 });
 
 type AdminLoginDTO = z.infer<typeof adminLoginFormSchema>;
 
-export default function AdminLoginForm({
-  className,
-}: ComponentPropsWithoutRef<'form'>) {
+export default function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) {
   const { t } = useTranslation('admin');
 
   const { mutateAsync, isPending } = useLogin();
@@ -52,16 +40,13 @@ export default function AdminLoginForm({
   return (
     <Form {...form}>
       <form
-        className={cn(
-          'w-1/2 flex flex-col items-center justify-center gap-6',
-          className,
-        )}
+        className={cn('w-1/2 flex flex-col items-center justify-center gap-6', className)}
         onSubmit={form.handleSubmit(handleLogin)}
       >
         <div className="w-3/5 3xl:w-2/5">
-          <div className="fixed top-4 right-4">
+          {/*<div className="fixed top-4 right-4">
             <LanguageDropdown />
-          </div>
+          </div>*/}
           <div className="flex flex-col items-center gap-2 text-center">
             <h1 className="text-2xl font-bold">{t('admin_panel')}</h1>
           </div>
@@ -106,12 +91,7 @@ export default function AdminLoginForm({
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              className="w-full"
-              loading={isPending}
-              disabled={isPending}
-            >
+            <Button type="submit" className="w-full" loading={isPending} disabled={isPending}>
               {t('sign_in')}
             </Button>
           </div>

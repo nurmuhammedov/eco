@@ -19,7 +19,7 @@ const ApplicationPage = () => {
     return (
       canCreateApplication && (
         <Button onClick={() => navigate('/applications/create')}>
-          <PlusCircle /> Ариза яратиш
+          <PlusCircle /> Ariza yaratish
         </Button>
       )
     );

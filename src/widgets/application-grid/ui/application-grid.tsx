@@ -19,7 +19,7 @@ export const ApplicationsGrid: React.FC = () => {
     if (!hasMainCards) {
       return (
         <div className="text-center py-12">
-          <p className="text-slate-500">Бу тоифада ҳозирча аризалар мавжуд эмас</p>
+          <p className="text-slate-500">Bu toifada hozircha arizalar mavjud emas</p>
         </div>
       );
     }
@@ -28,7 +28,7 @@ export const ApplicationsGrid: React.FC = () => {
     if (selectedMainCard && !hasSubCards) {
       return (
         <div className="text-center py-12">
-          <p className="text-slate-500">Танланган тоифага оид аризалар мавжуд эмас</p>
+          <p className="text-slate-500">Tanlangan toifaga oid arizalar mavjud emas</p>
         </div>
       );
     }

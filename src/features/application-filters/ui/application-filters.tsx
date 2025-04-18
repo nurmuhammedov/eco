@@ -69,7 +69,7 @@ export const ApplicationFilters: React.FC<ApplicationFiltersProps> = ({ onFilter
         <FilterField>
           <SearchInput
             ref={searchRef}
-            placeholder="Қидирув"
+            placeholder="Ariza raqami"
             onChange={handleSearchChange}
             defaultValue={initialFilters?.name}
           />
@@ -88,7 +88,7 @@ export const ApplicationFilters: React.FC<ApplicationFiltersProps> = ({ onFilter
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Ариза тури" />
+                  <SelectValue placeholder="Ariza turi" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="XICHONI_RUYHATGA_OLISH">ХИЧОни рўйхатга олиш</SelectItem>
@@ -112,7 +112,7 @@ export const ApplicationFilters: React.FC<ApplicationFiltersProps> = ({ onFilter
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Ижрочи ҳудудий бошқарма" />
+                  <SelectValue placeholder="Ijrochi hududiy boshqarma" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="YANGI">Янги</SelectItem>
@@ -139,7 +139,7 @@ export const ApplicationFilters: React.FC<ApplicationFiltersProps> = ({ onFilter
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Маъсул ижрочи" />
+                  <SelectValue placeholder="Maʼsul ijrochi" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="YANGI">Янги</SelectItem>

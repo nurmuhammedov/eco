@@ -1,7 +1,8 @@
 import { lazy, LazyExoticComponent } from 'react';
-import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types.ts';
+import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
 
 const formComponentsMap: Record<string, LazyExoticComponent<any>> = {
+  [ApplicationTypeEnum.RegisterHPO]: lazy(() => import('../ui/forms/register-hpo-form')),
   [ApplicationTypeEnum.RegisterLift]: lazy(() => import('../ui/forms/register-lift-form')),
   [ApplicationTypeEnum.RegisterCrane]: lazy(() => import('../ui/forms/register-crane-form')),
   [ApplicationTypeEnum.RegisterBoiler]: lazy(() => import('../ui/forms/register-boiler-form')),
