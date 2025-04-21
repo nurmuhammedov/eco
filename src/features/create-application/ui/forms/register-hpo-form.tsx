@@ -2,40 +2,39 @@ import { useForm } from 'react-hook-form';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { Textarea } from '@/shared/components/ui/textarea';
+import { InputFile } from '@/shared/components/common/file-upload';
+import { HPOApplicationDTO } from '@/features/create-application/model/dto';
+import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types';
 import { CardForm } from '@/entities/user/applications/create-application/ui/application-form-card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { InputFile } from '@/shared/components/common/file-upload/ui';
-import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
-import { CreateRegisterHpoDTO } from '@/entities/user/applications/create-application/model/application.dto';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
+import { applicationFormConstants } from '@/entities/create-application/model/form-constants';
 
 export default () => {
-  const form = useForm<CreateRegisterHpoDTO>({});
-  const onSubmit = (data: CreateRegisterHpoDTO) => {
+  const form = useForm<HPOApplicationDTO>({});
+  const onSubmit = (data: HPOApplicationDTO) => {
     console.log("Yuborilgan ma'lumot:", data);
   };
 
-  const { register, handleSubmit } = form;
+  const { spheres } = applicationFormConstants();
+
+  const { handleSubmit, formState } = form;
 
   return (
     <Form {...form}>
+      {JSON.stringify(formState)}
       <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
         <CardForm className="my-2">
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
+          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
             <FormField
               control={form.control}
-              name="parent_name"
+              name="upperOrganization"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Yuqori tashkilotning nomi (mavjud bo‘lsa)</FormLabel>
                   <FormControl>
-                    <Input
-                      className="w-full 3xl:w-sm"
-                      placeholder="Yuqori tashkilotning nomi"
-                      {...register('parent_name')}
-                      {...field}
-                    />
+                    <Input className="w-full 3xl:w-sm" placeholder="Yuqori tashkilotning nomi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -43,58 +42,7 @@ export default () => {
             />
             <FormField
               control={form.control}
-              name="organization_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>XICHO dan foydalanuvchi tashkilot nomi</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="w-full 3xl:w-sm"
-                      placeholder="XICHO dan foydalanuvchi tashkilot nomi"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="organization_email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>XICHO dan foydalanuvchi tashkilot pochta manzili</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="w-full 3xl:w-sm"
-                      placeholder="XICHO dan foydalanuvchi tashkilot pochta manzili"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="tin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>STIR</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="w-full 3xl:w-sm"
-                      placeholder="Soliq to‘lovchining identifikatsion raqami"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="hpo_name"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>XICHO ning nomi</FormLabel>
@@ -107,7 +55,7 @@ export default () => {
             />
             <FormField
               control={form.control}
-              name="hpo_type"
+              name="hazardousFacilityTypeId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>XICHO ning turi</FormLabel>
@@ -127,7 +75,7 @@ export default () => {
             />
             <FormField
               control={form.control}
-              name="networks"
+              name="spheres"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Tarmoqlar</FormLabel>
@@ -137,7 +85,11 @@ export default () => {
                         <SelectValue placeholder="Tarmoqlar" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={'null'}>Mavjud emas</SelectItem>
+                        {spheres.map((item) => (
+                          <SelectItem key={item.name} value={item.id}>
+                            {item.name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -147,7 +99,7 @@ export default () => {
             />
             <FormField
               control={form.control}
-              name="region"
+              name="regionId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>XICHO joylashgan viloyat</FormLabel>
@@ -167,7 +119,7 @@ export default () => {
             />
             <FormField
               control={form.control}
-              name="district"
+              name="districtId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>XICHO joylashgan tuman</FormLabel>
@@ -190,10 +142,23 @@ export default () => {
               name="address"
               render={({ field }) => (
                 <FormItem className="w-full 3xl:w-sm">
-                  <FormLabel>XICHO manzili</FormLabel>
+                  <FormLabel>XICHO joylashgan manzil</FormLabel>
+                  <FormControl>
+                    <Input className="w-full 3xl:w-sm" placeholder="Alisher Navoiy ko‘chasi, 1-uy" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem className="w-full 3xl:w-sm">
+                  <FormLabel>Joylashuv</FormLabel>
                   <FormControl>
                     <YandexMapModal
-                      initialCoords={field.value}
+                      initialCoords={field.value ? [field.value] : null}
                       onConfirm={(coords) => field.onChange(coords)}
                       {...field}
                     />
@@ -204,16 +169,16 @@ export default () => {
             />
             <FormField
               control={form.control}
-              name="hpo_objects_name"
+              name="extraArea"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="w-full 3xl:w-sm">
-                    ХИЧО цехлари, участкалари, майдончалари ва бошқа ишлаб чиқариш объектларининг номи
+                    XICHO sexlari, uchastkalari, maydonchalari va boshqa ishlab chiqarish obyektlarining nomi
                   </FormLabel>
                   <FormControl>
                     <Input
                       className="w-full 3xl:w-sm"
-                      placeholder="ХИЧО цехлари, участкалари, майдончалари ва бошқа ишлаб чиқариш объектларининг номи"
+                      placeholder="XICHO sexlari, uchastkalari, maydonchalari va boshqa ishlab chiqarish obyektlarining nomi"
                       {...field}
                     />
                   </FormControl>
@@ -223,16 +188,16 @@ export default () => {
             />
             <FormField
               control={form.control}
-              name="hazardous_name"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="w-full 3xl:w-sm">
-                    ВМнинг 2008 йил 10 декабрдаги 271-сон қарорига мувофиқ хавфли моддаларнинг номи ва миқдори
+                    VM ning 2008 yil 10 dekabrdagi 271-son qaroriga muvofiq xavfli moddalarning nomi va miqdori
                   </FormLabel>
                   <FormControl>
                     <Input
                       className="w-full 3xl:w-sm"
-                      placeholder="ВМнинг 2008 йил 10 декабрдаги 271-сон қарорига мувофиқ хавфли моддаларнинг номи ва миқдори"
+                      placeholder="VM ning 2008 yil 10 dekabrdagi 271-son qaroriga muvofiq xavfli moddalarning nomi va miqdori"
                       {...field}
                     />
                   </FormControl>
@@ -257,23 +222,25 @@ export default () => {
         </CardForm>
         <CardForm className="grid grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4">
           <FormField
-            name="fileUrls"
+            name="projectDocumentationPath"
             control={form.control}
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Loyiha hujjatlari(PDF)</FormLabel>
+                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    Loyiha hujjatlari(PDF)
+                  </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile showPreview form={form} accept={[FileTypes.PDF]} {...field} />
                   </FormControl>
                 </div>
                 <FormMessage className="text-right" />
               </FormItem>
             )}
           />
-          {/*<FormField
+          <FormField
             control={form.control}
-            name="fileUrls"
+            name="insurancePolicyPath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
@@ -288,11 +255,11 @@ export default () => {
           />
           <FormField
             control={form.control}
-            name="fileUrls"
+            name="appointmentOrderPath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Masʼul xodim tayinlanganligi buyrug‘i(PDF)</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ma'sul xodim tayinlanganligi buyrug‘i(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                   </FormControl>
@@ -303,7 +270,24 @@ export default () => {
           />
           <FormField
             control={form.control}
-            name="fileUrls"
+            name="identificationCardPath"
+            render={({ field }) => (
+              <FormItem className="pb-4 border-b">
+                <div className="flex items-end xl:items-center justify-between gap-2">
+                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    Identifikatsiya varag‘i(PDF)
+                  </FormLabel>
+                  <FormControl>
+                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                  </FormControl>
+                </div>
+                <FormMessage className="text-right" />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="expertOpinionPath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
@@ -318,7 +302,7 @@ export default () => {
           />
           <FormField
             control={form.control}
-            name="fileUrls"
+            name="licensePath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
@@ -333,7 +317,7 @@ export default () => {
           />
           <FormField
             control={form.control}
-            name="fileUrls"
+            name="ecologicalConclusionPath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
@@ -348,22 +332,7 @@ export default () => {
           />
           <FormField
             control={form.control}
-            name="fileUrls"
-            render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Identifikatsiya varag‘i(PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
-                  </FormControl>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="fileUrls"
+            name="permitPath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
@@ -378,7 +347,7 @@ export default () => {
           />
           <FormField
             control={form.control}
-            name="fileUrls"
+            name="receiptPath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
@@ -395,7 +364,7 @@ export default () => {
           />
           <FormField
             control={form.control}
-            name="fileUrls"
+            name="certificationPath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
@@ -412,7 +381,7 @@ export default () => {
           />
           <FormField
             control={form.control}
-            name="fileUrls"
+            name="cadastralPassportPath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
@@ -427,7 +396,7 @@ export default () => {
           />
           <FormField
             control={form.control}
-            name="fileUrls"
+            name="replyLetterPath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
@@ -442,7 +411,7 @@ export default () => {
           />
           <FormField
             control={form.control}
-            name="fileUrls"
+            name="industrialSafetyDeclarationPath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
@@ -457,7 +426,7 @@ export default () => {
           />
           <FormField
             control={form.control}
-            name="fileUrls"
+            name="deviceTestingPath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
@@ -469,7 +438,7 @@ export default () => {
                 <FormMessage className="text-right" />
               </FormItem>
             )}
-          />*/}
+          />
         </CardForm>
         <Button type="submit" className="mt-5">
           Ariza yaratish

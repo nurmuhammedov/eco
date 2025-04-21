@@ -1,11 +1,6 @@
-// use-upload-files.ts
 import { useMutation } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api';
 import { AxiosProgressEvent } from 'axios';
-
-export interface UploadResponse {
-  urls: string[];
-}
 
 interface UploadFilesOptions {
   endpoint?: string;
@@ -21,13 +16,13 @@ const DEFAULT_OPTIONS: UploadFilesOptions = {
 export const useUploadFiles = (options?: UploadFilesOptions) => {
   const { endpoint, fieldName, onUploadProgress } = { ...DEFAULT_OPTIONS, ...options };
 
-  return useMutation<string[], Error, File[]>({
+  return useMutation<string, Error, File[]>({
     mutationFn: async (files: File[]) => {
       const formData = new FormData();
       files.forEach((file) => formData.append(fieldName || 'file', file));
 
       // API klientga headers va onUploadProgress ni to'g'ri uzatish
-      const response = await apiClient.post<string[]>(
+      const response = await apiClient.post<string>(
         endpoint || '/attachments/registry-files',
         formData,
         { 'Content-Type': 'multipart/form-data' },

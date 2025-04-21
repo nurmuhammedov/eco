@@ -5,9 +5,9 @@ import { Textarea } from '@/shared/components/ui/textarea';
 import { CardForm } from '@/entities/user/applications/create-application/ui/application-form-card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { InputFile } from '@/shared/components/common/file-upload/ui';
+import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload.tsx';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-upload-types';
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
 import { CreateRegisterHpoDTO } from '@/entities/user/applications/create-application/model/application.dto';
 import { useCreateRegisterHPOMutation } from '@/features/user/applications/create-application/api/register-hpo.api';
 

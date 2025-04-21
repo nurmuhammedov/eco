@@ -16,11 +16,11 @@ import {
 
 interface YandexMapModalProps {
   label?: string;
-  initialCoords?: Coordinate;
-  onConfirm: (coords: Coordinate) => void;
+  initialCoords?: any;
+  onConfirm: (coords: string) => void;
 }
 
-const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Харитадан белгилаш', onConfirm, initialCoords }) => {
+const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belgilash', onConfirm, initialCoords }) => {
   const mapHeight = getMapContentSize();
   const [open, setOpen] = useState(false);
   const [selectedCoords, setSelectedCoords] = useState<Coordinate | null>(initialCoords || null);
@@ -39,7 +39,7 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Харитад
 
   const handleConfirm = useCallback(() => {
     if (selectedCoords) {
-      onConfirm(selectedCoords);
+      onConfirm(selectedCoords.join(', '));
       setOpen(false);
     }
   }, [selectedCoords, onConfirm]);
@@ -59,7 +59,7 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Харитад
       </DialogTrigger>
       <DialogContent className="max-w-9/10">
         <DialogHeader>
-          <DialogTitle>Харитадан манзилни белгиланг</DialogTitle>
+          <DialogTitle>Xaritadan joylashuvni belgilang</DialogTitle>
         </DialogHeader>
         <div className="w-full">
           <YandexMap
@@ -74,12 +74,12 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Харитад
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline" onClick={() => setOpen(false)}>
-              Бекор қилиш
+              Bekor qilish
             </Button>
           </DialogClose>
           <DialogClose asChild>
             <Button onClick={handleConfirm} disabled={!selectedCoords}>
-              Сақлаш
+              Saqlash
             </Button>
           </DialogClose>
         </DialogFooter>
