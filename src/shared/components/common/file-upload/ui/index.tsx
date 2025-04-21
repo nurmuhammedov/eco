@@ -7,6 +7,14 @@ import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 import { AxiosProgressEvent } from 'axios';
 
+// Fayl ma'lumotlari interfeysi
+interface FileData {
+  url: string;
+  originalName: string;
+  size?: number;
+  type?: string;
+}
+
 export interface InputFileProps<T extends FieldValues> {
   name: Path<T>;
   accept: FileTypes[];
@@ -52,10 +60,39 @@ function InputFileComponent<T extends FieldValues>({
     formState: { errors },
   } = form;
   const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [fileDataList, setFileDataList] = useState<FileData[]>([]);
 
-  const fileUrls: string[] = watch(name) || [];
+  // Form watch qiladi faqat URL massivini
+  const urls: string[] = watch(name) || [];
+
+  // Fayl ma'lumotlarini har safar URLs o'zgarganda sinxronlash
+  React.useEffect(() => {
+    // URLs va fileDataList sinxronizatsiyasini ta'minlash
+    // Faqat URL ro'yxati o'zgarganda, fayl ma'lumotlari ro'yxatini yangilash
+    if (urls.length !== fileDataList.length) {
+      // URLs ni tekshirish va o'chirilgan yoki qo'shilgan elementlarni aniqlash
+
+      // Agar URLs massivi kamaygan bo'lsa, fayl o'chirilgan
+      if (urls.length < fileDataList.length) {
+        const newFileDataList = fileDataList.filter((fileData) => urls.includes(fileData.url));
+        setFileDataList(newFileDataList);
+      }
+      // Yangi URLlar haqida ma'lumot bo'lmasa, ba'zi asosiy ma'lumotlar bilan to'ldirish
+      else if (urls.length > fileDataList.length) {
+        const existingUrls = fileDataList.map((item) => item.url);
+        const newUrls = urls.filter((url) => !existingUrls.includes(url));
+
+        const newFileDataItems = newUrls.map((url) => ({
+          url,
+          originalName: url.split('/').pop() || 'Nomsiz fayl',
+        }));
+
+        setFileDataList((prevData) => [...prevData, ...newFileDataItems]);
+      }
+    }
+  }, [urls, fileDataList]);
+
   const hasError = !!errors[name];
-
   const acceptTypes = useMemo(() => accept.join(','), [accept]);
 
   const handleUploadProgress = useCallback(
@@ -93,7 +130,7 @@ function InputFileComponent<T extends FieldValues>({
       }
 
       // Fayllar sonini tekshirish
-      if (maxFiles && fileUrls.length + files.length > maxFiles) {
+      if (maxFiles && urls.length + files.length > maxFiles) {
         setError(name, {
           type: 'maxFiles',
           message: `Maksimal ${maxFiles} ta fayl yuklash mumkin`,
@@ -103,7 +140,7 @@ function InputFileComponent<T extends FieldValues>({
 
       return true;
     },
-    [maxSize, maxFiles, fileUrls.length, name, setError],
+    [maxSize, maxFiles, urls.length, name, setError],
   );
 
   const handleFileChange = useCallback(
@@ -116,16 +153,39 @@ function InputFileComponent<T extends FieldValues>({
           return;
         }
 
+        // Fayllar haqida to'liq ma'lumot saqlash
+        const filesInfo = files.map((file) => ({
+          originalName: file.name,
+          size: file.size,
+          type: file.type,
+        }));
+
         clearErrors(name);
         onUploadStart?.();
         setUploadProgress(0);
 
         mutate(files, {
           onSuccess: (data) => {
-            const newUrls = [...fileUrls, ...data] as any;
+            // Yangi URLlar
+            const newUrls = [...urls, ...data];
+
+            // Form qiymatini yangilash (faqat URL massivi)
             setValue(name, newUrls, {
               shouldValidate: true,
             });
+
+            // Fayl ma'lumotlari ro'yxatini yangilash
+            const newFileData: FileData[] = Array.isArray(data)
+              ? data.map((url, index) => ({
+                  url,
+                  originalName: filesInfo[index].originalName,
+                  size: filesInfo[index].size,
+                  type: filesInfo[index].type,
+                }))
+              : [];
+
+            setFileDataList((prevData) => [...prevData, ...newFileData]);
+
             onUploadComplete?.(data);
           },
           onError: (error) => {
@@ -148,7 +208,7 @@ function InputFileComponent<T extends FieldValues>({
       mutate,
       setValue,
       name,
-      fileUrls,
+      urls,
       validateFiles,
       onUploadStart,
       onUploadComplete,
@@ -159,12 +219,43 @@ function InputFileComponent<T extends FieldValues>({
 
   const removeFile = useCallback(
     (index: number) => {
-      const newUrls = [...fileUrls];
+      // URL ni o'chirish
+      const newUrls = [...urls];
       newUrls.splice(index, 1);
-      setValue(name, newUrls as any, { shouldValidate: true });
+
+      // Form qiymatini yangilash
+      setValue(name, newUrls, { shouldValidate: true });
+
+      // fileDataList useEffect orqali avtomatik yangilanadi
     },
-    [fileUrls, setValue, name],
+    [urls, setValue, name],
   );
+
+  // Button textni hisoblash
+  const getButtonText = useCallback(() => {
+    if (isPending) {
+      return `Yuklanmoqda (${uploadProgress}%)`;
+    }
+
+    if (urls.length > 0 && fileDataList.length > 0) {
+      // Agar faqat bitta fayl bo'lsa, fayl nomini ko'rsatish
+      if (urls.length === 1 && fileDataList[0]) {
+        return fileDataList[0].originalName;
+      }
+      // Ko'p fayl bo'lsa, sanini ko'rsatish
+      return `${urls.length} ta fayl biriktirilgan`;
+    }
+
+    return buttonText;
+  }, [isPending, uploadProgress, urls.length, fileDataList, buttonText]);
+
+  const formatFileSize = useCallback((bytes?: number): string => {
+    if (bytes === undefined) return '';
+
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  }, []);
 
   return (
     <div className="file-upload-container">
@@ -181,9 +272,10 @@ function InputFileComponent<T extends FieldValues>({
           className,
         )}
         aria-busy={isPending}
+        title={getButtonText()}
       >
         <Icon name={buttonIcon} className="size-5" />
-        {isPending ? `Yuklanmoqda (${uploadProgress}%)` : buttonText}
+        <span className="truncate max-w-xs">{getButtonText()}</span>
       </button>
 
       <Input
@@ -201,18 +293,33 @@ function InputFileComponent<T extends FieldValues>({
         <p className="text-red-500 text-sm mt-1">{errors[name]?.message as string}</p>
       )}
 
-      {showPreview && fileUrls.length > 0 && (
+      {showPreview && urls.length > 0 && (
         <div className="mt-3 space-y-2">
-          {fileUrls.map((url, index) => (
-            <div key={`${url}-${index}`} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-              <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-500 truncate max-w-xs">
-                {url.split('/').pop()}
-              </a>
-              <button type="button" onClick={() => removeFile(index)} className="text-red-500 hover:text-red-700">
-                <Icon name="trash" className="size-4" />
-              </button>
-            </div>
-          ))}
+          {urls.map((url, index) => {
+            const fileData = fileDataList.find((item) => item.url === url) || {
+              url,
+              originalName: url.split('/').pop() || 'Unknown File',
+            };
+
+            return (
+              <div key={`${url}`} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                <div className="flex flex-col">
+                  <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-500 truncate max-w-xs">
+                    {fileData.originalName}
+                  </a>
+                  {fileData.size && <span className="text-xs text-gray-500">{formatFileSize(fileData.size)}</span>}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeFile(index)}
+                  className="text-red-500 hover:text-red-700"
+                  aria-label="Remove file"
+                >
+                  <Icon name="trash" className="size-4" />
+                </button>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
