@@ -1,4 +1,4 @@
-import { CardForm } from './application-form-card.tsx';
+import { CardForm } from '../../../../create-application/ui/application-form-card.tsx';
 import { Skeleton } from '@/shared/components/ui/skeleton.tsx';
 
 export const SkeletonFormLoader = () => {

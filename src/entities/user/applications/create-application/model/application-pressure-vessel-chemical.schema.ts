@@ -5,7 +5,7 @@ export const CreateRegisterPressureVesselChemicalSchema = ApplicationBaseSchema.
   hpo_id: z.string(defaultRequiredMessage),
   crane_type: z.string(defaultRequiredMessage),
   fileUrls: z.array(z.string().url()).min(1, 'Камида 1 та файл юкланиши керак').default([]),
-  factoryNumber: z.string(defaultRequiredMessage).min(1, 'Завод рақами мажбурий').describe('Қурилманинг завод рақами'),
+  factoryNumber: z.string(defaultRequiredMessage).min(1, 'Завод рақами мажбурий').describe('Qurilmaning zavod raqami'),
   region: z.string(defaultRequiredMessage).min(1, 'Вилоят номи мажбурий').describe('Қурилма жойлашган вилоят'),
   district: z.string(defaultRequiredMessage).min(1, 'Туман номи мажбурий').describe('Қурилма жойлашган туман'),
   address: z.string(defaultRequiredMessage).min(1, 'Манзил мажбурий').describe('Қурилма жойлашган манзил'),
@@ -14,7 +14,7 @@ export const CreateRegisterPressureVesselChemicalSchema = ApplicationBaseSchema.
   manufacturer: z
     .string(defaultRequiredMessage)
     .min(1, 'Ишлаб чиқарувчи номи мажбурий')
-    .describe('Ишлаб чиқарган завод номи'),
+    .describe('Ishlab chiqargan zavod nomi'),
   ownerName: z
     .string(defaultRequiredMessage)
     .min(1, 'Қурилма эгасининг номи мажбурий')

@@ -1,11 +1,6 @@
 import { z } from 'zod';
 import { UserRoles } from '@/entities/user';
-
-const PATTERNS = {
-  pin: /^\d{14}$/,
-  phoneUz: /^\+998\d{9}$/,
-  uuid: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
-} as const;
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
 
 const ERROR_MESSAGES = {
   required: "Bu maydonni to'ldirish majburiy",
@@ -27,7 +22,7 @@ export const committeeBaseSchema = {
   pin: z.coerce
     .number({ message: ERROR_MESSAGES.pin })
     .transform((val) => val.toString())
-    .refine((val) => PATTERNS.pin.test(val), { message: ERROR_MESSAGES.pin }),
+    .refine((val) => USER_PATTERNS.pin.test(val), { message: ERROR_MESSAGES.pin }),
   role: z.nativeEnum(UserRoles, {
     errorMap: () => ({ message: ERROR_MESSAGES.role }),
   }),
@@ -41,7 +36,7 @@ export const committeeBaseSchema = {
   phoneNumber: z
     .string({ message: ERROR_MESSAGES.required })
     .trim()
-    .refine((val) => PATTERNS.phoneUz.test(val), {
+    .refine((val) => USER_PATTERNS.phone.test(val), {
       message: ERROR_MESSAGES.phone,
     }),
 };
@@ -61,7 +56,7 @@ export const committeeStaffSchema = z
   }));
 
 export const committeeTableItemSchema = z.object({
-  id: z.union([z.string().uuid(), z.string().regex(PATTERNS.uuid, { message: 'Invalid UUID format' })]),
+  id: z.union([z.string().uuid(), z.string().regex(USER_PATTERNS.uuid, { message: 'Invalid UUID format' })]),
 
   fullName: z.string().trim().min(1),
   pin: z.union([
@@ -73,7 +68,7 @@ export const committeeTableItemSchema = z.object({
   department: z.string(),
   departmentId: z.union([z.number().int().positive(), z.string().transform((val) => parseInt(val))]),
   position: z.string(),
-  phoneNumber: z.string().regex(PATTERNS.phoneUz, { message: ERROR_MESSAGES.phone }),
+  phoneNumber: z.string().regex(USER_PATTERNS.phone, { message: ERROR_MESSAGES.phone }),
   enabled: z.boolean().default(true),
 });
 

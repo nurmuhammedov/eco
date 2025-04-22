@@ -15,4 +15,6 @@ export const API_ENDPOINTS: Record<string, string> = {
   OFFICE_USERS: '/users/office-users',
   COMMITTEE_USERS: '/users/committee-users',
   HAZARDOUS_FACILITY_TYPES: '/hazardous-facility-types',
+  HAZARDOUS_FACILITY_TYPES_SELECT: '/hazardous-facility-types/select',
+  APPEAL_HF: '/appeals/hf',
 };

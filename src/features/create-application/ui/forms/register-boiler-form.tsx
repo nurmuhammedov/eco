@@ -9,10 +9,10 @@ import { Calendar } from '@/shared/components/ui/calendar';
 import { DATE_FORMAT } from '@/shared/constants/date-formats';
 import { getDisabledDates } from '@/shared/lib/get-disabled-dates';
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload.tsx';
-import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui';
+import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui/yandex-map-modal.tsx';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { CardForm } from '@/entities/user/applications/create-application/ui/application-form-card';
+import { CardForm } from '@/entities/create-application/ui/application-form-card.tsx';
 import { CreateRegisterBoilerDTO } from '@/entities/user/applications/create-application/model/application.dto';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
@@ -74,9 +74,9 @@ export default () => {
             name="factoryNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Қурилманинг завод рақами</FormLabel>
+                <FormLabel>Qurilmaning zavod raqami</FormLabel>
                 <FormControl>
-                  <Input className="w-full 3xl:w-sm" placeholder="Қурилманинг завод рақами" {...field} />
+                  <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning zavod raqami" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -87,9 +87,9 @@ export default () => {
             name="address"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ишлаб чиқарган завод номи</FormLabel>
+                <FormLabel>Ishlab chiqargan zavod nomi</FormLabel>
                 <FormControl>
-                  <Input className="w-full 3xl:w-sm" placeholder="Ишлаб чиқарган завод номи" {...field} />
+                  <Input className="w-full 3xl:w-sm" placeholder="Ishlab chiqargan zavod nomi" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,9 +100,9 @@ export default () => {
             name="factoryNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Модель, марка</FormLabel>
+                <FormLabel>Model, marka</FormLabel>
                 <FormControl>
-                  <Input className="w-full 3xl:w-sm" placeholder="Модель, марка" {...field} />
+                  <Input className="w-full 3xl:w-sm" placeholder="Model, marka" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -113,7 +113,7 @@ export default () => {
             name="productionDate"
             render={({ field }) => (
               <FormItem className="w-full 3xl:w-sm">
-                <FormLabel>Ишлаб чиқарилган сана</FormLabel>
+                <FormLabel>Ishlab chiqarilgan sana</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -124,7 +124,7 @@ export default () => {
                           !field.value && 'text-neutral-350',
                         )}
                       >
-                        {field.value ? format(field.value, DATE_FORMAT) : <span>Ишлаб чиқарилган сана</span>}
+                        {field.value ? format(field.value, DATE_FORMAT) : <span>Ishlab chiqarilgan sana</span>}
                         <CalendarIcon className="ml-auto size-4 opacity-50" />
                       </Button>
                     </FormControl>

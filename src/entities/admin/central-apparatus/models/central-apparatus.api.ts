@@ -18,10 +18,10 @@ export const centralApparatusAPI = {
     const { data } = await apiClient.get<ApiResponse<CentralApparatusResponse>>(`${API_ENDPOINTS.DEPARTMENTS}/${id}`);
     return data.data;
   },
-  create: async (district: CreateCentralApparatusDTO) => {
+  create: async (data: CreateCentralApparatusDTO) => {
     const response = await apiClient.post<CentralApparatusResponse, CreateCentralApparatusDTO>(
       API_ENDPOINTS.DEPARTMENTS,
-      district,
+      data,
     );
     if (!response.success && response.errors) {
       toast.error(Object.values(response.errors).join(', '), {
@@ -31,11 +31,8 @@ export const centralApparatusAPI = {
 
     return response;
   },
-  update: async (district: UpdateCentralApparatusDTO) => {
-    const response = await apiClient.put<UpdateCentralApparatusDTO>(
-      `${API_ENDPOINTS.DEPARTMENTS}/${district.id}`,
-      district,
-    );
+  update: async (data: UpdateCentralApparatusDTO) => {
+    const response = await apiClient.put<UpdateCentralApparatusDTO>(`${API_ENDPOINTS.DEPARTMENTS}/${data.id}`, data);
 
     if (!response.success) {
       throw new Error(response.message);

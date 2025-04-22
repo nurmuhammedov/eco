@@ -1,8 +1,8 @@
 import { MapPinned } from 'lucide-react';
+import { getMapContentSize } from '../lib';
 import { Button } from '@/shared/components/ui/button';
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Coordinate, YandexMap } from '@/shared/components/common/yandex-map';
-import { getMapContentSize } from '@/shared/components/common/yandex-map-modal/lib';
 import { MAP_DEFAULTS } from '@/shared/components/common/yandex-map/model/yandex-map-config';
 import {
   Dialog,
@@ -47,7 +47,7 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belg
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button" variant="outline" className="w-full justify-between text-neutral-350">
+        <Button type="button" variant="outline" className="w-full justify-between">
           {selectedCoords?.length ? (
             selectedCoords.join(', ')
           ) : (

@@ -1,10 +1,9 @@
-import { ApiResponse } from '@/shared/types/api.ts';
+import { type ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 
 export const districtsAPI = {
-  list: async () => {
-    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.DISTRICT_SELECT}`);
-
+  list: async (regionId?: string) => {
+    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.DISTRICT_SELECT}`, { regionId });
     return data.data;
   },
   getById: async (id: number) => {

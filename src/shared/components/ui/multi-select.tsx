@@ -159,7 +159,7 @@ const MultiSelect = React.forwardRef<
         onBlur={onBlur}
         disabled={disabled}
         className={cn(
-          'flex min-h-10 w-full items-center justify-between rounded border border-neutral-300 bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-neutral-350 focus:outline-none focus:ring-1 focus:ring-teal disabled:cursor-not-allowed disabled:opacity-50',
+          'flex min-h-9 w-full items-center justify-between rounded border border-neutral-300 bg-background px-3 py-1.5 text-sm ring-offset-background placeholder:text-neutral-350 focus:outline-none focus:ring-1 focus:ring-teal disabled:cursor-not-allowed disabled:opacity-50',
           className,
         )}
         {...restProps}
