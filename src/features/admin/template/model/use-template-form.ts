@@ -16,7 +16,16 @@ import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 const DEFAULT_FORM_VALUES = {
   name: '',
   description: '',
+  type: TemplateType.IRS,
 };
+
+const TEMPLATE_TYPE_MAP: Record<TemplateType, string> = {
+  [TemplateType.IRS]: 'INM arizalari',
+  [TemplateType.XICHO_APPEAL]: 'XICHO arizalari',
+  [TemplateType.EQUIPMENT_APPEAL]: 'Qurilma arizalari',
+} as const;
+
+export const getTemplateType = (type: TemplateType): string => TEMPLATE_TYPE_MAP[type] || 'Ariza';
 
 export function useTemplateForm() {
   const { data, onClose, isCreate } = useTemplateDrawer();
@@ -33,11 +42,11 @@ export function useTemplateForm() {
     mode: 'onChange',
   });
 
+  const { data: foundData, isLoading } = useTemplate(templateId);
+
   const { mutateAsync: createTemplate, isPending: isCreating } = useCreateTemplate();
 
   const { mutateAsync: updateTemplate, isPending: isUpdating } = useUpdateTemplate();
-
-  const { data: foundData, isLoading } = useTemplate(templateId);
 
   useEffect(() => {
     if (foundData && !isCreate) {

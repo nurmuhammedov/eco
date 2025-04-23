@@ -17,7 +17,9 @@ export const TemplateGrid: React.FC<TemplateGridProps> = ({ templates, isLoading
     onOpen(UIModeEnum.CREATE);
   };
 
-  const handleOpenEditDialog = () => {};
+  const handleOpenEditDialog = (id: number) => {
+    onOpen(UIModeEnum.EDIT, { id });
+  };
 
   return (
     <Fragment>
@@ -43,7 +45,7 @@ export const TemplateGrid: React.FC<TemplateGridProps> = ({ templates, isLoading
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 gap-4">
             {templates.map((template) => (
-              <TemplateCard key={template.id} template={template} onEdit={handleOpenEditDialog} />
+              <TemplateCard key={template.id} template={template} onEdit={() => handleOpenEditDialog(template.id)} />
             ))}
           </div>
         )}

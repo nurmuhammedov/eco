@@ -5,6 +5,7 @@ import { uz } from 'date-fns/locale';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/shared/components/ui/card';
 import { TemplateCardProps, TemplateTypeIcon } from '@/entities/admin/template';
+import { getTemplateType } from '@/features/admin/template/model/use-template-form.ts';
 
 export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onEdit }) => {
   const date = parseISO(template.updatedAt ?? template.createdAt);
@@ -16,7 +17,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onEdit }) 
             <TemplateTypeIcon type={template.type} name={template.name} />
             <div className="ml-3">
               <h3 className="font-medium text-gray-800">{template.name}</h3>
-              <p className="text-xs text-gray-500">{template.type}</p>
+              <p className="text-xs text-gray-500">{getTemplateType(template.type)}</p>
             </div>
           </div>
         </div>
@@ -28,7 +29,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onEdit }) 
         <p className="text-xs text-gray-500">Oxirgi tahrir: {format(date, 'dd.MM.yyyy HH:mm', { locale: uz })}</p>
 
         <div className="flex space-x-2">
-          <Button size="icon" variant="ghost" onClick={() => onEdit && onEdit(template)} className="size-8">
+          <Button size="icon" variant="ghost" onClick={() => onEdit && onEdit(template.id)} className="size-8">
             <Pencil className="size-4" />
           </Button>
         </div>

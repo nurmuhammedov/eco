@@ -11,7 +11,7 @@ export type TemplateFormDTO = Omit<Template, 'id' | 'updated_at'>;
 
 export interface TemplateCardProps {
   template: Template;
-  onEdit?: (template: Template) => void;
+  onEdit?: (id: number) => void;
 }
 
 export enum TemplateType {

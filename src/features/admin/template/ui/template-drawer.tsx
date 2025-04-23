@@ -48,11 +48,19 @@ export const TemplateDrawer = () => {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('region')}</FormLabel>
+                    <FormLabel>Shablon turi</FormLabel>
                     <FormControl>
-                      <Select {...field} value={field.value} onValueChange={field.onChange}>
+                      <Select
+                        {...field}
+                        value={field.value}
+                        onValueChange={(value) => {
+                          if (value) {
+                            field.onChange(value);
+                          }
+                        }}
+                      >
                         <SelectTrigger>
-                          <SelectValue placeholder={t('select_region')} />
+                          <SelectValue placeholder="Shablon turi" />
                         </SelectTrigger>
                         <SelectContent>{templateTypeOptions}</SelectContent>
                       </Select>
