@@ -17,4 +17,5 @@ export const API_ENDPOINTS: Record<string, string> = {
   HAZARDOUS_FACILITY_TYPES: '/hazardous-facility-types',
   HAZARDOUS_FACILITY_TYPES_SELECT: '/hazardous-facility-types/select',
   APPEAL_HF: '/appeals/hf',
+  TEMPLATES: '/templates',
 };

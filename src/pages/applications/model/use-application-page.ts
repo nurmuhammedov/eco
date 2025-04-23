@@ -27,7 +27,7 @@ export const useApplicationPage = () => {
   const prepareFiltersForApi = useCallback(() => {
     const { page, size, search, type, status } = filters;
 
-    // API so'rovi uchun filtrlarni to'g'ri formatda tayyorlash
+    // api so'rovi uchun filtrlarni to'g'ri formatda tayyorlash
     return {
       page,
       size,

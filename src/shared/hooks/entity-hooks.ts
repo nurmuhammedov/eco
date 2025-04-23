@@ -3,6 +3,8 @@ import { UI_COMPONENTS } from '@/shared/types/ui-types';
 
 export const useRegionDrawer = createEntityDrawerHook(UI_COMPONENTS.REGION_DRAWER);
 
+export const useTemplateDrawer = createEntityDrawerHook(UI_COMPONENTS.REGION_DRAWER);
+
 export const useDistrictDrawer = createEntityDrawerHook(UI_COMPONENTS.DISTRICT_DRAWER);
 
 export const useCentralApparatusDrawer = createEntityDrawerHook(UI_COMPONENTS.CENTRAL_APPARATUS_DRAWER);

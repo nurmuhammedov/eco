@@ -8,6 +8,7 @@ export enum UIModeEnum {
 export const UI_COMPONENTS = {
   REGION_DRAWER: 'region-drawer', // Viloyatlar
   DISTRICT_DRAWER: 'regions-drawer', // Tumanlar
+  TEMPLATE_DRAWER: 'template-drawer', // Shablonlar
   CENTRAL_APPARATUS_DRAWER: 'central-apparatus', // Markaziy apparat
   TERRITORIAL_DEPARTMENTS_DRAWER: 'territorial-departments', // Hududiy bo'limlar
   COMMITTEE_STAFFS_DRAWER: 'committee-staffs', // Qo'mita xodimlari
@@ -44,6 +45,9 @@ export interface UIComponentDataMap {
     id: string;
   };
   [UI_COMPONENTS.HAZARDOUS_FACILITY_TYPE_DRAWER]: {
+    id: number;
+  };
+  [UI_COMPONENTS.TEMPLATE_DRAWER]: {
     id: number;
   };
 }

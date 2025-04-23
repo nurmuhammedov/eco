@@ -10,3 +10,4 @@ export {
   removeSessionStorage,
 } from './storage';
 export { getUserData } from './getUserData';
+export { getInitials } from './get-initial-letter';

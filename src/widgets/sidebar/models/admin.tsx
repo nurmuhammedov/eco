@@ -1,4 +1,4 @@
-import { ListTree, MapPinned, Users } from 'lucide-react';
+import { ListTree, MapPinned, PencilRuler, Users } from 'lucide-react';
 import type { Navigation } from '@/widgets/sidebar/models/types';
 
 export default [
@@ -21,5 +21,10 @@ export default [
     url: '/hazardous-facilities',
     title: 'menu.hazardous_facilities',
     icon: <Users />,
+  },
+  {
+    url: '/templates',
+    title: 'menu.templates',
+    icon: <PencilRuler />,
   },
 ] as Navigation;

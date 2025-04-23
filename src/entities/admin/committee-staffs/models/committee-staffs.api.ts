@@ -6,7 +6,7 @@ import {
   CreateCommitteeStaffDTO,
   type FilterCommitteeStaffDTO,
   UpdateCommitteeStaffDTO,
-} from './committee-staffs.types.ts';
+} from './committee-staffs.types';
 
 export const committeeStaffAPI = {
   list: async (params: FilterCommitteeStaffDTO) => {

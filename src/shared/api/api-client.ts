@@ -24,7 +24,7 @@ type RequestHeaders = Record<string, string>;
 type ProgressCallback = (progressEvent: AxiosProgressEvent) => void;
 
 /**
- * Core API request function
+ * Core api request function
  * @param method - HTTP method to use
  * @param url - Endpoint URL
  * @param payload - Request data (query params or body)
@@ -92,7 +92,7 @@ async function apiRequest<T>(
 }
 
 /**
- * API Client with strongly typed methods
+ * api Client with strongly typed methods
  */
 export const apiClient = {
   get: <T>(

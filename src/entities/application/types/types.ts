@@ -23,5 +23,5 @@ export type CreateApplicationDTO = z.infer<typeof applicationSchemas.create>;
 export type UpdateApplicationDTO = z.infer<typeof applicationSchemas.update>;
 export type FilterApplicationDTO = z.infer<typeof applicationSchemas.filter>;
 
-// API responses
+// api responses
 export type SingleApplicationResponse = z.infer<typeof applicationSchemas.single>;

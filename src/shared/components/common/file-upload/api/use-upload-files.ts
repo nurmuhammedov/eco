@@ -21,7 +21,7 @@ export const useUploadFiles = (options?: UploadFilesOptions) => {
       const formData = new FormData();
       files.forEach((file) => formData.append(fieldName || 'file', file));
 
-      // API klientga headers va onUploadProgress ni to'g'ri uzatish
+      // api klientga headers va onUploadProgress ni to'g'ri uzatish
       const response = await apiClient.post<string>(
         endpoint || '/attachments/registry-files',
         formData,
