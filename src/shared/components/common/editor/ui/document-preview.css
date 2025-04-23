@@ -1,0 +1,36 @@
+.a4-document-editor {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.document-toolbar {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.document-toolbar button {
+  padding: 10px 15px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.document-toolbar button:hover {
+  background-color: #1976d2;
+}
+
+@media print {
+  .document-toolbar {
+    display: none;
+  }
+
+  .a4-document-editor.print-mode {
+    width: 100%;
+    max-width: 100%;
+  }
+}

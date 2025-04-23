@@ -20,6 +20,7 @@ const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'));
 const RegionsPage = lazy(() => import('@/pages/admin/regions/ui'));
 const DepartmentPage = lazy(() => import('@/pages/admin/department/ui'));
 const TemplatesPage = lazy(() => import('@/pages/admin/templates/page'));
+const TemplateEditorPage = lazy(() => import('@/pages/admin/templates/editor-page'));
 const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facility/ui'));
 
 export const appRoutes = [
@@ -56,6 +57,11 @@ export const appRoutes = [
   {
     path: 'templates',
     component: TemplatesPage,
+    roles: [UserRoles.ADMIN],
+  },
+  {
+    path: 'templates/:id',
+    component: TemplateEditorPage,
     roles: [UserRoles.ADMIN],
   },
   {
