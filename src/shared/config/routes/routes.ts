@@ -20,7 +20,7 @@ const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'));
 const RegionsPage = lazy(() => import('@/pages/admin/regions/ui'));
 const DepartmentPage = lazy(() => import('@/pages/admin/department/ui'));
 const TemplatesPage = lazy(() => import('@/pages/admin/templates/page'));
-const TemplateEditorPage = lazy(() => import('@/features/admin/template/ui/update-template-content.tsx'));
+const TemplateEditContentPage = lazy(() => import('@/pages/admin/templates/template-edit-content'));
 const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facility/ui'));
 
 export const appRoutes = [
@@ -61,7 +61,7 @@ export const appRoutes = [
   },
   {
     path: 'templates/:id',
-    component: TemplateEditorPage,
+    component: TemplateEditContentPage,
     roles: [UserRoles.ADMIN],
   },
   {

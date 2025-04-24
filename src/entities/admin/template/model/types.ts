@@ -1,9 +1,10 @@
 export interface Template {
   id: number;
   name: string;
-  type: TemplateType;
   createdAt: string;
+  type: TemplateType;
   description: string;
+  content: string | null;
   updatedAt: string | null;
 }
 

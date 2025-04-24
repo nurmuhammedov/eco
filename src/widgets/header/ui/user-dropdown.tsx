@@ -11,11 +11,14 @@ import {
 } from '@/shared/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
+import { getInitials } from '@/shared/utils';
 
 export default function UserDropdown() {
+  const { user } = useAuth();
   const { t } = useTranslation('auth');
   const { mutateAsync, isPending } = useLogout();
-  const { user } = useAuth();
+
+  const userName = getInitials(user?.name);
 
   if (isPending) {
     return <Loader isVisible={isPending} />;
@@ -27,7 +30,7 @@ export default function UserDropdown() {
         <div className="flex items-center space-x-2 cursor-pointer">
           <Avatar>
             <AvatarImage src="" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>{userName}</AvatarFallback>
           </Avatar>
           <span className="text-sm">{user?.name}</span>
           <ChevronDown size={16} />

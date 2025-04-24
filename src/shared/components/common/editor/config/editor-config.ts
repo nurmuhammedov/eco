@@ -33,7 +33,6 @@ export const DEFAULT_PLUGINS = [
   // File operations
   'save',
   'autosave',
-  'print',
 
   // Layout and structure
   'pagebreak',
@@ -62,7 +61,7 @@ export const DEFAULT_TOOLBAR = [
 export const DEFAULT_MENU = {
   file: {
     title: 'File',
-    items: 'newdocument restoredraft | preview | print | wordcount',
+    items: 'newdocument restoredraft | preview | wordcount',
   },
   edit: {
     title: 'Edit',

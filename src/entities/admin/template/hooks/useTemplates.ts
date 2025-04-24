@@ -19,9 +19,9 @@ export const useTemplates = () => {
 
 export const useTemplate = (id: number) => {
   return useQuery({
+    enabled: !!id,
     queryKey: templateKeys.detail(id),
     queryFn: () => templateAPI.byId(id),
-    enabled: !!id,
   });
 };
 

@@ -29,7 +29,7 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     menubar = true,
     contentCss,
     contentStyle,
-    borderStyle = 'none',
+    borderStyle = 'medium',
     borderColor = '#000000',
     browserSpellcheck = true,
     tinymceScriptSrc,
@@ -89,7 +89,7 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     const editorBody = editorRef.current.getBody();
     if (editorBody) {
       const currentStyle = editorBody.style.cssText || '';
-      const newStyle = currentStyle.replace(/border:[^;]+;?/g, '');
+      const newStyle = currentStyle?.replace(/border:[^;]+;?/g, '');
       editorBody.style.cssText = `${newStyle}; border: ${getBorderStyle(style, color)};`;
 
       setCurrentBorderStyle(style || 'none');
@@ -491,10 +491,7 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
   ]);
 
   return (
-    <div
-      className={`tinymce-editor-wrapper !h-[calc(100vh-130px)] ${className}`}
-      style={{ ...editorWrapperStyle, ...style }}
-    >
+    <div className={`tinymce-editor-wrapper ${className}`} style={{ ...editorWrapperStyle, ...style }}>
       <Editor
         id={editorId}
         apiKey={apiKey}

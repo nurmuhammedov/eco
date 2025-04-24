@@ -56,7 +56,7 @@ export function AppSidebar() {
           >
             <AppLogo />
           </SidebarHeader>
-          <SidebarGroupContent>
+          <SidebarGroupContent className="space-y-0.5">
             {NAVIGATIONS[user.role]?.map((item) => <NavMain key={item.title} item={item} />)}
           </SidebarGroupContent>
         </SidebarGroup>
