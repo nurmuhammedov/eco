@@ -22,8 +22,17 @@ export const templateAPI = {
 
     return response;
   },
-  update: async (id: number, templateData: Partial<TemplateFormDTO>) => {
+  updateData: async (id: number, templateData: Partial<TemplateFormDTO>) => {
     const response = await apiClient.put<Template>(`${API_ENDPOINTS.TEMPLATES}/${id}`, templateData);
+
+    if (!response.success) {
+      throw new Error(response.message);
+    }
+
+    return response;
+  },
+  updateContent: async (id: number, templateData: Partial<TemplateFormDTO>) => {
+    const response = await apiClient.patch<Template>(`${API_ENDPOINTS.UPDATE_TEMPLATE_CONTENT}/${id}`, templateData);
 
     if (!response.success) {
       throw new Error(response.message);

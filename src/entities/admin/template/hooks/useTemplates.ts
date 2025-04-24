@@ -38,11 +38,26 @@ export const useCreateTemplate = () => {
   });
 };
 
-export const useUpdateTemplate = () => {
+export const useUpdateTemplateData = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<TemplateFormDTO> }) => templateAPI.update(id, data),
+    mutationFn: ({ id, data }: { id: number; data: Partial<TemplateFormDTO> }) => templateAPI.updateData(id, data),
+    onSuccess: (updatedTemplate) => {
+      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
+      queryClient.invalidateQueries({
+        queryKey: templateKeys.detail(updatedTemplate.data.id),
+      });
+      toast.success('Shablon muvaffaqqiyatli tahrirlandi');
+    },
+    onError: (error) => toast.error(error.message, { richColors: true }),
+  });
+};
+export const useUpdateTemplateContent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<TemplateFormDTO> }) => templateAPI.updateContent(id, data),
     onSuccess: (updatedTemplate) => {
       queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
       queryClient.invalidateQueries({

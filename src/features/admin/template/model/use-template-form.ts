@@ -8,7 +8,7 @@ import {
   TemplateType,
   useCreateTemplate,
   useTemplate,
-  useUpdateTemplate,
+  useUpdateTemplateData,
 } from '@/entities/admin/template';
 import { useTranslatedObject } from '@/shared/hooks';
 import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
@@ -46,7 +46,7 @@ export function useTemplateForm() {
 
   const { mutateAsync: createTemplate, isPending: isCreating } = useCreateTemplate();
 
-  const { mutateAsync: updateTemplate, isPending: isUpdating } = useUpdateTemplate();
+  const { mutateAsync: updateTemplate, isPending: isUpdating } = useUpdateTemplateData();
 
   useEffect(() => {
     if (foundData && !isCreate) {

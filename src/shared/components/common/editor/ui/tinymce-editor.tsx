@@ -1,98 +1,22 @@
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import { TinyMCEEditorProps, TinyMCEEditorRef } from '../model/types';
 import { Editor } from '@tinymce/tinymce-react';
-
-// Border style utilities
-const getBorderStyle = (style?: TinyMCEEditorProps['borderStyle'], color: string = '#000000'): string => {
-  switch (style) {
-    case 'thin':
-      return `1px solid ${color}`;
-    case 'medium':
-      return `2px solid ${color}`;
-    case 'thick':
-      return `3px solid ${color}`;
-    case 'double':
-      return `4px double ${color}`;
-    case 'dashed':
-      return `2px dashed ${color}`;
-    case 'dotted':
-      return `2px dotted ${color}`;
-    case 'none':
-    default:
-      return 'none';
-  }
-};
-
-const BORDER_STYLE_OPTIONS = [
-  { text: 'None', value: 'none' },
-  { text: 'Thin', value: 'thin' },
-  { text: 'Medium', value: 'medium' },
-  { text: 'Thick', value: 'thick' },
-  { text: 'Double', value: 'double' },
-  { text: 'Dashed', value: 'dashed' },
-  { text: 'Dotted', value: 'dotted' },
-];
+import { TinyMCEEditorProps, TinyMCEEditorRef } from '../model/types';
+import { BORDER_STYLE_OPTIONS, getBorderStyle } from '../lib/border-utils';
+import { DEFAULT_PLUGINS, DEFAULT_TOOLBAR } from '../config/editor-config';
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 
 const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, ref) => {
   // Props destructuring with defaults
   const {
     id,
-    apiKey,
-    initialValue = ` <div style="border: 1px solid #000000; padding: 20px; font-family: 'Times New Roman', Times, serif;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-        <div style="display: flex; align-items: center;">
-          <img src="gerb_image_url.png" alt="O'zbekiston gerbi" style="width: 80px; height: 80px; margin-right: 10px;" />
-          <div style="font-weight: bold; width: 370px; line-height: 1.4; font-size: 14px; text-transform: uppercase;">
-            O'zbekiston Respublikasi Vazirlar Mahkamasi huzuridagi sanoat, yadro va radiatsiya xavfsizligi qo'mitasi
-          </div>
-        </div>
-        <div style="text-align: right; font-size: 14px; line-height: 1.5;">
-          Toshkent sh., Yunys Obod mavzesi,<br />
-          12-daxa, 12-uy, 5-xonadonda<br />
-          istiqomat qiluvchi fuqaro<br />
-          T.T. Testovdan
-        </div>
-      </div>
-      
-      <div style="text-align: center; font-weight: bold; font-size: 24px; margin: 40px 0;">
-        A R I Z A
-      </div>
-      
-      <div style="display: flex; justify-content: space-between; margin-bottom: 25px;">
-        <div>№ 001-2024</div>
-        <div>12 декабрь 2024 й.</div>
-      </div>
-      
-      <div style="margin-bottom: 20px; line-height: 1.5;">
-        4R148 "4R115 avtomobil yo'li-Yanqiqadam q.-Uchuy q.-Oltiariq sh.-Chimyon q.-Vodil q." avtomobil yo'tining 36-46 km obyektida
-      </div>
-      
-      <div style="margin-bottom: 20px; line-height: 1.5;">
-        "O'zyo'linspeksiya" davlat inspektori: Yo'ldoshev Dilshod Sodiqovich
-      </div>
-      
-      <div style="margin-bottom: 20px; line-height: 1.5;">
-        Buyurtmachi <strong>UFAYQ va RQD DUK</strong> texnik nazoratchisi <strong>Ikromjon Qodirov</strong>,<br />
-        Loyihachi <strong>"Farg'onayo'lloyixa" instituti</strong> MChJ muallifilik nazoratchisi <strong>Shoxboz Sobirjonov</strong>,<br />
-        Pudratchi <strong>"Best stroy-2020"</strong> MChJ ichki nazoratchisi <strong>Oltinjon Yusupov</strong>
-      </div>
-      
-      <div style="margin-bottom: 40px; line-height: 1.5; text-align: justify;">
-        ishtirokida, ushbu obyektda bajarilgan qurilish-montaj ishlarining loyiha va normativ hujjatlar talablariga rioya etilishi yuzasidan nazorat qilish ishlari o'tkazilishi natijasida quyidagilarni aniqladim:
-      </div>
-      
-      <div style="display: flex; justify-content: space-between; margin-top: 60px;">
-        <div>12.12.24</div>
-        <div>Testov T.T</div>
-      </div>
-    </div>`,
+    apiKey = 'yacgnjyvp8096uz8au6ipnf1ti0odomsp03locp9bpgdpeie',
+    initialValue,
     value,
     onChange,
     onInit,
     onBlur,
     onFocus,
     onSave,
-    height = 600,
+    height = 500,
     readOnly = false,
     disabled = false,
     placeholder,
@@ -120,9 +44,9 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     formats,
     allowPasteFromWord = true,
     pasteAsText = false,
-    autoresize = false,
+    autoresize = true,
     autoresizeMinHeight = 500,
-    autoresizeMaxHeight = 800,
+    autoresizeMaxHeight = 1000,
     lazyLoad = false,
     touchEnabled = true,
     relativeUrls = false,
@@ -130,9 +54,8 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     convertUrls = false,
     imageAdvtab = true,
     automaticUploads = true,
-    wordcount = true,
     quickbars = true,
-    quickbarsSelectionToolbar,
+    quickbarsSelectionToolbar = 'bold italic | h2 h3 | blockquote link | alignleft aligncenter alignright',
     setup,
   } = props;
 
@@ -265,6 +188,20 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     // Set initial border style
     updateEditorBorderStyle(currentBorderStyle, currentBorderColor);
 
+    // Optimize editor container styling
+    const editorContainer = editor.getContainer();
+    if (editorContainer) {
+      editorContainer.style.height = '100%';
+      editorContainer.style.display = 'flex';
+      editorContainer.style.flexDirection = 'column';
+
+      // Editor content element styling
+      const contentElement = editorContainer.querySelector('.tox-edit-area');
+      if (contentElement) {
+        contentElement.style.flex = '1';
+      }
+    }
+
     // Call the onInit callback if provided
     if (onInit) {
       onInit(editor);
@@ -281,38 +218,9 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
 
   // Default plugins
   const defaultPlugins = useMemo(() => {
-    const basePlugins = [
-      'advlist',
-      'autolink',
-      'lists',
-      'link',
-      'image',
-      'charmap',
-      'preview',
-      'anchor',
-      'searchreplace',
-      'visualblocks',
-      'fullscreen',
-      'insertdatetime',
-      'table',
-      'help',
-      'template',
-      'paste',
-      'importcss',
-      'directionality',
-      'print',
-      'nonbreaking',
-      'pagebreak',
-      'quickbars',
-      'codesample',
-    ];
-
-    // Add optional plugins
-    if (autoresize) basePlugins.push('autoresize');
-    if (wordcount) basePlugins.push('wordcount');
-
-    return basePlugins;
-  }, [autoresize, wordcount]);
+    // Use reliable default plugins for TinyMCE 6
+    return DEFAULT_PLUGINS;
+  }, []);
 
   // Merge default plugins with custom plugins
   const mergedPlugins = useMemo(() => {
@@ -320,13 +228,14 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
   }, [defaultPlugins, plugins]);
 
   // Default toolbar configuration
-  const defaultToolbar = useMemo(
-    () => [
-      'undo redo | blocks | bold italic underline strikethrough | forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
-      'link image media table codesample | charmap emoticons | fullscreen preview | code | ltr rtl | pageborder | help',
-    ],
-    [],
-  );
+  const defaultToolbar = useMemo(() => DEFAULT_TOOLBAR, []);
+
+  const editorWrapperStyle: React.CSSProperties = {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+  };
 
   // Build editor initialization config
   const editorInit = useMemo(() => {
@@ -336,9 +245,11 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
       plugins: mergedPlugins.join(' '),
       toolbar: toolbar || defaultToolbar,
       branding: false,
-      height,
+      height: autoresize ? 'auto' : height,
+      min_height: autoresizeMinHeight,
+      max_height: autoresizeMaxHeight,
       placeholder,
-      menubar,
+      menubar: menubar ? 'file edit view insert format tools table help' : menubar,
       browser_spellcheck: browserSpellcheck,
       entity_encoding: 'raw',
       inline,
@@ -346,9 +257,22 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
 
       // Content appearance
       content_css: contentCss || (darkMode ? 'dark' : 'default'),
-      content_style:
-        contentStyle ||
-        'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 14px; }',
+      content_style: `
+        ${contentStyle || ''}
+        body { 
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+          font-size: 16px;
+          line-height: 1.5;
+          padding: 10px;
+        }
+        table {
+          border-collapse: collapse;
+        }
+        table td, table th {
+          border: 1px solid #ddd;
+          padding: 8px;
+        }
+      `,
       skin: darkMode ? 'oxide-dark' : 'oxide',
 
       // URL handling
@@ -359,13 +283,15 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
       // Paste settings
       paste_data_images: true,
       paste_word_valid_elements: allowPasteFromWord
-        ? 'p,b,strong,i,em,h1,h2,h3,h4,h5,h6,table,tr,td,th,div,ul,ol,li,a,span,br'
+        ? 'p,b,strong,i,em,h1,h2,h3,h4,h5,h6,table,tr,td,th,div,ul,ol,li,a,span,br,img,hr,pre,code,blockquote'
         : '',
       paste_as_text: pasteAsText,
 
       // Image settings
       image_advtab: imageAdvtab,
       automatic_uploads: automaticUploads,
+      images_upload_credentials: true,
+      image_caption: true,
 
       // QuickBars settings
       quickbars_selection_toolbar: quickbarsSelectionToolbar || 'bold italic | h2 h3 | blockquote quicklink',
@@ -374,106 +300,88 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
       // Autosave settings
       autosave_interval: autosaveInterval,
       autosave_prefix: `tinymce-autosave-${editorId}-`,
+      autosave_restore_when_empty: true,
 
       // Internationalization
       language: language,
       language_url: languageUrl,
-
-      // Auto-resize settings
-      autoresize_bottom_margin: 50,
-      autoresize_min_height: autoresizeMinHeight,
-      autoresize_max_height: autoresizeMaxHeight,
-
-      // Mobile settings
-      mobile: {
-        menubar: false,
-        toolbar: 'undo redo | bold italic | link image',
-        plugins: ['autosave', 'lists', 'autolink', 'link', 'image'],
-      },
-
       // Templates and formats
       templates: templates,
       formats: formats,
 
       // Touch settings
       touch_enabled: touchEnabled,
-      images_file_types: 'jpeg,jpg,png,gif,bmp,webp,svg',
 
-      // Fayl tanlash turlari
-      file_picker_types: 'file image media',
-
-      // Boshqa fayllar uchun
-      file_browser_callback_types: 'file image media',
-
-      // Setup function that combines existing setup with additional functionality
       setup: (editor: any) => {
-        // Add border style button to toolbar
-        editor.ui.registry.addMenuButton('pageborder', {
-          text: 'Border',
-          tooltip: 'Set page border',
-          icon: 'line',
-          fetch: (callback: any) => {
-            const items = BORDER_STYLE_OPTIONS.map((option) => ({
-              type: 'menuitem',
-              text: option.text,
-              onAction: () => {
-                updateEditorBorderStyle(option.value as TinyMCEEditorProps['borderStyle'], currentBorderColor);
-              },
-            }));
+        // Add border style button to toolbar if borderStyle prop is provided
+        if (borderStyle !== 'none' || borderColor !== '#000000') {
+          editor.ui.registry.addMenuButton('pageborder', {
+            text: 'Border',
+            tooltip: 'Set page border',
+            icon: 'line',
+            fetch: (callback: any) => {
+              const items = BORDER_STYLE_OPTIONS.map((option) => ({
+                type: 'menuitem',
+                text: option.text,
+                onAction: () => {
+                  updateEditorBorderStyle(option.value as TinyMCEEditorProps['borderStyle'], currentBorderColor);
+                },
+              }));
 
-            callback(items);
-          },
-        });
+              callback(items);
+            },
+          });
 
-        // Register custom color picker for border
-        editor.ui.registry.addContextMenu('bordermenu', {
-          update: (element: any) => {
-            if (element.nodeName === 'BODY') {
-              return [
-                {
-                  text: 'Border Color...',
-                  icon: 'color-picker',
-                  onAction: () => {
-                    // Open color picker dialog
-                    editor.windowManager.open({
-                      title: 'Border Color',
-                      body: {
-                        type: 'panel',
-                        items: [
+          // Register custom color picker for border
+          editor.ui.registry.addContextMenu('bordermenu', {
+            update: (element: any) => {
+              if (element.nodeName === 'BODY') {
+                return [
+                  {
+                    text: 'Border Color...',
+                    icon: 'color-picker',
+                    onAction: () => {
+                      // Open color picker dialog
+                      editor.windowManager.open({
+                        title: 'Border Color',
+                        body: {
+                          type: 'panel',
+                          items: [
+                            {
+                              type: 'colorinput',
+                              name: 'bordercolor',
+                              label: 'Border color',
+                            },
+                          ],
+                        },
+                        initialData: {
+                          bordercolor: currentBorderColor,
+                        },
+                        buttons: [
                           {
-                            type: 'colorinput',
-                            name: 'bordercolor',
-                            label: 'Border color',
+                            type: 'cancel',
+                            text: 'Cancel',
+                          },
+                          {
+                            type: 'submit',
+                            text: 'Save',
+                            primary: true,
                           },
                         ],
-                      },
-                      initialData: {
-                        bordercolor: currentBorderColor,
-                      },
-                      buttons: [
-                        {
-                          type: 'cancel',
-                          text: 'Cancel',
+                        onSubmit: (api: any) => {
+                          const data = api.getData();
+                          updateEditorBorderStyle(currentBorderStyle, data.bordercolor);
+                          api.close();
                         },
-                        {
-                          type: 'submit',
-                          text: 'Save',
-                          primary: true,
-                        },
-                      ],
-                      onSubmit: (api: any) => {
-                        const data = api.getData();
-                        updateEditorBorderStyle(currentBorderStyle, data.bordercolor);
-                        api.close();
-                      },
-                    });
+                      });
+                    },
                   },
-                },
-              ];
-            }
-            return [];
-          },
-        });
+                ];
+              }
+              return [];
+            },
+          });
+        }
 
         // Register custom setup if provided
         if (setup) {
@@ -577,10 +485,16 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     imageUploadHandler,
     filePickerCallback,
     updateEditorBorderStyle,
+    borderStyle,
+    borderColor,
+    autoresize,
   ]);
 
   return (
-    <div className={`tinymce-editor-wrapper ${className}`} style={style}>
+    <div
+      className={`tinymce-editor-wrapper !h-[calc(100vh-130px)] ${className}`}
+      style={{ ...editorWrapperStyle, ...style }}
+    >
       <Editor
         id={editorId}
         apiKey={apiKey}
