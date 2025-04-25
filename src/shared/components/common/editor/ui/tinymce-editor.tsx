@@ -1,14 +1,18 @@
+// src/features/editor/ui/TinyMCEEditor.tsx
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { TinyMCEEditorProps, TinyMCEEditorRef } from '../model/types';
-import { BORDER_STYLE_OPTIONS, getBorderStyle } from '../lib/border-utils';
-import { DEFAULT_PLUGINS, DEFAULT_TOOLBAR } from '../config/editor-config';
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { getContentDimensions, mmToPx, PAPER_SIZES } from '../lib/paper-utils';
 
+/**
+ * A4 formatga moslashtirilgan TinyMCE Editor komponenti
+ * API kalitsiz mahalliy rejimda ishlaydi
+ * Clean code prinsiplari asosida optimallashtirilgan
+ */
 const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, ref) => {
   // Props destructuring with defaults
   const {
     id,
-    apiKey = 'yacgnjyvp8096uz8au6ipnf1ti0odomsp03locp9bpgdpeie',
     initialValue,
     value,
     onChange,
@@ -16,7 +20,7 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     onBlur,
     onFocus,
     onSave,
-    height = 600,
+    height,
     readOnly = false,
     disabled = false,
     placeholder,
@@ -29,79 +33,135 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     menubar = true,
     contentCss,
     contentStyle,
-    borderStyle = 'none',
-    borderColor = '#000000',
     browserSpellcheck = true,
-    tinymceScriptSrc,
     imageUploadHandler,
     filePickerCallback,
-    pastePreprocess,
-    pastePostprocess,
     language,
-    languageUrl,
     autosaveInterval = 30000,
     templates,
     formats,
-    allowPasteFromWord = true,
-    pasteAsText = false,
-    autoresize = true,
-    autoresizeMinHeight = 500,
-    autoresizeMaxHeight = 1000,
-    lazyLoad = false,
-    touchEnabled = true,
-    relativeUrls = false,
-    removeScriptHost = false,
-    convertUrls = false,
-    imageAdvtab = true,
-    automaticUploads = true,
-    quickbars = true,
-    quickbarsSelectionToolbar = 'bold italic | h2 h3 | blockquote link | alignleft aligncenter alignright',
+    pageSize = 'a4',
+    orientation = 'portrait',
+    pageMargin = 20, // mm
+    customButtons = [],
     setup,
   } = props;
 
   // Component state
   const editorRef = useRef<any>(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
-  const [currentBorderStyle, setCurrentBorderStyle] = useState(borderStyle);
-  const [currentBorderColor, setCurrentBorderColor] = useState(borderColor);
+  const [currentOrientation, setCurrentOrientation] = useState(orientation);
+  const [currentMargin, setCurrentMargin] = useState(pageMargin);
+  const [currentPageSize, setCurrentPageSize] = useState(pageSize);
 
-  // Memoize editor ID to avoid regenerating on each render
+  // Memoize paper dimensions
+  const paperDimensions = useMemo(() => {
+    return getContentDimensions(currentPageSize, currentOrientation, currentMargin);
+  }, [currentPageSize, currentOrientation, currentMargin]);
+
+  // Editor ID
   const editorId = useMemo(() => id || `tinymce-editor-${Math.random().toString(36).substring(2, 11)}`, [id]);
 
-  // Update editor content when controlled value changes
+  // Update content when value prop changes
   useEffect(() => {
     if (isEditorReady && editorRef.current && value !== undefined && value !== editorRef.current.getContent()) {
       editorRef.current.setContent(value);
     }
   }, [value, isEditorReady]);
 
-  // Update border style when props change
+  // Apply paper format when any of format parameters change
   useEffect(() => {
     if (isEditorReady && editorRef.current) {
-      updateEditorBorderStyle(borderStyle, borderColor);
+      applyPageFormat(editorRef.current, currentPageSize, currentOrientation, currentMargin);
     }
-  }, [borderStyle, borderColor, isEditorReady]);
+  }, [currentPageSize, currentOrientation, currentMargin, isEditorReady]);
 
-  // Internal function for updating border style
-  const updateEditorBorderStyle = (style: TinyMCEEditorProps['borderStyle'], color: string = '#000000') => {
-    if (!editorRef.current) return;
+  // Sahifani o'rnatish funksiyasi
+  const applyPageFormat = (editor: any, format: string, orient: 'portrait' | 'landscape', margin: number) => {
+    const { widthPx, heightPx, widthMm, heightMm } = getContentDimensions(format, orient, margin);
 
-    const editorBody = editorRef.current.getBody();
-    if (editorBody) {
-      const currentStyle = editorBody.style.cssText || '';
-      const newStyle = currentStyle?.replace(/border:[^;]+;?/g, '');
-      editorBody.style.cssText = `${newStyle}; border: ${getBorderStyle(style, color)};`;
+    // Page format style qo'yish
+    const doc = editor.getDoc();
+    let style = doc.getElementById('mce-page-format');
 
-      setCurrentBorderStyle(style || 'none');
-      setCurrentBorderColor(color);
+    if (!style) {
+      style = doc.createElement('style');
+      style.id = 'mce-page-format';
+      doc.head.appendChild(style);
     }
+
+    const pageStyles = `
+      /* Paper format styles */
+      body {
+        background-color: #f0f0f0 !important;
+        padding: 20px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        justify-content: center !important;
+      }
+      
+      .mce-content-container {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2) !important;
+        background-color: #fff !important;
+        width: ${widthPx}px !important;
+        min-height: ${heightPx}px !important;
+        margin: 0 auto !important;
+        padding: ${mmToPx(margin)}px !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+      
+      /* Printing styles */
+      @media print {
+        body {
+          background-color: white !important;
+          padding: 0 !important;
+        }
+        
+        .mce-content-container {
+          box-shadow: none !important;
+          width: ${widthMm}mm !important;
+          min-height: ${heightMm}mm !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+      }
+      
+      /* Page break style */
+      .mce-pagebreak {
+        border-top: 2px dashed #999;
+        page-break-before: always;
+        page-break-inside: avoid;
+        width: 100%;
+        display: block;
+        height: 5px;
+        margin: 15px 0;
+      }
+    `;
+
+    style.innerHTML = pageStyles;
+
+    // Body elementi uchun container yaratish
+    if (!doc.querySelector('.mce-content-container')) {
+      const bodyContent = doc.body.innerHTML;
+      const container = doc.createElement('div');
+      container.className = 'mce-content-container';
+      container.innerHTML = bodyContent;
+      doc.body.innerHTML = '';
+      doc.body.appendChild(container);
+    }
+
+    // Current values saqlash
+    setCurrentPageSize(format);
+    setCurrentOrientation(orient);
+    setCurrentMargin(margin);
   };
 
   // Expose methods via ref
   useImperativeHandle(
     ref,
     () => ({
-      // Core editor methods
       getEditor: () => editorRef.current,
 
       getContent: (args = {}) => {
@@ -119,7 +179,6 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
         editorRef.current.insertContent(content);
       },
 
-      // Editor state methods
       focus: () => {
         if (!editorRef.current) return;
         editorRef.current.focus();
@@ -145,7 +204,6 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
         editorRef.current.setDirty(false);
       },
 
-      // Visibility methods
       enable: () => {
         if (!editorRef.current) return;
         editorRef.current.mode.set('design');
@@ -166,51 +224,129 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
         editorRef.current.hide();
       },
 
-      // Selection methods
       getSelectedContent: () => {
         if (!editorRef.current) return '';
         return editorRef.current.selection.getContent();
       },
 
-      // Border methods
-      setBorderStyle: (style: TinyMCEEditorProps['borderStyle'], color?: string) => {
-        updateEditorBorderStyle(style, color || currentBorderColor);
+      // A4 formatni boshqarish metodlari
+      applyPageFormat: (format: string, orient: 'portrait' | 'landscape', margin: number) => {
+        if (!editorRef.current) return;
+        applyPageFormat(editorRef.current, format, orient, margin);
+      },
+
+      setPageSize: (format: string) => {
+        if (!editorRef.current) return;
+        applyPageFormat(editorRef.current, format, currentOrientation, currentMargin);
+      },
+
+      setOrientation: (orient: 'portrait' | 'landscape') => {
+        if (!editorRef.current) return;
+        applyPageFormat(editorRef.current, currentPageSize, orient, currentMargin);
+      },
+
+      setMargin: (margin: number) => {
+        if (!editorRef.current) return;
+        applyPageFormat(editorRef.current, currentPageSize, currentOrientation, margin);
+      },
+
+      // Page break qo'shish
+      insertPageBreak: () => {
+        if (!editorRef.current) return;
+        editorRef.current.execCommand('mcePageBreak');
+      },
+
+      // Print Preview
+      printPreview: () => {
+        if (!editorRef.current) return;
+        const content = editorRef.current.getContent();
+
+        // Yangi oyna yaratish va chop etish stili bilan to'ldirish
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+
+        const paperSize = PAPER_SIZES[currentPageSize] || PAPER_SIZES.a4;
+        let { width, height } = paperSize;
+
+        if (currentOrientation === 'landscape') {
+          [width, height] = [height, width];
+        }
+
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <style>
+              @page {
+                size: ${width}mm ${height}mm;
+                margin: ${currentMargin}mm;
+              }
+              body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+              }
+              .mce-pagebreak {
+                page-break-before: always;
+                height: 0;
+                border: 0;
+                margin: 0;
+                padding: 0;
+              }
+            </style>
+          </head>
+          <body>
+            ${content}
+            <script>
+              setTimeout(() => {
+                window.print();
+                window.close();
+              }, 500);
+            </script>
+          </body>
+          </html>
+        `);
+
+        printWindow.document.close();
+      },
+
+      // Export as PDF (requires implementation)
+      exportPDF: () => {
+        if (!editorRef.current) return;
+        console.log('PDF export method. Implement with a PDF library like jsPDF');
       },
     }),
-    [editorRef, isEditorReady, currentBorderColor],
+    [editorRef, isEditorReady, currentPageSize, currentOrientation, currentMargin, applyPageFormat],
   );
 
-  // Editor initialization handler
+  // Init handler
   const handleEditorInit = (_evt: any, editor: any) => {
     editorRef.current = editor;
     setIsEditorReady(true);
 
-    // Set initial border style
-    updateEditorBorderStyle(currentBorderStyle, currentBorderColor);
-
-    // Optimize editor container styling
+    // Optimize editor container
     const editorContainer = editor.getContainer();
     if (editorContainer) {
-      editorContainer.style.height = '100%';
       editorContainer.style.display = 'flex';
       editorContainer.style.flexDirection = 'column';
+      editorContainer.style.height = `${height || paperDimensions.heightPx + 200}px`;
 
-      // Editor content element styling
       const contentElement = editorContainer.querySelector('.tox-edit-area');
       if (contentElement) {
         contentElement.style.flex = '1';
       }
     }
 
-    // Call the onInit callback if provided
+    // A4 format o'rnatish
+    applyPageFormat(editor, pageSize, orientation, pageMargin);
+
     if (onInit) {
       onInit(editor);
     }
   };
 
-  // Editor content change handler
+  // Content change handler
   const handleEditorChange = (content: string, editor: any) => {
-    // Only call onChange if provided
     if (onChange) {
       onChange(content, editor);
     }
@@ -218,177 +354,217 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
 
   // Default plugins
   const defaultPlugins = useMemo(() => {
-    // Use reliable default plugins for TinyMCE 6
-    return DEFAULT_PLUGINS;
+    return [
+      'advlist',
+      'autolink',
+      'lists',
+      'link',
+      'image',
+      'charmap',
+      'preview',
+      'anchor',
+      'searchreplace',
+      'visualblocks',
+      'code',
+      'fullscreen',
+      'insertdatetime',
+      'media',
+      'table',
+      'help',
+      'wordcount',
+      'pagebreak',
+      'print',
+      'template',
+      'nonbreaking',
+      'hr',
+      'emoticons',
+    ];
   }, []);
 
-  // Merge default plugins with custom plugins
+  // Merge plugins
   const mergedPlugins = useMemo(() => {
     return plugins ? [...new Set([...defaultPlugins, ...plugins])] : defaultPlugins;
   }, [defaultPlugins, plugins]);
 
-  // Default toolbar configuration
-  const defaultToolbar = useMemo(() => DEFAULT_TOOLBAR, []);
+  // Default toolbar
+  const defaultToolbar = useMemo(
+    () => [
+      'undo redo | formatselect | fontselect fontsizeselect | bold italic underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
+      'link image media table | pagebreak nonbreaking hr | charmap emoticons | fullscreen preview print | code | pageformat printpreview | help',
+    ],
+    [],
+  );
 
-  const editorWrapperStyle: React.CSSProperties = {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden',
-  };
-
-  // Build editor initialization config
+  // Editor config
   const editorInit = useMemo(() => {
     const config: any = {
       // Core settings
       selector: `#${editorId}`,
       plugins: mergedPlugins.join(' '),
       toolbar: toolbar || defaultToolbar,
-      branding: false,
-      height: autoresize ? 'auto' : height,
-      min_height: autoresizeMinHeight,
-      // max_height: autoresizeMaxHeight,
+      height: height || paperDimensions.heightPx + 200,
       placeholder,
-      menubar: menubar ? 'file edit view insert format tools table help' : menubar,
+      menubar,
       browser_spellcheck: browserSpellcheck,
       entity_encoding: 'raw',
       inline,
       readonly: readOnly || disabled,
 
+      // API kalitsiz rejimda ishlashi uchun
+      branding: false,
+
       // Content appearance
       content_css: contentCss || (darkMode ? 'dark' : 'default'),
       content_style: `
         ${contentStyle || ''}
-        body { 
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-          font-size: 16px;
+        body {
+          font-family: 'Arial', sans-serif;
+          font-size: 11pt;
           line-height: 1.5;
-          padding: 10px;
-        }
-        table {
-          border-collapse: collapse;
-        }
-        table td, table th {
-          border: 1px solid #ddd;
-          padding: 8px;
         }
       `,
       skin: darkMode ? 'oxide-dark' : 'oxide',
 
-      // URL handling
-      relative_urls: relativeUrls,
-      remove_script_host: removeScriptHost,
-      convert_urls: convertUrls,
+      // Print settings
+      print_watermark: false,
 
-      // Paste settings
-      paste_data_images: true,
-      paste_word_valid_elements: allowPasteFromWord
-        ? 'p,b,strong,i,em,h1,h2,h3,h4,h5,h6,table,tr,td,th,div,ul,ol,li,a,span,br,img,hr,pre,code,blockquote'
-        : '',
-      paste_as_text: pasteAsText,
+      // A4 papersize settings
+      pagebreak_separator: '<div class="mce-pagebreak"></div>',
+      pagebreak_split_block: true,
+
+      // Page setup sozlamalarini menyuga qo'shish
+      menu: {
+        file: { title: 'File', items: 'newdocument restoredraft | preview | print | pagesetup' },
+        edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
+        view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen' },
+        insert: {
+          title: 'Insert',
+          items: 'image link media | pagebreak hr nonbreaking | charmap emoticons | template',
+        },
+        format: {
+          title: 'Format',
+          items:
+            'bold italic underline strikethrough | formats blockformats fontformats fontsizes align lineheight | forecolor backcolor | removeformat',
+        },
+        tools: { title: 'Tools', items: 'code wordcount' },
+        table: { title: 'Table', items: 'inserttable | cell row column | tableprops deletetable' },
+        help: { title: 'Help', items: 'help' },
+      },
 
       // Image settings
-      image_advtab: imageAdvtab,
-      automatic_uploads: automaticUploads,
-      images_upload_credentials: true,
-      image_caption: true,
-
-      // QuickBars settings
-      quickbars_selection_toolbar: quickbarsSelectionToolbar || 'bold italic | h2 h3 | blockquote quicklink',
-      quickbars_insert_toolbar: quickbars ? 'quickimage quicktable' : false,
+      automatic_uploads: true,
 
       // Autosave settings
       autosave_interval: autosaveInterval,
       autosave_prefix: `tinymce-autosave-${editorId}-`,
-      autosave_restore_when_empty: true,
 
       // Internationalization
       language: language,
-      language_url: languageUrl,
+
       // Templates and formats
-      templates: templates,
+      templates,
+
       formats: formats,
 
-      // Touch settings
-      touch_enabled: touchEnabled,
-
+      // Setup function
       setup: (editor: any) => {
-        // Add border style button to toolbar if borderStyle prop is provided
-        if (borderStyle !== 'none' || borderColor !== '#000000') {
-          editor.ui.registry.addMenuButton('pageborder', {
-            text: 'Border',
-            tooltip: 'Set page border',
-            icon: 'line',
-            fetch: (callback: any) => {
-              const items = BORDER_STYLE_OPTIONS.map((option) => ({
-                type: 'menuitem',
-                text: option.text,
-                onAction: () => {
-                  updateEditorBorderStyle(option.value as TinyMCEEditorProps['borderStyle'], currentBorderColor);
-                },
-              }));
-
-              callback(items);
-            },
-          });
-
-          // Register custom color picker for border
-          editor.ui.registry.addContextMenu('bordermenu', {
-            update: (element: any) => {
-              if (element.nodeName === 'BODY') {
-                return [
+        // A4 formati sozlamalari uchun menyu qo'shish
+        editor.ui.registry.addMenuItem('pagesetup', {
+          text: 'Page Setup',
+          icon: 'document-properties',
+          onAction: () => {
+            editor.windowManager.open({
+              title: 'Page Setup',
+              body: {
+                type: 'tabpanel',
+                tabs: [
                   {
-                    text: 'Border Color...',
-                    icon: 'color-picker',
-                    onAction: () => {
-                      // Open color picker dialog
-                      editor.windowManager.open({
-                        title: 'Border Color',
-                        body: {
-                          type: 'panel',
-                          items: [
-                            {
-                              type: 'colorinput',
-                              name: 'bordercolor',
-                              label: 'Border color',
-                            },
-                          ],
-                        },
-                        initialData: {
-                          bordercolor: currentBorderColor,
-                        },
-                        buttons: [
-                          {
-                            type: 'cancel',
-                            text: 'Cancel',
-                          },
-                          {
-                            type: 'submit',
-                            text: 'Save',
-                            primary: true,
-                          },
+                    title: 'Page',
+                    items: [
+                      {
+                        type: 'selectbox',
+                        name: 'pageSize',
+                        label: 'Page size',
+                        items: [
+                          { text: 'A4', value: 'a4' },
+                          { text: 'Letter', value: 'letter' },
+                          { text: 'Legal', value: 'legal' },
                         ],
-                        onSubmit: (api: any) => {
-                          const data = api.getData();
-                          updateEditorBorderStyle(currentBorderStyle, data.bordercolor);
-                          api.close();
-                        },
-                      });
-                    },
+                        value: currentPageSize,
+                      },
+                      {
+                        type: 'selectbox',
+                        name: 'orientation',
+                        label: 'Orientation',
+                        items: [
+                          { text: 'Portrait', value: 'portrait' },
+                          { text: 'Landscape', value: 'landscape' },
+                        ],
+                        value: currentOrientation,
+                      },
+                    ],
                   },
-                ];
-              }
-              return [];
-            },
-          });
-        }
+                  {
+                    title: 'Margins',
+                    items: [
+                      {
+                        type: 'input',
+                        name: 'margin',
+                        label: 'Margins (mm)',
+                        inputMode: 'numeric',
+                        value: String(currentMargin),
+                      },
+                    ],
+                  },
+                ],
+              },
+              buttons: [
+                {
+                  type: 'cancel',
+                  text: 'Cancel',
+                },
+                {
+                  type: 'submit',
+                  text: 'Apply',
+                  primary: true,
+                },
+              ],
+              initialData: {
+                pageSize: currentPageSize,
+                orientation: currentOrientation,
+                margin: String(currentMargin),
+              },
+              onSubmit: (api: any) => {
+                const data = api.getData();
+                const newSize = data.pageSize;
+                const newOrientation = data.orientation as 'portrait' | 'landscape';
+                const newMargin = parseInt(data.margin, 10) || 20;
 
-        // Register custom setup if provided
+                // Format qo'llash
+                applyPageFormat(editor, newSize, newOrientation, newMargin);
+
+                api.close();
+              },
+            });
+          },
+        });
+
+        // Custom buttonlarni qo'shish
+        customButtons.forEach((button) => {
+          editor.ui.registry.addButton(button.name, {
+            text: button.text,
+            tooltip: button.tooltip || button.text,
+            icon: button.icon,
+            onAction: () => button.onAction(editor),
+          });
+        });
+
+        // Custom setup
         if (setup) {
           setup(editor);
         }
 
-        // Register event handlers
+        // Event handlers
         if (onSave) {
           editor.on('save', (e: any) => {
             e.preventDefault();
@@ -406,19 +582,6 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
         if (onFocus) {
           editor.on('focus', (e: any) => {
             onFocus(e, editor);
-          });
-        }
-
-        // Register paste handlers
-        if (pastePreprocess) {
-          editor.on('PastePreProcess', (args: any) => {
-            pastePreprocess(editor, args);
-          });
-        }
-
-        if (pastePostprocess) {
-          editor.on('PastePostProcess', (args: any) => {
-            pastePostprocess(editor, args);
           });
         }
       },
@@ -457,52 +620,44 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     contentCss,
     contentStyle,
     darkMode,
-    relativeUrls,
-    removeScriptHost,
-    convertUrls,
-    allowPasteFromWord,
-    pasteAsText,
-    imageAdvtab,
-    automaticUploads,
-    quickbarsSelectionToolbar,
-    quickbars,
     autosaveInterval,
     language,
-    languageUrl,
-    autoresizeMinHeight,
-    autoresizeMaxHeight,
-    touchEnabled,
     templates,
     formats,
-    currentBorderColor,
-    currentBorderStyle,
     setup,
     onSave,
     onBlur,
     onFocus,
-    pastePreprocess,
-    pastePostprocess,
     imageUploadHandler,
     filePickerCallback,
-    updateEditorBorderStyle,
-    borderStyle,
-    borderColor,
-    autoresize,
+    currentPageSize,
+    currentOrientation,
+    currentMargin,
+    paperDimensions.heightPx,
+    customButtons,
+    applyPageFormat,
   ]);
 
+  // Editor wrapper style
+  const editorWrapperStyle: React.CSSProperties = {
+    height: height ? `${height}px` : `${paperDimensions.heightPx + 200}px`,
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    ...style,
+  };
+
   return (
-    <div className={`tinymce-editor-wrapper ${className}`} style={{ ...editorWrapperStyle, ...style }}>
+    <div className={`tinymce-editor-wrapper ${className}`} style={editorWrapperStyle}>
       <Editor
         id={editorId}
-        apiKey={apiKey}
+        apiKey="i2gzr3l3xi13o8ja2ssqch7jlrlau3xokciwv3x4it8t6u56"
         onInit={handleEditorInit}
         initialValue={initialValue}
         value={value}
         onEditorChange={handleEditorChange}
         init={editorInit}
         disabled={disabled}
-        tinymceScriptSrc={tinymceScriptSrc}
-        scriptLoading={{ async: lazyLoad, defer: lazyLoad }}
       />
     </div>
   );
