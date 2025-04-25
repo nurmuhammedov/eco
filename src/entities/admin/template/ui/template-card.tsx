@@ -1,12 +1,12 @@
 import React from 'react';
-import { FileSymlink, Pencil } from 'lucide-react';
-import { format, parseISO } from 'date-fns';
 import { uz } from 'date-fns/locale';
+import { format, parseISO } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import { FileSymlink, Pencil } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/shared/components/ui/card';
 import { TemplateCardProps, TemplateTypeIcon } from '@/entities/admin/template';
-import { getTemplateType } from '@/features/admin/template/model/use-template-form.ts';
-import { useNavigate } from 'react-router-dom';
+import { getTemplateType } from '@/features/admin/template/model/use-template-form';
 
 export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onEdit }) => {
   const navigate = useNavigate();

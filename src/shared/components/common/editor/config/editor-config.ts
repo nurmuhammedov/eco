@@ -52,7 +52,7 @@ export const DEFAULT_PLUGINS = [
  */
 export const DEFAULT_TOOLBAR = [
   'undo redo | blocks | bold italic underline strikethrough | forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
-  'link image media table | charmap emoticons | fullscreen preview | code | pageborder | help',
+  'link image table | charmap emoticons | fullscreen preview | code | pageborder | help',
 ];
 
 /**
@@ -60,7 +60,7 @@ export const DEFAULT_TOOLBAR = [
  */
 export const DEFAULT_MENU = {
   file: {
-    title: 'File',
+    title: 'Fayl',
     items: 'newdocument restoredraft | preview | wordcount',
   },
   edit: {

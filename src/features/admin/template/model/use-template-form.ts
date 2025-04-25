@@ -30,7 +30,7 @@ export const getTemplateType = (type: TemplateType): string => TEMPLATE_TYPE_MAP
 export function useTemplateForm() {
   const { data, onClose, isCreate } = useTemplateDrawer();
 
-  const templateTypes = useTranslatedObject(TemplateType);
+  const templateTypes = useTranslatedObject(TemplateType, 'templates');
 
   const templateTypeOptions = getSelectOptions(templateTypes);
 

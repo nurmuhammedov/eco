@@ -75,9 +75,9 @@ export const TemplateDrawer = () => {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('number')}</FormLabel>
+                    <FormLabel>Tavsifi</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Tavsif" {...field} />
+                      <Textarea placeholder="Tavsifi" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

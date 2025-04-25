@@ -76,6 +76,11 @@
     "COAL": "Ko'mir",
     "GEOLOGY": "Geologiya"
   },
+  "templates": {
+    "IRS": "INM arizasi",
+    "XICHO_APPEAL": "XICHO arizasi",
+    "EQUIPMENT_APPEAL": "Qurilma arizasi"
+  },
   "application_status": {
     "ALL": "Barchasi",
     "NEW": "Yangi",

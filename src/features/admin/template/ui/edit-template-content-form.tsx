@@ -9,5 +9,5 @@ interface EditTemplateFormProps {
 export const EditTemplateContentForm: React.FC<EditTemplateFormProps> = ({ content, onChange }) => {
   const editorRef = useRef<TinyMCEEditorRef>(null);
 
-  return <TinyMCEEditor className="!h-[calc(100vh-150px)]" ref={editorRef} value={content} onChange={onChange} />;
+  return <TinyMCEEditor className="!h-[calc(100%-60px)]" ref={editorRef} value={content} onChange={onChange} />;
 };
