@@ -5,7 +5,7 @@ import { Template, TemplateFormDTO } from '@/entities/admin/template';
 
 export const templateAPI = {
   list: async () => {
-    const { data } = await apiClient.getWithPagination<Template[]>(API_ENDPOINTS.TEMPLATES);
+    const { data } = await apiClient.getWithPagination<Template>(API_ENDPOINTS.TEMPLATES);
     return data.content || [];
   },
   byId: async (id: number) => {

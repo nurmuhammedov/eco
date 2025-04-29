@@ -8,7 +8,15 @@ import { InputFile } from '@/shared/components/common/file-upload';
 import { useCreateHPOApplication } from '@/features/create-application';
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { MultiSelect } from '@/shared/components/ui/multi-select.tsx';
 
@@ -178,16 +186,19 @@ export default () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required className="w-full 3xl:w-sm">
-                    XICHO sexlari, uchastkalari, maydonchalari va boshqa ishlab chiqarish obyektlarining nomi
+                    XICHO sexlari, uchastkalari va maydonchalari nomi
                   </FormLabel>
                   <FormControl>
                     <Input
                       className="w-full 3xl:w-sm"
-                      placeholder="XICHO sexlari, uchastkalari, maydonchalari va boshqa ishlab chiqarish obyektlarining nomi"
+                      placeholder="XICHO sexlari, uchastkalari va maydonchalari nomi"
                       {...field}
                     />
                   </FormControl>
                   <FormMessage />
+                  <FormDescription>
+                    XICHO sexlari, uchastkalari, maydonchalari va boshqa <br /> ishlab chiqarish obyektlarining nomi
+                  </FormDescription>
                 </FormItem>
               )}
             />
@@ -197,16 +208,16 @@ export default () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required className="w-full 3xl:w-sm">
-                    VM ning 2008 yil 10 dekabrdagi 271-son qaroriga muvofiq xavfli moddalarning nomi va miqdori
+                    Xavfli moddalarning nomi va miqdori
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      className="w-full 3xl:w-sm"
-                      placeholder="VM ning 2008 yil 10 dekabrdagi 271-son qaroriga muvofiq xavfli moddalarning nomi va miqdori"
-                      {...field}
-                    />
+                    <Input className="w-full 3xl:w-sm" placeholder="Xavfli moddalarning nomi va miqdori" {...field} />
                   </FormControl>
                   <FormMessage />
+                  <FormDescription>
+                    VM ning 2008 yil 10 dekabrdagi 271-son qaroriga muvofiq
+                    <br /> xavfli moddalarning nomi va miqdori
+                  </FormDescription>
                 </FormItem>
               )}
             />
