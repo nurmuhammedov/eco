@@ -13,13 +13,12 @@ import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui/yande
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
 import { CardForm } from '@/entities/create-application/ui/application-form-card.tsx';
-import { CreateRegisterBoilerDTO } from '@/entities/user/applications/create-application/model/application.dto';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 
 export default () => {
-  const form = useForm<CreateRegisterBoilerDTO>({});
-  const onSubmit = (data: CreateRegisterBoilerDTO) => {
+  const form = useForm({});
+  const onSubmit = (data: any) => {
     console.log("Yuborilgan ma'lumot:", data);
   };
 

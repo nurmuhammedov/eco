@@ -12,15 +12,14 @@ import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload.tsx';
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui/yandex-map-modal.tsx';
 import { CardForm } from '@/entities/create-application/ui/application-form-card.tsx';
-import { CreateRegisterLiftDTO } from '@/entities/user/applications/create-application/model/application.dto';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 
 export default () => {
-  const form = useForm<CreateRegisterLiftDTO>();
-  const onSubmit = (data: CreateRegisterLiftDTO) => {
+  const form = useForm();
+  const onSubmit = (data: any) => {
     console.log("Yuborilgan ma'lumot:", data);
   };
 
