@@ -1,15 +1,17 @@
+import { OctagonAlert } from 'lucide-react';
+import { GoBack } from '@/shared/components/common';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { CardForm } from '@/entities/create-application';
 import DatePicker from '@/shared/components/ui/datepicker';
 import { Textarea } from '@/shared/components/ui/textarea';
+import { Alert, AlertTitle } from '@/shared/components/ui/alert';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { useCreateCraneApplication } from '@/features/create-application';
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { GoBack } from '@/shared/components/common';
 
 export default () => {
   const { form, handleSubmit, regionOptions, districtOptions } = useCreateCraneApplication();
@@ -20,7 +22,14 @@ export default () => {
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack title="Kranni ro'yxatga olish" />
-        <CardForm className="my-2">
+        <Alert className="bg-destructive/10 border-destructive/50 my-3">
+          <OctagonAlert className="size-4 !text-destructive" />
+          <AlertTitle>
+            Diqqat! Agar ro'yxatga olinayotgan kran, biror bir XICHO ning tarkibida bo'lsa, u holda avval ushbu XICHO
+            mazkur axborot tizimida ro'yxatga olingan bo'lishi kerak!
+          </AlertTitle>
+        </Alert>
+        <CardForm className="mb-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
             <FormField
               control={form.control}
