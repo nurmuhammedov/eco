@@ -1,6 +1,10 @@
 import { FileInput, FileOutput, FilePlus } from 'lucide-react';
-import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
-import { ApplicationCardItem, ApplicationCategory, MainApplicationCategory } from '@/entities/create-application';
+import {
+  ApplicationCardItem,
+  ApplicationCategory,
+  ApplicationTypeEnum,
+  MainApplicationCategory,
+} from '@/entities/create-application';
 
 export const APPLICATION_CATEGORIES = [
   {

@@ -4,10 +4,12 @@ import { Button } from '@/shared/components/ui/button';
 import { CardForm } from '@/entities/create-application';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
+import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { useCreateHPOApplication } from '@/features/create-application';
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types';
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import {
   Form,
   FormControl,
@@ -17,8 +19,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { MultiSelect } from '@/shared/components/ui/multi-select.tsx';
 
 export default () => {
   const { form, spheres, handleSubmit, regionOptions, districtOptions, hazardousFacilityTypeOptions } =
@@ -27,7 +27,7 @@ export default () => {
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title="Ariza yaratish" />
+        <GoBack title="XICHOni ro‘yxatga olish" />
         <CardForm className="my-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
             <FormField

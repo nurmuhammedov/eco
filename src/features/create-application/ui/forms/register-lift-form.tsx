@@ -17,7 +17,6 @@ import { FileTypes } from '@/shared/components/common/file-upload/models/file-ty
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
-import { LIFT_TYPES } from '@/entities/user/applications/create-application/data';
 
 export default () => {
   const form = useForm<CreateRegisterLiftDTO>();
@@ -25,7 +24,7 @@ export default () => {
     console.log("Yuborilgan ma'lumot:", data);
   };
 
-  const liftTypeOptions = getSelectOptions(LIFT_TYPES);
+  const liftTypeOptions = getSelectOptions([]);
 
   const { handleSubmit } = form;
 

@@ -15,7 +15,6 @@ const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-
 const Login = lazy(() => import('@/pages/auth/ui/login-page'));
 const AdminLogin = lazy(() => import('@/pages/auth/ui/admin-login'));
 
-const Register = lazy(() => import('@/features/user/register/pages'));
 const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'));
 const RegionsPage = lazy(() => import('@/pages/admin/regions/ui'));
 const DepartmentPage = lazy(() => import('@/pages/admin/department/ui'));
@@ -41,7 +40,7 @@ export const appRoutes = [
   },
   {
     path: 'register',
-    component: Register,
+    component: RegionsPage,
     roles: [UserRoles.LEGAL],
   },
   {

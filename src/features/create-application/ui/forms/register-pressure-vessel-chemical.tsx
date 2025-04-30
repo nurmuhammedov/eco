@@ -17,7 +17,6 @@ import { CreateRegisterPressureVesselChemicalDTO } from '@/entities/user/applica
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
-import { CONTAINER_TYPES } from '@/entities/user/applications/create-application/data';
 
 export default () => {
   const form = useForm<CreateRegisterPressureVesselChemicalDTO>({});
@@ -25,7 +24,7 @@ export default () => {
     console.log("Yuborilgan ma'lumot:", data);
   };
 
-  const containerTypeOptions = getSelectOptions(CONTAINER_TYPES);
+  const containerTypeOptions = getSelectOptions([]);
 
   const { handleSubmit } = form;
 

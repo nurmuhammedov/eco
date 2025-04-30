@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ApplicationCardItem, ApplicationIcons } from '@/entities/create-application';
-import { ApplicationTypeEnum } from '@/entities/user/applications/create-application/model/application.types';
+import { ApplicationCardItem, ApplicationIcons, ApplicationTypeEnum } from '@/entities/create-application';
 
 interface ApplicationCardProps {
   application: ApplicationCardItem;
