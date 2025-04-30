@@ -15,3 +15,18 @@ export const useCreateHPOApplicationMutations = () => {
     },
   });
 };
+
+export const useCreateCraneApplicationMutations = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createApplicationsAPI.createCraneApplication,
+    onSuccess: (createdData) => {
+      queryClient.invalidateQueries({
+        queryKey: ['create-crane-application'],
+      });
+
+      queryClient.setQueryData(['create-crane-application'], createdData);
+    },
+  });
+};

@@ -1,49 +1,37 @@
-import { format } from 'date-fns';
-import { cn } from '@/shared/lib/utils';
-import { CalendarIcon } from 'lucide-react';
-import { useForm } from 'react-hook-form';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
+import { CardForm } from '@/entities/create-application';
+import DatePicker from '@/shared/components/ui/datepicker';
 import { Textarea } from '@/shared/components/ui/textarea';
-import { Calendar } from '@/shared/components/ui/calendar';
-import { DATE_FORMAT } from '@/shared/constants/date-formats';
-import { getDisabledDates } from '@/shared/lib/get-disabled-dates';
-import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
-import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload.tsx';
-import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui/yandex-map-modal.tsx';
-import { CRANE_TYPES } from '@/entities/user/applications/create-application/data';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { CardForm } from '@/entities/create-application/ui/application-form-card.tsx';
-import { CreateRegisterCraneDTO } from '@/entities/user/applications/create-application/model/application.dto';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
+import { InputFile } from '@/shared/components/common/file-upload';
+import { useCreateCraneApplication } from '@/features/create-application';
+import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
+import { GoBack } from '@/shared/components/common';
 
 export default () => {
-  const form = useForm<CreateRegisterCraneDTO>({});
-  const onSubmit = (data: CreateRegisterCraneDTO) => {
-    console.log("Yuborilgan ma'lumot:", data);
-  };
+  const { form, handleSubmit, regionOptions, districtOptions } = useCreateCraneApplication();
 
-  const craneTypeList = getSelectOptions(CRANE_TYPES);
-
-  const { handleSubmit } = form;
+  const craneTypeList = getSelectOptions([]);
 
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+      <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
+        <GoBack title="Kranni ro'yxatga olish" />
         <CardForm className="my-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
             <FormField
               control={form.control}
-              name="hpo_id"
+              name="hazardousFacilityId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>ХИЧО ни танланг</FormLabel>
+                  <FormLabel required>XICHO</FormLabel>
                   <FormControl>
                     <Select {...field}>
                       <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="ХИЧО ни танланг" />
+                        <SelectValue placeholder="XICHO ni tanlang" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value={'null'}>Mavjud emas</SelectItem>
@@ -56,14 +44,14 @@ export default () => {
             />
             <FormField
               control={form.control}
-              name="crane_type"
+              name="childEquipmentId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Кран турини танланг</FormLabel>
+                  <FormLabel required>Kran turini tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} {...field}>
                       <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="Кран турини танланг" />
+                        <SelectValue placeholder="Kran turini tanlang" />
                       </SelectTrigger>
                       <SelectContent>{craneTypeList}</SelectContent>
                     </Select>
@@ -77,9 +65,9 @@ export default () => {
               name="factoryNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Qurilmaning zavod raqami</FormLabel>
+                  <FormLabel required>Kranning zavod raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning zavod raqami" {...field} />
+                    <Input className="w-full 3xl:w-sm" placeholder="Kranning zavod raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -87,10 +75,10 @@ export default () => {
             />
             <FormField
               control={form.control}
-              name="factoryNumber"
+              name="model"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Model, marka</FormLabel>
+                  <FormLabel required>Model, marka</FormLabel>
                   <FormControl>
                     <Input className="w-full 3xl:w-sm" placeholder="Model, marka" {...field} />
                   </FormControl>
@@ -100,51 +88,18 @@ export default () => {
             />
             <FormField
               control={form.control}
-              name="productionDate"
-              render={({ field }) => (
-                <FormItem className="w-full 3xl:w-sm">
-                  <FormLabel>Ishlab chiqarilgan sana</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={'outline'}
-                          className={cn(
-                            'w-full pl-3 text-left hover:text-neutral-350 font-normal',
-                            !field.value && 'text-neutral-350',
-                          )}
-                        >
-                          {field.value ? format(field.value, DATE_FORMAT) : <span>Ishlab chiqarilgan sana</span>}
-                          <CalendarIcon className="ml-auto size-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => getDisabledDates(date, 'after')}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="boomLength"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="w-full 3xl:w-sm">Стреласининг узинлиги</FormLabel>
+                  <FormLabel required className="w-full 3xl:w-sm">
+                    Strelasining uzinligi
+                  </FormLabel>
                   <FormControl>
                     <Input
                       min={1}
                       type="number"
                       className="w-full 3xl:w-sm"
-                      placeholder="Стреласининг узинлиги"
+                      placeholder="Strelasining uzinligi"
                       {...field}
                     />
                   </FormControl>
@@ -154,10 +109,10 @@ export default () => {
             />
             <FormField
               control={form.control}
-              name="loadCapacity"
+              name="liftingCapacity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Yuk ko'tara olish</FormLabel>
+                  <FormLabel required>Yuk ko'tara olish</FormLabel>
                   <FormControl>
                     <Input
                       min={1}
@@ -171,20 +126,65 @@ export default () => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="region"
+              name="factoryNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Қурилма жойлашган вилоят</FormLabel>
+                  <FormLabel required>Ishlab chiqargan zavod nomi</FormLabel>
+                  <FormControl>
+                    <Input className="w-full 3xl:w-sm" placeholder="Ishlab chiqargan zavod nomi" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="manufacturedAt"
+              render={({ field }) => (
+                <FormItem className="w-full 3xl:w-sm">
+                  <FormLabel required>Ishlab chiqarilgan sana</FormLabel>
+                  <DatePicker value={field.value} onChange={field.onChange} placeholder="Ishlab chiqarilgan sana" />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="partialCheckDate"
+              render={({ field }) => (
+                <FormItem className="w-full 3xl:w-sm">
+                  <FormLabel required>Qisman texnik ko'rik sanasi</FormLabel>
+                  <DatePicker value={field.value} onChange={field.onChange} placeholder="Qisman texnik ko'rik sanasi" />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="fullCheckDate"
+              render={({ field }) => (
+                <FormItem className="w-full 3xl:w-sm">
+                  <FormLabel required>To'liq texnik ko'rik sanasi</FormLabel>
+                  <DatePicker value={field.value} onChange={field.onChange} placeholder="To'liq texnik ko'rik sanasi" />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="regionId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Kran joylashgan viloyat</FormLabel>
                   <FormControl>
                     <Select {...field}>
                       <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="Қурилма жойлашган вилоят" />
+                        <SelectValue placeholder="Kran joylashgan viloyat" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value={'null'}>Mavjud emas</SelectItem>
-                      </SelectContent>
+                      <SelectContent>{regionOptions}</SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />
@@ -193,18 +193,16 @@ export default () => {
             />
             <FormField
               control={form.control}
-              name="district"
+              name="districtId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Қурилма жойлашган туман</FormLabel>
+                  <FormLabel required>Kran joylashgan tuman</FormLabel>
                   <FormControl>
                     <Select {...field}>
                       <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="Қурилма жойлашган туман" />
+                        <SelectValue placeholder="Kran joylashgan tuman" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value={'null'}>Mavjud emas</SelectItem>
-                      </SelectContent>
+                      <SelectContent>{districtOptions}</SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />
@@ -216,20 +214,20 @@ export default () => {
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Қурилма жойлашган манзил*</FormLabel>
+                  <FormLabel required>Qurilma joylashgan manzil</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Қурилма жойлашган манзил*" {...field} />
+                    <Input className="w-full 3xl:w-sm" placeholder="Qurilma joylashgan manzil" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
+              name="location"
               control={form.control}
-              name="geolocation"
               render={({ field }) => (
                 <FormItem className="w-full 3xl:w-sm">
-                  <FormLabel>Геолокация</FormLabel>
+                  <FormLabel required>Joylashuv</FormLabel>
                   <FormControl>
                     <YandexMapModal
                       initialCoords={field.value}
@@ -237,20 +235,18 @@ export default () => {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
-              name="cranePhoto"
+              name="labelPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Краннинг биркаси билан сурати</FormLabel>
+                  <FormLabel required>Kranning birkasi bilan surati</FormLabel>
                   <FormControl>
-                    <InputFile className="w-full 3xl:w-sm" form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile className="w-full 3xl:w-sm" form={form} {...field} />
                   </FormControl>
-                  <FormMessage className="text-right" />
                 </FormItem>
               )}
             />
@@ -260,9 +256,9 @@ export default () => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ариза баёни</FormLabel>
+                <FormLabel required>Ariza bayoni</FormLabel>
                 <FormControl>
-                  <Textarea rows={6} className="3xl:w-4/6" placeholder="Ариза баёни" {...field} />
+                  <Textarea rows={6} className="3xl:w-4/6" placeholder="Ariza bayoni" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -271,102 +267,104 @@ export default () => {
         </CardForm>
         <CardForm className="grid grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4">
           <FormField
-            name="fileUrls"
+            name="saleContractPath"
             control={form.control}
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Сотиб олиш-сотиш шартномаси файли</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
-                  </FormControl>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="fileUrls"
-            render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Қурилма сертификати файли</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
-                  </FormControl>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="fileUrls"
-            render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                    Масъул шахс тайинланганлиги тўғрисида буйруқ файли
+                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    Sotib olish-sotish shartnomasi fayli
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
-                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
           <FormField
+            name="expertisePath"
             control={form.control}
-            name="fileUrls"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Экспертиза лойиҳаси файли</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
-                  </FormControl>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="fileUrls"
-            render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                    Монтаж гувоҳномаси файли(автокрандан ташқари)
+                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    Ekspertiza loyihasi fayli
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
-                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="fileUrls"
+            name="equipmentCertPath"
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ариза файли</FormLabel>
+                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    Qurilma sertifikati fayli
+                  </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
-                <FormMessage className="text-right" />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="assignmentDecreePath"
+            render={({ field }) => (
+              <FormItem className="pb-4 border-b">
+                <div className="flex items-end xl:items-center justify-between gap-2">
+                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    Masʼul shaxs tayinlanganligi to‘g‘risida buyruq fayli
+                  </FormLabel>
+                  <FormControl>
+                    <InputFile form={form} {...field} />
+                  </FormControl>
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="installationCertPath"
+            render={({ field }) => (
+              <FormItem className="pb-4 border-b">
+                <div className="flex items-end xl:items-center justify-between gap-2">
+                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    Montaj guvohnomasi fayli(avtokrandan tashqari)
+                  </FormLabel>
+                  <FormControl>
+                    <InputFile form={form} {...field} />
+                  </FormControl>
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="additionalFilePath"
+            render={({ field }) => (
+              <FormItem className="pb-4 border-b">
+                <div className="flex items-end xl:items-center justify-between gap-2">
+                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    Qo'shimcha ma'lumotlar
+                  </FormLabel>
+                  <FormControl>
+                    <InputFile form={form} {...field} />
+                  </FormControl>
+                </div>
               </FormItem>
             )}
           />
         </CardForm>
         <Button type="submit" className="mt-5">
-          Ариза яратиш
+          Ariza yaratish
         </Button>
       </form>
     </Form>

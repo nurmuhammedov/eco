@@ -13,7 +13,7 @@ import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from '
 
 export interface InputFileProps<T extends FieldValues> {
   name: Path<T>;
-  accept: FileTypes[];
+  accept?: FileTypes[];
   form: UseFormReturn<T>;
   className?: string;
   maxSize?: number; // MB da
@@ -32,7 +32,6 @@ export interface InputFileProps<T extends FieldValues> {
 
 function InputFileComponent<T extends FieldValues>({
   name,
-  accept,
   form,
   className,
   maxSize = 10, // 10MB default
@@ -40,6 +39,7 @@ function InputFileComponent<T extends FieldValues>({
   showPreview = false,
   showFileSize = false,
   showDownload = false,
+  accept = [FileTypes.PDF],
   uploadEndpoint,
   onUploadStart,
   onUploadComplete,
