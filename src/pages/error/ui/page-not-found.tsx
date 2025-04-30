@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import Icon from '@/shared/components/common/icon';
 
-export default function Error() {
+export default function NotFound() {
   const { t } = useTranslation(['common']);
   return (
     <div className="h-full flex flex-col items-center justify-center">

@@ -1,16 +1,12 @@
+import { debounce } from '@/shared/lib';
+import { RefreshCcw } from 'lucide-react';
 import React, { useCallback, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { FilterField, FilterRow } from '@/shared/components/common/filters';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import {
-  ApplicationFilters as ApplicationFiltersType,
-  ApplicationStatus,
-  FilterApplicationDTO,
-} from '@/entities/application';
-import { debounce } from '@/shared/lib';
-import SearchInput from '@/shared/components/common/search-input/ui/search-input.tsx';
 import { Button } from '@/shared/components/ui/button';
-import { RefreshCcw } from 'lucide-react';
+import { FilterField, FilterRow } from '@/shared/components/common/filters';
+import SearchInput from '@/shared/components/common/search-input/ui/search-input';
+import { ApplicationFilters as ApplicationFiltersType, ApplicationStatus } from '@/entities/application';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 
 const DEFAULT_FILTERS: ApplicationFiltersType = {
   search: '',
@@ -20,7 +16,7 @@ const DEFAULT_FILTERS: ApplicationFiltersType = {
 };
 
 interface ApplicationFiltersProps {
-  initialFilters?: FilterApplicationDTO;
+  initialFilters?: any;
   onFilter: (filters: ApplicationFiltersType) => void;
 }
 

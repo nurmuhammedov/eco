@@ -1,6 +1,6 @@
-import { ApplicationStatus } from '@/entities/application';
-import { cn } from '@/shared/lib/utils.ts';
+import { cn } from '@/shared/lib/utils';
 import { useTranslation } from 'react-i18next';
+import { ApplicationStatus } from '@/entities/application';
 
 interface ApplicationStatusBadgeProps {
   status: ApplicationStatus;
