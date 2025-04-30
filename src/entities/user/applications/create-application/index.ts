@@ -1,1 +1,0 @@
-export { fetchApplications } from './api';
