@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/components/ui/dialog';
+import { cn } from '@/shared/lib/utils.ts';
 
 interface YandexMapModalProps {
   label?: string;
@@ -47,7 +48,13 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belg
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button" variant="outline" className="w-full justify-between">
+        <Button
+          type="button"
+          variant="outline"
+          className={cn('w-full justify-between', {
+            'text-neutral-350': !selectedCoords?.length,
+          })}
+        >
           {selectedCoords?.length ? (
             selectedCoords.join(', ')
           ) : (
