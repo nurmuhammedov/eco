@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { CardForm } from '@/entities/user/applications/create-application/ui';
+import { CardForm } from '@/entities/create-application';
 
 export const AppealFormSkeleton = ({ length = 10, fileLength = 8 }: { length?: number; fileLength?: number }) => {
   return (
