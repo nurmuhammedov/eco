@@ -251,7 +251,7 @@ function InputFileComponent<T extends FieldValues>({
       <div
         className={cn(
           'flex items-center w-full',
-          'border rounded-md overflow-hidden bg-white',
+          'border rounded overflow-hidden bg-white',
           'transition-all duration-150 ease-in-out',
           hasError ? 'border-red-300' : 'border-blue-400',
           'hover:border-blue-400',
