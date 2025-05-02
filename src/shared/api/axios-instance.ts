@@ -1,9 +1,10 @@
 import axios from 'axios';
+import { apiConfig } from '@/shared/api/constants';
 
 export const axiosInstance = axios.create({
   withCredentials: true,
+  baseURL: apiConfig.baseURL,
   paramsSerializer: { indexes: null },
-  baseURL: import.meta.env.VITE_API_URL,
 });
 
 // Request interceptor
