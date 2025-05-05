@@ -3,43 +3,38 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
 import {
-  CreateDistrictDTO,
-  districtSchema,
-  UpdateDistrictDTO,
-  useCreateDistrict,
-  useDistrictQuery,
-  useRegionSelectQuery,
-  useUpdateDistrict,
-} from '@/entities/admin/districts';
+  CreateEquipmentDTO,
+  equipmentSchema,
+  UpdateEquipmentDTO,
+  useCreateEquipment,
+  useEquipmentDetail,
+  useUpdateEquipment,
+} from '@/entities/admin/equipment';
 
-const DEFAULT_FORM_VALUES: CreateDistrictDTO = {
+const DEFAULT_FORM_VALUES: CreateEquipmentDTO = {
   name: '',
-  soato: '',
-  number: '',
-  regionId: '',
+  equipmentType: '',
 };
 
-export function useDistrictForm() {
+export function useEquipmentForm() {
   const { data, onClose, isCreate } = useDistrictDrawer();
 
   const districtId = useMemo(() => (data?.id ? data?.id : 0), [data]);
 
-  const form = useForm<CreateDistrictDTO>({
-    resolver: zodResolver(districtSchema),
+  const form = useForm<CreateEquipmentDTO>({
+    resolver: zodResolver(equipmentSchema),
     defaultValues: DEFAULT_FORM_VALUES,
   });
 
-  const { data: regions } = useRegionSelectQuery();
+  const { mutateAsync: createRegion, isPending: isCreating } = useCreateEquipment();
 
-  const { mutateAsync: createRegion, isPending: isCreating } = useCreateDistrict();
+  const { mutateAsync: updateRegion, isPending: isUpdating } = useUpdateEquipment();
 
-  const { mutateAsync: updateRegion, isPending: isUpdating } = useUpdateDistrict();
-
-  const { data: districtData, isLoading } = useDistrictQuery(districtId);
+  const { data: districtData, isLoading } = useEquipmentDetail(districtId);
 
   useEffect(() => {
     if (districtData && !isCreate) {
-      form.reset({ ...districtData, regionId: String(districtData.regionId) });
+      form.reset({ ...districtData, equipmentType: String(districtData.equipmentType) });
     }
   }, [districtData, form]);
 
@@ -49,7 +44,7 @@ export function useDistrictForm() {
   }, [form, onClose]);
 
   const handleSubmit = useCallback(
-    async (formData: CreateDistrictDTO): Promise<boolean> => {
+    async (formData: CreateEquipmentDTO): Promise<boolean> => {
       try {
         if (isCreate) {
           const response = await createRegion(formData);
@@ -61,7 +56,7 @@ export function useDistrictForm() {
           const response = await updateRegion({
             id: districtId,
             ...formData,
-          } as UpdateDistrictDTO);
+          } as UpdateEquipmentDTO);
           if (response.success) {
             handleClose();
             return true;
@@ -81,7 +76,6 @@ export function useDistrictForm() {
 
   return {
     form,
-    regions,
     isCreate,
     isPending,
     districtData,

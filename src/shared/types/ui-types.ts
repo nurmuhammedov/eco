@@ -52,7 +52,7 @@ export interface UIComponentDataMap {
     id: number;
   };
   [UI_COMPONENTS.EQUIPMENT_DRAWER]: {
-    id: number | null;
+    id: number;
   };
 }
 

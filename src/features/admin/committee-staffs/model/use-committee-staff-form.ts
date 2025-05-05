@@ -103,7 +103,7 @@ export function useCommitteeStaffForm() {
 
         return false;
       } catch (error) {
-        console.error('[useDistrictForm] Submission error:', error);
+        console.error('[useEquipmentForm] Submission error:', error);
         return false;
       }
     },
