@@ -19,4 +19,4 @@ const RouterErrorBoundary = memo((props: ErrorBoundaryProps) => {
 
 RouterErrorBoundary.displayName = 'RouterErrorBoundary ';
 
-export default RouterErrorBoundary;
+export { RouterErrorBoundary };
