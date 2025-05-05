@@ -9,6 +9,7 @@ export const UI_COMPONENTS = {
   REGION_DRAWER: 'region-drawer', // Viloyatlar
   DISTRICT_DRAWER: 'regions-drawer', // Tumanlar
   TEMPLATE_DRAWER: 'template-drawer', // Shablonlar
+  EQUIPMENT_DRAWER: 'equipment-drawer', // Qurilmalar
   CENTRAL_APPARATUS_DRAWER: 'central-apparatus', // Markaziy apparat
   TERRITORIAL_DEPARTMENTS_DRAWER: 'territorial-departments', // Hududiy bo'limlar
   COMMITTEE_STAFFS_DRAWER: 'committee-staffs', // Qo'mita xodimlari
@@ -49,6 +50,9 @@ export interface UIComponentDataMap {
   };
   [UI_COMPONENTS.TEMPLATE_DRAWER]: {
     id: number;
+  };
+  [UI_COMPONENTS.EQUIPMENT_DRAWER]: {
+    id: number | null;
   };
 }
 

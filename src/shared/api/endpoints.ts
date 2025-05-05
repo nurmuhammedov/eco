@@ -19,5 +19,5 @@ export const API_ENDPOINTS: Record<string, string> = {
   APPEAL_HF: '/appeals/hf',
   TEMPLATES: '/templates',
   UPDATE_TEMPLATE_CONTENT: '/templates/content',
-  EQUIPMENT_CRANE: '/appeals/equipment/crane',
+  CHILD_EQUIPMENTS: '/child-equipments',
 };

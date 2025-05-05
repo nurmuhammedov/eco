@@ -4,7 +4,7 @@ import type { BaseEntity, PaginationParams } from '@/entities/base';
 export function createBaseApi<T extends BaseEntity, F extends Record<string, any>>(endpoint: string) {
   return {
     async getAll(params: PaginationParams & F) {
-      const { data } = await apiClient.getWithPagination<T>(endpoint, { params });
+      const { data } = await apiClient.getWithPagination<T>(endpoint, params);
       return data;
     },
 

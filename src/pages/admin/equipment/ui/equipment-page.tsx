@@ -1,108 +1,95 @@
-import React from 'react';
 import { PlusIcon } from 'lucide-react';
+import { UIModeEnum } from '@/shared/types';
+import React, { useCallback, useState } from 'react';
+import { EntityPage } from '@/widgets/admin/equipment';
 import { Button } from '@/shared/components/ui/button';
-import { useFilters } from '@/shared/hooks/use-filters';
-import { EntityMode, EntityPage } from '@/widgets/admin/equipment';
-import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import { EQUIPMENT_CONFIG, getEquipmentById } from '@/shared/config/equipment-types';
-import { CraneList } from '@/features/admin/crane/ui/crane-list';
 import { CraneFormDialog } from '@/features/admin/crane';
+import { useEquipmentDrawer } from '@/shared/hooks/entity-hooks';
+import { CraneList } from '@/features/admin/crane/ui/crane-list';
+import { filterParsers, useFilters } from '@/shared/hooks/use-filters';
+import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
+import { DEFAULT_EQUIPMENT, EQUIPMENT_CONFIG, getEquipmentById } from '@/shared/config/equipment-types';
 
 const EquipmentPage: React.FC = () => {
-  const { filters, setFilters } = useFilters();
+  const { onOpen } = useEquipmentDrawer();
+  const { filters, setFilters } = useFilters({
+    'equipment-tab': filterParsers.string(DEFAULT_EQUIPMENT.id),
+  });
 
-  // 'tab' query parametridan active equipment ni olish
-  const activeTabId = filters.tab || EQUIPMENT_CONFIG[0].id;
-  const activeEquipment = getEquipmentById(activeTabId) || EQUIPMENT_CONFIG[0];
+  const activeTabId = filters.tab || DEFAULT_EQUIPMENT.id;
+  const [activeTab, setActiveTab] = useState(activeTabId);
+  const [activeEquipment, setActiveEquipment] = useState(getEquipmentById(activeTabId));
 
-  // Tab o'zgarganda, 'tab' query parametrini yangilash
   const handleTabChange = (tabId: string) => {
-    setFilters({ tab: tabId, id: null, mode: null });
+    setActiveTab(tabId);
+    setActiveEquipment(getEquipmentById(tabId));
+    setFilters({ 'equipment-tab': tabId, mode: null, id: null });
   };
 
-  // Qo'shish tugmasi bosilganda
-  const handleAddClick = () => {
-    setFilters({ mode: EntityMode.ADD, id: null });
-  };
+  const handleAddClick = useCallback(() => {
+    if (filters['equipment-tab'] === activeTab) {
+      onOpen(UIModeEnum.CREATE, { id: null });
+    }
+  }, []);
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <h1 className="text-2xl font-bold">ХАВФЛИ ОБЪЕКТЛАР ВА ҚУРИЛМАЛАР</h1>
+        <h1 className="text-2xl font-bold">Xavfli obyektlar va qurilmalar</h1>
         <Button onClick={handleAddClick} className="flex-shrink-0">
-          <PlusIcon className="size-4" /> {activeEquipment.addLabel}
+          <PlusIcon className="size-4" /> {activeEquipment?.addLabel}
         </Button>
       </div>
 
-      <Tabs value={activeTabId} onValueChange={handleTabChange} className="w-full">
+      <Tabs
+        value={activeTab}
+        defaultValue={activeTab}
+        onValueChange={(value) => handleTabChange(value)}
+        className="w-full"
+      >
         <TabsList className="h-auto border border-input overflow-x-auto">
-          {EQUIPMENT_CONFIG.map((equipment) => {
-            return (
-              <TabsTrigger key={equipment.id} value={equipment.id}>
-                <span className="hidden md:inline">{equipment.title}</span>
-              </TabsTrigger>
-            );
-          })}
+          {EQUIPMENT_CONFIG.map((equipment) => (
+            <TabsTrigger key={equipment.id} value={equipment.id}>
+              <span className="hidden md:inline">{equipment.title}</span>
+            </TabsTrigger>
+          ))}
         </TabsList>
       </Tabs>
 
-      {/* Dinamik ravishda tegishli entity page'ni render qilish */}
-      <EntityTabContent equipmentId={activeEquipment.id} addButtonLabel={activeEquipment.addLabel} />
+      <EntityTabContent equipmentId={activeTab} />
     </div>
   );
 };
 
-/**
- * Tab tarkibini dinamik ravishda yaratuvchi komponent
- */
 const EntityTabContent: React.FC<{
   equipmentId: string;
-  addButtonLabel: string;
-}> = ({ equipmentId, addButtonLabel }) => {
-  // Jihozni olish
+}> = ({ equipmentId }) => {
   const equipment = getEquipmentById(equipmentId);
 
   if (!equipment) {
     return <div className="p-4 bg-muted rounded-md">Equipment not found</div>;
   }
 
-  // Har bir jihoz turi uchun tegishli komponentlarni render qilish
   switch (equipmentId) {
     case 'crane':
-      return <CraneTabContent equipmentId={equipmentId} addButtonLabel={addButtonLabel} />;
-
-    // Boshqa jihoz turlari uchun...
+      return <CraneTabContent equipmentId={equipmentId} />;
 
     default:
       return <UnderDevelopmentTab equipmentId={equipmentId} />;
   }
 };
 
-/**
- * Kran tab content komponenti
- */
 const CraneTabContent: React.FC<{
   equipmentId: string;
-  addButtonLabel: string;
-}> = ({ equipmentId, addButtonLabel }) => {
-  // Kran uchun konfiguratsiya
+}> = ({ equipmentId }) => {
   const cranePageConfig = {
-    components: {
-      ListComponent: CraneList,
-      FormDialogComponent: CraneFormDialog,
-    },
     equipmentId,
-    title: 'Kranlar boshqaruvi',
-    addButtonLabel,
-    className: 'crane-entity-page',
+    components: { ListComponent: CraneList, FormDialogComponent: CraneFormDialog },
   };
 
   return <EntityPage {...cranePageConfig} />;
 };
 
-/**
- * Ishlab chiqish jarayonidagi komponentlar uchun placeholder
- */
 const UnderDevelopmentTab: React.FC<{
   equipmentId: string;
 }> = ({ equipmentId }) => {

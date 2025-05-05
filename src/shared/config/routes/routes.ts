@@ -19,7 +19,7 @@ const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'));
 const RegionsPage = lazy(() => import('@/pages/admin/regions/ui'));
 const DepartmentPage = lazy(() => import('@/pages/admin/department/ui'));
 const TemplatesPage = lazy(() => import('@/pages/admin/templates/page'));
-const EquipmentPage = lazy(() => import('@/pages/admin/equipment/ui/equipment-page'));
+// const EquipmentPage = lazy(() => import('@/pages/admin/equipment/ui/equipment-page'));
 const TemplateEditContentPage = lazy(() => import('@/pages/admin/templates/template-edit-content'));
 const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facility/ui'));
 
@@ -74,11 +74,11 @@ export const appRoutes = [
     component: HazardousFacilitiesPage,
     roles: [UserRoles.ADMIN],
   },
-  {
-    path: 'equipments',
-    component: EquipmentPage,
-    roles: [UserRoles.ADMIN],
-  },
+  // {
+  //   path: 'equipments',
+  //   component: EquipmentPage,
+  //   roles: [UserRoles.ADMIN],
+  // },
 ];
 
 export const authRoutes = [
