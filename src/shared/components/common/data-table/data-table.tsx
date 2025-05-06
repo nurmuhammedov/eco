@@ -41,7 +41,7 @@ export function DataTable<TData, TValue>({
   onPageChange,
   onPageSizeChange,
   isLoading = false,
-  isPaginated = false,
+  isPaginated = true,
   pageSizeOptions,
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation('common');
