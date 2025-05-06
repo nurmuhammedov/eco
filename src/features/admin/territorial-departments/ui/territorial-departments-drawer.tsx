@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useUIActionLabel } from '@/shared/hooks';
 import { Input } from '@/shared/components/ui/input';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
@@ -10,18 +11,19 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 
 export const TerritorialDepartmentsDrawer = () => {
   const { t } = useTranslation('common');
-  const { isOpen, onClose, isCreate } = useTerritorialDepartmentsDrawer();
+  const { isOpen, onClose, isCreate, mode } = useTerritorialDepartmentsDrawer();
   const { form, onSubmit, isPending, isFetching, regionOptions } = useTerritorialDepartmentsForm();
+  const modeState = useUIActionLabel(mode);
 
   return (
     <BaseDrawer
       asForm
       open={isOpen}
+      title={modeState}
       onClose={onClose}
       loading={isPending}
       disabled={isPending}
       onSubmit={form.handleSubmit(onSubmit)}
-      title={isCreate ? t('actions.add') : t('actions.edit')}
     >
       <Form {...form}>
         <div className="space-y-4">
