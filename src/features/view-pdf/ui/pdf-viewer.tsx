@@ -31,14 +31,14 @@ interface PDFViewerProps {
   className?: string;
   height?: string;
   width?: string;
-  initialZoom?: ZoomLevel | number;
   viewMode?: ViewMode;
   showToolbar?: boolean;
   lightMode?: boolean;
   onLoad?: () => void;
+  initialZoom?: ZoomLevel | number;
   onError?: (error: Error) => void;
-  onZoomChange?: (zoom: ZoomLevel | number) => void;
   onViewModeChange?: (mode: ViewMode) => void;
+  onZoomChange?: (zoom: ZoomLevel | number) => void;
 }
 
 export const PDFViewer = ({
@@ -340,14 +340,14 @@ export const PDFViewer = ({
       <div className="bg-white" style={{ height }}>
         <iframe
           key={key}
+          allowFullScreen
           ref={iframeRef}
           src={getPdfUrl()}
-          className={cn('w-full h-full border-0 bg-white rounded-b-md', isLoading ? 'opacity-0' : 'opacity-100')}
           onLoad={handleIframeLoad}
           onError={handleIframeError}
+          style={{ display: 'block' }}
           title={title || 'PDF Viewer'}
-          allowFullScreen
-          style={{ display: 'block' }} /* Block display prevents extra spacing */
+          className={cn('w-full h-full border-0 bg-white rounded-b-md', isLoading ? 'opacity-0' : 'opacity-100')}
         />
       </div>
     </div>

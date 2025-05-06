@@ -1,7 +1,6 @@
 import { GoBack } from '@/shared/components/common';
 import { Input } from '@/shared/components/ui/input';
-import { Button } from '@/shared/components/ui/button';
-import { CardForm } from '@/entities/create-application';
+import { CardForm, type CreateHPOApplicationDTO } from '@/entities/create-application';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
@@ -19,14 +18,22 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
+import React from 'react';
+import { CreateApplicationButton } from '@/features/application-modal';
 
 export default () => {
   const { form, spheres, handleSubmit, regionOptions, districtOptions, hazardousFacilityTypeOptions } =
     useCreateHPOApplication();
 
+  const isFormValid = form.formState.isValid;
+
+  const getFormData = React.useCallback((): CreateHPOApplicationDTO => {
+    return form.getValues();
+  }, [form]);
+
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
+      <form autoComplete="off">
         <GoBack title="XICHOni ro‘yxatga olish" />
         <CardForm className="my-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
@@ -462,9 +469,9 @@ export default () => {
             )}
           />
         </CardForm>
-        <Button type="submit" className="mt-5">
-          Ariza yaratish
-        </Button>
+        <div className="flex justify-end mt-6">
+          <CreateApplicationButton formData={getFormData()} isFormValid={isFormValid} apiHandler={handleSubmit} />
+        </div>
       </form>
     </Form>
   );
