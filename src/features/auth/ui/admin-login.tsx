@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 
 const adminLoginFormSchema = z.object({
   username: z.string(),
-  password: z.string().min(8, 'Пароль камида 8 та белгидан иборат бўлиши керак'),
+  password: z.string().min(8, 'Parol kamida 8 ta belgidan iborat bo‘lishi kerak'),
 });
 
 type AdminLoginDTO = z.infer<typeof adminLoginFormSchema>;
@@ -78,7 +78,7 @@ export default function AdminLoginForm({ className }: ComponentPropsWithoutRef<'
                         type={showPassword ? 'text' : 'password'}
                         className="border-0 focus-visible:ring-0"
                       />
-                      <button onClick={togglePasswordVisibility}>
+                      <button type="button" onClick={togglePasswordVisibility}>
                         {showPassword ? (
                           <EyeOffIcon className="size-5 text-muted-foreground" />
                         ) : (

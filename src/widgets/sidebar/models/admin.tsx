@@ -1,5 +1,5 @@
-import { ListTree, MapPinned, PencilRuler, Users } from 'lucide-react';
 import type { Navigation } from '@/widgets/sidebar/models/types';
+import { ListTree, LucideMousePointerSquareDashed, MapPinned, PencilRuler, Users } from 'lucide-react';
 
 export default [
   {
@@ -26,5 +26,10 @@ export default [
     url: '/templates',
     title: 'menu.templates',
     icon: <PencilRuler />,
+  },
+  {
+    url: '/equipments',
+    title: 'menu.sub_types',
+    icon: <LucideMousePointerSquareDashed />,
   },
 ] as Navigation;

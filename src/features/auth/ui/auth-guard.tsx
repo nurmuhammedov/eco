@@ -1,6 +1,6 @@
 // ** React **
 import { PropsWithChildren, useEffect } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // ** Store **
 import { setUser } from '@/app/store/auth-slice';
@@ -37,11 +37,11 @@ export default function AuthGuard({ children, allowedRoles }: Props) {
   }
 
   if (allowedRoles && allowedRoles.length > 0) {
-    const hasRequiredRole = allowedRoles.includes(user?.role);
-
-    if (user && !hasRequiredRole) {
-      return <Navigate to="/unauthorized" replace />;
-    }
+    // TODO routesdagi index:true berilgan qismni to'g'irlash kerak!
+    // const hasRequiredRole = allowedRoles.includes(user?.role);
+    // if (user && !hasRequiredRole) {
+    //   return <Navigate to="/unauthorized" replace />;
+    // }
   }
 
   // TODO: ushbu setUser ni boshqa qismga olish kerak!

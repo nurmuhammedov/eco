@@ -37,7 +37,9 @@
     "state_reception": "Давлат қабули",
     "monitoring": "Мониторинг",
     "reports": "Ҳисоботлар",
-    "hazardous_facilities": "ҲИЧОлар"
+    "hazardous_facilities": "ҲИЧОлар",
+    "templates": "Шаблонлар",
+    "sub_types": "Қуйи турлар"
   },
   "app": {
     "name": "Саноат, радиация ва ядро хавфсизлиги қўмитаси экотизими"

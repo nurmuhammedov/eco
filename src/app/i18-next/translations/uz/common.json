@@ -38,7 +38,8 @@
     "monitoring": "Monitoring",
     "reports": "Hisobotlar",
     "hazardous_facilities": "XICHOlar",
-    "templates": "Shablonlar"
+    "templates": "Shablonlar",
+    "sub_types": "Quyi turlar"
   },
   "app": {
     "name": "Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi ekotizimi"
