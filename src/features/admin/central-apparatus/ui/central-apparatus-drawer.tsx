@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useUIActionLabel } from '@/shared/hooks';
 import { Input } from '@/shared/components/ui/input';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
@@ -8,18 +9,19 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 
 export const CentralApparatusDrawer = () => {
   const { t } = useTranslation('common');
-  const { isOpen, onClose } = useCentralApparatusDrawer();
+  const { isOpen, onClose, mode } = useCentralApparatusDrawer();
   const { form, onSubmit, isPending, isCreate, isFetching } = useCentralApparatusForm();
+  const modeState = useUIActionLabel(mode);
 
   return (
     <BaseDrawer
       asForm
       open={isOpen}
+      title={modeState}
       onClose={onClose}
       loading={isPending}
       disabled={isPending}
       onSubmit={form.handleSubmit(onSubmit)}
-      title={isCreate ? t('actions.add') : t('actions.edit')}
     >
       <Form {...form}>
         <div className="space-y-4">
