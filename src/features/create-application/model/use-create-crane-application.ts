@@ -27,7 +27,7 @@ export const useCreateCraneApplication = () => {
 
   const { data: districts } = useDistrictSelectQueries(regionId);
 
-  const districtOptions = useMemo(() => getSelectOptions(districts), [districts]);
+  const districtOptions = useMemo(() => getSelectOptions(districts), [districts, regionId]);
 
   const regionOptions = useMemo(() => getSelectOptions(regions), [regions, regionId]);
 

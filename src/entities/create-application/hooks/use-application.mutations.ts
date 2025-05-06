@@ -30,3 +30,18 @@ export const useCreateCraneApplicationMutations = () => {
     },
   });
 };
+
+export const useCreateLiftApplicationMutations = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createApplicationsAPI.createLiftApplication,
+    onSuccess: (createdData) => {
+      queryClient.invalidateQueries({
+        queryKey: ['create-crane-application'],
+      });
+
+      queryClient.setQueryData(['create-crane-application'], createdData);
+    },
+  });
+};
