@@ -1,22 +1,26 @@
 import { useTranslation } from 'react-i18next';
 import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
+import { useEquipmentTypeLabel } from '@/shared/hooks';
 import { useFilters } from '@/shared/hooks/use-filters';
-import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
+import { useEquipmentDrawer } from '@/shared/hooks/entity-hooks';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { Equipment, FilterEquipmentDTO, useDeleteEquipment, useEquipmentList } from '@/entities/admin/equipment';
 
 export function EquipmentList() {
   const { filters } = useFilters();
-  const { onOpen } = useDistrictDrawer();
+  const { onOpen } = useEquipmentDrawer();
   const { t } = useTranslation('common');
+
+  const getEquipmentTypeLabel = useEquipmentTypeLabel();
+
   const deleteData = useDeleteEquipment();
   const { data, isLoading } = useEquipmentList(filters as FilterEquipmentDTO);
   const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
 
   const onDelete = (id: number) => deleteData.mutate(id);
 
-  const districtTableColumns: ColumnDef<Equipment>[] = [
+  const equipmentTableColumns: ColumnDef<Equipment>[] = [
     {
       maxSize: 20,
       accessorKey: 'number',
@@ -24,16 +28,13 @@ export function EquipmentList() {
       cell: (cell) => cell.row.index + 1,
     },
     {
-      enablePinning: true,
       accessorKey: 'name',
-      enableSorting: false,
       header: t('name'),
     },
     {
-      enablePinning: true,
       accessorKey: 'equipmentType',
-      enableSorting: false,
-      header: 'Jihoz turi',
+      header: 'Qurilmaning quyi turi',
+      cell: ({ row }) => getEquipmentTypeLabel(row.original.equipmentType),
     },
     {
       id: 'actions',
@@ -53,11 +54,10 @@ export function EquipmentList() {
 
   return (
     <DataTable
-      isPaginated
       data={data || []}
       isLoading={isLoading}
-      columns={districtTableColumns}
-      className="h-[calc(100svh-270px)]"
+      columns={equipmentTableColumns}
+      className="h-[calc(100svh-220px)]"
     />
   );
 }

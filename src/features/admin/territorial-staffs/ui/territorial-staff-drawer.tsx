@@ -12,8 +12,8 @@ import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks';
 import { useTerritorialStaffForm } from '../model/use-territorial-staff-form';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 
 export const TerritorialStaffDrawer = () => {
   const { t } = useTranslation('common');

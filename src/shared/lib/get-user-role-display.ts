@@ -19,7 +19,6 @@ export const getUserRoleDisplay = (
 
   const userRole = role as UserRoles;
 
-  // Rol uchun tarjimani olish
   const translatedRole = translateFn(`userRoles.${userRole}`, {
     defaultValue: fallback || userRole,
   });

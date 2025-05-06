@@ -1,22 +1,19 @@
-import { Fragment, useMemo } from 'react';
+import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Input } from '@/shared/components/ui/input';
 import { useUIActionLabel } from '@/shared/hooks';
-import { useEquipmentForm } from '../model/use-equipment-form.ts';
+import { Input } from '@/shared/components/ui/input';
+import { useEquipmentForm } from '../model/use-equipment-form';
 import { useEquipmentDrawer } from '@/shared/hooks/entity-hooks';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 
 export const EquipmentDrawer = () => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation();
   const { isOpen, onClose, mode, isCreate } = useEquipmentDrawer();
   const modeState = useUIActionLabel(mode);
-  const { form, onSubmit, isPending, isFetching } = useEquipmentForm();
-
-  const regionOptions = useMemo(() => getSelectOptions([]), []);
+  const { form, onSubmit, isPending, isFetching, equipmentTypeOptions } = useEquipmentForm();
 
   return (
     <BaseDrawer
@@ -39,7 +36,7 @@ export const EquipmentDrawer = () => {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('region')}</FormLabel>
+                    <FormLabel>Qurilmaning quyi turi</FormLabel>
                     <FormControl>
                       <Select
                         {...field}
@@ -47,14 +44,13 @@ export const EquipmentDrawer = () => {
                         onValueChange={(value) => {
                           if (value) {
                             field.onChange(value);
-                            form.setValue('name', '');
                           }
                         }}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder={t('select_region')} />
+                          <SelectValue placeholder="Turini tanlang" />
                         </SelectTrigger>
-                        <SelectContent>{regionOptions}</SelectContent>
+                        <SelectContent>{equipmentTypeOptions}</SelectContent>
                       </Select>
                     </FormControl>
                     <FormMessage />

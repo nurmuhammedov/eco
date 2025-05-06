@@ -1,10 +1,13 @@
 import { useForm } from 'react-hook-form';
+import { useTranslatedObject } from '@/shared/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
+import { useEquipmentDrawer } from '@/shared/hooks/entity-hooks';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
 import {
   CreateEquipmentDTO,
   equipmentSchema,
+  EquipmentTypeEnum,
   UpdateEquipmentDTO,
   useCreateEquipment,
   useEquipmentDetail,
@@ -13,28 +16,32 @@ import {
 
 const DEFAULT_FORM_VALUES: CreateEquipmentDTO = {
   name: '',
-  equipmentType: '',
+  equipmentType: '' as EquipmentTypeEnum.BOILER,
 };
 
 export function useEquipmentForm() {
-  const { data, onClose, isCreate } = useDistrictDrawer();
+  const { data, onClose, isCreate } = useEquipmentDrawer();
 
-  const districtId = useMemo(() => (data?.id ? data?.id : 0), [data]);
+  const equipmentId = useMemo(() => (data?.id ? data?.id : 0), [data]);
 
   const form = useForm<CreateEquipmentDTO>({
     resolver: zodResolver(equipmentSchema),
     defaultValues: DEFAULT_FORM_VALUES,
   });
 
+  const equipmentTypes = useTranslatedObject(EquipmentTypeEnum, 'equipment_types');
+
+  const equipmentTypeOptions = getSelectOptions(equipmentTypes);
+
   const { mutateAsync: createRegion, isPending: isCreating } = useCreateEquipment();
 
-  const { mutateAsync: updateRegion, isPending: isUpdating } = useUpdateEquipment();
+  const { mutateAsync: updateEquipment, isPending: isUpdating } = useUpdateEquipment();
 
-  const { data: districtData, isLoading } = useEquipmentDetail(districtId);
+  const { data: districtData, isLoading } = useEquipmentDetail(equipmentId);
 
   useEffect(() => {
     if (districtData && !isCreate) {
-      form.reset({ ...districtData, equipmentType: String(districtData.equipmentType) });
+      form.reset({ ...districtData, equipmentType: districtData.equipmentType });
     }
   }, [districtData, form]);
 
@@ -53,8 +60,8 @@ export function useEquipmentForm() {
             return true;
           }
         } else {
-          const response = await updateRegion({
-            id: districtId,
+          const response = await updateEquipment({
+            id: equipmentId,
             ...formData,
           } as UpdateEquipmentDTO);
           if (response.success) {
@@ -69,7 +76,7 @@ export function useEquipmentForm() {
         return false;
       }
     },
-    [isCreate, districtId, createRegion, updateRegion, handleClose],
+    [isCreate, equipmentId, createRegion, updateEquipment, handleClose],
   );
 
   const isPending = isCreating || isUpdating;
@@ -79,6 +86,7 @@ export function useEquipmentForm() {
     isCreate,
     isPending,
     districtData,
+    equipmentTypeOptions,
     onSubmit: handleSubmit,
     isFetching: isLoading,
   };

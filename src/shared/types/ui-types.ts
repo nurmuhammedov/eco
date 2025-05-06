@@ -9,7 +9,7 @@ export const UI_COMPONENTS = {
   REGION_DRAWER: 'region-drawer', // Viloyatlar
   DISTRICT_DRAWER: 'regions-drawer', // Tumanlar
   TEMPLATE_DRAWER: 'template-drawer', // Shablonlar
-  EQUIPMENT_DRAWER: 'equipment-drawer', // Qurilmalar
+  EQUIPMENT_DRAWER: 'equipment-drawer', // Qurilmaning quyi turlari
   CENTRAL_APPARATUS_DRAWER: 'central-apparatus', // Markaziy apparat
   TERRITORIAL_DEPARTMENTS_DRAWER: 'territorial-departments', // Hududiy bo'limlar
   COMMITTEE_STAFFS_DRAWER: 'committee-staffs', // Qo'mita xodimlari

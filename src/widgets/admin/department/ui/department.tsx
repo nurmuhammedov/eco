@@ -22,9 +22,9 @@ const DepartmentWidget = () => {
     <Fragment>
       <DepartmentActionButton
         activeTab={activeTab}
-        title={t('menu.departments')}
         onAddApparatus={onAddApparatus}
         onAddDepartment={onAddDepartment}
+        title={t('menu.departments')}
       />
       <Tabs className="mt-3" defaultValue={activeTab} onValueChange={(value: any) => handleChangeTab(value)}>
         <TabsList>
