@@ -77,6 +77,21 @@
     "COAL": "Кўмир",
     "GEOLOGY": "Геология"
   },
+  "equipment_types": {
+    "CRANE": "Кран",
+    "CONTAINER": "Идиш",
+    "BOILER": "Қозон",
+    "ELEVATOR": "Лифт",
+    "ESCALATOR": "Эскалатор",
+    "CABLEWAY": "Осма йўл",
+    "HOIST": "Кўтарма қурилма",
+    "PIPELINE": "Қувур",
+    "CHEMICAL_CONTAINER": "Кимёвий идиш",
+    "HEAT_PIPELINE": "Иссиқлик қувури",
+    "BOILER_UTILIZER": "Қозон утилизатори",
+    "LPG_CONTAINER": "Суюлтирилган газ идиши",
+    "LPG_POWERED": "Суюлтирилган газ билан ишлайдиган"
+  },
   "application_status": {
     "ALL": "Барчаси",
     "NEW": "Янги",

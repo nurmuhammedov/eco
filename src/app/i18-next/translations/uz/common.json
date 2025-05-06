@@ -82,6 +82,21 @@
     "XICHO_APPEAL": "XICHO arizasi",
     "EQUIPMENT_APPEAL": "Qurilma arizasi"
   },
+  "equipment_types": {
+    "CRANE": "Kran",
+    "CONTAINER": "Idish",
+    "BOILER": "Qozon",
+    "ELEVATOR": "Lift",
+    "ESCALATOR": "Eskalator",
+    "CABLEWAY": "Osma yo'l",
+    "HOIST": "Ko'tarma qurilma",
+    "PIPELINE": "Quvur",
+    "CHEMICAL_CONTAINER": "Kimyoviy idish",
+    "HEAT_PIPELINE": "Issiqlik quvuri",
+    "BOILER_UTILIZER": "Qozon utilizatori",
+    "LPG_CONTAINER": "Suyultirilgan gaz idishi",
+    "LPG_POWERED": "Suyultirilgan gaz bilan ishlaydigan"
+  },
   "application_status": {
     "ALL": "Barchasi",
     "NEW": "Yangi",
@@ -114,7 +129,7 @@
   "committee_staffs": "Qo'mita xodimlari",
   "territorial_staffs": "Hududiy bo'lim xodimlari",
   "staffs": "Xodimlar",
-  "no_data": "Ma'lumot topilmadi",
+  "no_data": "Ma'lumot mavjud emas",
   "selected_items_count": "{{count}} ta element tanlandi",
   "position": "Lavozim",
   "committee_division_department": "Qo'mita bo'limi, boshqarmasi, departament",
