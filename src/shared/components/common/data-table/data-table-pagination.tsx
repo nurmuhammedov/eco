@@ -31,21 +31,33 @@ export function DataTablePagination<T>({
 }: PaginationProps<T>) {
   const { t } = useTranslation('common');
 
-  if (!data || !data.page || data.page.totalElements === 0) {
-    return null;
-  }
+  // Move all hook calls above any conditional returns
+  const shouldRender = !!(data && data.page && data.page.totalElements > 0);
 
-  const { totalPages, totalElements, size: pageSize, number: page } = data.page;
+  const pageInfo = useMemo(() => {
+    if (!shouldRender)
+      return {
+        currentPage: 1,
+        totalPages: 0,
+        pageSize: 0,
+        totalElements: 0,
+        startItem: 0,
+        endItem: 0,
+      };
 
-  const currentPage = page + 1;
+    const { totalPages, totalElements, size: pageSize, number: page } = data?.page ?? {};
+    const currentPage = page + 1;
+    const startItem = (currentPage - 1) * pageSize + 1;
+    const endItem = Math.min(startItem + pageSize - 1, totalElements);
 
-  // Calculate item range based on current page (1-indexed)
-  const startItem = (currentPage - 1) * pageSize + 1;
-  const endItem = Math.min(startItem + pageSize - 1, totalElements);
+    return { currentPage, totalPages, pageSize, totalElements, startItem, endItem };
+  }, [data, shouldRender]);
 
   const getPageItems = useMemo(() => {
     // Skip if only one page
-    if (totalPages <= 1) return { items: [1], jumpPrev: false, jumpNext: false };
+    if (!shouldRender || pageInfo.totalPages <= 1) {
+      return { items: pageInfo.totalPages ? [1] : [], jumpPrev: false, jumpNext: false };
+    }
 
     // Always show first, last and up to 5 pages around current
     const items: number[] = [];
@@ -53,11 +65,11 @@ export function DataTablePagination<T>({
     let jumpNext = false;
 
     // Define constants
-    const allPages = Array.from({ length: totalPages }, (_, i) => i + 1);
+    const allPages = Array.from({ length: pageInfo.totalPages }, (_, i) => i + 1);
     const MIN_VISIBLE = 7; // min buttons: 1 ... 4 5 6 ... 100
 
     // Logic for pages <= MIN_VISIBLE
-    if (totalPages <= MIN_VISIBLE) {
+    if (pageInfo.totalPages <= MIN_VISIBLE) {
       return { items: allPages, jumpPrev: false, jumpNext: false };
     }
 
@@ -66,40 +78,47 @@ export function DataTablePagination<T>({
     items.push(1);
 
     // Show ellipsis before current
-    if (currentPage > 4) {
+    if (pageInfo.currentPage > 4) {
       jumpPrev = true;
     } else {
       // Show 2,3,4 if near start
-      for (let i = 2; i < currentPage; i++) {
+      for (let i = 2; i < pageInfo.currentPage; i++) {
         items.push(i);
       }
     }
 
     // Pages around current
-    const leftBound = Math.max(2, currentPage - 1);
-    const rightBound = Math.min(totalPages - 1, currentPage + 1);
+    const leftBound = Math.max(2, pageInfo.currentPage - 1);
+    const rightBound = Math.min(pageInfo.totalPages - 1, pageInfo.currentPage + 1);
 
     for (let i = leftBound; i <= rightBound; i++) {
       items.push(i);
     }
 
     // Show ellipsis after current
-    if (currentPage < totalPages - 3) {
+    if (pageInfo.currentPage < pageInfo.totalPages - 3) {
       jumpNext = true;
     } else {
       // Show pages if near end
-      for (let i = currentPage + 2; i < totalPages; i++) {
+      for (let i = pageInfo.currentPage + 2; i < pageInfo.totalPages; i++) {
         items.push(i);
       }
     }
 
     // Always include last page
-    if (totalPages > 1) {
-      items.push(totalPages);
+    if (pageInfo.totalPages > 1) {
+      items.push(pageInfo.totalPages);
     }
 
     return { items, jumpPrev, jumpNext };
-  }, [currentPage, totalPages]);
+  }, [pageInfo, shouldRender]);
+
+  const hasPageItems = useMemo(() => getPageItems.items.length > 1, [getPageItems]);
+
+  // Return null after all hooks are called
+  if (!shouldRender) {
+    return null;
+  }
 
   // Handle page change - always use 1-indexed pages here
   const handlePageChange = (page: number) => {
@@ -108,29 +127,27 @@ export function DataTablePagination<T>({
 
   // Jump to page groups
   const jumpPrevious = () => {
-    const newPage = Math.max(1, currentPage - 3);
+    const newPage = Math.max(1, pageInfo.currentPage - 3);
     handlePageChange(newPage);
   };
 
   const jumpNext = () => {
-    const newPage = Math.min(totalPages, currentPage + 3);
+    const newPage = Math.min(pageInfo.totalPages, pageInfo.currentPage + 3);
     handlePageChange(newPage);
   };
 
-  const hasPageItems = useMemo(() => getPageItems.items.length > 1, [getPageItems]);
-
   return (
     <div className={cn('flex flex-col md:flex-row items-center justify-between gap-4 pt-3', className)}>
-      {showTotal && totalElements > 0 && (
+      {showTotal && pageInfo.totalElements > 0 && (
         <div className="flex flex-row items-center gap-2">
           {showSizeChanger && (
             <Select
               disabled={isLoading}
-              value={String(pageSize)}
+              value={String(pageInfo.pageSize)}
               onValueChange={(value) => onPageSizeChange(Number(value))}
             >
               <SelectTrigger className="h-8 w-20">
-                <SelectValue placeholder={pageSize} />
+                <SelectValue placeholder={pageInfo.pageSize} />
               </SelectTrigger>
               <SelectContent side="top">
                 {pageSizeOptions.map((size) => (
@@ -143,9 +160,9 @@ export function DataTablePagination<T>({
           )}
           <div className="text-sm text-muted-foreground">
             {t('showing_items', {
-              start: startItem,
-              end: endItem,
-              total: totalElements,
+              start: pageInfo.startItem,
+              end: pageInfo.endItem,
+              total: pageInfo.totalElements,
             })}
           </div>
         </div>
@@ -160,7 +177,7 @@ export function DataTablePagination<T>({
             variant="outline"
             className="size-9 flex"
             onClick={() => handlePageChange(1)}
-            disabled={currentPage === 1 || isLoading || !hasPageItems}
+            disabled={pageInfo.currentPage === 1 || isLoading || !hasPageItems}
           >
             <span className="sr-only">{t('first_page')}</span>
             <ChevronsLeft className="size-4" />
@@ -171,8 +188,8 @@ export function DataTablePagination<T>({
         <Button
           className="h-9"
           variant="outline"
-          disabled={currentPage === 1 || isLoading || !hasPageItems}
-          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={pageInfo.currentPage === 1 || isLoading || !hasPageItems}
+          onClick={() => handlePageChange(pageInfo.currentPage - 1)}
         >
           <ChevronLeft className="size-4" />
           <span className="">{t('previous')}</span>
@@ -226,11 +243,11 @@ export function DataTablePagination<T>({
             return (
               <Button
                 key={`page-${pageNumber}`}
-                variant={pageNumber === currentPage ? 'default' : 'outline'}
+                variant={pageNumber === pageInfo.currentPage ? 'default' : 'outline'}
                 size="sm"
                 className={cn(
                   'size-9',
-                  pageNumber === currentPage ? 'bg-blue-400 hover:bg-blue-400/90 text-white' : '',
+                  pageNumber === pageInfo.currentPage ? 'bg-blue-400 hover:bg-blue-400/90 text-white' : '',
                   'inline-flex',
                 )}
                 onClick={() => handlePageChange(pageNumber)}
@@ -245,8 +262,8 @@ export function DataTablePagination<T>({
         <Button
           className="h-9"
           variant="outline"
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage >= totalPages || isLoading || !hasPageItems}
+          onClick={() => handlePageChange(pageInfo.currentPage + 1)}
+          disabled={pageInfo.currentPage >= pageInfo.totalPages || isLoading || !hasPageItems}
         >
           <span>{t('next')}</span>
           <ChevronRight className="size-4" />
@@ -258,8 +275,8 @@ export function DataTablePagination<T>({
             variant="outline"
             size="icon"
             className="size-9 flex"
-            onClick={() => handlePageChange(totalPages)}
-            disabled={currentPage >= totalPages || isLoading || !hasPageItems}
+            onClick={() => handlePageChange(pageInfo.totalPages)}
+            disabled={pageInfo.currentPage >= pageInfo.totalPages || isLoading || !hasPageItems}
           >
             <span className="sr-only">{t('last_page')}</span>
             <ChevronsRight className="size-4" />

@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useUIActionLabel } from '@/shared/hooks';
 import { Input } from '@/shared/components/ui/input';
 import { useRegionForm } from '../model/use-region-form';
 import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
@@ -10,18 +11,19 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 
 export const RegionDrawer = () => {
   const { t } = useTranslation('common');
-  const { isOpen, onClose } = useRegionDrawer();
+  const { isOpen, onClose, mode } = useRegionDrawer();
+  const modeState = useUIActionLabel(mode);
   const { form, onSubmit, isPending, isCreate, isFetching } = useRegionForm();
 
   return (
     <BaseDrawer
       asForm
       open={isOpen}
+      title={modeState}
       onClose={onClose}
       loading={isPending}
       disabled={isPending}
       onSubmit={form.handleSubmit(onSubmit)}
-      title={isCreate ? t('actions.add') : t('actions.edit')}
     >
       <Form {...form}>
         <div className="space-y-4">
@@ -49,7 +51,7 @@ export const RegionDrawer = () => {
                   <FormItem>
                     <FormLabel>{t('soato')}</FormLabel>
                     <FormControl>
-                      <InputNumber placeholder={t('soato')} {...field} />
+                      <InputNumber maxLength={7} placeholder={t('soato')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -63,7 +65,7 @@ export const RegionDrawer = () => {
                   <FormItem>
                     <FormLabel>{t('number')}</FormLabel>
                     <FormControl>
-                      <InputNumber placeholder={t('number')} {...field} />
+                      <InputNumber maxLength={7} placeholder={t('number')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

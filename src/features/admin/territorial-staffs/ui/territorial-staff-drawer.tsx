@@ -135,7 +135,7 @@ export const TerritorialStaffDrawer = () => {
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel required>{t('menu.departments')}</FormLabel>
+                      <FormLabel required>Hududiy bo'lim</FormLabel>
                       <FormControl>
                         <Select
                           {...field}
@@ -147,7 +147,7 @@ export const TerritorialStaffDrawer = () => {
                           }}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder={t('menu.departments')} />
+                            <SelectValue placeholder="Hududiy bo'limni tanlang" />
                           </SelectTrigger>
                           <SelectContent>{departmentOptions}</SelectContent>
                         </Select>

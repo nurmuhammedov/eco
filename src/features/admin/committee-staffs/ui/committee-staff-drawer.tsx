@@ -7,13 +7,13 @@ import { CommitteeStaffView } from './committee-staff-view';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { InputNumber } from '@/shared/components/ui/input-number';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
 import { useCommitteeStaffForm } from '../model/use-committee-staff-form';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 
 export const CommitteeStaffDrawer = () => {
   const { t } = useTranslation('common');
@@ -135,7 +135,7 @@ export const CommitteeStaffDrawer = () => {
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel required>{t('menu.departments')}</FormLabel>
+                      <FormLabel required>Qo'mita va departament</FormLabel>
                       <FormControl>
                         <Select
                           {...field}
@@ -147,7 +147,7 @@ export const CommitteeStaffDrawer = () => {
                           }}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder={t('menu.departments')} />
+                            <SelectValue placeholder="Qo'mita yoki departamentni tanlang" />
                           </SelectTrigger>
                           <SelectContent>{departmentOptions}</SelectContent>
                         </Select>
