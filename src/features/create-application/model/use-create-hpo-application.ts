@@ -52,11 +52,16 @@ export const useCreateHPOApplication = () => {
   const { spheres } = applicationFormConstants();
 
   const { data: regions } = useRegionSelectQueries();
+
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const regionOptions = useMemo(() => getSelectOptions(regions), [regions, regionId]);
+
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect();
+
   const districtOptions = useMemo(() => getSelectOptions(districts), [districts]);
+
   const { mutateAsync: createHPOApplication, isPending } = useCreateHPOApplicationMutations();
+
+  const regionOptions = useMemo(() => getSelectOptions(regions), [regions, regionId]);
 
   const hazardousFacilityTypeOptions = useMemo(
     () => getSelectOptions(hazardousFacilityTypes),

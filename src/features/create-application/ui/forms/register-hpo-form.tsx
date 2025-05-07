@@ -1,11 +1,17 @@
+import React from 'react';
 import { GoBack } from '@/shared/components/common';
 import { Input } from '@/shared/components/ui/input';
-import { CardForm, type CreateHPOApplicationDTO } from '@/entities/create-application';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { InputFile } from '@/shared/components/common/file-upload';
-import { useCreateHPOApplication } from '@/features/create-application';
+import { CardForm, type CreateHPOApplicationDTO } from '@/entities/create-application';
+import {
+  ApplicationModal,
+  CreateApplicationButton,
+  useApplicationCreation,
+  useCreateHPOApplication,
+} from '@/features/create-application';
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
@@ -18,14 +24,13 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
-import React from 'react';
-import { CreateApplicationButton } from '@/features/application-modal';
 
 export default () => {
-  const { form, spheres, handleSubmit, regionOptions, districtOptions, hazardousFacilityTypeOptions } =
-    useCreateHPOApplication();
+  const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } = useCreateHPOApplication();
 
   const isFormValid = form.formState.isValid;
+
+  const applicationCreation = useApplicationCreation('hpo');
 
   const getFormData = React.useCallback((): CreateHPOApplicationDTO => {
     return form.getValues();
@@ -470,9 +475,29 @@ export default () => {
           />
         </CardForm>
         <div className="flex justify-end mt-6">
-          <CreateApplicationButton formData={getFormData()} isFormValid={isFormValid} apiHandler={handleSubmit} />
+          <CreateApplicationButton
+            formData={getFormData()}
+            isFormValid={isFormValid}
+            isLoading={applicationCreation.isLoading}
+            onSubmit={applicationCreation.handleCreateApplication}
+          />
         </div>
       </form>
+      <ApplicationModal
+        error={applicationCreation.error}
+        step={applicationCreation.currentStep}
+        isOpen={applicationCreation.isModalOpen}
+        isLoading={applicationCreation.isLoading}
+        onEdit={applicationCreation.handleEditForm}
+        documentUrl={applicationCreation.documentUrl}
+        onClose={applicationCreation.handleCloseModal}
+        onSign={applicationCreation.handleSignDocument}
+        isPdfLoading={applicationCreation.isPdfLoading}
+        isSignLoading={applicationCreation.isSignLoading}
+        isSubmitLoading={applicationCreation.isSubmitLoading}
+        onSubmit={applicationCreation.handleSubmitApplication}
+        onDownload={applicationCreation.handleDownloadDocument}
+      />
     </Form>
   );
 };
