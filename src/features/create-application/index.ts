@@ -1,4 +1,4 @@
-export * from './model/store';
+export * from './model/store.tsx';
 export { NoteForm } from './ui/note-form';
 export { AppealFormSkeleton } from './ui/form-skeleton';
 export { ApplicationModal } from './ui/application-modal';

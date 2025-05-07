@@ -1,114 +1,145 @@
-import { useState } from 'react';
-import { createPdf } from '../api/create-pdf.ts';
+// src/processes/application-creation/model.ts
+import { useCallback, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { signDocument } from '../api/sign-document.ts';
-import { getDocumentUrl } from '../api/get-document-url.ts';
-import { createApplication } from '../api/create-application.ts';
+import { createApplication, createPdf, getDocumentUrl, signDocument } from '../api/create-application';
 
-export function useApplicationCreation(submitEndpoint = '/create-application') {
+export type ApplicationStep = 'view' | 'signed' | 'submitted';
+export type FormData = any; // Formaga qarab tipini o'zgartiring
+
+export interface UseApplicationCreationProps {
+  pdfEndpoint?: string;
+  submitEndpoint?: string;
+  onSuccess?: () => void;
+  onError?: (error: string) => void;
+}
+
+export function useApplicationCreation({
+  pdfEndpoint = '/appeals/hf/generate-pdf',
+  submitEndpoint = '/create-application',
+  onSuccess,
+  onError,
+}: UseApplicationCreationProps = {}) {
   // Modal va jarayon holati
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentStep, setCurrentStep] = useState<'view' | 'signed' | 'submitted'>('view');
+  const [currentStep, setCurrentStep] = useState<ApplicationStep>('view');
   const [error, setError] = useState<string | null>(null);
 
   // So'rov natijalari
   const [filePath, setFilePath] = useState<string | null>(null);
   const [documentUrl, setDocumentUrl] = useState<string | null>(null);
   const [sign, setSign] = useState<string | null>(null);
-  const [formData, setFormData] = useState<FormData | null>(null);
+  const [formData, setFormData] = useState<FormData>(null);
 
   // Loading holatlari
   const [isPdfLoading, setIsPdfLoading] = useState(false);
   const [isSignLoading, setIsSignLoading] = useState(false);
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
-  // Ariza yaratish
-  const createPdfMutation = useMutation({
-    mutationFn: createPdf,
-    onSuccess: async (response) => {
-      if (!response.success || !response.filePath) {
-        setError(response.error || 'PDF yaratishda xatolik');
-        setIsPdfLoading(false);
-        return;
-      }
-
-      setFilePath(response.filePath);
-
-      // PDF URL olish
-      try {
-        const documentResponse = await getDocumentUrl(response.filePath);
-        if (!documentResponse.success || !documentResponse.documentUrl) {
-          throw new Error(documentResponse.error || 'Hujjat URL sini olishda xatolik');
-        }
-
-        setDocumentUrl(documentResponse.documentUrl);
-        setCurrentStep('view');
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsPdfLoading(false);
+  // Xatoliklarni qayta ishlash
+  const handleError = useCallback(
+    (errorMessage: string) => {
+      setError(errorMessage);
+      if (onError) {
+        onError(errorMessage);
       }
     },
-    onError: (error) => {
-      setError(error.message || 'PDF yaratishda xatolik');
-      setIsPdfLoading(false);
-    },
-  });
+    [onError],
+  );
 
-  // Hujjatni imzolash
-  const signDocumentMutation = useMutation({
-    mutationFn: signDocument,
-    onSuccess: (response) => {
-      if (!response.success || !response.sign) {
-        setError(response.error || 'Hujjatni imzolashda xatolik');
-        setIsSignLoading(false);
-        return;
-      }
-
-      setSign(response.sign);
-      setCurrentStep('signed');
-      setIsSignLoading(false);
-    },
-    onError: (error) => {
-      setError(error.message || 'Hujjatni imzolashda xatolik');
-      setIsSignLoading(false);
-    },
-  });
-
-  // Arizani yuborish
+  // Arizani yuborish - Faqat imzolash muvaffaqiyatli bo'lgandan keyin chaqiriladi
   const createApplicationMutation = useMutation({
     mutationFn: (params: { formData: FormData; filePath: string; sign: string }) =>
       createApplication(params.formData, params.filePath, params.sign, submitEndpoint),
     onSuccess: (response) => {
       if (!response.success) {
-        setError(response.error || 'Arizani yaratishda xatolik');
+        handleError(response.error || 'Arizani yaratishda xatolik');
         setIsSubmitLoading(false);
         return;
       }
 
       setCurrentStep('submitted');
       setIsSubmitLoading(false);
+
+      if (onSuccess) {
+        onSuccess();
+      }
     },
-    onError: (error) => {
-      setError(error.message || 'Arizani yuborishda xatolik');
+    onError: (error: Error) => {
+      handleError(error.message || 'Arizani yuborishda xatolik');
       setIsSubmitLoading(false);
     },
   });
 
-  // Form ma'lumotlarini yuborish va PDF yaratish
-  const handleCreateApplication = (data: FormData) => {
-    setFormData(data);
-    setIsModalOpen(true);
-    setIsPdfLoading(true);
-    setError(null);
+  // Hujjatni imzolash - Muvaffaqiyatli bo'lganda, arizani yuborish funktsiyasini chaqiradi
+  const signDocumentMutation = useMutation({
+    mutationFn: signDocument,
+    onSuccess: (response) => {
+      if (!response.success || !response.data) {
+        handleError(response.error || 'Hujjatni imzolashda xatolik');
+        setIsSignLoading(false);
+        return;
+      }
 
-    createPdfMutation.mutate(data);
-  };
+      setSign(response.data);
+      setCurrentStep('signed');
+      setIsSignLoading(false);
+    },
+    onError: (error: Error) => {
+      handleError(error.message || 'Hujjatni imzolashda xatolik');
+      setIsSignLoading(false);
+    },
+  });
+
+  // Ariza yaratish
+  const createPdfMutation = useMutation({
+    mutationFn: (data: FormData) => createPdf(data, pdfEndpoint),
+    onSuccess: async (response) => {
+      if (!response.success || !response.data) {
+        handleError(response.error || 'PDF yaratishda xatolik');
+        setIsPdfLoading(false);
+        return;
+      }
+
+      setFilePath(response.data);
+
+      // PDF URL olish
+      try {
+        const documentResponse = await getDocumentUrl(response.data);
+        if (!documentResponse.success || !documentResponse.data) {
+          throw new Error(documentResponse.error || 'Hujjat URL sini olishda xatolik');
+        }
+
+        setDocumentUrl(documentResponse.data);
+        setCurrentStep('view');
+      } catch (error) {
+        handleError(error.message);
+      } finally {
+        setIsPdfLoading(false);
+      }
+    },
+    onError: (error: Error) => {
+      handleError(error.message || 'PDF yaratishda xatolik');
+      setIsPdfLoading(false);
+    },
+  });
+
+  // Form ma'lumotlarini yuborish va PDF yaratish
+  const handleCreateApplication = useCallback(
+    (data: FormData) => {
+      setFormData(data);
+      setIsModalOpen(true);
+      setIsPdfLoading(true);
+      setError(null);
+
+      createPdfMutation.mutate(data);
+    },
+    [createPdfMutation],
+  );
 
   // Faylni imzolash
-  const handleSignDocument = () => {
+  const handleSignDocument = useCallback(() => {
     if (!filePath) {
-      setError('Imzolanadigan fayl mavjud emas');
+      handleError('Imzolanadigan fayl mavjud emas');
       return;
     }
 
@@ -116,12 +147,12 @@ export function useApplicationCreation(submitEndpoint = '/create-application') {
     setError(null);
 
     signDocumentMutation.mutate(filePath);
-  };
+  }, [filePath, handleError, signDocumentMutation]);
 
-  // Arizani yuborish
-  const handleSubmitApplication = () => {
+  // Arizani yuborish - faqat imzolash tugmasi bosish orqali sign qiymati olingan keyin chaqiriladi
+  const handleSubmitApplication = useCallback(() => {
     if (!formData || !filePath || !sign) {
-      setError("Kerakli ma'lumotlar mavjud emas");
+      handleError("Kerakli ma'lumotlar mavjud emas");
       return;
     }
 
@@ -133,37 +164,42 @@ export function useApplicationCreation(submitEndpoint = '/create-application') {
       filePath,
       sign,
     });
-  };
+  }, [formData, filePath, sign, handleError, createApplicationMutation]);
 
   // Formaga qaytish
-  const handleEditForm = () => {
+  const handleEditForm = useCallback(() => {
     setIsModalOpen(false);
     setDocumentUrl(null);
     setError(null);
-  };
+  }, []);
 
   // Modaldan chiqish
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     if (currentStep === 'submitted') {
       // Muvaffaqiyatli yakunlanganda barcha ma'lumotlarni tozalash
-      setIsModalOpen(false);
-      setFilePath(null);
-      setDocumentUrl(null);
-      setSign(null);
-      setFormData(null);
-      setCurrentStep('view');
-      setError(null);
+      resetState();
     } else {
       setIsModalOpen(false);
     }
-  };
+  }, [currentStep]);
+
+  // Barcha ma'lumotlarni tozalash
+  const resetState = useCallback(() => {
+    setIsModalOpen(false);
+    setFilePath(null);
+    setDocumentUrl(null);
+    setSign(null);
+    setFormData(null);
+    setCurrentStep('view');
+    setError(null);
+  }, []);
 
   // Hujjatni yuklab olish
-  const handleDownloadDocument = () => {
+  const handleDownloadDocument = useCallback(() => {
     if (documentUrl) {
       window.open(documentUrl, '_blank');
     }
-  };
+  }, [documentUrl]);
 
   // Loading holati
   const isLoading = isPdfLoading || isSignLoading || isSubmitLoading;
@@ -178,6 +214,9 @@ export function useApplicationCreation(submitEndpoint = '/create-application') {
     currentStep,
     error,
     documentUrl,
+    filePath,
+    sign,
+    formData,
 
     // Event handlerlar
     handleCreateApplication,
@@ -186,5 +225,6 @@ export function useApplicationCreation(submitEndpoint = '/create-application') {
     handleEditForm,
     handleCloseModal,
     handleDownloadDocument,
+    resetState,
   };
 }

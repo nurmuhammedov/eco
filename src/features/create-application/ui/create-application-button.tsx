@@ -4,7 +4,7 @@ interface CreateApplicationButtonProps {
   formData: any;
   isLoading: boolean;
   isFormValid: boolean;
-  onSubmit: (formData: FormData) => void;
+  onSubmit: (formData: any) => void;
 }
 
 export const CreateApplicationButton = ({

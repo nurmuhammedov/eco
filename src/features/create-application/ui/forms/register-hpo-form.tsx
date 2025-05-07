@@ -5,15 +5,10 @@ import { Textarea } from '@/shared/components/ui/textarea';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { InputFile } from '@/shared/components/common/file-upload';
-import { CardForm, type CreateHPOApplicationDTO } from '@/entities/create-application';
-import {
-  ApplicationModal,
-  CreateApplicationButton,
-  useApplicationCreation,
-  useCreateHPOApplication,
-} from '@/features/create-application';
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types';
+import { CardForm, type CreateHPOApplicationDTO } from '@/entities/create-application';
+import { CreateApplicationButton, useCreateHPOApplication } from '@/features/create-application';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import {
   Form,
@@ -25,12 +20,14 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form';
 
-export default () => {
+export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
   const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } = useCreateHPOApplication();
 
   const isFormValid = form.formState.isValid;
 
-  const applicationCreation = useApplicationCreation('hpo');
+  const handleSubmit = form.handleSubmit((data) => {
+    onSubmit(data);
+  });
 
   const getFormData = React.useCallback((): CreateHPOApplicationDTO => {
     return form.getValues();
@@ -38,7 +35,7 @@ export default () => {
 
   return (
     <Form {...form}>
-      <form autoComplete="off">
+      <form autoComplete="off" onSubmit={handleSubmit}>
         <GoBack title="XICHOni ro‘yxatga olish" />
         <CardForm className="my-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
@@ -476,28 +473,13 @@ export default () => {
         </CardForm>
         <div className="flex justify-end mt-6">
           <CreateApplicationButton
+            isLoading={false}
             formData={getFormData()}
             isFormValid={isFormValid}
-            isLoading={applicationCreation.isLoading}
-            onSubmit={applicationCreation.handleCreateApplication}
+            onSubmit={handleSubmit}
           />
         </div>
       </form>
-      <ApplicationModal
-        error={applicationCreation.error}
-        step={applicationCreation.currentStep}
-        isOpen={applicationCreation.isModalOpen}
-        isLoading={applicationCreation.isLoading}
-        onEdit={applicationCreation.handleEditForm}
-        documentUrl={applicationCreation.documentUrl}
-        onClose={applicationCreation.handleCloseModal}
-        onSign={applicationCreation.handleSignDocument}
-        isPdfLoading={applicationCreation.isPdfLoading}
-        isSignLoading={applicationCreation.isSignLoading}
-        isSubmitLoading={applicationCreation.isSubmitLoading}
-        onSubmit={applicationCreation.handleSubmitApplication}
-        onDownload={applicationCreation.handleDownloadDocument}
-      />
     </Form>
   );
 };

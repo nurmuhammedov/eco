@@ -1,7 +1,12 @@
-import { lazy, LazyExoticComponent } from 'react';
+import { ComponentType, lazy, LazyExoticComponent } from 'react';
 import { ApplicationTypeEnum } from '@/entities/create-application';
 
-const formComponentsMap: Record<string, LazyExoticComponent<any>> = {
+export interface FormComponentProps {
+  onSubmit: (data: any) => void;
+}
+
+// Update the formComponentsMap type to be more specific about component props
+const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormComponentProps>>> = {
   [ApplicationTypeEnum.RegisterHPO]: lazy(() => import('../ui/forms/register-hpo-form')),
   [ApplicationTypeEnum.RegisterLift]: lazy(() => import('../ui/forms/register-lift-form')),
   [ApplicationTypeEnum.RegisterCrane]: lazy(() => import('../ui/forms/register-crane-form')),
@@ -12,7 +17,10 @@ const formComponentsMap: Record<string, LazyExoticComponent<any>> = {
   ),
 };
 
-export function getFormComponentByType(type: ApplicationTypeEnum) {
+// Update the return type to be specific about the component props
+export function getFormComponentByType(
+  type: ApplicationTypeEnum,
+): LazyExoticComponent<ComponentType<FormComponentProps>> | null {
   return formComponentsMap[type] || null;
 }
 
