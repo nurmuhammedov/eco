@@ -9,6 +9,7 @@ import {
     useCreateLiftApplicationMutations,
 } from '@/entities/create-application';
 import {
+    useChildEquipmentTypes,
     useDistrictSelectQueries,
     useRegionSelectQueries,
 } from '@/shared/api/dictionaries';
@@ -26,10 +27,14 @@ export const useCreateLiftApplication = () => {
 
     const {data: districts} = useDistrictSelectQueries(regionId);
 
+    //TODO: replace string to enum or constant
+    const {data: childEquipmentTypes} = useChildEquipmentTypes('ELEVATOR')
+
     const districtOptions = useMemo(() => getSelectOptions(districts), [districts, regionId]);
 
-    console.log(regionId)
     const regionOptions = useMemo(() => getSelectOptions(regions), [regions]);
+
+    const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes), [childEquipmentTypes]);
 
 
     const {mutateAsync: createLiftApplication, isPending} = useCreateLiftApplicationMutations();
@@ -48,5 +53,5 @@ export const useCreateLiftApplication = () => {
         [createLiftApplication],
     );
 
-    return {form, handleSubmit, isPending, spheres, regionOptions, districtOptions};
+    return {form, handleSubmit, isPending, spheres, regionOptions, districtOptions, childEquipmentOptions};
 };

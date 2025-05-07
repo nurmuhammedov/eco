@@ -9,6 +9,7 @@ import {
   useCreateCraneApplicationMutations,
 } from '@/entities/create-application';
 import {
+  useChildEquipmentTypes,
   useDistrictSelectQueries,
   useHazardousFacilityTypeDictionarySelect,
   useRegionSelectQueries,
@@ -27,9 +28,14 @@ export const useCreateCraneApplication = () => {
 
   const { data: districts } = useDistrictSelectQueries(regionId);
 
+  //TODO: replace string to enum or constant
+  const {data: childEquipmentTypes} = useChildEquipmentTypes('CRANE')
+
   const districtOptions = useMemo(() => getSelectOptions(districts), [districts, regionId]);
 
   const regionOptions = useMemo(() => getSelectOptions(regions), [regions, regionId]);
+
+  const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes), [childEquipmentTypes]);
 
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect();
 
@@ -53,5 +59,5 @@ export const useCreateCraneApplication = () => {
     [createCraneApplication],
   );
 
-  return { form, handleSubmit, isPending, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions };
+  return { form, handleSubmit, isPending, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions, childEquipmentOptions };
 };
