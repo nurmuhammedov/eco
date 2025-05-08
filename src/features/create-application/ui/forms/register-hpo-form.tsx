@@ -1,4 +1,3 @@
-import React from 'react';
 import { GoBack } from '@/shared/components/common';
 import { Input } from '@/shared/components/ui/input';
 import { Textarea } from '@/shared/components/ui/textarea';
@@ -7,8 +6,8 @@ import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types';
-import { CardForm, type CreateHPOApplicationDTO } from '@/entities/create-application';
-import { CreateApplicationButton, useCreateHPOApplication } from '@/features/create-application';
+import { CardForm } from '@/entities/create-application';
+import { useCreateHPOApplication } from '@/features/create-application';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import {
   Form,
@@ -19,23 +18,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
+import { Button } from '@/shared/components/ui/button.tsx';
 
 export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
   const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } = useCreateHPOApplication();
 
-  const isFormValid = form.formState.isValid;
-
-  const handleSubmit = form.handleSubmit((data) => {
-    onSubmit(data);
-  });
-
-  const getFormData = React.useCallback((): CreateHPOApplicationDTO => {
-    return form.getValues();
-  }, [form]);
-
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={handleSubmit}>
+      <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="XICHOni ro‘yxatga olish" />
         <CardForm className="my-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
@@ -245,7 +235,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             )}
           />
         </CardForm>
-        <CardForm className="grid grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4">
+        <CardForm className="grid grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
           <FormField
             name="projectDocumentationPath"
             control={form.control}
@@ -471,14 +461,9 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             )}
           />
         </CardForm>
-        <div className="flex justify-end mt-6">
-          <CreateApplicationButton
-            isLoading={false}
-            formData={getFormData()}
-            isFormValid={isFormValid}
-            onSubmit={handleSubmit}
-          />
-        </div>
+        <Button type="submit" disabled={!form.formState.isValid}>
+          Ariza yaratish
+        </Button>
       </form>
     </Form>
   );
