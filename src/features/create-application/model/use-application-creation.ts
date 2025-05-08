@@ -1,7 +1,7 @@
 // src/processes/application-creation/model.ts
 import { useCallback, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { createApplication, createPdf, getDocumentUrl, signDocument } from '../api/create-application';
+import { createApplication, createPdf, signDocument } from '../api/create-application';
 
 export type ApplicationStep = 'view' | 'signed' | 'submitted';
 export type FormData = any; // Formaga qarab tipini o'zgartiring
@@ -75,7 +75,7 @@ export function useApplicationCreation({
     mutationFn: signDocument,
     onSuccess: (response) => {
       if (!response.success || !response.data) {
-        handleError(response.error || 'Hujjatni imzolashda xatolik');
+        handleError('Hujjatni imzolashda xatolik');
         setIsSignLoading(false);
         return;
       }
@@ -93,9 +93,9 @@ export function useApplicationCreation({
   // Ariza yaratish
   const createPdfMutation = useMutation({
     mutationFn: (data: FormData) => createPdf(data, pdfEndpoint),
-    onSuccess: async (response) => {
+    onSuccess: (response) => {
       if (!response.success || !response.data) {
-        handleError(response.error || 'PDF yaratishda xatolik');
+        handleError('PDF yaratishda xatolik');
         setIsPdfLoading(false);
         return;
       }
@@ -104,12 +104,11 @@ export function useApplicationCreation({
 
       // PDF URL olish
       try {
-        const documentResponse = await getDocumentUrl(response.data);
-        if (!documentResponse.success || !documentResponse.data) {
-          throw new Error(documentResponse.error || 'Hujjat URL sini olishda xatolik');
+        if (!response.success || !response.data) {
+          throw new Error('Hujjat URL sini olishda xatolik');
         }
 
-        setDocumentUrl(documentResponse.data);
+        setDocumentUrl(response.data.data);
         setCurrentStep('view');
       } catch (error) {
         handleError(error.message);

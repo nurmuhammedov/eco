@@ -32,8 +32,8 @@ export const CreateApplicationForm = () => {
         navigate('/applications');
       }, 1000);
     },
-    onError: () => {
-      toast('Xatolik!', { richColors: true });
+    onError: (error) => {
+      toast(error, { richColors: true });
     },
   });
 

@@ -37,8 +37,6 @@ export const useApplicationPage = () => {
     };
   }, [filters]);
 
-  console.log(prepareFiltersForApi);
-
   const data = () => [];
 
   const filterValues = {

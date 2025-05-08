@@ -256,7 +256,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     Loyiha hujjatlari(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile showPreview form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
                   </FormControl>
                 </div>
               </FormItem>

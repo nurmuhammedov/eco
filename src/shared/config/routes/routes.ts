@@ -12,8 +12,8 @@ const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'));
 
 // Auth pages
-const Login = lazy(() => import('@/pages/auth/ui/login-page'));
 const AdminLogin = lazy(() => import('@/pages/auth/ui/admin-login'));
+const OneIdLoginPage = lazy(() => import('@/pages/auth/ui/login-page'));
 
 const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'));
 const RegionsPage = lazy(() => import('@/pages/admin/regions/ui'));
@@ -84,7 +84,7 @@ export const appRoutes = [
 export const authRoutes = [
   {
     path: 'login',
-    component: Login,
+    component: OneIdLoginPage,
   },
   {
     path: 'login/admin',

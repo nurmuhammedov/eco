@@ -1,10 +1,10 @@
-// src/widgets/application-modal/index.tsx
 import React, { useEffect } from 'react';
-import { CheckCircle, Download, FileText, Loader2 } from 'lucide-react';
-import { ApplicationStep } from '../model/use-application-creation';
+import { PDFViewer } from '@/features/view-pdf';
 import { Button } from '@/shared/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx';
+import { ApplicationStep } from '../model/use-application-creation';
 import { Alert, AlertDescription } from '@/shared/components/ui/alert';
+import { CheckCircle, FileText, Loader2 } from 'lucide-react';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog';
 
 interface ApplicationModalProps {
   isOpen: boolean;
@@ -35,9 +35,8 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
   onEditForm,
   onSignDocument,
   onSubmitApplication,
-  onDownloadDocument,
+  // onDownloadDocument,
 }) => {
-  // Imzolash muvaffaqiyatli bo'lgandan keyin Yuborish tugmasini avtomatik ko'rsatish
   useEffect(() => {
     if (currentStep === 'signed' && !isLoading) {
       // Tugmani ko'rsatish va fokusga olish logikasi bo'lishi mumkin
@@ -63,17 +62,8 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
     }
 
     return (
-      <div className="flex flex-col">
-        <div className="relative w-full h-96 border overflow-hidden rounded-md bg-gray-50 mb-4">
-          <iframe src={documentUrl} className="absolute inset-0 w-full h-full" title="Ariza hujjati" />
-        </div>
-
-        <div className="flex justify-center">
-          <Button variant="outline" onClick={onDownloadDocument} className="text-primary" size="sm">
-            <Download className="mr-2 h-4 w-4" />
-            Yuklab olish
-          </Button>
-        </div>
+      <div className="h-full">
+        <PDFViewer url={`https://ekotizim.cirns.uz/${documentUrl}`} />
       </div>
     );
   };
@@ -86,15 +76,8 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
             <Button variant="outline" onClick={onEditForm} disabled={isLoading}>
               O'zgartirish
             </Button>
-            <Button onClick={onSignDocument} disabled={isLoading || !documentUrl} className="ml-2">
-              {isSignLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Imzolanmoqda...
-                </>
-              ) : (
-                'Imzolash'
-              )}
+            <Button loading={isSignLoading} onClick={onSignDocument} disabled={isLoading || !documentUrl}>
+              {isSignLoading ? 'Imzolanmoqda...' : 'Imzolash'}
             </Button>
           </>
         );
@@ -159,7 +142,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl relative">
+      <DialogContent className="sm:max-w-[735px] h-[calc(100vh-100px)]">
         {renderStatusIcon()}
 
         <DialogHeader>
@@ -192,7 +175,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
           renderContent()
         )}
 
-        <DialogFooter className="flex justify-end space-x-2">{renderButtons()}</DialogFooter>
+        <DialogFooter className="">{renderButtons()}</DialogFooter>
       </DialogContent>
     </Dialog>
   );

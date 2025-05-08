@@ -1,22 +1,20 @@
-import { apiClient } from '@/shared/api';
+import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import { ApiResponse } from '@/shared/types';
 
-export async function createPdf(
-  data: FormData,
+export async function createPdf<T extends Record<string, any>>(
+  values: T,
   endpoint: string = '/appeals/hf/generate-pdf',
-): Promise<ApiResponse<string>> {
+): Promise<ApiResponse<T>> {
   try {
-    const response = await apiClient.post<ApiResponse<string>>(endpoint, data);
-    return response.data;
+    return await apiClient.post<T>(endpoint, values);
   } catch (_error) {
     throw new Error('PDF generatsiya qilishda xatolik yuz berdi');
   }
 }
 
-export async function getDocumentUrl(filePath: string): Promise<ApiResponse<string>> {
+export async function getDocumentUrl(filePath: string) {
   try {
-    const response = await apiClient.get<ApiResponse<string>>(`/documents/${filePath}`);
-    return response.data;
+    return await apiClient.get<ApiResponse<string>>(API_ENDPOINTS.GET_FILE_BY_PATH, { path: filePath });
   } catch (_error) {
     throw new Error('Hujjat URL sini olishda xatolik');
   }
@@ -32,8 +30,8 @@ export async function signDocument(filePath: string): Promise<ApiResponse<string
   }
 }
 
-export async function createApplication(
-  formData: any,
+export async function createApplication<T extends Record<string, any>>(
+  formData: T,
   filePath: string,
   sign: string,
   endpoint: string = '/create-application',
@@ -44,8 +42,9 @@ export async function createApplication(
       filePath,
       sign,
     });
+
     return response.data;
-  } catch (error) {
+  } catch (_error) {
     throw new Error('Hujjat yaratishda xatolik');
   }
 }

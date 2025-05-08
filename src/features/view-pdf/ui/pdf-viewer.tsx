@@ -336,8 +336,7 @@ export const PDFViewer = ({
         </div>
       )}
 
-      {/* PDF iframe - content bilan bir xil border */}
-      <div className="bg-white" style={{ height }}>
+      <div className="bg-white h-[calc(100vh-300px)]">
         <iframe
           key={key}
           allowFullScreen
@@ -345,9 +344,9 @@ export const PDFViewer = ({
           src={getPdfUrl()}
           onLoad={handleIframeLoad}
           onError={handleIframeError}
-          style={{ display: 'block' }}
+          style={{ display: 'block', backgroundColor: 'red' }}
           title={title || 'PDF Viewer'}
-          className={cn('w-full h-full border-0 bg-white rounded-b-md', isLoading ? 'opacity-0' : 'opacity-100')}
+          className={cn('w-full h-full rounded-b-md', isLoading ? 'opacity-0' : 'opacity-100')}
         />
       </div>
     </div>

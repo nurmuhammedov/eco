@@ -40,8 +40,8 @@ export const HFAppealDtoSchema = z.object({
   // Optional fields
   upperOrganization: z.string({ required_error: 'Yuqori tashkilotning nomi kiritilmadi!' }),
   name: z.string({ required_error: 'XICHO ning nomi kiritilmadi!' }),
-  extraArea: z.string({ required_error: 'Maydon kiritilmadi!' }),
-  hazardousSubstance: z.string({ required_error: 'Maydon kiritilmadi!' }),
+  extraArea: z.string({ required_error: 'Maydon kiritilmadi!' }).min(1, 'Maydon kiritilmadi!'),
+  hazardousSubstance: z.string({ required_error: 'Maydon kiritilmadi!' }).min(1, 'Maydon kiritilmadi!'),
   description: z.string({ required_error: 'Maydon kiritilmadi!' }),
 
   // Array field

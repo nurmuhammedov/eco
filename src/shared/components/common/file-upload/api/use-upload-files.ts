@@ -1,6 +1,6 @@
-import { useMutation } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api';
 import { AxiosProgressEvent } from 'axios';
+import { useMutation } from '@tanstack/react-query';
 
 interface UploadFilesOptions {
   endpoint?: string;
@@ -21,8 +21,7 @@ export const useUploadFiles = (options?: UploadFilesOptions) => {
       const formData = new FormData();
       files.forEach((file) => formData.append(fieldName || 'file', file));
 
-      // api klientga headers va onUploadProgress ni to'g'ri uzatish
-      const response = await apiClient.post<string>(
+      const response = await apiClient.post<{ data: string }>(
         endpoint || '/attachments/registry-files',
         formData,
         { 'Content-Type': 'multipart/form-data' },
@@ -33,7 +32,7 @@ export const useUploadFiles = (options?: UploadFilesOptions) => {
         throw new Error(response.message || 'Fayl yuklashda xatolik yuz berdi');
       }
 
-      return response.data;
+      return response.data.data;
     },
   });
 };

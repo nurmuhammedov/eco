@@ -59,7 +59,6 @@ async function apiRequest<T>(
         data: response.data.data,
       };
     } else {
-      // Oddiy so'rov yuborish
       const response = await axiosInstance.request<T>(requestConfig);
       return {
         success: true,

@@ -247,7 +247,6 @@ function InputFileComponent<T extends FieldValues>({
 
   return (
     <div className="file-upload-container relative">
-      {/* Yuklash tugmasi yoki yuklangan fayl */}
       <div
         className={cn(
           'flex items-center w-full',
