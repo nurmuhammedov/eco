@@ -66,11 +66,14 @@ export const useLoginOneId = () => {
 
 export const useLogout = () => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const redirectPath = user?.role === UserRoles.ADMIN ? '/auth/login/admin' : '/auth/login';
   return useMutation({
     mutationFn: async () => authAPI.logout(),
     onSuccess: () => {
+      queryClient.removeQueries({ queryKey: ['me'] });
+      queryClient.removeQueries({ queryKey: ['currentUser'] });
       navigate(redirectPath);
     },
   });

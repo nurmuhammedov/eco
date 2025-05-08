@@ -4,7 +4,6 @@ import { Button } from '@/shared/components/ui/button';
 import { CardForm } from '@/entities/create-application';
 import DatePicker from '@/shared/components/ui/datepicker';
 import { Textarea } from '@/shared/components/ui/textarea';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
 import { NoteForm, useCreateCraneApplication } from '@/features/create-application';
@@ -12,9 +11,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 
 export default () => {
-  const { form, handleSubmit, regionOptions, districtOptions } = useCreateCraneApplication();
+  const { form, handleSubmit, regionOptions, districtOptions, childEquipmentOptions } = useCreateCraneApplication();
 
-  const craneTypeList = getSelectOptions([]);
 
   return (
     <Form {...form}>
@@ -54,7 +52,7 @@ export default () => {
                       <SelectTrigger className="w-full 3xl:w-sm">
                         <SelectValue placeholder="Kran turini tanlang" />
                       </SelectTrigger>
-                      <SelectContent>{craneTypeList}</SelectContent>
+                      <SelectContent>{childEquipmentOptions}</SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />
@@ -181,7 +179,15 @@ export default () => {
                 <FormItem>
                   <FormLabel required>Kran joylashgan viloyat</FormLabel>
                   <FormControl>
-                    <Select {...field}>
+                      <Select
+                          onValueChange={(value) => {
+                              if (value) {
+                                  field.onChange(value);
+                                  form.setValue('districtId', '');
+                              }
+                          }}
+                          value={field.value}
+                      >
                       <SelectTrigger className="w-full 3xl:w-sm">
                         <SelectValue placeholder="Kran joylashgan viloyat" />
                       </SelectTrigger>
@@ -199,7 +205,7 @@ export default () => {
                 <FormItem>
                   <FormLabel required>Kran joylashgan tuman</FormLabel>
                   <FormControl>
-                    <Select {...field}>
+                      <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full 3xl:w-sm">
                         <SelectValue placeholder="Kran joylashgan tuman" />
                       </SelectTrigger>

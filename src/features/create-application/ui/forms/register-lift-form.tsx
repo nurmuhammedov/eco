@@ -2,7 +2,6 @@ import {GoBack} from '@/shared/components/common';
 import {Input} from '@/shared/components/ui/input';
 import {Button} from '@/shared/components/ui/button';
 import {NoteForm} from '@/features/create-application';
-import {getSelectOptions} from '@/shared/lib/get-select-options';
 import {YandexMapModal} from '@/shared/components/common/yandex-map-modal';
 import {InputFile} from '@/shared/components/common/file-upload/ui/file-upload';
 import {CardForm} from '@/entities/create-application/ui/application-form-card';
@@ -12,8 +11,7 @@ import DatePicker from '@/shared/components/ui/datepicker.tsx';
 import {useCreateLiftApplication} from "@/features/create-application/model/use-create-lift-application.ts";
 
 export default () => {
-    const {form, handleSubmit, regionOptions, districtOptions} = useCreateLiftApplication();
-    const liftTypeOptions = getSelectOptions([]);
+    const {form, handleSubmit, regionOptions, districtOptions, childEquipmentOptions} = useCreateLiftApplication();
 
     return (
         <Form {...form}>
@@ -34,7 +32,7 @@ export default () => {
                                             <SelectTrigger className="w-full 3xl:w-sm">
                                                 <SelectValue placeholder="Lift turini tanlang"/>
                                             </SelectTrigger>
-                                            <SelectContent>{liftTypeOptions}</SelectContent>
+                                            <SelectContent>{childEquipmentOptions}</SelectContent>
                                         </Select>
                                     </FormControl>
                                     <FormMessage/>
