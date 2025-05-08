@@ -1,11 +1,5 @@
-import AdminLoginForm from '@/features/auth/ui/admin-login';
-import LoginInfoSection from '@/features/auth/ui/login-info-section';
+import { AdminLoginForm } from '@/features/auth';
 
 export default function AdminLoginPage() {
-  return (
-    <section className="flex h-screen">
-      <LoginInfoSection />
-      <AdminLoginForm />
-    </section>
-  );
+  return <AdminLoginForm />;
 }

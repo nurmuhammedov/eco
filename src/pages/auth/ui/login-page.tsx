@@ -1,11 +1,5 @@
-import LoginForm from '@/features/auth/ui/one-id-login.tsx';
-import LoginInfoSection from '@/features/auth/ui/login-info-section';
+import { OneIdLogin } from '@/features/auth';
 
-export default function LoginPage() {
-  return (
-    <section className="flex h-screen">
-      <LoginInfoSection />
-      <LoginForm />
-    </section>
-  );
+export default function OneIdLoginPage() {
+  return <OneIdLogin />;
 }

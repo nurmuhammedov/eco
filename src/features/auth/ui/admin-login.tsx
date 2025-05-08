@@ -17,7 +17,7 @@ const adminLoginFormSchema = z.object({
 
 type AdminLoginDTO = z.infer<typeof adminLoginFormSchema>;
 
-export default function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) {
+export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) {
   const { t } = useTranslation('admin');
 
   const { mutateAsync, isPending } = useLogin();
