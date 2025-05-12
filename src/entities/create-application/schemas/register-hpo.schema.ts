@@ -25,7 +25,7 @@ export const HFAppealDtoSchema = z.object({
     })
     .min(1, 'Manzil kiritilmadi!'),
 
-  hazardousFacilityTypeId: z.string({
+  hfTypeId: z.string({
     required_error: 'XICHO turi tanlanmadi!',
   }),
 

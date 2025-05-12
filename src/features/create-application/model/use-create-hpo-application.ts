@@ -21,7 +21,7 @@ export const useCreateHPOApplication = () => {
       upperOrganization: 'Yuqori tashkilot 123',
       name: 'Yangi XICHO nomi',
       phoneNumber: '+998702245665',
-      hazardousFacilityTypeId: '1',
+      hfTypeId: '1',
       spheres: ['GAS', 'GEOLOGY'],
       regionId: '4',
       districtId: '3',

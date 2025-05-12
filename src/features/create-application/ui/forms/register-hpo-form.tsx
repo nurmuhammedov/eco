@@ -5,7 +5,6 @@ import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types';
 import { CardForm } from '@/entities/create-application';
 import { useCreateHPOApplication } from '@/features/create-application';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
@@ -70,7 +69,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             />
             <FormField
               control={form.control}
-              name="hazardousFacilityTypeId"
+              name="hfTypeId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>XICHO ning turi</FormLabel>
@@ -246,7 +245,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     Loyiha hujjatlari(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -262,7 +261,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     Sug‘urta polisi(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -278,7 +277,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     Ma'sul xodim tayinlanganligi buyrug‘i(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -294,7 +293,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     Identifikatsiya varag‘i(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -310,7 +309,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     Ekspertiza xulosasi(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -326,7 +325,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     Litsenziya(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -342,7 +341,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     Ekologiya qo‘mitasidan xulosasi(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -358,7 +357,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     Ruxsatnoma(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -374,7 +373,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -390,7 +389,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     XICHO xodimlarning sanoat xavfsizligi bo‘yicha attestatsiyadan o‘tganligi(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -406,7 +405,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     XICHO kadastr pasporti(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -422,7 +421,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     Yong‘in xavfsizligi xulosasi(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -438,7 +437,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     Sanoat xavfsizligi deklaratsiyasi(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>
@@ -454,7 +453,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                     Qurilmalarni sinovdan o‘tganligi(PDF)
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} accept={[FileTypes.PDF]} {...field} />
+                    <InputFile form={form} {...field} />
                   </FormControl>
                 </div>
               </FormItem>

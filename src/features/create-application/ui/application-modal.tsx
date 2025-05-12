@@ -3,7 +3,7 @@ import { PDFViewer } from '@/features/view-pdf';
 import { Button } from '@/shared/components/ui/button';
 import { ApplicationStep } from '../model/use-application-creation';
 import { Alert, AlertDescription } from '@/shared/components/ui/alert';
-import { CheckCircle, FileText, Loader2 } from 'lucide-react';
+import { CheckCircle, FileText, Loader2, Pencil, Signature } from 'lucide-react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog';
 
 interface ApplicationModalProps {
@@ -61,11 +61,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
       );
     }
 
-    return (
-      <div className="h-full">
-        <PDFViewer url={`https://ekotizim.cirns.uz/${documentUrl}`} />
-      </div>
-    );
+    return <PDFViewer url={`https://ekotizim.cirns.uz/${documentUrl}`} />;
   };
 
   const renderButtons = () => {
@@ -74,10 +70,10 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
         return (
           <>
             <Button variant="outline" onClick={onEditForm} disabled={isLoading}>
-              O'zgartirish
+              <Pencil className="size-4" /> O'zgartirish
             </Button>
             <Button loading={isSignLoading} onClick={onSignDocument} disabled={isLoading || !documentUrl}>
-              {isSignLoading ? 'Imzolanmoqda...' : 'Imzolash'}
+              <Signature className="size-4" /> {isSignLoading ? 'Imzolanmoqda...' : 'Imzolash'}
             </Button>
           </>
         );
@@ -87,15 +83,8 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
             <Button variant="outline" onClick={onEditForm} disabled={isLoading}>
               O'zgartirish
             </Button>
-            <Button onClick={onSubmitApplication} disabled={isLoading} className="ml-2">
-              {isSubmitLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Yuborilmoqda...
-                </>
-              ) : (
-                'Yuborish'
-              )}
+            <Button onClick={onSubmitApplication} loading={isSubmitLoading} disabled={isLoading} className="ml-2">
+              {isSubmitLoading ? 'Yuborilmoqda...' : 'Yuborish'}
             </Button>
           </>
         );
@@ -142,9 +131,8 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[735px] h-[calc(100vh-100px)]">
+      <DialogContent className="sm:max-w-[740px]">
         {renderStatusIcon()}
-
         <DialogHeader>
           <DialogTitle>{getDialogTitle()}</DialogTitle>
         </DialogHeader>

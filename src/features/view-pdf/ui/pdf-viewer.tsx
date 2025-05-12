@@ -45,23 +45,17 @@ export const PDFViewer = ({
   url,
   title,
   className,
-  height = '900px',
   width = '100%',
-  initialZoom = ZoomLevel.NORMAL,
-  viewMode = ViewMode.FIT_V,
+  viewMode = ViewMode.SINGLE_PAGE,
   showToolbar = false,
   lightMode = true,
   onLoad,
   onError,
-  onZoomChange,
-  onViewModeChange,
 }: PDFViewerProps) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('PDF faylni yuklashda xatolik yuz berdi');
-  const [currentZoom, setCurrentZoom] = useState<ZoomLevel | number>(initialZoom);
-  const [currentViewMode, setCurrentViewMode] = useState<ViewMode>(viewMode);
   const [key, setKey] = useState<number>(0); // iframe ni yangilash uchun key
 
   // PDF URL validatsiyasi
@@ -106,38 +100,6 @@ export const PDFViewer = ({
     window.open(url, '_blank');
   };
 
-  // PDF ni to'liq ekranda ko'rsatish
-  const handleFullscreen = () => {
-    if (iframeRef.current) {
-      if (iframeRef.current.requestFullscreen) {
-        iframeRef.current.requestFullscreen();
-      }
-    }
-  };
-
-  // PDF ni chop etish
-  const handlePrint = () => {
-    if (iframeRef.current && iframeRef.current.contentWindow) {
-      iframeRef.current.contentWindow.print();
-    }
-  };
-
-  // Zoom darajasini o'zgartirish
-  const handleZoomChange = (zoom: ZoomLevel | number) => {
-    setCurrentZoom(zoom);
-    if (onZoomChange) onZoomChange(zoom);
-    // iframe ni yangilash
-    setKey((prev) => prev + 1);
-  };
-
-  // Ko'rinish rejimini o'zgartirish
-  const handleViewModeChange = (mode: ViewMode) => {
-    setCurrentViewMode(mode);
-    if (onViewModeChange) onViewModeChange(mode);
-    // iframe ni yangilash
-    setKey((prev) => prev + 1);
-  };
-
   // PDF URL ni parametrlar bilan yaratish
   const getPdfUrl = () => {
     if (!url) return '';
@@ -149,16 +111,10 @@ export const PDFViewer = ({
     const toolbarParam = showToolbar ? '1' : '0';
 
     // Fon rangi (light mode)
-    const bgColor = lightMode ? '%23FFFFFF' : '%23333333';
+    const bgColor = lightMode ? '#ffffff' : '#ffffff';
 
     // URL parametrlari
-    const params = [
-      `toolbar=${toolbarParam}`,
-      'navpanes=0',
-      `view=${currentViewMode}`,
-      `zoom=${currentZoom}`,
-      `bgcolor=${bgColor}`,
-    ].join('&');
+    const params = [`toolbar=${toolbarParam}`, 'navpanes=0', `view=${viewMode}`, `bgcolor=${bgColor}`].join('&');
 
     return `${baseUrl}#${params}`;
   };
@@ -182,151 +138,6 @@ export const PDFViewer = ({
 
   return (
     <div className={cn('w-full overflow-hidden rounded-md shadow-sm', className)} style={{ width }}>
-      {/* Header with title and actions */}
-      <div className="">
-        {/* Toolbar */}
-        {showToolbar && (
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Zoom controls */}
-            <div className="flex items-center gap-1 mr-2">
-              <Button
-                onClick={() => handleZoomChange(ZoomLevel.SMALL)}
-                className="flex items-center rounded-md bg-gray-100 w-8 h-8 p-0 justify-center text-gray-700 hover:bg-gray-200"
-                disabled={isLoading}
-                aria-label="Kichiklashtirish"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                </svg>
-              </Button>
-
-              <select
-                className="rounded-md border border-gray-300 bg-white px-2 py-1 text-sm"
-                value={String(currentZoom)}
-                onChange={(e) => handleZoomChange(e.target.value as ZoomLevel)}
-                disabled={isLoading}
-              >
-                <option value={ZoomLevel.TINY}>50%</option>
-                <option value={ZoomLevel.SMALL}>75%</option>
-                <option value={ZoomLevel.NORMAL}>100%</option>
-                <option value={ZoomLevel.LARGE}>125%</option>
-                <option value={ZoomLevel.XLARGE}>150%</option>
-                <option value={ZoomLevel.XXLARGE}>200%</option>
-                <option value={ZoomLevel.PAGE_WIDTH}>Sahifa kengligi</option>
-                <option value={ZoomLevel.PAGE_FIT}>To'liq sahifa</option>
-              </select>
-
-              <Button
-                onClick={() => handleZoomChange(ZoomLevel.LARGE)}
-                className="flex items-center rounded-md bg-gray-100 w-8 h-8 p-0 justify-center text-gray-700 hover:bg-gray-200"
-                disabled={isLoading}
-                aria-label="Kattalashtirish"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-              </Button>
-            </div>
-
-            {/* View mode */}
-            <select
-              className="rounded-md border border-gray-300 bg-white px-2 py-1 text-sm mr-2"
-              value={currentViewMode}
-              onChange={(e) => handleViewModeChange(e.target.value as ViewMode)}
-              disabled={isLoading}
-            >
-              <option value={ViewMode.FIT_H}>Gorizontal</option>
-              <option value={ViewMode.FIT_V}>Vertikal</option>
-              <option value={ViewMode.SINGLE_PAGE}>Bitta sahifa</option>
-              <option value={ViewMode.TWO_PAGE}>Ikki sahifa</option>
-              <option value={ViewMode.CONTINUOUS}>Uzluksiz</option>
-            </select>
-
-            {/* Actions */}
-            <Button
-              onClick={handleFullscreen}
-              className="flex items-center gap-1 rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
-              disabled={isLoading}
-              aria-label="To'liq ekran"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"
-                />
-              </svg>
-              <span className="hidden sm:inline">To'liq ekran</span>
-            </Button>
-
-            <Button
-              onClick={handlePrint}
-              className="flex items-center gap-1 rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
-              disabled={isLoading}
-              aria-label="Chop etish"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-                />
-              </svg>
-              <span className="hidden sm:inline">Chop etish</span>
-            </Button>
-
-            <Button
-              onClick={handleDownload}
-              className="flex items-center gap-1 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
-              aria-label="Yuklab olish"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                />
-              </svg>
-              <span className="hidden sm:inline">Yuklab olish</span>
-            </Button>
-          </div>
-        )}
-      </div>
-
-      {/* Loading state */}
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 z-10">
           <div className="text-center">
@@ -336,15 +147,15 @@ export const PDFViewer = ({
         </div>
       )}
 
-      <div className="bg-white h-[calc(100vh-300px)]">
+      <div className="bg-white h-[900px]">
         <iframe
           key={key}
+          width="100%"
           allowFullScreen
           ref={iframeRef}
           src={getPdfUrl()}
           onLoad={handleIframeLoad}
           onError={handleIframeError}
-          style={{ display: 'block', backgroundColor: 'red' }}
           title={title || 'PDF Viewer'}
           className={cn('w-full h-full rounded-b-md', isLoading ? 'opacity-0' : 'opacity-100')}
         />
