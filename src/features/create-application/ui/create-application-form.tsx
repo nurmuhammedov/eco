@@ -1,9 +1,9 @@
-import { ApplicationTypeEnum, useApplicationFactory } from '@/entities/create-application';
-import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import { getFormComponentByType, isValidApplicationType } from '../model/store';
 import { Suspense } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getFormComponentByType, isValidApplicationType } from '../model/store';
 import { AppealFormSkeleton, ApplicationModal } from '@/features/create-application';
+import { ApplicationTypeEnum, useApplicationFactory } from '@/entities/create-application';
 
 export const CreateApplicationForm = () => {
   const navigate = useNavigate();
@@ -12,15 +12,11 @@ export const CreateApplicationForm = () => {
     isModalOpen,
     isLoading,
     isPdfLoading,
-    isSignLoading,
-    isSubmitLoading,
-    currentStep,
     error,
     documentUrl,
     handleCreateApplication,
     handleSignDocument,
     handleSubmitApplication,
-    handleEditForm,
     handleCloseModal,
     handleDownloadDocument,
   } = useApplicationFactory({
@@ -56,19 +52,15 @@ export const CreateApplicationForm = () => {
     <Suspense fallback={<AppealFormSkeleton />}>
       {FormComponent && <FormComponent onSubmit={handleFormSubmit} />}
       <ApplicationModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        documentUrl={documentUrl}
-        currentStep={currentStep}
-        isLoading={isLoading}
-        isPdfLoading={isPdfLoading}
-        isSignLoading={isSignLoading}
-        isSubmitLoading={isSubmitLoading}
         error={error}
-        onEditForm={handleEditForm}
+        isOpen={isModalOpen}
+        isLoading={isLoading}
+        documentUrl={documentUrl!}
+        onClose={handleCloseModal}
+        isPdfLoading={isPdfLoading}
         onSignDocument={handleSignDocument}
-        onSubmitApplication={handleSubmitApplication}
         onDownloadDocument={handleDownloadDocument}
+        onSubmitApplication={handleSubmitApplication}
       />
     </Suspense>
   );

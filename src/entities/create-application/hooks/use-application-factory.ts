@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { applicationConfigs, ApplicationTypeEnum } from '@/entities/create-application';
 import {
   useApplicationCreation,
@@ -10,20 +9,7 @@ interface UseApplicationFactoryProps extends Omit<UseApplicationCreationProps, '
 }
 
 export function useApplicationFactory({ applicationType, onSuccess, onError }: UseApplicationFactoryProps) {
-  const getApplicationConfig = useCallback((): any => {
-    const config = applicationConfigs[applicationType];
-
-    if (!config) {
-      return {
-        pdfEndpoint: '/appeals/hf/generate-pdf',
-        submitEndpoint: '/create-application',
-      };
-    }
-
-    return config;
-  }, [applicationType]);
-
-  const config = getApplicationConfig();
+  const config = applicationConfigs[applicationType];
 
   const applicationCreation = useApplicationCreation({
     onError,
