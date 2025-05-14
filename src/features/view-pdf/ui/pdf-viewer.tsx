@@ -147,7 +147,7 @@ export const PDFViewer = ({
         </div>
       )}
 
-      <div className="bg-white h-[900px]">
+      <div className="bg-white h-[600px] 3xl:h-[900px]">
         <iframe
           key={key}
           width="100%"

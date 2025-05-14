@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { PDFViewer } from '@/features/view-pdf';
 import { Button } from '@/shared/components/ui/button';
 import { ApplicationStep } from '../model/use-application-creation';
+import { SignatureModal } from '@/shared/components/common/signature';
+import { CheckCircle, FileText, Loader2, Pencil } from 'lucide-react';
 import { Alert, AlertDescription } from '@/shared/components/ui/alert';
-import { CheckCircle, FileText, Loader2, Pencil, Signature } from 'lucide-react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog';
 
 interface ApplicationModalProps {
@@ -72,9 +73,10 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
             <Button variant="outline" onClick={onEditForm} disabled={isLoading}>
               <Pencil className="size-4" /> O'zgartirish
             </Button>
-            <Button loading={isSignLoading} onClick={onSignDocument} disabled={isLoading || !documentUrl}>
-              <Signature className="size-4" /> {isSignLoading ? 'Imzolanmoqda...' : 'Imzolash'}
-            </Button>
+            {/*<Button loading={isSignLoading} onClick={onSignDocument} disabled={isLoading || !documentUrl}>*/}
+            {/*  <Signature className="size-4" /> {isSignLoading ? 'Imzolanmoqda...' : 'Imzolash'}*/}
+            {/*</Button>*/}
+            <SignatureModal />
           </>
         );
       case 'signed':

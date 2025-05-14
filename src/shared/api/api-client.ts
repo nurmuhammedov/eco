@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
-import { AxiosError, AxiosProgressEvent } from 'axios';
 import { axiosInstance } from './axios-instance';
+import { AxiosError, AxiosProgressEvent } from 'axios';
 import type { ApiResponse, ResponseData } from '@/shared/types/api';
 
 /**
@@ -43,7 +43,7 @@ async function apiRequest<T>(
   try {
     const requestConfig = {
       method,
-      url,
+      url: `/api/v1${url}`,
       headers,
       onUploadProgress, // Axios konfiguratsiyasining asosiy parametri sifatida
       ...(method === 'get' || method === 'delete' ? { params: payload as RequestParams } : { data: payload as object }),

@@ -2,6 +2,7 @@
 import { useCallback, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { createApplication, createPdf, signDocument } from '../api/create-application';
+import { getSignatureKeys } from '@/shared/lib';
 
 export type ApplicationStep = 'view' | 'signed' | 'submitted';
 export type FormData = any; // Formaga qarab tipini o'zgartiring
@@ -19,6 +20,8 @@ export function useApplicationCreation({
   onSuccess,
   onError,
 }: UseApplicationCreationProps = {}) {
+  const { signatureKeys } = getSignatureKeys();
+
   // Modal va jarayon holati
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState<ApplicationStep>('view');

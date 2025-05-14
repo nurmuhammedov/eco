@@ -15,7 +15,7 @@ import {
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries';
 
-export const useCreateLiftApplication = () => {
+export const useCreateBoilerApplication = () => {
   const form = useForm<CreateLiftApplicationDTO>({
     resolver: zodResolver(LifAppealDtoSchema),
   });
@@ -49,7 +49,7 @@ export const useCreateLiftApplication = () => {
         const response = await createLiftApplication(formData);
         return response.success;
       } catch (error) {
-        console.error('Lift application submission error:', error);
+        console.error('Boiler application submission error:', error);
         return false;
       }
     },
