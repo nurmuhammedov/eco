@@ -8,7 +8,7 @@ import SignatureScript from '@/shared/config/signature/e-imzo.js?raw';
 
 export function useSignatureClient() {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-  const Client = useMemo(() => new SignatureClient(), []);
+  const Client: SignatureClient = useMemo(() => new SignatureClient(), []);
 
   useEffect(() => {
     const scriptContent = SignatureScript;

@@ -4,20 +4,14 @@ import { Button } from '@/shared/components/ui/button';
 import { SignatureKey } from '@/shared/types/signature';
 
 interface SignatureSelectProps {
-  onSelect?: (certificate: SignatureKey) => void;
-  certificates?: SignatureKey[];
-  defaultSelected?: SignatureKey | null;
   className?: string;
+  certificates?: SignatureKey[];
+  onSelect?: (certificate: SignatureKey) => void;
 }
 
-export function SignatureSelect({
-  onSelect,
-  certificates = [],
-  defaultSelected = null,
-  className = '',
-}: SignatureSelectProps) {
+export function SignatureSelect({ onSelect, certificates = [], className = '' }: SignatureSelectProps) {
   const [open, setOpen] = useState(false);
-  const [selectedCert, setSelectedCert] = useState<SignatureKey | null>(defaultSelected);
+  const [selectedCert, setSelectedCert] = useState<SignatureKey | null>();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   function handleSelectCertificate(cert: SignatureKey) {

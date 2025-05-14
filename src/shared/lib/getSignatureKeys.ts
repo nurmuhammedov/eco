@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
-import { useSignature } from '@/shared/hooks';
+import { useSignatureClient } from '@/shared/hooks';
 
 export function getSignatureKeys() {
   const { Client, isScriptLoaded } = useSignatureClient();

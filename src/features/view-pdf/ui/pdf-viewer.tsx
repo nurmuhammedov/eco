@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/shared/lib/utils';
 import { isPDFUrl } from '@/shared/lib';
 import { Button } from '@/shared/components/ui/button';
+import { apiConfig } from '@/shared/api/constants.ts';
 
 // Zoom darajasi uchun enum
 export enum ZoomLevel {
@@ -26,15 +27,15 @@ export enum ViewMode {
 }
 
 interface PDFViewerProps {
-  url: string;
   title?: string;
-  className?: string;
-  height?: string;
   width?: string;
+  height?: string;
+  className?: string;
   viewMode?: ViewMode;
-  showToolbar?: boolean;
+  documentUrl: string;
   lightMode?: boolean;
   onLoad?: () => void;
+  showToolbar?: boolean;
   initialZoom?: ZoomLevel | number;
   onError?: (error: Error) => void;
   onViewModeChange?: (mode: ViewMode) => void;
@@ -42,7 +43,7 @@ interface PDFViewerProps {
 }
 
 export const PDFViewer = ({
-  url,
+  documentUrl,
   title,
   className,
   width = '100%',
@@ -58,9 +59,8 @@ export const PDFViewer = ({
   const [errorMessage, setErrorMessage] = useState('PDF faylni yuklashda xatolik yuz berdi');
   const [key, setKey] = useState<number>(0); // iframe ni yangilash uchun key
 
-  // PDF URL validatsiyasi
   useEffect(() => {
-    if (!url) {
+    if (!documentUrl) {
       setHasError(true);
       setErrorMessage("PDF URL ko'rsatilmagan");
       setIsLoading(false);
@@ -68,7 +68,7 @@ export const PDFViewer = ({
       return;
     }
 
-    if (!isPDFUrl(url)) {
+    if (!isPDFUrl(documentUrl)) {
       setHasError(true);
       setErrorMessage("PDF URL noto'g'ri formatda");
       setIsLoading(false);
@@ -78,45 +78,38 @@ export const PDFViewer = ({
 
     setHasError(false);
     setIsLoading(true);
-    // URL o'zgarganda iframe ni yangilash
-    setKey((prev) => prev + 1);
-  }, [url, onError]);
 
-  // PDF yuklanganda loading holatini o'zgartirish
+    setKey((prev) => prev + 1);
+  }, [documentUrl, onError]);
+
   const handleIframeLoad = () => {
     setIsLoading(false);
     if (onLoad) onLoad();
   };
 
-  // PDF yuklashda xatolik bo'lganda
   const handleIframeError = () => {
     setHasError(true);
     setIsLoading(false);
     if (onError) onError(new Error('PDF faylni yuklashda xatolik yuz berdi'));
   };
 
-  // PDF yuklab olish
   const handleDownload = () => {
-    window.open(url, '_blank');
+    window.open(documentUrl, '_blank');
   };
 
-  // PDF URL ni parametrlar bilan yaratish
   const getPdfUrl = () => {
-    if (!url) return '';
+    if (!documentUrl) return '';
 
     // Asosiy URL
-    const baseUrl = url.split('#')[0];
+    const baseUrl = documentUrl.split('#')[0];
 
-    // Toolbar, navigatsiya paneli parametrlari
     const toolbarParam = showToolbar ? '1' : '0';
 
-    // Fon rangi (light mode)
     const bgColor = lightMode ? '#ffffff' : '#ffffff';
 
-    // URL parametrlari
     const params = [`toolbar=${toolbarParam}`, 'navpanes=0', `view=${viewMode}`, `bgcolor=${bgColor}`].join('&');
 
-    return `${baseUrl}#${params}`;
+    return `${apiConfig.baseURL}${baseUrl}#${params}`;
   };
 
   if (hasError) {
@@ -124,7 +117,7 @@ export const PDFViewer = ({
       <div className="border rounded-lg p-6 bg-red-50 text-red-700">
         <h3 className="text-lg font-semibold mb-2">Xatolik yuz berdi</h3>
         <p>{errorMessage}</p>
-        {url && isPDFUrl(url) && (
+        {documentUrl && isPDFUrl(documentUrl) && (
           <Button
             onClick={handleDownload}
             className="mt-4 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"

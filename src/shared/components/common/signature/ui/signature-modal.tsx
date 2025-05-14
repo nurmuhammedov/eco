@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { Signature } from 'lucide-react';
 import { SignatureSelect } from '../index';
 import { getSignatureKeys } from '@/shared/lib';
+import { useSignatureClient } from '@/shared/hooks';
 import { Button } from '@/shared/components/ui/button';
 import { SignatureKey } from '@/shared/types/signature';
+import { handleSendKey } from '@/shared/components/common/signature/model';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,34 +17,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/shared/components/ui/alert-dialog';
-import { axiosInstance } from '@/shared/api';
-import { AxiosRequestConfig } from 'axios';
-import { handleSendKey } from '@/shared/components/common/signature/model';
-import { useSignatureClient } from '@/shared/hooks';
 
 interface SignatureModalProps {
-  title?: string;
-  description?: string;
+  documentUrl: string;
   onCancel?: () => void;
-  cancelButtonText?: string;
-  triggerButtonText?: string;
-  continueButtonText?: string;
   onConfirm?: (certificate: SignatureKey | null) => void;
 }
 
-export const SignatureModal = ({
-  title = 'Elektron sertifikatni tanlang',
-  description = "Imzolash uchun ERI sertifikatingizni tanlang. Bu amal orqali hujjat elektron imzolanadi va yuridik kuchga ega bo'ladi.",
-  triggerButtonText = 'Imzolash',
-  continueButtonText = 'Tasdiqlash',
-  cancelButtonText = 'Bekor qilish',
-  onConfirm,
-  onCancel,
-}: SignatureModalProps) => {
+export const SignatureModal = ({ onConfirm, onCancel, documentUrl }: SignatureModalProps) => {
   const { Client } = useSignatureClient();
   const { signatureKeys } = getSignatureKeys();
-  const [selectedCertificate, setSelectedCertificate] = useState<SignatureKey | null>(null);
   const [open, setOpen] = useState(false);
+  const [selectedCertificate, setSelectedCertificate] = useState<SignatureKey | null>(null);
 
   const handleSelectCertificate = (cert: SignatureKey) => {
     setSelectedCertificate(cert);
@@ -52,7 +38,8 @@ export const SignatureModal = ({
     if (onConfirm) {
       onConfirm(selectedCertificate);
     }
-    await handleSendKey(Client, selectedCertificate);
+    await handleSendKey(Client, selectedCertificate, documentUrl);
+    setSelectedCertificate(null);
     setOpen(false);
   };
 
@@ -61,71 +48,24 @@ export const SignatureModal = ({
       onCancel();
     }
     setOpen(false);
+    setSelectedCertificate(null);
   };
 
-  async function getBase64FromPdfUrl(pdfUrl: string): Promise<string | null> {
-    try {
-      const config: AxiosRequestConfig = {
-        responseType: 'arraybuffer',
-        headers: {
-          Accept: 'application/pdf',
-        },
-        withCredentials: true,
-      };
-
-      const response = await axiosInstance.get(pdfUrl, config);
-
-      if (response.status !== 200) {
-        console.error(`Xatolik yuz berdi: ${response.status} - ${response.statusText}`);
-        return null;
-      }
-
-      // Checking if `response.data` is an ArrayBuffer
-      if (!response.data || typeof response.data.byteLength !== 'number') {
-        console.error("PDF ma'lumotlari noto'g'ri formatda:", typeof response.data);
-        console.error("PDF ma'lumotlar uzunligi:", response.data?.byteLength);
-        return null;
-      }
-
-      // 5. Convert PDF to Base64 (Node.js environment)
-      if (typeof Buffer !== 'undefined') {
-        return Buffer.from(response.data).toString('base64');
-      }
-      // Browser environment
-      else {
-        const uint8Array = new Uint8Array(response.data);
-        let binaryString = '';
-        const chunkSize = 16384; // Memory optimization
-
-        // Processing large files into parts
-        for (let i = 0; i < uint8Array.length; i += chunkSize) {
-          const chunk = uint8Array.slice(i, i + chunkSize);
-          binaryString += String.fromCharCode.apply(null, Array.from(chunk));
-        }
-
-        return btoa(binaryString);
-      }
-    } catch (error) {
-      console.error('Error downloading PDF and converting to base64:', error);
-      console.log('ERROR', error);
-      return null;
-    }
-  }
-
-  const res = getBase64FromPdfUrl('files/appeals/hf-appeals/2025/may/14/1747215624308.pdf');
-  res.then((data) => console.log(data));
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button>
           <Signature className="size-4" />
-          {triggerButtonText}
+          Imzolash
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
+          <AlertDialogTitle>Elektron sertifikatni tanlang</AlertDialogTitle>
+          <AlertDialogDescription>
+            Imzolash uchun ERI sertifikatingizni tanlang. Bu amal orqali hujjat elektron imzolanadi va yuridik kuchga
+            ega bo'ladi.
+          </AlertDialogDescription>
         </AlertDialogHeader>
 
         <div className="py-4">
@@ -141,13 +81,13 @@ export const SignatureModal = ({
         </div>
 
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleCancel}>{cancelButtonText}</AlertDialogCancel>
+          <AlertDialogCancel onClick={handleCancel}>Bekor qilish</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={!selectedCertificate}
             className={!selectedCertificate ? 'opacity-50 cursor-not-allowed' : ''}
           >
-            {continueButtonText}
+            Tasdiqlash
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -1,8 +1,8 @@
 import { toast } from 'sonner';
 import { apiClient } from '@/shared/api';
 import { SignatureClient, SignatureKey } from '@/shared/types/signature';
+import { convertPdfToBase64 } from '@/shared/components/common/signature/model';
 import { getTimeStamp } from '@/shared/components/common/signature/api/get-time-stamp';
-import { getBase64FromPdfUrl } from '@/shared/components/common/signature/model/convert-pdf-to-base64';
 
 export const handleSendKey = async (
   Client: SignatureClient,
@@ -10,7 +10,7 @@ export const handleSendKey = async (
   pdfUrl = 'files/appeals/hf-appeals/2025/may/14/1747217197013.pdf',
 ): Promise<boolean> => {
   try {
-    // 1. Kalitni yuklash
+    // 1. Load certificate key
     if (!signature) {
       toast.error('Imzolash kaliti topilmadi');
       return false;
@@ -24,21 +24,21 @@ export const handleSendKey = async (
       return false;
     }
 
-    // 2. PDF ni base64 ga o'girish
-    const documentBase64 = await getBase64FromPdfUrl(pdfUrl);
+    // 2. Convert PDF to base64
+    const documentBase64 = await convertPdfToBase64(pdfUrl);
     if (!documentBase64) {
       toast.error('Hujjat yuklanmadi');
       return false;
     }
 
-    // 3. PKCS7 yaratish
+    // 3. Create a new PKCS7
     const pkcs7Signature = await Client.createPkcs7(keyId, documentBase64);
     if (!pkcs7Signature) {
       toast.error('Hujjat imzolashda xatolik');
       return false;
     }
 
-    // 4. Timestamp olish
+    // 4. Fetch timestamp
     const timestampResponse = await getTimeStamp({ sign: pkcs7Signature });
     const { pkcs7b64, status } = timestampResponse;
 
@@ -47,7 +47,7 @@ export const handleSendKey = async (
       return false;
     }
 
-    // 5. Serverga yuborish
+    // 5. Send to server
     const serverResponse = await apiClient.post('/e-imzo/attached', { sign: pkcs7b64 });
 
     if (serverResponse.status === 200) {
@@ -58,7 +58,6 @@ export const handleSendKey = async (
       return false;
     }
   } catch (error) {
-    // Xatolikni aniqlash va tegishli xabar chiqarish
     const errorMessage = getReadableErrorMessage(error);
     toast.error(errorMessage);
     console.error('Imzolash xatoligi:', error);
@@ -69,7 +68,6 @@ export const handleSendKey = async (
 function getReadableErrorMessage(error: unknown): string {
   if (!error) return "Noma'lum xatolik";
 
-  // Xatolik object bo'lsa
   if (typeof error === 'object') {
     // Axios xatoligi
     if ('response' in error && error.response) {
