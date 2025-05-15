@@ -3,12 +3,40 @@ import { apiClient } from '@/shared/api';
 import { SignatureClient, SignatureKey } from '@/shared/types/signature';
 import { convertPdfToBase64 } from '@/shared/components/common/signature/model';
 import { getTimeStamp } from '@/shared/components/common/signature/api/get-time-stamp';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const handleSendKey = async (
-  Client: SignatureClient,
-  signature: SignatureKey | null,
-  pdfUrl = 'files/appeals/hf-appeals/2025/may/14/1747217197013.pdf',
-): Promise<boolean> => {
+interface SignDocumentParams {
+  documentUrl: string;
+  Client: SignatureClient;
+  signature: SignatureKey | null;
+  onSuccess?: (result: any) => void; // Muvaffaqiyatli yakunlanganda callback
+}
+
+export function useDocumentSigning() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: signDocumentWithMetadata,
+    onSuccess: (result, variables) => {
+      console.log('onsuccess result', result);
+      toast.success('Hujjat muvaffaqiyatli imzolandi!');
+
+      // Cache ni yangilash
+      queryClient.invalidateQueries({ queryKey: ['documents'] });
+
+      // Agar callback berilgan bo'lsa, uni chaqirish
+      if (variables.onSuccess) {
+        variables.onSuccess(result);
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message, { richColors: true });
+      console.error('Imzolash xatoligi:', error);
+    },
+  });
+}
+
+export const signDocumentWithMetadata = async ({ Client, signature, documentUrl = '' }: SignDocumentParams) => {
   try {
     // 1. Load certificate key
     if (!signature) {
@@ -25,7 +53,7 @@ export const handleSendKey = async (
     }
 
     // 2. Convert PDF to base64
-    const documentBase64 = await convertPdfToBase64(pdfUrl);
+    const documentBase64 = await convertPdfToBase64(documentUrl);
     if (!documentBase64) {
       toast.error('Hujjat yuklanmadi');
       return false;
@@ -48,15 +76,27 @@ export const handleSendKey = async (
     }
 
     // 5. Send to server
-    const serverResponse = await apiClient.post('/e-imzo/attached', { sign: pkcs7b64 });
+    const signatureResponse = await apiClient.post('/e-imzo/attached', { sign: pkcs7b64 });
 
-    if (serverResponse.status === 200) {
-      toast.success('Hujjat imzolandi!');
-      return true;
-    } else {
-      toast.error('Server javobida xatolik');
+    if (signatureResponse.status !== 200) {
+      toast.error('Imzo serverga yuborishda xatolik');
       return false;
     }
+
+    // const serverResponse = await apiClient.post(options.submitEndpoint, {
+    //   sign: pkcs7b64,
+    //   filePath: documentUrl,
+    //   dto: options.formData,
+    // });
+
+    // if (signatureResponse.status === 200) {
+    //   toast.success('Hujjat imzolandi!');
+    //   return true;
+    // } else {
+    //   toast.error('Server javobida xatolik');
+    //   return false;
+    // }
+    return pkcs7b64;
   } catch (error) {
     const errorMessage = getReadableErrorMessage(error);
     toast.error(errorMessage);

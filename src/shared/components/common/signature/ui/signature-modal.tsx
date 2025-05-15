@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Signature } from 'lucide-react';
+import { apiClient } from '@/shared/api';
 import { SignatureSelect } from '../index';
 import { getSignatureKeys } from '@/shared/lib';
+import { Loader2, Signature } from 'lucide-react';
 import { useSignatureClient } from '@/shared/hooks';
 import { Button } from '@/shared/components/ui/button';
 import { SignatureKey } from '@/shared/types/signature';
-import { handleSendKey } from '@/shared/components/common/signature/model';
+import { useDocumentSigning } from '@/shared/components/common/signature/model';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,16 +20,19 @@ import {
 } from '@/shared/components/ui/alert-dialog';
 
 interface SignatureModalProps {
+  formData: any;
   documentUrl: string;
   onCancel?: () => void;
+  submitEndpoint: string;
   onConfirm?: (certificate: SignatureKey | null) => void;
 }
 
-export const SignatureModal = ({ onConfirm, onCancel, documentUrl }: SignatureModalProps) => {
+export const SignatureModal = ({ onConfirm, onCancel, documentUrl, submitEndpoint, formData }: SignatureModalProps) => {
   const { Client } = useSignatureClient();
   const { signatureKeys } = getSignatureKeys();
   const [open, setOpen] = useState(false);
   const [selectedCertificate, setSelectedCertificate] = useState<SignatureKey | null>(null);
+  const { mutateAsync: signDocument, isPending } = useDocumentSigning();
 
   const handleSelectCertificate = (cert: SignatureKey) => {
     setSelectedCertificate(cert);
@@ -38,7 +42,14 @@ export const SignatureModal = ({ onConfirm, onCancel, documentUrl }: SignatureMo
     if (onConfirm) {
       onConfirm(selectedCertificate);
     }
-    await handleSendKey(Client, selectedCertificate, documentUrl);
+    await signDocument({
+      Client,
+      documentUrl,
+      signature: selectedCertificate,
+      onSuccess: (result) => {
+        apiClient.post(submitEndpoint, { dto: formData, sign: result, filePath: documentUrl });
+      },
+    });
     setSelectedCertificate(null);
     setOpen(false);
   };
@@ -87,6 +98,7 @@ export const SignatureModal = ({ onConfirm, onCancel, documentUrl }: SignatureMo
             disabled={!selectedCertificate}
             className={!selectedCertificate ? 'opacity-50 cursor-not-allowed' : ''}
           >
+            {isPending && <Loader2 className="size-4 animate-spin" />}
             Tasdiqlash
           </AlertDialogAction>
         </AlertDialogFooter>

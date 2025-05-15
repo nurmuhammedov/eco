@@ -7,23 +7,24 @@ import { Alert, AlertDescription } from '@/shared/components/ui/alert';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog';
 
 interface ApplicationModalProps {
+  formData: any;
   isOpen: boolean;
   onClose: () => void;
   documentUrl: string;
+  submitEndpoint: string;
   isLoading: boolean;
   isPdfLoading: boolean;
   error: string | null;
-  onSignDocument: () => void;
-  onSubmitApplication: () => void;
-  onDownloadDocument: () => void;
 }
 
 export const ApplicationModal: React.FC<ApplicationModalProps> = ({
   isOpen,
   onClose,
-  documentUrl,
+  formData,
   isLoading,
+  documentUrl,
   isPdfLoading,
+  submitEndpoint,
   error,
 }) => {
   const renderContent = () => {
@@ -68,7 +69,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
             <Pencil className="size-4" /> O'zgartirish
           </Button>
-          <SignatureModal documentUrl={documentUrl} />
+          <SignatureModal formData={formData} submitEndpoint={submitEndpoint} documentUrl={documentUrl} />
         </DialogFooter>
       </DialogContent>
     </Dialog>
