@@ -37,12 +37,10 @@ export const HFAppealDtoSchema = z.object({
     required_error: 'Tuman tanlanmadi!',
   }),
 
-  // Optional fields
-  upperOrganization: z.string({ required_error: 'Yuqori tashkilotning nomi kiritilmadi!' }),
+  upperOrganization: z.string().optional(),
   name: z.string({ required_error: 'XICHO ning nomi kiritilmadi!' }),
   extraArea: z.string({ required_error: 'Maydon kiritilmadi!' }).min(1, 'Maydon kiritilmadi!'),
   hazardousSubstance: z.string({ required_error: 'Maydon kiritilmadi!' }).min(1, 'Maydon kiritilmadi!'),
-  description: z.string({ required_error: 'Maydon kiritilmadi!' }),
 
   // Array field
   spheres: z.array(HFSphereEnum, { required_error: 'Tarmoqlar tanlanmadi!' }),
