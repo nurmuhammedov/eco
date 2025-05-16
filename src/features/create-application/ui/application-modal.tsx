@@ -7,31 +7,29 @@ import { Alert, AlertDescription } from '@/shared/components/ui/alert';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog';
 
 interface ApplicationModalProps {
-  formData: any;
   isOpen: boolean;
+  isLoading: boolean;
   onClose: () => void;
   documentUrl: string;
-  submitEndpoint: string;
-  isLoading: boolean;
-  isPdfLoading: boolean;
   error: string | null;
+  isPdfLoading: boolean;
+  submitApplicationMetaData: (sign: string) => void;
 }
 
 export const ApplicationModal: React.FC<ApplicationModalProps> = ({
+  error,
   isOpen,
   onClose,
-  formData,
   isLoading,
   documentUrl,
   isPdfLoading,
-  submitEndpoint,
-  error,
+  submitApplicationMetaData,
 }) => {
   const renderContent = () => {
     if (isPdfLoading) {
       return (
         <div className="flex flex-col items-center justify-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+          <Loader2 className="size-8 animate-spin text-primary mb-4" />
           <p className="text-center text-gray-600">PDF hujjati yaratilmoqda...</p>
         </div>
       );
@@ -69,7 +67,11 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
             <Pencil className="size-4" /> O'zgartirish
           </Button>
-          <SignatureModal formData={formData} submitEndpoint={submitEndpoint} documentUrl={documentUrl} />
+          <SignatureModal
+            isLoading={isLoading}
+            documentUrl={documentUrl}
+            submitApplicationMetaData={submitApplicationMetaData}
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>

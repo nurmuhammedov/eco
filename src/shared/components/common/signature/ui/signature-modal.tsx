@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { apiClient } from '@/shared/api';
 import { SignatureSelect } from '../index';
 import { getSignatureKeys } from '@/shared/lib';
 import { Loader2, Signature } from 'lucide-react';
@@ -20,19 +19,27 @@ import {
 } from '@/shared/components/ui/alert-dialog';
 
 interface SignatureModalProps {
-  formData: any;
+  isLoading: boolean;
   documentUrl: string;
   onCancel?: () => void;
-  submitEndpoint: string;
+  submitApplicationMetaData: (sign: string) => void;
   onConfirm?: (certificate: SignatureKey | null) => void;
 }
 
-export const SignatureModal = ({ onConfirm, onCancel, documentUrl, submitEndpoint, formData }: SignatureModalProps) => {
+export const SignatureModal = ({
+  onCancel,
+  onConfirm,
+  isLoading,
+  documentUrl,
+  submitApplicationMetaData,
+}: SignatureModalProps) => {
   const { Client } = useSignatureClient();
   const { signatureKeys } = getSignatureKeys();
   const [open, setOpen] = useState(false);
   const [selectedCertificate, setSelectedCertificate] = useState<SignatureKey | null>(null);
   const { mutateAsync: signDocument, isPending } = useDocumentSigning();
+
+  const isLoadingSignature = isLoading || isPending;
 
   const handleSelectCertificate = (cert: SignatureKey) => {
     setSelectedCertificate(cert);
@@ -46,9 +53,7 @@ export const SignatureModal = ({ onConfirm, onCancel, documentUrl, submitEndpoin
       Client,
       documentUrl,
       signature: selectedCertificate,
-      onSuccess: (result) => {
-        apiClient.post(submitEndpoint, { dto: formData, sign: result, filePath: documentUrl });
-      },
+      onSuccess: (result) => submitApplicationMetaData(result),
     });
     setSelectedCertificate(null);
     setOpen(false);
@@ -65,16 +70,16 @@ export const SignatureModal = ({ onConfirm, onCancel, documentUrl, submitEndpoin
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button>
+        <Button loading={isLoading} disabled={isLoadingSignature}>
           <Signature className="size-4" />
           Imzolash
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
-          <AlertDialogTitle>Elektron sertifikatni tanlang</AlertDialogTitle>
+          <AlertDialogTitle>Elektron kalitni tanlang</AlertDialogTitle>
           <AlertDialogDescription>
-            Imzolash uchun ERI sertifikatingizni tanlang. Bu amal orqali hujjat elektron imzolanadi va yuridik kuchga
+            Imzolash uchun ERI kalitingizni tanlang. Bu amal orqali hujjat elektron tarzda imzolanadi va yuridik kuchga
             ega bo'ladi.
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -85,7 +90,7 @@ export const SignatureModal = ({ onConfirm, onCancel, documentUrl, submitEndpoin
           {selectedCertificate && (
             <div className="mt-4 p-3 bg-green-50 rounded-md border border-green-100">
               <p className="text-sm text-green-800">
-                <span className="font-medium">Tanlangan sertifikat:</span> {selectedCertificate.CN}
+                <span className="font-medium">Tanlangan kalit:</span> {selectedCertificate.CN}
               </p>
             </div>
           )}

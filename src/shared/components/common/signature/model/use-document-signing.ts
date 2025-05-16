@@ -1,35 +1,27 @@
 import { toast } from 'sonner';
 import { apiClient } from '@/shared/api';
+import { useMutation } from '@tanstack/react-query';
 import { SignatureClient, SignatureKey } from '@/shared/types/signature';
 import { convertPdfToBase64 } from '@/shared/components/common/signature/model';
 import { getTimeStamp } from '@/shared/components/common/signature/api/get-time-stamp';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface SignDocumentParams {
   documentUrl: string;
   Client: SignatureClient;
   signature: SignatureKey | null;
-  onSuccess?: (result: any) => void; // Muvaffaqiyatli yakunlanganda callback
+  onSuccess?: (result: any) => void;
 }
 
 export function useDocumentSigning() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: signDocumentWithMetadata,
     onSuccess: (result, variables) => {
-      console.log('onsuccess result', result);
-      toast.success('Hujjat muvaffaqiyatli imzolandi!');
-
-      // Cache ni yangilash
-      queryClient.invalidateQueries({ queryKey: ['documents'] });
-
-      // Agar callback berilgan bo'lsa, uni chaqirish
       if (variables.onSuccess) {
         variables.onSuccess(result);
       }
     },
     onError: (error) => {
+      console.log('onError', error);
       toast.error(error.message, { richColors: true });
       console.error('Imzolash xatoligi:', error);
     },
@@ -55,7 +47,7 @@ export const signDocumentWithMetadata = async ({ Client, signature, documentUrl 
     // 2. Convert PDF to base64
     const documentBase64 = await convertPdfToBase64(documentUrl);
     if (!documentBase64) {
-      toast.error('Hujjat yuklanmadi');
+      toast.error('Hujjat ustida ishlashda xatolik!');
       return false;
     }
 
@@ -83,19 +75,6 @@ export const signDocumentWithMetadata = async ({ Client, signature, documentUrl 
       return false;
     }
 
-    // const serverResponse = await apiClient.post(options.submitEndpoint, {
-    //   sign: pkcs7b64,
-    //   filePath: documentUrl,
-    //   dto: options.formData,
-    // });
-
-    // if (signatureResponse.status === 200) {
-    //   toast.success('Hujjat imzolandi!');
-    //   return true;
-    // } else {
-    //   toast.error('Server javobida xatolik');
-    //   return false;
-    // }
     return pkcs7b64;
   } catch (error) {
     const errorMessage = getReadableErrorMessage(error);
@@ -148,7 +127,6 @@ function getReadableErrorMessage(error: unknown): string {
     }
   }
 
-  // Oddiy string xatoliklar
   if (typeof error === 'string') {
     return error;
   }

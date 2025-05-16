@@ -1,3 +1,5 @@
+import { toast } from 'sonner';
+import { apiClient } from '@/shared/api';
 import { useCallback, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { createPdf } from '../api/create-application';
@@ -41,12 +43,12 @@ export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }:
 
       try {
         if (!response.success || !response.data) {
-          throw new Error('Hujjat URLini olishda xatolik');
+          throw new Error('Hujjat URL ini olishda xatolik');
         }
 
         setDocumentUrl(response.data.data);
-      } catch (error) {
-        handleError(error.message);
+      } catch (_error) {
+        toast.error('Hujjat bilan ishlashda xatolik');
       } finally {
         setIsPdfLoading(false);
       }
@@ -81,18 +83,23 @@ export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }:
     setError(null);
   }, []);
 
-  const isLoading = isPdfLoading;
+  const { mutate: submitApplicationMetaData, isPending: isLoadingMetaData } = useMutation({
+    onSuccess: () => resetState(),
+    mutationKey: ['submit-application'],
+    mutationFn: (sign: string) => apiClient.post(submitEndpoint, { dto: formData, sign, filePath: documentUrl }),
+  });
+
+  const isLoading = isPdfLoading || isLoadingMetaData;
 
   return {
     error,
-    formData,
     isLoading,
     resetState,
     documentUrl,
     isModalOpen,
     isPdfLoading,
-    submitEndpoint,
     handleCloseModal,
     handleCreateApplication,
+    submitApplicationMetaData,
   };
 }

@@ -8,20 +8,17 @@ import { ApplicationTypeEnum, useApplicationFactory } from '@/entities/create-ap
 export const CreateApplicationForm = () => {
   const { type } = useParams<{ type: ApplicationTypeEnum }>();
   const {
-    isModalOpen,
-    isLoading,
-    formData,
-    isPdfLoading,
-    submitEndpoint,
     error,
+    isLoading,
     documentUrl,
-    handleCreateApplication,
+    isModalOpen,
+    isPdfLoading,
     handleCloseModal,
+    handleCreateApplication,
+    submitApplicationMetaData,
   } = useApplicationFactory({
     applicationType: type!,
-    onError: (error) => {
-      toast(error, { richColors: true });
-    },
+    onError: (error) => toast(error, { richColors: true }),
   });
 
   const handleFormSubmit = (data: any) => {
@@ -44,13 +41,12 @@ export const CreateApplicationForm = () => {
       {FormComponent && <FormComponent onSubmit={handleFormSubmit} />}
       <ApplicationModal
         error={error}
-        formData={formData}
         isOpen={isModalOpen}
         isLoading={isLoading}
         documentUrl={documentUrl!}
         onClose={handleCloseModal}
         isPdfLoading={isPdfLoading}
-        submitEndpoint={submitEndpoint}
+        submitApplicationMetaData={submitApplicationMetaData}
       />
     </Suspense>
   );
