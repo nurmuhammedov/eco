@@ -21,8 +21,6 @@ export function useDocumentSigning() {
       }
     },
     onError: (error) => {
-      console.log('onError', error);
-      toast.error(error.message, { richColors: true });
       console.error('Imzolash xatoligi:', error);
     },
   });
@@ -36,11 +34,13 @@ export const signDocumentWithMetadata = async ({ Client, signature, documentUrl 
       return false;
     }
 
-    const keyResponse = await Client.loadKey(signature as unknown as SignatureKey);
+    const keyResponse = await Client.loadKey(signature as unknown as SignatureKey).catch(() => {
+      toast.error("Kiritilgan parolni noto'g'ri!", { richColors: true });
+    });
     const keyId = keyResponse?.id;
 
     if (!keyId) {
-      toast.error('Kalit ID si olinmadi');
+      toast.error('Kalit topilmadi!', { richColors: true });
       return false;
     }
 
@@ -77,59 +77,8 @@ export const signDocumentWithMetadata = async ({ Client, signature, documentUrl 
 
     return pkcs7b64;
   } catch (error) {
-    const errorMessage = getReadableErrorMessage(error);
-    toast.error(errorMessage);
-    console.error('Imzolash xatoligi:', error);
+    console.log(90978978, error);
+    toast.error("Imzolash bilan bog'liq xatolik");
     return false;
   }
 };
-
-function getReadableErrorMessage(error: unknown): string {
-  if (!error) return "Noma'lum xatolik";
-
-  if (typeof error === 'object') {
-    // Axios xatoligi
-    if ('response' in error && error.response) {
-      const response = error.response as any;
-
-      // Backend dan xabar kelgan bo'lsa
-      if (response.data?.message) {
-        return response.data.message;
-      }
-      // Status kodga qarab
-      if (response.status === 401) {
-        return 'Avtorizatsiya xatoligi';
-      }
-      if (response.status === 403) {
-        return 'Ruxsat etilmagan amal';
-      }
-      if (response.status === 404) {
-        return "So'ralgan resurs topilmadi";
-      }
-      if (response.status >= 500) {
-        return "Server xatoligi. Iltimos keyinroq urinib ko'ring";
-      }
-
-      return `Server xatoligi: ${response.status}`;
-    }
-
-    // E-imzo xatoliklari
-    if ('message' in error) {
-      const message = (error as Error).message;
-      if (message.includes('password')) {
-        return "Parol noto'g'ri kiritildi!";
-      }
-      if (message.includes('key') || message.includes('kalit')) {
-        return "Kalit bilan bog'liq muammo yuzaga keldi";
-      }
-
-      return message;
-    }
-  }
-
-  if (typeof error === 'string') {
-    return error;
-  }
-
-  return "Noma'lum xatolik yuz berdi";
-}

@@ -3,6 +3,7 @@ import { apiClient } from '@/shared/api';
 import { useCallback, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { createPdf } from '../api/create-application';
+import { useNavigate } from 'react-router-dom';
 
 export type FormData = any;
 
@@ -13,6 +14,7 @@ export interface UseApplicationCreationProps {
 }
 
 export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }: UseApplicationCreationProps) {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -84,7 +86,13 @@ export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }:
   }, []);
 
   const { mutate: submitApplicationMetaData, isPending: isLoadingMetaData } = useMutation({
-    onSuccess: () => resetState(),
+    onSuccess: ({ success }) => {
+      if (success) {
+        resetState();
+        navigate('/applications');
+        toast.success('Ariza muvaffaqqiyatli yuborildi');
+      }
+    },
     mutationKey: ['submit-application'],
     mutationFn: (sign: string) => apiClient.post(submitEndpoint, { dto: formData, sign, filePath: documentUrl }),
   });
