@@ -41,8 +41,8 @@ export const appRoutes = [
   },
   {
     path: 'register',
-    component: RegionsPage,
-    roles: [UserRoles.LEGAL],
+    component: Applications,
+    roles: [UserRoles.LEGAL, UserRoles.REGIONAL],
   },
   {
     path: 'territories',

@@ -39,7 +39,8 @@
     "reports": "Ҳисоботлар",
     "hazardous_facilities": "ҲИЧОлар",
     "templates": "Шаблонлар",
-    "sub_types": "Қуйи турлар"
+    "sub_types": "Қуйи турлар",
+    "permits_authorization_documents": "Рухсат этувчи хужжатлар"
   },
   "app": {
     "name": "Саноат, радиация ва ядро хавфсизлиги қўмитаси экотизими"
