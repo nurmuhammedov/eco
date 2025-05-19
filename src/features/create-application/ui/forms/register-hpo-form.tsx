@@ -227,9 +227,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Loyiha hujjatlari(PDF)
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Loyiha hujjatlari(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -243,9 +241,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Sug‘urta polisi(PDF)
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sug‘urta polisi(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -291,9 +287,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Ekspertiza xulosasi(PDF)
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekspertiza xulosasi(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -307,9 +301,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Litsenziya(PDF)
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Litsenziya(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -323,9 +315,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Ekologiya qo‘mitasidan xulosasi(PDF)
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekologiya qo‘mitasidan xulosasi(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -339,9 +329,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Ruxsatnoma(PDF)
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ruxsatnoma(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -371,7 +359,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                     XICHO xodimlarning sanoat xavfsizligi bo‘yicha attestatsiyadan o‘tganligi(PDF)
                   </FormLabel>
                   <FormControl>
@@ -387,9 +375,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    XICHO kadastr pasporti(PDF)
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">XICHO kadastr pasporti(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -403,9 +389,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Yong‘in xavfsizligi xulosasi(PDF)
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Yong‘in xavfsizligi xulosasi(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -419,9 +403,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Sanoat xavfsizligi deklaratsiyasi(PDF)
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sanoat xavfsizligi deklaratsiyasi(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -435,9 +417,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Qurilmalarni sinovdan o‘tganligi(PDF)
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilmalarni sinovdan o‘tganligi(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
