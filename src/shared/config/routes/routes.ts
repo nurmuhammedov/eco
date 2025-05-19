@@ -27,7 +27,7 @@ export const appRoutes = [
   {
     path: 'applications',
     component: Applications,
-    roles: [UserRoles.LEGAL],
+    roles: [],
   },
   {
     path: 'applications/create',
