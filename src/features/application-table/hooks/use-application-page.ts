@@ -1,13 +1,14 @@
-import { useCallback, useState } from 'react';
-import { useTranslatedObject } from '@/shared/hooks';
 import { ApplicationStatus } from '@/entities/application';
+import { useApplicationList } from '@/features/application-table/hooks/index';
+import { useTranslatedObject } from '@/shared/hooks';
 import { filterParsers, useFilters } from '@/shared/hooks/use-filters';
+import { useCallback, useMemo } from 'react';
 
 export const useApplicationPage = () => {
   const moduleFilters = {
+    status: filterParsers.string(ApplicationStatus.ALL),
     search: filterParsers.string(),
     type: filterParsers.string(),
-    status: filterParsers.string(),
     fromDate: filterParsers.string(),
     toDate: filterParsers.string(),
   };
@@ -22,22 +23,8 @@ export const useApplicationPage = () => {
     debug: process.env.NODE_ENV === 'development',
   });
 
-  const [activeTab, setActiveTab] = useState(ApplicationStatus.ALL);
-
-  const prepareFiltersForApi = useCallback(() => {
-    const { page, size, search, type, status } = filters;
-
-    // api so'rovi uchun filtrlarni to'g'ri formatda tayyorlash
-    return {
-      page,
-      size,
-      search: search || undefined,
-      type: type || undefined,
-      status: status || undefined,
-    };
-  }, [filters]);
-
-  const data = () => [];
+  const { data = [] } = useApplicationList({ ...filters, status: filters?.status !== 'ALL' ? filters?.status : '' });
+  console.log(data, 'da');
 
   const filterValues = {
     search: filters.search || '',
@@ -57,12 +44,14 @@ export const useApplicationPage = () => {
     [setFilters],
   );
 
-  const handleTabChange = useCallback((value: ApplicationStatus | string) => {
-    setActiveTab(value as ApplicationStatus);
-  }, []);
+  const activeTab = useMemo<string>(() => filters['status'] as ApplicationStatus, [filters]);
+
+  const handleChangeTab = useCallback(
+    (tab: string) => setFilters((prev: any) => ({ ...prev, status: tab })),
+    [setFilters],
+  );
 
   const handleResetFilters = useCallback(() => {
-    // Faqat page va size qoldirib, qolgan barcha filtrlarni tozalash
     const currentPage = filters.page;
     const currentSize = filters.size;
 
@@ -77,8 +66,7 @@ export const useApplicationPage = () => {
 
   return {
     activeTab,
-    setActiveTab,
-    handleTabChange,
+    handleChangeTab,
     applicationStatus,
     applications: data || [],
     totalApplications: data || 0,

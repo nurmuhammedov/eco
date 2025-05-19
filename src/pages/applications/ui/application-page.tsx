@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 const ApplicationPage = () => {
   const navigate = useNavigate();
-  const { setFilters, activeTab, handleTabChange, applicationStatus } = useApplicationPage();
+  const { setFilters, activeTab, handleChangeTab, applicationStatus } = useApplicationPage();
 
   const canCreateApplication = useHasPermission(PERMISSIONS.APPEAL);
 
@@ -24,10 +24,11 @@ const ApplicationPage = () => {
       )
     );
   }, [canCreateApplication]);
+
   return (
-    <TabsLayout action={action} activeTab={activeTab} tabs={applicationStatus} onTabChange={handleTabChange}>
+    <TabsLayout action={action} activeTab={activeTab} tabs={applicationStatus} onTabChange={handleChangeTab}>
       <ApplicationFilters onFilter={setFilters} />
-      <ApplicationTable data={[]} onViewApplication={() => {}} />
+      <ApplicationTable />
     </TabsLayout>
   );
 };
