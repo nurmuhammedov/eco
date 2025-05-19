@@ -12,6 +12,11 @@ export default [
     icon: 'external-drive',
   },
   {
+    title: 'menu.permits_authorization_documents',
+    url: '/permits-authorization-documents',
+    icon: 'document',
+  },
+  {
     title: 'menu.accreditation',
     url: '/accreditation',
     icon: 'danger',
@@ -20,6 +25,11 @@ export default [
     title: 'menu.cadastre',
     url: '/cadastre',
     icon: 'box-search',
+  },
+  {
+    title: 'menu.risk_analysis',
+    url: '/risk-analysis',
+    icon: 'danger',
   },
   {
     title: 'menu.prophylactic',

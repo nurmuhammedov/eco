@@ -39,7 +39,8 @@
     "reports": "Hisobotlar",
     "hazardous_facilities": "XICHOlar",
     "templates": "Shablonlar",
-    "sub_types": "Quyi turlar"
+    "sub_types": "Quyi turlar",
+    "permits_authorization_documents": "Ruxsat etuvchi hujjatlar"
   },
   "app": {
     "name": "Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi ekotizimi"

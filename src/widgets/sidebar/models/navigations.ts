@@ -1,6 +1,7 @@
-import userNavigation from './user.ts';
-import adminNavigation from './admin.tsx';
+import userNavigation from './user';
+import adminNavigation from './admin';
 import { UserRoles } from '@/entities/user';
+import regionalUserNavigation from './regional-user';
 
 export const NAVIGATIONS = {
   [UserRoles.ADMIN]: adminNavigation,
@@ -10,5 +11,5 @@ export const NAVIGATIONS = {
   [UserRoles.HEAD]: [],
   [UserRoles.INSPECTOR]: [],
   [UserRoles.MANAGER]: [],
-  [UserRoles.REGIONAL]: [],
+  [UserRoles.REGIONAL]: regionalUserNavigation,
 };
