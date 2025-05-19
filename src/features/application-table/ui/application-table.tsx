@@ -1,65 +1,76 @@
-import { useTranslation } from 'react-i18next';
-import { ColumnDef } from '@tanstack/react-table';
+import { ApplicationStatusBadge } from '@/entities/application';
+import { useApplicationPage } from '@/features/application-table/hooks';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
+import { getDate } from '@/shared/utils/date';
+import { ColumnDef } from '@tanstack/react-table';
+import { useTranslation } from 'react-i18next';
 
-interface ApplicationTableProps {
-  data: any;
-  onViewApplication: (id: string) => void;
-}
-
-export const ApplicationTable = ({ data, onViewApplication }: ApplicationTableProps) => {
+export const ApplicationTable = () => {
   const { t } = useTranslation('common');
+  const { applications } = useApplicationPage();
 
   const handleViewApplication = (id: string) => {
-    onViewApplication(id);
+    // onViewApplication(id);
+    console.log(id);
   };
   const columns: ColumnDef<any>[] = [
     {
       maxSize: 30,
-      accessorKey: 'number',
       header: t('sequence_number'),
       cell: (cell) => cell.row.index + 1,
     },
     {
-      accessorKey: 'name',
+      accessorKey: 'number',
       header: 'Ariza raqami',
     },
     {
-      accessorKey: 'name',
       header: 'Ariza sanasi',
+      accessorFn: (row) => getDate(row.createdDate),
     },
     {
-      accessorKey: 'name',
+      // accessorKey: 'appealType',
       header: 'Ariza turi',
+      cell: () => 'XICHOni ro‘yxatga olish',
     },
     {
-      accessorKey: 'name',
+      minSize: 150,
+      accessorKey: 'officeName',
       header: 'Qo‘mita maʼsul bo‘limi',
     },
     {
-      accessorKey: 'name',
+      minSize: 200,
+      accessorKey: 'regionName',
       header: 'Ijrochi hududiy boshqarma',
     },
     {
-      accessorKey: 'name',
+      accessorKey: 'executorName',
       header: 'Maʼsul ijrochi',
     },
     {
-      accessorKey: 'name',
+      maxSize: 80,
       header: 'Ijro muddati',
+      accessorFn: (row) => getDate(row.deadline),
     },
     {
-      accessorKey: 'name',
       header: 'Ariza holati',
+      cell: (cell) => ApplicationStatusBadge({ status: cell.row.original.status }),
     },
     {
       id: 'actions',
-      maxSize: 20,
-      minSize: 10,
+      maxSize: 40,
+      // minSize: 20,
       cell: ({ row }) => (
         <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
       ),
     },
   ];
-  return <DataTable isPaginated data={data || []} columns={columns} className="h-[calc(100svh-270px)]" />;
+
+  return (
+    <DataTable
+      isPaginated
+      data={applications || []}
+      columns={columns as unknown as any}
+      className="h-[calc(100svh-270px)]"
+    />
+  );
 };

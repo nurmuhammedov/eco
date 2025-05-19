@@ -1,7 +1,9 @@
-import * as React from 'react';
-import { Fragment, useCallback } from 'react';
-import { cn } from '@/shared/lib/utils';
+import Icon from '@/shared/components/common/icon';
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/components/ui/table';
 import { useFilters } from '@/shared/hooks/use-filters';
+import { cn } from '@/shared/lib/utils';
+import { ResponseData } from '@/shared/types/api';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -15,13 +17,11 @@ import {
   useReactTable,
   VisibilityState,
 } from '@tanstack/react-table';
-
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/components/ui/table';
-import { ResponseData } from '@/shared/types/api';
+import * as React from 'react';
+import { Fragment, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DataTablePagination } from './data-table-pagination';
 import { getCommonPinningStyles } from './models/get-common-pinning';
-import Icon from '@/shared/components/common/icon';
-import { useTranslation } from 'react-i18next';
 
 interface DataTableProps<TData, TValue> {
   className?: string;
@@ -50,6 +50,7 @@ export function DataTable<TData, TValue>({
   const isContentData = data && typeof data === 'object' && 'content' in data;
 
   const tableData = isContentData ? data.content : data;
+  console.log('isContentData', tableData);
 
   const pageCount = isContentData ? data?.page?.totalPages : undefined;
 
