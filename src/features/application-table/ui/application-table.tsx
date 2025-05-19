@@ -4,14 +4,16 @@ import { DataTable, DataTableRowActions } from '@/shared/components/common/data-
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 export const ApplicationTable = () => {
   const { t } = useTranslation('common');
   const { applications } = useApplicationPage();
+  const navigate = useNavigate();
 
   const handleViewApplication = (id: string) => {
     // onViewApplication(id);
-    console.log(id);
+    navigate(`detail/${id}`);
   };
   const columns: ColumnDef<any>[] = [
     {

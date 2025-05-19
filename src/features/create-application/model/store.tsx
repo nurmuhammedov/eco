@@ -1,5 +1,5 @@
-import { ComponentType, lazy, LazyExoticComponent } from 'react';
 import { ApplicationTypeEnum } from '@/entities/create-application';
+import { ComponentType, lazy, LazyExoticComponent } from 'react';
 
 export interface FormComponentProps {
   onSubmit: (data: any) => void;
@@ -10,8 +10,8 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.RegisterHPO]: lazy(() => import('../ui/forms/register-hpo-form')),
   [ApplicationTypeEnum.RegisterLift]: lazy(() => import('../ui/forms/register-lift-form')),
   [ApplicationTypeEnum.RegisterCrane]: lazy(() => import('../ui/forms/register-crane-form')),
-  [ApplicationTypeEnum.RegisterBoiler]: lazy(() => import('../ui/forms/register-boiler-form')),
-  [ApplicationTypeEnum.RegisterSteamAndHotWaterPipeline]: lazy(() => import('../ui/forms/register-boiler-form')),
+  // [ApplicationTypeEnum.RegisterBoiler]: lazy(() => import('../ui/forms/register-boiler-form')),
+  // [ApplicationTypeEnum.RegisterSteamAndHotWaterPipeline]: lazy(() => import('../ui/forms/register-boiler-form')),
   [ApplicationTypeEnum.RegisterPressureVesselChemical]: lazy(
     () => import('../ui/forms/register-pressure-vessel-chemical'),
   ),

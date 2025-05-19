@@ -1,5 +1,5 @@
-import { lazy } from 'react';
 import { UserRoles } from '@/entities/user';
+import { lazy } from 'react';
 
 // Error pages
 const NotFound = lazy(() => import('@/pages/error/ui/page-not-found'));
@@ -7,6 +7,7 @@ const UnAuthorized = lazy(() => import('@/features/auth/ui/unauthorized'));
 
 // Application pages
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'));
+const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'));
 
 const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'));
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'));
@@ -38,6 +39,11 @@ export const appRoutes = [
     path: 'applications/create/:type',
     component: CreateApplicationForm,
     roles: [UserRoles.LEGAL],
+  },
+  {
+    path: 'applications/detail/:id',
+    component: ApplicationDetail,
+    roles: [],
   },
   {
     path: 'register',
