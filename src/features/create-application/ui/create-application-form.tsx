@@ -1,36 +1,24 @@
 import { toast } from 'sonner';
 import { Suspense } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getFormComponentByType, isValidApplicationType } from '../model/store';
 import { AppealFormSkeleton, ApplicationModal } from '@/features/create-application';
 import { ApplicationTypeEnum, useApplicationFactory } from '@/entities/create-application';
 
 export const CreateApplicationForm = () => {
-  const navigate = useNavigate();
   const { type } = useParams<{ type: ApplicationTypeEnum }>();
   const {
-    isModalOpen,
-    isLoading,
-    isPdfLoading,
     error,
+    isLoading,
     documentUrl,
-    handleCreateApplication,
-    handleSignDocument,
-    handleSubmitApplication,
+    isModalOpen,
+    isPdfLoading,
     handleCloseModal,
-    handleDownloadDocument,
+    handleCreateApplication,
+    submitApplicationMetaData,
   } = useApplicationFactory({
     applicationType: type!,
-    onSuccess: () => {
-      toast('Ariza muvaffaqiyatli yuborildi');
-
-      setTimeout(() => {
-        navigate('/applications');
-      }, 1000);
-    },
-    onError: (error) => {
-      toast(error, { richColors: true });
-    },
+    onError: (error) => toast(error, { richColors: true }),
   });
 
   const handleFormSubmit = (data: any) => {
@@ -58,9 +46,7 @@ export const CreateApplicationForm = () => {
         documentUrl={documentUrl!}
         onClose={handleCloseModal}
         isPdfLoading={isPdfLoading}
-        onSignDocument={handleSignDocument}
-        onDownloadDocument={handleDownloadDocument}
-        onSubmitApplication={handleSubmitApplication}
+        submitApplicationMetaData={submitApplicationMetaData}
       />
     </Suspense>
   );

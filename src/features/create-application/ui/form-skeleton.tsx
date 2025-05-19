@@ -12,10 +12,6 @@ export const AppealFormSkeleton = ({ length = 10, fileLength = 8 }: { length?: n
               <div className="h-9 bg-gray-200 rounded w-full 3xl:w-sm" />
             </div>
           ))}
-          <div className="3xl:w-4/6">
-            <div className="h-5 mb-2 w-48 bg-gray-200 rounded" />
-            <div className="h-28 bg-gray-200 rounded w-full" />
-          </div>
         </div>
       </CardForm>
       <CardForm className="grid grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4">

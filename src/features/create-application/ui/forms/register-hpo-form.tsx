@@ -1,6 +1,5 @@
 import { GoBack } from '@/shared/components/common';
 import { Input } from '@/shared/components/ui/input';
-import { Textarea } from '@/shared/components/ui/textarea';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { InputFile } from '@/shared/components/common/file-upload';
@@ -33,7 +32,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               name="upperOrganization"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Yuqori tashkilotning nomi (mavjud bo‘lsa)</FormLabel>
+                  <FormLabel>Yuqori tashkilotning nomi (mavjud bo‘lsa)</FormLabel>
                   <FormControl>
                     <Input className="w-full 3xl:w-sm" placeholder="Yuqori tashkilotning nomi" {...field} />
                   </FormControl>
@@ -220,19 +219,6 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               )}
             />
           </div>
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel required>Ariza bayoni</FormLabel>
-                <FormControl>
-                  <Textarea rows={6} className="3xl:w-4/6" placeholder="Ariza bayoni" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </CardForm>
         <CardForm className="grid grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
           <FormField
