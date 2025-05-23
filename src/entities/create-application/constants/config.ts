@@ -10,4 +10,8 @@ export const applicationConfigs: Record<string, any> = {
     pdfEndpoint: '/appeals/physical/generate-pdf',
     submitEndpoint: '/appeals/physical/create',
   },
+  [ApplicationTypeEnum.RegisterCrane]: {
+    pdfEndpoint: '/appeals/physical/generate-pdf',
+    submitEndpoint: '/appeals/physical/create',
+  },
 };

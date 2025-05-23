@@ -1,12 +1,9 @@
+import { CardForm } from '@/entities/create-application';
+import { useCreateHPOApplication } from '@/features/application/create-application';
 import { GoBack } from '@/shared/components/common';
-import { Input } from '@/shared/components/ui/input';
-import { PhoneInput } from '@/shared/components/ui/phone-input';
-import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
-import { CardForm } from '@/entities/create-application';
-import { useCreateHPOApplication } from '@/features/create-application';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { Button } from '@/shared/components/ui/button.tsx';
 import {
   Form,
   FormControl,
@@ -16,7 +13,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
-import { Button } from '@/shared/components/ui/button.tsx';
+import { Input } from '@/shared/components/ui/input';
+import { MultiSelect } from '@/shared/components/ui/multi-select';
+import { PhoneInput } from '@/shared/components/ui/phone-input';
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 
 export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
   const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } = useCreateHPOApplication();
@@ -255,9 +255,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Ma'sul xodim tayinlanganligi buyrug‘i(PDF)
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ma'sul xodim tayinlanganligi buyrug‘i(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>

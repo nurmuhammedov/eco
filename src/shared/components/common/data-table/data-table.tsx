@@ -1,7 +1,6 @@
 import Icon from '@/shared/components/common/icon';
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/components/ui/table';
-import { useFilters } from '@/shared/hooks/use-filters';
+import { useCustomSearchParams } from '@/shared/hooks';
 import { cn } from '@/shared/lib/utils';
 import { ResponseData } from '@/shared/types/api';
 import {
@@ -18,7 +17,7 @@ import {
   VisibilityState,
 } from '@tanstack/react-table';
 import * as React from 'react';
-import { Fragment, useCallback } from 'react';
+import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DataTablePagination } from './data-table-pagination';
 import { getCommonPinningStyles } from './models/get-common-pinning';
@@ -45,12 +44,10 @@ export function DataTable<TData, TValue>({
   pageSizeOptions,
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation('common');
-  const { filters, setFilters } = useFilters();
-
+  const { addParams } = useCustomSearchParams();
   const isContentData = data && typeof data === 'object' && 'content' in data;
 
   const tableData = isContentData ? data.content : data;
-  console.log('isContentData', tableData);
 
   const pageCount = isContentData ? data?.page?.totalPages : undefined;
 
@@ -59,27 +56,21 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
-  const handlePageChange = useCallback(
-    (page: number) => {
-      if (onPageChange) {
-        onPageChange(page);
-      } else if (isContentData) {
-        setFilters({ ...filters, page });
-      }
-    },
-    [filters, setFilters, onPageChange, isContentData],
-  );
+  const handlePageChange = (page: number) => {
+    if (onPageChange) {
+      onPageChange(page);
+    } else if (isContentData) {
+      addParams({ page });
+    }
+  };
 
-  const handlePageSizeChange = useCallback(
-    (size: number) => {
-      if (onPageSizeChange) {
-        onPageSizeChange(size);
-      } else if (isContentData) {
-        setFilters({ ...filters, page: 1, size });
-      }
-    },
-    [filters, setFilters, onPageSizeChange, isContentData],
-  );
+  const handlePageSizeChange = (size: number) => {
+    if (onPageSizeChange) {
+      onPageSizeChange(size);
+    } else if (isContentData) {
+      addParams({ size }, 'page');
+    }
+  };
 
   const table = useReactTable({
     data: tableData,

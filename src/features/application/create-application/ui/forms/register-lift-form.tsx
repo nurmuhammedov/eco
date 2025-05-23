@@ -1,14 +1,14 @@
-import { GoBack } from '@/shared/components/common';
-import { Input } from '@/shared/components/ui/input';
-import { Button } from '@/shared/components/ui/button';
-import { NoteForm } from '@/features/create-application';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
-import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload';
 import { CardForm } from '@/entities/create-application/ui/application-form-card';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { NoteForm } from '@/features/application/create-application';
+import { GoBack } from '@/shared/components/common';
+import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload';
+import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
+import { Button } from '@/shared/components/ui/button';
+import DatePicker from '@/shared/components/ui/datepicker';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { useCreateLiftApplication } from '@/features/create-application/model/use-create-lift-application.ts';
+import { Input } from '@/shared/components/ui/input';
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { useCreateLiftApplication } from '../../model/use-create-lift-application.ts';
 
 export default () => {
   const { form, handleSubmit, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
@@ -181,82 +181,72 @@ export default () => {
                 </FormItem>
               )}
             />
-            <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
-              <FormField
-                control={form.control}
-                name="partialCheckDate"
-                render={({ field }) => (
-                  <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>Qisman texnik ko'rik sanasi</FormLabel>
-                    <DatePicker
-                      value={field.value}
-                      onChange={field.onChange}
-                      placeholder="Qisman texnik ko'rik sanasi"
+            <FormField
+              control={form.control}
+              name="partialCheckDate"
+              render={({ field }) => (
+                <FormItem className="w-full 3xl:w-sm">
+                  <FormLabel required>Qisman texnik ko'rik sanasi</FormLabel>
+                  <DatePicker value={field.value} onChange={field.onChange} placeholder="Qisman texnik ko'rik sanasi" />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="fullCheckDate"
+              render={({ field }) => (
+                <FormItem className="w-full 3xl:w-sm">
+                  <FormLabel required>To'liq texnik ko'rik sanasi</FormLabel>
+                  <DatePicker value={field.value} onChange={field.onChange} placeholder="To'liq texnik ko'rik sanasi" />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="liftingCapacity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Yuk ko'tara olish</FormLabel>
+                  <FormControl>
+                    <Input className="w-full 3xl:w-sm" placeholder="Yuk ko'tara olish" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="stopCount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>To'xtashlar soni</FormLabel>
+                  <FormControl>
+                    <Input
+                      min={1}
+                      type="number"
+                      className="w-full 3xl:w-sm"
+                      placeholder="To'xtashlar soni"
+                      {...field}
                     />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="fullCheckDate"
-                render={({ field }) => (
-                  <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>To'liq texnik ko'rik sanasi</FormLabel>
-                    <DatePicker
-                      value={field.value}
-                      onChange={field.onChange}
-                      placeholder="To'liq texnik ko'rik sanasi"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="liftingCapacity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Yuk ko'tara olish</FormLabel>
-                    <FormControl>
-                      <Input className="w-full 3xl:w-sm" placeholder="Yuk ko'tara olish" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="stopCount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>To'xtashlar soni</FormLabel>
-                    <FormControl>
-                      <Input
-                        min={1}
-                        type="number"
-                        className="w-full 3xl:w-sm"
-                        placeholder="To'xtashlar soni"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="labelPath"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Liftning birkasi bilan sur'ati</FormLabel>
-                    <FormControl>
-                      <InputFile className="w-full 3xl:w-sm" form={form} {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="labelPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Liftning birkasi bilan sur'ati</FormLabel>
+                  <FormControl>
+                    <InputFile className="w-full 3xl:w-sm" form={form} {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
           </div>
         </CardForm>
         <CardForm className="grid grid-cols-2 2xl:grid-cols-3 gap-x-16 gap-y-6">

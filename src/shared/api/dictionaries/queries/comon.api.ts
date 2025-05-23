@@ -1,5 +1,5 @@
 import { apiClient } from '@/shared/api';
-import type { ResponseData } from '@/shared/types';
+import type { ApiResponse, ResponseData } from '@/shared/types';
 
 export const CommonService = {
   getPaginatedData: async <T>(endpoint: string, params = {}): Promise<ResponseData<T>> => {
@@ -28,8 +28,8 @@ export const CommonService = {
   },
 
   async getDetail<T>(endpoint: string, id: string, params = {}): Promise<T> {
-    const response = await apiClient.get<T>(`${endpoint}/${id}`, params);
-    return response.data;
+    const response = await apiClient.get<ApiResponse<T>>(`${endpoint}/${id}`, params);
+    return response.data?.data;
   },
 
   async getData<T>(endpoint: string, params = {}): Promise<T> {
