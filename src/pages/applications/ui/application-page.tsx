@@ -1,18 +1,20 @@
-import { useMemo } from 'react';
-import { PlusCircle } from 'lucide-react';
-import { TabsLayout } from '@/shared/layouts';
-import { useHasPermission } from '@/shared/hooks';
+import { ApplicationStatus } from '@/entities/application';
 import { PERMISSIONS } from '@/entities/permission';
+import { ApplicationTable } from '@/features/application/application-table';
+import { useApplicationPage } from '@/features/application/application-table/hooks';
 import { Button } from '@/shared/components/ui/button';
-import { useApplicationPage } from '@/pages/applications';
-import { ApplicationTable } from '@/features/application-table';
-import { ApplicationFilters } from '@/features/application-filters';
+import { useCustomSearchParams, useHasPermission } from '@/shared/hooks';
+import { TabsLayout } from '@/shared/layouts';
+import { PlusCircle } from 'lucide-react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ApplicationPage = () => {
   const navigate = useNavigate();
-  const { setFilters, activeTab, handleChangeTab, applicationStatus } = useApplicationPage();
-
+  const { handleChangeTab, applicationStatus } = useApplicationPage();
+  const {
+    paramsObject: { status = ApplicationStatus.ALL },
+  } = useCustomSearchParams();
   const canCreateApplication = useHasPermission(PERMISSIONS.APPEAL);
 
   const action = useMemo(() => {
@@ -26,8 +28,7 @@ const ApplicationPage = () => {
   }, [canCreateApplication]);
 
   return (
-    <TabsLayout action={action} activeTab={activeTab} tabs={applicationStatus} onTabChange={handleChangeTab}>
-      <ApplicationFilters onFilter={setFilters} />
+    <TabsLayout action={action} activeTab={status} tabs={applicationStatus} onTabChange={handleChangeTab}>
       <ApplicationTable />
     </TabsLayout>
   );

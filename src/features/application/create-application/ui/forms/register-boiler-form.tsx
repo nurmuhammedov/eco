@@ -7,7 +7,7 @@
 // import { CardForm } from '@/entities/create-application/ui/application-form-card';
 // import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-// import { useCreateBoilerApplication } from '@/features/create-application/model';
+// import { useCreateBoilerApplication } from '@/features/application/create-application/model';
 //
 // export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
 //   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =

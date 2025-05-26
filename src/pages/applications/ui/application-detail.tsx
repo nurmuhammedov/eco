@@ -1,15 +1,16 @@
-import { ApplicationDetail } from '@/features/application-detail';
-import { useApplicationDetail } from '@/features/application-detail/hooks/use-application-detail';
+import { ApplicationDetail } from '@/features/application/application-detail';
 import { GoBack } from '@/shared/components/common';
+import { useDetail } from '@/shared/hooks';
 import { useParams } from 'react-router-dom';
 
 const ApplicationPage = () => {
   const { id = '' } = useParams();
-  const { data } = useApplicationDetail(id, {});
+  const { data } = useDetail<any>('/appeals/', id);
 
+  console.log(data);
   return (
     <div>
-      <GoBack title={'Ариза рақами: 1-XIC-2025'} />
+      <GoBack title={`Ариза рақами: ${data?.number || ''}`} />
       <ApplicationDetail data={data} />
     </div>
   );

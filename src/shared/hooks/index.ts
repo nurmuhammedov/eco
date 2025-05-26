@@ -1,4 +1,5 @@
 export * from './use-permission';
+export * from './api';
 export { useSignatureClient } from './useSignatureClient';
 export { useCurrentRole } from './use-current-role';
 export { useUIActionLabel } from './use-ui-action-label';

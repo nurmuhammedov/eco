@@ -1,6 +1,9 @@
-import { ApplicationStatusBadge } from '@/entities/application';
-import { useApplicationPage } from '@/features/application-table/hooks';
+import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application';
+import { APPLICATIONS_DATA } from '@/entities/create-application';
+import { useApplicationList } from '@/features/application/application-table/hooks';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
+import { useCustomSearchParams } from '@/shared/hooks';
+import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
@@ -8,14 +11,17 @@ import { useNavigate } from 'react-router-dom';
 
 export const ApplicationTable = () => {
   const { t } = useTranslation('common');
-  const { applications } = useApplicationPage();
+  const {
+    paramsObject: { status = ApplicationStatus.ALL, ...rest },
+  } = useCustomSearchParams();
+  const { data: applications = [] } = useApplicationList({ ...rest, status: status !== 'ALL' ? status : '' });
+
   const navigate = useNavigate();
 
   const handleViewApplication = (id: string) => {
-    // onViewApplication(id);
     navigate(`detail/${id}`);
   };
-  const columns: ColumnDef<any>[] = [
+  const columns: ColumnDef<ISearchParams>[] = [
     {
       maxSize: 30,
       header: t('sequence_number'),
@@ -23,16 +29,17 @@ export const ApplicationTable = () => {
     },
     {
       accessorKey: 'number',
+      maxSize: 100,
       header: 'Ariza raqami',
     },
     {
       header: 'Ariza sanasi',
-      accessorFn: (row) => getDate(row.createdDate),
+      maxSize: 100,
+      accessorFn: (row) => getDate(row.createdAt),
     },
     {
-      // accessorKey: 'appealType',
       header: 'Ariza turi',
-      cell: () => 'XICHOni ro‘yxatga olish',
+      cell: (cell) => APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.title || '',
     },
     {
       minSize: 150,
@@ -60,7 +67,6 @@ export const ApplicationTable = () => {
     {
       id: 'actions',
       maxSize: 40,
-      // minSize: 20,
       cell: ({ row }) => (
         <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
       ),

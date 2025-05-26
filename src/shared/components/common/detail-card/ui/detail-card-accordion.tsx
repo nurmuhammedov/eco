@@ -1,7 +1,7 @@
-import { FC } from 'react';
-import { cn } from '@/shared/lib/utils';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/shared/components/ui/accordion';
 import Icon from '@/shared/components/common/icon';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/shared/components/ui/accordion';
+import { cn } from '@/shared/lib/utils';
+import { FC } from 'react';
 import type { DetailCardAccordionItemProps, DetailCardAccordionProps } from '../model/detail-card-types';
 
 export const DetailCardAccordion: FC<DetailCardAccordionProps> & {

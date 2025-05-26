@@ -1,9 +1,9 @@
-import { toast } from 'sonner';
+import { ApplicationTypeEnum, useApplicationFactory } from '@/entities/create-application';
+import { AppealFormSkeleton, ApplicationModal } from '@/features/application/create-application';
 import { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import { getFormComponentByType, isValidApplicationType } from '../model/store';
-import { AppealFormSkeleton, ApplicationModal } from '@/features/create-application';
-import { ApplicationTypeEnum, useApplicationFactory } from '@/entities/create-application';
 
 export const CreateApplicationForm = () => {
   const { type } = useParams<{ type: ApplicationTypeEnum }>();
