@@ -1,9 +1,8 @@
-// src/features/view-pdf/ui/pdf-viewer.tsx
-import { useEffect, useRef, useState } from 'react';
-import { cn } from '@/shared/lib/utils';
-import { isPDFUrl } from '@/shared/lib';
-import { Button } from '@/shared/components/ui/button';
 import { apiConfig } from '@/shared/api/constants.ts';
+import { Button } from '@/shared/components/ui/button';
+import { isPDFUrl } from '@/shared/lib';
+import { cn } from '@/shared/lib/utils';
+import { useEffect, useRef, useState } from 'react';
 
 // Zoom darajasi uchun enum
 export enum ZoomLevel {
@@ -47,6 +46,7 @@ export const PDFViewer = ({
   title,
   className,
   width = '100%',
+  height = '600px',
   viewMode = ViewMode.SINGLE_PAGE,
   showToolbar = false,
   lightMode = true,
@@ -57,14 +57,14 @@ export const PDFViewer = ({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('PDF faylni yuklashda xatolik yuz berdi');
-  const [key, setKey] = useState<number>(0); // iframe ni yangilash uchun key
+  const [key, setKey] = useState<number>(0);
 
   useEffect(() => {
     if (!documentUrl) {
       setHasError(true);
       setErrorMessage("PDF URL ko'rsatilmagan");
       setIsLoading(false);
-      if (onError) onError(new Error("PDF URL ko'rsatilmagan"));
+      onError?.(new Error("PDF URL ko'rsatilmagan"));
       return;
     }
 
@@ -72,25 +72,24 @@ export const PDFViewer = ({
       setHasError(true);
       setErrorMessage("PDF URL noto'g'ri formatda");
       setIsLoading(false);
-      if (onError) onError(new Error("PDF URL noto'g'ri formatda"));
+      onError?.(new Error("PDF URL noto'g'ri formatda"));
       return;
     }
 
     setHasError(false);
     setIsLoading(true);
-
     setKey((prev) => prev + 1);
   }, [documentUrl, onError]);
 
   const handleIframeLoad = () => {
     setIsLoading(false);
-    if (onLoad) onLoad();
+    onLoad?.();
   };
 
   const handleIframeError = () => {
     setHasError(true);
     setIsLoading(false);
-    if (onError) onError(new Error('PDF faylni yuklashda xatolik yuz berdi'));
+    onError?.(new Error('PDF faylni yuklashda xatolik yuz berdi'));
   };
 
   const handleDownload = () => {
@@ -99,22 +98,16 @@ export const PDFViewer = ({
 
   const getPdfUrl = () => {
     if (!documentUrl) return '';
-
-    // Asosiy URL
     const baseUrl = documentUrl.split('#')[0];
-
     const toolbarParam = showToolbar ? '1' : '0';
-
-    const bgColor = lightMode ? '#ffffff' : '#ffffff';
-
+    const bgColor = lightMode ? '#ffffff' : '#1f1f1f';
     const params = [`toolbar=${toolbarParam}`, 'navpanes=0', `view=${viewMode}`, `bgcolor=${bgColor}`].join('&');
-
     return `${apiConfig.baseURL}${baseUrl}#${params}`;
   };
 
   if (hasError) {
     return (
-      <div className="border rounded-lg p-6 bg-red-50 text-red-700">
+      <div className="border rounded-lg p-6 bg-red-100 dark:bg-red-200/50 text-red-800">
         <h3 className="text-lg font-semibold mb-2">Xatolik yuz berdi</h3>
         <p>{errorMessage}</p>
         {documentUrl && isPDFUrl(documentUrl) && (
@@ -130,29 +123,37 @@ export const PDFViewer = ({
   }
 
   return (
-    <div className={cn('w-full overflow-hidden rounded-md shadow-sm', className)} style={{ width }}>
+    <div
+      className={cn(
+        'relative w-full overflow-hidden rounded-md shadow border border-gray-200 dark:border-gray-600',
+        className,
+      )}
+      style={{ width, height }}
+    >
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 z-10">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
           <div className="text-center">
-            <div className="inline-block w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mb-2"></div>
-            <p className="text-gray-500">PDF yuklanmoqda...</p>
+            <div className="inline-block w-8 h-8 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin mb-2"></div>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">PDF yuklanmoqda...</p>
           </div>
         </div>
       )}
 
-      <div className="bg-white h-[600px] 3xl:h-[900px]">
-        <iframe
-          key={key}
-          width="100%"
-          allowFullScreen
-          ref={iframeRef}
-          src={getPdfUrl()}
-          onLoad={handleIframeLoad}
-          onError={handleIframeError}
-          title={title || 'PDF Viewer'}
-          className={cn('w-full h-full rounded-b-md', isLoading ? 'opacity-0' : 'opacity-100')}
-        />
-      </div>
+      <iframe
+        key={key}
+        width="100%"
+        height="100%"
+        allowFullScreen
+        ref={iframeRef}
+        src={getPdfUrl()}
+        onLoad={handleIframeLoad}
+        onError={handleIframeError}
+        title={title || 'PDF Viewer'}
+        className={cn(
+          'w-full h-full rounded-md transition-opacity duration-300',
+          isLoading ? 'opacity-0' : 'opacity-100',
+        )}
+      />
     </div>
   );
 };
