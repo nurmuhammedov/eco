@@ -21,6 +21,7 @@ export const ApplicationTable = () => {
   const handleViewApplication = (id: string) => {
     navigate(`detail/${id}`);
   };
+
   const columns: ColumnDef<ISearchParams>[] = [
     {
       maxSize: 30,
@@ -78,7 +79,7 @@ export const ApplicationTable = () => {
       isPaginated
       data={applications || []}
       columns={columns as unknown as any}
-      className="h-[calc(100svh-270px)]"
+      className="h-[calc(100svh-220px)]"
     />
   );
 };
