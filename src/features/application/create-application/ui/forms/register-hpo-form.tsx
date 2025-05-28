@@ -227,7 +227,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Loyiha hujjatlari(PDF)</FormLabel>
+                  <FormLabel>Loyiha hujjatlari(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -241,7 +241,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sug‘urta polisi(PDF)</FormLabel>
+                  <FormLabel>Sug‘urta polisi(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -255,7 +255,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ma'sul xodim tayinlanganligi buyrug‘i(PDF)</FormLabel>
+                  <FormLabel>Ma'sul xodim tayinlanganligi buyrug‘i(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
