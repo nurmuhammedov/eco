@@ -110,3 +110,23 @@ export enum ApplicationTypeEnum {
   ACCEPT_IRS = 'ACCEPT_IRS',
   TRANSFER_IRS = 'TRANSFER_IRS',
 }
+
+export enum IrsIdentifierType {
+  SRM = 'SRM',
+  NUM = 'NUM',
+}
+
+export enum IrsCategory {
+  I = 'I',
+  II = 'II',
+  III = 'III',
+  IV = 'IV',
+  V = 'V',
+}
+
+export enum IrsUsageType {
+  USAGE = 'USAGE', // Ishlatish (foydalanish) uchun
+  DISPOSAL = 'DISPOSAL', // Ko‘mish uchun
+  EXPORT = 'EXPORT', // Chet-elga olib chiqish uchun
+  STORAGE = 'STORAGE', // Vaqtinchalik saqlash uchun
+}

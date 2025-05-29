@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createApplicationsAPI } from '@/entities/create-application';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useCreateHPOApplicationMutations = () => {
   const queryClient = useQueryClient();

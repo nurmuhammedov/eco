@@ -95,7 +95,7 @@
     "CHEMICAL_CONTAINER": "Kimyoviy idish",
     "HEAT_PIPELINE": "Issiqlik quvuri",
     "BOILER_UTILIZER": "Qozon utilizatori",
-    "LPG_CONTAINER": "Suyultirilgan gaz idishi",
+    "LPG_CONTAINER": "Bosim ostida ishlovchi idishlari (SUG)",
     "LPG_POWERED": "Suyultirilgan gaz bilan ishlaydigan"
   },
   "application_status": {

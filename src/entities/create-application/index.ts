@@ -9,6 +9,18 @@ export * from './constants/constants';
 export * from './schemas/register-hpo.schema';
 export * from './schemas/register-crane.schema';
 export * from './schemas/register-lift.schema';
+export * from './schemas/register-container.schema';
+export * from './schemas/register-boiler.schema';
+export * from './schemas/register-escalator.schema';
+export * from './schemas/register-pipeline.schema';
+export * from './schemas/register-chemical-container.schema';
+export * from './schemas/register-heat-pipeline.schema';
+export * from './schemas/register-boiler-utilizer.schema';
+export * from './schemas/register-lpg-container.schema';
+export * from './schemas/register-lpg-powered.schema';
+export * from './schemas/register-hoist.schema';
+export * from './schemas/register-cableway.schema';
+export * from './schemas/register-irs.schema';
 
 //other
 export * from './ui/application-card';
