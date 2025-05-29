@@ -1,6 +1,6 @@
 // src/features/application/create-application/ui/forms/register-lpg-powered-form.tsx
 import { CardForm, CreateLpgPoweredApplicationDTO } from '@/entities/create-application';
-import { NoteForm } from '@/features/application/create-application';
+import { NoteForm, useCreateLpgPoweredApplication } from '@/features/application/create-application';
 import { GoBack } from '@/shared/components/common';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
@@ -12,7 +12,6 @@ import { Input } from '@/shared/components/ui/input';
 import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { parseISO } from 'date-fns';
-import { useCreateLpgPoweredApplication } from '../../model/use-create-lpg-powered-application';
 
 interface RegisterLpgPoweredFormProps {
   onSubmit: (data: CreateLpgPoweredApplicationDTO) => void;
