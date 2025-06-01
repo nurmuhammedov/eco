@@ -21,23 +21,33 @@ export const HFAppealDtoSchema = z.object({
     .string({
       required_error: 'Koordinatalar kiritilmadi!',
     })
-    .min(1, 'Manzil kiritilmadi!'),
-  hfTypeId: z.string({
-    required_error: 'XICHO turi tanlanmadi!',
-  }),
-  regionId: z.string({
-    required_error: 'Viloyat tanlanmadi!',
-  }),
-  districtId: z.string({
-    required_error: 'Tuman tanlanmadi!',
-  }),
+    .min(1, 'Koordinatalar kiritilmadi!'),
+  hfTypeId: z
+    .string({
+      required_error: 'XICHO turi tanlanmadi!',
+    })
+    .min(1, 'XICHO turi tanlanmadi!'),
+  regionId: z
+    .string({
+      required_error: 'Viloyat tanlanmadi!',
+    })
+    .min(1, 'Viloyat tanlanmadi!'),
+  districtId: z
+    .string({
+      required_error: 'Tuman tanlanmadi!',
+    })
+    .min(1, 'Tuman tanlanmadi!'),
   upperOrganization: z.string().optional(),
-  name: z.string({ required_error: 'XICHO ning nomi kiritilmadi!' }),
+  name: z.string({ required_error: 'XICHO ning nomi kiritilmadi!' }).min(1, 'XICHO ning nomi kiritilmadi!'),
   extraArea: z.string({ required_error: 'Maydon kiritilmadi!' }).min(1, 'Maydon kiritilmadi!'),
   hazardousSubstance: z.string({ required_error: 'Maydon kiritilmadi!' }).min(1, 'Maydon kiritilmadi!'),
-  spheres: z.array(HFSphereEnum, { required_error: 'Tarmoqlar tanlanmadi!' }),
-  identificationCardPath: z.string({ required_error: 'Fayl biriktirilmadi!' }),
-  receiptPath: z.string({ required_error: 'Fayl biriktirilmadi!' }),
+  spheres: z.array(HFSphereEnum, { required_error: 'Tarmoqlar tanlanmadi!' }).min(1, 'Tarmoqlar tanlanmadi!'),
+  identificationCardPath: z
+    .string({ required_error: 'Identifikatsiya varag‘i fayli biriktirilmadi!' })
+    .min(1, 'Identifikatsiya varag‘i fayli biriktirilmadi!'),
+  receiptPath: z
+    .string({ required_error: 'XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi fayli biriktirilmadi!' })
+    .min(1, 'XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi fayli biriktirilmadi!'),
   expertOpinionPath: z.string().optional(),
   projectDocumentationPath: z.string().optional(),
   cadastralPassportPath: z.string().optional(),

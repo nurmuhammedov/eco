@@ -1,5 +1,6 @@
-import { CardForm, CreateCraneApplicationDTO } from '@/entities/create-application';
-import { NoteForm, useCreateCraneApplication } from '@/features/application/create-application';
+// src/features/application/create-application/ui/forms/register-cableway-form.tsx
+import { CardForm, CreateCablewayApplicationDTO } from '@/entities/create-application';
+import { NoteForm, useCreateCablewayApplication } from '@/features/application/create-application';
 import { GoBack } from '@/shared/components/common';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
@@ -12,19 +13,19 @@ import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { parseISO } from 'date-fns';
 
-interface RegisterCraneFormProps {
-  onSubmit: (data: CreateCraneApplicationDTO) => void;
+interface RegisterCablewayFormProps {
+  onSubmit: (data: CreateCablewayApplicationDTO) => void;
 }
 
-export default ({ onSubmit }: RegisterCraneFormProps) => {
+export default ({ onSubmit }: RegisterCablewayFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
-    useCreateCraneApplication();
+    useCreateCablewayApplication();
 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="Kranni roʻyxatga olish" />
-        <NoteForm equipmentName="kran" />
+        <GoBack title="Osma arqonli yuruvchi yo‘lni ro‘yxatga olish" />
+        <NoteForm equipmentName="osma yo‘l" />
         <CardForm className="mb-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
             <FormField
@@ -45,11 +46,11 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="hazardousFacilityId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>XICHO ni tanlang</FormLabel>
+                  <FormLabel>XICHO‘ tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value || ''}>
                       <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
+                        <SelectValue placeholder="XICHO‘ni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
                     </Select>
@@ -63,11 +64,11 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="childEquipmentId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Kran turini tanlang</FormLabel>
+                  <FormLabel required>Osma yo‘l turini tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="Kran turini tanlang" />
+                        <SelectValue placeholder="Osma yo‘l turini tanlang" />
                       </SelectTrigger>
                       <SelectContent>{childEquipmentOptions}</SelectContent>
                     </Select>
@@ -81,9 +82,9 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="factoryNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Kranning zavod raqami</FormLabel>
+                  <FormLabel required>Osma yo‘lning zavod raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Kranning zavod raqami" {...field} />
+                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning zavod raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -94,7 +95,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="factory"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Ishlab chiqargan zavod nomi</FormLabel>
+                  <FormLabel required>Osma yo‘l egasining nomi</FormLabel>
                   <FormControl>
                     <Input className="w-full 3xl:w-sm" placeholder="Ishlab chiqargan zavod nomi" {...field} />
                   </FormControl>
@@ -117,32 +118,6 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
             />
             <FormField
               control={form.control}
-              name="boomLength"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Strelasining uzunligi (m)</FormLabel>
-                  <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Strelasining uzunligi" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="liftingCapacity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Yuk koʻtara olish quvvati (tonna)</FormLabel>
-                  <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Yuk koʻtara olish quvvati" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="manufacturedAt"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
@@ -152,43 +127,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Sanani tanlang"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="partialCheckDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>Qisman texnik koʻrik sanasi</FormLabel>
-                    <DatePicker
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Sanani tanlang"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="fullCheckDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>Toʻliq texnik koʻrik sanasi</FormLabel>
-                    <DatePicker
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Sanani tanlang"
+                      placeholder="Ishlab chiqarilgan sana"
                     />
                     <FormMessage />
                   </FormItem>
@@ -200,7 +139,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="regionId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Kran joylashgan viloyat</FormLabel>
+                  <FormLabel required>Osma yo‘l joylashgan viloyat</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={(value) => {
@@ -212,7 +151,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                       value={field.value?.toString()}
                     >
                       <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="Viloyatni tanlang" />
+                        <SelectValue placeholder="Qurilma joylashgan viloyat" />
                       </SelectTrigger>
                       <SelectContent>{regionOptions}</SelectContent>
                     </Select>
@@ -226,7 +165,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="districtId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Kran joylashgan tuman</FormLabel>
+                  <FormLabel required>Osma yo‘l joylashgan tuman</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -234,7 +173,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                       disabled={!form.watch('regionId')}
                     >
                       <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="Tumanni tanlang" />
+                        <SelectValue placeholder="Qurilma joylashgan tuman" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
                     </Select>
@@ -248,9 +187,9 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Qurilma joylashgan manzil</FormLabel>
+                  <FormLabel required>Osma yo‘lning joylashgan manzili</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Aniq manzilni kiriting" {...field} />
+                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning joylashgan manzili" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -261,13 +200,106 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="location"
               render={({ field }) => (
                 <FormItem className="w-full 3xl:w-sm">
-                  <FormLabel required>Joylashuv (Xarita)</FormLabel>
+                  <FormLabel required>Geolokatsiya (xaritadan joyni tanlang va koordinatalarni kiriting)</FormLabel>
                   <FormControl>
                     <YandexMapModal
                       initialCoords={field.value ? field.value.split(',').map(Number) : null}
                       onConfirm={(coords) => field.onChange(coords)}
                       label="Xaritadan belgilash"
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="partialCheckDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                return (
+                  <FormItem className="w-full 3xl:w-sm">
+                    <FormLabel required>Qisman texnik ko‘rik sanasi</FormLabel>
+                    <DatePicker
+                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                      onChange={field.onChange}
+                      placeholder="Qisman texnik ko‘rik sanasini kiriting"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="fullCheckDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                return (
+                  <FormItem className="w-full 3xl:w-sm">
+                    <FormLabel required>To‘liq texnik ko‘rik sanasi</FormLabel>
+                    <DatePicker
+                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                      onChange={field.onChange}
+                      placeholder="To‘liq texnik ko‘rik sanasini kiriting"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="nonDestructiveCheckDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                return (
+                  <FormItem className="w-full 3xl:w-sm">
+                    <FormLabel required>Putur yetkazmaydigan nazoratdan o‘tkazish sanasi</FormLabel>
+                    <DatePicker
+                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                      onChange={field.onChange}
+                      placeholder="Putur yetkazmaydigan nazorat sanasi"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="speed"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Harakat tezligi</FormLabel>
+                  <FormControl>
+                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Harakat tezligi" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="passengerCount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Yo‘lovchilar soni</FormLabel>
+                  <FormControl>
+                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Yo‘lovchilar soni" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="length"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Uzunligi</FormLabel>
+                  <FormControl>
+                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Uzunligi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -283,13 +315,12 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Kranning birkasi bilan surati
+                    Osma yo‘lning birkasi bilan sur‘ati
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
+                    <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
                   </FormControl>
                 </div>
-                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
@@ -300,13 +331,12 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Sotib olish-sotish shartnomasi
+                    Sotib olish-sotish shartnomasi fayli
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
-                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
@@ -317,13 +347,12 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Qurilma sertifikati
+                    Osma yo‘l sertifikati fayli
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
-                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
@@ -334,13 +363,12 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Masʼul shaxs tayinlanganligi to‘g‘risida buyruq
+                    Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq fayli
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
-                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
@@ -351,13 +379,12 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Ekspertiza loyihasi
+                    Ekspertiza loyihasi fayli
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
-                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
@@ -368,13 +395,12 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Montaj guvohnomasi (avtokrandan tashqari)
+                    Montaj guvohnomasi fayli
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
-                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
@@ -384,12 +410,11 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qoʻshimcha maʼlumotlar</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qo‘shimcha ma‘lumotlar</FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
-                <FormMessage className="text-right" />
               </FormItem>
             )}
           />

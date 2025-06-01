@@ -1,4 +1,5 @@
-import { CraneAppealDtoSchema, CreateCraneApplicationDTO } from '@/entities/create-application';
+// src/features/application/create-application/model/use-create-pipeline-application.ts
+import { CreatePipelineApplicationDTO, PipelineAppealDtoSchema } from '@/entities/create-application';
 import {
   useChildEquipmentTypes,
   useDistrictSelectQueries,
@@ -10,9 +11,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
-export const useCreateCraneApplication = () => {
-  const form = useForm<CreateCraneApplicationDTO>({
-    resolver: zodResolver(CraneAppealDtoSchema),
+export const useCreatePipelineApplication = () => {
+  const form = useForm<CreatePipelineApplicationDTO>({
+    resolver: zodResolver(PipelineAppealDtoSchema),
     defaultValues: {
       phoneNumber: '',
       hazardousFacilityId: undefined,
@@ -27,8 +28,6 @@ export const useCreateCraneApplication = () => {
       manufacturedAt: undefined,
       partialCheckDate: undefined,
       fullCheckDate: undefined,
-      boomLength: '',
-      liftingCapacity: '',
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
@@ -36,6 +35,12 @@ export const useCreateCraneApplication = () => {
       expertisePath: undefined,
       installationCertPath: undefined,
       additionalFilePath: undefined,
+      nonDestructiveCheckDate: undefined,
+      diameter: '',
+      thickness: '',
+      length: '',
+      pressure: '',
+      environment: '',
     },
     mode: 'onChange',
   });
@@ -45,7 +50,7 @@ export const useCreateCraneApplication = () => {
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
   const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
-  const { data: childEquipmentTypes } = useChildEquipmentTypes('CRANE');
+  const { data: childEquipmentTypes } = useChildEquipmentTypes('PIPELINE'); // Child equipment turi 'PIPELINE'
 
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);

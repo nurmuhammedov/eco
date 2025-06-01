@@ -13,78 +13,120 @@ export enum ApplicationCategory {
   ATTESTATION_PREVENTION = 'ATTESTATION_PREVENTION',
 }
 
+export enum BuildingSphereType {
+  RESIDENTIAL = 'RESIDENTIAL', // Turar joy binosi
+  HOTEL = 'HOTEL', // Mehmonxona
+  SOCIAL = 'SOCIAL', // Ijtimoiy soha
+  INDUSTRIAL = 'INDUSTRIAL', // Sanoat korxonasi
+  SERVICE = 'SERVICE', // Xizmat ko‘rsatish objekti
+  OTHER = 'OTHER', // Boshqa objektlar
+}
+
 export enum ApplicationTypeEnum {
-  // Xavfli Ishlab Chiqarish Obyektini ro‘yxatga olish va chiqarish
-  RegisterHPO = 'REGISTER_HF', // Xavfli ishlab chiqarish obyektini ro‘yxatdan o‘tkazish
-  DeregisterHPO = 'DEREGISTER_HF', // Xavfli ishlab chiqarish obyektini ro‘yxatdan chiqarish
+  // Xavfli Ishlab Chiqarish Obyektini ro‘yxatga olish, o'zgartirish va chiqarish
+  REGISTER_HF = 'REGISTER_HF',
+  DEREGISTER_HF = 'DEREGISTER_HF',
+  MODIFY_HF = 'MODIFY_HF',
 
-  // Xavfli ishlab chiqarish qurilmalarini ro‘yxatdan o‘tkazish
-  RegisterCrane = 'REGISTER_CRANE', // Kranni ro‘yxatga olish
-  RegisterVessel = 'REGISTER_CONTAINER', // Bosim ostida ishlovchi idishni ro‘yxatga olish
-  RegisterBoiler = 'REGISTER_BOILER', // Qozonni ro‘yxatga olish
-  RegisterLift = 'REGISTER_ELEVATOR', // Liftni ro‘yxatga olish
-  RegisterEscalator = 'REGISTER_ESCALATOR', // Eskalatorni ro‘yxatga olish
-  RegisterBridgeOrRoad = 'REGISTER_CABLEWAY', // Osma arqonli yuruvchi yo'lni ro‘yxatga olish
-  RegisterElevator = 'REGISTER_HOIST', // Yuk ko'targichni ro‘yxatga olish
-  RegisterPipeline = 'REGISTER_PIPELINE', // Quvurni ro‘yxatga olish
-  RegisterPressureVesselChemical = 'REGISTER_CHEMICAL_CONTAINER', // Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatga olish
-  RegisterSteamAndHotWaterPipeline = 'REGISTER_HEAT_PIPELINE', // Bug‘ va issiq suv quvurlarini ro‘yxatga olish
-  RegisterBoilerUtilizer = 'REGISTER_BOILER_UTILIZER', // Qozon utilizatorlarini ro‘yxatga olish
-  RegisterPressureVesselLPG = 'REGISTER_LPG_CONTAINER', // Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatga olish
-  RegisterLpgPowered = 'REGISTER_LPG_POWERED', // SUG bilan ishlovchi qurilmalar ro‘yxatga olish
-  RegisterAttractionPassport = 'REGISTER_ATTRACTION_PASSPORT', // Attraksion pasportini ro‘yxatga olish
-  RegisterAttraction = 'REGISTER_ATTRACTION', // Attraksionni ro‘yxatga olish
+  //Crane
+  REGISTER_CRANE = 'REGISTER_CRANE',
+  DEREGISTER_CRANE = 'DEREGISTER_CRANE',
+  RE_REGISTER_CRANE = 'RE_REGISTER_CRANE',
 
-  RegisterHighGasUsageEquipment = 'REGISTER_HIGH_GAS_USAGE_EQUIPMENT', // Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni ro‘yxatga olish
+  //Container - bosim ostida ishlovchi idish
+  REGISTER_CONTAINER = 'REGISTER_CONTAINER',
+  DEREGISTER_CONTAINER = 'DEREGISTER_CONTAINER',
+  RE_REGISTER_CONTAINER = 'RE_REGISTER_CONTAINER',
 
-  // Xavfli ishlab chiqarish qurilmalarini ro‘yxatdan chiqarish
-  DeregisterCrane = 'DEREGISTER_CRANE', // Kranni ro‘yxatdan chiqarish
-  DeregisterVessel = 'DEREGISTER_CONTAINER', // Bosim ostida ishlovchi idishni ro‘yxatdan chiqarish
-  DeregisterBoiler = 'DEREGISTER_BOILER', // Qozonni ro‘yxatdan chiqarish
-  DeregisterLift = 'DEREGISTER_ELEVATOR', // Liftni ro‘yxatdan chiqarish
-  DeregisterEscalator = 'DEREGISTER_ESCALATOR', // Eskalatorni ro‘yxatdan chiqarish
-  DeregisterBridgeOrRoad = 'DEREGISTER_CABLEWAY', // Osma arqonli yuruvchi yo'lni ro‘yxatdan chiqarish
-  DeregisterElevator = 'DEREGISTER_HOIST', // Yuk ko'targichni ro‘yxatdan chiqarish
-  DeregisterPipeline = 'DEREGISTER_PIPELINE', // Quvurni ro‘yxatdan chiqarish
-  DeRegisterPressureVesselChemical = 'DEREGISTER_CHEMICAL_CONTAINER', // Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatdan chiqarish
-  DeRegisterSteamAndHotWaterPipeline = 'DEREGISTER_HEAT_PIPELINE', // Bug‘ va issiq suv quvurlarini ro‘yxatdan chiqarish
-  DeRegisterBoilerUtilizer = 'DEREGISTER_BOILER_UTILIZER', // Qozon utilizatorlarini ro‘yxatdan chiqarish
-  DeRegisterPressureVesselLPG = 'DEREGISTER_LPG_CONTAINER', // Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatdan chiqarish
-  DeRegisterLpgPowered = 'DEREGISTER_LPG_POWERED', // SUG bilan ishlovchi qurilmalar ro‘yxatga olish
-  DeregisterAttractionPassport = 'DEREGISTER_ATTRACTION_PASSPORT', // Attraksion pasportini ro‘yxatdan chiqarish
-  DeregisterAttraction = 'DEREGISTER_ATTRACTION', // Attraksionni ro‘yxatdan chiqarish
+  //Boiler - bug'qozon
+  REGISTER_BOILER = 'REGISTER_BOILER',
+  DEREGISTER_BOILER = 'DEREGISTER_BOILER',
+  RE_REGISTER_BOILER = 'RE_REGISTER_BOILER',
 
-  // Xavfli ishlab chiqarish obyektlari xodimlarini attestatsiyadan o‘tkazish
-  CertifyHPOEmployee = 'CERTIFY_HPO_EMPLOYEE', // Xavfli ishlab chiqarish obyektlari xodimlarini attestatsiyadan o‘tkazish
+  //Elevator - lift
+  REGISTER_ELEVATOR = 'REGISTER_ELEVATOR',
+  DEREGISTER_ELEVATOR = 'DEREGISTER_ELEVATOR',
+  RE_REGISTER_ELEVATOR = 'RE_REGISTER_ELEVATOR',
 
-  // Ekspert tashkilotini akkreditatsiya qilish
-  AccreditExpertOrganization = 'ACCREDIT_EXPERT_ORGANIZATION', // Ekspert tashkilotini akkreditatsiya qilish
-  ReaccreditExpertOrganization = 'REACCREDIT_EXPERT_ORGANIZATION', // Ekspert tashkilotini qayta akkreditatsiya qilish
-  ExpandAccreditationScope = 'EXPAND_ACCREDITATION_SCOPE', // Ekspert tashkilotining akkreditatsiya sohasini kengaytirish
+  //Escalator
+  REGISTER_ESCALATOR = 'REGISTER_ESCALATOR',
+  DEREGISTER_ESCALATOR = 'DEREGISTER_ESCALATOR',
+  RE_REGISTER_ESCALATOR = 'RE_REGISTER_ESCALATOR',
 
-  // Sanoat xavfsizligi bo‘yicha ekspertiza xulosalari
-  RegisterSafetyExpertConclusion = 'REGISTER_SAFETY_EXPERT_CONCLUSION', // Sanoat xavfsizligi ekspertiza xulosalarini ro‘yxatga olish
-  DeregisterSafetyExpertConclusion = 'DEREGISTER_SAFETY_EXPERT_CONCLUSION', // Sanoat xavfsizligi ekspertiza xulosalarini ro‘yxatdan chiqarish
+  //Cableway - osma qarqonli yuruvchi yo'l
+  REGISTER_CABLEWAY = 'REGISTER_CABLEWAY',
+  DEREGISTER_CABLEWAY = 'DEREGISTER_CABLEWAY',
+  RE_REGISTER_CABLEWAY = 'RE_REGISTER_CABLEWAY',
 
-  // Litsenziya va ruxsatnomalar
-  ObtainLicense = 'OBTAIN_LICENSE', // Litsenziya olish
-  ObtainPermit = 'OBTAIN_PERMIT', // Ruxsatnoma olish
-  ObtainConclusion = 'OBTAIN_CONCLUSION', // Xulosa olish
+  //hoist - yuk ko'targich
+  REGISTER_HOIST = 'REGISTER_HOIST',
+  DEREGISTER_HOIST = 'DEREGISTER_HOIST',
+  RE_REGISTER_HOIST = 'RE_REGISTER_HOIST',
 
-  // Xavfli ishlab chiqarish obyektlari kadastr pasporti
-  RegisterHPOCadastrePassport = 'REGISTER_HPO_CADASTRE_PASSPORT', // Xavfli ishlab chiqarish obyektlari kadastr pasportini ro‘yxatga olish
-  DeregisterHPOCadastrePassport = 'DEREGISTER_HPO_CADASTRE_PASSPORT', // Xavfli ishlab chiqarish obyektlari kadastr pasportini ro‘yxatdan chiqarish
+  //pipeline - quvur
+  REGISTER_PIPELINE = 'REGISTER_PIPELINE',
+  DEREGISTER_PIPELINE = 'DEREGISTER_PIPELINE',
+  RE_REGISTER_PIPELINE = 'RE_REGISTER_PIPELINE',
 
-  // Sanoat xavfsizligi deklaratsiyasi
-  RegisterSafetyDeclaration = 'REGISTER_SAFETY_DECLARATION', // Sanoat xavfsizligi deklaratsiyasini ro‘yxatga olish
-  DeregisterSafetyDeclaration = 'DEREGISTER_SAFETY_DECLARATION', // Sanoat xavfsizligi deklaratsiyasini ro‘yxatdan chiqarish
+  //Chemical container - bosim ostida ishlovchi idish (kimyoviy)
+  REGISTER_CHEMICAL_CONTAINER = 'REGISTER_CHEMICAL_CONTAINER',
+  DEREGISTER_CHEMICAL_CONTAINER = 'DEREGISTER_CHEMICAL_CONTAINER',
+  RE_REGISTER_CHEMICAL_CONTAINER = 'RE_REGISTER_CHEMICAL_CONTAINER',
 
-  // INM (Individual Number for Manufacturing)
-  ObtainINM = 'OBTAIN_INM', // INMni olish
-  IssueINM = 'ISSUE_INM', // INMni berish
-  RegisterINM = 'REGISTER_INM', // INMni ro‘yxatga olish
-  DeregisterINM = 'DEREGISTER_INM', // INMni ro‘yxatdan chiqarish
+  //Heat pipe - bug' va issiqsuv quvuri
+  REGISTER_HEAT_PIPELINE = 'REGISTER_HEAT_PIPELINE',
+  DEREGISTER_HEAT_PIPELINE = 'DEREGISTER_HEAT_PIPELINE',
+  RE_REGISTER_HEAT_PIPELINE = 'RE_REGISTER_HEAT_PIPELINE',
 
-  // Boshqa yo‘nalishlar
-  Other = 'OTHER', // Boshqa yo‘nalishlar
+  //Boiler utilizer - qozon utilizator
+  REGISTER_BOILER_UTILIZER = 'REGISTER_BOILER_UTILIZER',
+  DEREGISTER_BOILER_UTILIZER = 'DEREGISTER_BOILER_UTILIZER',
+  RE_REGISTER_BOILER_UTILIZER = 'RE_REGISTER_BOILER_UTILIZER',
+
+  //LPG container (Liquefied Petroleum Gas) - bosim ostida ishlovchi idish (SUG)
+  REGISTER_LPG_CONTAINER = 'REGISTER_LPG_CONTAINER',
+  DEREGISTER_LPG_CONTAINER = 'DEREGISTER_LPG_CONTAINER',
+  RE_REGISTER_LPG_CONTAINER = 'RE_REGISTER_LPG_CONTAINER',
+
+  //LPG powered (Liquefied Petroleum Gas) - SUG bilan ishlovchi qurilmalar
+  REGISTER_LPG_POWERED = 'REGISTER_LPG_POWERED',
+  DEREGISTER_LPG_POWERED = 'DEREGISTER_LPG_POWERED',
+  RE_REGISTER_LPG_POWERED = 'RE_REGISTER_LPG_POWERED',
+
+  //attraction_passport - Attraksion pasporti
+  REGISTER_ATTRACTION_PASSPORT = 'REGISTER_ATTRACTION_PASSPORT',
+  DEREGISTER_ATTRACTION_PASSPORT = 'DEREGISTER_ATTRACTION_PASSPORT',
+  RE_REGISTER_ATTRACTION_PASSPORT = 'RE_REGISTER_ATTRACTION_PASSPORT',
+
+  //attraction - Attraksion
+  REGISTER_ATTRACTION = 'REGISTER_ATTRACTION',
+  DEREGISTER_ATTRACTION = 'DEREGISTER_ATTRACTION',
+  RE_REGISTER_ATTRACTION = 'RE_REGISTER_ATTRACTION',
+
+  DEFAULT = 'DEFAULT',
+
+  //IRS (Ionizing Radiation Source ) - INM ro'yhatga olish, qabul qilib olish va berish
+  REGISTER_IRS = 'REGISTER_IRS',
+  ACCEPT_IRS = 'ACCEPT_IRS',
+  TRANSFER_IRS = 'TRANSFER_IRS',
+}
+
+export enum IrsIdentifierType {
+  SRM = 'SRM',
+  NUM = 'NUM',
+}
+
+export enum IrsCategory {
+  I = 'I',
+  II = 'II',
+  III = 'III',
+  IV = 'IV',
+  V = 'V',
+}
+
+export enum IrsUsageType {
+  USAGE = 'USAGE', // Ishlatish (foydalanish) uchun
+  DISPOSAL = 'DISPOSAL', // Ko‘mish uchun
+  EXPORT = 'EXPORT', // Chet-elga olib chiqish uchun
+  STORAGE = 'STORAGE', // Vaqtinchalik saqlash uchun
 }

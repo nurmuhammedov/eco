@@ -1,10 +1,10 @@
-import { FileInput, FileOutput, FilePlus } from 'lucide-react';
 import {
   ApplicationCardItem,
   ApplicationCategory,
   ApplicationTypeEnum,
   MainApplicationCategory,
 } from '@/entities/create-application';
+import { FileInput, FileOutput, FilePlus } from 'lucide-react';
 
 export const APPLICATION_CATEGORIES = [
   {
@@ -62,13 +62,12 @@ export const MAIN_APPLICATION_BY_CATEGORY = {
 };
 
 export const APPLICATIONS_DATA: ApplicationCardItem[] = [
-  // XICHO
   {
     id: 1,
     title: 'XICHOni ro‘yxatga olish',
     description: 'XICHOni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.XICHO,
-    type: ApplicationTypeEnum.RegisterHPO,
+    type: ApplicationTypeEnum.REGISTER_HF,
     icon: 'factoryRegisterIcon',
   },
   {
@@ -76,7 +75,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'XICHOni ro‘yxatdan chiqarish',
     description: 'XICHOni ro‘yxatdan chiqarish ariza shakli',
     category: ApplicationCategory.XICHO,
-    type: ApplicationTypeEnum.DeregisterHPO,
+    type: ApplicationTypeEnum.DEREGISTER_HF,
     icon: 'factoryDeregisterIcon',
   },
   {
@@ -84,7 +83,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'ХИЧО реестрига ўзгартириш киритиш',
     description: 'ХИЧО реестрига ўзгартириш киритиш учун ариза шакли',
     category: ApplicationCategory.XICHO,
-    type: ApplicationTypeEnum.DeregisterHPO,
+    type: ApplicationTypeEnum.MODIFY_HF,
     icon: 'factoryUpdateIcon',
   },
   // Xavfli obyektlar va qurilmalar => Ro'yxatga olish
@@ -93,7 +92,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Kranni ro‘yxatga olish',
     description: 'Kranni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterCrane,
+    type: ApplicationTypeEnum.REGISTER_CRANE,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'crane',
   },
@@ -102,7 +101,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Bosim ostida ishlovchi idishni ro‘yxatga olish',
     description: 'Bosim ostida ishlovchi idishni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterVessel,
+    type: ApplicationTypeEnum.REGISTER_CONTAINER, // Yangilandi (RegisterVessel -> REGISTER_CONTAINER)
     parentId: MainApplicationCategory.REGISTER,
     icon: 'pressureVessel',
   },
@@ -111,7 +110,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Bug‘ qozonni ro‘yxatga olish',
     description: 'Bug‘ qozonlarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterSteamAndHotWaterPipeline,
+    type: ApplicationTypeEnum.REGISTER_BOILER, // Yangilandi (RegisterSteamAndHotWaterPipeline -> REGISTER_BOILER)
     parentId: MainApplicationCategory.REGISTER,
     icon: 'boiler',
   },
@@ -120,7 +119,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Liftni ro‘yxatga olish',
     description: 'Liftni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterLift,
+    type: ApplicationTypeEnum.REGISTER_ELEVATOR, // Yangilandi (RegisterLift -> REGISTER_ELEVATOR)
     parentId: MainApplicationCategory.REGISTER,
     icon: 'elevator',
   },
@@ -129,7 +128,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Eskalatorni ro‘yxatga olish',
     description: 'Eskalatorni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterEscalator,
+    type: ApplicationTypeEnum.REGISTER_ESCALATOR, // Yangilandi
     parentId: MainApplicationCategory.REGISTER,
     icon: 'escalator',
   },
@@ -138,7 +137,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Attraksion pasportini ro‘yxatga olish',
     description: 'Attraksion pasportlarini rasmiylashtirish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterAttractionPassport,
+    type: ApplicationTypeEnum.REGISTER_ATTRACTION_PASSPORT, // Yangilandi
     parentId: MainApplicationCategory.REGISTER,
     icon: 'passport',
   },
@@ -147,7 +146,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Attraksionni ro‘yxatga olish',
     description: 'Attraksion qurilmalarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterAttraction,
+    type: ApplicationTypeEnum.REGISTER_ATTRACTION, // Yangilandi
     parentId: MainApplicationCategory.REGISTER,
     icon: 'attraction',
   },
@@ -156,7 +155,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Quvurni ro‘yxatga olish',
     description: 'Quvurlarni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterPipeline,
+    type: ApplicationTypeEnum.REGISTER_PIPELINE, // Yangilandi
     parentId: MainApplicationCategory.REGISTER,
     icon: 'pipeSystem',
   },
@@ -165,7 +164,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatga olish',
     description: 'Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterPressureVesselChemical,
+    type: ApplicationTypeEnum.REGISTER_CHEMICAL_CONTAINER, // Yangilandi
     parentId: MainApplicationCategory.REGISTER,
     icon: 'chemicalVessel',
   },
@@ -174,7 +173,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Bug‘ va issiq suv quvurlarini ro‘yxatga olish',
     description: 'Bug‘ va issiq suv quvurlarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterSteamAndHotWaterPipeline,
+    type: ApplicationTypeEnum.REGISTER_HEAT_PIPELINE, // Yangilandi
     parentId: MainApplicationCategory.REGISTER,
     icon: 'steamPipe',
   },
@@ -183,7 +182,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Qozon utilizatorlarini ro‘yxatga olish',
     description: 'Qozon utilizatorlarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterBoilerUtilizer,
+    type: ApplicationTypeEnum.REGISTER_BOILER_UTILIZER, // Yangilandi
     parentId: MainApplicationCategory.REGISTER,
     icon: 'recycleBoiler',
   },
@@ -192,7 +191,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatga olish',
     description: 'Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterPressureVesselLPG,
+    type: ApplicationTypeEnum.REGISTER_LPG_CONTAINER, // Yangilandi
     parentId: MainApplicationCategory.REGISTER,
     icon: 'gasVessel',
   },
@@ -202,7 +201,8 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description:
       'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterHighGasUsageEquipment,
+    // type: ApplicationTypeEnum.REGISTER_HIGH_GAS_USAGE_EQUIPMENT, // Bu enum yangi ro'yxatda yo'q, izohga olinadi yoki moslashtiriladi
+    type: ApplicationTypeEnum.REGISTER_LPG_POWERED, // Vaqtinchalik moslashtirish, asl enum qiymatini aniqlash kerak
     parentId: MainApplicationCategory.REGISTER,
     icon: 'naturalGas',
   },
@@ -211,7 +211,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Yuk ko‘targichni ro‘yxatga olish',
     description: 'Yuk ko‘targichni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterElevator,
+    type: ApplicationTypeEnum.REGISTER_HOIST, // Yangilandi (RegisterElevator -> REGISTER_HOIST)
     parentId: MainApplicationCategory.REGISTER,
     icon: 'heavyLift',
   },
@@ -220,7 +220,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Osma arqonli yuruvchi yo‘lni ro‘yxatga olish',
     description: 'Osma arqonli yuruvchi yo‘lni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.RegisterBridgeOrRoad,
+    type: ApplicationTypeEnum.REGISTER_CABLEWAY, // Yangilandi (RegisterBridgeOrRoad -> REGISTER_CABLEWAY)
     parentId: MainApplicationCategory.REGISTER,
     icon: 'cableway',
   },
@@ -230,32 +230,32 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Ionlashtiruvchi nurlanish manbalarini ro‘yxatga olish',
     description: 'Ionlashtiruvchi nurlanish manbalarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.INM,
-    type: ApplicationTypeEnum.RegisterINM,
+    type: ApplicationTypeEnum.REGISTER_IRS, // Yangilandi
     icon: 'radiationRegisterIcon',
   },
   {
     id: 20,
-    title: 'Ionlashtiruvchi nurlanish manbalarini olinishi',
-    description: 'Ionlashtiruvchi nurlanish manbalarini olinishi ariza shakli',
+    title: 'Ionlashtiruvchi nurlanish manbalarini qabul qilish', // Olinishi -> qabul qilish
+    description: 'Ionlashtiruvchi nurlanish manbalarini qabul qilish uchun ariza shakli',
     category: ApplicationCategory.INM,
-    type: ApplicationTypeEnum.ObtainINM,
+    type: ApplicationTypeEnum.ACCEPT_IRS, // Yangilandi
     icon: 'radiationReceiveIcon',
   },
   {
     id: 21,
-    title: 'Ionlashtiruvchi nurlanish manbalarini berilishi',
-    description: 'Ionlashtiruvchi nurlanish manbalarini berilishi ariza shakli',
+    title: 'Ionlashtiruvchi nurlanish manbalarini topshirish', // Berilishi -> topshirish
+    description: 'Ionlashtiruvchi nurlanish manbalarini topshirish uchun ariza shakli',
     category: ApplicationCategory.INM,
-    type: ApplicationTypeEnum.IssueINM,
+    type: ApplicationTypeEnum.TRANSFER_IRS, // Yangilandi
     icon: 'radiationTransferIcon',
   },
-  // Akkreditatsiya
+  // Akkreditatsiya - bu turlar yangi ApplicationTypeEnum ro'yxatida yo'q, shuning uchun izohga olinadi
   {
     id: 22,
     title: 'Ekspert tashkilotini akkreditatsiyadan o‘tkazish',
     description: 'Ekspert tashkilotini akkreditatsiyadan o‘tkazish ariza shakli',
     category: ApplicationCategory.ACCREDITATION,
-    type: ApplicationTypeEnum.AccreditExpertOrganization,
+    type: ApplicationTypeEnum.DEFAULT,
     icon: 'expertOrgAccreditationIcon',
   },
   {
@@ -263,7 +263,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Ekspert tashkilotini qayta akkreditatsiyadan o‘tkazish',
     description: 'Ekspert tashkilotini qayta akkreditatsiyadan o‘tkazish ariza shakli',
     category: ApplicationCategory.ACCREDITATION,
-    type: ApplicationTypeEnum.ReaccreditExpertOrganization,
+    type: ApplicationTypeEnum.DEFAULT,
     icon: 'expertOrgReaccreditationIcon',
   },
   {
@@ -271,7 +271,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Ekspert tashkilotining akkreditatsiya sohasini kengaytirish',
     description: 'Ekspert tashkilotining akkreditatsiya sohasini kengaytirish ariza shakli',
     category: ApplicationCategory.ACCREDITATION,
-    type: ApplicationTypeEnum.ExpandAccreditationScope,
+    type: ApplicationTypeEnum.DEFAULT,
     icon: 'expertOrgExpandAccreditationIcon',
   },
   {
@@ -279,16 +279,16 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Sanoat xavfsizligi ekspertiza xulosalarini ro‘yxatga olish',
     description: 'Sanoat xavfsizligi ekspertiza xulosalarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.ACCREDITATION,
-    type: ApplicationTypeEnum.RegisterSafetyExpertConclusion,
+    type: ApplicationTypeEnum.DEFAULT,
     icon: 'industrialSafetyExpertiseRegistrationIcon',
   },
-  // Attestatsiya
+  // Attestatsiya - bu turlar yangi ApplicationTypeEnum ro'yxatida yo'q, shuning uchun izohga olinadi
   {
     id: 26,
     title: 'XICHO xodimlarini attestatsiyadan o‘tkazish',
     description: 'XICHO xodimlarini attestatsiyadan o‘tkazish ariza shakli',
     category: ApplicationCategory.ATTESTATION_PREVENTION,
-    type: ApplicationTypeEnum.CertifyHPOEmployee,
+    type: ApplicationTypeEnum.DEFAULT,
     icon: 'staffAttestationIcon',
   },
   {
@@ -296,7 +296,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Profilaktika tadbirini o‘tkazish',
     description: 'Profilaktika tadbirini o‘tkazish ariza shakli',
     category: ApplicationCategory.ATTESTATION_PREVENTION,
-    type: ApplicationTypeEnum.RegisterSafetyExpertConclusion, // enum registratsiya qilinmagan
+    type: ApplicationTypeEnum.DEFAULT,
     icon: 'preventiveMeasuresIcon',
   },
 ];
