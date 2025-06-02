@@ -40,7 +40,6 @@ const AttachInspectorModal = () => {
     }).then(() => {
       setIsShow(false);
     });
-    setIsShow(false);
   }
 
   return (
