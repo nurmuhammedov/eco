@@ -25,7 +25,7 @@ const ApplicantDocsTable = () => {
         {
             accessorKey: 'path',
             maxSize: 100,
-            header: 'Hujjat nomi',
+            header: 'Fayl',
         },
 
     ];
