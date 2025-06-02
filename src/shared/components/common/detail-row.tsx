@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 
 interface InfoCardProps {
   title: string;
-  value: string | number;
+  value: ReactNode;
 }
 
 const DetailRow: React.FC<InfoCardProps> = ({ title, value }) => {

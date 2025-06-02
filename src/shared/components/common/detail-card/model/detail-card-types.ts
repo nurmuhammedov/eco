@@ -10,6 +10,7 @@ export interface DetailCardProps {
 export interface DetailCardAccordionProps {
   multiple?: boolean;
   children: ReactNode;
+  defaultValue?: string[]
 }
 
 export interface DetailCardAccordionItemProps {
