@@ -90,7 +90,7 @@
     "CHEMICAL_CONTAINER": "Кимёвий идиш",
     "HEAT_PIPELINE": "Иссиқлик қувури",
     "BOILER_UTILIZER": "Қозон утилизатори",
-    "LPG_CONTAINER": "Суюлтирилган газ идиши",
+    "LPG_CONTAINER": "Босим остида ишловчи идишлари (СУГ)",
     "LPG_POWERED": "Суюлтирилган газ билан ишлайдиган"
   },
   "application_status": {

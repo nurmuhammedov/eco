@@ -75,11 +75,11 @@ export const applicationConfigs: Record<string, any> = {
     pdfEndpoint: API_ENDPOINTS.APPEALS_EQUIPMENT_GENERATE_PDF_URL + 'attraction',
   },
   [ApplicationTypeEnum.REGISTER_IRS]: {
-    submitEndpoint: '/appeals/irs/register',
+    submitEndpoint: '/appeals/irs',
     pdfEndpoint: '/appeals/irs/generate-pdf/register',
   },
   [ApplicationTypeEnum.ACCEPT_IRS]: {
-    submitEndpoint: '/appeals/irs/accept',
+    submitEndpoint: '/appeals/irs/acceptance',
     pdfEndpoint: '/appeals/irs/generate-pdf/accept',
   },
   [ApplicationTypeEnum.TRANSFER_IRS]: {

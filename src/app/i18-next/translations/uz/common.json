@@ -29,7 +29,7 @@
     "appeals": "Murojaatlar",
     "applications": "Arizalar",
     "accreditation": "Akkreditatsiya",
-    "register": "Reestrlar",
+    "register": "Reyestrlar",
     "risk_analysis": "Xavf tahlili",
     "cadastre": "Kadastr",
     "prophylactic": "Profilaktika",
@@ -65,6 +65,7 @@
   },
   "permission": {
     "APPEAL": "Arizalar",
+    "REGISTRY": "Reyestrlar",
     "ATTESTAT": "Attestat",
     "ATTESTATION": "Attestatsiya",
     "CERTIFICATE": "Sertifikat",
@@ -95,7 +96,7 @@
     "CHEMICAL_CONTAINER": "Kimyoviy idish",
     "HEAT_PIPELINE": "Issiqlik quvuri",
     "BOILER_UTILIZER": "Qozon utilizatori",
-    "LPG_CONTAINER": "Suyultirilgan gaz idishi",
+    "LPG_CONTAINER": "Bosim ostida ishlovchi idishlari (SUG)",
     "LPG_POWERED": "Suyultirilgan gaz bilan ishlaydigan"
   },
   "application_status": {
