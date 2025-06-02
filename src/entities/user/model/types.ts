@@ -11,10 +11,10 @@ export enum UserRoles {
 
 export enum Direction {
   APPEAL = 'APPEAL',
-  ATTESTAT = 'ATTESTAT',
+  REGISTRY = 'REGISTRY',
+  ACCREDITATION = 'ACCREDITATION',
   ATTESTATION = 'ATTESTATION',
   CERTIFICATE = 'CERTIFICATE',
-  ACCREDITATION = 'ACCREDITATION',
 }
 
 export type UserState = {

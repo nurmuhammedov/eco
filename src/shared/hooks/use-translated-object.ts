@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 export function useTranslatedObject<T extends string>(
   object: Record<string, T>,
   i18nNamespace?: string,
-  sorted = true,
+  sorted = false,
 ): Array<{ id: T; name: string }> {
   const { t } = useTranslation();
 
