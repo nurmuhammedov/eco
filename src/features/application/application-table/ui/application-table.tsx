@@ -8,6 +8,7 @@ import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { FileWarning } from 'lucide-react';
 
 export const ApplicationTable = () => {
   const { t } = useTranslation('common');
@@ -63,7 +64,18 @@ export const ApplicationTable = () => {
     },
     {
       header: 'Ariza holati',
-      cell: (cell) => ApplicationStatusBadge({ status: cell.row.original.status }),
+      cell: (cell) => {
+        return (
+          <div className="flex gap-2">
+            {ApplicationStatusBadge({ status: cell.row.original.status })}
+            {cell.row.original.isRejected && (
+              <p title="Has rejected file!">
+                <FileWarning size={18} className="text-yellow-200" />
+              </p>
+            )}
+          </div>
+        );
+      },
     },
     {
       id: 'actions',
