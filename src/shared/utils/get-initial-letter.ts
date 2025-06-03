@@ -31,6 +31,7 @@ export function getInitials(input: unknown, maxLength = 1, fallback = '?'): stri
 
     return initials || fallback;
   } catch (error) {
+    console.error(error);
     return fallback;
   }
 }
