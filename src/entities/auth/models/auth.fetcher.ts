@@ -68,7 +68,9 @@ export const useLogout = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const redirectPath = user?.role === UserRoles.ADMIN ? '/auth/login/admin' : '/auth/login';
+
+  //TODO: ubrat redirect na admin kogda budet presetasiya
+  const redirectPath = user?.role === UserRoles.ADMIN ? '/auth/login/admin' : '/auth/login/admin';
   return useMutation({
     mutationFn: async () => authAPI.logout(),
     onSuccess: () => {
