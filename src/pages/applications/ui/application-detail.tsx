@@ -11,7 +11,6 @@ import ReferenceCreateModal from '@/features/application/application-detail/ui/m
 const ApplicationPage = () => {
   const { data } = useApplicationDetail();
   const { user } = useAuth();
-  console.log(data);
   return (
     <div>
       <div className="flex justify-between items-center">

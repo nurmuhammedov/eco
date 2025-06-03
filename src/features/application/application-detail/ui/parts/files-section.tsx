@@ -12,7 +12,7 @@ const FilesSection: FC<Props> = ({ files }) => {
         <div key={file.path} className="flex justify-between items-center border-b border-b-[#E5E7EB] py-4 px-3">
           <p>{file.label}</p>
           <p className="shrink-0">
-            <FileLink url={file.path} title={file.label} />
+            <FileLink url={file.path} />
           </p>
         </div>
       ))}
