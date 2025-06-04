@@ -40,8 +40,8 @@ const ApplicationDetail = ({ data }: any) => {
               value={<Stepper activeStep={data?.status} steps={Object.values(ApplicationStatus).slice(1, -1)} />}
             />
             <DetailRow title="Ijro muddati:" value={getDate(data?.deadline)} />
-            <DetailRow title="Ijrochi Qo‘mita masʼul bo‘limi:" value={data?.officeName || '-'} />
-            <DetailRow title="Ijrochi Hududiy boshqarma nomi:" value={data?.regionName || '-'} />
+            <DetailRow title="Ijrochi Qo‘mita masʼul bo‘limi:" value={'-'} />
+            <DetailRow title="Ijrochi Hududiy boshqarma nomi:" value={data?.officeName || '-'} />
             <DetailRow title="Hududiy boshqarma boshlig‘i F.I.SH:" value={data?.executorName || '-'}  />
             <DetailRow title="Hududiy boshqarma boshlig‘i rezolyutsiyasi:" value={data?.resolution || '-'} />
             <DetailRow title="Ijrochi inspektor F.I.SH:" value={data?.executorName || '-'} />
@@ -75,7 +75,7 @@ const ApplicationDetail = ({ data }: any) => {
               <TabsTrigger value="response_docs">Javob hujjatlari</TabsTrigger>
             </TabsList>
             <TabsContent value="info">
-              <AppealMainInfo />
+              <AppealMainInfo data={data?.data} type={data?.appealType?.replace('REGISTER_', '')} address={data?.address} />
             </TabsContent>
             <TabsContent value="applicant_docs">
               <ApplicantDocsTable />

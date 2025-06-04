@@ -27,12 +27,6 @@ export function TerritorialStaffList() {
 
   const columns: ColumnDef<TerritorialStaffTableItem>[] = [
     {
-      maxSize: 50,
-      minSize: 50,
-      header: t('sequence_number'),
-      cell: (cell) => cell.row.index + 1,
-    },
-    {
       accessorKey: 'fullName',
       minSize: 250,
       header: t('short.full_name'),

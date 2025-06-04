@@ -22,12 +22,6 @@ export function EquipmentList() {
 
   const equipmentTableColumns: ColumnDef<Equipment>[] = [
     {
-      maxSize: 20,
-      accessorKey: 'number',
-      header: t('sequence_number'),
-      cell: (cell) => cell.row.index + 1,
-    },
-    {
       accessorKey: 'name',
       header: t('name'),
     },
