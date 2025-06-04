@@ -2,7 +2,7 @@ import DetailRow from "@/shared/components/common/detail-row.tsx";
 
 const AppealMainInfo = () => {
     return (
-        <div className="py-1 px-2 flex flex-col">
+        <div className="py-1 flex flex-col">
             <DetailRow title="Turi:" value={'-'}/>
             <DetailRow title="Obyekt ro‘yxat raqami:" value={'-'}/>
             <DetailRow title="Egalik qiluvchi tashkilot:" value={'-'}/>

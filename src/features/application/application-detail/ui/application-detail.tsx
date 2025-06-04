@@ -29,7 +29,7 @@ const ApplicationDetail = ({ data }: any) => {
         ]}
       >
         <DetailCardAccordion.Item value="general" title="Ariza va ijro to‘g‘risida maʼlumot">
-          <div className="py-1 px-2 flex flex-col">
+          <div className="py-1  flex flex-col">
             <DetailRow title="Ariza sanasi:" value={getDate(data?.createdAt)} />
             <DetailRow
               title="Ariza turi:"
@@ -42,15 +42,15 @@ const ApplicationDetail = ({ data }: any) => {
             <DetailRow title="Ijro muddati:" value={getDate(data?.deadline)} />
             <DetailRow title="Ijrochi Qo‘mita masʼul bo‘limi:" value={data?.officeName || '-'} />
             <DetailRow title="Ijrochi Hududiy boshqarma nomi:" value={data?.regionName || '-'} />
-            <DetailRow title="Hududiy boshqarma boshlig‘i F.I.Sh.:" value="-" />
-            <DetailRow title="Hududiy boshqarma boshlig‘i rezolyutsiyasi:" value="-" />
-            <DetailRow title="Ijrochi inspektor F.I.Sh.:" value={data?.executorName || '-'} />
-            <DetailRow title="Ijrochi (inspektor) xulosasi:" value="-" />
+            <DetailRow title="Hududiy boshqarma boshlig‘i F.I.SH:" value={data?.executorName || '-'}  />
+            <DetailRow title="Hududiy boshqarma boshlig‘i rezolyutsiyasi:" value={data?.resolution || '-'} />
+            <DetailRow title="Ijrochi inspektor F.I.SH:" value={data?.executorName || '-'} />
+            <DetailRow title="Ijrochi (inspektor) xulosasi:" value={data?.conclusion || '-'} />
           </div>
         </DetailCardAccordion.Item>
         {!isLegalApplication && (
           <DetailCardAccordion.Item value="applicant_info_individual" title="Arizachi to‘g‘risida ma’lumot">
-            <div className="py-1 px-2 flex flex-col">
+            <div className="py-1  flex flex-col">
               <DetailRow title="Arizachi JSHIR:" value={'-'} />
               <DetailRow title="Arizachi F.I.SH:" value={'-'} />
               {/*<DetailRow title="Arizachining yashash viloyati:" value={'-'}/>*/}

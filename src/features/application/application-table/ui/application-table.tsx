@@ -6,12 +6,12 @@ import { useCustomSearchParams } from '@/shared/hooks';
 import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { FileWarning } from 'lucide-react';
 
 export const ApplicationTable = () => {
-  const { t } = useTranslation('common');
+  // const { t } = useTranslation('common');
   const {
     paramsObject: { status = ApplicationStatus.ALL, ...rest },
   } = useCustomSearchParams();
@@ -24,11 +24,6 @@ export const ApplicationTable = () => {
   };
 
   const columns: ColumnDef<ISearchParams>[] = [
-    {
-      maxSize: 30,
-      header: t('sequence_number'),
-      cell: (cell) => cell.row.index + 1,
-    },
     {
       accessorKey: 'number',
       maxSize: 100,

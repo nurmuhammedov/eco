@@ -27,11 +27,11 @@ const ApplicantDocsTable = () => {
       header: 'Hujjat nomi',
     },
     {
-      accessorKey: 'isSigned',
+      accessorKey: 'isFullySigned',
       maxSize: 100,
       header: 'Imzo holati',
       cell: (cell) => {
-        const currentStatus = cell.row.original?.isSigned;
+        const currentStatus = cell.row.original?.isFullySigned;
         const currentLabel = signStatuses.get(currentStatus);
         const signersList = cell.row.original?.signers as any[];
         if (currentLabel) {
@@ -63,7 +63,7 @@ const ApplicantDocsTable = () => {
 
   return (
     <>
-      <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-270px)]" />
+      <DataTable showNumeration={false} isPaginated data={data || []} columns={columns as unknown as any} />
       <SignersModal setSigners={setSigners} signers={signers} />
     </>
   );

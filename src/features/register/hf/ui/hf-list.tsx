@@ -5,11 +5,9 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 export const HfList = () => {
-  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const {
     paramsObject: { status = ApplicationStatus.ALL, ...rest },
@@ -21,11 +19,6 @@ export const HfList = () => {
   };
 
   const columns: ColumnDef<ISearchParams>[] = [
-    {
-      maxSize: 30,
-      header: t('sequence_number'),
-      cell: (cell) => cell.row.index + 1,
-    },
     {
       header: 'Hisobga olish sanasi',
       accessorFn: (row) => getDate(row.registrationDate),

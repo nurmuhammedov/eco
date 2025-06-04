@@ -17,7 +17,7 @@ import SignersModal from '@/features/application/application-detail/ui/modals/si
 
 export const signStatuses = new Map([
   [true, { label: 'Imzolangan', variant: 'info' }],
-  [false, { label: 'Imzolanmagan', variant: 'warning' }],
+  [false, { label: 'Imzolanmagan', variant: 'warning' }]
 ] as const);
 
 //TODO:vinesti v enum ili const, sam map vinesti v otdelni fayl
@@ -25,16 +25,16 @@ export const approveStatuses = new Map([
   ['AGREED', { label: 'Kelishildi', variant: 'success' }],
   ['NOT_AGREED', { label: 'Kelishilmadi', variant: 'error' }],
   ['APPROVED', { label: 'Tasdiqlandi', variant: 'success' }],
-  ['NOT_APPROVED', { label: 'Tasdiqlanmadi', variant: 'error' }],
+  ['NOT_APPROVED', { label: 'Tasdiqlanmadi', variant: 'error' }]
 ] as const);
 
 //TODO:vinesti  v enum ili const,  sam map vinesti v otdelni fayl
 export const documentTypes = new Map([
-  ['REPORT', "Ma'lumotnoma"],
+  ['REPORT', 'Ma\'lumotnoma'],
   ['ACT', 'Dalolatnoma'],
   ['DECREE', 'Qaror'],
   ['APPEAL', 'Ariza'],
-  ['REPLY_LETTER', 'Javob xati'],
+  ['REPLY_LETTER', 'Javob xati']
 ]);
 
 const AppealResponseDocs = () => {
@@ -48,20 +48,20 @@ const AppealResponseDocs = () => {
       accessorKey: 'createdAt',
       maxSize: 100,
       header: 'Sana',
-      cell: (cell) => formatDate(cell.row.original.createdAt, 'dd.MM.yyyy'),
+      cell: (cell) => formatDate(cell.row.original.createdAt, 'dd.MM.yyyy')
     },
     {
       accessorKey: 'documentType',
       maxSize: 100,
       header: 'Hujjat nomi',
-      cell: (cell) => documentTypes.get(cell.row.original.documentType),
+      cell: (cell) => documentTypes.get(cell.row.original.documentType)
     },
     {
-      accessorKey: 'isSigned',
+      accessorKey: 'isFullySigned',
       maxSize: 100,
       header: 'Imzo holati',
       cell: (cell) => {
-        const currentStatus = cell.row.original?.isSigned;
+        const currentStatus = cell.row.original?.isFullySigned;
         const currentLabel = signStatuses.get(currentStatus);
         const signersList = cell.row.original?.signers as any[];
         if (currentLabel) {
@@ -81,13 +81,13 @@ const AppealResponseDocs = () => {
             </div>
           );
         }
-      },
+      }
     },
     {
       accessorKey: 'path',
       maxSize: 100,
       header: 'Fayl',
-      cell: (cell) => <FileLink url={cell.row.original?.path} />,
+      cell: (cell) => <FileLink url={cell.row.original?.path} />
     },
     {
       accessorKey: 'actions',
@@ -138,13 +138,15 @@ const AppealResponseDocs = () => {
             </div>
           );
         }
-      },
-    },
+      }
+    }
   ];
 
   return (
     <>
-      <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-270px)]" />
+      <DataTable showNumeration={false}
+                 isPaginated data={data || []}
+                 columns={columns as unknown as any} />
       <RejectMessageModal setMessage={setRejectMessage} message={rejectMessage} />
       <SignersModal setSigners={setSigners} signers={signers} />
     </>
