@@ -6,10 +6,10 @@ import type { DetailCardAccordionItemProps, DetailCardAccordionProps } from '../
 
 export const DetailCardAccordion: FC<DetailCardAccordionProps> & {
   Item: FC<DetailCardAccordionItemProps>;
-} = ({ multiple = true, children }) => {
-  const type = multiple ? 'multiple' : 'single';
+} = ({ children, defaultValue=[] }) => {
+  // const type = multiple ? 'multiple' : 'single';
   return (
-    <Accordion type={type} collapsible className="w-full rounded-lg">
+    <Accordion type={'multiple'} defaultValue={defaultValue}    className="w-full rounded-lg">
       {children}
     </Accordion>
   );
@@ -17,7 +17,7 @@ export const DetailCardAccordion: FC<DetailCardAccordionProps> & {
 
 DetailCardAccordion.Item = ({ value, title, children, className, icon = 'word' }) => {
   return (
-    <AccordionItem value={value} className={cn('bg-blue-200 rounded-lg', className)}>
+    <AccordionItem value={value} className={cn('bg-blue-200 rounded-lg mb-4', className)}>
       <AccordionTrigger className="text-blue-400 px-4 py-4 3xl:py-5">
         <div className="flex items-center gap-2 3xl:text-lg text-blue-400 font-semibold">
           {icon && <Icon name={icon} className="size-5 3xl:size-6" />}

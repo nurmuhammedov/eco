@@ -32,7 +32,10 @@ export default function UserDropdown() {
             <AvatarImage src="" alt="@shadcn" />
             <AvatarFallback>{userName}</AvatarFallback>
           </Avatar>
-          <span className="text-sm">{user?.name}</span>
+          <div>
+            <p className="text-sm">{user?.name}</p>
+            <p className="text-sm text-slate-500">{user?.role}</p>
+          </div>
           <ChevronDown size={16} />
         </div>
       </DropdownMenuTrigger>

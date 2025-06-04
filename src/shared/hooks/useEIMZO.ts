@@ -1,7 +1,6 @@
-// src/features/application/create-application/model/use-application-creation.ts
 import { createPdf } from '@/features/application/create-application/api/create-application';
 import { apiClient } from '@/shared/api';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -13,14 +12,16 @@ export interface UseApplicationCreationProps {
   submitEndpoint: string;
   onSuccessNavigateTo?: string;
   successMessage?: string;
+  queryKey: string;
 }
 
 export function useEIMZO({
-  pdfEndpoint,
-  submitEndpoint,
-  onSuccessNavigateTo,
-  successMessage,
-}: UseApplicationCreationProps) {
+                           pdfEndpoint,
+                           submitEndpoint,
+                           onSuccessNavigateTo,
+                           successMessage,
+                           queryKey
+                         }: UseApplicationCreationProps) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,6 +30,7 @@ export function useEIMZO({
   const [formData, setFormData] = useState<FormData>(null);
 
   const [isPdfLoading, setIsPdfLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleError = useCallback((errorMessage: string) => {
     setError(errorMessage);
@@ -52,7 +54,7 @@ export function useEIMZO({
     onError: (error: Error) => {
       setIsPdfLoading(false);
       handleError(error.message || 'PDF yaratishda noma’lum server xatoligi');
-    },
+    }
   });
 
   const handleCreateApplication = useCallback(
@@ -63,7 +65,7 @@ export function useEIMZO({
       setError(null);
       createPdfMutation.mutate(data);
     },
-    [createPdfMutation],
+    [createPdfMutation]
   );
 
   const resetState = useCallback(() => {
@@ -77,24 +79,24 @@ export function useEIMZO({
   const handleCloseModal = useCallback(() => {
     resetState();
   }, [resetState]);
-
   const { mutate: submitApplicationMetaData, isPending: isLoadingMetaData } = useMutation({
     mutationFn: (sign: string) => apiClient.post(submitEndpoint, { dto: formData, sign, filePath: documentUrl }),
-    onSuccess: (response: any) => {
+    onSuccess: async (response: any) => {
       if (response && response.success) {
         resetState();
         if (onSuccessNavigateTo) {
           navigate(onSuccessNavigateTo);
         }
-        toast.success(successMessage || 'Ariza muvaffaqqiyatli yuborildi', { richColors: true });
+        await queryClient.invalidateQueries({ queryKey: [queryKey] });
+        toast.success(successMessage || 'Success', { richColors: true });
       } else {
-        handleError(response?.message || 'Arizani yuborishda noma’lum xatolik');
+        handleError(response?.message || 'Some Error');
       }
     },
     onError: (error: Error) => {
-      handleError(error.message || 'Arizani yuborishda server xatoligi');
+      handleError(error.message || 'Some Error');
     },
-    mutationKey: ['submit-application'],
+    mutationKey: ['submit-application']
   });
 
   const isLoading = isPdfLoading || isLoadingMetaData;
@@ -108,6 +110,6 @@ export function useEIMZO({
     isPdfLoading,
     handleCloseModal,
     handleCreateApplication,
-    submitApplicationMetaData,
+    submitApplicationMetaData
   };
 }
