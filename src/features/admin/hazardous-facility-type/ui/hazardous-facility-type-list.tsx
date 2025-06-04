@@ -27,12 +27,6 @@ export function HazardousFacilityTypeList() {
 
   const columns: ColumnDef<HazardousFacilityTypeTableItem>[] = [
     {
-      maxSize: 20,
-      accessorKey: 'number',
-      header: t('sequence_number'),
-      cell: (cell) => cell.row.index + 1,
-    },
-    {
       accessorKey: 'name',
       header: t('hazardous_facility_type'),
     },

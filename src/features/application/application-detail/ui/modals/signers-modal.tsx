@@ -18,7 +18,7 @@ const SignersModal: FC<Props> = ({ signers, setSigners }) => {
   };
   return (
     <Dialog onOpenChange={handleModal} open={!!signers.length}>
-      <DialogContent className="sm:max-w-[700px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="text-[#4E75FF]">Imzolagan shaxslar</DialogTitle>
         </DialogHeader>

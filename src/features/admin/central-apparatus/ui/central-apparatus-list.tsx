@@ -24,12 +24,6 @@ export function CentralApparatusList() {
 
   const columns: ColumnDef<CentralApparatus>[] = [
     {
-      maxSize: 20,
-      accessorKey: 'number',
-      header: t('sequence_number'),
-      cell: (cell) => cell.row.index + 1,
-    },
-    {
       enablePinning: true,
       accessorKey: 'name',
       enableSorting: false,
