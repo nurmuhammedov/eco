@@ -1,11 +1,11 @@
-import { JSX } from 'react';
-import { OptionItem } from '@/shared/types/general.ts';
 import { SelectItem } from '@/shared/components/ui/select.tsx';
+import { OptionItem } from '@/shared/types/general.ts';
+import { JSX } from 'react';
 
 export function getSelectOptions<T>(list: OptionItem<T>[]): JSX.Element[] {
   if (!Array.isArray(list) || list.length === 0) {
     return [
-      <SelectItem value="null" key="no-options" disabled={true}>
+      <SelectItem value="notSelected" key="no-options" disabled={true}>
         Mavjud emas
       </SelectItem>,
     ];
