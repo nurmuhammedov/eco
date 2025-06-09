@@ -31,23 +31,26 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
       <DetailRow title={t(`labels.${type}.factoryNumber`)} value={data?.factoryNumber} />
       <DetailRow title={t(`labels.${type}.factory`)} value={data?.factory} />
       <DetailRow title={t(`labels.${type}.model`)} value={data?.model} />
-      <DetailRow title={t(`labels.${type}.boomLength`)} value={data?.boomLength} />
-      <DetailRow title={t(`labels.${type}.liftingCapacity`)} value={data?.liftingCapacity} />
+      <DetailRow title={t(`labels.${type}.boomLength`)} value={data?.parameters?.boomLength} />
+      <DetailRow title={t(`labels.${type}.liftingCapacity`)} value={data?.parameters?.liftingCapacity} />
       <DetailRow title={t(`labels.${type}.manufacturedAt`)} value={getDate(data?.manufacturedAt)} />
       <DetailRow title={t(`labels.${type}.partialCheckDate`)} value={getDate(data?.partialCheckDate)} />
       <DetailRow title={t(`labels.${type}.fullCheckDate`)} value={getDate(data?.fullCheckDate)} />
       <DetailRow title={t(`labels.${type}.nonDestructiveCheckDate`)} value={getDate(data?.nonDestructiveCheckDate)} />
-      <DetailRow title={t(`labels.${type}.capacity`)} value={data?.capacity} />
-      <DetailRow title={t(`labels.${type}.environment`)} value={data?.environment} />
-      <DetailRow title={t(`labels.${type}.pressure`)} value={data?.pressure} />
-      <DetailRow title={t(`labels.${type}.stopCount`)} value={data?.stopCount} />
-      <DetailRow title={t(`labels.${type}.passengersPerMinute`)} value={data?.passengersPerMinute} />
-      <DetailRow title={t(`labels.${type}.length`)} value={data?.length} />
-      <DetailRow title={t(`labels.${type}.height`)} value={data?.height} />
-      <DetailRow title={t(`labels.${type}.diameter`)} value={data?.diameter} />
-      <DetailRow title={t(`labels.${type}.thickness`)} value={data?.thickness} />
-      <DetailRow title={t(`labels.${type}.temperature`)} value={data?.temperature} />
-      <DetailRow title={t(`labels.${type}.fuel`)} value={data?.fuel} />
+      <DetailRow title={t(`labels.${type}.capacity`)} value={data?.parameters?.capacity} />
+      <DetailRow title={t(`labels.${type}.environment`)} value={data?.parameters?.environment} />
+      <DetailRow title={t(`labels.${type}.pressure`)} value={data?.parameters?.pressure} />
+      <DetailRow title={t(`labels.${type}.stopCount`)} value={data?.parameters?.stopCount} />
+      <DetailRow title={t(`labels.${type}.speed`)} value={data?.parameters?.speed} />
+      <DetailRow title={t(`labels.${type}.passengersPerMinute`)} value={data?.parameters?.passengersPerMinute} />
+      <DetailRow title={t(`labels.${type}.passengerCount`)} value={data?.parameters?.passengerCount} />
+      <DetailRow title={t(`labels.${type}.length`)} value={data?.parameters?.length} />
+      <DetailRow title={t(`labels.${type}.height`)} value={data?.parameters?.height} />
+      <DetailRow title={t(`labels.${type}.diameter`)} value={data?.parameters?.diameter} />
+      <DetailRow title={t(`labels.${type}.thickness`)} value={data?.parameters?.thickness} />
+      <DetailRow title={t(`labels.${type}.temperature`)} value={data?.parameters?.temperature} />
+      <DetailRow title={t(`labels.${type}.density`)} value={data?.parameters?.density} />
+      <DetailRow title={t(`labels.${type}.fuel`)} value={data?.parameters?.fuel} />
       <DetailRow title={t(`labels.${type}.sphere`)} value={data?.sphere} />
     </div>
   );

@@ -13,7 +13,7 @@ export const useApplicationDetail = () => {
     enabled: !!id,
     queryFn: () => applicationDetailApi.getApplicationDetail(id),
     select: (data) => {
-      const files = Object.entries(data.data)
+      const files = Object.entries(data.data?.files)
         .filter(([label, value]) => label.includes('Path') && !!value)
         .map((file) => {
           const label = `labels.${data.appealType.replace('REGISTER_', '')}.${file[0]}`;
