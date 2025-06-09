@@ -93,6 +93,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Kranni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_CRANE,
+    equipmentType: ApplicationTypeEnum.CRANE,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'crane',
   },
@@ -102,6 +103,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Bosim ostida ishlovchi idishni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_CONTAINER, // Yangilandi (RegisterVessel -> REGISTER_CONTAINER)
+    equipmentType: ApplicationTypeEnum.CONTAINER,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'pressureVessel',
   },
@@ -111,6 +113,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Bug‘ qozonlarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_BOILER, // Yangilandi (RegisterSteamAndHotWaterPipeline -> REGISTER_BOILER)
+    equipmentType: ApplicationTypeEnum.BOILER,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'boiler',
   },
@@ -120,6 +123,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Liftni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_ELEVATOR, // Yangilandi (RegisterLift -> REGISTER_ELEVATOR)
+    equipmentType: ApplicationTypeEnum.ELEVATOR,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'elevator',
   },
@@ -129,6 +133,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Eskalatorni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_ESCALATOR, // Yangilandi
+    equipmentType: ApplicationTypeEnum.ESCALATOR,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'escalator',
   },
@@ -138,6 +143,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Attraksion pasportlarini rasmiylashtirish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_ATTRACTION_PASSPORT, // Yangilandi
+    equipmentType: ApplicationTypeEnum.ATTRACTION_PASSPORT,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'passport',
   },
@@ -147,6 +153,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Attraksion qurilmalarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_ATTRACTION, // Yangilandi
+    equipmentType: ApplicationTypeEnum.ATTRACTION,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'attraction',
   },
@@ -156,6 +163,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Quvurlarni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_PIPELINE, // Yangilandi
+    equipmentType: ApplicationTypeEnum.PIPELINE,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'pipeSystem',
   },
@@ -165,6 +173,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_CHEMICAL_CONTAINER, // Yangilandi
+    equipmentType: ApplicationTypeEnum.CHEMICAL_CONTAINER,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'chemicalVessel',
   },
@@ -174,6 +183,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Bug‘ va issiq suv quvurlarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_HEAT_PIPELINE, // Yangilandi
+    equipmentType: ApplicationTypeEnum.HEAT_PIPELINE,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'steamPipe',
   },
@@ -183,6 +193,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Qozon utilizatorlarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_BOILER_UTILIZER, // Yangilandi
+    equipmentType: ApplicationTypeEnum.BOILER_UTILIZER,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'recycleBoiler',
   },
@@ -192,6 +203,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_LPG_CONTAINER, // Yangilandi
+    equipmentType: ApplicationTypeEnum.LPG_CONTAINER,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'gasVessel',
   },
@@ -201,8 +213,8 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description:
       'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    // type: ApplicationTypeEnum.REGISTER_HIGH_GAS_USAGE_EQUIPMENT, // Bu enum yangi ro'yxatda yo'q, izohga olinadi yoki moslashtiriladi
     type: ApplicationTypeEnum.REGISTER_LPG_POWERED, // Vaqtinchalik moslashtirish, asl enum qiymatini aniqlash kerak
+    equipmentType: ApplicationTypeEnum.LPG_POWERED,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'naturalGas',
   },
@@ -212,6 +224,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Yuk ko‘targichni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_HOIST, // Yangilandi (RegisterElevator -> REGISTER_HOIST)
+    equipmentType: ApplicationTypeEnum.HOIST,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'heavyLift',
   },
@@ -221,6 +234,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'Osma arqonli yuruvchi yo‘lni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_CABLEWAY, // Yangilandi (RegisterBridgeOrRoad -> REGISTER_CABLEWAY)
+    equipmentType: ApplicationTypeEnum.CABLEWAY,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'cableway',
   },

@@ -8,5 +8,6 @@ export interface ApplicationCardItem {
   type: ApplicationTypeEnum;
   category: ApplicationCategory;
   parentId?: MainApplicationCategory;
+  equipmentType?: ApplicationTypeEnum;
   icon: keyof typeof ApplicationIcons;
 }
