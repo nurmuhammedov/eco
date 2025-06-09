@@ -2,20 +2,25 @@ import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/applicatio
 import { APPLICATIONS_DATA } from '@/entities/create-application';
 import { useApplicationList } from '@/features/application/application-table/hooks';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
+import Filter from '@/shared/components/common/filter';
 import { useCustomSearchParams } from '@/shared/hooks';
 import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
+import { FileWarning } from 'lucide-react';
 // import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { FileWarning } from 'lucide-react';
 
 export const ApplicationTable = () => {
   // const { t } = useTranslation('common');
   const {
-    paramsObject: { status = ApplicationStatus.ALL, ...rest },
+    paramsObject: { status = ApplicationStatus.ALL, search = '', ...rest },
   } = useCustomSearchParams();
-  const { data: applications = [] } = useApplicationList({ ...rest, status: status !== 'ALL' ? status : '' });
+  const { data: applications = [] } = useApplicationList({
+    ...rest,
+    status: status !== 'ALL' ? status : '',
+    legalTin: search,
+  });
 
   const navigate = useNavigate();
 
@@ -39,13 +44,13 @@ export const ApplicationTable = () => {
       cell: (cell) => APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.title || '',
     },
     {
-      minSize: 150,
-      accessorKey: 'officeName',
+      maxSize: 200,
+      accessorKey: 'test',
       header: 'Qo‘mita maʼsul bo‘limi',
     },
     {
       minSize: 200,
-      accessorKey: 'regionName',
+      accessorKey: 'officeName',
       header: 'Ijrochi hududiy boshqarma',
     },
     {
@@ -82,11 +87,14 @@ export const ApplicationTable = () => {
   ];
 
   return (
-    <DataTable
-      isPaginated
-      data={applications || []}
-      columns={columns as unknown as any}
-      className="h-[calc(100svh-220px)]"
-    />
+    <>
+      <Filter inputKeys={['search', 'appealType', 'officeId', 'executorId']} />
+      <DataTable
+        isPaginated
+        data={applications || []}
+        columns={columns as unknown as any}
+        className="h-[calc(100svh-220px)]"
+      />
+    </>
   );
 };
