@@ -1,4 +1,5 @@
 // src/widgets/register/ui/register-widget.tsx
+import { EquipmentsList } from '@/features/register/equipments/ui/equipments-list';
 import { HfList } from '@/features/register/hf/ui/hf-list';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import React, { Fragment } from 'react';
@@ -27,7 +28,7 @@ const RegisterWidget = () => {
           <HfList />
         </TabsContent>
         <TabsContent value={RegisterActiveTab.EQUIPMENTS} className="mt-4">
-          {/*<EquipmentsList />*/}
+          <EquipmentsList />
         </TabsContent>
         <TabsContent value={RegisterActiveTab.IRS} className="mt-4">
           {/*<IrsList />*/}

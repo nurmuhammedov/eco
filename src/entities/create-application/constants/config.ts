@@ -76,14 +76,14 @@ export const applicationConfigs: Record<string, any> = {
   },
   [ApplicationTypeEnum.REGISTER_IRS]: {
     submitEndpoint: '/appeals/irs',
-    pdfEndpoint: '/appeals/irs/generate-pdf/register',
+    pdfEndpoint: '/appeals/irs/generate-pdf',
   },
   [ApplicationTypeEnum.ACCEPT_IRS]: {
     submitEndpoint: '/appeals/irs/acceptance',
-    pdfEndpoint: '/appeals/irs/generate-pdf/accept',
+    pdfEndpoint: '/appeals/irs/generate-pdf',
   },
   [ApplicationTypeEnum.TRANSFER_IRS]: {
     submitEndpoint: '/appeals/irs/transfer',
-    pdfEndpoint: '/appeals/irs/generate-pdf/transfer',
+    pdfEndpoint: '/appeals/irs/generate-pdf',
   },
 };
