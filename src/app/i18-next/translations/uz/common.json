@@ -494,6 +494,34 @@
       "speed": "Harakat tezligi",
       "passengerCount": "Yo‘lovchilar soni",
       "length": "Uzunligi"
+    },
+    "IRS": {
+      "phoneNumber": "Ariza beruvchining telefon raqami",
+      "parentOrganization": "Yuqori turuvchi tashkilot ",
+      "supervisorName": "Rahbarning F.I.Sh.",
+      "supervisorPosition": "Rahbarning lavozimi",
+      "supervisorStatus": "Rahbarning radiatsiya xavfsizligi bo‘yicha tayyorgarlik holati",
+      "supervisorEducation": "Rahbarning ma‘lumoti",
+      "supervisorPhoneNumber": "Rahbarning telefon raqami",
+      "division": "Bo‘linma nomi (INM bilan ishlovchi)",
+      "identifierType": "INMning identifikatsiya raqami (SRM/NUM)",
+      "symbol": "Radionuklid belgisi",
+      "sphere": "Qo‘llash sohasi",
+      "factoryNumber": "Zavod raqami",
+      "serialNumber": "Seriya raqami",
+      "activity": "Aktivligi, Bk",
+      "type": "INM turi",
+      "category": "INMlarning kategoriyasi",
+      "country": "Ishlab chiqarilgan mamlakat",
+      "manufacturedAt": "Ishlab chiqarilgan sana",
+      "acceptedFrom": "Kimdan olinganligi",
+      "acceptedAt": "Olingan sana",
+      "isValid": "INM holati",
+      "usageType": "INMdan foydalanish maqsadi",
+      "storageLocation": "Saqlash joyi",
+      "address": "Joylashgan manzil",
+      "passportPath": "INM (qurilma) pasporti va sertifikati fayli",
+      "additionalFilePath": "Qo‘shimcha maʼlumotlar"
     }
   }
 }

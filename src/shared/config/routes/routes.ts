@@ -25,7 +25,7 @@ const TemplateEditContentPage = lazy(() => import('@/pages/admin/templates/templ
 const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facility/ui'));
 const RegisterPage = lazy(() => import('@/pages/register/ui'));
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'));
-const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipment-detail'));
+const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'));
 
 export const appRoutes = [
   {
