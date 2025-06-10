@@ -90,6 +90,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 10,
     title: 'Kranni ro‘yxatga olish',
+    name: 'Kran',
     description: 'Kranni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_CRANE,
@@ -100,6 +101,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 4,
     title: 'Bosim ostida ishlovchi idishni ro‘yxatga olish',
+    name: 'Bosim ostida ishlovchi idish',
     description: 'Bosim ostida ishlovchi idishni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_CONTAINER, // Yangilandi (RegisterVessel -> REGISTER_CONTAINER)
@@ -110,6 +112,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 5,
     title: 'Bug‘ qozonni ro‘yxatga olish',
+    name: 'Bug‘ qozon',
     description: 'Bug‘ qozonlarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_BOILER, // Yangilandi (RegisterSteamAndHotWaterPipeline -> REGISTER_BOILER)
@@ -120,6 +123,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 6,
     title: 'Liftni ro‘yxatga olish',
+    name: 'Lift',
     description: 'Liftni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_ELEVATOR, // Yangilandi (RegisterLift -> REGISTER_ELEVATOR)
@@ -130,6 +134,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 7,
     title: 'Eskalatorni ro‘yxatga olish',
+    name: 'Eskalator',
     description: 'Eskalatorni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_ESCALATOR, // Yangilandi
@@ -140,6 +145,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 8,
     title: 'Attraksion pasportini ro‘yxatga olish',
+    name: 'Attraksion pasporti',
     description: 'Attraksion pasportlarini rasmiylashtirish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_ATTRACTION_PASSPORT, // Yangilandi
@@ -150,6 +156,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 9,
     title: 'Attraksionni ro‘yxatga olish',
+    name: 'Attraksion',
     description: 'Attraksion qurilmalarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_ATTRACTION, // Yangilandi
@@ -160,6 +167,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 11,
     title: 'Quvurni ro‘yxatga olish',
+    name: 'Quvur',
     description: 'Quvurlarni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_PIPELINE, // Yangilandi
@@ -170,6 +178,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 12,
     title: 'Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatga olish',
+    name: 'Bosim ostida ishlovchi idish (kimyo)',
     description: 'Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_CHEMICAL_CONTAINER, // Yangilandi
@@ -180,6 +189,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 13,
     title: 'Bug‘ va issiq suv quvurlarini ro‘yxatga olish',
+    name: 'Bug‘ va issiq suv quvuri',
     description: 'Bug‘ va issiq suv quvurlarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_HEAT_PIPELINE, // Yangilandi
@@ -190,6 +200,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 14,
     title: 'Qozon utilizatorlarini ro‘yxatga olish',
+    name: 'Qozon utilizatorlarini',
     description: 'Qozon utilizatorlarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_BOILER_UTILIZER, // Yangilandi
@@ -200,6 +211,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 15,
     title: 'Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatga olish',
+    name: 'Bosim ostida ishlovchi idishlarni (SUG)',
     description: 'Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_LPG_CONTAINER, // Yangilandi
@@ -210,6 +222,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 16,
     title: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni ro‘yxatga olish',
+    name: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma',
     description:
       'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
@@ -221,6 +234,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 17,
     title: 'Yuk ko‘targichni ro‘yxatga olish',
+    name: 'Yuk ko‘targich',
     description: 'Yuk ko‘targichni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_HOIST, // Yangilandi (RegisterElevator -> REGISTER_HOIST)
@@ -231,6 +245,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 18,
     title: 'Osma arqonli yuruvchi yo‘lni ro‘yxatga olish',
+    name: 'Osma arqonli yuruvchi yo‘l',
     description: 'Osma arqonli yuruvchi yo‘lni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
     type: ApplicationTypeEnum.REGISTER_CABLEWAY, // Yangilandi (RegisterBridgeOrRoad -> REGISTER_CABLEWAY)
