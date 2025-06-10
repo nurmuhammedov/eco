@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { cn } from '@/shared/lib/utils';
 import { CalendarIcon } from 'lucide-react';
@@ -37,24 +37,25 @@ export type DatePickerProps = {
 };
 
 const DatePicker: React.FC<DatePickerProps> = ({
-  value,
-  onChange,
-  dateFormat = 'dd.MM.yyyy',
-  placeholder = 'Sana tanlang',
-  disableStrategy = 'none',
-  customDisabledFn,
-  minDate,
-  maxDate,
-  className,
-  buttonVariant = 'outline',
-  disabled = false,
-  icon = <CalendarIcon className="ml-auto size-4 opacity-50" />,
-}) => {
+                                                 value,
+                                                 onChange,
+                                                 dateFormat = 'dd.MM.yyyy',
+                                                 placeholder = 'Sana tanlang',
+                                                 disableStrategy = 'none',
+                                                 customDisabledFn,
+                                                 minDate,
+                                                 maxDate,
+                                                 className,
+                                                 buttonVariant = 'outline',
+                                                 disabled = false,
+                                                 icon = <CalendarIcon className="ml-auto size-4 opacity-50" />
+                                               }) => {
+  const [isShow, setIsShow] = useState(false);
+
   // Function to determine which dates should be disabled
   const getDisabledDates = (date: Date): boolean => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
     switch (disableStrategy) {
       case 'before':
         return date < today;
@@ -74,7 +75,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
   };
 
   return (
-    <Popover>
+    <Popover open={isShow} onOpenChange={(val) => setIsShow(val)} >
       <PopoverTrigger asChild>
         <FormControl>
           <Button
@@ -88,7 +89,10 @@ const DatePicker: React.FC<DatePickerProps> = ({
         </FormControl>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
-        <Calendar mode="single" selected={value} onSelect={onChange} disabled={getDisabledDates} initialFocus />
+        <Calendar mode="single" selected={value} onSelect={(value) => {
+          onChange(value);
+          setIsShow(false);
+        }} disabled={getDisabledDates} initialFocus />
       </PopoverContent>
     </Popover>
   );
