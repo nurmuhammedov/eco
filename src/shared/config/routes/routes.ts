@@ -24,6 +24,8 @@ const EquipmentPage = lazy(() => import('@/pages/admin/equipment/equipment-page'
 const TemplateEditContentPage = lazy(() => import('@/pages/admin/templates/template-edit-content'));
 const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facility/ui'));
 const RegisterPage = lazy(() => import('@/pages/register/ui'));
+const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'));
+const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipment-detail'));
 
 export const appRoutes = [
   {
@@ -49,6 +51,16 @@ export const appRoutes = [
   {
     path: 'register',
     component: RegisterPage,
+    roles: [],
+  },
+  {
+    path: 'register/:id/hf',
+    component: RegisterHFDetail,
+    roles: [],
+  },
+  {
+    path: 'register/:id/equipments',
+    component: RegisterEquipmentDetail,
     roles: [],
   },
   {
