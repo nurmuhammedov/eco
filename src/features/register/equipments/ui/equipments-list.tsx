@@ -1,7 +1,8 @@
 import { ApplicationStatus } from '@/entities/application';
-import { APPLICATIONS_DATA } from '@/entities/create-application';
+import { ApplicationCategory, APPLICATIONS_DATA } from '@/entities/create-application';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
+import { TabsLayout } from '@/shared/layouts';
 import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
@@ -10,12 +11,17 @@ import { useNavigate } from 'react-router-dom';
 export const EquipmentsList = () => {
   const navigate = useNavigate();
   const {
-    paramsObject: { status = ApplicationStatus.ALL, type = '', ...rest },
+    paramsObject: { status = ApplicationStatus.ALL, type = 'ALL', ...rest },
+    addParams,
   } = useCustomSearchParams();
-  const { data = [] } = usePaginatedData<any>(`/equipments`, { ...rest, type, status: status !== 'ALL' ? status : '' });
+  const { data = [] } = usePaginatedData<any>(`/equipments`, {
+    ...rest,
+    type: type !== 'ALL' ? type : '',
+    status: status !== 'ALL' ? status : '',
+  });
 
   const handleViewApplication = (id: string) => {
-    navigate(`detail/${id}`);
+    navigate(`${id}/equipments`);
   };
 
   const columns: ColumnDef<ISearchParams>[] = [
@@ -29,7 +35,7 @@ export const EquipmentsList = () => {
     },
     {
       header: 'Qurilmaning turi',
-      cell: (cell) => APPLICATIONS_DATA?.find((i) => i?.equipmentType == cell.row.original.type)?.title || '',
+      cell: (cell) => APPLICATIONS_DATA?.find((i) => i?.equipmentType == cell.row.original.type)?.name || '',
     },
     {
       header: 'Qurilmaning egasi',
@@ -61,6 +67,21 @@ export const EquipmentsList = () => {
   ];
 
   return (
-    <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-220px)]" />
+    <TabsLayout
+      activeTab={type}
+      tabs={[
+        {
+          id: 'ALL',
+          name: 'Barchasi',
+        },
+        ...(APPLICATIONS_DATA?.filter((i) => i?.category == ApplicationCategory.HOKQ)?.map((i) => ({
+          id: i?.equipmentType?.toString() || 'ALL',
+          name: i?.name?.toString() || 'Bachasi',
+        })) || []),
+      ]}
+      onTabChange={(type) => addParams({ type: type }, 'page')}
+    >
+      <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-320px)]" />
+    </TabsLayout>
   );
 };

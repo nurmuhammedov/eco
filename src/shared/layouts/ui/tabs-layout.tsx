@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { cn } from '@/shared/lib/utils.ts';
+import { ReactNode } from 'react';
 
 interface Tab {
   id: string;
@@ -32,7 +32,7 @@ export const TabsLayout = ({
 }: TabsLayoutProps) => {
   return (
     <Tabs defaultValue={defaultValue} value={activeTab} onValueChange={onTabChange} className={className}>
-      <div className="flex justify-between">
+      <div className="flex justify-between overflow-x-auto no-scrollbar">
         <TabsList className={classNameTabList}>
           {tabs.map((tab) => (
             <TabsTrigger className={cn('hover:bg-neutral-100', classNameTrigger)} key={tab.id} value={tab.id}>
