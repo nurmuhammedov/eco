@@ -1,20 +1,20 @@
-import { APPLICATIONS_DATA } from '@/entities/create-application';
-import { DetailCardAccordion } from '@/shared/components/common/detail-card';
-import DetailRow from '@/shared/components/common/detail-row';
-import { getDate } from '@/shared/utils/date';
-import Stepper from '@/shared/components/common/stepper';
 import { ApplicationStatus } from '@/entities/application';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
+import { APPLICATIONS_DATA } from '@/entities/create-application';
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
 import AppealResponseDocs from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx';
 import ApplicantDocsTable from '@/features/application/application-detail/ui/parts/applicant-docs-table.tsx';
-import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
-import { Coordinate } from '@/shared/components/common/yandex-map';
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
+import { DetailCardAccordion } from '@/shared/components/common/detail-card';
+import DetailRow from '@/shared/components/common/detail-row';
+import Stepper from '@/shared/components/common/stepper';
+import { Coordinate } from '@/shared/components/common/yandex-map';
+import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
+import { getDate } from '@/shared/utils/date';
 
 const ApplicationDetail = ({ data }: any) => {
-  const currentObjLocation = data?.data?.location.split(',') || ([] as Coordinate[]);
+  const currentObjLocation = data?.data?.location?.split(',') || ([] as Coordinate[]);
   const isLegalApplication = !!data?.legalTin;
   return (
     <div className="grid grid-cols-1 gap-4 mt-4">
@@ -42,7 +42,7 @@ const ApplicationDetail = ({ data }: any) => {
             <DetailRow title="Ijro muddati:" value={getDate(data?.deadline)} />
             <DetailRow title="Ijrochi Qo‘mita masʼul bo‘limi:" value={'-'} />
             <DetailRow title="Ijrochi Hududiy boshqarma nomi:" value={data?.officeName || '-'} />
-            <DetailRow title="Hududiy boshqarma boshlig‘i F.I.SH:" value={data?.executorName || '-'}  />
+            <DetailRow title="Hududiy boshqarma boshlig‘i F.I.SH:" value={data?.executorName || '-'} />
             <DetailRow title="Hududiy boshqarma boshlig‘i rezolyutsiyasi:" value={data?.resolution || '-'} />
             <DetailRow title="Ijrochi inspektor F.I.SH:" value={data?.executorName || '-'} />
             <DetailRow title="Ijrochi (inspektor) xulosasi:" value={data?.conclusion || '-'} />
@@ -75,7 +75,11 @@ const ApplicationDetail = ({ data }: any) => {
               <TabsTrigger value="response_docs">Javob hujjatlari</TabsTrigger>
             </TabsList>
             <TabsContent value="info">
-              <AppealMainInfo data={data?.data} type={data?.appealType?.replace('REGISTER_', '')} address={data?.address} />
+              <AppealMainInfo
+                data={data?.data}
+                type={data?.appealType?.replace('REGISTER_', '')}
+                address={data?.address}
+              />
             </TabsContent>
             <TabsContent value="applicant_docs">
               <ApplicantDocsTable />
@@ -88,9 +92,11 @@ const ApplicationDetail = ({ data }: any) => {
         <DetailCardAccordion.Item value="appeal_files" title="Arizaga biriktirilgan fayllar">
           <FilesSection files={data?.files || []} />
         </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="appeal_location" title="Arizada ko‘rsatilgan obyekt yoki qurilma joyi">
-          <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
-        </DetailCardAccordion.Item>
+        {!!currentObjLocation?.length && (
+          <DetailCardAccordion.Item value="appeal_location" title="Arizada ko‘rsatilgan obyekt yoki qurilma joyi">
+            <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
+          </DetailCardAccordion.Item>
+        )}
       </DetailCardAccordion>
     </div>
   );

@@ -4,9 +4,11 @@ import { ApplicationCategory, ApplicationTypeEnum, MainApplicationCategory } fro
 export interface ApplicationCardItem {
   id: number;
   title: string;
+  name?: string;
   description: string;
   type: ApplicationTypeEnum;
   category: ApplicationCategory;
   parentId?: MainApplicationCategory;
+  equipmentType?: ApplicationTypeEnum;
   icon: keyof typeof ApplicationIcons;
 }
