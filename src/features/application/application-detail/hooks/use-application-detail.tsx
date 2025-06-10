@@ -20,7 +20,7 @@ export const useApplicationDetail = () => {
           return { label: t(label), path: file[1] };
         });
       const fields = Object.entries(data.data)
-        .filter(([label]) => !label.includes('Path'))
+        .filter(([label]) => label.includes('Path'))
         .map((file) => {
           return file[0];
         });
@@ -29,8 +29,8 @@ export const useApplicationDetail = () => {
 
       return {
         ...data,
-        files
+        files,
       };
-    }
+    },
   });
 };
