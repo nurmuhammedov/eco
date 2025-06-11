@@ -26,92 +26,98 @@ const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facil
 const RegisterPage = lazy(() => import('@/pages/register/ui'));
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'));
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'));
+const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'));
 
 export const appRoutes = [
   {
     path: 'applications',
     component: Applications,
-    roles: [],
+    roles: []
   },
   {
     path: 'applications/create',
     component: CreateApplicationGrids,
-    roles: [UserRoles.LEGAL],
+    roles: [UserRoles.LEGAL]
   },
   {
     path: 'applications/create/:type',
     component: CreateApplicationForm,
-    roles: [UserRoles.LEGAL],
+    roles: [UserRoles.LEGAL]
   },
   {
     path: 'applications/detail/:id',
     component: ApplicationDetail,
-    roles: [],
+    roles: []
   },
   {
     path: 'register',
     component: RegisterPage,
-    roles: [],
+    roles: []
   },
   {
     path: 'register/:id/hf',
     component: RegisterHFDetail,
-    roles: [],
+    roles: []
   },
   {
     path: 'register/:id/equipments',
     component: RegisterEquipmentDetail,
-    roles: [],
+    roles: []
+  },
+  {
+    path: 'register/:id/irs',
+    component: RegisterIrsDetail,
+    roles: []
   },
   {
     path: 'territories',
     component: RegionsPage,
-    roles: [UserRoles.ADMIN],
+    roles: [UserRoles.ADMIN]
   },
   {
     path: 'department',
     component: DepartmentPage,
-    roles: [UserRoles.ADMIN],
+    roles: [UserRoles.ADMIN]
   },
   {
     path: 'templates',
     component: TemplatesPage,
-    roles: [UserRoles.ADMIN],
+    roles: [UserRoles.ADMIN]
   },
   {
     path: 'templates/:id',
     component: TemplateEditContentPage,
-    roles: [UserRoles.ADMIN],
+    roles: [UserRoles.ADMIN]
   },
   {
     path: 'staffs',
     component: StaffsPage,
-    roles: [UserRoles.ADMIN],
+    roles: [UserRoles.ADMIN]
   },
   {
     path: 'hazardous-facilities',
     component: HazardousFacilitiesPage,
-    roles: [UserRoles.ADMIN],
+    roles: [UserRoles.ADMIN]
   },
   {
     path: 'equipments',
     component: EquipmentPage,
-    roles: [UserRoles.ADMIN],
-  },
+    roles: [UserRoles.ADMIN]
+  }
 ];
 
 export const authRoutes = [
   {
     path: 'login',
-    component: OneIdLoginPage,
+    component: OneIdLoginPage
   },
   {
     path: 'login/admin',
-    component: AdminLogin,
-  },
+    component: AdminLogin
+  }
 ];
 
 export const specialComponents = {
   notFound: NotFound,
-  unauthorized: UnAuthorized,
+  unauthorized: UnAuthorized
 };
