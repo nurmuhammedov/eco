@@ -1,3 +1,4 @@
+import { IrsUsageType } from '@/entities/create-application';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { ISearchParams } from '@/shared/types';
@@ -18,8 +19,42 @@ export const IrsList = () => {
 
   const columns: ColumnDef<ISearchParams>[] = [
     {
-      header: 'Hisobga olish sanasi',
+      header: 'INM hisobga olish sanasi',
       accessorFn: (row) => getDate(row.registrationDate),
+    },
+    {
+      header: 'INM ro‘yxat raqami',
+      accessorFn: (row) => row?.registryNumber,
+    },
+    {
+      header: 'Manzil',
+      accessorFn: (row) => row?.address,
+    },
+    {
+      header: 'Kategoriyasi',
+      accessorFn: (row) => row?.category,
+    },
+    {
+      header: 'Aktivligi',
+      accessorFn: (row) => row?.activity,
+    },
+    {
+      header: 'Soha',
+      accessorFn: (row) => row?.sphere,
+    },
+    {
+      header: 'Radionuklid belgisi',
+      accessorFn: (row) => row?.symbol,
+    },
+    {
+      header: 'Foydalanish maqsadi',
+      accessorFn: (row) =>
+        [
+          { id: IrsUsageType.USAGE, name: 'Ishlatish (foydalanish) uchun' },
+          { id: IrsUsageType.DISPOSAL, name: 'Ko‘mish uchun' },
+          { id: IrsUsageType.EXPORT, name: 'Chet-elga olib chiqish uchun' },
+          { id: IrsUsageType.STORAGE, name: 'Vaqtinchalik saqlash uchun' },
+        ]?.find((i) => i?.id == row?.usageType)?.name || '',
     },
     {
       id: 'actions',

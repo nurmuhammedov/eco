@@ -33,7 +33,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="Ionlashtiruvchi nurlanish manbalarini ro‘yxatga olish" />
         {/* NoteForm kerak bo'lsa qo'shiladi */}
-        <CardForm className="mb-2">
+        <CardForm className="my-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
             <FormField
               control={form.control}
@@ -66,7 +66,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
               name="supervisorName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Rahbarning F.I.Sh.</FormLabel>
+                  <FormLabel required>Masʼul shaxsning F.I.Sh.</FormLabel>
                   <FormControl>
                     <Input className="w-full 3xl:w-sm" placeholder="Rahbarning F.I.Sh." {...field} />
                   </FormControl>
@@ -79,7 +79,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
               name="supervisorPosition"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Rahbarning lavozimi</FormLabel>
+                  <FormLabel required>Masʼul shaxsning lavozimi</FormLabel>
                   <FormControl>
                     <Input className="w-full 3xl:w-sm" placeholder="Rahbarning lavozimi" {...field} />
                   </FormControl>
@@ -92,7 +92,9 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
               name="supervisorStatus"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Rahbarning radiatsiya xavfsizligi bo‘yicha tayyorgarlik holati</FormLabel>
+                  <FormLabel required>
+                    Masʼul shaxsning radiatsiya xavfsizligi bo‘yicha <br /> tayyorgarlik holati
+                  </FormLabel>
                   <FormControl>
                     <Input className="w-full 3xl:w-sm" placeholder="Guvohnoma, sertifikat va h.k." {...field} />
                   </FormControl>
@@ -105,7 +107,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
               name="supervisorEducation"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Rahbarning ma‘lumoti</FormLabel>
+                  <FormLabel required>Masʼul shaxsning ma‘lumoti</FormLabel>
                   <FormControl>
                     <Input className="w-full 3xl:w-sm" placeholder="Rahbarning ma‘lumoti" {...field} />
                   </FormControl>
@@ -118,7 +120,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
               name="supervisorPhoneNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Rahbarning telefon raqami</FormLabel>
+                  <FormLabel required>Masʼul shaxsning telefon raqami</FormLabel>
                   <FormControl>
                     <PhoneInput className="w-full 3xl:w-sm" placeholder="+998 XX XXX XX XX" {...field} />
                   </FormControl>
