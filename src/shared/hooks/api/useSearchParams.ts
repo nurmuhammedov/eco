@@ -9,7 +9,6 @@ function useCustomSearchParams() {
 
   function addParams(paramKeyOrObj: ISearchParams, ...removeKeys: string[]): void {
     if (!paramKeyOrObj) return;
-    console.log(paramsObj, 'paramsObj');
 
     let newParams: ISearchParams = { ...paramsObj };
 
@@ -22,8 +21,6 @@ function useCustomSearchParams() {
     if (isObject(paramKeyOrObj)) {
       newParams = { ...newParams, ...paramKeyOrObj };
     }
-
-    console.log(newParams, 'newParams');
 
     setSearchParams(cleanParams(newParams) as unknown as URLSearchParams, { replace: true });
   }

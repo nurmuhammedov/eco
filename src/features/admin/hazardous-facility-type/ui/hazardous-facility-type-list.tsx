@@ -1,25 +1,22 @@
-import { useTranslation } from 'react-i18next';
-import { ColumnDef } from '@tanstack/react-table';
-import { UIModeEnum } from '@/shared/types/ui-types';
-import { useFilters } from '@/shared/hooks/use-filters';
-import { useHazardousFacilityTypeDrawer } from '@/shared/hooks/entity-hooks';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import {
   FilterHazardousFacilityTypeDTO,
   HazardousFacilityTypeTableItem,
   useDeleteHazardousFacilityType,
   useHazardousFacilityTypeListQuery,
 } from '@/entities/admin/hazardous-facility-type';
-import { objectToList } from '@/shared/constants/object-to-list';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
+import { useHazardousFacilityTypeDrawer } from '@/shared/hooks/entity-hooks';
+import { useFilters } from '@/shared/hooks/use-filters';
+import { UIModeEnum } from '@/shared/types/ui-types';
+import { ColumnDef } from '@tanstack/react-table';
+import { useTranslation } from 'react-i18next';
 
 export function HazardousFacilityTypeList() {
   const { filters } = useFilters();
   const { t } = useTranslation('common');
   const { onOpen } = useHazardousFacilityTypeDrawer();
   const { data, isLoading } = useHazardousFacilityTypeListQuery(filters as FilterHazardousFacilityTypeDTO);
-  const { sphereOptions } = objectToList();
 
-  console.log(sphereOptions);
   const deleteData = useDeleteHazardousFacilityType();
   const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
 
