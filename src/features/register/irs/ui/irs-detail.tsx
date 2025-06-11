@@ -41,7 +41,7 @@ const IrsDetail = () => {
           <LegalApplicantInfo tinNumber={data?.legalTin} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
-          <AppealMainInfo data={data} type={data?.type} address={data?.address} />
+          <AppealMainInfo data={data} type={"IRS"} address={data?.address} />
         </DetailCardAccordion.Item>
         {!!currentObjLocation?.length && (
           <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">
