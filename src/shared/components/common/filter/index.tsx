@@ -3,11 +3,14 @@ import { ApplicationTypeEnum } from '@/entities/create-application/types/enums';
 import { API_ENDPOINTS } from '@/shared/api/endpoints';
 import { FilterField, FilterRow } from '@/shared/components/common/filters';
 import SearchInput from '@/shared/components/common/search-input/ui/search-input';
+import DatePicker from '@/shared/components/ui/datepicker';
+import { Form, FormField, FormItem } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { useCustomSearchParams } from '@/shared/hooks';
 import useData from '@/shared/hooks/api/useData';
 import { debounce } from '@/shared/lib';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
+import { format } from 'date-fns';
 import React, { useCallback, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +22,8 @@ interface ApplicationFiltersFormValues {
   appealType?: ApplicationTypeEnum;
   officeId?: string;
   executorId?: string;
+  startDate?: Date;
+  endDate?: Date;
 }
 
 interface ApplicationFiltersProps {
@@ -29,17 +34,23 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
   const { t } = useTranslation(['common']);
   const { paramsObject, addParams } = useCustomSearchParams();
 
-  const { control, handleSubmit } = useForm<ApplicationFiltersFormValues>({
+  const form = useForm<ApplicationFiltersFormValues>({
     defaultValues: {
       search: paramsObject.search || '',
       appealType: paramsObject.appealType || '',
       officeId: paramsObject.officeId?.toString() || '',
       executorId: paramsObject.executorId?.toString() || '',
+      startDate: paramsObject.startDate ? new Date(paramsObject.startDate) : undefined,
+      endDate: paramsObject.endDate ? new Date(paramsObject.endDate) : undefined,
     },
   });
 
+  const { control, handleSubmit } = form;
+
   const isOfficeFilterEnabled = useMemo(() => inputKeys.includes('officeId'), [inputKeys]);
   const isExecutorFilterEnabled = useMemo(() => inputKeys.includes('executorId'), [inputKeys]);
+  const isStartDateFilterEnabled = useMemo(() => inputKeys.includes('startDate'), [inputKeys]);
+  const isEndDateFilterEnabled = useMemo(() => inputKeys.includes('endDate'), [inputKeys]);
 
   const dynamicApplicationTypeOptions = APPLICATIONS_DATA.map((item) => (
     <SelectItem key={item.type} value={item.type}>
@@ -58,7 +69,14 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
   );
 
   const onSubmit = (data: ApplicationFiltersFormValues) => {
-    addParams(data, 'page');
+    const formattedData: any = { ...data };
+    if (data.startDate) {
+      formattedData.startDate = format(data.startDate, 'yyyy-MM-dd');
+    }
+    if (data.endDate) {
+      formattedData.endDate = format(data.endDate, 'yyyy-MM-dd');
+    }
+    addParams(formattedData, 'page');
   };
 
   const debouncedSubmit = useCallback(debounce(handleSubmit(onSubmit), 300), [handleSubmit, onSubmit]);
@@ -67,7 +85,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
     switch (key) {
       case 'search':
         return (
-          <FilterField key={key}>
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
             <Controller
               name="search"
               control={control}
@@ -86,7 +104,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
         );
       case 'appealType':
         return (
-          <FilterField key={key}>
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
             <Controller
               name="appealType"
               control={control}
@@ -113,7 +131,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
       case 'officeId':
         if (!isOfficeFilterEnabled) return null;
         return (
-          <FilterField key={key}>
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
             <Controller
               name="officeId"
               control={control}
@@ -141,7 +159,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
       case 'executorId':
         if (!isExecutorFilterEnabled) return null;
         return (
-          <FilterField key={key}>
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
             <Controller
               name="executorId"
               control={control}
@@ -166,15 +184,61 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
             />
           </FilterField>
         );
+      case 'startDate':
+        if (!isStartDateFilterEnabled) return null;
+        return (
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+            <FormField
+              control={control}
+              name="startDate"
+              render={({ field }) => (
+                <FormItem>
+                  <DatePicker
+                    value={field.value}
+                    onChange={(date) => {
+                      field.onChange(date);
+                      handleSubmit(onSubmit)();
+                    }}
+                    placeholder="dan"
+                  />
+                </FormItem>
+              )}
+            />
+          </FilterField>
+        );
+      case 'endDate':
+        if (!isEndDateFilterEnabled) return null;
+        return (
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+            <FormField
+              control={control}
+              name="endDate"
+              render={({ field }) => (
+                <FormItem>
+                  <DatePicker
+                    value={field.value}
+                    onChange={(date) => {
+                      field.onChange(date);
+                      handleSubmit(onSubmit)();
+                    }}
+                    placeholder="gacha"
+                  />
+                </FormItem>
+              )}
+            />
+          </FilterField>
+        );
       default:
         return null;
     }
   };
 
   return (
-    <form className="mb-3">
-      <FilterRow>{inputKeys.map((key) => renderInput(key))}</FilterRow>
-    </form>
+    <Form {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} className="mb-3">
+        <FilterRow>{inputKeys.map((key) => renderInput(key))}</FilterRow>
+      </form>
+    </Form>
   );
 };
 

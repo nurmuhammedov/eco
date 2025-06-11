@@ -88,12 +88,12 @@ export const ApplicationTable = () => {
 
   return (
     <>
-      <Filter inputKeys={['search', 'appealType', 'officeId', 'executorId']} />
+      <Filter inputKeys={['search', 'appealType', 'officeId', 'executorId', 'startDate', 'endDate']} />
       <DataTable
         isPaginated
         data={applications || []}
         columns={columns as unknown as any}
-        className="h-[calc(100svh-220px)]"
+        className="h-[calc(100svh-280px)]"
       />
     </>
   );
