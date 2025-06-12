@@ -11,6 +11,11 @@ export default [
     url: '/register',
     icon: 'external-drive',
   },
+  {
+    title: 'menu.risk_analysis',
+    url: '/risk-analysis',
+    icon: 'danger',
+  },
   // {
   //   title: 'menu.accreditation',
   //   url: '/accreditation',

@@ -30,7 +30,6 @@
     "applications": "Arizalar",
     "accreditation": "Akkreditatsiya",
     "register": "Reyestrlar",
-    "risk_analysis": "Xavf tahlili",
     "cadastre": "Kadastr",
     "prophylactic": "Profilaktika",
     "attestation": "Attestatsiya",
@@ -40,7 +39,24 @@
     "hazardous_facilities": "XICHOlar",
     "templates": "Shablonlar",
     "sub_types": "Quyi turlar",
-    "permits_authorization_documents": "Ruxsat etuvchi hujjatlar"
+    "permits_authorization_documents": "Ruxsat etuvchi hujjatlar",
+    "risk_analysis": "Xavfni tahlil qilish"
+  },
+  "risk_analysis_tabs": {
+    "XICHO": "XICHO",
+    "INM": "INM",
+    "LIFT": "Lift",
+    "ATTRACTION": "Attraksion",
+    "NOT_ASSIGNED": "Inspektor belgilanmaganlar",
+    "ASSIGNED": "Inspektor belgilanganlar"
+  },
+  "risk_analysis_columns": {
+    "registryNumber": "Reyestr raqami",
+    "name": "Nomi",
+    "legalName": "Yuridik shaxs nomi",
+    "legalTin": "STIR",
+    "address": "Manzil",
+    "inspectorName": "Inspektor F.I.SH."
   },
   "app": {
     "name": "Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi ekotizimi"

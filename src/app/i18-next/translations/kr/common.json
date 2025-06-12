@@ -30,7 +30,7 @@
     "applications": "Аризалар",
     "accreditation": "Аккредитация",
     "register": "Реестрлар",
-    "risk_analysis": "Хавф таҳлили",
+    "risk_analysis": "Хавф таҳлил қилиш",
     "cadastre": "Кадастр",
     "prophylactic": "Профилактика",
     "attestation": "Аттестация",
@@ -41,6 +41,22 @@
     "templates": "Шаблонлар",
     "sub_types": "Қуйи турлар",
     "permits_authorization_documents": "Рухсат этувчи хужжатлар"
+  },
+  "risk_analysis_tabs": {
+    "XICHO": "ХИЧО",
+    "INM": "ИНМ",
+    "LIFT": "Лифт",
+    "ATTRACTION": "Аттракцион",
+    "NOT_ASSIGNED": "Инспектор белгиланмаганлар",
+    "ASSIGNED": "Инспектор белгиланганлар"
+  },
+  "risk_analysis_columns": {
+    "registryNumber": "Реестр рақами",
+    "name": "Номи",
+    "legalName": "Юридик шахс номи",
+    "legalTin": "СТИР",
+    "address": "Манзил",
+    "inspectorName": "Инспектор Ф.И.Ш."
   },
   "app": {
     "name": "Саноат, радиация ва ядро хавфсизлиги қўмитаси экотизими"

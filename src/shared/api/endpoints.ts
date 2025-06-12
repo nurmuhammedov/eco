@@ -60,4 +60,9 @@ export const API_ENDPOINTS: Record<string, string> = {
   APPEAL_EQUIPMENT_PDF_CABLEWAY: APPEALS_EQUIPMENT_GENERATE_PDF_URL + 'cableway',
   APPEAL_EQUIPMENT_PDF_BOILER: APPEALS_EQUIPMENT_GENERATE_PDF_URL + 'boiler',
   APPEAL_EQUIPMENT_PDF_BOILER_UTILIZER: APPEALS_EQUIPMENT_GENERATE_PDF_URL + 'boiler-utilizer',
+
+  RISK_ASSESSMENT_HF: '/hf/risk-assessment',
+  RISK_ASSESSMENT_IRS: '/irs/risk-assessment',
+  RISK_ASSESSMENT_ATTRACTIONS: '/equipments/attractions/risk-assessment',
+  RISK_ASSESSMENT_ELEVATORS: '/equipments/elevators/risk-assessment',
 };
