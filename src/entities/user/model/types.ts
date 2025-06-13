@@ -17,9 +17,18 @@ export enum Direction {
   CERTIFICATE = 'CERTIFICATE',
 }
 
+interface IInterval {
+  id: number;
+  year: number;
+  startDate: string;
+  endDate: string;
+  status: 'CURRENT' | 'PAST' | 'FUTURE';
+}
+
 export type UserState = {
   id: string;
   name: string;
+  interval: IInterval;
   role: UserRoles;
   directions: Direction[];
 };
