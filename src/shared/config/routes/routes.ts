@@ -28,6 +28,7 @@ const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'));
 const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'));
 const RiskAnalysisPage = lazy(() => import('@/pages/risk-analysis'));
+const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'));
 
 export const appRoutes = [
   {
@@ -110,6 +111,11 @@ export const appRoutes = [
     component: RiskAnalysisPage,
     roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR],
   },
+  {
+    path: 'risk-analysis/detail',
+    component: RiskAnalysisDetailPage,
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR]
+  }
 ];
 
 export const authRoutes = [
