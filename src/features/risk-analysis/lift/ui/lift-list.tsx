@@ -1,9 +1,10 @@
-import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types';
+import { RiskAnalysisItem, RiskAnalysisParams } from '@/entities/risk-analysis/models/risk-analysis.types';
 import { UserRoles } from '@/entities/user';
 import { API_ENDPOINTS } from '@/shared/api';
 import { DataTable } from '@/shared/components/common/data-table';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { useCurrentRole, useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { AssignedStatusTab } from '@/widgets/risk-analysis/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { useMemo } from 'react';
@@ -11,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 export const LiftList = () => {
   const { t } = useTranslation('common');
+  const { user } = useAuth();
   const currentRole = useCurrentRole();
   const isRegional = currentRole === UserRoles.REGIONAL;
 
@@ -23,11 +25,15 @@ export const LiftList = () => {
   };
 
   const apiParams = useMemo(() => {
+    const params: RiskAnalysisParams = {};
     if (isRegional) {
-      return { isAssigned: activeAssignedStatus === AssignedStatusTab.ASSIGNED };
+      params.isAssigned = activeAssignedStatus === AssignedStatusTab.ASSIGNED;
     }
-    return {};
-  }, [isRegional, activeAssignedStatus]);
+    if (user?.interval?.id) {
+      params.intervalId = user.interval.id;
+    }
+    return params;
+  }, [isRegional, activeAssignedStatus, user]);
 
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_ELEVATORS, apiParams);
 

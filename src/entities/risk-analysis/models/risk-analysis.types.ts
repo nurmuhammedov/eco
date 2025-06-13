@@ -12,6 +12,7 @@ export interface RiskAnalysisParams {
   isAssigned?: boolean;
   page?: number;
   size?: number;
+  intervalId?: number;
 
   [key: string]: any;
 }
