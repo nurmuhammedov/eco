@@ -1,5 +1,7 @@
-const Index = () => {
-  return <div></div>;
+import RiskAnalysisWidget from '@/widgets/risk-analysis/ui/risk-analysis-widget';
+
+const RiskAnalysisPage = () => {
+  return <RiskAnalysisWidget />;
 };
 
-export default Index;
+export default RiskAnalysisPage;
