@@ -7,12 +7,21 @@ const LegalApplicantInfo = ({ tinNumber }: any) => {
     <div className="py-1  flex flex-col">
       <DetailRow title="Tashkilot STIR:" value={data?.tin || '-'} />
       <DetailRow title="Tashkilot nomi:" value={data?.legalName || '-'} />
-      <DetailRow title="Tashkilot tashkiliy-huquqiy shakli:" value={'-'} />
+      <DetailRow title="Tashkilot tashkiliy-huquqiy shakli:" value={data?.legalForm || '-'} />
+      <DetailRow title="Tashkilot mulkchilik shakli:" value={data?.legalOwnershipType || '-'} />
       <DetailRow title="Tashkilot rahbari F.I.SH:" value={data?.fullName || '-'} />
       <DetailRow title="Tashkilot manzili:" value={data?.legalAddress || '-'} />
-      <DetailRow title="Tashkilot telefon raqami:" value={'-'} />
-      <DetailRow title="Tashkilot elektron pochta manzili:" value={'-'} />
-      <DetailRow title="Tashkilotning faoliyat yuritish holati:" value={'-'} />
+      <DetailRow title="Tashkilot telefon raqami:" value={data?.phoneNumber || '-'} />
+      <DetailRow
+        title="Tashkilotning faoliyat yuritish holati:"
+        value={
+          data?.isActive ? (
+            <span className="text-green-600">Faol</span>
+          ) : (
+            <span className="text-red-600">Faol emas</span>
+          )
+        }
+      />
     </div>
   );
 };

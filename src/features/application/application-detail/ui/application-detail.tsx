@@ -42,7 +42,7 @@ const ApplicationDetail = ({ data }: any) => {
             <DetailRow title="Ijro muddati:" value={getDate(data?.deadline)} />
             <DetailRow title="Ijrochi Qo‘mita masʼul bo‘limi:" value={'-'} />
             <DetailRow title="Ijrochi Hududiy boshqarma nomi:" value={data?.officeName || '-'} />
-            <DetailRow title="Hududiy boshqarma boshlig‘i F.I.SH:" value={data?.executorName || '-'} />
+            <DetailRow title="Hududiy boshqarma boshlig‘i F.I.SH:" value={data?.approverName || '-'} />
             <DetailRow title="Hududiy boshqarma boshlig‘i rezolyutsiyasi:" value={data?.resolution || '-'} />
             <DetailRow title="Ijrochi inspektor F.I.SH:" value={data?.executorName || '-'} />
             <DetailRow title="Ijrochi (inspektor) xulosasi:" value={data?.conclusion || '-'} />
@@ -53,8 +53,6 @@ const ApplicationDetail = ({ data }: any) => {
             <div className="py-1  flex flex-col">
               <DetailRow title="Arizachi JSHIR:" value={'-'} />
               <DetailRow title="Arizachi F.I.SH:" value={'-'} />
-              {/*<DetailRow title="Arizachining yashash viloyati:" value={'-'}/>*/}
-              {/*<DetailRow title="Arizachining yashash tumani:" value={'-'}/>*/}
               <DetailRow title="Arizachining manzili:" value={'-'} />
               <DetailRow title="Arizachining telefon raqami:" value={'-'} />
               <DetailRow title="Arizachining elektron pochtasi:" value={'-'} />
