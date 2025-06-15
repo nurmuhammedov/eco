@@ -19,14 +19,8 @@ interface RegisterEscalatorFormProps {
 }
 
 export default ({ onSubmit }: RegisterEscalatorFormProps) => {
-  const {
-    form,
-    regionOptions,
-    districtOptions,
-    childEquipmentOptions,
-    hazardousFacilitiesOptions,
-    sphereSelectOptions,
-  } = useCreateEscalatorApplication();
+  const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
+    useCreateEscalatorApplication();
 
   return (
     <Form {...form}>
@@ -312,24 +306,24 @@ export default ({ onSubmit }: RegisterEscalatorFormProps) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="sphere"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Soha</FormLabel>
-                  <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="Sohani tanlang" />
-                      </SelectTrigger>
-                      <SelectContent>{sphereSelectOptions}</SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/*<FormField*/}
+            {/*  control={form.control}*/}
+            {/*  name="sphere"*/}
+            {/*  render={({ field }) => (*/}
+            {/*    <FormItem>*/}
+            {/*      <FormLabel required>Soha</FormLabel>*/}
+            {/*      <FormControl>*/}
+            {/*        <Select onValueChange={field.onChange} value={field.value}>*/}
+            {/*          <SelectTrigger className="w-full 3xl:w-sm">*/}
+            {/*            <SelectValue placeholder="Sohani tanlang" />*/}
+            {/*          </SelectTrigger>*/}
+            {/*          <SelectContent>{sphereSelectOptions}</SelectContent>*/}
+            {/*        </Select>*/}
+            {/*      </FormControl>*/}
+            {/*      <FormMessage />*/}
+            {/*    </FormItem>*/}
+            {/*  )}*/}
+            {/*/>*/}
           </div>
         </CardForm>
         <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
