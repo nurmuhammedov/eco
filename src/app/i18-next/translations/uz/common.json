@@ -51,7 +51,7 @@
     "ASSIGNED": "Inspektor belgilanganlar"
   },
   "risk_analysis_columns": {
-    "registryNumber": "Reyestr raqami",
+    "registryNumber": "Hisobga olish raqami",
     "name": "Nomi",
     "legalName": "Yuridik shaxs nomi",
     "legalTin": "STIR",

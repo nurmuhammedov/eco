@@ -27,7 +27,19 @@ export const IrsList = () => {
       accessorFn: (row) => row?.registryNumber,
     },
     {
-      header: 'Manzil',
+      header: 'Tashkilot nomi',
+      accessorFn: (row) => row?.legalName,
+    },
+    {
+      header: 'Tashkilot manzili',
+      accessorFn: (row) => row?.legalAddress,
+    },
+    {
+      header: 'Tashkilot STIR',
+      accessorFn: (row) => row?.legalTin,
+    },
+    {
+      header: 'INM manzili',
       accessorFn: (row) => row?.address,
     },
     {

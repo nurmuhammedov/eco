@@ -1,21 +1,24 @@
 import { RiskAnalysisItem, RiskAnalysisParams } from '@/entities/risk-analysis/models/risk-analysis.types';
 import { UserRoles } from '@/entities/user';
+import { AssignInspectorModal } from '@/features/risk-analysis/ui/modals/assign-inspector-modal';
 import { API_ENDPOINTS } from '@/shared/api';
-import { DataTable } from '@/shared/components/common/data-table';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { useCurrentRole, useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { useAuth } from '@/shared/hooks/use-auth';
-import { AssignedStatusTab } from '@/widgets/risk-analysis/types';
+import { AssignedStatusTab, RiskAnalysisTab } from '@/widgets/risk-analysis/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { AssignInspectorButton } from '../../ui/assign-inspector-button';
 
 export const XichoList = () => {
   const { t } = useTranslation('common');
   const currentRole = useCurrentRole();
   const isRegional = currentRole === UserRoles.REGIONAL;
   const { user } = useAuth();
-
+  const navigate = useNavigate();
   const { paramsObject, addParams } = useCustomSearchParams();
 
   const activeAssignedStatus = (paramsObject.assignedStatus as AssignedStatusTab) || AssignedStatusTab.NOT_ASSIGNED;
@@ -23,6 +26,8 @@ export const XichoList = () => {
   const handleAssignedStatusChange = (status: string) => {
     addParams({ assignedStatus: status });
   };
+
+  const type = paramsObject.mainTab || RiskAnalysisTab.XICHO;
 
   const apiParams = useMemo(() => {
     const params: RiskAnalysisParams = {};
@@ -36,6 +41,11 @@ export const XichoList = () => {
   }, [isRegional, activeAssignedStatus, user]);
 
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_HF, apiParams);
+
+  const handleView = (row: RiskAnalysisItem) => {
+    const intervalId = user?.interval?.id;
+    navigate(`/risk-analysis/detail?tin=${row.legalTin}&id=${row.id}&intervalId=${intervalId}&type=${type}`);
+  };
 
   const columns: ColumnDef<RiskAnalysisItem>[] = [
     {
@@ -58,11 +68,29 @@ export const XichoList = () => {
       header: t('risk_analysis_columns.address'),
       accessorKey: 'address',
     },
-    {
-      header: t('risk_analysis_columns.inspectorName'),
-      accessorKey: 'inspectorName',
-      cell: ({ row }) => row.original.inspectorName || '-',
-    },
+    ...(activeAssignedStatus === AssignedStatusTab.NOT_ASSIGNED && user?.role == UserRoles.REGIONAL
+      ? [
+          {
+            id: 'assignInspector',
+            header: 'Inspektorni belgilash',
+            cell: ({ row }: any) => <AssignInspectorButton row={row.original} />,
+            meta: {
+              className: 'w-[200px]',
+            },
+          },
+        ]
+      : [
+          {
+            header: t('risk_analysis_columns.inspectorName'),
+            accessorKey: 'inspectorName',
+            cell: ({ row }: any) => row.original.inspectorName || '-',
+          },
+          {
+            id: 'actions',
+            header: 'Amallar',
+            cell: ({ row }: any) => <DataTableRowActions showView onView={() => handleView(row.original)} row={row} />,
+          },
+        ]),
   ];
 
   const assignedStatusTabs = [
@@ -90,6 +118,7 @@ export const XichoList = () => {
         isLoading={isLoading}
         className="h-[calc(100svh-320px)]"
       />
+      <AssignInspectorModal />
     </div>
   );
 };
