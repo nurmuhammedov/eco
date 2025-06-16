@@ -1,5 +1,4 @@
 import { ApplicationStatus } from '@/entities/application';
-import { APPLICATIONS_DATA } from '@/entities/create-application';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { ISearchParams } from '@/shared/types';
@@ -28,6 +27,18 @@ export const HfList = () => {
       accessorKey: 'registryNumber',
     },
     {
+      header: 'Tashkilot nomi',
+      accessorKey: 'legalName',
+    },
+    {
+      header: 'Tashkilot manzili',
+      accessorKey: 'legalAddress',
+    },
+    {
+      header: 'STIR',
+      accessorKey: 'legalTin',
+    },
+    {
       header: 'XICHOning nomi',
       accessorKey: 'name',
     },
@@ -37,7 +48,7 @@ export const HfList = () => {
     },
     {
       header: 'XICHOning turi',
-      cell: (cell) => APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.title || '',
+      accessorKey: 'typeName',
     },
     {
       id: 'actions',
