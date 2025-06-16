@@ -1,30 +1,22 @@
 import { riskAnalysisData } from '@/shared/constants/risk-analysis-data.ts';
-import { Button } from '@/shared/components/ui/button.tsx';
-import { Check, Minus } from 'lucide-react';
-import { Textarea } from '@/shared/components/ui/textarea.tsx';
+import RiskAnalysisItem from '@/features/risk-analysis/ui/parts/risk-analysis-item.tsx';
+import { useSearchParams } from 'react-router-dom';
+import { useRiskAnalysisDetail } from '@/features/risk-analysis/hooks/use-risk-analysis-detail.ts';
 
 const RiskAnalysisForm = () => {
+  const [searchParams] = useSearchParams();
+  const currentCat = searchParams.get('type') as 'XICHO';
+  const { data, isLoading, isError  } = useRiskAnalysisDetail();
+
+ if(isLoading || isError){
+   return null
+ }
+
   return (
     <div>
-      {riskAnalysisData.HF.map((item, idx) => {
+      {riskAnalysisData[currentCat].map((item, idx) => {
         return (
-          <div key={item.title}>
-            <div className="bg-[#EDEEEE] shadow-md p-2.5 rounded font-medium">
-              {idx + 1}. {item.title} - <b>{item.point}</b> ball
-            </div>
-            <div className="flex items-center py-5 px-2.5 gap-4">
-              <div className="flex-grow">{item.title}</div>
-              <div className="flex-shrink-0 flex gap-3  w-full max-w-[500px] items-center">
-                <Button className="flex-shrink-0" variant="outline" size="icon">
-                  <Check />
-                </Button>
-                <Button className="flex-shrink-0" variant="outline" size="icon">
-                  <Minus />
-                </Button>
-                <Textarea className="resize-none" placeholder={item.rejectPlaceholder} />
-              </div>
-            </div>
-          </div>
+          <RiskAnalysisItem number={idx + 1} data={item} key={item.title} globalData={data} />
         );
       })}
     </div>
