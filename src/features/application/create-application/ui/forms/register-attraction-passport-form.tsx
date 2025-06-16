@@ -1,5 +1,4 @@
 import { CardForm, CreateAttractionPassportApplicationDTO } from '@/entities/create-application';
-import { NoteForm } from '@/features/application/create-application';
 import { useCreateAttractionPassportApplication } from '@/features/application/create-application/model/use-create-attraction-passport-application';
 import { GoBack } from '@/shared/components/common';
 import { InputFile } from '@/shared/components/common/file-upload';
@@ -25,12 +24,9 @@ export default ({ onSubmit }: RegisterAttractionPassportFormProps) => {
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="Attraksion pasportini ro‘yxatga olish" />
-        <NoteForm equipmentName="attraksion pasporti" />
 
-        {/* Asosiy maydonlar */}
-        <CardForm className="mb-2">
+        <CardForm className="my-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
-            {/* Telefon raqami */}
             <FormField
               control={form.control}
               name="phoneNumber"
@@ -66,7 +62,7 @@ export default ({ onSubmit }: RegisterAttractionPassportFormProps) => {
                 <FormItem>
                   <FormLabel required>Attraksion turi</FormLabel>
                   <FormControl>
-                    <Select onValueChange={(val) => field.onChange(Number(val))} value={String(field.value)}>
+                    <Select onValueChange={(val) => field.onChange(val)} value={String(field.value || '')}>
                       <SelectTrigger className="w-full 3xl:w-sm">
                         <SelectValue placeholder="Attraksion turini tanlang" />
                       </SelectTrigger>
@@ -86,8 +82,8 @@ export default ({ onSubmit }: RegisterAttractionPassportFormProps) => {
                   <FormLabel required>Attraksion tipi</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={(val) => field.onChange(Number(val))}
-                      value={String(field.value)}
+                      onValueChange={(val) => field.onChange(val)}
+                      value={String(field.value || '')}
                       disabled={!form.watch('childEquipmentId')}
                     >
                       <SelectTrigger className="w-full 3xl:w-sm">
@@ -190,10 +186,10 @@ export default ({ onSubmit }: RegisterAttractionPassportFormProps) => {
                   <FormControl>
                     <Select
                       onValueChange={(v) => {
-                        field.onChange(Number(v));
+                        field.onChange(v);
                         form.setValue('districtId', 0);
                       }}
-                      value={String(field.value)}
+                      value={String(field.value || '')}
                     >
                       <SelectTrigger className="w-full 3xl:w-sm">
                         <SelectValue placeholder="Viloyatni tanlang" />
@@ -213,8 +209,8 @@ export default ({ onSubmit }: RegisterAttractionPassportFormProps) => {
                   <FormLabel required>Attraksion joylashgan tuman</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={(v) => field.onChange(Number(v))}
-                      value={String(field.value)}
+                      onValueChange={(v) => field.onChange(v)}
+                      value={String(field.value || '')}
                       disabled={!form.watch('regionId')}
                     >
                       <SelectTrigger className="w-full 3xl:w-sm">

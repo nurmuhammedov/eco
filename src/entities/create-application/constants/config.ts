@@ -67,12 +67,12 @@ export const applicationConfigs: Record<string, any> = {
     pdfEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_LPG_POWERED,
   },
   [ApplicationTypeEnum.REGISTER_ATTRACTION_PASSPORT]: {
-    submitEndpoint: API_ENDPOINTS.APPEALS_EQUIPMENT_URL + 'attraction-passport',
-    pdfEndpoint: API_ENDPOINTS.APPEALS_EQUIPMENT_GENERATE_PDF_URL + 'attraction-passport',
+    submitEndpoint: API_ENDPOINTS.APPEAL_ATTRACTION_PASSPORT,
+    pdfEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_ATTRACTION_PASSPORT,
   },
   [ApplicationTypeEnum.REGISTER_ATTRACTION]: {
-    submitEndpoint: API_ENDPOINTS.APPEALS_EQUIPMENT_URL + 'attraction',
-    pdfEndpoint: API_ENDPOINTS.APPEALS_EQUIPMENT_GENERATE_PDF_URL + 'attraction',
+    submitEndpoint: API_ENDPOINTS.APPEAL_ATTRACTION,
+    pdfEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_ATTRACTION,
   },
   [ApplicationTypeEnum.REGISTER_IRS]: {
     submitEndpoint: '/appeals/irs',
