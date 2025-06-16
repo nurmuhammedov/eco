@@ -51,7 +51,7 @@
     "ASSIGNED": "Инспектор белгиланганлар"
   },
   "risk_analysis_columns": {
-    "registryNumber": "Реестр рақами",
+    "registryNumber": "Ҳисобга олиш рақами",
     "name": "Номи",
     "legalName": "Юридик шахс номи",
     "legalTin": "СТИР",

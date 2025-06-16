@@ -38,8 +38,12 @@ export const EquipmentsList = () => {
       cell: (cell) => APPLICATIONS_DATA?.find((i) => i?.equipmentType == cell.row.original.type)?.name || '',
     },
     {
-      header: 'Qurilmaning egasi',
+      header: 'Tashkilot nomi',
       accessorKey: 'legalName',
+    },
+    {
+      header: 'Tashkilot manzili',
+      accessorFn: (row) => row?.legalAddress,
     },
     {
       header: 'Tashkilot STIR',

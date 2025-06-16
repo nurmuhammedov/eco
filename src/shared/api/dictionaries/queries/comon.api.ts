@@ -33,7 +33,7 @@ export const CommonService = {
   },
 
   async getData<T>(endpoint: string, params = {}): Promise<T> {
-    const response = await apiClient.get<T>(endpoint, params);
-    return response.data;
+    const response = await apiClient.get<ApiResponse<T>>(endpoint, params);
+    return response.data?.data;
   },
 };
