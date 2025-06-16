@@ -19,3 +19,4 @@ export { useCreateLpgPoweredApplication } from './model/use-create-lpg-powered-a
 export { useCreateHoistApplication } from './model/use-create-hoist-application';
 export { useCreateCablewayApplication } from './model/use-create-cableway-application';
 export { useCreateIrsApplication } from './model/use-create-irs-application';
+export { useCreateAttractionPassportApplication } from './model/use-create-attraction-passport-application';

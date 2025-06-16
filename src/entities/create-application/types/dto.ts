@@ -1,5 +1,6 @@
 // src/entities/create-application/types/dto.ts
 import {
+  AttractionPassportAppealDtoSchema,
   BoilerAppealDtoSchema,
   BoilerUtilizerAppealDtoSchema,
   CablewayAppealDtoSchema,
@@ -33,3 +34,4 @@ export type CreateLpgPoweredApplicationDTO = z.infer<typeof LpgPoweredAppealDtoS
 export type CreateHoistApplicationDTO = z.infer<typeof HoistAppealDtoSchema>;
 export type CreateCablewayApplicationDTO = z.infer<typeof CablewayAppealDtoSchema>;
 export type CreateIrsApplicationDTO = z.infer<typeof IrsAppealDtoSchema>;
+export type CreateAttractionPassportApplicationDTO = z.infer<typeof AttractionPassportAppealDtoSchema>;

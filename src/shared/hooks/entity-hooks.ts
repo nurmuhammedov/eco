@@ -18,3 +18,5 @@ export const useTerritorialStaffsDrawer = createEntityDrawerHook(UI_COMPONENTS.T
 export const useHazardousFacilityTypeDrawer = createEntityDrawerHook(UI_COMPONENTS.HAZARDOUS_FACILITY_TYPE_DRAWER);
 
 export const useEquipmentDrawer = createEntityDrawerHook(UI_COMPONENTS.EQUIPMENT_DRAWER);
+
+export const useAttractionTypeDrawer = createEntityDrawerHook(UI_COMPONENTS.ATTRACTION_TYPE_DRAWER);
