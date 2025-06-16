@@ -37,7 +37,7 @@ export const useCreateEscalatorApplication = () => {
       expertisePath: undefined,
       installationCertPath: undefined,
       additionalFilePath: undefined,
-      sphere: undefined,
+      // sphere: undefined,
       passengersPerMinute: '',
       length: '',
       speed: '',

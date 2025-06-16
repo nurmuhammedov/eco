@@ -1,5 +1,5 @@
 // src/entities/create-application/schemas/register-escalator.schema.ts
-import { BuildingSphereType } from '@/entities/create-application/types/enums';
+// import { BuildingSphereType } from '@/entities/create-application/types/enums';
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
 import { FORM_ERROR_MESSAGES } from '@/shared/validation';
 import { format } from 'date-fns';
@@ -73,9 +73,9 @@ export const EscalatorAppealDtoSchema = z.object({
     .string({ required_error: 'Montaj guvohnomasi fayli biriktirilmadi!' })
     .min(1, 'Montaj guvohnomasi fayli biriktirilmadi!'),
   additionalFilePath: z.string().optional(),
-  sphere: z.nativeEnum(BuildingSphereType, {
-    errorMap: () => ({ message: 'Soha tanlanmadi!' }),
-  }),
+  // sphere: z.nativeEnum(BuildingSphereType, {
+  //   errorMap: () => ({ message: 'Soha tanlanmadi!' }),
+  // }),
   passengersPerMinute: z // DTO dagi liftingCapacity o'rniga
     .string({ required_error: 'O‘tkazish qobiliyati, kishi/soat kiritilmadi!' })
     .min(1, 'O‘tkazish qobiliyati, kishi/soat kiritilmadi!'),

@@ -1,5 +1,5 @@
 import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application';
-import { APPLICATIONS_DATA } from '@/entities/create-application';
+import { ApplicationCategory, APPLICATIONS_DATA } from '@/entities/create-application';
 import { useApplicationList } from '@/features/application/application-table/hooks';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import Filter from '@/shared/components/common/filter';
@@ -47,6 +47,16 @@ export const ApplicationTable = () => {
       maxSize: 200,
       accessorKey: 'test',
       header: 'Qo‘mita maʼsul bo‘limi',
+      cell: (cell) =>
+        APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category == ApplicationCategory.XICHO
+          ? `Аxborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi`
+          : APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
+              ApplicationCategory.HOKQ
+            ? `Davlat xizmatlarini ko‘rsatish boʼlimi`
+            : APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
+                ApplicationCategory.INM
+              ? `Litsenziyalash hamda INMlarni hisobga olish bo‘limi`
+              : '',
     },
     {
       minSize: 200,
