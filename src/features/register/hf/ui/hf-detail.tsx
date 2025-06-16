@@ -8,6 +8,7 @@ import AppealMainInfo from '@/features/application/application-detail/ui/parts/a
 import DetailRow from '@/shared/components/common/detail-row.tsx';
 import { getDate } from '@/shared/utils/date.ts';
 import { Link } from 'react-router-dom';
+import FileLink from '@/shared/components/common/file-link.tsx';
 
 const HfDetail = () => {
   const { isLoading, data } = useHfDetail();
@@ -34,6 +35,7 @@ const HfDetail = () => {
           />
           <DetailRow title="XIChOni hisobga olish sanasi:" value={getDate(data?.registrationDate)} />
           <DetailRow title="XIChOni hisobga olish raqami:" value={data?.registryNumber} />
+          {!!data?.registryFilePath &&<DetailRow title="Sertifikat fayli:" value={<FileLink url={data?.registryFilePath} />} />}
           <DetailRow title="XIChOni reyestrdan chiqarish sanasi:" value={getDate(data?.deregisterDate)} />
           <DetailRow title="XIChOni reyestrdan chiqarish sababi:" value={getDate(data?.deregisterReason)} />
         </DetailCardAccordion.Item>

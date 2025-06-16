@@ -8,6 +8,7 @@ import DetailRow from '@/shared/components/common/detail-row.tsx';
 import { getDate } from '@/shared/utils/date.ts';
 import { Link } from 'react-router-dom';
 import { useEquipmentsDetail } from '@/features/register/equipments/hooks/use-equipments-detail.tsx';
+import FileLink from '@/shared/components/common/file-link.tsx';
 
 const EquipmentsDetail = () => {
   const { isLoading, data } = useEquipmentsDetail();
@@ -34,6 +35,7 @@ const EquipmentsDetail = () => {
           />
           <DetailRow title="Hisobga olish sanasi:" value={getDate(data?.registrationDate)} />
           <DetailRow title="Hisobga olish raqami:" value={data?.registryNumber} />
+          {!!data?.registryFilePath &&<DetailRow title="Sertifikat fayli:" value={<FileLink url={data?.registryFilePath} />} />}
           <DetailRow title="Reyestrdan chiqarish sanasi:" value={getDate(data?.deregisterDate)} />
           <DetailRow title="Reyestrdan chiqarish sababi:" value={getDate(data?.deregisterReason)} />
         </DetailCardAccordion.Item>

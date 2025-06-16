@@ -6,7 +6,7 @@ import { Textarea } from '@/shared/components/ui/textarea.tsx';
 const RiskAnalysisForm = () => {
   return (
     <div>
-      {riskAnalysisData.ELEVATOR.map((item, idx) => {
+      {riskAnalysisData.HF.map((item, idx) => {
         return (
           <div key={item.title}>
             <div className="bg-[#EDEEEE] shadow-md p-2.5 rounded font-medium">

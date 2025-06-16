@@ -17,10 +17,10 @@ export const DetailCardAccordion: FC<DetailCardAccordionProps> & {
 
 DetailCardAccordion.Item = ({ value, title, children, className, icon = 'word' }) => {
   return (
-    <AccordionItem value={value} className={cn('bg-blue-200 rounded-lg mb-4', className)}>
-      <AccordionTrigger className="text-blue-400 px-4 py-4 3xl:py-5">
-        <div className="flex items-center gap-2 3xl:text-lg text-blue-400 font-semibold">
-          {icon && <Icon name={icon} className="size-5 3xl:size-6" />}
+    <AccordionItem value={value} className={cn('bg-blue-200 rounded-lg mb-3', className)}>
+      <AccordionTrigger className="text-blue-400 px-4 py-2 3xl:py-2.5">
+        <div className="flex items-center gap-2 3xl:text-base text-blue-400 font-semibold">
+          {icon && <Icon name={icon} className="size-5 3xl:size-5" />}
           {title}
         </div>
       </AccordionTrigger>
