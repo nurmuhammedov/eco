@@ -1,4 +1,4 @@
-import { Button } from '@/shared/components/ui/button.tsx';
+import { Button, buttonVariants } from '@/shared/components/ui/button.tsx';
 import { Check, Minus } from 'lucide-react';
 import { Textarea } from '@/shared/components/ui/textarea.tsx';
 import { FC } from 'react';
@@ -9,6 +9,12 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/co
 import { useRejectRiskItem } from '@/features/risk-analysis/hooks/use-reject-risk-item.ts';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
 import { UserRoles } from '@/entities/user';
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
+import { useSearchParams } from 'react-router-dom';
+import { useUploadFiles } from '@/shared/components/common/file-upload/api/use-upload-files.ts';
+import { useAttachFile } from '@/features/risk-analysis/hooks/use-attach-file.ts';
+import FileLink from '@/shared/components/common/file-link.tsx';
+import { useCancelPoints } from '@/features/risk-analysis/hooks/use-cancel-points.ts';
 
 interface Props {
   number: number;
@@ -16,35 +22,51 @@ interface Props {
   globalData: any[];
 }
 
-const schema = z.object({
-  isReject: z.boolean({ message: 'Обязательное поле' }).default(false),
-  description: z.string().default('')
-}).superRefine((data, ctx) => {
-  if (data.isReject && data.description.trim().length < 10) {
-    ctx.addIssue({
-      path: ['description'],
-      code: z.ZodIssueCode.too_small,
-      minimum: 10,
-      type: 'string',
-      inclusive: true,
-      message: 'Too short value'
-    });
-  }
-});
+const schema = z
+  .object({
+    isReject: z.boolean({ message: 'Обязательное поле' }).default(false),
+    description: z.string().default(''),
+  })
+  .superRefine((data, ctx) => {
+    if (data.isReject && data.description.trim().length < 10) {
+      ctx.addIssue({
+        path: ['description'],
+        code: z.ZodIssueCode.too_small,
+        minimum: 10,
+        type: 'string',
+        inclusive: true,
+        message: 'Too short value',
+      });
+    }
+  });
 
 const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
+  const [searchParams] = useSearchParams();
+  const currentCat = searchParams.get('type') || '';
+  const paragraphName = `PARAGRAPH_${currentCat?.toUpperCase()}_${number}`;
   const { mutate } = useRejectRiskItem();
   const { user } = useAuth();
-  const isManager = user?.role === UserRoles.MANAGER;
-  //TODO: add actual interval check
-  const currentItem = globalData?.find(item => item.indicatorType === 'PARAGRAPH_HF_' + number);
+  const isInspector = user?.role === UserRoles.INSPECTOR;
+  const isLegal = user?.role === UserRoles.LEGAL;
+  const { mutate: attachFile, isPending: isPendingAttachFile } = useAttachFile();
+  const { mutateAsync: sendFiles, isPending } = useUploadFiles();
+  const { mutate: cancelPoints } = useCancelPoints();
+  const currentItem = globalData?.find((item) => item.indicatorType === paragraphName);
+
+  const isConfirmed = currentItem?.score !== data.point && !!currentItem?.filePath;
   const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(schema),
   });
   const isReject = form.watch('isReject');
 
   const onSubmit = (data: any) => {
-    mutate({ data: { description: data.description }, type: 'hf' });
+    mutate({
+      data: {
+        description: data.description,
+        indicatorType: paragraphName,
+      },
+      type: currentCat,
+    });
   };
   return (
     <div key={data.title}>
@@ -54,19 +76,32 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
       <div className="flex items-center py-5 px-2.5 gap-4">
         <div className="flex-grow">{data.title}</div>
         <Form {...form}>
-          <div className="flex-shrink-0 flex gap-3  w-full max-w-[500px] items-center">
+          <div className="flex-shrink-0 flex gap-3  w-full max-w-[600px] items-center">
             <div className="flex gap-1 flex-shrink-0">
-              <Button disabled={true} type="button" className="flex-shrink-0" variant="successOutline" size="icon">
+              <Button
+                onClick={() => {
+                  if (confirm('Cancel points?')) {
+                    cancelPoints(currentItem.id);
+                  }
+                }}
+                disabled={!isInspector || isConfirmed}
+                type="button"
+                className="flex-shrink-0"
+                variant={isConfirmed ? 'success' : 'successOutline'}
+                size="icon"
+              >
                 <Check />
               </Button>
-              <Button onClick={() => {
-                form.setValue('isReject', !isReject);
-              }}
-                      disabled={!!currentItem || !isManager}
-                      type="button"
-                      className="flex-shrink-0"
-                      variant={isReject || !!currentItem ? 'destructive' : 'destructiveOutline'}
-                      size="icon">
+              <Button
+                onClick={() => {
+                  form.setValue('isReject', !isReject);
+                }}
+                disabled={!!currentItem || !isInspector}
+                type="button"
+                className="flex-shrink-0"
+                variant={isReject || !!currentItem ? 'destructive' : 'destructiveOutline'}
+                size="icon"
+              >
                 <Minus />
               </Button>
             </div>
@@ -79,23 +114,46 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
                   <FormItem>
                     <FormControl>
                       <Textarea
-                        disabled={!isReject}
+                        disabled={!isReject || !!currentItem}
                         className="resize-none w-full"
                         rows={2}
                         placeholder="Boshqarma boshlig‘i rezolyutsiyasi"
                         {...field}
-                      >
-
-                      </Textarea>
+                      ></Textarea>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              {isReject && <Button onClick={form.handleSubmit(onSubmit)}
-                                   className="absolute top-6 right-2 opacity-80 hover:opacity-100" size="sm"
-                                   variant="outline">Yuborish</Button>}
+              {isReject && !currentItem && (
+                <Button
+                  onClick={form.handleSubmit(onSubmit)}
+                  className="absolute top-6 right-2 opacity-80 hover:opacity-100"
+                  size="sm"
+                  variant="outline"
+                >
+                  Yuborish
+                </Button>
+              )}
             </div>
+            {isLegal && !!currentItem && !currentItem?.filePath && (
+              <label className={buttonVariants({ size: 'sm' })}>
+                Batraf etish
+                <input
+                  disabled={isPending || isPendingAttachFile}
+                  onChange={(e) => {
+                    const files = e.target.files;
+                    if (files?.length) {
+                      sendFiles([files[0]]).then((data) => attachFile({ id: currentItem?.id, path: data }));
+                    }
+                  }}
+                  className="hidden"
+                  type="file"
+                  accept={FileTypes.PDF}
+                />
+              </label>
+            )}
+            {!!currentItem?.filePath && <FileLink isSmall={true} url={currentItem?.filePath} />}
           </div>
         </Form>
       </div>

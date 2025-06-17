@@ -3,7 +3,7 @@ export const riskAnalysisData = {
     {
       title:
         'Havfli ishlab chiqarish obyektlari loyihaviy hujjatlarining sanoat xavfsizligi ekspertizasidan oʻtkazilganligi, identifikatsiya xulosasi, sanoat xavfsizligi deklaratsiyasi, majburiy sugʻurta mavjudligi',
-      point: 14,
+      point: 13,
       rejectPlaceholder: 'Izoh',
     },
     {

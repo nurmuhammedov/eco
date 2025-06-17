@@ -7,6 +7,7 @@ export const useRiskAnalysisDetail = () => {
   const [searchParams] = useSearchParams();
   const tin = searchParams.get('tin');
   const id = searchParams.get('id');
+  const type = searchParams.get('type');
   const intervalId = searchParams.get('intervalId');
   const navigate = useNavigate();
 
@@ -14,9 +15,15 @@ export const useRiskAnalysisDetail = () => {
     navigate('/risk-analysis', { replace: true });
   }
   return useQuery({
-    queryKey: [QK_RISK_ANALYSIS, intervalId, id, tin],
-    queryFn: () => riskAnalysisDetailApi.getRiskItems({
-      intervalId, id, tin
-    })
+    queryKey: [QK_RISK_ANALYSIS, intervalId, id, tin, type],
+    queryFn: () =>
+      riskAnalysisDetailApi.getRiskItems(
+        {
+          intervalId,
+          id,
+          tin,
+        },
+        type,
+      ),
   });
 };

@@ -5,11 +5,13 @@ import { FileDown } from 'lucide-react';
 interface Props {
   url: string;
   title?: string;
+  isSmall?: boolean;
 }
 
-const FileLink: FC<Props> = ({ url, title = 'Yuklab olish' }) => {
+const FileLink: FC<Props> = ({ url, title = 'Yuklab olish', isSmall = false }) => {
+  const size = isSmall ? 'sm' : 'default';
   return (
-    <a className={buttonVariants({ variant: 'info' })} href={url} target={'_blank'}>
+    <a className={buttonVariants({ variant: 'info', size })} href={url} target={'_blank'}>
       <FileDown />
       {title}
     </a>
