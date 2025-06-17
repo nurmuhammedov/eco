@@ -124,7 +124,7 @@
     "IN_APPROVAL": "Tasdiqlashda",
     "COMPLETED": "Yakunlangan",
     "REJECTED": "Rad etilgan",
-    "CANCELLED": "Qaytarilgan"
+    "CANCELED": "Qaytarilgan"
   },
   "building_sphere_type": {
     "RESIDENTIAL": "Turar joy binosi",

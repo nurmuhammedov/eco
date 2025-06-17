@@ -118,7 +118,7 @@
     "IN_APPROVAL": "Тасдиқлашда",
     "COMPLETED": "Якунланган",
     "REJECTED": "Рад этилган",
-    "CANCELLED": "Қайтарилган"
+    "CANCELED": "Қайтарилган"
   },
   "regions": "Вилоятлар",
   "districts": "Туманлар",

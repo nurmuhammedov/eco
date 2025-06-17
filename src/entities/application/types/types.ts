@@ -6,7 +6,7 @@ export enum ApplicationStatus {
   IN_APPROVAL = 'IN_APPROVAL',
   COMPLETED = 'COMPLETED',
   REJECTED = 'REJECTED',
-  CANCELLED = 'CANCELLED',
+  CANCELED = 'CANCELED',
 }
 
 export enum ApplicationStatusForInspector {
@@ -16,7 +16,7 @@ export enum ApplicationStatusForInspector {
   IN_APPROVAL = 'IN_APPROVAL',
   COMPLETED = 'COMPLETED',
   REJECTED = 'REJECTED',
-  CANCELLED = 'CANCELLED',
+  CANCELED = 'CANCELED',
 }
 
 export interface ApplicationFilters {
