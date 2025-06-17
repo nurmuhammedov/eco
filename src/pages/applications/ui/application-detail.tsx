@@ -1,16 +1,18 @@
+import { ApplicationStatus } from '@/entities/application';
+import { UserRoles } from '@/entities/user';
 import { ApplicationDetail } from '@/features/application/application-detail';
-import { GoBack } from '@/shared/components/common';
-import { Button } from '@/shared/components/ui/button.tsx';
 import { useApplicationDetail } from '@/features/application/application-detail/hooks/use-application-detail.tsx';
 import AttachInspectorModal from '@/features/application/application-detail/ui/modals/attach-inspector-modal.tsx';
-import { useAuth } from '@/shared/hooks/use-auth.ts';
-import { UserRoles } from '@/entities/user';
-import { ApplicationStatus } from '@/entities/application';
 import ReferenceCreateModal from '@/features/application/application-detail/ui/modals/reference-create-modal.tsx';
+import RejectApplicationModal from '@/features/application/application-detail/ui/modals/reject-application-modal.tsx';
+import { GoBack } from '@/shared/components/common';
+import { useData } from '@/shared/hooks';
+import { useAuth } from '@/shared/hooks/use-auth.ts';
 
 const ApplicationPage = () => {
   const { data } = useApplicationDetail();
   const { user } = useAuth();
+  useData('/risk-analysis-intervals/select?year=2024');
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -19,7 +21,7 @@ const ApplicationPage = () => {
           {user?.role === UserRoles.REGIONAL && data?.status === ApplicationStatus.NEW && (
             <>
               <AttachInspectorModal />
-              <Button variant="destructive">Arizani qaytarish</Button>
+              <RejectApplicationModal />
             </>
           )}
           {user?.role === UserRoles.INSPECTOR && data?.status === ApplicationStatus.IN_PROCESS && (

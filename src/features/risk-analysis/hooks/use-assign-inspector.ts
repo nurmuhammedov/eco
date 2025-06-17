@@ -1,6 +1,6 @@
 // src/features/risk-analysis/hooks/use-assign-inspector.ts
 
-import { apiClient } from '@/shared/api';
+import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
 import { useAuth } from '@/shared/hooks/use-auth';
 import { RiskAnalysisTab } from '@/widgets/risk-analysis/types';
@@ -15,14 +15,30 @@ interface AssignInspectorPayload {
 const getEndpoint = (type: RiskAnalysisTab) => {
   switch (type) {
     case RiskAnalysisTab.XICHO:
-      return '/assign-inspector-hf';
+      return {
+        id: API_ENDPOINTS.RISK_ASSESSMENT_HF,
+        url: '/assign-inspector-hf',
+      };
     case RiskAnalysisTab.INM:
-      return '/assign-inspector-irs';
+      return {
+        id: API_ENDPOINTS.RISK_ASSESSMENT_IRS,
+        url: '/assign-inspector-irs',
+      };
     case RiskAnalysisTab.ATTRACTION:
+      return {
+        id: API_ENDPOINTS.RISK_ASSESSMENT_ATTRACTIONS,
+        url: '/assign-inspector-equipments',
+      };
     case RiskAnalysisTab.LIFT:
-      return '/assign-inspector-equipments';
+      return {
+        id: API_ENDPOINTS.RISK_ASSESSMENT_ELEVATORS,
+        url: '/assign-inspector-equipments',
+      };
     default:
-      throw new Error('Invalid risk analysis type');
+      return {
+        id: API_ENDPOINTS.RISK_ASSESSMENT_HF,
+        url: '/assign-inspector-hf',
+      };
   }
 };
 
@@ -32,23 +48,22 @@ export const useAssignInspector = () => {
   const { paramsObject } = useCustomSearchParams();
 
   const type = paramsObject.mainTab ?? (RiskAnalysisTab.XICHO as RiskAnalysisTab);
-  const intervalId = user?.interval?.id;
+  const intervalId = paramsObject?.interval?.id || user?.interval?.id;
 
   return useMutation({
     mutationFn: (payload: AssignInspectorPayload) => {
       const endpoint = getEndpoint(type);
-      return apiClient.post(endpoint, {
+      return apiClient.post(endpoint.url, {
         ...payload,
         intervalId,
       });
     },
     onSuccess: () => {
       toast.success('Inspektor muvaffaqiyatli biriktirildi!');
-      queryClient.invalidateQueries({ queryKey: ['risk-analysis', type] });
+      queryClient.invalidateQueries({ queryKey: [getEndpoint(type)?.id] }).then((r) => console.log(r));
     },
     onError: (error: any) => {
-      console.error(error);
-      toast.error(error?.response?.data?.message || 'Xatolik yuz berdi');
+      toast.error(error?.response?.data?.message || 'Xatolik yuz berdi!');
     },
   });
 };

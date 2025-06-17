@@ -37,7 +37,13 @@ const ApplicationDetail = ({ data }: any) => {
             />
             <DetailRow
               title="Ariza holati:"
-              value={<Stepper activeStep={data?.status} steps={Object.values(ApplicationStatus).slice(1, -1)} />}
+              value={
+                data?.status === ApplicationStatus.REJECTED ? (
+                  <div className="text-red-500">Qaytarilgan</div>
+                ) : (
+                  <Stepper activeStep={data?.status} steps={Object.values(ApplicationStatus).slice(1, -1)} />
+                )
+              }
             />
             <DetailRow title="Ijro muddati:" value={getDate(data?.deadline)} />
             <DetailRow title="Ijrochi Qo‘mita masʼul bo‘limi:" value={'-'} />

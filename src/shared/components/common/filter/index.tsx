@@ -1,5 +1,6 @@
 import { APPLICATIONS_DATA } from '@/entities/create-application/constants/constants';
 import { ApplicationTypeEnum } from '@/entities/create-application/types/enums';
+import { useRiskAnalysisIntervalsQuery } from '@/shared/api/dictionaries/hooks/use-risk-analysis-intervals-query';
 import { API_ENDPOINTS } from '@/shared/api/endpoints';
 import { FilterField, FilterRow } from '@/shared/components/common/filters';
 import SearchInput from '@/shared/components/common/search-input/ui/search-input';
@@ -8,8 +9,10 @@ import { Form, FormField, FormItem } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { useCustomSearchParams } from '@/shared/hooks';
 import useData from '@/shared/hooks/api/useData';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { debounce } from '@/shared/lib';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
+import { getDate } from '@/shared/utils/date';
 import { format } from 'date-fns';
 import React, { useCallback, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -24,15 +27,18 @@ interface ApplicationFiltersFormValues {
   executorId?: string;
   startDate?: Date;
   endDate?: Date;
+  intervalId?: string;
 }
 
 interface ApplicationFiltersProps {
   inputKeys: (keyof ApplicationFiltersFormValues)[];
+  className?: string;
 }
 
-const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
+const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-3' }) => {
   const { t } = useTranslation(['common']);
   const { paramsObject, addParams } = useCustomSearchParams();
+  const { user } = useAuth();
 
   const form = useForm<ApplicationFiltersFormValues>({
     defaultValues: {
@@ -42,6 +48,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
       executorId: paramsObject.executorId?.toString() || '',
       startDate: paramsObject.startDate ? new Date(paramsObject.startDate) : undefined,
       endDate: paramsObject.endDate ? new Date(paramsObject.endDate) : undefined,
+      intervalId: paramsObject.intervalId?.toString() || user?.interval?.id.toString(),
     },
   });
 
@@ -51,6 +58,20 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
   const isExecutorFilterEnabled = useMemo(() => inputKeys.includes('executorId'), [inputKeys]);
   const isStartDateFilterEnabled = useMemo(() => inputKeys.includes('startDate'), [inputKeys]);
   const isEndDateFilterEnabled = useMemo(() => inputKeys.includes('endDate'), [inputKeys]);
+
+  const isIntervalFilterEnabled = useMemo(() => inputKeys.includes('intervalId'), [inputKeys]);
+
+  const { data: intervalOptionsData, isLoading: isLoadingIntervals } =
+    useRiskAnalysisIntervalsQuery(isIntervalFilterEnabled);
+
+  const intervalOptions = useMemo(() => {
+    if (!intervalOptionsData) return [];
+    return intervalOptionsData.map((interval) => (
+      <SelectItem key={interval.id} value={interval.id.toString()}>
+        <span className="whitespace-nowrap">{`${getDate(interval.startDate)} - ${getDate(interval.endDate)}`}</span>
+      </SelectItem>
+    ));
+  }, [intervalOptionsData]);
 
   const dynamicApplicationTypeOptions = APPLICATIONS_DATA.map((item) => (
     <SelectItem key={item.type} value={item.type}>
@@ -76,7 +97,10 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
     if (data.endDate) {
       formattedData.endDate = format(data.endDate, 'yyyy-MM-dd');
     }
-    addParams(formattedData, 'page');
+    if (data.intervalId && data.intervalId == user?.interval?.id) {
+      delete formattedData.intervalId;
+    }
+    addParams(formattedData, 'page', data.intervalId == user?.interval?.id ? 'intervalId' : '');
   };
 
   const debouncedSubmit = useCallback(debounce(handleSubmit(onSubmit), 300), [handleSubmit, onSubmit]);
@@ -228,6 +252,31 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
             />
           </FilterField>
         );
+      case 'intervalId':
+        if (!isIntervalFilterEnabled) return null;
+        return (
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+            <Controller
+              name="intervalId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    handleSubmit(onSubmit)();
+                  }}
+                  value={field.value}
+                  disabled={isLoadingIntervals}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Davrni tanlang" />
+                  </SelectTrigger>
+                  <SelectContent>{intervalOptions}</SelectContent>
+                </Select>
+              )}
+            />
+          </FilterField>
+        );
       default:
         return null;
     }
@@ -235,7 +284,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="mb-3">
+      <form onSubmit={handleSubmit(onSubmit)} className={className}>
         <FilterRow>{inputKeys.map((key) => renderInput(key))}</FilterRow>
       </form>
     </Form>

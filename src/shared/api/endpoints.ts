@@ -69,4 +69,6 @@ export const API_ENDPOINTS: Record<string, string> = {
   RISK_ASSESSMENT_IRS: '/irs/risk-assessment',
   RISK_ASSESSMENT_ATTRACTIONS: '/equipments/attractions/risk-assessment',
   RISK_ASSESSMENT_ELEVATORS: '/equipments/elevators/risk-assessment',
+
+  RISK_ANALYSIS_INTERVALS_SELECT: '/risk-analysis-intervals/select',
 };

@@ -9,6 +9,7 @@ const usePaginatedData = <T>(endpoint: string, params?: ISearchParams, enabled: 
     queryKey: [endpoint, params, i18n.language],
     queryFn: () => CommonService.getPaginatedData<T>(endpoint, params),
     enabled,
+    staleTime: 0,
   });
 
   const { content = [], page } = queryMethods.data || {};
