@@ -61,7 +61,7 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Tasdiqlaysizmi?</DialogTitle>
+          <DialogTitle>Reyestrga qo‘shilsinmi?</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -70,7 +70,6 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
               name="shouldRegister"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel className="mb-3">Reyestrga qo‘shilsinmi?</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
