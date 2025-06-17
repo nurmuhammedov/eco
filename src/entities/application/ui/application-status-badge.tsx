@@ -1,6 +1,6 @@
+import { ApplicationStatus } from '@/entities/application';
 import { cn } from '@/shared/lib/utils';
 import { useTranslation } from 'react-i18next';
-import { ApplicationStatus } from '@/entities/application';
 
 interface ApplicationStatusBadgeProps {
   status: ApplicationStatus;
@@ -22,6 +22,8 @@ export const ApplicationStatusBadge = ({ status }: ApplicationStatusBadgeProps) 
         return 'bg-gray-100 text-gray-800';
       case ApplicationStatus.REJECTED:
         return 'bg-red-100 text-red-800';
+      case ApplicationStatus.CANCELED:
+        return 'bg-red-100 text-red-500';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -41,6 +43,8 @@ export const ApplicationStatusBadge = ({ status }: ApplicationStatusBadgeProps) 
         return 'application_status.COMPLETED';
       case ApplicationStatus.REJECTED:
         return 'application_status.REJECTED';
+      case ApplicationStatus.CANCELED:
+        return 'application_status.CANCELED';
       default:
         return status;
     }

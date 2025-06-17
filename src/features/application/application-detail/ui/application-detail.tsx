@@ -38,10 +38,12 @@ const ApplicationDetail = ({ data }: any) => {
             <DetailRow
               title="Ariza holati:"
               value={
-                data?.status === ApplicationStatus.CANCELED ? (
+                data?.status === ApplicationStatus.REJECTED ? (
+                  <div className="text-red-800">Rad etilgan</div>
+                ) : data?.status === ApplicationStatus.CANCELED ? (
                   <div className="text-red-500">Qaytarilgan</div>
                 ) : (
-                  <Stepper activeStep={data?.status} steps={Object.values(ApplicationStatus).slice(1, -1)} />
+                  <Stepper activeStep={data?.status} steps={Object.values(ApplicationStatus).slice(1, -2)} />
                 )
               }
             />
