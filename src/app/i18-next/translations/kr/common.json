@@ -117,7 +117,8 @@
     "IN_AGREEMENT": "Келишишда",
     "IN_APPROVAL": "Тасдиқлашда",
     "COMPLETED": "Якунланган",
-    "REJECTED": "Қайтарилган"
+    "REJECTED": "Рад этилган",
+    "CANCELLED": "Қайтарилган"
   },
   "regions": "Вилоятлар",
   "districts": "Туманлар",
