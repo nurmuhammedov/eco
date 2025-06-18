@@ -40,8 +40,13 @@
     "templates": "Shablonlar",
     "sub_types": "Quyi turlar",
     "permits_authorization_documents": "Ruxsat etuvchi hujjatlar",
-    "risk_analysis": "Xavfni tahlil qilish"
+    "risk_analysis": "Xavfni tahlil qilish",
+    "checklist_templates": "Cheklistlar"
   },
+  "checklist_name": "Cheklist nomi",
+  "checklist_file": "Cheklist fayli",
+  "checklist_name_placeholder": "Cheklist nomini kiriting",
+  "upload_pdf": "PDF fayl yuklash",
   "risk_analysis_tabs": {
     "XICHO": "XICHO",
     "INM": "INM",

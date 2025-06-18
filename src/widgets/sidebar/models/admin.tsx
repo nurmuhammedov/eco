@@ -1,5 +1,13 @@
 import type { Navigation } from '@/widgets/sidebar/models/types';
-import { ListTree, LucideMousePointerSquareDashed, MapPinned, PencilRuler, ToyBrick, Users } from 'lucide-react';
+import {
+  ListChecks,
+  ListTree,
+  LucideMousePointerSquareDashed,
+  MapPinned,
+  PencilRuler,
+  ToyBrick,
+  Users,
+} from 'lucide-react';
 
 export default [
   {
@@ -36,5 +44,10 @@ export default [
     url: '/attraction-types',
     title: 'Attraksion tipi',
     icon: <ToyBrick />,
+  },
+  {
+    url: '/checklist-templates',
+    title: 'menu.checklist_templates',
+    icon: <ListChecks />,
   },
 ] as Navigation;

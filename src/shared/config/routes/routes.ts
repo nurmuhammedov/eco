@@ -30,6 +30,7 @@ const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipment
 const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'));
 const RiskAnalysisPage = lazy(() => import('@/pages/risk-analysis'));
 const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'));
+const ChecklistTemplatesPage = lazy(() => import('@/pages/admin/checklist-templates/page'));
 
 export const appRoutes = [
   {
@@ -110,6 +111,11 @@ export const appRoutes = [
   {
     path: 'attraction-types',
     component: AttractionTypePage,
+    roles: [UserRoles.ADMIN],
+  },
+  {
+    path: 'checklist-templates',
+    component: ChecklistTemplatesPage,
     roles: [UserRoles.ADMIN],
   },
   {
