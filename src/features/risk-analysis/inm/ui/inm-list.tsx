@@ -45,7 +45,9 @@ export const InmList = () => {
 
   const handleView = (row: RiskAnalysisItem) => {
     const intervalId = paramsObject.intervalId || user?.interval?.id;
-    navigate(`/risk-analysis/detail?tin=${row.legalTin}&id=${row.id}&intervalId=${intervalId}&type=${type}`);
+    navigate(
+      `/risk-analysis/detail?tin=${row.legalTin}&id=${row.id}&assignId=${row.assignId}&intervalId=${intervalId}&type=${type}`,
+    );
   };
 
   const columns: ColumnDef<RiskAnalysisItem>[] = [
