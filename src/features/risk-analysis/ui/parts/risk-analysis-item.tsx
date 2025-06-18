@@ -15,6 +15,7 @@ import { useUploadFiles } from '@/shared/components/common/file-upload/api/use-u
 import { useAttachFile } from '@/features/risk-analysis/hooks/use-attach-file.ts';
 import FileLink from '@/shared/components/common/file-link.tsx';
 import { useCancelPoints } from '@/features/risk-analysis/hooks/use-cancel-points.ts';
+import { clsx } from 'clsx';
 
 interface Props {
   number: number;
@@ -43,22 +44,23 @@ const schema = z
 const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
   const [searchParams] = useSearchParams();
   const currentCat = searchParams.get('type') || '';
+  const currentInervalId = searchParams.get('intervalId') || '';
   const paragraphName = `PARAGRAPH_${currentCat?.toUpperCase()}_${number}`;
   const { mutate } = useRejectRiskItem();
   const { user } = useAuth();
+  const isValidInterval = currentInervalId == user?.interval?.id;
   const isInspector = user?.role === UserRoles.INSPECTOR;
   const isLegal = user?.role === UserRoles.LEGAL;
   const { mutate: attachFile, isPending: isPendingAttachFile } = useAttachFile();
   const { mutateAsync: sendFiles, isPending } = useUploadFiles();
   const { mutate: cancelPoints } = useCancelPoints();
   const currentItem = globalData?.find((item) => item.indicatorType === paragraphName);
-
-  const isConfirmed = currentItem?.score !== data.point && !!currentItem?.filePath;
+  const isConfirmed = currentItem?.score === 0 && !!currentItem?.filePath;
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
   const isReject = form.watch('isReject');
-
+  console.log(currentInervalId);
   const onSubmit = (data: any) => {
     mutate({
       data: {
@@ -70,15 +72,25 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
   };
   return (
     <div key={data.title}>
-      <div className="bg-[#EDEEEE] shadow-md p-2.5 rounded font-medium">
+      <div
+        className={clsx('bg-[#EDEEEE] shadow-md p-2.5 rounded font-medium', {
+          'bg-red-200': !!currentItem?.score && currentItem?.score > 0,
+          'bg-green-200': isConfirmed,
+        })}
+      >
         {number}. {data.title} - <b>{data.point}</b> ball
       </div>
-      <div className="flex items-center py-5 px-2.5 gap-4">
+      <div
+        className={clsx('flex items-center py-5 px-2.5 gap-4 my-2', {
+          'bg-red-50': !!currentItem?.score && currentItem?.score > 0,
+          'bg-green-50': isConfirmed,
+        })}
+      >
         <div className="flex-grow">{data.title}</div>
         <Form {...form}>
           <div className="flex-shrink-0 flex gap-3  w-full max-w-[600px] items-center">
             <div className="flex gap-1 flex-shrink-0">
-              {isInspector && (
+              {isInspector && isValidInterval && (
                 <>
                   <Button
                     onClick={() => {
@@ -86,7 +98,7 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
                         cancelPoints(currentItem.id);
                       }
                     }}
-                    disabled={!isInspector || isConfirmed}
+                    disabled={!isInspector || isConfirmed || !currentItem?.filePath}
                     type="button"
                     className="flex-shrink-0"
                     variant={isConfirmed ? 'success' : 'successOutline'}
@@ -106,6 +118,30 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
                   >
                     <Minus />
                   </Button>
+                </>
+              )}
+              {(!isInspector || !isValidInterval) && (
+                <>
+                  {!currentItem && (
+                    <Button type="button" className="flex-shrink-0" variant={'successOutline'} size="icon">
+                      <Check />
+                    </Button>
+                  )}
+                  {!!currentItem && isConfirmed && (
+                    <Button
+                      type="button"
+                      className="flex-shrink-0"
+                      variant={isConfirmed ? 'success' : 'successOutline'}
+                      size="icon"
+                    >
+                      <Check />
+                    </Button>
+                  )}
+                  {!!currentItem && !isConfirmed && (
+                    <Button type="button" className="flex-shrink-0" variant={'destructive'} size="icon">
+                      <Minus />
+                    </Button>
+                  )}
                 </>
               )}
             </div>
@@ -157,7 +193,7 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
                 />
               </label>
             )}
-            {!!currentItem?.filePath && <FileLink isSmall={true} url={currentItem?.filePath} />}
+            {!!currentItem?.filePath && <FileLink isSmall={true} title={'Ma’lumotnoma'} url={currentItem?.filePath} />}
           </div>
         </Form>
       </div>

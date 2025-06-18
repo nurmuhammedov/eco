@@ -11,6 +11,7 @@ import FileLink from '@/shared/components/common/file-link.tsx';
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
+import RiskAnalysisFilesToFix from '@/features/risk-analysis/ui/parts/risk-analysis-files-to-fix.tsx';
 
 const RiskAnalysisDetail = () => {
   const { data } = useObjectInfo();
@@ -76,7 +77,7 @@ const RiskAnalysisDetail = () => {
           </DetailCardAccordion.Item>
         )}
         <DetailCardAccordion.Item value="files" title="Xavfni tahlil etish uchun arizachi yuborgan ma’lumotlar">
-          files
+          <RiskAnalysisFilesToFix />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
           <RiskAnalysisInfo />

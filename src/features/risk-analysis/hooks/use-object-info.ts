@@ -21,7 +21,6 @@ export const useObjectInfo = () => {
     select: (data) => {
       const fileNamePrefix = currentType !== 'equipments' ? currentType.toUpperCase() : data.type;
 
-      console.log(fileNamePrefix);
       const files = Object.entries(data?.files)
         .filter(([label, value]) => label.includes('Path') && !!value)
         .map((file) => {
