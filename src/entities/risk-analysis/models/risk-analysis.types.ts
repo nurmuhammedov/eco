@@ -1,6 +1,7 @@
 export interface RiskAnalysisItem {
   id: string;
   inspectorName: string | null;
+  assignId: string | null;
   registryNumber: string;
   address: string;
   name: string;
