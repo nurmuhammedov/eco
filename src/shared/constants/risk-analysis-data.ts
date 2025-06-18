@@ -1,9 +1,9 @@
 export const riskAnalysisData = {
-  HF: [
+  hf: [
     {
       title:
         'Havfli ishlab chiqarish obyektlari loyihaviy hujjatlarining sanoat xavfsizligi ekspertizasidan oʻtkazilganligi, identifikatsiya xulosasi, sanoat xavfsizligi deklaratsiyasi, majburiy sugʻurta mavjudligi',
-      point: 14,
+      point: 13,
       rejectPlaceholder: 'Izoh',
     },
     {
@@ -64,7 +64,7 @@ export const riskAnalysisData = {
       rejectPlaceholder: 'Maʼlumot taqdim etilmagan',
     },
   ],
-  IRS: [
+  irs: [
     {
       title:
         "Atom energetikasi va yadro texnologiyalari, ionlashtiruvchi nurlanish manbalari (INM) va retgen uskunasidan foylanuvchi ob'ektlar lisenziyalash yoki ruxsat etish xususiyatiga ega hujjatlarni rasmiylashtirmaslik yoki muddatiga amal qilmaslik",
@@ -144,7 +144,7 @@ export const riskAnalysisData = {
       rejectPlaceholder: `Ma'lumot taqdim etilmagan`,
     },
   ],
-  ATTRACTION: [
+  attraction: [
     {
       title: `Attraktsionning texnik pasporti mavjudligi`,
       point: 15,
@@ -181,7 +181,7 @@ export const riskAnalysisData = {
       rejectPlaceholder: `placeholder`,
     },
   ],
-  ELEVATOR: [
+  elevator: [
     {
       title: `Liftga xizmat ko'rsatish bo'yicha shartnoma tuzilganligi va shirkatda liftga xizmat ko'rsatuvchi xodim mavjudmi`,
       point: 15,

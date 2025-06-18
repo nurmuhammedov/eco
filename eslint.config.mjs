@@ -47,6 +47,7 @@ export default tslint.config(
       '@typescript-eslint/no-unsafe-return': ['off'],
       '@typescript-eslint/no-floating-promises': ['off'],
       '@typescript-eslint/no-unused-expressions': ['off'],
+      '@typescript-eslint/ban-ts-comment': ['off'],
     },
   },
 );

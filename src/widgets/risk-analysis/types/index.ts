@@ -1,8 +1,8 @@
 export enum RiskAnalysisTab {
-  XICHO = 'XICHO',
-  INM = 'INM',
-  LIFT = 'LIFT',
-  ATTRACTION = 'ATTRACTION',
+  XICHO = 'hf',
+  INM = 'irs',
+  LIFT = 'elevator',
+  ATTRACTION = 'attraction',
 }
 
 export enum AssignedStatusTab {
