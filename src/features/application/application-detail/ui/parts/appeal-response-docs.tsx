@@ -1,23 +1,25 @@
-import { ColumnDef } from '@tanstack/react-table';
+import { UserRoles } from '@/entities/user';
+import { useConfirmDocument } from '@/features/application/application-detail/hooks/mutations/use-confirm-document.tsx';
+import { useResponseDocs } from '@/features/application/application-detail/hooks/use-response-docs.tsx';
+import RejectDocumentModal from '@/features/application/application-detail/ui/modals/reject-document-modal.tsx';
+import RejectMessageModal from '@/features/application/application-detail/ui/modals/reject-message-modal.tsx';
+import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx';
 
 import { DataTable } from '@/shared/components/common/data-table';
-import { useResponseDocs } from '@/features/application/application-detail/hooks/use-response-docs.tsx';
-import { Button } from '@/shared/components/ui/button.tsx';
 import FileLink from '@/shared/components/common/file-link.tsx';
-import { useConfirmDocument } from '@/features/application/application-detail/hooks/mutations/use-confirm-document.tsx';
-import { useAuth } from '@/shared/hooks/use-auth.ts';
-import { UserRoles } from '@/entities/user';
-import RejectDocumentModal from '@/features/application/application-detail/ui/modals/reject-document-modal.tsx';
 import { Badge } from '@/shared/components/ui/badge.tsx';
+import { Button } from '@/shared/components/ui/button.tsx';
+import { useAuth } from '@/shared/hooks/use-auth.ts';
+import { ColumnDef } from '@tanstack/react-table';
 import { formatDate } from 'date-fns';
-import RejectMessageModal from '@/features/application/application-detail/ui/modals/reject-message-modal.tsx';
-import { useState } from 'react';
 import { Eye, Info } from 'lucide-react';
-import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import ConfirmWithRegistryModal from '../modals/confirm-with-registry-modal.tsx';
 
 export const signStatuses = new Map([
   [true, { label: 'Imzolangan', variant: 'info' }],
-  [false, { label: 'Imzolanmagan', variant: 'warning' }]
+  [false, { label: 'Imzolanmagan', variant: 'warning' }],
 ] as const);
 
 //TODO:vinesti v enum ili const, sam map vinesti v otdelni fayl
@@ -25,16 +27,16 @@ export const approveStatuses = new Map([
   ['AGREED', { label: 'Kelishildi', variant: 'success' }],
   ['NOT_AGREED', { label: 'Kelishilmadi', variant: 'error' }],
   ['APPROVED', { label: 'Tasdiqlandi', variant: 'success' }],
-  ['NOT_APPROVED', { label: 'Tasdiqlanmadi', variant: 'error' }]
+  ['NOT_APPROVED', { label: 'Tasdiqlanmadi', variant: 'error' }],
 ] as const);
 
 //TODO:vinesti  v enum ili const,  sam map vinesti v otdelni fayl
 export const documentTypes = new Map([
-  ['REPORT', 'Ma\'lumotnoma'],
+  ['REPORT', "Ma'lumotnoma"],
   ['ACT', 'Dalolatnoma'],
   ['DECREE', 'Qaror'],
   ['APPEAL', 'Ariza'],
-  ['REPLY_LETTER', 'Javob xati']
+  ['REPLY_LETTER', 'Javob xati'],
 ]);
 
 const AppealResponseDocs = () => {
@@ -43,18 +45,20 @@ const AppealResponseDocs = () => {
   const { data } = useResponseDocs();
   const { mutate: confirmDocument, isPending } = useConfirmDocument();
   const { user } = useAuth();
+  const { id: appealId } = useParams();
+
   const columns: ColumnDef<any>[] = [
     {
       accessorKey: 'createdAt',
       maxSize: 100,
       header: 'Sana',
-      cell: (cell) => formatDate(cell.row.original.createdAt, 'dd.MM.yyyy')
+      cell: (cell) => formatDate(cell.row.original.createdAt, 'dd.MM.yyyy'),
     },
     {
       accessorKey: 'documentType',
       maxSize: 100,
       header: 'Hujjat nomi',
-      cell: (cell) => documentTypes.get(cell.row.original.documentType)
+      cell: (cell) => documentTypes.get(cell.row.original.documentType),
     },
     {
       accessorKey: 'isFullySigned',
@@ -81,13 +85,13 @@ const AppealResponseDocs = () => {
             </div>
           );
         }
-      }
+      },
     },
     {
       accessorKey: 'path',
       maxSize: 100,
       header: 'Fayl',
-      cell: (cell) => <FileLink url={cell.row.original?.path} />
+      cell: (cell) => <FileLink url={cell.row.original?.path} />,
     },
     {
       accessorKey: 'actions',
@@ -100,24 +104,32 @@ const AppealResponseDocs = () => {
         const currentAgreement = cell.row.original?.agreementStatus;
         const currentBadge = approveStatuses.get(currentAgreement);
         const message = cell.row.original?.description;
+        const documentId = cell.row.original?.documentId;
+
         if ((isRegionalUser && !isAgreed) || (currentAgreement === 'AGREED' && isManager)) {
+          if (isRegionalUser) {
+            return (
+              <div className="flex gap-1">
+                <Button
+                  disabled={isPending}
+                  onClick={() => {
+                    if (confirm('Tasdiqlaysizmi?')) {
+                      confirmDocument({ appealId, documentId, shouldRegister: false });
+                    }
+                  }}
+                  variant="success"
+                >
+                  Kelishildi
+                </Button>
+                <RejectDocumentModal documentId={documentId} label={'Kelishilmadi'} />
+              </div>
+            );
+          }
+
           return (
-            <div className="flex gap-1">
-              <Button
-                disabled={isPending}
-                onClick={() => {
-                  if (confirm('Are u sure?')) {
-                    confirmDocument(cell.row.original?.documentId);
-                  }
-                }}
-                variant="success"
-              >
-                {isRegionalUser ? 'Kelishildi' : 'Tasdiqlandi'}
-              </Button>
-              <RejectDocumentModal
-                documentId={cell.row.original?.documentId}
-                label={isRegionalUser ? 'Kelishilmadi' : 'Tasdiqlanmadi'}
-              />
+            <div className="flex gap-4">
+              <ConfirmWithRegistryModal documentId={documentId} />
+              <RejectDocumentModal documentId={documentId} label={'Tasdiqlanmadi'} />
             </div>
           );
         }
@@ -138,15 +150,13 @@ const AppealResponseDocs = () => {
             </div>
           );
         }
-      }
-    }
+      },
+    },
   ];
 
   return (
     <>
-      <DataTable showNumeration={false}
-                 isPaginated data={data || []}
-                 columns={columns as unknown as any} />
+      <DataTable showNumeration={false} isPaginated data={data || []} columns={columns as unknown as any} />
       <RejectMessageModal setMessage={setRejectMessage} message={rejectMessage} />
       <SignersModal setSigners={setSigners} signers={signers} />
     </>

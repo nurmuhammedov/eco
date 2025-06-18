@@ -14,3 +14,4 @@ export * from './register-lpg-powered.schema';
 export * from './register-hoist.schema';
 export * from './register-cableway.schema';
 export * from './register-irs.schema';
+export * from './register-attraction-passport.schema';

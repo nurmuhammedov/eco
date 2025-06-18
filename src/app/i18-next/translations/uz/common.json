@@ -109,6 +109,7 @@
     "CABLEWAY": "Osma yoʻl",
     "HOIST": "Koʻtarma qurilma",
     "PIPELINE": "Quvur",
+    "ATTRACTION": "Attraksion",
     "CHEMICAL_CONTAINER": "Kimyoviy idish",
     "HEAT_PIPELINE": "Issiqlik quvuri",
     "BOILER_UTILIZER": "Qozon utilizatori",
@@ -122,7 +123,8 @@
     "IN_AGREEMENT": "Kelishishda",
     "IN_APPROVAL": "Tasdiqlashda",
     "COMPLETED": "Yakunlangan",
-    "REJECTED": "Qaytarilgan"
+    "REJECTED": "Rad etilgan",
+    "CANCELED": "Qaytarilgan"
   },
   "building_sphere_type": {
     "RESIDENTIAL": "Turar joy binosi",

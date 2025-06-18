@@ -1,5 +1,5 @@
 import type { Navigation } from '@/widgets/sidebar/models/types';
-import { ListTree, LucideMousePointerSquareDashed, MapPinned, PencilRuler, Users } from 'lucide-react';
+import { ListTree, LucideMousePointerSquareDashed, MapPinned, PencilRuler, ToyBrick, Users } from 'lucide-react';
 
 export default [
   {
@@ -31,5 +31,10 @@ export default [
     url: '/equipments',
     title: 'menu.sub_types',
     icon: <LucideMousePointerSquareDashed />,
+  },
+  {
+    url: '/attraction-types',
+    title: 'Attraksion tipi',
+    icon: <ToyBrick />,
   },
 ] as Navigation;

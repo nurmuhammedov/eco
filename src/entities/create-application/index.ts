@@ -21,7 +21,7 @@ export * from './schemas/register-lpg-powered.schema';
 export * from './schemas/register-hoist.schema';
 export * from './schemas/register-cableway.schema';
 export * from './schemas/register-irs.schema';
-
+export * from './schemas/register-attraction-passport.schema';
 //other
 export * from './ui/application-card';
 export { CardForm } from './ui/application-form-card';

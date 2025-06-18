@@ -29,14 +29,19 @@ export const applicationDetailApi = {
     const { data: res } = await apiClient.post<any>(`/appeals/set-inspector`, data);
     return res.data;
   },
-
-  confirmDocument: async (data: any) => {
-    const { data: res } = await apiClient.post<any>(`/appeals/confirmation`, data);
-    return res.data;
-  },
+  //
+  // confirmDocument: async (data: any) => {
+  //   const { data: res } = await apiClient.post<any>(`/appeals/confirmation`, data);
+  //   return res.data;
+  // },
 
   rejectDocument: async (data: any) => {
     const { data: res } = await apiClient.post<any>(`/appeals/rejection`, data);
     return res.data;
-  }
+  },
+
+  confirmDocument: async (data: { appealId: any; documentId: any; shouldRegister?: boolean }) => {
+    const { data: res } = await apiClient.post<any>(`/appeals/confirmation`, data);
+    return res.data;
+  },
 };

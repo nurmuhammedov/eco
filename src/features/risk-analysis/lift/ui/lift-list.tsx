@@ -35,15 +35,15 @@ export const LiftList = () => {
       params.isAssigned = activeAssignedStatus === AssignedStatusTab.ASSIGNED;
     }
     if (user?.interval?.id) {
-      params.intervalId = user.interval.id;
+      params.intervalId = paramsObject.intervalId || user.interval.id;
     }
     return params;
-  }, [isRegional, activeAssignedStatus, user]);
+  }, [isRegional, activeAssignedStatus, user, paramsObject.intervalId]);
 
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_ELEVATORS, apiParams);
 
   const handleView = (row: RiskAnalysisItem) => {
-    const intervalId = user?.interval?.id;
+    const intervalId = paramsObject.intervalId || user?.interval?.id;
     navigate(`/risk-analysis/detail?tin=${row.legalTin}&id=${row.id}&intervalId=${intervalId}&type=${type}`);
   };
 

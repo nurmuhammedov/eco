@@ -3,10 +3,16 @@ import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+interface ConfirmDocumentPayload {
+  appealId: any;
+  documentId: any;
+  shouldRegister?: boolean;
+}
+
 export function useConfirmDocument() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (documentId: any) => await applicationDetailApi.confirmDocument(documentId),
+    mutationFn: async (payload: ConfirmDocumentPayload) => await applicationDetailApi.confirmDocument(payload),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
       toast.success('Success');

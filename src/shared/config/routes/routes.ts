@@ -1,4 +1,5 @@
 import { UserRoles } from '@/entities/user';
+import AttractionTypePage from '@/pages/admin/attraction-type/page';
 import { lazy } from 'react';
 
 // Error pages
@@ -107,6 +108,11 @@ export const appRoutes = [
     roles: [UserRoles.ADMIN],
   },
   {
+    path: 'attraction-types',
+    component: AttractionTypePage,
+    roles: [UserRoles.ADMIN],
+  },
+  {
     path: 'risk-analysis',
     component: RiskAnalysisPage,
     roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR],
@@ -114,8 +120,8 @@ export const appRoutes = [
   {
     path: 'risk-analysis/detail',
     component: RiskAnalysisDetailPage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR]
-  }
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR],
+  },
 ];
 
 export const authRoutes = [
