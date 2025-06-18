@@ -12,12 +12,14 @@ import AppealMainInfo from '@/features/application/application-detail/ui/parts/a
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
 import RiskAnalysisFilesToFix from '@/features/risk-analysis/ui/parts/risk-analysis-files-to-fix.tsx';
+import { useFilesToFix } from '@/features/risk-analysis/hooks/use-files-to-fix.ts';
 
 const RiskAnalysisDetail = () => {
   const { data } = useObjectInfo();
   const [searchParams] = useSearchParams();
   const currentTin = searchParams.get('tin');
   let type = searchParams.get('type') || '';
+  const { data: filesToFix } = useFilesToFix();
 
   if (type !== 'hf' && type !== 'irs') {
     type = data?.type;
@@ -76,9 +78,11 @@ const RiskAnalysisDetail = () => {
             <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
           </DetailCardAccordion.Item>
         )}
-        <DetailCardAccordion.Item value="files" title="Xavfni tahlil etish uchun arizachi yuborgan ma’lumotlar">
-          <RiskAnalysisFilesToFix />
-        </DetailCardAccordion.Item>
+        {filesToFix && filesToFix?.length > 0 && (
+          <DetailCardAccordion.Item value="files" title="Xavfni tahlil etish uchun arizachi yuborgan ma’lumotlar">
+            <RiskAnalysisFilesToFix data={filesToFix} />
+          </DetailCardAccordion.Item>
+        )}
         <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
           <RiskAnalysisInfo />
         </DetailCardAccordion.Item>
