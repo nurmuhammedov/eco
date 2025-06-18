@@ -6,14 +6,19 @@ import React from 'react';
 
 interface AssignInspectorButtonProps {
   row: RiskAnalysisItem;
+  disabled?: boolean;
 }
 
-export const AssignInspectorButton: React.FC<AssignInspectorButtonProps> = ({ row }) => {
+export const AssignInspectorButton: React.FC<AssignInspectorButtonProps> = ({ row, disabled = false }) => {
   const { addParams } = useCustomSearchParams();
 
   const handleOpenModal = () => {
     addParams({ objectId: row.id });
   };
 
-  return <Button onClick={handleOpenModal}>Inspektorni belgilash</Button>;
+  return (
+    <Button disabled={disabled} onClick={handleOpenModal}>
+      Inspektorni belgilash
+    </Button>
+  );
 };

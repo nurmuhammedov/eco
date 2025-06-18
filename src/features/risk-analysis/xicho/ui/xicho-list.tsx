@@ -75,7 +75,9 @@ export const XichoList = () => {
           {
             id: 'assignInspector',
             header: 'Inspektorni belgilash',
-            cell: ({ row }: any) => <AssignInspectorButton row={row.original} />,
+            cell: ({ row }: any) => (
+              <AssignInspectorButton disabled={paramsObject?.intervalId != user?.interval?.id} row={row.original} />
+            ),
             meta: {
               className: 'w-[200px]',
             },
