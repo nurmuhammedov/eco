@@ -78,32 +78,36 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
         <Form {...form}>
           <div className="flex-shrink-0 flex gap-3  w-full max-w-[600px] items-center">
             <div className="flex gap-1 flex-shrink-0">
-              <Button
-                onClick={() => {
-                  if (confirm('Cancel points?')) {
-                    cancelPoints(currentItem.id);
-                  }
-                }}
-                disabled={!isInspector || isConfirmed}
-                type="button"
-                className="flex-shrink-0"
-                variant={isConfirmed ? 'success' : 'successOutline'}
-                size="icon"
-              >
-                <Check />
-              </Button>
-              <Button
-                onClick={() => {
-                  form.setValue('isReject', !isReject);
-                }}
-                disabled={!!currentItem || !isInspector}
-                type="button"
-                className="flex-shrink-0"
-                variant={isReject || !!currentItem ? 'destructive' : 'destructiveOutline'}
-                size="icon"
-              >
-                <Minus />
-              </Button>
+              {isInspector && (
+                <>
+                  <Button
+                    onClick={() => {
+                      if (confirm('Cancel points?')) {
+                        cancelPoints(currentItem.id);
+                      }
+                    }}
+                    disabled={!isInspector || isConfirmed}
+                    type="button"
+                    className="flex-shrink-0"
+                    variant={isConfirmed ? 'success' : 'successOutline'}
+                    size="icon"
+                  >
+                    <Check />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      form.setValue('isReject', !isReject);
+                    }}
+                    disabled={!!currentItem || !isInspector}
+                    type="button"
+                    className="flex-shrink-0"
+                    variant={isReject || !!currentItem ? 'destructive' : 'destructiveOutline'}
+                    size="icon"
+                  >
+                    <Minus />
+                  </Button>
+                </>
+              )}
             </div>
             <div className="relative w-full">
               <FormField

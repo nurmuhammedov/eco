@@ -17,4 +17,8 @@ export const riskAnalysisDetailApi = {
     const { data: res } = await apiClient.patch<any>(`/${type}-risk-indicators/cancel/${id}`, data);
     return res.data;
   },
+  getObjectInfo: async ({ type, id }: { type: any; id: any }) => {
+    const { data } = await apiClient.get<any>(`/${type}/${id}`);
+    return data.data;
+  },
 };

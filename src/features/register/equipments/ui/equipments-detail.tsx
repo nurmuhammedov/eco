@@ -9,6 +9,7 @@ import { getDate } from '@/shared/utils/date.ts';
 import { Link } from 'react-router-dom';
 import { useEquipmentsDetail } from '@/features/register/equipments/hooks/use-equipments-detail.tsx';
 import FileLink from '@/shared/components/common/file-link.tsx';
+import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
 
 const EquipmentsDetail = () => {
   const { isLoading, data } = useEquipmentsDetail();
@@ -23,7 +24,9 @@ const EquipmentsDetail = () => {
       <div className="flex justify-between items-center mb-4">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
       </div>
-      <DetailCardAccordion defaultValue={['registry_info', 'applicant_info', 'object_info', 'object_location']}>
+      <DetailCardAccordion
+        defaultValue={['registry_info', 'applicant_info', 'object_info', 'object_location', 'object_files']}
+      >
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
           <DetailRow
             title="Reyestrga kiritish uchun asos (ariza):"
@@ -35,7 +38,9 @@ const EquipmentsDetail = () => {
           />
           <DetailRow title="Hisobga olish sanasi:" value={getDate(data?.registrationDate)} />
           <DetailRow title="Hisobga olish raqami:" value={data?.registryNumber} />
-          {!!data?.registryFilePath &&<DetailRow title="Sertifikat fayli:" value={<FileLink url={data?.registryFilePath} />} />}
+          {!!data?.registryFilePath && (
+            <DetailRow title="Sertifikat fayli:" value={<FileLink url={data?.registryFilePath} />} />
+          )}
           <DetailRow title="Reyestrdan chiqarish sanasi:" value={getDate(data?.deregisterDate)} />
           <DetailRow title="Reyestrdan chiqarish sababi:" value={getDate(data?.deregisterReason)} />
         </DetailCardAccordion.Item>
@@ -44,6 +49,9 @@ const EquipmentsDetail = () => {
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
           <AppealMainInfo data={data} type={data?.type} address={data?.address} />
+        </DetailCardAccordion.Item>
+        <DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">
+          <FilesSection files={data?.files || []} />
         </DetailCardAccordion.Item>
         {!!currentObjLocation?.length && (
           <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">
