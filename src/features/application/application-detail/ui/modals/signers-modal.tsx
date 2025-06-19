@@ -29,7 +29,9 @@ const SignersModal: FC<Props> = ({ signers, setSigners }) => {
             return (
               <div className="flex items-center gap-4 justify-between text-sm odd:bg-neutral-50 rounded  p-2.5">
                 <p>{signer?.signedBy}</p>
-                <p className="text-slate-400 flex-shrink-0 text-xs">{format(signer?.createdAt, 'dd.MM.yyyy hh:mm:ss')}</p>
+                <p className="text-slate-400 flex-shrink-0 text-xs">
+                  {format(signer?.createdAt, 'dd.MM.yyyy, HH:mm:ss')}
+                </p>
                 <p className="shrink-0">
                   {currentLabel && <Badge variant={currentLabel.variant}>{currentLabel.label}</Badge>}
                 </p>

@@ -31,6 +31,7 @@ const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-deta
 const RiskAnalysisPage = lazy(() => import('@/pages/risk-analysis'));
 const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'));
 const ChecklistTemplatesPage = lazy(() => import('@/pages/admin/checklist-templates/page'));
+const ChecklistTemplatesPage2 = lazy(() => import('@/features/checklists'));
 
 export const appRoutes = [
   {
@@ -127,6 +128,11 @@ export const appRoutes = [
     path: 'risk-analysis/detail',
     component: RiskAnalysisDetailPage,
     roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
+  },
+  {
+    path: 'checklists',
+    component: ChecklistTemplatesPage2,
+    roles: [UserRoles.LEGAL],
   },
 ];
 

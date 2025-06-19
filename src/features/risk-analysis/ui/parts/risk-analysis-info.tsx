@@ -4,6 +4,7 @@ import { useAuth } from '@/shared/hooks/use-auth.ts';
 import { UserRoles } from '@/entities/user';
 import RiskAnalysisForm from '@/features/risk-analysis/ui/parts/risk-analysis-form.tsx';
 import { useRiskAnalysisDetail } from '@/features/risk-analysis/hooks/use-risk-analysis-detail.ts';
+import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info.tsx';
 
 const RiskAnalysisInfo = () => {
   const { user } = useAuth();
@@ -29,7 +30,9 @@ const RiskAnalysisInfo = () => {
           Total score: <b className="font-medium">{totalScore}</b>
         </div>
       </div>
-      <TabsContent value="inspector_info">inspector_info</TabsContent>
+      <TabsContent value="inspector_info">
+        <RiskAnalysisInspectorInfo />
+      </TabsContent>
       <TabsContent value="analysis_indicators">
         <RiskAnalysisForm data={data} />
       </TabsContent>

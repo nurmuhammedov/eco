@@ -13,6 +13,7 @@ import FilesSection from '@/features/application/application-detail/ui/parts/fil
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
 import RiskAnalysisFilesToFix from '@/features/risk-analysis/ui/parts/risk-analysis-files-to-fix.tsx';
 import { useFilesToFix } from '@/features/risk-analysis/hooks/use-files-to-fix.ts';
+import RiskAnalysisChecklists from '@/features/risk-analysis/ui/parts/risk-analysis-checklists.tsx';
 
 const RiskAnalysisDetail = () => {
   const { data } = useObjectInfo();
@@ -44,6 +45,7 @@ const RiskAnalysisDetail = () => {
           // 'object_files',
           // 'object_location',
           // 'registry_info',
+          'checklists',
           'risk_anlalysis_info',
         ]}
       >
@@ -83,6 +85,9 @@ const RiskAnalysisDetail = () => {
             <RiskAnalysisFilesToFix data={filesToFix} />
           </DetailCardAccordion.Item>
         )}
+        <DetailCardAccordion.Item value="checklists" title="Cheklistlar">
+          <RiskAnalysisChecklists />
+        </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
           <RiskAnalysisInfo />
         </DetailCardAccordion.Item>

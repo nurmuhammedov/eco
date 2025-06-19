@@ -22,11 +22,15 @@ export const riskAnalysisDetailApi = {
     return data.data;
   },
   getInspectorInfo: async ({ type, id }: { type: any; id: any }) => {
-    const { data } = await apiClient.get<any>(`/${type}/${id}`);
+    const { data } = await apiClient.get<any>(`/assign-inspector-${type}/${id}`);
     return data.data;
   },
   getFilesToFix: async ({ type, params }: { type: any; params: any }) => {
     const { data } = await apiClient.get<any>(`/${type}-risk-indicators/to-fix`, params);
     return data.data;
+  },
+  addCheckList: async (data: any) => {
+    const { data: res } = await apiClient.post<any>(`/checklists`, data);
+    return res.data;
   },
 };

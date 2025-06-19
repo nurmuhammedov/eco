@@ -1,6 +1,6 @@
 import { useLogout } from '@/entities/auth';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, LogOut } from 'lucide-react';
+import { ChevronDown, File, LogOut } from 'lucide-react';
 import { Loader } from '@/shared/components/common';
 import {
   DropdownMenu,
@@ -12,12 +12,14 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
 import { getInitials } from '@/shared/utils';
+import { UserRoles } from '@/entities/user';
+import { useNavigate } from 'react-router-dom';
 
 export default function UserDropdown() {
   const { user } = useAuth();
   const { t } = useTranslation('auth');
   const { mutateAsync, isPending } = useLogout();
-
+  const navigate = useNavigate();
   const userName = getInitials(user?.name);
 
   if (isPending) {
@@ -41,6 +43,11 @@ export default function UserDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-44">
         <DropdownMenuGroup>
+          {user?.role == UserRoles.LEGAL && (
+            <DropdownMenuItem className="flex justify-between" onClick={() => navigate('/checklists')}>
+              Cheklistlar <File size={16} />
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem disabled={isPending} className="flex justify-between" onClick={() => mutateAsync()}>
             {t('logout')} <LogOut size={16} />
           </DropdownMenuItem>
