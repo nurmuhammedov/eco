@@ -121,12 +121,12 @@ export const appRoutes = [
   {
     path: 'risk-analysis',
     component: RiskAnalysisPage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR],
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
   },
   {
     path: 'risk-analysis/detail',
     component: RiskAnalysisDetailPage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR],
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
   },
 ];
 
