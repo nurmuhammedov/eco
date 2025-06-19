@@ -16,6 +16,11 @@ export default [
     url: '/risk-analysis',
     icon: 'danger',
   },
+  {
+    title: 'Profilaktika',
+    url: '/preventions',
+    icon: 'danger',
+  },
   // {
   //   title: 'menu.permits_authorization_documents',
   //   url: '/permits-authorization-documents',

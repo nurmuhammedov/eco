@@ -1,7 +1,7 @@
+import type { ApiResponse, ResponseData } from '@/shared/types/api';
+import { AxiosError, AxiosProgressEvent } from 'axios';
 import { toast } from 'sonner';
 import { axiosInstance } from './axios-instance';
-import { AxiosError, AxiosProgressEvent } from 'axios';
-import type { ApiResponse, ResponseData } from '@/shared/types/api';
 
 /**
  * Available HTTP methods
@@ -129,6 +129,6 @@ export const apiClient = {
     onUploadProgress?: ProgressCallback,
   ): Promise<ApiResponse<T>> => apiRequest<T>('patch', url, body, headers, onUploadProgress),
 
-  delete: <T>(url: string, params?: RequestParams, headers?: RequestHeaders): Promise<ApiResponse<T>> =>
-    apiRequest<T>('delete', url, params, headers),
+  delete: <T>(url: string, params?: RequestParams, headers?: RequestHeaders, body?: any): Promise<ApiResponse<T>> =>
+    apiRequest<T>('delete', url, params, headers, body),
 };

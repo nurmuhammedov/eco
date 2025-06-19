@@ -31,6 +31,9 @@ const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-deta
 const RiskAnalysisPage = lazy(() => import('@/pages/risk-analysis'));
 const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'));
 const ChecklistTemplatesPage = lazy(() => import('@/pages/admin/checklist-templates/page'));
+const PreventionsPage = lazy(() => import('@/pages/preventions'));
+const PreventionCreatePage = lazy(() => import('@/pages/preventions/create'));
+const PreventionViewPage = lazy(() => import('@/pages/preventions/view'));
 
 export const appRoutes = [
   {
@@ -127,6 +130,35 @@ export const appRoutes = [
     path: 'risk-analysis/detail',
     component: RiskAnalysisDetailPage,
     roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
+  },
+  {
+    path: 'preventions',
+    component: PreventionsPage,
+    roles: [
+      UserRoles.LEGAL,
+      UserRoles.HEAD,
+      UserRoles.MANAGER,
+      UserRoles.REGIONAL,
+      UserRoles.INSPECTOR,
+      UserRoles.INDIVIDUAL,
+    ],
+  },
+  {
+    path: 'preventions/create/:tin',
+    component: PreventionCreatePage,
+    roles: [UserRoles.INSPECTOR],
+  },
+  {
+    path: 'preventions/view/:id',
+    component: PreventionViewPage,
+    roles: [
+      UserRoles.LEGAL,
+      UserRoles.HEAD,
+      UserRoles.MANAGER,
+      UserRoles.REGIONAL,
+      UserRoles.INSPECTOR,
+      UserRoles.INDIVIDUAL,
+    ],
   },
 ];
 

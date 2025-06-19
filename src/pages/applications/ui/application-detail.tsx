@@ -6,13 +6,11 @@ import AttachInspectorModal from '@/features/application/application-detail/ui/m
 import ReferenceCreateModal from '@/features/application/application-detail/ui/modals/reference-create-modal.tsx';
 import RejectApplicationModal from '@/features/application/application-detail/ui/modals/reject-application-modal.tsx';
 import { GoBack } from '@/shared/components/common';
-import { useData } from '@/shared/hooks';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
 
 const ApplicationPage = () => {
   const { data } = useApplicationDetail();
   const { user } = useAuth();
-  useData('/risk-analysis-intervals/select?year=2024');
   return (
     <div>
       <div className="flex justify-between items-center">
