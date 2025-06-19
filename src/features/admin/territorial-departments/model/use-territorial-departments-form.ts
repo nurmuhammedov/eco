@@ -1,8 +1,4 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useEffect, useMemo } from 'react';
 import { useRegionSelectQuery } from '@/entities/admin/districts';
-import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks';
 import {
   CreateTerritorialDepartmentsDTO,
   territorialDepartmentsSchema,
@@ -11,10 +7,14 @@ import {
   useTerritorialDepartmentQuery,
   useUpdateTerritorialDepartments,
 } from '@/entities/admin/territorial-departments';
+import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
 
 const DEFAULT_FORM_VALUES: CreateTerritorialDepartmentsDTO = {
   name: '',
-  regionIds: [],
+  regionId: 0,
 };
 
 export function useTerritorialDepartmentsForm() {

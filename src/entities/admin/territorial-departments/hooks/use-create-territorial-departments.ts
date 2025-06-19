@@ -1,11 +1,11 @@
-import type { ResponseData } from '@/shared/types/api';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   CreateTerritorialDepartmentsDTO,
   TerritorialDepartmentResponse,
   territorialDepartmentsAPI,
   territorialDepartmentsKeys,
 } from '@/entities/admin/territorial-departments';
+import type { ResponseData } from '@/shared/types/api';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useCreateTerritorialDepartment = () => {
   const queryClient = useQueryClient();
@@ -48,10 +48,12 @@ export const useCreateTerritorialDepartment = () => {
       });
 
       // Add the newly created territorial-departments to cache
-      queryClient.setQueryData(
-        territorialDepartmentsKeys.detail('territorial-departments', createdData.data.id!),
-        createdData,
-      );
+      if (createdData.data.id) {
+        queryClient.setQueryData(
+          territorialDepartmentsKeys.detail('territorial-departments', createdData.data.id),
+          createdData,
+        );
+      }
     },
 
     onError: (_err, _newData, context) => {

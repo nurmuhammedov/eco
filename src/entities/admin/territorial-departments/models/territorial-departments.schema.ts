@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const territorialDepartmentsBaseSchema = {
   name: z.string().min(1, 'Nomi majburiy'),
-  regionIds: z.array(z.number().int().positive()),
+  regionId: z.number().int().positive('Viloyatni tanlang'),
 };
 
 export const territorialDepartmentsSchema = z.object({
