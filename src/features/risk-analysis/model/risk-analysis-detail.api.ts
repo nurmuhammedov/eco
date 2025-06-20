@@ -33,4 +33,12 @@ export const riskAnalysisDetailApi = {
     const { data: res } = await apiClient.post<any>(`/checklists`, data);
     return res.data;
   },
+  getChecklist: async (params: any) => {
+    const { data } = await apiClient.get<any>(`/checklists`, params);
+    return data.data;
+  },
+  deleteChecklist: async (id: any) => {
+    const { data: res } = await apiClient.delete<any>(`/checklists/${id}`);
+    return res.data;
+  },
 };

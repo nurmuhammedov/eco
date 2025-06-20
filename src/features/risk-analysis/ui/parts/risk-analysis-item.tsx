@@ -60,7 +60,6 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
     resolver: zodResolver(schema),
   });
   const isReject = form.watch('isReject');
-  console.log(currentInervalId);
   const onSubmit = (data: any) => {
     mutate({
       data: {

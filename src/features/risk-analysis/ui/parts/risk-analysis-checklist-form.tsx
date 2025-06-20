@@ -12,7 +12,7 @@ import { useCheckListSelect } from '@/features/checklists/hooks/use-checklist-se
 import { Button } from '@/shared/components/ui/button.tsx';
 
 const schema = z.object({
-  templateId: z.string({ message: FORM_ERROR_MESSAGES.required }),
+  templateId: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
   path: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
 });
 
@@ -29,10 +29,14 @@ const RiskAnalysisChecklistForm = () => {
     mutateAsync({
       ...data,
       templateId: +data.templateId,
+    }).then(() => {
+      form.setValue('templateId', '');
+      form.setValue('path', '');
     });
   };
+
   return (
-    <div>
+    <div className=" border-b border-b-neutral-100 mb-4">
       <h3 className="text-base font-medium ">Cheklist qo‘shish</h3>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-4 gap-2 py-2">
@@ -42,7 +46,7 @@ const RiskAnalysisChecklistForm = () => {
               name="templateId"
               render={({ field }) => (
                 <FormItem>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Cheklist shakllari" />
