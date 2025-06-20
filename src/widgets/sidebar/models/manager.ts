@@ -16,4 +16,9 @@ export default [
     url: '/risk-analysis',
     icon: 'danger',
   },
+  {
+    title: 'Profilaktika',
+    url: '/preventions',
+    icon: 'danger',
+  },
 ] as Navigation;

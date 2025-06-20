@@ -1,10 +1,10 @@
-import type { ResponseData } from '@/shared/types/api';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   territorialDepartmentsAPI,
   territorialDepartmentsKeys,
   type UpdateTerritorialDepartmentsDTO,
 } from '@/entities/admin/territorial-departments';
+import type { ResponseData } from '@/shared/types/api';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useUpdateTerritorialDepartments = () => {
   const queryClient = useQueryClient();
@@ -42,7 +42,9 @@ export const useUpdateTerritorialDepartments = () => {
       if (previousList) {
         queryClient.setQueryData(territorialDepartmentsKeys.list('territorial-departments'), {
           ...previousList,
-          content: previousList.content.map((district) => (district.id === updateData.id ? updateData : district)),
+          content: previousList.content.map((department) =>
+            department.id === updateData.id ? updateData : department,
+          ),
         });
       }
 

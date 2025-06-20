@@ -72,4 +72,6 @@ export const API_ENDPOINTS: Record<string, string> = {
 
   RISK_ANALYSIS_INTERVALS_SELECT: '/risk-analysis-intervals/select',
   CHECKLIST_TEMPLATES: '/checklist-templates',
+
+  PREVENTIONS: '/preventions',
 };

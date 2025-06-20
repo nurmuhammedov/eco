@@ -1,7 +1,6 @@
 // src/features/admin/checklist-templates/ui/checklist-templates-list.tsx
 import {
   ChecklistTemplate,
-  FilterChecklistTemplateDTO,
   useChecklistTemplateList,
   useDeleteChecklistTemplate,
 } from '@/entities/admin/checklist-templates';
@@ -11,7 +10,6 @@ import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
 import { useChecklistTemplateDrawer } from '@/shared/hooks/entity-hooks';
 import { UIModeEnum } from '@/shared/types';
 import { ColumnDef } from '@tanstack/react-table';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export function ChecklistTemplatesList() {
@@ -20,15 +18,11 @@ export function ChecklistTemplatesList() {
   const { paramsObject } = useCustomSearchParams();
   const { mutate: deleteTemplate } = useDeleteChecklistTemplate();
 
-  const filters = useMemo<FilterChecklistTemplateDTO>(() => {
-    return {
-      page: paramsObject.page ? parseInt(paramsObject.page, 10) : 1,
-      size: paramsObject.size ? parseInt(paramsObject.size, 10) : 20,
-      active: paramsObject.active?.toString() === 'true',
-    };
-  }, [paramsObject]);
-
-  const { data, isLoading } = useChecklistTemplateList(filters);
+  const { data, isLoading } = useChecklistTemplateList({
+    page: paramsObject.page ? parseInt(paramsObject.page, 10) : 1,
+    size: paramsObject.size ? parseInt(paramsObject.size, 10) : 20,
+    active: paramsObject.active?.toString() || 'true',
+  });
 
   const columns: ColumnDef<ChecklistTemplate>[] = [
     {

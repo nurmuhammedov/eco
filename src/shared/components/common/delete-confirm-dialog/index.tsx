@@ -1,8 +1,3 @@
-import { cn } from '@/shared/lib/utils';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ButtonProps } from '@/shared/components/ui/button';
-import { Loader2, OctagonAlert, Trash2 } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,6 +9,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/shared/components/ui/alert-dialog';
+import { ButtonProps } from '@/shared/components/ui/button';
+import { cn } from '@/shared/lib/utils';
+import { Loader2, OctagonAlert, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type DialogSize = 'sm' | 'md' | 'lg' | 'xl';
 
@@ -28,6 +28,7 @@ export interface DeleteConfirmationDialogProps {
   onCancel?: () => void;
   dialogSize?: DialogSize;
   trigger?: React.ReactNode;
+  children?: React.ReactNode;
   contentClassName?: string;
   icon?: React.ReactElement;
   variant?: ButtonProps['variant'];

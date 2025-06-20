@@ -1,19 +1,22 @@
-import { Fragment } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useUIActionLabel } from '@/shared/hooks';
-import { Input } from '@/shared/components/ui/input';
-import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks';
-import { useTerritorialDepartmentsForm } from '../model/use-territorial-departments-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { Input } from '@/shared/components/ui/input';
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { useUIActionLabel } from '@/shared/hooks';
+import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
+import { Fragment, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useTerritorialDepartmentsForm } from '../model/use-territorial-departments-form';
 
 export const TerritorialDepartmentsDrawer = () => {
   const { t } = useTranslation('common');
   const { isOpen, onClose, isCreate, mode } = useTerritorialDepartmentsDrawer();
-  const { form, onSubmit, isPending, isFetching, regionOptions } = useTerritorialDepartmentsForm();
+  const { form, onSubmit, isPending, isFetching, regionOptions: regions } = useTerritorialDepartmentsForm();
   const modeState = useUIActionLabel(mode);
+
+  const regionOptions = useMemo(() => getSelectOptions(regions), [regions]);
 
   return (
     <BaseDrawer
@@ -45,13 +48,25 @@ export const TerritorialDepartmentsDrawer = () => {
                 )}
               />
               <FormField
-                name="regionIds"
+                name="regionId"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t('region')}</FormLabel>
                     <FormControl>
-                      <MultiSelect {...field} options={regionOptions} placeholder={t('select_region')} />
+                      <Select
+                        value={String(field.value)}
+                        onValueChange={(value) => {
+                          if (value) {
+                            field.onChange(Number(value));
+                          }
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder={t('select_region')} />
+                        </SelectTrigger>
+                        <SelectContent>{regionOptions}</SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

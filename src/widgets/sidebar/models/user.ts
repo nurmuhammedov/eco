@@ -16,6 +16,11 @@ export default [
     url: '/risk-analysis',
     icon: 'danger',
   },
+  {
+    title: 'Profilaktika',
+    url: '/preventions',
+    icon: 'danger',
+  },
   // {
   //   title: 'menu.accreditation',
   //   url: '/accreditation',
