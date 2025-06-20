@@ -1,3 +1,5 @@
+// src/features/application/application-detail/hooks/use-application-detail.tsx
+
 import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -13,10 +15,10 @@ export const useApplicationDetail = () => {
     queryFn: () => applicationDetailApi.getApplicationDetail(id),
     select: (data) => {
       const files = Object.entries(data.data?.files)
-        .filter(([label, value]) => label.includes('Path') && !!value)
-        .map((file) => {
-          const label = `labels.${data.appealType.replace('REGISTER_', '')}.${file[0]}`;
-          return { label: t(label), path: file[1] };
+        .filter(([key]) => key.includes('Path'))
+        .map(([key, value]) => {
+          const label = `labels.${data.appealType.replace('REGISTER_', '')}.${key}`;
+          return { label: t(label), path: value as string, fieldName: key };
         });
       return {
         ...data,

@@ -1,6 +1,8 @@
+// src/pages/applications/ui/application-detail.tsx
+
 import { ApplicationStatus } from '@/entities/application';
 import { UserRoles } from '@/entities/user';
-import { ApplicationDetail } from '@/features/application/application-detail';
+import { ApplicationDetail as ApplicationDetailFeature } from '@/features/application/application-detail';
 import { useApplicationDetail } from '@/features/application/application-detail/hooks/use-application-detail.tsx';
 import AttachInspectorModal from '@/features/application/application-detail/ui/modals/attach-inspector-modal.tsx';
 import ReferenceCreateModal from '@/features/application/application-detail/ui/modals/reference-create-modal.tsx';
@@ -8,7 +10,7 @@ import RejectApplicationModal from '@/features/application/application-detail/ui
 import { GoBack } from '@/shared/components/common';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
 
-const ApplicationPage = () => {
+const ApplicationDetailPage = () => {
   const { data } = useApplicationDetail();
   const { user } = useAuth();
   return (
@@ -27,8 +29,8 @@ const ApplicationPage = () => {
           )}
         </div>
       </div>
-      <ApplicationDetail data={data} />
+      <ApplicationDetailFeature data={data} userRole={user?.role} />
     </div>
   );
 };
-export default ApplicationPage;
+export default ApplicationDetailPage;

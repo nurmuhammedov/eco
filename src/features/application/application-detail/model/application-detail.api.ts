@@ -44,4 +44,9 @@ export const applicationDetailApi = {
     const { data: res } = await apiClient.post<any>(`/appeals/confirmation`, data);
     return res.data;
   },
+
+  uploadFile: async (payload: { appealId?: string; fieldName: string; filePath: string }) => {
+    const { data: res } = await apiClient.post<any>('/appeals/upload-file', payload);
+    return res.data;
+  },
 };
