@@ -3,7 +3,7 @@ import { HFSphere } from '@/shared/types';
 import { FORM_ERROR_MESSAGES } from '@/shared/validation';
 import { z } from 'zod';
 
-const HFSphereEnum = z.enum(Object.values(HFSphere) as [string, ...string[]]);
+export const HFSphereEnum = z.enum(Object.values(HFSphere) as [string, ...string[]]);
 
 export const HFAppealDtoSchema = z.object({
   phoneNumber: z
