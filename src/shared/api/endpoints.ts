@@ -74,4 +74,6 @@ export const API_ENDPOINTS: Record<string, string> = {
   CHECKLIST_TEMPLATES: '/checklist-templates',
 
   PREVENTIONS: '/preventions',
+
+  INSPECTIONS: '/inspections',
 };

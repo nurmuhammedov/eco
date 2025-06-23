@@ -37,6 +37,7 @@ const PreventionCreatePage = lazy(() => import('@/pages/preventions/create'));
 const PreventionViewPage = lazy(() => import('@/pages/preventions/view'));
 const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'));
 const InspectionsDetailPage = lazy(() => import('@/features/inspections/ui/inspections.detail.tsx'));
+const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
 
 export const appRoutes = [
   {
@@ -167,6 +168,11 @@ export const appRoutes = [
     path: 'checklists',
     component: ChecklistTemplatesPage2,
     roles: [UserRoles.LEGAL],
+  },
+  {
+    path: 'inspections',
+    component: InspectionsPage,
+    roles: [UserRoles.MANAGER, UserRoles.INSPECTOR, UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL],
   },
   {
     path: 'inspections/info',
