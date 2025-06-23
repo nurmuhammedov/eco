@@ -17,6 +17,11 @@ export default [
     icon: 'danger',
   },
   {
+    title: 'Tekshiruvlar',
+    url: '/inspections',
+    icon: 'note-text',
+  },
+  {
     title: 'Profilaktika',
     url: '/preventions',
     icon: 'danger',

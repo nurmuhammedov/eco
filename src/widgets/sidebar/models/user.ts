@@ -17,9 +17,14 @@ export default [
     icon: 'danger',
   },
   {
-    title: 'Profilaktika',
-    url: '/preventions',
-    icon: 'danger',
+    title: 'Tekshiruvlar',
+    url: '/inspections',
+    icon: 'note-text',
+  },
+  {
+    title: 'Tekshirishlar',
+    url: '/inspections',
+    icon: 'scanner',
   },
   // {
   //   title: 'menu.accreditation',
