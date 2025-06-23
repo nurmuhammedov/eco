@@ -12,11 +12,12 @@ const usePaginatedData = <T>(endpoint: string, params?: ISearchParams, enabled: 
     staleTime: 0,
   });
 
-  const { content = [], page } = queryMethods.data || {};
+  const { page } = queryMethods.data || {};
+  console.log('usePaginatedData', queryMethods.data);
 
   return {
     ...queryMethods,
-    data: Array.isArray(queryMethods.data) ? queryMethods.data : content,
+    data: queryMethods.data,
     totalPages: page?.totalPages,
   };
 };
