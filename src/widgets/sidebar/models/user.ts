@@ -21,11 +21,6 @@ export default [
     url: '/inspections',
     icon: 'note-text',
   },
-  {
-    title: 'Tekshirishlar',
-    url: '/inspections',
-    icon: 'scanner',
-  },
   // {
   //   title: 'menu.accreditation',
   //   url: '/accreditation',
