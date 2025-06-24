@@ -1,9 +1,9 @@
 import { DetailCardAccordion } from '@/shared/components/common/detail-card';
 import { GoBack } from '@/shared/components/common';
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
 import { useSearchParams } from 'react-router-dom';
 import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts';
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
+import PointsClassification from '@/features/inspections/ui/parts/points-classification.tsx';
 
 const InspectionsDetail = () => {
   const { data } = useObjectInfo();
@@ -24,22 +24,12 @@ const InspectionsDetail = () => {
       <div className="flex justify-between items-center mb-4">
         <GoBack title={`Tashkilot STIR: ${currentTin}`} />
       </div>
-      <DetailCardAccordion
-        defaultValue={
-          [
-            // 'org_info',
-            // 'object_info'
-          ]
-        }
-      >
-        <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
-          <LegalApplicantInfo tinNumber={currentTin} />
-        </DetailCardAccordion.Item>
+      <DetailCardAccordion defaultValue={['org_info', 'object_info', 'risk_analysis_info']}>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
           <AppealMainInfo data={data} type={type?.toUpperCase()} address={data?.address} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="risk_analysis_info" title="Olingan ballar tasnifi">
-          Olingan ballar tasnifi
+          <PointsClassification />
         </DetailCardAccordion.Item>
       </DetailCardAccordion>
     </>

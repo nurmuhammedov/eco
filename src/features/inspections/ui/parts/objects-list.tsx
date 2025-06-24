@@ -5,14 +5,14 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/shared/components/ui/button.tsx';
 import { Eye } from 'lucide-react';
 import { DataTable } from '@/shared/components/common/data-table';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const ObjectsList = () => {
   const { addParams, paramsObject } = useCustomSearchParams();
-  const location = useLocation();
   const currentTab = paramsObject?.type || 'hf';
   const { data, isLoading } = useObjectList();
   const navigate = useNavigate();
+
   const columns: ColumnDef<any>[] = [
     {
       header: 'Nomi',
@@ -38,7 +38,10 @@ const ObjectsList = () => {
           variant="ghost"
           size="icon"
           onClick={() =>
-            navigate(`/inspections/detail${location.search}&id=${row.original?.objectId}&type=${currentTab}`, {})
+            navigate(
+              `/inspections/detail?id=${row.original?.objectId}&type=${currentTab}&tin=${paramsObject?.tin}&intervalId=${paramsObject?.intervalId}`,
+              {},
+            )
           }
         >
           <Eye className="h-4 w-4" />
