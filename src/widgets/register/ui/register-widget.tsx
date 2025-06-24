@@ -2,6 +2,7 @@
 import { EquipmentsList } from '@/features/register/equipments/ui/equipments-list';
 import { HfList } from '@/features/register/hf/ui/hf-list';
 import { IrsList } from '@/features/register/irs/ui/irs-list';
+import { Badge } from '@/shared/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import React, { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +11,7 @@ import { RegisterActiveTab } from '../types';
 
 const RegisterWidget = () => {
   const { t } = useTranslation('common'); // Assuming 'common' namespace has these translations
-  const { activeTab, handleChangeTab } = useRegister();
+  const { activeTab, handleChangeTab, hfCount, irsCount, equipmentsCount } = useRegister();
 
   return (
     <Fragment>
@@ -19,9 +20,30 @@ const RegisterWidget = () => {
       </div>
       <Tabs defaultValue={activeTab} onValueChange={handleChangeTab}>
         <TabsList>
-          <TabsTrigger value={RegisterActiveTab.HF}>XICHO</TabsTrigger>{' '}
-          <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>Qurilmalar</TabsTrigger>
-          <TabsTrigger value={RegisterActiveTab.IRS}>INM</TabsTrigger>
+          <TabsTrigger value={RegisterActiveTab.HF}>
+            XICHO
+            {hfCount ? (
+              <Badge variant="destructive" className="ml-2">
+                {hfCount}
+              </Badge>
+            ) : null}
+          </TabsTrigger>
+          <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
+            Qurilmalar
+            {hfCount ? (
+              <Badge variant="destructive" className="ml-2">
+                {equipmentsCount}
+              </Badge>
+            ) : null}
+          </TabsTrigger>
+          <TabsTrigger value={RegisterActiveTab.IRS}>
+            INM
+            {hfCount ? (
+              <Badge variant="destructive" className="ml-2">
+                {irsCount}
+              </Badge>
+            ) : null}
+          </TabsTrigger>
         </TabsList>
         <TabsContent value={RegisterActiveTab.HF} className="mt-4">
           <HfList />

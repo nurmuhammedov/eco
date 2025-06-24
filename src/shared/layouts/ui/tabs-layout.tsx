@@ -1,3 +1,4 @@
+import { Badge } from '@/shared/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { cn } from '@/shared/lib/utils.ts';
 import { ReactNode } from 'react';
@@ -5,6 +6,7 @@ import { ReactNode } from 'react';
 interface Tab {
   id: string;
   name: string;
+  count?: number;
 }
 
 interface TabsLayoutProps {
@@ -37,6 +39,11 @@ export const TabsLayout = ({
           {tabs.map((tab) => (
             <TabsTrigger className={cn('hover:bg-neutral-100', classNameTrigger)} key={tab.id} value={tab.id}>
               {tab.name}
+              {tab.count ? (
+                <Badge variant="destructive" className="ml-2">
+                  {tab.count}
+                </Badge>
+              ) : null}
             </TabsTrigger>
           ))}
         </TabsList>
