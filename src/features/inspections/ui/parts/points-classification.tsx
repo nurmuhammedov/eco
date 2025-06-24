@@ -35,7 +35,7 @@ const PointsClassification = () => {
               <td className="border border-neutral-100 p-4">{idx + 1}</td>
               <td className="border border-neutral-100 p-4">{item?.title}</td>
               <td className="border border-neutral-100 p-4">
-                {currentItem?.score === item?.point ? (
+                {currentItem?.score !== 0 ? (
                   <span className="text-red-600">yoq</span>
                 ) : (
                   <span className="text-green-600">yoq</span>
