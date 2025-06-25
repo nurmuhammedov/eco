@@ -22,15 +22,10 @@ export default [
     icon: 'note-text',
   },
   {
-    title: 'Tekshirishlar',
-    url: '/inspections',
-    icon: 'scanner',
+    title: 'menu.accreditation',
+    url: '/accreditations',
+    icon: 'danger',
   },
-  // {
-  //   title: 'menu.accreditation',
-  //   url: '/accreditation',
-  //   icon: 'danger',
-  // },
   // {
   //   title: 'menu.cadastre',
   //   url: '/cadastre',

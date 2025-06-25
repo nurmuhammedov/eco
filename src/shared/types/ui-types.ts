@@ -1,3 +1,5 @@
+import { FC, ReactNode } from 'react';
+
 export enum UIModeEnum {
   EDIT = 'edit',
   VIEW = 'view',
@@ -68,4 +70,11 @@ export type PayloadUI<T extends UIComponentName> = {
   mode: UIModeEnum;
   componentName: T;
   data?: UIComponentDataMap[T] | null;
+};
+
+export type FCC<P = object> = FC<{ children?: ReactNode } & P>;
+
+export type SelectOption<T> = {
+  name: string;
+  id: T;
 };

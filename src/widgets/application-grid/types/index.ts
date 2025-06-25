@@ -1,10 +1,11 @@
 import { LucideIcon } from 'lucide-react';
+import { ElementType } from 'react';
 
 export interface MainCard {
   id: string;
   title: string;
   color?: string;
-  icon: LucideIcon;
+  icon: LucideIcon | ElementType;
   description: string;
 }
 
