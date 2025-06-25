@@ -36,6 +36,9 @@ const PreventionsPage = lazy(() => import('@/pages/preventions'));
 const PreventionCreatePage = lazy(() => import('@/pages/preventions/create'));
 const PreventionViewPage = lazy(() => import('@/pages/preventions/view'));
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
+const AccreditationPage = lazy(() => import('@/pages/accreditations/page'));
+const CreateAccreditationPage = lazy(() => import('@/pages/accreditations/create/page'));
+const CreateAccreditationFormPage = lazy(() => import('@/pages/accreditations/page'));
 
 export const appRoutes = [
   {
@@ -171,6 +174,21 @@ export const appRoutes = [
     path: 'inspections',
     component: InspectionsPage,
     roles: [UserRoles.MANAGER, UserRoles.INSPECTOR, UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL],
+  },
+  {
+    path: 'accreditations',
+    component: AccreditationPage,
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER],
+  },
+  {
+    path: 'accreditations/create',
+    component: CreateAccreditationPage,
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
+  },
+  {
+    path: 'accreditations/create/:type',
+    component: CreateAccreditationFormPage,
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
   },
 ];
 
