@@ -1,10 +1,16 @@
 // src/widgets/register/model/use-register.ts
-import { useCustomSearchParams } from '@/shared/hooks/api';
+import { useCustomSearchParams, useData } from '@/shared/hooks/api';
 import { useCallback, useMemo } from 'react';
 import { RegisterActiveTab } from '../types';
 
 export const useRegister = () => {
   const { paramsObject, addParams } = useCustomSearchParams();
+
+  const { data: hfCount = 0 } = useData<number>('/hf/count');
+
+  const { data: equipmentsCount = 0 } = useData<number>('/equipments/count');
+
+  const { data: irsCount = 0 } = useData<number>('/irs/count');
 
   const activeTab = useMemo<RegisterActiveTab>(() => {
     const tabFromParams = paramsObject['tab'] as string;
@@ -28,6 +34,9 @@ export const useRegister = () => {
 
   return {
     activeTab,
+    hfCount,
+    equipmentsCount,
+    irsCount,
     handleChangeTab,
   };
 };

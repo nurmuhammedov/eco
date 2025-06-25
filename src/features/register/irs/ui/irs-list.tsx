@@ -78,6 +78,6 @@ export const IrsList = () => {
   ];
 
   return (
-    <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-250px)]" />
+    <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-300px)]" />
   );
 };
