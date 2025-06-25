@@ -13,4 +13,8 @@ export const inspectionsApi = {
     const { data: res } = await apiClient.put<any>(`/inspections/set-inspector/${id}`, data);
     return res.data;
   },
+  setFiles: async ({ data, id }: { data: any; id: any }) => {
+    const { data: res } = await apiClient.put<any>(`/inspections/set-files/${id}`, data);
+    return res.data;
+  },
 };

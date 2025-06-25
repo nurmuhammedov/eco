@@ -14,7 +14,6 @@ import { MultiSelect } from '@/shared/components/ui/multi-select.tsx';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
 import { useAttachInspectors } from '@/features/inspections/hooks/use-attach-inspectors.ts';
-import useCustomSearchParams from '../../../../shared/hooks/api/useSearchParams.ts';
 
 const schema = z.object({
   startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
@@ -31,8 +30,6 @@ const AttachInspectorModal = () => {
   });
   const { data: inspectorSelectData } = useInspectorSelect();
 
-  const { addParams } = useCustomSearchParams();
-
   function onSubmit(data: z.infer<typeof schema>) {
     mutateAsync({
       ...data,
@@ -41,7 +38,6 @@ const AttachInspectorModal = () => {
     }).then(() => {
       setIsShow(false);
       form.reset();
-      addParams({ status: 'IN_PROCESS' });
     });
   }
 
