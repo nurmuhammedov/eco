@@ -7,6 +7,7 @@ const PointsClassification = () => {
   const { paramsObject } = useCustomSearchParams();
   const currentCat = paramsObject?.type || '';
   const { data, isLoading, isError } = useRiskAnalysisDetail();
+  const totalScore = data?.reduce((sum: any, item: any) => sum + (item.score ?? 0), 0) || 0;
 
   if (isLoading || isError) {
     return null;
@@ -35,10 +36,10 @@ const PointsClassification = () => {
               <td className="border border-neutral-100 p-4">{idx + 1}</td>
               <td className="border border-neutral-100 p-4">{item?.title}</td>
               <td className="border border-neutral-100 p-4">
-                {currentItem?.score !== 0 ? (
+                {currentItem && currentItem?.score !== 0 ? (
                   <span className="text-red-600">yoq</span>
                 ) : (
-                  <span className="text-green-600">yoq</span>
+                  <span className="text-green-600">ha</span>
                 )}
               </td>
               <td className="border border-neutral-100 p-4">{currentItem?.score || 0}</td>
@@ -48,6 +49,16 @@ const PointsClassification = () => {
             </tr>
           );
         })}
+      <tfoot className="bg-[#DAE5FF] text-base font-medium">
+        <tr>
+          <td className="p-4" colSpan={3}>
+            Jami:
+          </td>
+          <td className="p-4" colSpan={2}>
+            {totalScore}
+          </td>
+        </tr>
+      </tfoot>
     </table>
   );
 };

@@ -19,7 +19,7 @@ const schema = z.object({
   startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
   endDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
   inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required).default([]),
-  path: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
+  decreePath: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
 });
 
 const AttachInspectorModal = () => {
@@ -116,7 +116,7 @@ const AttachInspectorModal = () => {
               </div>
               <div>
                 <FormField
-                  name="path"
+                  name="decreePath"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>

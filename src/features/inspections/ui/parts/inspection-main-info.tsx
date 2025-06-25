@@ -24,7 +24,10 @@ const InspectionMainInfo = () => {
       })}
 
       <DetailRow title="Ombudsman maxsus kod:" value={inspectionData?.specialCode || '-'} />
-      <DetailRow title="Tekshiruv buyrug‘i:" value={'-'} />
+      <DetailRow
+        title="Tekshiruv buyrug‘i:"
+        value={!!inspectionData?.decreePath ? <FileLink url={inspectionData?.decreePath} /> : '-'}
+      />
 
       <DetailRow
         title="Xabardor qilish xati:"

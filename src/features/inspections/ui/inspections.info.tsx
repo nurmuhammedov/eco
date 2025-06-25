@@ -10,6 +10,7 @@ import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts'
 import InpectionsDetailInfo from '@/features/inspections/ui/parts/inpections-detail-info.tsx';
 import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 import { InspectionStatus } from '@/widgets/inspection/ui/inspection-widget.tsx';
+import InspectionReports from '@/features/inspections/ui/parts/inspection-reports.tsx';
 
 const InspectionsInfo = () => {
   const [searchParams] = useSearchParams();
@@ -41,7 +42,7 @@ const InspectionsInfo = () => {
           <InpectionsDetailInfo />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="inspection_results" title="Tekshiruv bo‘yicha ijro natijalari">
-          Tekshiruv bo‘yicha ijro natijalari
+          <InspectionReports />
         </DetailCardAccordion.Item>
       </DetailCardAccordion>
     </>
