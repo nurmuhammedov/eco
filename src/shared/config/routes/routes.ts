@@ -38,7 +38,7 @@ const PreventionViewPage = lazy(() => import('@/pages/preventions/view'));
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
 const AccreditationPage = lazy(() => import('@/pages/accreditations/page'));
 const CreateAccreditationPage = lazy(() => import('@/pages/accreditations/create/page'));
-const CreateAccreditationFormPage = lazy(() => import('@/pages/accreditations/page'));
+const CreateAccreditationFormPage = lazy(() => import('@/pages/accreditations/create/form/page'));
 
 export const appRoutes = [
   {

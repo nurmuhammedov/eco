@@ -76,4 +76,7 @@ export const API_ENDPOINTS: Record<string, string> = {
   PREVENTIONS: '/preventions',
 
   INSPECTIONS: '/inspections',
+
+  APPEALS_ACCREDITATION: '/appeals/accreditation',
+  APPEALS_ACCREDITATION_GENERATE_PDF: '/appeals/accreditation/generate-pdf',
 };
