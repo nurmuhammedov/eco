@@ -1,19 +1,19 @@
-import { DetailCardAccordion } from '@/shared/components/common/detail-card';
-import { GoBack } from '@/shared/components/common';
-import RiskAnalysisInfo from '@/features/risk-analysis/ui/parts/risk-analysis-info.tsx';
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
-import { Link, useSearchParams } from 'react-router-dom';
-import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts';
-import { Coordinate } from '@/shared/components/common/yandex-map';
-import DetailRow from '@/shared/components/common/detail-row.tsx';
-import { getDate } from '@/shared/utils/date.ts';
-import FileLink from '@/shared/components/common/file-link.tsx';
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
-import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
-import RiskAnalysisFilesToFix from '@/features/risk-analysis/ui/parts/risk-analysis-files-to-fix.tsx';
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
 import { useFilesToFix } from '@/features/risk-analysis/hooks/use-files-to-fix.ts';
+import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts';
 import RiskAnalysisChecklists from '@/features/risk-analysis/ui/parts/risk-analysis-checklists.tsx';
+import RiskAnalysisFilesToFix from '@/features/risk-analysis/ui/parts/risk-analysis-files-to-fix.tsx';
+import RiskAnalysisInfo from '@/features/risk-analysis/ui/parts/risk-analysis-info.tsx';
+import { GoBack } from '@/shared/components/common';
+import { DetailCardAccordion } from '@/shared/components/common/detail-card';
+import DetailRow from '@/shared/components/common/detail-row.tsx';
+import FileLink from '@/shared/components/common/file-link.tsx';
+import { Coordinate } from '@/shared/components/common/yandex-map';
+import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
+import { getDate } from '@/shared/utils/date.ts';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const RiskAnalysisDetail = () => {
   const { data } = useObjectInfo();
@@ -53,9 +53,13 @@ const RiskAnalysisDetail = () => {
           <DetailRow
             title="Reyestrga kiritish uchun asos (ariza):"
             value={
-              <Link className="text-[#0271FF]" to={'/applications/detail/' + data?.appealId}>
-                Arizani ko‘rish
-              </Link>
+              data?.appealId ? (
+                <Link className="text-[#0271FF]" to={'/applications/detail/' + data?.appealId}>
+                  Arizani ko‘rish
+                </Link>
+              ) : (
+                <span className="text-red-600">Mavjud emas</span>
+              )
             }
           />
           <DetailRow title="Hisobga olish sanasi:" value={getDate(data?.registrationDate)} />
