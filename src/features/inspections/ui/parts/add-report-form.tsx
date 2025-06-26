@@ -32,7 +32,7 @@ const AddReportForm = () => {
       <DialogTrigger asChild>
         <Button size="sm">ADD REPORT</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[730px]">
+      <DialogContent className="sm:max-w-[550px]">
         <DialogHeader>
           <DialogTitle className="text-[#4E75FF]">ADD REPORT</DialogTitle>
         </DialogHeader>
@@ -70,6 +70,7 @@ const AddReportForm = () => {
                       <FormControl>
                         <Textarea className="min-h-[150px] resize-none" {...field}></Textarea>
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
