@@ -1,4 +1,9 @@
-import { AccreditationDtoSchema, CreateAccreditationDTO } from '@/entities/accreditation/models/accreditation.schema';
+// src/features/accreditation/create/model/use-expand-accreditation.ts
+
+import {
+  ExpandAccreditationDTO,
+  ExpandAccreditationDtoSchema,
+} from '@/entities/accreditation/models/accreditation.schema.ts';
 import { API_ENDPOINTS } from '@/shared/api';
 import { ACCREDITATION_SPHERE_OPTIONS } from '@/shared/constants/accreditation-data';
 import { useEIMZO } from '@/shared/hooks';
@@ -7,10 +12,10 @@ import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-export const useCreateAccreditation = () => {
+export const useExpandAccreditation = () => {
   const { t } = useTranslation('accreditation');
-  const form = useForm<CreateAccreditationDTO>({
-    resolver: zodResolver(AccreditationDtoSchema),
+  const form = useForm<ExpandAccreditationDTO>({
+    resolver: zodResolver(ExpandAccreditationDtoSchema),
     mode: 'onChange',
   });
 
@@ -24,10 +29,10 @@ export const useCreateAccreditation = () => {
     handleCreateApplication,
     submitApplicationMetaData,
   } = useEIMZO({
-    pdfEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_GENERATE_PDF,
-    submitEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION,
-    queryKey: 'accreditation-applications',
-    successMessage: 'Akkreditatsiya arizasi muvaffaqiyatli yuborildi',
+    pdfEndpoint: API_ENDPOINTS.APPEALS_EXPEND_ACCREDITATION_GENERATE_PDF,
+    submitEndpoint: API_ENDPOINTS.APPEALS_EXPEND_ACCREDITATION,
+    queryKey: 'expand-accreditation-applications',
+    successMessage: 'Akkreditatsiya sohasini kengaytirish uchun ariza muvaffaqiyatli yuborildi',
     onSuccessNavigateTo: '/accreditations',
   });
 
@@ -38,7 +43,7 @@ export const useCreateAccreditation = () => {
     }));
   }, []);
 
-  const onSubmit = (data: CreateAccreditationDTO) => {
+  const onSubmit = (data: ExpandAccreditationDTO) => {
     handleCreateApplication(data);
   };
 
