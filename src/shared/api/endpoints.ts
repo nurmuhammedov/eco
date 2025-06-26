@@ -79,4 +79,8 @@ export const API_ENDPOINTS: Record<string, string> = {
 
   APPEALS_ACCREDITATION: '/appeals/accreditation',
   APPEALS_ACCREDITATION_GENERATE_PDF: '/appeals/accreditation/generate-pdf',
+  APPEALS_RE_ACCREDITATION: '/appeals/accreditation/redo',
+  APPEALS_RE_ACCREDITATION_GENERATE_PDF: '/appeals/accreditation/redo/generate-pdf',
+  APPEALS_EXPEND_ACCREDITATION: '/appeals/accreditation/expend',
+  APPEALS_EXPEND_ACCREDITATION_GENERATE_PDF: '/appeals/accreditation/expend/generate-pdf',
 };
