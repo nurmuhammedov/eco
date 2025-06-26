@@ -1,9 +1,10 @@
+import { ApplicationCardItem, ApplicationIcons, ApplicationTypeEnum } from '@/entities/create-application';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ApplicationCardItem, ApplicationIcons, ApplicationTypeEnum } from '@/entities/create-application';
 
 interface ApplicationCardProps {
   application: ApplicationCardItem;
+  url?: string;
 }
 
 const SendSVGIcon = () => (
@@ -19,11 +20,11 @@ const SendSVGIcon = () => (
   </span>
 );
 
-const AnimatedButton = ({ type }: { type: ApplicationTypeEnum }) => {
+const AnimatedButton = ({ type, url = 'applications' }: { type: ApplicationTypeEnum; url?: string }) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate(`/applications/create/${type}`);
+    navigate(`/${url}/create/${type}`);
   };
 
   return (
@@ -41,7 +42,7 @@ const AnimatedButton = ({ type }: { type: ApplicationTypeEnum }) => {
   );
 };
 
-function ApplicationCard({ application }: ApplicationCardProps) {
+function ApplicationCard({ application, url }: ApplicationCardProps) {
   return (
     <div className="group p-6 relative border border-slate-100 bg-white flex flex-col justify-between rounded-md overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
       <div className="mb-5 flex items-center">
@@ -56,7 +57,7 @@ function ApplicationCard({ application }: ApplicationCardProps) {
       <h3 className="text-base font-medium text-slate-800 line-clamp-2 leading-5">{application.title}</h3>
 
       <p className="text-sm text-gray-500 font-normal mb-6 mt-2 line-clamp-2">{application.description}</p>
-      <AnimatedButton type={application.type} />
+      <AnimatedButton url={url} type={application.type} />
     </div>
   );
 }

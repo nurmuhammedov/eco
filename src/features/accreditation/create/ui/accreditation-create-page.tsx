@@ -2,21 +2,21 @@ import { ApplicationCardItem, ApplicationCategory, ApplicationTypeEnum } from '@
 import ApplicationCard from '@/entities/create-application/ui/application-card';
 import { GoBack } from '@/shared/components/common';
 
-const accreditationCards: ApplicationCardItem[] = [
+export const accreditationCards: ApplicationCardItem[] = [
   {
     id: 1,
-    title: "Ekspert tashkilotini akkreditatsiyadan o'tkazish",
-    description: "Ekspert tashkilotini akkreditatsiyadan o'tkazish uchun ariza",
+    title: 'Ekspert tashkilotini akkreditatsiyadan o‘tkazish',
+    description: 'Ekspert tashkilotini akkreditatsiyadan o‘tkazish uchun ariza',
     category: ApplicationCategory.ACCREDITATION,
-    type: ApplicationTypeEnum.DEFAULT,
+    type: ApplicationTypeEnum.REGISTER_ACCREDITATION,
     icon: 'expertOrgAccreditationIcon',
   },
   {
     id: 2,
-    title: "Ekspert tashkilotini qayta akkreditatsiyadan o'tkazish",
-    description: "Ekspert tashkilotini qayta akkreditatsiyadan o'tkazish uchun ariza",
+    title: 'Ekspert tashkilotini qayta akkreditatsiyadan o‘tkazish',
+    description: 'Ekspert tashkilotini qayta akkreditatsiyadan o‘tkazish uchun ariza',
     category: ApplicationCategory.ACCREDITATION,
-    type: ApplicationTypeEnum.DEFAULT,
+    type: ApplicationTypeEnum.RE_REGISTER_ACCREDITATION,
     icon: 'expertOrgAccreditationIcon',
   },
   {
@@ -24,7 +24,7 @@ const accreditationCards: ApplicationCardItem[] = [
     title: 'Ekspert tashkilotining akkreditatsiya sohasini kengaytirish',
     description: 'Ekspert tashkilotining akkreditatsiya sohasini kengaytirish uchun ariza',
     category: ApplicationCategory.ACCREDITATION,
-    type: ApplicationTypeEnum.DEFAULT,
+    type: ApplicationTypeEnum.EXPAND_ACCREDITATION,
     icon: 'expertOrgAccreditationIcon',
   },
 ];
@@ -38,7 +38,7 @@ export const AccreditationCreatePage = () => {
 
       <div className={gridClasses}>
         {accreditationCards.map((application) => (
-          <ApplicationCard key={application.id} application={application} />
+          <ApplicationCard url="accreditations" key={application.id} application={application} />
         ))}
       </div>
     </div>
