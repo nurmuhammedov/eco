@@ -48,6 +48,8 @@ export default tslint.config(
       '@typescript-eslint/no-floating-promises': ['off'],
       '@typescript-eslint/no-unused-expressions': ['off'],
       '@typescript-eslint/ban-ts-comment': ['off'],
+      'no-unsafe-negation': ['off'],
+      'no-extra-boolean-cast': 'off',
     },
   },
 );

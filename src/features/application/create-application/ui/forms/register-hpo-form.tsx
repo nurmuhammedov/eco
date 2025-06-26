@@ -20,7 +20,7 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/comp
 
 export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
   const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } = useCreateHPOApplication();
-
+  console.log(spheres);
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>

@@ -35,6 +35,8 @@ const ChecklistTemplatesPage2 = lazy(() => import('@/features/checklists'));
 const PreventionsPage = lazy(() => import('@/pages/preventions'));
 const PreventionCreatePage = lazy(() => import('@/pages/preventions/create'));
 const PreventionViewPage = lazy(() => import('@/pages/preventions/view'));
+const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'));
+const InspectionsDetailPage = lazy(() => import('@/features/inspections/ui/inspections.detail.tsx'));
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
 const AccreditationPage = lazy(() => import('@/pages/accreditations/page'));
 const CreateAccreditationPage = lazy(() => import('@/pages/accreditations/create/page'));
@@ -174,6 +176,16 @@ export const appRoutes = [
     path: 'inspections',
     component: InspectionsPage,
     roles: [UserRoles.MANAGER, UserRoles.INSPECTOR, UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL],
+  },
+  {
+    path: 'inspections/info',
+    component: InspectionsInfoPage,
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
+  },
+  {
+    path: 'inspections/detail',
+    component: InspectionsDetailPage,
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
   },
   {
     path: 'accreditations',

@@ -10,7 +10,6 @@ const RiskAnalysisInspectorInfo = () => {
   const [searchParams] = useSearchParams();
   const currentIntervalId = searchParams.get('intervalId') || '';
   const isValidInterval = currentIntervalId == user?.interval?.id;
-  console.log(data);
   if (!data) {
     return null;
   }
