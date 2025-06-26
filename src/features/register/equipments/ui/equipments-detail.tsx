@@ -1,15 +1,15 @@
+import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
+import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
+import { useEquipmentsDetail } from '@/features/register/equipments/hooks/use-equipments-detail.tsx';
 import { GoBack } from '@/shared/components/common';
 import { DetailCardAccordion } from '@/shared/components/common/detail-card';
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
+import DetailRow from '@/shared/components/common/detail-row.tsx';
+import FileLink from '@/shared/components/common/file-link.tsx';
 import { Coordinate } from '@/shared/components/common/yandex-map';
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
-import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
-import DetailRow from '@/shared/components/common/detail-row.tsx';
 import { getDate } from '@/shared/utils/date.ts';
 import { Link } from 'react-router-dom';
-import { useEquipmentsDetail } from '@/features/register/equipments/hooks/use-equipments-detail.tsx';
-import FileLink from '@/shared/components/common/file-link.tsx';
-import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
 
 const EquipmentsDetail = () => {
   const { isLoading, data } = useEquipmentsDetail();
@@ -31,9 +31,13 @@ const EquipmentsDetail = () => {
           <DetailRow
             title="Reyestrga kiritish uchun asos (ariza):"
             value={
-              <Link className="text-[#0271FF]" to={'/applications/detail/' + data?.appealId}>
-                Arizani ko‘rish
-              </Link>
+              data?.appealId ? (
+                <Link className="text-[#0271FF]" to={'/applications/detail/' + data?.appealId}>
+                  Arizani ko‘rish
+                </Link>
+              ) : (
+                <span className="text-red-600">Mavjud emas</span>
+              )
             }
           />
           <DetailRow title="Hisobga olish sanasi:" value={getDate(data?.registrationDate)} />
