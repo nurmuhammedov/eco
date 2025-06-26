@@ -13,7 +13,7 @@ export const useHfDetail = () => {
     queryFn: () => hfDetailApi.getDetail(id),
     select: (data) => {
       const files = Object.entries(data?.files)
-        .filter(([label, value]) => label.includes('Path') && !!value)
+        .filter(([label]) => label.includes('Path'))
         .map(([key, value]) => {
           const label = `labels.HF.${key || 'file'}`;
           return { label: t(label), path: value || '' };

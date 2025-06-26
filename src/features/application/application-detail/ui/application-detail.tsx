@@ -104,6 +104,7 @@ const ApplicationDetail = ({ data, userRole }: { data: any; userRole?: UserRoles
             userRole={userRole}
             applicationStatus={data?.status}
             appealId={data?.id}
+            edit={true}
           />
         </DetailCardAccordion.Item>
         {!!currentObjLocation?.length && (
