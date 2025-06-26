@@ -21,4 +21,24 @@ export const inspectionsApi = {
     const { data: res } = await apiClient.post<any>(`/inspection-reports/${id}`, data);
     return res.data;
   },
+  editInspectionReport: async ({ data, id }: { data: any; id: any }) => {
+    const { data: res } = await apiClient.patch<any>(`/inspection-reports/${id}`, data);
+    return res.data;
+  },
+  getInspectionList: async (id: any) => {
+    const { data } = await apiClient.get<any>(`/inspection-reports/${id}`);
+    return data.data;
+  },
+  rejectInspectionReport: async ({ data, id }: { data: any; id: any }) => {
+    const { data: res } = await apiClient.put<any>(`/inspection-reports-executions/${id}`, data);
+    return res.data;
+  },
+  acceptInspectionReport: async ({ data, id }: { data: any; id: any }) => {
+    const { data: res } = await apiClient.patch<any>(`/inspection-reports-executions/${id}`, data);
+    return res.data;
+  },
+  addFileToInspectionReport: async ({ data, id }: { data: any; id: any }) => {
+    const { data: res } = await apiClient.post<any>(`/inspection-reports-executions/${id}`, data);
+    return res.data;
+  },
 };
