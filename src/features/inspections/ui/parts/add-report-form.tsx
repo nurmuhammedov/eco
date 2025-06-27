@@ -5,16 +5,17 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import DatePicker from '@/shared/components/ui/datepicker.tsx';
 import { FORM_ERROR_MESSAGES } from '@/shared/validation';
 import { useState } from 'react';
 
 import { Textarea } from '@/shared/components/ui/textarea.tsx';
+import { useAddInspectionReport } from '@/features/inspections/hooks/use-add-inspection-report.ts';
 
 const schema = z.object({
   deadline: z.date({ message: FORM_ERROR_MESSAGES.required }),
-  reportMsg: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
+  assignedTasks: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
 });
 
 const AddReportForm = () => {
@@ -22,9 +23,16 @@ const AddReportForm = () => {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
+  const { mutateAsync, isPending } = useAddInspectionReport();
 
   function onSubmit(data: z.infer<typeof schema>) {
-    console.log(data);
+    mutateAsync({
+      ...data,
+      deadline: format(data.deadline, 'yyyy-MM-dd'),
+    }).then(() => {
+      form.reset();
+      setIsShow(false);
+    });
   }
 
   return (
@@ -47,11 +55,11 @@ const AddReportForm = () => {
                     const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                     return (
                       <FormItem className="w-full ">
-                        <FormLabel required>DEADLINE</FormLabel>
+                        <FormLabel required>Bartaraf etish muddati</FormLabel>
                         <DatePicker
                           value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                           onChange={field.onChange}
-                          placeholder="Ijro muddatini belgilash "
+                          placeholder="Bartaraf etish muddati"
                         />
                         <FormMessage />
                       </FormItem>
@@ -59,10 +67,9 @@ const AddReportForm = () => {
                   }}
                 />
               </div>
-
               <div>
                 <FormField
-                  name="reportMsg"
+                  name="assignedTasks"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
@@ -77,10 +84,12 @@ const AddReportForm = () => {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3 ">
-              <DialogClose asChild>
+              <DialogClose disabled={isPending} asChild>
                 <Button variant="outline">CANCEL</Button>
               </DialogClose>
-              <Button type="submit">ADD REPORT</Button>
+              <Button disabled={isPending} type="submit">
+                ADD REPORT
+              </Button>
             </div>
           </form>
         </Form>

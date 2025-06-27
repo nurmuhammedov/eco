@@ -12,27 +12,30 @@ const buttonVariants = cva(
       variant: {
         default: 'bg-blue-400 text-primary-foreground shadow-sm hover:bg-blue-400/90',
         success: 'bg-[#2ECD56] text-primary-foreground shadow-sm hover:bg-[#2ECD56]/90',
-        successOutline: 'border border-[#2ECD56] bg-background text-[#2ECD56] shadow-xs hover:bg-[#2ECD56] hover:text-white',
+        successOutline:
+          'border border-[#2ECD56] bg-background text-[#2ECD56] shadow-xs hover:bg-[#2ECD56] hover:text-white',
         destructive: 'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90',
-        destructiveOutline: 'bg-background  border border-destructive text-destructive shadow-xs hover:bg-destructive/90 hover:text-white',
+        destructiveOutline:
+          'bg-background  border border-destructive text-destructive shadow-xs hover:bg-destructive/90 hover:text-white',
         outline: 'border border-neutral-300 bg-background shadow-xs hover:bg-accent hover:text-accent-foreground',
         info: 'border border-[#4E75FF] bg-[#DCE4FF] shadow-xs hover:bg-[#DCE4FF] text-[#4E75FF]',
         secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline'
+        link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-9 px-4 py-2',
         sm: 'h-8 rounded-md px-3 text-xs',
         lg: 'h-10 rounded-md px-8',
-        icon: 'size-8 2xl:size-9'
-      }
+        icon: 'size-8 2xl:size-9',
+        iconSm: 'size-6 2xl:size-7',
+      },
     },
     defaultVariants: {
       variant: 'default',
-      size: 'default'
-    }
-  }
+      size: 'default',
+    },
+  },
 );
 
 export interface ButtonProps
@@ -49,7 +52,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }), {
-          'opacity-50 cursor-not-allowed': loading
+          'opacity-50 cursor-not-allowed': loading,
         })}
         ref={ref}
         aria-live="polite"
@@ -63,7 +66,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         </Fragment>
       </Comp>
     );
-  }
+  },
 );
 Button.displayName = 'Button';
 
