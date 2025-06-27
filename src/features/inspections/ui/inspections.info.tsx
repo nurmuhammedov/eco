@@ -41,7 +41,10 @@ const InspectionsInfo = () => {
         <DetailCardAccordion.Item value="inspection_info" title="Tekshiruv ma’lumotlari">
           <InpectionsDetailInfo />
         </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="inspection_results" title="Tekshiruv bo‘yicha ijro natijalari">
+        <DetailCardAccordion.Item
+          value="inspection_results"
+          title="Tekshiruv bo‘yicha yuborilgan ijro hujjatlari va ularni ko‘rish natijasi"
+        >
           <InspectionReports />
         </DetailCardAccordion.Item>
       </DetailCardAccordion>

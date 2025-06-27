@@ -5,6 +5,7 @@ import { UserRoles } from '@/entities/user';
 import RiskAnalysisForm from '@/features/risk-analysis/ui/parts/risk-analysis-form.tsx';
 import { useRiskAnalysisDetail } from '@/features/risk-analysis/hooks/use-risk-analysis-detail.ts';
 import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info.tsx';
+import { Badge } from '@/shared/components/ui/badge.tsx';
 
 const RiskAnalysisInfo = () => {
   const { user } = useAuth();
@@ -26,8 +27,8 @@ const RiskAnalysisInfo = () => {
             <TabsTrigger value="analysis_indicators">Tahlil uchun baholash ko‘rsatkichlari holati</TabsTrigger>
           </TabsList>
         )}
-        <div className="ml-auto bg-neutral-200 rounded-md px-3 py-1.5">
-          Total score: <b className="font-medium">{totalScore}</b>
+        <div className="ml-auto ">
+          <Badge variant={totalScore > 80 ? 'destructive' : 'success'}>Jami ballar: {totalScore}</Badge>
         </div>
       </div>
       <TabsContent value="inspector_info">

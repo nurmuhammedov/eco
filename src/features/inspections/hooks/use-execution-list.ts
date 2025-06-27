@@ -3,13 +3,14 @@ import { inspectionsApi } from '@/features/inspections/model/inspections.model.t
 import { QK_INSPECTION } from '@/shared/constants/query-keys.ts';
 import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts';
 
-export const useInspectionReports = () => {
+export const useExecutionList = (id: any) => {
   const {
     paramsObject: { inspectionId, eliminated = false, page = 1, size = 10 },
   } = useCustomSearchParams();
 
   return useQuery({
-    queryKey: [QK_INSPECTION, 'list', inspectionId, eliminated, page, size],
-    queryFn: () => inspectionsApi.getInspectionList({ inspectionId, eliminated, page, size }),
+    queryKey: [QK_INSPECTION, 'execution list', inspectionId, eliminated, page, size],
+    queryFn: () => inspectionsApi.getExecutionList(id),
+    enabled: !!id,
   });
 };

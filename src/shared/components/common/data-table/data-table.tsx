@@ -19,9 +19,9 @@ import {
 import * as React from 'react';
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
 import { DataTablePagination } from './data-table-pagination';
 import { getCommonPinningStyles } from './models/get-common-pinning';
+import { useSearchParams } from 'react-router-dom';
 
 interface DataTableProps<TData, TValue> {
   className?: string;
@@ -151,7 +151,7 @@ export function DataTable<TData, TValue>({
               ))
             ) : (
               <TableRow className="hover:bg-white">
-                <TableCell colSpan={columns?.length} className="text-center">
+                <TableCell colSpan={columns?.length + (showNumeration ? 1 : 0)} className="text-center">
                   <div className="flex flex-col items-center gap-4 justify-center h-80 w-full">
                     <Icon name="no-data" size={160} />
                     <p className="font-medium">{t('no_data')}</p>
