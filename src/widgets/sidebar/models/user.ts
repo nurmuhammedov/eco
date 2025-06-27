@@ -22,6 +22,11 @@ export default [
     icon: 'note-text',
   },
   {
+    title: 'Profilaktika',
+    url: '/preventions',
+    icon: 'danger',
+  },
+  {
     title: 'menu.accreditation',
     url: '/accreditations',
     icon: 'danger',

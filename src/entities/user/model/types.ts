@@ -11,10 +11,14 @@ export enum UserRoles {
 
 export enum Direction {
   APPEAL = 'APPEAL',
+  HF = 'HF',
+  EQUIPMENT = 'EQUIPMENT',
+  IRS = 'IRS',
   REGISTRY = 'REGISTRY',
-  ACCREDITATION = 'ACCREDITATION',
   ATTESTATION = 'ATTESTATION',
-  CERTIFICATE = 'CERTIFICATE',
+  ACCREDITATION = 'ACCREDITATION',
+  CADASTRE = 'CADASTRE',
+  PERMITS = 'PERMITS',
 }
 
 interface IInterval {

@@ -80,11 +80,15 @@
     "ADMIN": "Администратор"
   },
   "permission": {
-    "APPEAL": "Аризалар",
-    "ATTESTAT": "Аттестат",
-    "ATTESTATION": "Аттестация",
-    "CERTIFICATE": "Сертификат",
-    "ACCREDITATION": "Аккредитация"
+    "APPEAL": "Arizalar",
+    "HF": "XICHO",
+    "EQUIPMENT": "QURILMALAR",
+    "IRS": "INM",
+    "REGISTRY": "Reyestrlar",
+    "ATTESTATION": "Attestatsiya",
+    "CADASTRE": "Kadastr",
+    "PERMITS": "Ruxsat beruvchi hujjatlar",
+    "ACCREDITATION": "Akkreditatsiya"
   },
   "application": {
     "OIL": "Нефт",
