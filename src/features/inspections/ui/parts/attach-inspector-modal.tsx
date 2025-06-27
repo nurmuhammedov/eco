@@ -14,12 +14,15 @@ import { MultiSelect } from '@/shared/components/ui/multi-select.tsx';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
 import { useAttachInspectors } from '@/features/inspections/hooks/use-attach-inspectors.ts';
+import { Input } from '@/shared/components/ui/input.tsx';
 
 const schema = z.object({
   startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
   endDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
   inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required).default([]),
   decreePath: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
+  decreeDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
+  decreeNumber: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
 });
 
 const AttachInspectorModal = () => {
@@ -65,7 +68,7 @@ const AttachInspectorModal = () => {
                         <DatePicker
                           value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                           onChange={field.onChange}
-                          placeholder="Ijro muddatini belgilash "
+                          placeholder="Tekshiruv muddatini belgilash"
                         />
                         <FormMessage />
                       </FormItem>
@@ -85,7 +88,7 @@ const AttachInspectorModal = () => {
                         <DatePicker
                           value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                           onChange={field.onChange}
-                          placeholder="Ijro muddatini belgilash "
+                          placeholder="Tugash muddatini belgilash"
                         />
                         <FormMessage />
                       </FormItem>
@@ -93,7 +96,55 @@ const AttachInspectorModal = () => {
                   }}
                 />
               </div>
-
+              <div>
+                <FormField
+                  control={form.control}
+                  name="endDate"
+                  render={({ field }) => {
+                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                    return (
+                      <FormItem className="w-full">
+                        <FormLabel required>Buyruq sanasi</FormLabel>
+                        <DatePicker
+                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                          onChange={field.onChange}
+                          placeholder="Buyruq sanasi"
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              </div>
+              <div>
+                <FormField
+                  control={form.control}
+                  name="decreeNumber"
+                  render={({ field }) => {
+                    return (
+                      <FormItem className="w-full">
+                        <FormLabel required>Buyruq raqami</FormLabel>
+                        <Input {...field} placeholder={'Buyruq raqami'} />
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              </div>
+              <div>
+                <FormField
+                  name="decreePath"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Buyruq hujjatini yuklash</FormLabel>
+                      <FormControl>
+                        <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
               <div>
                 <FormField
                   control={form.control}
@@ -114,20 +165,6 @@ const AttachInspectorModal = () => {
                   )}
                 />
               </div>
-              <div>
-                <FormField
-                  name="decreePath"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>Buyruq hujjatini yuklash</FormLabel>
-                      <FormControl>
-                        <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
             </div>
             <div className="grid grid-cols-2 gap-3 ">
               <DialogClose asChild>
@@ -136,7 +173,7 @@ const AttachInspectorModal = () => {
                 </Button>
               </DialogClose>
               <Button disabled={isPending} type="submit">
-                Buyruqni shakllantirish
+                Saqlash
               </Button>
             </div>
           </form>
