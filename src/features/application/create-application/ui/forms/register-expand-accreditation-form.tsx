@@ -1,6 +1,6 @@
-import { CardForm } from '@/entities/create-application';
-import { ApplicationModal } from '@/features/application/create-application';
+import { CardForm, ExpandAccreditationDTO } from '@/entities/create-application';
 import { useExpandAccreditation } from '@/features/application/create-application/model/use-expand-accreditation';
+import { GoBack } from '@/shared/components/common';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
 import { Button } from '@/shared/components/ui/button';
@@ -9,25 +9,20 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/components/ui/input.tsx';
 import { MultiSelect } from '@/shared/components/ui/multi-select.tsx';
 
-export default () => {
-  const {
-    form,
-    onSubmit,
-    isLoading,
-    isModalOpen,
-    documentUrl,
-    isPdfLoading,
-    handleCloseModal,
-    submitApplicationMetaData,
-    error,
-    accreditationSphereOptions,
-  } = useExpandAccreditation();
+interface CreateAccreditationFormProps {
+  onSubmit: (data: ExpandAccreditationDTO) => void;
+}
+
+export default ({ onSubmit }: CreateAccreditationFormProps) => {
+  const { form, accreditationSphereOptions } = useExpandAccreditation();
 
   return (
     <>
       <Form {...form}>
-        <form onSubmit={onSubmit}>
-          <CardForm>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <GoBack title="Ekspert tashkilotining akkreditatsiya sohasini kengaytirish" />
+
+          <CardForm className="mt-4">
             <FormField
               name="accreditationSpheres"
               control={form.control}
@@ -67,6 +62,19 @@ export default () => {
                     <FormLabel required>Akkreditatsiya attestatining ro‘yxat raqami</FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="Ro‘yxat raqami" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="responsiblePersonName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Masʼul vakil F.IS.H.</FormLabel>
+                    <FormControl>
+                      <Input type="text" className="w-full 3xl:w-sm" placeholder="Masʼul vakil F.IS.H." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -216,20 +224,11 @@ export default () => {
             />
           </CardForm>
 
-          <Button type="submit" className="mt-5" disabled={!form.formState.isValid || isLoading}>
+          <Button type="submit" className="mt-5" disabled={!form.formState.isValid}>
             Ariza Yuborish
           </Button>
         </form>
       </Form>
-      <ApplicationModal
-        error={error}
-        isOpen={isModalOpen}
-        isLoading={isLoading}
-        documentUrl={documentUrl!}
-        onClose={handleCloseModal}
-        isPdfLoading={isPdfLoading}
-        submitApplicationMetaData={submitApplicationMetaData}
-      />
     </>
   );
 };
