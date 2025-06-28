@@ -1,8 +1,8 @@
 // src/entities/accreditation/models/accreditation.schema.ts
 
+import { AccreditationSphere } from '@/entities/accreditation/models/accreditation.enums';
 import { FORM_ERROR_MESSAGES } from '@/shared/validation';
 import { z } from 'zod';
-import { AccreditationSphere } from './accreditation.enums.ts';
 
 const baseAccreditationFilesSchema = {
   accreditationFieldPath: z.string().min(1, FORM_ERROR_MESSAGES.required),
@@ -43,7 +43,3 @@ export const ExpandAccreditationDtoSchema = z.object({
   certificateNumber: z.string().min(1, "Attestat ro'yxat raqamini kiriting"),
   certificateIssueDate: z.date({ required_error: 'Attestat berilgan sanani tanlang' }),
 });
-
-export type CreateAccreditationDTO = z.infer<typeof AccreditationDtoSchema>;
-export type ReAccreditationDTO = z.infer<typeof ReAccreditationDtoSchema>;
-export type ExpandAccreditationDTO = z.infer<typeof ExpandAccreditationDtoSchema>;

@@ -1,7 +1,6 @@
-// src/features/accreditation/create/ui/register-expand-accreditation-form.tsx
-
 import { CardForm } from '@/entities/create-application';
 import { ApplicationModal } from '@/features/application/create-application';
+import { useExpandAccreditation } from '@/features/application/create-application/model/use-expand-accreditation';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
 import { Button } from '@/shared/components/ui/button';
@@ -9,9 +8,8 @@ import DatePicker from '@/shared/components/ui/datepicker.tsx';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input.tsx';
 import { MultiSelect } from '@/shared/components/ui/multi-select.tsx';
-import { useExpandAccreditation } from '../model/use-expand-accreditation.ts';
 
-export const RegisterExpandAccreditationForm = () => {
+export default () => {
   const {
     form,
     onSubmit,

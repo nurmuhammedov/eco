@@ -1,9 +1,3 @@
-export enum AccreditationType {
-  ACCREDITATION = 'accreditation',
-  RE_ACCREDITATION = 're-accreditation',
-  EXPAND_ACCREDITATION = 'expand-accreditation',
-}
-
 export enum AccreditationSphere {
   ACCREDITATION_SPHERE_1 = 'ACCREDITATION_SPHERE_1',
   ACCREDITATION_SPHERE_1_1 = 'ACCREDITATION_SPHERE_1_1',

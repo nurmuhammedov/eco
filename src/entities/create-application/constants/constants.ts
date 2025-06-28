@@ -279,29 +279,30 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     icon: 'radiationTransferIcon',
   },
   // Akkreditatsiya - bu turlar yangi ApplicationTypeEnum ro'yxatida yo'q, shuning uchun izohga olinadi
+
   {
-    id: 22,
-    title: 'Ekspert tashkilotini akkreditatsiyadan o‘tkazish',
-    description: 'Ekspert tashkilotini akkreditatsiyadan o‘tkazish ariza shakli',
+    id: 22, // ID-larni boshqa arizalar bilan moslashtiring
+    title: "Ekspert tashkilotini akkreditatsiyadan o'tkazish",
+    description: "Ekspert tashkilotini akkreditatsiyadan o'tkazish uchun ariza",
     category: ApplicationCategory.ACCREDITATION,
-    type: ApplicationTypeEnum.DEFAULT,
+    type: ApplicationTypeEnum.REGISTER_ACCREDITATION,
     icon: 'expertOrgAccreditationIcon',
   },
   {
     id: 23,
-    title: 'Ekspert tashkilotini qayta akkreditatsiyadan o‘tkazish',
-    description: 'Ekspert tashkilotini qayta akkreditatsiyadan o‘tkazish ariza shakli',
+    title: "Ekspert tashkilotini qayta akkreditatsiyadan o'tkazish",
+    description: "Ekspert tashkilotini qayta akkreditatsiyadan o'tkazish uchun ariza",
     category: ApplicationCategory.ACCREDITATION,
-    type: ApplicationTypeEnum.DEFAULT,
-    icon: 'expertOrgReaccreditationIcon',
+    type: ApplicationTypeEnum.RE_REGISTER_ACCREDITATION,
+    icon: 'expertOrgAccreditationIcon',
   },
   {
     id: 24,
     title: 'Ekspert tashkilotining akkreditatsiya sohasini kengaytirish',
-    description: 'Ekspert tashkilotining akkreditatsiya sohasini kengaytirish ariza shakli',
+    description: 'Ekspert tashkilotining akkreditatsiya sohasini kengaytirish uchun ariza',
     category: ApplicationCategory.ACCREDITATION,
-    type: ApplicationTypeEnum.DEFAULT,
-    icon: 'expertOrgExpandAccreditationIcon',
+    type: ApplicationTypeEnum.EXPAND_ACCREDITATION,
+    icon: 'expertOrgAccreditationIcon',
   },
   {
     id: 25,
@@ -311,6 +312,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     type: ApplicationTypeEnum.DEFAULT,
     icon: 'industrialSafetyExpertiseRegistrationIcon',
   },
+
   // Attestatsiya - bu turlar yangi ApplicationTypeEnum ro'yxatida yo'q, shuning uchun izohga olinadi
   {
     id: 26,

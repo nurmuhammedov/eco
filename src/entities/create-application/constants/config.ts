@@ -86,4 +86,16 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: '/appeals/irs/transfer',
     pdfEndpoint: '/appeals/irs/generate-pdf',
   },
+  [ApplicationTypeEnum.REGISTER_ACCREDITATION]: {
+    submitEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION,
+    pdfEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_GENERATE_PDF,
+  },
+  [ApplicationTypeEnum.RE_REGISTER_ACCREDITATION]: {
+    submitEndpoint: API_ENDPOINTS.APPEALS_RE_ACCREDITATION,
+    pdfEndpoint: API_ENDPOINTS.APPEALS_RE_ACCREDITATION_GENERATE_PDF,
+  },
+  [ApplicationTypeEnum.EXPAND_ACCREDITATION]: {
+    submitEndpoint: API_ENDPOINTS.APPEALS_EXPEND_ACCREDITATION,
+    pdfEndpoint: API_ENDPOINTS.APPEALS_EXPEND_ACCREDITATION_GENERATE_PDF,
+  },
 };

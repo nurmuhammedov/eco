@@ -39,8 +39,6 @@ const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspect
 const InspectionsDetailPage = lazy(() => import('@/features/inspections/ui/inspections.detail.tsx'));
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
 const AccreditationPage = lazy(() => import('@/pages/accreditations/page'));
-const CreateAccreditationPage = lazy(() => import('@/pages/accreditations/create/page'));
-const CreateAccreditationFormPage = lazy(() => import('@/pages/accreditations/create/form/page'));
 
 export const appRoutes = [
   {
@@ -191,16 +189,6 @@ export const appRoutes = [
     path: 'accreditations',
     component: AccreditationPage,
     roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER],
-  },
-  {
-    path: 'accreditations/create',
-    component: CreateAccreditationPage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
-  },
-  {
-    path: 'accreditations/create/:type',
-    component: CreateAccreditationFormPage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
   },
 ];
 
