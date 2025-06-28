@@ -1,4 +1,5 @@
 import {
+  CreateAttestationDTO,
   CreateCraneApplicationDTO,
   CreateHPOApplicationDTO,
   CreateLiftApplicationDTO,
@@ -27,6 +28,15 @@ export const createApplicationsAPI = {
   },
   createLiftApplication: async (data: CreateLiftApplicationDTO) => {
     const response = await apiClient.post<CreateLiftApplicationDTO>(API_ENDPOINTS.APPEAL_EQUIPMENT_ELEVATOR, data);
+    if (!response.success && response.errors) {
+      toast.error(Object.values(response.errors).join(', '), {
+        richColors: true,
+      });
+    }
+    return response;
+  },
+  createAttestationApplication: async (data: CreateAttestationDTO) => {
+    const response = await apiClient.post<CreateAttestationDTO>(API_ENDPOINTS.APPEALS_ATTESTATION, data);
     if (!response.success && response.errors) {
       toast.error(Object.values(response.errors).join(', '), {
         richColors: true,

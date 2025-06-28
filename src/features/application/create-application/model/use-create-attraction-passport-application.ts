@@ -21,10 +21,8 @@ export const useCreateAttractionPassportApplication = () => {
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
 
-  // Attraksion nomlari (turi emas, aynan nomlari)
   const { data: attractionNames } = useChildEquipmentTypes('ATTRACTION');
 
-  // Attraksion tiplari (nomiga bog'liq holda)
   const { data: attractionSorts } = useData<any[]>(`/child-equipment-sorts/select`, !!childEquipmentId, {
     childEquipmentId,
   });

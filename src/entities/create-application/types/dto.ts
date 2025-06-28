@@ -1,6 +1,7 @@
 // src/entities/create-application/types/dto.ts
 import {
   AccreditationDtoSchema,
+  AttestationAppealDtoSchema,
   AttractionPassportAppealDtoSchema,
   BoilerAppealDtoSchema,
   BoilerUtilizerAppealDtoSchema,
@@ -41,3 +42,4 @@ export type CreateAttractionPassportApplicationDTO = z.infer<typeof AttractionPa
 export type CreateAccreditationDTO = z.infer<typeof AccreditationDtoSchema>;
 export type ReAccreditationDTO = z.infer<typeof ReAccreditationDtoSchema>;
 export type ExpandAccreditationDTO = z.infer<typeof ExpandAccreditationDtoSchema>;
+export type CreateAttestationDTO = z.infer<typeof AttestationAppealDtoSchema>;

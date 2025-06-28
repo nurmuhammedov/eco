@@ -103,6 +103,11 @@
     "COAL": "Koʻmir",
     "GEOLOGY": "Geologiya"
   },
+  "attestation": {
+    "EMPLOYEE": "Xodim",
+    "LEADER": "Rahbar xodim",
+    "TECHNICIAN": "Texnik"
+  },
   "templates": {
     "IRS": "INM arizasi",
     "XICHO_APPEAL": "XICHO arizasi",

@@ -31,6 +31,11 @@ export default [
     url: '/accreditations',
     icon: 'danger',
   },
+  {
+    title: 'menu.attestation',
+    url: '/attestations',
+    icon: 'document',
+  },
   // {
   //   title: 'menu.cadastre',
   //   url: '/cadastre',

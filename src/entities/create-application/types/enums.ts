@@ -123,6 +123,9 @@ export enum ApplicationTypeEnum {
   RE_REGISTER_ACCREDITATION = 'RE_REGISTER_ACCREDITATION',
   EXPAND_ACCREDITATION = 'EXPAND_ACCREDITATION',
 
+  // ATTESTATION,
+  REGISTER_ATTESTATION = 'REGISTER_ATTESTATION',
+
   DEFAULT = 'DEFAULT',
 
   //IRS (Ionizing Radiation Source ) - INM ro'yhatga olish, qabul qilib olish va berish

@@ -319,7 +319,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'XICHO xodimlarini attestatsiyadan o‘tkazish',
     description: 'XICHO xodimlarini attestatsiyadan o‘tkazish ariza shakli',
     category: ApplicationCategory.ATTESTATION_PREVENTION,
-    type: ApplicationTypeEnum.DEFAULT,
+    type: ApplicationTypeEnum.REGISTER_ATTESTATION,
     icon: 'staffAttestationIcon',
   },
   {

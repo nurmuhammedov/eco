@@ -26,8 +26,12 @@ export const API_ENDPOINTS: Record<string, string> = {
   DEPARTMENT_SELECT: '/departments/select',
   OFFICE_SELECT: '/offices/select',
   HAZARDOUS_FACILITY_SELECT: '/hf/select',
+  HF_SELECT: '/hf/select',
   HAZARDOUS_FACILITY_TYPES_SELECT: '/hf-types/select',
   CHILD_EQUIPMENTS_SELECT: '/child-equipments/select',
+
+  APPEALS_ATTESTATION: '/appeals/attestation',
+  APPEALS_ATTESTATION_GENERATE_PDF: '/appeals/attestation/generate-pdf',
 
   // APPEALS CREATE (SUBMIT)
   APPEAL_HF_CREATE: '/appeals/hf',
@@ -83,4 +87,6 @@ export const API_ENDPOINTS: Record<string, string> = {
   APPEALS_RE_ACCREDITATION_GENERATE_PDF: '/appeals/accreditation/redo/generate-pdf',
   APPEALS_EXPEND_ACCREDITATION: '/appeals/accreditation/expend',
   APPEALS_EXPEND_ACCREDITATION_GENERATE_PDF: '/appeals/accreditation/expend/generate-pdf',
+
+  ATTESTATION: '/attestation',
 };

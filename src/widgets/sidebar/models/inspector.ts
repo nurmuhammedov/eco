@@ -26,4 +26,9 @@ export default [
     url: '/preventions',
     icon: 'danger',
   },
+  {
+    title: 'menu.attestation',
+    url: '/attestations',
+    icon: 'document',
+  },
 ] as Navigation;

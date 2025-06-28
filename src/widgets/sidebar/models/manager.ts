@@ -31,4 +31,9 @@ export default [
     url: '/accreditations',
     icon: 'danger',
   },
+  {
+    title: 'menu.attestation',
+    url: '/attestations',
+    icon: 'document',
+  },
 ] as Navigation;

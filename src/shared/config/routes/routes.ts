@@ -39,6 +39,8 @@ const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspect
 const InspectionsDetailPage = lazy(() => import('@/features/inspections/ui/inspections.detail.tsx'));
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
 const AccreditationPage = lazy(() => import('@/pages/accreditations/page'));
+const AttestationPage = lazy(() => import('@/pages/attestation'));
+const AddAttestationEmployeePage = lazy(() => import('@/pages/attestation/add-employee'));
 
 export const appRoutes = [
   {
@@ -189,6 +191,16 @@ export const appRoutes = [
     path: 'accreditations',
     component: AccreditationPage,
     roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER],
+  },
+  {
+    path: 'attestations',
+    component: AttestationPage,
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER, UserRoles.INSPECTOR, UserRoles.REGIONAL],
+  },
+  {
+    path: '/attestations/add',
+    component: AddAttestationEmployeePage,
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
   },
 ];
 

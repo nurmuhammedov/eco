@@ -70,6 +70,10 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: API_ENDPOINTS.APPEAL_ATTRACTION_PASSPORT,
     pdfEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_ATTRACTION_PASSPORT,
   },
+  [ApplicationTypeEnum.REGISTER_ATTESTATION]: {
+    submitEndpoint: API_ENDPOINTS.APPEALS_ATTESTATION,
+    pdfEndpoint: API_ENDPOINTS.APPEALS_ATTESTATION_GENERATE_PDF,
+  },
   [ApplicationTypeEnum.REGISTER_ATTRACTION]: {
     submitEndpoint: API_ENDPOINTS.APPEAL_ATTRACTION,
     pdfEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_ATTRACTION,

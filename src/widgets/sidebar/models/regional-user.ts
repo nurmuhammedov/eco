@@ -26,6 +26,11 @@ export default [
     url: '/preventions',
     icon: 'danger',
   },
+  {
+    title: 'menu.attestation',
+    url: '/attestations',
+    icon: 'document',
+  },
   // {
   //   title: 'menu.permits_authorization_documents',
   //   url: '/permits-authorization-documents',
