@@ -526,6 +526,9 @@
       "passengerCount": "Yo‘lovchilar soni",
       "length": "Uzunligi"
     },
+    "ATTESTATION_REGIONAL": {
+      "address": "Manzil"
+    },
     "IRS": {
       "phoneNumber": "Ariza beruvchining telefon raqami",
       "parentOrganization": "Yuqori turuvchi tashkilot ",

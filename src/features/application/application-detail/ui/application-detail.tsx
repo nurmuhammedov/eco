@@ -84,32 +84,28 @@ const ApplicationDetail = ({ data, userRole }: { data: any; userRole?: UserRoles
           </DetailCardAccordion.Item>
         )}
 
-        {data?.appealType != ApplicationTypeEnum.ATTESTATION_COMMITTEE &&
-          data?.appealType != ApplicationTypeEnum.ATTESTATION_REGIONAL && (
-            <DetailCardAccordion.Item value="appeal_docs" title="Ariza bo‘yicha batafsil ma’lumotlar va hujjatlar">
-              <Tabs defaultValue="info">
-                <TabsList className="bg-[#EDEEEE]">
-                  <TabsTrigger value="info">Ma’lumotlar</TabsTrigger>
-                  <TabsTrigger value="applicant_docs">Arizachi hujjatlari</TabsTrigger>
-                  <TabsTrigger value="response_docs">Javob hujjatlari</TabsTrigger>
-                </TabsList>
-                <TabsContent value="info">
-                  <AppealMainInfo
-                    data={data?.data}
-                    type={data?.appealType?.replace('REGISTER_', '')}
-                    address={data?.address}
-                  />
-                </TabsContent>
-                <TabsContent value="applicant_docs">
-                  <ApplicantDocsTable />
-                </TabsContent>
-                <TabsContent value="response_docs">
-                  <AppealResponseDocs />
-                </TabsContent>
-              </Tabs>
-            </DetailCardAccordion.Item>
-          )}
-
+        <DetailCardAccordion.Item value="appeal_docs" title="Ariza bo‘yicha batafsil ma’lumotlar va hujjatlar">
+          <Tabs defaultValue="info">
+            <TabsList className="bg-[#EDEEEE]">
+              <TabsTrigger value="info">Ma’lumotlar</TabsTrigger>
+              <TabsTrigger value="applicant_docs">Arizachi hujjatlari</TabsTrigger>
+              <TabsTrigger value="response_docs">Javob hujjatlari</TabsTrigger>
+            </TabsList>
+            <TabsContent value="info">
+              <AppealMainInfo
+                data={data?.data}
+                type={data?.appealType?.replace('REGISTER_', '')}
+                address={data?.address}
+              />
+            </TabsContent>
+            <TabsContent value="applicant_docs">
+              <ApplicantDocsTable />
+            </TabsContent>
+            <TabsContent value="response_docs">
+              <AppealResponseDocs />
+            </TabsContent>
+          </Tabs>
+        </DetailCardAccordion.Item>
         {(data?.appealType === ApplicationTypeEnum.ATTESTATION_COMMITTEE ||
           data?.appealType === ApplicationTypeEnum.ATTESTATION_REGIONAL) && (
           <DetailCardAccordion.Item value="employee_list" title="Attestatsiya ma'lumotlari">
