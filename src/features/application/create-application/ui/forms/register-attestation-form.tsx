@@ -1,4 +1,5 @@
 import { EmployeeLevel } from '@/entities/attestation/model/attestation.types';
+import { GoBack } from '@/shared/components/common';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import DatePicker from '@/shared/components/ui/datepicker';
@@ -17,8 +18,6 @@ const RegisterAttestationForm = ({ onSubmit }: any) => {
     addEmployee,
     remove,
     directions,
-    // hfOptions,
-    // isHfLoading,
     regionOptions,
     isRegionLoading,
     districtOptions,
@@ -34,11 +33,9 @@ const RegisterAttestationForm = ({ onSubmit }: any) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <GoBack title="XICHO xodimlarini attestatsiyadan o‘tkazish arizasi" />
         <Card>
-          <CardHeader>
-            <CardTitle>XICHO xodimlarini attestatsiyadan o‘tkazish arizasi</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4">
             {/*<FormField*/}
             {/*  control={form.control}*/}
             {/*  name="hfId"*/}
@@ -91,19 +88,6 @@ const RegisterAttestationForm = ({ onSubmit }: any) => {
                   <FormLabel required>XICHОdan foydalanuvchi tashkilotning nomi</FormLabel>
                   <FormControl>
                     <Input placeholder="Foydalanuvchi tashkilot nomini kiriting" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="legalAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>XICHОdan foydalanuvchi tashkilotning pochta manzili</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Pochta manzilini kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -222,21 +206,21 @@ const RegisterAttestationForm = ({ onSubmit }: any) => {
           </CardContent>
         </Card>
 
-        {/* XODIMLAR HAQIDA MA'LUMOT KARTASI */}
         <Card>
           <CardHeader>
-            <CardTitle>Attestatsiyadan o'tkaziladigan xodimlar to'g'risida ma'lumot</CardTitle>
+            <CardTitle>Attestatsiyadan o‘tkaziladigan xodimlar to‘g‘risida maʼlumot</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {fields.map((item, index) => (
-              <div key={item.id} className="border p-4 rounded-md space-y-4 relative">
-                <div className="flex justify-end absolute top-2 right-2">
+              <div key={item.id} className="border p-4 rounded-md relative">
+                <div className="flex justify-end">
                   <Button
                     type="button"
                     variant="destructive"
                     size="icon"
                     onClick={() => remove(index)}
                     disabled={index === 0}
+                    className="cursor-pointer"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -304,7 +288,7 @@ const RegisterAttestationForm = ({ onSubmit }: any) => {
                     name={`employeeList.${index}.ctcTrainingFromDate`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>'Kontekhnazorat' DUKda o‘qigan muddati</FormLabel>
+                        <FormLabel>“Kontexnazorato‘quv” DMda o‘qigan muddati</FormLabel>
                         <FormControl>
                           <DatePicker
                             value={field.value ? new Date(field.value) : undefined}
@@ -321,7 +305,7 @@ const RegisterAttestationForm = ({ onSubmit }: any) => {
                     name={`employeeList.${index}.ctcTrainingDate`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>'Kontekhnazorat' DUKda o‘qigan muddati</FormLabel>
+                        <FormLabel>“Kontexnazorato‘quv” DMda o‘qigan muddati</FormLabel>
                         <FormControl>
                           <DatePicker
                             value={field.value ? new Date(field.value) : undefined}
@@ -400,11 +384,14 @@ const RegisterAttestationForm = ({ onSubmit }: any) => {
                 </div>
               </div>
             ))}
-            <Button type="button" variant="outline" onClick={addEmployee}>
+            <Button type="button" variant="success" onClick={addEmployee}>
               <PlusCircle className="mr-2 h-4 w-4" /> Attestatsiyaga xodim qo‘shish
             </Button>
           </CardContent>
         </Card>
+        <Button type="submit" className="mt-1">
+          Ariza yaratish
+        </Button>
       </form>
     </Form>
   );

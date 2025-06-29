@@ -11,8 +11,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useFieldArray, useForm } from 'react-hook-form';
 
 const ATTESTATION_DIRECTIONS: OptionItem<string>[] = [
-  { id: 'COMMITTEE', name: 'Rahbar xodimlar' },
   { id: 'REGIONAL', name: 'Muhandis-texnik va oddiy xodimlar' },
+  { id: 'COMMITTEE', name: 'Rahbar xodimlar' },
 ];
 
 export const useCreateAttestation = () => {
@@ -20,12 +20,11 @@ export const useCreateAttestation = () => {
     resolver: zodResolver(AttestationAppealDtoSchema),
     defaultValues: {
       phoneNumber: '',
-      direction: 'COMMITTEE',
+      direction: 'REGIONAL',
       // hfId: undefined,
       hfRegistryNumber: '',
       upperOrganizationName: '',
       legalName: '',
-      legalAddress: '',
       tin: '',
       hfName: '',
       hfAddress: '',

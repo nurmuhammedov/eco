@@ -35,7 +35,6 @@ export const AttestationAppealDtoSchema = z.object({
   hfRegistryNumber: z.string().min(1, 'Hisobga olish raqami kiritilishi majburiy'),
   upperOrganizationName: z.string().min(1, 'Yuqori turuvchi tashkilot nomi kiritilishi majburiy'),
   legalName: z.string().min(1, 'Foydalanuvchi tashkilot nomi kiritilishi majburiy'),
-  legalAddress: z.string().min(1, 'Pochta manzili kiritilishi majburiy'),
   tin: z.string().length(9, FORM_ERROR_MESSAGES.required),
   hfName: z.string().min(1, 'XICHO nomi kiritilishi majburiy'),
   hfAddress: z.string().min(1, 'XICHO manzili kiritilishi majburiy'),
