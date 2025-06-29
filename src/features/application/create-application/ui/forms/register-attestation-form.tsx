@@ -493,7 +493,10 @@ const RegisterAttestationForm = ({ onSubmit }: any) => {
                     <FormItem>
                       <FormLabel required>Texnik va oddiy xodimlar attestatsiyadan o'tkazish sanasi</FormLabel>
                       <FormControl>
-                        <DateTimePicker value={field.value || undefined} onChange={field.onChange} />
+                        <DateTimePicker
+                          value={(field.value as unknown as Date) ?? undefined}
+                          onChange={field.onChange}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
