@@ -10,6 +10,12 @@ export const useInspectionReports = () => {
 
   return useQuery({
     queryKey: [QK_INSPECTION, 'list', inspectionId, eliminated, page, size],
-    queryFn: () => inspectionsApi.getInspectionList({ inspectionId, eliminated, page, size }),
+    queryFn: () =>
+      inspectionsApi.getInspectionList({
+        inspectionId,
+        eliminated: eliminated === 'eliminated',
+        page,
+        size,
+      }),
   });
 };

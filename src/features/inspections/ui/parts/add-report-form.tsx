@@ -15,7 +15,7 @@ import { useAddInspectionReport } from '@/features/inspections/hooks/use-add-ins
 
 const schema = z.object({
   deadline: z.date({ message: FORM_ERROR_MESSAGES.required }),
-  assignedTasks: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
+  defect: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
 });
 
 const AddReportForm = () => {
@@ -38,11 +38,11 @@ const AddReportForm = () => {
   return (
     <Dialog onOpenChange={setIsShow} open={isShow}>
       <DialogTrigger asChild>
-        <Button size="sm">ADD REPORT</Button>
+        <Button size="sm">Kamchiliklarni qo'shish</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[550px]">
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">ADD REPORT</DialogTitle>
+          <DialogTitle className="text-[#4E75FF]">Kamchiliklarni qo'shish</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -69,11 +69,11 @@ const AddReportForm = () => {
               </div>
               <div>
                 <FormField
-                  name="assignedTasks"
+                  name="defect"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel required>REPORT DESCRIPTION</FormLabel>
+                      <FormLabel required>Kamchilikning tavsifi</FormLabel>
                       <FormControl>
                         <Textarea className="min-h-[150px] resize-none" {...field}></Textarea>
                       </FormControl>
@@ -85,10 +85,10 @@ const AddReportForm = () => {
             </div>
             <div className="grid grid-cols-2 gap-3 ">
               <DialogClose disabled={isPending} asChild>
-                <Button variant="outline">CANCEL</Button>
+                <Button variant="outline">Bekor qilish</Button>
               </DialogClose>
               <Button disabled={isPending} type="submit">
-                ADD REPORT
+                Qo'shish
               </Button>
             </div>
           </form>
