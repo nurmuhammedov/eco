@@ -17,7 +17,15 @@ import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
 import { getDate } from '@/shared/utils/date';
 
-const ApplicationDetail = ({ data, userRole }: { data: any; userRole?: UserRoles }) => {
+const ApplicationDetail = ({
+  data,
+  userRole,
+  showAttestationActions,
+}: {
+  data: any;
+  userRole?: UserRoles;
+  showAttestationActions?: boolean;
+}) => {
   const currentObjLocation = data?.data?.location?.split(',') || ([] as Coordinate[]);
   const isLegalApplication = !!data?.legalTin;
   return (
@@ -109,7 +117,7 @@ const ApplicationDetail = ({ data, userRole }: { data: any; userRole?: UserRoles
         {(data?.appealType === ApplicationTypeEnum.ATTESTATION_COMMITTEE ||
           data?.appealType === ApplicationTypeEnum.ATTESTATION_REGIONAL) && (
           <DetailCardAccordion.Item value="employee_list" title="Attestatsiya ma'lumotlari">
-            <EmployeesList data={data.data.employeeList || []} />
+            <EmployeesList data={data.data.employeeList || []} showAttestationActions={showAttestationActions} />
           </DetailCardAccordion.Item>
         )}
 

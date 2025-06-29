@@ -13,7 +13,7 @@ import AttachInspectorModal from '@/features/inspections/ui/parts/attach-inspect
 import { GoBack } from '@/shared/components/common';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
 
-const ApplicationDetailPage = () => {
+const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActions?: boolean }) => {
   const { data } = useApplicationDetail();
   const { user } = useAuth();
 
@@ -43,7 +43,7 @@ const ApplicationDetailPage = () => {
           )}
         </div>
       </div>
-      <ApplicationDetailFeature data={data} userRole={user?.role} />
+      <ApplicationDetailFeature data={data} userRole={user?.role} showAttestationActions={showAttestationActions} />
     </div>
   );
 };

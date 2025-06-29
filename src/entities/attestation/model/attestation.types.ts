@@ -25,11 +25,6 @@ export interface AttestationReportDto {
   failedEmployees: number;
 }
 
-export enum AttestationDirection {
-  COMMITTEE = 1,
-  REGIONAL = 2,
-}
-
 export enum AttestationStatus {
   PENDING = 'PENDING',
   PASSED = 'PASSED',
@@ -59,4 +54,15 @@ export interface EmployeePayload {
 export interface AddEmployeeDto {
   hfId: string;
   employeeList: EmployeePayload[];
+}
+
+export interface IEmployeeAttestationResult {
+  [pin: string]: any;
+}
+
+export interface IConductAttestationPayload {
+  appealId: string;
+  filePath: string;
+  dateOfAttestation: string; // "YYYY-MM-DD" formatida
+  result: IEmployeeAttestationResult;
 }
