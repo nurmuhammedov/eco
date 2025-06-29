@@ -38,6 +38,7 @@ const AttachInspectorModal = () => {
       ...data,
       startDate: formatDate(data.startDate, 'yyyy-MM-dd'),
       endDate: formatDate(data.endDate, 'yyyy-MM-dd'),
+      decreeDate: formatDate(data.decreeDate, 'yyyy-MM-dd'),
     }).then(() => {
       setIsShow(false);
       form.reset();
@@ -99,7 +100,7 @@ const AttachInspectorModal = () => {
               <div>
                 <FormField
                   control={form.control}
-                  name="endDate"
+                  name="decreeDate"
                   render={({ field }) => {
                     const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                     return (

@@ -12,7 +12,9 @@ const InpectionsDetailInfo = () => {
   const { user } = useAuth();
   const { paramsObject } = useCustomSearchParams();
   const isValidInterval = paramsObject?.intervalId == user?.interval?.id;
-
+  const resetTab = () => {
+    setActiveTab('main_info');
+  };
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
       {user?.role === UserRoles.INSPECTOR && isValidInterval && (
@@ -29,7 +31,7 @@ const InpectionsDetailInfo = () => {
         <AddInspectionDocuments />
       </TabsContent>
       <TabsContent value="create_document">
-        <CreateDocument />
+        <CreateDocument resetTab={resetTab} />
       </TabsContent>
     </Tabs>
   );
