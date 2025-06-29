@@ -14,7 +14,7 @@ export const EquipmentsList = () => {
     paramsObject: { status = ApplicationStatus.ALL, type = 'ALL', ...rest },
     addParams,
   } = useCustomSearchParams();
-  const { data = [] } = usePaginatedData<any>(`/equipments`, {
+  const { data } = usePaginatedData<any>(`/equipments`, {
     ...rest,
     type: type !== 'ALL' ? type : '',
     status: status !== 'ALL' ? status : '',
@@ -82,7 +82,10 @@ export const EquipmentsList = () => {
           id: i?.equipmentType?.toString() || 'ALL',
           name: i?.name?.toString() || 'Bachasi',
         })) || []),
-      ]}
+      ]?.map((i) => ({
+        ...i,
+        count: i?.id == type ? data?.page?.totalElements || 0 : 0,
+      }))}
       onTabChange={(type) => addParams({ type: type }, 'page')}
     >
       <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-320px)]" />

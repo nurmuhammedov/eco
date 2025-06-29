@@ -86,10 +86,13 @@
   },
   "permission": {
     "APPEAL": "Arizalar",
+    "HF": "XICHO",
+    "EQUIPMENT": "QURILMALAR",
+    "IRS": "INM",
     "REGISTRY": "Reyestrlar",
-    "ATTESTAT": "Attestat",
     "ATTESTATION": "Attestatsiya",
-    "CERTIFICATE": "Sertifikat",
+    "CADASTRE": "Kadastr",
+    "PERMITS": "Ruxsat beruvchi hujjatlar",
     "ACCREDITATION": "Akkreditatsiya"
   },
   "application": {
@@ -546,5 +549,6 @@
       "passportPath": "INM (qurilma) pasporti va sertifikati fayli",
       "additionalFilePath": "Qo‘shimcha maʼlumotlar"
     }
-  }
+  },
+  "accreditation": "Akkreditatsiya"
 }

@@ -38,6 +38,7 @@ const PreventionViewPage = lazy(() => import('@/pages/preventions/view'));
 const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'));
 const InspectionsDetailPage = lazy(() => import('@/features/inspections/ui/inspections.detail.tsx'));
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
+const AccreditationPage = lazy(() => import('@/pages/accreditations/page'));
 
 export const appRoutes = [
   {
@@ -183,6 +184,11 @@ export const appRoutes = [
     path: 'inspections/detail',
     component: InspectionsDetailPage,
     roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
+  },
+  {
+    path: 'accreditations',
+    component: AccreditationPage,
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER],
   },
 ];
 

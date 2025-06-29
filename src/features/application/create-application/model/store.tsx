@@ -20,6 +20,9 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.REGISTER_LPG_POWERED]: lazy(() => import('../ui/forms/register-lpg-powered-form')),
   [ApplicationTypeEnum.REGISTER_HOIST]: lazy(() => import('../ui/forms/register-hoist-form')),
   [ApplicationTypeEnum.REGISTER_CABLEWAY]: lazy(() => import('../ui/forms/register-cableway-form')),
+  [ApplicationTypeEnum.REGISTER_ACCREDITATION]: lazy(() => import('../ui/forms/register-accreditation-form')),
+  [ApplicationTypeEnum.RE_REGISTER_ACCREDITATION]: lazy(() => import('../ui/forms/register-re-accreditation-form')),
+  [ApplicationTypeEnum.EXPAND_ACCREDITATION]: lazy(() => import('../ui/forms/register-expand-accreditation-form')),
   [ApplicationTypeEnum.REGISTER_IRS]: lazy(() => import('../ui/forms/register-irs-form')),
   [ApplicationTypeEnum.REGISTER_ATTRACTION_PASSPORT]: lazy(
     () => import('../ui/forms/register-attraction-passport-form'),

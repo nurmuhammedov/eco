@@ -27,6 +27,8 @@ interface DataTableProps<TData, TValue> {
   className?: string;
   isLoading?: boolean;
   isPaginated?: boolean;
+  pageQuery?: 'page' | 'p';
+  sizeQuery?: string;
   pageSizeOptions?: number[];
   columns: ColumnDef<TData, TValue>[];
   data: TData[] | ResponseData<TData>;
@@ -40,6 +42,8 @@ export function DataTable<TData, TValue>({
   columns,
   className,
   onPageChange,
+  sizeQuery = 'size',
+  pageQuery = 'page',
   onPageSizeChange,
   isLoading = false,
   isPaginated = true,
@@ -60,14 +64,14 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const [searchParams] = useSearchParams();
-  const currentPage = +(searchParams.get('page') || 1);
-  const pageSize = +(searchParams.get('size') || 10);
+  const currentPage = +(searchParams.get(pageQuery) || 1);
+  const pageSize = +(searchParams.get(sizeQuery) || 10);
 
   const handlePageChange = (page: number) => {
     if (onPageChange) {
       onPageChange(page);
     } else if (isContentData) {
-      addParams({ page });
+      addParams({ [pageQuery]: page });
     }
   };
 
@@ -75,7 +79,7 @@ export function DataTable<TData, TValue>({
     if (onPageSizeChange) {
       onPageSizeChange(size);
     } else if (isContentData) {
-      addParams({ size }, 'page');
+      addParams({ [sizeQuery]: size }, 'page', 'p');
     }
   };
 

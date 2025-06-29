@@ -1,5 +1,6 @@
 // src/entities/create-application/types/dto.ts
 import {
+  AccreditationDtoSchema,
   AttractionPassportAppealDtoSchema,
   BoilerAppealDtoSchema,
   BoilerUtilizerAppealDtoSchema,
@@ -8,6 +9,7 @@ import {
   ContainerAppealDtoSchema,
   CraneAppealDtoSchema,
   EscalatorAppealDtoSchema,
+  ExpandAccreditationDtoSchema,
   HeatPipelineAppealDtoSchema,
   HFAppealDtoSchema,
   HoistAppealDtoSchema,
@@ -16,6 +18,7 @@ import {
   LpgContainerAppealDtoSchema,
   LpgPoweredAppealDtoSchema,
   PipelineAppealDtoSchema,
+  ReAccreditationDtoSchema,
 } from '@/entities/create-application/schemas';
 import { z } from 'zod';
 
@@ -35,3 +38,6 @@ export type CreateHoistApplicationDTO = z.infer<typeof HoistAppealDtoSchema>;
 export type CreateCablewayApplicationDTO = z.infer<typeof CablewayAppealDtoSchema>;
 export type CreateIrsApplicationDTO = z.infer<typeof IrsAppealDtoSchema>;
 export type CreateAttractionPassportApplicationDTO = z.infer<typeof AttractionPassportAppealDtoSchema>;
+export type CreateAccreditationDTO = z.infer<typeof AccreditationDtoSchema>;
+export type ReAccreditationDTO = z.infer<typeof ReAccreditationDtoSchema>;
+export type ExpandAccreditationDTO = z.infer<typeof ExpandAccreditationDtoSchema>;

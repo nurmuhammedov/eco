@@ -1,5 +1,8 @@
+// src/features/application/application-detail/ui/application-detail.tsx
+
 import { ApplicationStatus } from '@/entities/application';
 import { APPLICATIONS_DATA } from '@/entities/create-application';
+import { UserRoles } from '@/entities/user';
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
 import AppealResponseDocs from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx';
 import ApplicantDocsTable from '@/features/application/application-detail/ui/parts/applicant-docs-table.tsx';
@@ -13,7 +16,7 @@ import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
 import { getDate } from '@/shared/utils/date';
 
-const ApplicationDetail = ({ data }: any) => {
+const ApplicationDetail = ({ data, userRole }: { data: any; userRole?: UserRoles }) => {
   const currentObjLocation = data?.data?.location?.split(',') || ([] as Coordinate[]);
   const isLegalApplication = !!data?.legalTin;
   return (
@@ -96,10 +99,16 @@ const ApplicationDetail = ({ data }: any) => {
           </Tabs>
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="appeal_files" title="Arizaga biriktirilgan fayllar">
-          <FilesSection files={data?.files || []} />
+          <FilesSection
+            files={data?.files || []}
+            userRole={userRole}
+            applicationStatus={data?.status}
+            appealId={data?.id}
+            edit={true}
+          />
         </DetailCardAccordion.Item>
         {!!currentObjLocation?.length && (
-          <DetailCardAccordion.Item value="appeal_location" title="Arizada ko‘rsatilgan obyekt yoki qurilma joyi">
+          <DetailCardAccordion.Item value="object_location" title="Arizada ko‘rsatilgan obyekt yoki qurilma joyi">
             <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
           </DetailCardAccordion.Item>
         )}

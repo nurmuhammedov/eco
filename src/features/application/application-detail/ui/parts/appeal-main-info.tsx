@@ -1,7 +1,7 @@
 import DetailRow from '@/shared/components/common/detail-row.tsx';
+import { getDate } from '@/shared/utils/date.ts';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getDate } from '@/shared/utils/date.ts';
 
 interface Props {
   address: any;
@@ -19,8 +19,10 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
       <DetailRow title={t(`labels.${type}.upperOrganization`)} value={data?.upperOrganization} />
       <DetailRow title={t(`labels.${type}.name`)} value={data?.name} />
       <DetailRow title={t(`labels.${type}.parentOrganization`)} value={data?.parentOrganization} />
+
       <DetailRow title={t(`labels.${type}.supervisorName`)} value={data?.supervisorName} />
       <DetailRow title={t(`labels.${type}.supervisorPosition`)} value={data?.supervisorPosition} />
+
       <DetailRow title={t(`labels.${type}.supervisorStatus`)} value={data?.supervisorStatus} />
       <DetailRow title={t(`labels.${type}.supervisorEducation`)} value={data?.supervisorEducation} />
       <DetailRow title={t(`labels.${type}.supervisorPhoneNumber`)} value={data?.supervisorPhoneNumber} />

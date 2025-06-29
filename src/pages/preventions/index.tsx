@@ -1,14 +1,18 @@
 import { usePreventions } from '@/entities/prevention';
+import { UserRoles } from '@/entities/user';
 import { PreventionListTable } from '@/features/prevention';
 import Filter from '@/shared/components/common/filter';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { PreventionFileHandler } from './ui/prevention-file-handler';
 
 export default function PreventionsPage() {
   const { paramsObject, addParams } = useCustomSearchParams();
-  const isPassed = paramsObject.isPassed || 'false';
+  const { user } = useAuth();
+  const isPassed =
+    paramsObject.isPassed || user?.role === UserRoles.LEGAL || user?.role === UserRoles.INDIVIDUAL ? 'true' : 'false';
   const currentYear = new Date().getFullYear();
 
   const { data: preventionsData, isLoading } = usePreventions({
@@ -35,7 +39,9 @@ export default function PreventionsPage() {
       <Tabs value={String(isPassed)} onValueChange={handleTabChange}>
         <div className="flex justify-between items-center">
           <TabsList>
-            <TabsTrigger value="false">Tadbir o'tkazilmaganlar</TabsTrigger>
+            {user?.role !== UserRoles.LEGAL && user?.role !== UserRoles.INDIVIDUAL && (
+              <TabsTrigger value="false">Tadbir o'tkazilmaganlar</TabsTrigger>
+            )}
             <TabsTrigger value="true">Tadbir o'tkazilganlar</TabsTrigger>
           </TabsList>
           {isPassed == 'false' && (

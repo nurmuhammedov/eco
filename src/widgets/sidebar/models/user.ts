@@ -21,11 +21,16 @@ export default [
     url: '/inspections',
     icon: 'note-text',
   },
-  // {
-  //   title: 'menu.accreditation',
-  //   url: '/accreditation',
-  //   icon: 'danger',
-  // },
+  {
+    title: 'Profilaktika',
+    url: '/preventions',
+    icon: 'danger',
+  },
+  {
+    title: 'menu.accreditation',
+    url: '/accreditations',
+    icon: 'danger',
+  },
   // {
   //   title: 'menu.cadastre',
   //   url: '/cadastre',

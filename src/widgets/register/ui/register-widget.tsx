@@ -10,7 +10,7 @@ import { useRegister } from '../model/use-register';
 import { RegisterActiveTab } from '../types';
 
 const RegisterWidget = () => {
-  const { t } = useTranslation('common'); // Assuming 'common' namespace has these translations
+  const { t } = useTranslation('common');
   const { activeTab, handleChangeTab, hfCount, irsCount, equipmentsCount } = useRegister();
 
   return (
@@ -30,7 +30,7 @@ const RegisterWidget = () => {
           </TabsTrigger>
           <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
             Qurilmalar
-            {hfCount ? (
+            {equipmentsCount ? (
               <Badge variant="destructive" className="ml-2">
                 {equipmentsCount}
               </Badge>

@@ -26,4 +26,9 @@ export default [
     url: '/preventions',
     icon: 'danger',
   },
+  {
+    title: 'menu.accreditation',
+    url: '/accreditations',
+    icon: 'danger',
+  },
 ] as Navigation;
