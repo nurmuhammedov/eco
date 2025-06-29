@@ -12,6 +12,7 @@ import { Eye } from 'lucide-react';
 import ReportExecutionModal from '@/features/inspections/ui/parts/report-execution-modal.tsx';
 import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
+import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 
 const InspectionReports = () => {
   const { data, isLoading } = useInspectionReports();
@@ -22,6 +23,7 @@ const InspectionReports = () => {
   const [id, setId] = useState<any>(null);
   const [inspectionTitle, setInspectionTitle] = useState<string>('');
   const currentTab = paramsObject?.eliminated;
+  const { data: inspectionData } = useInspectionDetail();
 
   const columns: ColumnDef<any>[] = [
     {
@@ -83,7 +85,9 @@ const InspectionReports = () => {
             </Tabs>
           )}
         </div>
-        {isValidInterval && user?.role === UserRoles.INSPECTOR && <AddReportForm />}
+        {isValidInterval && user?.role === UserRoles.INSPECTOR && inspectionData?.status === 'IN_PROCESS' && (
+          <AddReportForm />
+        )}
       </div>
       <div>
         <DataTable isLoading={isLoading} columns={columns} data={data || []} />
