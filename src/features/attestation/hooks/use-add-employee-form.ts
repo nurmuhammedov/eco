@@ -28,7 +28,7 @@ export const useAddEmployeeForm = () => {
           certDate: '',
           certExpiryDate: '',
           ctcTrainingFromDate: '',
-          ctcTrainingDate: '',
+          ctcTrainingToDate: '',
           dateOfEmployment: '',
         },
       ],
@@ -70,7 +70,7 @@ export const useAddEmployeeForm = () => {
       certDate: '',
       certExpiryDate: '',
       ctcTrainingFromDate: '',
-      ctcTrainingDate: '',
+      ctcTrainingToDate: '',
       dateOfEmployment: '',
     });
   };

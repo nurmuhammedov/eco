@@ -52,7 +52,7 @@ export interface EmployeePayload {
   certDate?: string;
   certExpiryDate?: string;
   ctcTrainingFromDate?: string;
-  ctcTrainingDate?: string;
+  ctcTrainingToDate?: string;
   dateOfEmployment?: string;
 }
 

@@ -1,3 +1,4 @@
+import { EmployeeLevel } from '@/entities/attestation/model/attestation.types';
 import {
   AttestationAppealDtoSchema,
   CreateAttestationDTO,
@@ -21,14 +22,15 @@ export const useCreateAttestation = () => {
     defaultValues: {
       phoneNumber: '',
       direction: 'REGIONAL',
-      // hfId: undefined,
+      hfId: '',
       hfRegistryNumber: '',
       upperOrganizationName: '',
       legalName: '',
-      tin: '',
+      legalTin: '',
       hfName: '',
-      hfAddress: '',
+      address: '',
       regionId: '',
+      dateOfAttestation: null,
       districtId: '',
       employeeList: [{ pin: '', fullName: '', profession: '', level: 'EMPLOYEE' }],
     },
@@ -39,9 +41,17 @@ export const useCreateAttestation = () => {
     name: 'employeeList',
   });
 
+  const hfId = form.watch('hfId');
+
   const { data: hfOptions, isLoading: isHfLoading } = useQuery<OptionItem<string>[]>({
     queryKey: ['hf-select'],
     queryFn: () => CommonService.getData(API_ENDPOINTS.HF_SELECT),
+  });
+
+  const { data: employeeOptions, isLoading: isEmployeeLoading } = useQuery<OptionItem<string>[]>({
+    queryKey: ['employees-select', hfId],
+    queryFn: () => CommonService.getData(`${API_ENDPOINTS.EMPLOYEES_SELECT}${hfId}`),
+    enabled: !!hfId,
   });
 
   const selectedRegionId = form.watch('regionId');
@@ -49,7 +59,18 @@ export const useCreateAttestation = () => {
   const { data: districts, isLoading: isDistrictLoading } = useDistrictSelectQueries(selectedRegionId);
 
   const addEmployee = () => {
-    append({ pin: '', fullName: '', profession: '', level: 'EMPLOYEE' });
+    append({
+      pin: '',
+      fullName: '',
+      profession: '',
+      level: EmployeeLevel.EMPLOYEE,
+      certNumber: '',
+      certDate: '',
+      certExpiryDate: '',
+      ctcTrainingFromDate: '',
+      ctcTrainingToDate: '',
+      dateOfEmployment: '',
+    });
   };
 
   return {
@@ -60,6 +81,8 @@ export const useCreateAttestation = () => {
     directions: ATTESTATION_DIRECTIONS,
     hfOptions,
     isHfLoading,
+    employeeOptions,
+    isEmployeeLoading,
     regionOptions: regions,
     isRegionLoading,
     districtOptions: districts,

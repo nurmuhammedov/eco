@@ -26,6 +26,7 @@ export const API_ENDPOINTS: Record<string, string> = {
   DEPARTMENT_SELECT: '/departments/select',
   OFFICE_SELECT: '/offices/select',
   HAZARDOUS_FACILITY_SELECT: '/hf/select',
+  EMPLOYEES_SELECT: '/employee/select/by-hf/',
   HF_SELECT: '/hf/select',
   HAZARDOUS_FACILITY_TYPES_SELECT: '/hf-types/select',
   CHILD_EQUIPMENTS_SELECT: '/child-equipments/select',

@@ -48,7 +48,9 @@ export const ApplicationTable = () => {
       accessorKey: 'test',
       header: 'Qo‘mita maʼsul bo‘limi',
       cell: (cell) =>
-        APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category == ApplicationCategory.XICHO
+        APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
+          ApplicationCategory.XICHO ||
+        APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category == ApplicationCategory.DEFAULT
           ? `Аxborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi`
           : APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
               ApplicationCategory.HOKQ
