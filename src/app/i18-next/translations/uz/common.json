@@ -529,6 +529,9 @@
     "ATTESTATION_REGIONAL": {
       "address": "Manzil"
     },
+    "ATTESTATION_COMMITTEE": {
+      "address": "Manzil"
+    },
     "IRS": {
       "phoneNumber": "Ariza beruvchining telefon raqami",
       "parentOrganization": "Yuqori turuvchi tashkilot ",

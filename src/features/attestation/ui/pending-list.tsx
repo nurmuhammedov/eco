@@ -1,8 +1,8 @@
-import { PreventionList } from '@/entities/prevention';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { ColumnDef } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
+import { getDate } from '@/shared/utils/date';
 
 export const PendingList = () => {
   const navigate = useNavigate();
@@ -15,22 +15,31 @@ export const PendingList = () => {
     size: rest?.size || 10,
   });
 
-  const columns: ColumnDef<PreventionList>[] = [
+  const columns: ColumnDef<any>[] = [
     {
-      header: 'Tashkilot nomi',
+      accessorKey: 'number',
+      header: 'Ariza raqami',
+    },
+    {
       accessorKey: 'legalName',
+      header: 'Tashkilot nomi',
     },
     {
-      header: 'Tashkilot STIR',
-      accessorKey: 'tin',
+      accessorKey: 'legalTin',
+      header: 'STIR',
     },
     {
-      header: 'Tashkilot joylashgan hudud',
-      accessorKey: 'regionName',
+      accessorKey: 'executorName',
+      header: 'Ijrochi',
     },
     {
-      header: 'Tashkilot manzili',
-      accessorKey: 'legalAddress',
+      accessorKey: 'deadline',
+      header: 'Muddat',
+      cell: ({ row }) => getDate(row.original.deadline),
+    },
+    {
+      accessorKey: 'resolution',
+      header: 'Resolutsya',
     },
     {
       id: 'actions',

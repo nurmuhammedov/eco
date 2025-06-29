@@ -17,9 +17,7 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
   const { data } = useApplicationDetail();
   const { user } = useAuth();
 
-  const isAttestationAppeal =
-    data?.appealType === ApplicationTypeEnum.ATTESTATION_COMMITTEE ||
-    data?.appealType === ApplicationTypeEnum.ATTESTATION_REGIONAL;
+  const isAttestationAppeal = data?.appealType === ApplicationTypeEnum.ATTESTATION_REGIONAL;
 
   return (
     <div>
@@ -32,12 +30,14 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
               <RejectApplicationModal />
             </>
           )}
-          {user?.role === UserRoles.MANAGER && data?.status === ApplicationStatus.NEW && isAttestationAppeal && (
-            <>
-              <ManagerAttestationModal />
-              <RejectApplicationModal />
-            </>
-          )}
+          {user?.role === UserRoles.MANAGER &&
+            data?.status === ApplicationStatus.NEW &&
+            data?.appealType === ApplicationTypeEnum.ATTESTATION_COMMITTEE && (
+              <>
+                <ManagerAttestationModal />
+                <RejectApplicationModal />
+              </>
+            )}
           {user?.role === UserRoles.INSPECTOR && data?.status === ApplicationStatus.IN_PROCESS && (
             <ReferenceCreateModal />
           )}
@@ -47,5 +47,5 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
     </div>
   );
 };
-// @ts-ignore
+
 export default ApplicationDetailPage;

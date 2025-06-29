@@ -13,7 +13,6 @@ const usePaginatedData = <T>(endpoint: string, params?: ISearchParams, enabled: 
   });
 
   const { page } = queryMethods.data || {};
-  console.log('usePaginatedData', queryMethods.data);
 
   return {
     ...queryMethods,

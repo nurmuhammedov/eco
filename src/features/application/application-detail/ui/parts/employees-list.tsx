@@ -46,7 +46,7 @@ const attestationSchema = z.object({
 
 type AttestationFormValues = z.infer<typeof attestationSchema>;
 
-const EmployeesList = ({ data, showAttestationActions = true }: EmployeesListProps) => {
+const EmployeesList = ({ data, showAttestationActions = false }: EmployeesListProps) => {
   const { t } = useTranslation(['common']);
   const { id: appealId } = useParams<{ id: string }>();
   const { onSubmit: executeAttestation, isPending } = useExecuteAttestation(appealId || '');
@@ -75,10 +75,6 @@ const EmployeesList = ({ data, showAttestationActions = true }: EmployeesListPro
 
   const columns: ColumnDef<Employee>[] = [
     {
-      header: '№',
-      cell: ({ row }) => row.index + 1,
-    },
-    {
       accessorKey: 'fullName',
       header: 'Xodim FIO',
     },
@@ -94,11 +90,11 @@ const EmployeesList = ({ data, showAttestationActions = true }: EmployeesListPro
     },
     {
       accessorKey: 'pin',
-      header: 'JSHIR',
+      header: 'JSHSHIR',
     },
     {
       accessorKey: 'profession',
-      header: 'Kasbi',
+      header: 'Lavozimi',
     },
     {
       accessorKey: 'certNumber',
@@ -116,13 +112,8 @@ const EmployeesList = ({ data, showAttestationActions = true }: EmployeesListPro
     },
     {
       accessorKey: 'ctcTrainingFromDate',
-      header: '“Kontexnazorato‘quv” DMda o‘qigan muddati (dan)',
-      cell: ({ row }) => getDate(row.original.ctcTrainingFromDate),
-    },
-    {
-      accessorKey: 'ctcTrainingToDate',
-      header: '“Kontexnazorato‘quv” DMda o‘qigan muddati (gacha)',
-      cell: ({ row }) => getDate(row.original.ctcTrainingToDate),
+      header: '“Kontexnazorato‘quv” DMda o‘qigan muddati',
+      cell: ({ row }) => `${getDate(row.original.ctcTrainingFromDate)} - ${getDate(row.original.ctcTrainingToDate)}`,
     },
   ];
 

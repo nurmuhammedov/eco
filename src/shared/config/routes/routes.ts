@@ -61,12 +61,12 @@ export const appRoutes = [
   },
   {
     path: 'applications/detail/:id',
-    component: AttestationDetail,
+    component: ApplicationDetail,
     roles: [],
   },
   {
     path: 'attestations/detail/:id',
-    component: ApplicationDetail,
+    component: AttestationDetail,
     roles: [],
   },
   {

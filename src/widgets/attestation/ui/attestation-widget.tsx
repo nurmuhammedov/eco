@@ -17,6 +17,8 @@ export const AttestationWidget = () => {
   if (isManagerOrInspector) {
     return (
       <>
+        <h2 className="text-2xl font-bold mb-4">Attestatsiya</h2>
+
         <Tabs value={activeTab} onValueChange={(activeTab) => addParams({ activeTab })}>
           <TabsList className="mb-2">
             <TabsTrigger value="pending">Attestatsiyadan o‘tmagan</TabsTrigger>
@@ -33,5 +35,10 @@ export const AttestationWidget = () => {
     );
   }
 
-  return <AttestationList />;
+  return (
+    <>
+      <h2 className="text-2xl font-bold mb-4">Attestatsiya</h2>
+      <AttestationList />
+    </>
+  );
 };
