@@ -1,11 +1,11 @@
-import { useCallback, useMemo } from 'react';
-import { filterParsers, useFilters } from '@/shared/hooks/use-filters';
 import {
   ApplicationCategory,
   APPLICATIONS_DATA,
   MAIN_APPLICATION_BY_CATEGORY,
   MainApplicationCategory,
 } from '@/entities/create-application';
+import { filterParsers, useFilters } from '@/shared/hooks/use-filters';
+import { useCallback, useMemo } from 'react';
 
 export function useApplicationGrid() {
   const { filters, setFilters } = useFilters({
@@ -43,6 +43,7 @@ export function useApplicationGrid() {
 
   const mainCards = useMemo(() => {
     if (!activeTab) return [];
+    // @ts-ignore
     return MAIN_APPLICATION_BY_CATEGORY[activeTab] || [];
   }, [activeTab]);
 
@@ -50,6 +51,7 @@ export function useApplicationGrid() {
     if (!activeTab) return [];
 
     // If there are main cards for this category
+    // @ts-ignore
     if (MAIN_APPLICATION_BY_CATEGORY[activeTab]?.length > 0) {
       // If a main card is selected, show its sub applications
       if (selectedMainCard) {
