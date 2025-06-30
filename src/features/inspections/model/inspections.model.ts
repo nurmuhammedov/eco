@@ -45,4 +45,8 @@ export const inspectionsApi = {
     const { data } = await apiClient.get<any>(`/inspection-report-executions/${id}`);
     return data.data;
   },
+  getActDetail: async (id: any) => {
+    const { data } = await apiClient.get<any>(`/inspections/act/${id}`);
+    return data.data;
+  },
 };
