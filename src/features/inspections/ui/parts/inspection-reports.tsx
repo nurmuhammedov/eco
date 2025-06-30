@@ -73,7 +73,7 @@ const InspectionReports = () => {
         <div>
           {user?.role !== UserRoles.INSPECTOR && (
             <Tabs
-              value={currentTab || 'FALSE'}
+              value={currentTab || 'eliminated'}
               onValueChange={(val) => {
                 addParams({ eliminated: val, page: 1 });
               }}

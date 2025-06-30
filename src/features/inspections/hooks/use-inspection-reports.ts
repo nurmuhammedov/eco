@@ -5,7 +5,7 @@ import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts'
 
 export const useInspectionReports = () => {
   const {
-    paramsObject: { inspectionId, eliminated = false, page = 1, size = 10 },
+    paramsObject: { inspectionId, eliminated = 'eliminated', page = 1, size = 10 },
   } = useCustomSearchParams();
 
   return useQuery({
