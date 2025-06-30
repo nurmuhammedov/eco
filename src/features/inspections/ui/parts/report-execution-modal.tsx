@@ -113,7 +113,7 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
     <Dialog onOpenChange={handleModal} open={!!id}>
       <DialogContent className="sm:max-w-[800px]">
         <div>
-          <h2 className="font-medium mb-1">REPORT DESCRIPTION</h2>
+          <h2 className="font-medium mb-1">Aniqlangan kamchilik</h2>
           <p className="text-sm">{description}</p>
         </div>
         <hr className="border-neutral-50" />
@@ -126,8 +126,10 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
                 <div>
                   <FileLink title={'Dokument'} isSmall={true} url={item?.executionFilePath} />
                 </div>
-                <div className="text-neutral-500 text-sm w-[120px]">{getDate(item?.fileUploadDate)}</div>
-                <div>{!!currentBadge && <Badge variant={currentBadge.variant}>{currentBadge.label}</Badge>}</div>
+                <div className="text-neutral-500 text-sm w-[120px] text-center">{getDate(item?.fileUploadDate)}</div>
+                <div className="text-center">
+                  {!!currentBadge && <Badge variant={currentBadge.variant}>{currentBadge.label}</Badge>}
+                </div>
                 {isValidInterval && user?.role === UserRoles.INSPECTOR && item?.status === 'IN_PROCESS' && (
                   <div className="flex gap-1.5">
                     <Button

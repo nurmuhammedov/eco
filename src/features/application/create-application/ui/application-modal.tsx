@@ -14,6 +14,7 @@ interface ApplicationModalProps {
   error: string | null;
   isPdfLoading: boolean;
   submitApplicationMetaData: (sign: string) => void;
+  title?: string;
 }
 
 export const ApplicationModal: React.FC<ApplicationModalProps> = ({
@@ -24,6 +25,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
   documentUrl,
   isPdfLoading,
   submitApplicationMetaData,
+  title = 'Ariza hujjati',
 }) => {
   const renderContent = () => {
     if (isPdfLoading) {
@@ -51,7 +53,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
       <DialogContent className="w-[740px] max-h-[98vh] max-w-[98vw] flex flex-col p-0">
         <DialogHeader className="p-6 pb-4 border-b flex-shrink-0">
           <DialogTitle className="flex items-end gap-x-2">
-            <FileText className="h-5 w-5 text-yellow-600" /> Ariza hujjati
+            <FileText className="h-5 w-5 text-yellow-600" /> {title}
           </DialogTitle>
         </DialogHeader>
 
