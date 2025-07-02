@@ -346,4 +346,20 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     type: ApplicationTypeEnum.ATTESTATION_REGIONAL,
     icon: 'staffAttestationIcon',
   },
+  {
+    id: 30,
+    title: 'TXYZ kadastr pasportini ro‘yxatga olish',
+    description: 'TXYZ kadastr pasportini ro‘yxatga olish ariza shakli',
+    category: ApplicationCategory.CADASTRE,
+    type: ApplicationTypeEnum.REGISTER_CADASTRE_PASSPORT,
+    icon: 'staffAttestationIcon',
+  },
+  {
+    id: 30,
+    title: 'Sanoat xavfsizligi deklaratsiyasini ro‘yxatga olish',
+    description: 'Sanoat xavfsizligi deklaratsiyasini ro‘yxatga olish ariza shakli',
+    category: ApplicationCategory.CADASTRE,
+    type: ApplicationTypeEnum.REGISTER_DECLARATION,
+    icon: 'staffAttestationIcon',
+  },
 ];
