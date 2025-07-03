@@ -6,9 +6,11 @@ import {
   BoilerAppealDtoSchema,
   BoilerUtilizerAppealDtoSchema,
   CablewayAppealDtoSchema,
+  CadastrePassportAppealDtoSchema,
   ChemicalContainerAppealDtoSchema,
   ContainerAppealDtoSchema,
   CraneAppealDtoSchema,
+  DeclarationAppealDtoSchema,
   EscalatorAppealDtoSchema,
   ExpandAccreditationDtoSchema,
   HeatPipelineAppealDtoSchema,
@@ -43,3 +45,5 @@ export type CreateAccreditationDTO = z.infer<typeof AccreditationDtoSchema>;
 export type ReAccreditationDTO = z.infer<typeof ReAccreditationDtoSchema>;
 export type ExpandAccreditationDTO = z.infer<typeof ExpandAccreditationDtoSchema>;
 export type CreateAttestationDTO = z.infer<typeof AttestationAppealDtoSchema>;
+export type CreateCadastrePassportApplicationDTO = z.infer<typeof CadastrePassportAppealDtoSchema>;
+export type CreateDeclarationApplicationDTO = z.infer<typeof DeclarationAppealDtoSchema>;

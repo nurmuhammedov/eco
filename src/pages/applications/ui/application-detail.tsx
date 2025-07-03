@@ -6,6 +6,7 @@ import { UserRoles } from '@/entities/user';
 import { ApplicationDetail as ApplicationDetailFeature } from '@/features/application/application-detail';
 import { useApplicationDetail } from '@/features/application/application-detail/hooks/use-application-detail.tsx';
 import ExecuteAttestationModal from '@/features/application/application-detail/ui/modals/AttachInspectorForAttestation';
+import CadastreModal from '@/features/application/application-detail/ui/modals/cadastre-modal';
 import ManagerAttestationModal from '@/features/application/application-detail/ui/modals/ManagerAttestationModal';
 import ReferenceCreateModal from '@/features/application/application-detail/ui/modals/reference-create-modal';
 import RejectApplicationModal from '@/features/application/application-detail/ui/modals/reject-application-modal.tsx';
@@ -20,6 +21,9 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
   const isAttestationAppeal =
     data?.appealType === ApplicationTypeEnum.ATTESTATION_COMMITTEE ||
     data?.appealType === ApplicationTypeEnum.ATTESTATION_REGIONAL;
+  const isCadastreAppeal =
+    data?.appealType === ApplicationTypeEnum.REGISTER_DECLARATION ||
+    data?.appealType === ApplicationTypeEnum.REGISTER_CADASTRE_PASSPORT;
 
   return (
     <div>
@@ -35,6 +39,18 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
           {user?.role === UserRoles.MANAGER && data?.status === ApplicationStatus.NEW && isAttestationAppeal && (
             <>
               <ManagerAttestationModal />
+              <RejectApplicationModal />
+            </>
+          )}
+          {user?.role === UserRoles.MANAGER && data?.status === ApplicationStatus.NEW && isCadastreAppeal && (
+            <>
+              <CadastreModal
+                url={
+                  data?.appealType === ApplicationTypeEnum.REGISTER_CADASTRE_PASSPORT
+                    ? 'cadastre-passport'
+                    : 'declaration'
+                }
+              />
               <RejectApplicationModal />
             </>
           )}

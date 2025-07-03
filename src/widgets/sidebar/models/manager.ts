@@ -36,4 +36,9 @@ export default [
     url: '/attestations',
     icon: 'document',
   },
+  {
+    title: 'cadastre',
+    url: '/cadastre',
+    icon: 'document',
+  },
 ] as Navigation;
