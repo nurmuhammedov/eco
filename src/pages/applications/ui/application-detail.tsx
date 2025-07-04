@@ -9,6 +9,8 @@ import ReferenceCreateModal from '@/features/application/application-detail/ui/m
 import RejectApplicationModal from '@/features/application/application-detail/ui/modals/reject-application-modal.tsx';
 import { GoBack } from '@/shared/components/common';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
+import RejectAccreditationModal from '@/features/application/application-detail/ui/modals/reject-accreditation-modal.tsx';
+import ApplyAccreditationModal from '@/features/application/application-detail/ui/modals/apply-accreditation-modal.tsx';
 
 const ApplicationDetailPage = () => {
   const { data } = useApplicationDetail();
@@ -26,6 +28,12 @@ const ApplicationDetailPage = () => {
           )}
           {user?.role === UserRoles.INSPECTOR && data?.status === ApplicationStatus.IN_PROCESS && (
             <ReferenceCreateModal />
+          )}
+          {user?.role === UserRoles.HEAD && data?.status === ApplicationStatus.IN_APPROVAL && (
+            <>
+              <ApplyAccreditationModal />
+              <RejectAccreditationModal />
+            </>
           )}
         </div>
       </div>
