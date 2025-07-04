@@ -37,7 +37,7 @@ export default [
     icon: 'document',
   },
   {
-    title: 'cadastre',
+    title: 'permission.CADASTRE',
     url: '/cadastre',
     icon: 'document',
   },

@@ -87,13 +87,18 @@
   "permission": {
     "APPEAL": "Arizalar",
     "HF": "XICHO",
-    "EQUIPMENT": "QURILMALAR",
+    "EQUIPMENT": "Qurilmalar",
     "IRS": "INM",
     "REGISTRY": "Reyestrlar",
     "ATTESTATION": "Attestatsiya",
+    "ATTESTATION_COMMITTEE": "Attestatsiya",
+    "ATTESTATION_REGIONAL": "Attestatsiya",
+    "RISK_ANALYSIS": "Xavf tahlil qilish",
+    "INSPECTION": "Tekshiruvlar",
+    "PREVENTION": "Profilaktika",
+    "ACCREDITATION": "Akkreditatsiya",
     "CADASTRE": "Kadastr",
-    "PERMITS": "Ruxsat beruvchi hujjatlar",
-    "ACCREDITATION": "Akkreditatsiya"
+    "PERMITS": "Ruxsat beruvchi hujjatlar"
   },
   "application": {
     "OIL": "Neft",

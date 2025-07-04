@@ -25,7 +25,7 @@ export const APPLICATION_CATEGORIES = [
   },
   {
     id: ApplicationCategory.ATTESTATION_PREVENTION,
-    name: 'Attestatsiya va profilaktika',
+    name: 'Attestatsiya',
   },
   {
     id: ApplicationCategory.CADASTRE,
@@ -321,14 +321,6 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     category: ApplicationCategory.ATTESTATION_PREVENTION,
     type: ApplicationTypeEnum.REGISTER_ATTESTATION,
     icon: 'staffAttestationIcon',
-  },
-  {
-    id: 27,
-    title: 'Profilaktika tadbirini o‘tkazish',
-    description: 'Profilaktika tadbirini o‘tkazish ariza shakli',
-    category: ApplicationCategory.ATTESTATION_PREVENTION,
-    type: ApplicationTypeEnum.DEFAULT,
-    icon: 'preventiveMeasuresIcon',
   },
   {
     id: 28,
