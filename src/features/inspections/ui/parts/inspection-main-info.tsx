@@ -2,9 +2,17 @@ import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection
 import DetailRow from '@/shared/components/common/detail-row.tsx';
 import { getDate } from '@/shared/utils/date.ts';
 import FileLink from '@/shared/components/common/file-link.tsx';
+import { useActDetail } from '@/features/inspections/hooks/use-act-detail.ts';
+import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx';
+import { useState } from 'react';
+import { Eye } from 'lucide-react';
 
 const InspectionMainInfo = () => {
   const { data: inspectionData } = useInspectionDetail();
+  const { data: actInfo } = useActDetail();
+  const [signers, setSigners] = useState<any[]>([]);
+
+  console.log(actInfo);
   if (!inspectionData) {
     return null;
   }
@@ -24,10 +32,13 @@ const InspectionMainInfo = () => {
       })}
 
       <DetailRow title="Ombudsman maxsus kod:" value={inspectionData?.specialCode || '-'} />
+
       <DetailRow
         title="Tekshiruv buyrug‘i:"
         value={!!inspectionData?.decreePath ? <FileLink url={inspectionData?.decreePath} /> : '-'}
       />
+      <DetailRow title="Buyruq sanasi:" value={getDate(inspectionData?.decreeDate) || '-'} />
+      <DetailRow title="Buyruq raqami:" value={inspectionData?.decreeNumber || '-'} />
 
       <DetailRow
         title="Xabardor qilish xati:"
@@ -57,6 +68,29 @@ const InspectionMainInfo = () => {
         title="Tekshiruv natijasi:"
         value={!!inspectionData?.resultPath ? <FileLink url={inspectionData?.resultPath} /> : '-'}
       />
+      {!!actInfo && (
+        <DetailRow
+          title="Dalolatnoma:"
+          value={
+            !!actInfo?.path ? (
+              <div className="flex items-center gap-2">
+                <FileLink url={actInfo?.path} />
+                <button
+                  className="cursor-pointer hover:text-yellow-200 text-[#A6B1BB]"
+                  onClick={() => {
+                    setSigners(actInfo?.signers || []);
+                  }}
+                >
+                  <Eye size="18" />
+                </button>
+              </div>
+            ) : (
+              '-'
+            )
+          }
+        />
+      )}
+      <SignersModal setSigners={setSigners} signers={signers} />
     </div>
   );
 };

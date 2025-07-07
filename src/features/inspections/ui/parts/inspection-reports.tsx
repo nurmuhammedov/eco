@@ -12,6 +12,7 @@ import { Eye } from 'lucide-react';
 import ReportExecutionModal from '@/features/inspections/ui/parts/report-execution-modal.tsx';
 import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
+import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 
 const InspectionReports = () => {
   const { data, isLoading } = useInspectionReports();
@@ -22,6 +23,7 @@ const InspectionReports = () => {
   const [id, setId] = useState<any>(null);
   const [inspectionTitle, setInspectionTitle] = useState<string>('');
   const currentTab = paramsObject?.eliminated;
+  const { data: inspectionData } = useInspectionDetail();
 
   const columns: ColumnDef<any>[] = [
     {
@@ -37,8 +39,8 @@ const InspectionReports = () => {
       cell: ({ row }) => format(row.original?.deadline, 'dd.MM.yyyy'),
     },
     {
-      accessorKey: 'assignedTasks',
-      header: 'Bajariladigan vazifalar',
+      accessorKey: 'defect',
+      header: 'Aniqlangan kamchilik',
       size: 200,
     },
     {
@@ -54,7 +56,7 @@ const InspectionReports = () => {
           <Button
             onClick={() => {
               setId(row.original?.id);
-              setInspectionTitle(row?.original?.assignedTasks || '');
+              setInspectionTitle(row?.original?.defect || '');
             }}
             variant="outline"
             size="iconSm"
@@ -68,18 +70,24 @@ const InspectionReports = () => {
   return (
     <div>
       <div className="flex justify-between items-center ">
-        <Tabs
-          value={currentTab || 'false'}
-          onValueChange={(val) => {
-            addParams({ eliminated: val, page: 1 });
-          }}
-        >
-          <TabsList className="bg-[#EDEEEE]">
-            <TabsTrigger value="true">eliminated</TabsTrigger>
-            <TabsTrigger value="false">not_eliminated</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        {isValidInterval && user?.role === UserRoles.INSPECTOR && <AddReportForm />}
+        <div>
+          {user?.role !== UserRoles.INSPECTOR && (
+            <Tabs
+              value={currentTab || 'eliminated'}
+              onValueChange={(val) => {
+                addParams({ eliminated: val, page: 1 });
+              }}
+            >
+              <TabsList className="bg-[#EDEEEE]">
+                <TabsTrigger value="eliminated">Bartaraf etildi</TabsTrigger>
+                <TabsTrigger value="not_eliminated">Bartaraf etildmadi</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          )}
+        </div>
+        {isValidInterval && user?.role === UserRoles.INSPECTOR && inspectionData?.status === 'IN_PROCESS' && (
+          <AddReportForm />
+        )}
       </div>
       <div>
         <DataTable isLoading={isLoading} columns={columns} data={data || []} />
