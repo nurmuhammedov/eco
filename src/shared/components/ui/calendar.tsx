@@ -14,7 +14,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
       locale={uz}
       captionLayout="dropdown-buttons"
       fromYear={new Date().getFullYear() - 100}
-      toYear={new Date().getFullYear()}
+      toYear={new Date().getFullYear() + 75}
       classNames={{
         caption: 'flex justify-center pt-1 relative items-center',
         caption_label: 'hidden',

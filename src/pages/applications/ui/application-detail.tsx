@@ -10,11 +10,11 @@ import CadastreModal from '@/features/application/application-detail/ui/modals/c
 import ManagerAttestationModal from '@/features/application/application-detail/ui/modals/ManagerAttestationModal';
 import ReferenceCreateModal from '@/features/application/application-detail/ui/modals/reference-create-modal';
 import RejectApplicationModal from '@/features/application/application-detail/ui/modals/reject-application-modal.tsx';
-import AttachInspectorModal from '@/features/inspections/ui/parts/attach-inspector-modal';
 import { GoBack } from '@/shared/components/common';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
-import RejectAccreditationModal from '@/features/application/application-detail/ui/modals/reject-accreditation-modal.tsx';
+import AttachInspectorModal from '@/features/application/application-detail/ui/modals/attach-inspector-modal.tsx';
 import ApplyAccreditationModal from '@/features/application/application-detail/ui/modals/apply-accreditation-modal.tsx';
+import RejectAccreditationModal from '@/features/application/application-detail/ui/modals/reject-accreditation-modal.tsx';
 
 const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActions?: boolean }) => {
   const { data } = useApplicationDetail();
