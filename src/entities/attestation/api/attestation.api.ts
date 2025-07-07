@@ -1,6 +1,11 @@
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import { ISearchParams } from '@/shared/types';
-import { AddEmployeeDto, AttestationReportDto, AttestationView } from '../model/attestation.types';
+import {
+  AddEmployeeDto,
+  AttestationReportDto,
+  AttestationView,
+  IConductAttestationPayload,
+} from '../model/attestation.types';
 
 type AttestationData = AttestationView | AttestationReportDto;
 
@@ -14,4 +19,8 @@ export const attestationAPI = {
     const { data } = await apiClient.post('/employee', payload);
     return data;
   },
+};
+
+export const conductAttestation = async (payload: IConductAttestationPayload): Promise<void> => {
+  await apiClient.post(`/attestation/conduct`, payload);
 };

@@ -137,7 +137,7 @@ export const AddEmployeeForm = () => {
               />
               <FormField
                 control={form.control}
-                name={`employeeList.${index}.ctcTrainingDate`}
+                name={`employeeList.${index}.ctcTrainingToDate`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>“Kontexnazorato‘quv” DMda o‘qigan muddati</FormLabel>

@@ -13,7 +13,7 @@ export const employeeSchema = z.object({
   certDate: z.string().optional(),
   certExpiryDate: z.string().optional(),
   ctcTrainingFromDate: z.string().optional(),
-  ctcTrainingDate: z.string().optional(),
+  ctcTrainingToDate: z.string().optional(),
   dateOfEmployment: z.string().optional(),
 });
 

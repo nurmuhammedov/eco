@@ -27,8 +27,6 @@ export const XichoList = () => {
     addParams({ assignedStatus: status });
   };
 
-  usePaginatedData('/preventions');
-
   const type = paramsObject.mainTab || RiskAnalysisTab.XICHO;
 
   const apiParams = useMemo(() => {

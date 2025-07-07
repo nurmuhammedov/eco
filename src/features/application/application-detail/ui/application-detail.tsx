@@ -1,11 +1,12 @@
 // src/features/application/application-detail/ui/application-detail.tsx
 
 import { ApplicationStatus } from '@/entities/application';
-import { APPLICATIONS_DATA } from '@/entities/create-application';
+import { APPLICATIONS_DATA, ApplicationTypeEnum } from '@/entities/create-application';
 import { UserRoles } from '@/entities/user';
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
 import AppealResponseDocs from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx';
 import ApplicantDocsTable from '@/features/application/application-detail/ui/parts/applicant-docs-table.tsx';
+import EmployeesList from '@/features/application/application-detail/ui/parts/employees-list';
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
 import { DetailCardAccordion } from '@/shared/components/common/detail-card';
@@ -16,7 +17,15 @@ import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
 import { getDate } from '@/shared/utils/date';
 
-const ApplicationDetail = ({ data, userRole }: { data: any; userRole?: UserRoles }) => {
+const ApplicationDetail = ({
+  data,
+  userRole,
+  showAttestationActions,
+}: {
+  data: any;
+  userRole?: UserRoles;
+  showAttestationActions?: boolean;
+}) => {
   const currentObjLocation = data?.data?.location?.split(',') || ([] as Coordinate[]);
   const isLegalApplication = !!data?.legalTin;
   return (
@@ -27,6 +36,7 @@ const ApplicationDetail = ({ data, userRole }: { data: any; userRole?: UserRoles
           'applicant_info_individual',
           'applicant_info_legal',
           'appeal_docs',
+          'employee_list',
           'appeal_files',
           'appeal_location',
         ]}
@@ -76,6 +86,7 @@ const ApplicationDetail = ({ data, userRole }: { data: any; userRole?: UserRoles
             <LegalApplicantInfo tinNumber={data?.legalTin} />
           </DetailCardAccordion.Item>
         )}
+
         <DetailCardAccordion.Item value="appeal_docs" title="Ariza bo‘yicha batafsil ma’lumotlar va hujjatlar">
           <Tabs defaultValue="info">
             <TabsList className="bg-[#EDEEEE]">
@@ -98,15 +109,24 @@ const ApplicationDetail = ({ data, userRole }: { data: any; userRole?: UserRoles
             </TabsContent>
           </Tabs>
         </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="appeal_files" title="Arizaga biriktirilgan fayllar">
-          <FilesSection
-            files={data?.files || []}
-            userRole={userRole}
-            applicationStatus={data?.status}
-            appealId={data?.id}
-            edit={true}
-          />
-        </DetailCardAccordion.Item>
+        {(data?.appealType === ApplicationTypeEnum.ATTESTATION_COMMITTEE ||
+          data?.appealType === ApplicationTypeEnum.ATTESTATION_REGIONAL) && (
+          <DetailCardAccordion.Item value="employee_list" title="Attestatsiya ma'lumotlari">
+            <EmployeesList data={data.data.employeeList || []} showAttestationActions={showAttestationActions} />
+          </DetailCardAccordion.Item>
+        )}
+
+        {data?.files?.length > 0 && (
+          <DetailCardAccordion.Item value="appeal_files" title="Arizaga biriktirilgan fayllar">
+            <FilesSection
+              files={data?.files || []}
+              userRole={userRole}
+              applicationStatus={data?.status}
+              appealId={data?.id}
+              edit={true}
+            />
+          </DetailCardAccordion.Item>
+        )}
         {!!currentObjLocation?.length && (
           <DetailCardAccordion.Item value="object_location" title="Arizada ko‘rsatilgan obyekt yoki qurilma joyi">
             <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />

@@ -26,6 +26,7 @@ export const API_ENDPOINTS: Record<string, string> = {
   DEPARTMENT_SELECT: '/departments/select',
   OFFICE_SELECT: '/offices/select',
   HAZARDOUS_FACILITY_SELECT: '/hf/select',
+  EMPLOYEES_SELECT: '/employee/select/by-hf/',
   HF_SELECT: '/hf/select',
   HAZARDOUS_FACILITY_TYPES_SELECT: '/hf-types/select',
   CHILD_EQUIPMENTS_SELECT: '/child-equipments/select',
@@ -78,7 +79,6 @@ export const API_ENDPOINTS: Record<string, string> = {
   CHECKLIST_TEMPLATES: '/checklist-templates',
 
   PREVENTIONS: '/preventions',
-
   INSPECTIONS: '/inspections',
 
   APPEALS_ACCREDITATION: '/appeals/accreditation',
@@ -87,6 +87,11 @@ export const API_ENDPOINTS: Record<string, string> = {
   APPEALS_RE_ACCREDITATION_GENERATE_PDF: '/appeals/accreditation/redo/generate-pdf',
   APPEALS_EXPEND_ACCREDITATION: '/appeals/accreditation/expend',
   APPEALS_EXPEND_ACCREDITATION_GENERATE_PDF: '/appeals/accreditation/expend/generate-pdf',
+
+  APPEALS_REGISTER_DECLARATION: '/appeals/declaration',
+  APPEALS_REGISTER_DECLARATION_GENERATE_PDF: '/appeals/declaration/generate-pdf',
+  APPEALS_CADASTRE_PASSPORT: '/appeals/cadastre-passport',
+  APPEALS_CADASTRE_PASSPORT_GENERATE_PDF: '/appeals/cadastre-passport/generate-pdf',
 
   ATTESTATION: '/attestation',
 };

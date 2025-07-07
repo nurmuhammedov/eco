@@ -9,6 +9,7 @@ const UnAuthorized = lazy(() => import('@/features/auth/ui/unauthorized'));
 // Application pages
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'));
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'));
+const AttestationDetail = lazy(() => import('@/pages/attestation/attestation-detail'));
 
 const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'));
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'));
@@ -40,6 +41,7 @@ const InspectionsDetailPage = lazy(() => import('@/features/inspections/ui/inspe
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
 const AccreditationPage = lazy(() => import('@/pages/accreditations/page'));
 const AttestationPage = lazy(() => import('@/pages/attestation'));
+const CadastrePage = lazy(() => import('@/pages/cadastre'));
 const AddAttestationEmployeePage = lazy(() => import('@/pages/attestation/add-employee'));
 
 export const appRoutes = [
@@ -60,12 +62,22 @@ export const appRoutes = [
   },
   {
     path: 'applications/detail/:id',
+    component: AttestationDetail,
+    roles: [],
+  },
+  {
+    path: 'attestations/detail/:id',
     component: ApplicationDetail,
     roles: [],
   },
   {
     path: 'register',
     component: RegisterPage,
+    roles: [],
+  },
+  {
+    path: 'cadastre',
+    component: CadastrePage,
     roles: [],
   },
   {
