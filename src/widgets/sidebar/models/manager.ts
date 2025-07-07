@@ -36,4 +36,9 @@ export default [
     url: '/attestations',
     icon: 'document',
   },
+  {
+    title: 'permission.CADASTRE',
+    url: '/cadastre',
+    icon: 'document',
+  },
 ] as Navigation;

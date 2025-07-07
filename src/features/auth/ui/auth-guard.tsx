@@ -1,17 +1,16 @@
 // ** React **
-import { PropsWithChildren, useEffect } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-
 // ** Store **
 import { setUser } from '@/app/store/auth-slice';
 
 // ** Hooks **
 import { useCurrentUser } from '@/entities/auth';
-import { useAppDispatch } from '@/shared/hooks/use-store';
 
 // ** Components **
 import { UserRoles } from '@/entities/user';
 import { Loader } from '@/shared/components/common';
+import { useAppDispatch } from '@/shared/hooks/use-store';
+import { PropsWithChildren, useEffect } from 'react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 interface Props extends PropsWithChildren {
   allowedRoles?: UserRoles[];
@@ -25,7 +24,7 @@ export default function AuthGuard({ children, allowedRoles }: Props) {
 
   useEffect(() => {
     if (!isPending && !isAuth) {
-      navigate('/auth/login/admin', {
+      navigate('/auth/login', {
         state: { from: pathname },
         replace: true,
       });

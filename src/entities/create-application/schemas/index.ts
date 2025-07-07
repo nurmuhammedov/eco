@@ -17,3 +17,5 @@ export * from './register-irs.schema';
 export * from './register-attraction-passport.schema';
 export * from './accreditation.schema';
 export * from './register-attestation.schema';
+export * from './register-cadastre-passport.schema';
+export * from './register-declaration.schema';

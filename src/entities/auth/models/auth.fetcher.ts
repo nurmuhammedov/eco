@@ -1,13 +1,13 @@
-import { useEffect, useMemo } from 'react';
 import { setUser } from '@/app/store/auth-slice';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { UserRoles, UserState } from '@/entities/user';
 import { authAPI } from '@/entities/auth/models/auth.api';
-import { useAppDispatch } from '@/shared/hooks/use-store';
 import { LoginDTO } from '@/entities/auth/models/auth.types';
+import { UserRoles, UserState } from '@/entities/user';
+import { useAuth } from '@/shared/hooks/use-auth';
+import { useAppDispatch } from '@/shared/hooks/use-store';
 import { getHomeRouteForLoggedInUser } from '@/shared/lib/router';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useMemo } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 export const useCurrentUser = () => {
   const {
@@ -70,7 +70,7 @@ export const useLogout = () => {
   const navigate = useNavigate();
 
   //TODO: ubrat redirect na admin kogda budet presetasiya
-  const redirectPath = user?.role === UserRoles.ADMIN ? '/auth/login/admin' : '/auth/login/admin';
+  const redirectPath = user?.role === UserRoles.ADMIN ? '/auth/login' : '/auth/login';
   return useMutation({
     mutationFn: async () => authAPI.logout(),
     onSuccess: () => {

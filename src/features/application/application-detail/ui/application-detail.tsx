@@ -31,20 +31,15 @@ const ApplicationDetail = ({
   return (
     <div className="grid grid-cols-1 gap-4 mt-4">
       <DetailCardAccordion
-        defaultValue={
-          data?.appealType != ApplicationTypeEnum.ATTESTATION_COMMITTEE &&
-          data?.appealType != ApplicationTypeEnum.ATTESTATION_REGIONAL
-            ? ['employee_list']
-            : [
-                'general',
-                'applicant_info_individual',
-                'applicant_info_legal',
-                'appeal_docs',
-                'employee_list',
-                'appeal_files',
-                'appeal_location',
-              ]
-        }
+        defaultValue={[
+          'general',
+          'applicant_info_individual',
+          'applicant_info_legal',
+          'appeal_docs',
+          'employee_list',
+          'appeal_files',
+          'appeal_location',
+        ]}
       >
         <DetailCardAccordion.Item value="general" title="Ariza va ijro to‘g‘risida maʼlumot">
           <div className="py-1  flex flex-col">

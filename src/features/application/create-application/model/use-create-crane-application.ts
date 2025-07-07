@@ -44,8 +44,8 @@ export const useCreateCraneApplication = () => {
 
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
   const { data: childEquipmentTypes } = useChildEquipmentTypes('CRANE');
+  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
 
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);

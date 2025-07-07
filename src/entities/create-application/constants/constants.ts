@@ -25,7 +25,7 @@ export const APPLICATION_CATEGORIES = [
   },
   {
     id: ApplicationCategory.ATTESTATION_PREVENTION,
-    name: 'Attestatsiya va profilaktika',
+    name: 'Attestatsiya',
   },
   {
     id: ApplicationCategory.CADASTRE,
@@ -323,14 +323,6 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     icon: 'staffAttestationIcon',
   },
   {
-    id: 27,
-    title: 'Profilaktika tadbirini o‘tkazish',
-    description: 'Profilaktika tadbirini o‘tkazish ariza shakli',
-    category: ApplicationCategory.ATTESTATION_PREVENTION,
-    type: ApplicationTypeEnum.DEFAULT,
-    icon: 'preventiveMeasuresIcon',
-  },
-  {
     id: 28,
     title: 'XICHO rahbar xodimlarini attestatsiyadan o‘tkazish',
     description: 'XICHO xodimlarini attestatsiyadan o‘tkazish ariza shakli',
@@ -344,6 +336,22 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'XICHO xodimlarini attestatsiyadan o‘tkazish ariza shakli',
     category: ApplicationCategory.DEFAULT,
     type: ApplicationTypeEnum.ATTESTATION_REGIONAL,
+    icon: 'staffAttestationIcon',
+  },
+  {
+    id: 30,
+    title: 'TXYZ kadastr pasportini ro‘yxatga olish',
+    description: 'TXYZ kadastr pasportini ro‘yxatga olish ariza shakli',
+    category: ApplicationCategory.CADASTRE,
+    type: ApplicationTypeEnum.REGISTER_CADASTRE_PASSPORT,
+    icon: 'staffAttestationIcon',
+  },
+  {
+    id: 30,
+    title: 'Sanoat xavfsizligi deklaratsiyasini ro‘yxatga olish',
+    description: 'Sanoat xavfsizligi deklaratsiyasini ro‘yxatga olish ariza shakli',
+    category: ApplicationCategory.CADASTRE,
+    type: ApplicationTypeEnum.REGISTER_DECLARATION,
     icon: 'staffAttestationIcon',
   },
 ];

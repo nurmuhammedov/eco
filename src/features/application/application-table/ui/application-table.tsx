@@ -8,11 +8,9 @@ import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
 import { FileWarning } from 'lucide-react';
-// import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 export const ApplicationTable = () => {
-  // const { t } = useTranslation('common');
   const {
     paramsObject: { status = ApplicationStatus.ALL, search = '', ...rest },
   } = useCustomSearchParams();
@@ -50,7 +48,10 @@ export const ApplicationTable = () => {
       cell: (cell) =>
         APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
           ApplicationCategory.XICHO ||
-        APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category == ApplicationCategory.DEFAULT
+        APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
+          ApplicationCategory.DEFAULT ||
+        APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
+          ApplicationCategory.CADASTRE
           ? `Аxborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi`
           : APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
               ApplicationCategory.HOKQ
