@@ -30,6 +30,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
                 <FormControl>
                   <MultiSelect
                     {...field}
+                    maxDisplayItems={Infinity}
                     options={accreditationSphereOptions}
                     placeholder={t('select_accreditation_sphere')}
                   />

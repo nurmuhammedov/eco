@@ -23,9 +23,16 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
   const isAttestationAppeal =
     data?.appealType === ApplicationTypeEnum.ATTESTATION_COMMITTEE ||
     data?.appealType === ApplicationTypeEnum.ATTESTATION_REGIONAL;
+
   const isCadastreAppeal =
     data?.appealType === ApplicationTypeEnum.REGISTER_DECLARATION ||
     data?.appealType === ApplicationTypeEnum.REGISTER_CADASTRE_PASSPORT;
+
+  const isAccreditationAppeal =
+    data?.appealType === ApplicationTypeEnum.REGISTER_ACCREDITATION ||
+    data?.appealType === ApplicationTypeEnum.RE_REGISTER_ACCREDITATION ||
+    data?.appealType === ApplicationTypeEnum.EXPAND_ACCREDITATION ||
+    data?.appealType === ApplicationTypeEnum.REGISTER_EXPERTISE_CONCLUSION;
 
   return (
     <div>
@@ -59,7 +66,7 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
           {user?.role === UserRoles.INSPECTOR && data?.status === ApplicationStatus.IN_PROCESS && (
             <ReferenceCreateModal />
           )}
-          {user?.role === UserRoles.HEAD && data?.status === ApplicationStatus.IN_APPROVAL && (
+          {user?.role === UserRoles.MANAGER && data?.status === ApplicationStatus.NEW && isAccreditationAppeal && (
             <>
               <ApplyAccreditationModal />
               <RejectAccreditationModal />

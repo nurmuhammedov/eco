@@ -23,6 +23,9 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.REGISTER_ACCREDITATION]: lazy(() => import('../ui/forms/register-accreditation-form')),
   [ApplicationTypeEnum.RE_REGISTER_ACCREDITATION]: lazy(() => import('../ui/forms/register-re-accreditation-form')),
   [ApplicationTypeEnum.EXPAND_ACCREDITATION]: lazy(() => import('../ui/forms/register-expand-accreditation-form')),
+  [ApplicationTypeEnum.REGISTER_EXPERTISE_CONCLUSION]: lazy(
+    () => import('../ui/forms/register-accreditation-conclusion-form'),
+  ),
   [ApplicationTypeEnum.REGISTER_ATTESTATION]: lazy(() => import('../ui/forms/register-attestation-form')),
   [ApplicationTypeEnum.REGISTER_IRS]: lazy(() => import('../ui/forms/register-irs-form')),
   [ApplicationTypeEnum.REGISTER_CADASTRE_PASSPORT]: lazy(() => import('../ui/forms/register-cadastre-passport-form')),

@@ -34,6 +34,7 @@ const RejectAccreditationModal = () => {
     successMessage: 'Ariza muvaffaqiyatli qaytarildi!',
     queryKey: QK_APPLICATIONS,
   });
+
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });

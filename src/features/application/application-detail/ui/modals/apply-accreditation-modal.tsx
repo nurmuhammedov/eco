@@ -19,6 +19,9 @@ import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input.tsx';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
+import { Textarea } from '@/shared/components/ui/textarea.tsx';
+import { ArrowLeft } from 'lucide-react';
+import { clsx } from 'clsx';
 
 const schema = z.object({
   referencePath: z.string().min(1, FORM_ERROR_MESSAGES.required),
@@ -34,8 +37,24 @@ const schema = z.object({
   accreditationSpheres: z.array(z.nativeEnum(AccreditationSphere)).min(1, FORM_ERROR_MESSAGES.required),
 });
 
+const schema2 = z.object({
+  rejectionReason: z.string(),
+});
+
 const ApplyAccreditationModal = () => {
+  const { id } = useParams();
+
   const [isShow, setIsShow] = useState(false);
+  const [modalType, setModalType] = useState<'certificate' | 'reject'>('certificate');
+  const form2 = useForm<z.infer<typeof schema2>>({
+    resolver: zodResolver(schema2),
+  });
+
+  function onSubmit2(data: z.infer<typeof schema2>) {
+    handleCreateApplication({ ...data, appealId: id });
+    setIsShow(false);
+  }
+
   const { t } = useTranslation('accreditation');
   const accreditationSphereOptions = useMemo(() => {
     return ACCREDITATION_SPHERE_OPTIONS.map((option) => ({
@@ -54,16 +73,14 @@ const ApplyAccreditationModal = () => {
     handleCreateApplication,
     submitApplicationMetaData,
   } = useEIMZO({
-    pdfEndpoint: '/accreditations/certificate/generate-pdf',
-    submitEndpoint: '/accreditations/certificate',
+    pdfEndpoint: `/accreditations/${modalType}/generate-pdf`,
+    submitEndpoint: `/accreditations/${modalType}`,
     successMessage: 'SUCCESS!',
     queryKey: QK_APPLICATIONS,
   });
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
-
-  const { id } = useParams();
 
   function onSubmit(data: z.infer<typeof schema>) {
     handleCreateApplication({
@@ -83,215 +100,259 @@ const ApplyAccreditationModal = () => {
         <DialogTrigger asChild>
           <Button>Ijro etish</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-screen-xl">
+        <DialogContent
+          className={clsx({
+            'sm:max-w-screen-xl': modalType === 'certificate',
+            'sm:max-w-[725px]': modalType === 'reject',
+          })}
+        >
           <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Ijro etish</DialogTitle>
+            <DialogTitle className="text-[#4E75FF]">
+              {modalType === 'certificate' ? 'Ijro etish' : 'Rad etish'}
+            </DialogTitle>
           </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <div className="grid grid-cols-4 gap-2 mb-2">
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="certificateNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required>Akkreditatsiya attestati raqami</FormLabel>
-                        <FormControl>
-                          <Input type="text" placeholder="Akkreditatsiya attestati raqami" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div>
-                  <FormField
-                    name="accreditationSpheres"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required>{t('form.accreditationSpheres')}</FormLabel>
-                        <FormControl>
-                          <MultiSelect
-                            {...field}
-                            options={accreditationSphereOptions}
-                            placeholder={t('select_accreditation_sphere')}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="certificateDate"
-                    render={({ field }) => {
-                      const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                      return (
-                        <FormItem className="w-full ">
-                          <FormLabel required>Akkreditatsiya attestati sanasi</FormLabel>
-                          <DatePicker
-                            value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                            onChange={field.onChange}
-                            placeholder="Akkreditatsiya attestati sanasi"
-                          />
+          {modalType === 'certificate' && (
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <div className="grid grid-cols-4 gap-2 mb-2">
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="certificateNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel required>Akkreditatsiya attestati raqami</FormLabel>
+                          <FormControl>
+                            <Input type="text" placeholder="Akkreditatsiya attestati raqami" {...field} />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
-                      );
-                    }}
-                  />
-                </div>
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="certificateValidityDate"
-                    render={({ field }) => {
-                      const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                      return (
-                        <FormItem className="w-full ">
-                          <FormLabel required>Akkreditatsiya attestati muddati</FormLabel>
-                          <DatePicker
-                            value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                            onChange={field.onChange}
-                            placeholder="Akkreditatsiya attestati muddati"
-                          />
+                      )}
+                    />
+                  </div>
+                  <div>
+                    <FormField
+                      name="accreditationSpheres"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel required>{t('form.accreditationSpheres')}</FormLabel>
+                          <FormControl>
+                            <MultiSelect
+                              {...field}
+                              options={accreditationSphereOptions}
+                              placeholder={t('select_accreditation_sphere')}
+                            />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
-                      );
-                    }}
-                  />
+                      )}
+                    />
+                  </div>
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="certificateDate"
+                      render={({ field }) => {
+                        const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                        return (
+                          <FormItem className="w-full ">
+                            <FormLabel required>Akkreditatsiya attestati sanasi</FormLabel>
+                            <DatePicker
+                              value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                              onChange={field.onChange}
+                              placeholder="Akkreditatsiya attestati sanasi"
+                            />
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="certificateValidityDate"
+                      render={({ field }) => {
+                        const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                        return (
+                          <FormItem className="w-full ">
+                            <FormLabel required>Akkreditatsiya attestati muddati</FormLabel>
+                            <DatePicker
+                              value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                              onChange={field.onChange}
+                              placeholder="Akkreditatsiya attestati muddati"
+                            />
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-              <hr />
-              <div className="grid grid-cols-3 gap-2">
-                <div>
-                  <FormField
-                    name="referencePath"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required={true}>Ma’lumotnomani yuklash</FormLabel>
-                        <FormControl>
-                          <InputFile showPreview={true} form={form} name={field.name} accept={[FileTypes.PDF]} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                <hr />
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <FormField
+                      name="referencePath"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel required={true}>Ma’lumotnomani yuklash</FormLabel>
+                          <FormControl>
+                            <InputFile showPreview={true} form={form} name={field.name} accept={[FileTypes.PDF]} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="assessmentCommissionDecisionNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required>Baholash komissiyasi qarori raqami</FormLabel>
-                        <FormControl>
-                          <Input type="text" placeholder="Baholash komissiyasi qarori raqami" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="assessmentCommissionDecisionDate"
-                    render={({ field }) => {
-                      const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                      return (
-                        <FormItem className="w-full ">
-                          <FormLabel required>Baholash komissiyasi qarori sanasi</FormLabel>
-                          <DatePicker
-                            value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                            onChange={field.onChange}
-                            placeholder="Baholash komissiyasi qarori sanasi"
-                          />
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="assessmentCommissionDecisionNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel required>Baholash komissiyasi qarori raqami</FormLabel>
+                          <FormControl>
+                            <Input type="text" placeholder="Baholash komissiyasi qarori raqami" {...field} />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
-                      );
-                    }}
-                  />
+                      )}
+                    />
+                  </div>
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="assessmentCommissionDecisionDate"
+                      render={({ field }) => {
+                        const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                        return (
+                          <FormItem className="w-full ">
+                            <FormLabel required>Baholash komissiyasi qarori sanasi</FormLabel>
+                            <DatePicker
+                              value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                              onChange={field.onChange}
+                              placeholder="Baholash komissiyasi qarori sanasi"
+                            />
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <FormField
+                      name="assessmentCommissionDecisionPath"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel required={true}>Baholash komissiyasining qarorini yuklash</FormLabel>
+                          <FormControl>
+                            <InputFile showPreview={true} form={form} name={field.name} accept={[FileTypes.PDF]} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <FormField
-                    name="assessmentCommissionDecisionPath"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required={true}>Baholash komissiyasining qarorini yuklash</FormLabel>
-                        <FormControl>
-                          <InputFile showPreview={true} form={form} name={field.name} accept={[FileTypes.PDF]} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="accreditationCommissionDecisionNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required>Akkreditatsiya komissiyasining qarori raqami</FormLabel>
-                        <FormControl>
-                          <Input type="text" placeholder="Akkreditatsiya komissiyasining qarori raqami" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="accreditationCommissionDecisionDate"
-                    render={({ field }) => {
-                      const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                      return (
-                        <FormItem className="w-full ">
-                          <FormLabel required>Akkreditatsiya komissiyasining qarori sanasi</FormLabel>
-                          <DatePicker
-                            value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                            onChange={field.onChange}
-                            placeholder="Akkreditatsiya komissiyasining qarori sanasi"
-                          />
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="accreditationCommissionDecisionNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel required>Akkreditatsiya komissiyasining qarori raqami</FormLabel>
+                          <FormControl>
+                            <Input type="text" placeholder="Akkreditatsiya komissiyasining qarori raqami" {...field} />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
-                      );
-                    }}
-                  />
+                      )}
+                    />
+                  </div>
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="accreditationCommissionDecisionDate"
+                      render={({ field }) => {
+                        const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                        return (
+                          <FormItem className="w-full ">
+                            <FormLabel required>Akkreditatsiya komissiyasining qarori sanasi</FormLabel>
+                            <DatePicker
+                              value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                              onChange={field.onChange}
+                              placeholder="Akkreditatsiya komissiyasining qarori sanasi"
+                            />
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <FormField
+                      name="accreditationCommissionDecisionPath"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel required={true}>Akkreditatsiya komissiyasining qarorini yuklash</FormLabel>
+                          <FormControl>
+                            <InputFile showPreview={true} form={form} name={field.name} accept={[FileTypes.PDF]} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <FormField
-                    name="accreditationCommissionDecisionPath"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required={true}>Akkreditatsiya komissiyasining qarorini yuklash</FormLabel>
-                        <FormControl>
-                          <InputFile showPreview={true} form={form} name={field.name} accept={[FileTypes.PDF]} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                <div className="grid grid-cols-2 gap-2 ">
+                  <Button variant="success" type="submit">
+                    Saqlash
+                  </Button>
+                  <Button type="button" onClick={() => setModalType('reject')} variant="destructive">
+                    Rad etish
+                  </Button>
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2 ">
-                <Button variant="success" type="submit">
-                  Saqlash
-                </Button>
-                <Button variant="destructive">Rad etish</Button>
-              </div>
-            </form>
-          </Form>
+              </form>
+            </Form>
+          )}
+          {modalType === 'reject' && (
+            <Form {...form2}>
+              <form onSubmit={form2.handleSubmit(onSubmit2)} className="space-y-4">
+                <FormField
+                  control={form2.control}
+                  name="rejectionReason"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Qaytarish sababi</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          className="resize-none"
+                          rows={7}
+                          placeholder="Qaytarish sababini kiriting"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="grid grid-cols-2 gap-3 ">
+                  <Button onClick={() => setModalType('certificate')} variant="outline">
+                    <ArrowLeft />
+                    Ijro etishga
+                  </Button>
+                  <Button variant="destructive" type="submit">
+                    Arizani rad etish
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          )}
         </DialogContent>
       </Dialog>
       <ApplicationModal

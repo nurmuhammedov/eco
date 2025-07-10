@@ -309,7 +309,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'Sanoat xavfsizligi ekspertiza xulosalarini ro‘yxatga olish',
     description: 'Sanoat xavfsizligi ekspertiza xulosalarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.ACCREDITATION,
-    type: ApplicationTypeEnum.DEFAULT,
+    type: ApplicationTypeEnum.REGISTER_EXPERTISE_CONCLUSION,
     icon: 'industrialSafetyExpertiseRegistrationIcon',
   },
 

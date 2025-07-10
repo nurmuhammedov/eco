@@ -87,6 +87,8 @@ export const API_ENDPOINTS: Record<string, string> = {
   APPEALS_RE_ACCREDITATION_GENERATE_PDF: '/appeals/accreditation/redo/generate-pdf',
   APPEALS_EXPEND_ACCREDITATION: '/appeals/accreditation/expend',
   APPEALS_EXPEND_ACCREDITATION_GENERATE_PDF: '/appeals/accreditation/expend/generate-pdf',
+  APPEALS_ACCREDITATION_CONCLUSION: '/appeals/accreditation/conclusion',
+  APPEALS_ACCREDITATION_CONCLUSION_GENERATE_PDF: '/appeals/accreditation/conclusion/generate-pdf',
 
   APPEALS_REGISTER_DECLARATION: '/appeals/declaration',
   APPEALS_REGISTER_DECLARATION_GENERATE_PDF: '/appeals/declaration/generate-pdf',

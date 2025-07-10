@@ -31,6 +31,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
                   <FormLabel required>Akkreditatsiya sohasi</FormLabel>
                   <FormControl>
                     <MultiSelect
+                      maxDisplayItems={Infinity}
                       {...field}
                       options={accreditationSphereOptions}
                       placeholder="Akkreditatsiya sohasini tanlang..."
@@ -40,13 +41,26 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <FormField
-                name="certificateIssueDate"
+                name="certificateDate"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required>ЭТ attestat berilgan sana</FormLabel>
+                    <FormControl>
+                      <DatePicker value={field.value} onChange={field.onChange} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="certificateValidityDate"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Akkreditatsiya attestatining amal qilish muddati</FormLabel>
                     <FormControl>
                       <DatePicker value={field.value} onChange={field.onChange} />
                     </FormControl>

@@ -31,6 +31,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
                 <FormControl>
                   <MultiSelect
                     {...field}
+                    maxDisplayItems={Infinity}
                     options={accreditationSphereOptions}
                     placeholder="Akkreditatsiya sohasini tanlang..."
                   />
@@ -41,7 +42,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
           />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <FormField
-              name="certificateIssueDate"
+              name="certificateDate"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
@@ -54,7 +55,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
               )}
             />
             <FormField
-              name="certificateEndDate"
+              name="certificateValidityDate"
               control={form.control}
               render={({ field }) => (
                 <FormItem>

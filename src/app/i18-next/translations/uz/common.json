@@ -564,6 +564,18 @@
       "address": "Joylashgan manzil",
       "passportPath": "INM (qurilma) pasporti va sertifikati fayli",
       "additionalFilePath": "Qo‘shimcha maʼlumotlar"
+    },
+    "ACCREDIT_EXPERT_ORGANIZATION": {
+      "accreditationSpheres": "Akkreditatsiya sohalari",
+      "accreditationFieldPath": "Faoliyat olib boriladigan akkreditatsiya sohasi",
+      "organizationCharterPath": "Ekspert tashkiloti nizomi",
+      "declarationConformityPath": "Akkreditatsiya mezonlariga muvofiqlik deklaratsiyasi",
+      "receiptPath": "To'lov to'langanligini tasdiqlovchi hujjat",
+      "employeesInfoPath": "Ishlarni bajaradigan hodimlar haqida ma'lumotlar",
+      "accreditationResourcedPath": "Ishlarni bajarish uchun mavjud resurslar haqida ma'lumotlar",
+      "propertyOwnerShipPath": "Bino, jihozlarga mulk huquqini tasdiqlovchi hujjatlar",
+      "qualityPerformanceInstructionPath": "Sifat bo'yicha qo'llanma",
+      "qualityManagementSystemPath": "Sifatni boshqarish tizimi hujjatlari"
     }
   },
   "accreditation": "Akkreditatsiya"
