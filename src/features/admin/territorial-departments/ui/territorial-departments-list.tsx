@@ -28,18 +28,11 @@ export function TerritorialDepartmentsList() {
       enablePinning: true,
       accessorKey: 'name',
       enableSorting: false,
+      maxSize: -10,
       header: t('name'),
     },
     {
-      enablePinning: true,
-      accessorKey: 'regions',
-      enableSorting: false,
-      header: t('regions'),
-    },
-    {
       id: 'actions',
-      maxSize: 20,
-      minSize: 10,
       cell: ({ row }) => (
         <DataTableRowActions
           showEdit

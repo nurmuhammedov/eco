@@ -15,12 +15,14 @@ export function AttractionTypeList() {
 
   const columns: ColumnDef<AttractionType>[] = [
     {
-      accessorKey: 'name',
-      header: t('name'),
+      accessorKey: 'childEquipment',
+      maxSize: -10,
+      header: t('Atraksion turi'),
     },
     {
-      accessorKey: 'childEquipment',
-      header: t('Atraksion turi'),
+      accessorKey: 'name',
+      maxSize: -10,
+      header: t('Atraksion tipi'),
     },
     {
       id: 'actions',
@@ -34,7 +36,6 @@ export function AttractionTypeList() {
           onDelete={() => deleteAttractionType(row.original.id)}
         />
       ),
-      size: 100,
     },
   ];
 

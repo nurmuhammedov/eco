@@ -51,7 +51,9 @@ export const ApplicationTable = () => {
         APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
           ApplicationCategory.DEFAULT ||
         APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
-          ApplicationCategory.CADASTRE
+          ApplicationCategory.CADASTRE ||
+        APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
+          ApplicationCategory.ACCREDITATION
           ? `Аxborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi`
           : APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
               ApplicationCategory.HOKQ

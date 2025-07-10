@@ -30,11 +30,10 @@ export function HazardousFacilityTypeList() {
     {
       accessorKey: 'description',
       header: t('hazardous_facility_type_description'),
+      maxSize: -10,
     },
     {
       id: 'actions',
-      maxSize: 40,
-      enableResizing: false,
       cell: ({ row }) => (
         <DataTableRowActions
           showEdit

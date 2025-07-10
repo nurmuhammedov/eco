@@ -18,8 +18,12 @@ export const CadastreList = () => {
       accessorKey: 'registryNumber',
     },
     {
-      header: t('risk_analysis_columns.name'),
-      accessorKey: 'name',
+      header: t('XICHO nomi'),
+      accessorKey: 'hfName',
+    },
+    {
+      header: t('XICHO manzili'),
+      accessorKey: 'hfAddress',
     },
     {
       header: t('risk_analysis_columns.legalName'),
@@ -31,7 +35,7 @@ export const CadastreList = () => {
     },
     {
       header: t('risk_analysis_columns.address'),
-      accessorKey: 'address',
+      accessorKey: 'legalAddress',
     },
   ];
 

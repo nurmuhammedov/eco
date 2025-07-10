@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { templateAPI, TemplateFormDTO } from '@/entities/admin/template';
 import { toast } from 'sonner';
+import { useCustomSearchParams } from '@/shared/hooks';
 
 export const templateKeys = {
   all: ['templates'] as const,
@@ -11,9 +12,10 @@ export const templateKeys = {
 };
 
 export const useTemplates = () => {
+  const { paramsObject, paramsString } = useCustomSearchParams();
   return useQuery({
-    queryKey: templateKeys.lists(),
-    queryFn: templateAPI.list,
+    queryKey: templateKeys.list(paramsString),
+    queryFn: () => templateAPI.list(paramsObject),
   });
 };
 

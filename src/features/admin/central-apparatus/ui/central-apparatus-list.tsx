@@ -27,12 +27,13 @@ export function CentralApparatusList() {
       enablePinning: true,
       accessorKey: 'name',
       enableSorting: false,
+      maxSize: -10,
       header: t('name'),
     },
     {
       id: 'actions',
-      maxSize: 20,
-      minSize: 10,
+      // maxSize: 20,
+      // minSize: 10,
       cell: ({ row }) => (
         <DataTableRowActions
           showEdit
