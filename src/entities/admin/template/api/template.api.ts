@@ -1,12 +1,12 @@
 import { toast } from 'sonner';
-import { ApiResponse } from '@/shared/types';
+import { ApiResponse, ResponseData } from '@/shared/types';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import { Template, TemplateFormDTO } from '@/entities/admin/template';
 
 export const templateAPI = {
-  list: async () => {
-    const { data } = await apiClient.getWithPagination<Template>(API_ENDPOINTS.TEMPLATES);
-    return data.content || [];
+  list: async (filters: any) => {
+    const { data } = await apiClient.getWithPagination<ResponseData<Template>>(API_ENDPOINTS.TEMPLATES, filters);
+    return data || [];
   },
   byId: async (id: number) => {
     const { data } = await apiClient.get<ApiResponse<Template>>(`${API_ENDPOINTS.TEMPLATES}/${id}`);

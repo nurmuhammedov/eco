@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import { ColumnDef } from '@tanstack/react-table';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { useEquipmentTypeLabel } from '@/shared/hooks';
@@ -10,7 +9,6 @@ import { Equipment, FilterEquipmentDTO, useDeleteEquipment, useEquipmentList } f
 export function EquipmentList() {
   const { filters } = useFilters();
   const { onOpen } = useEquipmentDrawer();
-  const { t } = useTranslation('common');
 
   const getEquipmentTypeLabel = useEquipmentTypeLabel();
 
@@ -22,18 +20,18 @@ export function EquipmentList() {
 
   const equipmentTableColumns: ColumnDef<Equipment>[] = [
     {
-      accessorKey: 'name',
-      header: t('name'),
-    },
-    {
       accessorKey: 'equipmentType',
-      header: 'Qurilmaning quyi turi',
+      header: 'Qurilmaning turi',
+      maxSize: -10,
       cell: ({ row }) => getEquipmentTypeLabel(row.original.equipmentType),
     },
     {
+      accessorKey: 'name',
+      maxSize: -10,
+      header: 'Qurilmaning quyi  turi',
+    },
+    {
       id: 'actions',
-      maxSize: 40,
-      enableResizing: false,
       cell: ({ row }) => (
         <DataTableRowActions
           showEdit

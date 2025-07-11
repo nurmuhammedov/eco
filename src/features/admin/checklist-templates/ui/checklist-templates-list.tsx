@@ -27,6 +27,7 @@ export function ChecklistTemplatesList() {
   const columns: ColumnDef<ChecklistTemplate>[] = [
     {
       accessorKey: 'name',
+      maxSize: -10,
       header: t('checklist_name', 'Cheklist nomi'),
     },
     {
@@ -45,7 +46,6 @@ export function ChecklistTemplatesList() {
           onDelete={() => deleteTemplate(row.original.id)}
         />
       ),
-      size: 100,
     },
   ];
 

@@ -21,22 +21,23 @@ export function DistrictList() {
       enablePinning: true,
       accessorKey: 'name',
       enableSorting: false,
+      maxSize: -10,
       header: t('name'),
     },
     {
       enablePinning: true,
       accessorKey: 'region',
       enableSorting: false,
+      maxSize: -10,
       header: t('region'),
     },
     {
       accessorKey: 'soato',
+      maxSize: -10,
       header: t('district_code'),
     },
     {
       id: 'actions',
-      maxSize: 40,
-      enableResizing: false,
       cell: ({ row }) => (
         <DataTableRowActions
           showEdit

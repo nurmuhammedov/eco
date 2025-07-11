@@ -18,24 +18,24 @@ export const DeclarationList = () => {
       accessorKey: 'registryNumber',
     },
     {
-      header: t('risk_analysis_columns.name'),
+      header: t('XICHO nomi'),
       accessorKey: 'hfName',
     },
     {
-      header: t('risk_analysis_columns.name'),
+      header: t('XICHO manzili'),
       accessorKey: 'hfAddress',
     },
     {
-      header: t('risk_analysis_columns.legalName'),
-      accessorKey: 'legalName',
+      header: t('XICHOning hisobga olish raqami'),
+      accessorKey: 'hfRegistryNumber',
     },
     {
-      header: t('risk_analysis_columns.legalTin'),
-      accessorKey: 'legalTin',
+      header: t('Deklaratsiya ishlab chiqqan tashkilot'),
+      accessorKey: 'producingOrganizationName',
     },
     {
-      header: t('risk_analysis_columns.address'),
-      accessorKey: 'legalAddress',
+      header: t('Deklaratsiya ishlab chiqqan tashkilot STIR'),
+      accessorKey: 'producingOrganizationTin',
     },
   ];
 

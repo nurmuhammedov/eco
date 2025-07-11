@@ -36,7 +36,7 @@ export const EquipmentDrawer = () => {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Qurilmaning quyi turi</FormLabel>
+                    <FormLabel>Qurilmaning turi</FormLabel>
                     <FormControl>
                       <Select
                         {...field}

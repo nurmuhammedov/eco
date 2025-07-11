@@ -18,19 +18,19 @@ export function RegionList() {
 
   const regionTableColumns: ColumnDef<Region>[] = [
     {
-      enablePinning: true,
+      // enablePinning: true,
       accessorKey: 'name',
-      enableSorting: false,
+      // enableSorting: false,
       header: t('name'),
+      maxSize: -10,
     },
     {
       accessorKey: 'soato',
       header: t('region_code'),
+      maxSize: -10,
     },
     {
       id: 'actions',
-      maxSize: 40,
-      enableResizing: false,
       cell: ({ row }) => (
         <DataTableRowActions
           showEdit

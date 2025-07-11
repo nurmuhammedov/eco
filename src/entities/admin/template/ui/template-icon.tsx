@@ -21,7 +21,7 @@ const TEMPLATE_TYPE_STYLES: TemplateTypeStyleMap = {
     border: 'border-blue-200',
     text: 'text-blue-700',
   },
-  [TemplateType.IRS]: {
+  [TemplateType.IRS_APPEAL]: {
     background: 'bg-green-100',
     border: 'border-green-200',
     text: 'text-green-700',
