@@ -45,9 +45,9 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
               name="responsiblePersonName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Masʼul vakil F.IS.H.</FormLabel>
+                  <FormLabel required>Masʼul vakil F.I.Sh</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Masʼul vakil F.IS.H." {...field} />
+                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Masʼul vakil F.I.Sh" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

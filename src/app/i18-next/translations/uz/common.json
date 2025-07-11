@@ -566,7 +566,6 @@
       "additionalFilePath": "Qo‘shimcha maʼlumotlar"
     },
     "ACCREDIT_EXPERT_ORGANIZATION": {
-      "accreditationSpheres": "Akkreditatsiya sohalari",
       "accreditationFieldPath": "Faoliyat olib boriladigan akkreditatsiya sohasi",
       "organizationCharterPath": "Ekspert tashkiloti nizomi",
       "declarationConformityPath": "Akkreditatsiya mezonlariga muvofiqlik deklaratsiyasi",
@@ -575,7 +574,57 @@
       "accreditationResourcedPath": "Ishlarni bajarish uchun mavjud resurslar haqida ma'lumotlar",
       "propertyOwnerShipPath": "Bino, jihozlarga mulk huquqini tasdiqlovchi hujjatlar",
       "qualityPerformanceInstructionPath": "Sifat bo'yicha qo'llanma",
-      "qualityManagementSystemPath": "Sifatni boshqarish tizimi hujjatlari"
+      "qualityManagementSystemPath": "Sifatni boshqarish tizimi hujjatlari",
+      "responsiblePersonName": "Masʼul vakil F.I.Sh",
+      "accreditationSpheres": "Akkreditatsiya sohalari",
+      "address": "Manzil"
+    },
+    "RE_ACCREDIT_EXPERT_ORGANIZATION": {
+      "accreditationFieldPath": "Faoliyat olib boriladigan akkreditatsiya sohasi",
+      "organizationCharterPath": "Ekspert tashkiloti nizomi",
+      "declarationConformityPath": "Akkreditatsiya mezonlariga muvofiqlik deklaratsiyasi",
+      "receiptPath": "To'lov to'langanligini tasdiqlovchi hujjat",
+      "employeesInfoPath": "Ishlarni bajaradigan hodimlar haqida ma'lumotlar",
+      "accreditationResourcedPath": "Ishlarni bajarish uchun mavjud resurslar haqida ma'lumotlar",
+      "propertyOwnerShipPath": "Bino, jihozlarga mulk huquqini tasdiqlovchi hujjatlar",
+      "qualityPerformanceInstructionPath": "Sifat bo'yicha qo'llanma",
+      "qualityManagementSystemPath": "Sifatni boshqarish tizimi hujjatlari",
+      "responsiblePersonName": "Masʼul vakil F.I.Sh",
+      "accreditationSpheres": "Akkreditatsiya sohalari",
+      "address": "Manzil"
+    },
+    "EXPEND_ACCREDITATION_SCOPE": {
+      "accreditationFieldPath": "Faoliyat olib boriladigan akkreditatsiya sohasi",
+      "organizationCharterPath": "Ekspert tashkiloti nizomi",
+      "declarationConformityPath": "Akkreditatsiya mezonlariga muvofiqlik deklaratsiyasi",
+      "receiptPath": "To'lov to'langanligini tasdiqlovchi hujjat",
+      "employeesInfoPath": "Ishlarni bajaradigan hodimlar haqida ma'lumotlar",
+      "accreditationResourcedPath": "Ishlarni bajarish uchun mavjud resurslar haqida ma'lumotlar",
+      "propertyOwnerShipPath": "Bino, jihozlarga mulk huquqini tasdiqlovchi hujjatlar",
+      "qualityPerformanceInstructionPath": "Sifat bo'yicha qo'llanma",
+      "qualityManagementSystemPath": "Sifatni boshqarish tizimi hujjatlari",
+      "responsiblePersonName": "Masʼul vakil F.I.Sh",
+      "accreditationSpheres": "Akkreditatsiya sohalari",
+      "address": "Manzil"
+    },
+    "EXPERTISE_CONCLUSION": {
+      "customerLegalName": "Tashkilot nomi",
+      "customerTin": "Tashkilot STIR",
+      "customerLegalForm": "Tashkilot tashkiliy-huquqiy shakli",
+      "customerLegalAddress": "Tashkilot yuridik manzili",
+      "customerPhoneNumber": "Tashkilot telefon raqami",
+      "customerFullName": "Tashkilot rahbarining F.I.Sh",
+      "monitoringLetterDate": "Kuzatuv xati sanasi",
+      "monitoringLetterNumber": "Kuzatuv xati raqami",
+      "submissionDate": "Ekspertiza xulosasini hisobga olish uchun topshirgan sana",
+      "objectName": "Ekspertiza ob’ekti nomi",
+      "expertiseConclusionPath": "Eksperiza xulosasi",
+      "firstSymbolsGroup": "Birinchi belgilar guruhi",
+      "secondSymbolsGroup": "Ikkinchi belgilar guruhi",
+      "thirdSymbolsGroup": "Uchinchi belgilar guruhi",
+      "expertiseConclusionNumber": "Eksperiza xulosasi raqami",
+      "accreditationSpheres": "Akkreditatsiya sohalari",
+      "address": "Manzil"
     }
   },
   "accreditation": "Akkreditatsiya"
