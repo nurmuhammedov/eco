@@ -84,34 +84,33 @@ export function useTemplateForm() {
     onClose();
   }, [form, onClose]);
 
-  const handleSubmit = useCallback(
-    async (formData: any): Promise<boolean> => {
-      try {
-        if (isCreate) {
-          const response = await createTemplate(formData);
-          if (response.success) {
-            handleClose();
-            return true;
-          }
-        } else {
-          const response = await updateTemplate({
-            id: templateId,
-            ...formData,
-          });
-          if (response.success) {
-            handleClose();
-            return true;
-          }
-        }
+  const handleSubmit = async (formData: any): Promise<boolean> => {
+    console.log(formData, 'formData');
 
-        return false;
-      } catch (error) {
-        console.error('[useTemplateForm] Submission error:', error);
-        return false;
+    try {
+      if (isCreate) {
+        const response = await createTemplate(formData);
+        if (response.success) {
+          handleClose();
+          return true;
+        }
+      } else {
+        const response = await updateTemplate({
+          id: templateId,
+          ...formData,
+        });
+        if (response.success) {
+          handleClose();
+          return true;
+        }
       }
-    },
-    [isCreate, templateId, createTemplate, updateTemplate, handleClose],
-  );
+
+      return false;
+    } catch (error) {
+      console.error('[useTemplateForm] Submission error:', error);
+      return false;
+    }
+  };
 
   const isPending = isCreating || isUpdating;
 

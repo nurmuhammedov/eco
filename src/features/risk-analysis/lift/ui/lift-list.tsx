@@ -25,7 +25,7 @@ export const LiftList = () => {
   const activeAssignedStatus = (paramsObject.assignedStatus as AssignedStatusTab) || AssignedStatusTab.NOT_ASSIGNED;
 
   const handleAssignedStatusChange = (status: string) => {
-    addParams({ assignedStatus: status });
+    addParams({ assignedStatus: status, page: 1 });
   };
   const type = paramsObject.mainTab || RiskAnalysisTab.XICHO;
 
@@ -40,7 +40,11 @@ export const LiftList = () => {
     return params;
   }, [isRegional, activeAssignedStatus, user, paramsObject.intervalId]);
 
-  const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_ELEVATORS, apiParams);
+  const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_ELEVATORS, {
+    ...apiParams,
+    size: paramsObject?.size || 10,
+    page: paramsObject?.page || 1,
+  });
 
   const handleView = (row: RiskAnalysisItem) => {
     const intervalId = paramsObject.intervalId || user?.interval?.id;

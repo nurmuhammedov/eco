@@ -6,6 +6,7 @@ import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
 import { useAuth } from '@/shared/hooks/use-auth';
 import { getDate } from '@/shared/utils/date';
 import React, { useMemo } from 'react';
+import { UserRoles } from '@/entities/user';
 
 export enum InspectionStatus {
   NEW = 'NEW',
@@ -18,7 +19,8 @@ export const InspectionWidget: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams();
   const { data: intervalOptionsData, isLoading: isLoadingIntervals } = useRiskAnalysisIntervalsQuery();
 
-  const activeTab = paramsObject.status || InspectionStatus.NEW;
+  const isInspector = user.role == UserRoles.INSPECTOR;
+  const activeTab = paramsObject.status;
 
   const handleTabChange = (value: string) => {
     addParams({ status: value });
@@ -37,6 +39,42 @@ export const InspectionWidget: React.FC = () => {
     ));
   }, [intervalOptionsData]);
 
+  if (isInspector) {
+    return (
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold">Tekshiruvlar</h2>
+          <Select
+            onValueChange={handleIntervalChange}
+            defaultValue={paramsObject.intervalId?.toString() || user?.interval.id.toString()}
+            disabled={isLoadingIntervals}
+          >
+            <SelectTrigger className="w-[280px]">
+              <SelectValue placeholder="Davrni tanlang" />
+            </SelectTrigger>
+            <SelectContent>{intervalOptions}</SelectContent>
+          </Select>
+        </div>
+
+        <Tabs value={activeTab || InspectionStatus.IN_PROCESS} onValueChange={handleTabChange}>
+          <TabsList>
+            <TabsTrigger value={InspectionStatus.IN_PROCESS}>Tekshiruv rejalashtirilgan</TabsTrigger>
+            <TabsTrigger value={InspectionStatus.CONDUCTED}>Tekshiruv o‘tkazilgan</TabsTrigger>
+          </TabsList>
+          <TabsContent value={InspectionStatus.NEW}>
+            <InspectionList />
+          </TabsContent>
+          <TabsContent value={InspectionStatus.IN_PROCESS}>
+            <InspectionList />
+          </TabsContent>
+          <TabsContent value={InspectionStatus.CONDUCTED}>
+            <InspectionList />
+          </TabsContent>
+        </Tabs>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -53,10 +91,10 @@ export const InspectionWidget: React.FC = () => {
         </Select>
       </div>
 
-      <Tabs value={activeTab} onValueChange={handleTabChange}>
+      <Tabs value={activeTab || InspectionStatus.NEW} onValueChange={handleTabChange}>
         <TabsList>
           <TabsTrigger value={InspectionStatus.NEW}>Inspektor belgilanmaganlar</TabsTrigger>
-          <TabsTrigger value={InspectionStatus.IN_PROCESS}>Inspektor belgilanganlar</TabsTrigger>
+          <TabsTrigger value={InspectionStatus.IN_PROCESS}>Inspektor belgilanganla</TabsTrigger>
           <TabsTrigger value={InspectionStatus.CONDUCTED}>Tekshiruv o‘tkazilgan</TabsTrigger>
         </TabsList>
         <TabsContent value={InspectionStatus.NEW}>

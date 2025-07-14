@@ -5,7 +5,7 @@ export const useRiskAnalysis = () => {
   const { paramsObject, addParams } = useCustomSearchParams();
 
   const handleChangeTab = (tab: string) => {
-    addParams({ mainTab: tab });
+    addParams({ mainTab: tab, page: 1 });
   };
 
   return {

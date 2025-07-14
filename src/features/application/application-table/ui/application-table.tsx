@@ -9,8 +9,11 @@ import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
 import { FileWarning } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/shared/hooks/use-auth';
+import { UserRoles } from '@/entities/user';
 
 export const ApplicationTable = () => {
+  const { user } = useAuth();
   const {
     paramsObject: { status = ApplicationStatus.ALL, search = '', ...rest },
   } = useCustomSearchParams();
@@ -41,6 +44,14 @@ export const ApplicationTable = () => {
       header: 'Ariza turi',
       cell: (cell) => APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.title || '',
     },
+    ...(user?.role != UserRoles.LEGAL && user?.role != UserRoles.INDIVIDUAL
+      ? [
+          {
+            accessorKey: 'legalName',
+            header: 'Arizachi tashkilot nomi',
+          },
+        ]
+      : []),
     {
       maxSize: 200,
       accessorKey: 'test',
