@@ -2,6 +2,7 @@ import DetailRow from '@/shared/components/common/detail-row.tsx';
 import { getDate } from '@/shared/utils/date.ts';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ACCREDITATION_SPHERE_OPTIONS } from '@/shared/constants/accreditation-data.ts';
 
 interface Props {
   address: any;
@@ -53,6 +54,39 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
         <DetailRow
           title={t(`labels.${type}.spheres`)}
           value={data?.spheres.map((item: string) => t('application.' + item)).join(', ')}
+        />
+      )}
+      <DetailRow title={t(`labels.${type}.customerLegalName`)} value={data?.customerLegalName} />
+      <DetailRow title={t(`labels.${type}.customerTin`)} value={data?.customerTin} />
+      <DetailRow title={t(`labels.${type}.customerLegalForm`)} value={data?.customerLegalForm} />
+      <DetailRow title={t(`labels.${type}.customerLegalAddress`)} value={data?.customerLegalAddress} />
+      <DetailRow title={t(`labels.${type}.customerPhoneNumber`)} value={data?.customerPhoneNumber} />
+      <DetailRow title={t(`labels.${type}.customerFullName`)} value={data?.customerFullName} />
+      <DetailRow title={t(`labels.${type}.monitoringLetterDate`)} value={data?.monitoringLetterDate} />
+      <DetailRow title={t(`labels.${type}.monitoringLetterNumber`)} value={data?.monitoringLetterNumber} />
+      <DetailRow title={t(`labels.${type}.submissionDate`)} value={data?.submissionDate} />
+      <DetailRow title={t(`labels.${type}.objectName`)} value={data?.objectName} />
+      <DetailRow title={t(`labels.${type}.firstSymbolsGroup`)} value={data?.firstSymbolsGroup} />
+      <DetailRow title={t(`labels.${type}.secondSymbolsGroup`)} value={data?.secondSymbolsGroup} />
+      <DetailRow title={t(`labels.${type}.thirdSymbolsGroup`)} value={data?.thirdSymbolsGroup} />
+      <DetailRow title={t(`labels.${type}.expertiseConclusionNumber`)} value={data?.expertiseConclusionNumber} />
+      <DetailRow title={t(`labels.${type}.responsiblePersonName`)} value={data?.responsiblePersonName} />
+      {data?.accreditationSpheres && (
+        <DetailRow
+          title={t(`labels.${type}.accreditationSpheres`)}
+          value={
+            <div>
+              {Array.isArray(data?.accreditationSpheres) &&
+                data?.accreditationSpheres?.map((item: string) => {
+                  const currentItem = ACCREDITATION_SPHERE_OPTIONS.find((accItem) => String(accItem.id) === item);
+                  return (
+                    <p>
+                      {currentItem?.point}. {currentItem?.name}
+                    </p>
+                  );
+                })}
+            </div>
+          }
         />
       )}
       <DetailRow title={t(`labels.${type}.address`)} value={address} />
