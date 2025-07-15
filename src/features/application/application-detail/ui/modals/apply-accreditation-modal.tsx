@@ -32,6 +32,7 @@ const schema = z.object({
   assessmentCommissionDecisionNumber: z.string().min(1, FORM_ERROR_MESSAGES.required),
   assessmentCommissionDecisionDate: z.date({ required_error: FORM_ERROR_MESSAGES.required }),
   accreditationCommissionDecisionPath: z.string().min(1, FORM_ERROR_MESSAGES.required),
+  accreditationCertificatePath: z.string().min(1, FORM_ERROR_MESSAGES.required),
   accreditationCommissionDecisionNumber: z.string().min(1, FORM_ERROR_MESSAGES.required),
   accreditationCommissionDecisionDate: z.date({ required_error: FORM_ERROR_MESSAGES.required }),
   accreditationSpheres: z.array(z.nativeEnum(AccreditationSphere)).min(1, FORM_ERROR_MESSAGES.required),
@@ -301,6 +302,20 @@ const ApplyAccreditationModal = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel required={true}>Akkreditatsiya komissiyasining qarorini yuklash</FormLabel>
+                          <FormControl>
+                            <InputFile showPreview={true} form={form} name={field.name} accept={[FileTypes.PDF]} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div>
+                    <FormField
+                      name="accreditationCertificatePath"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel required={true}>Akkreditatsiya attestati ilova fayli</FormLabel>
                           <FormControl>
                             <InputFile showPreview={true} form={form} name={field.name} accept={[FileTypes.PDF]} />
                           </FormControl>

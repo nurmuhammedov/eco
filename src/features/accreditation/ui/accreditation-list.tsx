@@ -1,7 +1,7 @@
-import { DataTable } from '@/shared/components/common/data-table';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getDate } from '@/shared/utils/date';
 import FileLink from '@/shared/components/common/file-link';
 
@@ -9,7 +9,7 @@ export const AccreditationList = () => {
   const {
     paramsObject: { ...rest },
   } = useCustomSearchParams();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const { data = [], isLoading } = usePaginatedData<any>(`/accreditations`, {
     ...rest,
     page: rest.page || 1,
@@ -64,21 +64,21 @@ export const AccreditationList = () => {
           <span className="text-red-600">Mavjud emas</span>
         ),
     },
-    // {
-    //   id: 'actions',
-    //   header: 'Amallar',
-    //   cell: ({ row }: any) => {
-    //     return (
-    //       <div className="flex gap-2">
-    //         <DataTableRowActions
-    //           row={row}
-    //           showView
-    //           onView={() => navigate(`/accreditations/detail/${row.original.id}`)}
-    //         />
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      id: 'actions',
+      header: 'Amallar',
+      cell: ({ row }: any) => {
+        return (
+          <div className="flex gap-2">
+            <DataTableRowActions
+              row={row}
+              showView
+              onView={() => navigate(`/accreditations/detail/${row.original.id}`)}
+            />
+          </div>
+        );
+      },
+    },
   ];
 
   return <DataTable columns={columns} data={data || []} isLoading={isLoading} className="h-[calc(100svh-220px)]" />;
