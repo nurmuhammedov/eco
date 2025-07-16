@@ -19,20 +19,41 @@ export const AccreditationList = () => {
   const columns: ColumnDef<any>[] = [
     {
       accessorKey: 'legalName',
-      header: 'Tashkilot nomi',
+      header: 'Ekspert tashkilotining nomi',
+    },
+    {
+      accessorKey: 'fullName',
+      header: 'Ekspert tashkiloti rahbarining F.I.SH.',
+    },
+    {
+      accessorKey: 'legalAddress',
+      header: 'Ekspert tashkilotining yuridik manzili',
+    },
+    {
+      accessorKey: 'phoneNumber',
+      header: 'Ekspert tashkilotining telefon raqami',
     },
     {
       accessorKey: 'tin',
       header: 'STIR',
     },
     {
-      accessorKey: 'certificateNumber',
-      header: 'Sertifikat raqami',
+      header: 'Akkreditatsiya sohasi haqida maʼlumot',
+      cell: ({ row }) => getDate(row.original.certificateDate),
     },
     {
       accessorKey: 'certificateDate',
-      header: 'Sertifikat muddati',
+      header: 'Attestat berilgan sanasi',
       cell: ({ row }) => getDate(row.original.certificateDate),
+    },
+    {
+      accessorKey: 'certificateValidityDate',
+      header: 'Attestat amal qilish muddati',
+      cell: ({ row }) => getDate(row.original.certificateValidityDate),
+    },
+    {
+      accessorKey: 'certificateNumber',
+      header: 'Attestat ro‘yxat raqami',
     },
     {
       // accessorKey: 'accreditationCommissionDecisionPath',
