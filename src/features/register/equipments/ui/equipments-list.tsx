@@ -7,6 +7,7 @@ import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
+import Filter from '@/shared/components/common/filter';
 
 export const EquipmentsList = () => {
   const navigate = useNavigate();
@@ -86,8 +87,9 @@ export const EquipmentsList = () => {
         ...i,
         count: i?.id == type ? data?.page?.totalElements || 0 : 0,
       }))}
-      onTabChange={(type) => addParams({ type: type }, 'page')}
+      onTabChange={(type) => addParams({ type: type }, 'page', 'search', 'startDate', 'endDate')}
     >
+      <Filter inputKeys={['search', 'startDate', 'endDate']} />
       <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-320px)]" />
     </TabsLayout>
   );

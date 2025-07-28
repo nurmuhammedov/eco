@@ -23,10 +23,10 @@ export const useRegister = () => {
   const handleChangeTab = useCallback(
     (tabValue: string) => {
       if (Object.values(RegisterActiveTab).includes(tabValue as RegisterActiveTab)) {
-        addParams({ tab: tabValue });
+        addParams({ tab: tabValue }, 'page', 'search', 'startDate', 'endDate');
       } else {
         console.warn(`Invalid tab value: ${tabValue}, defaulting to HF.`);
-        addParams({ tab: RegisterActiveTab.HF });
+        addParams({ tab: RegisterActiveTab.HF }, 'page', 'search', 'startDate', 'endDate');
       }
     },
     [addParams],

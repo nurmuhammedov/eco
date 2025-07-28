@@ -1,111 +1,109 @@
-import { DataTable, DataTableColumnHeader } from '@/shared/components/common/data-table';
-import { createColumnHelper } from '@tanstack/react-table';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
+import { ColumnDef } from '@tanstack/react-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
+import { getDate } from '@/shared/utils/date';
+import { useNavigate } from 'react-router-dom';
 
 export const AccreditationConclusionList = () => {
   const {
     paramsObject: { ...rest },
   } = useCustomSearchParams();
+  const navigate = useNavigate();
   const { data = [], isLoading } = usePaginatedData<any>(`/accreditations/conclusions`, {
     ...rest,
     page: rest.page || 1,
     size: rest?.size || 10,
   });
 
-  const columnHelper = createColumnHelper<any>();
-
-  const expertiseConclusionColumns = [
-    columnHelper.group({
-      id: 'customerInfo',
-      header: 'Buyurtmachi to‘g‘risida asosiy ma’lumotlar',
-      columns: [
-        columnHelper.accessor('customerLegalName', {
-          header: ({ column }) => <DataTableColumnHeader column={column} title="Buyurtmachi tashkilotning nomi" />,
-          cell: (info) => info.getValue() || 'Kiritilmagan',
-        }),
-        columnHelper.accessor('customerTin', {
-          header: ({ column }) => <DataTableColumnHeader column={column} title="Buyurtmachi tashkilot STIR" />,
-          cell: (info) => info.getValue() || 'Kiritilmagan',
-        }),
-        columnHelper.accessor('customerLegalAddress', {
-          header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Buyurtmachi tashkilotning yuridik manzili" />
-          ),
-          cell: (info) => info.getValue() || 'Kiritilmagan',
-        }),
-        columnHelper.accessor('customerLegalForm', {
-          header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Buyurtmachi tashkilotning tashkiliy-huquqiy shakli" />
-          ),
-          cell: (info) => info.getValue() || 'Kiritilmagan',
-        }),
-      ],
-    }),
-    columnHelper.group({
-      id: 'expertiseInfo',
-      header: 'Sanoat xavfsizligi ekspertizasi xulosasi to‘g‘risida ma’lumotlar',
-      columns: [
-        // columnHelper.accessor('spheres', {
-        //   header: 'Sanoat xavfsizligi ekspertizasining yo‘nalishlari',
-        //   cell: (info) => {
-        //     const spheres = info.getValue();
-        //     if (!spheres || spheres.length === 0) return 'Kiritilmagan';
-        //     return spheres
-        //       .map((sphereKey) => {
-        //         const sphere = ACCREDITATION_SPHERE_OPTIONS.find((opt) => opt.value === sphereKey);
-        //         return sphere ? sphere.name : sphereKey;
-        //       })
-        //       .join(', ');
-        //   },
-        //   size: 400,
-        // }),
-        columnHelper.accessor('expertiseConclusionNumber', {
-          header: 'Xulosa raqami',
-          cell: (info) => info.getValue() || 'Kiritilmagan',
-        }),
-        columnHelper.accessor('expertiseConclusionDate', {
-          header: 'Xulosa sanasi',
-          cell: (info) => info.getValue() || 'Kiritilmagan',
-        }),
-        columnHelper.accessor('expertiseObjectName', {
-          header: 'Ekspertiza obyekti nomi',
-          cell: (info) => info.getValue() || 'Kiritilmagan',
-        }),
-      ],
-    }),
-    // columnHelper.accessor('expertiseConclusionPath', {
-    //   header: 'Hujjatlar',
-    //   cell: (info) => {
-    //     const path = info.getValue();
-    //     if (!path) return 'Mavjud emas';
-    //     return (
-    //       <a href={path} target="_blank" rel="noopener noreferrer">
-    //         <Button variant="outline" size="icon">
-    //           <FileText className="h-4 w-4" />
-    //         </Button>
-    //       </a>
-    //     );
-    //   },
-    // }),
-    // columnHelper.display({
-    //   id: 'actions',
-    //   header: 'Amallar',
-    //   cell: ({ row }) => (
-    //     <Link to={row.original.id}>
-    //       <Button variant="outline" size="icon">
-    //         <Eye className="h-4 w-4" />
-    //       </Button>
-    //     </Link>
-    //   ),
-    //   size: 80,
-    // }),
+  const expertiseConclusionColumns: ColumnDef<any>[] = [
+    {
+      accessorKey: 'expertiseConclusionDate',
+      header: 'Ekspertiza xulosasi ro‘yxat sanasi',
+      cell: ({ row }) => getDate(row.original.expertiseConclusionDate) || '-',
+    },
+    {
+      accessorKey: 'customerLegalName',
+      header: 'Ekspertiza xulosasi raqami',
+      cell: () => '-',
+    },
+    {
+      accessorKey: 'customerLegalName',
+      header: 'Buyurtmachi tashkilot nomi',
+      cell: ({ row }) => row.original.customerLegalName || '-',
+    },
+    {
+      accessorKey: 'customerLegalAddress',
+      header: 'Buyurtmachi tashkilot manzili',
+      cell: ({ row }) => row.original.customerLegalAddress || '-',
+    },
+    {
+      accessorKey: 'customerTin',
+      header: 'Buyurtmachi tashkilot STIR',
+      cell: ({ row }) => row.original.customerTin || '-',
+    },
+    {
+      accessorKey: 'expertOrganizationName',
+      header: 'Ekspert tashkiloti nomi',
+      cell: ({ row }) => row.original.expertOrganizationName || '-',
+    },
+    {
+      accessorKey: 'expertiseObjectName',
+      header: 'Ekspertiza obyekti nomi',
+      cell: ({ row }) => row.original.expertiseObjectName || '-',
+    },
+    {
+      accessorKey: 'firstSymbolsGroup',
+      header: 'Birinchi belgilar guruhi (XXX)',
+      cell: ({ row }) => row.original.firstSymbolsGroup || '-',
+    },
+    {
+      accessorKey: 'secondSymbolsGroup',
+      header: 'Ikkinchi belgilar guruhi (XX)',
+      cell: ({ row }) => row.original.secondSymbolsGroup || '-',
+    },
+    {
+      accessorKey: 'thirdSymbolsGroup',
+      header: 'Uchinchi belgilar guruhi (XXXX)',
+      cell: ({ row }) => row.original.thirdSymbolsGroup || '-',
+    },
+    {
+      accessorKey: 'fourthSymbolsGroup',
+      header: 'To‘rtinchi belgilar guruhi (XXXXX)',
+      cell: ({ row }) => row.original.fourthSymbolsGroup || '-',
+    },
+    {
+      accessorKey: 'objectAddress',
+      header: 'Obyekt manzili',
+      cell: ({ row }) => row.original.objectAddress || '-',
+    },
+    {
+      accessorKey: 'expertiseConclusionNumber',
+      header: 'Ekspert tashkiloti bergan ekspertiza xulosasi raqami',
+      cell: ({ row }) => row.original.expertiseConclusionNumber || '-',
+    },
+    {
+      id: 'actions',
+      header: 'Amallar',
+      cell: ({ row }: any) => {
+        return (
+          <div className="flex gap-2">
+            <DataTableRowActions
+              row={row}
+              showView
+              onView={() =>
+                navigate(`/accreditations/conclusions/detail/${row.original.appealId}?id=${row.original.id}`)
+              }
+            />
+          </div>
+        );
+      },
+    },
   ];
 
   return (
     <DataTable
       columns={expertiseConclusionColumns}
       data={data || []}
-      showNumeration={false}
       isLoading={isLoading}
       className="h-[calc(100svh-220px)]"
     />

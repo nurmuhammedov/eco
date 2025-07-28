@@ -11,6 +11,7 @@ import { NAVIGATIONS } from '@/widgets/sidebar/models/navigations';
 
 // ** SVG Icons **
 import { TechnocorpLogo } from '@/shared/components/SVGIcons';
+import allNavigation from '../models/all';
 
 // ** UI ui **
 import {
@@ -24,6 +25,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/shared/components/ui/sidebar';
+import { useMemo } from 'react';
+import { Direction, UserRoles } from '@/entities/user';
+import { Navigation } from '@/widgets/sidebar/models/types';
 
 function Footer() {
   return (
@@ -43,6 +47,21 @@ export function AppSidebar() {
   const sidebarOpen = state === 'expanded';
   const { user } = useAppSelector((state) => pick(state.auth, ['user']), shallowEqual);
 
+  const displayedNavigations: Navigation = useMemo(() => {
+    if (!user) return [];
+
+    if (user.role === UserRoles.ADMIN || user.role === UserRoles.LEGAL) {
+      return NAVIGATIONS[user.role];
+    }
+
+    if (user.directions.length === 0) {
+      const appealNav = allNavigation.find((item: any) => item.id === 'APPEAL');
+      return appealNav ? [appealNav] : [];
+    }
+
+    return allNavigation.filter((navItem) => user.directions.includes(navItem.id as Direction));
+  }, [user]);
+
   if (!user) return null;
 
   return (
@@ -57,7 +76,9 @@ export function AppSidebar() {
             <AppLogo />
           </SidebarHeader>
           <SidebarGroupContent className="space-y-0.5">
-            {NAVIGATIONS[user.role]?.map((item) => <NavMain key={item.title} item={item} />)}
+            {displayedNavigations.map((item) => (
+              <NavMain key={item.title} item={item} />
+            ))}
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

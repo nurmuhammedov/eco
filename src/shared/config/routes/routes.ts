@@ -44,6 +44,10 @@ const AttestationPage = lazy(() => import('@/pages/attestation'));
 const CadastrePage = lazy(() => import('@/pages/cadastre'));
 const AddAttestationEmployeePage = lazy(() => import('@/pages/attestation/add-employee'));
 const AccreditationDetailPage = lazy(() => import('@/pages/accreditations/detail'));
+const AccreditationConclusionsDetailPage = lazy(
+  () => import('@/features/accreditation/ui/accreditation-conclusion-detail'),
+);
+const CadastreDetailPage = lazy(() => import('@/pages/cadastre/detail'));
 
 export const appRoutes = [
   {
@@ -219,6 +223,16 @@ export const appRoutes = [
     path: '/accreditations/detail/:id',
     component: AccreditationDetailPage,
     roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER],
+  },
+  {
+    path: '/accreditations/conclusions/detail/:id',
+    component: AccreditationConclusionsDetailPage,
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER],
+  },
+  {
+    path: '/cadastre/detail/:id',
+    component: CadastreDetailPage,
+    roles: [],
   },
 ];
 

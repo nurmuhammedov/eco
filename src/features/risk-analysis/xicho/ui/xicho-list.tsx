@@ -87,6 +87,11 @@ export const XichoList = () => {
         ]
       : [
           {
+            header: t('Ballar'),
+            accessorKey: 'score',
+            cell: ({ row }: any) => row.original?.score ?? "Yo'q",
+          },
+          {
             header: t('risk_analysis_columns.inspectorName'),
             accessorKey: 'inspectorName',
             cell: ({ row }: any) => row.original.inspectorName || '-',

@@ -5,19 +5,19 @@ import { IrsList } from '@/features/register/irs/ui/irs-list';
 import { Badge } from '@/shared/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import React, { Fragment } from 'react';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { useRegister } from '../model/use-register';
 import { RegisterActiveTab } from '../types';
 
 const RegisterWidget = () => {
-  const { t } = useTranslation('common');
+  // const { t } = useTranslation('common');
   const { activeTab, handleChangeTab, hfCount, irsCount, equipmentsCount } = useRegister();
 
   return (
     <Fragment>
-      <div className="flex justify-between items-center mb-4">
-        <h5 className="text-2xl font-semibold uppercase">{t('menu.register')}</h5>
-      </div>
+      {/*<div className="flex justify-between items-center mb-4">*/}
+      {/*  <h5 className="text-2xl font-semibold uppercase">{t('menu.register')}</h5>*/}
+      {/*</div>*/}
       <Tabs defaultValue={activeTab} onValueChange={handleChangeTab}>
         <TabsList>
           <TabsTrigger value={RegisterActiveTab.HF}>

@@ -2,7 +2,6 @@ import { useCustomSearchParams, useDetail } from '@/shared/hooks';
 import { DetailCardAccordion } from '@/shared/components/common/detail-card';
 import DetailRow from '@/shared/components/common/detail-row';
 import { getDate } from '@/shared/utils/date';
-import FileLink from '@/shared/components/common/file-link';
 import { ACCREDITATION_SPHERE_OPTIONS } from '@/shared/constants/accreditation-data';
 import { AccreditationSphere } from '@/entities/accreditation/models/accreditation.enums';
 import { useApplicationDetail } from '@/features/application/application-detail/hooks/use-application-detail';
@@ -15,7 +14,7 @@ const AccreditationDetail = () => {
   const {
     paramsObject: { id = undefined },
   } = useCustomSearchParams();
-  const { data } = useDetail<any>(`/accreditations/`, id);
+  const { data } = useDetail<any>(`/accreditations/conclusions`, id);
 
   const { data: appeal } = useApplicationDetail();
 
@@ -33,7 +32,7 @@ const AccreditationDetail = () => {
 
   return (
     <>
-      <GoBack title={`${data?.legalName} - ${data?.tin}`} />
+      <GoBack title={`${appeal?.legalName || ''} - ${appeal?.legalTin || ''}`} />
 
       <div className="grid grid-cols-1 gap-4 mt-4">
         <DetailCardAccordion
@@ -57,7 +56,7 @@ const AccreditationDetail = () => {
             </DetailCardAccordion.Item>
           )}
 
-          <DetailCardAccordion.Item value="general" title="Akkreditatsiya to‘g‘risida maʼlumot">
+          <DetailCardAccordion.Item value="general" title="Ekspertiza xulosasi to‘g‘risida maʼlumot">
             <div className="py-1  flex flex-col">
               <DetailRow
                 title="Reyestrga kiritish uchun asos (ariza):"
@@ -71,48 +70,25 @@ const AccreditationDetail = () => {
                   )
                 }
               />
-              <DetailRow title="Ekspert tashkiloti STIRi" value={data?.tin} />
-              <DetailRow title="Ekspert tashkiloti nomi" value={data?.legalName} />
-              <DetailRow title="Ekspert tashkiloti yuridik manzili" value={data?.legalAddress} />
-              <DetailRow title="Ekspert tashkiloti telefon raqami" value={data?.phoneNumber} />
-              <DetailRow title="Ekspert tashkiloti rahbari F.I.Sh." value={data?.fullName} />
-              <DetailRow title="Attestat ro'yxat raqami" value={data?.certificateNumber} />
-              <DetailRow title="Attestat berilgan sana" value={getDate(data?.certificateDate)} />
-              <DetailRow title="Attestat amal qilish muddati" value={getDate(data?.certificateValidityDate)} />
+              <DetailRow title="Ekspertiza xulosasi ro‘yxat sanasi" value={getDate(data?.expertiseConclusionDate)} />
+              <DetailRow title="Ekspertiza xulosasi raqami" value={'-'} />
+              <DetailRow title="Buyurtmachi tashkilot nomi" value={data?.customerLegalName || '-'} />
+              <DetailRow title="Buyurtmachi tashkilot manzili" value={data?.customerLegalAddress || '-'} />
+              <DetailRow title="Buyurtmachi tashkilot STIR" value={data?.customerTin || '-'} />
+              <DetailRow title="Ekspert tashkiloti nomi" value={data?.expertOrganizationName || '-'} />
+              <DetailRow title="Ekspertiza obyekti nomi" value={data?.expertiseObjectName || '-'} />
+              <DetailRow title="Obyekt manzili" value={data?.objectAddress || '-'} />
+              <DetailRow
+                title="Ekspert tashkiloti bergan ekspertiza xulosasi raqami"
+                value={data?.expertiseConclusionNumber || '-'}
+              />
+              <DetailRow title="Birinchi belgilar guruhi (XXX)" value={data?.firstSymbolsGroup || '-'} />
+              <DetailRow title="Ikkinchi belgilar guruhi (XX)" value={data?.secondSymbolsGroup || '-'} />
+              <DetailRow title="Uchinchi belgilar guruhi (XXXX)" value={data?.thirdSymbolsGroup || '-'} />
+              <DetailRow title="To‘rtinchi belgilar guruhi (XXXXX)" value={data?.fourthSymbolsGroup || '-'} />
               <DetailRow title="Akkreditatsiya sohalari" value={formattedSpheres} />
-
-              {/*<div className="py-1  flex flex-col">*/}
-              <DetailRow
-                title="Akkreditatsiya komissiyasi qarori"
-                value={<FileLink url={data?.accreditationCommissionDecisionPath} />}
-              />
-              <DetailRow title="Akkreditatsiya ilova fayli" value={<FileLink url={data?.referencePath} />} />
-              <DetailRow
-                title="Baholash komissiyasi qarori"
-                value={<FileLink url={data?.assessmentCommissionDecisionPath} />}
-              />
-              <DetailRow
-                title="Akkreditatsiya attestati"
-                value={<FileLink url={data?.accreditationCertificatePath} />}
-              />
-              {/*</div>*/}
             </div>
           </DetailCardAccordion.Item>
-          {/*<DetailCardAccordion.Item value="files" title="Arizaga biriktirilgan fayllar">*/}
-          {/*  <div className="py-1  flex flex-col">*/}
-          {/*    <DetailRow*/}
-          {/*      title="Akkreditatsiya komissiyasi qarori"*/}
-          {/*      value={<FileLink url={data?.accreditationCommissionDecisionPath} />}*/}
-          {/*    />*/}
-          {/*    <DetailRow*/}
-          {/*      title="Baholash komissiyasi qarori"*/}
-          {/*      value={<FileLink url={data?.assessmentCommissionDecisionPath} />}*/}
-          {/*    />*/}
-          {/*    <DetailRow title="Ma'lumotnoma" value={<FileLink url={data?.referencePath} />} />*/}
-          {/*    <DetailRow title="Akkreditatsiya attestati" value={<FileLink url={data?.accreditationAttestationPath} />} />*/}
-          {/*  </div>*/}
-          {/*</DetailCardAccordion.Item>*/}
-
           {appeal?.files?.length > 0 && (
             <DetailCardAccordion.Item value="appeal_files" title="Arizaga biriktirilgan fayllar">
               <FilesSection

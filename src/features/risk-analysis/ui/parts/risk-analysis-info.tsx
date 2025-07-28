@@ -6,6 +6,7 @@ import RiskAnalysisForm from '@/features/risk-analysis/ui/parts/risk-analysis-fo
 import { useRiskAnalysisDetail } from '@/features/risk-analysis/hooks/use-risk-analysis-detail.ts';
 import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info.tsx';
 import { Badge } from '@/shared/components/ui/badge.tsx';
+import ConfirmModal from '@/features/risk-analysis/ui/modals/confirm-modal';
 
 const RiskAnalysisInfo = () => {
   const { user } = useAuth();
@@ -27,8 +28,9 @@ const RiskAnalysisInfo = () => {
             <TabsTrigger value="analysis_indicators">Tahlil uchun baholash ko‘rsatkichlari holati</TabsTrigger>
           </TabsList>
         )}
-        <div className="ml-auto ">
+        <div className="ml-auto flex items-center gap-4">
           <Badge variant={totalScore > 80 ? 'destructive' : 'success'}>Jami ballar: {totalScore}</Badge>
+          {isInspector && <ConfirmModal />}
         </div>
       </div>
       <TabsContent value="inspector_info">
