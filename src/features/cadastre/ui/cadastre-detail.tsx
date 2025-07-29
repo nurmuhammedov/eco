@@ -8,6 +8,7 @@ import LegalApplicantInfo from '@/features/application/application-detail/ui/par
 import { GoBack } from '@/shared/components/common';
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section';
 import { useApplicationDetail } from '@/features/application/application-detail/hooks/use-application-detail';
+import { getDate } from '@/shared/utils/date';
 
 const CadastreDetail = () => {
   const {
@@ -54,23 +55,45 @@ const CadastreDetail = () => {
           )}
           <DetailCardAccordion.Item value="general" title="Kadastr ma'lumotlari">
             <div className="py-1 flex flex-col">
-              <DetailRow title="Tashkilot STIRi:" value={data?.organizationTin || '-'} />
-              <DetailRow title="Tashkilot nomi:" value={data?.organizationName || '-'} />
-              <DetailRow title="Tashkilot manzili:" value={data?.organizationAddress || '-'} />
-              <DetailRow title="Reyestr raqami:" value={data?.registryNumber || '-'} />
-              <DetailRow title="Obyekt nomi:" value={data?.hfName || '-'} />
-              <DetailRow title="Obyekt joylashgan manzil:" value={data?.hfAddress || '-'} />
-              <DetailRow title="Obyekt pasporti:" value={<FileLink url={data?.files?.passportPath} />} />
-              <DetailRow title="Shartnoma:" value={<FileLink url={data?.files?.agreementPath} />} />
+              <DetailRow title="XICHO ro‘yxatga olish raqami:" value={'-'} />
+              <DetailRow title="XICHO nomi:" value={data?.hfName || '-'} />
+              <DetailRow title="XICHO manzili:" value={data?.hfAddress || '-'} />
+
+              <DetailRow
+                title="TXYZ kadastr pasprtini ishlab chiqqan tashkilot STIRi:"
+                value={data?.organizationTin || '-'}
+              />
+              <DetailRow
+                title="TXYZ kadastr pasprtini ishlab chiqqan tashkilot nomi:"
+                value={data?.organizationName || '-'}
+              />
+              <DetailRow
+                title="TXYZ kadastr pasprtini ishlab chiqqan tashkilot manzili:"
+                value={data?.organizationAddress || '-'}
+              />
+              <DetailRow title="TXYZ kadastr pasprti reyestr raqami:" value={data?.registryNumber || '-'} />
+              <DetailRow
+                title="TXYZ kadastr pasprti ro‘yxatga olingan sana:"
+                value={data?.createdAt ? getDate(data?.createdAt) : '-'}
+              />
             </div>
           </DetailCardAccordion.Item>
           {appeal?.files?.length > 0 && (
             <DetailCardAccordion.Item value="appeal_files" title="Arizaga biriktirilgan fayllar">
+              <DetailRow
+                title="TXYUZ kadastr pasporti titul varaqi (skan-kopiya):"
+                value={<FileLink url={data?.files?.passportPath} />}
+              />
+              <DetailRow
+                title="TXYUZ kadastr pasportining tegishli tashkilotlar bilan kelishilganligi titul varaqi nusxasi (skan-kopiya):"
+                value={<FileLink url={data?.files?.agreementPath} />}
+              />
+
               <FilesSection
                 files={appeal?.files || []}
                 applicationStatus={appeal?.status}
                 appealId={appeal?.id}
-                edit={true}
+                edit={false}
               />
             </DetailCardAccordion.Item>
           )}

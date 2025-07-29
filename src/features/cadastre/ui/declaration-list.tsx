@@ -3,6 +3,7 @@ import { DataTable } from '@/shared/components/common/data-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
+import { getDate } from '@/shared/utils/date';
 
 export const DeclarationList = () => {
   const { t } = useTranslation('common');
@@ -14,27 +15,31 @@ export const DeclarationList = () => {
 
   const columns: ColumnDef<any>[] = [
     {
-      header: t('risk_analysis_columns.registryNumber'),
+      header: t('Sanoat deklaratsiyasining ro‘yxat raqami'),
       accessorKey: 'registryNumber',
     },
     {
-      header: t('XICHO nomi'),
-      accessorKey: 'hfName',
+      header: t('Sanoat deklaratsiyasi ro‘yxatga olingan sana'),
+      accessorFn: (row) => getDate(row.createdAt),
     },
     {
-      header: t('XICHO manzili'),
-      accessorKey: 'hfAddress',
-    },
-    {
-      header: t('XICHOning hisobga olish raqami'),
+      header: t('Deklaratsiya qilinayotgan obyektning ro‘yxat raqami'),
       accessorKey: 'hfRegistryNumber',
     },
     {
-      header: t('Deklaratsiya ishlab chiqqan tashkilot'),
+      header: t('Deklaratsiya qilinayotgan obyektning nomi'),
+      accessorKey: 'hfName',
+    },
+    {
+      header: t('Deklaratsiya qilinayotgan obyektning manzili'),
+      accessorKey: 'hfAddress',
+    },
+    {
+      header: t('Sanoat deklaratsiyasini ishlab chiqqan tashkilot nomi'),
       accessorKey: 'producingOrganizationName',
     },
     {
-      header: t('Deklaratsiya ishlab chiqqan tashkilot STIR'),
+      header: t('Sanoat deklaratsiyasini ishlab chiqqan tashkilot STIR'),
       accessorKey: 'producingOrganizationTin',
     },
   ];

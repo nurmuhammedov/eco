@@ -1,11 +1,5 @@
 import { UserRoles } from '@/entities/user';
 import adminNavigation from './admin';
-// import chairmanNavigation from './chairman';
-// import headNavigation from './head';
-// import inspectorNavigation from './inspector';
-// import managerNavigation from './manager';
-// import regionalUserNavigation from './regional-user';
-// import userNavigation from './user';
 import allNavigation from './all';
 
 export const NAVIGATIONS = {

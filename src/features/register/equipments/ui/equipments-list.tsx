@@ -63,6 +63,14 @@ export const EquipmentsList = () => {
       header: 'Qurilma manzili',
     },
     {
+      accessorFn: (row) => (row.partialCheckDate ? getDate(row.partialCheckDate) : '-'),
+      header: 'Qisman texnik ko‘rik sanasi',
+    },
+    {
+      accessorFn: (row) => (row.fullCheckDate ? getDate(row.fullCheckDate) : '-'),
+      header: 'To‘liq texnik ko‘rik sanasi',
+    },
+    {
       id: 'actions',
       maxSize: 40,
       cell: ({ row }) => (

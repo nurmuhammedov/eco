@@ -17,15 +17,15 @@ export const CadastreList = () => {
 
   const columns: ColumnDef<any>[] = [
     {
-      header: t('risk_analysis_columns.registryNumber'),
+      header: t('TXYZ kadastr pasportining hisobga olish raqami'),
       accessorKey: 'registryNumber',
     },
     {
-      header: t('Hisobga olish sanasi'),
+      header: t('TXYZ kadastr pasportining hisobga olish sanasi'),
       accessorFn: (row) => getDate(row.createdAt),
     },
     {
-      header: t('XICHO nomi'),
+      header: t('XICHO nomi (mavjud bo‘lsa)'),
       accessorKey: 'hfName',
     },
     {
@@ -33,15 +33,15 @@ export const CadastreList = () => {
       accessorKey: 'hfAddress',
     },
     {
-      header: t('risk_analysis_columns.legalName'),
+      header: t('XICHOga egalik qiluvchi yuridik shaxs nomi'),
       accessorKey: 'legalName',
     },
     {
-      header: t('risk_analysis_columns.legalTin'),
+      header: t('Tashkilot STIR'),
       accessorKey: 'legalTin',
     },
     {
-      header: t('risk_analysis_columns.address'),
+      header: t('TXYZ manzili'),
       accessorKey: 'legalAddress',
     },
     {

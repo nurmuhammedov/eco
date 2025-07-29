@@ -10,14 +10,22 @@ import { Coordinate } from '@/shared/components/common/yandex-map';
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
 import { getDate } from '@/shared/utils/date.ts';
 import { Link } from 'react-router-dom';
+import { useDetail } from '@/shared/hooks';
 
 const EquipmentsDetail = () => {
   const { isLoading, data } = useEquipmentsDetail();
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[]);
 
+  const { data: regNumber } = useDetail<any>(
+    '/equipments/registry-number',
+    data?.registryNumber,
+    !!data?.registryNumber,
+  );
   if (isLoading || !data) {
     return null;
   }
+
+  console.log(regNumber, 'regNumber');
 
   return (
     <div>
@@ -42,6 +50,7 @@ const EquipmentsDetail = () => {
           />
           <DetailRow title="Hisobga olish sanasi:" value={getDate(data?.registrationDate)} />
           <DetailRow title="Hisobga olish raqami:" value={data?.registryNumber} />
+          <DetailRow title="Qurilmaning eski hisobga olish raqami:" value={regNumber?.registryNumber || '-'} />
           {!!data?.registryFilePath && (
             <DetailRow title="Sertifikat fayli:" value={<FileLink url={data?.registryFilePath} />} />
           )}

@@ -28,6 +28,7 @@ import {
 import { useMemo } from 'react';
 import { Direction, UserRoles } from '@/entities/user';
 import { Navigation } from '@/widgets/sidebar/models/types';
+import { apiConfig } from '@/shared/api/constants';
 
 function Footer() {
   return (
@@ -50,7 +51,7 @@ export function AppSidebar() {
   const displayedNavigations: Navigation = useMemo(() => {
     if (!user) return [];
 
-    if (user.role === UserRoles.ADMIN || user.role === UserRoles.LEGAL) {
+    if (user.role === UserRoles.ADMIN || (user.role === UserRoles.MANAGER && apiConfig.dev)) {
       return NAVIGATIONS[user.role];
     }
 

@@ -119,7 +119,7 @@ const AccreditationDetail = () => {
                 files={appeal?.files || []}
                 applicationStatus={appeal?.status}
                 appealId={appeal?.id}
-                edit={true}
+                edit={false}
               />
             </DetailCardAccordion.Item>
           )}
