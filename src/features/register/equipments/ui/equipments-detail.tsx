@@ -25,8 +25,6 @@ const EquipmentsDetail = () => {
     return null;
   }
 
-  console.log(regNumber, 'regNumber');
-
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
