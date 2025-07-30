@@ -47,7 +47,7 @@ export const ApplicationTable = () => {
     ...(user?.role != UserRoles.LEGAL && user?.role != UserRoles.INDIVIDUAL
       ? [
           {
-            accessorKey: 'legalName',
+            accessorKey: 'ownerName',
             header: 'Arizachi tashkilot nomi',
           },
         ]

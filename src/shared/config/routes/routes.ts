@@ -58,12 +58,12 @@ export const appRoutes = [
   {
     path: 'applications/create',
     component: CreateApplicationGrids,
-    roles: [UserRoles.LEGAL],
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
   },
   {
     path: 'applications/create/:type',
     component: CreateApplicationForm,
-    roles: [UserRoles.LEGAL],
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
   },
   {
     path: 'applications/detail/:id',

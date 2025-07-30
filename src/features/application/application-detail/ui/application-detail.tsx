@@ -27,7 +27,7 @@ const ApplicationDetail = ({
   showAttestationActions?: boolean;
 }) => {
   const currentObjLocation = data?.data?.location?.split(',') || ([] as Coordinate[]);
-  const isLegalApplication = !!data?.legalTin;
+  const isLegalApplication = !!data?.ownerIdentity;
   return (
     <div className="grid grid-cols-1 gap-4 mt-4">
       <DetailCardAccordion
@@ -83,7 +83,7 @@ const ApplicationDetail = ({
 
         {isLegalApplication && (
           <DetailCardAccordion.Item value="applicant_info_legal" title="Arizachi to‘g‘risida ma’lumot">
-            <LegalApplicantInfo tinNumber={data?.legalTin} />
+            <LegalApplicantInfo tinNumber={data?.ownerIdentity} />
           </DetailCardAccordion.Item>
         )}
 

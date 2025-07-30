@@ -5,12 +5,12 @@ const LegalApplicantInfo = ({ tinNumber }: any) => {
   const { data } = useLegalApplicantInfo(tinNumber);
   return (
     <div className="py-1  flex flex-col">
-      <DetailRow title="Tashkilot STIR:" value={data?.tin || '-'} />
+      <DetailRow title="Tashkilot STIR:" value={data?.ownerIdentity || '-'} />
       <DetailRow title="Tashkilot nomi:" value={data?.legalName || '-'} />
       <DetailRow title="Tashkilot tashkiliy-huquqiy shakli:" value={data?.legalForm || '-'} />
       <DetailRow title="Tashkilot mulkchilik shakli:" value={data?.legalOwnershipType || '-'} />
       <DetailRow title="Tashkilot rahbari F.I.SH:" value={data?.fullName || '-'} />
-      <DetailRow title="Tashkilot manzili:" value={data?.legalAddress || '-'} />
+      <DetailRow title="Tashkilot manzili:" value={data?.ownerAddress || '-'} />
       <DetailRow title="Tashkilot telefon raqami:" value={data?.phoneNumber || '-'} />
       <DetailRow
         title="Tashkilotning faoliyat yuritish holati:"

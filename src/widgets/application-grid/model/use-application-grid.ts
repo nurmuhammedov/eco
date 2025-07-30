@@ -6,11 +6,17 @@ import {
 } from '@/entities/create-application';
 import { filterParsers, useFilters } from '@/shared/hooks/use-filters';
 import { useCallback, useMemo } from 'react';
+import { useAuth } from '@/shared/hooks/use-auth';
+import { UserRoles } from '@/entities/user';
 
 export function useApplicationGrid() {
+  const { user } = useAuth();
+
   const { filters, setFilters } = useFilters({
     'selected-main-card': filterParsers.string(MainApplicationCategory.REGISTER),
-    'active-application-tab': filterParsers.string(ApplicationCategory.XICHO),
+    'active-application-tab': filterParsers.string(
+      user?.role == UserRoles.INDIVIDUAL ? ApplicationCategory.HOKQ : ApplicationCategory.XICHO,
+    ),
   });
 
   const activeTab = useMemo<ApplicationCategory>(
