@@ -7,7 +7,6 @@ import { getHomeRouteForLoggedInUser } from '@/shared/lib/router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { apiConfig } from '@/shared/api/constants';
 
 export const useCurrentUser = () => {
   const {
@@ -69,7 +68,7 @@ export const useLogout = () => {
   const navigate = useNavigate();
 
   //TODO: ubrat redirect na admin kogda budet presetasiya
-  const redirectPath = apiConfig.isTestServer ? '/auth/login/admin' : '/auth/login';
+  const redirectPath = '/auth/login';
   return useMutation({
     mutationFn: async () => authAPI.logout(),
     onSuccess: () => {

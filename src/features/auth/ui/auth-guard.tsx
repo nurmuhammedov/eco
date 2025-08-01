@@ -11,7 +11,6 @@ import { Loader } from '@/shared/components/common';
 import { useAppDispatch } from '@/shared/hooks/use-store';
 import { PropsWithChildren, useEffect } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { apiConfig } from '@/shared/api/constants';
 
 interface Props extends PropsWithChildren {
   allowedRoles?: UserRoles[];
@@ -25,7 +24,7 @@ export default function AuthGuard({ children, allowedRoles }: Props) {
 
   useEffect(() => {
     if (!isPending && !isAuth) {
-      navigate(apiConfig?.isTestServer ? '/auth/login/admin' : '/auth/login', {
+      navigate('/auth/login', {
         state: { from: pathname },
         replace: true,
       });
