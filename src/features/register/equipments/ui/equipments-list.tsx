@@ -1,13 +1,13 @@
 import { ApplicationStatus } from '@/entities/application';
 import { ApplicationCategory, APPLICATIONS_DATA } from '@/entities/create-application';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
+import Filter from '@/shared/components/common/filter';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { TabsLayout } from '@/shared/layouts';
 import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
-import Filter from '@/shared/components/common/filter';
 
 export const EquipmentsList = () => {
   const navigate = useNavigate();
@@ -39,16 +39,16 @@ export const EquipmentsList = () => {
       cell: (cell) => APPLICATIONS_DATA?.find((i) => i?.equipmentType == cell.row.original.type)?.name || '',
     },
     {
-      header: 'Tashkilot nomi',
-      accessorKey: 'legalName',
+      header: 'Tashkilot nomi/ Fuqaro nomi',
+      accessorKey: 'ownerName',
     },
     {
-      header: 'Tashkilot manzili',
-      accessorFn: (row) => row?.legalAddress,
+      header: 'Tashkilot manzili/ Fuqaro manzili',
+      accessorFn: (row) => row?.ownerAddress,
     },
     {
-      header: 'Tashkilot STIR',
-      accessorKey: 'legalTin',
+      header: 'Tashkilot STIR/ JSHSHIR',
+      accessorKey: 'ownerIdentity',
     },
     {
       header: 'Qurilmaning zavod raqami',

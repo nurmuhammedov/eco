@@ -1,10 +1,13 @@
 // src/widgets/register/model/use-register.ts
+import { UserRoles } from '@/entities/user';
 import { useCustomSearchParams, useData } from '@/shared/hooks/api';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { useCallback, useMemo } from 'react';
 import { RegisterActiveTab } from '../types';
 
 export const useRegister = () => {
   const { paramsObject, addParams } = useCustomSearchParams();
+  const { user } = useAuth();
 
   const { data: hfCount = 0 } = useData<number>('/hf/count');
 
@@ -17,8 +20,8 @@ export const useRegister = () => {
     if (Object.values(RegisterActiveTab).includes(tabFromParams as RegisterActiveTab)) {
       return tabFromParams as RegisterActiveTab;
     }
-    return RegisterActiveTab.HF;
-  }, [paramsObject]);
+    return user?.role == UserRoles.INDIVIDUAL ? RegisterActiveTab.EQUIPMENTS : RegisterActiveTab.HF;
+  }, [paramsObject, user?.role]);
 
   const handleChangeTab = useCallback(
     (tabValue: string) => {
