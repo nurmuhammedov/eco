@@ -8,9 +8,9 @@ import DetailRow from '@/shared/components/common/detail-row.tsx';
 import FileLink from '@/shared/components/common/file-link.tsx';
 import { Coordinate } from '@/shared/components/common/yandex-map';
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
+import { useDetail } from '@/shared/hooks';
 import { getDate } from '@/shared/utils/date.ts';
 import { Link } from 'react-router-dom';
-import { useDetail } from '@/shared/hooks';
 
 const EquipmentsDetail = () => {
   const { isLoading, data } = useEquipmentsDetail();
@@ -31,7 +31,14 @@ const EquipmentsDetail = () => {
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
       </div>
       <DetailCardAccordion
-        defaultValue={['registry_info', 'applicant_info', 'object_info', 'object_location', 'object_files']}
+        defaultValue={[
+          'registry_info',
+          'applicant_info',
+          'applicant_info_individual',
+          'object_info',
+          'object_location',
+          'object_files',
+        ]}
       >
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
           <DetailRow
@@ -55,9 +62,20 @@ const EquipmentsDetail = () => {
           <DetailRow title="Reyestrdan chiqarish sanasi:" value={getDate(data?.deregisterDate)} />
           <DetailRow title="Reyestrdan chiqarish sababi:" value={getDate(data?.deregisterReason)} />
         </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="applicant_info" title="Arizachi to‘g‘risida ma’lumot">
-          <LegalApplicantInfo tinNumber={data?.legalTin} />
-        </DetailCardAccordion.Item>
+        {data?.ownerType != 'LEGAL' ? (
+          <DetailCardAccordion.Item value="applicant_info_individual" title="Arizachi to‘g‘risida ma’lumot">
+            <div className="py-1  flex flex-col">
+              <DetailRow title="Arizachi JSHIR:" value={data?.ownerIdentity || '-'} />
+              <DetailRow title="Arizachi F.I.SH:" value={data?.ownerName || '-'} />
+              <DetailRow title="Arizachining manzili:" value={data?.address || '-'} />
+              <DetailRow title="Arizachining telefon raqami:" value={data?.phoneNumber || '-'} />
+            </div>
+          </DetailCardAccordion.Item>
+        ) : (
+          <DetailCardAccordion.Item value="applicant_info" title="Arizachi to‘g‘risida ma’lumot">
+            <LegalApplicantInfo tinNumber={data?.ownerIdentity} />
+          </DetailCardAccordion.Item>
+        )}
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
           <AppealMainInfo data={data} type={data?.type} address={data?.address} />
         </DetailCardAccordion.Item>

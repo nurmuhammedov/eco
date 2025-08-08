@@ -1,16 +1,16 @@
 import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application';
 import { ApplicationCategory, APPLICATIONS_DATA } from '@/entities/create-application';
+import { UserRoles } from '@/entities/user';
 import { useApplicationList } from '@/features/application/application-table/hooks';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import Filter from '@/shared/components/common/filter';
 import { useCustomSearchParams } from '@/shared/hooks';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
 import { FileWarning } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { UserRoles } from '@/entities/user';
 
 export const ApplicationTable = () => {
   const { user } = useAuth();
@@ -49,6 +49,10 @@ export const ApplicationTable = () => {
           {
             accessorKey: 'ownerName',
             header: 'Arizachi tashkilot nomi',
+          },
+          {
+            accessorKey: 'ownerIdentity',
+            header: 'Arizachi tashkilot STIR/ Fuqaro JSHSHIR',
           },
         ]
       : []),

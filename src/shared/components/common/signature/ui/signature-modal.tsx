@@ -1,10 +1,4 @@
-import { useState } from 'react';
-import { SignatureSelect } from '../index';
-import { getSignatureKeys } from '@/shared/lib';
-import { Loader2, Signature } from 'lucide-react';
-import { useSignatureClient } from '@/shared/hooks';
-import { Button } from '@/shared/components/ui/button';
-import { SignatureKey } from '@/shared/types/signature';
+import { apiConfig } from '@/shared/api/constants';
 import { useDocumentSigning } from '@/shared/components/common/signature/model';
 import {
   AlertDialog,
@@ -17,6 +11,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/shared/components/ui/alert-dialog';
+import { Button } from '@/shared/components/ui/button';
+import { useSignatureClient } from '@/shared/hooks';
+import { getSignatureKeys } from '@/shared/lib';
+import { SignatureKey } from '@/shared/types/signature';
+import { Loader2, Signature } from 'lucide-react';
+import { useState } from 'react';
+import { SignatureSelect } from '../index';
 
 interface SignatureModalProps {
   isLoading: boolean;
@@ -49,12 +50,17 @@ export const SignatureModal = ({
     if (onConfirm) {
       onConfirm(selectedCertificate);
     }
-    await signDocument({
-      Client,
-      documentUrl,
-      signature: selectedCertificate,
-      onSuccess: (result) => submitApplicationMetaData(result),
-    });
+
+    if (apiConfig.oneIdClientId == 'test_cirns_uz') {
+      submitApplicationMetaData('singString');
+    } else {
+      await signDocument({
+        Client,
+        documentUrl,
+        signature: selectedCertificate,
+        onSuccess: (result) => submitApplicationMetaData(result),
+      });
+    }
     setSelectedCertificate(null);
     setOpen(false);
   };
@@ -100,8 +106,10 @@ export const SignatureModal = ({
           <AlertDialogCancel onClick={handleCancel}>Bekor qilish</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
-            disabled={!selectedCertificate}
-            className={!selectedCertificate ? 'opacity-50 cursor-not-allowed' : ''}
+            disabled={!selectedCertificate && apiConfig.oneIdClientId != 'test_cirns_uz'}
+            className={
+              !selectedCertificate && apiConfig.oneIdClientId != 'test_cirns_uz' ? 'opacity-50 cursor-not-allowed' : ''
+            }
           >
             {isPending && <Loader2 className="size-4 animate-spin" />}
             Tasdiqlash
