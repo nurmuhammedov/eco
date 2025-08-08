@@ -24,7 +24,7 @@ export default function AuthGuard({ children, allowedRoles }: Props) {
 
   useEffect(() => {
     if (!isPending && !isAuth) {
-      navigate('/auth/login', {
+      navigate('/auth/login/admin', {
         state: { from: pathname },
         replace: true,
       });

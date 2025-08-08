@@ -25,6 +25,7 @@ import {
   ReAccreditationDtoSchema,
 } from '@/entities/create-application/schemas';
 import { z } from 'zod';
+import { DeRegisterEquipment } from '@/entities/create-application/schemas/de-register-equipment';
 
 export type CreateHPOApplicationDTO = z.infer<typeof HFAppealDtoSchema>;
 export type CreateCraneApplicationDTO = z.infer<typeof CraneAppealDtoSchema>;
@@ -49,3 +50,4 @@ export type ExpandAccreditationDTO = z.infer<typeof ExpandAccreditationDtoSchema
 export type CreateAttestationDTO = z.infer<typeof AttestationAppealDtoSchema>;
 export type CreateCadastrePassportApplicationDTO = z.infer<typeof CadastrePassportAppealDtoSchema>;
 export type CreateDeclarationApplicationDTO = z.infer<typeof DeclarationAppealDtoSchema>;
+export type DeRegisterEquipmentDTO = z.infer<typeof DeRegisterEquipment>;

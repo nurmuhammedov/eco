@@ -23,6 +23,7 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.REGISTER_ACCREDITATION]: lazy(() => import('../ui/forms/register-accreditation-form')),
   [ApplicationTypeEnum.RE_REGISTER_ACCREDITATION]: lazy(() => import('../ui/forms/register-re-accreditation-form')),
   [ApplicationTypeEnum.EXPAND_ACCREDITATION]: lazy(() => import('../ui/forms/register-expand-accreditation-form')),
+  [ApplicationTypeEnum.DEREGISTER_EQUIPMENT]: lazy(() => import('../ui/forms/deregister-equipment-form')),
   [ApplicationTypeEnum.REGISTER_EXPERTISE_CONCLUSION]: lazy(
     () => import('../ui/forms/register-accreditation-conclusion-form'),
   ),

@@ -89,6 +89,16 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   // Xavfli obyektlar va qurilmalar => Ro'yxatga olish
   {
     id: 10,
+    title: 'Qurilmani ro‘yxatdan chiqarish',
+    name: 'Qurilma',
+    description: 'Qurilmani ro‘yxatdan chiqarish ariza shakli',
+    category: ApplicationCategory.HOKQ,
+    type: ApplicationTypeEnum.DEREGISTER_EQUIPMENT,
+    parentId: MainApplicationCategory.UNREGISTER,
+    icon: 'boiler',
+  },
+  {
+    id: 10,
     title: 'Kranni ro‘yxatga olish',
     name: 'Kran',
     description: 'Kranni ro‘yxatga olish ariza shakli',
