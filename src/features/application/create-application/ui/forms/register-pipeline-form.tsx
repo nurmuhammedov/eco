@@ -219,11 +219,11 @@ export default ({ onSubmit }: RegisterPipelineFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
                   <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>Qisman texnik ko‘rik sanasi</FormLabel>
+                    <FormLabel required>O‘tkazilgan qisman texnik ko‘rik sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Qisman texnik ko‘rik sanasini kiriting"
+                      placeholder="O‘tkazilgan qisman texnik ko‘rik sanasi"
                     />
                     <FormMessage />
                   </FormItem>
@@ -255,7 +255,9 @@ export default ({ onSubmit }: RegisterPipelineFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
                   <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>Putur yetkazmaydigan nazoratdan o‘tkazish sanasi</FormLabel>
+                    <FormLabel required>
+                      O‘tkaziladigan tashqi, ichki ko‘rik (N/O, V/O) yoki gidrosinov (GI) sanasi
+                    </FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
@@ -436,7 +438,7 @@ export default ({ onSubmit }: RegisterPipelineFormProps) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qo‘shimcha ma‘lumotlar</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilma pasporti</FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>

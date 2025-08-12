@@ -51,7 +51,7 @@ export const BoilerUtilizerAppealDtoSchema = z.object({
     .date({ required_error: 'Tashqi va ichki ko‘rik sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   fullCheckDate: z
-    .date({ required_error: 'Gidrosinov o‘tkazish sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkazilgan tashqi, ichki ko‘rik (N/O, V/O) yoki gidrosinov (GI) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   labelPath: z
     .string({ required_error: 'Qozon utilizatorining birkasi bilan sur‘ati fayli biriktirilmadi!' })
@@ -73,7 +73,7 @@ export const BoilerUtilizerAppealDtoSchema = z.object({
     .min(1, 'Montaj guvohnomasi fayli biriktirilmadi!'),
   additionalFilePath: z.string().optional(), // Ixtiyoriy
   nonDestructiveCheckDate: z
-    .date({ required_error: 'Putur yetkazmaydigan nazoratdan o‘tkazish sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkaziladigan tashqi, ichki ko‘rik (N/O, V/O) yoki gidrosinov (GI) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   capacity: z.string({ required_error: 'Hajmi kiritilmadi!' }).min(1, 'Hajmi kiritilmadi!'),
   environment: z.string({ required_error: 'Muhit kiritilmadi!' }).min(1, 'Muhit kiritilmadi!'),

@@ -14,14 +14,8 @@ export const DeRegisterEquipment = z.object({
   }),
   description: z.string().optional(),
   registryNumber: z.string({ required_error: 'Zavod raqami kiritilmadi!' }).min(1, 'Zavod raqami kiritilmadi!'),
-  purchaseAgreementPath: z
-    .string({ required_error: 'Masʼul shaxs tayinlanganligi to‘g‘risida buyruq fayli biriktirilmadi!' })
-    .min(1, 'Masʼul shaxs tayinlanganligi to‘g‘risida buyruq fayli biriktirilmadi!'),
-  orderSuspensionPath: z
-    .string({ required_error: 'Ekspertiza loyihasi fayli biriktirilmadi!' })
-    .min(1, 'Ekspertiza loyihasi fayli biriktirilmadi!'),
-  laboratoryReportPath: z
-    .string({ required_error: 'Montaj guvohnomasi fayli biriktirilmadi!' })
-    .min(1, 'Montaj guvohnomasi fayli biriktirilmadi!'),
+  purchaseAgreementPath: z.string().optional(),
+  orderSuspensionPath: z.string().optional(),
+  laboratoryReportPath: z.string().optional(),
   additionalInfoPath: z.string().optional(),
 });

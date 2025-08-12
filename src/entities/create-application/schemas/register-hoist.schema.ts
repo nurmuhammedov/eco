@@ -48,7 +48,7 @@ export const HoistAppealDtoSchema = z.object({
     .date({ required_error: 'Ishlab chiqarilgan sana kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   partialCheckDate: z
-    .date({ required_error: 'Qisman texnik ko‘rik sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkazilgan qisman texnik ko‘rik sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   fullCheckDate: z
     .date({ required_error: 'To‘liq texnik ko‘rik sanasi kiritilmadi!' })

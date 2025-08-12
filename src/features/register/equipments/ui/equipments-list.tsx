@@ -1,5 +1,5 @@
 import { ApplicationStatus } from '@/entities/application';
-import { ApplicationCategory, APPLICATIONS_DATA } from '@/entities/create-application';
+import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import Filter from '@/shared/components/common/filter';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
@@ -12,12 +12,13 @@ import { useNavigate } from 'react-router-dom';
 export const EquipmentsList = () => {
   const navigate = useNavigate();
   const {
-    paramsObject: { status = ApplicationStatus.ALL, type = 'ALL', ...rest },
+    paramsObject: { status = ApplicationStatus.ALL, type = 'ALL', isActive = 'true', ...rest },
     addParams,
   } = useCustomSearchParams();
   const { data } = usePaginatedData<any>(`/equipments`, {
     ...rest,
     type: type !== 'ALL' ? type : '',
+    isActive,
     status: status !== 'ALL' ? status : '',
   });
 
@@ -64,7 +65,7 @@ export const EquipmentsList = () => {
     },
     {
       accessorFn: (row) => (row.partialCheckDate ? getDate(row.partialCheckDate) : '-'),
-      header: 'Qisman texnik ko‘rik sanasi',
+      header: 'O‘tkazilgan qisman texnik ko‘rik sanasi',
     },
     {
       accessorFn: (row) => (row.fullCheckDate ? getDate(row.fullCheckDate) : '-'),
@@ -87,7 +88,9 @@ export const EquipmentsList = () => {
           id: 'ALL',
           name: 'Barchasi',
         },
-        ...(APPLICATIONS_DATA?.filter((i) => i?.category == ApplicationCategory.HOKQ)?.map((i) => ({
+        ...(APPLICATIONS_DATA?.filter(
+          (i) => i?.category == ApplicationCategory.HOKQ && i?.parentId == MainApplicationCategory.REGISTER,
+        )?.map((i) => ({
           id: i?.equipmentType?.toString() || 'ALL',
           name: i?.name?.toString() || 'Bachasi',
         })) || []),
@@ -97,8 +100,31 @@ export const EquipmentsList = () => {
       }))}
       onTabChange={(type) => addParams({ type: type }, 'page', 'search', 'startDate', 'endDate')}
     >
-      <Filter inputKeys={['search', 'startDate', 'endDate']} />
-      <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-320px)]" />
+      <TabsLayout
+        activeTab={isActive?.toString()}
+        tabs={[
+          {
+            id: 'true',
+            name: 'Amaldagi qurilmalar',
+          },
+          {
+            id: 'false',
+            name: 'Reyestrdan chiqarilgan qurilmalar',
+          },
+        ]?.map((i) => ({
+          ...i,
+          count: i?.id == type ? data?.page?.totalElements || 0 : 0,
+        }))}
+        onTabChange={(type) => addParams({ isActive: type }, 'page', 'search', 'startDate', 'endDate')}
+      >
+        <Filter inputKeys={['search', 'startDate', 'endDate']} />
+        <DataTable
+          isPaginated
+          data={data || []}
+          columns={columns as unknown as any}
+          className="h-[calc(100svh-420px)]"
+        />
+      </TabsLayout>
     </TabsLayout>
   );
 };

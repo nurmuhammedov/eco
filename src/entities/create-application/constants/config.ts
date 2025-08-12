@@ -118,4 +118,8 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: '/appeals/equipment/deregister',
     pdfEndpoint: '/appeals/equipment/deregister-pdf',
   },
+  [ApplicationTypeEnum.RE_REGISTER_EQUIPMENT]: {
+    submitEndpoint: '/appeals/equipment/reregister',
+    pdfEndpoint: '/appeals/equipment/reregister-pdf',
+  },
 };

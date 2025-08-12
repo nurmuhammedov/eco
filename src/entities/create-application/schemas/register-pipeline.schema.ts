@@ -47,8 +47,8 @@ export const PipelineAppealDtoSchema = z.object({
   manufacturedAt: z
     .date({ required_error: 'Ishlab chiqarilgan sana kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
-  partialCheckDate: z // Qisman texnik ko'rik sanasi
-    .date({ required_error: 'Qisman texnik ko‘rik sanasi kiritilmadi!' })
+  partialCheckDate: z
+    .date({ required_error: 'O‘tkazilgan qisman texnik ko‘rik sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   fullCheckDate: z // To'liq texnik ko'rik sanasi
     .date({ required_error: 'To‘liq texnik ko‘rik sanasi kiritilmadi!' })
@@ -73,7 +73,7 @@ export const PipelineAppealDtoSchema = z.object({
     .min(1, 'Montaj guvohnomasi fayli biriktirilmadi!'),
   additionalFilePath: z.string().optional(), // Ixtiyoriy
   nonDestructiveCheckDate: z // Putur yetkazmaydigan nazoratdan o'tkazish sanasi
-    .date({ required_error: 'Putur yetkazmaydigan nazoratdan o‘tkazish sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkaziladigan tashqi, ichki ko‘rik (N/O, V/O) yoki gidrosinov (GI) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   diameter: z.string({ required_error: 'Diametr, mm kiritilmadi!' }).min(1, 'Diametr, mm kiritilmadi!'),
   thickness: z

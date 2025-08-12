@@ -1,6 +1,11 @@
-// src/features/application/create-application/ui/forms/register-cableway-form.tsx
-import { CardForm, CreateCablewayApplicationDTO } from '@/entities/create-application';
-import { NoteForm, useCreateCablewayApplication } from '@/features/application/create-application';
+import {
+  ApplicationCategory,
+  APPLICATIONS_DATA,
+  CardForm,
+  MainApplicationCategory,
+  ReRegisterEquipmentDTO,
+} from '@/entities/create-application';
+import { NoteForm } from '@/features/application/create-application';
 import { GoBack } from '@/shared/components/common';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
@@ -10,22 +15,22 @@ import DatePicker from '@/shared/components/ui/datepicker';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { parseISO } from 'date-fns';
+import { useReRegisterEquipment } from '@/features/application/create-application/model/use-re-register-equipment';
 
-interface RegisterCablewayFormProps {
-  onSubmit: (data: CreateCablewayApplicationDTO) => void;
+interface RegisterCraneFormProps {
+  onSubmit: (data: ReRegisterEquipmentDTO) => void;
 }
 
-export default ({ onSubmit }: RegisterCablewayFormProps) => {
-  const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
-    useCreateCablewayApplication();
+export default ({ onSubmit }: RegisterCraneFormProps) => {
+  const { form, regionOptions, districtOptions, hazardousFacilitiesOptions } = useReRegisterEquipment();
 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="Osma arqonli yuruvchi yo‘lni ro‘yxatga olish" />
-        <NoteForm equipmentName="osma yo‘l" />
+        <GoBack title="Qurilmani qayta roʻyxatga olish" />
+        <NoteForm equipmentName="qurilma" />
         <CardForm className="mb-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
             <FormField
@@ -41,16 +46,45 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Qurilmaning turi</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-full 3xl:w-sm">
+                        <SelectValue placeholder="Qurilma turini tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {APPLICATIONS_DATA?.filter(
+                          (i) =>
+                            i.category == ApplicationCategory.HOKQ && i.parentId == MainApplicationCategory.REGISTER,
+                        )?.map((option) => (
+                          <SelectItem key={option.equipmentType || 'DEFAULT'} value={option.equipmentType || 'DEFAULT'}>
+                            {option.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="hazardousFacilityId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>XICHO‘ tanlang</FormLabel>
+                  <FormLabel>XICHO ni tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value || ''}>
                       <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="XICHO‘ni tanlang" />
+                        <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
                       </SelectTrigger>
                       <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
                     </Select>
@@ -61,152 +95,12 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
             />
             <FormField
               control={form.control}
-              name="childEquipmentId"
+              name="oldRegistryNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Osma yo‘l turini tanlang</FormLabel>
+                  <FormLabel required>Qurilmaning eski roʻyxatga olish raqami</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="Osma yo‘l turini tanlang" />
-                      </SelectTrigger>
-                      <SelectContent>{childEquipmentOptions}</SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="factoryNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Osma yo‘lning zavod raqami</FormLabel>
-                  <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning zavod raqami" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="factory"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Osma yo‘l egasining nomi</FormLabel>
-                  <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Ishlab chiqargan zavod nomi" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="model"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Model, marka</FormLabel>
-                  <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Model, marka" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="manufacturedAt"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>Ishlab chiqarilgan sana</FormLabel>
-                    <DatePicker
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Ishlab chiqarilgan sana"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="regionId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Osma yo‘l joylashgan viloyat</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) => {
-                        if (value) {
-                          field.onChange(value);
-                          form.setValue('districtId', '');
-                        }
-                      }}
-                      value={field.value?.toString()}
-                    >
-                      <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="Qurilma joylashgan viloyat" />
-                      </SelectTrigger>
-                      <SelectContent>{regionOptions}</SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="districtId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Osma yo‘l joylashgan tuman</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value?.toString()}
-                      disabled={!form.watch('regionId')}
-                    >
-                      <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="Qurilma joylashgan tuman" />
-                      </SelectTrigger>
-                      <SelectContent>{districtOptions}</SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Osma yo‘lning joylashgan manzili</FormLabel>
-                  <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning joylashgan manzili" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem className="w-full 3xl:w-sm">
-                  <FormLabel required>Geolokatsiya (xaritadan joyni tanlang va koordinatalarni kiriting)</FormLabel>
-                  <FormControl>
-                    <YandexMapModal
-                      initialCoords={field.value ? field.value.split(',').map(Number) : null}
-                      onConfirm={(coords) => field.onChange(coords)}
-                      label="Xaritadan belgilash"
-                    />
+                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning roʻyxatga olish raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -223,7 +117,7 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="O‘tkazilgan qisman texnik ko‘rik sanasi"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -237,11 +131,11 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
                   <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>To‘liq texnik ko‘rik sanasi</FormLabel>
+                    <FormLabel required>Toʻliq texnik koʻrik sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="To‘liq texnik ko‘rik sanasini kiriting"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -250,58 +144,77 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
             />
             <FormField
               control={form.control}
-              name="nonDestructiveCheckDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>
-                      O‘tkaziladigan tashqi, ichki ko‘rik (N/O, V/O) yoki gidrosinov (GI) sanasi
-                    </FormLabel>
-                    <DatePicker
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Putur yetkazmaydigan nazorat sanasi"
+              name="regionId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Qurilma joylashgan viloyat</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value);
+                          form.setValue('districtId', '');
+                        }
+                      }}
+                      value={field.value?.toString()}
+                    >
+                      <SelectTrigger className="w-full 3xl:w-sm">
+                        <SelectValue placeholder="Viloyatni tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>{regionOptions}</SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="districtId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Qurilma joylashgan tuman</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value?.toString()}
+                      disabled={!form.watch('regionId')}
+                    >
+                      <SelectTrigger className="w-full 3xl:w-sm">
+                        <SelectValue placeholder="Tumanni tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>{districtOptions}</SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Qurilma joylashgan manzil</FormLabel>
+                  <FormControl>
+                    <Input className="w-full 3xl:w-sm" placeholder="Aniq manzilni kiriting" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem className="w-full 3xl:w-sm">
+                  <FormLabel required>Joylashuv (Xarita)</FormLabel>
+                  <FormControl>
+                    <YandexMapModal
+                      initialCoords={field.value ? field.value.split(',').map(Number) : null}
+                      onConfirm={(coords) => field.onChange(coords)}
+                      label="Xaritadan belgilash"
                     />
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="speed"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Harakat tezligi</FormLabel>
-                  <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Harakat tezligi" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="passengerCount"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Yo‘lovchilar soni</FormLabel>
-                  <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Yo‘lovchilar soni" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="length"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Uzunligi</FormLabel>
-                  <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Uzunligi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -309,6 +222,7 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
             />
           </div>
         </CardForm>
+
         <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
           <FormField
             name="labelPath"
@@ -317,12 +231,13 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Osma yo‘lning birkasi bilan sur‘ati
+                    Qurilmaning surati
                   </FormLabel>
                   <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
+                    <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
                   </FormControl>
                 </div>
+                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
@@ -333,12 +248,13 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Sotib olish-sotish shartnomasi fayli
+                    Sotib olish-sotish shartnomasi
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
+                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
@@ -349,12 +265,13 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Osma yo‘l sertifikati fayli
+                    Qurilma sertifikati
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
+                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
@@ -365,12 +282,13 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq fayli
+                    Masʼul shaxs tayinlanganligi to‘g‘risida buyruq
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
+                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
@@ -381,12 +299,13 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Ekspertiza loyihasi fayli
+                    Ekspertiza loyihasi
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
+                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
@@ -403,20 +322,7 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="additionalFilePath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilma pasporti</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                  </FormControl>
-                </div>
+                <FormMessage className="text-right" />
               </FormItem>
             )}
           />

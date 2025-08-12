@@ -31,6 +31,7 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.REGISTER_IRS]: lazy(() => import('../ui/forms/register-irs-form')),
   [ApplicationTypeEnum.REGISTER_CADASTRE_PASSPORT]: lazy(() => import('../ui/forms/register-cadastre-passport-form')),
   [ApplicationTypeEnum.REGISTER_DECLARATION]: lazy(() => import('../ui/forms/register-declaration-form')),
+  [ApplicationTypeEnum.RE_REGISTER_EQUIPMENT]: lazy(() => import('../ui/forms/reregister-equipment-form')),
   [ApplicationTypeEnum.REGISTER_ATTRACTION_PASSPORT]: lazy(
     () => import('../ui/forms/register-attraction-passport-form'),
   ),

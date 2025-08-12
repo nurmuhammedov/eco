@@ -82,14 +82,16 @@ export default ({ onSubmit }: DeRegisterEquipmentFormProps) => {
                 </FormItem>
               )}
             />
+          </div>
+          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
-                <FormItem className="md:col-span-2 xl:col-span-3">
-                  <FormLabel required>Qurilmani roʻyxatdan chiqarish sababi</FormLabel>
+                <FormItem className="col-span-12 w-full">
+                  <FormLabel>Qurilmani roʻyxatdan chiqarish sababi</FormLabel>
                   <FormControl>
-                    <Textarea className="w-full" placeholder="Ariza bayoni" {...field} />
+                    <Textarea className="w-full" rows={7} placeholder="Ariza bayoni" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -104,9 +106,7 @@ export default ({ onSubmit }: DeRegisterEquipmentFormProps) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Sotib olish-sotish shartnomasi fayli
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sotib olish-sotish shartnomasi fayli</FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
@@ -121,7 +121,7 @@ export default ({ onSubmit }: DeRegisterEquipmentFormProps) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                     Tashkilot faoliyati toʻxtatilganligi toʻgʻrisida buyruq
                   </FormLabel>
                   <FormControl>
@@ -155,7 +155,9 @@ export default ({ onSubmit }: DeRegisterEquipmentFormProps) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qoʻshimcha maʼlumotlar</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">
+                    Qurilmani yaroqsiz holga kelganligini tasdiqlovchi hujjat
+                  </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>

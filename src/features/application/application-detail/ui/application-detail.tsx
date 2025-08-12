@@ -96,7 +96,7 @@ const ApplicationDetail = ({
             <TabsContent value="info">
               <AppealMainInfo
                 data={data?.data}
-                type={data?.appealType?.replace('REGISTER_', '')}
+                type={data?.appealType?.replace('DEREGISTER_', '')?.replace('REGISTER_', '')?.replace('RE_', '')}
                 address={data?.address}
               />
             </TabsContent>

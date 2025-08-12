@@ -84,7 +84,6 @@ function InputNumber<
 
       // Validatsiya
       if (validationRegex.test(newValue)) {
-        // Qisman kiritish uchun input qiymatini yangilash
         e.target.value = newValue;
 
         // To'liq son bo'lsa parse qilish

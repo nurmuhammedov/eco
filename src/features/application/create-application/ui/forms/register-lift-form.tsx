@@ -221,11 +221,11 @@ export default ({ onSubmit }: RegisterLiftFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
                   <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>Qisman texnik koʼrik sanasi</FormLabel>
+                    <FormLabel required>O‘tkazilgan qisman texnik ko‘rik sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Qisman texnik koʼrik sanasi"
+                      placeholder="O‘tkazilgan qisman texnik ko‘rik sanasi"
                     />
                     <FormMessage />
                   </FormItem>
@@ -405,7 +405,7 @@ export default ({ onSubmit }: RegisterLiftFormProps) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qoʻshimcha fayllar</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilma pasporti</FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
