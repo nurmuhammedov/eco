@@ -12,6 +12,7 @@ const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application
 const AttestationDetail = lazy(() => import('@/pages/attestation/attestation-detail'));
 
 const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'));
+const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'));
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'));
 
 // Auth pages
@@ -59,6 +60,11 @@ export const appRoutes = [
     path: 'applications/create',
     component: CreateApplicationGrids,
     roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
+  },
+  {
+    path: 'applications/create/INSPECTOR',
+    component: CreateApplicationGridsIns,
+    roles: [UserRoles.INSPECTOR],
   },
   {
     path: 'applications/create/:type',
