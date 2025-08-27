@@ -6,14 +6,17 @@ import { useCallback, useMemo } from 'react';
 import { RegisterActiveTab } from '../types';
 
 export const useRegister = () => {
-  const { paramsObject, addParams } = useCustomSearchParams();
+  const {
+    paramsObject: { mode, ...paramsObject },
+    addParams,
+  } = useCustomSearchParams();
   const { user } = useAuth();
 
-  const { data: hfCount = 0 } = useData<number>('/hf/count');
+  const { data: hfCount = 0 } = useData<number>('/hf/count', true, { mode });
 
-  const { data: equipmentsCount = 0 } = useData<number>('/equipments/count');
+  const { data: equipmentsCount = 0 } = useData<number>('/equipments/count', true, { mode });
 
-  const { data: irsCount = 0 } = useData<number>('/irs/count');
+  const { data: irsCount = 0 } = useData<number>('/irs/count', true, { mode });
 
   const activeTab = useMemo<RegisterActiveTab>(() => {
     const tabFromParams = paramsObject['tab'] as string;

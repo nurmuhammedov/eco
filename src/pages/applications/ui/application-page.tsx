@@ -30,15 +30,9 @@ const ApplicationPage = () => {
 
     if (UserRoles.INSPECTOR === user?.role) {
       return (
-        <div className="flex justify-end">
-          <button
-            onClick={() => navigate('/applications/create/INSPECTOR')}
-            type="button"
-            className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 font-medium rounded-lg text-sm px-3 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 cursor-pointer"
-          >
-            Норасмий ХИЧО ва қурилма учун ариза яратиш
-          </button>
-        </div>
+        <Button onClick={() => navigate('/applications/inspector/create')}>
+          <PlusCircle /> Norasmiy XICHO va qurilma uchun arizalar
+        </Button>
       );
     }
 

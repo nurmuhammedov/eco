@@ -122,4 +122,8 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: '/appeals/equipment/reregister',
     pdfEndpoint: '/appeals/equipment/reregister-pdf',
   },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_HF]: {
+    submitEndpoint: '/appeals/hf/unofficial',
+    pdfEndpoint: '/appeals/hf/unofficial/generate-pdf',
+  },
 };

@@ -59,6 +59,7 @@ export const MAIN_APPLICATION_BY_CATEGORY = {
   [ApplicationCategory.CADASTRE]: [],
   [ApplicationCategory.ACCREDITATION]: [],
   [ApplicationCategory.ATTESTATION_PREVENTION]: [],
+  [ApplicationCategory.ILLEGAL]: [],
 };
 
 export const REPORTS_DATA: ApplicationCardItem[] = [
@@ -94,6 +95,14 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'XICHOni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.XICHO,
     type: ApplicationTypeEnum.REGISTER_HF,
+    icon: 'factoryRegisterIcon',
+  },
+  {
+    id: 12612,
+    title: 'XICHOni ro‘yxatga olish',
+    description: 'XICHOni ro‘yxatga olish ariza shakli',
+    category: ApplicationCategory.ILLEGAL,
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_HF,
     icon: 'factoryRegisterIcon',
   },
   {

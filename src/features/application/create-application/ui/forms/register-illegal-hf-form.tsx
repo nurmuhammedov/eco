@@ -1,5 +1,4 @@
 import { CardForm } from '@/entities/create-application';
-import { useCreateHPOApplication } from '@/features/application/create-application';
 import { GoBack } from '@/shared/components/common';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
@@ -17,13 +16,32 @@ import { Input } from '@/shared/components/ui/input';
 import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { useCreateIllegalHFApplication } from '@/features/application/create-application/model/use-create-illegal-hf-applicaton';
 
 export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
-  const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } = useCreateHPOApplication();
+  const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } =
+    useCreateIllegalHFApplication();
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="XICHOni ro‘yxatga olish" />
+        <CardForm className="my-2">
+          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
+            <FormField
+              control={form.control}
+              name="legalTin"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>STIR</FormLabel>
+                  <FormControl>
+                    <Input className={'w-full 3xl:w-sm'} placeholder="STIRni kiriting" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </CardForm>
         <CardForm className="my-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
             <FormField
@@ -70,7 +88,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               name="hfTypeId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>XICHO ning turi</FormLabel>
+                  <FormLabel>XICHO ning turi</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full 3xl:w-sm">
@@ -88,7 +106,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               name="spheres"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Tarmoqlar</FormLabel>
+                  <FormLabel>Tarmoqlar</FormLabel>
                   <FormControl>
                     <MultiSelect
                       className="w-full 3xl:w-sm"
@@ -181,9 +199,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               name="extraArea"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required className="w-full 3xl:w-sm">
-                    XICHO sexlari, uchastkalari va maydonchalari nomi
-                  </FormLabel>
+                  <FormLabel className="w-full 3xl:w-sm">XICHO sexlari, uchastkalari va maydonchalari nomi</FormLabel>
                   <FormControl>
                     <Input
                       className="w-full 3xl:w-sm"
@@ -203,9 +219,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               name="hazardousSubstance"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required className="w-full 3xl:w-sm">
-                    Xavfli moddalarning nomi va miqdori
-                  </FormLabel>
+                  <FormLabel className="w-full 3xl:w-sm">Xavfli moddalarning nomi va miqdori</FormLabel>
                   <FormControl>
                     <Input className="w-full 3xl:w-sm" placeholder="Xavfli moddalarning nomi va miqdori" {...field} />
                   </FormControl>
@@ -268,9 +282,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Identifikatsiya varag‘i(PDF)
-                  </FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Identifikatsiya varag‘i(PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -340,7 +352,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                     XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi(PDF)
                   </FormLabel>
                   <FormControl>
@@ -423,9 +435,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             )}
           />
         </CardForm>
-        <Button type="submit" disabled={!form.formState.isValid}>
-          Ariza yaratish
-        </Button>
+        <Button type="submit">Ariza yaratish</Button>
       </form>
     </Form>
   );

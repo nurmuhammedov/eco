@@ -62,7 +62,7 @@ export const HfList = () => {
 
   return (
     <>
-      <Filter inputKeys={['search']} />
+      <Filter inputKeys={['search', 'mode']} />
       <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-300px)]" />
     </>
   );

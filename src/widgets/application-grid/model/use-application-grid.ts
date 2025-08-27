@@ -15,7 +15,11 @@ export function useApplicationGrid() {
   const { filters, setFilters } = useFilters({
     'selected-main-card': filterParsers.string(MainApplicationCategory.REGISTER),
     'active-application-tab': filterParsers.string(
-      user?.role == UserRoles.INDIVIDUAL ? ApplicationCategory.HOKQ : ApplicationCategory.XICHO,
+      user?.role == UserRoles.INDIVIDUAL
+        ? ApplicationCategory.HOKQ
+        : user?.role == UserRoles.INSPECTOR
+          ? ApplicationCategory.ILLEGAL
+          : ApplicationCategory.XICHO,
     ),
   });
 

@@ -71,7 +71,14 @@ export const ApplicationsGrid: React.FC = () => {
                 name: 'Xavfli obyektlar va qurilmalar',
               },
             ]
-          : APPLICATION_CATEGORIES
+          : user?.role == UserRoles.INSPECTOR
+            ? [
+                {
+                  id: ApplicationCategory.ILLEGAL,
+                  name: 'XICHO',
+                },
+              ]
+            : APPLICATION_CATEGORIES
       }
       classNameTrigger="text-base mx-0.5"
       className="font-medium 3xl:font-semibold"

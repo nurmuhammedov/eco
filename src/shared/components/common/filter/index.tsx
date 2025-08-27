@@ -25,6 +25,7 @@ interface ApplicationFiltersFormValues {
   appealType?: ApplicationTypeEnum;
   officeId?: string;
   executorId?: string;
+  mode?: string;
   startDate?: Date;
   endDate?: Date;
   intervalId?: string;
@@ -46,6 +47,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
       appealType: paramsObject.appealType || '',
       officeId: paramsObject.officeId?.toString() || '',
       executorId: paramsObject.executorId?.toString() || '',
+      mode: paramsObject.mode?.toString() || '',
       startDate: paramsObject.startDate ? new Date(paramsObject.startDate) : undefined,
       endDate: paramsObject.endDate ? new Date(paramsObject.endDate) : undefined,
       intervalId: paramsObject.intervalId?.toString() || user?.interval?.id.toString(),
@@ -58,6 +60,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
   const isExecutorFilterEnabled = useMemo(() => inputKeys.includes('executorId'), [inputKeys]);
   const isStartDateFilterEnabled = useMemo(() => inputKeys.includes('startDate'), [inputKeys]);
   const isEndDateFilterEnabled = useMemo(() => inputKeys.includes('endDate'), [inputKeys]);
+  const modeFilterEnabled = useMemo(() => inputKeys.includes('mode'), [inputKeys]);
 
   const isIntervalFilterEnabled = useMemo(() => inputKeys.includes('intervalId'), [inputKeys]);
 
@@ -174,6 +177,39 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                   <SelectContent>
                     <SelectItem value={ALL_ITEMS_VALUE as unknown as string}>{t('all', 'Barchasi')}</SelectItem>
                     {getSelectOptions(officeOptionsDataFromApi?.data || [])}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </FilterField>
+        );
+      case 'mode':
+        if (!modeFilterEnabled) return null;
+        return (
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+            <Controller
+              name="mode"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    handleSubmit(onSubmit)();
+                  }}
+                  value={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('mode_placeholder', 'Rasmiylashtirish turi')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={ALL_ITEMS_VALUE as unknown as string}>{t('all', 'Barchasi')}</SelectItem>
+                    {getSelectOptions([
+                      { id: 'OFFICIAL', name: 'Rasmiy arizalar' },
+                      {
+                        id: 'UNOFFICIAL',
+                        name: 'Norasmiy XICHO va qurilma uchun arizalar',
+                      },
+                    ])}
                   </SelectContent>
                 </Select>
               )}

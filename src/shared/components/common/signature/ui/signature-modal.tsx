@@ -65,7 +65,10 @@ export const SignatureModal = ({
       Client,
       documentUrl,
       signature: selectedCertificate,
-      onSuccess: (result) => submitApplicationMetaData(result),
+      onSuccess: (result) => {
+        console.log(result);
+        submitApplicationMetaData(result);
+      },
     });
     setSelectedCertificate(null);
     setOpen(false);

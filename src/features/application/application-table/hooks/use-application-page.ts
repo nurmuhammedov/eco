@@ -5,24 +5,31 @@ import { useAuth } from '@/shared/hooks/use-auth';
 import { useMemo } from 'react';
 
 export const useApplicationPage = () => {
-  const { addParams } = useCustomSearchParams();
+  const {
+    addParams,
+    paramsObject: { mode },
+  } = useCustomSearchParams();
   const { user } = useAuth();
   const userRole = user?.role;
 
   const { data: inspectorInProcessCount = 0 } = useData<number>('/appeals/count', userRole === UserRoles.INSPECTOR, {
     status: ApplicationStatus.IN_PROCESS,
+    mode,
   });
 
   const { data: regionalNewCount = 0 } = useData<number>('/appeals/count', userRole === UserRoles.REGIONAL, {
     status: ApplicationStatus.NEW,
+    mode,
   });
 
   const { data: regionalAgreementCount = 0 } = useData<number>('/appeals/count', userRole === UserRoles.REGIONAL, {
     status: ApplicationStatus.IN_AGREEMENT,
+    mode,
   });
 
   const { data: managerApprovalCount = 0 } = useData<number>('/appeals/count', userRole === UserRoles.MANAGER, {
     status: ApplicationStatus.IN_APPROVAL,
+    mode,
   });
 
   const applicationStatusList = useTranslatedObject(ApplicationStatus, 'application_status', false);

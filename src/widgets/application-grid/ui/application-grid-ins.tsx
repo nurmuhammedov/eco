@@ -64,14 +64,25 @@ export const ApplicationsGridIns: React.FC = () => {
       defaultValue={activeTab}
       classNameTabList="px-4 py-6"
       tabs={
-        user?.role == UserRoles.INSPECTOR
+        user?.role == UserRoles.INDIVIDUAL
           ? [
               {
                 id: ApplicationCategory.HOKQ,
                 name: 'Xavfli obyektlar va qurilmalar',
               },
             ]
-          : APPLICATION_CATEGORIES
+          : user?.role == UserRoles.INSPECTOR
+            ? [
+                {
+                  id: ApplicationCategory.ILLEGAL,
+                  name: 'XICHO',
+                },
+                {
+                  id: ApplicationCategory.ILLEGAL_HOKQ,
+                  name: 'Xavfli obyektlar va qurilmalar',
+                },
+              ]
+            : APPLICATION_CATEGORIES
       }
       classNameTrigger="text-base mx-0.5"
       className="font-medium 3xl:font-semibold"

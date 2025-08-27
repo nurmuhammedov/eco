@@ -66,7 +66,7 @@ export const appRoutes = [
     roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
   },
   {
-    path: 'applications/create/INSPECTOR',
+    path: 'applications/inspector/create',
     component: CreateApplicationGridsIns,
     roles: [UserRoles.INSPECTOR],
   },
@@ -93,7 +93,7 @@ export const appRoutes = [
   {
     path: 'applications/create/:type',
     component: CreateApplicationForm,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.INSPECTOR],
   },
   {
     path: 'applications/detail/:id',
