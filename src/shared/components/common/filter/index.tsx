@@ -217,19 +217,34 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
               name="startDate"
               render={({ field }) => (
                 <FormItem>
-                  <DatePicker
-                    value={field.value}
-                    onChange={(date) => {
-                      field.onChange(date);
-                      handleSubmit(onSubmit)();
-                    }}
-                    placeholder="dan"
-                  />
+                  <div className="relative">
+                    <DatePicker
+                      value={field.value}
+                      onChange={(date) => {
+                        field.onChange(date);
+                        handleSubmit(onSubmit)();
+                      }}
+                      placeholder="dan"
+                    />
+                    {field.value && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          field.onChange(undefined);
+                          handleSubmit(onSubmit)();
+                        }}
+                        className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                      >
+                        ✖
+                      </button>
+                    )}
+                  </div>
                 </FormItem>
               )}
             />
           </FilterField>
         );
+
       case 'endDate':
         if (!isEndDateFilterEnabled) return null;
         return (
@@ -239,14 +254,28 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
               name="endDate"
               render={({ field }) => (
                 <FormItem>
-                  <DatePicker
-                    value={field.value}
-                    onChange={(date) => {
-                      field.onChange(date);
-                      handleSubmit(onSubmit)();
-                    }}
-                    placeholder="gacha"
-                  />
+                  <div className="relative">
+                    <DatePicker
+                      value={field.value}
+                      onChange={(date) => {
+                        field.onChange(date);
+                        handleSubmit(onSubmit)();
+                      }}
+                      placeholder="gacha"
+                    />
+                    {field.value && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          field.onChange(undefined);
+                          handleSubmit(onSubmit)();
+                        }}
+                        className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                      >
+                        ✖
+                      </button>
+                    )}
+                  </div>
                 </FormItem>
               )}
             />
