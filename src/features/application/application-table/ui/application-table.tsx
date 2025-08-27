@@ -20,7 +20,7 @@ export const ApplicationTable = () => {
   const { data: applications = [] } = useApplicationList({
     ...rest,
     status: status !== 'ALL' ? status : '',
-    legalTin: search,
+    search,
   });
 
   const navigate = useNavigate();
