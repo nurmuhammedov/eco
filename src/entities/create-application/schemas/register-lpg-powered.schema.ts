@@ -48,10 +48,10 @@ export const LpgPoweredAppealDtoSchema = z.object({
     .date({ required_error: 'Ishlab chiqarilgan sana kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   partialCheckDate: z
-    .date({ required_error: 'Tashqi va ichki ko‘rik sanasi kiritilmadi!' }) // Rasmda bu maydon yo'q, lekin DTO da bor
+    .date({ required_error: 'O‘tkazilgan tashki (NO), ichki koʻrik (VO) yoki gidrosinov (GI) sanasi kiritilmadi!' }) // Rasmda bu maydon yo'q, lekin DTO da bor
     .transform((date) => format(date, 'yyyy-MM-dd')),
   fullCheckDate: z
-    .date({ required_error: 'O‘tkazilgan tashqi, ichki ko‘rik (N/O, V/O) yoki gidrosinov (GI) sanasi kiritilmadi!' }) // Rasmda bu maydon yo'q, lekin DTO da bor
+    .date({ required_error: 'O‘tkaziladigan tashki (NO), ichki koʻrik (VO) yoki gidrosinov (GI) sanasi kiritilmadi!' }) // Rasmda bu maydon yo'q, lekin DTO da bor
     .transform((date) => format(date, 'yyyy-MM-dd')),
   labelPath: z
     .string({ required_error: 'Qurilmaning birkasi bilan sur‘ati fayli biriktirilmadi!' })

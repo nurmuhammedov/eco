@@ -1,4 +1,3 @@
-import { apiConfig } from '@/shared/api/constants';
 import { useDocumentSigning } from '@/shared/components/common/signature/model';
 import {
   AlertDialog,
@@ -51,16 +50,23 @@ export const SignatureModal = ({
       onConfirm(selectedCertificate);
     }
 
-    if (apiConfig.oneIdClientId == 'test_cirns_uz') {
-      submitApplicationMetaData('singString');
-    } else {
-      await signDocument({
-        Client,
-        documentUrl,
-        signature: selectedCertificate,
-        onSuccess: (result) => submitApplicationMetaData(result),
-      });
-    }
+    // if (apiConfig.oneIdClientId == 'test_cirns_uz') {
+    //   submitApplicationMetaData('singString');
+    // } else {
+    //   await signDocument({
+    //     Client,
+    //     documentUrl,
+    //     signature: selectedCertificate,
+    //     onSuccess: (result) => submitApplicationMetaData(result),
+    //   });
+    // }
+
+    await signDocument({
+      Client,
+      documentUrl,
+      signature: selectedCertificate,
+      onSuccess: (result) => submitApplicationMetaData(result),
+    });
     setSelectedCertificate(null);
     setOpen(false);
   };
@@ -106,10 +112,8 @@ export const SignatureModal = ({
           <AlertDialogCancel onClick={handleCancel}>Bekor qilish</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
-            disabled={!selectedCertificate && apiConfig.oneIdClientId != 'test_cirns_uz'}
-            className={
-              !selectedCertificate && apiConfig.oneIdClientId != 'test_cirns_uz' ? 'opacity-50 cursor-not-allowed' : ''
-            }
+            disabled={!selectedCertificate}
+            className={!selectedCertificate ? 'opacity-50 cursor-not-allowed' : ''}
           >
             {isPending && <Loader2 className="size-4 animate-spin" />}
             Tasdiqlash

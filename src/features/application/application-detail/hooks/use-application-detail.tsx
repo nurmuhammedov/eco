@@ -17,7 +17,7 @@ export const useApplicationDetail = () => {
       const files = Object.entries(data.data?.files || [])
         .filter(([key]) => key.includes('Path'))
         .map(([key, value]) => {
-          const label = `labels.${data.appealType.replace('REGISTER_', '')}.${key}`;
+          const label = `labels.${data?.appealType?.replace('DEREGISTER_', '')?.replace('REGISTER_', '')?.replace('RE_', '')}.${key}`;
           return { label: t(label), path: value as string, fieldName: key };
         });
       return {

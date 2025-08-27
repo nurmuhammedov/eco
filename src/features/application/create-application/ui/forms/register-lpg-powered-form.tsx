@@ -219,11 +219,13 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
                   <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>Tashqi va ichki ko‘rik sanasi</FormLabel>
+                    <FormLabel required>
+                      O‘tkazilgan tashki (NO), ichki koʻrik (VO) yoki gidrosinov (GI) sanasi
+                    </FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Tashqi va ichki ko‘rik sanasini kiriting"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -238,12 +240,12 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
                 return (
                   <FormItem className="w-full 3xl:w-sm">
                     <FormLabel required>
-                      O‘tkazilgan tashqi, ichki ko‘rik (N/O, V/O) yoki gidrosinov (GI) sanasi
+                      O‘tkaziladigan tashki (NO), ichki koʻrik (VO) yoki gidrosinov (GI) sanasi
                     </FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Gidrosinov sanasini kiriting"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>

@@ -65,11 +65,11 @@ export const EquipmentsList = () => {
     },
     {
       accessorFn: (row) => (row.partialCheckDate ? getDate(row.partialCheckDate) : '-'),
-      header: 'O‘tkazilgan qisman texnik ko‘rik sanasi',
+      header: 'O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi',
     },
     {
       accessorFn: (row) => (row.fullCheckDate ? getDate(row.fullCheckDate) : '-'),
-      header: 'To‘liq texnik ko‘rik sanasi',
+      header: 'O‘tkaziladigan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi',
     },
     {
       id: 'actions',
@@ -117,7 +117,7 @@ export const EquipmentsList = () => {
         }))}
         onTabChange={(type) => addParams({ isActive: type }, 'page', 'search', 'startDate', 'endDate')}
       >
-        <Filter inputKeys={['search', 'startDate', 'endDate']} />
+        <Filter inputKeys={['search']} />
         <DataTable
           isPaginated
           data={data || []}

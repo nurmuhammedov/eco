@@ -48,10 +48,10 @@ export const CablewayAppealDtoSchema = z.object({
     .date({ required_error: 'Ishlab chiqarilgan sana kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   partialCheckDate: z
-    .date({ required_error: 'O‘tkazilgan qisman texnik ko‘rik sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   fullCheckDate: z
-    .date({ required_error: 'To‘liq texnik ko‘rik sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkaziladigan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   labelPath: z
     .string({ required_error: 'Osma yo‘lning birkasi bilan sur‘ati fayli biriktirilmadi!' })
@@ -73,7 +73,7 @@ export const CablewayAppealDtoSchema = z.object({
     .min(1, 'Montaj guvohnomasi fayli biriktirilmadi!'),
   additionalFilePath: z.string().optional(), // Ixtiyoriy
   nonDestructiveCheckDate: z
-    .date({ required_error: 'O‘tkaziladigan tashqi, ichki ko‘rik (N/O, V/O) yoki gidrosinov (GI) sanasi kiritilmadi!' })
+    .date({ required_error: 'Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   speed: z.string({ required_error: 'Harakat tezligi kiritilmadi!' }).min(1, 'Harakat tezligi kiritilmadi!'),
   passengerCount: z

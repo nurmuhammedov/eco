@@ -55,4 +55,10 @@ export default [
     url: '/cadastre',
     icon: 'box-search',
   },
+  {
+    id: 'REPORT',
+    title: 'Hisobotlar',
+    url: '/reports',
+    icon: 'document',
+  },
 ] as Navigation;

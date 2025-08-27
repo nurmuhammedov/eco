@@ -71,7 +71,9 @@ export const ApplicationTable = () => {
           ApplicationCategory.ACCREDITATION
           ? `Аxborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi`
           : APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
-              ApplicationCategory.HOKQ
+                ApplicationCategory.HOKQ ||
+              cell.row.original.appealType?.startsWith('RE_') ||
+              cell.row.original.appealType?.startsWith('DE')
             ? `Davlat xizmatlarini ko‘rsatish boʼlimi`
             : APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
                 ApplicationCategory.INM

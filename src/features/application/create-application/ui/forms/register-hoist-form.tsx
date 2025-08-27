@@ -220,11 +220,12 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
                   <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>O‘tkazilgan qisman texnik ko‘rik sanasi</FormLabel>
+                    <FormLabel required>O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi</FormLabel>
                     <DatePicker
+                      disableStrategy="after"
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="O‘tkazilgan qisman texnik ko‘rik sanasi"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -238,11 +239,11 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
                   <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>To‘liq texnik ko‘rik sanasi</FormLabel>
+                    <FormLabel required>O‘tkaziladigan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="To‘liq texnik ko‘rik sanasini kiriting"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
