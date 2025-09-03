@@ -16,7 +16,7 @@ export const useHfDetail = () => {
         .filter(([label]) => label.includes('Path'))
         .map(([key, value]) => {
           const label = `labels.HF.${key || 'file'}`;
-          return { label: t(label), path: value || '' };
+          return { label: t(label), data: value || '' };
         });
       return {
         ...data,

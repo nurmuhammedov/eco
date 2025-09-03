@@ -67,7 +67,6 @@ export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }:
       setIsModalOpen(true);
       setIsPdfLoading(true);
       setError(null);
-
       createPdfMutation.mutate(data);
     },
     [createPdfMutation],
