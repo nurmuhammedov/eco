@@ -1,8 +1,7 @@
 import { setUser } from '@/app/store/auth-slice';
 import { authAPI } from '@/entities/auth/models/auth.api';
 import { LoginDTO } from '@/entities/auth/models/auth.types';
-import { UserRoles, UserState } from '@/entities/user';
-import { useAuth } from '@/shared/hooks/use-auth';
+import { UserState } from '@/entities/user';
 import { useAppDispatch } from '@/shared/hooks/use-store';
 import { getHomeRouteForLoggedInUser } from '@/shared/lib/router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -65,12 +64,11 @@ export const useLoginOneId = () => {
 };
 
 export const useLogout = () => {
-  const { user } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   //TODO: ubrat redirect na admin kogda budet presetasiya
-  const redirectPath = user?.role === UserRoles.ADMIN ? '/auth/login' : '/auth/login';
+  const redirectPath = '/auth/login';
   return useMutation({
     mutationFn: async () => authAPI.logout(),
     onSuccess: () => {

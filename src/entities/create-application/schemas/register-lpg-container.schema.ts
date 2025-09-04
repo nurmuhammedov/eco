@@ -48,32 +48,39 @@ export const LpgContainerAppealDtoSchema = z.object({
     .date({ required_error: 'Ishlab chiqarilgan sana kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   partialCheckDate: z
-    .date({ required_error: 'Tashqi va ichki ko‘rik sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkazilgan tashki (NO), ichki koʻrik (VO) yoki gidrosinov (GI) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   fullCheckDate: z
-    .date({ required_error: 'Gidrosinov o‘tkazish sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkaziladigan tashki (NO), ichki koʻrik (VO) yoki gidrosinov (GI) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   labelPath: z
     .string({ required_error: 'Idishning (SUG) birkasi bilan sur‘ati fayli biriktirilmadi!' })
     .min(1, 'Idishning (SUG) birkasi bilan sur‘ati fayli biriktirilmadi!'),
+  labelExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   saleContractPath: z
     .string({ required_error: 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!' })
     .min(1, 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!'),
+  saleContractExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   equipmentCertPath: z
     .string({ required_error: 'Idish (SUG) sertifikati fayli biriktirilmadi!' })
     .min(1, 'Idish (SUG) sertifikati fayli biriktirilmadi!'),
+  equipmentCertExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   assignmentDecreePath: z
     .string({ required_error: "Mas'ul shaxs tayinlanganligi to'g'risida buyruq fayli biriktirilmadi!" })
     .min(1, "Mas'ul shaxs tayinlanganligi to'g'risida buyruq fayli biriktirilmadi!"),
+  assignmentDecreeExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   expertisePath: z
     .string({ required_error: 'Ekspertiza loyihasi fayli biriktirilmadi!' })
     .min(1, 'Ekspertiza loyihasi fayli biriktirilmadi!'),
+  expertiseExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   installationCertPath: z
     .string({ required_error: 'Montaj guvohnomasi fayli biriktirilmadi!' })
     .min(1, 'Montaj guvohnomasi fayli biriktirilmadi!'),
+  installationCertExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   additionalFilePath: z.string().optional(), // Ixtiyoriy
+  additionalFileExpiryDate: z.date().optional(), // Ixtiyoriy
   nonDestructiveCheckDate: z
-    .date({ required_error: 'Putur yetkazmaydigan nazoratdan o‘tkazish sanasi kiritilmadi!' })
+    .date({ required_error: 'Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   capacity: z.string({ required_error: 'Hajmi kiritilmadi!' }).min(1, 'Hajmi kiritilmadi!'),
   environment: z.string({ required_error: 'Muhit kiritilmadi!' }).min(1, 'Muhit kiritilmadi!'),

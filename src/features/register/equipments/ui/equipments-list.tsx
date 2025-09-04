@@ -1,6 +1,7 @@
 import { ApplicationStatus } from '@/entities/application';
-import { ApplicationCategory, APPLICATIONS_DATA } from '@/entities/create-application';
+import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
+import Filter from '@/shared/components/common/filter';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { TabsLayout } from '@/shared/layouts';
 import { ISearchParams } from '@/shared/types';
@@ -11,12 +12,13 @@ import { useNavigate } from 'react-router-dom';
 export const EquipmentsList = () => {
   const navigate = useNavigate();
   const {
-    paramsObject: { status = ApplicationStatus.ALL, type = 'ALL', ...rest },
+    paramsObject: { status = ApplicationStatus.ALL, type = 'ALL', isActive = 'true', ...rest },
     addParams,
   } = useCustomSearchParams();
   const { data } = usePaginatedData<any>(`/equipments`, {
     ...rest,
     type: type !== 'ALL' ? type : '',
+    isActive,
     status: status !== 'ALL' ? status : '',
   });
 
@@ -38,16 +40,16 @@ export const EquipmentsList = () => {
       cell: (cell) => APPLICATIONS_DATA?.find((i) => i?.equipmentType == cell.row.original.type)?.name || '',
     },
     {
-      header: 'Tashkilot nomi',
-      accessorKey: 'legalName',
+      header: 'Tashkilot nomi/ Fuqaro nomi',
+      accessorKey: 'ownerName',
     },
     {
-      header: 'Tashkilot manzili',
-      accessorFn: (row) => row?.legalAddress,
+      header: 'Tashkilot manzili/ Fuqaro manzili',
+      accessorFn: (row) => row?.ownerAddress,
     },
     {
-      header: 'Tashkilot STIR',
-      accessorKey: 'legalTin',
+      header: 'Tashkilot STIR/ JSHSHIR',
+      accessorKey: 'ownerIdentity',
     },
     {
       header: 'Qurilmaning zavod raqami',
@@ -60,6 +62,14 @@ export const EquipmentsList = () => {
     {
       accessorKey: 'address',
       header: 'Qurilma manzili',
+    },
+    {
+      accessorFn: (row) => (row.partialCheckDate ? getDate(row.partialCheckDate) : '-'),
+      header: 'O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi',
+    },
+    {
+      accessorFn: (row) => (row.fullCheckDate ? getDate(row.fullCheckDate) : '-'),
+      header: 'O‘tkaziladigan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi',
     },
     {
       id: 'actions',
@@ -78,7 +88,9 @@ export const EquipmentsList = () => {
           id: 'ALL',
           name: 'Barchasi',
         },
-        ...(APPLICATIONS_DATA?.filter((i) => i?.category == ApplicationCategory.HOKQ)?.map((i) => ({
+        ...(APPLICATIONS_DATA?.filter(
+          (i) => i?.category == ApplicationCategory.HOKQ && i?.parentId == MainApplicationCategory.REGISTER,
+        )?.map((i) => ({
           id: i?.equipmentType?.toString() || 'ALL',
           name: i?.name?.toString() || 'Bachasi',
         })) || []),
@@ -86,9 +98,33 @@ export const EquipmentsList = () => {
         ...i,
         count: i?.id == type ? data?.page?.totalElements || 0 : 0,
       }))}
-      onTabChange={(type) => addParams({ type: type }, 'page')}
+      onTabChange={(type) => addParams({ type: type }, 'page', 'search', 'startDate', 'endDate')}
     >
-      <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-320px)]" />
+      <TabsLayout
+        activeTab={isActive?.toString()}
+        tabs={[
+          {
+            id: 'true',
+            name: 'Amaldagi qurilmalar',
+          },
+          {
+            id: 'false',
+            name: 'Reyestrdan chiqarilgan qurilmalar',
+          },
+        ]?.map((i) => ({
+          ...i,
+          count: i?.id == type ? data?.page?.totalElements || 0 : 0,
+        }))}
+        onTabChange={(type) => addParams({ isActive: type }, 'page', 'search', 'startDate', 'endDate')}
+      >
+        <Filter inputKeys={['search']} />
+        <DataTable
+          isPaginated
+          data={data || []}
+          columns={columns as unknown as any}
+          className="h-[calc(100svh-420px)]"
+        />
+      </TabsLayout>
     </TabsLayout>
   );
 };

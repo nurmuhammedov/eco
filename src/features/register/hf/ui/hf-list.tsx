@@ -5,6 +5,7 @@ import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
+import Filter from '@/shared/components/common/filter';
 
 export const HfList = () => {
   const navigate = useNavigate();
@@ -60,6 +61,9 @@ export const HfList = () => {
   ];
 
   return (
-    <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-300px)]" />
+    <>
+      <Filter inputKeys={['search', 'mode']} />
+      <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-300px)]" />
+    </>
   );
 };

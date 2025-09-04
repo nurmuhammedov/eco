@@ -114,4 +114,16 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: API_ENDPOINTS.APPEALS_REGISTER_DECLARATION,
     pdfEndpoint: API_ENDPOINTS.APPEALS_REGISTER_DECLARATION_GENERATE_PDF,
   },
+  [ApplicationTypeEnum.DEREGISTER_EQUIPMENT]: {
+    submitEndpoint: '/appeals/equipment/deregister',
+    pdfEndpoint: '/appeals/equipment/deregister-pdf',
+  },
+  [ApplicationTypeEnum.RE_REGISTER_EQUIPMENT]: {
+    submitEndpoint: '/appeals/equipment/reregister',
+    pdfEndpoint: '/appeals/equipment/reregister-pdf',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_HF]: {
+    submitEndpoint: '/appeals/hf/unofficial',
+    pdfEndpoint: '/appeals/hf/unofficial/generate-pdf',
+  },
 };

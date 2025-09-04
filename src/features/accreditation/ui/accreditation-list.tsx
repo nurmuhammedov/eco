@@ -3,7 +3,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { useNavigate } from 'react-router-dom';
 import { getDate } from '@/shared/utils/date';
-import FileLink from '@/shared/components/common/file-link';
+// import FileLink from '@/shared/components/common/file-link';
 
 export const AccreditationList = () => {
   const {
@@ -19,51 +19,72 @@ export const AccreditationList = () => {
   const columns: ColumnDef<any>[] = [
     {
       accessorKey: 'legalName',
-      header: 'Tashkilot nomi',
+      header: 'Ekspert tashkilotining nomi',
+    },
+    {
+      accessorKey: 'fullName',
+      header: 'Ekspert tashkiloti rahbarining F.I.SH.',
+    },
+    {
+      accessorKey: 'legalAddress',
+      header: 'Ekspert tashkilotining yuridik manzili',
+    },
+    {
+      accessorKey: 'phoneNumber',
+      header: 'Ekspert tashkilotining telefon raqami',
     },
     {
       accessorKey: 'tin',
       header: 'STIR',
     },
     {
-      accessorKey: 'certificateNumber',
-      header: 'Sertifikat raqami',
-    },
-    {
-      accessorKey: 'certificateDate',
-      header: 'Sertifikat muddati',
+      header: 'Akkreditatsiya sohasi haqida maʼlumot',
       cell: ({ row }) => getDate(row.original.certificateDate),
     },
     {
-      // accessorKey: 'accreditationCommissionDecisionPath',
-      header: 'Akkreditatsiya komissiyasining qarori',
-      cell: ({ row }) =>
-        row.original?.accreditationCommissionDecisionPath ? (
-          <FileLink url={row.original?.accreditationCommissionDecisionPath} />
-        ) : (
-          <span className="text-red-600">Mavjud emas</span>
-        ),
+      accessorKey: 'certificateDate',
+      header: 'Attestat berilgan sanasi',
+      cell: ({ row }) => getDate(row.original.certificateDate),
     },
     {
-      // accessorKey: 'assessmentCommissionDecisionPath',
-      header: 'Baholash komissiyasining qarori',
-      cell: ({ row }) =>
-        row.original?.assessmentCommissionDecisionPath ? (
-          <FileLink url={row.original?.assessmentCommissionDecisionPath} />
-        ) : (
-          <span className="text-red-600">Mavjud emas</span>
-        ),
+      accessorKey: 'certificateValidityDate',
+      header: 'Attestat amal qilish muddati',
+      cell: ({ row }) => getDate(row.original.certificateValidityDate),
     },
     {
-      // accessorKey: 'referencePath',
-      header: 'Ma’lumotnoma',
-      cell: ({ row }) =>
-        row.original?.referencePath ? (
-          <FileLink url={row.original?.referencePath} />
-        ) : (
-          <span className="text-red-600">Mavjud emas</span>
-        ),
+      accessorKey: 'certificateNumber',
+      header: 'Attestat ro‘yxat raqami',
     },
+    // {
+    //   // accessorKey: 'accreditationCommissionDecisionPath',
+    //   header: 'Akkreditatsiya komissiyasining qarori',
+    //   cell: ({ row }) =>
+    //     row.original?.accreditationCommissionDecisionPath ? (
+    //       <FileLink url={row.original?.accreditationCommissionDecisionPath} />
+    //     ) : (
+    //       <span className="text-red-600">Mavjud emas</span>
+    //     ),
+    // },
+    // {
+    //   // accessorKey: 'assessmentCommissionDecisionPath',
+    //   header: 'Baholash komissiyasining qarori',
+    //   cell: ({ row }) =>
+    //     row.original?.assessmentCommissionDecisionPath ? (
+    //       <FileLink url={row.original?.assessmentCommissionDecisionPath} />
+    //     ) : (
+    //       <span className="text-red-600">Mavjud emas</span>
+    //     ),
+    // },
+    // {
+    //   // accessorKey: 'referencePath',
+    //   header: 'Ma’lumotnoma',
+    //   cell: ({ row }) =>
+    //     row.original?.referencePath ? (
+    //       <FileLink url={row.original?.referencePath} />
+    //     ) : (
+    //       <span className="text-red-600">Mavjud emas</span>
+    //     ),
+    // },
     {
       id: 'actions',
       header: 'Amallar',
@@ -73,7 +94,7 @@ export const AccreditationList = () => {
             <DataTableRowActions
               row={row}
               showView
-              onView={() => navigate(`/accreditations/detail/${row.original.id}`)}
+              onView={() => navigate(`/accreditations/detail/${row.original.appealId}?id=${row.original.id}`)}
             />
           </div>
         );

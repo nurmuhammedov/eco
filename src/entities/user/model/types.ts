@@ -22,6 +22,7 @@ export enum Direction {
   HF = 'HF',
   IRS = 'IRS',
   EQUIPMENT = 'EQUIPMENT',
+  REPORT = 'REPORT',
 }
 
 interface IInterval {

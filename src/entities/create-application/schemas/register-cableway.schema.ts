@@ -48,32 +48,39 @@ export const CablewayAppealDtoSchema = z.object({
     .date({ required_error: 'Ishlab chiqarilgan sana kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   partialCheckDate: z
-    .date({ required_error: 'Qisman texnik ko‘rik sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   fullCheckDate: z
-    .date({ required_error: 'To‘liq texnik ko‘rik sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkaziladigan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   labelPath: z
     .string({ required_error: 'Osma yo‘lning birkasi bilan sur‘ati fayli biriktirilmadi!' })
     .min(1, 'Osma yo‘lning birkasi bilan sur‘ati fayli biriktirilmadi!'),
+  labelExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   saleContractPath: z
     .string({ required_error: 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!' })
     .min(1, 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!'),
+  saleContractExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   equipmentCertPath: z
     .string({ required_error: 'Osma yo‘l sertifikati fayli biriktirilmadi!' })
     .min(1, 'Osma yo‘l sertifikati fayli biriktirilmadi!'),
+  equipmentCertExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   assignmentDecreePath: z
     .string({ required_error: "Mas'ul shaxs tayinlanganligi to'g'risida buyruq fayli biriktirilmadi!" })
     .min(1, "Mas'ul shaxs tayinlanganligi to'g'risida buyruq fayli biriktirilmadi!"),
+  assignmentDecreeExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   expertisePath: z
     .string({ required_error: 'Ekspertiza loyihasi fayli biriktirilmadi!' })
     .min(1, 'Ekspertiza loyihasi fayli biriktirilmadi!'),
+  expertiseExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   installationCertPath: z
     .string({ required_error: 'Montaj guvohnomasi fayli biriktirilmadi!' })
     .min(1, 'Montaj guvohnomasi fayli biriktirilmadi!'),
+  installationCertExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   additionalFilePath: z.string().optional(), // Ixtiyoriy
+  additionalFileExpiryDate: z.date().optional(), // Ixtiyoriy
   nonDestructiveCheckDate: z
-    .date({ required_error: 'Putur yetkazmaydigan nazoratdan o‘tkazish sanasi kiritilmadi!' })
+    .date({ required_error: 'Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   speed: z.string({ required_error: 'Harakat tezligi kiritilmadi!' }).min(1, 'Harakat tezligi kiritilmadi!'),
   passengerCount: z

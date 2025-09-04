@@ -32,10 +32,10 @@ export const LifAppealDtoSchema = z.object({
     .date({ required_error: 'Ishlab chiqarilgan sana kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   partialCheckDate: z
-    .date({ required_error: 'Qisman texnik koʼrik sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   fullCheckDate: z
-    .date({ required_error: 'Toʼliq texnik koʼrik sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkaziladigan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   labelPath: z
     .string({ required_error: 'Liftning birkasi bilan surʼati fayli biriktirilmadi!' })

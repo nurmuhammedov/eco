@@ -20,14 +20,24 @@ const ApplicationPage = () => {
   } = useCustomSearchParams();
 
   const action = useMemo(() => {
-    return (
-      [UserRoles.LEGAL, UserRoles.INDIVIDUAL]?.includes(user?.role) && (
+    if ([UserRoles.LEGAL, UserRoles.INDIVIDUAL]?.includes(user?.role)) {
+      return (
         <Button onClick={() => navigate('/applications/create')}>
           <PlusCircle /> Ariza yaratish
         </Button>
-      )
-    );
-  }, []);
+      );
+    }
+
+    if (UserRoles.INSPECTOR === user?.role) {
+      return (
+        <Button onClick={() => navigate('/applications/inspector/create')}>
+          <PlusCircle /> Norasmiy XICHO va qurilma uchun arizalar
+        </Button>
+      );
+    }
+
+    return null;
+  }, [user?.role, navigate]);
 
   return (
     <TabsLayout action={action} activeTab={status} tabs={applicationStatus} onTabChange={handleChangeTab}>

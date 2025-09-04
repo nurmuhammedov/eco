@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 interface ApplicationCardProps {
   application: ApplicationCardItem;
   url?: string;
+  btnTitle?: string;
 }
 
 const SendSVGIcon = () => (
@@ -20,7 +21,15 @@ const SendSVGIcon = () => (
   </span>
 );
 
-const AnimatedButton = ({ type, url = 'applications' }: { type: ApplicationTypeEnum; url?: string }) => {
+const AnimatedButton = ({
+  type,
+  url = 'applications',
+  btnTitle = 'Ariza yuborish',
+}: {
+  type: ApplicationTypeEnum;
+  url?: string;
+  btnTitle?: string;
+}) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -35,14 +44,14 @@ const AnimatedButton = ({ type, url = 'applications' }: { type: ApplicationTypeE
     >
       <span className="relative z-10 flex items-center">
         <SendSVGIcon />
-        Ariza yuborish
+        {btnTitle}
       </span>
       <span className="absolute inset-0 bg-white/10 transform -skew-x-12 -translate-x-full opacity-0 group-hover:opacity-100 group-hover:translate-x-full transition-transform ease-out duration-700" />
     </button>
   );
 };
 
-function ApplicationCard({ application, url }: ApplicationCardProps) {
+function ApplicationCard({ application, url, btnTitle }: ApplicationCardProps) {
   return (
     <div className="group p-6 relative border border-slate-100 bg-white flex flex-col justify-between rounded-md overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
       <div className="mb-5 flex items-center">
@@ -57,7 +66,7 @@ function ApplicationCard({ application, url }: ApplicationCardProps) {
       <h3 className="text-base font-medium text-slate-800 line-clamp-2 leading-5">{application.title}</h3>
 
       <p className="text-sm text-gray-500 font-normal mb-6 mt-2 line-clamp-2">{application.description}</p>
-      <AnimatedButton url={url} type={application.type} />
+      <AnimatedButton url={url} type={application.type} btnTitle={btnTitle} />
     </div>
   );
 }

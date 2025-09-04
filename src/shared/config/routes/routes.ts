@@ -12,6 +12,7 @@ const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application
 const AttestationDetail = lazy(() => import('@/pages/attestation/attestation-detail'));
 
 const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'));
+const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'));
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'));
 
 // Auth pages
@@ -19,6 +20,10 @@ const AdminLogin = lazy(() => import('@/pages/auth/ui/admin-login'));
 const OneIdLoginPage = lazy(() => import('@/pages/auth/ui/login-page'));
 
 const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'));
+const ReportsPage = lazy(() => import('@/features/reports/ui/reports'));
+const ReportsDetail1 = lazy(() => import('@/features/reports/ui/report1'));
+const ReportsDetail2 = lazy(() => import('@/features/reports/ui/report2'));
+const ReportsDetail3 = lazy(() => import('@/features/reports/ui/report3'));
 const RegionsPage = lazy(() => import('@/pages/admin/regions/ui'));
 const DepartmentPage = lazy(() => import('@/pages/admin/department/ui'));
 const TemplatesPage = lazy(() => import('@/pages/admin/templates/page'));
@@ -44,6 +49,10 @@ const AttestationPage = lazy(() => import('@/pages/attestation'));
 const CadastrePage = lazy(() => import('@/pages/cadastre'));
 const AddAttestationEmployeePage = lazy(() => import('@/pages/attestation/add-employee'));
 const AccreditationDetailPage = lazy(() => import('@/pages/accreditations/detail'));
+const AccreditationConclusionsDetailPage = lazy(
+  () => import('@/features/accreditation/ui/accreditation-conclusion-detail'),
+);
+const CadastreDetailPage = lazy(() => import('@/pages/cadastre/detail'));
 
 export const appRoutes = [
   {
@@ -54,12 +63,37 @@ export const appRoutes = [
   {
     path: 'applications/create',
     component: CreateApplicationGrids,
-    roles: [UserRoles.LEGAL],
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
+  },
+  {
+    path: 'applications/inspector/create',
+    component: CreateApplicationGridsIns,
+    roles: [UserRoles.INSPECTOR],
+  },
+  {
+    path: 'reports',
+    component: ReportsPage,
+    roles: [],
+  },
+  {
+    path: 'reports/create/REPORT_1',
+    component: ReportsDetail1,
+    roles: [],
+  },
+  {
+    path: 'reports/create/REPORT_2',
+    component: ReportsDetail2,
+    roles: [],
+  },
+  {
+    path: 'reports/create/REPORT_3',
+    component: ReportsDetail3,
+    roles: [],
   },
   {
     path: 'applications/create/:type',
     component: CreateApplicationForm,
-    roles: [UserRoles.LEGAL],
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.INSPECTOR],
   },
   {
     path: 'applications/detail/:id',
@@ -144,24 +178,27 @@ export const appRoutes = [
   {
     path: 'risk-analysis',
     component: RiskAnalysisPage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
+    // roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
+    roles: [],
   },
   {
     path: 'risk-analysis/detail',
     component: RiskAnalysisDetailPage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
+    // roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
+    roles: [],
   },
   {
     path: 'preventions',
     component: PreventionsPage,
-    roles: [
-      UserRoles.LEGAL,
-      UserRoles.HEAD,
-      UserRoles.MANAGER,
-      UserRoles.REGIONAL,
-      UserRoles.INSPECTOR,
-      UserRoles.INDIVIDUAL,
-    ],
+    // roles: [
+    //   UserRoles.LEGAL,
+    //   UserRoles.HEAD,
+    //   UserRoles.MANAGER,
+    //   UserRoles.REGIONAL,
+    //   UserRoles.INSPECTOR,
+    //   UserRoles.INDIVIDUAL,
+    // ],
+    roles: [],
   },
   {
     path: 'preventions/create/:tin',
@@ -171,14 +208,15 @@ export const appRoutes = [
   {
     path: 'preventions/view/:id',
     component: PreventionViewPage,
-    roles: [
-      UserRoles.LEGAL,
-      UserRoles.HEAD,
-      UserRoles.MANAGER,
-      UserRoles.REGIONAL,
-      UserRoles.INSPECTOR,
-      UserRoles.INDIVIDUAL,
-    ],
+    // roles: [
+    //   UserRoles.LEGAL,
+    //   UserRoles.HEAD,
+    //   UserRoles.MANAGER,
+    //   UserRoles.REGIONAL,
+    //   UserRoles.INSPECTOR,
+    //   UserRoles.INDIVIDUAL,
+    // ],
+    roles: [],
   },
   {
     path: 'checklists',
@@ -188,37 +226,55 @@ export const appRoutes = [
   {
     path: 'inspections',
     component: InspectionsPage,
-    roles: [UserRoles.MANAGER, UserRoles.INSPECTOR, UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL],
+    roles: [],
+    // roles: [UserRoles.MANAGER, UserRoles.INSPECTOR, UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL],
   },
   {
     path: 'inspections/info',
     component: InspectionsInfoPage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
+    roles: [],
+    // roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
   },
   {
     path: 'inspections/detail',
     component: InspectionsDetailPage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
+    roles: [],
+    // roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
   },
   {
     path: 'accreditations',
     component: AccreditationPage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER],
+    roles: [],
+    // roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER],
   },
   {
     path: 'attestations',
     component: AttestationPage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER, UserRoles.INSPECTOR, UserRoles.REGIONAL],
+    roles: [],
+    // roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER, UserRoles.INSPECTOR, UserRoles.REGIONAL],
   },
   {
     path: '/attestations/add',
     component: AddAttestationEmployeePage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
+    roles: [],
+    // roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
   },
   {
     path: '/accreditations/detail/:id',
     component: AccreditationDetailPage,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER],
+    roles: [],
+    // roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER],
+  },
+  {
+    path: '/accreditations/conclusions/detail/:id',
+    component: AccreditationConclusionsDetailPage,
+    roles: [],
+    // roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.MANAGER],
+  },
+  {
+    path: '/cadastre/detail/:id',
+    component: CadastreDetailPage,
+    roles: [],
   },
 ];
 

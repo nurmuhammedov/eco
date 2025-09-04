@@ -59,7 +59,34 @@ export const MAIN_APPLICATION_BY_CATEGORY = {
   [ApplicationCategory.CADASTRE]: [],
   [ApplicationCategory.ACCREDITATION]: [],
   [ApplicationCategory.ATTESTATION_PREVENTION]: [],
+  [ApplicationCategory.ILLEGAL]: [],
 };
+
+export const REPORTS_DATA: ApplicationCardItem[] = [
+  {
+    id: 1,
+    title: '1-jadval',
+    description: 'Jismoniy va yuridik shaxslardan yuborilgan arizalarni hududlar kesimida taqsimlanishi',
+    type: ApplicationTypeEnum.REPORT_1,
+    icon: 'factoryRegisterIcon',
+  },
+  {
+    id: 2,
+    title: '2-jadval',
+    description:
+      'Jismoniy va yuridik shaxslardan yuborilgan arizalarni turlari bo‘yicha hududlar kesimida taqsimlanishi',
+    type: ApplicationTypeEnum.REPORT_2,
+    icon: 'factoryDeregisterIcon',
+  },
+  {
+    id: 3,
+    title: '3-jadval',
+    description:
+      'Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, qurilmalar va IIMlarni hududlar kesimida taqsimlanishi',
+    type: ApplicationTypeEnum.REPORT_3,
+    icon: 'factoryUpdateIcon',
+  },
+];
 
 export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
@@ -68,6 +95,14 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description: 'XICHOni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.XICHO,
     type: ApplicationTypeEnum.REGISTER_HF,
+    icon: 'factoryRegisterIcon',
+  },
+  {
+    id: 12612,
+    title: 'XICHOni ro‘yxatga olish',
+    description: 'XICHOni ro‘yxatga olish ariza shakli',
+    category: ApplicationCategory.ILLEGAL,
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_HF,
     icon: 'factoryRegisterIcon',
   },
   {
@@ -80,13 +115,286 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   },
   {
     id: 3,
-    title: 'ХИЧО реестрига ўзгартириш киритиш',
-    description: 'ХИЧО реестрига ўзгартириш киритиш учун ариза шакли',
+    title: 'XICHO reyestriga o‘zgartirish kiritish',
+    description: 'XICHO reyestriga o‘zgartirish kiritish uchun ariza shakli',
     category: ApplicationCategory.XICHO,
     type: ApplicationTypeEnum.MODIFY_HF,
     icon: 'factoryUpdateIcon',
   },
+
   // Xavfli obyektlar va qurilmalar => Ro'yxatga olish
+
+  {
+    id: 10,
+    title: 'Qurilmani ro‘yxatdan chiqarish',
+    name: 'Qurilma',
+    description: 'Qurilmani ro‘yxatdan chiqarish ariza shakli',
+    category: ApplicationCategory.HOKQ,
+    type: ApplicationTypeEnum.DEREGISTER_EQUIPMENT,
+    parentId: MainApplicationCategory.UNREGISTER,
+    icon: 'boiler',
+  },
+
+  {
+    id: 10,
+    title: 'Qurilmani qayta ro‘yxatga olish',
+    name: 'Qurilma',
+    description: 'Qurilmani qayta ro‘yxatga olish ariza shakli',
+    category: ApplicationCategory.HOKQ,
+    type: ApplicationTypeEnum.RE_REGISTER_EQUIPMENT,
+    parentId: MainApplicationCategory.REREGISTER,
+    icon: 'boiler',
+  },
+
+  //
+  {
+    id: 10,
+    title: 'Kranni ro‘yxatdan chiqarish',
+    name: 'Kran',
+    description: 'Kranni ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_CRANE,
+    icon: 'crane',
+  },
+  {
+    id: 4,
+    title: 'Bosim ostida ishlovchi idishni ro‘yxatdan chiqarish',
+    name: 'Bosim ostida ishlovchi idish',
+    description: 'Bosim ostida ishlovchi idishni ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_CONTAINER,
+    icon: 'pressureVessel',
+  },
+  {
+    id: 5,
+    title: 'Bug‘ qozonni ro‘yxatdan chiqarish',
+    name: 'Bug‘ qozon',
+    description: 'Bug‘ qozonlarini ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_BOILER,
+    icon: 'boiler',
+  },
+  {
+    id: 6,
+    title: 'Liftni ro‘yxatdan chiqarish',
+    name: 'Lift',
+    description: 'Liftni ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_ELEVATOR,
+    icon: 'elevator',
+  },
+  {
+    id: 7,
+    title: 'Eskalatorni ro‘yxatdan chiqarish',
+    name: 'Eskalator',
+    description: 'Eskalatorni ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_ESCALATOR,
+    icon: 'escalator',
+  },
+  {
+    id: 8,
+    title: 'Attraksion pasportini ro‘yxatdan chiqarish',
+    name: 'Attraksion pasporti',
+    description: 'Attraksion pasportlarini ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_ATTRACTION_PASSPORT,
+    icon: 'passport',
+  },
+  {
+    id: 9,
+    title: 'Attraksionni ro‘yxatdan chiqarish',
+    name: 'Attraksion',
+    description: 'Attraksion qurilmalarini ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_ATTRACTION,
+    icon: 'attraction',
+  },
+  {
+    id: 11,
+    title: 'Quvurni ro‘yxatdan chiqarish',
+    name: 'Quvur',
+    description: 'Quvurlarni ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_PIPELINE,
+    icon: 'pipeSystem',
+  },
+  {
+    id: 12,
+    title: 'Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatdan chiqarish',
+    name: 'Bosim ostida ishlovchi idish (kimyo)',
+    description: 'Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_CHEMICAL_CONTAINER,
+    icon: 'chemicalVessel',
+  },
+  {
+    id: 13,
+    title: 'Bug‘ va issiq suv quvurlarini ro‘yxatdan chiqarish',
+    name: 'Bug‘ va issiq suv quvuri',
+    description: 'Bug‘ va issiq suv quvurlarini ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_HEAT_PIPELINE,
+    icon: 'steamPipe',
+  },
+  {
+    id: 14,
+    title: 'Qozon utilizatorlarini ro‘yxatdan chiqarish',
+    name: 'Qozon utilizatorlarini',
+    description: 'Qozon utilizatorlarini ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_BOILER_UTILIZER,
+    icon: 'recycleBoiler',
+  },
+  {
+    id: 15,
+    title: 'Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatdan chiqarish',
+    name: 'Bosim ostida ishlovchi idishlarni (SUG)',
+    description: 'Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_LPG_CONTAINER,
+    icon: 'gasVessel',
+  },
+  {
+    id: 16,
+    title: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni ro‘yxatdan chiqarish',
+    name: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma',
+    description:
+      'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_LPG_POWERED,
+    icon: 'naturalGas',
+  },
+  {
+    id: 17,
+    title: 'Yuk ko‘targichni ro‘yxatdan chiqarish',
+    name: 'Yuk ko‘targich',
+    description: 'Yuk ko‘targichni ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_HOIST,
+    icon: 'heavyLift',
+  },
+  {
+    id: 18,
+    title: 'Osma arqonli yuruvchi yo‘lni ro‘yxatdan chiqarish',
+    name: 'Osma arqonli yuruvchi yo‘l',
+    description: 'Osma arqonli yuruvchi yo‘lni ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_CABLEWAY,
+    icon: 'cableway',
+  },
+
+  //
+
+  {
+    id: 10,
+    title: 'Kranni qayta ro‘yxatga olish',
+    name: 'Kran',
+    description: 'Kranni qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_CRANE,
+    icon: 'crane',
+  },
+  {
+    id: 4,
+    title: 'Bosim ostida ishlovchi idishni qayta ro‘yxatga olish',
+    name: 'Bosim ostida ishlovchi idish',
+    description: 'Bosim ostida ishlovchi idishni qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_CONTAINER,
+    icon: 'pressureVessel',
+  },
+  {
+    id: 5,
+    title: 'Bug‘ qozonni qayta ro‘yxatga olish',
+    name: 'Bug‘ qozon',
+    description: 'Bug‘ qozonlarini qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_BOILER,
+    icon: 'boiler',
+  },
+  {
+    id: 6,
+    title: 'Liftni qayta ro‘yxatga olish',
+    name: 'Lift',
+    description: 'Liftni qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_ELEVATOR,
+    icon: 'elevator',
+  },
+  {
+    id: 7,
+    title: 'Eskalatorni qayta ro‘yxatga olish',
+    name: 'Eskalator',
+    description: 'Eskalatorni qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_ESCALATOR,
+    icon: 'escalator',
+  },
+  {
+    id: 8,
+    title: 'Attraksion pasportini qayta ro‘yxatga olish',
+    name: 'Attraksion pasporti',
+    description: 'Attraksion pasportlarini qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_ATTRACTION_PASSPORT,
+    icon: 'passport',
+  },
+  {
+    id: 9,
+    title: 'Attraksionni qayta ro‘yxatga olish',
+    name: 'Attraksion',
+    description: 'Attraksion qurilmalarini qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_ATTRACTION,
+    icon: 'attraction',
+  },
+  {
+    id: 11,
+    title: 'Quvurni qayta ro‘yxatga olish',
+    name: 'Quvur',
+    description: 'Quvurlarni qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_PIPELINE,
+    icon: 'pipeSystem',
+  },
+  {
+    id: 12,
+    title: 'Bosim ostida ishlovchi idishlarni (kimyo) qayta ro‘yxatga olish',
+    name: 'Bosim ostida ishlovchi idish (kimyo)',
+    description: 'Bosim ostida ishlovchi idishlarni (kimyo) qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_CHEMICAL_CONTAINER,
+    icon: 'chemicalVessel',
+  },
+  {
+    id: 13,
+    title: 'Bug‘ va issiq suv quvurlarini qayta ro‘yxatga olish',
+    name: 'Bug‘ va issiq suv quvuri',
+    description: 'Bug‘ va issiq suv quvurlarini qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_HEAT_PIPELINE,
+    icon: 'steamPipe',
+  },
+  {
+    id: 14,
+    title: 'Qozon utilizatorlarini qayta ro‘yxatga olish',
+    name: 'Qozon utilizatorlarini',
+    description: 'Qozon utilizatorlarini qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_BOILER_UTILIZER,
+    icon: 'recycleBoiler',
+  },
+  {
+    id: 15,
+    title: 'Bosim ostida ishlovchi idishlarni (SUG) qayta ro‘yxatga olish',
+    name: 'Bosim ostida ishlovchi idishlarni (SUG)',
+    description: 'Bosim ostida ishlovchi idishlarni (SUG) qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_LPG_CONTAINER,
+    icon: 'gasVessel',
+  },
+  {
+    id: 16,
+    title: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni qayta ro‘yxatga olish',
+    name: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma',
+    description:
+      'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_LPG_POWERED,
+    icon: 'naturalGas',
+  },
+  {
+    id: 17,
+    title: 'Yuk ko‘targichni qayta ro‘yxatga olish',
+    name: 'Yuk ko‘targich',
+    description: 'Yuk ko‘targichni qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_HOIST,
+    icon: 'heavyLift',
+  },
+  {
+    id: 18,
+    title: 'Osma arqonli yuruvchi yo‘lni qayta ro‘yxatga olish',
+    name: 'Osma arqonli yuruvchi yo‘l',
+    description: 'Osma arqonli yuruvchi yo‘lni qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_CABLEWAY,
+    icon: 'cableway',
+  },
+
+  //
+
   {
     id: 10,
     title: 'Kranni ro‘yxatga olish',
@@ -170,7 +478,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     name: 'Quvur',
     description: 'Quvurlarni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.REGISTER_PIPELINE, // Yangilandi
+    type: ApplicationTypeEnum.REGISTER_PIPELINE,
     equipmentType: ApplicationTypeEnum.PIPELINE,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'pipeSystem',
@@ -181,7 +489,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     name: 'Bosim ostida ishlovchi idish (kimyo)',
     description: 'Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.REGISTER_CHEMICAL_CONTAINER, // Yangilandi
+    type: ApplicationTypeEnum.REGISTER_CHEMICAL_CONTAINER,
     equipmentType: ApplicationTypeEnum.CHEMICAL_CONTAINER,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'chemicalVessel',
@@ -192,7 +500,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     name: 'Bug‘ va issiq suv quvuri',
     description: 'Bug‘ va issiq suv quvurlarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.REGISTER_HEAT_PIPELINE, // Yangilandi
+    type: ApplicationTypeEnum.REGISTER_HEAT_PIPELINE,
     equipmentType: ApplicationTypeEnum.HEAT_PIPELINE,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'steamPipe',
@@ -203,7 +511,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     name: 'Qozon utilizatorlarini',
     description: 'Qozon utilizatorlarini ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.REGISTER_BOILER_UTILIZER, // Yangilandi
+    type: ApplicationTypeEnum.REGISTER_BOILER_UTILIZER,
     equipmentType: ApplicationTypeEnum.BOILER_UTILIZER,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'recycleBoiler',
@@ -214,7 +522,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     name: 'Bosim ostida ishlovchi idishlarni (SUG)',
     description: 'Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.REGISTER_LPG_CONTAINER, // Yangilandi
+    type: ApplicationTypeEnum.REGISTER_LPG_CONTAINER,
     equipmentType: ApplicationTypeEnum.LPG_CONTAINER,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'gasVessel',
@@ -226,7 +534,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     description:
       'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.REGISTER_LPG_POWERED, // Vaqtinchalik moslashtirish, asl enum qiymatini aniqlash kerak
+    type: ApplicationTypeEnum.REGISTER_LPG_POWERED,
     equipmentType: ApplicationTypeEnum.LPG_POWERED,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'naturalGas',
@@ -237,7 +545,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     name: 'Yuk ko‘targich',
     description: 'Yuk ko‘targichni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.REGISTER_HOIST, // Yangilandi (RegisterElevator -> REGISTER_HOIST)
+    type: ApplicationTypeEnum.REGISTER_HOIST,
     equipmentType: ApplicationTypeEnum.HOIST,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'heavyLift',
@@ -248,7 +556,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     name: 'Osma arqonli yuruvchi yo‘l',
     description: 'Osma arqonli yuruvchi yo‘lni ro‘yxatga olish ariza shakli',
     category: ApplicationCategory.HOKQ,
-    type: ApplicationTypeEnum.REGISTER_CABLEWAY, // Yangilandi (RegisterBridgeOrRoad -> REGISTER_CABLEWAY)
+    type: ApplicationTypeEnum.REGISTER_CABLEWAY,
     equipmentType: ApplicationTypeEnum.CABLEWAY,
     parentId: MainApplicationCategory.REGISTER,
     icon: 'cableway',

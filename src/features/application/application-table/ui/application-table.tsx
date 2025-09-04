@@ -1,26 +1,27 @@
 import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application';
 import { ApplicationCategory, APPLICATIONS_DATA } from '@/entities/create-application';
+import { UserRoles } from '@/entities/user';
 import { useApplicationList } from '@/features/application/application-table/hooks';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import Filter from '@/shared/components/common/filter';
 import { useCustomSearchParams } from '@/shared/hooks';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
 import { FileWarning } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { UserRoles } from '@/entities/user';
 
 export const ApplicationTable = () => {
   const { user } = useAuth();
   const {
-    paramsObject: { status = ApplicationStatus.ALL, search = '', ...rest },
+    paramsObject: { status = ApplicationStatus.ALL, mode, search = '', ...rest },
   } = useCustomSearchParams();
   const { data: applications = [] } = useApplicationList({
     ...rest,
     status: status !== 'ALL' ? status : '',
-    legalTin: search,
+    search,
+    mode,
   });
 
   const navigate = useNavigate();
@@ -47,8 +48,12 @@ export const ApplicationTable = () => {
     ...(user?.role != UserRoles.LEGAL && user?.role != UserRoles.INDIVIDUAL
       ? [
           {
-            accessorKey: 'legalName',
+            accessorKey: 'ownerName',
             header: 'Arizachi tashkilot nomi',
+          },
+          {
+            accessorKey: 'ownerIdentity',
+            header: 'Arizachi tashkilot STIR/ Fuqaro JSHSHIR',
           },
         ]
       : []),
@@ -67,7 +72,9 @@ export const ApplicationTable = () => {
           ApplicationCategory.ACCREDITATION
           ? `Аxborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi`
           : APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
-              ApplicationCategory.HOKQ
+                ApplicationCategory.HOKQ ||
+              cell.row.original.appealType?.startsWith('RE_') ||
+              cell.row.original.appealType?.startsWith('DE')
             ? `Davlat xizmatlarini ko‘rsatish boʼlimi`
             : APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
                 ApplicationCategory.INM
@@ -114,7 +121,7 @@ export const ApplicationTable = () => {
 
   return (
     <>
-      <Filter inputKeys={['search', 'appealType', 'officeId', 'executorId', 'startDate', 'endDate']} />
+      <Filter inputKeys={['search', 'appealType', 'officeId', 'executorId', 'mode', 'startDate', 'endDate']} />
       <DataTable
         isPaginated
         data={applications || []}

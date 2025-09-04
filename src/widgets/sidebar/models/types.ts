@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 export type NavigationItem = {
+  id?: string;
   url: string;
   title: string;
   icon: ReactNode;

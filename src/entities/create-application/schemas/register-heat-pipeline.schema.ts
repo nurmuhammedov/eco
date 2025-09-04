@@ -48,10 +48,10 @@ export const HeatPipelineAppealDtoSchema = z.object({
     .date({ required_error: 'Ishlab chiqarilgan sana kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   partialCheckDate: z
-    .date({ required_error: 'Qisman texnik ko‘rik sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   fullCheckDate: z
-    .date({ required_error: 'To‘liq texnik ko‘rik sanasi kiritilmadi!' })
+    .date({ required_error: 'O‘tkaziladigan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   labelPath: z
     .string({ required_error: 'Quvurning birkasi bilan sur‘ati fayli biriktirilmadi!' })
@@ -80,7 +80,7 @@ export const HeatPipelineAppealDtoSchema = z.object({
   additionalFilePath: z.string().optional(), // Ixtiyoriy
   additionalFileExpiryDate: z.date().optional(), // Ixtiyoriy
   nonDestructiveCheckDate: z
-    .date({ required_error: 'Putur yetkazmaydigan nazoratdan o‘tkazish sanasi kiritilmadi!' })
+    .date({ required_error: 'Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   diameter: z.string({ required_error: 'Diametr, mm kiritilmadi!' }).min(1, 'Diametr, mm kiritilmadi!'),
   thickness: z

@@ -1,10 +1,3 @@
-import { useState } from 'react';
-import { SignatureSelect } from '../index';
-import { getSignatureKeys } from '@/shared/lib';
-import { Loader2, Signature } from 'lucide-react';
-import { useSignatureClient } from '@/shared/hooks';
-import { Button } from '@/shared/components/ui/button';
-import { SignatureKey } from '@/shared/types/signature';
 import { useDocumentSigning } from '@/shared/components/common/signature/model';
 import {
   AlertDialog,
@@ -17,6 +10,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/shared/components/ui/alert-dialog';
+import { Button } from '@/shared/components/ui/button';
+import { useSignatureClient } from '@/shared/hooks';
+import { getSignatureKeys } from '@/shared/lib';
+import { SignatureKey } from '@/shared/types/signature';
+import { Loader2, Signature } from 'lucide-react';
+import { useState } from 'react';
+import { SignatureSelect } from '../index';
 
 interface SignatureModalProps {
   isLoading: boolean;
@@ -49,11 +49,26 @@ export const SignatureModal = ({
     if (onConfirm) {
       onConfirm(selectedCertificate);
     }
+
+    // if (apiConfig.oneIdClientId == 'test_cirns_uz') {
+    //   submitApplicationMetaData('singString');
+    // } else {
+    //   await signDocument({
+    //     Client,
+    //     documentUrl,
+    //     signature: selectedCertificate,
+    //     onSuccess: (result) => submitApplicationMetaData(result),
+    //   });
+    // }
+
     await signDocument({
       Client,
       documentUrl,
       signature: selectedCertificate,
-      onSuccess: (result) => submitApplicationMetaData(result),
+      onSuccess: (result) => {
+        console.log(result);
+        submitApplicationMetaData(result);
+      },
     });
     setSelectedCertificate(null);
     setOpen(false);

@@ -10,6 +10,7 @@ export const PERMISSIONS = {
   CADASTRE: 'CADASTRE',
   PERMITS: 'PERMITS',
   HF: 'HF',
+  REPORT: 'REPORT',
   IRS: 'IRS',
   EQUIPMENT: 'EQUIPMENT',
 };

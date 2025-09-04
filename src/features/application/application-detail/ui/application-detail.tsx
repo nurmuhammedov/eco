@@ -27,7 +27,7 @@ const ApplicationDetail = ({
   showAttestationActions?: boolean;
 }) => {
   const currentObjLocation = data?.data?.location?.split(',') || ([] as Coordinate[]);
-  const isLegalApplication = !!data?.legalTin;
+  const isLegalApplication = data?.ownerType == 'LEGAL';
   return (
     <div className="grid grid-cols-1 gap-4 mt-4">
       <DetailCardAccordion
@@ -72,18 +72,17 @@ const ApplicationDetail = ({
         {!isLegalApplication && (
           <DetailCardAccordion.Item value="applicant_info_individual" title="Arizachi to‘g‘risida ma’lumot">
             <div className="py-1  flex flex-col">
-              <DetailRow title="Arizachi JSHIR:" value={'-'} />
-              <DetailRow title="Arizachi F.I.SH:" value={'-'} />
-              <DetailRow title="Arizachining manzili:" value={'-'} />
-              <DetailRow title="Arizachining telefon raqami:" value={'-'} />
-              <DetailRow title="Arizachining elektron pochtasi:" value={'-'} />
+              <DetailRow title="Arizachi JSHIR:" value={data?.ownerIdentity || '-'} />
+              <DetailRow title="Arizachi F.I.SH:" value={data?.ownerName || '-'} />
+              <DetailRow title="Arizachining manzili:" value={data?.address || '-'} />
+              <DetailRow title="Arizachining telefon raqami:" value={data?.phoneNumber || '-'} />
             </div>
           </DetailCardAccordion.Item>
         )}
 
         {isLegalApplication && (
           <DetailCardAccordion.Item value="applicant_info_legal" title="Arizachi to‘g‘risida ma’lumot">
-            <LegalApplicantInfo tinNumber={data?.legalTin} />
+            <LegalApplicantInfo tinNumber={data?.ownerIdentity} />
           </DetailCardAccordion.Item>
         )}
 
@@ -97,7 +96,7 @@ const ApplicationDetail = ({
             <TabsContent value="info">
               <AppealMainInfo
                 data={data?.data}
-                type={data?.appealType?.replace('REGISTER_', '')}
+                type={data?.appealType?.replace('DEREGISTER_', '')?.replace('REGISTER_', '')?.replace('RE_', '')}
                 address={data?.address}
               />
             </TabsContent>

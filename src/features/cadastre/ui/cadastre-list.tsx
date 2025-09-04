@@ -1,12 +1,15 @@
 import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types';
-import { DataTable } from '@/shared/components/common/data-table';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
+import { getDate } from '@/shared/utils/date';
+import { useNavigate } from 'react-router-dom';
 
 export const CadastreList = () => {
   const { t } = useTranslation('common');
   const { paramsObject } = useCustomSearchParams();
+  const navigate = useNavigate();
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>('/cadastre-passports', {
     page: paramsObject?.page || 1,
     size: paramsObject?.size || 10,
@@ -14,11 +17,15 @@ export const CadastreList = () => {
 
   const columns: ColumnDef<any>[] = [
     {
-      header: t('risk_analysis_columns.registryNumber'),
+      header: t('TXYZ kadastr pasportining hisobga olish raqami'),
       accessorKey: 'registryNumber',
     },
     {
-      header: t('XICHO nomi'),
+      header: t('TXYZ kadastr pasportining hisobga olish sanasi'),
+      accessorFn: (row) => getDate(row.createdAt),
+    },
+    {
+      header: t('XICHO nomi (mavjud bo‘lsa)'),
       accessorKey: 'hfName',
     },
     {
@@ -26,16 +33,31 @@ export const CadastreList = () => {
       accessorKey: 'hfAddress',
     },
     {
-      header: t('risk_analysis_columns.legalName'),
+      header: t('XICHOga egalik qiluvchi yuridik shaxs nomi'),
       accessorKey: 'legalName',
     },
     {
-      header: t('risk_analysis_columns.legalTin'),
+      header: t('Tashkilot STIR'),
       accessorKey: 'legalTin',
     },
     {
-      header: t('risk_analysis_columns.address'),
+      header: t('TXYZ manzili'),
       accessorKey: 'legalAddress',
+    },
+    {
+      id: 'actions',
+      header: 'Amallar',
+      cell: ({ row }: any) => {
+        return (
+          <div className="flex gap-2">
+            <DataTableRowActions
+              row={row}
+              showView
+              onView={() => navigate(`/cadastre/detail/${row.original.appealId}?id=${row.original.id}`)}
+            />
+          </div>
+        );
+      },
     },
   ];
 

@@ -119,6 +119,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
       <DetailRow title={t(`labels.${type}.density`)} value={data?.parameters?.density} />
       <DetailRow title={t(`labels.${type}.fuel`)} value={data?.parameters?.fuel} />
       <DetailRow title={t(`labels.${type}.sphere`)} value={data?.sphere} />
+      <DetailRow title={t(`oldRegistryNumber`)} value={data?.registryNumber || ''} />
     </div>
   );
 };

@@ -87,6 +87,10 @@ export const AttractionList = () => {
         ]
       : [
           {
+            header: t('Ballar'),
+            accessorKey: 'score',
+          },
+          {
             header: t('risk_analysis_columns.inspectorName'),
             accessorKey: 'inspectorName',
             cell: ({ row }: any) => row.original.inspectorName || '-',

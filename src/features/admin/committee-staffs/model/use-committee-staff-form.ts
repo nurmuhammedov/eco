@@ -83,6 +83,7 @@ export function useCommitteeStaffForm() {
 
   const handleSubmit = useCallback(
     async (formData: CreateCommitteeStaffDTO): Promise<boolean> => {
+      console.log(formData, 'formData');
       try {
         if (isCreate) {
           const response = await createCommitteeStaff(formData);
@@ -94,6 +95,7 @@ export function useCommitteeStaffForm() {
           const response = await updateCommitteeStaff({
             id: committeeStaffId,
             ...formData,
+            directions: formData.directions?.filter((i) => i != 'ATTESTATION'),
           } as UpdateCommitteeStaffDTO);
           if (response.success) {
             handleClose();

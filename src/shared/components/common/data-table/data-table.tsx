@@ -29,6 +29,7 @@ interface DataTableProps<TData, TValue> {
   isPaginated?: boolean;
   pageQuery?: 'page' | 'p';
   sizeQuery?: string;
+  headerCenter?: boolean;
   pageSizeOptions?: number[];
   columns: ColumnDef<TData, TValue>[];
   data: TData[] | ResponseData<TData>;
@@ -46,6 +47,7 @@ export function DataTable<TData, TValue>({
   pageQuery = 'page',
   onPageSizeChange,
   isLoading = false,
+  headerCenter = false,
   isPaginated = true,
   pageSizeOptions,
   showNumeration = true,
@@ -121,6 +123,7 @@ export function DataTable<TData, TValue>({
                     colSpan={header.colSpan}
                     style={{
                       ...getCommonPinningStyles({ column: header.column }),
+                      ...(headerCenter ? { textAlign: 'center' } : {}),
                     }}
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
