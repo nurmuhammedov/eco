@@ -56,9 +56,11 @@ export const ContainerAppealDtoSchema = z.object({
   labelPath: z
     .string({ required_error: "Idishning birkasi bilan sur'ati fayli biriktirilmadi!" })
     .min(1, "Idishning birkasi bilan sur'ati fayli biriktirilmadi!"),
+  labelExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   saleContractPath: z
     .string({ required_error: 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!' })
     .min(1, 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!'),
+  saleContractExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   equipmentCertPath: z
     .string({ required_error: 'Idish sertifikati fayli biriktirilmadi!' })
     .min(1, 'Idish sertifikati fayli biriktirilmadi!'),
