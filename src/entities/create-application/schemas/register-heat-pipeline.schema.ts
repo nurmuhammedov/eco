@@ -56,9 +56,11 @@ export const HeatPipelineAppealDtoSchema = z.object({
   labelPath: z
     .string({ required_error: 'Quvurning birkasi bilan sur‘ati fayli biriktirilmadi!' })
     .min(1, 'Quvurning birkasi bilan sur‘ati fayli biriktirilmadi!'),
+  labelExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   saleContractPath: z
     .string({ required_error: 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!' })
     .min(1, 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!'),
+  saleContractExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   equipmentCertPath: z
     .string({ required_error: 'Quvur sertifikati fayli biriktirilmadi!' })
     .min(1, 'Quvur sertifikati fayli biriktirilmadi!'),

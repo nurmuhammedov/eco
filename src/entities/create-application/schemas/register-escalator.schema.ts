@@ -57,22 +57,29 @@ export const EscalatorAppealDtoSchema = z.object({
   labelPath: z
     .string({ required_error: 'Eskalatorning birkasi bilan sur‘ati fayli biriktirilmadi!' })
     .min(1, 'Eskalatorning birkasi bilan sur‘ati fayli biriktirilmadi!'),
+  labelExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   saleContractPath: z
     .string({ required_error: 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!' })
     .min(1, 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!'),
+  saleContractExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   equipmentCertPath: z
     .string({ required_error: 'Eskalator sertifikati fayli biriktirilmadi!' })
     .min(1, 'Eskalator sertifikati fayli biriktirilmadi!'),
+  equipmentCertExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   assignmentDecreePath: z
     .string({ required_error: "Mas'ul shaxs tayinlanganligi to'g'risida buyruq fayli biriktirilmadi!" })
     .min(1, "Mas'ul shaxs tayinlanganligi to'g'risida buyruq fayli biriktirilmadi!"),
+  assignmentDecreeExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   expertisePath: z
     .string({ required_error: 'Ekspertiza loyihasi fayli biriktirilmadi!' })
     .min(1, 'Ekspertiza loyihasi fayli biriktirilmadi!'),
+  expertiseExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   installationCertPath: z
     .string({ required_error: 'Montaj guvohnomasi fayli biriktirilmadi!' })
     .min(1, 'Montaj guvohnomasi fayli biriktirilmadi!'),
+  installationCertExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   additionalFilePath: z.string().optional(),
+  additionalFileExpiryDate: z.date().optional(),
   // sphere: z.nativeEnum(BuildingSphereType, {
   //   errorMap: () => ({ message: 'Soha tanlanmadi!' }),
   // }),

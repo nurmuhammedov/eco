@@ -553,7 +553,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}

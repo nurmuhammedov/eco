@@ -38,18 +38,22 @@ export const AttractionPassportAppealDtoSchema = z.object({
   labelPath: z
     .string({ required_error: 'Attraksionning birkasi bilan surati biriktirilmadi!' })
     .min(1, 'Attraksionning birkasi bilan surati biriktirilmadi!'),
+  labelExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   passportPath: z
     .string({ required_error: 'Attraksion pasporti fayli biriktirilmadi!' })
     .min(1, 'Attraksion pasporti fayli biriktirilmadi!'),
+  passportExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   equipmentCertPath: z
     .string({ required_error: 'Attraksion sertifikati fayli biriktirilmadi!' })
     .min(1, 'Attraksion sertifikati fayli biriktirilmadi!'),
+  equipmentCertExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   acceptanceCertPath: z
     .string({ required_error: 'Attraksionni foydalanishga qabul qilish guvohnomasi fayli biriktirilmadi!' })
     .min(1, 'Attraksionni foydalanishga qabul qilish guvohnomasi fayli biriktirilmadi!'),
   assignmentDecreePath: z
     .string({ required_error: 'Masʼul shaxs tayinlanganligi toʻgʻrisida buyruq fayli biriktirilmadi!' })
     .min(1, 'Masʼul shaxs tayinlanganligi toʻgʻrisida buyruq fayli biriktirilmadi!'),
+  assignmentDecreeExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   techReadinessActPath: z
     .string({ required_error: 'Attraksion texnik tayyorligi toʻgʻrisida dalolatnoma biriktirilmadi!' })
     .min(1, 'Attraksion texnik tayyorligi toʻgʻrisida dalolatnoma biriktirilmadi!'),

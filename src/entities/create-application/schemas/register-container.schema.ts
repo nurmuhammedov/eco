@@ -64,16 +64,21 @@ export const ContainerAppealDtoSchema = z.object({
   equipmentCertPath: z
     .string({ required_error: 'Idish sertifikati fayli biriktirilmadi!' })
     .min(1, 'Idish sertifikati fayli biriktirilmadi!'),
+  equipmentCertExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   assignmentDecreePath: z
     .string({ required_error: "Mas'ul shaxs tayinlanganligi to'g'risida buyruq fayli biriktirilmadi!" })
     .min(1, "Mas'ul shaxs tayinlanganligi to'g'risida buyruq fayli biriktirilmadi!"),
+  assignmentDecreeExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   expertisePath: z
     .string({ required_error: 'Ekspertiza loyihasi fayli biriktirilmadi!' })
     .min(1, 'Ekspertiza loyihasi fayli biriktirilmadi!'),
+  expertiseExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   installationCertPath: z
     .string({ required_error: 'Montaj guvohnomasi fayli biriktirilmadi!' })
     .min(1, 'Montaj guvohnomasi fayli biriktirilmadi!'),
+  installationCertExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   additionalFilePath: z.string().optional(), // Ixtiyoriy
+  additionalFileExpiryDate: z.string().optional(),
   nonDestructiveCheckDate: z // Putur yetkazmaydigan nazoratdan o'tkazish sanasi
     .date({ required_error: "Putur yetkazmaydigan nazoratdan o'tkazish sanasi kiritilmadi!" })
     .transform((date) => format(date, 'yyyy-MM-dd')),
