@@ -19,6 +19,8 @@ const HfDetail = () => {
     return null;
   }
 
+  console.log(data, 'data');
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
