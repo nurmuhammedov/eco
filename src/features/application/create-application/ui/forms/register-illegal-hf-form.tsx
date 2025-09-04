@@ -17,10 +17,17 @@ import { MultiSelect } from '@/shared/components/ui/multi-select';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { useCreateIllegalHFApplication } from '@/features/application/create-application/model/use-create-illegal-hf-applicaton';
+import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info';
+import DetailRow from '@/shared/components/common/detail-row';
 
 export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
   const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } =
     useCreateIllegalHFApplication();
+
+  const legalTin = form.watch('legalTin');
+
+  const { data, isLoading: isLegalInfoLoading } = useLegalApplicantInfo(legalTin, legalTin?.trim()?.length === 7);
+
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
@@ -41,6 +48,19 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               )}
             />
           </div>
+          {isLegalInfoLoading && <div className=""></div>}
+
+          {data && (
+            <div className="mt-6 border-t pt-6">
+              <h3 className="text-lg font-semibold mb-4 text-gray-800">Tashkilot ma'lumotlari</h3>
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-x-6 gap-y-4">
+                <DetailRow title="Tashkilot nomi:" value={data?.name || '-'} />
+                <DetailRow title="Tashkilot rahbari F.I.SH:" value={data?.directorName || '-'} />
+                <DetailRow title="Tashkilot manzili:" value={data?.address || '-'} />
+                <DetailRow title="Tashkilot telefon raqami:" value={data?.phoneNumber || '-'} />
+              </div>
+            </div>
+          )}
         </CardForm>
         <CardForm className="my-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
