@@ -55,7 +55,7 @@ const EquipmentsDetail = () => {
           />
           <DetailRow title="Hisobga olish sanasi:" value={getDate(data?.registrationDate)} />
           <DetailRow title="Hisobga olish raqami:" value={data?.registryNumber} />
-          <DetailRow title="Qurilmaning eski hisobga olish raqami:" value={regNumber?.registryNumber || '-'} />
+          <DetailRow title="Qurilmaning eski hisobga olish raqami:" value={regNumber?.oldRegistryNumber || '-'} />
           {!!data?.registryFilePath && (
             <DetailRow title="Sertifikat fayli:" value={<FileLink url={data?.registryFilePath} />} />
           )}

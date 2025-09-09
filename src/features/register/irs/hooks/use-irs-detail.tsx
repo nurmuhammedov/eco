@@ -16,7 +16,7 @@ export const useIrsDetail = () => {
         .filter(([label]) => label.includes('Path'))
         .map((file) => {
           const label = `labels.IRS.${file[0]}`;
-          return { label: t(label), path: file[1] };
+          return { label: t(label), data: file[1] };
         });
       return {
         ...data,

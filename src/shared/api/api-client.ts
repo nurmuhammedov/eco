@@ -39,6 +39,7 @@ async function apiRequest<T>(
   headers?: RequestHeaders,
   onUploadProgress?: ProgressCallback,
   usePagination?: boolean,
+  downloadFile?: boolean,
 ): Promise<ApiResponse<any>> {
   try {
     const requestConfig = {
@@ -57,6 +58,17 @@ async function apiRequest<T>(
         success: true,
         status: response.status,
         data: response.data.data,
+      };
+    } else if (downloadFile) {
+      const response = await axiosInstance.request<T>({
+        ...requestConfig,
+        responseType: 'blob',
+      });
+
+      return {
+        success: true,
+        status: response.status,
+        data: response.data,
       };
     } else {
       const response = await axiosInstance.request<T>(requestConfig);
@@ -107,6 +119,13 @@ export const apiClient = {
     headers?: RequestHeaders,
     onDownloadProgress?: ProgressCallback,
   ): Promise<ApiResponse<ResponseData<T>>> => apiRequest<T>('get', url, params, headers, onDownloadProgress, true),
+
+  downloadFile: <T>(
+    url: string,
+    params?: RequestParams,
+    headers?: RequestHeaders,
+    onDownloadProgress?: ProgressCallback,
+  ): Promise<ApiResponse<T>> => apiRequest('get', url, params, headers, onDownloadProgress, false, true),
 
   post: <T, B extends object = object>(
     url: string,

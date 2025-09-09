@@ -176,7 +176,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={ALL_ITEMS_VALUE as unknown as string}>{t('all', 'Barchasi')}</SelectItem>
-                    {getSelectOptions(officeOptionsDataFromApi?.data || [])}
+                    {getSelectOptions(officeOptionsDataFromApi || [])}
                   </SelectContent>
                 </Select>
               )}
@@ -237,7 +237,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={ALL_ITEMS_VALUE as unknown as string}>{t('all', 'Barchasi')}</SelectItem>
-                    {getSelectOptions(executorOptionsDataFromApi?.data || [])}
+                    {getSelectOptions(executorOptionsDataFromApi || [])}
                   </SelectContent>
                 </Select>
               )}

@@ -10,11 +10,18 @@ import React, { Fragment } from 'react';
 // import { useTranslation } from 'react-i18next';
 import { useRegister } from '../model/use-register';
 import { RegisterActiveTab } from '../types';
+import { useCustomSearchParams } from '@/shared/hooks';
+import { Button } from '@/shared/components/ui/button.tsx';
+import { PlusCircle } from 'lucide-react';
 
 const RegisterWidget = () => {
   // const { t } = useTranslation('common');
   const { user } = useAuth();
   const { activeTab, handleChangeTab, hfCount, irsCount, equipmentsCount } = useRegister();
+
+  const { paramsObject: params } = useCustomSearchParams();
+
+  console.log(params, 'activeTab');
 
   return (
     <Fragment>

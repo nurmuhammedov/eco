@@ -52,10 +52,10 @@ export const CraneAppealDtoSchema = z.object({
   liftingCapacity: z
     .string({ required_error: "Yuk ko'tara olishi kiritilmadi!" })
     .min(1, "Yuk ko'tara olishi kiritilmadi!"),
-  labelPath: z
-    .string({ required_error: "Kranning birkasi bilan sur'ati fayli biriktirilmadi!" })
-    .min(1, "Kranning birkasi bilan sur'ati fayli biriktirilmadi!"),
-  labelExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
+  labelPath: z.string().optional(),
+  // .string({ required_error: "Kranning birkasi bilan sur'ati fayli biriktirilmadi!" })
+  // .min(1, "Kranning birkasi bilan sur'ati fayli biriktirilmadi!"),
+  // labelExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   saleContractPath: z
     .string({ required_error: 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!' })
     .min(1, 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!'),

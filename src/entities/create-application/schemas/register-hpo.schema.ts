@@ -48,7 +48,6 @@ export const HFAppealDtoSchema = z.object({
   receiptPath: z
     .string({ required_error: 'XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi fayli biriktirilmadi!' })
     .min(1, 'XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi fayli biriktirilmadi!'),
-  identificationCardExpiryDate: z.date({ required_error: 'Identifikatsiya amal qilish muddati tanlanmadi!' }),
   expertOpinionPath: z.string().optional(),
   expertOpinionExpiryDate: z.date().optional(),
   projectDocumentationPath: z.string().optional(),

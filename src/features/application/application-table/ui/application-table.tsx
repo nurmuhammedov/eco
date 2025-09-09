@@ -14,9 +14,11 @@ import { useNavigate } from 'react-router-dom';
 
 export const ApplicationTable = () => {
   const { user } = useAuth();
+
   const {
     paramsObject: { status = ApplicationStatus.ALL, mode, search = '', ...rest },
   } = useCustomSearchParams();
+
   const { data: applications = [] } = useApplicationList({
     ...rest,
     status: status !== 'ALL' ? status : '',
@@ -122,6 +124,7 @@ export const ApplicationTable = () => {
   return (
     <>
       <Filter inputKeys={['search', 'appealType', 'officeId', 'executorId', 'mode', 'startDate', 'endDate']} />
+
       <DataTable
         isPaginated
         data={applications || []}
