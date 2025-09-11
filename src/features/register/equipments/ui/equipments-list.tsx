@@ -91,7 +91,6 @@ export const EquipmentsList = () => {
       isActive,
       status: status !== 'ALL' ? status : '',
     });
-
     const blob = res.data;
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

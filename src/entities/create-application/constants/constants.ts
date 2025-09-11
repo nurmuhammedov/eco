@@ -662,4 +662,13 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     type: ApplicationTypeEnum.REGISTER_DECLARATION,
     icon: 'staffAttestationIcon',
   },
+  {
+    id: 10,
+    title: 'Norasmiy kranni ro‘yxatga olish arizasi',
+    name: 'Kran',
+    description: 'Norasmiy kranni ro‘yxatga olish arizasi',
+    category: ApplicationCategory.ILLEGAL_HOKQ,
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_CRANE,
+    icon: 'crane',
+  },
 ];

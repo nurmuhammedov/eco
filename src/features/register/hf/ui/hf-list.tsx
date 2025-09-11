@@ -88,9 +88,11 @@ export const HfList = () => {
     <>
       <div className={'flex justify-between items-start'}>
         <Filter inputKeys={['search', 'mode', 'officeId', 'executorId']} />
-        <Button onClick={handleDownloadExel}>
-          <Download /> MS Exel
-        </Button>
+        {rest.mode && (
+          <Button onClick={handleDownloadExel}>
+            <Download /> MS Exel
+          </Button>
+        )}
       </div>
 
       <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-300px)]" />

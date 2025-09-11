@@ -66,9 +66,16 @@ export const useLoginOneId = () => {
 export const useLogout = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   //TODO: ubrat redirect na admin kogda budet presetasiya
-  const redirectPath = '/auth/login';
+  console.log(apiUrl, 'apiUrl');
+  let redirectPath;
+  if (apiUrl === 'https://test.cirns.uz') {
+    redirectPath = '/auth/login/admin';
+  } else {
+    redirectPath = '/auth/login';
+  }
   return useMutation({
     mutationFn: async () => authAPI.logout(),
     onSuccess: () => {

@@ -153,6 +153,9 @@ export enum ApplicationTypeEnum {
   REGISTER_IRS = 'REGISTER_IRS',
   ACCEPT_IRS = 'ACCEPT_IRS',
   TRANSFER_IRS = 'TRANSFER_IRS',
+
+  // UNOFFICIAL
+  ILLEGAL_REGISTER_CRANE = 'ILLEGAL_REGISTER_CRANE',
 }
 
 export enum IrsIdentifierType {

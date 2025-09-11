@@ -1,5 +1,5 @@
 import { UserRoles } from '@/entities/user';
-// import { useConfirmDocument } from '@/features/application/application-detail/hooks/mutations/use-confirm-document.tsx';
+import { useConfirmDocument } from '@/features/application/application-detail/hooks/mutations/use-confirm-document.tsx';
 import { useResponseDocs } from '@/features/application/application-detail/hooks/use-response-docs.tsx';
 import RejectDocumentModal from '@/features/application/application-detail/ui/modals/reject-document-modal.tsx';
 import RejectMessageModal from '@/features/application/application-detail/ui/modals/reject-message-modal.tsx';
@@ -8,13 +8,13 @@ import SignersModal from '@/features/application/application-detail/ui/modals/si
 import { DataTable } from '@/shared/components/common/data-table';
 import FileLink from '@/shared/components/common/file-link.tsx';
 import { Badge } from '@/shared/components/ui/badge.tsx';
-// import { Button } from '@/shared/components/ui/button.tsx';
+import { Button } from '@/shared/components/ui/button.tsx';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
 import { ColumnDef } from '@tanstack/react-table';
 import { formatDate } from 'date-fns';
 import { Eye, Info } from 'lucide-react';
 import { useState } from 'react';
-// import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import ConfirmWithRegistryModal from '../modals/confirm-with-registry-modal.tsx';
 import { ApplicationTypeEnum } from '@/entities/create-application';
 
@@ -58,9 +58,9 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
   const [rejectMessage, setRejectMessage] = useState<string>('');
   const [signers, setSigners] = useState<any[]>([]);
   const { data } = useResponseDocs();
-  // const { mutate: confirmDocument, isPending } = useConfirmDocument();
+  const { mutate: confirmDocument, isPending } = useConfirmDocument();
   const { user } = useAuth();
-  // const { id: appealId } = useParams();
+  const { id: appealId } = useParams();
 
   const columns: ColumnDef<any>[] = [
     {
@@ -121,27 +121,7 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
         const message = cell.row.original?.description;
         const documentId = cell.row.original?.documentId;
         const isAppealForManager = managerTypes.includes(appeal_type);
-
         if ((isRegionalUser && !isAgreed) || (currentAgreement === 'AGREED' && isManager)) {
-          // if (isRegionalUser) {
-          //   return (
-          //     <div className="flex gap-1">
-          //       <Button
-          //         disabled={isPending}
-          //         onClick={() => {
-          //           if (confirm('Tasdiqlaysizmi?')) {
-          //             confirmDocument({ appealId, documentId, shouldRegister: false });
-          //           }
-          //         }}
-          //         variant="success"
-          //       >
-          //         Kelishildi
-          //       </Button>
-          //       <RejectDocumentModal documentId={documentId} label={'Kelishilmadi'} />
-          //     </div>
-          //   );
-          // }
-
           if (isManager && isAppealForManager) {
             return (
               <div className="flex gap-4">
@@ -150,12 +130,29 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
               </div>
             );
           } else if (isRegionalUser) {
-            return (
-              <div className="flex gap-4">
-                <ConfirmWithRegistryModal documentId={documentId} />
-                <RejectDocumentModal documentId={documentId} label={'Tasdiqlanmadi'} />
-              </div>
-            );
+            if (isAppealForManager) {
+              return (
+                <div className="flex gap-1">
+                  <Button
+                    disabled={isPending}
+                    onClick={() => {
+                      confirmDocument({ appealId, documentId });
+                    }}
+                    variant="success"
+                  >
+                    Kelishildi
+                  </Button>
+                  <RejectDocumentModal documentId={documentId} label={'Kelishilmadi'} />
+                </div>
+              );
+            } else {
+              return (
+                <div className="flex gap-4">
+                  <ConfirmWithRegistryModal documentId={documentId} />
+                  <RejectDocumentModal documentId={documentId} label={'Tasdiqlanmadi'} />
+                </div>
+              );
+            }
           }
         }
         if (currentBadge) {

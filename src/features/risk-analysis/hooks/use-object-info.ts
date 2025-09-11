@@ -25,7 +25,7 @@ export const useObjectInfo = () => {
         .filter(([label, value]) => label.includes('Path') && !!value)
         .map((file) => {
           const label = `labels.${fileNamePrefix}.${file[0]}`;
-          return { label: t(label), path: file[1] };
+          return { label: t(label), data: file[1] };
         });
       return {
         ...data,
