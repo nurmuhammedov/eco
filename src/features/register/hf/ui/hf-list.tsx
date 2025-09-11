@@ -28,6 +28,7 @@ export const HfList = () => {
       mode: rest.mode,
       ...rest,
     });
+
     const blob = res.data;
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -86,7 +87,7 @@ export const HfList = () => {
   return (
     <>
       <div className={'flex justify-between items-start'}>
-        <Filter inputKeys={['search', 'mode']} />
+        <Filter inputKeys={['search', 'mode', 'officeId', 'executorId']} />
         <Button onClick={handleDownloadExel}>
           <Download /> MS Exel
         </Button>

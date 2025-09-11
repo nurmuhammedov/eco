@@ -28,6 +28,9 @@ const ApplicationDetail = ({
 }) => {
   const currentObjLocation = data?.data?.location?.split(',') || ([] as Coordinate[]);
   const isLegalApplication = data?.ownerType == 'LEGAL';
+
+  console.log(data, 'data');
+
   return (
     <div className="grid grid-cols-1 gap-4 mt-4">
       <DetailCardAccordion
@@ -104,7 +107,7 @@ const ApplicationDetail = ({
               <ApplicantDocsTable />
             </TabsContent>
             <TabsContent value="response_docs">
-              <AppealResponseDocs />
+              <AppealResponseDocs appeal_type={data?.appealType} />
             </TabsContent>
           </Tabs>
         </DetailCardAccordion.Item>

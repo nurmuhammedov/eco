@@ -8,6 +8,10 @@ import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
+import { apiClient } from '@/shared/api';
+import { format } from 'date-fns';
+import { Button } from '@/shared/components/ui/button.tsx';
+import { Download } from 'lucide-react';
 
 export const EquipmentsList = () => {
   const navigate = useNavigate();
@@ -80,6 +84,27 @@ export const EquipmentsList = () => {
     },
   ];
 
+  const handleDownloadExel = async () => {
+    const res = await apiClient.downloadFile<Blob>('/equipments/export/excel', {
+      ...rest,
+      type: type !== 'ALL' ? type : '',
+      isActive,
+      status: status !== 'ALL' ? status : '',
+    });
+
+    const blob = res.data;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const today = new Date();
+    const filename = `qurilmalar_${format(today, 'yyyy-MM-dd_hh:mm:ss')}.xlsx`;
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <TabsLayout
       activeTab={type}
@@ -117,7 +142,13 @@ export const EquipmentsList = () => {
         }))}
         onTabChange={(type) => addParams({ isActive: type }, 'page', 'search', 'startDate', 'endDate')}
       >
-        <Filter inputKeys={['search']} />
+        <div className={'flex justify-between items-start'}>
+          <Filter inputKeys={['search', 'officeId', 'executorId']} />
+          <Button onClick={handleDownloadExel}>
+            <Download /> MS Exel
+          </Button>
+        </div>
+
         <DataTable
           isPaginated
           data={data || []}
