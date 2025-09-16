@@ -48,6 +48,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               )}
             />
           </div>
+
           {isLegalInfoLoading && <div className=""></div>}
 
           {data && (

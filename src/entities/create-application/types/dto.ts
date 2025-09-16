@@ -23,11 +23,27 @@ import {
   LpgPoweredAppealDtoSchema,
   PipelineAppealDtoSchema,
   ReAccreditationDtoSchema,
+  IllegalCraneAppealDtoSchema,
+  ContainerIllegalAppealDtoSchema,
+  AttractionIllegalPassportAppealDtoSchema,
+  EscalatorIllegalAppealDtoSchema,
+  PipelineIllegalAppealDtoSchema,
+  BoilerUtilizerIllegalAppealDtoSchema,
 } from '@/entities/create-application/schemas';
 import { z } from 'zod';
 import { DeRegisterEquipment } from '@/entities/create-application/schemas/de-register-equipment';
 import { ReRegisterEquipmentSchema } from '@/entities/create-application/schemas/re-register-equipment.schema';
 import { RegisterIllegalHFSchema } from '@/entities/create-application/schemas/register-illegal-hf-shcema';
+import { BoilerIllegalAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-boiler.schema.ts';
+import { LiftIllegalAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-lift.schema';
+import { ChemicalIllegalContainerAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-chemical-container.schema.ts';
+import { HeatPipelineIllegalAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-heat-pipeline.schema.ts';
+import {
+  HoistIllegalAppealDtoSchema,
+  LpgContainerIllegalAppealDtoSchema,
+  LpgPoweredIllegalAppealDtoSchema,
+} from '@/entities/create-application';
+import { CablewayIllegalAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-cableway.schema.ts';
 
 export type CreateHPOApplicationDTO = z.infer<typeof HFAppealDtoSchema>;
 export type CreateCraneApplicationDTO = z.infer<typeof CraneAppealDtoSchema>;
@@ -55,3 +71,17 @@ export type CreateDeclarationApplicationDTO = z.infer<typeof DeclarationAppealDt
 export type DeRegisterEquipmentDTO = z.infer<typeof DeRegisterEquipment>;
 export type ReRegisterEquipmentDTO = z.infer<typeof ReRegisterEquipmentSchema>;
 export type RegisterIllegalHFSchemaDTO = z.infer<typeof RegisterIllegalHFSchema>;
+export type RegisterIllegalCraneApplicationDTO = z.infer<typeof IllegalCraneAppealDtoSchema>;
+export type RegisterIllegalContainerApplicationDTO = z.infer<typeof ContainerIllegalAppealDtoSchema>;
+export type RegisterIllegalBoilerApplicationDTO = z.infer<typeof BoilerIllegalAppealDtoSchema>;
+export type RegisterIllegalLiftApplicationDTO = z.infer<typeof LiftIllegalAppealDtoSchema>;
+export type RegisterIllegalEscalatorApplicationDTO = z.infer<typeof EscalatorIllegalAppealDtoSchema>;
+export type RegisterIllegalAttractionApplicationDTO = z.infer<typeof AttractionIllegalPassportAppealDtoSchema>;
+export type RegisterIllegalPipelineApplicationDTO = z.infer<typeof PipelineIllegalAppealDtoSchema>;
+export type RegisterIllegalChemicalContainerApplicationDTO = z.infer<typeof ChemicalIllegalContainerAppealDtoSchema>;
+export type RegisterIllegalHeatPipelineApplicationDTO = z.infer<typeof HeatPipelineIllegalAppealDtoSchema>;
+export type RegisterIllegalBoilerUtilizerApplicationDTO = z.infer<typeof BoilerUtilizerIllegalAppealDtoSchema>;
+export type RegisterIllegalLpgContainerApplicationDTO = z.infer<typeof LpgContainerIllegalAppealDtoSchema>;
+export type RegisterIllegalLpgPoweredAppApplicationDTO = z.infer<typeof LpgPoweredIllegalAppealDtoSchema>;
+export type RegisterIllegalHoistAppApplicationDTO = z.infer<typeof HoistIllegalAppealDtoSchema>;
+export type RegisterIllegalCablewayAppApplicationDTO = z.infer<typeof CablewayIllegalAppealDtoSchema>;

@@ -60,9 +60,6 @@ export function useApplicationGrid() {
   const displayedSubCards = useMemo(() => {
     if (!activeTab) return [];
 
-    console.log(activeTab, 'activeTab');
-    console.log(selectedMainCard, 'selectedMainCard');
-
     // If there are main cards for this category
     // @ts-ignore
     if (MAIN_APPLICATION_BY_CATEGORY[activeTab]?.length > 0) {

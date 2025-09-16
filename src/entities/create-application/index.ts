@@ -24,6 +24,16 @@ export * from './schemas/register-irs.schema';
 export * from './schemas/accreditation.schema';
 export * from './schemas/register-attraction-passport.schema';
 export * from './schemas/de-register-equipment';
+export * from './schemas/register-illegal-escalator.schema';
+export * from './schemas/register-illegal-attraction-passport.schema';
+export * from './schemas/register-illegal-pipeline.schema';
+export * from './schemas/register-illegal-chemical-container.schema';
+export * from './schemas/register-illegal-heat-pipeline.schema';
+export * from './schemas/register-illegal-boiler-utilizer.schema';
+export * from './schemas/register-illegal-lpg-container.schema';
+export * from './schemas/register-illegal-lpg-powered.schema';
+export * from './schemas/register-illegal-hoist.schema';
+export * from './schemas/register-illegal-cableway.schema';
 
 //other
 export * from './ui/application-card';

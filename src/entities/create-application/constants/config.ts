@@ -128,6 +128,58 @@ export const applicationConfigs: Record<string, any> = {
   },
   [ApplicationTypeEnum.ILLEGAL_REGISTER_CRANE]: {
     submitEndpoint: '/appeals/equipment/unofficial/crane',
-    pdfEndpoint: '/appeals/equipment/unofficial/crane/generate-pdf',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/crane',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_CONTAINER]: {
+    submitEndpoint: '/appeals/equipment/unofficial/container',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/container',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER]: {
+    submitEndpoint: '/appeals/equipment/unofficial/boiler',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/boiler',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_ELEVATOR]: {
+    submitEndpoint: '/appeals/equipment/unofficial/elevator',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/elevator',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_ESCALATOR]: {
+    submitEndpoint: '/appeals/equipment/unofficial/escalator',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/escalator',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION_PASSPORT]: {
+    submitEndpoint: '/appeals/equipment/unofficial/attraction',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/attraction',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_PIPELINE]: {
+    submitEndpoint: '/appeals/equipment/unofficial/pipeline',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/pipeline',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_CHEMICAL_CONTAINER]: {
+    submitEndpoint: '/appeals/equipment/unofficial/chemical-container',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/chemical-container',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_HEAT_PIPELINE]: {
+    submitEndpoint: '/appeals/equipment/unofficial/heat-pipeline',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/heat-pipeline',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER_UTILIZER]: {
+    submitEndpoint: '/appeals/equipment/unofficial/boiler-utilizer',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/boiler-utilizer',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_LPG_CONTAINER]: {
+    submitEndpoint: '/appeals/equipment/unofficial/lpg-container',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/lpg-container',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_LPG_POWERED]: {
+    submitEndpoint: '/appeals/equipment/unofficial/lpg-powered',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/lpg-powered',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_HOIST]: {
+    submitEndpoint: '/appeals/equipment/unofficial/hoist',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/hoist',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_CABLEWAY]: {
+    submitEndpoint: '/appeals/equipment/unofficial/cableway',
+    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/cableway',
   },
 };

@@ -36,7 +36,32 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.REGISTER_ATTRACTION_PASSPORT]: lazy(
     () => import('../ui/forms/register-attraction-passport-form'),
   ),
-  [ApplicationTypeEnum.ILLEGAL_REGISTER_CRANE]: lazy(() => import('../ui/forms/unofficial-register-crane-form.tsx')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_CRANE]: lazy(() => import('../ui/forms/register-illegal-crane-form')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_CONTAINER]: lazy(() => import('../ui/forms/register-illegal-container-form')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER]: lazy(() => import('../ui/forms/register-illegal-boiler-form.tsx')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_ELEVATOR]: lazy(() => import('../ui/forms/register-illegal-lift-form.tsx')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_ESCALATOR]: lazy(() => import('../ui/forms/register-illegal-escalator-form')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION_PASSPORT]: lazy(
+    () => import('../ui/forms/register-illegal-attraction-passport-form'),
+  ),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_PIPELINE]: lazy(() => import('../ui/forms/register-illegal-pipeline-form')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_CHEMICAL_CONTAINER]: lazy(
+    () => import('../ui/forms/register-illegal-chemical-container-form'),
+  ),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_HEAT_PIPELINE]: lazy(
+    () => import('../ui/forms/register-illegal-heat-pipeline-form'),
+  ),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER_UTILIZER]: lazy(
+    () => import('../ui/forms/register-illegal-boiler-utilizer-form'),
+  ),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_LPG_CONTAINER]: lazy(
+    () => import('../ui/forms/register-illegal-lpg-container-form'),
+  ),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_LPG_POWERED]: lazy(
+    () => import('../ui/forms/register-illegal-lpg-powered-form'),
+  ),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_HOIST]: lazy(() => import('../ui/forms/register-illegal-hoist-form')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_CABLEWAY]: lazy(() => import('../ui/forms/register-illegal-cableway-form')),
 };
 
 export function getFormComponentByType(
