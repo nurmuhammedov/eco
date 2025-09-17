@@ -27,3 +27,4 @@ export { useCreateIllegalLpgContainerApplication } from './model/use-create-ille
 export { useCreateIllegalLpgPoweredApplication } from './model/use-create-illegal-lpg-powered-application';
 export { useCreateIllegalHoistApplication } from './model/use-create-illegal-hoist-application';
 export { useCreateIllegalCablewayApplication } from './model/use-create-illegal-cableway-application';
+export { useCreateAttractionApplication } from './model/use-create-attraction-application';

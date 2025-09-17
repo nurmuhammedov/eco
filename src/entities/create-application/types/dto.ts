@@ -39,6 +39,7 @@ import { LiftIllegalAppealDtoSchema } from '@/entities/create-application/schema
 import { ChemicalIllegalContainerAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-chemical-container.schema.ts';
 import { HeatPipelineIllegalAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-heat-pipeline.schema.ts';
 import {
+  AttractionAppealDtoSchema,
   HoistIllegalAppealDtoSchema,
   LpgContainerIllegalAppealDtoSchema,
   LpgPoweredIllegalAppealDtoSchema,
@@ -61,6 +62,7 @@ export type CreateHoistApplicationDTO = z.infer<typeof HoistAppealDtoSchema>;
 export type CreateCablewayApplicationDTO = z.infer<typeof CablewayAppealDtoSchema>;
 export type CreateIrsApplicationDTO = z.infer<typeof IrsAppealDtoSchema>;
 export type CreateAttractionPassportApplicationDTO = z.infer<typeof AttractionPassportAppealDtoSchema>;
+export type CreateAttractionApplicationDTO = z.infer<typeof AttractionAppealDtoSchema>;
 export type CreateAccreditationDTO = z.infer<typeof AccreditationDtoSchema>;
 export type ReAccreditationDTO = z.infer<typeof ReAccreditationDtoSchema>;
 export type AccreditationConclusionDTO = z.infer<typeof AccreditationConclusionDtoSchema>;
