@@ -104,6 +104,8 @@ export const EquipmentsList = () => {
     URL.revokeObjectURL(url);
   };
 
+  console.log(rest, 'rest');
+
   return (
     <TabsLayout
       activeTab={type}
@@ -143,9 +145,11 @@ export const EquipmentsList = () => {
       >
         <div className={'flex justify-between items-start'}>
           <Filter inputKeys={['search', 'officeId', 'executorId']} />
-          <Button onClick={handleDownloadExel}>
-            <Download /> MS Exel
-          </Button>
+          {type !== 'ALL' && (
+            <Button onClick={handleDownloadExel}>
+              <Download /> MS Exel
+            </Button>
+          )}
         </div>
 
         <DataTable
