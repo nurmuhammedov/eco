@@ -80,7 +80,7 @@ export const IrsList = () => {
 
   return (
     <>
-      <Filter inputKeys={['search', 'officeId', 'executorId']} />
+      <Filter inputKeys={['search', 'officeId']} />
       <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-300px)]" />
     </>
   );

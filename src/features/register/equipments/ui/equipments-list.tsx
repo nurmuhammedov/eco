@@ -144,7 +144,7 @@ export const EquipmentsList = () => {
         onTabChange={(type) => addParams({ isActive: type }, 'page', 'search', 'startDate', 'endDate')}
       >
         <div className={'flex justify-between items-start'}>
-          <Filter inputKeys={['search', 'officeId', 'executorId']} />
+          <Filter inputKeys={['search', 'officeId']} />
           {type !== 'ALL' && (
             <Button onClick={handleDownloadExel}>
               <Download /> MS Exel

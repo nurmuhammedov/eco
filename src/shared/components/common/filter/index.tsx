@@ -204,10 +204,10 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                   <SelectContent>
                     <SelectItem value={ALL_ITEMS_VALUE as unknown as string}>{t('all', 'Barchasi')}</SelectItem>
                     {getSelectOptions([
-                      { id: 'OFFICIAL', name: 'Rasmiy arizalar' },
+                      { id: 'OFFICIAL', name: "Arizachilar tomonidan ro'yxatga olingan" },
                       {
                         id: 'UNOFFICIAL',
-                        name: 'Norasmiy XICHO va qurilma uchun arizalar',
+                        name: "Qo'mita tomonidan ro'yxatga olingan",
                       },
                     ])}
                   </SelectContent>
