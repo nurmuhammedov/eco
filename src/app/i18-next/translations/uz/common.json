@@ -41,7 +41,8 @@
     "sub_types": "Quyi turlar",
     "permits_authorization_documents": "Ruxsat etuvchi hujjatlar",
     "risk_analysis": "Xavfni tahlil qilish",
-    "checklist_templates": "Cheklistlar"
+    "checklist_templates": "Cheklistlar",
+    "logs": "users logs"
   },
   "checklist_name": "Cheklist nomi",
   "checklist_file": "Cheklist fayli",
@@ -135,6 +136,15 @@
     "BOILER_UTILIZER": "Qozon utilizatori",
     "LPG_CONTAINER": "Bosim ostida ishlovchi idishlari (SUG)",
     "LPG_POWERED": "Suyultirilgan gaz bilan ishlaydigan"
+  },
+  "logs_type": {
+    "NEW": "Ariza yaratdi",
+    "IN_PROCESS": "Arizani jarayonga o'tkazdi",
+    "IN_AGREEMENT": "Arizani kelishishga o'tkazdi",
+    "IN_APPROVAL": "Arizani tasdiqlashga o'tkazdi",
+    "COMPLETED": " Arizani yakunladi",
+    "CANCELED": " Arizani qaytardi",
+    "REJECTED": " Arizani rad etdi"
   },
   "application_status": {
     "ALL": "Barchasi",

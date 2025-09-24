@@ -50,4 +50,9 @@ export default [
     title: 'menu.checklist_templates',
     icon: <ListChecks />,
   },
+  {
+    url: '/logs',
+    title: 'menu.logs',
+    icon: <ListChecks />,
+  },
 ] as Navigation;

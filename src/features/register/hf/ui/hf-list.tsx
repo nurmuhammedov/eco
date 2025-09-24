@@ -89,7 +89,7 @@ export const HfList = () => {
   return (
     <>
       <div className={'flex justify-between items-start'}>
-        <Filter inputKeys={['search', 'mode', 'officeId']} />
+        <Filter inputKeys={['search', 'mode', 'hfOfficeId']} />
         <Button onClick={handleDownloadExel}>
           <Download /> MS Exel
         </Button>

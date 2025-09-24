@@ -11,7 +11,7 @@ const RiskAnalysisInspectorInfo = () => {
   const currentIntervalId = searchParams.get('intervalId') || '';
   const isValidInterval = currentIntervalId == user?.interval?.id;
   if (!data) {
-    return null;
+    return <div className={'py-5 px-5'}>Ma'lumot mavjud emas</div>;
   }
   return (
     <div>

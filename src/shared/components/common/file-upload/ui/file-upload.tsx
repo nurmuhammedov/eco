@@ -117,6 +117,27 @@ function InputFileComponent<T extends FieldValues>({
 
   const validateFile = useCallback(
     (file: File): boolean => {
+      const type = file.type;
+
+      const match = type.match(/^([^/]+)/);
+      const typeMatch = match ? match[1] : '';
+      const isImage = typeMatch === 'image';
+
+      console.log(typeMatch, 'typeMatch');
+      console.log(isImage, 'isImage');
+
+      if (acceptTypes.includes(FileTypes.IMAGE) && isImage) {
+        return true;
+      }
+
+      if (!accept.includes(type as FileTypes)) {
+        setError(name, {
+          type: 'type',
+          message: `Fayl type error`,
+        });
+        return false;
+      }
+
       if (file.size > maxSize * 1024 * 1024) {
         setError(name, {
           type: 'size',
@@ -168,6 +189,9 @@ function InputFileComponent<T extends FieldValues>({
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
+
+      console.log(files, 'files');
+      console.log(accept, 'acceptTypes');
 
       if (files && files.length > 0) {
         const file = files[0]; // Faqat birinchi faylni olish

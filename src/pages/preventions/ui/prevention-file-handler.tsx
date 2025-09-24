@@ -8,6 +8,7 @@ import { useAuth } from '@/shared/hooks/use-auth';
 import { Loader2, Trash2 } from 'lucide-react';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
 
 interface PreventionFileHandlerProps {
   year: number;
@@ -64,6 +65,7 @@ export const PreventionFileHandler: FC<PreventionFileHandlerProps> = ({ year }) 
     return (
       <InputFile
         form={form}
+        accept={[FileTypes.PDF]}
         name="prevention_file"
         onUploadComplete={handleFileUpload}
         buttonText="Reja faylini yuklash"

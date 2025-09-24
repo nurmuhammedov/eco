@@ -7,8 +7,11 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { Input } from '@/shared/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/components/ui/button';
-import { ComponentPropsWithoutRef, useState } from 'react';
+import { ComponentPropsWithoutRef, useEffect, useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+// @ts-ignore
+import { loadCaptchaEnginge, LoadCanvasTemplateNoReload, validateCaptcha } from 'react-simple-captcha';
+import { clsx } from 'clsx';
 
 const adminLoginFormSchema = z.object({
   username: z.string(),
@@ -23,6 +26,8 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
   const { mutateAsync, isPending } = useLogin();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showCaptchaError, setCaptchaError] = useState(false);
+  const [captchaValue, setCaptchaValue] = useState('');
 
   const form = useForm<AdminLoginDTO>({
     resolver: zodResolver(adminLoginFormSchema),
@@ -33,8 +38,16 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
     setShowPassword(!showPassword);
   };
 
+  useEffect(() => {
+    loadCaptchaEnginge(5);
+  }, []);
+
   const handleLogin = async (data: z.infer<typeof adminLoginFormSchema>) => {
-    await mutateAsync(data);
+    if (validateCaptcha(captchaValue)) {
+      await mutateAsync(data);
+    } else {
+      setCaptchaError(true);
+    }
   };
 
   return (
@@ -91,6 +104,26 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
                 </FormItem>
               )}
             />
+
+            <div className={'flex items-center'}>
+              <LoadCanvasTemplateNoReload />
+              <div
+                className={clsx(
+                  'relative flex items-center rounded border border-neutral-300 focus-within:ring-1 focus-within:ring-teal w-full',
+                  {
+                    ['border-red-500']: showCaptchaError,
+                  },
+                )}
+              >
+                <Input
+                  placeholder={t('captcha')}
+                  type={'text'}
+                  onChange={(val) => setCaptchaValue(val.target.value)}
+                  className="border-0 focus-visible:ring-0 w-full"
+                />
+              </div>
+            </div>
+
             <Button type="submit" className="w-full" loading={isPending} disabled={isPending}>
               {t('sign_in')}
             </Button>

@@ -70,6 +70,8 @@ export const API_ENDPOINTS: Record<string, string> = {
   APPEAL_EQUIPMENT_PDF_ATTRACTION_PASSPORT: APPEALS_EQUIPMENT_GENERATE_PDF_URL + 'attraction-passport',
   APPEAL_EQUIPMENT_PDF_ATTRACTION: APPEALS_EQUIPMENT_GENERATE_PDF_URL + 'attraction',
 
+  APPEALS_EXECUTION_PROCESS_CONTROLLER: '/appeal-execution-processes',
+
   RISK_ASSESSMENT_HF: '/hf/risk-assessment',
   RISK_ASSESSMENT_IRS: '/irs/risk-assessment',
   RISK_ASSESSMENT_ATTRACTIONS: '/equipments/attractions/risk-assessment',

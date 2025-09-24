@@ -282,6 +282,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                   <FormItem className="w-full 3xl:w-sm">
                     <FormLabel required>Ishlab chiqarilgan sana</FormLabel>
                     <DatePicker
+                      disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
                       placeholder="Ishlab chiqarilgan sana"

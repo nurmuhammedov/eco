@@ -6,7 +6,14 @@ import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analy
 export const useInspectorInfo = () => {
   const [searchParams] = useSearchParams();
   let currentType = searchParams.get('type') || '';
-  const currentAssignId = searchParams.get('assignId') || '';
+  const currentAssignParam = searchParams.get('assignId') || '';
+  let currentAssignId;
+
+  if (currentAssignParam === 'null') {
+    currentAssignId = '';
+  } else {
+    currentAssignId = currentAssignParam;
+  }
 
   if (currentType !== 'hf' && currentType !== 'irs') {
     currentType = 'equipments';
@@ -15,5 +22,6 @@ export const useInspectorInfo = () => {
   return useQuery({
     queryKey: [QK_RISK_ANALYSIS, 'INSPECTOR_INFO', currentAssignId, currentType],
     queryFn: () => riskAnalysisDetailApi.getInspectorInfo({ type: currentType, id: currentAssignId }),
+    enabled: !!currentAssignId,
   });
 };

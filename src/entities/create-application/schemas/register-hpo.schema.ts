@@ -66,7 +66,7 @@ export const HFAppealDtoSchema = z.object({
   certificationExpiryDate: z.date().optional(),
   deviceTestingPath: z.string().optional(),
   deviceTestingExpiryDate: z.date().optional(),
-  appointmentOrderPath: z.date().optional(),
+  appointmentOrderPath: z.string().optional(),
   appointmentOrderExpiryDate: z.string().optional(),
   ecologicalConclusionPath: z.string().optional(),
   ecologicalConclusionExpiryDate: z.date().optional(),

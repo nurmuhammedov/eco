@@ -37,6 +37,7 @@ const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-deta
 const RiskAnalysisPage = lazy(() => import('@/pages/risk-analysis'));
 const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'));
 const ChecklistTemplatesPage = lazy(() => import('@/pages/admin/checklist-templates/page'));
+const LogsPage = lazy(() => import('@/pages/admin/logs/page.tsx'));
 const ChecklistTemplatesPage2 = lazy(() => import('@/features/checklists'));
 const PreventionsPage = lazy(() => import('@/pages/preventions'));
 const PreventionCreatePage = lazy(() => import('@/pages/preventions/create'));
@@ -173,6 +174,11 @@ export const appRoutes = [
   {
     path: 'checklist-templates',
     component: ChecklistTemplatesPage,
+    roles: [UserRoles.ADMIN],
+  },
+  {
+    path: 'logs',
+    component: LogsPage,
     roles: [UserRoles.ADMIN],
   },
   {

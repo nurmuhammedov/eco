@@ -106,6 +106,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                   <FormItem className="w-full 3xl:w-sm">
                     <FormLabel>Attraksion ishlab chiqarilgan sana</FormLabel>
                     <DatePicker
+                      disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
                       placeholder="Sanani tanlang"

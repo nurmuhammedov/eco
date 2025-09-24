@@ -23,7 +23,10 @@ const ALL_ITEMS_VALUE = null;
 interface ApplicationFiltersFormValues {
   search?: string;
   appealType?: ApplicationTypeEnum;
+  hfOfficeId?: string;
   officeId?: string;
+  eqOfficeId?: string;
+  irsOfficeId?: string;
   executorId?: string;
   mode?: string;
   startDate?: Date;
@@ -57,6 +60,9 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
   const { control, handleSubmit } = form;
 
   const isOfficeFilterEnabled = useMemo(() => inputKeys.includes('officeId'), [inputKeys]);
+  const isHfOfficeFilterEnabled = useMemo(() => inputKeys.includes('hfOfficeId'), [inputKeys]);
+  const isEqOfficeFilterEnabled = useMemo(() => inputKeys.includes('eqOfficeId'), [inputKeys]);
+  const isIrsOfficeFilterEnabled = useMemo(() => inputKeys.includes('irsOfficeId'), [inputKeys]);
   const isExecutorFilterEnabled = useMemo(() => inputKeys.includes('executorId'), [inputKeys]);
   const isStartDateFilterEnabled = useMemo(() => inputKeys.includes('startDate'), [inputKeys]);
   const isEndDateFilterEnabled = useMemo(() => inputKeys.includes('endDate'), [inputKeys]);
@@ -149,6 +155,90 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                   <SelectContent>
                     <SelectItem value={ALL_ITEMS_VALUE as unknown as string}>{t('all', 'Barchasi')}</SelectItem>
                     {dynamicApplicationTypeOptions}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </FilterField>
+        );
+      case 'hfOfficeId':
+        if (!isHfOfficeFilterEnabled) return null;
+        return (
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+            <Controller
+              name="officeId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    handleSubmit(onSubmit)();
+                  }}
+                  value={field.value}
+                  disabled={isLoadingOffices}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('office_id_placeholder', 'XICHO joylashgan manzil')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={ALL_ITEMS_VALUE as unknown as string}>{t('all', 'Barchasi')}</SelectItem>
+                    {getSelectOptions(officeOptionsDataFromApi || [])}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </FilterField>
+        );
+      case 'irsOfficeId':
+        if (!isIrsOfficeFilterEnabled) return null;
+        return (
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+            <Controller
+              name="officeId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    handleSubmit(onSubmit)();
+                  }}
+                  value={field.value}
+                  disabled={isLoadingOffices}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('office_id_placeholder', 'INM joylashgan manzil')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={ALL_ITEMS_VALUE as unknown as string}>{t('all', 'Barchasi')}</SelectItem>
+                    {getSelectOptions(officeOptionsDataFromApi || [])}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </FilterField>
+        );
+      case 'eqOfficeId':
+        if (!isEqOfficeFilterEnabled) return null;
+        return (
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+            <Controller
+              name="officeId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    handleSubmit(onSubmit)();
+                  }}
+                  value={field.value}
+                  disabled={isLoadingOffices}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('office_id_placeholder', 'Qurilma joylashgan manzil')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={ALL_ITEMS_VALUE as unknown as string}>{t('all', 'Barchasi')}</SelectItem>
+                    {getSelectOptions(officeOptionsDataFromApi || [])}
                   </SelectContent>
                 </Select>
               )}

@@ -152,6 +152,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                   <FormItem className="w-full 3xl:w-sm">
                     <FormLabel>Ishlab chiqarilgan sana</FormLabel>
                     <DatePicker
+                      disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
                       placeholder="Sanani tanlang"

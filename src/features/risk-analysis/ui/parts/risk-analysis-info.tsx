@@ -19,6 +19,7 @@ const RiskAnalysisInfo = () => {
   if (isLoading || isError) {
     return null;
   }
+
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
       <div className="flex justify-between items-center">
