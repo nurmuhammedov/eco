@@ -20,6 +20,7 @@ const DEFAULT_FORM_VALUES: CreateTerritorialStaffDTO = {
   fullName: '',
   officeId: '',
   position: '',
+  birthDate: undefined as unknown as Date,
   directions: [],
   phoneNumber: '',
   role: UserRoles.REGIONAL,
@@ -64,6 +65,7 @@ export function useTerritorialStaffForm() {
         fullName: fetchByIdData.fullName,
         position: fetchByIdData.position,
         directions: fetchByIdData.directions,
+        birthDate: fetchByIdData.birthDate,
         phoneNumber: fetchByIdData.phoneNumber,
         officeId: String(fetchByIdData.officeId),
       });

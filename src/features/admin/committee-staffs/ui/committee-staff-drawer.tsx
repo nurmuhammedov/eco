@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { UIModeEnum } from '@/shared/types';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/shared/components/ui/input';
@@ -14,11 +14,16 @@ import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
 import { useCommitteeStaffForm } from '../model/use-committee-staff-form';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { Button } from '@/shared/components/ui/button';
+import DatePicker from '@/shared/components/ui/datepicker';
+import { apiClient } from '@/shared/api';
+import { format } from 'date-fns';
 
 export const CommitteeStaffDrawer = () => {
   const { t } = useTranslation('common');
   const { isOpen, mode, onClose } = useCommitteeStaffsDrawer();
   const modeState = useUIActionLabel(mode);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     form,
     onSubmit,
@@ -32,6 +37,9 @@ export const CommitteeStaffDrawer = () => {
   } = useCommitteeStaffForm();
 
   const roleOptions = useMemo(() => getSelectOptions(userRoleOptions), []);
+
+  const pin = form.getValues('pin');
+  const birthDate = form.getValues('birthDate');
 
   return (
     <BaseDrawer
@@ -48,6 +56,68 @@ export const CommitteeStaffDrawer = () => {
       ) : (
         <Form {...form}>
           <div className="space-y-4">
+            <FormField
+              name="pin"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>{t('short.pin')}</FormLabel>
+                  <FormControl>
+                    <InputNumber maxLength={14} placeholder="142536945201203" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="birthDate"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Tug‘ilgan sana</FormLabel>
+                  <FormControl>
+                    <DatePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      disableStrategy="after"
+                      placeholder="Sanani tanlang"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex justify-end">
+              <Button
+                type="button"
+                disabled={!pin || !birthDate}
+                loading={isLoading}
+                onClick={() => {
+                  if (pin && birthDate) {
+                    const d = format(birthDate, 'yyyy-MM-dd');
+                    setIsLoading(true);
+                    apiClient
+                      .post<{ data: { fullName: string } }>('/integration/iip/individual', {
+                        pin,
+                        birthDate: d,
+                      })
+                      .then((res) => {
+                        if (res?.data?.data?.fullName) {
+                          form.setValue('fullName', res?.data?.data?.fullName);
+                        }
+                      })
+                      .finally(() => {
+                        setIsLoading(false);
+                      });
+                  }
+                }}
+              >
+                Qidirish
+              </Button>
+            </div>
+
             {isFetching && !isCreate ? (
               <FormSkeleton length={7} />
             ) : (
@@ -59,25 +129,25 @@ export const CommitteeStaffDrawer = () => {
                     <FormItem>
                       <FormLabel required>{t('short.full_name')}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t('short.full_name')} {...field} />
+                        <Input disabled={true} placeholder={t('short.full_name')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <FormField
-                  name="pin"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>{t('short.pin')}</FormLabel>
-                      <FormControl>
-                        <InputNumber maxLength={14} placeholder="142536945201203" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {/*<FormField*/}
+                {/*  name="pin"*/}
+                {/*  control={form.control}*/}
+                {/*  render={({ field }) => (*/}
+                {/*    <FormItem>*/}
+                {/*      <FormLabel required>{t('short.pin')}</FormLabel>*/}
+                {/*      <FormControl>*/}
+                {/*        <InputNumber maxLength={14} placeholder="142536945201203" {...field} />*/}
+                {/*      </FormControl>*/}
+                {/*      <FormMessage />*/}
+                {/*    </FormItem>*/}
+                {/*  )}*/}
+                {/*/>*/}
                 <FormField
                   name="position"
                   control={form.control}

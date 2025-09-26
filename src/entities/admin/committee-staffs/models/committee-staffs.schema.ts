@@ -19,6 +19,7 @@ export const committeeBaseSchema = {
     .string({ message: ERROR_MESSAGES.position })
 
     .min(1, ERROR_MESSAGES.required),
+  birthDate: z.date({ required_error: 'Sana majburiy' }),
   pin: z.coerce
     .number({ message: ERROR_MESSAGES.pin })
     .transform((val) => val.toString())
@@ -66,6 +67,7 @@ export const committeeTableItemSchema = z.object({
   role: z.nativeEnum(UserRoles),
   directions: z.array(z.string()).default([]),
   department: z.string(),
+  birthDate: z.date({ required_error: 'Sana majburiy' }),
   departmentId: z.union([z.number().int().positive(), z.string().transform((val) => parseInt(val))]),
   position: z.string(),
   phoneNumber: z.string().regex(USER_PATTERNS.phone, { message: ERROR_MESSAGES.phone }),

@@ -19,6 +19,7 @@ export const territorialBaseSchema = {
     .string({ message: ERROR_MESSAGES.position })
 
     .min(1, ERROR_MESSAGES.required),
+  birthDate: z.date({ required_error: 'Sana majburiy' }),
   pin: z.coerce
     .string({ message: ERROR_MESSAGES.pin })
     .transform((val) => val.toString())
@@ -59,7 +60,7 @@ export const territorialStaffSchema = z
 
 export const territorialTableItemSchema = z.object({
   id: z.union([z.string().uuid(), z.string().regex(USER_PATTERNS.uuid, { message: 'Invalid UUID format' })]),
-
+  birthDate: z.date({ required_error: 'Sana majburiy' }),
   fullName: z.string().trim().min(1),
   pin: z.union([
     z.number().transform((val) => val.toString()),

@@ -7,6 +7,10 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ISearchParams } from '@/shared/types';
 import Filter from '@/shared/components/common/filter';
 import { GoBack } from '@/shared/components/common';
+import { Button } from '@/shared/components/ui/button';
+import { Download } from 'lucide-react';
+import { apiClient } from '@/shared/api';
+import { format } from 'date-fns';
 
 export enum InspectionStatus {
   LEGAL = 'LEGAL',
@@ -137,6 +141,25 @@ const Report1: React.FC = () => {
     },
   ];
 
+  const handleDownloadExel = async () => {
+    const res = await apiClient.downloadFile<Blob>('/reports/appeal-status/export-excel', {
+      ...paramsObject,
+      ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,
+    });
+
+    const blob = res.data;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const today = new Date();
+    const filename = `report_1_${format(today, 'yyyy-MM-dd_hh:mm:ss')}.xlsx`;
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -148,9 +171,16 @@ const Report1: React.FC = () => {
           <TabsTrigger value={InspectionStatus.INDIVIDUAL}>Jismoniy shaxslar</TabsTrigger>
           <TabsTrigger value={InspectionStatus.LEGAL}>Yuridik shaxslar</TabsTrigger>
         </TabsList>
-        <div className="my-4">
-          <Filter inputKeys={['startDate', 'endDate']} />
+
+        <div className={'flex my-4 justify-between items-start'}>
+          <div className="flex-1">
+            <Filter inputKeys={['startDate', 'endDate']} />
+          </div>
+          <Button onClick={handleDownloadExel}>
+            <Download /> MS Exel
+          </Button>
         </div>
+
         <TabsContent value={InspectionStatus.INDIVIDUAL}>
           <DataTable
             showNumeration={false}

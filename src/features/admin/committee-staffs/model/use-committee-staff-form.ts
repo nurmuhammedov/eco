@@ -17,11 +17,13 @@ import {
   useUpdateCommitteeStaff,
 } from '@/entities/admin/committee-staffs';
 import { PERMISSIONS } from '@/entities/permission';
+import { format } from 'date-fns';
 
 const DEFAULT_FORM_VALUES: CreateCommitteeStaffDTO = {
   pin: '',
   fullName: '',
   position: '',
+  birthDate: undefined as unknown as Date,
   directions: [],
   phoneNumber: '',
   departmentId: '',
@@ -68,6 +70,7 @@ export function useCommitteeStaffForm() {
         pin: fetchByIdData.pin,
         role: fetchByIdData.role,
         fullName: fetchByIdData.fullName,
+        birthDate: fetchByIdData.birthDate,
         position: fetchByIdData.position,
         directions: fetchByIdData.directions,
         phoneNumber: fetchByIdData.phoneNumber,
@@ -83,10 +86,12 @@ export function useCommitteeStaffForm() {
 
   const handleSubmit = useCallback(
     async (formData: CreateCommitteeStaffDTO): Promise<boolean> => {
-      console.log(formData, 'formData');
       try {
         if (isCreate) {
-          const response = await createCommitteeStaff(formData);
+          const response = await createCommitteeStaff({
+            ...formData,
+            birthDate: format(formData?.birthDate, 'yyyy-MM-dd') as unknown as Date,
+          });
           if (response.success) {
             handleClose();
             return true;
@@ -95,6 +100,7 @@ export function useCommitteeStaffForm() {
           const response = await updateCommitteeStaff({
             id: committeeStaffId,
             ...formData,
+            birthDate: format(formData?.birthDate, 'yyyy-MM-dd'),
             directions: formData.directions?.filter((i) => i != 'ATTESTATION'),
           } as UpdateCommitteeStaffDTO);
           if (response.success) {
