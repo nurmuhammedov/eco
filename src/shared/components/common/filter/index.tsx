@@ -114,6 +114,14 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
 
   const debouncedSubmit = useCallback(debounce(handleSubmit(onSubmit), 300), [handleSubmit, onSubmit]);
 
+  const customDisabledFn = (date: Date) => {
+    // @ts-ignore
+    const today = new Date(form.watch('startDate'));
+    today.setHours(0, 0, 0, 0);
+
+    return date < today;
+  };
+
   const renderInput = (key: keyof ApplicationFiltersFormValues) => {
     switch (key) {
       case 'search':
@@ -334,6 +342,43 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
             />
           </FilterField>
         );
+      // case 'startDate':
+      //   if (!isStartDateFilterEnabled) return null;
+      //   return (
+      //     <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+      //       <FormField
+      //         control={control}
+      //         name="startDate"
+      //         render={({ field }) => (
+      //           <FormItem>
+      //             <div className="relative">
+      //               <DatePicker
+      //                 value={field.value}
+      //                 onChange={(date) => {
+      //                   field.onChange(date);
+      //                   handleSubmit(onSubmit)();
+      //                 }}
+      //                 placeholder="dan"
+      //               />
+      //               {field.value && (
+      //                 <button
+      //                   type="button"
+      //                   onClick={() => {
+      //                     field.onChange(undefined);
+      //                     handleSubmit(onSubmit)();
+      //                   }}
+      //                   className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+      //                 >
+      //                   ✖
+      //                 </button>
+      //               )}
+      //             </div>
+      //           </FormItem>
+      //         )}
+      //       />
+      //     </FilterField>
+      //   );
+
       case 'startDate':
         if (!isStartDateFilterEnabled) return null;
         return (
@@ -348,6 +393,10 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                       value={field.value}
                       onChange={(date) => {
                         field.onChange(date);
+                        const endDate = form.getValues('endDate');
+                        if (endDate && date && endDate < date) {
+                          form.setValue('endDate', undefined);
+                        }
                         handleSubmit(onSubmit)();
                       }}
                       placeholder="dan"
@@ -371,6 +420,45 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
           </FilterField>
         );
 
+      //
+      // case 'endDate':
+      //   if (!isEndDateFilterEnabled) return null;
+      //   return (
+      //     <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+      //       <FormField
+      //         control={control}
+      //         name="endDate"
+      //         render={({ field }) => (
+      //           <FormItem>
+      //             <div className="relative">
+      //               <DatePicker
+      //                 value={field.value}
+      //                 onChange={(date) => {
+      //                   field.onChange(date);
+      //                   handleSubmit(onSubmit)();
+      //                 }}
+      //                 placeholder="gacha"
+      //               />
+      //               {field.value && (
+      //                 <button
+      //                   type="button"
+      //                   onClick={() => {
+      //                     field.onChange(undefined);
+      //                     handleSubmit(onSubmit)();
+      //                   }}
+      //                   className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+      //                 >
+      //                   ✖
+      //                 </button>
+      //               )}
+      //             </div>
+      //           </FormItem>
+      //         )}
+      //       />
+      //     </FilterField>
+      //   );
+      //
+
       case 'endDate':
         if (!isEndDateFilterEnabled) return null;
         return (
@@ -378,35 +466,42 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
             <FormField
               control={control}
               name="endDate"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="relative">
-                    <DatePicker
-                      value={field.value}
-                      onChange={(date) => {
-                        field.onChange(date);
-                        handleSubmit(onSubmit)();
-                      }}
-                      placeholder="gacha"
-                    />
-                    {field.value && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          field.onChange(undefined);
+              render={({ field }) => {
+                const startDate = form.getValues('startDate');
+                return (
+                  <FormItem>
+                    <div className="relative">
+                      <DatePicker
+                        value={field.value}
+                        onChange={(date) => {
+                          field.onChange(date);
                           handleSubmit(onSubmit)();
                         }}
-                        className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
-                      >
-                        ✖
-                      </button>
-                    )}
-                  </div>
-                </FormItem>
-              )}
+                        placeholder="gacha"
+                        disableStrategy="custom"
+                        customDisabledFn={customDisabledFn}
+                        minDate={startDate}
+                      />
+                      {field.value && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            field.onChange(undefined);
+                            handleSubmit(onSubmit)();
+                          }}
+                          className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                        >
+                          ✖
+                        </button>
+                      )}
+                    </div>
+                  </FormItem>
+                );
+              }}
             />
           </FilterField>
         );
+
       case 'intervalId':
         if (!isIntervalFilterEnabled) return null;
         return (
