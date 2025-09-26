@@ -6,10 +6,10 @@ import { getDate } from '@/shared/utils/date';
 import { ColumnDef } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
 import Filter from '@/shared/components/common/filter';
-import { Button } from '@/shared/components/ui/button';
-import { Download } from 'lucide-react';
 import { apiClient } from '@/shared/api';
 import { format } from 'date-fns';
+import { Button } from '@/shared/components/ui/button.tsx';
+import { Download } from 'lucide-react';
 
 export const IrsList = () => {
   const navigate = useNavigate();
@@ -20,25 +20,6 @@ export const IrsList = () => {
 
   const handleViewApplication = (id: string) => {
     navigate(`${id}/irs`);
-  };
-
-  const handleDownloadExel = async () => {
-    const res = await apiClient.downloadFile<Blob>('/irs/export/excel', {
-      mode: rest.mode,
-      ...rest,
-    });
-
-    const blob = res.data;
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const today = new Date();
-    const filename = `inm_${format(today, 'yyyy-MM-dd_hh:mm:ss')}.xlsx`;
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
   };
 
   const columns: ColumnDef<ISearchParams>[] = [
@@ -100,6 +81,25 @@ export const IrsList = () => {
       ),
     },
   ];
+
+  const handleDownloadExel = async () => {
+    const res = await apiClient.downloadFile<Blob>('/irs/export/excel', {
+      mode: rest.mode,
+      ...rest,
+    });
+
+    const blob = res.data;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const today = new Date();
+    const filename = `xicho_${format(today, 'yyyy-MM-dd_hh:mm:ss')}.xlsx`;
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <>
