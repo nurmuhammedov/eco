@@ -35,6 +35,7 @@ export * from './schemas/register-illegal-lpg-powered.schema';
 export * from './schemas/register-illegal-hoist.schema';
 export * from './schemas/register-illegal-cableway.schema';
 export * from './schemas/register-attraction.schema';
+export * from './schemas/de-register-hfo';
 
 //other
 export * from './ui/application-card';

@@ -7,6 +7,7 @@ export interface FormComponentProps {
 
 const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormComponentProps>>> = {
   [ApplicationTypeEnum.REGISTER_HF]: lazy(() => import('../ui/forms/register-hpo-form')),
+  [ApplicationTypeEnum.DEREGISTER_HF]: lazy(() => import('../ui/forms/deregister-hpo-form')),
   [ApplicationTypeEnum.REGISTER_ELEVATOR]: lazy(() => import('../ui/forms/register-lift-form')),
   [ApplicationTypeEnum.REGISTER_CRANE]: lazy(() => import('../ui/forms/register-crane-form')),
   [ApplicationTypeEnum.REGISTER_CONTAINER]: lazy(() => import('../ui/forms/register-container-form')),
