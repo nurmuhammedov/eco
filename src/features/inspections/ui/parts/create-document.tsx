@@ -9,6 +9,7 @@ import { Input } from '@/shared/components/ui/input.tsx';
 import { useCustomSearchParams, useEIMZO } from '@/shared/hooks';
 import { QK_INSPECTION } from '@/shared/constants/query-keys.ts';
 import { ApplicationModal } from '@/features/application/create-application';
+import { InputFile } from '@/shared/components/common/file-upload';
 
 const schema = z.object({
   objects: z.string().min(5).default(''),
@@ -18,6 +19,7 @@ const schema = z.object({
   sectionFourth: z.string().min(5).default(''),
   sectionFifth: z.string().min(5).default(''),
   sectionSixth: z.string().min(5).default(''),
+  acknowledgementPath: z.string().min(1, 'Tilxat majburiy!'),
 });
 
 const CreateDocument: FC<{ resetTab: () => void }> = () => {
@@ -158,6 +160,26 @@ const CreateDocument: FC<{ resetTab: () => void }> = () => {
                     </FormControl>
                     <FormMessage />
                   </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="grid grid-cols-3 gap-4">
+              <FormField
+                name="acknowledgementPath"
+                control={form.control}
+                render={({ field }) => (
+                  <InputFile
+                    uploadEndpoint="/attachments/inspections"
+                    form={form}
+                    name={field.name}
+                    onUploadComplete={(url) => {
+                      form.setValue('acknowledgementPath', url, { shouldValidate: true });
+                    }}
+                    buttonText="Yangi faylni tanlang"
+                  />
                 )}
               />
             </div>
