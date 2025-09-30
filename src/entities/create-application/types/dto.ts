@@ -45,6 +45,7 @@ import {
   LpgPoweredIllegalAppealDtoSchema,
 } from '@/entities/create-application';
 import { CablewayIllegalAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-cableway.schema.ts';
+import { DeRegisterHFO } from '@/entities/create-application/schemas/de-register-hfo.ts';
 
 export type CreateHPOApplicationDTO = z.infer<typeof HFAppealDtoSchema>;
 export type CreateCraneApplicationDTO = z.infer<typeof CraneAppealDtoSchema>;
@@ -87,3 +88,4 @@ export type RegisterIllegalLpgContainerApplicationDTO = z.infer<typeof LpgContai
 export type RegisterIllegalLpgPoweredAppApplicationDTO = z.infer<typeof LpgPoweredIllegalAppealDtoSchema>;
 export type RegisterIllegalHoistAppApplicationDTO = z.infer<typeof HoistIllegalAppealDtoSchema>;
 export type RegisterIllegalCablewayAppApplicationDTO = z.infer<typeof CablewayIllegalAppealDtoSchema>;
+export type DeRegisterHFOtDTO = z.infer<typeof DeRegisterHFO>;

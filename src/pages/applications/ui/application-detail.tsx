@@ -15,6 +15,7 @@ import { useAuth } from '@/shared/hooks/use-auth.ts';
 import AttachInspectorModal from '@/features/application/application-detail/ui/modals/attach-inspector-modal.tsx';
 import ApplyAccreditationModal from '@/features/application/application-detail/ui/modals/apply-accreditation-modal.tsx';
 import RejectAccreditationModal from '@/features/application/application-detail/ui/modals/reject-accreditation-modal.tsx';
+import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal.tsx';
 
 const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActions?: boolean }) => {
   const { data } = useApplicationDetail();
@@ -38,6 +39,11 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
     <div>
       <div className="flex justify-between items-center">
         <GoBack title={`Ariza raqami: ${data?.number || ''}`} />
+
+        <div className={'ml-auto'}>
+          <ApplicationLogsModal />
+        </div>
+
         <div className="flex gap-2">
           {user?.role === UserRoles.REGIONAL && data?.status === ApplicationStatus.NEW && (
             <>

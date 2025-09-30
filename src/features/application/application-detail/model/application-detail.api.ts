@@ -20,6 +20,11 @@ export const applicationDetailApi = {
     return data.data;
   },
 
+  getApplicationLogs: async (id: any) => {
+    const { data } = await apiClient.get<any>(`/appeal-execution-processes/appeal/${id}`);
+    return data.data;
+  },
+
   getInspectorListSelect: async () => {
     const { data } = await apiClient.get<any>(`/users/office-users/inspectors/select`);
     return data.data;

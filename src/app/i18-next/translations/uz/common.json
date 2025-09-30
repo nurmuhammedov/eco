@@ -42,7 +42,7 @@
     "permits_authorization_documents": "Ruxsat etuvchi hujjatlar",
     "risk_analysis": "Xavfni tahlil qilish",
     "checklist_templates": "Cheklistlar",
-    "logs": "users logs"
+    "user-logs": "Users logs"
   },
   "checklist_name": "Cheklist nomi",
   "checklist_file": "Cheklist fayli",
@@ -643,5 +643,14 @@
       "address": "Manzil"
     }
   },
-  "accreditation": "Akkreditatsiya"
+  "accreditation": "Akkreditatsiya",
+  "user-logs": {
+    "NEW": "Ariza yaratdi",
+    "IN_PROCESS": "Arizani jarayonga o'tkazdi",
+    "IN_AGREEMENT": "Arizani kelishishga o'tkazdi",
+    "IN_APPROVAL": "Arizani tasdiqlashga o'tkazdi",
+    "COMPLETED": "Arizani yakunladi",
+    "CANCELED": "Arizani qaytardi",
+    "REJECTED": " Arizani rad etdi"
+  }
 }

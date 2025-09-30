@@ -51,8 +51,8 @@ export default [
     icon: <ListChecks />,
   },
   {
-    url: '/logs',
-    title: 'menu.logs',
+    url: '/user-logs',
+    title: 'menu.user-logs',
     icon: <ListChecks />,
   },
 ] as Navigation;
