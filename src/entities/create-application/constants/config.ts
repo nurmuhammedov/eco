@@ -8,7 +8,7 @@ export const applicationConfigs: Record<string, any> = {
   },
   [ApplicationTypeEnum.DEREGISTER_HF]: {
     submitEndpoint: '/appeals/hf/deregister',
-    pdfEndpoint: '/appeals/hf/deregister-pdf',
+    pdfEndpoint: '/appeals/hf/deregister/generate-pdf',
   },
   [ApplicationTypeEnum.MODIFY_HF]: {
     submitEndpoint: API_ENDPOINTS.APPEAL_HF + '/modify',
