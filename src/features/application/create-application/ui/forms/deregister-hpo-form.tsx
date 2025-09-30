@@ -42,7 +42,7 @@ export default ({ onSubmit }: DeRegisterHFOFormProps) => {
                 <FormItem>
                   <FormLabel required>Roʻyxatga olish raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning roʻyxatga olish raqami" {...field} />
+                    <Input className="w-full 3xl:w-sm" placeholder="XICHO roʻyxatga olish raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
