@@ -35,14 +35,18 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
     data?.appealType === ApplicationTypeEnum.EXPAND_ACCREDITATION ||
     data?.appealType === ApplicationTypeEnum.REGISTER_EXPERTISE_CONCLUSION;
 
+  const hideLogs = user?.role === UserRoles.LEGAL || user?.role === UserRoles.INDIVIDUAL;
+
   return (
     <div>
       <div className="flex justify-between items-center">
         <GoBack title={`Ariza raqami: ${data?.number || ''}`} />
 
-        <div className={'ml-auto'}>
-          <ApplicationLogsModal />
-        </div>
+        {!hideLogs ? (
+          <div className={'ml-auto'}>
+            <ApplicationLogsModal />
+          </div>
+        ) : null}
 
         <div className="flex gap-2">
           {user?.role === UserRoles.REGIONAL && data?.status === ApplicationStatus.NEW && (
