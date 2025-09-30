@@ -40,8 +40,13 @@ export const applicationDetailApi = {
     return res.data;
   },
 
-  uploadFile: async (payload: { appealId?: string; fieldName: string; filePath: string }) => {
-    const { data: res } = await apiClient.post<any>('/appeals/upload-file', payload);
+  uploadFile: async (payload: any, url = '/appeals/upload-file') => {
+    const { data: res } = await apiClient.post<any>(url, payload);
+    return res.data;
+  },
+
+  updateFile: async (id: string, payload: any) => {
+    const { data: res } = await apiClient.patch<any>(`/hf/${id}`, payload);
     return res.data;
   },
 };

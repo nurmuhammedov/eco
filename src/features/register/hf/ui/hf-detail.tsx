@@ -10,10 +10,12 @@ import { Coordinate } from '@/shared/components/common/yandex-map';
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
 import { getDate } from '@/shared/utils/date.ts';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/shared/hooks/use-auth';
 
 const HfDetail = () => {
   const { isLoading, data } = useHfDetail();
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[]);
+  const { user } = useAuth();
 
   if (isLoading || !data) {
     return null;
@@ -55,7 +57,7 @@ const HfDetail = () => {
           <AppealMainInfo data={data} type={'HF'} address={data?.address} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">
-          <FilesSection files={data?.files || []} />
+          <FilesSection appealId={data?.appealId} userRole={user?.role} register={true} files={data?.files || []} />
         </DetailCardAccordion.Item>
         {!!currentObjLocation?.length && (
           <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">

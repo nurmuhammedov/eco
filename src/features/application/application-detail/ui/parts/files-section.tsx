@@ -5,6 +5,7 @@ import { UserRoles } from '@/entities/user';
 import FileLink from '@/shared/components/common/file-link.tsx';
 import { FC } from 'react';
 import { UpdateFileModal } from '../modals/update-file-modal';
+import FileEditModal from '@/features/register/modals/file-edit-modal';
 
 type FileType = {
   label: string;
@@ -22,11 +23,13 @@ interface Props {
   userRole?: UserRoles;
   applicationStatus?: ApplicationStatus;
   appealId?: string;
+  register?: boolean;
   edit?: boolean;
 }
 
-const FilesSection: FC<Props> = ({ files, userRole, applicationStatus, appealId, edit }) => {
+const FilesSection: FC<Props> = ({ files, register = false, userRole, applicationStatus, appealId, edit }) => {
   const canEdit = userRole === UserRoles.INSPECTOR && applicationStatus === ApplicationStatus.IN_PROCESS && edit;
+  const canInspectorEdit = userRole === UserRoles.INSPECTOR && register && !appealId;
 
   const showFileData = (file: FileType) => {
     if (!file.data.path && !file.data.number && !file.data.uploadDate && !file.data.expiryDate) {
@@ -57,7 +60,7 @@ const FilesSection: FC<Props> = ({ files, userRole, applicationStatus, appealId,
         <div key={file.label} className="flex justify-between items-center border-b border-b-[#E5E7EB] py-4 px-3">
           <p className={'pr-5'}>{file.label}</p>
           <div className="flex items-center gap-2">
-            {showFileData(file)}
+            {canInspectorEdit ? <FileEditModal fieldName={file.fieldName} /> : showFileData(file)}
             {canEdit && <UpdateFileModal appealId={appealId} fieldName={file.fieldName} />}
           </div>
         </div>
