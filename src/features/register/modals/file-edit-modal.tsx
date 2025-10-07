@@ -20,24 +20,23 @@ const schema = z.object({
 
 type FormType = z.infer<typeof schema>;
 
-const DocumentFormModal = ({ fieldName }: { fieldName: string }) => {
+const DocumentFormModal = ({ fieldName, url }: { fieldName: string; url?: string }) => {
   const [open, setOpen] = useState(false);
   const form = useForm<FormType>({
     resolver: zodResolver(schema),
   });
 
-  const { mutate: updateFile, isPending } = useUpdateRegisterFile();
+  const { mutate: updateFile, isPending } = useUpdateRegisterFile(url);
   const queryClient = new QueryClient();
 
   const onSubmit = (data: FormType) => {
     updateFile(
       {
-        files: {
-          [fieldName]: {
-            number: data.documentNumber,
-            documentDate: format(data.documentDate, 'yyyy-MM-dd'),
-            expiryDate: format(data.expiryDate, 'yyyy-MM-dd'),
-          },
+        fileName: fieldName,
+        fileDto: {
+          number: data.documentNumber,
+          uploadDate: format(data.documentDate, 'yyyy-MM-dd'),
+          expiryDate: format(data.expiryDate, 'yyyy-MM-dd'),
         },
       },
       {

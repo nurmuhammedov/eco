@@ -4,12 +4,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useParams } from 'react-router-dom';
 
-export function useUpdateRegisterFile() {
+export function useUpdateRegisterFile(url?: string) {
   const queryClient = useQueryClient();
   const { id = '' } = useParams();
 
   return useMutation({
-    mutationFn: (payload: any) => applicationDetailApi.updateFile(id, payload),
+    mutationFn: (payload: any) => applicationDetailApi.updateFile(id, payload, url),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
       toast.success('Success');

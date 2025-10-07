@@ -11,11 +11,12 @@ import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
 import { useDetail } from '@/shared/hooks';
 import { getDate } from '@/shared/utils/date.ts';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/shared/hooks/use-auth';
 
 const EquipmentsDetail = () => {
   const { isLoading, data } = useEquipmentsDetail();
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[]);
-
+  const { user } = useAuth();
   const { data: regNumber } = useDetail<any>(
     '/equipments/registry-number',
     data?.registryNumber,
@@ -80,7 +81,14 @@ const EquipmentsDetail = () => {
           <AppealMainInfo data={data} type={data?.type} address={data?.address} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">
-          <FilesSection files={data?.files || []} />
+          {/*<FilesSection files={data?.files || []} />*/}
+          <FilesSection
+            appealId={data?.appealId}
+            userRole={user?.role}
+            register={true}
+            url="equipments"
+            files={data?.files || []}
+          />
         </DetailCardAccordion.Item>
         {!!currentObjLocation?.length && (
           <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">

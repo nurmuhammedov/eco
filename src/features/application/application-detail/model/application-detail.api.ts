@@ -50,8 +50,8 @@ export const applicationDetailApi = {
     return res.data;
   },
 
-  updateFile: async (id: string, payload: any) => {
-    const { data: res } = await apiClient.patch<any>(`/hf/${id}`, payload);
+  updateFile: async (id: string, payload: any, url = 'hf') => {
+    const { data: res } = await apiClient.patch<any>(`/${url}/${id}`, payload);
     return res.data;
   },
 };

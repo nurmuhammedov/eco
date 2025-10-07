@@ -24,10 +24,11 @@ interface Props {
   applicationStatus?: ApplicationStatus;
   appealId?: string;
   register?: boolean;
+  url?: string;
   edit?: boolean;
 }
 
-const FilesSection: FC<Props> = ({ files, register = false, userRole, applicationStatus, appealId, edit }) => {
+const FilesSection: FC<Props> = ({ files, register = false, url, userRole, applicationStatus, appealId, edit }) => {
   const canEdit = userRole === UserRoles.INSPECTOR && applicationStatus === ApplicationStatus.IN_PROCESS && edit;
   const canInspectorEdit = userRole === UserRoles.INSPECTOR && register && !appealId;
 
@@ -60,7 +61,7 @@ const FilesSection: FC<Props> = ({ files, register = false, userRole, applicatio
         <div key={file.label} className="flex justify-between items-center border-b border-b-[#E5E7EB] py-4 px-3">
           <p className={'pr-5'}>{file.label}</p>
           <div className="flex items-center gap-2">
-            {canInspectorEdit ? <FileEditModal fieldName={file.fieldName} /> : showFileData(file)}
+            {canInspectorEdit ? <FileEditModal url={url} fieldName={file.fieldName} /> : showFileData(file)}
             {canEdit && <UpdateFileModal appealId={appealId} fieldName={file.fieldName} />}
           </div>
         </div>

@@ -14,9 +14,10 @@ export const useEquipmentsDetail = () => {
     select: (data) => {
       const files = Object.entries(data?.files)
         .filter(([label]) => label.includes('Path'))
-        .map((file) => {
-          const label = `labels.${data.type}.${file[0]}`;
-          return { label: t(label), data: file[1] };
+        .map(([key, value]) => {
+          const label = `labels.HF.${key || 'file'}`;
+          // return { label: t(label), data: file[1] };
+          return { label: t(label), data: value as string, fieldName: key };
         });
       return {
         ...data,
