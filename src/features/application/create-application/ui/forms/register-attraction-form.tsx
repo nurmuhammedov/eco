@@ -96,6 +96,35 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="factory"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Attraksionni ishlab chiqaruvchi zavod nomi</FormLabel>
+                  <FormControl>
+                    <Input className="w-full 3xl:w-sm" placeholder="Zavod nomi" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="factoryAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Ishlab chiqaruvchi manzili</FormLabel>
+                  <FormControl>
+                    <Input className="w-full 3xl:w-sm" placeholder="Ishlab chiqaruvchi manzili" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             {/* Ishlab chiqarilgan sana */}
             <FormField
               control={form.control}
@@ -136,18 +165,37 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
               }}
             />
             {/* Xizmat muddati (yil) */}
+            {/*<FormField*/}
+            {/*  control={form.control}*/}
+            {/*  name="servicePeriod"*/}
+            {/*  render={({ field }) => (*/}
+            {/*    <FormItem>*/}
+            {/*      <FormLabel required>Xizmat muddati (yil)</FormLabel>*/}
+            {/*      <FormControl>*/}
+            {/*        <Input className="w-full 3xl:w-sm" placeholder="Xizmat muddati" {...field} />*/}
+            {/*      </FormControl>*/}
+            {/*      <FormMessage />*/}
+            {/*    </FormItem>*/}
+            {/*  )}*/}
+            {/*/>*/}
             <FormField
               control={form.control}
               name="servicePeriod"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Xizmat muddati (yil)</FormLabel>
-                  <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Xizmat muddati" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                return (
+                  <FormItem className="w-full 3xl:w-sm">
+                    <FormLabel required>Xizmat muddati</FormLabel>
+                    <DatePicker
+                      disableStrategy={'after'}
+                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                      onChange={field.onChange}
+                      placeholder="Sanani tanlang"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
             {/* Attraksion zavod raqami */}
             <FormField
@@ -243,7 +291,9 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
               name="location"
               render={({ field }) => (
                 <FormItem className="w-full 3xl:w-sm">
-                  <FormLabel required>Geolokatsiya</FormLabel>
+                  <FormLabel required>
+                    Geolokatsiya (xaritadan attraksion joylashgan joyni tanlang va koordinatalarini kiriting)
+                  </FormLabel>
                   <FormControl>
                     <YandexMapModal
                       initialCoords={field.value ? field.value.split(',').map(Number) : null}
@@ -260,7 +310,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
               name="riskLevel"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Attraksionning biomexanik xavf darajasi (toifa)</FormLabel>
+                  <FormLabel required> Attraksionning biomexanik xavf darajasi</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full 3xl:w-sm">

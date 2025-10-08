@@ -29,7 +29,19 @@ export const useCreateAttractionApplication = () => {
   const attractionNameOptions = useMemo(() => getSelectOptions(attractionNames || []), [attractionNames]);
   const attractionSortOptions = useMemo(() => getSelectOptions(attractionSorts || []), [attractionSorts]);
 
-  const riskLevels = useMemo(() => ['I', 'II', 'III', 'IV'].map((level) => ({ id: level, name: level })), []);
+  const riskLevels = useMemo(
+    () =>
+      [
+        { label: 'I-yuqori', value: 'I' },
+        { label: 'II-o‘rta', value: 'II' },
+        {
+          label: 'III-past',
+          value: 'III',
+        },
+        { label: 'IV-ahamiyatsiz', value: 'IV' },
+      ].map((level) => ({ id: level?.value, name: level?.label })),
+    [],
+  );
   const riskLevelOptions = useMemo(() => getSelectOptions(riskLevels), [riskLevels]);
 
   return {

@@ -13,13 +13,17 @@ export const AttractionAppealDtoSchema = z.object({
   attractionName: z.string({ required_error: 'Attraksion nomi kiritilmadi!' }).min(1, 'Attraksion nomi kiritilmadi!'),
   childEquipmentId: z.coerce.number({ required_error: 'Attraksion turi tanlanmadi!' }),
   childEquipmentSortId: z.coerce.number({ required_error: 'Attraksion tipi tanlanmadi!' }),
+  factory: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  factoryAddress: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   manufacturedAt: z
     .date({ required_error: 'Ishlab chiqarilgan sana kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   acceptedAt: z
     .date({ required_error: 'Dastlabki foydalanishga qabul qilingan sana kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
-  servicePeriod: z.coerce.number({ required_error: 'Xizmat muddati (yil) kiritilmadi!' }),
+  servicePeriod: z
+    .date({ required_error: 'Xizmat muddati kiritilmadi!' })
+    .transform((date) => format(date, 'yyyy-MM-dd')),
   factoryNumber: z
     .string({ required_error: 'Attraksion zavod raqami kiritilmadi!' })
     .min(1, 'Attraksion zavod raqami kiritilmadi!'),
