@@ -337,35 +337,13 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel required>Attraksionning birkasi bilan surati</FormLabel>
+                    <FormLabel required>Attraksionning surati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
                     </FormControl>
                   </div>
                 </FormItem>
               )}
-            />
-            <FormField
-              control={form.control}
-              name="labelExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
             />
           </div>
 
@@ -376,46 +354,31 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel required>Attraksion pasporti fayli</FormLabel>
+                    <FormLabel required>
+                      Attraksion ishlab chiqaruvchisi tomonidan va (yoki) ixtisoslashtirilgan tashkilot tomonidan
+                      tayyorlangan attraksion pasporti
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
                   </div>
                 </FormItem>
               )}
-            />
-            <FormField
-              control={form.control}
-              name="passportExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
             />
           </div>
 
           <div className="pb-4 border-b">
             <FormField
-              name="equipmentCertPath"
+              name="conformityCertPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel required>Attraksion sertifikati fayli</FormLabel>
+                    <FormLabel>
+                      Muvofiqlik sertifikati yoki muvofiqlik to‘g‘risidagi deklaratsiyaning nusxasi (2023 yil 28 maydan
+                      so‘ng muomalaga kiritilgan attraksionlar uchun - majburiy, qolgan attraksionlar uchun - mavjud
+                      bo‘lsa)
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -423,37 +386,19 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="equipmentCertExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
           </div>
 
           <FormField
-            name="acceptanceCertPath"
+            name="technicalJournalPath"
             control={form.control}
             render={({ field }) => (
               <FormItem className={'mb-2'}>
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required>Attraksionni foydalanishga qabul qilish guvohnomasi fayli</FormLabel>
+                  <FormLabel required>
+                    Kundalik texnik xizmat ko‘rsatish attraksion ishlari boshlanishidan oldin olib boriladi. Natijalar
+                    bo‘yicha attraksionlardan xavfsiz foydalanishga javobgar shaxs attraksionni kundalik foydalanishga
+                    ruxsat berganligi to‘g‘rida jurnali.
+                  </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
@@ -464,12 +409,15 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
 
           <div className="pb-4 border-b">
             <FormField
-              name="assignmentDecreePath"
+              name="seasonalInspectionPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel required>Masʼul shaxs tayinlanganligi toʻgʻrisida buyruq fayli</FormLabel>
+                    <FormLabel required>
+                      Mavsumiy foydalaniladigan attraksionlar to‘liq texnik shahodat sinovlaridan o‘tganligi to‘g‘risida
+                      ma’lumotlar.
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -480,7 +428,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
 
             <FormField
               control={form.control}
-              name="assignmentDecreeExpiryDate"
+              name="seasonalInspectionExpiryDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
@@ -503,12 +451,15 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
           </div>
 
           <FormField
-            name="techReadinessActPath"
+            name="servicePlanPath"
             control={form.control}
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required>Attraksion texnik tayyorligi toʻgʻrisida dalolatnoma</FormLabel>
+                  <FormLabel required>
+                    Attraksionlarga davriy texnik xizmat ko‘rsatish attraksion egasi yoki attraksionni ijaraga olgan
+                    shaxs tomonidan tasdiqlangan reja-jadvali.
+                  </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
