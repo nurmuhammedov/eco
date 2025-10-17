@@ -1,6 +1,6 @@
 import { cn } from '@/shared/lib/utils';
 import { Row } from '@tanstack/react-table';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
+import { Eye, Pencil, Trash2, QrCode } from 'lucide-react';
 import React, { memo, ReactNode, useCallback } from 'react';
 import DeleteConfirmationDialog from '../delete-confirm-dialog';
 
@@ -16,14 +16,17 @@ export interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 
   showEdit?: boolean;
+  showQr?: boolean;
   showView?: boolean;
   showDelete?: boolean;
 
   onEdit?: (row: Row<TData>) => void;
+  onQr?: (row: Row<TData>) => void;
   onView?: (row: Row<TData>) => void;
   onDelete?: (row: Row<TData>) => void;
 
   editClassName?: string;
+  qrClassName?: string;
   viewClassName?: string;
   deleteClassName?: string;
 
@@ -58,12 +61,15 @@ ActionButton.displayName = 'ActionButton';
 function DataTableRowActions<TData>({
   row,
   showEdit = true,
+  showQr = true,
   showDelete = true,
   showView = true,
   onEdit,
+  onQr,
   onDelete,
   onView,
   editClassName,
+  qrClassName,
   deleteClassName,
   viewClassName,
   containerClassName,
@@ -85,6 +91,10 @@ function DataTableRowActions<TData>({
     if (onView) onView(row);
   }, [onView, row]);
 
+  const handleQr = useCallback((): void => {
+    if (onQr) onQr(row);
+  }, [onQr, row]);
+
   const buttons: ActionButtonConfig[] = [
     ...(showView && onView
       ? [
@@ -93,6 +103,16 @@ function DataTableRowActions<TData>({
             onClick: handleView,
             className: cn(viewClassName),
             icon: <Eye className="size-4" />,
+          },
+        ]
+      : []),
+    ...(showQr && onQr
+      ? [
+          {
+            ariaLabel: 'Qr',
+            onClick: handleQr,
+            className: cn(qrClassName),
+            icon: <QrCode className="size-4" />,
           },
         ]
       : []),

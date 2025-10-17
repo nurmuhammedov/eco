@@ -26,7 +26,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
 
   const legalTin = form.watch('legalTin');
 
-  const { data, isLoading: isLegalInfoLoading } = useLegalApplicantInfo(legalTin, legalTin?.trim()?.length === 7);
+  const { data, isLoading: isLegalInfoLoading } = useLegalApplicantInfo(legalTin, legalTin?.trim()?.length === 9);
 
   return (
     <Form {...form}>
@@ -126,14 +126,16 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               control={form.control}
               name="spheres"
               render={({ field }) => (
-                <FormItem>
+                // <FormItem> butun blokni o'rab turadi
+                <FormItem className="flex flex-col">
                   <FormLabel>Tarmoqlar</FormLabel>
                   <FormControl>
+                    {/* MultiSelect'ni FormControl ichiga joylaymiz */}
                     <MultiSelect
-                      className="w-full 3xl:w-sm"
-                      {...field}
+                      className="w-full 3xl:w-sm" // Bu klasslar balandlikni to'g'rilashga yordam beradi
+                      value={field.value || []}
+                      onChange={field.onChange}
                       options={spheres}
-                      maxDisplayItems={5}
                       placeholder="Tarmoqlar"
                     />
                   </FormControl>

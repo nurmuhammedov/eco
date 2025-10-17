@@ -24,7 +24,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="Norasmiy kranni ro‘yxatga olish arizasi" />
+        <GoBack title="Kranni ro‘yxatga olish arizasi" />
         <NoteForm equipmentName="kran" />
 
         <CardForm className="mb-2">

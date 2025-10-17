@@ -31,7 +31,7 @@ const ApplicationPage = () => {
     if (UserRoles.INSPECTOR === user?.role) {
       return (
         <Button onClick={() => navigate('/applications/inspector/create')}>
-          <PlusCircle /> Norasmiy XICHO va qurilma uchun arizalar
+          <PlusCircle /> XICHO va qurilma uchun arizalar
         </Button>
       );
     }

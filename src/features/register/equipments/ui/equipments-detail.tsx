@@ -10,13 +10,14 @@ import { Coordinate } from '@/shared/components/common/yandex-map';
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
 import { useDetail } from '@/shared/hooks';
 import { getDate } from '@/shared/utils/date.ts';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '@/shared/hooks/use-auth';
 
 const EquipmentsDetail = () => {
   const { isLoading, data } = useEquipmentsDetail();
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[]);
   const { user } = useAuth();
+  const { id: equipmentUuid } = useParams<{ id: string }>();
   const { data: regNumber } = useDetail<any>(
     '/equipments/registry-number',
     data?.registryNumber,
@@ -90,6 +91,28 @@ const EquipmentsDetail = () => {
             files={data?.files || []}
           />
         </DetailCardAccordion.Item>
+
+        {data?.type == 'ATTRACTION' ? (
+          <DetailCardAccordion.Item value="object_qr" title="Qurilma pasport ma‘lumotlari">
+            <DetailRow
+              title="QR:"
+              value={
+                <Link target="_blank" className="text-[#0271FF]" to={'/register/' + equipmentUuid + '/qr-page'}>
+                  Print
+                </Link>
+              }
+            />
+            <DetailRow
+              title="View:"
+              value={
+                <Link target="_blank" className="text-[#0271FF]" to={'/register/' + equipmentUuid + '/qr-page'}>
+                  View
+                </Link>
+              }
+            />
+          </DetailCardAccordion.Item>
+        ) : null}
+
         {!!currentObjLocation?.length && (
           <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">
             <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />

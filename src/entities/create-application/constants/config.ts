@@ -90,6 +90,14 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: '/appeals/irs/transfer',
     pdfEndpoint: '/appeals/irs/generate-pdf',
   },
+  [ApplicationTypeEnum.REGISTER_XRAY]: {
+    submitEndpoint: '/appeals/xray',
+    pdfEndpoint: '/appeals/xray/generate-pdf',
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_XRAY]: {
+    submitEndpoint: '/appeals/xray',
+    pdfEndpoint: '/appeals/xray/generate-pdf',
+  },
   [ApplicationTypeEnum.REGISTER_ACCREDITATION]: {
     submitEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION,
     pdfEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_GENERATE_PDF,

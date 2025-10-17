@@ -203,6 +203,33 @@
   "hazardous_facilities_type": "XICHO turlari",
   "description": "Tavsif",
   "labels": {
+    "XRAY": {
+      "address": "Rentgen joylashgan manzil",
+      "model": "Ruxsatnoma reesri bo‘yicha tartib raqami",
+      "file1Path": "Mehnat vazirligi tomonidan berilgan ekspertiza hulosasi",
+      "file2Path": "Sanitar-epidemologik hulosa barcha betlari",
+      "file3Path": "Sanitar-epidemologik hulosa obʼekt toifasi koʼrsatilgan qismi",
+      "file4Path": "Buyruq va “А” toifaga kirgan xodimlar roʼyhati ilova shaklida",
+      "file5Path": "Radiatsiyaviy xavfsizlik boʼyicha oʼqiganlik yuzasidan sertifikat",
+      "file6Path": "Tibbiy koʼrik hulosasi",
+      "file7Path": "Dozimetr protokoli (bayonnomasi)",
+      "file8Path": "Davriy qiyoslov sertifikati",
+      "file9Path": "Dalolatnoma",
+      "file10Path": "Kuzatuv xati, INM pasporti va inventarizatsiya",
+      "file11Path": "Yoʼriqnomalar",
+      "file12Path": "Shaxsiy ximoya vositalarining foto surati",
+      "file13Path": "Dalolatnoma-koʼrsatma va uning bajarilish maʼlumotlari"
+    },
+    "ATTRACTION": {
+      "country": "Attraksion ishlab chiqarilgan mamlakat",
+      "acceptedAt": "Dastlabki foydalanishga qabul qilingan sana",
+      "address": "Attraksion joylashgan manzil",
+      "location": "Geolokatsiya (xaritadan attraksion joylashgan joyni tanlang va koordinatalarini kiriting)",
+      "childEquipmentId": "Attraksion turi",
+      "factoryNumber": "Attraksion zavod raqami",
+      "factory": "Attraksionni ishlab chiqaruvchi zavod nomi",
+      "manufacturedAt": "Attraksion ishlab chiqarilgan sana"
+    },
     "HF": {
       "identificationCardPath": "Identifikatsiya varag‘i fayli",
       "receiptPath": "XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi fayli",
@@ -227,7 +254,18 @@
       "hazardousSubstance": "VMning 2008 yil 10 dekabrdagi 271-son qaroriga muvofiq xavfli moddalarning nomi va miqdori",
       "spheres": "Tarmoqlar",
       "phoneNumber": "Telefon raqami",
-      "email": "Elektron pochta manzili"
+      "email": "Elektron pochta manzili",
+      "labelPath": "Attraksionning surati",
+      "passportPath": "Attraksion ishlab chiqaruvchisi tomonidan va (yoki) ixtisoslashtirilgan tashkilot tomonidan tayyorlangan attraksion pasporti",
+      "conformityCertPath": "Muvofiqlik sertifikati yoki muvofiqlik to‘g‘risidagi deklaratsiyaning nusxasi (2023 yil 28 maydan so‘ng muomalaga kiritilgan attraksionlar uchun - majburiy, qolgan attraksionlar uchun - mavjud bo‘lsa)",
+      "technicalJournalPath": "Kundalik texnik xizmat ko‘rsatish attraksion ishlari boshlanishidan oldin olib boriladi. Natijalar bo‘yicha attraksionlardan xavfsiz foydalanishga javobgar shaxs attraksionni kundalik foydalanishga ruxsat berganligi to‘g‘rida jurnali.",
+      "seasonalInspectionPath": "Mavsumiy foydalaniladigan attraksionlar to‘liq texnik shahodat sinovlaridan o‘tganligi to‘g‘risida ma’lumotlar",
+      "servicePlanPath": "Attraksionlarga davriy texnik xizmat ko‘rsatish attraksion egasi yoki attraksionni ijaraga olgan shaxs tomonidan tasdiqlangan reja-jadvali",
+      "seasonalReadinessActPath": "Bog‘ attraksionining mavsumga tayyorligi to‘g‘risidagi dalolatnomasi",
+      "technicalManualPath": "Texnik shahodat sinovlari attraksiondan foydalanish qo‘llanmasi va mazkur Qoidalar talablariga muvofiq attraksionlarni soz holatda saqlash va xavfsiz foydalanish uchun mas’ul bo‘lgan mutaxassis boshchiligida amalga oshiriladi. Mas’ul mutaxasis buyrug‘i",
+      "employeeSafetyKnowledgePath": "Bog‘ xodimlarning mehnatni muhofaza qilish bo‘yicha bilimlarini sinovdan o‘tganligi to‘g‘risida ma’lumot",
+      "usageRightsPath": "Ruxsatnoma",
+      "technicalReadinessActPath": "Attraksionlarning texnik tayyorligi dalolatnomasi ( yangi o‘rnatilgan 2023 yil 28 maydan so‘ng muomalaga kiritilgan attraksionlar uchun - majburiy, qolgan attraksionlar uchun - mavjud bo‘lsa)"
     },
     "ELEVATOR": {
       "labelPath": "Liftning birkasi bilan surʼati",

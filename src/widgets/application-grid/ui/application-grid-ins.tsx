@@ -81,6 +81,10 @@ export const ApplicationsGridIns: React.FC = () => {
                   id: ApplicationCategory.ILLEGAL_HOKQ,
                   name: 'Xavfli obyektlar va qurilmalar',
                 },
+                {
+                  id: ApplicationCategory.ILLEGAL_XRAY,
+                  name: 'Rentgen',
+                },
               ]
             : APPLICATION_CATEGORIES
       }

@@ -1,5 +1,5 @@
 import {
-  AttractionIllegalPassportAppealDtoSchema,
+  AttractionIllegalAppealDtoSchema,
   RegisterIllegalAttractionApplicationDTO,
 } from '@/entities/create-application';
 import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries';
@@ -9,10 +9,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
+type FormValues = RegisterIllegalAttractionApplicationDTO & {
+  identity: string;
+  birthDate?: Date; // `birthDate` ixtiyoriy bo'lishi mumkin
+};
+
 export const useCreateIllegalAttractionPassportApplication = () => {
-  const form = useForm<RegisterIllegalAttractionApplicationDTO>({
-    resolver: zodResolver(AttractionIllegalPassportAppealDtoSchema),
+  const form = useForm<FormValues>({
+    resolver: zodResolver(AttractionIllegalAppealDtoSchema),
     mode: 'onChange',
+    defaultValues: {
+      identity: '',
+      // ... boshqa maydonlar uchun boshlang'ich qiymatlar
+    },
   });
 
   const regionId = form.watch('regionId')?.toString();

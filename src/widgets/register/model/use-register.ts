@@ -18,6 +18,8 @@ export const useRegister = () => {
 
   const { data: irsCount = 0 } = useData<number>('/irs/count', true, { mode });
 
+  const { data: xrayCount = 0 } = useData<number>('/irs/count', true, { mode });
+
   const activeTab = useMemo<RegisterActiveTab>(() => {
     const tabFromParams = paramsObject['tab'] as string;
     if (Object.values(RegisterActiveTab).includes(tabFromParams as RegisterActiveTab)) {
@@ -43,6 +45,7 @@ export const useRegister = () => {
     hfCount,
     equipmentsCount,
     irsCount,
+    xrayCount,
     handleChangeTab,
   };
 };

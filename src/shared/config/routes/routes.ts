@@ -33,6 +33,7 @@ const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facil
 const RegisterPage = lazy(() => import('@/pages/register/ui'));
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'));
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'));
+const EquipmentPrintPage = lazy(() => import('@/features/register/equipments/ui/EquipmentPrintPage'));
 const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'));
 const RiskAnalysisPage = lazy(() => import('@/pages/risk-analysis'));
 const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'));
@@ -124,6 +125,11 @@ export const appRoutes = [
   {
     path: 'register/:id/equipments',
     component: RegisterEquipmentDetail,
+    roles: [],
+  },
+  {
+    path: 'register/:id/qr-page',
+    component: EquipmentPrintPage,
     roles: [],
   },
   {

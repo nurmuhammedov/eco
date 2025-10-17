@@ -16,13 +16,12 @@ import { Download } from 'lucide-react';
 export const EquipmentsList = () => {
   const navigate = useNavigate();
   const {
-    paramsObject: { status = ApplicationStatus.ALL, type = 'ALL', isActive = 'true', ...rest },
+    paramsObject: { status = ApplicationStatus.ALL, type = 'ALL', ...rest },
     addParams,
   } = useCustomSearchParams();
   const { data } = usePaginatedData<any>(`/equipments`, {
     ...rest,
     type: type !== 'ALL' ? type : '',
-    isActive,
     status: status !== 'ALL' ? status : '',
   });
 
@@ -77,7 +76,7 @@ export const EquipmentsList = () => {
     },
     {
       id: 'actions',
-      maxSize: 40,
+      maxSize: 70,
       cell: ({ row }) => (
         <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
       ),
@@ -88,7 +87,6 @@ export const EquipmentsList = () => {
     const res = await apiClient.downloadFile<Blob>('/equipments/export/excel', {
       ...rest,
       type: type !== 'ALL' ? type : '',
-      isActive,
       status: status !== 'ALL' ? status : '',
     });
     const blob = res.data;
@@ -127,21 +125,29 @@ export const EquipmentsList = () => {
       onTabChange={(type) => addParams({ type: type }, 'page', 'search', 'startDate', 'endDate')}
     >
       <TabsLayout
-        activeTab={isActive?.toString()}
+        activeTab={status?.toString()}
         tabs={[
           {
-            id: 'true',
+            id: 'ACTIVE',
             name: 'Amaldagi qurilmalar',
           },
           {
-            id: 'false',
+            id: 'INACTIVE',
             name: 'Reyestrdan chiqarilgan qurilmalar',
+          },
+          {
+            id: 'EXPIRED',
+            name: "Muddati o'tgan qurilmalar",
+          },
+          {
+            id: 'NO_DATE',
+            name: 'Muddati kiritilmaganlar',
           },
         ]?.map((i) => ({
           ...i,
           count: i?.id == type ? data?.page?.totalElements || 0 : 0,
         }))}
-        onTabChange={(type) => addParams({ isActive: type }, 'page', 'search', 'startDate', 'endDate')}
+        onTabChange={(type) => addParams({ status: type }, 'page', 'search', 'startDate', 'endDate')}
       >
         <div className={'flex justify-between items-start'}>
           <Filter inputKeys={['search', 'eqOfficeId']} />

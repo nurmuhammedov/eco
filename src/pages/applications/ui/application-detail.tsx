@@ -35,6 +35,8 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
     data?.appealType === ApplicationTypeEnum.EXPAND_ACCREDITATION ||
     data?.appealType === ApplicationTypeEnum.REGISTER_EXPERTISE_CONCLUSION;
 
+  const isXrayAppeal = data?.appealType === ApplicationTypeEnum.REGISTER_XRAY;
+
   const hideLogs = user?.role === UserRoles.LEGAL || user?.role === UserRoles.INDIVIDUAL;
 
   return (
@@ -49,12 +51,13 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
         ) : null}
 
         <div className="flex gap-2">
-          {user?.role === UserRoles.REGIONAL && data?.status === ApplicationStatus.NEW && (
-            <>
-              {isAttestationAppeal ? <ExecuteAttestationModal /> : <AttachInspectorModal />}
-              <RejectApplicationModal />
-            </>
-          )}
+          {(user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) &&
+            data?.status === ApplicationStatus.NEW && (
+              <>
+                {isAttestationAppeal ? <ExecuteAttestationModal /> : <AttachInspectorModal />}
+                <RejectApplicationModal />
+              </>
+            )}
           {user?.role === UserRoles.MANAGER && data?.status === ApplicationStatus.NEW && isAttestationAppeal && (
             <>
               <ManagerAttestationModal />
@@ -80,6 +83,11 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
             <>
               <ApplyAccreditationModal />
               <RejectAccreditationModal />
+            </>
+          )}
+          {user?.role === UserRoles.MANAGER && data?.status === ApplicationStatus.IN_PROCESS && isXrayAppeal && (
+            <>
+              <ReferenceCreateModal />
             </>
           )}
         </div>

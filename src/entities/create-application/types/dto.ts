@@ -18,6 +18,7 @@ import {
   HFAppealDtoSchema,
   HoistAppealDtoSchema,
   IrsAppealDtoSchema,
+  XrayAppealDtoSchema,
   LifAppealDtoSchema,
   LpgContainerAppealDtoSchema,
   LpgPoweredAppealDtoSchema,
@@ -25,7 +26,7 @@ import {
   ReAccreditationDtoSchema,
   IllegalCraneAppealDtoSchema,
   ContainerIllegalAppealDtoSchema,
-  AttractionIllegalPassportAppealDtoSchema,
+  AttractionIllegalAppealDtoSchema,
   EscalatorIllegalAppealDtoSchema,
   PipelineIllegalAppealDtoSchema,
   BoilerUtilizerIllegalAppealDtoSchema,
@@ -62,6 +63,7 @@ export type CreateLpgPoweredApplicationDTO = z.infer<typeof LpgPoweredAppealDtoS
 export type CreateHoistApplicationDTO = z.infer<typeof HoistAppealDtoSchema>;
 export type CreateCablewayApplicationDTO = z.infer<typeof CablewayAppealDtoSchema>;
 export type CreateIrsApplicationDTO = z.infer<typeof IrsAppealDtoSchema>;
+export type CreateXrayApplicationDTO = z.infer<typeof XrayAppealDtoSchema>;
 export type CreateAttractionPassportApplicationDTO = z.infer<typeof AttractionPassportAppealDtoSchema>;
 export type CreateAttractionApplicationDTO = z.infer<typeof AttractionAppealDtoSchema>;
 export type CreateAccreditationDTO = z.infer<typeof AccreditationDtoSchema>;
@@ -79,7 +81,7 @@ export type RegisterIllegalContainerApplicationDTO = z.infer<typeof ContainerIll
 export type RegisterIllegalBoilerApplicationDTO = z.infer<typeof BoilerIllegalAppealDtoSchema>;
 export type RegisterIllegalLiftApplicationDTO = z.infer<typeof LiftIllegalAppealDtoSchema>;
 export type RegisterIllegalEscalatorApplicationDTO = z.infer<typeof EscalatorIllegalAppealDtoSchema>;
-export type RegisterIllegalAttractionApplicationDTO = z.infer<typeof AttractionIllegalPassportAppealDtoSchema>;
+export type RegisterIllegalAttractionApplicationDTO = z.infer<typeof AttractionIllegalAppealDtoSchema>;
 export type RegisterIllegalPipelineApplicationDTO = z.infer<typeof PipelineIllegalAppealDtoSchema>;
 export type RegisterIllegalChemicalContainerApplicationDTO = z.infer<typeof ChemicalIllegalContainerAppealDtoSchema>;
 export type RegisterIllegalHeatPipelineApplicationDTO = z.infer<typeof HeatPipelineIllegalAppealDtoSchema>;
