@@ -39,7 +39,7 @@ export const TabsLayout = ({
           {tabs.map((tab) => (
             <TabsTrigger className={cn('hover:bg-neutral-100', classNameTrigger)} key={tab.id} value={tab.id}>
               {tab.name}
-              {tab.count ? (
+              {tab.count || tab.count == 0 ? (
                 <Badge variant="destructive" className="ml-2">
                   {tab.count}
                 </Badge>

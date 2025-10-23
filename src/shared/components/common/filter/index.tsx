@@ -25,8 +25,10 @@ interface ApplicationFiltersFormValues {
   appealType?: ApplicationTypeEnum;
   hfOfficeId?: string;
   officeId?: string;
+  regionId?: string;
   eqOfficeId?: string;
-  irsOfficeId?: string;
+  irsRegionId?: string;
+  xrayRegionId?: string;
   executorId?: string;
   mode?: string;
   startDate?: Date;
@@ -60,9 +62,11 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
   const { control, handleSubmit } = form;
 
   const isOfficeFilterEnabled = useMemo(() => inputKeys.includes('officeId'), [inputKeys]);
+  const isRegionFilterEnabled = useMemo(() => inputKeys.includes('regionId'), [inputKeys]);
   const isHfOfficeFilterEnabled = useMemo(() => inputKeys.includes('hfOfficeId'), [inputKeys]);
   const isEqOfficeFilterEnabled = useMemo(() => inputKeys.includes('eqOfficeId'), [inputKeys]);
-  const isIrsOfficeFilterEnabled = useMemo(() => inputKeys.includes('irsOfficeId'), [inputKeys]);
+  const isIrsRegionFilterEnabled = useMemo(() => inputKeys.includes('irsRegionId'), [inputKeys]);
+  const isXrayRegionFilterEnabled = useMemo(() => inputKeys.includes('xrayRegionId'), [inputKeys]);
   const isExecutorFilterEnabled = useMemo(() => inputKeys.includes('executorId'), [inputKeys]);
   const isStartDateFilterEnabled = useMemo(() => inputKeys.includes('startDate'), [inputKeys]);
   const isEndDateFilterEnabled = useMemo(() => inputKeys.includes('endDate'), [inputKeys]);
@@ -90,7 +94,12 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
 
   const { data: officeOptionsDataFromApi, isLoading: isLoadingOffices } = useData<any>(
     `${API_ENDPOINTS.OFFICES}/select`,
-    isOfficeFilterEnabled,
+    isOfficeFilterEnabled || isHfOfficeFilterEnabled || isEqOfficeFilterEnabled,
+  );
+
+  const { data: regionOptionsDataFromApi, isLoading: isLoadingRegions } = useData<any>(
+    `${API_ENDPOINTS.REGIONS_SELECT}`,
+    isRegionFilterEnabled || isIrsRegionFilterEnabled || isXrayRegionFilterEnabled,
   );
 
   const { data: executorOptionsDataFromApi, isLoading: isLoadingExecutors } = useData<any>(
@@ -197,12 +206,12 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
             />
           </FilterField>
         );
-      case 'irsOfficeId':
-        if (!isIrsOfficeFilterEnabled) return null;
+      case 'irsRegionId':
+        if (!isIrsRegionFilterEnabled) return null;
         return (
           <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
             <Controller
-              name="officeId"
+              name="regionId"
               control={control}
               render={({ field }) => (
                 <Select
@@ -211,14 +220,42 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                     handleSubmit(onSubmit)();
                   }}
                   value={field.value}
-                  disabled={isLoadingOffices}
+                  disabled={isLoadingRegions}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder={t('office_id_placeholder', 'INM joylashgan manzil')} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={ALL_ITEMS_VALUE as unknown as string}>{t('all', 'Barchasi')}</SelectItem>
-                    {getSelectOptions(officeOptionsDataFromApi || [])}
+                    {getSelectOptions(regionOptionsDataFromApi || [])}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </FilterField>
+        );
+      case 'xrayRegionId':
+        if (!isXrayRegionFilterEnabled) return null;
+        return (
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+            <Controller
+              name="regionId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    handleSubmit(onSubmit)();
+                  }}
+                  value={field.value}
+                  disabled={isLoadingRegions}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('office_id_placeholder', 'Rentgenlar joylashgan manzil')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={ALL_ITEMS_VALUE as unknown as string}>{t('all', 'Barchasi')}</SelectItem>
+                    {getSelectOptions(regionOptionsDataFromApi || [])}
                   </SelectContent>
                 </Select>
               )}

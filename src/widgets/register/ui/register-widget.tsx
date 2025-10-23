@@ -3,6 +3,7 @@ import { UserRoles } from '@/entities/user';
 import { EquipmentsList } from '@/features/register/equipments/ui/equipments-list';
 import { HfList } from '@/features/register/hf/ui/hf-list';
 import { IrsList } from '@/features/register/irs/ui/irs-list';
+import { XrayList } from '@/features/register/xray/ui/xray-list';
 import { Badge } from '@/shared/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { useAuth } from '@/shared/hooks/use-auth';
@@ -14,7 +15,7 @@ import { RegisterActiveTab } from '../types';
 const RegisterWidget = () => {
   // const { t } = useTranslation('common');
   const { user } = useAuth();
-  const { activeTab, handleChangeTab, hfCount, irsCount, equipmentsCount } = useRegister();
+  const { activeTab, handleChangeTab, hfCount, irsCount, equipmentsCount, xrayCount } = useRegister();
 
   return (
     <Fragment>
@@ -48,6 +49,14 @@ const RegisterWidget = () => {
                 </Badge>
               ) : null}
             </TabsTrigger>
+            <TabsTrigger value={RegisterActiveTab.XRAY}>
+              Rentgenlar
+              {xrayCount ? (
+                <Badge variant="destructive" className="ml-2">
+                  {xrayCount}
+                </Badge>
+              ) : null}
+            </TabsTrigger>
           </TabsList>
         ) : (
           <TabsList>
@@ -69,6 +78,9 @@ const RegisterWidget = () => {
         </TabsContent>
         <TabsContent value={RegisterActiveTab.IRS} className="mt-4">
           <IrsList />
+        </TabsContent>
+        <TabsContent value={RegisterActiveTab.XRAY} className="mt-4">
+          <XrayList />
         </TabsContent>
       </Tabs>
     </Fragment>

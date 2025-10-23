@@ -6,6 +6,7 @@ export enum MainApplicationCategory {
 
 export enum ApplicationCategory {
   INM = 'INM',
+  XRAY = 'XRAY',
   HOKQ = 'HOKQ',
   XICHO = 'XICHO',
   CADASTRE = 'CADASTRE',
@@ -14,6 +15,7 @@ export enum ApplicationCategory {
   DEFAULT = 'DEFAULT',
   ILLEGAL = 'ILLEGAL',
   ILLEGAL_HOKQ = 'ILLEGAL_HOKQ',
+  ILLEGAL_XRAY = 'ILLEGAL_XRAY',
 }
 
 export enum BuildingSphereType {
@@ -154,6 +156,9 @@ export enum ApplicationTypeEnum {
   ACCEPT_IRS = 'ACCEPT_IRS',
   TRANSFER_IRS = 'TRANSFER_IRS',
 
+  //XRAY
+  REGISTER_XRAY = 'REGISTER_XRAY',
+
   // UNOFFICIAL
   ILLEGAL_REGISTER_CRANE = 'ILLEGAL_REGISTER_CRANE',
   ILLEGAL_REGISTER_CONTAINER = 'ILLEGAL_REGISTER_CONTAINER',
@@ -169,6 +174,7 @@ export enum ApplicationTypeEnum {
   ILLEGAL_REGISTER_LPG_POWERED = 'ILLEGAL_REGISTER_LPG_POWERED',
   ILLEGAL_REGISTER_HOIST = 'ILLEGAL_REGISTER_HOIST',
   ILLEGAL_REGISTER_CABLEWAY = 'ILLEGAL_REGISTER_CABLEWAY',
+  ILLEGAL_REGISTER_XRAY = 'ILLEGAL_REGISTER_XRAY',
 }
 
 export enum IrsIdentifierType {
@@ -182,6 +188,10 @@ export enum IrsCategory {
   III = 'III',
   IV = 'IV',
   V = 'V',
+}
+
+export enum stateService {
+  X_RAY_PERMIT = 'Rentgen uskunasidan foydalanish uchun ruxsatnoma',
 }
 
 export enum IrsUsageType {

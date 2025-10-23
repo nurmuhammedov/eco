@@ -25,7 +25,7 @@ export default ({ onSubmit }: RegisterIllegalContainerFormProps) => {
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="Norasmiy bosim ostida ishlovchi idishni ro‘yxatga olish" />
+        <GoBack title="Bosim ostida ishlovchi idishni ro‘yxatga olish" />
         <NoteForm equipmentName="idish" />
         <CardForm className="mb-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">

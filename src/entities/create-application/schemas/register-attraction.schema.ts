@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { z } from 'zod';
 
 export const AttractionAppealDtoSchema = z.object({
+  // --- Asosiy qism (o'zgarishsiz) ---
   phoneNumber: z
     .string({ message: FORM_ERROR_MESSAGES.required })
     .trim()
@@ -14,7 +15,6 @@ export const AttractionAppealDtoSchema = z.object({
   childEquipmentId: z.coerce.number({ required_error: 'Attraksion turi tanlanmadi!' }),
   childEquipmentSortId: z.coerce.number({ required_error: 'Attraksion tipi tanlanmadi!' }),
   factory: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  factoryAddress: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   manufacturedAt: z
     .date({ required_error: 'Ishlab chiqarilgan sana kiritilmadi!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
@@ -38,36 +38,101 @@ export const AttractionAppealDtoSchema = z.object({
   location: z.string({ required_error: 'Geolokatsiya tanlanmadi!' }).min(1, 'Geolokatsiya tanlanmadi!'),
   riskLevel: z.enum(['I', 'II', 'III', 'IV'], { required_error: 'Biomexanik xavf darajasi tanlanmadi!' }),
 
-  // File paths
-  labelPath: z.string().min(1, 'Attraksionning birkasi bilan surati biriktirilmadi!'),
-  labelExpiryDate: z.date().optional(),
+  // --- Fayllar va Sanalar (BACKENDGA MOSLASHTIRILGAN QISM) ---
+
+  // Backendda bor va majburiy
   passportPath: z
     .string({ required_error: 'Attraksion pasporti fayli biriktirilmadi!' })
     .min(1, 'Attraksion pasporti fayli biriktirilmadi!'),
-  passportExpiryDate: z.date().optional(),
-  equipmentCertPath: z
-    .string({ required_error: 'Attraksion sertifikati fayli biriktirilmadi!' })
-    .min(1, 'Attraksion sertifikati fayli biriktirilmadi!'),
-  equipmentCertExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
-  acceptanceCertPath: z
-    .string({ required_error: 'Attraksionni foydalanishga qabul qilish guvohnomasi fayli biriktirilmadi!' })
-    .min(1, 'Attraksionni foydalanishga qabul qilish guvohnomasi fayli biriktirilmadi!'),
-  assignmentDecreePath: z
-    .string({ required_error: 'Masʼul shaxs tayinlanganligi toʻgʻrisida buyruq fayli biriktirilmadi!' })
-    .min(1, 'Masʼul shaxs tayinlanganligi toʻgʻrisida buyruq fayli biriktirilmadi!'),
-  assignmentDecreeExpiryDate: z.date().optional(),
-  techReadinessActPath: z
-    .string({ required_error: 'Attraksion texnik tayyorligi toʻgʻrisida dalolatnoma biriktirilmadi!' })
-    .min(1, 'Attraksion texnik tayyorligi toʻgʻrisida dalolatnoma biriktirilmadi!'),
-  seasonalReadinessActPath: z
-    .string({ required_error: 'Attraksion mavsumga tayyorligi toʻgʻrisida dalolatnoma biriktirilmadi!' })
-    .min(1, 'Attraksion mavsumga tayyorligi toʻgʻrisida dalolatnoma biriktirilmadi!'),
-  safetyDecreePath: z
-    .string({
-      required_error:
-        'Attraksionni soz holatda va undan xavfsiz foydalanish boʻyicha masʼul shaxs buyrugʻi biriktirilmadi!',
-    })
-    .min(1, 'Attraksionni soz holatda va undan xavfsiz foydalanish boʻyicha masʼul shaxs buyrugʻi biriktirilmadi!'),
+  labelPath: z
+    .string({ required_error: 'Attraksionning surati biriktirilmadi!' })
+    .min(1, 'Attraksionning surati biriktirilmadi!'),
 
+  // Backendda bor, lekin majburiy emas (yulduzchasi yo'q)
+  conformityCertPath: z.string().optional(),
+
+  qrPath: z.string().optional(),
+  preservationActPath: z
+    .string({ required_error: 'Kundalik texnik xizmat ko‘rsatish jurnali biriktirilmadi!' })
+    .min(1, 'Kundalik texnik xizmat ko‘rsatish jurnali biriktirilmadi!'),
+  preservationActExpiryDate: z
+    .date({ required_error: 'Amal qilish muddati kiritilmadi!' })
+    .transform((date) => format(date, 'yyyy-MM-dd')),
+
+  // Backendda bor va majburiy (sizning sxemangizda yo'q edi)
+  technicalJournalPath: z
+    .string({ required_error: 'Kundalik texnik xizmat ko‘rsatish jurnali biriktirilmadi!' })
+    .min(1, 'Kundalik texnik xizmat ko‘rsatish jurnali biriktirilmadi!'),
+  technicalManualExpiryDate: z
+    .date()
+    .optional()
+    .transform((date) => {
+      if (date) {
+        return format(date, 'yyyy-MM-dd');
+      }
+      return date;
+    }),
+  servicePlanPath: z
+    .string({ required_error: 'Davriy texnik xizmat ko‘rsatish reja-jadvali biriktirilmadi!' })
+    .min(1, 'Davriy texnik xizmat ko‘rsatish reja-jadvali biriktirilmadi!'),
+  servicePlanExpiryDate: z
+    .date()
+    .optional()
+    .transform((date) => {
+      if (date) {
+        return format(date, 'yyyy-MM-dd');
+      }
+      return date;
+    }),
+
+  // Backendda nomi 'technicalManualPath' (sizda 'safetyDecreePath' edi)
+  technicalManualPath: z
+    .string({ required_error: 'Mas’ul mutaxasis buyrug‘i biriktirilmadi!' })
+    .min(1, 'Mas’ul mutaxasis buyrug‘i biriktirilmadi!'),
+
+  // Backendda bor va majburiy (sizning sxemangizda yo'q edi)
+  seasonalInspectionPath: z
+    .string({ required_error: 'Mavsumiy texnik shahodat sinovlari fayli biriktirilmadi!' })
+    .min(1, 'Mavsumiy texnik shahodat sinovlari fayli biriktirilmadi!'),
+
+  // Backend sana-string kutadi
+  seasonalInspectionExpiryDate: z
+    .date({ required_error: 'Amal qilish muddati kiritilmadi!' })
+    .transform((date) => format(date, 'yyyy-MM-dd')),
+
+  // Backendda bor va majburiy
+  seasonalReadinessActPath: z
+    .string({ required_error: 'Mavsumga tayyorligi to‘g‘risidagi dalolatnoma biriktirilmadi!' })
+    .min(1, 'Mavsumga tayyorligi to‘g‘risidagi dalolatnoma biriktirilmadi!'),
+
+  // Backend sana-string kutadi
+  seasonalReadinessActExpiryDate: z
+    .date({ required_error: 'Amal qilish muddati kiritilmadi!' })
+    .transform((date) => format(date, 'yyyy-MM-dd')),
+
+  // Backendda bor, lekin majburiy emas (sizda majburiy edi)
+  technicalReadinessActPath: z.string().optional(),
+
+  // Backendda bor va majburiy (sizning sxemangizda yo'q edi)
+  employeeSafetyKnowledgePath: z
+    .string({ required_error: 'Xodimlar bilim sinovi ma’lumoti biriktirilmadi!' })
+    .min(1, 'Xodimlar bilim sinovi ma’lumoti biriktirilmadi!'),
+
+  // Backend sana-string kutadi
+  employeeSafetyKnowledgeExpiryDate: z
+    .date({ required_error: 'Amal qilish muddati kiritilmadi!' })
+    .transform((date) => format(date, 'yyyy-MM-dd')),
+
+  // Backendda bor va majburiy (sizning sxemangizda yo'q edi)
+  usageRightsPath: z
+    .string({ required_error: 'Ruxsatnoma fayli biriktirilmadi!' })
+    .min(1, 'Ruxsatnoma fayli biriktirilmadi!'),
+
+  // Backend sana-string kutadi
+  usageRightsExpiryDate: z
+    .date({ required_error: 'Amal qilish muddati kiritilmadi!' })
+    .transform((date) => format(date, 'yyyy-MM-dd')),
+
+  // Backendda bor
   filesBuilt: z.boolean().default(false).optional(),
 });

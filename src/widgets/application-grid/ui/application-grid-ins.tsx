@@ -81,8 +81,19 @@ export const ApplicationsGridIns: React.FC = () => {
                   id: ApplicationCategory.ILLEGAL_HOKQ,
                   name: 'Xavfli obyektlar va qurilmalar',
                 },
+                {
+                  id: ApplicationCategory.ILLEGAL_XRAY,
+                  name: 'Rentgen',
+                },
               ]
-            : APPLICATION_CATEGORIES
+            : user?.role == UserRoles.MANAGER
+              ? [
+                  {
+                    id: ApplicationCategory.ILLEGAL_XRAY,
+                    name: 'Rentgen',
+                  },
+                ]
+              : APPLICATION_CATEGORIES
       }
       classNameTrigger="text-base mx-0.5"
       className="font-medium 3xl:font-semibold"

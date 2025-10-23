@@ -66,8 +66,8 @@ const ApplicationDetail = ({
             <DetailRow title="Ijrochi Hududiy boshqarma nomi:" value={data?.officeName || '-'} />
             <DetailRow title="Hududiy boshqarma boshlig‘i F.I.SH:" value={data?.approverName || '-'} />
             <DetailRow title="Hududiy boshqarma boshlig‘i rezolyutsiyasi:" value={data?.resolution || '-'} />
-            <DetailRow title="Ijrochi inspektor F.I.SH:" value={data?.executorName || '-'} />
-            <DetailRow title="Ijrochi (inspektor) xulosasi:" value={data?.conclusion || '-'} />
+            <DetailRow title="Ijrochi ma‘sul F.I.SH:" value={data?.executorName || '-'} />
+            <DetailRow title="Ijrochi ma‘sul xulosasi:" value={data?.conclusion || '-'} />
           </div>
         </DetailCardAccordion.Item>
         {!isLegalApplication && (

@@ -75,10 +75,10 @@ export const CommitteeStaffDrawer = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Tug‘ilgan sana</FormLabel>
+                  <FormLabel required={isCreate}>Tug‘ilgan sana</FormLabel>
                   <FormControl>
                     <DatePicker
-                      value={field.value}
+                      value={field.value ?? undefined}
                       onChange={field.onChange}
                       disableStrategy="after"
                       placeholder="Sanani tanlang"

@@ -8,23 +8,53 @@ import DetailRow from '@/shared/components/common/detail-row.tsx';
 import FileLink from '@/shared/components/common/file-link.tsx';
 import { Coordinate } from '@/shared/components/common/yandex-map';
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
-import { useDetail } from '@/shared/hooks';
+//import { useDetail } from '@/shared/hooks';
 import { getDate } from '@/shared/utils/date.ts';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '@/shared/hooks/use-auth';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { QRCodeCanvas } from 'qrcode.react';
+import { EquipmentPdfDocument } from '@/shared/components/common/EquipmentPdfDocument';
+import { useState, useEffect } from 'react';
+import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx';
+import { EquipmentStickerPdf } from '@/shared/components/common/EquipmentStickerPdf';
 
 const EquipmentsDetail = () => {
   const { isLoading, data } = useEquipmentsDetail();
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[]);
   const { user } = useAuth();
-  const { data: regNumber } = useDetail<any>(
+  const { id: equipmentUuid } = useParams<{ id: string }>();
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
+  const { data: legalData } = useLegalApplicantInfo(data?.ownerIdentity);
+
+  useEffect(() => {
+    console.log('useEffect ishga tushdi, data mavjud:', !!data);
+    const canvas = document.getElementById('pdf-qr-canvas') as HTMLCanvasElement;
+    console.log('Canvas elementi topildimi?:', canvas); // ENG MUHIM QATOR
+    if (canvas) {
+      const dataUrl = canvas.toDataURL();
+      setQrCodeDataUrl(dataUrl);
+      console.log("QR-kod Data URL o'rnatildi.");
+    }
+  }, [data]);
+
+  /*  const { data: regNumber } = useDetail<any>(
     '/equipments/registry-number',
     data?.registryNumber,
     !!data?.registryNumber,
-  );
+  ); */
   if (isLoading || !data) {
     return null;
   }
+
+  const equipmentPublicUrl = `${window.location.origin}/qr/${equipmentUuid}/equipments`;
+
+  const handleQrCanvasRef = (canvas: HTMLCanvasElement | null) => {
+    if (canvas) {
+      const dataUrl = canvas.toDataURL();
+      setQrCodeDataUrl(dataUrl);
+    }
+  };
 
   return (
     <div>
@@ -56,7 +86,7 @@ const EquipmentsDetail = () => {
           />
           <DetailRow title="Hisobga olish sanasi:" value={getDate(data?.registrationDate)} />
           <DetailRow title="Hisobga olish raqami:" value={data?.registryNumber} />
-          <DetailRow title="Qurilmaning eski hisobga olish raqami:" value={regNumber?.oldRegistryNumber || '-'} />
+          <DetailRow title="Qurilmaning eski hisobga olish raqami:" value={data?.oldRegistryNumber || '-'} />
           {!!data?.registryFilePath && (
             <DetailRow title="Sertifikat fayli:" value={<FileLink url={data?.registryFilePath} />} />
           )}
@@ -90,6 +120,101 @@ const EquipmentsDetail = () => {
             files={data?.files || []}
           />
         </DetailCardAccordion.Item>
+
+        {data?.type == 'ATTRACTION' ? (
+          <DetailCardAccordion.Item value="object_qr" title="Qurilma pasport ma‘lumotlari">
+            {/* YASHIRIN CANVAS (O'ZGARISHSIZ) */}
+            <QRCodeCanvas
+              id="pdf-qr-canvas" // ID endi shart emas, lekin qoldirsa bo'ladi
+              value={equipmentPublicUrl}
+              size={256}
+              style={{ display: 'none' }}
+              ref={handleQrCanvasRef} // <--- ENG MUHIM O'ZGARISH
+            />
+
+            <div className="flex items-center p-4 space-x-8">
+              <div className="flex-shrink-0">
+                {' '}
+                {/* Bu qism kichraymaydi */}
+                <QRCodeCanvas
+                  value={equipmentPublicUrl}
+                  size={128} // O'lchamini kichraytirdik
+                  bgColor={'#ffffff'}
+                  fgColor={'#000000'}
+                  level={'L'}
+                  includeMargin={false}
+                />
+              </div>
+              <div className="flex-grow">
+                <DetailRow
+                  title="QR Etiketka shaklida 100x40:"
+                  value={
+                    qrCodeDataUrl ? (
+                      <PDFDownloadLink
+                        document={
+                          <EquipmentStickerPdf
+                            data={{
+                              ownerName: legalData?.name || data?.ownerName,
+                              registryNumber: data.registryNumber,
+                              registrationDate: data.registrationDate,
+                              attractionName: data.attractionName, // API'da shu nom bo'lishi kerak
+                              qrCodeDataUrl: qrCodeDataUrl,
+                            }}
+                          />
+                        }
+                        fileName={`etiketka-${data.registryNumber}.pdf`}
+                      >
+                        {({ loading }) =>
+                          loading ? (
+                            'Tayyorlanmoqda...'
+                          ) : (
+                            <span className="text-[#0271FF] cursor-pointer hover:underline">Chop etish</span>
+                          )
+                        }
+                      </PDFDownloadLink>
+                    ) : (
+                      <span>QR kod tayyorlanmoqda...</span>
+                    )
+                  }
+                />
+
+                {/* "PDF FORMATIDA" QATORINING TO'LIQ KODI */}
+                <DetailRow
+                  title="PDF A5 formatida:"
+                  value={
+                    qrCodeDataUrl ? (
+                      <PDFDownloadLink
+                        document={
+                          <EquipmentPdfDocument
+                            data={{
+                              ownerName: legalData?.name || data?.ownerName,
+                              registryNumber: data.registryNumber,
+                              registrationDate: data.registrationDate,
+                              attractionName: data.attractionName,
+                              qrCodeDataUrl: qrCodeDataUrl,
+                            }}
+                          />
+                        }
+                        fileName={`passport-${data.registryNumber}.pdf`}
+                      >
+                        {({ loading }) =>
+                          loading ? (
+                            'Tayyorlanmoqda...'
+                          ) : (
+                            <span className="text-[#0271FF] cursor-pointer hover:underline">Yuklab olish</span>
+                          )
+                        }
+                      </PDFDownloadLink>
+                    ) : (
+                      <span>QR kod generatsiya qilinmoqda...</span>
+                    )
+                  }
+                />
+              </div>
+            </div>
+          </DetailCardAccordion.Item>
+        ) : null}
+
         {!!currentObjLocation?.length && (
           <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">
             <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />

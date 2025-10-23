@@ -1,12 +1,10 @@
 import { toast } from 'sonner';
 import { ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
-import {
-  CommitteeStaffResponse,
-  CreateCommitteeStaffDTO,
-  type FilterCommitteeStaffDTO,
-  UpdateCommitteeStaffDTO,
-} from './committee-staffs.types';
+import { CommitteeStaffResponse, type FilterCommitteeStaffDTO } from './committee-staffs.types';
+
+// DTO'larni esa .schema faylidan import qilamiz
+import type { CreateCommitteeStaffDTO, UpdateCommitteeStaffDTO } from './committee-staffs.schema';
 
 export const committeeStaffAPI = {
   list: async (params: FilterCommitteeStaffDTO) => {

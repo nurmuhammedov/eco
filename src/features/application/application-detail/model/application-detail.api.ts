@@ -15,6 +15,21 @@ export const applicationDetailApi = {
     return data.data;
   },
 
+  getLegalIipInfo: async (tin: any) => {
+    const payload = { tin: tin };
+    const { data: res } = await apiClient.post<any>(`/integration/iip/legal`, payload);
+    return res.data;
+  },
+
+  getIndividualIipInfo: async (pin: string, birthDate: string) => {
+    const payload = {
+      pin: pin,
+      birthDate: birthDate, // `birthDate` "yyyy-MM-dd" formatidagi string bo'lishi kerak
+    };
+    const { data: res } = await apiClient.post<any>(`/integration/iip/individual`, payload);
+    return res.data;
+  },
+
   getApplicationDetail: async (id: any) => {
     const { data } = await apiClient.get<any>(`/appeals/${id}`);
     return data.data;
@@ -27,6 +42,11 @@ export const applicationDetailApi = {
 
   getInspectorListSelect: async () => {
     const { data } = await apiClient.get<any>(`/users/office-users/inspectors/select`);
+    return data.data;
+  },
+
+  getManagerListSelect: async () => {
+    const { data } = await apiClient.get<any>(`/users/committee-users/managers/select`);
     return data.data;
   },
 
