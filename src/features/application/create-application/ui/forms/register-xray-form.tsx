@@ -56,9 +56,9 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               name="licenseNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ruxsatnoma raqami</FormLabel>
+                  <FormLabel>License tizimidagi ruxsatnoma raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Ruxsatnoma raqami" {...field} />
+                    <Input className="w-full 3xl:w-sm" placeholder="License tizimidagi ruxsatnoma raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -69,11 +69,11 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               name="licenseRegistryNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Ruxsatnoma reesri bo‘yicha tartib raqami</FormLabel>
+                  <FormLabel required>License tizimidagi ruxsatnoma reestri tartib raqami</FormLabel>
                   <FormControl>
                     <Input
                       className="w-full 3xl:w-sm"
-                      placeholder="Ruxsatnoma reesri bo‘yicha tartib raqami"
+                      placeholder="License tizimidagi ruxsatnoma reestri tartib raqami"
                       {...field}
                     />
                   </FormControl>
@@ -86,13 +86,9 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               name="model"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Ruxsatnoma reesri bo‘yicha tartib raqami</FormLabel>
+                  <FormLabel required>Rentgen uskunasining modeli</FormLabel>
                   <FormControl>
-                    <Input
-                      className="w-full 3xl:w-sm"
-                      placeholder="Ruxsatnoma reesri bo‘yicha tartib raqami"
-                      {...field}
-                    />
+                    <Input className="w-full 3xl:w-sm" placeholder="Rentgen uskunasining modeli" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -105,12 +101,12 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : undefined;
                 return (
                   <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>Ruxsatnoma berilgan sana</FormLabel>
+                    <FormLabel required>License tizimi orqali ruxsatnoma berilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
-                      placeholder="Ruxsatnoma berilgan sana"
+                      placeholder="License tizimi orqali ruxsatnoma berilgan sana"
                     />
                     <FormMessage />
                   </FormItem>
@@ -140,7 +136,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               name="regionId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Joylashgan viloyat</FormLabel>
+                  <FormLabel required>Rentgen joylashgan viloyat</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={(value) => {
@@ -166,7 +162,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               name="districtId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Joylashgan tuman</FormLabel>
+                  <FormLabel required>Rentgen joylashgan tuman (shahar)</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -201,9 +197,9 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               name="serialNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Seriya raqami</FormLabel>
+                  <FormLabel required>Rentgen uskunasining raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Seriya raqami" {...field} />
+                    <Input className="w-full 3xl:w-sm" placeholder="Rentgen uskunasining raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

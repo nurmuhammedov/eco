@@ -95,8 +95,8 @@ export const applicationConfigs: Record<string, any> = {
     pdfEndpoint: '/appeals/xray/generate-pdf',
   },
   [ApplicationTypeEnum.ILLEGAL_REGISTER_XRAY]: {
-    submitEndpoint: '/appeals/xray',
-    pdfEndpoint: '/appeals/xray/generate-pdf',
+    submitEndpoint: '/appeals/xray/unofficial',
+    pdfEndpoint: '/appeals/xray/unofficial/generate-pdf',
   },
   [ApplicationTypeEnum.REGISTER_ACCREDITATION]: {
     submitEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION,

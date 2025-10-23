@@ -116,12 +116,13 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
         const isAgreed = !!cell.row.original?.agreementStatus;
         const isRegionalUser = user?.role === UserRoles.REGIONAL;
         const isManager = user?.role === UserRoles.MANAGER;
+        const isHead = user?.role === UserRoles.HEAD;
         const currentAgreement = cell.row.original?.agreementStatus;
         const currentBadge = approveStatuses.get(currentAgreement);
         const message = cell.row.original?.description;
         const documentId = cell.row.original?.documentId;
         const isAppealForManager = managerTypes.includes(appeal_type);
-        if ((isRegionalUser && !isAgreed) || (currentAgreement === 'AGREED' && isManager)) {
+        if ((isHead && !isAgreed) || (isRegionalUser && !isAgreed) || (currentAgreement === 'AGREED' && isManager)) {
           if (isManager && isAppealForManager) {
             return (
               <div className="flex gap-4">
@@ -129,7 +130,7 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
                 <RejectDocumentModal documentId={documentId} label={'Tasdiqlanmadi'} />
               </div>
             );
-          } else if (isRegionalUser) {
+          } else if (isRegionalUser || isHead) {
             if (isAppealForManager) {
               return (
                 <div className="flex gap-1">

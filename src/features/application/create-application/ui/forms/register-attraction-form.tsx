@@ -173,7 +173,6 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                   <FormItem className="w-full 3xl:w-sm">
                     <FormLabel required>Xizmat muddati</FormLabel>
                     <DatePicker
-                      disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
                       placeholder="Sanani tanlang"

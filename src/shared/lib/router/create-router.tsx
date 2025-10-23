@@ -2,7 +2,14 @@ import { Loader } from '@/shared/components/common';
 import React, { LazyExoticComponent, Suspense } from 'react';
 import { RouterErrorBoundary } from '@/widgets/error-boundary';
 import { createBrowserRouter, Navigate, RouteObject } from 'react-router-dom';
-import { appRoutes, AuthGuardProps, authRoutes, RouteConfig, specialComponents } from '@/shared/config/routes';
+import {
+  appRoutes,
+  AuthGuardProps,
+  authRoutes,
+  RouteConfig,
+  publicRoutes,
+  specialComponents,
+} from '@/shared/config/routes';
 
 const withSuspense = (Component: React.ComponentType) => (
   <Suspense fallback={<Loader isVisible />}>
@@ -47,7 +54,8 @@ export const createAppRouter = (
   AuthGuard: React.ComponentType<AuthGuardProps>,
 ) => {
   const protectedRoutes = appRoutes.map((route) => createProtectedRoute(route, AuthGuard));
-  const publicRoutes = authRoutes.map(createAuthRoute);
+  const authLayoutRoutes = authRoutes.map(createAuthRoute);
+  const standalonePublicRoutes = publicRoutes.map(createAuthRoute);
 
   const routerConfig: RouteObject[] = [
     {
@@ -68,8 +76,11 @@ export const createAppRouter = (
     {
       path: '/auth',
       element: withSuspense(AuthLayout),
-      children: publicRoutes,
+      children: authLayoutRoutes,
     },
+
+    ...standalonePublicRoutes,
+
     {
       path: '*',
       element: withSuspense(specialComponents.notFound),

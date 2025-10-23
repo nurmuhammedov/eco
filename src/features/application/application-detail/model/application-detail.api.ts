@@ -45,6 +45,11 @@ export const applicationDetailApi = {
     return data.data;
   },
 
+  getManagerListSelect: async () => {
+    const { data } = await apiClient.get<any>(`/users/committee-users/managers/select`);
+    return data.data;
+  },
+
   attachInspector: async (data: any) => {
     const { data: res } = await apiClient.post<any>(`/appeals/set-inspector`, data);
     return res.data;

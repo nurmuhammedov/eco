@@ -57,9 +57,9 @@ export const useCreateXrayApplication = () => {
   const stateServiceOptions = useMemo(
     () =>
       getSelectOptions(
-        Object.values(stateService).map((val) => ({
-          id: val,
-          name: val,
+        Object.entries(stateService).map(([key, value]) => ({
+          id: key, // `id` ga kalit (`X_RAY_PERMIT`) tushadi
+          name: value, // `name` ga qiymat (`Rentgen...`) tushadi
         })),
       ),
     [],

@@ -191,7 +191,7 @@ export enum IrsCategory {
 }
 
 export enum stateService {
-  X_RAY_PERMIT = 'X_RAY_PERMIT',
+  X_RAY_PERMIT = 'Rentgen uskunasidan foydalanish uchun ruxsatnoma',
 }
 
 export enum IrsUsageType {

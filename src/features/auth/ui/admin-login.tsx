@@ -26,8 +26,8 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
   const { mutateAsync, isPending } = useLogin();
 
   const [showPassword, setShowPassword] = useState(false);
-  const [showCaptchaError, setCaptchaError] = useState(false);
-  const [captchaValue, setCaptchaValue] = useState('');
+  //const [showCaptchaError, setCaptchaError] = useState(false);
+  //const [captchaValue, setCaptchaValue] = useState('');
 
   const form = useForm<AdminLoginDTO>({
     resolver: zodResolver(adminLoginFormSchema),
@@ -43,11 +43,13 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
   }, []);
 
   const handleLogin = async (data: z.infer<typeof adminLoginFormSchema>) => {
-    if (validateCaptcha(captchaValue)) {
-      await mutateAsync(data);
+    await mutateAsync(data);
+
+    /* if (validateCaptcha(captchaValue)) {
+    await mutateAsync(data);
     } else {
-      setCaptchaError(true);
-    }
+    setCaptchaError(true);
+    } */
   };
 
   return (
@@ -110,15 +112,15 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
               <div
                 className={clsx(
                   'relative flex items-center rounded border border-neutral-300 focus-within:ring-1 focus-within:ring-teal w-full',
-                  {
+                  /* {
                     ['border-red-500']: showCaptchaError,
-                  },
+                  }, */
                 )}
               >
                 <Input
                   placeholder={t('captcha')}
                   type={'text'}
-                  onChange={(val) => setCaptchaValue(val.target.value)}
+                  //onChange={(val) => setCaptchaValue(val.target.value)}
                   className="border-0 focus-visible:ring-0 w-full"
                 />
               </div>

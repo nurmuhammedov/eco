@@ -28,7 +28,7 @@ const ApplicationPage = () => {
       );
     }
 
-    if (UserRoles.INSPECTOR === user?.role) {
+    if (UserRoles.INSPECTOR === user?.role || UserRoles.MANAGER === user?.role) {
       return (
         <Button onClick={() => navigate('/applications/inspector/create')}>
           <PlusCircle /> XICHO va qurilma uchun arizalar

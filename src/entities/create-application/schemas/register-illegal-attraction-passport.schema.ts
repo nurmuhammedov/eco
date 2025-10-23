@@ -35,14 +35,8 @@ export const AttractionIllegalAppealDtoSchema = z.object({
       return date;
     }),
   servicePeriod: z
-    .date()
-    .optional()
-    .transform((date) => {
-      if (date) {
-        return format(date, 'yyyy-MM-dd');
-      }
-      return date;
-    }),
+    .date({ required_error: 'Xizmat muddati kiritilmadi!' })
+    .transform((date) => format(date, 'yyyy-MM-dd')),
   factoryNumber: z.string().optional(),
   country: z.string().optional(),
   regionId: z.coerce.number({ required_error: 'Attraksion joylashgan viloyat tanlanmadi!' }),

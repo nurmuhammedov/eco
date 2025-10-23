@@ -1,5 +1,6 @@
 import { useEquipmentsDetail } from '@/features/register/equipments/hooks/use-equipments-detail.tsx';
 import { PrintableQrSticker } from '@/shared/components/common/printable-qr-sticker/PrintableQrSticker.tsx';
+import { useParams } from 'react-router-dom';
 
 // Chop etish uchun maxsus stil
 const printPageStyles: React.CSSProperties = {
@@ -12,7 +13,7 @@ const printPageStyles: React.CSSProperties = {
 };
 
 const EquipmentPrintPage = () => {
-  // URL'dan `id` parametrini olamiz. marshrut sozlamalariga mos bo'lishi kerak.
+  const { id } = useParams<{ id: string }>();
 
   // Ma'lumotlarni ID bo'yicha yuklaymiz.
   // Eslatma: `useEquipmentsDetail` ID'ni URL'dan o'zi oladigan bo'lsa, unga `id` yuborish shart emas.
@@ -23,7 +24,7 @@ const EquipmentPrintPage = () => {
   }
 
   // QR kod ichida shifrlanadigan URL
-  const detailPageUrl = `${window.location.origin}/equipments/detail/${data.id}`;
+  const detailPageUrl = `${window.location.origin}/qr/${id}/equipments`;
 
   return (
     <div style={printPageStyles}>

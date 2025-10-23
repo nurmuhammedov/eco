@@ -1,4 +1,3 @@
-import { IrsUsageType } from '@/entities/create-application';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { ISearchParams } from '@/shared/types';
@@ -16,10 +15,10 @@ export const XrayList = () => {
   const {
     paramsObject: { ...rest },
   } = useCustomSearchParams();
-  const { data = [] } = usePaginatedData<any>(`/irs`, { ...rest });
+  const { data = [] } = usePaginatedData<any>(`/xrays`, { ...rest });
 
   const handleViewApplication = (id: string) => {
-    navigate(`${id}/irs`);
+    navigate(`${id}/xrays`);
   };
 
   const columns: ColumnDef<ISearchParams>[] = [
@@ -28,50 +27,28 @@ export const XrayList = () => {
       accessorFn: (row) => getDate(row.registrationDate),
     },
     {
-      header: "Ruxsatnoma reesri bo'yicha tartib raqami",
+      header: "Ruxsatnoma reestri bo'yicha tartib raqami",
       accessorFn: (row) => row?.registryNumber,
+    },
+    {
+      header: 'License tizimidagi ruxsatnoma reestri  tartib raqami',
+      accessorFn: (row) => row?.licenseRegistryNumber,
+    },
+    {
+      header: 'Ruxsatnomani amal qilish muddati',
+      accessorFn: (row) => row?.licenseExpiryDate,
     },
     {
       header: 'Tashkilot nomi',
       accessorFn: (row) => row?.legalName,
     },
     {
-      header: 'Tashkilot manzili',
-      accessorFn: (row) => row?.legalAddress,
-    },
-    {
       header: 'Tashkilot STIR',
       accessorFn: (row) => row?.legalTin,
     },
     {
-      header: 'Joylashgan manzili',
+      header: 'Rentgen joylashgan manzil',
       accessorFn: (row) => row?.address,
-    },
-    {
-      header: 'Kategoriyasi',
-      accessorFn: (row) => row?.category,
-    },
-    {
-      header: 'Aktivligi',
-      accessorFn: (row) => row?.activity,
-    },
-    {
-      header: 'Soha',
-      accessorFn: (row) => row?.sphere,
-    },
-    {
-      header: 'Radionuklid belgisi',
-      accessorFn: (row) => row?.symbol,
-    },
-    {
-      header: 'Foydalanish maqsadi',
-      accessorFn: (row) =>
-        [
-          { id: IrsUsageType.USAGE, name: 'Ishlatish (foydalanish) uchun' },
-          { id: IrsUsageType.DISPOSAL, name: 'Ko‘mish uchun' },
-          { id: IrsUsageType.EXPORT, name: 'Chet-elga olib chiqish uchun' },
-          { id: IrsUsageType.STORAGE, name: 'Vaqtinchalik saqlash uchun' },
-        ]?.find((i) => i?.id == row?.usageType)?.name || '',
     },
     {
       id: 'actions',
@@ -83,7 +60,7 @@ export const XrayList = () => {
   ];
 
   const handleDownloadExel = async () => {
-    const res = await apiClient.downloadFile<Blob>('/irs/export/excel', {
+    const res = await apiClient.downloadFile<Blob>('/xrays/export/excel', {
       mode: rest.mode,
       ...rest,
     });
@@ -92,7 +69,7 @@ export const XrayList = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     const today = new Date();
-    const filename = `xicho_${format(today, 'yyyy-MM-dd_hh:mm:ss')}.xlsx`;
+    const filename = `rentgenlar_${format(today, 'yyyy-MM-dd_hh:mm:ss')}.xlsx`;
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -104,7 +81,7 @@ export const XrayList = () => {
   return (
     <>
       <div className={'flex justify-between items-start'}>
-        <Filter inputKeys={['search', 'xrayOfficeId']} />
+        <Filter inputKeys={['search', 'xrayRegionId']} />
         <Button onClick={handleDownloadExel}>
           <Download /> MS Exel
         </Button>

@@ -15,7 +15,7 @@ import { RegisterActiveTab } from '../types';
 const RegisterWidget = () => {
   // const { t } = useTranslation('common');
   const { user } = useAuth();
-  const { activeTab, handleChangeTab, hfCount, xrayCount, irsCount, equipmentsCount } = useRegister();
+  const { activeTab, handleChangeTab, hfCount, irsCount, equipmentsCount, xrayCount } = useRegister();
 
   return (
     <Fragment>
@@ -51,7 +51,7 @@ const RegisterWidget = () => {
             </TabsTrigger>
             <TabsTrigger value={RegisterActiveTab.XRAY}>
               Rentgenlar
-              {hfCount ? (
+              {xrayCount ? (
                 <Badge variant="destructive" className="ml-2">
                   {xrayCount}
                 </Badge>

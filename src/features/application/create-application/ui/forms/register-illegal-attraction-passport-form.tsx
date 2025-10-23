@@ -281,9 +281,8 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
                   <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel>Xizmat muddati</FormLabel>
+                    <FormLabel required>Xizmat muddati</FormLabel>
                     <DatePicker
-                      disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
                       placeholder="Sanani tanlang"

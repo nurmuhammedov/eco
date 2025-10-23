@@ -18,7 +18,7 @@ export const useRegister = () => {
 
   const { data: irsCount = 0 } = useData<number>('/irs/count', true, { mode });
 
-  const { data: xrayCount = 0 } = useData<number>('/irs/count', true, { mode });
+  const { data: xrayCount = 0 } = useData<number>('/xrays/count', true, { mode });
 
   const activeTab = useMemo<RegisterActiveTab>(() => {
     const tabFromParams = paramsObject['tab'] as string;

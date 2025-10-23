@@ -22,6 +22,7 @@ export * from './schemas/register-hoist.schema';
 export * from './schemas/register-cableway.schema';
 export * from './schemas/register-irs.schema';
 export * from './schemas/register-xray.schema';
+export * from './schemas/register-illegal-xray.schema';
 export * from './schemas/accreditation.schema';
 export * from './schemas/register-attraction-passport.schema';
 export * from './schemas/de-register-equipment';

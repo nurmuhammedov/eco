@@ -1,5 +1,4 @@
 // src/entities/create-application/schemas/register-irs.schema.ts
-import { stateService } from '@/entities/create-application/types/enums';
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
 import { FORM_ERROR_MESSAGES } from '@/shared/validation';
 import { format, parseISO } from 'date-fns'; // parseISO ni import qiling
@@ -13,7 +12,7 @@ export const XrayAppealDtoSchema = z.object({
       message: FORM_ERROR_MESSAGES.phone,
     }),
   licenseNumber: z.string().optional(), // Ixtiyoriy
-  model: z.string().optional(), // Ixtiyoriy
+  model: z.string({ required_error: 'Model kiritilmadi!' }).min(1, 'Model kiritilmadi!'),
   licenseRegistryNumber: z
     .string({ required_error: 'Ruxsatnoma raqami kiritilmadi!' })
     .min(1, 'Ruxsatnoma raqami kiritilmadi!'),
@@ -39,9 +38,12 @@ export const XrayAppealDtoSchema = z.object({
       // Juda eski sanalarni cheklash (ixtiyoriy)
       message: 'Ishlab chiqarilgan yil juda eski',
     }),
-  stateService: z.nativeEnum(stateService, {
-    errorMap: () => ({ message: "Davlat xizmatining to'liq nomi tanlanmadi!" }),
-  }),
+
+  stateService: z
+    .string({
+      required_error: "Davlat xizmatining to'liq nomi tanlanmadi!",
+    })
+    .min(1, 'Joylashgan tuman tanlanmadi!'),
   file1Path: z.string({ required_error: 'Pasport fayli biriktirilmadi!' }).min(1, 'Pasport fayli biriktirilmadi!'),
   file1ExpiryDate: z
     .date({ required_error: 'Amal qilish muddati kiritilmadi!' })

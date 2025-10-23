@@ -15,6 +15,7 @@ export * from './register-hoist.schema';
 export * from './register-cableway.schema';
 export * from './register-irs.schema';
 export * from './register-xray.schema';
+export * from './register-illegal-xray.schema';
 export * from './register-attraction-passport.schema';
 export * from './accreditation.schema';
 export * from './register-attestation.schema';

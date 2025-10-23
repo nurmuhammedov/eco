@@ -92,7 +92,7 @@ export const IrsList = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     const today = new Date();
-    const filename = `xicho_${format(today, 'yyyy-MM-dd_hh:mm:ss')}.xlsx`;
+    const filename = `INMlar_${format(today, 'yyyy-MM-dd_hh:mm:ss')}.xlsx`;
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -104,7 +104,7 @@ export const IrsList = () => {
   return (
     <>
       <div className={'flex justify-between items-start'}>
-        <Filter inputKeys={['search', 'irsOfficeId']} />
+        <Filter inputKeys={['search', 'irsRegionId']} />
         <Button onClick={handleDownloadExel}>
           <Download /> MS Exel
         </Button>

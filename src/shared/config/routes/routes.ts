@@ -33,8 +33,10 @@ const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facil
 const RegisterPage = lazy(() => import('@/pages/register/ui'));
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'));
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'));
+const RegisterEquipmentAppealList = lazy(() => import('@/features/register/equipments/ui/equipments-appeal-list'));
 const EquipmentPrintPage = lazy(() => import('@/features/register/equipments/ui/EquipmentPrintPage'));
 const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'));
+const RegisterXrayDetail = lazy(() => import('@/features/register/xray/ui/xray-detail'));
 const RiskAnalysisPage = lazy(() => import('@/pages/risk-analysis'));
 const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'));
 const ChecklistTemplatesPage = lazy(() => import('@/pages/admin/checklist-templates/page'));
@@ -55,6 +57,7 @@ const AccreditationConclusionsDetailPage = lazy(
   () => import('@/features/accreditation/ui/accreditation-conclusion-detail'),
 );
 const CadastreDetailPage = lazy(() => import('@/pages/cadastre/detail'));
+const ContactPage = lazy(() => import('@/pages/qr-form'));
 
 export const appRoutes = [
   {
@@ -70,7 +73,7 @@ export const appRoutes = [
   {
     path: 'applications/inspector/create',
     component: CreateApplicationGridsIns,
-    roles: [UserRoles.INSPECTOR],
+    roles: [UserRoles.INSPECTOR, UserRoles.MANAGER],
   },
   {
     path: 'reports',
@@ -95,7 +98,7 @@ export const appRoutes = [
   {
     path: 'applications/create/:type',
     component: CreateApplicationForm,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.INSPECTOR],
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
   },
   {
     path: 'applications/detail/:id',
@@ -128,6 +131,11 @@ export const appRoutes = [
     roles: [],
   },
   {
+    path: 'register/:id/equipments/appeal',
+    component: RegisterEquipmentAppealList,
+    roles: [],
+  },
+  {
     path: 'register/:id/qr-page',
     component: EquipmentPrintPage,
     roles: [],
@@ -135,6 +143,11 @@ export const appRoutes = [
   {
     path: 'register/:id/irs',
     component: RegisterIrsDetail,
+    roles: [],
+  },
+  {
+    path: 'register/:id/xrays',
+    component: RegisterXrayDetail,
     roles: [],
   },
   {
@@ -298,6 +311,13 @@ export const authRoutes = [
   {
     path: 'login/admin',
     component: AdminLogin,
+  },
+];
+
+export const publicRoutes = [
+  {
+    path: '/qr/:id/equipments',
+    component: ContactPage,
   },
 ];
 

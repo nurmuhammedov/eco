@@ -19,6 +19,7 @@ import {
   HoistAppealDtoSchema,
   IrsAppealDtoSchema,
   XrayAppealDtoSchema,
+  XrayIllegalAppealDtoSchema,
   LifAppealDtoSchema,
   LpgContainerAppealDtoSchema,
   LpgPoweredAppealDtoSchema,
@@ -64,6 +65,7 @@ export type CreateHoistApplicationDTO = z.infer<typeof HoistAppealDtoSchema>;
 export type CreateCablewayApplicationDTO = z.infer<typeof CablewayAppealDtoSchema>;
 export type CreateIrsApplicationDTO = z.infer<typeof IrsAppealDtoSchema>;
 export type CreateXrayApplicationDTO = z.infer<typeof XrayAppealDtoSchema>;
+export type CreateIllegalXrayApplicationDTO = z.infer<typeof XrayIllegalAppealDtoSchema>;
 export type CreateAttractionPassportApplicationDTO = z.infer<typeof AttractionPassportAppealDtoSchema>;
 export type CreateAttractionApplicationDTO = z.infer<typeof AttractionAppealDtoSchema>;
 export type CreateAccreditationDTO = z.infer<typeof AccreditationDtoSchema>;

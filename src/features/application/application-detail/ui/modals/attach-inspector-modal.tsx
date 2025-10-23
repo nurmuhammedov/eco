@@ -11,10 +11,13 @@ import DatePicker from '@/shared/components/ui/datepicker.tsx';
 import { Textarea } from '@/shared/components/ui/textarea.tsx';
 import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
 import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select.tsx';
+import { useManagerSelect } from '@/features/application/application-detail/hooks/use-manager-select.tsx';
 import { FORM_ERROR_MESSAGES } from '@/shared/validation';
 import { useState } from 'react';
 import { useAttachInspector } from '@/features/application/application-detail/hooks/mutations/use-attach-inspector.tsx';
 import { useParams } from 'react-router-dom';
+import { UserRoles } from '@/entities/user';
+import { useAuth } from '@/shared/hooks/use-auth.ts';
 
 const schema = z.object({
   deadline: z.date({ message: FORM_ERROR_MESSAGES.required }),
@@ -23,6 +26,7 @@ const schema = z.object({
 });
 
 const AttachInspectorModal = () => {
+  const { user } = useAuth();
   const [isShow, setIsShow] = useState(false);
   const { mutateAsync, isPending } = useAttachInspector();
   const { id } = useParams();
@@ -30,7 +34,18 @@ const AttachInspectorModal = () => {
     resolver: zodResolver(schema),
   });
   const { data: inspectorSelectData } = useInspectorSelect();
-  const inspectorOptions = getSelectOptions(inspectorSelectData || []);
+  const { data: managerSelectData } = useManagerSelect();
+
+  const isManager = user.role == UserRoles.HEAD;
+  const isRegional = user.role == UserRoles.REGIONAL;
+
+  const selectOptions = getSelectOptions(
+    isManager
+      ? managerSelectData || [] // Agar isManager rost bo'lsa, shu ma'lumotni
+      : isRegional
+        ? inspectorSelectData || [] // Aks holda, agar isRegional rost bo'lsa, shu ma'lumotni
+        : [], // Agar ikkalasi ham yolg'on bo'lsa, bo'sh massivni ol
+  );
 
   function onSubmit(data: z.infer<typeof schema>) {
     mutateAsync({
@@ -71,6 +86,7 @@ const AttachInspectorModal = () => {
                 );
               }}
             />
+
             <FormField
               control={form.control}
               name="inspectorId"
@@ -83,12 +99,14 @@ const AttachInspectorModal = () => {
                         <SelectValue placeholder="Ijrochini belgilash" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>{inspectorOptions}</SelectContent>
+
+                    <SelectContent>{selectOptions}</SelectContent>
                   </Select>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="resolution"
