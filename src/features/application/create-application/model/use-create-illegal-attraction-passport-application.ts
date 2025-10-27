@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 
 type FormValues = RegisterIllegalAttractionApplicationDTO & {
   identity: string;
-  birthDate?: Date; // `birthDate` ixtiyoriy bo'lishi mumkin
+  birthDate?: string; // `birthDate` ixtiyoriy bo'lishi mumkin
 };
 
 export const useCreateIllegalAttractionPassportApplication = () => {

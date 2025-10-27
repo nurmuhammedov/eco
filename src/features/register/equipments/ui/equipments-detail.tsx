@@ -18,6 +18,7 @@ import { EquipmentPdfDocument } from '@/shared/components/common/EquipmentPdfDoc
 import { useState, useEffect } from 'react';
 import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx';
 import { EquipmentStickerPdf } from '@/shared/components/common/EquipmentStickerPdf';
+import { Button } from '@/shared/components/ui/button';
 
 const EquipmentsDetail = () => {
   const { isLoading, data } = useEquipmentsDetail();
@@ -49,6 +50,10 @@ const EquipmentsDetail = () => {
 
   const equipmentPublicUrl = `${window.location.origin}/qr/${equipmentUuid}/equipments`;
 
+  const handleButtonClick = () => {
+    alert('Tugma bosildi!');
+  };
+
   const handleQrCanvasRef = (canvas: HTMLCanvasElement | null) => {
     if (canvas) {
       const dataUrl = canvas.toDataURL();
@@ -60,6 +65,9 @@ const EquipmentsDetail = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
+        <Button onClick={handleButtonClick} className="bg-blue-500 text-white px-4 py-2 rounded-md">
+          Murojaatlar
+        </Button>
       </div>
       <DetailCardAccordion
         defaultValue={[
@@ -123,9 +131,8 @@ const EquipmentsDetail = () => {
 
         {data?.type == 'ATTRACTION' ? (
           <DetailCardAccordion.Item value="object_qr" title="Qurilma pasport ma‘lumotlari">
-            {/* YASHIRIN CANVAS (O'ZGARISHSIZ) */}
             <QRCodeCanvas
-              id="pdf-qr-canvas" // ID endi shart emas, lekin qoldirsa bo'ladi
+              id="pdf-qr-canvas"
               value={equipmentPublicUrl}
               size={256}
               style={{ display: 'none' }}
@@ -135,7 +142,6 @@ const EquipmentsDetail = () => {
             <div className="flex items-center p-4 space-x-8">
               <div className="flex-shrink-0">
                 {' '}
-                {/* Bu qism kichraymaydi */}
                 <QRCodeCanvas
                   value={equipmentPublicUrl}
                   size={128} // O'lchamini kichraytirdik
@@ -157,7 +163,7 @@ const EquipmentsDetail = () => {
                               ownerName: legalData?.name || data?.ownerName,
                               registryNumber: data.registryNumber,
                               registrationDate: data.registrationDate,
-                              attractionName: data.attractionName, // API'da shu nom bo'lishi kerak
+                              attractionName: data.attractionName,
                               qrCodeDataUrl: qrCodeDataUrl,
                             }}
                           />
@@ -178,7 +184,6 @@ const EquipmentsDetail = () => {
                   }
                 />
 
-                {/* "PDF FORMATIDA" QATORINING TO'LIQ KODI */}
                 <DetailRow
                   title="PDF A5 formatida:"
                   value={

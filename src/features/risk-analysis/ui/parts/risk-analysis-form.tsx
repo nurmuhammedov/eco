@@ -1,24 +1,23 @@
-import { riskAnalysisData } from '@/shared/constants/risk-analysis-data.ts';
 import RiskAnalysisItem from '@/features/risk-analysis/ui/parts/risk-analysis-item.tsx';
-import { useSearchParams } from 'react-router-dom';
 import { FC } from 'react';
+import { RiskIndicators } from '../riskAnalysis';
 
 interface Props {
-  data: any;
+  data: RiskIndicators | null;
 }
 
 const RiskAnalysisForm: FC<Props> = ({ data }) => {
-  const [searchParams] = useSearchParams();
-  const currentCat = searchParams.get('type') || '';
+  if (!data || Object.keys(data).length === 0) {
+    return <div>Tahlil ko'rsatkichlari mavjud emas.</div>;
+  }
+
+  const indicatorsArray = Object.entries(data);
 
   return (
     <div>
-      {/*@ts-ignore*/}
-      {riskAnalysisData[currentCat] &&
-        //@ts-ignore
-        riskAnalysisData[currentCat].map((item, idx) => {
-          return <RiskAnalysisItem number={idx + 1} data={item} key={item.title} globalData={data} />;
-        })}
+      {indicatorsArray.map(([key, indicatorData], idx) => {
+        return <RiskAnalysisItem key={key} number={key} data={indicatorData} displayIndex={idx + 1} />;
+      })}
     </div>
   );
 };

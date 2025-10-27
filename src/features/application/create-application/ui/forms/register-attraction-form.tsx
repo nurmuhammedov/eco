@@ -527,7 +527,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel>
+                    <FormLabel required>
                       Texnik shahodat sinovlari attraksiondan foydalanish qo‘llanmasi va mazkur Qoidalar talablariga
                       muvofiq attraksionlarni soz holatda saqlash va xavfsiz foydalanish uchun mas’ul bo‘lgan mutaxassis
                       boshchiligida amalga oshiriladi. Mas’ul mutaxasis buyrug‘i
@@ -548,7 +548,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -653,7 +653,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required>
+                  <FormLabel>
                     Attraksionlarning texnik tayyorligi dalolatnomasi ( yangi o‘rnatilgan 2023 yil 28 maydan so‘ng
                     muomalaga kiritilgan attraksionlar uchun - majburiy, qolgan attraksionlar uchun - mavjud bo‘lsa)
                   </FormLabel>
@@ -672,7 +672,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel required>Attraksionga video kuzatuv moslamasi o’rnatilganligi surati</FormLabel>
+                    <FormLabel>Attraksionni saqlashga qo’yish dalolatnomasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -689,15 +689,12 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>
-                        Attraksionni saqlashga qo’yish dalolatnomasi (ushbu ilovani muddati bo’ladi)
-                      </FormLabel>
+                      <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Attraksionni saqlashga qo’yish dalolatnomasi"
+                        placeholder="Amal qilish muddati"
                       />
                     </div>
                     <FormMessage />
@@ -706,6 +703,21 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
               }}
             />
           </div>
+
+          <FormField
+            name="cctvInstallationPath"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="pb-4 border-b">
+                <div className="flex items-end xl:items-center justify-between gap-2">
+                  <FormLabel>Attraksionga video kuzatuv moslamasi o’rnatilganligi surati</FormLabel>
+                  <FormControl>
+                    <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
+                  </FormControl>
+                </div>
+              </FormItem>
+            )}
+          />
 
           <FormField
             name="qrPath"

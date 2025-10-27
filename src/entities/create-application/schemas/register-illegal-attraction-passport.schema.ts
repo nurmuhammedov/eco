@@ -15,6 +15,20 @@ export const AttractionIllegalAppealDtoSchema = z.object({
   childEquipmentId: z.coerce.number({ required_error: 'Attraksion turi tanlanmadi!' }),
   childEquipmentSortId: z.coerce.number({ required_error: 'Attraksion tipi tanlanmadi!' }),
   identity: z.string().min(9, "STIR 9 ta raqamdan iborat bo'lishi kerak"),
+  cctvInstallationPath: z.string().optional(),
+  birthDate: z.coerce // <-- "coerce" qo'shiladi
+    .date({
+      // Agar sana noto'g'ri formatda bo'lsa, maxsus xabar chiqarish uchun:
+      errorMap: () => ({ message: "Iltimos, to'g'ri sanani kiriting" }),
+    })
+    .optional()
+    .transform((date) => {
+      // Bu qism o'zgarishsiz qoladi, u serverga yuborishdan oldin formatlash uchun kerak
+      if (date) {
+        return format(date, 'yyyy-MM-dd');
+      }
+      return date;
+    }),
   factory: z.string().optional(),
   manufacturedAt: z
     .date()

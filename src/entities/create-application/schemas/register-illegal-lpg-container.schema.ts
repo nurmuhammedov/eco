@@ -11,7 +11,21 @@ export const LpgContainerIllegalAppealDtoSchema = z.object({
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  hazardousFacilityId: z.string().uuid('XICHO‘ ID noto‘g‘ri formatda!').optional().or(z.literal('')), // Ixtiyoriy
+  hazardousFacilityId: z.string().uuid('XICHO‘ ID noto‘g‘ri formatda!').optional().or(z.literal('')), // Ixtiyoriy,
+  identity: z.string().min(9, "STIR 9 ta raqamdan iborat bo'lishi kerak"),
+  birthDate: z.coerce // <-- "coerce" qo'shiladi
+    .date({
+      // Agar sana noto'g'ri formatda bo'lsa, maxsus xabar chiqarish uchun:
+      errorMap: () => ({ message: "Iltimos, to'g'ri sanani kiriting" }),
+    })
+    .optional()
+    .transform((date) => {
+      // Bu qism o'zgarishsiz qoladi, u serverga yuborishdan oldin formatlash uchun kerak
+      if (date) {
+        return format(date, 'yyyy-MM-dd');
+      }
+      return date;
+    }),
   childEquipmentId: z
     .string({
       required_error: 'Idish (SUG) turini tanlanmadi!',

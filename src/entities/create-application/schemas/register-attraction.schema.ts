@@ -52,18 +52,8 @@ export const AttractionAppealDtoSchema = z.object({
   conformityCertPath: z.string().optional(),
 
   qrPath: z.string().optional(),
-  preservationActPath: z
-    .string({ required_error: 'Kundalik texnik xizmat ko‘rsatish jurnali biriktirilmadi!' })
-    .min(1, 'Kundalik texnik xizmat ko‘rsatish jurnali biriktirilmadi!'),
+  preservationActPath: z.string().optional(),
   preservationActExpiryDate: z
-    .date({ required_error: 'Amal qilish muddati kiritilmadi!' })
-    .transform((date) => format(date, 'yyyy-MM-dd')),
-
-  // Backendda bor va majburiy (sizning sxemangizda yo'q edi)
-  technicalJournalPath: z
-    .string({ required_error: 'Kundalik texnik xizmat ko‘rsatish jurnali biriktirilmadi!' })
-    .min(1, 'Kundalik texnik xizmat ko‘rsatish jurnali biriktirilmadi!'),
-  technicalManualExpiryDate: z
     .date()
     .optional()
     .transform((date) => {
@@ -72,6 +62,14 @@ export const AttractionAppealDtoSchema = z.object({
       }
       return date;
     }),
+
+  // Backendda bor va majburiy (sizning sxemangizda yo'q edi)
+  technicalJournalPath: z
+    .string({ required_error: 'Texnik shahodat sinovlari attraksiondan foydalanish qo‘llanmasi... biriktirilmadi!' })
+    .min(1, 'Texnik shahodat sinovlari attraksiondan foydalanish qo‘llanmasi... biriktirilmadi!'),
+  technicalManualExpiryDate: z
+    .date({ required_error: 'Amal qilish muddati kiritilmadi!' })
+    .transform((date) => format(date, 'yyyy-MM-dd')),
   servicePlanPath: z
     .string({ required_error: 'Davriy texnik xizmat ko‘rsatish reja-jadvali biriktirilmadi!' })
     .min(1, 'Davriy texnik xizmat ko‘rsatish reja-jadvali biriktirilmadi!'),
@@ -112,6 +110,7 @@ export const AttractionAppealDtoSchema = z.object({
 
   // Backendda bor, lekin majburiy emas (sizda majburiy edi)
   technicalReadinessActPath: z.string().optional(),
+  cctvInstallationPath: z.string().optional(),
 
   // Backendda bor va majburiy (sizning sxemangizda yo'q edi)
   employeeSafetyKnowledgePath: z

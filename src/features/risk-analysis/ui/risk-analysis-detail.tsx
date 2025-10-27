@@ -5,7 +5,8 @@ import { useFilesToFix } from '@/features/risk-analysis/hooks/use-files-to-fix.t
 import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts';
 import RiskAnalysisChecklists from '@/features/risk-analysis/ui/parts/risk-analysis-checklists.tsx';
 import RiskAnalysisFilesToFix from '@/features/risk-analysis/ui/parts/risk-analysis-files-to-fix.tsx';
-import RiskAnalysisInfo from '@/features/risk-analysis/ui/parts/risk-analysis-info.tsx';
+//import RiskAnalysisInfo from '@/features/risk-analysis/ui/parts/risk-analysis-info.tsx';
+import RiskAnalysisIndicator from '@/features/risk-analysis/ui/parts/risk-analysis-info.tsx';
 import { GoBack } from '@/shared/components/common';
 import { DetailCardAccordion } from '@/shared/components/common/detail-card';
 import DetailRow from '@/shared/components/common/detail-row.tsx';
@@ -14,17 +15,23 @@ import { Coordinate } from '@/shared/components/common/yandex-map';
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
 import { getDate } from '@/shared/utils/date.ts';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useAuth } from '@/shared/hooks/use-auth';
 
 const RiskAnalysisDetail = () => {
   const { data } = useObjectInfo();
   const [searchParams] = useSearchParams();
   const currentTin = searchParams.get('tin');
+  const objectId = searchParams.get('id');
   let type = searchParams.get('type') || '';
   const { data: filesToFix } = useFilesToFix();
+  const { user } = useAuth();
 
   if (type !== 'hf' && type !== 'irs') {
     type = data?.type;
   }
+
+  const currentBelongId = objectId; // Misol uchun
+  const currentIntervalId = user.interval.id; // Misol uchun
 
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[]);
 
@@ -92,8 +99,18 @@ const RiskAnalysisDetail = () => {
         <DetailCardAccordion.Item value="checklists" title="Cheklistlar">
           <RiskAnalysisChecklists />
         </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
+        {/* <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
           <RiskAnalysisInfo />
+        </DetailCardAccordion.Item> */}
+        <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
+          {currentBelongId && currentIntervalId ? (
+            <RiskAnalysisIndicator
+              belongId={currentBelongId}
+              intervalId={Number(currentIntervalId)} // Agar intervalId ham string bo'lsa, songa o'giramiz
+            />
+          ) : (
+            <div>Kerakli ma'lumotlar topilmadi...</div> // Yoki loader ko'rsatish mumkin
+          )}
         </DetailCardAccordion.Item>
       </DetailCardAccordion>
     </>

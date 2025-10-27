@@ -16,11 +16,12 @@ import { useAttachFile } from '@/features/risk-analysis/hooks/use-attach-file.ts
 import FileLink from '@/shared/components/common/file-link.tsx';
 import { useCancelPoints } from '@/features/risk-analysis/hooks/use-cancel-points.ts';
 import { clsx } from 'clsx';
+import { Indicator } from '../riskAnalysis'; // To'g'ri tipni import qilamiz
 
 interface Props {
-  number: number;
-  data: any;
-  globalData: any[];
+  number: string;
+  data: Indicator;
+  displayIndex: number;
 }
 
 const schema = z
@@ -41,7 +42,17 @@ const schema = z
     }
   });
 
-const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
+const statusMap: Record<string, string> = {
+  UPLOADED: 'Tadbirkor tomonidan ijro uchun fayl yuklangan',
+  REJECTED: 'Inspektor tomonidan rad etilgan',
+  EXISTING: 'Reestrda ushbu fayl mavjud',
+  COMPLETED: 'Inspektor tomonidan qabul qilingan',
+  EXPIRED: "Faylning amal qilish muddati o'tgan",
+  NOT_EXISTING: 'Reestrda ushbu fayl mavjud emas',
+  NOT_EXPIRY_DATE: 'Faylning amal qilish muddati kiritilmagan',
+};
+
+const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
   const [searchParams] = useSearchParams();
   const currentCat = searchParams.get('type') || '';
   const currentInervalId = searchParams.get('intervalId') || '';
@@ -49,13 +60,14 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
   const { mutate } = useRejectRiskItem();
   const { user } = useAuth();
   const isValidInterval = currentInervalId == user?.interval?.id;
+  const isChairman = user?.role === UserRoles.CHAIRMAN;
   const isInspector = user?.role === UserRoles.INSPECTOR;
   const isLegal = user?.role === UserRoles.LEGAL;
   const { mutate: attachFile, isPending: isPendingAttachFile } = useAttachFile();
   const { mutateAsync: sendFiles, isPending } = useUploadFiles();
   const { mutate: cancelPoints } = useCancelPoints();
-  const currentItem = globalData?.find((item) => item.indicatorType === paragraphName);
-  const isConfirmed = currentItem?.score === 0 && !!currentItem?.filePath;
+  const isConfirmed = data?.score === 0;
+
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
@@ -69,23 +81,37 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
       type: currentCat,
     });
   };
+
+  let statusText: string | null = null;
+
+  if (data?.status) {
+    if (data.score > 0) {
+      statusText = statusMap[data.status];
+    }
+  }
+
   return (
-    <div key={data.title}>
+    <div key={data.text}>
       <div
         className={clsx('bg-[#EDEEEE] shadow-md p-2.5 rounded font-medium', {
-          'bg-red-200': !!currentItem?.score && currentItem?.score > 0,
+          'bg-red-200': !!data?.score && data?.score > 0,
           'bg-green-200': isConfirmed,
         })}
       >
-        {number}. {data.title} - <b>{data.point}</b> ball
+        {displayIndex}. {data.text} - <b>{data.maxScore}</b> ball
       </div>
       <div
         className={clsx('flex items-center py-5 px-2.5 gap-4 my-2', {
-          'bg-red-50': !!currentItem?.score && currentItem?.score > 0,
+          'bg-red-50': !!data?.score && data?.score > 0,
           'bg-green-50': isConfirmed,
         })}
       >
-        <div className="flex-grow">{data.title}</div>
+        <div className="flex-grow flex flex-col">
+          <span>{data.text}</span>
+
+          {statusText && <span className={clsx('text-sm font-semibold mt-1 italic')}>* {statusText}</span>}
+        </div>
+
         <Form {...form}>
           <div className="flex-shrink-0 flex gap-3  w-full max-w-[600px] items-center">
             <div className="flex gap-1 flex-shrink-0">
@@ -94,10 +120,10 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
                   <Button
                     onClick={() => {
                       if (confirm('Cancel points?')) {
-                        cancelPoints(currentItem.id);
+                        cancelPoints(data.id);
                       }
                     }}
-                    disabled={!isInspector || isConfirmed || !currentItem?.filePath}
+                    disabled={!isInspector || isConfirmed || !data?.filePath}
                     type="button"
                     className="flex-shrink-0"
                     variant={isConfirmed ? 'success' : 'successOutline'}
@@ -109,24 +135,24 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
                     onClick={() => {
                       form.setValue('isReject', !isReject);
                     }}
-                    disabled={!!currentItem || !isInspector}
+                    disabled={!!data || !isInspector}
                     type="button"
                     className="flex-shrink-0"
-                    variant={isReject || !!currentItem ? 'destructive' : 'destructiveOutline'}
+                    variant={isReject || !!data ? 'destructive' : 'destructiveOutline'}
                     size="icon"
                   >
                     <Minus />
                   </Button>
                 </>
               )}
-              {(!isInspector || !isValidInterval) && (
+              {!isChairman && (!isInspector || !isValidInterval) && (
                 <>
-                  {!currentItem && (
+                  {!data && (
                     <Button type="button" className="flex-shrink-0" variant={'successOutline'} size="icon">
                       <Check />
                     </Button>
                   )}
-                  {!!currentItem && isConfirmed && (
+                  {!!data && isConfirmed && (
                     <Button
                       type="button"
                       className="flex-shrink-0"
@@ -136,7 +162,7 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
                       <Check />
                     </Button>
                   )}
-                  {!!currentItem && !isConfirmed && (
+                  {!!data && !isConfirmed && (
                     <Button type="button" className="flex-shrink-0" variant={'destructive'} size="icon">
                       <Minus />
                     </Button>
@@ -144,38 +170,41 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
                 </>
               )}
             </div>
-            <div className="relative w-full">
-              <FormField
-                defaultValue={currentItem?.description ? currentItem?.description : ''}
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Textarea
-                        disabled={!isReject || !!currentItem}
-                        className="resize-none w-full"
-                        rows={2}
-                        placeholder="Boshqarma boshlig‘i rezolyutsiyasi"
-                        {...field}
-                      ></Textarea>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+            {!isChairman && (
+              <div className="relative w-full">
+                <FormField
+                  defaultValue={data?.description ? data?.description : ''}
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Textarea
+                          disabled={!isReject || !!data}
+                          className="resize-none w-full"
+                          rows={2}
+                          placeholder="Boshqarma boshlig‘i rezolyutsiyasi"
+                          {...field}
+                        ></Textarea>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {isReject && !data && (
+                  <Button
+                    onClick={form.handleSubmit(onSubmit)}
+                    className="absolute top-6 right-2 opacity-80 hover:opacity-100"
+                    size="sm"
+                    variant="outline"
+                  >
+                    Yuborish
+                  </Button>
                 )}
-              />
-              {isReject && !currentItem && (
-                <Button
-                  onClick={form.handleSubmit(onSubmit)}
-                  className="absolute top-6 right-2 opacity-80 hover:opacity-100"
-                  size="sm"
-                  variant="outline"
-                >
-                  Yuborish
-                </Button>
-              )}
-            </div>
-            {isLegal && !!currentItem && !currentItem?.filePath && (
+              </div>
+            )}
+
+            {isLegal && !!data && !data?.filePath && (
               <label className={buttonVariants({ size: 'sm' })}>
                 Batraf etish
                 <input
@@ -183,7 +212,14 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
                   onChange={(e) => {
                     const files = e.target.files;
                     if (files?.length) {
-                      sendFiles([files[0]]).then((data) => attachFile({ id: currentItem?.id, path: data }));
+                      // 3. XATOLIKNI TUZATAMIZ:
+                      sendFiles([files[0]]).then((filePath) => {
+                        // `filePath` -> sendFiles dan qaytgan string (fayl manzili)
+                        attachFile({
+                          id: number, // Indikator ID si `number` propidan olinadi
+                          path: filePath, // Fayl manzili `sendFiles` natijasidan olinadi
+                        });
+                      });
                     }
                   }}
                   className="hidden"
@@ -192,7 +228,7 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, globalData }) => {
                 />
               </label>
             )}
-            {!!currentItem?.filePath && <FileLink isSmall={true} title={'Ma’lumotnoma'} url={currentItem?.filePath} />}
+            {!!data?.filePath && <FileLink isSmall={true} title={'Ma’lumotnoma'} url={data?.filePath} />}
           </div>
         </Form>
       </div>

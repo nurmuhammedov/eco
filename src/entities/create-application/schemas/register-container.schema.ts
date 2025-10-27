@@ -78,7 +78,15 @@ export const ContainerAppealDtoSchema = z.object({
     .min(1, 'Montaj guvohnomasi fayli biriktirilmadi!'),
   installationCertExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
   additionalFilePath: z.string().optional(), // Ixtiyoriy
-  additionalFileExpiryDate: z.string().optional(),
+  additionalFileExpiryDate: z
+    .date()
+    .optional()
+    .transform((date) => {
+      if (date) {
+        return format(date, 'yyyy-MM-dd');
+      }
+      return date;
+    }),
   nonDestructiveCheckDate: z // Putur yetkazmaydigan nazoratdan o'tkazish sanasi
     .date({ required_error: "Putur yetkazmaydigan nazoratdan o'tkazish sanasi kiritilmadi!" })
     .transform((date) => format(date, 'yyyy-MM-dd')),

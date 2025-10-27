@@ -25,7 +25,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
     useCreateIllegalAttractionPassportApplication();
 
   const identity = form.watch('identity');
-  const birthDate = form.watch('birthDate');
+  const birthDateString = form.watch('birthDate'); // Qiymatni string sifatida olamiz
 
   const isLegal = typeof identity === 'string' && identity.trim().length === 9;
   const isIndividual = typeof identity === 'string' && identity.trim().length === 14;
@@ -35,11 +35,16 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
     !!isLegal, // `!!` juda muhim!
   );
 
+  // --- TUZATISH KIRITILGAN JOY ---
+  // birthDate'ni string'dan Date obyektiga o'tkazamiz
+  const birthDateForHook = birthDateString ? new Date(birthDateString) : undefined;
+
   const { data: individualData, isLoading: isIndividualLoading } = useIndividualIipInfo(
     identity,
-    birthDate,
-    !!(isIndividual && birthDate), // `!!` va qavslar juda muhim!
+    birthDateForHook, // Hook'ga Date obyektini uzatamiz
+    !!(isIndividual && birthDateForHook), // Shartni ham yangi o'zgaruvchi bilan tekshiramiz
   );
+  // --- TUZATISH TUGADI ---
 
   const data = isLegal ? legalData : individualData;
   const isLoading = isLegalLoading || isIndividualLoading;
@@ -62,10 +67,9 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
         const calculatedDate = new Date(year, month, day);
 
         // Yaratilgan sana to'g'riligini tekshiramiz
-        // (masalan, 31-fevral kabi xato sanalarni oldini olish uchun)
         if (!isNaN(calculatedDate.getTime())) {
           // `birthDate` maydonini yangi sana bilan yangilaymiz
-          form.setValue('birthDate', calculatedDate, { shouldValidate: true });
+          form.setValue('birthDate', calculatedDate.toISOString(), { shouldValidate: true });
         }
       } catch (error) {
         console.error('JSHSHIRdan sanani ajratishda xatolik:', error);
@@ -81,7 +85,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
         <GoBack title="Attraksion ro‘yxatga olish" />
         <CardForm className="my-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
-            {/* STIR yoki PINFL uchun maydon (o'zgarmaydi) */}
             <FormField
               control={form.control}
               name="identity"
@@ -95,31 +98,33 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-
             {isIndividual && (
               <FormField
                 control={form.control}
                 name="birthDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Tug'ilgan sana</FormLabel>
-                    <FormControl>
-                      <DatePicker value={field.value} onChange={field.onChange} placeholder="Sanani tanlang" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const dateValue = field.value ? new Date(field.value) : undefined;
+                  const validDate = dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined;
+                  return (
+                    <FormItem>
+                      <FormLabel required>Tug'ilgan sana</FormLabel>
+                      <FormControl>
+                        <DatePicker
+                          value={validDate} // DatePicker'ga tayyor Date obyektini beramiz
+                          onChange={field.onChange}
+                          placeholder="Sanani tanlang"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
             )}
           </div>
-
-          {/* Yuklanish indikatori */}
           {isLoading && <div className="">Yuklanmoqda...</div>}
-
-          {/* Ma'lumotlar bloki (`data` o'zgaruvchisidan foydalanadi) */}
           {data && (
             <div className="mt-6 border-t pt-6">
-              {/* Sarlavhani ham dinamik qilamiz */}
               <h3 className="text-lg font-semibold mb-4 text-gray-800">
                 {isLegal ? "Tashkilot ma'lumotlari" : "Fuqaro ma'lumotlari"}
               </h3>
@@ -820,7 +825,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel>Attraksionga video kuzatuv moslamasi o’rnatilganligi surati</FormLabel>
+                    <FormLabel>Attraksionni saqlashga qo’yish dalolatnomasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -837,14 +842,12 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel>
-                        Attraksionni saqlashga qo’yish dalolatnomasi (ushbu ilovani muddati bo’ladi)
-                      </FormLabel>
+                      <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Attraksionni saqlashga qo’yish dalolatnomasi"
+                        placeholder="Amal qilish muddati"
                       />
                     </div>
                     <FormMessage />
@@ -853,6 +856,21 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
               }}
             />
           </div>
+
+          <FormField
+            name="cctvInstallationPath"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="pb-4 border-b">
+                <div className="flex items-end xl:items-center justify-between gap-2">
+                  <FormLabel>Attraksionga video kuzatuv moslamasi o’rnatilganligi surati</FormLabel>
+                  <FormControl>
+                    <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
+                  </FormControl>
+                </div>
+              </FormItem>
+            )}
+          />
 
           <FormField
             name="qrPath"

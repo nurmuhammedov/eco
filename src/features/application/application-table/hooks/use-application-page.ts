@@ -61,7 +61,14 @@ export const useApplicationPage = () => {
           if (userRole === UserRoles.MANAGER) count = managerApprovalCount;
           break;
       }
-      return { ...status, count };
+
+      // O'zgartirish: Faqat count > 0 bo'lganda obyektga qo'shish
+      if (count > 0) {
+        return { ...status, count };
+      }
+
+      // Aks holda, count maydonisiz qaytarish
+      return status;
     });
   }, [
     userRole,
