@@ -98,7 +98,20 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
           'bg-green-200': isConfirmed,
         })}
       >
-        {displayIndex}. {data.text} - <b>{data.maxScore}</b> ball
+        <div className="flex justify-between gap-2">
+          <div>
+            {displayIndex}. {data.text} - <b>{data.maxScore}</b> ball
+          </div>
+          {data?.score == 0 ? (
+            <div className="pr-4">
+              <b>0</b> ball
+            </div>
+          ) : (
+            <div className="pr-4">
+              <b>{data?.score}</b> ball
+            </div>
+          )}
+        </div>
       </div>
       <div
         className={clsx('flex items-center py-5 px-2.5 gap-4 my-2', {

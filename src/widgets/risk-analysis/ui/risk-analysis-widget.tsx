@@ -2,7 +2,7 @@ import { AttractionList } from '@/features/risk-analysis/attraction/ui/attractio
 import { InmList } from '@/features/risk-analysis/inm/ui/inm-list';
 import { LiftList } from '@/features/risk-analysis/lift/ui/lift-list';
 import { XichoList } from '@/features/risk-analysis/xicho/ui/xicho-list';
-import Filter from '@/shared/components/common/filter';
+// import Filter from '@/shared/components/common/filter';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -77,7 +77,7 @@ const RiskAnalysisWidget = () => {
               ) : null}
             </TabsTrigger>
           </TabsList>
-          <Filter inputKeys={['intervalId']} className="" />
+          {/*<Filter inputKeys={['intervalId']} className="" />*/}
         </div>
 
         <TabsContent value={RiskAnalysisTab.XICHO} className="mt-4">

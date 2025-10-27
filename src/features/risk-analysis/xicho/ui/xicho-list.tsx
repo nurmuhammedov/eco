@@ -12,6 +12,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { AssignInspectorButton } from '../../ui/assign-inspector-button';
+import { cleanParams } from '@/shared/lib';
 
 export const XichoList = () => {
   const { t } = useTranslation('common');
@@ -40,11 +41,15 @@ export const XichoList = () => {
     return params;
   }, [isRegional, activeAssignedStatus, user, paramsObject.intervalId]);
 
-  const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_HF, {
-    ...apiParams,
-    size: paramsObject?.size || 10,
-    page: paramsObject?.page || 1,
-  });
+  const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(
+    API_ENDPOINTS.RISK_ASSESSMENT_HF,
+    cleanParams({
+      ...apiParams,
+      level: paramsObject.riskLevel == 'ALL' ? undefined : paramsObject.riskLevel ? paramsObject.riskLevel : undefined,
+      size: paramsObject?.size || 10,
+      page: paramsObject?.page || 1,
+    }),
+  );
 
   const handleView = (row: RiskAnalysisItem) => {
     const intervalId = paramsObject.intervalId || user?.interval?.id;

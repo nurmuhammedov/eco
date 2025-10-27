@@ -41,6 +41,7 @@ export const InmList = () => {
 
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_IRS, {
     ...apiParams,
+    level: paramsObject.riskLevel == 'ALL' ? undefined : paramsObject.riskLevel ? paramsObject.riskLevel : undefined,
     size: paramsObject?.size || 10,
     page: paramsObject?.page || 1,
   });

@@ -1,18 +1,8 @@
-// src/features/risk-analysis/ui/RiskLevelTabs.tsx
 import { TabsLayout } from '@/shared/layouts';
 import { useCustomSearchParams } from '@/shared/hooks';
-import { Badge } from '@/shared/components/ui/badge'; // (Loyihangizdagi Badge komponenti)
-import { useQuery } from '@tanstack/react-query'; // Ma'lumot sonini olish uchun
-
-// Yangi: Har bir tur uchun sonlarni olish uchun API funksiyasi (taxminiy)
-// Buni alohida api/ papkasida yaratish kerak
-/* const getRiskCountsByType = async (type: string) => {
-  // const { data } = await apiClient.get(`/risk-analysis/counts?type=${type}`);
-  // return data;
-  
-  // Hozircha statik, test uchun ma'lumot
-  return { LOW: 5, MEDIUM: 2, HIGH: 1, ALL: 8 };
-}; */
+import { Badge } from '@/shared/components/ui/badge';
+import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
 
 interface RiskLevelTabsProps {
   type: string;
@@ -20,49 +10,70 @@ interface RiskLevelTabsProps {
 }
 
 const riskLevels = [
-  { id: 'ALL', name: 'Barchasi', baseColor: 'bg-gray-500', activeColor: 'bg-teal-600' }, // "Barchasi" uchun rang
-  { id: 'LOW', name: 'Xavfi past (0-60)', baseColor: 'bg-green-500', activeColor: 'bg-green-700' }, // Yashil
-  { id: 'MEDIUM', name: "Xavfi o'rta (61-80)", baseColor: 'bg-yellow-500', activeColor: 'bg-yellow-600' }, // Sariq
-  { id: 'HIGH', name: 'Xavfi yuqori (81-100)', baseColor: 'bg-red-500', activeColor: 'bg-red-700' }, // Qizil
+  {
+    id: 'ALL',
+    name: 'Barchasi',
+    // lightColor: 'bg-[#016B7B]',
+    darkColor: 'bg-[#016B7B]',
+    badgeColor: 'bg-[#016B7B]',
+  },
+  {
+    id: 'LOW',
+    name: 'Xavfi past (0-60)',
+    lightColor: 'bg-green-100',
+    darkColor: 'bg-green-700',
+    badgeColor: 'bg-green-500',
+  },
+  {
+    id: 'MEDIUM',
+    name: 'Xavfi o‘rta (61-80)',
+    lightColor: 'bg-yellow-100',
+    darkColor: 'bg-yellow-600',
+    badgeColor: 'bg-yellow-500',
+  },
+  {
+    id: 'HIGH',
+    name: 'Xavfi yuqori (81-100)',
+    lightColor: 'bg-red-100',
+    darkColor: 'bg-red-700',
+    badgeColor: 'bg-red-500',
+  },
 ];
 
 export const RiskLevelTabs = ({ type, ListContentComponent }: RiskLevelTabsProps) => {
   const { paramsObject, addParams } = useCustomSearchParams();
   const activeRiskLevel = paramsObject.riskLevel || 'ALL';
 
-  // Har bir risk darajasi uchun sonlarni backenddan olamiz
   const { data: counts, isLoading: isLoadingCounts } = useQuery({
     queryKey: ['riskCounts', type],
-    // Ma'lumotni to'g'ridan-to'g'ri shu yerda qaytaramiz
-    queryFn: () => {
-      // Kelajakda bu yerga API so'rovi qo'yiladi:
-      // const { data } = await apiClient.get(`/risk-analysis/counts?type=${type}`);
-      // return data;
-
-      // Hozircha test uchun
-      return { LOW: 5, MEDIUM: 2, HIGH: 1, ALL: 8 };
-    },
+    queryFn: () => ({ LOW: 5, MEDIUM: 2, HIGH: 1, ALL: 8 }),
   });
+
   const tabs = riskLevels.map((level) => {
     const count = counts?.[level.id as keyof typeof counts] || 0;
     const isActive = activeRiskLevel === level.id;
 
     return {
       id: level.id,
-      name: level.name, // `TabsLayout` buni ishlatmaydi, lekin majburiy bo'lishi mumkin
+      name: level.name,
       count: count,
-      // `renderName` orqali tabning ko'rinishini to'liq o'zimiz boshqaramiz
       renderName: (
         <div
-          className={`flex items-center space-x-2 rounded-md px-3 py-1.5 transition-colors duration-200 ${isActive ? level.activeColor : 'hover:bg-gray-100'}`}
+          className={clsx(
+            'flex items-center mx-1 space-x-2 rounded-md px-3 py-1.5 transition-all duration-200 border',
+            isActive
+              ? `${level.darkColor} text-white border-transparent`
+              : `${level.lightColor} text-gray-700 border-gray-300 hover:border-gray-400`,
+          )}
         >
-          <span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-gray-700'}`}>{level.name}</span>
+          <span className="text-sm font-medium">{level.name}</span>
           <Badge
             variant="secondary"
-            className={`
-              ${isActive ? 'bg-white text-black' : `${level.baseColor} text-white`}
-              ${isLoadingCounts ? 'animate-pulse' : ''}
-            `}
+            className={clsx(
+              'text-xs',
+              isActive ? 'bg-white text-black' : `${level.badgeColor} text-white`,
+              isLoadingCounts && 'animate-pulse',
+            )}
           >
             {isLoadingCounts ? '...' : count}
           </Badge>
@@ -74,9 +85,10 @@ export const RiskLevelTabs = ({ type, ListContentComponent }: RiskLevelTabsProps
   return (
     <TabsLayout
       activeTab={activeRiskLevel}
+      classNameTabList="bg-[#F6F6F6]"
       tabs={tabs}
+      classNameTrigger="bg-[#F6F6F6]! cursor-pointer rounded-lg p-1!  border-none border-0! outline-none! shadow-none! focus-visible:ring-0!"
       onTabChange={(risk) => addParams({ riskLevel: risk }, 'page')}
-      // `TabsLayout` tablar orasida bo'sh joy qoldirishi uchun (ixtiyoriy)
       className="space-x-2"
     >
       <div className="mt-4">

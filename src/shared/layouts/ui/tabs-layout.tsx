@@ -7,6 +7,7 @@ interface Tab {
   id: string;
   name: string;
   count?: number;
+  renderName?: ReactNode;
 }
 
 interface TabsLayoutProps {
@@ -37,13 +38,17 @@ export const TabsLayout = ({
       <div className="flex justify-between overflow-x-auto no-scrollbar">
         <TabsList className={classNameTabList}>
           {tabs.map((tab) => (
-            <TabsTrigger className={cn('hover:bg-neutral-100', classNameTrigger)} key={tab.id} value={tab.id}>
-              {tab.name}
-              {tab.count || tab.count == 0 ? (
-                <Badge variant="destructive" className="ml-2">
-                  {tab.count}
-                </Badge>
-              ) : null}
+            <TabsTrigger key={tab.id} value={tab.id} className={cn(`hover:bg-neutral-100`, classNameTrigger)}>
+              {tab.renderName ?? (
+                <>
+                  {tab.name}
+                  {tab.count || tab.count == 0 ? (
+                    <Badge variant="destructive" className="ml-2">
+                      {tab.count}
+                    </Badge>
+                  ) : null}
+                </>
+              )}
             </TabsTrigger>
           ))}
         </TabsList>
