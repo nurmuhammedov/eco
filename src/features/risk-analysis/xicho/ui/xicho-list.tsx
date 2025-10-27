@@ -45,6 +45,7 @@ export const XichoList = () => {
     API_ENDPOINTS.RISK_ASSESSMENT_HF,
     cleanParams({
       ...apiParams,
+      type: 'HF',
       level: paramsObject.riskLevel == 'ALL' ? undefined : paramsObject.riskLevel ? paramsObject.riskLevel : undefined,
       size: paramsObject?.size || 10,
       page: paramsObject?.page || 1,
