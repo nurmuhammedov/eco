@@ -21,7 +21,7 @@ export const InspectionList: React.FC = () => {
   });
   const handleView = (row: Inspection) => {
     navigate(
-      `/inspections/info?inspectionId=${row.id}&tin=${row.tin}&intervalId=${paramsObject.intervalId || user?.interval?.id}`,
+      `/inspections/info?inspectionId=${row.id}&tin=${row.tin}&name=${row.legalName}&intervalId=${paramsObject.intervalId || user?.interval?.id}`,
     );
   };
 

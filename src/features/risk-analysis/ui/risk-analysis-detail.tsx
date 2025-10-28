@@ -61,7 +61,7 @@ const RiskAnalysisDetail = () => {
     {
       header: 'Xavf tahlil davri',
       cell: ({ row }) =>
-        `${formatDate(row.original.endDate, 'dd.MM.yyyy')} - ${formatDate(row.original.startDate, 'dd.MM.yyyy')}`,
+        `${formatDate(row.original.startDate, 'dd.MM.yyyy')} - ${formatDate(row.original.endDate, 'dd.MM.yyyy')}`,
     },
     {
       header: 'Inspektor',
