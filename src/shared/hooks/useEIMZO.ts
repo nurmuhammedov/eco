@@ -88,7 +88,7 @@ export function useEIMZO({
           navigate(onSuccessNavigateTo);
         }
         await queryClient.invalidateQueries({ queryKey: [queryKey] });
-        toast.success(successMessage || 'Success', { richColors: true });
+        toast.success(successMessage || 'Muvaffaqiyatli saqlandi!', { richColors: true });
       }
     },
     mutationKey: ['submit-application'],

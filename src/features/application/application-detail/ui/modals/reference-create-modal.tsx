@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom';
 import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts';
 
 const schema = z.object({
-  conclusion: z.string()
+  conclusion: z.string(),
 });
 
 const ReferenceCreateModal = () => {
@@ -27,15 +27,15 @@ const ReferenceCreateModal = () => {
     isPdfLoading,
     handleCloseModal,
     handleCreateApplication,
-    submitApplicationMetaData
+    submitApplicationMetaData,
   } = useEIMZO({
     pdfEndpoint: '/appeals/reply/generate-pdf',
     submitEndpoint: '/appeals/reply',
-    successMessage: 'Success',
-    queryKey: QK_APPLICATIONS
+    successMessage: 'Muvaffaqiyatli saqlandi!',
+    queryKey: QK_APPLICATIONS,
   });
   const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(schema),
   });
 
   const { id } = useParams();

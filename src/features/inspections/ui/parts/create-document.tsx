@@ -39,7 +39,7 @@ const CreateDocument: FC<{ resetTab: () => void }> = () => {
   } = useEIMZO({
     pdfEndpoint: '/inspections/act/generate-pdf',
     submitEndpoint: '/inspections/act',
-    successMessage: 'Success',
+    successMessage: 'Muvaffaqiyatli saqlandi!',
     queryKey: QK_INSPECTION,
   });
 

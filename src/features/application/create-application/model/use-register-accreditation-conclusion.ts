@@ -34,7 +34,7 @@ export const useRegisterAccreditationConclusion = () => {
     pdfEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_CONCLUSION_GENERATE_PDF,
     submitEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_CONCLUSION,
     queryKey: 'accreditation-conclusion',
-    successMessage: 'Success!',
+    successMessage: 'Muvaffaqiyatli saqlandi!!',
     onSuccessNavigateTo: '/accreditations',
   });
 

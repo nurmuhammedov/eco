@@ -9,7 +9,7 @@ export function useRejectDocument() {
     mutationFn: applicationDetailApi.rejectDocument,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
-      toast.success('Success');
-    }
+      toast.success('Muvaffaqiyatli saqlandi!');
+    },
   });
 }

@@ -12,7 +12,7 @@ export function useUpdateApplicationFile() {
     mutationFn: (payload: { appealId?: string; fieldName: string; filePath: string }) =>
       applicationDetailApi.uploadFile(payload),
     onSuccess: async () => {
-      toast.success('Success');
+      toast.success('Muvaffaqiyatli saqlandi!');
       await queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
     },
     onError: (error: Error) => {

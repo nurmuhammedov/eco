@@ -11,7 +11,7 @@ export function useUpdateRegisterFile(url?: string) {
   return useMutation({
     mutationFn: (payload: any) => applicationDetailApi.updateFile(id, payload, url),
     onSuccess: async () => {
-      toast.success('Success');
+      toast.success('Muvaffaqiyatli saqlandi!');
       await queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
     },
   });
