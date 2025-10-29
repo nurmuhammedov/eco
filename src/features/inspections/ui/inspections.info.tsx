@@ -24,7 +24,7 @@ const InspectionsInfo = () => {
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <GoBack title={`Tashkilot STIR: ${currentTin}`} />
+        <GoBack title={`Tashkilot: ${paramsObject.name} (${currentTin})`} />
       </div>
       <DetailCardAccordion defaultValue={['risk_anlalysis_info', 'inspection_results', 'inspection_info']}>
         <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
