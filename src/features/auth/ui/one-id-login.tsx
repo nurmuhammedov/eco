@@ -7,8 +7,8 @@ export function OneIdLogin() {
   useLoginOneId();
 
   return (
-    <div className="w-1/2 flex flex-col items-center justify-center">
-      <h3 className="mb-4 font-medium text-2xl leading-6 w-1/4 text-center">Axborot tizimiga kirish</h3>
+    <div className="w-full flex flex-col items-center justify-center">
+      <h3 className="mb-12 font-medium text-2xl leading-6 text-center">Axborot tizimiga kirish</h3>
       <a
         className="bg-neutral-200 px-9 3xl:px-12 rounded-2xl inline-block"
         href={`https://sso.egov.uz/sso/oauth/Authorization.do?response_type=one_code&client_id=${oneIdClientId}&client_secret=${oneIdClientSecret}&redirect_uri=${oneIdUrl}`}

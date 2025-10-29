@@ -12,7 +12,7 @@ const RouterErrorBoundary = memo((props: ErrorBoundaryProps) => {
       {...props}
       navigate={navigate}
       pathname={location.pathname}
-      className="h-[calc(100svh-82px)] overflow-auto px-4 pt-4 3xl:p-5"
+      className={props?.className ? props?.className : 'h-[calc(100svh-82px)] overflow-auto px-4 pt-4 3xl:p-5'}
     />
   );
 });

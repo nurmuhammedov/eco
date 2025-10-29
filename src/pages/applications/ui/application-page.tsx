@@ -20,7 +20,7 @@ const ApplicationPage = () => {
   } = useCustomSearchParams();
 
   const action = useMemo(() => {
-    if ([UserRoles.LEGAL, UserRoles.INDIVIDUAL]?.includes(user?.role)) {
+    if ([UserRoles.LEGAL, UserRoles.INDIVIDUAL]?.includes(user?.role as unknown as UserRoles)) {
       return (
         <Button onClick={() => navigate('/applications/create')}>
           <PlusCircle /> Ariza yaratish

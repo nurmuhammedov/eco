@@ -7,6 +7,7 @@ import { getHomeRouteForLoggedInUser } from '@/shared/lib/router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { apiConfig } from '@/shared/api/constants';
 
 export const useCurrentUser = () => {
   const {
@@ -17,7 +18,8 @@ export const useCurrentUser = () => {
   } = useQuery({
     queryKey: ['me'],
     queryFn: async () => authAPI.getMe(),
-    retry: 1,
+    retry: 0,
+    staleTime: Infinity,
   });
 
   return { user, error, isPending, isSuccess, isAuth: user && !error };
@@ -66,12 +68,10 @@ export const useLoginOneId = () => {
 export const useLogout = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = apiConfig.oneIdClientId;
 
-  //TODO: ubrat redirect na admin kogda budet presetasiya
-  console.log(apiUrl, 'apiUrl');
   let redirectPath;
-  if (apiUrl === 'https://test.cirns.uz') {
+  if (apiUrl === 'test_cirns_uz') {
     redirectPath = '/auth/login/admin';
   } else {
     redirectPath = '/auth/login';

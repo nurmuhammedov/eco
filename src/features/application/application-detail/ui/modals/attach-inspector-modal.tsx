@@ -36,8 +36,8 @@ const AttachInspectorModal = () => {
   const { data: inspectorSelectData } = useInspectorSelect();
   const { data: managerSelectData } = useManagerSelect();
 
-  const isManager = user.role == UserRoles.HEAD;
-  const isRegional = user.role == UserRoles.REGIONAL;
+  const isManager = user?.role == UserRoles.HEAD;
+  const isRegional = user?.role == UserRoles.REGIONAL;
 
   const selectOptions = getSelectOptions(
     isManager

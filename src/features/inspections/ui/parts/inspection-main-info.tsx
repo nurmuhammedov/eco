@@ -12,7 +12,6 @@ const InspectionMainInfo = () => {
   const { data: actInfo } = useActDetail();
   const [signers, setSigners] = useState<any[]>([]);
 
-  console.log(actInfo);
   if (!inspectionData) {
     return null;
   }

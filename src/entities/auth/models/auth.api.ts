@@ -1,5 +1,7 @@
 import { LoginDTO } from './auth.types';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
+import { UserState } from '@/entities/user';
+import { ApiResponse } from '@/shared/types';
 
 export const authAPI = {
   login: async (data: LoginDTO) => {
@@ -29,7 +31,7 @@ export const authAPI = {
     return response.data;
   },
   getMe: async () => {
-    const response = await apiClient.get<any>(API_ENDPOINTS.USER_ME);
+    const response = await apiClient.get<ApiResponse<UserState>>(API_ENDPOINTS.USER_ME);
 
     if (!response.success) {
       throw new Error(response.message);

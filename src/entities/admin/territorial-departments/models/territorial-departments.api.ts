@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import { ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import type {
@@ -19,17 +18,16 @@ export const territorialDepartmentsAPI = {
     return data.data;
   },
   create: async (data: CreateTerritorialDepartmentsDTO) => {
-    const response = await apiClient.post<TerritorialDepartmentResponse, CreateTerritorialDepartmentsDTO>(
+    // if (!response.success && response.errors) {
+    //   toast.error(Object.values(response.errors).join(', '), {
+    //     richColors: true,
+    //   });
+    // }
+
+    return await apiClient.post<TerritorialDepartmentResponse, CreateTerritorialDepartmentsDTO>(
       API_ENDPOINTS.OFFICES,
       data,
     );
-    if (!response.success && response.errors) {
-      toast.error(Object.values(response.errors).join(', '), {
-        richColors: true,
-      });
-    }
-
-    return response;
   },
   update: async (data: UpdateTerritorialDepartmentsDTO) => {
     const response = await apiClient.put<UpdateTerritorialDepartmentsDTO>(`${API_ENDPOINTS.OFFICES}/${data.id}`, data);

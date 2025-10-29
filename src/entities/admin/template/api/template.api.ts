@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import { ApiResponse, ResponseData } from '@/shared/types';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import { Template, TemplateFormDTO } from '@/entities/admin/template';
@@ -13,14 +12,13 @@ export const templateAPI = {
     return data.data;
   },
   create: async (data: TemplateFormDTO) => {
-    const response = await apiClient.post<Template, TemplateFormDTO>(API_ENDPOINTS.TEMPLATES, data);
-    if (!response.success && response.errors) {
-      toast.error(Object.values(response.errors).join(', '), {
-        richColors: true,
-      });
-    }
+    // if (!response.success && response.errors) {
+    //   toast.error(Object.values(response.errors).join(', '), {
+    //     richColors: true,
+    //   });
+    // }
 
-    return response;
+    return await apiClient.post<Template, TemplateFormDTO>(API_ENDPOINTS.TEMPLATES, data);
   },
   updateData: async (id: number, templateData: Partial<TemplateFormDTO>) => {
     const response = await apiClient.put<Template>(`${API_ENDPOINTS.TEMPLATES}/${id}`, templateData);

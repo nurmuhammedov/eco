@@ -8,8 +8,8 @@ export function useConfirmDocument() {
   return useMutation({
     mutationFn: async (documentId: any) => await applicationDetailApi.confirmDocument(documentId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
       toast.success('Success');
+      await queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
     },
   });
 }

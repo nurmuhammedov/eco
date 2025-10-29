@@ -1,11 +1,8 @@
-// ** Utils **
 import { Direction, UserRoles } from '@/entities/user';
 import { apiConfig } from '@/shared/api/constants';
 
-// ** SVG Icons **
 import { TechnocorpLogo } from '@/shared/components/SVGIcons';
 
-// ** UI ui **
 import {
   Sidebar,
   SidebarContent,
@@ -17,18 +14,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/shared/components/ui/sidebar';
-import { useAppSelector } from '@/shared/hooks/use-store';
 import { cn } from '@/shared/lib/utils';
-import { pick } from '@/shared/utils';
 import { NAVIGATIONS } from '@/widgets/sidebar/models/navigations';
 import { Navigation } from '@/widgets/sidebar/models/types';
 import { NavMain } from '@/widgets/sidebar/ui/nav-main';
 import { useMemo } from 'react';
-import { shallowEqual } from 'react-redux';
 import allNavigation from '../models/all';
 
-// ** Secondary Components **
 import { AppLogo } from './app-logo';
+import { useAuth } from '@/shared/hooks/use-auth';
 
 function Footer() {
   return (
@@ -46,7 +40,7 @@ function Footer() {
 export function AppSidebar() {
   const { state } = useSidebar();
   const sidebarOpen = state === 'expanded';
-  const { user } = useAppSelector((state) => pick(state.auth, ['user']), shallowEqual);
+  const { user } = useAuth();
 
   const displayedNavigations: Navigation = useMemo(() => {
     if (!user) return [];

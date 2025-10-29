@@ -41,7 +41,7 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
 
   return (
     <div>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between gap-2 items-center">
         <GoBack title={`Ariza raqami: ${data?.number || ''}`} />
 
         {!hideLogs ? (

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { apiConfig } from '@/shared/api/constants';
+import { cleanParams } from '@/shared/lib';
+import { toast } from 'sonner';
 
 export const axiosInstance = axios.create({
   withCredentials: true,
@@ -7,19 +9,64 @@ export const axiosInstance = axios.create({
   paramsSerializer: { indexes: null },
 });
 
-// Request interceptor
 axiosInstance.interceptors.request.use(
-  (config) => config,
+  (config) => {
+    if (config.params) {
+      config.params = cleanParams(config.params);
+    }
+    return config;
+  },
   (error) => Promise.reject(error),
 );
 
-// Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      console.warn('Unauthorized: Please login again.');
+    if (error?.response?.status === 401) {
+      const location: string = window.location.pathname;
+      if (
+        location !== '/auth/login' &&
+        location !== '/auth/login/admin' &&
+        location !== '/auth/login/' &&
+        location !== '/auth/login/admin/'
+      ) {
+        window.location.replace('/auth/login');
+      }
+    }
+
+    if (error?.response?.status <= 499 && error?.response?.status !== 401 && error?.response?.status !== 404) {
+      toast.error(
+        error.response?.data?.message || 'Serverda nomaʼlum xatolik yuz berdi. Xatolik haqida xabar bering!',
+        { richColors: true },
+      );
+    } else if (error?.response?.status >= 500) {
+      toast.error('Serverda nomaʼlum xatolik yuz berdi. Xatolik haqida xabar bering!', { richColors: true });
+    } else if (error?.response?.status === 401 && error?.response?.config?.url === '/api/v1/users/me') {
+      toast.error('Kirish maʼlumotlari topilmadi yoki noto‘g‘ri. Iltimos, tizimga qayta kiring.', { richColors: true });
+    } else if (error?.response?.status === 401 && error?.response?.config?.url === '/api/v1/auth/login') {
+      toast.error('Login yoki parol noto‘g‘ri. Iltimos, ma’lumotlarni tekshirib, qayta urinib ko‘ring.', {
+        richColors: true,
+      });
+    } else if (error?.response?.status === 404) {
+      toast.error('So‘ralgan xizmat topilmadi. Iltimos, keyinroq qayta urinib ko‘ring', { richColors: true });
     }
     return Promise.reject(error);
   },
 );
+
+// Request interceptor
+// axiosInstance.interceptors.request.use(
+//   (config) => config,
+//   (error) => Promise.reject(error),
+// );
+
+// Response interceptor
+// axiosInstance.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     if (error.response?.status === 401) {
+//       console.warn('Unauthorized: Please login again.');
+//     }
+//     return Promise.reject(error);
+//   },
+// );

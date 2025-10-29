@@ -5,16 +5,10 @@ import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts'
 
 export const useObjectList = () => {
   const { paramsObject } = useCustomSearchParams();
-  const type = paramsObject?.type || 'hf';
-  let currentType = '';
+  const type = paramsObject?.inspectionId || 'hf';
 
-  if (type.includes('attraction') || type.includes('elevator')) {
-    currentType = 'equipments';
-  } else {
-    currentType = type;
-  }
   return useQuery({
-    queryKey: [QK_INSPECTION, paramsObject, currentType],
-    queryFn: () => inspectionsApi.getObjectList({ ...paramsObject, type: type.toUpperCase() }, currentType),
+    queryKey: [QK_INSPECTION, paramsObject],
+    queryFn: () => inspectionsApi.getObjectList(paramsObject, type.toUpperCase()),
   });
 };

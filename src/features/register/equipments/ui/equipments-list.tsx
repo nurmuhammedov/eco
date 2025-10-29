@@ -111,8 +111,6 @@ export const EquipmentsList = () => {
     URL.revokeObjectURL(url);
   };
 
-  console.log(rest, 'rest');
-
   return (
     <TabsLayout
       activeTab={type}

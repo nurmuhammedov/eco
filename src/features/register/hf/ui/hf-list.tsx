@@ -84,8 +84,6 @@ export const HfList = () => {
     },
   ];
 
-  console.log(rest, 'rest');
-
   return (
     <>
       <div className={'flex justify-between items-start'}>

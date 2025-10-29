@@ -55,7 +55,7 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
   return (
     <Form {...form}>
       <form
-        className={cn('w-1/2 flex flex-col items-center justify-center gap-6', className)}
+        className={cn('w-full flex flex-col items-center justify-center gap-6', className)}
         onSubmit={form.handleSubmit(handleLogin)}
       >
         <div className="w-3/5 3xl:w-2/5">

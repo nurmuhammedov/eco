@@ -85,8 +85,6 @@ export function useTemplateForm() {
   }, [form, onClose]);
 
   const handleSubmit = async (formData: any): Promise<boolean> => {
-    console.log(formData, 'formData');
-
     try {
       if (isCreate) {
         const response = await createTemplate(formData);

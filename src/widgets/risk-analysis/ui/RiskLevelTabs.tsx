@@ -6,7 +6,6 @@ import { useMemo } from 'react';
 import { RiskAnalysisItem, RiskAnalysisParams } from '@/entities/risk-analysis/models/risk-analysis.types';
 import { AssignedStatusTab } from '@/widgets/risk-analysis/types';
 import { API_ENDPOINTS } from '@/shared/api';
-import { cleanParams } from '@/shared/lib';
 import { UserRoles } from '@/entities/user';
 import { useAuth } from '@/shared/hooks/use-auth';
 
@@ -66,16 +65,13 @@ export const RiskLevelTabs = ({ ListContentComponent }: RiskLevelTabsProps) => {
     return params;
   }, [isRegional, activeAssignedStatus, user, paramsObject.intervalId]);
 
-  const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(
-    API_ENDPOINTS.RISK_ASSESSMENT_HF,
-    cleanParams({
-      ...apiParams,
-      type: 'HF',
-      level: paramsObject.riskLevel == 'ALL' ? undefined : paramsObject.riskLevel ? paramsObject.riskLevel : undefined,
-      size: paramsObject?.size || 10,
-      page: paramsObject?.page || 1,
-    }),
-  );
+  const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_HF, {
+    ...apiParams,
+    type: 'HF',
+    level: paramsObject.riskLevel == 'ALL' ? undefined : paramsObject.riskLevel ? paramsObject.riskLevel : undefined,
+    size: paramsObject?.size || 10,
+    page: paramsObject?.page || 1,
+  });
 
   const tabs = riskLevels.map((level) => {
     const count = level.id == 'ALL' ? 0 : paramsObject.riskLevel == level?.id ? data?.page?.totalElements : 0;

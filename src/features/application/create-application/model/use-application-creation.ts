@@ -38,19 +38,17 @@ export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }:
     mutationFn: (data: FormData) => createPdf(data, pdfEndpoint),
     onSuccess: (response) => {
       if (!response.success || !response.data) {
-        handleError('PDF yaratishda xatolik');
+        handleError('PDF yaratishda xatolik!');
         setIsPdfLoading(false);
         return;
       }
 
       try {
         if (!response.success || !response.data) {
-          throw new Error('Hujjat URL ini olishda xatolik');
+          throw new Error('Hujjat URL ini olishda xatolik!');
         }
 
         setDocumentUrl(response.data.data);
-      } catch (_error) {
-        toast.error('Hujjat bilan ishlashda xatolik');
       } finally {
         setIsPdfLoading(false);
       }

@@ -12,8 +12,6 @@ export const registerExportControls = (editor: any): void => {
         type: 'info',
         timeout: 2000,
       });
-      // Implementation would require external library
-      console.log('Export as DOCX functionality needs implementation');
     },
   });
 
@@ -27,8 +25,6 @@ export const registerExportControls = (editor: any): void => {
         type: 'info',
         timeout: 2000,
       });
-      // Implementation would require external library
-      console.log('Export as PDF functionality needs implementation');
     },
   });
 };

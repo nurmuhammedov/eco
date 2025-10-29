@@ -17,6 +17,7 @@ import { SignatureKey } from '@/shared/types/signature';
 import { Loader2, Signature } from 'lucide-react';
 import { useState } from 'react';
 import { SignatureSelect } from '../index';
+import { apiConfig } from '@/shared/api/constants';
 
 interface SignatureModalProps {
   isLoading: boolean;
@@ -50,25 +51,21 @@ export const SignatureModal = ({
       onConfirm(selectedCertificate);
     }
 
-    // if (apiConfig.oneIdClientId == 'test_cirns_uz') {
-    //   submitApplicationMetaData('singString');
-    // } else {
-    //   await signDocument({
-    //     Client,
-    //     documentUrl,
-    //     signature: selectedCertificate,
-    //     onSuccess: (result) => submitApplicationMetaData(result),
-    //   });
-    // }
+    if (apiConfig.oneIdClientId == 'test_cirns_uz') {
+      submitApplicationMetaData('testServer');
+    } else {
+      await signDocument({
+        Client,
+        documentUrl,
+        signature: selectedCertificate,
+        onSuccess: (result) => submitApplicationMetaData(result),
+      });
+    }
 
     await signDocument({
       Client,
       documentUrl,
       signature: selectedCertificate,
-      onSuccess: (result) => {
-        console.log(result);
-        submitApplicationMetaData(result);
-      },
     });
     setSelectedCertificate(null);
     setOpen(false);
@@ -84,12 +81,19 @@ export const SignatureModal = ({
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>
-        <Button loading={isLoading} disabled={isLoadingSignature}>
+      {apiConfig.oneIdClientId == 'test_cirns_uz' ? (
+        <Button loading={isLoading} onClick={handleConfirm} disabled={isLoading}>
           <Signature className="size-4" />
           Imzolash
         </Button>
-      </AlertDialogTrigger>
+      ) : (
+        <AlertDialogTrigger asChild>
+          <Button loading={isLoading} disabled={isLoadingSignature}>
+            <Signature className="size-4" />
+            Imzolash
+          </Button>
+        </AlertDialogTrigger>
+      )}
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
           <AlertDialogTitle>Elektron kalitni tanlang</AlertDialogTitle>

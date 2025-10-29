@@ -2,7 +2,6 @@ import { ApplicationTypeEnum, useApplicationFactory } from '@/entities/create-ap
 import { AppealFormSkeleton, ApplicationModal } from '@/features/application/create-application';
 import { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 import { getFormComponentByType, isValidApplicationType } from '../model/store';
 
 export const CreateApplicationForm = () => {
@@ -18,7 +17,6 @@ export const CreateApplicationForm = () => {
     submitApplicationMetaData,
   } = useApplicationFactory({
     applicationType: type!,
-    onError: (error) => toast(error, { richColors: true }),
   });
 
   const handleFormSubmit = (data: any) => {

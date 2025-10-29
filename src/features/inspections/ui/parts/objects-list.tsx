@@ -5,6 +5,7 @@ import { Button } from '@/shared/components/ui/button.tsx';
 import { Eye } from 'lucide-react';
 import { DataTable } from '@/shared/components/common/data-table';
 import { useNavigate } from 'react-router-dom';
+import { formatDate } from 'date-fns';
 
 const ObjectsList = () => {
   const { paramsObject } = useCustomSearchParams();
@@ -13,20 +14,25 @@ const ObjectsList = () => {
 
   const columns: ColumnDef<any>[] = [
     {
-      header: 'Nomi',
-      accessorKey: 'name',
+      header: 'Xavf tahlil davri',
+      cell: ({ row }) =>
+        `${formatDate(row.original.startDate, 'dd.MM.yyyy')} - ${formatDate(row.original.endDate, 'dd.MM.yyyy')}`,
     },
     {
-      header: 'Manzil',
-      accessorKey: 'address',
+      header: 'Nomi',
+      accessorKey: 'name',
     },
     {
       header: 'Ro‘yxatga olish raqami',
       accessorKey: 'registryNumber',
     },
     {
-      header: ' Xavfni tahlil qilish bali',
-      accessorKey: 'score',
+      header: 'Manzil',
+      accessorKey: 'address',
+    },
+    {
+      header: 'Jami bali',
+      accessorKey: 'totalScore',
     },
     {
       id: 'actions',

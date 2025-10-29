@@ -73,7 +73,6 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
                       return data?.data?.data;
                     })
                     .then((data) => {
-                      console.log(data?.districtId);
                       form.setValue('customerLegalName', data?.legalName);
                       form.setValue('customerLegalAddress', data?.legalAddress);
                       form.setValue('address', data?.address);

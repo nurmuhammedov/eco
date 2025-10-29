@@ -40,10 +40,6 @@ export const useAddEmployeeForm = () => {
     name: 'employeeList',
   });
 
-  console.log(form?.formState.errors, 'errors');
-  console.log(form?.watch('employeeList'), 'employeeList');
-  console.log(form?.watch('hfId'), 'hfId');
-
   const { data: hfOptions, isLoading: isLoadingHf } = useQuery<OptionItem<string>[]>({
     queryKey: ['hf-select'],
     queryFn: () => CommonService.getData(API_ENDPOINTS.HF_SELECT),
@@ -55,7 +51,6 @@ export const useAddEmployeeForm = () => {
       toast.success("Xodimlar muvaffaqiyatli qo'shildi");
       navigate('/attestations');
     },
-    onError: () => toast.error('Xatolik yuz berdi'),
   });
 
   const employeeLevelOptions = useTranslatedObject(EmployeeLevel, 'attestation');

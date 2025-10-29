@@ -37,7 +37,7 @@ const RiskAnalysisDetail = () => {
   const { data: filesToFix } = useFilesToFix();
   const { user } = useAuth();
 
-  const { data: tableData = [], isLoading: isTableDataLoading } = usePaginatedData<any>(`/risk-analyses/belongings`, {
+  const { data: tableData, isLoading: isTableDataLoading } = usePaginatedData<any>(`/risk-analyses/belongings`, {
     ...rest,
     belongId: objectId,
     page: rest.page || 1,
@@ -49,7 +49,7 @@ const RiskAnalysisDetail = () => {
   }
 
   const currentBelongId = objectId; // Misol uchun
-  const currentIntervalId = user.interval.id; // Misol uchun
+  const currentIntervalId = user?.interval.id; // Misol uchun
 
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[]);
 
@@ -100,10 +100,20 @@ const RiskAnalysisDetail = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center gap-2 mb-4">
         <GoBack
           title={`Tashkilot: ${data?.legalName || data?.ownerName || ''} ${currentTin ? `(${currentTin})` : ''}`}
         />
+        {tableData?.content && tableData?.content?.length > 0 && (
+          <div className="flex justify-end items-center gap-2">
+            <div className="text-base font-normal truncate text-neutral-850">
+              Xavf tahlili natijasi: <span className="font-semibold">{tableData?.content?.[0]?.totalScore || 0}</span>
+            </div>
+            <div className="text-base font-normal truncate text-neutral-850">
+              Hozirgi holati: <span className="font-semibold">{tableData?.content?.[0]?.totalScore || 0}</span>
+            </div>
+          </div>
+        )}
       </div>
       <DetailCardAccordion
         defaultValue={[

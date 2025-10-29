@@ -1,9 +1,7 @@
-import { toast } from 'sonner';
 import { ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import { CommitteeStaffResponse, type FilterCommitteeStaffDTO } from './committee-staffs.types';
 
-// DTO'larni esa .schema faylidan import qilamiz
 import type { CreateCommitteeStaffDTO, UpdateCommitteeStaffDTO } from './committee-staffs.schema';
 
 export const committeeStaffAPI = {
@@ -17,17 +15,16 @@ export const committeeStaffAPI = {
     return data.data;
   },
   create: async (district: CreateCommitteeStaffDTO) => {
-    const response = await apiClient.post<CommitteeStaffResponse, CreateCommitteeStaffDTO>(
+    // if (!response.success && response.errors) {
+    //   toast.error(Object.values(response.errors).join(', '), {
+    //     richColors: true,
+    //   });
+    // }
+
+    return await apiClient.post<CommitteeStaffResponse, CreateCommitteeStaffDTO>(
       API_ENDPOINTS.COMMITTEE_USERS,
       district,
     );
-    if (!response.success && response.errors) {
-      toast.error(Object.values(response.errors).join(', '), {
-        richColors: true,
-      });
-    }
-
-    return response;
   },
   update: async (district: UpdateCommitteeStaffDTO) => {
     const response = await apiClient.put<UpdateCommitteeStaffDTO>(

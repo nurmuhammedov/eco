@@ -13,7 +13,7 @@ const RiskAnalysisInspectorInfo: FC<Props> = ({ data }) => {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const currentIntervalId = searchParams.get('intervalId') || '';
-  const isValidInterval = currentIntervalId == user?.interval?.id;
+  const isValidInterval = currentIntervalId == user?.interval?.id?.toString();
 
   if (!data) {
     return <div className={'py-5 px-5'}>Ma'lumot mavjud emas</div>;

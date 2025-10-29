@@ -28,14 +28,13 @@ export function useDocumentSigning() {
 
 export const signDocumentWithMetadata = async ({ Client, signature, documentUrl = '' }: SignDocumentParams) => {
   try {
-    // 1. Load certificate key
     if (!signature) {
-      toast.error('Imzolash kaliti topilmadi');
+      toast.error('Imzolash kaliti topilmadi!');
       return false;
     }
 
     const keyResponse = await Client.loadKey(signature as unknown as SignatureKey).catch(() => {
-      toast.error("Kiritilgan parolni noto'g'ri!", { richColors: true });
+      toast.error('Kiritilgan parol noto‘g‘ri!', { richColors: true });
     });
     const keyId = keyResponse?.id;
 
@@ -54,7 +53,7 @@ export const signDocumentWithMetadata = async ({ Client, signature, documentUrl 
     // 3. Create a new PKCS7
     const pkcs7Signature = await Client.createPkcs7(keyId, documentBase64);
     if (!pkcs7Signature) {
-      toast.error('Hujjat imzolashda xatolik');
+      toast.error('Hujjat imzolashda xatolik!');
       return false;
     }
 
@@ -63,7 +62,7 @@ export const signDocumentWithMetadata = async ({ Client, signature, documentUrl 
     const { pkcs7b64, status } = timestampResponse;
 
     if (status !== '1' || !pkcs7b64) {
-      toast.error('Vaqt belgisi (timestamp) olishda xatolik');
+      toast.error('Vaqt belgisi olishda xatolik!');
       return false;
     }
 
@@ -71,14 +70,14 @@ export const signDocumentWithMetadata = async ({ Client, signature, documentUrl 
     const signatureResponse = await apiClient.post('/e-imzo/attached', { sign: pkcs7b64 });
 
     if (signatureResponse.status !== 200) {
-      toast.error('Imzo serverga yuborishda xatolik');
+      toast.error('Imzo serverda yuborishda xatolik!');
       return false;
     }
 
     return pkcs7b64;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.log(90978978, error);
-    toast.error("Imzolash bilan bog'liq xatolik");
+    toast.error('Imzolash bilan bog‘liq xatolik!');
     return false;
   }
 };

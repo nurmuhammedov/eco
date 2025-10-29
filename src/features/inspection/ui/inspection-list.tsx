@@ -9,6 +9,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Eye } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserRoles } from '@/entities/user';
 
 export const InspectionList: React.FC = () => {
   const navigate = useNavigate();
@@ -17,7 +18,11 @@ export const InspectionList: React.FC = () => {
   const { data: inspections, isLoading } = useInspections({
     ...paramsObject,
     intervalId: paramsObject?.intervalId || user?.interval?.id,
-    status: paramsObject?.status || InspectionStatus.NEW,
+    status: paramsObject?.status
+      ? paramsObject?.status
+      : user?.role == UserRoles.INSPECTOR
+        ? InspectionStatus.IN_PROCESS
+        : InspectionStatus.NEW,
   });
   const handleView = (row: Inspection) => {
     navigate(

@@ -123,9 +123,6 @@ function InputFileComponent<T extends FieldValues>({
       const typeMatch = match ? match[1] : '';
       const isImage = typeMatch === 'image';
 
-      console.log(typeMatch, 'typeMatch');
-      console.log(isImage, 'isImage');
-
       if (acceptTypes.includes(FileTypes.IMAGE) && isImage) {
         return true;
       }
@@ -190,17 +187,13 @@ function InputFileComponent<T extends FieldValues>({
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
 
-      console.log(files, 'files');
-      console.log(accept, 'acceptTypes');
-
       if (files && files.length > 0) {
-        const file = files[0]; // Faqat birinchi faylni olish
+        const file = files[0];
 
         if (!validateFile(file)) {
           return;
         }
 
-        // Fayl uchun Blob URL yaratish
         const blobUrl = URL.createObjectURL(file);
 
         const fileInfo = {

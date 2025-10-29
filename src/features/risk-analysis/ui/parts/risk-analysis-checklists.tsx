@@ -13,7 +13,7 @@ const RiskAnalysisChecklists = () => {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const currentIntervalId = searchParams.get('intervalId') || '';
-  const isValidInterval = currentIntervalId == user?.interval?.id;
+  const isValidInterval = currentIntervalId == user?.interval?.id?.toString();
   const isCanAction = isValidInterval && user?.role === UserRoles.LEGAL;
   const { mutate: deleteCheckList, isPending } = useDeleteChecklist();
   return (

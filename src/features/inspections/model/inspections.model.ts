@@ -1,8 +1,8 @@
 import { apiClient } from '@/shared/api';
 
 export const inspectionsApi = {
-  getObjectList: async (params: any, type: any) => {
-    const { data } = await apiClient.get<any>(`/risk-assessments/${type}`, params);
+  getObjectList: async (params: any, id: any) => {
+    const { data } = await apiClient.get<any>(`/risk-analyses/by-inspection/${id}`, params);
     return data.data;
   },
   getInspectionDetail: async (id: any) => {

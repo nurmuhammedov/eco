@@ -10,6 +10,7 @@ import {
   publicRoutes,
   specialComponents,
 } from '@/shared/config/routes';
+import { useAuth } from '@/shared/hooks/use-auth';
 
 const withSuspense = (Component: React.ComponentType) => (
   <Suspense fallback={<Loader isVisible />}>
@@ -20,6 +21,7 @@ const withSuspense = (Component: React.ComponentType) => (
 export const createProtectedRoute = (
   routeConfig: RouteConfig,
   AuthGuard: React.ComponentType<AuthGuardProps>,
+  className?: string,
 ): RouteObject => {
   const { component: Component, roles, path, children } = routeConfig;
 
@@ -27,7 +29,7 @@ export const createProtectedRoute = (
     path,
     element: (
       <AuthGuard allowedRoles={roles}>
-        <RouterErrorBoundary>{withSuspense(Component)}</RouterErrorBoundary>
+        <RouterErrorBoundary className={className}>{withSuspense(Component)}</RouterErrorBoundary>
       </AuthGuard>
     ),
   };
@@ -53,8 +55,11 @@ export const createAppRouter = (
   AuthLayout: LazyExoticComponent<React.ComponentType>,
   AuthGuard: React.ComponentType<AuthGuardProps>,
 ) => {
+  const { isAuthenticated } = useAuth();
   const protectedRoutes = appRoutes.map((route) => createProtectedRoute(route, AuthGuard));
-  const authLayoutRoutes = authRoutes.map(createAuthRoute);
+  const authLayoutRoutes = authRoutes.map((route: RouteConfig) =>
+    createProtectedRoute(route, AuthGuard, 'w-1/2 flex flex-col items-center justify-center gap-6'),
+  );
   const standalonePublicRoutes = publicRoutes.map(createAuthRoute);
 
   const routerConfig: RouteObject[] = [
@@ -62,15 +67,20 @@ export const createAppRouter = (
       path: '/',
       element: withSuspense(AppLayout),
       children: [
-        {
-          index: true,
-          element: <Navigate to="/applications" replace />,
-        },
+        ...(isAuthenticated
+          ? [
+              {
+                index: true,
+                element: <Navigate to="/applications" replace />,
+              },
+            ]
+          : [
+              {
+                index: true,
+                element: <Navigate to="/auth/login" replace />,
+              },
+            ]),
         ...protectedRoutes,
-        {
-          path: 'unauthorized',
-          element: withSuspense(specialComponents.unauthorized),
-        },
       ],
     },
     {
@@ -78,13 +88,21 @@ export const createAppRouter = (
       element: withSuspense(AuthLayout),
       children: authLayoutRoutes,
     },
-
     ...standalonePublicRoutes,
-
-    {
-      path: '*',
-      element: withSuspense(specialComponents.notFound),
-    },
+    ...(isAuthenticated
+      ? [
+          {
+            path: '*',
+            element: withSuspense(specialComponents.notFound),
+          },
+        ]
+      : [
+          {
+            path: '*',
+            element: withSuspense(AuthLayout),
+            children: authLayoutRoutes,
+          },
+        ]),
   ];
 
   return createBrowserRouter(routerConfig);

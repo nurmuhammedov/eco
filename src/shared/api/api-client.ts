@@ -1,37 +1,15 @@
 import type { ApiResponse, ResponseData } from '@/shared/types/api';
 import { AxiosError, AxiosProgressEvent } from 'axios';
-import { toast } from 'sonner';
 import { axiosInstance } from './axios-instance';
 
-/**
- * Available HTTP methods
- */
 type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
-/**
- * Type for request parameters with proper typing
- */
 type RequestParams = Record<string, string | number | boolean | null | undefined | object>;
 
-/**
- * Type for request headers
- */
 type RequestHeaders = Record<string, string>;
 
-/**
- * Progress callback type
- */
 type ProgressCallback = (progressEvent: AxiosProgressEvent) => void;
 
-/**
- * Core api request function
- * @param method - HTTP method to use
- * @param url - Endpoint URL
- * @param payload - Request data (query params or body)
- * @param headers - Custom headers to include in the request
- * @param onUploadProgress - Upload progress callback
- * @param usePagination - Whether to expect paginated response
- */
 async function apiRequest<T>(
   method: HttpMethod,
   url: string,
@@ -46,11 +24,10 @@ async function apiRequest<T>(
       method,
       url: `/api/v1${url}`,
       headers,
-      onUploadProgress, // Axios konfiguratsiyasining asosiy parametri sifatida
+      onUploadProgress,
       ...(method === 'get' || method === 'delete' ? { params: payload as RequestParams } : { data: payload as object }),
     };
 
-    // Pagination uchun so'rov yuborish
     if (usePagination) {
       const response = await axiosInstance.request<ApiResponse<ResponseData<T>>>(requestConfig);
 
@@ -84,27 +61,19 @@ async function apiRequest<T>(
       errors?: Record<string, string>;
     }>;
 
-    if (axiosError.response?.data?.message) {
-      toast.error(axiosError.response?.data?.message, { richColors: true });
-    }
-
-    if (axiosError?.response?.status === 401) {
-      toast.error("Avtorizatsiyadan o'tmagan", { richColors: true });
-    }
-
     return {
       data: null,
       success: false,
       status: axiosError.response?.status || 500,
       errors: axiosError.response?.data?.errors || {},
-      message: axiosError.response?.data?.message || axiosError.message || 'An unknown error occurred',
+      message:
+        axiosError.response?.data?.message ||
+        axiosError.message ||
+        'Serverda nomaʼlum xatolik yuz berdi. Xatolik haqida xabar bering!',
     };
   }
 }
 
-/**
- * api Client with strongly typed methods
- */
 export const apiClient = {
   get: <T>(
     url: string,

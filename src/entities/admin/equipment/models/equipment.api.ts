@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import { ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import {
@@ -24,17 +23,13 @@ export const equipmentAPI = {
     return data.data;
   },
   create: async (district: CreateEquipmentDTO) => {
-    const response = await apiClient.post<EquipmentResponse, CreateEquipmentDTO>(
-      API_ENDPOINTS.CHILD_EQUIPMENTS,
-      district,
-    );
-    if (!response.success && response.errors) {
-      toast.error(Object.values(response.errors).join(', '), {
-        richColors: true,
-      });
-    }
+    // if (!response.success && response.errors) {
+    //   toast.error(Object.values(response.errors).join(', '), {
+    //     richColors: true,
+    //   });
+    // }
 
-    return response;
+    return await apiClient.post<EquipmentResponse, CreateEquipmentDTO>(API_ENDPOINTS.CHILD_EQUIPMENTS, district);
   },
   update: async (district: UpdateEquipmentDTO) => {
     const response = await apiClient.put<UpdateEquipmentDTO>(

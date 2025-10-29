@@ -108,7 +108,6 @@ function AdvancedFiltersPage() {
       preserveParams: true,
       onFiltersChange: (updatedFilters) => {
         console.log("Filtrlar o'zgardi:", updatedFilters);
-        // Ma'lumotlarni yuklash yoki analitika yuborish
       },
       debug: process.env.NODE_ENV === 'development',
     },

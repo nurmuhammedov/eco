@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import { ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import { CreateDistrictDTO, DistrictResponse, type FilterDistrictDTO, UpdateDistrictDTO } from './district.types';
@@ -19,14 +18,13 @@ export const districtAPI = {
     return data.data;
   },
   createDistrict: async (district: CreateDistrictDTO) => {
-    const response = await apiClient.post<DistrictResponse, CreateDistrictDTO>(API_ENDPOINTS.DISTRICTS, district);
-    if (!response.success && response.errors) {
-      toast.error(Object.values(response.errors).join(', '), {
-        richColors: true,
-      });
-    }
+    // if (!response.success && response.errors) {
+    //   toast.error(Object.values(response.errors).join(', '), {
+    //     richColors: true,
+    //   });
+    // }
 
-    return response;
+    return await apiClient.post<DistrictResponse, CreateDistrictDTO>(API_ENDPOINTS.DISTRICTS, district);
   },
   updateDistrict: async (district: UpdateDistrictDTO) => {
     const response = await apiClient.put<UpdateDistrictDTO>(`${API_ENDPOINTS.DISTRICTS}/${district.id}`, district);

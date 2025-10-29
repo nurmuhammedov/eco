@@ -11,12 +11,12 @@ export function useUpdateApplicationFile() {
   return useMutation({
     mutationFn: (payload: { appealId?: string; fieldName: string; filePath: string }) =>
       applicationDetailApi.uploadFile(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
+    onSuccess: async () => {
       toast.success('Success');
+      await queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Faylni yangilashda noma'lum xatolik");
+      toast.error(error.message || 'Faylni yangilashda nomaʼlum xatolik');
     },
   });
 }

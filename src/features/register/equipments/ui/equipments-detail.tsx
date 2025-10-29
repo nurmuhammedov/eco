@@ -29,21 +29,13 @@ const EquipmentsDetail = () => {
   const { data: legalData } = useLegalApplicantInfo(data?.ownerIdentity);
 
   useEffect(() => {
-    console.log('useEffect ishga tushdi, data mavjud:', !!data);
     const canvas = document.getElementById('pdf-qr-canvas') as HTMLCanvasElement;
-    console.log('Canvas elementi topildimi?:', canvas); // ENG MUHIM QATOR
     if (canvas) {
       const dataUrl = canvas.toDataURL();
       setQrCodeDataUrl(dataUrl);
-      console.log("QR-kod Data URL o'rnatildi.");
     }
   }, [data]);
 
-  /*  const { data: regNumber } = useDetail<any>(
-    '/equipments/registry-number',
-    data?.registryNumber,
-    !!data?.registryNumber,
-  ); */
   if (isLoading || !data) {
     return null;
   }

@@ -52,18 +52,10 @@ export async function convertPdfToBase64(pdfUrl: string): Promise<string | null>
 
       if (axiosError.response) {
         toast.error(axiosError.message);
-        // Server javob qaytardi, lekin status kod 200 emas
-        console.error(`Server xatosi (${axiosError.response.status}): ${axiosError.message}`);
       } else if (axiosError.request) {
-        // So'rov yuborildi, lekin javob qaytmadi
         toast.error(axiosError.message);
-        console.error(`Tarmoq xatosi: ${axiosError.message}`);
-      } else {
-        // So'rovni o'rnatishda xatolik
-        console.error(`So'rovni yaratishda xatolik: ${axiosError.message}`);
       }
     } else {
-      // Boshqa turdagi xatoliklar
       console.error(`PDF konvertatsiya xatoligi:`, error);
     }
 

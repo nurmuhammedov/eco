@@ -12,11 +12,11 @@ export const useCreateChecklistTemplate = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: CreateChecklistTemplateDTO) => checklistTemplateAPI.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: checklistTemplateKeys.list('checklist-templates') });
+    onSuccess: async () => {
       toast.success("Cheklist muvaffaqiyatli qo'shildi");
+      await queryClient.invalidateQueries({ queryKey: checklistTemplateKeys.list('checklist-templates') });
     },
-    onError: (error) => toast.error(`Xatolik: ${error.message}`),
+    // onError: (error) => toast.error(`Xatolik: ${error.message}`),
   });
 };
 
@@ -25,11 +25,11 @@ export const useUpdateChecklistTemplate = () => {
   return useMutation({
     mutationFn: (data: UpdateChecklistTemplateDTO) =>
       checklistTemplateAPI.update({ active: data?.active, id: data?.id } as unknown as UpdateChecklistTemplateDTO),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: checklistTemplateKeys.list('checklist-templates') });
+    onSuccess: async () => {
       toast.success('Cheklist muvaffaqiyatli yangilandi');
+      await queryClient.invalidateQueries({ queryKey: checklistTemplateKeys.list('checklist-templates') });
     },
-    onError: (error) => toast.error(`Xatolik: ${error.message}`),
+    // onError: (error) => toast.error(`Xatolik: ${error.message}`),
   });
 };
 
@@ -37,10 +37,10 @@ export const useDeleteChecklistTemplate = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => checklistTemplateAPI.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: checklistTemplateKeys.list('checklist-templates') });
+    onSuccess: async () => {
       toast.success("Cheklist o'chirildi");
+      await queryClient.invalidateQueries({ queryKey: checklistTemplateKeys.list('checklist-templates') });
     },
-    onError: (error) => toast.error(`Xatolik: ${error.message}`),
+    // onError: (error) => toast.error(`Xatolik: ${error.message}`),
   });
 };

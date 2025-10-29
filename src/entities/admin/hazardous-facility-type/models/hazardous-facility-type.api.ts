@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import { ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import {
@@ -24,17 +23,16 @@ export const hazardousFacilityTypeAPI = {
     return data.data;
   },
   create: async (data: CreateHazardousFacilityTypeDTO) => {
-    const response = await apiClient.post<HazardousFacilityTypeResponse, CreateHazardousFacilityTypeDTO>(
+    // if (!response.success && response.errors) {
+    //   toast.error(Object.values(response.errors).join(', '), {
+    //     richColors: true,
+    //   });
+    // }
+
+    return await apiClient.post<HazardousFacilityTypeResponse, CreateHazardousFacilityTypeDTO>(
       API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES,
       data,
     );
-    if (!response.success && response.errors) {
-      toast.error(Object.values(response.errors).join(', '), {
-        richColors: true,
-      });
-    }
-
-    return response;
   },
   update: async (data: UpdateHazardousFacilityTypeDTO) => {
     const response = await apiClient.patch<UpdateHazardousFacilityTypeDTO>(

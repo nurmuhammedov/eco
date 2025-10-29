@@ -12,15 +12,14 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { AssignInspectorButton } from '../../ui/assign-inspector-button';
-import { cleanParams } from '@/shared/lib';
 
 export const XichoList = () => {
-  const { t } = useTranslation('common');
   const currentRole = useCurrentRole();
   const isRegional = currentRole === UserRoles.REGIONAL;
   const { user } = useAuth();
   const navigate = useNavigate();
   const { paramsObject, addParams } = useCustomSearchParams();
+  const { t } = useTranslation('common');
 
   const activeAssignedStatus = (paramsObject.assignedStatus as AssignedStatusTab) || AssignedStatusTab.NOT_ASSIGNED;
 
@@ -41,16 +40,13 @@ export const XichoList = () => {
     return params;
   }, [isRegional, activeAssignedStatus, user, paramsObject.intervalId]);
 
-  const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(
-    API_ENDPOINTS.RISK_ASSESSMENT_HF,
-    cleanParams({
-      ...apiParams,
-      type: 'HF',
-      level: paramsObject.riskLevel == 'ALL' ? undefined : paramsObject.riskLevel ? paramsObject.riskLevel : undefined,
-      size: paramsObject?.size || 10,
-      page: paramsObject?.page || 1,
-    }),
-  );
+  const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_HF, {
+    ...apiParams,
+    type: 'HF',
+    level: paramsObject.riskLevel == 'ALL' ? undefined : paramsObject.riskLevel ? paramsObject.riskLevel : undefined,
+    size: paramsObject?.size || 10,
+    page: paramsObject?.page || 1,
+  });
 
   const handleView = (row: RiskAnalysisItem) => {
     const intervalId = paramsObject.intervalId || user?.interval?.id;

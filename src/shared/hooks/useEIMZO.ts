@@ -16,12 +16,12 @@ export interface UseApplicationCreationProps {
 }
 
 export function useEIMZO({
-                           pdfEndpoint,
-                           submitEndpoint,
-                           onSuccessNavigateTo,
-                           successMessage,
-                           queryKey
-                         }: UseApplicationCreationProps) {
+  pdfEndpoint,
+  submitEndpoint,
+  onSuccessNavigateTo,
+  successMessage,
+  queryKey,
+}: UseApplicationCreationProps) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,19 +42,19 @@ export function useEIMZO({
     onSuccess: (response) => {
       setIsPdfLoading(false);
       if (!response.success || !response.data || !response.data.data) {
-        handleError(response.message || 'PDF yaratishda xatolik');
+        handleError(response.message || 'PDF yaratishda xatolik!');
         return;
       }
       try {
         setDocumentUrl(response.data.data);
       } catch (_error) {
-        handleError('Hujjat URL ini olishda xatolik');
+        handleError('Hujjat URL ini olishda xatolik!');
       }
     },
     onError: (error: Error) => {
       setIsPdfLoading(false);
-      handleError(error.message || 'PDF yaratishda noma’lum server xatoligi');
-    }
+      handleError(error.message || 'PDF yaratishda serverda nomaʼlum xatolik yuz berdi!');
+    },
   });
 
   const handleCreateApplication = useCallback(
@@ -65,7 +65,7 @@ export function useEIMZO({
       setError(null);
       createPdfMutation.mutate(data);
     },
-    [createPdfMutation]
+    [createPdfMutation],
   );
 
   const resetState = useCallback(() => {
@@ -89,14 +89,9 @@ export function useEIMZO({
         }
         await queryClient.invalidateQueries({ queryKey: [queryKey] });
         toast.success(successMessage || 'Success', { richColors: true });
-      } else {
-        handleError(response?.message || 'Some Error');
       }
     },
-    onError: (error: Error) => {
-      handleError(error.message || 'Some Error');
-    },
-    mutationKey: ['submit-application']
+    mutationKey: ['submit-application'],
   });
 
   const isLoading = isPdfLoading || isLoadingMetaData;
@@ -110,6 +105,6 @@ export function useEIMZO({
     isPdfLoading,
     handleCloseModal,
     handleCreateApplication,
-    submitApplicationMetaData
+    submitApplicationMetaData,
   };
 }

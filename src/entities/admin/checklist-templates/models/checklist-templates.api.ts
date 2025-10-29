@@ -1,6 +1,5 @@
 // src/entities/admin/checklist-templates/models/checklist-templates.api.ts
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
-import { toast } from 'sonner';
 import {
   ChecklistTemplate,
   CreateChecklistTemplateDTO,
@@ -18,14 +17,10 @@ export const checklistTemplateAPI = {
   },
 
   create: async (data: CreateChecklistTemplateDTO) => {
-    const response = await apiClient.post<ChecklistTemplate, CreateChecklistTemplateDTO>(
-      API_ENDPOINTS.CHECKLIST_TEMPLATES,
-      data,
-    );
-    if (!response.success && response.errors) {
-      toast.error(Object.values(response.errors).join(', '), { richColors: true });
-    }
-    return response;
+    // if (!response.success && response.errors) {
+    //   toast.error(Object.values(response.errors).join(', '), { richColors: true });
+    // }
+    return await apiClient.post<ChecklistTemplate, CreateChecklistTemplateDTO>(API_ENDPOINTS.CHECKLIST_TEMPLATES, data);
   },
 
   update: (data: UpdateChecklistTemplateDTO) => {

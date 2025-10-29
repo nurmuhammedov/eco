@@ -19,7 +19,7 @@ export const InspectionWidget: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams();
   const { data: intervalOptionsData, isLoading: isLoadingIntervals } = useRiskAnalysisIntervalsQuery();
 
-  const isInspector = user.role == UserRoles.INSPECTOR;
+  const isInspector = user?.role == UserRoles.INSPECTOR;
   const activeTab = paramsObject.status;
 
   const handleTabChange = (value: string) => {
@@ -61,9 +61,6 @@ export const InspectionWidget: React.FC = () => {
             <TabsTrigger value={InspectionStatus.IN_PROCESS}>Tekshiruv rejalashtirilgan</TabsTrigger>
             <TabsTrigger value={InspectionStatus.CONDUCTED}>Tekshiruv o‘tkazilgan</TabsTrigger>
           </TabsList>
-          <TabsContent value={InspectionStatus.NEW}>
-            <InspectionList />
-          </TabsContent>
           <TabsContent value={InspectionStatus.IN_PROCESS}>
             <InspectionList />
           </TabsContent>

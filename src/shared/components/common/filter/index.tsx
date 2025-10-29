@@ -115,7 +115,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
     if (data.endDate) {
       formattedData.endDate = format(data.endDate, 'yyyy-MM-dd');
     }
-    if (data.intervalId && data.intervalId == user?.interval?.id) {
+    if (data.intervalId && data.intervalId?.toString() == user?.interval?.id?.toString()) {
       delete formattedData.intervalId;
     }
     addParams(formattedData, 'page', data.intervalId == user?.interval?.id ? 'intervalId' : '');

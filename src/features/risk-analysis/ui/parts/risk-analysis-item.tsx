@@ -22,6 +22,7 @@ interface Props {
   number: string;
   data: Indicator;
   displayIndex: number;
+  info?: boolean;
 }
 
 const schema = z
@@ -52,14 +53,14 @@ const statusMap: Record<string, string> = {
   NOT_EXPIRY_DATE: 'Faylning amal qilish muddati kiritilmagan',
 };
 
-const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
+const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex, info = false }) => {
   const [searchParams] = useSearchParams();
   const currentCat = searchParams.get('type') || '';
   const currentInervalId = searchParams.get('intervalId') || '';
   const paragraphName = `PARAGRAPH_${currentCat?.toUpperCase()}_${number}`;
   const { mutate } = useRejectRiskItem();
   const { user } = useAuth();
-  const isValidInterval = currentInervalId == user?.interval?.id;
+  const isValidInterval = currentInervalId == user?.interval?.id?.toString();
   const isChairman = user?.role === UserRoles.CHAIRMAN;
   const isInspector = user?.role === UserRoles.INSPECTOR;
   const isLegal = user?.role === UserRoles.LEGAL;
@@ -125,48 +126,19 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
           {statusText && <span className={clsx('text-sm font-semibold mt-1 italic')}>* {statusText}</span>}
         </div>
 
-        <Form {...form}>
-          <div className="flex-shrink-0 flex gap-3  w-full max-w-[600px] items-center">
-            <div className="flex gap-1 flex-shrink-0">
-              {isInspector && isValidInterval && (
-                <>
-                  <Button
-                    onClick={() => {
-                      if (confirm('Cancel points?')) {
-                        cancelPoints(data.id);
-                      }
-                    }}
-                    disabled={!isInspector || isConfirmed || !data?.filePath}
-                    type="button"
-                    className="flex-shrink-0"
-                    variant={isConfirmed ? 'success' : 'successOutline'}
-                    size="icon"
-                  >
-                    <Check />
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      form.setValue('isReject', !isReject);
-                    }}
-                    disabled={!!data || !isInspector}
-                    type="button"
-                    className="flex-shrink-0"
-                    variant={isReject || !!data ? 'destructive' : 'destructiveOutline'}
-                    size="icon"
-                  >
-                    <Minus />
-                  </Button>
-                </>
-              )}
-              {!isChairman && (!isInspector || !isValidInterval) && (
-                <>
-                  {!data && (
-                    <Button type="button" className="flex-shrink-0" variant={'successOutline'} size="icon">
-                      <Check />
-                    </Button>
-                  )}
-                  {!!data && isConfirmed && (
+        {!info && (
+          <Form {...form}>
+            <div className="flex-shrink-0 flex gap-3  w-full max-w-[600px] items-center">
+              <div className="flex gap-1 flex-shrink-0">
+                {isInspector && isValidInterval && (
+                  <>
                     <Button
+                      onClick={() => {
+                        if (confirm('Cancel points?')) {
+                          cancelPoints(data.id);
+                        }
+                      }}
+                      disabled={!isInspector || isConfirmed || !data?.filePath}
                       type="button"
                       className="flex-shrink-0"
                       variant={isConfirmed ? 'success' : 'successOutline'}
@@ -174,76 +146,107 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
                     >
                       <Check />
                     </Button>
-                  )}
-                  {!!data && !isConfirmed && (
-                    <Button type="button" className="flex-shrink-0" variant={'destructive'} size="icon">
+                    <Button
+                      onClick={() => {
+                        form.setValue('isReject', !isReject);
+                      }}
+                      disabled={!!data || !isInspector}
+                      type="button"
+                      className="flex-shrink-0"
+                      variant={isReject || !!data ? 'destructive' : 'destructiveOutline'}
+                      size="icon"
+                    >
                       <Minus />
                     </Button>
-                  )}
-                </>
-              )}
-            </div>
-            {!isChairman && (
-              <div className="relative w-full">
-                <FormField
-                  defaultValue={data?.description ? data?.description : ''}
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea
-                          disabled={!isReject || !!data}
-                          className="resize-none w-full"
-                          rows={2}
-                          placeholder="Boshqarma boshlig‘i rezolyutsiyasi"
-                          {...field}
-                        ></Textarea>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {isReject && !data && (
-                  <Button
-                    onClick={form.handleSubmit(onSubmit)}
-                    className="absolute top-6 right-2 opacity-80 hover:opacity-100"
-                    size="sm"
-                    variant="outline"
-                  >
-                    Yuborish
-                  </Button>
+                  </>
+                )}
+                {!isChairman && (!isInspector || !isValidInterval) && (
+                  <>
+                    {!data && (
+                      <Button type="button" className="flex-shrink-0" variant={'successOutline'} size="icon">
+                        <Check />
+                      </Button>
+                    )}
+                    {!!data && isConfirmed && (
+                      <Button
+                        type="button"
+                        className="flex-shrink-0"
+                        variant={isConfirmed ? 'success' : 'successOutline'}
+                        size="icon"
+                      >
+                        <Check />
+                      </Button>
+                    )}
+                    {!!data && !isConfirmed && (
+                      <Button type="button" className="flex-shrink-0" variant={'destructive'} size="icon">
+                        <Minus />
+                      </Button>
+                    )}
+                  </>
                 )}
               </div>
-            )}
+              {!isChairman && (
+                <div className="relative w-full">
+                  <FormField
+                    defaultValue={data?.description ? data?.description : ''}
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Textarea
+                            disabled={!isReject || !!data}
+                            className="resize-none w-full"
+                            rows={2}
+                            placeholder="Boshqarma boshlig‘i rezolyutsiyasi"
+                            {...field}
+                          ></Textarea>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {isReject && !data && (
+                    <Button
+                      onClick={form.handleSubmit(onSubmit)}
+                      className="absolute top-6 right-2 opacity-80 hover:opacity-100"
+                      size="sm"
+                      variant="outline"
+                    >
+                      Yuborish
+                    </Button>
+                  )}
+                </div>
+              )}
 
-            {isLegal && !!data && !data?.filePath && (
-              <label className={buttonVariants({ size: 'sm' })}>
-                Batraf etish
-                <input
-                  disabled={isPending || isPendingAttachFile}
-                  onChange={(e) => {
-                    const files = e.target.files;
-                    if (files?.length) {
-                      // 3. XATOLIKNI TUZATAMIZ:
-                      sendFiles([files[0]]).then((filePath) => {
-                        // `filePath` -> sendFiles dan qaytgan string (fayl manzili)
-                        attachFile({
-                          id: number, // Indikator ID si `number` propidan olinadi
-                          path: filePath, // Fayl manzili `sendFiles` natijasidan olinadi
+              {isLegal && !!data && !data?.filePath && (
+                <label className={buttonVariants({ size: 'sm' })}>
+                  Batraf etish
+                  <input
+                    disabled={isPending || isPendingAttachFile}
+                    onChange={(e) => {
+                      const files = e.target.files;
+                      if (files?.length) {
+                        // 3. XATOLIKNI TUZATAMIZ:
+                        sendFiles([files[0]]).then((filePath) => {
+                          // `filePath` -> sendFiles dan qaytgan string (fayl manzili)
+                          attachFile({
+                            id: number, // Indikator ID si `number` propidan olinadi
+                            path: filePath, // Fayl manzili `sendFiles` natijasidan olinadi
+                          });
                         });
-                      });
-                    }
-                  }}
-                  className="hidden"
-                  type="file"
-                  accept={FileTypes.PDF}
-                />
-              </label>
-            )}
-            {!!data?.filePath && <FileLink isSmall={true} title={'Ma’lumotnoma'} url={data?.filePath} />}
-          </div>
-        </Form>
+                      }
+                    }}
+                    className="hidden"
+                    type="file"
+                    accept={FileTypes.PDF}
+                  />
+                </label>
+              )}
+              {!!data?.filePath && <FileLink isSmall={true} title={'Ma’lumotnoma'} url={data?.filePath} />}
+            </div>
+          </Form>
+        )}
       </div>
     </div>
   );

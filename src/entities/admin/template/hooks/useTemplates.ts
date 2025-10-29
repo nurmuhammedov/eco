@@ -32,11 +32,11 @@ export const useCreateTemplate = () => {
 
   return useMutation({
     mutationFn: (data: TemplateFormDTO) => templateAPI.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
+    onSuccess: async () => {
       toast.success('Shablon muvaffaqqiyatli yaratildi');
+      await queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
     },
-    onError: (error) => toast.error(error.message, { richColors: true }),
+    // onError: (error) => toast.error(error.message, { richColors: true }),
   });
 };
 
@@ -45,14 +45,14 @@ export const useUpdateTemplateData = () => {
 
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<TemplateFormDTO> }) => templateAPI.updateData(id, data),
-    onSuccess: (updatedTemplate) => {
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
-      queryClient.invalidateQueries({
+    onSuccess: async (updatedTemplate) => {
+      toast.success('Shablon muvaffaqqiyatli tahrirlandi');
+      await queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
+      await queryClient.invalidateQueries({
         queryKey: templateKeys.detail(updatedTemplate.data.id),
       });
-      toast.success('Shablon muvaffaqqiyatli tahrirlandi');
     },
-    onError: (error) => toast.error(error.message, { richColors: true }),
+    // onError: (error) => toast.error(error.message, { richColors: true }),
   });
 };
 export const useUpdateTemplateContent = () => {
@@ -60,13 +60,13 @@ export const useUpdateTemplateContent = () => {
 
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<TemplateFormDTO> }) => templateAPI.updateContent(id, data),
-    onSuccess: (updatedTemplate) => {
-      queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
-      queryClient.invalidateQueries({
+    onSuccess: async (updatedTemplate) => {
+      toast.success('Shablon muvaffaqqiyatli tahrirlandi');
+      await queryClient.invalidateQueries({ queryKey: templateKeys.lists() });
+      await queryClient.invalidateQueries({
         queryKey: templateKeys.detail(updatedTemplate.data.id),
       });
-      toast.success('Shablon muvaffaqqiyatli tahrirlandi');
     },
-    onError: (error) => toast.error(error.message, { richColors: true }),
+    // onError: (error) => toast.error(error.message, { richColors: true }),
   });
 };

@@ -10,12 +10,9 @@ export function useUpdateRegisterFile(url?: string) {
 
   return useMutation({
     mutationFn: (payload: any) => applicationDetailApi.updateFile(id, payload, url),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
+    onSuccess: async () => {
       toast.success('Success');
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Faylni yangilashda noma'lum xatolik");
+      await queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
     },
   });
 }

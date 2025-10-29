@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import { ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import {
@@ -19,17 +18,13 @@ export const territorialStaffAPI = {
     return data.data;
   },
   create: async (data: CreateTerritorialStaffDTO) => {
-    const response = await apiClient.post<TerritorialStaffResponse, CreateTerritorialStaffDTO>(
-      API_ENDPOINTS.OFFICE_USERS,
-      data,
-    );
-    if (!response.success && response.errors) {
-      toast.error(Object.values(response.errors).join(', '), {
-        richColors: true,
-      });
-    }
+    // if (!response.success && response.errors) {
+    //   toast.error(Object.values(response.errors).join(', '), {
+    //     richColors: true,
+    //   });
+    // }
 
-    return response;
+    return await apiClient.post<TerritorialStaffResponse, CreateTerritorialStaffDTO>(API_ENDPOINTS.OFFICE_USERS, data);
   },
   update: async (data: UpdateTerritorialStaffDTO) => {
     const response = await apiClient.put<UpdateTerritorialStaffDTO>(`${API_ENDPOINTS.OFFICE_USERS}/${data.id}`, data);

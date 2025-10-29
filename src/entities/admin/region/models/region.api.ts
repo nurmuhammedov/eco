@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import { ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import { CreateRegionDTO, type FilterRegionDTO, RegionResponse, UpdateRegionDTO } from './region.types';
@@ -14,14 +13,13 @@ export const regionAPI = {
     return data.data;
   },
   createRegion: async (district: CreateRegionDTO) => {
-    const response = await apiClient.post<RegionResponse, CreateRegionDTO>(API_ENDPOINTS.REGIONS, district);
-    if (!response.success && response.errors) {
-      toast.error(Object.values(response.errors).join(', '), {
-        richColors: true,
-      });
-    }
+    // if (!response.success && response.errors) {
+    //   toast.error(Object.values(response.errors).join(', '), {
+    //     richColors: true,
+    //   });
+    // }
 
-    return response;
+    return await apiClient.post<RegionResponse, CreateRegionDTO>(API_ENDPOINTS.REGIONS, district);
   },
   updateRegion: async (district: UpdateRegionDTO) => {
     const response = await apiClient.put<UpdateRegionDTO>(`${API_ENDPOINTS.REGIONS}/${district.id}`, district);
