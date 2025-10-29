@@ -1,8 +1,14 @@
 import { TabsLayout } from '@/shared/layouts';
-import { useCustomSearchParams } from '@/shared/hooks';
+import { useCurrentRole, useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { Badge } from '@/shared/components/ui/badge';
-import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { useMemo } from 'react';
+import { RiskAnalysisItem, RiskAnalysisParams } from '@/entities/risk-analysis/models/risk-analysis.types';
+import { AssignedStatusTab } from '@/widgets/risk-analysis/types';
+import { API_ENDPOINTS } from '@/shared/api';
+import { cleanParams } from '@/shared/lib';
+import { UserRoles } from '@/entities/user';
+import { useAuth } from '@/shared/hooks/use-auth';
 
 interface RiskLevelTabsProps {
   type: string;
@@ -40,17 +46,39 @@ const riskLevels = [
   },
 ];
 
-export const RiskLevelTabs = ({ type, ListContentComponent }: RiskLevelTabsProps) => {
+export const RiskLevelTabs = ({ ListContentComponent }: RiskLevelTabsProps) => {
   const { paramsObject, addParams } = useCustomSearchParams();
   const activeRiskLevel = paramsObject.riskLevel || 'ALL';
+  const currentRole = useCurrentRole();
+  const isRegional = currentRole === UserRoles.REGIONAL;
+  const { user } = useAuth();
 
-  const { data: counts, isLoading: isLoadingCounts } = useQuery({
-    queryKey: ['riskCounts', type],
-    queryFn: () => ({ LOW: 5, MEDIUM: 2, HIGH: 1, ALL: 8 }),
-  });
+  const activeAssignedStatus = (paramsObject.assignedStatus as AssignedStatusTab) || AssignedStatusTab.NOT_ASSIGNED;
+
+  const apiParams = useMemo(() => {
+    const params: RiskAnalysisParams = {};
+    if (isRegional) {
+      params.isAssigned = activeAssignedStatus === AssignedStatusTab.ASSIGNED;
+    }
+    if (user?.interval?.id) {
+      params.intervalId = paramsObject.intervalId || user.interval.id;
+    }
+    return params;
+  }, [isRegional, activeAssignedStatus, user, paramsObject.intervalId]);
+
+  const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(
+    API_ENDPOINTS.RISK_ASSESSMENT_HF,
+    cleanParams({
+      ...apiParams,
+      type: 'HF',
+      level: paramsObject.riskLevel == 'ALL' ? undefined : paramsObject.riskLevel ? paramsObject.riskLevel : undefined,
+      size: paramsObject?.size || 10,
+      page: paramsObject?.page || 1,
+    }),
+  );
 
   const tabs = riskLevels.map((level) => {
-    const count = counts?.[level.id as keyof typeof counts] || 0;
+    const count = level.id == 'ALL' ? 0 : paramsObject.riskLevel == level?.id ? data?.page?.totalElements : 0;
     const isActive = activeRiskLevel === level.id;
 
     return {
@@ -67,16 +95,18 @@ export const RiskLevelTabs = ({ type, ListContentComponent }: RiskLevelTabsProps
           )}
         >
           <span className="text-sm font-medium">{level.name}</span>
-          <Badge
-            variant="secondary"
-            className={clsx(
-              'text-xs',
-              isActive ? 'bg-white text-black' : `${level.badgeColor} text-white`,
-              isLoadingCounts && 'animate-pulse',
-            )}
-          >
-            {isLoadingCounts ? '...' : count}
-          </Badge>
+          {(paramsObject.riskLevel || 'ALL') == level?.id && (
+            <Badge
+              variant="secondary"
+              className={clsx(
+                'text-xs',
+                isActive ? 'bg-white text-black' : `${level.badgeColor} text-white`,
+                isLoading && 'animate-pulse',
+              )}
+            >
+              {data?.page?.totalElements || '0'}
+            </Badge>
+          )}
         </div>
       ),
     };
