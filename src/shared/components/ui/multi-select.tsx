@@ -88,9 +88,9 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
         </PopoverTrigger>
         <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
           <Command>
-            <CommandInput placeholder={t('search') || 'Qidirish...'} />
+            <CommandInput placeholder={t('Qidirish...') || 'Qidirish...'} />
             <CommandList>
-              <CommandEmpty>{t('no_results') || 'Natija topilmadi.'}</CommandEmpty>
+              <CommandEmpty>{t('Maʼlumot topilmadi') || 'Natija topilmadi.'}</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem

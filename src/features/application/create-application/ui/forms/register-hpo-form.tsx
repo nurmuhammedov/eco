@@ -89,7 +89,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               control={form.control}
               name="spheres"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel required>Tarmoqlar</FormLabel>
                   <FormControl>
                     <MultiSelect
