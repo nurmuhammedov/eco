@@ -9,8 +9,9 @@ export const useExecutionList = (id: any) => {
   } = useCustomSearchParams();
 
   return useQuery({
-    queryKey: [QK_INSPECTION, 'execution list', inspectionId, eliminated, page, size],
+    queryKey: [QK_INSPECTION, 'execution list', id, inspectionId, eliminated, page, size],
     queryFn: () => inspectionsApi.getExecutionList(id),
     enabled: !!id,
+    staleTime: 0,
   });
 };

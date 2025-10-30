@@ -13,7 +13,7 @@ export function useSetFiles() {
     mutationFn: (data: any) => inspectionsApi.setFiles({ id, data }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] });
-      toast.success('SUCCESS!');
+      toast.success('Muvaffaqiyatli saqlandi!');
     },
   });
 }

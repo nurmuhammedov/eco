@@ -13,7 +13,7 @@ export function useAddInspectionReport() {
     mutationFn: (data: any) => inspectionsApi.addInspectionReport({ id, data }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] });
-      toast.success('SUCCESS!');
+      toast.success('Muvaffaqiyatli saqlandi!');
     },
   });
 }

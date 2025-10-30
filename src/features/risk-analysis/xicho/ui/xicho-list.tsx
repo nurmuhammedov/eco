@@ -93,11 +93,11 @@ export const XichoList = () => {
             accessorKey: 'score',
             cell: ({ row }: any) => row.original?.score ?? "Yo'q",
           },
-          {
-            header: t('risk_analysis_columns.inspectorName'),
-            accessorKey: 'inspectorName',
-            cell: ({ row }: any) => row.original.inspectorName || '-',
-          },
+          // {
+          //   header: t('risk_analysis_columns.inspectorName'),
+          //   accessorKey: 'inspectorName',
+          //   cell: ({ row }: any) => row.original.inspectorName || '-',
+          // },
           {
             id: 'actions',
             header: 'Amallar',

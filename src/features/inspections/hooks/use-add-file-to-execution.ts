@@ -10,7 +10,7 @@ export function useAddFileToExecution(id: any) {
     mutationFn: (data: any) => inspectionsApi.addFileToInspectionReport({ id, data }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] });
-      toast.success('SUCCESS!');
+      toast.success('Muvaffaqiyatli saqlandi!');
     },
   });
 }

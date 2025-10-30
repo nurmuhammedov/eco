@@ -15,7 +15,7 @@ export function useAttachInspectors() {
     mutationFn: (data: any) => inspectionsApi.attachInspectors({ id, data: { ...data, intervalId, tin } }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] });
-      toast.success('SUCCESS!');
+      toast.success('Muvaffaqiyatli saqlandi!');
     },
   });
 }

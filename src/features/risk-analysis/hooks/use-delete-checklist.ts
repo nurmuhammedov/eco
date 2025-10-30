@@ -9,7 +9,7 @@ export function useDeleteChecklist() {
     mutationFn: riskAnalysisDetailApi.deleteChecklist,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QK_CHECKLIST] });
-      toast.success('SUCCESS!');
+      toast.success('Muvaffaqiyatli saqlandi!');
     },
   });
 }

@@ -21,11 +21,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/
 import { Textarea } from '@/shared/components/ui/textarea.tsx';
 import { useAcceptExecutionReport } from '@/features/inspections/hooks/use-accept-execution-report.ts';
 import { useRejectExecutionReport } from '@/features/inspections/hooks/use-reject-execution-report.ts';
+import { toast } from 'sonner';
 
-export const exucutionReportStatuses = new Map([
-  ['ACCEPTED', { label: 'ACCEPTED', variant: 'success' }],
-  ['REJECTED', { label: 'REJECTED', variant: 'error' }],
-  ['IN_PROCESS', { label: 'IN_PROCESS', variant: 'warning' }],
+export const executionReportStatuses = new Map([
+  ['ACCEPTED', { label: 'Qabul qilindi', variant: 'success' }],
+  ['REJECTED', { label: 'Rad etildi', variant: 'error' }],
+  ['IN_PROCESS', { label: 'Jarayonda', variant: 'warning' }],
 ] as const);
 
 const schema = z.object({
@@ -97,12 +98,12 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
-  const { data = [] } = useExecutionList(id);
-  const { mutate, isPending } = useAddFileToExecution(id);
-  const { mutate: acceptReport } = useAcceptExecutionReport();
+  const { data = [], isLoading } = useExecutionList(id);
+  const { mutateAsync, isPending } = useAddFileToExecution(id);
+  const { mutateAsync: acceptReport } = useAcceptExecutionReport();
 
   function onSubmit(data: z.infer<typeof schema>) {
-    mutate(data);
+    mutateAsync(data).then(() => form.reset({ paramValue: undefined }));
   }
 
   const isFormShow =
@@ -117,87 +118,95 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
           <p className="text-sm">{description}</p>
         </div>
         <hr className="border-neutral-50" />
-        <div>
-          {data?.map((item: any) => {
-            const currentBadge = exucutionReportStatuses.get(item?.status);
-
-            return (
-              <div className="grid grid-cols-4 gap-2 odd:bg-neutral-50 rounded p-2.5">
-                <div>
-                  <FileLink title={'Dokument'} isSmall={true} url={item?.executionFilePath} />
-                </div>
-                <div className="text-neutral-500 text-sm w-[120px] text-center">{getDate(item?.fileUploadDate)}</div>
-                <div className="text-center">
-                  {!!currentBadge && <Badge variant={currentBadge.variant}>{currentBadge.label}</Badge>}
-                </div>
-                {isValidInterval && user?.role === UserRoles.INSPECTOR && item?.status === 'IN_PROCESS' && (
-                  <div className="flex gap-1.5">
-                    <Button
-                      onClick={() => {
-                        if (confirm('Are u sure?')) {
-                          acceptReport(item?.id);
-                        }
-                      }}
-                      size="sm"
-                      variant="success"
-                    >
-                      Qabul qilish
-                    </Button>
-                    <RejectExecution id={item?.id} />
-                  </div>
-                )}
-                {!!item?.rejectedCause && (
-                  <div className="ml-auto">
-                    <Popover>
-                      <PopoverTrigger>
-                        <Button size="iconSm" variant="outline">
-                          <CircleAlert />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent>
-                        <p className="text-sm">{item?.rejectedCause}</p>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-        {isFormShow && (
+        {isLoading ? (
+          <div className="font-medium my-6 text-center">Yuklanmoqda...</div>
+        ) : (
           <>
-            <hr className="border-neutral-50" />
-            <Form {...form}>
-              <form className="max-w-[400px]" onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="flex gap-2 items-start">
-                  <div className="flex-grow">
-                    <FormField
-                      name="paramValue"
-                      control={form.control}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Response file</FormLabel>
-                          <FormControl>
-                            <InputFile
-                              buttonText="Choose response file"
-                              showPreview={true}
-                              form={form}
-                              name={field.name}
-                              accept={[FileTypes.PDF]}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+            <div>
+              {data?.map((item: any) => {
+                const currentBadge = executionReportStatuses.get(item?.status);
+
+                return (
+                  <div className="grid grid-cols-4 gap-2 odd:bg-neutral-50 rounded p-2.5">
+                    <div>
+                      <FileLink title={'Dokument'} isSmall={true} url={item?.executionFilePath} />
+                    </div>
+                    <div className="text-neutral-500 text-sm w-[120px] text-center">
+                      {getDate(item?.fileUploadDate)}
+                    </div>
+                    <div className="text-center">
+                      {!!currentBadge && <Badge variant={currentBadge.variant}>{currentBadge.label}</Badge>}
+                    </div>
+                    {isValidInterval && user?.role === UserRoles.INSPECTOR && item?.status === 'IN_PROCESS' && (
+                      <div className="flex gap-1.5">
+                        <Button
+                          onClick={() => {
+                            if (confirm('Ishonchingiz komilmi?')) {
+                              acceptReport(item?.id).then(() => toast.success('Muvaffaqiyatli saqlandi!'));
+                            }
+                          }}
+                          size="sm"
+                          variant="success"
+                        >
+                          Qabul qilish
+                        </Button>
+                        <RejectExecution id={item?.id} />
+                      </div>
+                    )}
+                    {!!item?.rejectedCause && (
+                      <div className="ml-auto">
+                        <Popover>
+                          <PopoverTrigger>
+                            <Button size="iconSm" variant="outline">
+                              <CircleAlert />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <p className="text-sm">{item?.rejectedCause}</p>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    )}
                   </div>
-                  <div className="pt-[25px]">
-                    <Button disabled={isPending} size="icon">
-                      <SendHorizontal />
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            </Form>
+                );
+              })}
+            </div>
+            {isFormShow && (
+              <>
+                <hr className="border-neutral-50" />
+                <Form {...form}>
+                  <form className="max-w-[400px]" onSubmit={form.handleSubmit(onSubmit)}>
+                    <div className="flex gap-2 items-start">
+                      <div className="flex-grow">
+                        <FormField
+                          name="paramValue"
+                          control={form.control}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Javob fayli</FormLabel>
+                              <FormControl>
+                                <InputFile
+                                  buttonText="Faylni yuklang"
+                                  showPreview={true}
+                                  form={form}
+                                  name={field.name}
+                                  accept={[FileTypes.PDF]}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className="pt-[25px]">
+                        <Button disabled={isPending} size="icon">
+                          <SendHorizontal />
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
+                </Form>
+              </>
+            )}
           </>
         )}
       </DialogContent>

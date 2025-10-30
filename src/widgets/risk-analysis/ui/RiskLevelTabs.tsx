@@ -84,7 +84,7 @@ export const RiskLevelTabs = ({ ListContentComponent }: RiskLevelTabsProps) => {
       renderName: (
         <div
           className={clsx(
-            'flex items-center mx-1 space-x-2 rounded-md px-3 py-1.5 transition-all duration-200 border',
+            'flex items-center space-x-2 rounded-md px-3 py-1 transition-all duration-200 border',
             isActive
               ? `${level.darkColor} text-white border-transparent`
               : `${level.lightColor} text-gray-700 border-gray-300 hover:border-gray-400`,
@@ -115,7 +115,6 @@ export const RiskLevelTabs = ({ ListContentComponent }: RiskLevelTabsProps) => {
       tabs={tabs}
       classNameTrigger="bg-[#F6F6F6]! cursor-pointer rounded-lg p-1!  border-none border-0! outline-none! shadow-none! focus-visible:ring-0!"
       onTabChange={(risk) => addParams({ riskLevel: risk }, 'page')}
-      className="space-x-2"
     >
       <div className="mt-4">
         <ListContentComponent />

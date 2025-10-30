@@ -7,6 +7,7 @@ import FileLink from '@/shared/components/common/file-link.tsx';
 import { Button } from '@/shared/components/ui/button.tsx';
 import { Trash2 } from 'lucide-react';
 import { useDeleteChecklist } from '@/features/risk-analysis/hooks/use-delete-checklist.ts';
+import { toast } from 'sonner';
 
 const RiskAnalysisChecklists = () => {
   const { data } = useChecklist();
@@ -15,7 +16,7 @@ const RiskAnalysisChecklists = () => {
   const currentIntervalId = searchParams.get('intervalId') || '';
   const isValidInterval = currentIntervalId == user?.interval?.id?.toString();
   const isCanAction = isValidInterval && user?.role === UserRoles.LEGAL;
-  const { mutate: deleteCheckList, isPending } = useDeleteChecklist();
+  const { mutateAsync: deleteCheckList, isPending } = useDeleteChecklist();
   return (
     <div>
       {isCanAction && <RiskAnalysisChecklistForm />}
@@ -32,8 +33,8 @@ const RiskAnalysisChecklists = () => {
                     size="icon"
                     variant="destructiveOutline"
                     onClick={() => {
-                      if (confirm('Are u sure?')) {
-                        deleteCheckList(item.id);
+                      if (confirm('Ishonchingiz komilmi?')) {
+                        deleteCheckList(item.id).then(() => toast.success('Muvaffaqiyatli saqlandi!'));
                       }
                     }}
                   >

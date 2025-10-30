@@ -22,7 +22,9 @@ export const InspectionList: React.FC = () => {
       ? paramsObject?.status
       : user?.role == UserRoles.INSPECTOR
         ? InspectionStatus.IN_PROCESS
-        : InspectionStatus.NEW,
+        : user?.role == UserRoles.LEGAL
+          ? InspectionStatus.CONDUCTED
+          : InspectionStatus.NEW,
   });
   const handleView = (row: Inspection) => {
     navigate(

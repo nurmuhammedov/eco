@@ -18,7 +18,7 @@ export function useCancelPoints() {
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QK_RISK_ANALYSIS] });
-      toast.success('SUCCESS!');
+      toast.success('Muvaffaqiyatli saqlandi!');
     },
   });
 }

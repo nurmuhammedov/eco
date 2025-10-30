@@ -20,7 +20,9 @@ export const InspectionWidget: React.FC = () => {
   const { data: intervalOptionsData, isLoading: isLoadingIntervals } = useRiskAnalysisIntervalsQuery();
 
   const isInspector = user?.role == UserRoles.INSPECTOR;
+  const isLegal = user?.role == UserRoles.LEGAL;
   const activeTab = paramsObject.status;
+  const defaultTab = isLegal ? InspectionStatus.CONDUCTED : InspectionStatus.NEW;
 
   const handleTabChange = (value: string) => {
     addParams({ status: value });
@@ -88,15 +90,26 @@ export const InspectionWidget: React.FC = () => {
         </Select>
       </div>
 
-      <Tabs value={activeTab || InspectionStatus.NEW} onValueChange={handleTabChange}>
+      <Tabs value={activeTab || defaultTab} onValueChange={handleTabChange}>
         <TabsList>
-          <TabsTrigger value={InspectionStatus.NEW}>Inspektor belgilanmaganlar</TabsTrigger>
-          <TabsTrigger value={InspectionStatus.IN_PROCESS}>Inspektor belgilanganla</TabsTrigger>
-          <TabsTrigger value={InspectionStatus.CONDUCTED}>Tekshiruv o‘tkazilgan</TabsTrigger>
+          {!isLegal && <TabsTrigger value={InspectionStatus.NEW}>Inspektor belgilanmaganlar</TabsTrigger>}
+          {isLegal ? (
+            <>
+              <TabsTrigger value={InspectionStatus.CONDUCTED}>Tekshiruv o‘tkazilgan</TabsTrigger>
+              <TabsTrigger value={InspectionStatus.IN_PROCESS}>Inspektor belgilanganlar</TabsTrigger>
+            </>
+          ) : (
+            <>
+              <TabsTrigger value={InspectionStatus.IN_PROCESS}>Inspektor belgilanganlar</TabsTrigger>
+              <TabsTrigger value={InspectionStatus.CONDUCTED}>Tekshiruv o‘tkazilgan</TabsTrigger>
+            </>
+          )}
         </TabsList>
-        <TabsContent value={InspectionStatus.NEW}>
-          <InspectionList />
-        </TabsContent>
+        {!isLegal && (
+          <TabsContent value={InspectionStatus.NEW}>
+            <InspectionList />
+          </TabsContent>
+        )}
         <TabsContent value={InspectionStatus.IN_PROCESS}>
           <InspectionList />
         </TabsContent>

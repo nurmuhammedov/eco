@@ -10,7 +10,7 @@ export function useAcceptExecutionReport() {
     mutationFn: (id) => inspectionsApi.acceptInspectionReport(id),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] });
-      toast.success('SUCCESS!');
+      toast.success('Muvaffaqiyatli saqlandi!');
     },
   });
 }

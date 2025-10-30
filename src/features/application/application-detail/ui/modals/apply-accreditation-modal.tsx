@@ -76,7 +76,7 @@ const ApplyAccreditationModal = () => {
   } = useEIMZO({
     pdfEndpoint: `/accreditations/${modalType}/generate-pdf`,
     submitEndpoint: `/accreditations/${modalType}`,
-    successMessage: 'SUCCESS!',
+    successMessage: 'Muvaffaqiyatli saqlandi!',
     queryKey: QK_APPLICATIONS,
   });
   const form = useForm<z.infer<typeof schema>>({

@@ -19,7 +19,7 @@ export function useAddChecklist() {
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QK_CHECKLIST] });
-      toast.success('SUCCESS!');
+      toast.success('Muvaffaqiyatli saqlandi!');
     },
   });
 }
