@@ -9,7 +9,7 @@ export const useInspectorInfo = () => {
   const currentAssignParam = searchParams.get('assignId') || '';
   let currentAssignId;
 
-  if (currentAssignParam === 'null') {
+  if (currentAssignParam) {
     currentAssignId = '';
   } else {
     currentAssignId = currentAssignParam;

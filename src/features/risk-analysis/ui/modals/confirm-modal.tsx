@@ -27,7 +27,7 @@ const ConfirmModal: React.FC<ConfirmWithRegistryModalProps> = () => {
   } = useCustomSearchParams();
   const currentIdName = idNames.get(type);
   const list = riskAnalysisData[type as unknown as 'hf'] as unknown as any[];
-  const { mutate, isPending } = useAdd(`/${type}-risk-indicators/success-all`);
+  const { mutate, isPending } = useAdd(`/${type?.toLowerCase()}-risk-indicators/success-all`);
 
   const onSubmit = () => {
     mutate(

@@ -53,14 +53,16 @@ const statusMap: Record<string, string> = {
   NOT_EXPIRY_DATE: 'Faylning amal qilish muddati kiritilmagan',
 };
 
-const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex, info = false }) => {
+const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
   const [searchParams] = useSearchParams();
   const currentCat = searchParams.get('type') || '';
-  const currentInervalId = searchParams.get('intervalId') || '';
+  const info = (searchParams.get('info') || 'false') == 'true';
+  // const currentInervalId = searchParams.get('intervalId') || '';
   const paragraphName = `PARAGRAPH_${currentCat?.toUpperCase()}_${number}`;
   const { mutate } = useRejectRiskItem();
   const { user } = useAuth();
-  const isValidInterval = currentInervalId == user?.interval?.id?.toString();
+  // const isValidInterval = currentInervalId == user?.interval?.id?.toString();
+  const isValidInterval = true;
   const isChairman = user?.role === UserRoles.CHAIRMAN;
   const isInspector = user?.role === UserRoles.INSPECTOR;
   const isLegal = user?.role === UserRoles.LEGAL;

@@ -64,19 +64,15 @@ const RejectExecution: FC<{ id: any }> = ({ id }) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Response file</FormLabel>
+                  <FormLabel>Jaxob xati</FormLabel>
                   <FormControl>
-                    <Textarea
-                      {...field}
-                      className="resize-none min-h-[100px]"
-                      placeholder={'Type reject message'}
-                    ></Textarea>
+                    <Textarea {...field} className="resize-none min-h-[100px]" placeholder={'Tafsilotlar'}></Textarea>
                   </FormControl>
                 </FormItem>
               )}
             />
             <Button className="w-full mt-2" size="sm">
-              Send
+              Yuborish
             </Button>
           </form>
         </Form>

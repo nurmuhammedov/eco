@@ -67,6 +67,10 @@ const InspectionMainInfo = () => {
         title="Tekshiruv natijasi:"
         value={!!inspectionData?.resultPath ? <FileLink url={inspectionData?.resultPath} /> : '-'}
       />
+      <DetailRow
+        title="Tilxat:"
+        value={!!inspectionData?.acknowledgementPath ? <FileLink url={inspectionData?.acknowledgementPath} /> : '-'}
+      />
       {!!actInfo && (
         <DetailRow
           title="Dalolatnoma:"

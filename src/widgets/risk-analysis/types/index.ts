@@ -1,13 +1,13 @@
 export enum RiskAnalysisTab {
-  XICHO = 'hf',
-  INM = 'irs',
-  LIFT = 'elevator',
-  ATTRACTION = 'attraction',
-  XRAY = 'xray',
-  LPG_POWERED = 'lpg_powered',
+  XICHO = 'HF',
+  INM = 'IRS',
+  LIFT = 'ELEVATOR',
+  ATTRACTION = 'ATTRACTION',
+  XRAY = 'XRAY',
+  LPG_POWERED = 'LGP_POWERED',
 }
 
 export enum AssignedStatusTab {
-  NOT_ASSIGNED = 'NOT_ASSIGNED',
-  ASSIGNED = 'ASSIGNED',
+  NOT_ASSIGNED = 'NEW',
+  ASSIGNED = 'ATTACHED',
 }

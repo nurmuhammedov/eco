@@ -19,7 +19,7 @@ const InspectionReports = () => {
   const { user } = useAuth();
   const { addParams, paramsObject } = useCustomSearchParams();
 
-  const isValidInterval = paramsObject?.intervalId == user?.interval?.id;
+  // const isValidInterval = paramsObject?.intervalId == user?.interval?.id;
   const [id, setId] = useState<any>(null);
   const [inspectionTitle, setInspectionTitle] = useState<string>('');
   const currentTab = paramsObject?.eliminated;
@@ -85,9 +85,7 @@ const InspectionReports = () => {
             </Tabs>
           )}
         </div>
-        {isValidInterval && user?.role === UserRoles.INSPECTOR && inspectionData?.status === 'IN_PROCESS' && (
-          <AddReportForm />
-        )}
+        {user?.role === UserRoles.INSPECTOR && inspectionData?.status === 'IN_PROCESS' && <AddReportForm />}
       </div>
       <div>
         <DataTable isLoading={isLoading} columns={columns} data={data || []} />

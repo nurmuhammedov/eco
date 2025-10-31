@@ -5,14 +5,11 @@ import { UserRoles } from '@/entities/user';
 import InspectionMainInfo from '@/features/inspections/ui/parts/inspection-main-info.tsx';
 import AddInspectionDocuments from '@/features/inspections/ui/parts/add-inspection-documents.tsx';
 import CreateDocument from '@/features/inspections/ui/parts/create-document.tsx';
-import { useCustomSearchParams } from '@/shared/hooks';
 import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 
 const InpectionsDetailInfo = () => {
   const [activeTab, setActiveTab] = useState('main_info');
   const { user } = useAuth();
-  const { paramsObject } = useCustomSearchParams();
-  const isValidInterval = paramsObject?.intervalId == user?.interval?.id;
   const { data: inspectionData } = useInspectionDetail();
 
   const resetTab = () => {
@@ -20,7 +17,7 @@ const InpectionsDetailInfo = () => {
   };
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
-      {user?.role === UserRoles.INSPECTOR && isValidInterval && (
+      {user?.role === UserRoles.INSPECTOR && (
         <TabsList className="bg-[#EDEEEE]">
           <TabsTrigger value="main_info">Umumiy ma’lumotlar</TabsTrigger>
           <TabsTrigger value="add_inspection_documents">Tekshiruv hujjatlari yuklash</TabsTrigger>

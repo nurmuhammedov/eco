@@ -51,6 +51,7 @@ const InspectionsDetailPage = lazy(() => import('@/features/inspections/ui/inspe
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
 const AccreditationPage = lazy(() => import('@/pages/accreditations/page'));
 const AttestationPage = lazy(() => import('@/pages/attestation'));
+const InspectorTasks = lazy(() => import('@/features/risk-analysis/ui/inspector-tasks'));
 const CadastrePage = lazy(() => import('@/pages/cadastre'));
 const AddAttestationEmployeePage = lazy(() => import('@/pages/attestation/add-employee'));
 const AccreditationDetailPage = lazy(() => import('@/pages/accreditations/detail'));
@@ -70,6 +71,11 @@ export const appRoutes = [
     path: 'applications/create',
     component: CreateApplicationGrids,
     roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
+  },
+  {
+    path: 'risk-analysis/my-tasks',
+    component: InspectorTasks,
+    roles: [UserRoles.INSPECTOR],
   },
   {
     path: 'applications/inspector/create',

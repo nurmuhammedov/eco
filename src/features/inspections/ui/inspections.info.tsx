@@ -16,9 +16,7 @@ const InspectionsInfo = () => {
   const [searchParams] = useSearchParams();
   const currentTin = searchParams.get('tin');
   const { paramsObject } = useCustomSearchParams();
-  const currentIntervalId = paramsObject?.intervalId;
   const { user } = useAuth();
-  const isValidInterval = currentIntervalId == user?.interval?.id;
   const { data: inspectionData } = useInspectionDetail();
 
   return (
@@ -31,7 +29,7 @@ const InspectionsInfo = () => {
           <LegalApplicantInfo tinNumber={currentTin} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
-          {isValidInterval && user?.role === UserRoles.REGIONAL && inspectionData?.status === InspectionStatus.NEW && (
+          {user?.role === UserRoles.REGIONAL && inspectionData?.status === InspectionStatus.NEW && (
             <div className="flex justify-end py-2">
               <AttachInspectorModal />
             </div>

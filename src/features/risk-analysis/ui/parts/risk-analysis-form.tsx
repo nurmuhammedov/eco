@@ -16,7 +16,7 @@ const RiskAnalysisForm: FC<Props> = ({ data }) => {
   return (
     <div>
       {indicatorsArray.map(([key, indicatorData], idx) => {
-        return <RiskAnalysisItem info={true} key={key} number={key} data={indicatorData} displayIndex={idx + 1} />;
+        return <RiskAnalysisItem key={key} number={key} data={indicatorData} displayIndex={idx + 1} />;
       })}
     </div>
   );

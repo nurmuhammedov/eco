@@ -40,7 +40,7 @@ export const AssignInspectorModal: React.FC = () => {
       mutate(
         {
           inspectorId: data.inspectorId,
-          objectId: objectId as string,
+          riskAnalysisId: objectId as string,
         },
         {
           onSuccess: () => {

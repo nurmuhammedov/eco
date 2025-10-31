@@ -22,14 +22,16 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    const location: string = window.location.pathname;
     if (error?.response?.status === 401) {
-      const location: string = window.location.pathname;
       if (
-        location !== '/auth/login' &&
-        location !== '/auth/login/admin' &&
-        location !== '/auth/login/' &&
-        location !== '/auth/login/admin/'
+        location === '/auth/login' ||
+        location === '/auth/login/admin' ||
+        location === '/auth/login/' ||
+        location === '/auth/login/admin/'
       ) {
+        console.log('Redirecting to login...');
+      } else {
         window.location.replace('/auth/login');
       }
     }
@@ -42,7 +44,18 @@ axiosInstance.interceptors.response.use(
     } else if (error?.response?.status >= 500) {
       toast.error('Serverda nomaʼlum xatolik yuz berdi. Xatolik haqida xabar bering!', { richColors: true });
     } else if (error?.response?.status === 401 && error?.response?.config?.url === '/api/v1/users/me') {
-      toast.error('Kirish maʼlumotlari topilmadi yoki noto‘g‘ri. Iltimos, tizimga qayta kiring.', { richColors: true });
+      if (
+        location === '/auth/login' ||
+        location === '/auth/login/admin' ||
+        location === '/auth/login/' ||
+        location === '/auth/login/admin/'
+      ) {
+        console.log('Redirecting to login...');
+      } else {
+        toast.error('Kirish maʼlumotlari topilmadi yoki noto‘g‘ri. Iltimos, tizimga qayta kiring.', {
+          richColors: true,
+        });
+      }
     } else if (error?.response?.status === 401 && error?.response?.config?.url === '/api/v1/auth/login') {
       toast.error('Login yoki parol noto‘g‘ri. Iltimos, ma’lumotlarni tekshirib, qayta urinib ko‘ring.', {
         richColors: true,

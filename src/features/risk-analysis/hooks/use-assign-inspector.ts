@@ -1,15 +1,12 @@
-// src/features/risk-analysis/hooks/use-assign-inspector.ts
-
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
-import { useAuth } from '@/shared/hooks/use-auth';
 import { RiskAnalysisTab } from '@/widgets/risk-analysis/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 interface AssignInspectorPayload {
   inspectorId: string;
-  objectId: string;
+  riskAnalysisId: string;
 }
 
 const getEndpoint = (type: RiskAnalysisTab) => {
@@ -44,26 +41,19 @@ const getEndpoint = (type: RiskAnalysisTab) => {
 
 export const useAssignInspector = () => {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
   const { paramsObject } = useCustomSearchParams();
-
   const type = paramsObject.mainTab ?? (RiskAnalysisTab.XICHO as RiskAnalysisTab);
-  const intervalId = paramsObject?.interval?.id || user?.interval?.id;
 
   return useMutation({
     mutationFn: (payload: AssignInspectorPayload) => {
       const endpoint = getEndpoint(type);
       return apiClient.post(endpoint.url, {
         ...payload,
-        intervalId,
       });
     },
     onSuccess: () => {
       toast.success('Inspektor muvaffaqiyatli biriktirildi!');
       queryClient.invalidateQueries({ queryKey: [getEndpoint(type)?.id] }).then((r) => console.log(r));
-    },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Xatolik yuz berdi!');
     },
   });
 };

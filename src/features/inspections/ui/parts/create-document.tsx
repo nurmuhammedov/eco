@@ -19,7 +19,7 @@ const schema = z.object({
   sectionFourth: z.string().min(5).default(''),
   sectionFifth: z.string().min(5).default(''),
   sectionSixth: z.string().min(5).default(''),
-  acknowledgementPath: z.string().min(1, 'Tilxat majburiy!'),
+  acknowledgementPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Tilxat majburiy!'),
 });
 
 const CreateDocument: FC<{ resetTab: () => void }> = () => {
@@ -171,15 +171,20 @@ const CreateDocument: FC<{ resetTab: () => void }> = () => {
                 name="acknowledgementPath"
                 control={form.control}
                 render={({ field }) => (
-                  <InputFile
-                    uploadEndpoint="/attachments/inspections"
-                    form={form}
-                    name={field.name}
-                    onUploadComplete={(url) => {
-                      form.setValue('acknowledgementPath', url, { shouldValidate: true });
-                    }}
-                    buttonText="Yangi faylni tanlang"
-                  />
+                  <FormItem className="mb-2">
+                    <div className="flex flex-col">
+                      <FormLabel required>Tilxat</FormLabel>
+                      <InputFile
+                        uploadEndpoint="/attachments/inspections"
+                        form={form}
+                        name={field.name}
+                        onUploadComplete={(url) => {
+                          form.setValue('acknowledgementPath', url, { shouldValidate: true });
+                        }}
+                        buttonText="Faylni yuklang"
+                      />
+                    </div>
+                  </FormItem>
                 )}
               />
             </div>
