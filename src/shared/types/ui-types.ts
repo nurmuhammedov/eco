@@ -19,6 +19,8 @@ export const UI_COMPONENTS = {
   HAZARDOUS_FACILITY_TYPE_DRAWER: 'hazardous-facility-type', // Xavfli ishlab chiqarish obyektlari turlari
   ATTRACTION_TYPE_DRAWER: 'attraction-type-drawer',
   CHECKLIST_TEMPLATES_DRAWER: 'checklist-templates-drawer',
+  CHECKLISTS: 'checklist',
+  CATEGORY_TYPES: 'category-types',
 } as const;
 
 export type UIComponentName = (typeof UI_COMPONENTS)[keyof typeof UI_COMPONENTS];
@@ -62,6 +64,12 @@ export interface UIComponentDataMap {
     id: number;
   };
   [UI_COMPONENTS.CHECKLIST_TEMPLATES_DRAWER]: {
+    id: number;
+  };
+  [UI_COMPONENTS.CHECKLISTS]: {
+    id: number;
+  };
+  [UI_COMPONENTS.CATEGORY_TYPES]: {
     id: number;
   };
 }

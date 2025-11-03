@@ -15,14 +15,19 @@
     "add_territorial_department": "Hududiy boʻlim qoʻshish",
     "add_territorial_staff": "Hududiy xodim qoʻshish",
     "add_committee_staff": "Qoʻmita xodimi qoʻshish",
+    "add_category_type": "Yangi tekshiruv turi qoʻshish",
+    "add_checklist": "Yangi cheklist qoʻshish",
     "add_hazardous_facility_type": "XICHO turi qoʻshish"
   },
+  "category_types": "Tekshiruv turi",
+  "checklists": "Cheklistlar",
   "errors": {
     "something_went_wrong": "Xatolik yuz berdi!",
     "view_details": "Maʼlumotlarni koʻrsatish",
     "page_not_found": "Sahifa topilmadi"
   },
   "menu": {
+    "inspection": "Tekshiruv savolnoma",
     "staffs": "Xodimlar",
     "departments": "Boʻlimlar",
     "territories": "Hududlar",
@@ -45,6 +50,7 @@
     "user-logs": "Users logs"
   },
   "checklist_name": "Cheklist nomi",
+  "categoryTypes": "Tekshiruv turlari",
   "checklist_file": "Cheklist fayli",
   "checklist_name_placeholder": "Cheklist nomini kiriting",
   "upload_pdf": "PDF fayl yuklash",

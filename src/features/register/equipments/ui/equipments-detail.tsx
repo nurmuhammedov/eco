@@ -8,7 +8,7 @@ import DetailRow from '@/shared/components/common/detail-row.tsx';
 import FileLink from '@/shared/components/common/file-link.tsx';
 import { Coordinate } from '@/shared/components/common/yandex-map';
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
-//import { useDetail } from '@/shared/hooks';
+//import { useDetail } from '@/shared/model';
 import { getDate } from '@/shared/utils/date.ts';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '@/shared/hooks/use-auth';

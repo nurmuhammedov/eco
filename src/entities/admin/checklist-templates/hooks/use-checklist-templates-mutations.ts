@@ -1,4 +1,4 @@
-// src/entities/admin/checklist-templates/hooks/use-checklist-templates-mutations.ts
+// src/entities/admin/checklist-templates/model/use-checklist-templates-mutations.ts
 import {
   checklistTemplateAPI,
   checklistTemplateKeys,

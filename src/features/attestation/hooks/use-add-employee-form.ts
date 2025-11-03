@@ -1,4 +1,4 @@
-// src/features/attestation/hooks/use-add-employee-form.ts
+// src/features/attestation/model/use-add-employee-form.ts
 import { attestationAPI } from '@/entities/attestation/api/attestation.api';
 import { addEmployeeFormSchema } from '@/entities/attestation/model/add-employee.schema';
 import { AddEmployeeDto, EmployeeLevel } from '@/entities/attestation/model/attestation.types';

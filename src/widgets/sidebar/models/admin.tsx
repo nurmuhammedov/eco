@@ -2,18 +2,21 @@ import type { Navigation } from '@/widgets/sidebar/models/types';
 import {
   ListChecks,
   ListTree,
-  LucideMousePointerSquareDashed,
-  MapPinned,
+  MapPin,
   PencilRuler,
-  ToyBrick,
+  MousePointerClick,
   Users,
+  Clipboard,
+  Activity,
+  AlertTriangle,
+  Star,
 } from 'lucide-react';
 
 export default [
   {
     url: '/territories',
     title: 'menu.territories',
-    icon: <MapPinned />,
+    icon: <MapPin />,
   },
   {
     url: '/department',
@@ -28,7 +31,7 @@ export default [
   {
     url: '/hazardous-facilities',
     title: 'menu.hazardous_facilities',
-    icon: <Users />,
+    icon: <AlertTriangle />,
   },
   {
     url: '/templates',
@@ -38,12 +41,17 @@ export default [
   {
     url: '/equipments',
     title: 'menu.sub_types',
-    icon: <LucideMousePointerSquareDashed />,
+    icon: <MousePointerClick />,
   },
   {
     url: '/attraction-types',
     title: 'Attraksion tipi',
-    icon: <ToyBrick />,
+    icon: <Star />,
+  },
+  {
+    url: '/inspection-surveys',
+    title: 'menu.inspection',
+    icon: <Clipboard />,
   },
   {
     url: '/checklist-templates',
@@ -53,6 +61,6 @@ export default [
   {
     url: '/user-logs',
     title: 'menu.user-logs',
-    icon: <ListChecks />,
+    icon: <Activity />,
   },
 ] as Navigation;

@@ -21,3 +21,23 @@ export function getSelectOptions<T>(list: OptionItem<T>[]): JSX.Element[] {
     )
     .filter(Boolean) as JSX.Element[];
 }
+
+export function getSelectOptionsByType<T>(list: OptionItem<T>[]): JSX.Element[] {
+  if (!Array.isArray(list) || list.length === 0) {
+    return [
+      <SelectItem value="notSelected" key="no-options" disabled={true}>
+        Mavjud emas
+      </SelectItem>,
+    ];
+  }
+
+  return list
+    .map((option) =>
+      option?.id ? (
+        <SelectItem value={String(option.id)} key={String(option.id) || crypto.randomUUID()}>
+          {option.type}
+        </SelectItem>
+      ) : null,
+    )
+    .filter(Boolean) as JSX.Element[];
+}

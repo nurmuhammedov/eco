@@ -115,7 +115,7 @@ export function DataTablePagination<T>({
 
   const hasPageItems = useMemo(() => getPageItems.items.length > 1, [getPageItems]);
 
-  // Return null after all hooks are called
+  // Return null after all model are called
   if (!shouldRender) {
     return null;
   }

@@ -22,3 +22,7 @@ export const useEquipmentDrawer = createEntityDrawerHook(UI_COMPONENTS.EQUIPMENT
 export const useAttractionTypeDrawer = createEntityDrawerHook(UI_COMPONENTS.ATTRACTION_TYPE_DRAWER);
 
 export const useChecklistTemplateDrawer = createEntityDrawerHook(UI_COMPONENTS.CHECKLIST_TEMPLATES_DRAWER);
+
+export const useChecklistDrawer = createEntityDrawerHook(UI_COMPONENTS.CHECKLISTS);
+
+export const useCategoryTypeDrawer = createEntityDrawerHook(UI_COMPONENTS.CATEGORY_TYPES);

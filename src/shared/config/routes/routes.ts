@@ -49,6 +49,7 @@ const PreventionViewPage = lazy(() => import('@/pages/preventions/view'));
 const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'));
 const InspectionsDetailPage = lazy(() => import('@/features/inspections/ui/inspections.detail.tsx'));
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
+const InspectionSurveys = lazy(() => import('@/pages/admin/inspection/ui'));
 const AccreditationPage = lazy(() => import('@/pages/accreditations/page'));
 const AttestationPage = lazy(() => import('@/pages/attestation'));
 const InspectorTasks = lazy(() => import('@/features/risk-analysis/ui/inspector-tasks'));
@@ -165,6 +166,11 @@ export const appRoutes = [
   {
     path: 'department',
     component: DepartmentPage,
+    roles: [UserRoles.ADMIN],
+  },
+  {
+    path: 'inspection-surveys',
+    component: InspectionSurveys,
     roles: [UserRoles.ADMIN],
   },
   {
