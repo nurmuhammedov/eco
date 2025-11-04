@@ -57,7 +57,7 @@ export function UserLogsList() {
       data={data || []}
       columns={columns}
       isLoading={isLoading}
-      className="h-[calc(100svh-220px)]"
+      className="h-[calc(100svh-250px)]"
     />
   );
 }

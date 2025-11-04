@@ -32,8 +32,8 @@ const InspectionManagement = () => {
 
       <Tabs className="mt-3" defaultValue={activeTab} onValueChange={(value: any) => handleChangeTab(value)}>
         <TabsList>
-          <TabsTrigger value="categoryType">{t('categoryTypes')}</TabsTrigger>
           <TabsTrigger value="checklists">{t('checklists')}</TabsTrigger>
+          <TabsTrigger value="categoryType">{t('categoryTypes')}</TabsTrigger>
         </TabsList>
 
         <TabsContent className="mt-4" value="categoryType">

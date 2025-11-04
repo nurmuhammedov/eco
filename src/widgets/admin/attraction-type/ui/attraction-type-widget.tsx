@@ -15,7 +15,7 @@ const AttractionTypeWidget = () => {
 
   return (
     <Fragment>
-      <div className="flex items-center justify-between mb-3 mt-4">
+      <div className="flex items-center justify-between mb-4">
         <h5 className="text-xl font-semibold uppercase">Atraksion tipi</h5>
         <Button onClick={handleAdd}>
           <PlusCircle /> Atraksion tipi qo'shish

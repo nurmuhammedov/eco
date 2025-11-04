@@ -21,8 +21,12 @@ export const inspectionCategoryTypeAPI = {
     );
     return data.data;
   },
-  fetchCategoryTypeSelect: async () => {
-    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.INSPECTION_CATEGORY_TYPES}/select`);
+  fetchCategoryTypeSelect: async (params: any) => {
+    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.INSPECTION_CATEGORY_TYPES}/select`, params);
+    return data.data;
+  },
+  fetchCategoryTypeMetaSelect: async () => {
+    const { data } = await apiClient.get<ApiResponse<any>>(`/metadata/checklist/inspection/categories`);
     return data.data;
   },
   createCategoryType: async (dto: CreateCategoryTypeDTO) => {

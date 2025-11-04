@@ -9,7 +9,6 @@ import {
   Clipboard,
   Activity,
   AlertTriangle,
-  Star,
 } from 'lucide-react';
 
 export default [
@@ -46,18 +45,18 @@ export default [
   {
     url: '/attraction-types',
     title: 'Attraksion tipi',
-    icon: <Star />,
+    icon: <ListChecks />,
   },
   {
     url: '/inspection-surveys',
     title: 'menu.inspection',
     icon: <Clipboard />,
   },
-  {
-    url: '/checklist-templates',
-    title: 'menu.checklist_templates',
-    icon: <ListChecks />,
-  },
+  // {
+  //   url: '/checklist-templates',
+  //   title: 'menu.checklist_templates',
+  //   icon: <ListChecks />,
+  // },
   {
     url: '/user-logs',
     title: 'menu.user-logs',

@@ -1,0 +1,26 @@
+{
+  "accreditation": "Akkreditatsiya",
+  "accreditation_applications": "Akkreditatsiya bo'yicha arizalar",
+  "create_application": "Ariza yaratish",
+  "applications_list": "Arizalar ro'yxati",
+  "nomi": "Nomi",
+  "accreditation_title": "Ekspert tashkilotini akkreditatsiyadan o'tkazish",
+  "accreditation_desc": "Sanoat xavfsizligi sohasida ekspertiza o'tkazish huquqini olish uchun ariza yuborish.",
+  "re_accreditation_title": "Ekspert tashkilotini qayta akkreditatsiyadan o'tkazish",
+  "re_accreditation_desc": "Mavjud akkreditatsiya muddatini uzaytirish uchun ariza yuborish.",
+  "expand_accreditation_title": "Ekspert tashkilotining akkreditatsiya sohasini kengaytirish",
+  "expand_accreditation_desc": "Yangi faoliyat sohalarini qo'shish uchun ariza yuborish.",
+  "select_accreditation_sphere": "Akkreditatsiya sohasini tanlang...",
+  "form": {
+    "accreditationSpheres": "Akkreditatsiya sohalari",
+    "accreditationFieldPath": "Faoliyat olib boriladigan akkreditatsiya sohasi",
+    "organizationCharterPath": "Ekspert tashkiloti nizomi",
+    "declarationConformityPath": "Akkreditatsiya mezonlariga muvofiqlik deklaratsiyasi",
+    "receiptPath": "To'lov to'langanligini tasdiqlovchi hujjat",
+    "employeesInfoPath": "Ishlarni bajaradigan hodimlar haqida ma'lumotlar",
+    "accreditationResourcedPath": "Ishlarni bajarish uchun mavjud resurslar haqida ma'lumotlar",
+    "propertyOwnerShipPath": "Bino, jihozlarga mulk huquqini tasdiqlovchi hujjatlar",
+    "qualityPerformanceInstructionPath": "Sifat bo'yicha qo'llanma",
+    "qualityManagementSystemPath": "Sifatni boshqarish tizimi hujjatlari"
+  }
+}

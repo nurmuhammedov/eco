@@ -21,7 +21,7 @@ export const useChecklistQuery = (
 ) => {
   return useQuery({
     enabled: !!id,
-    staleTime: getTime(1, 'day'),
+    staleTime: 0,
     queryFn: () => checklistAPI.fetchChecklist(id),
     queryKey: checklistKeys.detail('checklist', id),
     placeholderData: (previousData) => previousData,

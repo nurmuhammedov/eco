@@ -8,21 +8,15 @@ import { useCategoryTypeForm } from '../model/use-category-type-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
-
-const categoryOptions = [
-  { id: 'HF', name: 'XICHO' },
-  { id: 'ELEVATOR', name: 'Lift' },
-  { id: 'ATTRACTION', name: 'Attraksion' },
-  { id: 'IRS', name: 'INM' },
-  { id: 'XRAY', name: 'Rentgen' },
-  { id: 'LPG_POWERED', name: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma' },
-];
+import { UIModeEnum } from '@/shared/types';
+import { CategoryTypeView } from '@/features/admin/inspection/category-types/ui/category-type-view';
+import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options';
 
 export const CategoryTypeDrawer = () => {
   const { isOpen, onClose, mode, isCreate } = useCategoryTypeDrawer();
   const modeLabel = useUIActionLabel(mode);
-  const { form, onSubmit, isPending, isFetching } = useCategoryTypeForm();
-  const options = useMemo(() => getSelectOptions(categoryOptions), []);
+  const { form, onSubmit, isPending, isFetching, categoryTypeData } = useCategoryTypeForm();
+  const options = useMemo(() => getSelectOptions(inspectionCategoryOptions), [inspectionCategoryOptions]);
 
   return (
     <BaseDrawer
@@ -34,47 +28,59 @@ export const CategoryTypeDrawer = () => {
       disabled={isPending}
       onSubmit={form.handleSubmit(onSubmit)}
     >
-      <Form {...form}>
-        <div className="space-y-4">
-          {isFetching && !isCreate ? (
-            <FormSkeleton length={2} />
-          ) : (
-            <Fragment>
-              <FormField
-                name="category"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Kategoriya</FormLabel>
-                    <FormControl>
-                      <Select {...field} value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Tanlang" />
-                        </SelectTrigger>
-                        <SelectContent>{options}</SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="type"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tekshiruv turi</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Tekshiruv turini kiriting" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </Fragment>
-          )}
-        </div>
-      </Form>
+      {mode === UIModeEnum.VIEW ? (
+        <CategoryTypeView data={categoryTypeData as any} />
+      ) : (
+        <Form {...form}>
+          <div className="space-y-4">
+            {isFetching && !isCreate ? (
+              <FormSkeleton length={2} />
+            ) : (
+              <Fragment>
+                <FormField
+                  name="category"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Kategoriya</FormLabel>
+                      <FormControl>
+                        <Select
+                          {...field}
+                          value={field.value}
+                          onValueChange={(value) => {
+                            if (value) {
+                              field.onChange(value);
+                            }
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Tanlang" />
+                          </SelectTrigger>
+                          <SelectContent>{options}</SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="type"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tekshiruv turi</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Tekshiruv turini kiriting" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </Fragment>
+            )}
+          </div>
+        </Form>
+      )}
     </BaseDrawer>
   );
 };

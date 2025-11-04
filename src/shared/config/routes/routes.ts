@@ -40,7 +40,7 @@ const RegisterXrayDetail = lazy(() => import('@/features/register/xray/ui/xray-d
 const RiskAnalysisPage = lazy(() => import('@/pages/risk-analysis'));
 const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'));
 const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-info-by-id'));
-const ChecklistTemplatesPage = lazy(() => import('@/pages/admin/checklist-templates/page'));
+// const ChecklistTemplatesPage = lazy(() => import('@/pages/admin/checklist-templates/page'));
 const UserLogsPage = lazy(() => import('@/pages/admin/user-logs/page'));
 const ChecklistTemplatesPage2 = lazy(() => import('@/features/checklists'));
 const PreventionsPage = lazy(() => import('@/pages/preventions'));
@@ -203,11 +203,11 @@ export const appRoutes = [
     component: AttractionTypePage,
     roles: [UserRoles.ADMIN],
   },
-  {
-    path: 'checklist-templates',
-    component: ChecklistTemplatesPage,
-    roles: [UserRoles.ADMIN],
-  },
+  // {
+  //   path: 'checklist-templates',
+  //   component: ChecklistTemplatesPage,
+  //   roles: [UserRoles.ADMIN],
+  // },
   {
     path: 'user-logs',
     component: UserLogsPage,

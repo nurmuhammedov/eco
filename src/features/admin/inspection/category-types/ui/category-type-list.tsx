@@ -17,6 +17,7 @@ export function CategoryTypeList() {
 
   const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
   const onDelete = (id: number) => deleteItem.mutate(id);
+  const onView = (id: number) => onOpen(UIModeEnum.VIEW, { id });
 
   const columns: ColumnDef<CategoryType>[] = [
     {
@@ -33,6 +34,7 @@ export function CategoryTypeList() {
           row={row}
           onEdit={(row) => onEdit(row.original.id!)}
           onDelete={(row) => onDelete(row.original.id!)}
+          onView={(row) => onView(row.original.id!)}
         />
       ),
     },

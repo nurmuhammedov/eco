@@ -23,6 +23,7 @@ export function useCategoryTypeForm() {
   const form = useForm<CreateCategoryTypeDTO>({
     resolver: zodResolver(categoryTypeSchema),
     defaultValues: DEFAULT_VALUES,
+    mode: 'onChange',
   });
 
   const { mutateAsync: createItem, isPending: isCreating } = useCreateCategoryType();
@@ -36,8 +37,8 @@ export function useCategoryTypeForm() {
   }, [categoryTypeData, isCreate, form]);
 
   const handleClose = useCallback(() => {
-    onClose();
     form.reset(DEFAULT_VALUES);
+    onClose();
   }, [form, onClose]);
 
   const handleSubmit = useCallback(
@@ -62,6 +63,7 @@ export function useCategoryTypeForm() {
 
   return {
     form,
+    categoryTypeData,
     isCreate,
     onSubmit: handleSubmit,
     isFetching: isLoading,

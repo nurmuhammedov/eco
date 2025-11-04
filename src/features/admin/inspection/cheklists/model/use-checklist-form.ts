@@ -13,6 +13,7 @@ import {
 } from '@/entities/admin/inspection';
 
 const DEFAULT_VALUES: CreateChecklistDTO = {
+  category: '',
   categoryTypeId: '',
   orderNumber: '',
   question: '',
@@ -27,9 +28,12 @@ export function useChecklistForm() {
   const form = useForm<CreateChecklistDTO>({
     resolver: zodResolver(checklistSchema),
     defaultValues: DEFAULT_VALUES,
+    mode: 'onBlur',
   });
 
-  const { data: categoryTypes } = useCategoryTypeSelectQuery();
+  console.log(form.formState.errors);
+
+  const { data: categoryTypes } = useCategoryTypeSelectQuery(form?.watch('category'));
   const { mutateAsync: createItem, isPending: isCreating } = useCreateChecklist();
   const { mutateAsync: updateItem, isPending: isUpdating } = useUpdateChecklist();
   const { data: checklistData, isLoading } = useChecklistQuery(checklistId);
@@ -37,20 +41,24 @@ export function useChecklistForm() {
   useEffect(() => {
     if (checklistData && !isCreate) {
       form.reset({
-        ...checklistData,
         categoryTypeId: checklistData.categoryTypeId?.toString(),
-        orderNumber: checklistData.orderNumber?.toString(),
+        corrective: checklistData.corrective,
+        orderNumber: checklistData.orderNumber,
+        negative: checklistData.negative,
+        question: checklistData.question,
+        category: checklistData.category?.toString(),
       });
     }
   }, [checklistData, isCreate, form]);
 
   const handleClose = useCallback(() => {
-    onClose();
     form.reset(DEFAULT_VALUES);
+    onClose();
   }, [form, onClose]);
 
   const handleSubmit = useCallback(
     async (formData: CreateChecklistDTO): Promise<boolean> => {
+      console.log(formData);
       try {
         const response = isCreate
           ? await createItem(formData)
@@ -72,6 +80,7 @@ export function useChecklistForm() {
   return {
     form,
     isCreate,
+    checklistData,
     categoryTypes,
     onSubmit: handleSubmit,
     isFetching: isLoading,
