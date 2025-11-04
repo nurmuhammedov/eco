@@ -59,9 +59,6 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
         onSubmit={form.handleSubmit(handleLogin)}
       >
         <div className="w-3/5 3xl:w-2/5">
-          {/*<div className="fixed top-4 right-4">
-            <LanguageDropdown />
-          </div>*/}
           <div className="flex flex-col items-center gap-2 text-center">
             <h1 className="text-2xl font-bold">{t('admin_panel')}</h1>
           </div>

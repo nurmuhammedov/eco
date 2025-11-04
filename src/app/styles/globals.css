@@ -100,9 +100,11 @@
       Golos Text,
       sans-serif;
   }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -197,6 +199,7 @@
   .card-title {
     @apply font-semibold leading-normal text-neutral-850;
   }
+
   .page-sub-title {
     @apply text-base 3xl:text-xl font-semibold;
   }

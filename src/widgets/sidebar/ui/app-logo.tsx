@@ -1,11 +1,6 @@
-// ** Utils **
 import { cn } from '@/shared/lib/utils';
-
-// ** Hooks **
 import { useTranslation } from 'react-i18next';
 import { useSidebar } from '@/shared/components/ui/sidebar';
-
-// ** Components **
 import Icon from '@/shared/components/common/icon';
 
 export function AppLogo() {

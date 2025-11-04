@@ -1,13 +1,24 @@
 export enum UserRoles {
   LEGAL = 'LEGAL', // Yuridik shaxs
-  HEAD = 'HEAD', // Ma'sul bo'lim boshlig'i
-  ADMIN = 'ADMIN', // Ma'mur
-  MANAGER = 'MANAGER', // Ma'sul xodim
+  HEAD = 'HEAD', // Maʼsul bo‘lim boshlig‘i
+  ADMIN = 'ADMIN', // Maʼmur
+  MANAGER = 'MANAGER', // Maʼsul xodim
   CHAIRMAN = 'CHAIRMAN', // Rais
-  REGIONAL = 'REGIONAL', // Hududiy bo'lim boshlig'i
+  REGIONAL = 'REGIONAL', // Hududiy bo‘lim boshlig‘i
   INSPECTOR = 'INSPECTOR', // Nazoratchi
   INDIVIDUAL = 'INDIVIDUAL', // Jismoniy shaxs
 }
+
+export const UserRoleLabels: Record<UserRoles, string> = {
+  [UserRoles.LEGAL]: 'Yuridik shaxs',
+  [UserRoles.HEAD]: 'Maʼsul bo‘lim boshlig‘i',
+  [UserRoles.ADMIN]: 'Maʼmur',
+  [UserRoles.MANAGER]: 'Maʼsul xodim',
+  [UserRoles.CHAIRMAN]: 'Rais',
+  [UserRoles.REGIONAL]: 'Hududiy bo‘lim boshlig‘i',
+  [UserRoles.INSPECTOR]: 'Nazoratchi',
+  [UserRoles.INDIVIDUAL]: 'Jismoniy shaxs',
+};
 
 export enum Direction {
   APPEAL = 'APPEAL',

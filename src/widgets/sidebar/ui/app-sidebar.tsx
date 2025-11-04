@@ -1,17 +1,10 @@
 import { Direction, UserRoles } from '@/entities/user';
-import { apiConfig } from '@/shared/api/constants';
-
-import { TechnocorpLogo } from '@/shared/components/SVGIcons';
-
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
   useSidebar,
 } from '@/shared/components/ui/sidebar';
 import { cn } from '@/shared/lib/utils';
@@ -24,19 +17,6 @@ import allNavigation from '../models/all';
 import { AppLogo } from './app-logo';
 import { useAuth } from '@/shared/hooks/use-auth';
 
-function Footer() {
-  return (
-    <SidebarFooter className="py-4 px-3 border-t border-neutral-200/20">
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <TechnocorpLogo />
-          <p className="text-xm font-normal">tomonidan ishlab chiqilgan</p>
-        </SidebarMenuItem>
-      </SidebarMenu>
-    </SidebarFooter>
-  );
-}
-
 export function AppSidebar() {
   const { state } = useSidebar();
   const sidebarOpen = state === 'expanded';
@@ -45,10 +25,7 @@ export function AppSidebar() {
   const displayedNavigations: Navigation = useMemo(() => {
     if (!user) return [];
 
-    if (
-      user.role === UserRoles.ADMIN ||
-      (user.role === UserRoles.MANAGER && apiConfig.oneIdClientId == 'test_cirns_uz')
-    ) {
+    if (user.role === UserRoles.ADMIN) {
       return NAVIGATIONS[user.role];
     }
 
@@ -80,7 +57,6 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      {sidebarOpen ? <Footer /> : null}
     </Sidebar>
   );
 }

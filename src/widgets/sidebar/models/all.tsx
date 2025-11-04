@@ -1,64 +1,65 @@
 import { Navigation } from '@/widgets/sidebar/models/types';
+import { FileText, Database, AlertCircle, Clipboard, ShieldCheck, CheckCircle, Archive, BarChart2 } from 'lucide-react';
 
 export default [
   {
     id: 'APPEAL',
     title: 'menu.applications',
     url: '/applications',
-    icon: 'file-text',
+    icon: <FileText />,
   },
   {
     id: 'REGISTRY',
     title: 'menu.register',
     url: '/register',
-    icon: 'database',
+    icon: <Database />,
   },
   {
     id: 'RISK_ANALYSIS',
     title: 'menu.risk_analysis',
     url: '/risk-analysis',
-    icon: 'alert-circle',
+    icon: <AlertCircle />,
   },
   {
     id: 'INSPECTION',
     title: 'Tekshiruvlar',
     url: '/inspections',
-    icon: 'clipboard',
+    icon: <Clipboard />,
   },
   {
     id: 'PREVENTION',
     title: 'Profilaktika',
     url: '/preventions',
-    icon: 'shield-check',
+    icon: <ShieldCheck />,
   },
   {
     id: 'ACCREDITATION',
     title: 'menu.accreditation',
     url: '/accreditations',
-    icon: 'check-circle',
+    icon: <CheckCircle />,
   },
   {
     id: 'ATTESTATION_COMMITTEE',
     title: 'menu.attestation',
     url: '/attestations',
-    icon: 'file-text',
+    icon: <FileText />,
   },
   {
     id: 'ATTESTATION_REGIONAL',
     title: 'menu.attestation',
     url: '/attestations',
-    icon: 'file-text',
+    icon: <FileText />,
   },
   {
     id: 'CADASTRE',
     title: 'menu.cadastre',
     url: '/cadastre',
-    icon: 'archive',
+    icon: <Archive />,
   },
   {
     id: 'REPORT',
     title: 'Hisobotlar',
     url: '/reports',
-    icon: 'bar-chart-2',
+    icon: <BarChart2 />,
   },
 ] as Navigation;

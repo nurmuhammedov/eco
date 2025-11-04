@@ -6,11 +6,13 @@ import { useAttractionTypeDrawer } from '@/shared/hooks/entity-hooks';
 import { UIModeEnum } from '@/shared/types/ui-types';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
+import { useCustomSearchParams } from '@/shared/hooks';
 
 export function AttractionTypeList() {
   const { t } = useTranslation('common');
   const { onOpen } = useAttractionTypeDrawer();
-  const { data, isLoading } = useAttractionTypeList({});
+  const { paramsObject } = useCustomSearchParams();
+  const { data, isLoading } = useAttractionTypeList({ page: paramsObject?.page || 1, size: paramsObject?.size || 10 });
   const { mutate: deleteAttractionType } = useDeleteAttractionType();
 
   const columns: ColumnDef<AttractionType>[] = [
@@ -45,7 +47,7 @@ export function AttractionTypeList() {
       data={data?.data || []}
       columns={columns}
       isLoading={isLoading}
-      className="h-[calc(100svh-220px)]"
+      className="h-[calc(100svh-240px)]"
     />
   );
 }
