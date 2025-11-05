@@ -5,12 +5,10 @@ import { UserRoles } from '@/entities/user';
 import InspectionMainInfo from '@/features/inspections/ui/parts/inspection-main-info.tsx';
 import AddInspectionDocuments from '@/features/inspections/ui/parts/add-inspection-documents.tsx';
 import CreateDocument from '@/features/inspections/ui/parts/create-document.tsx';
-import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 
-const InpectionsDetailInfo = () => {
+const InpectionsDetailInfo = ({ inspectionData }: any) => {
   const [activeTab, setActiveTab] = useState('main_info');
   const { user } = useAuth();
-  const { data: inspectionData } = useInspectionDetail();
 
   const resetTab = () => {
     setActiveTab('main_info');
@@ -27,7 +25,7 @@ const InpectionsDetailInfo = () => {
         </TabsList>
       )}
       <TabsContent value="main_info">
-        <InspectionMainInfo />
+        <InspectionMainInfo inspectionData={inspectionData} />
       </TabsContent>
       <TabsContent value="add_inspection_documents">
         <AddInspectionDocuments />

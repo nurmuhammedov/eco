@@ -10,7 +10,7 @@ import { UserRoles } from '@/entities/user';
 
 export enum InspectionStatus {
   NEW = 'NEW',
-  IN_PROCESS = 'IN_PROCESS',
+  IN_PROCESS = 'ASSIGNED',
   CONDUCTED = 'CONDUCTED',
 }
 

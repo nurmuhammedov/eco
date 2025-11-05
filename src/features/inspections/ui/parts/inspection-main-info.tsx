@@ -1,15 +1,15 @@
-import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
+// import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 import DetailRow from '@/shared/components/common/detail-row.tsx';
 import { getDate } from '@/shared/utils/date.ts';
 import FileLink from '@/shared/components/common/file-link.tsx';
-import { useActDetail } from '@/features/inspections/hooks/use-act-detail.ts';
+// import { useActDetail } from '@/features/inspections/hooks/use-act-detail.ts';
 import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx';
 import { useState } from 'react';
 import { Eye } from 'lucide-react';
 
-const InspectionMainInfo = () => {
-  const { data: inspectionData } = useInspectionDetail();
-  const { data: actInfo } = useActDetail();
+const InspectionMainInfo = ({ inspectionData }: any) => {
+  // const { data: inspectionData } = useInspectionDetail();
+  // const { data: inspectionData?.act } = useActDetail();
   const [signers, setSigners] = useState<any[]>([]);
 
   if (!inspectionData) {
@@ -34,9 +34,9 @@ const InspectionMainInfo = () => {
 
       <DetailRow
         title="Tekshiruv buyrug‘i:"
-        value={!!inspectionData?.decreePath ? <FileLink url={inspectionData?.decreePath} /> : '-'}
+        value={!!inspectionData?.decree?.path ? <FileLink url={inspectionData?.decree?.path} /> : '-'}
       />
-      <DetailRow title="Buyruq sanasi:" value={getDate(inspectionData?.decreeDate) || '-'} />
+      <DetailRow title="Buyruq sanasi:" value={getDate(inspectionData?.decree?.createdAt) || '-'} />
       <DetailRow title="Buyruq raqami:" value={inspectionData?.decreeNumber || '-'} />
 
       <DetailRow
@@ -71,17 +71,17 @@ const InspectionMainInfo = () => {
         title="Tilxat:"
         value={!!inspectionData?.acknowledgementPath ? <FileLink url={inspectionData?.acknowledgementPath} /> : '-'}
       />
-      {!!actInfo && (
+      {!!inspectionData?.act && (
         <DetailRow
           title="Dalolatnoma:"
           value={
-            !!actInfo?.path ? (
+            !!inspectionData?.act?.path ? (
               <div className="flex items-center gap-2">
-                <FileLink url={actInfo?.path} />
+                <FileLink url={inspectionData?.act?.path} />
                 <button
                   className="cursor-pointer hover:text-yellow-200 text-[#A6B1BB]"
                   onClick={() => {
-                    setSigners(actInfo?.signers || []);
+                    setSigners(inspectionData?.act?.signers || []);
                   }}
                 >
                   <Eye size="18" />

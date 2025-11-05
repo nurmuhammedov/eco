@@ -7,7 +7,7 @@ import ObjectsList from '@/features/inspections/ui/parts/objects-list.tsx';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
 import { UserRoles } from '@/entities/user';
 import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts';
-import InpectionsDetailInfo from '@/features/inspections/ui/parts/inpections-detail-info.tsx';
+import InspectionsDetailInfo from '@/features/inspections/ui/parts/inpections-detail-info.tsx';
 import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 import { InspectionStatus } from '@/widgets/inspection/ui/inspection-widget.tsx';
 import InspectionReports from '@/features/inspections/ui/parts/inspection-reports.tsx';
@@ -31,13 +31,13 @@ const InspectionsInfo = () => {
         <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
           {user?.role === UserRoles.REGIONAL && inspectionData?.status === InspectionStatus.NEW && (
             <div className="flex justify-end py-2">
-              <AttachInspectorModal />
+              <AttachInspectorModal type={inspectionData?.belongType} />
             </div>
           )}
           <ObjectsList />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="inspection_info" title="Tekshiruv ma’lumotlari">
-          <InpectionsDetailInfo />
+          <InspectionsDetailInfo inspectionData={inspectionData} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item
           value="inspection_results"
