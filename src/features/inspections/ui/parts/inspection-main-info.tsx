@@ -1,15 +1,11 @@
-// import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 import DetailRow from '@/shared/components/common/detail-row.tsx';
 import { getDate } from '@/shared/utils/date.ts';
 import FileLink from '@/shared/components/common/file-link.tsx';
-// import { useActDetail } from '@/features/inspections/hooks/use-act-detail.ts';
 import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx';
 import { useState } from 'react';
 import { Eye } from 'lucide-react';
 
 const InspectionMainInfo = ({ inspectionData }: any) => {
-  // const { data: inspectionData } = useInspectionDetail();
-  // const { data: inspectionData?.act } = useActDetail();
   const [signers, setSigners] = useState<any[]>([]);
 
   if (!inspectionData) {
@@ -31,10 +27,9 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
         return <DetailRow key={item.id} title={`Tekshiruvchi inspektor ${idx + 1}:`} value={item?.name} />;
       })}
 
-      {/*tepga olib chiqish kerak ombudsan va buyurq va xabar qilish xati*/}
       <DetailRow
         title="Ombudsman maxsus kod:"
-        value={inspectionData?.specialCode || <span style={{ color: 'green' }}>OMK458</span>}
+        value={<span style={{ color: 'green' }}>{inspectionData?.specialCode || '-'}</span>}
       />
 
       {/*<DetailRow*/}

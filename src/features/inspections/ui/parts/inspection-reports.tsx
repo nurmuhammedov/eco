@@ -9,11 +9,11 @@ import ReportExecutionModal from '@/features/inspections/ui/parts/report-executi
 import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
 import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
-import { InspectionChecklistForm } from '@/features/inspections/ui/parts/inspection-checklist-form';
-import { InspectionStatus } from '@/widgets/inspection/ui/inspection-widget';
+import { answerOptions, InspectionChecklistForm } from '@/features/inspections/ui/parts/inspection-checklist-form';
+import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/ui/inspection-widget';
 import { QK_INSPECTION } from '@/shared/constants/query-keys';
 
-const InspectionReports = ({ checklistCategoryTypeId }: any) => {
+const InspectionReports = ({ checklistCategoryTypeId, status }: any) => {
   const { data, isLoading } = useInspectionReports();
   const { user } = useAuth();
   const { addParams, paramsObject } = useCustomSearchParams();
@@ -23,7 +23,7 @@ const InspectionReports = ({ checklistCategoryTypeId }: any) => {
   const tabulation = paramsObject?.tabulation || 'all';
   const { data: inspectionData } = useInspectionDetail();
   const { data: questions } = useData<any[]>(
-    `/inspection-checklists/by-category-type/${checklistCategoryTypeId}`,
+    `/inspection-${status == InspectionSubMenuStatus.CONDUCTED ? 'results/by-inspection/' : 'checklists/by-category-type/'}${status == InspectionSubMenuStatus.CONDUCTED ? paramsObject?.inspectionId : checklistCategoryTypeId}`,
     !!checklistCategoryTypeId,
     {},
     [QK_INSPECTION],
@@ -34,6 +34,15 @@ const InspectionReports = ({ checklistCategoryTypeId }: any) => {
       accessorKey: 'question',
       header: 'Savol',
     },
+    ...(status == InspectionSubMenuStatus.CONDUCTED
+      ? [
+          {
+            accessorKey: 'answer',
+            header: 'Javob',
+            cell: ({ row }: any) => answerOptions?.find((i) => i?.value == row.original?.answer)?.labelKey || '',
+          },
+        ]
+      : []),
   ];
 
   const columns: ColumnDef<any>[] = [

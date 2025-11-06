@@ -21,7 +21,7 @@ interface InspectionChecklistFormProps {
   onSuccess?: () => void;
 }
 
-const answerOptions = [
+export const answerOptions = [
   {
     value: ChecklistAnswerStatus.POSITIVE,
     labelKey: 'Bajarilgan',
@@ -71,7 +71,7 @@ export const InspectionChecklistForm = ({ items, inspectionId }: InspectionCheck
       question: item.question,
       answer: item.answer,
       orderNumber: item.orderNumber,
-      corrective: item.description || null,
+      corrective: item.answer == ChecklistAnswerStatus.NEGATIVE ? item.description || null : null,
     }));
 
     mutateAsync({ dtoList: payload, inspectionId }).then(async () => {
@@ -92,7 +92,9 @@ export const InspectionChecklistForm = ({ items, inspectionId }: InspectionCheck
                 {index + 1}. {field.question}
               </CardTitle>
             </CardHeader>
+
             <CardContent className="flex flex-col gap-4">
+              {/* Javob tanlash (radio group) */}
               <FormField
                 control={form.control}
                 name={`items.${index}.answer`}
@@ -102,7 +104,7 @@ export const InspectionChecklistForm = ({ items, inspectionId }: InspectionCheck
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                         className="flex flex-row flex-wrap items-center gap-x-6 gap-y-2"
                       >
                         {answerOptions.map((option) => (
@@ -120,22 +122,24 @@ export const InspectionChecklistForm = ({ items, inspectionId }: InspectionCheck
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name={`items.${index}.description`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('Chora-tadbir matni', 'Chora-tadbir matni')}</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder={t('Chora-tadbir matnni kiriting...', 'Chora-tadbir matnni kiriting...')}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {form.watch(`items.${index}.answer`) === ChecklistAnswerStatus.NEGATIVE && (
+                <FormField
+                  control={form.control}
+                  name={`items.${index}.description`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('Chora-tadbir matni', 'Chora-tadbir matni')}</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder={t('Chora-tadbir matnni kiriting...', 'Chora-tadbir matnni kiriting...')}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
             </CardContent>
           </Card>
         ))}

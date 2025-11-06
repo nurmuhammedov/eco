@@ -19,7 +19,7 @@ const InspectionsDetailInfo = ({ inspectionData }: any) => {
       {user?.role === UserRoles.INSPECTOR && (
         <TabsList className="bg-[#EDEEEE]">
           <TabsTrigger value="main_info">Umumiy ma’lumotlar</TabsTrigger>
-          <TabsTrigger value="add_inspection_documents">Tekshiruv hujjatlari yuklash</TabsTrigger>
+          <TabsTrigger value="add_inspection_documents">Tekshiruv maʼlumotlarini yangilash</TabsTrigger>
           {inspectionData?.status === 'IN_PROCESS' && (
             <TabsTrigger value="create_document">Dalolatnoma tuzish</TabsTrigger>
           )}

@@ -24,7 +24,7 @@ const InspectionsInfo = () => {
       <div className="flex justify-between items-center mb-4">
         <GoBack title={`Tashkilot: ${paramsObject?.name || ''} (${currentTin})`} />
       </div>
-      <DetailCardAccordion defaultValue={['risk_anlalysis_info', 'inspection_info']}>
+      <DetailCardAccordion defaultValue={['risk_anlalysis_info', 'inspection_info', 'inspection_results']}>
         <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
           <LegalApplicantInfo tinNumber={currentTin} />
         </DetailCardAccordion.Item>
@@ -40,7 +40,10 @@ const InspectionsInfo = () => {
           <InspectionsDetailInfo inspectionData={inspectionData} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="inspection_results" title={`Tekshiruv dasturi  (${paramsObject?.name || ''})`}>
-          <InspectionReports checklistCategoryTypeId={inspectionData?.checklistCategoryTypeId} />
+          <InspectionReports
+            status={inspectionData?.status}
+            checklistCategoryTypeId={inspectionData?.checklistCategoryTypeId}
+          />
         </DetailCardAccordion.Item>
         {/*<DetailCardAccordion.Item*/}
         {/*  value="type"*/}
