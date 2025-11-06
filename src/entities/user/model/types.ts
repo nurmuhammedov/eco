@@ -5,7 +5,7 @@ export enum UserRoles {
   MANAGER = 'MANAGER', // Maʼsul xodim
   CHAIRMAN = 'CHAIRMAN', // Rais
   REGIONAL = 'REGIONAL', // Hududiy bo‘lim boshlig‘i
-  INSPECTOR = 'INSPECTOR', // Nazoratchi
+  INSPECTOR = 'INSPECTOR', // Inspektor
   INDIVIDUAL = 'INDIVIDUAL', // Jismoniy shaxs
 }
 
@@ -16,7 +16,7 @@ export const UserRoleLabels: Record<UserRoles, string> = {
   [UserRoles.MANAGER]: 'Maʼsul xodim',
   [UserRoles.CHAIRMAN]: 'Rais',
   [UserRoles.REGIONAL]: 'Hududiy bo‘lim boshlig‘i',
-  [UserRoles.INSPECTOR]: 'Nazoratchi',
+  [UserRoles.INSPECTOR]: 'Inspektor',
   [UserRoles.INDIVIDUAL]: 'Jismoniy shaxs',
 };
 

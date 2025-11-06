@@ -34,7 +34,7 @@ const answerOptions = [
   },
   {
     value: ChecklistAnswerStatus.PARTIAL,
-    labelKey: 'Qisman bajarilgan',
+    labelKey: 'Tadbiq etilmaydi',
   },
   // {
   //   value: ChecklistAnswerStatus.UNRELATED,
