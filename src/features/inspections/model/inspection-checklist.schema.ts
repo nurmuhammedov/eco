@@ -14,7 +14,6 @@ export const checklistItemSchema = z.object({
     required_error: 'Iltimos, javob variantlaridan birini tanlang',
   }),
   description: z.string().optional(),
-  file: z.string().optional().nullable(),
 });
 
 export const checklistFormSchema = z.object({

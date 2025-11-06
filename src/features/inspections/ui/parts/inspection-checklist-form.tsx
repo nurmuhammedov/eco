@@ -6,14 +6,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types';
 import {
   ChecklistAnswerStatus,
   ChecklistFormValues,
   checklistFormSchema,
 } from '../../model/inspection-checklist.schema';
 import { useAdd } from '@/shared/hooks';
-import { InputFile } from '@/shared/components/common/file-upload';
 import { useQueryClient } from '@tanstack/react-query';
 import { QK_INSPECTION } from '@/shared/constants/query-keys';
 
@@ -73,8 +71,7 @@ export const InspectionChecklistForm = ({ items, inspectionId }: InspectionCheck
       question: item.question,
       answer: item.answer,
       orderNumber: item.orderNumber,
-      description: item.description || null,
-      filePath: item.file ? item.file : null,
+      corrective: item.description || null,
     }));
 
     mutateAsync({ dtoList: payload, inspectionId }).then(async () => {
@@ -128,26 +125,13 @@ export const InspectionChecklistForm = ({ items, inspectionId }: InspectionCheck
                 name={`items.${index}.description`}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('common:description', 'Izoh')}</FormLabel>
+                    <FormLabel>{t('Chora-tadbir matni', 'Chora-tadbir matni')}</FormLabel>
                     <FormControl>
-                      <Textarea placeholder={t('common:enter_description', 'Izoh kiriting...')} {...field} />
+                      <Textarea
+                        placeholder={t('Chora-tadbir matnni kiriting...', 'Chora-tadbir matnni kiriting...')}
+                        {...field}
+                      />
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`items.${index}.file`}
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex items-center gap-2">
-                      <FormLabel>{t('common:file', 'Fayl')}</FormLabel>
-                      <FormControl>
-                        <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                      </FormControl>
-                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
