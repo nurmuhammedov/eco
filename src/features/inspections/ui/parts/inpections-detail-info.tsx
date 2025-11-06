@@ -6,13 +6,14 @@ import InspectionMainInfo from '@/features/inspections/ui/parts/inspection-main-
 import AddInspectionDocuments from '@/features/inspections/ui/parts/add-inspection-documents.tsx';
 import CreateDocument from '@/features/inspections/ui/parts/create-document.tsx';
 
-const InpectionsDetailInfo = ({ inspectionData }: any) => {
+const InspectionsDetailInfo = ({ inspectionData }: any) => {
   const [activeTab, setActiveTab] = useState('main_info');
   const { user } = useAuth();
 
   const resetTab = () => {
     setActiveTab('main_info');
   };
+
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
       {user?.role === UserRoles.INSPECTOR && (
@@ -28,7 +29,7 @@ const InpectionsDetailInfo = ({ inspectionData }: any) => {
         <InspectionMainInfo inspectionData={inspectionData} />
       </TabsContent>
       <TabsContent value="add_inspection_documents">
-        <AddInspectionDocuments />
+        <AddInspectionDocuments resetTab={resetTab} />
       </TabsContent>
       <TabsContent value="create_document">
         <CreateDocument resetTab={resetTab} />
@@ -36,4 +37,4 @@ const InpectionsDetailInfo = ({ inspectionData }: any) => {
     </Tabs>
   );
 };
-export default InpectionsDetailInfo;
+export default InspectionsDetailInfo;

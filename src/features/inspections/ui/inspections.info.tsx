@@ -22,13 +22,13 @@ const InspectionsInfo = () => {
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <GoBack title={`Tashkilot: ${paramsObject.name} (${currentTin})`} />
+        <GoBack title={`Tashkilot: ${paramsObject?.name || ''} (${currentTin})`} />
       </div>
-      <DetailCardAccordion defaultValue={['risk_anlalysis_info', 'inspection_results', 'inspection_info']}>
+      <DetailCardAccordion defaultValue={['risk_anlalysis_info', 'inspection_info']}>
         <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
           <LegalApplicantInfo tinNumber={currentTin} />
         </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
+        <DetailCardAccordion.Item value="risk_anlalysis_info" title={`Xavfni tahlil qilish bo‘yicha ma’lumotlar`}>
           {user?.role === UserRoles.REGIONAL && inspectionData?.status === InspectionStatus.NEW && (
             <div className="flex justify-end py-2">
               <AttachInspectorModal type={inspectionData?.belongType} />
@@ -36,15 +36,18 @@ const InspectionsInfo = () => {
           )}
           <ObjectsList />
         </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="inspection_info" title="Tekshiruv ma’lumotlari">
+        <DetailCardAccordion.Item value="inspection_info" title={`Tekshiruv ma’lumotlari`}>
           <InspectionsDetailInfo inspectionData={inspectionData} />
         </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item
-          value="inspection_results"
-          title="Tekshiruv bo‘yicha yuborilgan ijro hujjatlari va ularni ko‘rish natijasi"
-        >
-          <InspectionReports />
+        <DetailCardAccordion.Item value="inspection_results" title={`Tekshiruv dasturi  (${paramsObject?.name || ''})`}>
+          <InspectionReports checklistCategoryTypeId={inspectionData?.checklistCategoryTypeId} />
         </DetailCardAccordion.Item>
+        {/*<DetailCardAccordion.Item*/}
+        {/*  value="type"*/}
+        {/*  title={`Tekshiruvda aniqlangan kamchiliklar yuzasidan ko‘rilgan choralar  (${paramsObject?.name || ''})`}*/}
+        {/*>*/}
+        {/*  <div></div>*/}
+        {/*</DetailCardAccordion.Item>*/}
       </DetailCardAccordion>
     </>
   );

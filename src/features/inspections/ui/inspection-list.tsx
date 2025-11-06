@@ -4,7 +4,7 @@ import { DataTable } from '@/shared/components/common/data-table';
 import { Button } from '@/shared/components/ui/button';
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
 import { useAuth } from '@/shared/hooks/use-auth';
-import { InspectionStatus } from '@/widgets/inspection/ui/inspection-widget';
+import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/ui/inspection-widget';
 import { ColumnDef } from '@tanstack/react-table';
 import { Eye } from 'lucide-react';
 import React from 'react';
@@ -13,23 +13,22 @@ import { UserRoles } from '@/entities/user';
 
 export const InspectionList: React.FC = () => {
   const navigate = useNavigate();
-  const { paramsObject } = useCustomSearchParams();
+  const {
+    paramsObject: { status = InspectionStatus.ALL, subStatus = InspectionSubMenuStatus.ASSIGNED, ...rest },
+  } = useCustomSearchParams();
   const { user } = useAuth();
   const { data: inspections, isLoading } = useInspections({
-    ...paramsObject,
-    intervalId: paramsObject?.intervalId || user?.interval?.id,
-    status: paramsObject?.status
-      ? paramsObject?.status
-      : user?.role == UserRoles.INSPECTOR
-        ? InspectionStatus.IN_PROCESS
-        : user?.role == UserRoles.LEGAL
-          ? InspectionStatus.CONDUCTED
-          : InspectionStatus.NEW,
+    ...rest,
+    status: [UserRoles.LEGAL, UserRoles?.INSPECTOR]?.includes(user?.role as unknown as UserRoles)
+      ? subStatus
+      : status === InspectionStatus.ALL
+        ? undefined
+        : status == InspectionStatus.ASSIGNED
+          ? subStatus
+          : status,
   });
   const handleView = (row: Inspection) => {
-    navigate(
-      `/inspections/info?inspectionId=${row.id}&tin=${row.tin}&name=${row.legalName}&intervalId=${paramsObject.intervalId || user?.interval?.id}`,
-    );
+    navigate(`/inspections/info?inspectionId=${row.id}&tin=${row.tin}&name=${row.legalName}`);
   };
 
   const columns: ColumnDef<Inspection>[] = [
@@ -70,7 +69,7 @@ export const InspectionList: React.FC = () => {
       data={inspections || []}
       columns={columns as unknown as any}
       isLoading={isLoading}
-      className="h-[calc(100vh-280px)]"
+      className="h-[calc(100vh-250px)]"
     />
   );
 };

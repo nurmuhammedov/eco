@@ -22,6 +22,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
         title="Tekshiruv reja jadvali:"
         value={!!inspectionData?.schedulePath ? <FileLink url={inspectionData?.schedulePath} /> : '-'}
       />
+
       <DetailRow
         title="Tekshiruv sanasi:"
         value={getDate(inspectionData?.startDate) + ' - ' + getDate(inspectionData?.endDate)}
@@ -30,47 +31,79 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
         return <DetailRow key={item.id} title={`Tekshiruvchi inspektor ${idx + 1}:`} value={item?.name} />;
       })}
 
-      <DetailRow title="Ombudsman maxsus kod:" value={inspectionData?.specialCode || '-'} />
+      {/*tepga olib chiqish kerak ombudsan va buyurq va xabar qilish xati*/}
+      <DetailRow
+        title="Ombudsman maxsus kod:"
+        value={inspectionData?.specialCode || <span style={{ color: 'green' }}>OMK458</span>}
+      />
+
+      {/*<DetailRow*/}
+      {/*  title="Tekshiruv buyrug‘i:"*/}
+      {/*  value={!!inspectionData?.decree?.path ? <FileLink url={inspectionData?.decree?.path} /> : '-'}*/}
+      {/*/>*/}
 
       <DetailRow
         title="Tekshiruv buyrug‘i:"
-        value={!!inspectionData?.decree?.path ? <FileLink url={inspectionData?.decree?.path} /> : '-'}
+        value={
+          !!inspectionData?.decree?.path ? (
+            <div className="flex items-center gap-2">
+              <span>{getDate(inspectionData?.decree?.createdAt) || '-'}</span> |
+              <span>{inspectionData?.decreeNumber || '-'}</span> |
+              <FileLink url={inspectionData?.decree?.path} />
+              <button
+                className="cursor-pointer hover:text-yellow-200 text-[#A6B1BB]"
+                onClick={() => {
+                  setSigners(inspectionData?.decree?.signers || []);
+                }}
+              >
+                <Eye size="18" />
+              </button>
+            </div>
+          ) : (
+            '-'
+          )
+        }
       />
-      <DetailRow title="Buyruq sanasi:" value={getDate(inspectionData?.decree?.createdAt) || '-'} />
-      <DetailRow title="Buyruq raqami:" value={inspectionData?.decreeNumber || '-'} />
+
+      {/*<DetailRow title="Buyruq sanasi:" value={getDate(inspectionData?.decree?.createdAt) || '-'} />*/}
+      {/*<DetailRow title="Buyruq raqami:" value={inspectionData?.decreeNumber || '-'} />*/}
 
       <DetailRow
         title="Xabardor qilish xati:"
         value={
-          !!inspectionData?.notificationLetterPath ? <FileLink url={inspectionData?.notificationLetterPath} /> : '-'
+          !!inspectionData?.notificationLetterPath ? (
+            <div className="flex items-center gap-2">
+              <span>{getDate(inspectionData?.notificationLetterDate)}</span> |
+              <FileLink url={inspectionData?.notificationLetterPath} />
+            </div>
+          ) : (
+            '-'
+          )
         }
       />
 
-      <DetailRow title="Xabardor qilish xati sanasi:" value={getDate(inspectionData?.notificationLetterDate) || '-'} />
+      {/*<DetailRow title="Xabardor qilish xati sanasi:" value={getDate(inspectionData?.notificationLetterDate) || '-'} />*/}
+      {/*<DetailRow*/}
+      {/*  title="Buyurtma:"*/}
+      {/*  value={!!inspectionData?.orderPath ? <FileLink url={inspectionData?.orderPath} /> : '-'}*/}
+      {/*/>*/}
+      {/*<DetailRow*/}
+      {/*  title="Tekshiruv dasturi:"*/}
+      {/*  value={!!inspectionData?.programPath ? <FileLink url={inspectionData?.programPath} /> : '-'}*/}
+      {/*/>*/}
+      {/*<DetailRow*/}
+      {/*  title="Chora-tadbirlar:"*/}
+      {/*  value={!!inspectionData?.measuresPath ? <FileLink url={inspectionData?.measuresPath} /> : '-'}*/}
+      {/*/>*/}
+      {/*<DetailRow*/}
+      {/*  title="Tekshiruv natijasi:"*/}
+      {/*  value={!!inspectionData?.resultPath ? <FileLink url={inspectionData?.resultPath} /> : '-'}*/}
+      {/*/>*/}
+      {/*<DetailRow*/}
+      {/*  title="Tilxat:"*/}
+      {/*  value={!!inspectionData?.acknowledgementPath ? <FileLink url={inspectionData?.acknowledgementPath} /> : '-'}*/}
+      {/*/>*/}
 
-      <DetailRow
-        title="Buyurtma:"
-        value={!!inspectionData?.orderPath ? <FileLink url={inspectionData?.orderPath} /> : '-'}
-      />
-
-      <DetailRow
-        title="Tekshiruv dasturi:"
-        value={!!inspectionData?.programPath ? <FileLink url={inspectionData?.programPath} /> : '-'}
-      />
-
-      <DetailRow
-        title="Chora-tadbirlar:"
-        value={!!inspectionData?.measuresPath ? <FileLink url={inspectionData?.measuresPath} /> : '-'}
-      />
-
-      <DetailRow
-        title="Tekshiruv natijasi:"
-        value={!!inspectionData?.resultPath ? <FileLink url={inspectionData?.resultPath} /> : '-'}
-      />
-      <DetailRow
-        title="Tilxat:"
-        value={!!inspectionData?.acknowledgementPath ? <FileLink url={inspectionData?.acknowledgementPath} /> : '-'}
-      />
       {!!inspectionData?.act && (
         <DetailRow
           title="Dalolatnoma:"

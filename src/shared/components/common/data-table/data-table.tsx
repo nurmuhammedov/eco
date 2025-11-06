@@ -137,7 +137,9 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row, idx) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {showNumeration && (
-                    <TableCell>{currentPage > 1 ? idx + (currentPage * pageSize - (pageSize - 1)) : idx + 1}</TableCell>
+                    <TableCell style={{ width: '15px' }}>
+                      {currentPage > 1 ? idx + (currentPage * pageSize - (pageSize - 1)) : idx + 1}
+                    </TableCell>
                   )}
                   {row.getVisibleCells().map((cell) => (
                     <TableCell

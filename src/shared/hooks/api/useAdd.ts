@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 
 const useAdd = <TVariables extends object, TData, TError>(
   endpoint: string,
-  successMessage: string = 'Saved successfully',
+  successMessage: string = 'Muvaffaqiyatli saqlandi!',
 ) => {
   return useMutation<TData, TError, TVariables>({
     mutationFn: (data: TVariables) => CommonService.addData<TVariables, TData>(endpoint, data),

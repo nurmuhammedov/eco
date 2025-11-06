@@ -11,6 +11,9 @@ import { Button } from '@/shared/components/ui/button.tsx';
 import { useSetFiles } from '@/features/inspections/hooks/use-set-files.ts';
 import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 import { useEffect } from 'react';
+import { QK_INSPECTION } from '@/shared/constants/query-keys';
+import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 
 const schema = z.object({
   specialCode: z.string().optional().default(''),
@@ -23,8 +26,9 @@ const schema = z.object({
   resultPath: z.string().optional().default(''),
 });
 
-const AddInspectionDocuments = () => {
-  const { mutate } = useSetFiles();
+const AddInspectionDocuments = ({ resetTab }: any) => {
+  const queryClient = useQueryClient();
+  const { mutateAsync } = useSetFiles();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
@@ -50,11 +54,16 @@ const AddInspectionDocuments = () => {
   const onSubmit = (data: any) => {
     const transformedDate = format(data.notificationLetterDate, 'yyyy-MM-dd') || null;
 
-    mutate({
+    mutateAsync({
       ...data,
       notificationLetterDate: transformedDate,
+    }).then(async () => {
+      toast.success('Muvaffaqiyatli saqlandi!');
+      resetTab?.();
+      await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] });
     });
   };
+
   return (
     <Form {...form}>
       <form className="bg-white shadow rounded-lg p-4" onSubmit={form.handleSubmit(onSubmit)}>

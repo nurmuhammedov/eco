@@ -1,72 +1,85 @@
-import { InspectionList } from '@/features/inspection/ui/inspection-list';
-import { useRiskAnalysisIntervalsQuery } from '@/shared/api/dictionaries/hooks/use-risk-analysis-intervals-query';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { InspectionList } from '@/features/inspections/ui/inspection-list';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
 import { useAuth } from '@/shared/hooks/use-auth';
-import { getDate } from '@/shared/utils/date';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { UserRoles } from '@/entities/user';
+import { useData } from '@/shared/hooks';
+import { Badge } from '@/shared/components/ui/badge';
 
 export enum InspectionStatus {
+  ALL = 'ALL',
   NEW = 'NEW',
-  IN_PROCESS = 'ASSIGNED',
-  CONDUCTED = 'CONDUCTED',
+  ASSIGNED = 'ASSIGNED',
 }
+
+export enum InspectionSubMenuStatus {
+  CONDUCTED = 'CONDUCTED',
+  ASSIGNED = 'ASSIGNED',
+}
+
+export interface CountDto {
+  allCount: number;
+  newCount: number;
+  assignedCount: number;
+  conductedCount: number;
+}
+
+export const defaultCountDto: CountDto = {
+  allCount: 0,
+  newCount: 0,
+  assignedCount: 0,
+  conductedCount: 0,
+};
 
 export const InspectionWidget: React.FC = () => {
   const { user } = useAuth();
   const { paramsObject, addParams } = useCustomSearchParams();
-  const { data: intervalOptionsData, isLoading: isLoadingIntervals } = useRiskAnalysisIntervalsQuery();
-
   const isInspector = user?.role == UserRoles.INSPECTOR;
   const isLegal = user?.role == UserRoles.LEGAL;
   const activeTab = paramsObject.status;
-  const defaultTab = isLegal ? InspectionStatus.CONDUCTED : InspectionStatus.NEW;
+  const activeSubTab = paramsObject.subStatus;
+
+  const { data: countObject = defaultCountDto } = useData<CountDto>('/inspections/count');
 
   const handleTabChange = (value: string) => {
-    addParams({ status: value });
+    addParams({ status: value, page: 1 });
   };
 
-  const handleIntervalChange = (value: string) => {
-    addParams({ intervalId: value });
+  const handleSubTabChange = (value: string) => {
+    addParams({ subStatus: value, page: 1 });
   };
 
-  const intervalOptions = useMemo(() => {
-    if (!intervalOptionsData) return [];
-    return intervalOptionsData.map((interval) => (
-      <SelectItem key={interval.id} value={interval.id.toString()}>
-        <span className="whitespace-nowrap">{`${getDate(interval.startDate)} - ${getDate(interval.endDate)}`}</span>
-      </SelectItem>
-    ));
-  }, [intervalOptionsData]);
-
-  if (isInspector) {
+  if (isInspector || isLegal) {
     return (
       <div>
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-3">
           <h2 className="text-2xl font-bold">Tekshiruvlar</h2>
-          <Select
-            onValueChange={handleIntervalChange}
-            defaultValue={paramsObject.intervalId?.toString() || user?.interval.id.toString()}
-            disabled={isLoadingIntervals}
-          >
-            <SelectTrigger className="w-[280px]">
-              <SelectValue placeholder="Davrni tanlang" />
-            </SelectTrigger>
-            <SelectContent>{intervalOptions}</SelectContent>
-          </Select>
         </div>
 
-        <Tabs value={activeTab || InspectionStatus.IN_PROCESS} onValueChange={handleTabChange}>
+        <Tabs value={activeSubTab || InspectionSubMenuStatus.ASSIGNED} onValueChange={handleSubTabChange}>
           <TabsList>
-            <TabsTrigger value={InspectionStatus.IN_PROCESS}>Tekshiruv rejalashtirilgan</TabsTrigger>
-            <TabsTrigger value={InspectionStatus.CONDUCTED}>Tekshiruv o‘tkazilgan</TabsTrigger>
+            <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
+              Tekshiruv o‘tkazilmagan
+              {countObject.assignedCount ? (
+                <Badge variant="destructive" className="ml-2">
+                  {countObject.assignedCount}
+                </Badge>
+              ) : null}
+            </TabsTrigger>
+            <TabsTrigger value={InspectionSubMenuStatus.CONDUCTED}>
+              Tekshiruv o‘tkazilgan
+              {countObject.conductedCount ? (
+                <Badge variant="destructive" className="ml-2">
+                  {countObject.conductedCount}
+                </Badge>
+              ) : null}
+            </TabsTrigger>
           </TabsList>
-          <TabsContent value={InspectionStatus.IN_PROCESS}>
+          <TabsContent value={InspectionSubMenuStatus.CONDUCTED}>
             <InspectionList />
           </TabsContent>
-          <TabsContent value={InspectionStatus.CONDUCTED}>
+          <TabsContent value={InspectionSubMenuStatus.ASSIGNED}>
             <InspectionList />
           </TabsContent>
         </Tabs>
@@ -76,44 +89,71 @@ export const InspectionWidget: React.FC = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-3">
         <h2 className="text-2xl font-bold">Tekshiruvlar</h2>
-        <Select
-          onValueChange={handleIntervalChange}
-          defaultValue={paramsObject.intervalId?.toString() || user?.interval.id.toString()}
-          disabled={isLoadingIntervals}
-        >
-          <SelectTrigger className="w-[280px]">
-            <SelectValue placeholder="Davrni tanlang" />
-          </SelectTrigger>
-          <SelectContent>{intervalOptions}</SelectContent>
-        </Select>
       </div>
 
-      <Tabs value={activeTab || defaultTab} onValueChange={handleTabChange}>
+      <Tabs value={activeTab || InspectionStatus.ALL} onValueChange={handleTabChange}>
         <TabsList>
-          {!isLegal && <TabsTrigger value={InspectionStatus.NEW}>Inspektor belgilanmaganlar</TabsTrigger>}
-          {isLegal ? (
-            <>
-              <TabsTrigger value={InspectionStatus.CONDUCTED}>Tekshiruv o‘tkazilgan</TabsTrigger>
-              <TabsTrigger value={InspectionStatus.IN_PROCESS}>Inspektor belgilanganlar</TabsTrigger>
-            </>
-          ) : (
-            <>
-              <TabsTrigger value={InspectionStatus.IN_PROCESS}>Inspektor belgilanganlar</TabsTrigger>
-              <TabsTrigger value={InspectionStatus.CONDUCTED}>Tekshiruv o‘tkazilgan</TabsTrigger>
-            </>
-          )}
+          <TabsTrigger value={InspectionStatus.ALL}>
+            Barchasi
+            {countObject.allCount ? (
+              <Badge variant="destructive" className="ml-2">
+                {countObject.allCount}
+              </Badge>
+            ) : null}
+          </TabsTrigger>
+          <TabsTrigger value={InspectionStatus.NEW}>
+            Inspektor belgilanmaganlar
+            {countObject.newCount ? (
+              <Badge variant="destructive" className="ml-2">
+                {countObject.newCount}
+              </Badge>
+            ) : null}
+          </TabsTrigger>
+          <TabsTrigger value={InspectionStatus.ASSIGNED}>
+            Inspektor belgilanganlar
+            {countObject.assignedCount ? (
+              <Badge variant="destructive" className="ml-2">
+                {countObject.assignedCount}
+              </Badge>
+            ) : null}
+          </TabsTrigger>
         </TabsList>
-        {!isLegal && (
-          <TabsContent value={InspectionStatus.NEW}>
-            <InspectionList />
-          </TabsContent>
-        )}
-        <TabsContent value={InspectionStatus.IN_PROCESS}>
+        <TabsContent value={InspectionStatus.ALL}>
           <InspectionList />
         </TabsContent>
-        <TabsContent value={InspectionStatus.CONDUCTED}>
+        <TabsContent value={InspectionStatus.NEW}>
+          <InspectionList />
+        </TabsContent>
+        <TabsContent value={InspectionStatus.ASSIGNED}>
+          <div className="mb-3">
+            <Tabs
+              value={activeSubTab || InspectionSubMenuStatus.ASSIGNED}
+              onValueChange={(value) => {
+                addParams({ subStatus: value, page: 1 });
+              }}
+            >
+              <TabsList>
+                <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
+                  Tekshiruv o‘tkazilmagan
+                  {countObject.assignedCount ? (
+                    <Badge variant="destructive" className="ml-2">
+                      {countObject.assignedCount}
+                    </Badge>
+                  ) : null}
+                </TabsTrigger>
+                <TabsTrigger value={InspectionSubMenuStatus.CONDUCTED}>
+                  Tekshiruv o‘tkazilgan
+                  {countObject.conductedCount ? (
+                    <Badge variant="destructive" className="ml-2">
+                      {countObject.conductedCount}
+                    </Badge>
+                  ) : null}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
           <InspectionList />
         </TabsContent>
       </Tabs>
