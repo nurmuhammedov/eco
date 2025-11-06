@@ -14,10 +14,10 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
 
   return (
     <div>
-      <DetailRow
-        title="Tekshiruv reja jadvali:"
-        value={!!inspectionData?.schedulePath ? <FileLink url={inspectionData?.schedulePath} /> : '-'}
-      />
+      {/*<DetailRow*/}
+      {/*  title="Tekshiruv reja jadvali:"*/}
+      {/*  value={!!inspectionData?.schedulePath ? <FileLink url={inspectionData?.schedulePath} /> : '-'}*/}
+      {/*/>*/}
 
       <DetailRow
         title="Tekshiruv sanasi:"

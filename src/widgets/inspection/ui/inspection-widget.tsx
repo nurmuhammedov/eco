@@ -61,19 +61,15 @@ export const InspectionWidget: React.FC = () => {
           <TabsList>
             <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
               Tekshiruv o‘tkazilmagan
-              {countObject.assignedCount ? (
-                <Badge variant="destructive" className="ml-2">
-                  {countObject.assignedCount}
-                </Badge>
-              ) : null}
+              <Badge variant="destructive" className="ml-2">
+                {countObject.assignedCount || 0}
+              </Badge>
             </TabsTrigger>
             <TabsTrigger value={InspectionSubMenuStatus.CONDUCTED}>
               Tekshiruv o‘tkazilgan
-              {countObject.conductedCount ? (
-                <Badge variant="destructive" className="ml-2">
-                  {countObject.conductedCount}
-                </Badge>
-              ) : null}
+              <Badge variant="destructive" className="ml-2">
+                {countObject.conductedCount || 0}
+              </Badge>
             </TabsTrigger>
           </TabsList>
           <TabsContent value={InspectionSubMenuStatus.CONDUCTED}>
@@ -97,27 +93,21 @@ export const InspectionWidget: React.FC = () => {
         <TabsList>
           <TabsTrigger value={InspectionStatus.ALL}>
             Barchasi
-            {countObject.allCount ? (
-              <Badge variant="destructive" className="ml-2">
-                {countObject.allCount}
-              </Badge>
-            ) : null}
+            <Badge variant="destructive" className="ml-2">
+              {countObject.allCount || 0}
+            </Badge>
           </TabsTrigger>
           <TabsTrigger value={InspectionStatus.NEW}>
             Inspektor belgilanmaganlar
-            {countObject.newCount ? (
-              <Badge variant="destructive" className="ml-2">
-                {countObject.newCount}
-              </Badge>
-            ) : null}
+            <Badge variant="destructive" className="ml-2">
+              {countObject.newCount || 0}
+            </Badge>
           </TabsTrigger>
           <TabsTrigger value={InspectionStatus.ASSIGNED}>
             Inspektor belgilanganlar
-            {countObject.assignedCount ? (
-              <Badge variant="destructive" className="ml-2">
-                {countObject.assignedCount}
-              </Badge>
-            ) : null}
+            <Badge variant="destructive" className="ml-2">
+              {(countObject.assignedCount || 0) + (countObject.conductedCount || 0)}
+            </Badge>
           </TabsTrigger>
         </TabsList>
         <TabsContent value={InspectionStatus.ALL}>
@@ -137,19 +127,15 @@ export const InspectionWidget: React.FC = () => {
               <TabsList>
                 <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
                   Tekshiruv o‘tkazilmagan
-                  {countObject.assignedCount ? (
-                    <Badge variant="destructive" className="ml-2">
-                      {countObject.assignedCount}
-                    </Badge>
-                  ) : null}
+                  <Badge variant="destructive" className="ml-2">
+                    {countObject.assignedCount || 0}
+                  </Badge>
                 </TabsTrigger>
                 <TabsTrigger value={InspectionSubMenuStatus.CONDUCTED}>
                   Tekshiruv o‘tkazilgan
-                  {countObject.conductedCount ? (
-                    <Badge variant="destructive" className="ml-2">
-                      {countObject.conductedCount}
-                    </Badge>
-                  ) : null}
+                  <Badge variant="destructive" className="ml-2">
+                    {countObject.conductedCount || 0}
+                  </Badge>
                 </TabsTrigger>
               </TabsList>
             </Tabs>
