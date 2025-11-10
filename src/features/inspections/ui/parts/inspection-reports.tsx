@@ -8,7 +8,6 @@ import { format } from 'date-fns';
 import ReportExecutionModal from '@/features/inspections/ui/parts/report-execution-modal.tsx';
 import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
-import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 import { answerOptions, InspectionChecklistForm } from '@/features/inspections/ui/parts/inspection-checklist-form';
 import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/ui/inspection-widget';
 import { QK_INSPECTION } from '@/shared/constants/query-keys';
@@ -21,48 +20,65 @@ const InspectionReports = ({ checklistCategoryTypeId, status }: any) => {
   const [inspectionTitle, setInspectionTitle] = useState<string>('');
   const currentTab = paramsObject?.eliminated || 'questions';
   const tabulation = paramsObject?.tabulation || 'all';
-  const { data: inspectionData } = useInspectionDetail();
-  const { data: questions } = useData<any[]>(
-    `/inspection-${status == InspectionSubMenuStatus.CONDUCTED ? 'results/by-inspection/' : 'checklists/by-category-type/'}${status == InspectionSubMenuStatus.CONDUCTED ? paramsObject?.inspectionId : checklistCategoryTypeId}`,
+
+  const { data: questions = [] } = useData<any[]>(
+    `/${status == InspectionSubMenuStatus.CONDUCTED ? 'inspection-results/by-inspection/' : 'checklists/by-category-type/'}${status == InspectionSubMenuStatus.CONDUCTED ? paramsObject?.inspectionId : checklistCategoryTypeId}`,
     !!checklistCategoryTypeId,
     {},
     [QK_INSPECTION],
+    6000,
   );
 
-  const questionColumns: ColumnDef<any>[] = [
-    {
-      accessorKey: 'question',
-      header: 'Savol',
-    },
-    ...(status == InspectionSubMenuStatus.CONDUCTED
-      ? [
-          {
-            accessorKey: 'answer',
-            header: 'Javob',
-            cell: ({ row }: any) => answerOptions?.find((i) => i?.value == row.original?.answer)?.labelKey || '',
-          },
-        ]
-      : []),
-  ];
+  // const questionColumns: ColumnDef<any>[] = [];
 
   const columns: ColumnDef<any>[] = [
-    {
-      accessorKey: 'defect',
-      header: 'Aniqlangan kamchilik',
-      size: 200,
-    },
-    {
-      accessorKey: 'date',
-      header: 'Kamchilik aniqlangan sana',
-      size: 80,
-      cell: ({ row }) => format(row.original?.date, 'dd.MM.yyyy'),
-    },
-    {
-      accessorKey: 'deadline',
-      size: 80,
-      header: 'Bartaraf etish muddati',
-      cell: ({ row }) => format(row.original?.deadline, 'dd.MM.yyyy'),
-    },
+    ...(currentTab == 'eliminated'
+      ? [
+          {
+            accessorKey: 'defect',
+            header: 'Aniqlangan kamchiliklar',
+            size: 200,
+          },
+          {
+            accessorKey: 'corrective',
+            header: 'Chora-tadbir',
+          },
+          {
+            accessorKey: 'deadline',
+            size: 80,
+            header: 'Bartaraf etish muddati',
+            cell: ({ row }: any) => format(row.original?.deadline, 'dd.MM.yyyy'),
+          },
+        ]
+      : currentTab == 'questions'
+        ? [
+            {
+              accessorKey: 'question',
+              header: 'Savol',
+            },
+            ...(status == InspectionSubMenuStatus.CONDUCTED
+              ? [
+                  {
+                    accessorKey: 'answer',
+                    header: 'Javob',
+                    cell: ({ row }: any) =>
+                      answerOptions?.find((i) => i?.value == row.original?.answer)?.labelKey || '',
+                  },
+                ]
+              : []),
+          ]
+        : [
+            {
+              accessorKey: 'corrective',
+              header: 'Savolnoma',
+            },
+            {
+              accessorKey: 'date',
+              size: 80,
+              header: ' Tekshirilgna sana',
+              cell: ({ row }: any) => format(row.original?.deadline, 'dd.MM.yyyy'),
+            },
+          ]),
   ];
 
   return (
@@ -100,18 +116,17 @@ const InspectionReports = ({ checklistCategoryTypeId, status }: any) => {
         )}
       </div>
       <div>
-        {currentTab === 'questions' ? (
-          <>
-            {user?.role == UserRoles.INSPECTOR &&
-            inspectionData?.status == InspectionStatus.ASSIGNED &&
-            questions?.length ? (
-              <InspectionChecklistForm items={questions || []} inspectionId={paramsObject?.inspectionId} />
-            ) : (
-              <DataTable isLoading={isLoading} columns={questionColumns} data={questions || []} />
-            )}
-          </>
+        {currentTab == 'questions' &&
+        user?.role == UserRoles.INSPECTOR &&
+        status == InspectionStatus.ASSIGNED &&
+        questions?.length ? (
+          <InspectionChecklistForm items={questions || []} inspectionId={paramsObject?.inspectionId} />
         ) : (
-          <DataTable isLoading={isLoading} columns={columns} data={data || []} />
+          <DataTable
+            isLoading={isLoading}
+            columns={columns}
+            data={currentTab == 'questions' ? questions : data || []}
+          />
         )}
       </div>
       <ReportExecutionModal

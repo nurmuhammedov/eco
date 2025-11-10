@@ -24,7 +24,7 @@ const schema = z.object({
 
 const AddInspectionDocuments = ({ resetTab }: any) => {
   const queryClient = useQueryClient();
-  const { mutateAsync } = useSetFiles();
+  const { mutateAsync, isPending } = useSetFiles();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
@@ -74,7 +74,9 @@ const AddInspectionDocuments = ({ resetTab }: any) => {
             />
           </div>
         </div>
-        <Button>Saqlash</Button>
+        <Button disabled={isPending} loading={isPending}>
+          Saqlash
+        </Button>
       </form>
     </Form>
   );

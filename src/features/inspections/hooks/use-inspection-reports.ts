@@ -17,5 +17,6 @@ export const useInspectionReports = () => {
         page,
         size,
       }),
+    staleTime: 6000,
   });
 };

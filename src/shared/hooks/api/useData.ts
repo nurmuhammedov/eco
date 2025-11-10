@@ -8,6 +8,7 @@ const useData = <T>(
   enabled: boolean = true,
   params?: ISearchParams,
   keys: (string | number)[] = [],
+  staleTime?: number,
 ) => {
   const { i18n } = useTranslation();
 
@@ -15,6 +16,7 @@ const useData = <T>(
     queryKey: [endpoint, params, i18n.language, ...keys],
     queryFn: () => CommonService.getData<T>(endpoint, params),
     enabled,
+    staleTime,
   });
 };
 

@@ -10,5 +10,6 @@ export const useInspectionDetail = () => {
   return useQuery({
     queryKey: [QK_INSPECTION, inspectionId],
     queryFn: () => inspectionsApi.getInspectionDetail(inspectionId),
+    staleTime: 6000,
   });
 };
