@@ -1,5 +1,15 @@
 import { Navigation } from '@/widgets/sidebar/models/types';
-import { FileText, Database, AlertCircle, Clipboard, ShieldCheck, CheckCircle, Archive, BarChart2 } from 'lucide-react';
+import {
+  FileText,
+  Database,
+  AlertCircle,
+  Clipboard,
+  ShieldCheck,
+  CheckCircle,
+  Archive,
+  BarChart2,
+  Award,
+} from 'lucide-react';
 
 export default [
   {
@@ -61,5 +71,11 @@ export default [
     title: 'Hisobotlar',
     url: '/reports',
     icon: <BarChart2 />,
+  },
+  {
+    id: 'PERMITS',
+    title: 'Ruxsat beruvchi hujjatlar',
+    url: '/permits',
+    icon: <Award />,
   },
 ] as Navigation;

@@ -15,10 +15,10 @@ export interface Permit {
 }
 
 export enum PermitTabKey {
-  ALL = 'all',
-  PERMIT = 'permit',
-  LICENSE = 'license',
-  CONCLUSION = 'conclusion',
+  ALL = 'ALL',
+  PERMIT = 'PERMISSION',
+  LICENSE = 'LICENSE',
+  CONCLUSION = 'CONCLUSION',
   NEARING_EXPIRY = 'nearing_expiry',
   EXPIRED = 'expired',
 }

@@ -1,6 +1,6 @@
 import { PermitTabs, PermitTable } from '@/features/permits';
 import { PermitTabKey } from '@/entities/permit';
-import { useCustomSearchParams } from '@/shared/hooks';
+import { useCustomSearchParams, useData } from '@/shared/hooks';
 import { AddPermitModal } from '@/features/permits/ui/add-permit-modal';
 import { useState } from 'react';
 import { Button } from '@/shared/components/ui/button';
@@ -16,13 +16,15 @@ export const PermitsWidget = () => {
     addParams({ tab: tabKey, page: '1' });
   };
 
+  const { data } = useData<any>('/permits/count');
+
   const tabCounts = {
-    [PermitTabKey.ALL]: 5,
-    [PermitTabKey.PERMIT]: 2,
-    [PermitTabKey.LICENSE]: 2,
-    [PermitTabKey.CONCLUSION]: 1,
-    [PermitTabKey.NEARING_EXPIRY]: 1,
-    [PermitTabKey.EXPIRED]: 1,
+    [PermitTabKey.ALL]: data?.allCount ?? 0,
+    [PermitTabKey.PERMIT]: data?.permissionCount ?? 0,
+    [PermitTabKey.LICENSE]: data?.licenseCount ?? 0,
+    [PermitTabKey.CONCLUSION]: data?.conclusionCount ?? 0,
+    [PermitTabKey.NEARING_EXPIRY]: 0,
+    [PermitTabKey.EXPIRED]: 0,
   };
 
   return (
@@ -35,7 +37,7 @@ export const PermitsWidget = () => {
       </div>
       <div className="flex flex-col gap-5">
         <PermitTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts} />
-        <PermitTable data={[]} />
+        <PermitTable />
         <AddPermitModal open={isModalOpen} onOpenChange={setIsModalOpen} />
       </div>
     </>

@@ -18,18 +18,18 @@ const tabIcons: Record<PermitTabKey, React.ReactNode> = {
   [PermitTabKey.EXPIRED]: <ShieldX className="h-5 w-5" />,
 };
 
-export const PermitTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) => {
-  const tabs = [
-    { key: PermitTabKey.ALL, label: 'Barchasi' },
-    { key: PermitTabKey.PERMIT, label: 'Ruxsatnoma' },
-    { key: PermitTabKey.LICENSE, label: 'Litsenziya' },
-    { key: PermitTabKey.CONCLUSION, label: 'Xulosa' },
-    // { key: PermitTabKey.NEARING_EXPIRY, label: 'Muddati yaqinlashayotganlar' },
-    // { key: PermitTabKey.EXPIRED, label: 'Muddatidan o‘tganlar' },
-  ];
+export const tabs = [
+  { key: PermitTabKey.ALL, label: 'Barchasi' },
+  { key: PermitTabKey.PERMIT, label: 'Ruxsatnoma' },
+  { key: PermitTabKey.LICENSE, label: 'Litsenziya' },
+  { key: PermitTabKey.CONCLUSION, label: 'Xulosa' },
+  // { key: PermitTabKey.NEARING_EXPIRY, label: 'Muddati yaqinlashayotganlar' },
+  // { key: PermitTabKey.EXPIRED, label: 'Muddatidan o‘tganlar' },
+];
 
+export const PermitTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {tabs.map((tab) => {
         const isActive = activeTab == tab.key;
         const isNearingExpiry = tab.key === PermitTabKey.NEARING_EXPIRY;

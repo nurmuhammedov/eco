@@ -120,7 +120,7 @@ const InspectionReports = ({ checklistCategoryTypeId, status }: any) => {
         user?.role == UserRoles.INSPECTOR &&
         status == InspectionStatus.ASSIGNED &&
         questions?.length ? (
-          <InspectionChecklistForm items={questions || []} inspectionId={paramsObject?.inspectionId} />
+          <InspectionChecklistForm items={questions || []} />
         ) : (
           <DataTable
             isLoading={isLoading}

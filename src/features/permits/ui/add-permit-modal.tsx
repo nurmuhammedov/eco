@@ -10,6 +10,8 @@ import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAdd } from '@/shared/hooks';
+import { useQueryClient } from '@tanstack/react-query';
+import { tabs } from '@/features/permits/ui/permit-tabs';
 
 interface AddPermitModalProps {
   open: boolean;
@@ -28,13 +30,21 @@ const searchSchema = z.object({
 
 type SearchFormValues = z.infer<typeof searchSchema>;
 
-const SearchResultDisplay = ({ data }: { data: PermitSearchResult }) => {
+export const SearchResultDisplay = ({
+  data,
+  type = 'modal',
+}: {
+  data: PermitSearchResult;
+  type?: 'detail' | 'modal';
+}) => {
   const infoRows = [
     { label: 'Ro‘yxat ID raqami', value: data.registerId },
     { label: 'Tashkilot nomi', value: data.name },
     { label: 'STIR (JSHSHIR)', value: data.tin },
     { label: 'PIN', value: data.pin },
-    { label: 'Turi', value: data.documentType },
+    ...(type === 'detail'
+      ? [{ label: 'Turi', value: tabs.find((t) => t?.key?.toString() == data?.type?.toString())?.label || '' }]
+      : [{ label: 'Hujjat turi', value: data?.documentType }]),
     { label: 'Holati', value: data.status === 'ACTIVE' ? 'Faol' : 'Nofaol' },
     { label: 'Ro‘yxatga olingan raqami', value: data.registerNumber },
     { label: 'Ro‘yxatga olingan sana', value: data.registrationDate },
@@ -65,7 +75,7 @@ const SearchResultDisplay = ({ data }: { data: PermitSearchResult }) => {
 
 export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
   const [searchResult, setSearchResult] = useState<PermitSearchResult | null>(null);
-
+  const queryClient = useQueryClient();
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchSchema),
     defaultValues: {
@@ -99,12 +109,14 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
 
   const handleAdd = () => {
     if (form.watch('stir').length === 9) {
-      addLegalPermit({ tin: form.watch('stir'), registerNumber: form.watch('regNumber') }).then(() => {
+      addLegalPermit({ tin: form.watch('stir'), registerNumber: form.watch('regNumber') }).then(async () => {
         handleClose();
+        await queryClient.invalidateQueries({ queryKey: ['/permits'] });
       });
     } else {
-      addPermit({ pin: form.watch('stir'), registerNumber: form.watch('regNumber') }).then(() => {
+      addPermit({ pin: form.watch('stir'), registerNumber: form.watch('regNumber') }).then(async () => {
         handleClose();
+        await queryClient.invalidateQueries({ queryKey: ['/permits'] });
       });
     }
   };

@@ -25,7 +25,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
   documentUrl,
   isPdfLoading,
   submitApplicationMetaData,
-  title = 'Ariza hujjati',
+  title = 'Hujjatni shakklantirish',
 }) => {
   const renderContent = () => {
     if (isPdfLoading) {

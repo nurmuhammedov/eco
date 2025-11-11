@@ -11,15 +11,13 @@ import {
   ChecklistFormValues,
   checklistFormSchema,
 } from '../../model/inspection-checklist.schema';
-import { useAdd } from '@/shared/hooks';
-import { useQueryClient } from '@tanstack/react-query';
-import { QK_INSPECTION } from '@/shared/constants/query-keys';
+import { useCustomSearchParams } from '@/shared/hooks';
 import { formatDate, parseISO } from 'date-fns';
 import DatePicker from '@/shared/components/ui/datepicker';
+import InspectionCheklistModal from '@/features/inspections/ui/parts/inspection-cheklist-modal';
 
 interface InspectionChecklistFormProps {
   items: any[];
-  inspectionId: string | number;
   onSuccess?: () => void;
 }
 
@@ -36,15 +34,11 @@ export const answerOptions = [
     value: ChecklistAnswerStatus.PARTIAL,
     labelKey: 'Tadbiq etilmaydi',
   },
-  // {
-  //   value: ChecklistAnswerStatus.UNRELATED,
-  //   labelKey: 'Tadbiq etilmaydi',
-  // },
 ];
 
-export const InspectionChecklistForm = ({ items, inspectionId }: InspectionChecklistFormProps) => {
+export const InspectionChecklistForm = ({ items }: InspectionChecklistFormProps) => {
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
+  const { addParams } = useCustomSearchParams();
   const form = useForm<ChecklistFormValues>({
     resolver: zodResolver(checklistFormSchema),
     defaultValues: {
@@ -54,6 +48,7 @@ export const InspectionChecklistForm = ({ items, inspectionId }: InspectionCheck
         orderNumber: item.orderNumber,
         answer: undefined,
         description: '',
+        deadline: undefined,
         file: null,
       })),
     },
@@ -66,22 +61,8 @@ export const InspectionChecklistForm = ({ items, inspectionId }: InspectionCheck
 
   const categoryTitle = items.length > 0 ? items[0].categoryTypeName : '';
 
-  const { mutateAsync, isPending } = useAdd('/inspection-results');
-
-  const handleFormSubmit = (data: ChecklistFormValues) => {
-    const payload: any[] = data.items.map((item) => ({
-      question: item.question,
-      answer: item.answer,
-      orderNumber: item.orderNumber,
-      corrective: item.answer == ChecklistAnswerStatus.NEGATIVE ? item.description || null : null,
-      deadline:
-        item.answer == ChecklistAnswerStatus.NEGATIVE ? formatDate(item?.deadline || '', 'yyyy-MM-dd') || null : null,
-    }));
-
-    mutateAsync({ dtoList: payload, inspectionId }).then(async () => {
-      console.log('payload');
-      await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] });
-    });
+  const handleFormSubmit = (_: ChecklistFormValues) => {
+    addParams({ modal: 'addUsers' });
   };
 
   return (
@@ -98,7 +79,6 @@ export const InspectionChecklistForm = ({ items, inspectionId }: InspectionCheck
             </CardHeader>
 
             <CardContent className="flex flex-col gap-4">
-              {/* Javob tanlash (radio group) */}
               <FormField
                 control={form.control}
                 name={`items.${index}.answer`}
@@ -169,8 +149,22 @@ export const InspectionChecklistForm = ({ items, inspectionId }: InspectionCheck
           </Card>
         ))}
 
-        <Button type="submit" disabled={isPending} className="self-end">
-          {isPending ? t('common:loading', 'Yuklanmoqda...') : t('common:submit', 'Yuborish')}
+        <InspectionCheklistModal
+          items={form?.watch('items')?.map((item) => ({
+            question: item.question,
+            answer: item.answer,
+            orderNumber: item.orderNumber,
+            corrective: item.answer == ChecklistAnswerStatus.NEGATIVE ? item.description || null : null,
+            deadline:
+              item.answer == ChecklistAnswerStatus.NEGATIVE
+                ? item?.deadline
+                  ? formatDate(item?.deadline, 'yyyy-MM-dd')
+                  : null
+                : null,
+          }))}
+        />
+        <Button type="submit" className="self-end">
+          {t('common:submit', 'Yuborish')}
         </Button>
       </form>
     </Form>
