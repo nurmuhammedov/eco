@@ -9,6 +9,7 @@ import {
   Clipboard,
   Activity,
   AlertTriangle,
+  Award,
 } from 'lucide-react';
 
 export default [
@@ -51,6 +52,11 @@ export default [
     url: '/inspection-surveys',
     title: 'menu.inspection',
     icon: <Clipboard />,
+  },
+  {
+    url: '/permits',
+    title: 'Ruxsatnomalar',
+    icon: <Award />,
   },
   // {
   //   url: '/checklist-templates',

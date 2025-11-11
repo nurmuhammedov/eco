@@ -24,8 +24,8 @@ export const PermitTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) 
     { key: PermitTabKey.PERMIT, label: 'Ruxsatnoma' },
     { key: PermitTabKey.LICENSE, label: 'Litsenziya' },
     { key: PermitTabKey.CONCLUSION, label: 'Xulosa' },
-    { key: PermitTabKey.NEARING_EXPIRY, label: 'Muddati yaqinlashayotganlar' },
-    { key: PermitTabKey.EXPIRED, label: 'Muddatidan o‘tganlar' },
+    // { key: PermitTabKey.NEARING_EXPIRY, label: 'Muddati yaqinlashayotganlar' },
+    // { key: PermitTabKey.EXPIRED, label: 'Muddatidan o‘tganlar' },
   ];
 
   return (
