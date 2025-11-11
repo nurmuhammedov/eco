@@ -24,13 +24,21 @@ export enum PermitTabKey {
 }
 
 export interface PermitSearchResult {
-  stir: string;
-  organizationName: string;
-  status: string;
-  documentType: PermitDocumentType;
-  documentId: string;
-  registrationNumber: string;
+  registerId: number;
+  name: string;
+  tin: number;
+  pin: number;
+  type: number;
+  registerNumber: string;
   registrationDate: string;
   expiryDate: string;
+  documentType: string;
   documentName: string;
+  organizationName: string;
+  activityAddresses: string[];
+  activityTypeNames: string[];
+  category: string | null;
+  documentId: number;
+  status: string;
+  brandMark: string | null;
 }

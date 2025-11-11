@@ -1,11 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose,
-} from '@/shared/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/shared/components/ui/dialog';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
@@ -37,35 +30,20 @@ type SearchFormValues = z.infer<typeof searchSchema>;
 
 const SearchResultDisplay = ({ data }: { data: PermitSearchResult }) => {
   const infoRows = [
-    { label: 'STIR (JSHSHIR)', value: data.stir },
+    { label: 'Ro‘yxat ID raqami', value: data.registerId },
+    { label: 'Tashkilot nomi', value: data.name },
+    { label: 'STIR (JSHSHIR)', value: data.tin },
+    { label: 'PIN', value: data.pin },
+    { label: 'Turi', value: data.documentType },
+    { label: 'Holati', value: data.status === 'ACTIVE' ? 'Faol' : 'Nofaol' },
+    { label: 'Ro‘yxatga olingan raqami', value: data.registerNumber },
+    { label: 'Ro‘yxatga olingan sana', value: data.registrationDate },
+    { label: 'Amal qilish muddati (tugash sanasi)', value: data.expiryDate },
+    { label: 'Hujjat nomi', value: data.documentName },
+    { label: 'Vakolatli tashkilot', value: data.organizationName },
     {
-      label: 'Nomi',
-      value: data?.organizationName,
-    },
-    {
-      label: 'Holati',
-      value: data?.organizationName,
-    },
-    {
-      label: 'Turi',
-      value: data?.documentType,
-    },
-    { label: 'Hujjat ID', value: data?.documentId },
-    {
-      label: 'Ro‘yxatga olingan raqami',
-      value: data?.registrationNumber,
-    },
-    {
-      label: 'Ro‘yxatga olingan sana',
-      value: data?.registrationDate,
-    },
-    {
-      label: 'Tugash sanasi',
-      value: data?.expiryDate,
-    },
-    {
-      label: 'Hujjat nomi',
-      value: data?.documentName,
+      label: 'Faoliyat turi',
+      value: data.activityTypeNames?.length ? data.activityTypeNames.join(', ') : 'Ko‘rsatilmagan',
     },
   ];
 
@@ -73,9 +51,11 @@ const SearchResultDisplay = ({ data }: { data: PermitSearchResult }) => {
     <div className="mt-4 border rounded-md p-4 bg-muted/30">
       <div className="grid grid-cols-1 gap-y-2">
         {infoRows.map((row) => (
-          <div key={row.label} className={'col-span-1 flex flex-row gap-1'}>
-            <div className="text-sm font-semibold text-black">{row.label}:</div>
-            <div className="text-sm font-medium text-muted-foreground">{row.value}</div>
+          <div key={row.label} className={'flex flex-row gap-1'}>
+            <div className="text-sm font-semibold text-black flex-2" style={{ whiteSpace: 'nowrap' }}>
+              {row.label}:
+            </div>
+            <div className="text-sm font-medium text-muted-foreground flex-3">{row.value}</div>
           </div>
         ))}
       </div>
@@ -94,19 +74,39 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
     },
   });
 
-  const { mutateAsync: searchPermit, isPending } = useAdd<any, PermitSearchResult, any>('/permits/search');
+  const { mutateAsync: searchPermit, isPending } = useAdd<any, any, any>('/integration/iip/individual/license', '');
+  const { mutateAsync: addPermit, isPending: isAddPermitLoading } = useAdd<any, any, any>('/permits/individual');
+  const { mutateAsync: addLegalPermit, isPending: isAddLegalPermitLoading } = useAdd<any, any, any>('/permits/legal');
+  const { mutateAsync: searchPermitLegal, isPending: isPendingLegal } = useAdd<any, any, any>(
+    '/integration/iip/legal/license',
+    '',
+  );
 
   const onSubmit = (values: SearchFormValues) => {
     setSearchResult(null);
-    searchPermit(values).then((data) => {
-      setSearchResult(data);
-      toast.success('Muvaffaqiyatli topildi!');
-    });
+    if (values?.stir?.length === 9) {
+      searchPermitLegal({ tin: values?.stir, registerNumber: values?.regNumber }).then((data) => {
+        setSearchResult(data?.data);
+        toast.success('Muvaffaqiyatli topildi!');
+      });
+    } else {
+      searchPermit({ pin: values?.stir, registerNumber: values?.regNumber }).then((data) => {
+        setSearchResult(data?.data);
+        toast.success('Muvaffaqiyatli topildi!');
+      });
+    }
   };
 
   const handleAdd = () => {
-    console.log(searchResult, 'addResult');
-    handleClose();
+    if (form.watch('stir').length === 9) {
+      addLegalPermit({ tin: form.watch('stir'), registerNumber: form.watch('regNumber') }).then(() => {
+        handleClose();
+      });
+    } else {
+      addPermit({ pin: form.watch('stir'), registerNumber: form.watch('regNumber') }).then(() => {
+        handleClose();
+      });
+    }
   };
 
   const handleClose = () => {
@@ -156,7 +156,7 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
                 />
               </div>
               <Button type="submit" disabled={isPending}>
-                {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Qidirish'}
+                {isPending || isPendingLegal ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Qidirish'}
               </Button>
             </div>
           </form>
@@ -167,12 +167,23 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
             <SearchResultDisplay data={searchResult} />
 
             <DialogFooter className="mt-4 sm:justify-center">
-              <DialogClose asChild>
-                <Button type="button" variant="outline">
-                  Bekor qilish
-                </Button>
-              </DialogClose>
-              <Button type="button" onClick={handleAdd} disabled={!searchResult || isPending}>
+              <Button
+                onClick={() => {
+                  form.reset();
+                  setSearchResult(null);
+                }}
+                type="button"
+                variant="outline"
+              >
+                Bekor qilish
+              </Button>
+              <Button
+                type="button"
+                onClick={handleAdd}
+                disabled={
+                  !searchResult || isAddPermitLoading || isAddLegalPermitLoading || searchResult?.status === 'EXPIRED'
+                }
+              >
                 Qo‘shish
               </Button>
             </DialogFooter>

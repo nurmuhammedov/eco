@@ -14,6 +14,8 @@ import {
 import { useAdd } from '@/shared/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { QK_INSPECTION } from '@/shared/constants/query-keys';
+import { formatDate, parseISO } from 'date-fns';
+import DatePicker from '@/shared/components/ui/datepicker';
 
 interface InspectionChecklistFormProps {
   items: any[];
@@ -72,6 +74,8 @@ export const InspectionChecklistForm = ({ items, inspectionId }: InspectionCheck
       answer: item.answer,
       orderNumber: item.orderNumber,
       corrective: item.answer == ChecklistAnswerStatus.NEGATIVE ? item.description || null : null,
+      deadline:
+        item.answer == ChecklistAnswerStatus.NEGATIVE ? formatDate(item?.deadline || '', 'yyyy-MM-dd') || null : null,
     }));
 
     mutateAsync({ dtoList: payload, inspectionId }).then(async () => {
@@ -123,22 +127,43 @@ export const InspectionChecklistForm = ({ items, inspectionId }: InspectionCheck
               />
 
               {form.watch(`items.${index}.answer`) === ChecklistAnswerStatus.NEGATIVE && (
-                <FormField
-                  control={form.control}
-                  name={`items.${index}.description`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('Chora-tadbir matni', 'Chora-tadbir matni')}</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder={t('Chora-tadbir matnni kiriting...', 'Chora-tadbir matnni kiriting...')}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <>
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.description`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('Chora-tadbir matni', 'Chora-tadbir matni')}</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder={t('Chora-tadbir matnni kiriting...', 'Chora-tadbir matnni kiriting...')}
+                            {...field}
+                            value={field?.value || ('' as unknown as string)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.deadline`}
+                    render={({ field }) => {
+                      const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                      return (
+                        <FormItem className="w-full ">
+                          <FormLabel required>Amal qilish muddati</FormLabel>
+                          <DatePicker
+                            value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                            onChange={field.onChange}
+                            placeholder="Amal qilish muddatini belgilash"
+                          />
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                </>
               )}
             </CardContent>
           </Card>

@@ -61,7 +61,8 @@ async function apiRequest<T>(
       errors?: Record<string, string>;
     }>;
 
-    return {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
+    throw {
       data: null,
       success: false,
       status: axiosError.response?.status || 500,
