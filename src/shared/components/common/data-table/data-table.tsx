@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { DataTablePagination } from './data-table-pagination';
 import { getCommonPinningStyles } from './models/get-common-pinning';
 import { useSearchParams } from 'react-router-dom';
+import { ColumnFilterInput } from '@/shared/components/common/data-table/column-filter-input';
 
 interface DataTableProps<TData, TValue> {
   className?: string;
@@ -36,6 +37,7 @@ interface DataTableProps<TData, TValue> {
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
   showNumeration?: boolean;
+  showFilters?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -51,11 +53,11 @@ export function DataTable<TData, TValue>({
   isPaginated = true,
   pageSizeOptions,
   showNumeration = true,
+  showFilters = false,
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation('common');
   const { addParams } = useCustomSearchParams();
   const isContentData = data && typeof data === 'object' && 'content' in data;
-
   const tableData = isContentData ? data.content : data;
 
   const pageCount = isContentData ? data?.page?.totalPages : undefined;
@@ -131,6 +133,23 @@ export function DataTable<TData, TValue>({
                 ))}
               </TableRow>
             ))}
+
+            {/* --- Filter Row --- */}
+            {showFilters && (
+              <TableRow className="bg-white">
+                {showNumeration && <TableHead style={{ width: '15px' }}></TableHead>}
+                {table.getAllColumns().map((column) => {
+                  const columnDef = column.columnDef;
+                  const key = (columnDef as any).searchKey as string | undefined;
+                  if (!key || key === 'actions') return <TableHead key={column.id}></TableHead>;
+                  return (
+                    <TableHead key={column.id}>
+                      <ColumnFilterInput columnKey={key} />
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            )}
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (

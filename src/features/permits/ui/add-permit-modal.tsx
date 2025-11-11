@@ -40,8 +40,8 @@ export const SearchResultDisplay = ({
   const infoRows = [
     { label: 'Ro‘yxat ID raqami', value: data.registerId },
     { label: 'Tashkilot nomi', value: data.name },
-    { label: 'STIR (JSHSHIR)', value: data.tin },
-    { label: 'PIN', value: data.pin },
+    { label: 'STIR', value: data.tin },
+    { label: 'JSHSHIR', value: data.pin },
     ...(type === 'detail'
       ? [{ label: 'Turi', value: tabs.find((t) => t?.key?.toString() == data?.type?.toString())?.label || '' }]
       : [{ label: 'Hujjat turi', value: data?.documentType }]),
@@ -112,11 +112,13 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
       addLegalPermit({ tin: form.watch('stir'), registerNumber: form.watch('regNumber') }).then(async () => {
         handleClose();
         await queryClient.invalidateQueries({ queryKey: ['/permits'] });
+        await queryClient.invalidateQueries({ queryKey: ['/permits/count'] });
       });
     } else {
       addPermit({ pin: form.watch('stir'), registerNumber: form.watch('regNumber') }).then(async () => {
         handleClose();
         await queryClient.invalidateQueries({ queryKey: ['/permits'] });
+        await queryClient.invalidateQueries({ queryKey: ['/permits/count'] });
       });
     }
   };

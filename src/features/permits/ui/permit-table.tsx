@@ -9,11 +9,24 @@ import { tabs } from '@/features/permits/ui/permit-tabs';
 export const PermitTable = () => {
   const {
     addParams,
-    paramsObject: { currentTab = 'ALL', page = 1, size = 10, tab = 'ALL' },
+    paramsObject: {
+      currentTab = 'ALL',
+      page = 1,
+      size = 10,
+      tab = 'ALL',
+      registerNumber = '',
+      tin = '',
+      name = '',
+      documentName = '',
+    },
   } = useCustomSearchParams();
   const { data = [], isLoading } = usePaginatedData<any>('/permits', {
     page: page,
     size: size,
+    tin: tin,
+    name: name,
+    registerNumber: registerNumber,
+    documentName: documentName,
     type: tab == 'ALL' ? null : tab,
     status: currentTab == 'ALL' ? null : currentTab,
   });
@@ -22,10 +35,15 @@ export const PermitTable = () => {
     {
       accessorKey: 'tin',
       header: 'Tashkilotning STIR (JSHSHIR)',
+      // @ts-ignore
+      searchKey: 'tin',
     },
     {
       accessorKey: 'name',
       header: 'Tashkilot nomi',
+      // @ts-ignore
+
+      searchKey: 'name',
     },
     {
       accessorKey: 'type',
@@ -36,16 +54,26 @@ export const PermitTable = () => {
       accessorKey: 'documentName',
       header: 'Hujjat nomi',
       minSize: 300,
+      // @ts-ignore
+      searchKey: 'documentName',
     },
     {
       accessorKey: 'registerNumber',
       header: 'Ro‘yxatga olingan raqami',
+      // @ts-ignore
+      searchKey: 'registerNumber',
     },
     {
       accessorKey: 'createdAt',
       maxSize: 100,
       header: 'Ro‘yxatga olingan sanasi',
-      cell: (cell) => formatDate(cell.row.original.createdAt, 'dd.MM.yyyy'),
+      cell: (cell) => formatDate(cell.row.original.registrationDate, 'dd.MM.yyyy'),
+    },
+    {
+      accessorKey: 'createdAt',
+      maxSize: 100,
+      header: 'Amal qilish muddati',
+      cell: (cell) => formatDate(cell.row.original.expiryDate, 'dd.MM.yyyy'),
     },
     {
       id: 'actions',
@@ -91,6 +119,7 @@ export const PermitTable = () => {
         isPaginated={true}
         columns={columns}
         data={data}
+        showFilters={true}
         isLoading={isLoading}
         className="h-[calc(100svh-430px)]"
       />

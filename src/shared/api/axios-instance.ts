@@ -36,13 +36,11 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    if (error?.response?.status <= 499 && error?.response?.status !== 401 && error?.response?.status !== 404) {
+    if (error?.response?.status <= 499) {
       toast.error(
         error.response?.data?.message || 'Serverda nomaʼlum xatolik yuz berdi. Xatolik haqida xabar bering!',
         { richColors: true },
       );
-    } else if (error?.response?.status >= 500) {
-      toast.error('Serverda nomaʼlum xatolik yuz berdi. Xatolik haqida xabar bering!', { richColors: true });
     } else if (error?.response?.status === 401 && error?.response?.config?.url === '/api/v1/users/me') {
       if (
         location === '/auth/login' ||
@@ -60,9 +58,11 @@ axiosInstance.interceptors.response.use(
       toast.error('Login yoki parol noto‘g‘ri. Iltimos, ma’lumotlarni tekshirib, qayta urinib ko‘ring.', {
         richColors: true,
       });
-    } else if (error?.response?.status === 404) {
-      toast.error('So‘ralgan xizmat topilmadi. Iltimos, keyinroq qayta urinib ko‘ring', { richColors: true });
     }
+
+    // else if (error?.response?.status === 404) {
+    //   toast.error('So‘ralgan xizmat topilmadi. Iltimos, keyinroq qayta urinib ko‘ring', { richColors: true });
+    // }
     return Promise.reject(error);
   },
 );
