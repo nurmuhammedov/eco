@@ -1,10 +1,10 @@
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { ColumnDef } from '@tanstack/react-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { formatDate } from 'date-fns';
 import { PermitDetailModal } from '@/features/permits/ui/permit-detail-modal';
 import { tabs } from '@/features/permits/ui/permit-tabs';
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
 
 export const PermitTable = () => {
   const {
@@ -31,19 +31,18 @@ export const PermitTable = () => {
     status: currentTab == 'ALL' ? null : currentTab,
   });
 
-  const columns: ColumnDef<any>[] = [
+  const columns: ExtendedColumnDef<any, any>[] = [
     {
       accessorKey: 'tin',
       header: 'Tashkilotning STIR (JSHSHIR)',
-      // @ts-ignore
-      searchKey: 'tin',
+      filterKey: 'tin',
+      filterType: 'search',
     },
     {
       accessorKey: 'name',
       header: 'Tashkilot nomi',
-      // @ts-ignore
-
-      searchKey: 'name',
+      filterKey: 'name',
+      filterType: 'search',
     },
     {
       accessorKey: 'type',
@@ -54,26 +53,27 @@ export const PermitTable = () => {
       accessorKey: 'documentName',
       header: 'Hujjat nomi',
       minSize: 300,
-      // @ts-ignore
-      searchKey: 'documentName',
+      filterKey: 'documentName',
+      filterType: 'search',
     },
     {
       accessorKey: 'registerNumber',
       header: 'Ro‘yxatga olingan raqami',
-      // @ts-ignore
-      searchKey: 'registerNumber',
+      filterKey: 'registerNumber',
+      filterType: 'search',
     },
     {
       accessorKey: 'createdAt',
       maxSize: 100,
       header: 'Ro‘yxatga olingan sanasi',
-      cell: (cell) => formatDate(cell.row.original.registrationDate, 'dd.MM.yyyy'),
+      cell: (cell) =>
+        cell.row.original.registrationDate ? formatDate(cell.row.original.registrationDate, 'dd.MM.yyyy') : null,
     },
     {
       accessorKey: 'createdAt',
       maxSize: 100,
       header: 'Amal qilish muddati',
-      cell: (cell) => formatDate(cell.row.original.expiryDate, 'dd.MM.yyyy'),
+      cell: (cell) => (cell.row.original.expiryDate ? formatDate(cell.row.original.expiryDate, 'dd.MM.yyyy') : null),
     },
     {
       id: 'actions',
@@ -86,7 +86,6 @@ export const PermitTable = () => {
               row={row}
               showView
               onView={() => {
-                console.log('asdasd');
                 addParams({ detailId: row.original.id });
               }}
             />
@@ -108,7 +107,6 @@ export const PermitTable = () => {
           <TabsList>
             <TabsTrigger value="ALL">Barchasi</TabsTrigger>
             <TabsTrigger value="ACTIVE">Aktiv</TabsTrigger>
-            {/*<TabsTrigger value="INACTIVE">Aktiv emas</TabsTrigger>*/}
             <TabsTrigger value="EXPIRING_SOON">Muddati yaqinlashayotganlar</TabsTrigger>
             <TabsTrigger value="EXPIRED">Muddatidan o‘tganlar</TabsTrigger>
           </TabsList>

@@ -31,8 +31,6 @@ export function useChecklistForm() {
     mode: 'onBlur',
   });
 
-  console.log(form.formState.errors);
-
   const { data: categoryTypes } = useCategoryTypeSelectQuery(form?.watch('category'));
   const { mutateAsync: createItem, isPending: isCreating } = useCreateChecklist();
   const { mutateAsync: updateItem, isPending: isUpdating } = useUpdateChecklist();
@@ -58,7 +56,6 @@ export function useChecklistForm() {
 
   const handleSubmit = useCallback(
     async (formData: CreateChecklistDTO): Promise<boolean> => {
-      console.log(formData);
       try {
         const response = isCreate
           ? await createItem(formData)

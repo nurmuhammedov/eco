@@ -66,7 +66,6 @@ export interface SearchInputProps extends Omit<React.InputHTMLAttributes<HTMLInp
   isLoading?: boolean;
   onClear?: () => void;
   onChange?: (value: string) => void;
-  /** Style variant: "default" (with icons) | "underline" (no icons, bottom border only) */
   variant?: 'default' | 'underline';
 }
 
@@ -90,12 +89,10 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
       <div
         className={cn(
           'relative w-full',
-          variant === 'underline' && 'border-b border-neutral-300 focus-within:border-neutral-600',
+          variant === 'underline' && 'border-b border-neutral-300 focus-within:border-neutral-700',
         )}
       >
-        {variant === 'default' && (
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
-        )}
+        <SearchIcon className="absolute left-2 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
 
         <Input
           ref={ref}
@@ -103,10 +100,10 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
           onChange={handleChange}
           className={cn(
             variant === 'default'
-              ? cn('pl-9', showClearButton && 'pr-9')
+              ? cn('pl-8', showClearButton && 'pr-9')
               : cn(
-                  'border-none rounded-none shadow-none px-0',
-                  'focus-visible:ring-0 focus-visible:outline-none bg-transparent',
+                  'border-none rounded-none shadow-none px-0 pl-8',
+                  'focus-visible:ring-0 text-normal font-normal focus-visible:outline-none bg-transparent',
                 ),
             className,
           )}

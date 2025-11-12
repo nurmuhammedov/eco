@@ -5,8 +5,6 @@ import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/st
 export const ChecklistView = ({ data }: { data: Checklist | null }) => {
   if (!data) return null;
 
-  console.log(data);
-
   return (
     <Description>
       <Description.Item key="category" label="Kategoriya">

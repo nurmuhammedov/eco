@@ -24,6 +24,11 @@ import { getCommonPinningStyles } from './models/get-common-pinning';
 import { useSearchParams } from 'react-router-dom';
 import { ColumnFilterInput } from '@/shared/components/common/data-table/column-filter-input';
 
+export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
+  filterKey?: string;
+  filterType?: 'search' | 'select' | 'date';
+};
+
 interface DataTableProps<TData, TValue> {
   className?: string;
   isLoading?: boolean;
@@ -32,7 +37,8 @@ interface DataTableProps<TData, TValue> {
   sizeQuery?: string;
   headerCenter?: boolean;
   pageSizeOptions?: number[];
-  columns: ColumnDef<TData, TValue>[];
+  // columns: ColumnDef<TData, TValue>[];
+  columns: ExtendedColumnDef<TData, TValue>[];
   data: TData[] | ResponseData<TData>;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
@@ -118,11 +124,26 @@ export function DataTable<TData, TValue>({
           <TableHeader className="p-2 font-semibold text-black">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {showNumeration && <TableHead style={{ width: '15px' }}>T/r</TableHead>}
+                {showNumeration && (
+                  <TableHead
+                    className={cn(
+                      showFilters
+                        ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
+                        : 'first:rounded-l-lg! last:rounded-r-lg!',
+                    )}
+                  >
+                    T/r
+                  </TableHead>
+                )}
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
                     colSpan={header.colSpan}
+                    className={cn(
+                      showFilters
+                        ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
+                        : 'first:rounded-l-lg! last:rounded-r-lg!',
+                    )}
                     style={{
                       ...getCommonPinningStyles({ column: header.column }),
                       ...(headerCenter ? { textAlign: 'center' } : {}),
@@ -134,16 +155,17 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
 
-            {/* --- Filter Row --- */}
             {showFilters && (
-              <TableRow className="bg-white">
-                {showNumeration && <TableHead style={{ width: '15px' }}></TableHead>}
+              <TableRow className="bg-neutral-50">
+                {showNumeration && (
+                  <TableHead className="first:rounded-bl-lg last:rounded-br-lg" style={{ width: '15px' }} />
+                )}
                 {table.getAllColumns().map((column) => {
                   const columnDef = column.columnDef;
-                  const key = (columnDef as any).searchKey as string | undefined;
+                  const key = (columnDef as any).filterKey as string | undefined;
                   if (!key || key === 'actions') return <TableHead key={column.id}></TableHead>;
                   return (
-                    <TableHead key={column.id}>
+                    <TableHead key={column.id} className="first:rounded-bl-lg last:rounded-br-lg">
                       <ColumnFilterInput columnKey={key} />
                     </TableHead>
                   );
@@ -156,9 +178,7 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row, idx) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {showNumeration && (
-                    <TableCell style={{ width: '15px' }}>
-                      {currentPage > 1 ? idx + (currentPage * pageSize - (pageSize - 1)) : idx + 1}
-                    </TableCell>
+                    <TableCell>{currentPage > 1 ? idx + (currentPage * pageSize - (pageSize - 1)) : idx + 1}</TableCell>
                   )}
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
