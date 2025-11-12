@@ -26,6 +26,7 @@ export enum PermitTabKey {
 export interface PermitSearchResult {
   registerId: number;
   name: string;
+  filePath: string;
   tin: number;
   pin: number;
   type: number;

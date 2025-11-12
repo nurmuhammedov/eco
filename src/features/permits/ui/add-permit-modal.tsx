@@ -12,6 +12,9 @@ import { toast } from 'sonner';
 import { useAdd } from '@/shared/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { tabs } from '@/features/permits/ui/permit-tabs';
+import { InputFile } from '@/shared/components/common/file-upload';
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types';
+import FileLink from '@/shared/components/common/file-link';
 
 interface AddPermitModalProps {
   open: boolean;
@@ -28,7 +31,12 @@ const searchSchema = z.object({
   regNumber: z.string().min(1, 'Majbury maydon!'),
 });
 
+const fileSchema = z.object({
+  filePath: z.string().min(1, 'Fayl yuklash majburiy!'),
+});
+
 type SearchFormValues = z.infer<typeof searchSchema>;
+type FileFormValues = z.infer<typeof fileSchema>;
 
 export const SearchResultDisplay = ({
   data,
@@ -55,6 +63,10 @@ export const SearchResultDisplay = ({
       label: 'Faoliyat turi',
       value: data.activityTypeNames?.length ? data.activityTypeNames.join(', ') : 'Ko‘rsatilmagan',
     },
+
+    ...(type === 'detail'
+      ? [{ label: 'Fayl', value: data?.filePath && <FileLink url={data?.filePath} className={'mb-1'} /> }]
+      : []),
   ];
 
   return (
@@ -76,12 +88,15 @@ export const SearchResultDisplay = ({
 export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
   const [searchResult, setSearchResult] = useState<PermitSearchResult | null>(null);
   const queryClient = useQueryClient();
+
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchSchema),
-    defaultValues: {
-      stir: '',
-      regNumber: '',
-    },
+    defaultValues: { stir: '', regNumber: '' },
+  });
+
+  const fileForm = useForm<FileFormValues>({
+    resolver: zodResolver(fileSchema),
+    defaultValues: { filePath: '' },
   });
 
   const { mutateAsync: searchPermit, isPending } = useAdd<any, any, any>('/integration/iip/individual/license', '');
@@ -107,15 +122,33 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
     }
   };
 
-  const handleAdd = () => {
-    if (form.watch('stir').length === 9) {
-      addLegalPermit({ tin: form.watch('stir'), registerNumber: form.watch('regNumber') }).then(async () => {
+  const handleAdd = async () => {
+    const searchValues = form.getValues();
+    const fileValid = await fileForm.trigger();
+
+    if (!fileValid) {
+      toast.error('Iltimos, faylni yuklang!');
+      return;
+    }
+
+    const { filePath } = fileForm.getValues();
+
+    if (searchValues.stir.length === 9) {
+      addLegalPermit({
+        tin: searchValues.stir,
+        registerNumber: searchValues.regNumber,
+        filePath,
+      }).then(async () => {
         handleClose();
         await queryClient.invalidateQueries({ queryKey: ['/permits'] });
         await queryClient.invalidateQueries({ queryKey: ['/permits/count'] });
       });
     } else {
-      addPermit({ pin: form.watch('stir'), registerNumber: form.watch('regNumber') }).then(async () => {
+      addPermit({
+        pin: searchValues.stir,
+        registerNumber: searchValues.regNumber,
+        filePath,
+      }).then(async () => {
         handleClose();
         await queryClient.invalidateQueries({ queryKey: ['/permits'] });
         await queryClient.invalidateQueries({ queryKey: ['/permits/count'] });
@@ -125,6 +158,7 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
 
   const handleClose = () => {
     form.reset();
+    fileForm.reset();
     setSearchResult(null);
     onOpenChange(false);
   };
@@ -180,10 +214,34 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
           <>
             <SearchResultDisplay data={searchResult} />
 
+            <Form {...fileForm}>
+              <form className="mt-4">
+                <FormField
+                  name="filePath"
+                  control={fileForm.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required={true}>Fayl</FormLabel>
+                      <FormControl>
+                        <InputFile
+                          uploadEndpoint="/attachments/permits"
+                          showPreview={true}
+                          form={fileForm}
+                          name={field.name}
+                          accept={[FileTypes.PDF]}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
+
             <DialogFooter className="mt-4 sm:justify-center">
               <Button
                 onClick={() => {
                   form.reset();
+                  fileForm.reset();
                   setSearchResult(null);
                 }}
                 type="button"
