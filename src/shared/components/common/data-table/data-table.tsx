@@ -127,6 +127,7 @@ export function DataTable<TData, TValue>({
                 {showNumeration && (
                   <TableHead
                     className={cn(
+                      'w-16',
                       showFilters
                         ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
                         : 'first:rounded-l-lg! last:rounded-r-lg!',

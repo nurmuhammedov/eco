@@ -132,11 +132,11 @@ export const InspectionChecklistForm = ({ items }: InspectionChecklistFormProps)
                       const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                       return (
                         <FormItem className="w-full ">
-                          <FormLabel required>Amal qilish muddati</FormLabel>
+                          <FormLabel required>Bartaraf etish muddati</FormLabel>
                           <DatePicker
                             value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                             onChange={field.onChange}
-                            placeholder="Amal qilish muddatini belgilash"
+                            placeholder="Bartaraf etish muddatini belgilash"
                           />
                           <FormMessage />
                         </FormItem>

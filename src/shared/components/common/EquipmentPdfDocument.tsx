@@ -1,4 +1,4 @@
-import { Page, Text, View, Document, StyleSheet, Image } from '@react-pdf/renderer';
+import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
 import { getDate } from '@/shared/utils/date';
 
 interface PdfData {
@@ -9,8 +9,22 @@ interface PdfData {
   qrCodeDataUrl: string;
 }
 
+Font.register({
+  family: 'Roboto',
+  fonts: [
+    { src: '/fonts/Roboto-Regular.ttf' }, // public papkasidagi faylga to'g'ridan-to'g'ri yo'l
+    { src: '/fonts/Roboto-Bold.ttf', fontWeight: 'bold' },
+  ],
+});
+
 const styles = StyleSheet.create({
-  page: { flexDirection: 'row', backgroundColor: '#FFFFFF', padding: 20 },
+  page: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    padding: 20,
+    // 2. Butun hujjat uchun asosiy shriftni belgilash
+    fontFamily: 'Roboto',
+  },
   a5Section: {
     width: '50%',
     height: '100%',
@@ -21,14 +35,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 14, // Katta format uchun shrift o'lchami
-    fontFamily: 'Helvetica-Bold',
+    fontSize: 14,
+    fontWeight: 'bold', // Bu Roboto-Bold shriftini ishlatadi
     textAlign: 'center',
-    marginBottom: 20, // Sarlavhadan keyin masofa
+    marginBottom: 20,
     paddingHorizontal: 15,
   },
-  qrCode: { width: 200, height: 200, marginBottom: 20 },
-  infoContainer: { width: '100%' },
+  qrCode: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+  },
+  infoContainer: {
+    width: '100%',
+  },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -37,13 +57,17 @@ const styles = StyleSheet.create({
     borderBottom: '1px dotted #CCCCCC',
     paddingBottom: 4,
   },
-  infoLabel: { fontFamily: 'Helvetica' },
-  infoValue: { fontFamily: 'Helvetica-Bold' },
+  infoLabel: {
+    // Qo'shimcha shrift belgilash shart emas, `page` stilidan meros oladi
+  },
+  infoValue: {
+    fontWeight: 'bold', // Bu ham Roboto-Bold shriftini ishlatadi
+  },
   headerText: {
-    fontSize: 16, // Katta format uchun shrift o'lchami
-    fontFamily: 'Helvetica-Bold',
+    fontSize: 16,
+    fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 20, // Sarlavhadan keyin masofa
+    marginBottom: 20,
     paddingHorizontal: 15,
   },
 });

@@ -48,8 +48,12 @@ export const EquipmentsList = () => {
       accessorKey: 'registryNumber',
     },
     {
-      header: 'Qurilmaning turi',
+      header: 'Qurilma',
       cell: (cell) => APPLICATIONS_DATA?.find((i) => i?.equipmentType == cell.row.original.type)?.name || '',
+    },
+    {
+      header: 'Qurilmaning turi',
+      accessorKey: 'childEquipment',
     },
     {
       header: 'Tashkilot nomi/ Fuqaro nomi',
