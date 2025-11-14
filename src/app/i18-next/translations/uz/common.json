@@ -33,7 +33,7 @@
     "territories": "Hududlar",
     "appeals": "Murojaatlar",
     "applications": "Arizalar",
-    "accreditation": "Akkreditatsiya",
+    "accreditation": "Ekspertiza",
     "register": "Reyestrlar",
     "cadastre": "Kadastr",
     "prophylactic": "Profilaktika",
@@ -107,9 +107,9 @@
     "RISK_ANALYSIS": "Xavf tahlil qilish",
     "INSPECTION": "Tekshiruvlar",
     "PREVENTION": "Profilaktika",
-    "ACCREDITATION": "Akkreditatsiya",
+    "ACCREDITATION": "Ekspertiza",
     "CADASTRE": "Kadastr",
-    "PERMITS": "Ruxsat beruvchi hujjatlar"
+    "PERMITS": "Ruxsat etuvchi hujjatlar"
   },
   "application": {
     "OIL": "Neft",

@@ -1,0 +1,95 @@
+import { DataTable } from '@/shared/components/common/data-table';
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
+import { formatDate } from 'date-fns';
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
+
+export const ExpertiseTable = () => {
+  const {
+    paramsObject: { page = 1, size = 10, ...rest },
+  } = useCustomSearchParams();
+  const { data = [], isLoading } = usePaginatedData<any>('/accreditations', {
+    page: page,
+    size: size,
+    ...rest,
+  });
+
+  const columns: ExtendedColumnDef<any, any>[] = [
+    {
+      accessorKey: 'legalName',
+      header: 'Tashkilot nomi',
+      filterKey: 'legalName',
+      filterType: 'search',
+    },
+    {
+      accessorKey: 'legalTin',
+      header: 'Tashkilot STIRi',
+      filterKey: 'legalTin',
+      filterType: 'search',
+    },
+    // {
+    //   accessorKey: 'region',
+    //   header: 'Viloyati',
+    // },
+    // {
+    //   accessorKey: 'district',
+    //   header: 'Tumani',
+    // },
+    {
+      accessorKey: 'address',
+      header: 'Manzili',
+      filterKey: 'address',
+      filterType: 'search',
+    },
+    {
+      accessorKey: 'registryNumber',
+      header: 'Akkreditatsiya ro‘yxat raqami',
+      filterKey: 'registryNumber',
+      filterType: 'search',
+    },
+    {
+      accessorKey: 'registrationDate',
+      header: 'Akkreditatsiya berilgan sana',
+      cell: (cell) =>
+        cell.row.original.registrationDate ? formatDate(cell.row.original.registrationDate, 'dd.MM.yyyy') : null,
+    },
+    {
+      accessorKey: 'expiryDate',
+      header: 'Akkreditatsiya amal qilish muddati',
+      cell: (cell) => (cell.row.original.expiryDate ? formatDate(cell.row.original.expiryDate, 'dd.MM.yyyy') : null),
+    },
+    {
+      accessorKey: 'status',
+      header: 'Holati',
+    },
+    // {
+    //   id: 'actions',
+    //   size: 10,
+    //   header: 'Amallar',
+    //   cell: ({ row }: any) => {
+    //     return (
+    //       <div className="flex gap-2">
+    //         <DataTableRowActions
+    //           row={row}
+    //           showView
+    //           onView={() => {
+    //             addParams({ detailId: row.original.id });
+    //           }}
+    //         />
+    //       </div>
+    //     );
+    //   },
+    // },
+  ];
+
+  return (
+    <DataTable
+      showNumeration={true}
+      isPaginated={true}
+      columns={columns}
+      data={data}
+      showFilters={true}
+      isLoading={isLoading}
+      className="h-[calc(100svh-180px)]"
+    />
+  );
+};

@@ -13,6 +13,7 @@ import { Navigation } from '@/widgets/sidebar/models/types';
 import { NavMain } from '@/widgets/sidebar/ui/nav-main';
 import { useMemo } from 'react';
 import allNavigation from '../models/all';
+import legalNavigation from '../models/legal';
 
 import { AppLogo } from './app-logo';
 import { useAuth } from '@/shared/hooks/use-auth';
@@ -25,13 +26,17 @@ export function AppSidebar() {
   const displayedNavigations: Navigation = useMemo(() => {
     if (!user) return [];
 
-    if (user.role === UserRoles.ADMIN) {
+    if (user.role == UserRoles.ADMIN) {
       return NAVIGATIONS[user.role];
     }
 
     if (user.directions.length === 0) {
       const appealNav = allNavigation.find((item: any) => item.id === 'APPEAL');
       return appealNav ? [appealNav] : [];
+    }
+
+    if (user.role == UserRoles.LEGAL) {
+      return legalNavigation.filter((navItem) => user.directions.includes(navItem.id as Direction));
     }
 
     return allNavigation.filter((navItem) => user.directions.includes(navItem.id as Direction));

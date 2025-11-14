@@ -10,10 +10,10 @@ export const employeeSchema = z.object({
   }),
   profession: z.string().min(1, 'Lavozim kiritilishi majburiy'),
   certNumber: z.string().optional(),
-  certDate: z.string().optional(),
-  certExpiryDate: z.string().optional(),
-  ctcTrainingFromDate: z.string().optional(),
-  ctcTrainingToDate: z.string().optional(),
+  certDate: z.date().optional(),
+  certExpiryDate: z.date().optional(),
+  ctcTrainingFromDate: z.date().optional(),
+  ctcTrainingToDate: z.date().optional(),
   dateOfEmployment: z.string().optional(),
 });
 

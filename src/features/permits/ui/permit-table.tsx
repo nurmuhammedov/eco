@@ -5,8 +5,9 @@ import { formatDate } from 'date-fns';
 import { PermitDetailModal } from '@/features/permits/ui/permit-detail-modal';
 import { tabs } from '@/features/permits/ui/permit-tabs';
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
+import { Button } from '@/shared/components/ui/button';
 
-export const PermitTable = () => {
+export const PermitTable = ({ setIsModalOpen }: any) => {
   const {
     addParams,
     paramsObject: {
@@ -97,7 +98,7 @@ export const PermitTable = () => {
 
   return (
     <>
-      <div>
+      <div className="flex justify-between items-center">
         <Tabs
           value={currentTab}
           onValueChange={(val) => {
@@ -111,6 +112,9 @@ export const PermitTable = () => {
             <TabsTrigger value="EXPIRED">Muddatidan o‘tganlar</TabsTrigger>
           </TabsList>
         </Tabs>
+        <Button type="button" onClick={() => setIsModalOpen((p: boolean) => !p)}>
+          Qo‘shish
+        </Button>
       </div>
       <DataTable
         showNumeration={true}

@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { cn } from '@/shared/lib/utils';
 import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -27,15 +26,30 @@ export function NavMain({ item }: { item: NavigationItem }) {
         <Collapsible key={item.title} asChild defaultOpen={isActive}>
           <SidebarMenuItem>
             <CollapsibleTrigger asChild>
-              <SidebarMenuButton asChild size="lg" isActive={isActive} tooltip={t(item.title)}>
-                <Link to={item.url}>
-                  {typeof item.icon === 'string' ? <Icon name={item.icon} /> : item.icon}
-                  <span>{t(item.title)}</span>
-                </Link>
-              </SidebarMenuButton>
+              {item.items?.length ? (
+                <SidebarMenuButton
+                  className="cursor-pointer"
+                  asChild={!item.items?.length}
+                  size="lg"
+                  tooltip={t(item.title)}
+                >
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    {typeof item.icon === 'string' ? <Icon name={item.icon} /> : item.icon}
+                    <span>{t(item.title)}</span>
+                  </div>
+                </SidebarMenuButton>
+              ) : (
+                <SidebarMenuButton asChild={!item.items?.length} size="lg" isActive={isActive} tooltip={t(item.title)}>
+                  <Link to={item.url}>
+                    {typeof item.icon === 'string' ? <Icon name={item.icon} /> : item.icon}
+                    <span>{t(item.title)}</span>
+                  </Link>
+                </SidebarMenuButton>
+              )}
             </CollapsibleTrigger>
+
             {item.items?.length ? (
-              <Fragment>
+              <>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuAction className="data-[state=open]:rotate-90">
                     <ChevronRight
@@ -46,9 +60,10 @@ export function NavMain({ item }: { item: NavigationItem }) {
                     <span className="sr-only">Toggle</span>
                   </SidebarMenuAction>
                 </CollapsibleTrigger>
+
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    {item.items?.map((subItem) => (
+                    {item.items.map((subItem) => (
                       <SidebarMenuSubItem key={subItem.title}>
                         <SidebarMenuSubButton asChild size="lg" isActive={pathname === subItem.url}>
                           <Link to={subItem.url}>
@@ -59,7 +74,7 @@ export function NavMain({ item }: { item: NavigationItem }) {
                     ))}
                   </SidebarMenuSub>
                 </CollapsibleContent>
-              </Fragment>
+              </>
             ) : null}
           </SidebarMenuItem>
         </Collapsible>

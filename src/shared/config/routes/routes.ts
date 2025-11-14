@@ -41,6 +41,8 @@ const RiskAnalysisPage = lazy(() => import('@/pages/risk-analysis'));
 const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'));
 const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-info-by-id'));
 const PermitPage = lazy(() => import('@/pages/permits/page'));
+const ExpertisePage = lazy(() => import('@/pages/expertise/page'));
+const AddConclusionPage = lazy(() => import('@/pages/expertise/add-conclusion-page'));
 const UserLogsPage = lazy(() => import('@/pages/admin/user-logs/page'));
 const ChecklistTemplatesPage2 = lazy(() => import('@/features/checklists'));
 const PreventionsPage = lazy(() => import('@/pages/preventions'));
@@ -50,15 +52,13 @@ const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspect
 const InspectionsDetailPage = lazy(() => import('@/features/inspections/ui/inspections.detail.tsx'));
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
 const InspectionSurveys = lazy(() => import('@/pages/admin/inspection/ui'));
-const AccreditationPage = lazy(() => import('@/pages/accreditations/page'));
 const AttestationPage = lazy(() => import('@/pages/attestation'));
 const InspectorTasks = lazy(() => import('@/features/risk-analysis/ui/inspector-tasks'));
 const CadastrePage = lazy(() => import('@/pages/cadastre'));
 const AddAttestationEmployeePage = lazy(() => import('@/pages/attestation/add-employee'));
-const AccreditationDetailPage = lazy(() => import('@/pages/accreditations/detail'));
-const AccreditationConclusionsDetailPage = lazy(
-  () => import('@/features/accreditation/ui/accreditation-conclusion-detail'),
-);
+const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-page'));
+const ExpertiseOrganizations = lazy(() => import('@/pages/expertise/organizations-page'));
+const EditConclusion = lazy(() => import('@/pages/expertise/edit-conclusion-page'));
 const CadastreDetailPage = lazy(() => import('@/pages/cadastre/detail'));
 const ContactPage = lazy(() => import('@/pages/qr-form'));
 
@@ -71,6 +71,11 @@ export const appRoutes = [
   {
     path: 'permits',
     component: PermitPage,
+    roles: [],
+  },
+  {
+    path: 'expertise',
+    component: ExpertisePage,
     roles: [],
   },
   {
@@ -208,11 +213,11 @@ export const appRoutes = [
     component: AttractionTypePage,
     roles: [UserRoles.ADMIN],
   },
-  // {
-  //   path: 'checklist-templates',
-  //   component: ChecklistTemplatesPage,
-  //   roles: [UserRoles.ADMIN],
-  // },
+  {
+    path: 'expertise-organizations',
+    component: ExpertiseOrganizations,
+    roles: [],
+  },
   {
     path: 'user-logs',
     component: UserLogsPage,
@@ -270,7 +275,12 @@ export const appRoutes = [
   },
   {
     path: 'accreditations',
-    component: AccreditationPage,
+    component: ExpertisePage,
+    roles: [],
+  },
+  {
+    path: 'accreditations/add',
+    component: AddConclusionPage,
     roles: [],
   },
   {
@@ -285,12 +295,12 @@ export const appRoutes = [
   },
   {
     path: '/accreditations/detail/:id',
-    component: AccreditationDetailPage,
+    component: ConclusionDetail,
     roles: [],
   },
   {
-    path: '/accreditations/conclusions/detail/:id',
-    component: AccreditationConclusionsDetailPage,
+    path: '/accreditations/edit/:id',
+    component: EditConclusion,
     roles: [],
   },
   {

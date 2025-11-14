@@ -3,7 +3,6 @@ import { PermitTabKey } from '@/entities/permit';
 import { useCustomSearchParams, useData } from '@/shared/hooks';
 import { AddPermitModal } from '@/features/permits/ui/add-permit-modal';
 import { useState } from 'react';
-import { Button } from '@/shared/components/ui/button';
 
 export const PermitsWidget = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,7 +15,7 @@ export const PermitsWidget = () => {
     addParams({ tab: tabKey, page: '1' });
   };
 
-  const { data } = useData<any>('/permits/count');
+  const { data } = useData<any>('/permits/count', true, {}, [], 10 * 24 * 60 * 60);
 
   const tabCounts = {
     [PermitTabKey.ALL]: data?.allCount ?? 0,
@@ -29,15 +28,12 @@ export const PermitsWidget = () => {
 
   return (
     <>
-      <div className="flex justify-between gap-2 items-center">
-        <h1 className="text-2xl font-semibold">Ruxsatnomalar</h1>
-        <Button type="button" onClick={() => setIsModalOpen((p) => !p)}>
-          Qo‘shish
-        </Button>
-      </div>
+      {/*<div className="flex justify-between gap-2 items-center">*/}
+      {/*  <h1 className="text-2xl font-semibold">Ruxsatnomalar</h1>*/}
+      {/*</div>*/}
       <div className="flex flex-col gap-5">
         <PermitTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts} />
-        <PermitTable />
+        <PermitTable setIsModalOpen={setIsModalOpen} />
         <AddPermitModal open={isModalOpen} onOpenChange={setIsModalOpen} />
       </div>
     </>

@@ -45,13 +45,9 @@ export default [
   {
     id: 'ACCREDITATION',
     title: 'menu.accreditation',
-    url: '/expertise-organizations',
+    url: '/accreditations',
     icon: <CheckCircle />,
     items: [
-      {
-        url: '/expertise-organizations',
-        title: 'Ekpertiza tashkilotlari',
-      },
       {
         url: '/accreditations',
         title: 'Ekpertiza xulosalari',

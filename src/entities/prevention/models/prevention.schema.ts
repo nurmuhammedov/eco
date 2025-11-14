@@ -8,7 +8,7 @@ export const schemas = {
     legalName: z.string(),
     legalAddress: z.string(),
     regionName: z.string(),
-    date: z.string(),
+    date: z.date(),
     type: z.string(),
     content: z.string(),
     eventFilePath: z.string(),

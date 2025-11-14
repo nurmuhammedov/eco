@@ -32,7 +32,7 @@ export const ColumnFilterInput = ({ columnKey }: { columnKey: string }) => {
       value={value}
       placeholder=""
       onChange={(val) => setValue(val)}
-      className="w-full h-8 text-xs"
+      className="w-full h-8 text-xs bg-white"
       variant="underline"
     />
   );

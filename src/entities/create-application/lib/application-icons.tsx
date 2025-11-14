@@ -284,27 +284,6 @@ export const ApplicationIcons = {
       <path d="M11 15a3 3 0 100-6 3 3 0 000 6z" stroke={color} strokeWidth="1.5" />
     </svg>
   ),
-  // Эксперт ташкилотини қайта аккредитациядан ўтказиш
-  expertOrgReaccreditationIcon: (color: string) => (
-    <svg viewBox="0 0 24 24" fill="none">
-      <path d="M3 6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6z" stroke={color} strokeWidth="1.5" />
-      <path d="M8 4v4M16 4v4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M3 10h18" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M11 15a3 3 0 100-6 3 3 0 000 6z" stroke={color} strokeWidth="1.5" />
-      <path d="M17 13l-2 2 2 2" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M19 15h-4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
-  // Эксперт ташкилотининг аккредитация соҳасини кенгайтириш
-  expertOrgExpandAccreditationIcon: (color: string) => (
-    <svg viewBox="0 0 24 24" fill="none">
-      <path d="M3 6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6z" stroke={color} strokeWidth="1.5" />
-      <path d="M8 4v4M16 4v4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M3 10h18" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M11 15a3 3 0 100-6 3 3 0 000 6z" stroke={color} strokeWidth="1.5" />
-      <path d="M16 12h4M18 10v4" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  ),
   // Саноат хавфсизлиги экспертиза хулосаларини рўйхатга олиш
   industrialSafetyExpertiseRegistrationIcon: (color: string) => (
     <svg viewBox="0 0 24 24" fill="none">

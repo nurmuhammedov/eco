@@ -44,13 +44,13 @@ const RiskAnalysisWidget = () => {
 
   return (
     <Fragment>
-      <div className="flex justify-between items-center mb-4">
-        <h5 className="text-2xl font-semibold">{t('menu.risk_analysis')}</h5>
-        {action}
-      </div>
+      {/*<div className="flex justify-between items-center mb-4">*/}
+      {/*<h5 className="text-2xl font-semibold">{t('menu.risk_analysis')}</h5>*/}
+      {/*{action}*/}
+      {/*</div>*/}
 
       <Tabs defaultValue={mainTab} onValueChange={(tab) => addParams({ mainTab: tab, page: 1 })} className="w-full">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-2">
           <TabsList>
             <TabsTrigger value={RiskAnalysisTab.XICHO}>
               {t('risk_analysis_tabs.XICHO')}
@@ -101,24 +101,25 @@ const RiskAnalysisWidget = () => {
               ) : null}
             </TabsTrigger>
           </TabsList>
+          {action}
         </div>
 
-        <TabsContent value={RiskAnalysisTab.XICHO} className="mt-4">
+        <TabsContent value={RiskAnalysisTab.XICHO} className="mt-2">
           <RiskLevelTabs type="HF" ListContentComponent={HFList} />
         </TabsContent>
-        <TabsContent value={RiskAnalysisTab.INM} className="mt-4">
+        <TabsContent value={RiskAnalysisTab.INM} className="mt-2">
           <RiskLevelTabs type="IRS" ListContentComponent={Irs} />
         </TabsContent>
-        <TabsContent value={RiskAnalysisTab.LIFT} className="mt-4">
+        <TabsContent value={RiskAnalysisTab.LIFT} className="mt-2">
           <RiskLevelTabs type="ELEVATOR" ListContentComponent={Lift} />
         </TabsContent>
-        <TabsContent value={RiskAnalysisTab.ATTRACTION} className="mt-4">
+        <TabsContent value={RiskAnalysisTab.ATTRACTION} className="mt-2">
           <RiskLevelTabs type="ATTRACTION" ListContentComponent={Attraction} />
         </TabsContent>
-        <TabsContent value={RiskAnalysisTab.XRAY} className="mt-4">
+        <TabsContent value={RiskAnalysisTab.XRAY} className="mt-2">
           <Attraction />
         </TabsContent>
-        <TabsContent value={RiskAnalysisTab.LPG_POWERED} className="mt-4">
+        <TabsContent value={RiskAnalysisTab.LPG_POWERED} className="mt-2">
           <Attraction />
         </TabsContent>
       </Tabs>

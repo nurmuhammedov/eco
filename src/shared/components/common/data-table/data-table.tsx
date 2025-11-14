@@ -157,16 +157,27 @@ export function DataTable<TData, TValue>({
             ))}
 
             {showFilters && (
-              <TableRow className="bg-neutral-50">
+              <TableRow className="!bg-white hover:!bg-white even:!bg-white border-neutral-200">
                 {showNumeration && (
-                  <TableHead className="first:rounded-bl-lg last:rounded-br-lg" style={{ width: '15px' }} />
+                  <TableHead className="!bg-white !h-8 !p-0  hover:!bg-white even:!bg-white w-16 border-b-2 border-neutral-200" />
                 )}
                 {table.getAllColumns().map((column) => {
                   const columnDef = column.columnDef;
                   const key = (columnDef as any).filterKey as string | undefined;
-                  if (!key || key === 'actions') return <TableHead key={column.id}></TableHead>;
+
+                  if (!key || key === 'actions')
+                    return (
+                      <TableHead
+                        key={column.id}
+                        className="!bg-white !p-0 !h-8 hover:!bg-white even:!bg-white border-b-2 border-neutral-200"
+                      ></TableHead>
+                    );
+
                   return (
-                    <TableHead key={column.id} className="first:rounded-bl-lg last:rounded-br-lg">
+                    <TableHead
+                      key={column.id}
+                      className="!p-0 !h-8 !bg-white hover:!bg-white even:!bg-white border-b-2 border-neutral-200"
+                    >
                       <ColumnFilterInput columnKey={key} />
                     </TableHead>
                   );

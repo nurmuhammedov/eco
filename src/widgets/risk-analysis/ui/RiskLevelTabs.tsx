@@ -166,12 +166,12 @@ export const RiskLevelTabs = ({ ListContentComponent, type = 'HF' }: RiskLevelTa
   return (
     <TabsLayout
       activeTab={activeRiskLevel}
-      classNameTabList="bg-[#F6F6F6]"
+      classNameTabList="bg-[#F6F6F6] gap-2"
       tabs={tabs}
-      classNameTrigger="bg-[#F6F6F6]! cursor-pointer rounded-lg p-1! border-none border-0! outline-none! shadow-none! focus-visible:ring-0!"
+      classNameTrigger="bg-[#F6F6F6]! cursor-pointer rounded-lg p-0! border-none border-0! outline-none! shadow-none! focus-visible:ring-0!"
       onTabChange={(risk) => addParams({ riskLevel: risk }, 'page')}
     >
-      <div className="mt-4">
+      <div className="mt-2">
         <ListContentComponent data={data} isLoading={isLoading} />
       </div>
     </TabsLayout>
