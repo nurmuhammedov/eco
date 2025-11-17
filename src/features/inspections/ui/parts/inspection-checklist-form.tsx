@@ -163,6 +163,7 @@ export const InspectionChecklistForm = ({ items }: InspectionChecklistFormProps)
                 : null,
           }))}
         />
+
         <Button type="submit" className="self-end">
           {t('common:submit', 'Yuborish')}
         </Button>

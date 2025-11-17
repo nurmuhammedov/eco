@@ -9,7 +9,7 @@ export const getLegalInfoByTin = async (tin: string): Promise<LegalInfo> => {
   return response.data?.data;
 };
 
-export const getHfoByTinSelect = async (tin: string): Promise<HfoSelectOption[]> => {
+export const getHfoByTinSelect = async (tin?: string): Promise<HfoSelectOption[]> => {
   const response = await apiClient.get<ApiResponse<HfoSelectOption[]>>(`/hf/by-tin/select`, {
     legalTin: tin,
   });

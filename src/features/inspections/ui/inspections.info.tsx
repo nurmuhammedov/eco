@@ -10,7 +10,7 @@ import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts'
 import InspectionsDetailInfo from '@/features/inspections/ui/parts/inpections-detail-info.tsx';
 import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 import { InspectionStatus } from '@/widgets/inspection/ui/inspection-widget.tsx';
-import InspectionReports from '@/features/inspections/ui/parts/inspection-reports.tsx';
+// import InspectionReports from '@/features/inspections/ui/parts/inspection-reports.tsx';
 
 const InspectionsInfo = () => {
   const [searchParams] = useSearchParams();
@@ -31,7 +31,7 @@ const InspectionsInfo = () => {
         <DetailCardAccordion.Item value="risk_anlalysis_info" title={`Xavfni tahlil qilish bo‘yicha ma’lumotlar`}>
           {user?.role === UserRoles.REGIONAL && inspectionData?.status === InspectionStatus.NEW && (
             <div className="flex justify-end py-2">
-              <AttachInspectorModal type={inspectionData?.belongType} />
+              <AttachInspectorModal />
             </div>
           )}
           <ObjectsList />
@@ -40,10 +40,11 @@ const InspectionsInfo = () => {
           <InspectionsDetailInfo inspectionData={inspectionData} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="inspection_results" title={`Tekshiruv dasturi  (${paramsObject?.name || ''})`}>
-          <InspectionReports
-            status={inspectionData?.status}
-            checklistCategoryTypeId={inspectionData?.checklistCategoryTypeId}
-          />
+          {/*<InspectionReports*/}
+          {/*  status={inspectionData?.status}*/}
+          {/*  checklistCategoryTypeId={inspectionData?.checklistCategoryTypeId}*/}
+          {/*/>*/}
+          <></>
         </DetailCardAccordion.Item>
         {/*<DetailCardAccordion.Item*/}
         {/*  value="type"*/}

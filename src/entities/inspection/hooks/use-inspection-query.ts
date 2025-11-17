@@ -11,10 +11,10 @@ export const useInspections = (params: ISearchParams) => {
   });
 };
 
-export const useInspectionById = (id: string) => {
-  return useQuery({
-    queryKey: [INSPECTION_QUERY_KEY, id],
-    queryFn: () => inspectionAPI.getById(id),
-    enabled: !!id,
-  });
-};
+// export const useInspectionById = (id: string) => {
+//   return useQuery({
+//     queryKey: [INSPECTION_QUERY_KEY, id],
+//     queryFn: () => inspectionAPI.getById(id),
+//     enabled: !!id,
+//   });
+// };

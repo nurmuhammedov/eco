@@ -11,22 +11,182 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/components/ui/input';
 import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { parseISO } from 'date-fns';
+import { formatDate, parseISO } from 'date-fns';
 import { useCreateIlleagalBoilerApplication } from '@/features/application/create-application/model/use-create-illegal-boiler-application.ts';
+import DetailRow from '@/shared/components/common/detail-row';
+import useAdd from '@/shared/hooks/api/useAdd';
+import { useMemo, useState } from 'react';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
+import { useQuery } from '@tanstack/react-query';
+import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api';
 
 interface RegisterBoilerFormProps {
   onSubmit: (data: RegisterIllegalBoilerApplicationDTO) => void;
 }
 
 export default ({ onSubmit }: RegisterBoilerFormProps) => {
-  const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
-    useCreateIlleagalBoilerApplication();
+  const { form, regionOptions, districtOptions, childEquipmentOptions } = useCreateIlleagalBoilerApplication();
+  const [data, setData] = useState<any>(undefined);
+
+  const identity = form.watch('identity');
+  const birthDateString = form.watch('birthDate');
+
+  const isLegal = typeof identity === 'string' && identity.trim().length === 9;
+  const isIndividual = typeof identity === 'string' && identity.trim().length === 14;
+
+  const { data: hfoOptions } = useQuery({
+    queryKey: ['hfoSelect', identity],
+    queryFn: () => getHfoByTinSelect(identity),
+    enabled: !!identity && identity.length === 9 && !!data,
+    retry: 1,
+  });
+
+  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoOptions || []), [hfoOptions]);
+
+  const { mutateAsync, isPending } = useAdd<any, any, any>('/integration/iip/legal');
+  const { mutateAsync: individualMutateAsync, isPending: individualIsLoading } = useAdd<any, any, any>(
+    '/integration/iip/individual',
+  );
+
+  const handleSearch = () => {
+    if (form?.formState?.errors?.birthDate || form?.formState?.errors?.identity) {
+      form.trigger(['identity', 'birthDate']).then((r) => console.log(r));
+    } else if (identity?.length === 9) {
+      mutateAsync({ tin: identity }).then((res) => {
+        setData(res.data);
+      });
+    } else if (identity?.length === 14) {
+      individualMutateAsync({ pin: identity, birthDate: formatDate(birthDateString || new Date(), 'yyyy-MM-dd') }).then(
+        (res) => {
+          setData(res.data);
+        },
+      );
+    }
+  };
+
+  const handleClear = () => {
+    setData(undefined);
+
+    form.setValue('identity', '');
+    form.setValue('birthDate', '');
+    form.setValue('hazardousFacilityId', undefined);
+  };
 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="Bug‘ qozonni ro‘yxatga olish" />
         <NoteForm equipmentName="qozon" />
+
+        <CardForm className="my-2">
+          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
+            <FormField
+              control={form.control}
+              name="identity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>STIR yoki JSHSHIR</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={!!data}
+                      className="w-full 3xl:w-sm"
+                      placeholder="STIR yoki JSHSHIRni kiriting"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {isIndividual && (
+              // <FormField
+              //   control={form.control}
+              //   name="birthDate"
+              //   render={({ field }) => {
+              //     const dateValue = field.value ? new Date(field.value) : undefined;
+              //     const validDate = dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined;
+              //     return (
+              //       <FormItem>
+              //         <FormLabel required>Tug'ilgan sana</FormLabel>
+              //         <FormControl>
+              //           <DatePicker
+              //             className="w-full 3xl:w-sm"
+              //             value={validDate}
+              //             onChange={field.onChange}
+              //             placeholder="Sanani tanlang"
+              //           />
+              //         </FormControl>
+              //         <FormMessage />
+              //       </FormItem>
+              //     );
+              //   }}
+              // />
+              <div>
+                <FormField
+                  control={form.control}
+                  name="birthDate"
+                  render={({ field }) => {
+                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                    return (
+                      <FormItem className="w-full  3xl:w-sm">
+                        <FormLabel>Tug‘ilgan sana</FormLabel>
+                        <DatePicker
+                          disabled={!!data}
+                          className="w-full 3xl:w-sm"
+                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                          onChange={field.onChange}
+                          placeholder="Sanani tanlang"
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              </div>
+            )}
+            <div className="w-full 3xl:w-sm flex items-end justify-start gap-2">
+              {!data ? (
+                <Button
+                  type="button"
+                  onClick={handleSearch}
+                  disabled={
+                    isPending ||
+                    individualIsLoading ||
+                    !identity ||
+                    (identity.length !== 9 && identity.length !== 14) ||
+                    (!birthDateString && identity.length == 14)
+                  }
+                  loading={isPending || individualIsLoading}
+                >
+                  Qidirish
+                </Button>
+              ) : (
+                <Button type="button" variant="destructive" onClick={handleClear}>
+                  O‘chirish
+                </Button>
+              )}
+            </div>
+          </div>
+          {data && (
+            <div className="mt-6 border-t pt-6">
+              <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-x-6 gap-y-4">
+                <DetailRow
+                  title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH:'}
+                  value={data?.name || data?.fullName || '-'}
+                />
+                {isLegal && (
+                  <DetailRow title="Tashkilot rahbari F.I.SH:" value={data?.directorName || data?.fullName || '-'} />
+                )}
+                {isLegal && <DetailRow title="Manzil:" value={data?.address || data?.legalAddress || '-'} />}
+                {isLegal && <DetailRow title="Telefon raqami:" value={data?.phoneNumber || '-'} />}
+              </div>
+            </div>
+          )}
+        </CardForm>
+
         <CardForm className="mb-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
             <FormField
@@ -268,7 +428,6 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                 );
               }}
             />
-            {/* YNAGI MAYDONLAR */}
             <FormField
               control={form.control}
               name="capacity"
@@ -308,7 +467,6 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                 </FormItem>
               )}
             />
-            {/* YNAGI MAYDONLAR TUGASHI */}
           </div>
         </CardForm>
         <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
@@ -344,7 +502,6 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                         placeholder="Amal qilish muddati"
                       />
                     </div>
-                    <FormMessage />
                   </FormItem>
                 );
               }}
@@ -383,7 +540,6 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                         placeholder="Amal qilish muddati"
                       />
                     </div>
-                    <FormMessage />
                   </FormItem>
                 );
               }}
@@ -422,7 +578,6 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                         placeholder="Amal qilish muddati"
                       />
                     </div>
-                    <FormMessage />
                   </FormItem>
                 );
               }}
@@ -463,7 +618,6 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                         placeholder="Amal qilish muddati"
                       />
                     </div>
-                    <FormMessage />
                   </FormItem>
                 );
               }}
@@ -502,7 +656,6 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                         placeholder="Amal qilish muddati"
                       />
                     </div>
-                    <FormMessage />
                   </FormItem>
                 );
               }}
@@ -541,7 +694,6 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                         placeholder="Amal qilish muddati"
                       />
                     </div>
-                    <FormMessage />
                   </FormItem>
                 );
               }}
@@ -580,14 +732,13 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                         placeholder="Amal qilish muddati"
                       />
                     </div>
-                    <FormMessage />
                   </FormItem>
                 );
               }}
             />
           </div>
         </CardForm>
-        <Button type="submit" className="mt-5" disabled={!form.formState.isValid}>
+        <Button type="submit" className="mt-5" disabled={!data}>
           Ariza yaratish
         </Button>
       </form>

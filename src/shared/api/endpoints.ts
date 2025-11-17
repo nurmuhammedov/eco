@@ -9,7 +9,7 @@ export const API_ENDPOINTS: Record<string, string> = {
   USERS: '/users',
   REGIONS: '/regions',
   DISTRICTS: '/districts',
-  INSPECTION_CATEGORY_TYPES: '/inspection-checklists/category-types',
+  INSPECTION_CATEGORY_TYPES: '/checklists/categories',
   INSPECTION_CHECKLISTS: '/checklists',
   DEPARTMENTS: '/departments',
   OFFICES: '/offices',

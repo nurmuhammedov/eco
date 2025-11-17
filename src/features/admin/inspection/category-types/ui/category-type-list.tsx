@@ -22,9 +22,9 @@ export function CategoryTypeList() {
   const columns: ColumnDef<CategoryType>[] = [
     {
       header: 'Kategoriya',
-      cell: ({ row }) => inspectionCategoryOptions?.find((i) => i?.id == row.original.category)?.name || '',
+      cell: ({ row }) => inspectionCategoryOptions?.find((i) => i?.id == row.original.type)?.name || '',
     },
-    { accessorKey: 'type', header: 'Turi' },
+    { accessorKey: 'name', header: 'Turi' },
     {
       id: 'actions',
       cell: ({ row }) => (

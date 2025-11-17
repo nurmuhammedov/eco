@@ -4,8 +4,7 @@ import { inspectionCategoryTypeAPI as categoryTypeAPI, categoryTypeKeys } from '
 export const useCategoryTypeSelectQuery = (category?: string) => {
   return useQuery({
     staleTime: 0,
-    queryFn: () => categoryTypeAPI.fetchCategoryTypeSelect({ category }),
+    queryFn: () => categoryTypeAPI.fetchCategoryTypeSelect({ type: category }),
     queryKey: [...categoryTypeKeys.entity('category-type-select'), category],
-    enabled: !!category,
   });
 };

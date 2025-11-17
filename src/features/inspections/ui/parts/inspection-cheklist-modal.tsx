@@ -60,8 +60,8 @@ const AttachInspectorModal = ({ items = [] }: any) => {
   const onSubmit = (data: FormValues) => {
     handleCreateApplication({
       dtoList: items,
-      inspectionId,
-      users: data?.users,
+      resultId: inspectionId,
+      participants: data?.users,
     });
   };
 

@@ -6,7 +6,7 @@ import { useUIActionLabel } from '@/shared/hooks';
 import { BaseDrawer } from '@/shared/components/common/base-drawer';
 import { useChecklistDrawer } from '@/shared/hooks/entity-hooks';
 import { useChecklistForm } from '../model/use-checklist-form';
-import { getSelectOptions, getSelectOptionsByType } from '@/shared/lib/get-select-options';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { ChecklistView } from '@/features/admin/inspection/cheklists/ui/checklist-view';
@@ -17,7 +17,7 @@ export const ChecklistDrawer = () => {
   const { isOpen, onClose, mode, isCreate } = useChecklistDrawer();
   const modeLabel = useUIActionLabel(mode);
   const { form, checklistData, onSubmit, isPending, isFetching, categoryTypes } = useChecklistForm();
-  const categoryTypeOptions = useMemo(() => getSelectOptionsByType(categoryTypes), [categoryTypes]);
+  const categoryTypeOptions = useMemo(() => getSelectOptions(categoryTypes), [categoryTypes]);
   const options = useMemo(() => getSelectOptions(inspectionCategoryOptions), [inspectionCategoryOptions]);
 
   return (

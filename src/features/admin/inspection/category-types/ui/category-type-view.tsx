@@ -5,7 +5,7 @@ import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/st
 export const CategoryTypeView = ({ data }: { data: CategoryType | null }) => {
   if (!data) return null;
 
-  const categoryName = inspectionCategoryOptions?.find((i) => i.id == data.category)?.name || '-';
+  const categoryName = inspectionCategoryOptions?.find((i) => i.id == data.type)?.name || '-';
 
   return (
     <Description>
@@ -13,7 +13,7 @@ export const CategoryTypeView = ({ data }: { data: CategoryType | null }) => {
         {categoryName}
       </Description.Item>
       <Description.Item key="type" label="Tekshiruv turi">
-        {data.type}
+        {data.name}
       </Description.Item>
     </Description>
   );

@@ -1,21 +1,19 @@
 // src/features/application/create-application/model/use-create-boiler-application.ts
-import { BoilerAppealDtoSchema, RegisterIllegalBoilerApplicationDTO } from '@/entities/create-application';
-import {
-  useChildEquipmentTypes,
-  useDistrictSelectQueries,
-  useHazardousFacilityDictionarySelect,
-  useRegionSelectQueries,
-} from '@/shared/api/dictionaries';
+import { RegisterIllegalBoilerApplicationDTO } from '@/entities/create-application';
+import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { BoilerIllegalAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-boiler.schema';
 
 export const useCreateIlleagalBoilerApplication = () => {
   const form = useForm<RegisterIllegalBoilerApplicationDTO>({
-    resolver: zodResolver(BoilerAppealDtoSchema),
+    resolver: zodResolver(BoilerIllegalAppealDtoSchema),
     defaultValues: {
       phoneNumber: '',
+      identity: '',
+      birthDate: undefined,
       hazardousFacilityId: undefined,
       childEquipmentId: '',
       factoryNumber: '',
@@ -44,13 +42,10 @@ export const useCreateIlleagalBoilerApplication = () => {
   });
 
   const regionId = form.watch('regionId');
-
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
   const { data: childEquipmentTypes } = useChildEquipmentTypes('BOILER');
 
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);
   const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions]);
   const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes]);
@@ -60,6 +55,5 @@ export const useCreateIlleagalBoilerApplication = () => {
     regionOptions,
     districtOptions,
     childEquipmentOptions,
-    hazardousFacilitiesOptions,
   };
 };

@@ -3,11 +3,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useCategoryTypeDrawer } from '@/shared/hooks/entity-hooks';
 import {
-  CreateCategoryTypeDTO,
   categoryTypeSchema,
+  CreateCategoryTypeDTO,
   UpdateCategoryTypeDTO,
-  useCreateCategoryType,
   useCategoryTypeQuery,
+  useCreateCategoryType,
   useUpdateCategoryType,
 } from '@/entities/admin/inspection/';
 
@@ -32,7 +32,10 @@ export function useCategoryTypeForm() {
 
   useEffect(() => {
     if (categoryTypeData && !isCreate) {
-      form.reset(categoryTypeData);
+      form.reset({
+        category: categoryTypeData?.type,
+        type: categoryTypeData?.name,
+      });
     }
   }, [categoryTypeData, isCreate, form]);
 
@@ -42,11 +45,15 @@ export function useCategoryTypeForm() {
   }, [form, onClose]);
 
   const handleSubmit = useCallback(
-    async (formData: CreateCategoryTypeDTO): Promise<boolean> => {
+    async (formData: any): Promise<boolean> => {
       try {
         const response = isCreate
-          ? await createItem(formData)
-          : await updateItem({ id: categoryTypeId, ...formData } as UpdateCategoryTypeDTO);
+          ? await createItem({ type: formData?.category, name: formData?.type } as unknown as CreateCategoryTypeDTO)
+          : await updateItem({
+              id: categoryTypeId,
+              type: formData?.category,
+              name: formData?.type,
+            } as UpdateCategoryTypeDTO);
 
         if (response.success) {
           handleClose();

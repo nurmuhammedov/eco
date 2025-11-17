@@ -1,5 +1,6 @@
 import { type ApiResponse } from '@/shared/types/api';
 import { API_ENDPOINTS, apiClient } from '@/shared/api';
+import { useQuery } from '@tanstack/react-query';
 
 export const hazardousFacilityAPI = {
   list: async () => {
@@ -7,3 +8,10 @@ export const hazardousFacilityAPI = {
     return data.data;
   },
 };
+
+export const useGetHazardousFacilitiesByTinQuery = (tin: string) =>
+  useQuery({
+    queryKey: ['hf-by-tin', tin],
+    queryFn: () => apiClient.get(`/hf/by-tin/select`, { params: { tin } }),
+    enabled: !!tin && tin.length === 9,
+  });

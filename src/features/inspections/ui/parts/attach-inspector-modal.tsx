@@ -12,7 +12,7 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation';
 import { useMemo, useState } from 'react';
 import { MultiSelect } from '@/shared/components/ui/multi-select.tsx';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { getSelectOptionsByType } from '@/shared/lib/get-select-options';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection';
 import { useEIMZO } from '@/shared/hooks';
 import { ApplicationModal } from '@/features/application/create-application';
@@ -25,7 +25,7 @@ const schema = z.object({
   checklistCategoryTypeId: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
 });
 
-const AttachInspectorModal = ({ type }: { type?: string }) => {
+const AttachInspectorModal = () => {
   const [isShow, setIsShow] = useState(false);
   const [searchParams] = useSearchParams();
   const id = searchParams.get('inspectionId');
@@ -35,8 +35,8 @@ const AttachInspectorModal = ({ type }: { type?: string }) => {
   });
 
   const { data: inspectorSelectData } = useInspectorSelect();
-  const { data: categoryTypes } = useCategoryTypeSelectQuery(type);
-  const categoryTypeOptions = useMemo(() => getSelectOptionsByType(categoryTypes), [categoryTypes]);
+  const { data: categoryTypes } = useCategoryTypeSelectQuery();
+  const categoryTypeOptions = useMemo(() => getSelectOptions(categoryTypes), [categoryTypes]);
 
   const {
     error,

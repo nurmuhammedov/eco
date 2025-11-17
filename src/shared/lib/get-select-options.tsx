@@ -35,7 +35,7 @@ export function getSelectOptionsByType<T>(list: OptionItem<T>[]): JSX.Element[] 
     .map((option) =>
       option?.id ? (
         <SelectItem value={String(option.id)} key={String(option.id) || crypto.randomUUID()}>
-          {option.type}
+          {option.name}
         </SelectItem>
       ) : null,
     )

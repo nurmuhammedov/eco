@@ -7,6 +7,7 @@ export const categoryTypeBaseSchema = {
 
 export const categoryTypeSchema = z.object({
   id: z.number().optional(),
+  name: z.string().optional(),
   ...categoryTypeBaseSchema,
 });
 
