@@ -1,4 +1,3 @@
-// src/features/application/create-application/ui/forms/register-pipeline-form.tsx
 import { CardForm, RegisterIllegalPipelineApplicationDTO } from '@/entities/create-application';
 import { NoteForm } from '@/features/application/create-application';
 import { GoBack } from '@/shared/components/common';
@@ -11,22 +10,176 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/components/ui/input';
 import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { parseISO } from 'date-fns';
+import { formatDate, parseISO } from 'date-fns';
 import { useCreateIllegalPipelineApplication } from '@/features/application/create-application/model/use-create-illegal-pipeline-application.ts';
+import { useMemo, useState } from 'react';
+import useAdd from '@/shared/hooks/api/useAdd';
+import { useQuery } from '@tanstack/react-query';
+import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
+import DetailRow from '@/shared/components/common/detail-row';
 
 interface RegisterIllegalPipelineFormProps {
   onSubmit: (data: RegisterIllegalPipelineApplicationDTO) => void;
 }
 
 export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
-  const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
-    useCreateIllegalPipelineApplication();
+  const { form, regionOptions, districtOptions, childEquipmentOptions } = useCreateIllegalPipelineApplication();
+
+  const [data, setData] = useState<any>(undefined);
+
+  const identity = form.watch('identity');
+  const birthDateString = form.watch('birthDate');
+
+  const cleanIdentity = identity?.trim() || '';
+  const isLegal = cleanIdentity.length === 9;
+  const isIndividual = cleanIdentity.length === 14;
+
+  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal');
+
+  const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
+    '/integration/iip/individual',
+  );
+
+  const { data: hfoOptions } = useQuery({
+    queryKey: ['hfoSelect', cleanIdentity],
+    queryFn: () => getHfoByTinSelect(cleanIdentity),
+    enabled: isLegal && !!data,
+    retry: 1,
+  });
+
+  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoOptions || []), [hfoOptions]);
+
+  const handleSearch = () => {
+    if (isLegal && !form.formState.errors.identity) {
+      legalMutateAsync({ tin: cleanIdentity })
+        .then((res) => setData(res.data))
+        .catch(() => setData(undefined));
+    } else if (isIndividual && birthDateString && !form.formState.errors.birthDate && !form.formState.errors.identity) {
+      individualMutateAsync({
+        pin: cleanIdentity,
+        birthDate: formatDate(birthDateString || new Date(), 'yyyy-MM-dd'),
+      })
+        .then((res) => setData(res.data))
+        .catch(() => setData(undefined));
+    } else {
+      form.trigger(['identity', 'birthDate']).then((r) => console.log(r));
+    }
+  };
+
+  const handleClear = () => {
+    setData(undefined);
+    form.setValue('identity', '');
+    form.setValue('birthDate', undefined as unknown as string);
+    form.setValue('hazardousFacilityId', undefined);
+  };
 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="Quvurlarni ro‘yxatga olish ariza shakli" />
         <NoteForm equipmentName="quvur" />
+
+        <CardForm className="my-2">
+          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
+            <FormField
+              control={form.control}
+              name="identity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>STIR yoki JSHSHIR</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={!!data}
+                      className="w-full 3xl:w-sm"
+                      placeholder="STIR yoki JSHSHIRni kiriting"
+                      maxLength={14}
+                      {...field}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '');
+                        e.target.value = val;
+                        if (data) setData(undefined);
+                        form.setValue('hazardousFacilityId', undefined);
+                        if (val.length !== 14) {
+                          form.setValue('birthDate', undefined as unknown as string);
+                        }
+                        field.onChange(e);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {isIndividual && (
+              <FormField
+                control={form.control}
+                name="birthDate"
+                render={({ field }) => {
+                  const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                  return (
+                    <FormItem className="w-full 3xl:w-sm">
+                      <FormLabel required>Tug‘ilgan sana</FormLabel>
+                      <DatePicker
+                        disabled={!!data}
+                        className="w-full 3xl:w-sm"
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        placeholder="Sanani tanlang"
+                        disableStrategy="after"
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+            )}
+
+            <div className="w-full 3xl:w-sm flex items-end justify-start gap-2">
+              {!data ? (
+                <Button
+                  type="button"
+                  onClick={handleSearch}
+                  disabled={
+                    isLegalPending ||
+                    isIndividualPending ||
+                    !cleanIdentity ||
+                    (!isLegal && !(isIndividual && birthDateString))
+                  }
+                  loading={isLegalPending || isIndividualPending}
+                >
+                  Qidirish
+                </Button>
+              ) : (
+                <Button type="button" variant="destructive" onClick={handleClear}>
+                  O‘chirish
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {data && (
+            <div className="mt-6 border-t pt-6">
+              <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-x-6 gap-y-4">
+                <DetailRow
+                  title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH:'}
+                  value={data?.name || data?.fullName || '-'}
+                />
+                {isLegal && (
+                  <>
+                    <DetailRow title="Tashkilot rahbari:" value={data?.directorName || '-'} />
+                    <DetailRow title="Manzil:" value={data?.address || data?.legalAddress || '-'} />
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+        </CardForm>
+
         <CardForm className="mb-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
             <FormField
@@ -42,24 +195,28 @@ export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="hazardousFacilityId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>XICHO‘ tanlang</FormLabel>
-                  <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value || ''}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="XICHO‘ni tanlang" />
-                      </SelectTrigger>
-                      <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
+            {isLegal && !!data && (
+              <FormField
+                control={form.control}
+                name="hazardousFacilityId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>XICHO tanlang</FormLabel>
+                    <FormControl>
+                      <Select onValueChange={field.onChange} value={field.value || ''}>
+                        <SelectTrigger className="w-full 3xl:w-sm">
+                          <SelectValue placeholder="XICHO ni tanlang" />
+                        </SelectTrigger>
+                        <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
               name="childEquipmentId"
@@ -93,7 +250,7 @@ export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
             />
             <FormField
               control={form.control}
-              name="factory" // Quvur egasining nomi DTO da yo'q, "factory" ishlatildi
+              name="factory"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Quvurni ishlab chiqargan zavod nomi</FormLabel>
@@ -106,7 +263,7 @@ export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
             />
             <FormField
               control={form.control}
-              name="model" // Model, marka
+              name="model"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Model, marka</FormLabel>
@@ -286,9 +443,9 @@ export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
               name="thickness"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Devor qalinligi,mm</FormLabel>
+                  <FormLabel>Devor qalinligi, mm</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Devor qalinligi,mm" {...field} />
+                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Devor qalinligi, mm" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -299,9 +456,9 @@ export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
               name="length"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Uzunligi,m</FormLabel>
+                  <FormLabel>Uzunligi, m</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Uzunligi,m" {...field} />
+                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Uzunligi, m" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -312,9 +469,9 @@ export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
               name="pressure"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bosim,mPa</FormLabel>
+                  <FormLabel>Bosim, mPa</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Bosim,mPa" {...field} />
+                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Bosim, mPa" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -343,7 +500,7 @@ export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Quvurning birkasi bilan sur‘ati</FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Quvurning birkasi bilan surati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
                     </FormControl>
@@ -419,7 +576,7 @@ export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
               name="equipmentCertPath"
               control={form.control}
               render={({ field }) => (
-                <FormItem className={'mb-2'}>
+                <FormItem className="mb-2">
                   <div className="flex items-end xl:items-center justify-between gap-2">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Quvur sertifikati fayli</FormLabel>
                     <FormControl>
@@ -458,7 +615,7 @@ export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
               name="assignmentDecreePath"
               control={form.control}
               render={({ field }) => (
-                <FormItem className={'mb-2'}>
+                <FormItem className="mb-2">
                   <div className="flex items-end xl:items-center justify-between gap-2">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                       Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq fayli
@@ -499,8 +656,8 @@ export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
               name="expertisePath"
               control={form.control}
               render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                <FormItem>
+                  <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekspertiza loyihasi fayli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -556,7 +713,7 @@ export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -611,7 +768,7 @@ export default ({ onSubmit }: RegisterIllegalPipelineFormProps) => {
             />
           </div>
         </CardForm>
-        <Button type="submit" className="mt-5" disabled={!form.formState.isValid}>
+        <Button type="submit" className="mt-5" disabled={!data}>
           Ariza yaratish
         </Button>
       </form>

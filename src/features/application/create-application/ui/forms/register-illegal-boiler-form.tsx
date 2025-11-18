@@ -1,4 +1,3 @@
-// src/features/application/create-application/ui/forms/register-boiler-form.tsx
 import { CardForm, RegisterIllegalBoilerApplicationDTO } from '@/entities/create-application';
 import { NoteForm } from '@/features/application/create-application';
 import { GoBack } from '@/shared/components/common';
@@ -12,7 +11,7 @@ import { Input } from '@/shared/components/ui/input';
 import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { formatDate, parseISO } from 'date-fns';
-import { useCreateIlleagalBoilerApplication } from '@/features/application/create-application/model/use-create-illegal-boiler-application.ts';
+import { useCreateIllegalBoilerApplication } from '@/features/application/create-application/model/use-create-illegal-boiler-application.ts';
 import DetailRow from '@/shared/components/common/detail-row';
 import useAdd from '@/shared/hooks/api/useAdd';
 import { useMemo, useState } from 'react';
@@ -25,7 +24,7 @@ interface RegisterBoilerFormProps {
 }
 
 export default ({ onSubmit }: RegisterBoilerFormProps) => {
-  const { form, regionOptions, districtOptions, childEquipmentOptions } = useCreateIlleagalBoilerApplication();
+  const { form, regionOptions, districtOptions, childEquipmentOptions } = useCreateIllegalBoilerApplication();
   const [data, setData] = useState<any>(undefined);
 
   const identity = form.watch('identity');
@@ -48,19 +47,26 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
     '/integration/iip/individual',
   );
 
+  console.log(form.formState.errors);
+
   const handleSearch = () => {
-    if (form?.formState?.errors?.birthDate || form?.formState?.errors?.identity) {
-      form.trigger(['identity', 'birthDate']).then((r) => console.log(r));
-    } else if (identity?.length === 9) {
+    if (identity?.length === 9 && !form.formState.errors.identity) {
       mutateAsync({ tin: identity }).then((res) => {
         setData(res.data);
       });
-    } else if (identity?.length === 14) {
+    } else if (
+      identity?.length === 14 &&
+      birthDateString &&
+      !form.formState.errors.birthDate &&
+      !form.formState.errors.identity
+    ) {
       individualMutateAsync({ pin: identity, birthDate: formatDate(birthDateString || new Date(), 'yyyy-MM-dd') }).then(
         (res) => {
           setData(res.data);
         },
       );
+    } else {
+      form.trigger(['identity', 'birthDate']).then((r) => console.log(r));
     }
   };
 
@@ -92,6 +98,11 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                       className="w-full 3xl:w-sm"
                       placeholder="STIR yoki JSHSHIRni kiriting"
                       {...field}
+                      onChange={(e) => {
+                        form.setValue('hazardousFacilityId', undefined);
+                        form.setValue('birthDate', undefined as unknown as string);
+                        field.onChange(e);
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -99,28 +110,6 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
               )}
             />
             {isIndividual && (
-              // <FormField
-              //   control={form.control}
-              //   name="birthDate"
-              //   render={({ field }) => {
-              //     const dateValue = field.value ? new Date(field.value) : undefined;
-              //     const validDate = dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined;
-              //     return (
-              //       <FormItem>
-              //         <FormLabel required>Tug'ilgan sana</FormLabel>
-              //         <FormControl>
-              //           <DatePicker
-              //             className="w-full 3xl:w-sm"
-              //             value={validDate}
-              //             onChange={field.onChange}
-              //             placeholder="Sanani tanlang"
-              //           />
-              //         </FormControl>
-              //         <FormMessage />
-              //       </FormItem>
-              //     );
-              //   }}
-              // />
               <div>
                 <FormField
                   control={form.control}
@@ -150,11 +139,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                   type="button"
                   onClick={handleSearch}
                   disabled={
-                    isPending ||
-                    individualIsLoading ||
-                    !identity ||
-                    (identity.length !== 9 && identity.length !== 14) ||
-                    (!birthDateString && identity.length == 14)
+                    isPending || individualIsLoading || !identity || (identity.length !== 9 && identity.length !== 14)
                   }
                   loading={isPending || individualIsLoading}
                 >
@@ -202,24 +187,27 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="hazardousFacilityId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>XICHO‘ tanlang</FormLabel>
-                  <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value || ''}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="XICHO‘ni tanlang" />
-                      </SelectTrigger>
-                      <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {identity.length == 9 && !form.formState.errors.identity && !!data && (
+              <FormField
+                control={form.control}
+                name="hazardousFacilityId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>XICHO‘ tanlang</FormLabel>
+                    <FormControl>
+                      <Select onValueChange={field.onChange} value={field.value || ''}>
+                        <SelectTrigger className="w-full 3xl:w-sm">
+                          <SelectValue placeholder="XICHO‘ni tanlang" />
+                        </SelectTrigger>
+                        <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
               name="childEquipmentId"

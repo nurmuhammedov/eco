@@ -1,14 +1,8 @@
-// src/features/application/create-application/model/use-create-chemical-container-application.ts
 import {
   ChemicalIllegalContainerAppealDtoSchema,
   RegisterIllegalChemicalContainerApplicationDTO,
 } from '@/entities/create-application';
-import {
-  useChildEquipmentTypes,
-  useDistrictSelectQueries,
-  useHazardousFacilityDictionarySelect,
-  useRegionSelectQueries,
-} from '@/shared/api/dictionaries';
+import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
@@ -21,6 +15,8 @@ export const useCreateIllegalChemicalContainerApplication = () => {
       phoneNumber: '',
       hazardousFacilityId: undefined,
       childEquipmentId: '',
+      identity: '',
+      birthDate: undefined,
       factoryNumber: '',
       regionId: '',
       districtId: '',
@@ -50,10 +46,8 @@ export const useCreateIllegalChemicalContainerApplication = () => {
 
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
   const { data: childEquipmentTypes } = useChildEquipmentTypes('CHEMICAL_CONTAINER'); // Child equipment turi
 
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);
   const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions]);
   const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes]);
@@ -63,6 +57,5 @@ export const useCreateIllegalChemicalContainerApplication = () => {
     regionOptions,
     districtOptions,
     childEquipmentOptions,
-    hazardousFacilitiesOptions,
   };
 };

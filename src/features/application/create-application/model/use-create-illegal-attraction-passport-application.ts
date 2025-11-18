@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 
 type FormValues = RegisterIllegalAttractionApplicationDTO & {
   identity: string;
-  birthDate?: string; // `birthDate` ixtiyoriy bo'lishi mumkin
+  birthDate?: Date;
 };
 
 export const useCreateIllegalAttractionPassportApplication = () => {
@@ -20,7 +20,44 @@ export const useCreateIllegalAttractionPassportApplication = () => {
     mode: 'onChange',
     defaultValues: {
       identity: '',
-      // ... boshqa maydonlar uchun boshlang'ich qiymatlar
+      phoneNumber: '',
+      attractionName: '',
+      childEquipmentId: undefined,
+      childEquipmentSortId: undefined,
+      factory: '',
+      factoryNumber: '',
+      country: '',
+      regionId: undefined,
+      districtId: undefined,
+      address: '',
+      location: '',
+      riskLevel: undefined,
+      birthDate: undefined,
+      manufacturedAt: undefined,
+      acceptedAt: undefined,
+      servicePeriod: undefined,
+      passportPath: undefined,
+      labelPath: undefined,
+      conformityCertPath: undefined,
+      technicalJournalPath: undefined,
+      qrPath: undefined,
+      preservationActPath: undefined,
+      preservationActExpiryDate: undefined,
+      servicePlanPath: undefined,
+      servicePlanExpiryDate: undefined,
+      technicalManualPath: undefined,
+      technicalManualExpiryDate: undefined,
+      seasonalInspectionPath: undefined,
+      seasonalInspectionExpiryDate: undefined,
+      seasonalReadinessActPath: undefined,
+      seasonalReadinessActExpiryDate: undefined,
+      technicalReadinessActPath: undefined,
+      employeeSafetyKnowledgePath: undefined,
+      employeeSafetyKnowledgeExpiryDate: undefined,
+      usageRightsPath: undefined,
+      usageRightsExpiryDate: undefined,
+      cctvInstallationPath: undefined,
+      filesBuilt: false,
     },
   });
 

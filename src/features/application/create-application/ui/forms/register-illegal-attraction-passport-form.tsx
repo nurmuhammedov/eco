@@ -9,12 +9,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/components/ui/input';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { parseISO } from 'date-fns';
+import { formatDate, parseISO } from 'date-fns';
 import { useCreateIllegalAttractionPassportApplication } from '@/features/application/create-application/model/use-create-illegal-attraction-passport-application.ts';
-import { useLegalIipInfo } from '@/features/application/application-detail/hooks/use-legal-iip-info';
-import { useIndividualIipInfo } from '@/features/application/application-detail/hooks/use-individual-iip-info';
 import DetailRow from '@/shared/components/common/detail-row';
-import { useEffect } from 'react';
+import { useState } from 'react';
+import useAdd from '@/shared/hooks/api/useAdd';
 
 interface RegisterIllegalAttractionPassportFormProps {
   onSubmit: (data: RegisterIllegalAttractionApplicationDTO) => void;
@@ -24,65 +23,49 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
   const { form, regionOptions, districtOptions, attractionNameOptions, attractionSortOptions, riskLevelOptions } =
     useCreateIllegalAttractionPassportApplication();
 
+  const [data, setData] = useState<any>(undefined);
+
   const identity = form.watch('identity');
-  const birthDateString = form.watch('birthDate'); // Qiymatni string sifatida olamiz
+  const birthDateString = form.watch('birthDate');
 
-  const isLegal = typeof identity === 'string' && identity.trim().length === 9;
-  const isIndividual = typeof identity === 'string' && identity.trim().length === 14;
+  const cleanIdentity = identity?.trim() || '';
+  const isLegal = cleanIdentity.length === 9;
+  const isIndividual = cleanIdentity.length === 14;
 
-  const { data: legalData, isLoading: isLegalLoading } = useLegalIipInfo(
-    identity,
-    !!isLegal, // `!!` juda muhim!
+  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal');
+
+  const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
+    '/integration/iip/individual',
   );
 
-  // --- TUZATISH KIRITILGAN JOY ---
-  // birthDate'ni string'dan Date obyektiga o'tkazamiz
-  const birthDateForHook = birthDateString ? new Date(birthDateString) : undefined;
-
-  const { data: individualData, isLoading: isIndividualLoading } = useIndividualIipInfo(
-    identity,
-    birthDateForHook, // Hook'ga Date obyektini uzatamiz
-    !!(isIndividual && birthDateForHook), // Shartni ham yangi o'zgaruvchi bilan tekshiramiz
-  );
-  // --- TUZATISH TUGADI ---
-
-  const data = isLegal ? legalData : individualData;
-  const isLoading = isLegalLoading || isIndividualLoading;
-
-  useEffect(() => {
-    // Faqat `identity` 14 xonali string bo'lganda ishlaymiz
-    if (typeof identity === 'string' && identity.trim().length === 14) {
-      try {
-        const pin = identity.trim();
-
-        // JSHSHIRdan kerakli qismlarni ajratib olamiz (indekslar 0 dan boshlanadi)
-        const day = parseInt(pin.substring(1, 3), 10);
-        const month = parseInt(pin.substring(3, 5), 10) - 1; // JavaScript'da oylar 0-11 oralig'ida
-        const yearDigits = parseInt(pin.substring(5, 7), 10);
-
-        // Yilni hisoblaymiz
-        const year = yearDigits > 40 ? 1900 + yearDigits : 2000 + yearDigits;
-
-        // Sana obyektini yaratamiz
-        const calculatedDate = new Date(year, month, day);
-
-        // Yaratilgan sana to'g'riligini tekshiramiz
-        if (!isNaN(calculatedDate.getTime())) {
-          // `birthDate` maydonini yangi sana bilan yangilaymiz
-          form.setValue('birthDate', calculatedDate.toISOString(), { shouldValidate: true });
-        }
-      } catch (error) {
-        console.error('JSHSHIRdan sanani ajratishda xatolik:', error);
-        // Xatolik yuz bersa, maydonni tozalashimiz mumkin
-        form.setValue('birthDate', undefined, { shouldValidate: true });
-      }
+  const handleSearch = () => {
+    if (isLegal && !form.formState.errors.identity) {
+      legalMutateAsync({ tin: cleanIdentity })
+        .then((res) => setData(res.data))
+        .catch(() => setData(undefined));
+    } else if (isIndividual && birthDateString && !form.formState.errors.birthDate && !form.formState.errors.identity) {
+      individualMutateAsync({
+        pin: cleanIdentity,
+        birthDate: formatDate(birthDateString || new Date(), 'yyyy-MM-dd'),
+      })
+        .then((res) => setData(res.data))
+        .catch(() => setData(undefined));
+    } else {
+      form.trigger(['identity', 'birthDate']).then((r) => console.log(r));
     }
-  }, [identity, form.setValue]);
+  };
+
+  const handleClear = () => {
+    setData(undefined);
+    form.setValue('identity', '');
+    form.setValue('birthDate', undefined as unknown as any);
+  };
 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="Attraksion ro‘yxatga olish" />
+
         <CardForm className="my-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
             <FormField
@@ -92,41 +75,79 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 <FormItem>
                   <FormLabel required>STIR yoki JSHSHIR</FormLabel>
                   <FormControl>
-                    <Input className={'w-full 3xl:w-sm'} placeholder="STIR yoki JSHSHIRni kiriting" {...field} />
+                    <Input
+                      className={'w-full 3xl:w-sm'}
+                      placeholder="STIR yoki JSHSHIRni kiriting"
+                      disabled={!!data}
+                      maxLength={14}
+                      {...field}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '');
+                        e.target.value = val;
+                        if (data) setData(undefined);
+                        if (val.length !== 14) {
+                          form.setValue('birthDate', undefined as unknown as any);
+                        }
+                        field.onChange(e);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             {isIndividual && (
-              <FormField
-                control={form.control}
-                name="birthDate"
-                render={({ field }) => {
-                  const dateValue = field.value ? new Date(field.value) : undefined;
-                  const validDate = dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined;
-                  return (
-                    <FormItem>
-                      <FormLabel required>Tug'ilgan sana</FormLabel>
-                      <FormControl>
+              <div>
+                <FormField
+                  control={form.control}
+                  name="birthDate"
+                  render={({ field }) => {
+                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                    return (
+                      <FormItem className="w-full  3xl:w-sm">
+                        <FormLabel>Tug‘ilgan sana</FormLabel>
                         <DatePicker
-                          value={validDate} // DatePicker'ga tayyor Date obyektini beramiz
+                          disabled={!!data}
+                          className="w-full 3xl:w-sm"
+                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                           onChange={field.onChange}
                           placeholder="Sanani tanlang"
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              </div>
             )}
+
+            <div className="w-full 3xl:w-sm flex items-end justify-start gap-2">
+              {!data ? (
+                <Button
+                  type="button"
+                  onClick={handleSearch}
+                  disabled={
+                    isLegalPending ||
+                    isIndividualPending ||
+                    !cleanIdentity ||
+                    (!isLegal && !(isIndividual && birthDateString))
+                  }
+                  loading={isLegalPending || isIndividualPending}
+                >
+                  Qidirish
+                </Button>
+              ) : (
+                <Button type="button" variant="destructive" onClick={handleClear}>
+                  O‘chirish
+                </Button>
+              )}
+            </div>
           </div>
-          {isLoading && <div className="">Yuklanmoqda...</div>}
+
           {data && (
             <div className="mt-6 border-t pt-6">
               <h3 className="text-lg font-semibold mb-4 text-gray-800">
-                {isLegal ? "Tashkilot ma'lumotlari" : "Fuqaro ma'lumotlari"}
+                {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-1 gap-x-6 gap-y-4">
                 <DetailRow
@@ -140,6 +161,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
             </div>
           )}
         </CardForm>
+
         <CardForm className="my-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
             <FormField
@@ -265,20 +287,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 );
               }}
             />
-            {/* Xizmat muddati (yil) */}
-            {/*<FormField*/}
-            {/*  control={form.control}*/}
-            {/*  name="servicePeriod"*/}
-            {/*  render={({ field }) => (*/}
-            {/*    <FormItem>*/}
-            {/*      <FormLabel required>Xizmat muddati (yil)</FormLabel>*/}
-            {/*      <FormControl>*/}
-            {/*        <Input className="w-full 3xl:w-sm" placeholder="Xizmat muddati" {...field} />*/}
-            {/*      </FormControl>*/}
-            {/*      <FormMessage />*/}
-            {/*    </FormItem>*/}
-            {/*  )}*/}
-            {/*/>*/}
+            {/* Xizmat muddati */}
             <FormField
               control={form.control}
               name="servicePeriod"
@@ -428,8 +437,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
 
         {/* Fayl yuklash maydonlari */}
         <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
-          {/* Barcha fayllar uchun FormField'lar shu yerga qo'shiladi */}
-
           <div className="pb-4 border-b">
             <FormField
               name="labelPath"
@@ -497,7 +504,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                   <FormLabel>
                     Kundalik texnik xizmat ko‘rsatish attraksion ishlari boshlanishidan oldin olib boriladi. Natijalar
                     bo‘yicha attraksionlardan xavfsiz foydalanishga javobgar shaxs attraksionni kundalik foydalanishga
-                    ruxsat berganligi to‘g‘rida jurnali.
+                    ruxsat berganligi to‘g‘risida jurnali.
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -525,46 +532,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-
-            <div className="pb-4 border-b">
-              <FormField
-                name="seasonalReadinessActPath"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem className="mb-2">
-                    <div className="flex items-end xl:items-center justify-between gap-2">
-                      <FormLabel>Bog‘ attraksionining mavsumga tayyorligi to‘g‘risidagi dalolatnomasi.</FormLabel>
-                      <FormControl>
-                        <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                      </FormControl>
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="seasonalReadinessActExpiryDate"
-                render={({ field }) => {
-                  const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                  return (
-                    <FormItem className="w-full">
-                      <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                        <FormLabel>Amal qilish muddati</FormLabel>
-                        <DatePicker
-                          className={'max-w-2/3'}
-                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                          onChange={field.onChange}
-                          disableStrategy={'before'}
-                          placeholder="Amal qilish muddati"
-                        />
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
-            </div>
 
             <FormField
               control={form.control}
@@ -683,7 +650,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                     <FormLabel>
                       Texnik shahodat sinovlari attraksiondan foydalanish qo‘llanmasi va mazkur Qoidalar talablariga
                       muvofiq attraksionlarni soz holatda saqlash va xavfsiz foydalanish uchun mas’ul bo‘lgan mutaxassis
-                      boshchiligida amalga oshiriladi. Mas’ul mutaxasis buyrug‘i
+                      boshchiligida amalga oshiriladi. Mas’ul mutaxassis buyrug‘i
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -888,7 +855,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
           />
         </CardForm>
 
-        <Button type="submit" className="mt-5" disabled={!form.formState.isValid}>
+        <Button type="submit" className="mt-5" disabled={!data}>
           Ariza yaratish
         </Button>
       </form>

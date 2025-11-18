@@ -1,11 +1,5 @@
-// src/features/application/create-application/model/use-create-pipeline-application.ts
 import { PipelineIllegalAppealDtoSchema, RegisterIllegalPipelineApplicationDTO } from '@/entities/create-application';
-import {
-  useChildEquipmentTypes,
-  useDistrictSelectQueries,
-  useHazardousFacilityDictionarySelect,
-  useRegionSelectQueries,
-} from '@/shared/api/dictionaries';
+import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
@@ -18,6 +12,8 @@ export const useCreateIllegalPipelineApplication = () => {
       phoneNumber: '',
       hazardousFacilityId: undefined,
       childEquipmentId: '',
+      identity: '',
+      birthDate: undefined,
       factoryNumber: '',
       regionId: '',
       districtId: '',
@@ -49,10 +45,8 @@ export const useCreateIllegalPipelineApplication = () => {
 
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
   const { data: childEquipmentTypes } = useChildEquipmentTypes('PIPELINE'); // Child equipment turi 'PIPELINE'
 
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);
   const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions]);
   const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes]);
@@ -62,6 +56,5 @@ export const useCreateIllegalPipelineApplication = () => {
     regionOptions,
     districtOptions,
     childEquipmentOptions,
-    hazardousFacilitiesOptions,
   };
 };

@@ -1,8 +1,7 @@
-// src/entities/create-application/schemas/register-irs.schema.ts
 import { IrsCategory, IrsIdentifierType, IrsUsageType } from '@/entities/create-application/types/enums';
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
 import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { format, parseISO } from 'date-fns'; // parseISO ni import qiling
+import { format } from 'date-fns';
 import { z } from 'zod';
 
 export const IrsAppealDtoSchema = z.object({
@@ -50,19 +49,13 @@ export const IrsAppealDtoSchema = z.object({
   country: z
     .string({ required_error: 'Ishlab chiqarilgan mamlakat kiritilmadi!' })
     .min(1, 'Ishlab chiqarilgan mamlakat kiritilmadi!'),
-  manufacturedAt: z // String qabul qilinadi, keyin Date ga o'giriladi
-    .string({ required_error: 'Ishlab chiqarilgan sana kiritilmadi!' })
-    .min(1, 'Ishlab chiqarilgan sana kiritilmadi!')
-    .refine((val) => !isNaN(parseISO(val).valueOf()), { message: 'Sana noto‘g‘ri formatda' })
-    .transform((val) => format(parseISO(val), 'yyyy-MM-dd')),
+  manufacturedAt: z
+    .date({ required_error: 'Sana kiritilmadi!' })
+    .transform((date) => date && format(date, 'yyyy-MM-dd')),
   acceptedFrom: z
     .string({ required_error: 'Kimdan olinganligi kiritilmadi!' })
     .min(1, 'Kimdan olinganligi kiritilmadi!'),
-  acceptedAt: z // String qabul qilinadi, keyin Date ga o'giriladi
-    .string({ required_error: 'Olingan sana kiritilmadi!' })
-    .min(1, 'Olingan sana kiritilmadi!')
-    .refine((val) => !isNaN(parseISO(val).valueOf()), { message: 'Sana noto‘g‘ri formatda' })
-    .transform((val) => format(parseISO(val), 'yyyy-MM-dd')),
+  acceptedAt: z.date({ required_error: 'Sana kiritilmadi!' }).transform((date) => date && format(date, 'yyyy-MM-dd')),
   isValid: z.boolean({ required_error: 'INM holati tanlanmadi!', invalid_type_error: 'INM holati noto‘g‘ri formatda' }),
   usageType: z.nativeEnum(IrsUsageType, {
     errorMap: () => ({ message: 'INMdan foydalanish maqsadi tanlanmadi!' }),

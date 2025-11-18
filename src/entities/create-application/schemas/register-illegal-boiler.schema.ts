@@ -14,8 +14,8 @@ export const BoilerIllegalAppealDtoSchema = z
       }),
     identity: z
       .string({ required_error: 'STIR yoki JSHSHIR kiritilishi shart' })
-      .min(9, "STIR 9 xonali bo'lishi kerak")
-      .max(14, "JSHSHIR 14 xonali bo'lishi kerak")
+      .min(9, 'STIR 9 xonali bo‘lishi kerak')
+      .max(14, 'JSHSHIR 14 xonali bo‘lishi kerak')
       .regex(/^\d+$/, 'Faqat raqamlar kiritilishi kerak'),
     birthDate: z
       .date()
@@ -106,7 +106,6 @@ export const BoilerIllegalAppealDtoSchema = z
     pressure: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    // Agar JSHSHIR (14 xona) kiritilgan bo'lsa, birthDate majburiy
     if (data.identity && data.identity.length === 14) {
       if (!data.birthDate) {
         ctx.addIssue({

@@ -1,4 +1,3 @@
-// src/features/application/create-application/model/use-create-lpg-container-application.ts
 import {
   LpgContainerIllegalAppealDtoSchema,
   RegisterIllegalLpgContainerApplicationDTO,
@@ -21,6 +20,8 @@ export const useCreateIllegalLpgContainerApplication = () => {
       phoneNumber: '',
       hazardousFacilityId: undefined,
       childEquipmentId: '',
+      identity: '',
+      birthDate: undefined,
       factoryNumber: '',
       regionId: '',
       districtId: '',

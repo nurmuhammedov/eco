@@ -1,4 +1,3 @@
-// src/features/application/create-application/ui/forms/register-cableway-form.tsx
 import { CardForm, RegisterIllegalCablewayAppApplicationDTO } from '@/entities/create-application';
 import { NoteForm, useCreateIllegalCablewayApplication } from '@/features/application/create-application';
 import { GoBack } from '@/shared/components/common';
@@ -11,21 +10,175 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/components/ui/input';
 import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { parseISO } from 'date-fns';
+import { formatDate, parseISO } from 'date-fns';
+import { useMemo, useState } from 'react';
+import useAdd from '@/shared/hooks/api/useAdd';
+import { useQuery } from '@tanstack/react-query';
+import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
+import DetailRow from '@/shared/components/common/detail-row';
 
 interface RegisterIllegalCablewayFormProps {
   onSubmit: (data: RegisterIllegalCablewayAppApplicationDTO) => void;
 }
 
 export default ({ onSubmit }: RegisterIllegalCablewayFormProps) => {
-  const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
-    useCreateIllegalCablewayApplication();
+  const { form, regionOptions, districtOptions, childEquipmentOptions } = useCreateIllegalCablewayApplication();
+
+  const [data, setData] = useState<any>(undefined);
+
+  const identity = form.watch('identity');
+  const birthDateString = form.watch('birthDate');
+
+  const cleanIdentity = identity?.trim() || '';
+  const isLegal = cleanIdentity.length === 9;
+  const isIndividual = cleanIdentity.length === 14;
+
+  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal');
+
+  const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
+    '/integration/iip/individual',
+  );
+
+  const { data: hfoOptions } = useQuery({
+    queryKey: ['hfoSelect', cleanIdentity],
+    queryFn: () => getHfoByTinSelect(cleanIdentity),
+    enabled: isLegal && !!data,
+    retry: 1,
+  });
+
+  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoOptions || []), [hfoOptions]);
+
+  const handleSearch = () => {
+    if (isLegal && !form.formState.errors.identity) {
+      legalMutateAsync({ tin: cleanIdentity })
+        .then((res) => setData(res.data))
+        .catch(() => setData(undefined));
+    } else if (isIndividual && birthDateString && !form.formState.errors.birthDate && !form.formState.errors.identity) {
+      individualMutateAsync({
+        pin: cleanIdentity,
+        birthDate: formatDate(birthDateString || new Date(), 'yyyy-MM-dd'),
+      })
+        .then((res) => setData(res.data))
+        .catch(() => setData(undefined));
+    } else {
+      form.trigger(['identity', 'birthDate']).then((r) => console.log(r));
+    }
+  };
+
+  const handleClear = () => {
+    setData(undefined);
+    form.setValue('identity', '');
+    form.setValue('birthDate', undefined as unknown as string);
+    form.setValue('hazardousFacilityId', undefined);
+  };
 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="Osma arqonli yuruvchi yo‘lni ro‘yxatga olish" />
         <NoteForm equipmentName="osma yo‘l" />
+
+        <CardForm className="my-2">
+          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
+            <FormField
+              control={form.control}
+              name="identity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>STIR yoki JSHSHIR</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={!!data}
+                      className="w-full 3xl:w-sm"
+                      placeholder="STIR yoki JSHSHIRni kiriting"
+                      maxLength={14}
+                      {...field}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '');
+                        e.target.value = val;
+                        if (data) setData(undefined);
+                        form.setValue('hazardousFacilityId', undefined);
+                        if (val.length !== 14) {
+                          form.setValue('birthDate', undefined as unknown as string);
+                        }
+                        field.onChange(e);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {isIndividual && (
+              <FormField
+                control={form.control}
+                name="birthDate"
+                render={({ field }) => {
+                  const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                  return (
+                    <FormItem className="w-full 3xl:w-sm">
+                      <FormLabel required>Tug‘ilgan sana</FormLabel>
+                      <DatePicker
+                        disabled={!!data}
+                        className="w-full 3xl:w-sm"
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        placeholder="Sanani tanlang"
+                        disableStrategy="after"
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+            )}
+
+            <div className="w-full 3xl:w-sm flex items-end justify-start gap-2">
+              {!data ? (
+                <Button
+                  type="button"
+                  onClick={handleSearch}
+                  disabled={
+                    isLegalPending ||
+                    isIndividualPending ||
+                    !cleanIdentity ||
+                    (!isLegal && !(isIndividual && birthDateString))
+                  }
+                  loading={isLegalPending || isIndividualPending}
+                >
+                  Qidirish
+                </Button>
+              ) : (
+                <Button type="button" variant="destructive" onClick={handleClear}>
+                  O‘chirish
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {data && (
+            <div className="mt-6 border-t pt-6">
+              <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-x-6 gap-y-4">
+                <DetailRow
+                  title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH:'}
+                  value={data?.name || data?.fullName || '-'}
+                />
+                {isLegal && (
+                  <>
+                    <DetailRow title="Tashkilot rahbari:" value={data?.directorName || '-'} />
+                    <DetailRow title="Manzil:" value={data?.address || data?.legalAddress || '-'} />
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+        </CardForm>
+
         <CardForm className="mb-2">
           <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
             <FormField
@@ -41,24 +194,28 @@ export default ({ onSubmit }: RegisterIllegalCablewayFormProps) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="hazardousFacilityId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>XICHO‘ tanlang</FormLabel>
-                  <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value || ''}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="XICHO‘ni tanlang" />
-                      </SelectTrigger>
-                      <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
+            {isLegal && !!data && (
+              <FormField
+                control={form.control}
+                name="hazardousFacilityId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>XICHO tanlang</FormLabel>
+                    <FormControl>
+                      <Select onValueChange={field.onChange} value={field.value || ''}>
+                        <SelectTrigger className="w-full 3xl:w-sm">
+                          <SelectValue placeholder="XICHO ni tanlang" />
+                        </SelectTrigger>
+                        <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
               name="childEquipmentId"
@@ -97,7 +254,7 @@ export default ({ onSubmit }: RegisterIllegalCablewayFormProps) => {
                 <FormItem>
                   <FormLabel>Osma yo‘l egasining nomi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Ishlab chiqargan zavod nomi" {...field} />
+                    <Input className="w-full 3xl:w-sm" placeholder="Osma yo‘l egasining nomi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -188,9 +345,9 @@ export default ({ onSubmit }: RegisterIllegalCablewayFormProps) => {
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Osma yo‘lning joylashgan manzili</FormLabel>
+                  <FormLabel required>Osma yo‘l joylashgan manzil</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning joylashgan manzili" {...field} />
+                    <Input className="w-full 3xl:w-sm" placeholder="Qurilma joylashgan manzil" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -201,7 +358,7 @@ export default ({ onSubmit }: RegisterIllegalCablewayFormProps) => {
               name="location"
               render={({ field }) => (
                 <FormItem className="w-full 3xl:w-sm">
-                  <FormLabel required>Geolokatsiya (xaritadan joyni tanlang va koordinatalarni kiriting)</FormLabel>
+                  <FormLabel required>Joylashuv (xaritadan joyni tanlang va koordinatalarni kiriting)</FormLabel>
                   <FormControl>
                     <YandexMapModal
                       initialCoords={field.value ? field.value.split(',').map(Number) : null}
@@ -317,9 +474,7 @@ export default ({ onSubmit }: RegisterIllegalCablewayFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Osma yo‘lning birkasi bilan sur‘ati
-                    </FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Osma yo‘lning birkasi bilan surati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
                     </FormControl>
@@ -587,7 +742,7 @@ export default ({ onSubmit }: RegisterIllegalCablewayFormProps) => {
             />
           </div>
         </CardForm>
-        <Button type="submit" className="mt-5" disabled={!form.formState.isValid}>
+        <Button type="submit" className="mt-5" disabled={!data}>
           Ariza yaratish
         </Button>
       </form>

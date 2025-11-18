@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { BoilerIllegalAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-boiler.schema';
 
-export const useCreateIlleagalBoilerApplication = () => {
+export const useCreateIllegalBoilerApplication = () => {
   const form = useForm<RegisterIllegalBoilerApplicationDTO>({
     resolver: zodResolver(BoilerIllegalAppealDtoSchema),
     defaultValues: {

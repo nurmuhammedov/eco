@@ -5,7 +5,7 @@ export const UserLogsBaseSchema = {
   name: z.string().optional(),
   status: z.nativeEnum(UserLogsTypeEnum),
   ownerIdentity: z.string().optional(),
-  createdAt: z.string().optional(),
+  createdAt: z.date().optional(),
   ownerName: z.string().optional(),
   username: z.string().optional(),
   appealNumber: z.string().optional(),

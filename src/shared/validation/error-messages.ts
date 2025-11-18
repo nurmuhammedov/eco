@@ -6,5 +6,5 @@ export const FORM_ERROR_MESSAGES = {
   role: 'Rolni tanlash majburiy',
   direction: 'Kamida bitta yo‘nalishni tanlash majburiy',
   department: 'Bo‘limni tanlash majburiy',
-  phone: 'Telefon raqami formati +998XXXXXXXXX ko‘rinishida bo‘lishi kerak',
+  phone: 'Telefon raqam +998XXXXXXXXX ko‘rinishida bo‘lsin!',
 };
