@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import ReportExecutionModal from '@/features/inspections/ui/parts/report-execution-modal.tsx';
 import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
-import { answerOptions, InspectionChecklistForm } from '@/features/inspections/ui/parts/inspection-checklist-form';
+import { answerOptions } from '@/features/inspections/ui/parts/inspection-checklist-form';
 import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/ui/inspection-widget';
 import { QK_INSPECTION } from '@/shared/constants/query-keys';
 
@@ -28,8 +28,6 @@ const InspectionReports = ({ checklistCategoryTypeId, status }: any) => {
     [QK_INSPECTION],
     6000,
   );
-
-  console.log(questions, checklistCategoryTypeId);
 
   const columns: ColumnDef<any>[] = [
     ...(currentTab == 'eliminated'
@@ -116,14 +114,23 @@ const InspectionReports = ({ checklistCategoryTypeId, status }: any) => {
         )}
       </div>
       <div>
-        {currentTab == 'questions' &&
-        user?.role == UserRoles.INSPECTOR &&
-        status == InspectionStatus.ASSIGNED &&
-        questions?.length ? (
-          <InspectionChecklistForm items={questions || []} />
-        ) : (
-          <DataTable isLoading={false} columns={columns} data={[]} />
-        )}
+        {currentTab == 'questions' ? (
+          <>
+            {user?.role == UserRoles.INSPECTOR && status == InspectionStatus.ASSIGNED && questions?.length ? (
+              // <InspectionChecklistForm items={questions || []} />
+              <></>
+            ) : (
+              <>
+                {questions?.map((category) => (
+                  <div key={category.inspectionCategoryId} className="mb-4 border rounded-xl p-4 bg-white">
+                    <h3 className="text-lg font-semibold mb-4 text-black-600">{category.categoryName}</h3>
+                    <DataTable isLoading={false} columns={columns} data={category.checklists || []} />
+                  </div>
+                ))}
+              </>
+            )}
+          </>
+        ) : null}
       </div>
       <ReportExecutionModal
         description={inspectionTitle}

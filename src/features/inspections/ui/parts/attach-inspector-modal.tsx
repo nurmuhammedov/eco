@@ -11,8 +11,6 @@ import { useInspectorSelect } from '@/features/application/application-detail/ho
 import { FORM_ERROR_MESSAGES } from '@/shared/validation';
 import { useMemo, useState } from 'react';
 import { MultiSelect } from '@/shared/components/ui/multi-select.tsx';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection';
 import { useCustomSearchParams, useEIMZO } from '@/shared/hooks';
 import { ApplicationModal } from '@/features/application/create-application';
@@ -20,8 +18,14 @@ import { ApplicationModal } from '@/features/application/create-application';
 const schema = z.object({
   startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
   endDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
-  inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required).default([]),
-  checklistCategoryTypeId: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
+  inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
+
+  checklistDtoList: z.array(
+    z.object({
+      resultIdForObject: z.string(),
+      checklistCategoryIdList: z.array(z.number()).min(1, FORM_ERROR_MESSAGES.required),
+    }),
+  ),
 });
 
 const AttachInspectorModal = ({ data = [] }: any) => {
@@ -32,11 +36,28 @@ const AttachInspectorModal = ({ data = [] }: any) => {
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      checklistDtoList: data.map((item: any) => ({
+        resultIdForObject: item.id,
+        checklistCategoryIdList: [],
+      })),
+    },
   });
 
   const { data: inspectorSelectData } = useInspectorSelect(isShow);
   const { data: categoryTypes } = useCategoryTypeSelectQuery(undefined, isShow);
-  const categoryTypeOptions = useMemo(() => getSelectOptions(categoryTypes), [categoryTypes]);
+
+  const filteredCategoryTypes = useMemo(() => {
+    if (!categoryTypes) return {};
+
+    return data.reduce(
+      (acc: any, obj: any) => {
+        acc[obj.id] = categoryTypes.filter((ct: any) => ct.type === obj.belongType);
+        return acc;
+      },
+      {} as Record<string, any[]>,
+    );
+  }, [categoryTypes, data]);
 
   const {
     error,
@@ -55,13 +76,15 @@ const AttachInspectorModal = ({ data = [] }: any) => {
     onSuccessNavigateTo: `/inspections`,
   });
 
-  function onSubmit(data: z.infer<typeof schema>) {
+  function onSubmit(values: z.infer<typeof schema>) {
     handleCreateApplication({
-      ...data,
       inspectionId: id,
-      startDate: formatDate(data.startDate, 'yyyy-MM-dd'),
-      endDate: formatDate(data.endDate, 'yyyy-MM-dd'),
+      startDate: formatDate(values.startDate, 'yyyy-MM-dd'),
+      endDate: formatDate(values.endDate, 'yyyy-MM-dd'),
+      inspectorIdList: values.inspectorIdList,
+      checklistDtoList: values.checklistDtoList,
     });
+
     setIsShow(false);
   }
 
@@ -72,21 +95,21 @@ const AttachInspectorModal = ({ data = [] }: any) => {
           <Button size="sm">Inspektorni(larni) belgilash</Button>
         </DialogTrigger>
 
-        <DialogContent className="sm:max-w-[730px]">
+        <DialogContent className="sm:max-w-[750px] max-h-[95vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Inspektorni(larni) belgilash</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="grid grid-cols-2 gap-2 mb-2">
+              <div className="grid grid-cols-2 gap-2 mb-4">
                 <FormField
                   control={form.control}
                   name="startDate"
                   render={({ field }) => {
                     const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                     return (
-                      <FormItem className="w-full ">
+                      <FormItem>
                         <FormLabel required>Tekshiruv boshlanish sanasi</FormLabel>
                         <DatePicker
                           value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -105,7 +128,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                   render={({ field }) => {
                     const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                     return (
-                      <FormItem className="w-full ">
+                      <FormItem>
                         <FormLabel required>Tekshiruv tugash sanasi</FormLabel>
                         <DatePicker
                           value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -122,40 +145,16 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                   control={form.control}
                   name="inspectorIdList"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>Inspektor(lar)ni tanlash</FormLabel>
+                    <FormItem className="col-span-2">
+                      <FormLabel required>Inspektor(lar)ni tanlang</FormLabel>
                       <FormControl>
                         <MultiSelect
                           {...field}
                           options={inspectorSelectData || []}
-                          maxDisplayItems={5}
-                          placeholder="Tekshiruvchi inspektorlarni tanlang"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  name="checklistCategoryTypeId"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tekshiruv turi</FormLabel>
-                      <FormControl>
-                        <Select
-                          {...field}
                           value={field.value}
-                          onValueChange={(value) => {
-                            if (value) field.onChange(value);
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Tekshiruv turini tanlang" />
-                          </SelectTrigger>
-                          <SelectContent>{categoryTypeOptions}</SelectContent>
-                        </Select>
+                          onChange={field.onChange}
+                          placeholder="Inspektorlarni tanlang"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -163,7 +162,40 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3 mt-20">
+              <div className="mt-6">
+                {form.watch('checklistDtoList').map((block, index) => (
+                  <div key={block.resultIdForObject} className="border rounded-xl p-4 mb-4 bg-slate-50">
+                    <div className="font-semibold text-sm mb-2 text-slate-700">
+                      {data[index].belongName} | {data[index].belongRegistryNumber}
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name={`checklistDtoList.${index}.checklistCategoryIdList`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel required>Kategoriya tanlang</FormLabel>
+                          <FormControl>
+                            <MultiSelect
+                              {...field}
+                              options={(filteredCategoryTypes[data[index].id] || []).map((ct: any) => ({
+                                name: ct.name,
+                                id: ct.id,
+                              }))}
+                              value={field.value}
+                              onChange={field.onChange}
+                              placeholder="Kategoriyalarni tanlang"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mt-8">
                 <DialogClose asChild>
                   <Button disabled={isLoading} variant="outline">
                     Bekor qilish
