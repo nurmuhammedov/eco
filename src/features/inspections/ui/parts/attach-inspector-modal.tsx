@@ -14,9 +14,8 @@ import { MultiSelect } from '@/shared/components/ui/multi-select.tsx';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection';
-import { useEIMZO } from '@/shared/hooks';
+import { useCustomSearchParams, useEIMZO } from '@/shared/hooks';
 import { ApplicationModal } from '@/features/application/create-application';
-import { useSearchParams } from 'react-router-dom';
 
 const schema = z.object({
   startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
@@ -25,17 +24,18 @@ const schema = z.object({
   checklistCategoryTypeId: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
 });
 
-const AttachInspectorModal = () => {
+const AttachInspectorModal = ({ data = [] }: any) => {
   const [isShow, setIsShow] = useState(false);
-  const [searchParams] = useSearchParams();
-  const id = searchParams.get('inspectionId');
+  const {
+    paramsObject: { inspectionId: id = '' },
+  } = useCustomSearchParams();
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
 
-  const { data: inspectorSelectData } = useInspectorSelect();
-  const { data: categoryTypes } = useCategoryTypeSelectQuery();
+  const { data: inspectorSelectData } = useInspectorSelect(isShow);
+  const { data: categoryTypes } = useCategoryTypeSelectQuery(undefined, isShow);
   const categoryTypeOptions = useMemo(() => getSelectOptions(categoryTypes), [categoryTypes]);
 
   const {
@@ -52,7 +52,7 @@ const AttachInspectorModal = () => {
     submitEndpoint: '/inspections/decree',
     queryKey: 'inspections-attach-inspectors',
     successMessage: 'Muvaffaqiyatli saqlandi!',
-    onSuccessNavigateTo: `/inspections?intervalId=${searchParams.get('intervalId') || ''}`,
+    onSuccessNavigateTo: `/inspections`,
   });
 
   function onSubmit(data: z.infer<typeof schema>) {

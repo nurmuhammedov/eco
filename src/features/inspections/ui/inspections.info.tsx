@@ -2,7 +2,6 @@ import { GoBack } from '@/shared/components/common';
 import { DetailCardAccordion } from '@/shared/components/common/detail-card';
 import AttachInspectorModal from '@/features/inspections/ui/parts/attach-inspector-modal.tsx';
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
-import { useSearchParams } from 'react-router-dom';
 import ObjectsList from '@/features/inspections/ui/parts/objects-list.tsx';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
 import { UserRoles } from '@/entities/user';
@@ -11,59 +10,58 @@ import InspectionsDetailInfo from '@/features/inspections/ui/parts/inpections-de
 import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 import { InspectionStatus } from '@/widgets/inspection/ui/inspection-widget.tsx';
 import { useObjectList } from '@/features/inspections/hooks/use-object-list';
-// import InspectionReports from '@/features/inspections/ui/parts/inspection-reports.tsx';
+import { useData } from '@/shared/hooks';
+import InspectionReports from '@/features/inspections/ui/parts/inspection-reports.tsx';
 
 const InspectionsInfo = () => {
-  const [searchParams] = useSearchParams();
-  const currentTin = searchParams.get('tin');
-  const { paramsObject } = useCustomSearchParams();
+  const {
+    paramsObject: { tin: currentTin = '', name = '', inspectionId = '' },
+  } = useCustomSearchParams();
   const { user } = useAuth();
   const { data: inspectionData } = useInspectionDetail();
   const { data, isLoading } = useObjectList();
+  const { data: accordions = [] } = useData<any[]>('/inspection-results', !!inspectionId, {
+    inspectionId,
+  });
+
+  const typesList = [
+    ...(data && data?.HF && Array.isArray(data?.HF) ? data.HF : []),
+    ...(data && data?.ELEVATOR && Array.isArray(data?.ELEVATOR) ? data.ELEVATOR : []),
+    ...(data && data?.ATTRACTION && Array.isArray(data?.ATTRACTION) ? data.ATTRACTION : []),
+    ...(data && data?.IRS && Array.isArray(data?.IRS) ? data.IRS : []),
+    ...(data && data?.XRAY && Array.isArray(data?.XRAY) ? data.XRAY : []),
+    ...(data && data?.LPG_POWERED && Array.isArray(data?.LPG_POWERED) ? data.LPG_POWERED : []),
+  ];
 
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <GoBack title={`Tashkilot: ${paramsObject?.name || ''} (${currentTin})`} />
+        <GoBack title={`Tashkilot: ${name} (${currentTin})`} />
       </div>
-      <DetailCardAccordion defaultValue={['risk_anlalysis_info', 'inspection_info', 'inspection_results']}>
+      <DetailCardAccordion defaultValue={['risk_anlalysis_info', 'inspection_info']}>
         <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
           <LegalApplicantInfo tinNumber={currentTin} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="risk_anlalysis_info" title={`Xavfni tahlil qilish bo‘yicha ma’lumotlar`}>
           {user?.role === UserRoles.REGIONAL && inspectionData?.status === InspectionStatus.NEW && (
             <div className="flex justify-end py-2">
-              <AttachInspectorModal />
+              <AttachInspectorModal data={typesList || []} />
             </div>
           )}
-          <ObjectsList
-            isLoading={isLoading}
-            data={[
-              ...(data && data?.HF && Array.isArray(data?.HF) ? data.HF : []),
-              ...(data && data?.ELEVATOR && Array.isArray(data?.ELEVATOR) ? data.ELEVATOR : []),
-              ...(data && data?.ATTRACTION && Array.isArray(data?.ATTRACTION) ? data.ATTRACTION : []),
-              ...(data && data?.IRS && Array.isArray(data?.IRS) ? data.IRS : []),
-              ...(data && data?.XRAY && Array.isArray(data?.XRAY) ? data.XRAY : []),
-              ...(data && data?.LPG_POWERED && Array.isArray(data?.LPG_POWERED) ? data.LPG_POWERED : []),
-            ]}
-          />
+          <ObjectsList isLoading={isLoading} data={typesList || []} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="inspection_info" title={`Tekshiruv ma’lumotlari`}>
           <InspectionsDetailInfo inspectionData={inspectionData} />
         </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="inspection_results" title={`Tekshiruv dasturi  (${paramsObject?.name || ''})`}>
-          {/*<InspectionReports*/}
-          {/*  status={inspectionData?.status}*/}
-          {/*  checklistCategoryTypeId={inspectionData?.checklistCategoryTypeId}*/}
-          {/*/>*/}
-          <></>
-        </DetailCardAccordion.Item>
-        {/*<DetailCardAccordion.Item*/}
-        {/*  value="type"*/}
-        {/*  title={`Tekshiruvda aniqlangan kamchiliklar yuzasidan ko‘rilgan choralar  (${paramsObject?.name || ''})`}*/}
-        {/*>*/}
-        {/*  <div></div>*/}
-        {/*</DetailCardAccordion.Item>*/}
+        {accordions?.length > 0 &&
+          accordions?.map((item: any) => (
+            <DetailCardAccordion.Item
+              value={`inspection_results-${item?.id}`}
+              title={`Tekshiruv dasturi  (${item?.belongName})`}
+            >
+              <InspectionReports status={item?.status} checklistCategoryTypeId={item?.id} />
+            </DetailCardAccordion.Item>
+          ))}
       </DetailCardAccordion>
     </>
   );

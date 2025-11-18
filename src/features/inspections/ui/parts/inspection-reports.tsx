@@ -1,4 +1,4 @@
-import { useInspectionReports } from '@/features/inspections/hooks/use-inspection-reports.ts';
+// import { useInspectionReports } from '@/features/inspections/hooks/use-inspection-reports.ts';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
 import { useCustomSearchParams, useData } from '@/shared/hooks';
 import { UserRoles } from '@/entities/user';
@@ -13,7 +13,7 @@ import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/
 import { QK_INSPECTION } from '@/shared/constants/query-keys';
 
 const InspectionReports = ({ checklistCategoryTypeId, status }: any) => {
-  const { data, isLoading } = useInspectionReports();
+  // const { data, isLoading } = useInspectionReports();
   const { user } = useAuth();
   const { addParams, paramsObject } = useCustomSearchParams();
   const [id, setId] = useState<any>(null);
@@ -22,14 +22,14 @@ const InspectionReports = ({ checklistCategoryTypeId, status }: any) => {
   const tabulation = paramsObject?.tabulation || 'all';
 
   const { data: questions = [] } = useData<any[]>(
-    `/${status == InspectionSubMenuStatus.CONDUCTED ? 'inspection-results/by-inspection/' : 'checklists/by-category-type/'}${status == InspectionSubMenuStatus.CONDUCTED ? paramsObject?.inspectionId : checklistCategoryTypeId}`,
+    `/inspection-checklists/by-result/${checklistCategoryTypeId}`,
     !!checklistCategoryTypeId,
     {},
     [QK_INSPECTION],
     6000,
   );
 
-  // const questionColumns: ColumnDef<any>[] = [];
+  console.log(questions, checklistCategoryTypeId);
 
   const columns: ColumnDef<any>[] = [
     ...(currentTab == 'eliminated'
@@ -122,11 +122,7 @@ const InspectionReports = ({ checklistCategoryTypeId, status }: any) => {
         questions?.length ? (
           <InspectionChecklistForm items={questions || []} />
         ) : (
-          <DataTable
-            isLoading={isLoading}
-            columns={columns}
-            data={currentTab == 'questions' ? questions : data || []}
-          />
+          <DataTable isLoading={false} columns={columns} data={[]} />
         )}
       </div>
       <ReportExecutionModal
