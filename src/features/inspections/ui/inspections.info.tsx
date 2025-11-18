@@ -10,6 +10,7 @@ import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts'
 import InspectionsDetailInfo from '@/features/inspections/ui/parts/inpections-detail-info.tsx';
 import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
 import { InspectionStatus } from '@/widgets/inspection/ui/inspection-widget.tsx';
+import { useObjectList } from '@/features/inspections/hooks/use-object-list';
 // import InspectionReports from '@/features/inspections/ui/parts/inspection-reports.tsx';
 
 const InspectionsInfo = () => {
@@ -18,6 +19,7 @@ const InspectionsInfo = () => {
   const { paramsObject } = useCustomSearchParams();
   const { user } = useAuth();
   const { data: inspectionData } = useInspectionDetail();
+  const { data, isLoading } = useObjectList();
 
   return (
     <>
@@ -34,7 +36,17 @@ const InspectionsInfo = () => {
               <AttachInspectorModal />
             </div>
           )}
-          <ObjectsList />
+          <ObjectsList
+            isLoading={isLoading}
+            data={[
+              ...(data && data?.HF && Array.isArray(data?.HF) ? data.HF : []),
+              ...(data && data?.ELEVATOR && Array.isArray(data?.ELEVATOR) ? data.ELEVATOR : []),
+              ...(data && data?.ATTRACTION && Array.isArray(data?.ATTRACTION) ? data.ATTRACTION : []),
+              ...(data && data?.IRS && Array.isArray(data?.IRS) ? data.IRS : []),
+              ...(data && data?.XRAY && Array.isArray(data?.XRAY) ? data.XRAY : []),
+              ...(data && data?.LPG_POWERED && Array.isArray(data?.LPG_POWERED) ? data.LPG_POWERED : []),
+            ]}
+          />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="inspection_info" title={`Tekshiruv ma’lumotlari`}>
           <InspectionsDetailInfo inspectionData={inspectionData} />

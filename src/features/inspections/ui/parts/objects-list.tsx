@@ -1,38 +1,33 @@
-import { useObjectList } from '@/features/inspections/hooks/use-object-list.ts';
 import useCustomSearchParams from '../../../../shared/hooks/api/useSearchParams.ts';
 import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/shared/components/ui/button.tsx';
 import { Eye } from 'lucide-react';
 import { DataTable } from '@/shared/components/common/data-table';
 import { useNavigate } from 'react-router-dom';
-import { formatDate } from 'date-fns';
+import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options';
+// import { formatDate } from 'date-fns';
 
-const ObjectsList = () => {
+const ObjectsList = ({ data = [], isLoading }: any) => {
   const { paramsObject } = useCustomSearchParams();
-  const { data, isLoading } = useObjectList();
   const navigate = useNavigate();
 
   const columns: ColumnDef<any>[] = [
-    {
-      header: 'Xavf tahlil davri',
-      cell: ({ row }) =>
-        `${formatDate(row.original.startDate, 'dd.MM.yyyy')} - ${formatDate(row.original.endDate, 'dd.MM.yyyy')}`,
-    },
+    // {
+    //   header: 'Xavf tahlil davri',
+    //   cell: ({ row }) =>
+    //     `${formatDate(row.original.startDate, 'dd.MM.yyyy')} - ${formatDate(row.original.endDate, 'dd.MM.yyyy')}`,
+    // },
     {
       header: 'Nomi',
-      accessorKey: 'name',
+      accessorKey: 'belongName',
+    },
+    {
+      header: 'Turi',
+      cell: ({ row }: any) => inspectionCategoryOptions?.find((i) => i?.id == row.original.belongType)?.name || '',
     },
     {
       header: 'Ro‘yxatga olish raqami',
-      accessorKey: 'registryNumber',
-    },
-    {
-      header: 'Manzil',
-      accessorKey: 'address',
-    },
-    {
-      header: 'Jami bali',
-      accessorKey: 'totalScore',
+      accessorKey: 'belongRegistryNumber',
     },
     {
       id: 'actions',
@@ -53,7 +48,7 @@ const ObjectsList = () => {
 
   return (
     <div>
-      <DataTable isPaginated data={data || []} columns={columns as unknown as any} isLoading={isLoading} />
+      <DataTable data={data || []} columns={columns as unknown as any} isLoading={isLoading} />
     </div>
   );
 };

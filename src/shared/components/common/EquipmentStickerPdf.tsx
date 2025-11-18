@@ -1,7 +1,6 @@
-import { Page, Text, View, Document, StyleSheet, Image } from '@react-pdf/renderer';
+import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
 import { getDate } from '@/shared/utils/date';
 
-// Ma'lumotlar uchun tip
 interface StickerData {
   registryNumber?: string;
   registrationDate?: string;
@@ -10,8 +9,11 @@ interface StickerData {
   qrCodeDataUrl: string;
 }
 
-// Stillar (millimetrni pikselga o'tkazish uchun taxminan ~3.78 koeffitsientidan foydalanamiz)
-// 100mm ~ 378pt, 40mm ~ 151pt
+Font.register({
+  family: 'Roboto',
+  fonts: [{ src: '/fonts/Roboto-Regular.ttf' }, { src: '/fonts/Roboto-Bold.ttf', fontWeight: 'bold' }],
+});
+
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'row',
@@ -19,20 +21,21 @@ const styles = StyleSheet.create({
     padding: 10,
     width: 378,
     height: 151,
+    fontFamily: 'Roboto',
   },
   qrSection: {
-    width: '35%', // ~35mm
+    width: '35%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     paddingRight: 10,
   },
   qrCode: {
-    width: 114, // ~30mm
+    width: 114,
     height: 114,
   },
   infoSection: {
-    width: '65%', // ~65mm
+    width: '65%',
     height: '100%',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -44,25 +47,20 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   infoLabel: {
-    fontFamily: 'Helvetica',
     color: '#333',
   },
   infoValue: {
-    fontFamily: 'Helvetica-Bold',
     color: '#000',
   },
 });
 
 export const EquipmentStickerPdf = ({ data }: { data: StickerData }) => (
   <Document>
-    {/* Sahifa: 100mm x 40mm */}
     <Page size={[378, 151]} style={styles.page}>
-      {/* Chap taraf: QR Kod */}
       <View style={styles.qrSection}>
         <Image style={styles.qrCode} src={data.qrCodeDataUrl} />
       </View>
 
-      {/* O'ng taraf: Ma'lumotlar */}
       <View style={styles.infoSection}>
         <View style={styles.infoRow}>
           <Text style={styles.infoLabel}>Ro'yxatga olingan sana:</Text>

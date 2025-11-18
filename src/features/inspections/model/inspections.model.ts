@@ -1,28 +1,20 @@
 import { apiClient } from '@/shared/api';
 
 export const inspectionsApi = {
-  getObjectList: async (params: any, id: any) => {
-    const { data } = await apiClient.get<any>(`/risk-analyses/by-inspection/${id}`, params);
+  getObjectList: async (id: any) => {
+    const { data } = await apiClient.get<any>(`/inspections/${id}/objects`);
     return data.data;
   },
   getInspectionDetail: async (id: any) => {
     const { data } = await apiClient.get<any>(`/inspections/${id}`);
     return data.data;
   },
-  // attachInspectors: async ({ data, id }: { data: any; id: any }) => {
-  //   const { data: res } = await apiClient.put<any>(`/inspections/set-inspector/${id}`, data);
-  //   return res.data;
-  // },
   setFiles: async ({ data, id }: { data: any; id: any }) => {
     const { data: res } = await apiClient.post<any>(`/inspections/${id}/ombudsman`, data);
     return res.data;
   },
   addInspectionReport: async ({ data, id }: { data: any; id: any }) => {
     const { data: res } = await apiClient.post<any>(`/inspection-reports/${id}`, data);
-    return res.data;
-  },
-  editInspectionReport: async ({ data, id }: { data: any; id: any }) => {
-    const { data: res } = await apiClient.patch<any>(`/inspection-reports/${id}`, data);
     return res.data;
   },
   getInspectionList: async (params: any) => {

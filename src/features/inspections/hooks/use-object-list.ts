@@ -5,12 +5,12 @@ import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts'
 
 export const useObjectList = () => {
   const {
-    paramsObject: { inspectionId = '', page = 1, size = 10 },
+    paramsObject: { inspectionId = '' },
   } = useCustomSearchParams();
 
   return useQuery({
-    queryKey: [QK_INSPECTION, inspectionId, page, size],
-    queryFn: () => inspectionsApi.getObjectList({ page, size }, inspectionId),
+    queryKey: [QK_INSPECTION, inspectionId, 'list'],
+    queryFn: () => inspectionsApi.getObjectList(inspectionId),
     enabled: !!inspectionId,
   });
 };

@@ -49,7 +49,7 @@ const PreventionsPage = lazy(() => import('@/pages/preventions'));
 const PreventionCreatePage = lazy(() => import('@/pages/preventions/create'));
 const PreventionViewPage = lazy(() => import('@/pages/preventions/view'));
 const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'));
-const InspectionsDetailPage = lazy(() => import('@/features/inspections/ui/inspections.detail.tsx'));
+// const InspectionsDetailPage = lazy(() => import('@/features/inspections/ui/inspections.detail.tsx'));
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
 const InspectionSurveys = lazy(() => import('@/pages/admin/inspection/ui'));
 const AttestationPage = lazy(() => import('@/pages/attestation'));
@@ -266,11 +266,6 @@ export const appRoutes = [
   {
     path: 'inspections/info',
     component: InspectionsInfoPage,
-    roles: [],
-  },
-  {
-    path: 'inspections/detail',
-    component: InspectionsDetailPage,
     roles: [],
   },
   {
