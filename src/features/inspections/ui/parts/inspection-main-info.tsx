@@ -14,11 +14,6 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
 
   return (
     <div>
-      {/*<DetailRow*/}
-      {/*  title="Tekshiruv reja jadvali:"*/}
-      {/*  value={!!inspectionData?.schedulePath ? <FileLink url={inspectionData?.schedulePath} /> : '-'}*/}
-      {/*/>*/}
-
       <DetailRow
         title="Tekshiruv sanasi:"
         value={getDate(inspectionData?.startDate) + ' - ' + getDate(inspectionData?.endDate)}
@@ -31,11 +26,6 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
         title="Ombudsman maxsus kod:"
         value={<span style={{ color: 'green' }}>{inspectionData?.specialCode || '-'}</span>}
       />
-
-      {/*<DetailRow*/}
-      {/*  title="Tekshiruv buyrug‘i:"*/}
-      {/*  value={!!inspectionData?.decree?.path ? <FileLink url={inspectionData?.decree?.path} /> : '-'}*/}
-      {/*/>*/}
 
       <DetailRow
         title="Tekshiruv buyrug‘i:"
@@ -60,9 +50,6 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
         }
       />
 
-      {/*<DetailRow title="Buyruq sanasi:" value={getDate(inspectionData?.decree?.createdAt) || '-'} />*/}
-      {/*<DetailRow title="Buyruq raqami:" value={inspectionData?.decreeNumber || '-'} />*/}
-
       <DetailRow
         title="Xabardor qilish xati:"
         value={
@@ -76,28 +63,6 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
           )
         }
       />
-
-      {/*<DetailRow title="Xabardor qilish xati sanasi:" value={getDate(inspectionData?.notificationLetterDate) || '-'} />*/}
-      {/*<DetailRow*/}
-      {/*  title="Buyurtma:"*/}
-      {/*  value={!!inspectionData?.orderPath ? <FileLink url={inspectionData?.orderPath} /> : '-'}*/}
-      {/*/>*/}
-      {/*<DetailRow*/}
-      {/*  title="Tekshiruv dasturi:"*/}
-      {/*  value={!!inspectionData?.programPath ? <FileLink url={inspectionData?.programPath} /> : '-'}*/}
-      {/*/>*/}
-      {/*<DetailRow*/}
-      {/*  title="Chora-tadbirlar:"*/}
-      {/*  value={!!inspectionData?.measuresPath ? <FileLink url={inspectionData?.measuresPath} /> : '-'}*/}
-      {/*/>*/}
-      {/*<DetailRow*/}
-      {/*  title="Tekshiruv natijasi:"*/}
-      {/*  value={!!inspectionData?.resultPath ? <FileLink url={inspectionData?.resultPath} /> : '-'}*/}
-      {/*/>*/}
-      {/*<DetailRow*/}
-      {/*  title="Tilxat:"*/}
-      {/*  value={!!inspectionData?.acknowledgementPath ? <FileLink url={inspectionData?.acknowledgementPath} /> : '-'}*/}
-      {/*/>*/}
 
       {!!inspectionData?.act && (
         <DetailRow

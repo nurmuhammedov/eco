@@ -14,7 +14,7 @@ import {
 import { useCustomSearchParams } from '@/shared/hooks';
 import { formatDate, parseISO } from 'date-fns';
 import DatePicker from '@/shared/components/ui/datepicker';
-import InspectionCheklistModal from '@/features/inspections/ui/parts/inspection-cheklist-modal';
+import InspectionChecklistModal from '@/features/inspections/ui/parts/inspection-checklist-modal';
 
 interface InspectionChecklistFormProps {
   items: any[];
@@ -149,7 +149,7 @@ export const InspectionChecklistForm = ({ items }: InspectionChecklistFormProps)
           </Card>
         ))}
 
-        <InspectionCheklistModal
+        <InspectionChecklistModal
           items={form?.watch('items')?.map((item) => ({
             question: item.question,
             answer: item.answer,

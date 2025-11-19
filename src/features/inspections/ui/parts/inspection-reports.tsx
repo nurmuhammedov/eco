@@ -1,23 +1,17 @@
-// import { useInspectionReports } from '@/features/inspections/hooks/use-inspection-reports.ts';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
 import { useCustomSearchParams, useData } from '@/shared/hooks';
 import { UserRoles } from '@/entities/user';
 import { DataTable } from '@/shared/components/common/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import ReportExecutionModal from '@/features/inspections/ui/parts/report-execution-modal.tsx';
-import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
 import { answerOptions } from '@/features/inspections/ui/parts/inspection-checklist-form';
 import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/ui/inspection-widget';
 import { QK_INSPECTION } from '@/shared/constants/query-keys';
 
 const InspectionReports = ({ checklistCategoryTypeId, status }: any) => {
-  // const { data, isLoading } = useInspectionReports();
   const { user } = useAuth();
   const { addParams, paramsObject } = useCustomSearchParams();
-  const [id, setId] = useState<any>(null);
-  const [inspectionTitle, setInspectionTitle] = useState<string>('');
   const currentTab = paramsObject?.eliminated || 'questions';
   const tabulation = paramsObject?.tabulation || 'all';
 
@@ -132,14 +126,6 @@ const InspectionReports = ({ checklistCategoryTypeId, status }: any) => {
           </>
         ) : null}
       </div>
-      <ReportExecutionModal
-        description={inspectionTitle}
-        id={id}
-        closeModal={() => {
-          setId(null);
-          setInspectionTitle('');
-        }}
-      />
     </div>
   );
 };

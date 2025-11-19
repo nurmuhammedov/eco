@@ -6,7 +6,6 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx';
 import { Input } from '@/shared/components/ui/input';
 import { useCustomSearchParams, useEIMZO } from '@/shared/hooks';
-// import { formatDate } from 'date-fns';
 import { ApplicationModal } from '@/features/application/create-application';
 
 const schema = z.object({

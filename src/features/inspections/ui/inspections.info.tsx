@@ -57,7 +57,7 @@ const InspectionsInfo = () => {
           accordions?.map((item: any) => (
             <DetailCardAccordion.Item
               value={`inspection_results-${item?.id}`}
-              title={`Tekshiruv dasturi  (${item?.belongName})`}
+              title={`Tekshiruv dasturi  (${item?.belongRegistryNumber} - ${item?.belongName})`}
             >
               <InspectionReports status={item?.status} checklistCategoryTypeId={item?.id} />
             </DetailCardAccordion.Item>
