@@ -59,7 +59,7 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
       <DialogTrigger asChild>
         <Button variant="success">Tasdiqlandi</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Reyestrga qo‘shilsinmi?</DialogTitle>
         </DialogHeader>

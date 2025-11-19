@@ -12,6 +12,7 @@ export interface UseApplicationCreationProps {
   submitEndpoint: string;
   onSuccessNavigateTo?: string;
   successMessage?: string;
+  onEnd?: () => void;
   queryKey: string;
 }
 
@@ -20,6 +21,7 @@ export function useEIMZO({
   submitEndpoint,
   onSuccessNavigateTo,
   successMessage,
+  onEnd,
   queryKey,
 }: UseApplicationCreationProps) {
   const navigate = useNavigate();
@@ -68,6 +70,17 @@ export function useEIMZO({
     [createPdfMutation],
   );
 
+  const handleAsyncCreateApplication = useCallback(
+    async (data: FormData) => {
+      setFormData(data);
+      setIsModalOpen(true);
+      setIsPdfLoading(true);
+      setError(null);
+      await createPdfMutation.mutateAsync(data);
+    },
+    [createPdfMutation],
+  );
+
   const resetState = useCallback(() => {
     setIsModalOpen(false);
     setDocumentUrl(null);
@@ -79,16 +92,18 @@ export function useEIMZO({
   const handleCloseModal = useCallback(() => {
     resetState();
   }, [resetState]);
+
   const { mutate: submitApplicationMetaData, isPending: isLoadingMetaData } = useMutation({
     mutationFn: (sign: string) => apiClient.post(submitEndpoint, { dto: formData, sign, filePath: documentUrl }),
-    onSuccess: async (response: any) => {
+    onSuccess: (response: any) => {
       if (response && response.success) {
         resetState();
         if (onSuccessNavigateTo) {
           navigate(onSuccessNavigateTo);
         }
-        await queryClient.invalidateQueries({ queryKey: [queryKey] });
         toast.success(successMessage || 'Muvaffaqiyatli saqlandi!', { richColors: true });
+        onEnd?.();
+        queryClient.invalidateQueries({ queryKey: [queryKey] }).then((r) => console.log(r));
       }
     },
     mutationKey: ['submit-application'],
@@ -105,6 +120,7 @@ export function useEIMZO({
     isPdfLoading,
     handleCloseModal,
     handleCreateApplication,
+    handleAsyncCreateApplication,
     submitApplicationMetaData,
   };
 }

@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom';
 import { useRejectDocument } from '@/features/application/application-detail/hooks/mutations/use-reject-document.tsx';
 
 const schema = z.object({
-  description: z.string({ message: FORM_ERROR_MESSAGES.required })
+  description: z.string({ message: FORM_ERROR_MESSAGES.required }),
 });
 
 interface Props {
@@ -25,14 +25,14 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
   const { mutateAsync, isPending } = useRejectDocument();
   const { id } = useParams();
   const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(schema),
   });
 
   function onSubmit(data: z.infer<typeof schema>) {
     mutateAsync({
       ...data,
       appealId: id,
-      documentId
+      documentId,
     }).then(() => {
       setIsShow(false);
     });
@@ -43,7 +43,7 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
       <DialogTrigger asChild>
         <Button variant={'destructive'}> {label}</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="sm:max-w-[525px] max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-[#4E75FF]">Izoh</DialogTitle>
         </DialogHeader>
@@ -56,12 +56,7 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
                 <FormItem>
                   <FormLabel>Izoh</FormLabel>
                   <FormControl>
-                    <Textarea
-                      className="resize-none"
-                      rows={7}
-                      placeholder="Izoh"
-                      {...field}
-                    />
+                    <Textarea className="resize-none" rows={7} placeholder="Izoh" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

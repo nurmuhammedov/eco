@@ -12,7 +12,7 @@ const ApplicationLogsModal = () => {
         <DialogTrigger asChild>
           <Button>Ilovalar jurnallari</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[1124px]">
+        <DialogContent className="sm:max-w-[1124px] max-h-[95vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Ilovalar jurnallari</DialogTitle>
           </DialogHeader>

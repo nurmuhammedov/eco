@@ -56,10 +56,15 @@ const InspectionsInfo = () => {
         {accordions?.length > 0 &&
           accordions?.map((item: any) => (
             <DetailCardAccordion.Item
+              key={item.id}
               value={`inspection_results-${item?.id}`}
               title={`Tekshiruv dasturi  (${item?.belongRegistryNumber} - ${item?.belongName})`}
             >
-              <InspectionReports status={item?.status} checklistCategoryTypeId={item?.id} />
+              <InspectionReports
+                status={item?.status}
+                acknowledgementPath={item?.acknowledgementPath}
+                resultId={item?.id}
+              />
             </DetailCardAccordion.Item>
           ))}
       </DetailCardAccordion>

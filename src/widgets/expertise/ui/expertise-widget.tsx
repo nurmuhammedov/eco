@@ -1,17 +1,9 @@
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { ConclusionsTable, ConclusionTabs } from '@/features/expertise';
 import { useCustomSearchParams, useData } from '@/shared/hooks';
 import { TabKey } from '@/features/expertise/ui/conclusion-tabs';
 import { Button } from '@/shared/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-// import { ExpertiseTable } from '@/features/expertise/ui/expertise-table';
-// import { PermitTabKey } from '@/entities/permit';
-
-// enum InspectionSubMenuStatus {
-//   ORGANIZATIONS = 'ORGANIZATIONS',
-//   CONCLUSIONS = 'CONCLUSIONS',
-// }
 
 const ExpertiseWidget = () => {
   const {
@@ -37,29 +29,6 @@ const ExpertiseWidget = () => {
   const handle = () => {
     navigate('/accreditations/add');
   };
-
-  // return (
-  //   <div>
-  //     <Tabs
-  //       value={activeTab || InspectionSubMenuStatus.CONCLUSIONS}
-  //       onValueChange={(activeTab) => addParams({ mainTab: activeTab, page: '1' })}
-  //     >
-  //       {/*<TabsList>*/}
-  //       {/*  <TabsTrigger value={InspectionSubMenuStatus.ORGANIZATIONS}>Ekspertiza tashkilotlari</TabsTrigger>*/}
-  //       {/*  <TabsTrigger value={InspectionSubMenuStatus.CONCLUSIONS}>Ekspertiza xulosalari</TabsTrigger>*/}
-  //       {/*</TabsList>*/}
-  //       <TabsContent value={InspectionSubMenuStatus.CONCLUSIONS}>
-  //         <div className="flex flex-col gap-5">
-  //           <ConclusionTabs activeTab={tab} onTabChange={handleTabChange} counts={tabCounts} />
-  //           <ConclusionsTable />
-  //         </div>
-  //       </TabsContent>
-  //       <TabsContent value={InspectionSubMenuStatus.ORGANIZATIONS}>
-  //         <ExpertiseTable />
-  //       </TabsContent>
-  //     </Tabs>
-  //   </div>
-  // );
 
   return (
     <>

@@ -16,6 +16,7 @@ export enum InspectionStatus {
 export enum InspectionSubMenuStatus {
   CONDUCTED = 'CONDUCTED',
   ASSIGNED = 'ASSIGNED',
+  COMPLETED = 'COMPLETED',
 }
 
 export interface CountDto {

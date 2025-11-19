@@ -15,7 +15,7 @@ const RejectMessageModal: FC<Props> = ({ message, setMessage }) => {
   };
   return (
     <Dialog onOpenChange={handleModal} open={!!message}>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="sm:max-w-[525px] max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-[#4E75FF]">Kelishilmaslik sababi</DialogTitle>
         </DialogHeader>

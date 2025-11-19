@@ -9,6 +9,7 @@ const useDetail = <T>(
   id?: string | number | boolean | null,
   enabled: boolean = true,
   params?: ISearchParams,
+  staleTime: number = 600000,
 ) => {
   const { i18n } = useTranslation();
 
@@ -25,7 +26,7 @@ const useDetail = <T>(
       return CommonService.getDetail<T>(endpoint, id.toString(), params);
     },
     enabled: enabled && !!id,
-    staleTime: 0,
+    staleTime,
   });
 
   const { data = undefined } = queryMethods || {};

@@ -62,11 +62,6 @@ export const SignatureModal = ({
       });
     }
 
-    await signDocument({
-      Client,
-      documentUrl,
-      signature: selectedCertificate,
-    });
     setSelectedCertificate(null);
     setOpen(false);
   };
@@ -94,12 +89,12 @@ export const SignatureModal = ({
           </Button>
         </AlertDialogTrigger>
       )}
-      <AlertDialogContent className="max-w-md">
+      <AlertDialogContent className="max-w-[95vw]! w-auto!">
         <AlertDialogHeader>
           <AlertDialogTitle>Elektron kalitni tanlang</AlertDialogTitle>
           <AlertDialogDescription>
-            Imzolash uchun ERI kalitingizni tanlang. Bu amal orqali hujjat elektron tarzda imzolanadi va yuridik kuchga
-            ega bo'ladi.
+            Imzolash uchun ERI kalitingizni tanlang! <br /> Bu amal orqali hujjat elektron tarzda imzolanadi va yuridik
+            kuchga ega bo'ladi!
           </AlertDialogDescription>
         </AlertDialogHeader>
 

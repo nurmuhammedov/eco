@@ -12,7 +12,7 @@ const schema = z.object({
   users: z
     .array(
       z.object({
-        name: z.string().min(1, ''),
+        fullName: z.string().min(1, ''),
         position: z.string().min(1, ''),
       }),
     )
@@ -21,11 +21,11 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const AttachInspectorModal = ({ items = [] }: any) => {
+const AttachInspectorModal = ({ items = [], resultId }: any) => {
   const {
     addParams,
     removeParams,
-    paramsObject: { modal = '', inspectionId = '' },
+    paramsObject: { modal = '' },
   } = useCustomSearchParams();
 
   const {
@@ -38,16 +38,20 @@ const AttachInspectorModal = ({ items = [] }: any) => {
     handleCreateApplication,
     submitApplicationMetaData,
   } = useEIMZO({
-    pdfEndpoint: '/test/generate-pdf',
-    submitEndpoint: '/test/submit',
-    queryKey: 'inspections-attach-inspectors',
+    pdfEndpoint: '/inspection-results/act/generate-pdf',
+    submitEndpoint: '/inspection-results/act',
+    queryKey: '/inspection-results',
     successMessage: 'Muvaffaqiyatli saqlandi!',
+    onEnd: () => {
+      removeParams('modal');
+      form.reset();
+    },
   });
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      users: [{ name: '', position: '' }],
+      users: [{ fullName: '', position: '' }],
     },
   });
 
@@ -59,7 +63,7 @@ const AttachInspectorModal = ({ items = [] }: any) => {
   const onSubmit = (data: FormValues) => {
     handleCreateApplication({
       dtoList: items,
-      resultId: inspectionId,
+      resultId: resultId,
       participants: data?.users,
     });
   };
@@ -77,9 +81,9 @@ const AttachInspectorModal = ({ items = [] }: any) => {
         }}
         open={modal == 'addUsers'}
       >
-        <DialogContent className="sm:max-w-[800px]">
+        <DialogContent className="sm:max-w-[800px] max-h-[95vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Dalolatnoma tuzuvchilarni qo‘shish</DialogTitle>
+            <DialogTitle className="text-[#4E75FF]">Qatnashuvchilarni qo‘shish</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
@@ -88,7 +92,7 @@ const AttachInspectorModal = ({ items = [] }: any) => {
                 <div key={field.id} className="flex items-end gap-2">
                   <FormField
                     control={form.control}
-                    name={`users.${index}.name`}
+                    name={`users.${index}.fullName`}
                     render={({ field }) => (
                       <FormItem className="flex-1">
                         <FormLabel required>Ismi</FormLabel>
@@ -123,7 +127,7 @@ const AttachInspectorModal = ({ items = [] }: any) => {
               ))}
 
               <div className="flex justify-between mt-4">
-                <Button type="button" onClick={() => append({ name: '', position: '' })}>
+                <Button type="button" onClick={() => append({ fullName: '', position: '' })}>
                   Qo‘shish
                 </Button>
               </div>
@@ -146,8 +150,6 @@ const AttachInspectorModal = ({ items = [] }: any) => {
         isPdfLoading={isPdfLoading}
         onClose={() => {
           handleCloseModal();
-          removeParams('modal');
-          form.reset();
         }}
         submitApplicationMetaData={submitApplicationMetaData}
       />

@@ -51,7 +51,7 @@ const RejectApplicationModal = () => {
         <DialogTrigger asChild>
           <Button variant="destructive">Arizani qaytarish</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[725px]">
+        <DialogContent className="sm:max-w-[725px] max-h-[95vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Arizani qaytarish</DialogTitle>
           </DialogHeader>

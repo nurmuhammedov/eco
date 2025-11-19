@@ -127,11 +127,12 @@ export function DataTable<TData, TValue>({
                 {showNumeration && (
                   <TableHead
                     className={cn(
-                      'w-16',
+                      'w-[20px]',
                       showFilters
                         ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
                         : 'first:rounded-l-lg! last:rounded-r-lg!',
                     )}
+                    style={{ width: '20px', maxWidth: '20px' }}
                   >
                     T/r
                   </TableHead>
@@ -160,6 +161,16 @@ export function DataTable<TData, TValue>({
               <TableRow className="!bg-white hover:!bg-white even:!bg-white border-neutral-200">
                 {showNumeration && (
                   <TableHead className="!bg-white !h-8 !p-0  hover:!bg-white even:!bg-white w-16 border-b-2 border-neutral-200" />
+                )}
+                {showNumeration && (
+                  <TableHead
+                    className="!bg-white !h-8 !p-0 hover:!bg-white even:!bg-white border-b-2 border-neutral-200"
+                    style={{
+                      width: '20px',
+                      minWidth: '20px',
+                      maxWidth: '20px',
+                    }}
+                  />
                 )}
                 {table.getAllColumns().map((column) => {
                   const columnDef = column.columnDef;
@@ -190,7 +201,9 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row, idx) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {showNumeration && (
-                    <TableCell>{currentPage > 1 ? idx + (currentPage * pageSize - (pageSize - 1)) : idx + 1}</TableCell>
+                    <TableCell style={{ width: '20px', maxWidth: '20px' }}>
+                      {currentPage > 1 ? idx + (currentPage * pageSize - (pageSize - 1)) : idx + 1}
+                    </TableCell>
                   )}
                   {row.getVisibleCells().map((cell) => (
                     <TableCell

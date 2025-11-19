@@ -54,7 +54,7 @@ const DocumentFormModal = ({ fieldName, url }: { fieldName: string; url?: string
       <DialogTrigger asChild>
         <Button>Hujjat biriktirish</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Hujjat ma’lumotlari</DialogTitle>
         </DialogHeader>

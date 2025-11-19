@@ -40,7 +40,7 @@ const AddReportForm = () => {
       <DialogTrigger asChild>
         <Button size="sm">Kamchiliklarni qo'shish</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[550px]">
+      <DialogContent className="sm:max-w-[550px] max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-[#4E75FF]">Kamchiliklarni qo'shish</DialogTitle>
         </DialogHeader>

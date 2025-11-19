@@ -18,7 +18,7 @@ export const PermitDetailModal = () => {
         }
       }}
     >
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent className="sm:max-w-[800px] max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Tafsilotlar</DialogTitle>
         </DialogHeader>

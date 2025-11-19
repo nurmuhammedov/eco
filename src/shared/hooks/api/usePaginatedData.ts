@@ -3,13 +3,18 @@ import { ISearchParams, ResponseData } from '@/shared/types';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
-const usePaginatedData = <T>(endpoint: string, params?: ISearchParams, enabled: boolean = true) => {
+const usePaginatedData = <T>(
+  endpoint: string,
+  params?: ISearchParams,
+  enabled: boolean = true,
+  staleTime: number = 600000,
+) => {
   const { i18n } = useTranslation();
   const queryMethods = useQuery<ResponseData<T>, Error>({
     queryKey: [endpoint, params, i18n.language],
     queryFn: () => CommonService.getPaginatedData<T>(endpoint, params),
     enabled,
-    staleTime: 0,
+    staleTime,
   });
 
   const { page } = queryMethods.data || {};

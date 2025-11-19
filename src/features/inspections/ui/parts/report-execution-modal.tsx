@@ -108,7 +108,7 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
     isValidInterval;
   return (
     <Dialog onOpenChange={handleModal} open={!!id}>
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent className="sm:max-w-[800px] max-h-[95vh] overflow-y-auto">
         <div>
           <h2 className="font-medium mb-1">Aniqlangan kamchilik</h2>
           <p className="text-sm">{description}</p>

@@ -62,7 +62,7 @@ const AttachInspectorModal = () => {
       <DialogTrigger asChild>
         <Button> Ijro etish</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="sm:max-w-[525px] max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-[#4E75FF]">Ijrochini belgilash</DialogTitle>
         </DialogHeader>

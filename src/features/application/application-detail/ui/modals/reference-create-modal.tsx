@@ -51,7 +51,7 @@ const ReferenceCreateModal = () => {
         <DialogTrigger asChild>
           <Button> Ijro etish</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[725px]">
+        <DialogContent className="sm:max-w-[725px] max-h-[95vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Ma’lumotnoma/dalolatnoma tuzish</DialogTitle>
           </DialogHeader>

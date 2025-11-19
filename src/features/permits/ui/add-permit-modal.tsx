@@ -165,7 +165,7 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent className="sm:max-w-[800px] max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Qo‘shish</DialogTitle>
         </DialogHeader>

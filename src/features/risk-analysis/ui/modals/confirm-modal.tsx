@@ -53,7 +53,7 @@ const ConfirmModal: React.FC<ConfirmWithRegistryModalProps> = () => {
           Hech qanday kamchiliklar yo‘q
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Haqiqatdan ham tasdiqlaysizmi?</DialogTitle>
         </DialogHeader>

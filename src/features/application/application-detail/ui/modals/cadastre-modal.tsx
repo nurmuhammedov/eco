@@ -83,7 +83,7 @@ const RejectApplicationModal = ({ url = 'cadastre-passport' }: any) => {
         <DialogTrigger asChild>
           <Button>Arizani ijro etish</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[725px]">
+        <DialogContent className="sm:max-w-[725px] max-h-[95vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Arizani ijro etish</DialogTitle>
           </DialogHeader>
