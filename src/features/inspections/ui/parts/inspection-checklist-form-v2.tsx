@@ -92,7 +92,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
   const { mutateAsync: postChecklists2, isPending: isLoading2 } = useAdd('/inspection-checklists');
   const { addParams } = useCustomSearchParams();
 
-  const disabled = acknowledgementPath == null;
+  const disabled = !acknowledgementPath;
 
   const defaultValues: FormValues = useMemo(
     () => ({

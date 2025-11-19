@@ -10,6 +10,9 @@ import { useState } from 'react';
 import { useData } from '@/shared/hooks';
 import { answerOptions } from '@/features/inspections/ui/parts/inspection-checklist-form';
 import { UserRoles } from '@/entities/user';
+import { NoData } from '@/shared/components/common/no-data';
+import DetailRow from '@/shared/components/common/detail-row';
+import FileLink from '@/shared/components/common/file-link';
 
 const InspectionReports = ({ status, acknowledgementPath, resultId }: any) => {
   const { user } = useAuth();
@@ -115,10 +118,12 @@ const InspectionReports = ({ status, acknowledgementPath, resultId }: any) => {
       </div>
 
       <div>
-        {currentTab == 'questions' &&
-        user?.role == UserRoles.INSPECTOR &&
-        status == InspectionStatus.ASSIGNED &&
-        categories?.length ? (
+        {!categories?.length ? (
+          <NoData />
+        ) : currentTab == 'questions' &&
+          user?.role == UserRoles.INSPECTOR &&
+          status == InspectionStatus.ASSIGNED &&
+          categories?.length ? (
           <InspectionChecklistFormV2
             categories={categories}
             resultId={resultId}
@@ -126,6 +131,22 @@ const InspectionReports = ({ status, acknowledgementPath, resultId }: any) => {
           />
         ) : (
           <>
+            {currentTab == 'questions' && status == InspectionSubMenuStatus.COMPLETED && (
+              <div className="mb-4">
+                <DetailRow
+                  title="Tilxat fayli:"
+                  value={
+                    !!acknowledgementPath ? (
+                      <div className="flex items-center gap-2">
+                        <FileLink url={acknowledgementPath} />
+                      </div>
+                    ) : (
+                      '-'
+                    )
+                  }
+                />
+              </div>
+            )}
             {categories?.map((category: any) => (
               <div key={category.inspectionCategoryId} className="mb-4 border rounded-xl p-4 bg-white">
                 <h3 className="text-lg font-semibold mb-4 text-black-600">{category.categoryName}</h3>
