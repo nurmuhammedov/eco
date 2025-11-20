@@ -4,11 +4,20 @@ import { formatDate } from 'date-fns';
 import { tabs } from '@/features/expertise/ui/conclusion-tabs';
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
 import { useNavigate } from 'react-router-dom';
+import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
+import { useState } from 'react';
+import ExpertiseFileUploadModal from '@/features/expertise/ui/parts/expertise-file-upload-modal';
+import FileLink from '@/shared/components/common/file-link';
+import { UserRoles } from '@/entities/user';
+import { useAuth } from '@/shared/hooks/use-auth';
 
 export const ConclusionsTable = () => {
   const {
     paramsObject: { page = 1, size = 10, tab = 'ALL', ...rest },
   } = useCustomSearchParams();
+  const { user } = useAuth();
+  const [id, setId] = useState<any>(null);
   const navigate = useNavigate();
   const { data = [], isLoading } = usePaginatedData<any>('/conclusions', {
     page: page,
@@ -50,6 +59,7 @@ export const ConclusionsTable = () => {
     },
     {
       accessorKey: 'type',
+      size: 300,
       header: 'Xulosa turi',
       cell: (cell) => tabs.find((t) => t?.key?.toString() == cell.row.original.type?.toString())?.label || '',
     },
@@ -60,11 +70,40 @@ export const ConclusionsTable = () => {
       filterType: 'search',
     },
     {
+      accessorKey: 'status',
+      header: 'Holati',
+      cell: ({ row }) =>
+        row.original.processStatus == 'COMPLETED' ? (
+          <Badge variant="success">Yakunlangan</Badge>
+        ) : row.original.processStatus == 'NEW' ? (
+          <Badge variant="info">Yangi</Badge>
+        ) : null,
+    },
+    {
       accessorKey: 'registrationDate',
-      maxSize: 100,
       header: 'Reyestrga qo‘yilgan sana',
       cell: (cell) =>
         cell.row.original.registrationDate ? formatDate(cell.row.original.registrationDate, 'dd.MM.yyyy') : null,
+    },
+
+    {
+      header: 'Xulosa fayli',
+      cell: ({ row }: any) => (
+        <div>
+          {row.original?.processStatus == 'COMPLETED' && row.original.filePath ? (
+            <FileLink url={row.original.filePath} />
+          ) : user?.role == UserRoles.LEGAL ? (
+            <Button
+              onClick={() => {
+                setId(row.original?.id);
+              }}
+              variant="info"
+            >
+              Fayl yuklash
+            </Button>
+          ) : null}
+        </div>
+      ),
     },
     {
       id: 'actions',
@@ -74,7 +113,7 @@ export const ConclusionsTable = () => {
         return (
           <div className="flex gap-2">
             <DataTableRowActions
-              showEdit
+              showEdit={row.original?.processStatus != 'COMPLETED'}
               row={row}
               showView
               onEdit={(row: any) => navigate(`edit/${row.original.id!}`)}
@@ -87,14 +126,24 @@ export const ConclusionsTable = () => {
   ];
 
   return (
-    <DataTable
-      showNumeration={true}
-      isPaginated={true}
-      columns={columns}
-      data={data}
-      showFilters={true}
-      isLoading={isLoading}
-      className="h-[calc(100svh-460px)]"
-    />
+    <>
+      <DataTable
+        showNumeration={true}
+        isPaginated={true}
+        columns={columns}
+        data={data}
+        showFilters={true}
+        isLoading={isLoading}
+        className="h-[calc(100svh-460px)]"
+      />
+      {user?.role == UserRoles.LEGAL && (
+        <ExpertiseFileUploadModal
+          id={id}
+          closeModal={() => {
+            setId(null);
+          }}
+        />
+      )}
+    </>
   );
 };

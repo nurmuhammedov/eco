@@ -4,23 +4,23 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addExpertiseSchema } from '@/entities/expertise/model/expertise.schema';
 import { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types';
-import { ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/model/constants';
+import { ExpertiseSubTypeOptions, ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/model/constants';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import DatePicker from '@/shared/components/ui/datepicker';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
 import { useDetail, useUpdate } from '@/shared/hooks';
 import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries';
 import { useQuery } from '@tanstack/react-query';
 import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api';
+import { Textarea } from '@/shared/components/ui/textarea';
 
 export const UpdateConclusion = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { detail: conclusion, isFetching } = useDetail<AddExpertiseFormValues>('/conclusions', id, !!id);
+  const { detail: conclusion, isFetching } = useDetail<any>('/conclusions', id, !!id);
 
   const form = useForm<AddExpertiseFormValues>({
     resolver: zodResolver(addExpertiseSchema),
@@ -51,7 +51,7 @@ export const UpdateConclusion = () => {
         ...conclusion,
         customerTin: conclusion?.customerTin?.toString(),
         type: conclusion.type?.toString() as unknown as ExpertiseTypeEnum,
-        conclusionDate: new Date(conclusion.conclusionDate),
+        prefix: conclusion?.prefix,
         regionId: conclusion?.regionId?.toString(),
         districtId: conclusion?.districtId?.toString(),
       });
@@ -237,7 +237,7 @@ export const UpdateConclusion = () => {
                   <FormItem>
                     <FormLabel>Telefon raqami</FormLabel>
                     <FormControl>
-                      <PhoneInput {...field} />
+                      <PhoneInput disabled={conclusion?.processStatus == 'COMPLETED'} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -252,6 +252,7 @@ export const UpdateConclusion = () => {
                     <FormLabel>Ekspertiza turi</FormLabel>
                     <Select
                       {...field}
+                      disabled={conclusion?.processStatus == 'COMPLETED'}
                       value={field.value}
                       onValueChange={(value) => {
                         if (value) {
@@ -278,35 +279,64 @@ export const UpdateConclusion = () => {
 
               <FormField
                 control={form.control}
-                name="conclusionNumber"
+                name="subType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Xulosa raqami</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Raqam..." />
-                    </FormControl>
+                    <FormLabel>Ekspertiza obyekti turi</FormLabel>
+                    <Select
+                      disabled={conclusion?.processStatus == 'COMPLETED'}
+                      value={field.value}
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value);
+                        }
+                      }}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Tanlang..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {ExpertiseSubTypeOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
 
               <FormField
                 control={form.control}
-                name="conclusionDate"
+                name="prefix"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Xulosa sanasi</FormLabel>
+                    <FormLabel>Prefiks nomi</FormLabel>
                     <FormControl>
-                      <DatePicker value={field.value} onChange={field.onChange} />
+                      <Textarea
+                        disabled={conclusion?.processStatus == 'COMPLETED'}
+                        className="resize-none"
+                        rows={7}
+                        placeholder="Prefiks nomi..."
+                        {...field}
+                      />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <div className="md:col-span-4 flex justify-end">
-                <Button type="submit" disabled={isPending} loading={isPending}>
-                  Yangilash
-                </Button>
-              </div>
+              {conclusion?.processStatus != 'COMPLETED' && (
+                <div className="md:col-span-4 flex justify-end">
+                  <Button type="submit" disabled={isPending} loading={isPending}>
+                    Yangilash
+                  </Button>
+                </div>
+              )}
             </form>
           </Form>
         </CardContent>

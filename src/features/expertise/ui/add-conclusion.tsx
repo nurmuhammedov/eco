@@ -10,7 +10,7 @@ import {
 } from '@/entities/expertise/api/expertise.api';
 import { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types';
 import { addExpertiseSchema } from '@/entities/expertise/model/expertise.schema';
-import { ExpertiseTypeOptions } from '@/entities/expertise/model/constants';
+import { ExpertiseSubTypeOptions, ExpertiseTypeOptions } from '@/entities/expertise/model/constants';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
@@ -18,10 +18,9 @@ import { Input } from '@/shared/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { formatDate } from 'date-fns';
 import { cleanParams } from '@/shared/lib';
 import { useNavigate } from 'react-router-dom';
+import { Textarea } from '@/shared/components/ui/textarea';
 
 export const AddConclusion = () => {
   const [stir, setStir] = useState('');
@@ -39,8 +38,8 @@ export const AddConclusion = () => {
       regionId: undefined,
       districtId: undefined,
       address: '',
-      conclusionNumber: '',
-      conclusionDate: undefined,
+      subType: undefined,
+      prefix: '',
     },
   });
 
@@ -132,7 +131,7 @@ export const AddConclusion = () => {
 
   // Formani yuborish
   const onSubmit = (data: AddExpertiseFormValues) => {
-    mutate(cleanParams({ ...data, conclusionDate: formatDate(data.conclusionDate, 'yyyy-MM-dd') }));
+    mutate(cleanParams({ ...data }));
   };
 
   const hasLegalInfo = !!legalInfo && !isLegalInfoError;
@@ -373,7 +372,7 @@ export const AddConclusion = () => {
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Ekspertiza turini tanlang..." />
+                              <SelectValue placeholder="Tanlang..." />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -391,31 +390,44 @@ export const AddConclusion = () => {
 
                   <FormField
                     control={form.control}
-                    name="conclusionNumber"
+                    name="subType"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Xulosa raqami</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Xulosa raqamini kiriting..." />
-                        </FormControl>
+                        <FormLabel>Ekspertiza obyekti turi</FormLabel>
+                        <Select
+                          value={field.value}
+                          onValueChange={(value) => {
+                            if (value) {
+                              field.onChange(value);
+                            }
+                          }}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Tanlang..." />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {ExpertiseSubTypeOptions.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
                   <FormField
-                    name="conclusionDate"
                     control={form.control}
+                    name="prefix"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel required>Xulosa sanasi</FormLabel>
+                        <FormLabel>Prefiks nomi</FormLabel>
                         <FormControl>
-                          <DatePicker
-                            value={field.value}
-                            onChange={field.onChange}
-                            disableStrategy="after"
-                            placeholder="Xulosa sanasini tanlang"
-                          />
+                          <Textarea className="resize-none" rows={7} placeholder="Prefiks nomi..." {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
