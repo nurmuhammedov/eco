@@ -158,9 +158,6 @@ export function DataTable<TData, TValue>({
             {showFilters && (
               <TableRow className="!bg-white hover:!bg-white even:!bg-white border-neutral-200">
                 {showNumeration && (
-                  <TableHead className="!bg-white !h-8 !p-0  hover:!bg-white even:!bg-white w-16 border-b-2 border-neutral-200" />
-                )}
-                {showNumeration && (
                   <TableHead
                     className="!bg-white !h-8 !p-0 hover:!bg-white even:!bg-white border-b-2 border-neutral-200"
                     style={{
