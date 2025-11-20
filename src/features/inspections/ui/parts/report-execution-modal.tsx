@@ -15,7 +15,6 @@ import FileLink from '@/shared/components/common/file-link.tsx';
 import { getDate } from '@/shared/utils/date.ts';
 import { Badge } from '@/shared/components/ui/badge.tsx';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
-import { useCustomSearchParams } from '@/shared/hooks';
 import { UserRoles } from '@/entities/user';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover.tsx';
 import { Textarea } from '@/shared/components/ui/textarea.tsx';
@@ -26,7 +25,7 @@ import { toast } from 'sonner';
 export const executionReportStatuses = new Map([
   ['ACCEPTED', { label: 'Qabul qilindi', variant: 'success' }],
   ['REJECTED', { label: 'Rad etildi', variant: 'error' }],
-  ['IN_PROCESS', { label: 'Jarayonda', variant: 'warning' }],
+  ['UPLOADED', { label: 'Fayl yuklangan', variant: 'warning' }],
 ] as const);
 
 const schema = z.object({
@@ -49,6 +48,7 @@ const RejectExecution: FC<{ id: any }> = ({ id }) => {
   const onSubmit = (data: any) => {
     rejectReport({ id, data });
   };
+
   return (
     <Popover>
       <PopoverTrigger>
@@ -64,9 +64,9 @@ const RejectExecution: FC<{ id: any }> = ({ id }) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Jaxob xati</FormLabel>
+                  <FormLabel>Javob xati</FormLabel>
                   <FormControl>
-                    <Textarea {...field} className="resize-none min-h-[100px]" placeholder={'Tafsilotlar'}></Textarea>
+                    <Textarea {...field} className="resize-none min-h-[100px]" placeholder="Tafsilotlar"></Textarea>
                   </FormControl>
                 </FormItem>
               )}
@@ -83,9 +83,6 @@ const RejectExecution: FC<{ id: any }> = ({ id }) => {
 
 const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
   const { user } = useAuth();
-  const { paramsObject } = useCustomSearchParams();
-  const isValidInterval = paramsObject?.intervalId == user?.interval?.id;
-
   const handleModal = (isOpen: boolean) => {
     if (!isOpen) {
       closeModal();
@@ -104,8 +101,7 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
 
   const isFormShow =
     (data?.length === 0 || (data?.length !== 0 && data[data?.length - 1]?.status === 'REJECTED')) &&
-    user?.role === UserRoles.LEGAL &&
-    isValidInterval;
+    user?.role === UserRoles.LEGAL;
   return (
     <Dialog onOpenChange={handleModal} open={!!id}>
       <DialogContent className="sm:max-w-[800px] max-h-[95vh] overflow-y-auto">
@@ -120,26 +116,22 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
           <>
             <div>
               {data?.map((item: any) => {
-                const currentBadge = executionReportStatuses.get(item?.status);
+                const currentBadge = executionReportStatuses.get(item?.status || 'UPLOADED');
 
                 return (
-                  <div className="grid grid-cols-4 gap-2 odd:bg-neutral-50 rounded p-2.5">
+                  <div className="grid grid-cols-4 gap-2 odd:bg-neutral-50 rounded p-2.5 items-center">
                     <div>
-                      <FileLink title={'Dokument'} isSmall={true} url={item?.executionFilePath} />
-                    </div>
-                    <div className="text-neutral-500 text-sm w-[120px] text-center">
-                      {getDate(item?.fileUploadDate)}
+                      <FileLink title="Hujjat" isSmall={true} url={item?.filePath} />
                     </div>
                     <div className="text-center">
                       {!!currentBadge && <Badge variant={currentBadge.variant}>{currentBadge.label}</Badge>}
                     </div>
-                    {isValidInterval && user?.role === UserRoles.INSPECTOR && item?.status === 'IN_PROCESS' && (
+                    <div className="text-neutral-500 text-sm w-[120px] text-center">{getDate(item?.uploadDate)}</div>
+                    {user?.role === UserRoles.INSPECTOR && !item?.status && (
                       <div className="flex gap-1.5">
                         <Button
                           onClick={() => {
-                            if (confirm('Ishonchingiz komilmi?')) {
-                              acceptReport(item?.id).then(() => toast.success('Muvaffaqiyatli saqlandi!'));
-                            }
+                            acceptReport(item?.id).then(() => toast.success('Muvaffaqiyatli saqlandi!'));
                           }}
                           size="sm"
                           variant="success"
@@ -149,7 +141,7 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
                         <RejectExecution id={item?.id} />
                       </div>
                     )}
-                    {!!item?.rejectedCause && (
+                    {!!item?.rejectedReason && (
                       <div className="ml-auto">
                         <Popover>
                           <PopoverTrigger>
@@ -158,7 +150,7 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent>
-                            <p className="text-sm">{item?.rejectedCause}</p>
+                            <p className="text-sm">{item?.rejectedReason}</p>
                           </PopoverContent>
                         </Popover>
                       </div>

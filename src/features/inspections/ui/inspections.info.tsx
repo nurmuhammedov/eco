@@ -19,7 +19,7 @@ const InspectionsInfo = () => {
   } = useCustomSearchParams();
   const { user } = useAuth();
   const { data: inspectionData } = useInspectionDetail();
-  const { data, isLoading } = useObjectList();
+  const { data } = useObjectList();
   const { data: accordions = [] } = useData<any[]>('/inspection-results', !!inspectionId, {
     inspectionId,
   });
@@ -48,7 +48,7 @@ const InspectionsInfo = () => {
               <AttachInspectorModal data={typesList || []} />
             </div>
           )}
-          <ObjectsList isLoading={isLoading} data={typesList || []} />
+          <ObjectsList />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="inspection_info" title={`Tekshiruv ma’lumotlari`}>
           <InspectionsDetailInfo inspectionData={inspectionData} />

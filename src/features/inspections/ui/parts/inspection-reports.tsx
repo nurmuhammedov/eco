@@ -13,11 +13,17 @@ import { UserRoles } from '@/entities/user';
 import { NoData } from '@/shared/components/common/no-data';
 import DetailRow from '@/shared/components/common/detail-row';
 import FileLink from '@/shared/components/common/file-link';
+import ReportExecutionModal from '@/features/inspections/ui/parts/report-execution-modal';
+import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
+import { Eye } from 'lucide-react';
 
 const InspectionReports = ({ status, acknowledgementPath, resultId }: any) => {
   const { user } = useAuth();
   const [currentTab, setCurrentTab] = useState<'questions' | 'eliminated' | 'not_eliminated'>('questions');
   const [tabulation, setTabulation] = useState<'all' | 'positive' | 'negative'>('all');
+  const [id, setId] = useState<any>(null);
+  const [inspectionTitle, setInspectionTitle] = useState<string>('');
 
   const { data: categories = [] } = useData<any[]>(
     `/inspection-checklists`,
@@ -47,6 +53,33 @@ const InspectionReports = ({ status, acknowledgementPath, resultId }: any) => {
             size: 100,
             header: 'Bartaraf etish muddati',
             cell: ({ row }: any) => format(new Date(row.original?.deadline), 'dd.MM.yyyy'),
+          },
+          {
+            accessorKey: 'eliminated',
+            header: 'Holati',
+            cell: ({ row }: any) => (
+              <div className="flex gap-2 items-center">
+                {row.original?.status == 'NEGATIVE' ? (
+                  <Badge variant="info">{user?.role == UserRoles.LEGAL ? 'Yangi' : 'Yangi'}</Badge>
+                ) : row.original?.status == 'UPLOADED' ? (
+                  <Badge variant="warning">Fayl yuklangan</Badge>
+                ) : row.original?.status == 'REJECTED' ? (
+                  <Badge variant="error">Rad etilgan</Badge>
+                ) : row.original?.status == 'ACCEPTED' ? (
+                  <Badge variant="success">Qabul qilindi</Badge>
+                ) : null}
+                <Button
+                  onClick={() => {
+                    setId(row.original?.id);
+                    setInspectionTitle(row?.original?.question || '');
+                  }}
+                  variant="outline"
+                  size="iconSm"
+                >
+                  <Eye />
+                </Button>
+              </div>
+            ),
           },
         ]
       : currentTab == 'questions'
@@ -156,6 +189,16 @@ const InspectionReports = ({ status, acknowledgementPath, resultId }: any) => {
           </>
         )}
       </div>
+      {currentTab == 'eliminated' && status == InspectionSubMenuStatus.COMPLETED && (
+        <ReportExecutionModal
+          description={inspectionTitle}
+          id={id}
+          closeModal={() => {
+            setId(null);
+            setInspectionTitle('');
+          }}
+        />
+      )}
     </div>
   );
 };

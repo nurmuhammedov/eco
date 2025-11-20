@@ -14,3 +14,15 @@ export const useObjectList = () => {
     enabled: !!inspectionId,
   });
 };
+
+export const useObjectListByPagination = () => {
+  const {
+    paramsObject: { inspectionId = '', page = 1, size = 10 },
+  } = useCustomSearchParams();
+
+  return useQuery({
+    queryKey: [QK_INSPECTION, inspectionId, page, size],
+    queryFn: () => inspectionsApi.getObjectListByPagination({ page, size }, inspectionId),
+    enabled: !!inspectionId,
+  });
+};

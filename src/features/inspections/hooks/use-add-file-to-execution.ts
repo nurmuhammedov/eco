@@ -9,8 +9,9 @@ export function useAddFileToExecution(id: any) {
   return useMutation({
     mutationFn: (data: any) => inspectionsApi.addFileToInspectionReport({ id, data }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] });
       toast.success('Muvaffaqiyatli saqlandi!');
+      await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] });
+      await queryClient.invalidateQueries({ queryKey: ['/inspection-checklists'] });
     },
   });
 }

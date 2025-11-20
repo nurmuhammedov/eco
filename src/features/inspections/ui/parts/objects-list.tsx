@@ -1,27 +1,38 @@
+import { useObjectListByPagination } from '@/features/inspections/hooks/use-object-list.ts';
 import useCustomSearchParams from '../../../../shared/hooks/api/useSearchParams.ts';
 import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/shared/components/ui/button.tsx';
 import { Eye } from 'lucide-react';
 import { DataTable } from '@/shared/components/common/data-table';
 import { useNavigate } from 'react-router-dom';
-import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options';
+import { formatDate } from 'date-fns';
 
-const ObjectsList = ({ data = [], isLoading }: any) => {
+const ObjectsList = () => {
   const { paramsObject } = useCustomSearchParams();
+  const { data, isLoading } = useObjectListByPagination();
   const navigate = useNavigate();
 
   const columns: ColumnDef<any>[] = [
     {
-      header: 'Nomi',
-      accessorKey: 'belongName',
+      header: 'Xavf tahlil davri',
+      cell: ({ row }) =>
+        `${formatDate(row.original.startDate, 'dd.MM.yyyy')} - ${formatDate(row.original.endDate, 'dd.MM.yyyy')}`,
     },
     {
-      header: 'Turi',
-      cell: ({ row }: any) => inspectionCategoryOptions?.find((i) => i?.id == row.original.belongType)?.name || '',
+      header: 'Nomi',
+      accessorKey: 'name',
     },
     {
       header: 'Ro‘yxatga olish raqami',
-      accessorKey: 'belongRegistryNumber',
+      accessorKey: 'registryNumber',
+    },
+    {
+      header: 'Manzil',
+      accessorKey: 'address',
+    },
+    {
+      header: 'Jami bali',
+      accessorKey: 'totalScore',
     },
     {
       id: 'actions',
@@ -42,7 +53,7 @@ const ObjectsList = ({ data = [], isLoading }: any) => {
 
   return (
     <div>
-      <DataTable data={data || []} columns={columns as unknown as any} isLoading={isLoading} />
+      <DataTable isPaginated data={data || []} columns={columns as unknown as any} isLoading={isLoading} />
     </div>
   );
 };
