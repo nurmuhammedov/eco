@@ -3,7 +3,7 @@ import { z } from 'zod';
 export enum ChecklistAnswerStatus {
   POSITIVE = 'POSITIVE',
   NEGATIVE = 'NEGATIVE',
-  PARTIAL = 'PARTIAL',
+  UNRELATED = 'UNRELATED',
 }
 
 export const checklistItemSchema = z

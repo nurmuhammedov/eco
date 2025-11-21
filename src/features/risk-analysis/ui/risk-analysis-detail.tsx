@@ -3,9 +3,7 @@ import FilesSection from '@/features/application/application-detail/ui/parts/fil
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
 import { useFilesToFix } from '@/features/risk-analysis/hooks/use-files-to-fix.ts';
 import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts';
-// import RiskAnalysisChecklists from '@/features/risk-analysis/ui/parts/risk-analysis-checklists.tsx';
 import RiskAnalysisFilesToFix from '@/features/risk-analysis/ui/parts/risk-analysis-files-to-fix.tsx';
-// import RiskAnalysisIndicator from '@/features/risk-analysis/ui/parts/risk-analysis-info.tsx';
 import { GoBack } from '@/shared/components/common';
 import { DetailCardAccordion } from '@/shared/components/common/detail-card';
 import DetailRow from '@/shared/components/common/detail-row.tsx';
@@ -16,11 +14,6 @@ import { getDate } from '@/shared/utils/date.ts';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/shared/hooks/use-auth';
 import { ColumnDef } from '@tanstack/react-table';
-// import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types';
-//import RiskAnalysisInfo from '@ /features/risk-analysis/ui/parts/risk-analysis-info.tsx';
-// import { AssignedStatusTab } from '@/widgets/risk-analysis/types';
-// import { UserRoles } from '@/entities/user';
-// import { AssignInspectorButton } from '@/features/risk-analysis/ui/assign-inspector-button';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { format, formatDate } from 'date-fns';
@@ -115,18 +108,7 @@ const RiskAnalysisDetail = () => {
           </div>
         )}
       </div>
-      <DetailCardAccordion
-        defaultValue={[
-          // 'org_info',
-          // 'object_info',
-          // 'files',
-          // 'object_files',
-          // 'object_location',
-          // 'registry_info',
-          // 'checklists',
-          'risk_anlalysis_info',
-        ]}
-      >
+      <DetailCardAccordion defaultValue={['risk_anlalysis_info']}>
         <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
           {currentBelongId && currentIntervalId ? (
             <>

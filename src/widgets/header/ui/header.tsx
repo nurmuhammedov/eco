@@ -11,11 +11,21 @@ export function Header() {
     <header className="sticky top-0 border-b border-neutral-200 flex justify-between items-center bg-white z-10 px-4 3xl:px-6 py-4 3xl:py-5 w-full">
       <div className="flex items-center gap-x-4">
         <SidebarTrigger className="-ml-1" />
-        {pathname == '/permits' && <h1 className="text-2xl font-semibold">Ruxsatnomalar</h1>}
-        {pathname == '/expertise' && <h1 className="text-2xl font-semibold">Ekspertiza</h1>}
-        {pathname == '/risk-analysis' && <h1 className="text-2xl font-semibold">Xavfni tahlil qilish</h1>}
-        {pathname == '/accreditations' && <h1 className="text-2xl font-semibold">Ekpertiza xulosalari</h1>}
-        {pathname == '/expertise-organizations' && <h1 className="text-2xl font-semibold">Ekpertiza tashkilotlari</h1>}
+        {pathname == '/permits' ? (
+          <h1 className="text-2xl font-semibold">Ruxsatnomalar</h1>
+        ) : pathname == '/expertise' ? (
+          <h1 className="text-2xl font-semibold">Ekspertiza</h1>
+        ) : pathname == '/risk-analysis' ? (
+          <h1 className="text-2xl font-semibold">Xavfni tahlil qilish</h1>
+        ) : pathname == '/accreditations' ? (
+          <h1 className="text-2xl font-semibold">Ekpertiza xulosalari</h1>
+        ) : pathname == '/expertise-organizations' ? (
+          <h1 className="text-2xl font-semibold">Ekpertiza tashkilotlari</h1>
+        ) : pathname == '/inspections' ? (
+          <h1 className="text-2xl font-semibold">Tekshiruvlar</h1>
+        ) : pathname == '/preventions' ? (
+          <h1 className="text-2xl font-semibold">Profilaktika</h1>
+        ) : null}
       </div>
       <div className="flex items-center gap-x-4">
         {/*<LanguageSwitcher />*/}

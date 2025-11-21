@@ -2,6 +2,7 @@ import { DataTable } from '@/shared/components/common/data-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { formatDate } from 'date-fns';
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
+import { Badge } from '@/shared/components/ui/badge';
 
 export const ExpertiseTable = () => {
   const {
@@ -60,6 +61,7 @@ export const ExpertiseTable = () => {
     {
       accessorKey: 'status',
       header: 'Holati',
+      cell: ({ row }) => (row.original.status == 'ACTIVE' ? <Badge variant="success">Aktiv</Badge> : null),
     },
     // {
     //   id: 'actions',
@@ -89,7 +91,7 @@ export const ExpertiseTable = () => {
       data={data}
       showFilters={true}
       isLoading={isLoading}
-      className="h-[calc(100svh-180px)]"
+      className="h-[calc(100svh-220px)]"
     />
   );
 };

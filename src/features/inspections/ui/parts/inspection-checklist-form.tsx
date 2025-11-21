@@ -31,7 +31,7 @@ export const answerOptions = [
     labelKey: 'Bajarilmagan',
   },
   {
-    value: ChecklistAnswerStatus.PARTIAL,
+    value: ChecklistAnswerStatus.UNRELATED,
     labelKey: 'Tadbiq etilmaydi',
   },
 ];

@@ -1,6 +1,5 @@
 import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types';
 import { UserRoles } from '@/entities/user';
-import { AssignInspectorButton } from '@/features/risk-analysis/ui/assign-inspector-button';
 import { AssignInspectorModal } from '@/features/risk-analysis/ui/modals/assign-inspector-modal';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
@@ -8,34 +7,32 @@ import { useCurrentRole, useCustomSearchParams } from '@/shared/hooks';
 import { useAuth } from '@/shared/hooks/use-auth';
 import { AssignedStatusTab, RiskAnalysisTab } from '@/widgets/risk-analysis/types';
 import { ColumnDef } from '@tanstack/react-table';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { FC } from 'react';
+import { AssignInspectorButton } from '../assign-inspector-button';
 
 interface Props {
   data?: any;
   isLoading?: boolean;
 }
 
-export const Attraction: FC<Props> = ({ data, isLoading }) => {
-  const { t } = useTranslation('common');
+const List: FC<Props> = ({ data = [], isLoading = false }) => {
   const currentRole = useCurrentRole();
   const isRegional = currentRole === UserRoles.REGIONAL;
   const { user } = useAuth();
   const navigate = useNavigate();
-
   const { paramsObject, addParams } = useCustomSearchParams();
-
   const activeAssignedStatus = (paramsObject.assignedStatus as AssignedStatusTab) || AssignedStatusTab.NOT_ASSIGNED;
+  const { t } = useTranslation('common');
+  const type = paramsObject.mainTab || RiskAnalysisTab.XICHO;
 
   const handleAssignedStatusChange = (status: string) => {
     addParams({ assignedStatus: status, page: 1 });
   };
-  const type = paramsObject.mainTab || RiskAnalysisTab.XICHO;
 
   const handleView = (row: RiskAnalysisItem) => {
-    const intervalId = paramsObject.intervalId || user?.interval?.id;
-    navigate(`/risk-analysis/detail?tin=${row.legalTin}&id=${row.id}&intervalId=${intervalId}&type=${type}`);
+    navigate(`/risk-analysis/detail?tin=${row.legalTin}&id=${row.id}&type=${type}`);
   };
 
   const columns: ColumnDef<RiskAnalysisItem>[] = [
@@ -59,6 +56,11 @@ export const Attraction: FC<Props> = ({ data, isLoading }) => {
       header: t('risk_analysis_columns.address'),
       accessorKey: 'address',
     },
+    {
+      header: t('Ballar'),
+      accessorKey: 'score',
+      cell: ({ row }: any) => row.original?.score ?? "Yo'q",
+    },
     ...(activeAssignedStatus === AssignedStatusTab.NOT_ASSIGNED && user?.role == UserRoles.REGIONAL
       ? [
           {
@@ -70,22 +72,12 @@ export const Attraction: FC<Props> = ({ data, isLoading }) => {
             },
           },
         ]
-      : [
-          {
-            header: t('Ballar'),
-            accessorKey: 'score',
-          },
-          {
-            header: t('risk_analysis_columns.inspectorName'),
-            accessorKey: 'inspectorName',
-            cell: ({ row }: any) => row.original.inspectorName || '-',
-          },
-          {
-            id: 'actions',
-            header: 'Amallar',
-            cell: ({ row }: any) => <DataTableRowActions showView onView={() => handleView(row.original)} row={row} />,
-          },
-        ]),
+      : []),
+    {
+      id: 'actions',
+      header: 'Amallar',
+      cell: ({ row }: any) => <DataTableRowActions showView onView={() => handleView(row.original)} row={row} />,
+    },
   ];
 
   const assignedStatusTabs = [
@@ -111,9 +103,11 @@ export const Attraction: FC<Props> = ({ data, isLoading }) => {
         data={data || []}
         columns={columns}
         isLoading={isLoading}
-        className="h-[calc(100svh-320px)]"
+        className={user?.role == UserRoles.REGIONAL ? 'h-[calc(100svh-380px)]' : 'h-[calc(100svh-320px)]'}
       />
       <AssignInspectorModal />
     </div>
   );
 };
+
+export default List;

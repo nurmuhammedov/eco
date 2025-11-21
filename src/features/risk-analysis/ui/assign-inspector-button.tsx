@@ -1,4 +1,3 @@
-// src/features/risk-analysis/ui/assign-inspector-button.tsx
 import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types';
 import { Button } from '@/shared/components/ui/button';
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';

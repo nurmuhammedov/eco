@@ -28,27 +28,27 @@ export const ConclusionsTable = () => {
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
-      accessorKey: 'customerName',
-      header: 'Ekspert tashkiloti nomi',
-      filterKey: 'customerName',
-      filterType: 'search',
-    },
-    {
-      accessorKey: 'customerTin',
-      header: 'Ekspert tashkiloti STIRi',
-      filterKey: 'customerTin',
-      filterType: 'search',
-    },
-    {
       accessorKey: 'legalName',
-      header: 'Tashkilot nomi',
+      header: 'Ekspert tashkiloti nomi',
       filterKey: 'legalName',
       filterType: 'search',
     },
     {
       accessorKey: 'legalTin',
-      header: 'Tashkilot STIRi',
+      header: 'Ekspert tashkiloti STIRi',
       filterKey: 'legalTin',
+      filterType: 'search',
+    },
+    {
+      accessorKey: 'customerName',
+      header: 'Tashkilot nomi',
+      filterKey: 'customerName',
+      filterType: 'search',
+    },
+    {
+      accessorKey: 'customerTin',
+      header: 'Tashkilot STIRi',
+      filterKey: 'customerTin',
       filterType: 'search',
     },
     {

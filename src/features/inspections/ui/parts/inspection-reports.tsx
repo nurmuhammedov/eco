@@ -18,7 +18,7 @@ import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Eye } from 'lucide-react';
 
-const InspectionReports = ({ status, acknowledgementPath, resultId }: any) => {
+const InspectionReports = ({ status, acknowledgementPath, actPath, resultId }: any) => {
   const { user } = useAuth();
   const [currentTab, setCurrentTab] = useState<'questions' | 'eliminated' | 'not_eliminated'>('questions');
   const [tabulation, setTabulation] = useState<'all' | 'positive' | 'negative'>('all');
@@ -165,20 +165,38 @@ const InspectionReports = ({ status, acknowledgementPath, resultId }: any) => {
         ) : (
           <>
             {currentTab == 'questions' && status == InspectionSubMenuStatus.COMPLETED && (
-              <div className="mb-4">
-                <DetailRow
-                  title="Tilxat fayli:"
-                  value={
-                    !!acknowledgementPath ? (
-                      <div className="flex items-center gap-2">
-                        <FileLink url={acknowledgementPath} />
-                      </div>
-                    ) : (
-                      '-'
-                    )
-                  }
-                />
-              </div>
+              <>
+                <div className="mb-4">
+                  <DetailRow
+                    title="Tilxat fayli:"
+                    boldTitle={true}
+                    value={
+                      !!acknowledgementPath ? (
+                        <div className="flex items-center gap-2">
+                          <FileLink url={acknowledgementPath} />
+                        </div>
+                      ) : (
+                        '-'
+                      )
+                    }
+                  />
+                </div>
+                <div className="mb-4">
+                  <DetailRow
+                    title="Dalolatnoma:"
+                    boldTitle={true}
+                    value={
+                      !!actPath ? (
+                        <div className="flex items-center gap-2">
+                          <span>20.11.2025</span> | <FileLink url={actPath} />
+                        </div>
+                      ) : (
+                        '-'
+                      )
+                    }
+                  />
+                </div>
+              </>
             )}
             {categories?.map((category: any) => (
               <div key={category.inspectionCategoryId} className="mb-4 border rounded-xl p-4 bg-white">

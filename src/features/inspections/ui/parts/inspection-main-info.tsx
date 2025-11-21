@@ -4,6 +4,7 @@ import FileLink from '@/shared/components/common/file-link.tsx';
 import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx';
 import { useState } from 'react';
 import { Eye } from 'lucide-react';
+import { Badge } from '@/shared/components/ui/badge';
 
 const InspectionMainInfo = ({ inspectionData }: any) => {
   const [signers, setSigners] = useState<any[]>([]);
@@ -53,14 +54,14 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
       <DetailRow
         title="Xabardor qilish xati:"
         value={
-          !!inspectionData?.notificationLetterPath ? (
-            <div className="flex items-center gap-2">
-              <span>{getDate(inspectionData?.notificationLetterDate)}</span> |
-              <FileLink url={inspectionData?.notificationLetterPath} />
-            </div>
-          ) : (
-            '-'
-          )
+          <div className="flex items-center gap-2">
+            <span>Gibrid pochta holati: </span>
+            <Badge variant="info" className="text-sm">
+              Kelib tushdi
+            </Badge>{' '}
+            | <span>Yuborilgan sana: {getDate(inspectionData?.notificationLetterDate || new Date())}</span>
+            {/*|<FileLink url={inspectionData?.notificationLetterPath} />*/}
+          </div>
         }
       />
 

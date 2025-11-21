@@ -53,97 +53,85 @@ export const InspectionWidget: React.FC = () => {
 
   if (isInspector || isLegal) {
     return (
-      <div>
-        <div className="flex justify-between items-center mb-3">
-          <h2 className="text-2xl font-bold">Tekshiruvlar</h2>
-        </div>
-
-        <Tabs value={activeSubTab || InspectionSubMenuStatus.ASSIGNED} onValueChange={handleSubTabChange}>
-          <TabsList>
-            <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
-              Tekshiruv o‘tkazilmagan
-              <Badge variant="destructive" className="ml-2">
-                {countObject.assignedCount || 0}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value={InspectionSubMenuStatus.CONDUCTED}>
-              Tekshiruv o‘tkazilgan
-              <Badge variant="destructive" className="ml-2">
-                {countObject.conductedCount || 0}
-              </Badge>
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value={InspectionSubMenuStatus.CONDUCTED}>
-            <InspectionList />
-          </TabsContent>
-          <TabsContent value={InspectionSubMenuStatus.ASSIGNED}>
-            <InspectionList />
-          </TabsContent>
-        </Tabs>
-      </div>
+      <Tabs value={activeSubTab || InspectionSubMenuStatus.ASSIGNED} onValueChange={handleSubTabChange}>
+        <TabsList>
+          <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
+            Tekshiruv o‘tkazilmagan
+            <Badge variant="destructive" className="ml-2">
+              {countObject.assignedCount || 0}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger value={InspectionSubMenuStatus.CONDUCTED}>
+            Tekshiruv o‘tkazilgan
+            <Badge variant="destructive" className="ml-2">
+              {countObject.conductedCount || 0}
+            </Badge>
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value={InspectionSubMenuStatus.CONDUCTED}>
+          <InspectionList />
+        </TabsContent>
+        <TabsContent value={InspectionSubMenuStatus.ASSIGNED}>
+          <InspectionList />
+        </TabsContent>
+      </Tabs>
     );
   }
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-3">
-        <h2 className="text-2xl font-bold">Tekshiruvlar</h2>
-      </div>
-
-      <Tabs value={activeTab || InspectionStatus.ALL} onValueChange={handleTabChange}>
-        <TabsList>
-          <TabsTrigger value={InspectionStatus.ALL}>
-            Barchasi
-            <Badge variant="destructive" className="ml-2">
-              {countObject.allCount || 0}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value={InspectionStatus.NEW}>
-            Inspektor belgilanmaganlar
-            <Badge variant="destructive" className="ml-2">
-              {countObject.newCount || 0}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value={InspectionStatus.ASSIGNED}>
-            Inspektor belgilanganlar
-            <Badge variant="destructive" className="ml-2">
-              {(countObject.assignedCount || 0) + (countObject.conductedCount || 0)}
-            </Badge>
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value={InspectionStatus.ALL}>
-          <InspectionList />
-        </TabsContent>
-        <TabsContent value={InspectionStatus.NEW}>
-          <InspectionList />
-        </TabsContent>
-        <TabsContent value={InspectionStatus.ASSIGNED}>
-          <div className="mb-3">
-            <Tabs
-              value={activeSubTab || InspectionSubMenuStatus.ASSIGNED}
-              onValueChange={(value) => {
-                addParams({ subStatus: value, page: 1 });
-              }}
-            >
-              <TabsList>
-                <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
-                  Tekshiruv o‘tkazilmagan
-                  <Badge variant="destructive" className="ml-2">
-                    {countObject.assignedCount || 0}
-                  </Badge>
-                </TabsTrigger>
-                <TabsTrigger value={InspectionSubMenuStatus.CONDUCTED}>
-                  Tekshiruv o‘tkazilgan
-                  <Badge variant="destructive" className="ml-2">
-                    {countObject.conductedCount || 0}
-                  </Badge>
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
-          <InspectionList />
-        </TabsContent>
-      </Tabs>
-    </div>
+    <Tabs value={activeTab || InspectionStatus.ALL} onValueChange={handleTabChange}>
+      <TabsList>
+        <TabsTrigger value={InspectionStatus.ALL}>
+          Barchasi
+          <Badge variant="destructive" className="ml-2">
+            {countObject.allCount || 0}
+          </Badge>
+        </TabsTrigger>
+        <TabsTrigger value={InspectionStatus.NEW}>
+          Inspektor belgilanmaganlar
+          <Badge variant="destructive" className="ml-2">
+            {countObject.newCount || 0}
+          </Badge>
+        </TabsTrigger>
+        <TabsTrigger value={InspectionStatus.ASSIGNED}>
+          Inspektor belgilanganlar
+          <Badge variant="destructive" className="ml-2">
+            {(countObject.assignedCount || 0) + (countObject.conductedCount || 0)}
+          </Badge>
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value={InspectionStatus.ALL}>
+        <InspectionList />
+      </TabsContent>
+      <TabsContent value={InspectionStatus.NEW}>
+        <InspectionList />
+      </TabsContent>
+      <TabsContent value={InspectionStatus.ASSIGNED}>
+        <div className="mb-3">
+          <Tabs
+            value={activeSubTab || InspectionSubMenuStatus.ASSIGNED}
+            onValueChange={(value) => {
+              addParams({ subStatus: value, page: 1 });
+            }}
+          >
+            <TabsList>
+              <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
+                Tekshiruv o‘tkazilmagan
+                <Badge variant="destructive" className="ml-2">
+                  {countObject.assignedCount || 0}
+                </Badge>
+              </TabsTrigger>
+              <TabsTrigger value={InspectionSubMenuStatus.CONDUCTED}>
+                Tekshiruv o‘tkazilgan
+                <Badge variant="destructive" className="ml-2">
+                  {countObject.conductedCount || 0}
+                </Badge>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+        <InspectionList />
+      </TabsContent>
+    </Tabs>
   );
 };

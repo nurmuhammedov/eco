@@ -63,6 +63,7 @@ const InspectionsInfo = () => {
               <InspectionReports
                 status={item?.status}
                 acknowledgementPath={item?.acknowledgementPath}
+                actPath={item?.actPath}
                 resultId={item?.id}
               />
             </DetailCardAccordion.Item>

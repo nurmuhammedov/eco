@@ -1,4 +1,3 @@
-// 1. Bitta indikator uchun interfeys (bu sizda mavjud)
 export interface Indicator {
   id: string;
   text: string;
@@ -10,10 +9,8 @@ export interface Indicator {
   expireDate: string | null;
 }
 
-// 2. Barcha indikatorlarni o'z ichiga olgan obyekt uchun tip (bu sizda mavjud)
 export type RiskIndicators = Record<string, Indicator>;
 
-// 3. API DAN KELADIGAN TO'LIQ MA'LUMOT UCHUN INTERFEYS (MANA SHUNI QO'SHISH KERAK)
 export interface RiskAnalysisData {
   id: string;
   identity: number;
@@ -21,7 +18,7 @@ export interface RiskAnalysisData {
   belongId: string;
   totalScore: number;
   status: string;
-  indicators: RiskIndicators; // Yuqoridagi tipdan foydalanamiz
+  indicators: RiskIndicators;
   startDate: string;
   endDate: string;
   inspectorName: string | null;

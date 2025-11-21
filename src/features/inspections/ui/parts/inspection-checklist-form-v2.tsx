@@ -62,7 +62,7 @@ type FormValues = z.infer<typeof formSchema>;
 export const answerOptions = [
   { value: ChecklistAnswerStatus.POSITIVE, labelKey: 'Bajarilgan' },
   { value: ChecklistAnswerStatus.NEGATIVE, labelKey: 'Bajarilmagan' },
-  { value: ChecklistAnswerStatus.PARTIAL, labelKey: 'Tatbiq etilmaydi' },
+  { value: ChecklistAnswerStatus.UNRELATED, labelKey: 'Tatbiq etilmaydi' },
 ];
 
 type CategoryProps = {

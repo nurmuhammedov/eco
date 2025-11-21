@@ -56,77 +56,96 @@ export const ExpertiseSubTypeOptions = [
   {
     value: ExpertiseSubTypeEnum.XICH,
     label: 'Xavfli ishlab chiqarish obyektlarini identifikatsiya qilish',
+    type: ExpertiseTypeEnum.IX,
   },
   {
     value: ExpertiseSubTypeEnum.ILOY,
     label: 'Ishchi loyiha',
+    type: ExpertiseTypeEnum.LH,
   },
   {
     value: ExpertiseSubTypeEnum.LHUJ,
     label: 'Loyiha hujjatlari',
+    type: ExpertiseTypeEnum.LH,
   },
   {
     value: ExpertiseSubTypeEnum.GILO,
     label: 'Guruhli ishchi loyiha',
+    type: ExpertiseTypeEnum.LH,
   },
   {
     value: ExpertiseSubTypeEnum.SXDE,
     label: 'Sanoat xavfsizligi deklaratsiyasi',
+    type: ExpertiseTypeEnum.XD,
   },
   {
     value: ExpertiseSubTypeEnum.SXEX,
     label: 'Sanoat xavfsizligi ekspertizasi xulosasi',
+    type: ExpertiseTypeEnum.XD, // Rasmda "ХД" (kirillcha) turibdi, buni XD ga to'g'riladim
   },
   {
     value: ExpertiseSubTypeEnum.IHEK,
     label: 'Ishchi hujjatlar ekspertizasi',
+    type: ExpertiseTypeEnum.LH,
   },
   {
     value: ExpertiseSubTypeEnum.TEIA,
     label: 'Texnik-iqtisodiy asos (TIA)',
+    type: ExpertiseTypeEnum.XD,
   },
   {
     value: ExpertiseSubTypeEnum.XISX,
     label: 'Xavfli obyektlarning sanoat xavfsizligi deklaratsiyasi',
+    type: ExpertiseTypeEnum.XD,
   },
   {
     value: ExpertiseSubTypeEnum.INIL,
     label: 'Individual ishchi loyiha',
+    type: ExpertiseTypeEnum.LH,
   },
   {
     value: ExpertiseSubTypeEnum.IHUJ,
     label: 'Ishchi hujjatlar',
+    type: ExpertiseTypeEnum.LH,
   },
   {
     value: ExpertiseSubTypeEnum.ILYS,
     label: 'Ishchi loyihalar',
+    type: ExpertiseTypeEnum.LH,
   },
   {
     value: ExpertiseSubTypeEnum.SXBI,
     label: "Sanoat xavfsizligi bo'yicha ishchi loyiha ekspertizasi",
+    type: ExpertiseTypeEnum.LH,
   },
   {
     value: ExpertiseSubTypeEnum.LHSX,
     label: 'Sanoat xavfsizligi ekspertizasi (LHSX)',
+    type: ExpertiseTypeEnum.LH,
   },
   {
     value: ExpertiseSubTypeEnum.BINO,
     label: 'Bino',
+    type: ExpertiseTypeEnum.BI,
   },
   {
     value: ExpertiseSubTypeEnum.BISX,
     label: 'Sanoat xavfsizligi ekspertizasi (BISX)',
+    type: ExpertiseTypeEnum.BI,
   },
   {
     value: ExpertiseSubTypeEnum.OMBO,
     label: 'Ombor',
+    type: ExpertiseTypeEnum.BI,
   },
   {
     value: ExpertiseSubTypeEnum.OBIQ,
     label: 'Ombor bino va inshootlarining qurilish konstruksiyalari texnik holatini tekshirish',
+    type: ExpertiseTypeEnum.BI,
   },
   {
     value: ExpertiseSubTypeEnum.TQSX,
     label: 'Sanoat xavfsizligi ekspertizasi (TQSX)',
+    type: ExpertiseTypeEnum.TQ,
   },
 ];

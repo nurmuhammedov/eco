@@ -408,7 +408,7 @@ export const AddConclusion = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {ExpertiseSubTypeOptions.map((option) => (
+                            {ExpertiseSubTypeOptions.filter((i) => i?.type == form.watch('type')).map((option) => (
                               <SelectItem key={option.value} value={option.value}>
                                 {option.label}
                               </SelectItem>
