@@ -315,13 +315,13 @@ export const UpdateConclusion = () => {
                 name="prefix"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Prefiks nomi</FormLabel>
+                    <FormLabel>Ekspertiza obyekti nomi</FormLabel>
                     <FormControl>
                       <Textarea
                         disabled={conclusion?.processStatus == 'COMPLETED'}
                         className="resize-none"
                         rows={7}
-                        placeholder="Prefiks nomi..."
+                        placeholder="Obyekt nomini kiriting..."
                         {...field}
                       />
                     </FormControl>

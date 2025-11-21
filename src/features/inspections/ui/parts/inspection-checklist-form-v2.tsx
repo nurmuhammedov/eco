@@ -217,7 +217,8 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
               <div className="flex-1">
                 <h4 className="font-medium text-amber-900 text-sm mb-1">Diqqat, tilxat fayli yuklanmagan!</h4>
                 <p className="text-amber-800 text-sm mb-3 leading-relaxed">
-                  Tekshiruv savolnomasini to‘ldirish uchun avval tilxat yuklanishi shart.
+                  2022 yil 13-sentyabrdagi PQ-374-sonli qarorining 3-bob 18-bandiga asosan tilxat yuklanishi talab
+                  etiladi.
                 </p>
                 <AcknowledgementUploadModal
                   resultId={resultId}

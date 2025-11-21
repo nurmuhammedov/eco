@@ -82,7 +82,7 @@ export const DetailConclusion = () => {
               title="Ekspertiza obyekti turi:"
               value={ExpertiseSubTypeOptions?.find((i) => i?.value == detail?.subType)?.label || '-'}
             />
-            <DetailRow title="Prefiks nomi" value={detail?.prefix || '-'} />
+            <DetailRow title="Ekspertiza obyekti nomi" value={detail?.prefix || '-'} />
             <DetailRow title="Ekspertiza xulosasi natijasi:" value={detail?.result || '-'} />
             <DetailRow title="Ekspertiza xulosasi reyestr raqami:" value={detail?.registryNumber || '-'} />
             <DetailRow

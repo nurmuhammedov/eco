@@ -425,9 +425,14 @@ export const AddConclusion = () => {
                     name="prefix"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Prefiks nomi</FormLabel>
+                        <FormLabel>Ekspertiza obyekti nomi</FormLabel>
                         <FormControl>
-                          <Textarea className="resize-none" rows={7} placeholder="Prefiks nomi..." {...field} />
+                          <Textarea
+                            className="resize-none"
+                            rows={7}
+                            placeholder="Obyekt nomini kiriting..."
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
