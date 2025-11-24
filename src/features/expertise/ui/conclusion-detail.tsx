@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/shared/components/ui/card';
 import useDetail from '@/shared/hooks/api/useDetail';
 import { DetailCardAccordion } from '@/shared/components/common/detail-card';
 import DetailRow from '@/shared/components/common/detail-row';
-import { ExpertiseSubTypeOptions, ExpertiseTypeOptions } from '@/entities/expertise/model/constants';
+import { ExpertiseTypeOptions } from '@/entities/expertise/model/constants';
 import { getDate } from '@/shared/utils/date';
 import { Badge } from '@/shared/components/ui/badge';
 import FileLink from '@/shared/components/common/file-link';
@@ -78,10 +78,10 @@ export const DetailConclusion = () => {
               title="Ekspertiza xulosasi turi:"
               value={ExpertiseTypeOptions?.find((i) => i?.value == detail?.type)?.label || '-'}
             />
-            <DetailRow
-              title="Ekspertiza obyekti turi:"
-              value={ExpertiseSubTypeOptions?.find((i) => i?.value == detail?.subType)?.label || '-'}
-            />
+            {/*<DetailRow*/}
+            {/*  title="Ekspertiza obyekti turi:"*/}
+            {/*  value={ExpertiseSubTypeOptions?.find((i) => i?.value == detail?.subType)?.label || '-'}*/}
+            {/*/>*/}
             <DetailRow title="Ekspertiza obyekti nomi" value={detail?.prefix || '-'} />
             <DetailRow title="Ekspertiza xulosasi natijasi:" value={detail?.result || '-'} />
             <DetailRow title="Ekspertiza xulosasi reyestr raqami:" value={detail?.registryNumber || '-'} />

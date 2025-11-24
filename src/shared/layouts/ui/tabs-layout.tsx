@@ -15,7 +15,7 @@ interface TabsLayoutProps {
   action?: ReactNode;
   activeTab: string;
   className?: string;
-  children: ReactNode;
+  children?: ReactNode;
   defaultValue?: string;
   classNameTabList?: string;
   classNameTrigger?: string;
@@ -54,7 +54,7 @@ export const TabsLayout = ({
         </TabsList>
         {action}
       </div>
-      <TabsContent value={activeTab}>{children}</TabsContent>
+      {children && <TabsContent value={activeTab}>{children}</TabsContent>}
     </Tabs>
   );
 };

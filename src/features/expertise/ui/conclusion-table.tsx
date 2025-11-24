@@ -1,7 +1,7 @@
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { formatDate } from 'date-fns';
-import { tabs } from '@/features/expertise/ui/conclusion-tabs';
+// import { tabs } from '@/features/expertise/ui/conclusion-tabs';
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/shared/components/ui/badge';
@@ -47,22 +47,28 @@ export const ConclusionsTable = () => {
     },
     {
       accessorKey: 'customerTin',
-      header: 'Tashkilot STIRi',
+      header: 'Tashkilot STIR',
       filterKey: 'customerTin',
       filterType: 'search',
     },
     {
       accessorKey: 'objectName',
-      header: 'Obyektning nomi',
+      header: 'Reysterdagi obyektning nomi',
       filterKey: 'objectName',
       filterType: 'search',
     },
     {
-      accessorKey: 'type',
-      size: 300,
-      header: 'Xulosa turi',
-      cell: (cell) => tabs.find((t) => t?.key?.toString() == cell.row.original.type?.toString())?.label || '',
+      accessorKey: 'prefix',
+      header: 'Ekspertiza obyektining nomi',
+      filterKey: 'prefix',
+      filterType: 'search',
     },
+    // {
+    //   accessorKey: 'type',
+    //   size: 300,
+    //   header: 'Xulosa turi',
+    //   cell: (cell) => tabs.find((t) => t?.key?.toString() == cell.row.original.type?.toString())?.label || '',
+    // },
     {
       accessorKey: 'registryNumber',
       header: 'Reyestr raqami',
@@ -85,7 +91,11 @@ export const ConclusionsTable = () => {
       cell: (cell) =>
         cell.row.original.registrationDate ? formatDate(cell.row.original.registrationDate, 'dd.MM.yyyy') : null,
     },
-
+    {
+      accessorKey: 'createdAt',
+      header: 'Rasmiylashtirish sanasi',
+      cell: (cell) => (cell.row.original.createdAt ? formatDate(cell.row.original.createdAt, 'dd.MM.yyyy') : null),
+    },
     {
       header: 'Xulosa fayli',
       cell: ({ row }: any) => (

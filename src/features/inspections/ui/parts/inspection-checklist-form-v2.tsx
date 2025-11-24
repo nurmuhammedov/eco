@@ -215,7 +215,17 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
             <div className="flex items-start gap-3">
               <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
               <div className="flex-1">
-                <h4 className="font-medium text-amber-900 text-sm mb-1">Diqqat, tilxat fayli yuklanmagan!</h4>
+                <h4 className="font-medium text-amber-900 flex gap-3 text-sm mb-1">
+                  <span>Diqqat, tilxat fayli yuklanmagan!</span>
+                  <a
+                    href="https://test.cirns.uz/api/v1/offices/select"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold text-blue-600 hover:underline flex items-center gap-1"
+                  >
+                    Tilxat uchun shablon
+                  </a>
+                </h4>
                 <p className="text-amber-800 text-sm mb-3 leading-relaxed">
                   2022 yil 13-sentyabrdagi PQ-374-sonli qarorining 3-bob 18-bandiga asosan tilxat yuklanishi talab
                   etiladi.

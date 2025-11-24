@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ExpertiseSubTypeEnum, ExpertiseTypeEnum } from './constants';
+import { ExpertiseTypeEnum } from './constants';
 import { FORM_ERROR_MESSAGES } from '@/shared/validation';
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
 
@@ -21,9 +21,9 @@ export const addExpertiseSchema = z.object({
   type: z.nativeEnum(ExpertiseTypeEnum, {
     required_error: 'Ekspertiza turini tanlang',
   }),
-  subType: z.nativeEnum(ExpertiseSubTypeEnum, {
-    required_error: 'Ekspertiza obyekti turini tanlang',
-  }),
+  // subType: z.nativeEnum(ExpertiseSubTypeEnum, {
+  //   required_error: 'Ekspertiza obyekti turini tanlang',
+  // }),
 
   objectName: z.string({ required_error: 'Obyektini kiriting!' }).min(1, 'Obyektini kiriting!'),
   regionId: z.string({ required_error: 'Viloyatni tanlang!' }),

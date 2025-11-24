@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addExpertiseSchema } from '@/entities/expertise/model/expertise.schema';
 import { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types';
-import { ExpertiseSubTypeOptions, ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/model/constants';
+import { ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/model/constants';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
@@ -277,38 +277,38 @@ export const UpdateConclusion = () => {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="subType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Ekspertiza obyekti turi</FormLabel>
-                    <Select
-                      disabled={conclusion?.processStatus == 'COMPLETED'}
-                      value={field.value}
-                      onValueChange={(value) => {
-                        if (value) {
-                          field.onChange(value);
-                        }
-                      }}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Tanlang..." />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {ExpertiseSubTypeOptions.filter((i) => i?.type == form.watch('type')).map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/*<FormField*/}
+              {/*  control={form.control}*/}
+              {/*  name="subType"*/}
+              {/*  render={({ field }) => (*/}
+              {/*    <FormItem>*/}
+              {/*      <FormLabel>Ekspertiza obyekti turi</FormLabel>*/}
+              {/*      <Select*/}
+              {/*        disabled={conclusion?.processStatus == 'COMPLETED'}*/}
+              {/*        value={field.value}*/}
+              {/*        onValueChange={(value) => {*/}
+              {/*          if (value) {*/}
+              {/*            field.onChange(value);*/}
+              {/*          }*/}
+              {/*        }}*/}
+              {/*      >*/}
+              {/*        <FormControl>*/}
+              {/*          <SelectTrigger>*/}
+              {/*            <SelectValue placeholder="Tanlang..." />*/}
+              {/*          </SelectTrigger>*/}
+              {/*        </FormControl>*/}
+              {/*        <SelectContent>*/}
+              {/*          {ExpertiseSubTypeOptions.filter((i) => i?.type == form.watch('type')).map((option) => (*/}
+              {/*            <SelectItem key={option.value} value={option.value}>*/}
+              {/*              {option.label}*/}
+              {/*            </SelectItem>*/}
+              {/*          ))}*/}
+              {/*        </SelectContent>*/}
+              {/*      </Select>*/}
+              {/*      <FormMessage />*/}
+              {/*    </FormItem>*/}
+              {/*  )}*/}
+              {/*/>*/}
 
               <FormField
                 control={form.control}

@@ -17,6 +17,7 @@ import ReportExecutionModal from '@/features/inspections/ui/parts/report-executi
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Eye } from 'lucide-react';
+import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal';
 
 const InspectionReports = ({ status, acknowledgementPath, actPath, resultId }: any) => {
   const { user } = useAuth();
@@ -24,6 +25,7 @@ const InspectionReports = ({ status, acknowledgementPath, actPath, resultId }: a
   const [tabulation, setTabulation] = useState<'all' | 'positive' | 'negative'>('all');
   const [id, setId] = useState<any>(null);
   const [inspectionTitle, setInspectionTitle] = useState<string>('');
+  const [signers, setSigners] = useState<any[]>([]);
 
   const { data: categories = [] } = useData<any[]>(
     `/inspection-checklists`,
@@ -164,7 +166,7 @@ const InspectionReports = ({ status, acknowledgementPath, actPath, resultId }: a
           />
         ) : (
           <>
-            {currentTab == 'questions' && status == InspectionSubMenuStatus.COMPLETED && (
+            {currentTab == 'questions' && status == InspectionSubMenuStatus.ASSIGNED && (
               <>
                 <div className="mb-4">
                   <DetailRow
@@ -188,7 +190,15 @@ const InspectionReports = ({ status, acknowledgementPath, actPath, resultId }: a
                     value={
                       !!actPath ? (
                         <div className="flex items-center gap-2">
-                          <span>20.11.2025</span> | <FileLink url={actPath} />
+                          <span>20.11.2025</span> | <FileLink url={actPath} /> |
+                          <button
+                            className="cursor-pointer hover:text-yellow-200 text-[#A6B1BB]"
+                            onClick={() => {
+                              setSigners([]);
+                            }}
+                          >
+                            <Eye size="18" />
+                          </button>
                         </div>
                       ) : (
                         '-'
@@ -196,6 +206,7 @@ const InspectionReports = ({ status, acknowledgementPath, actPath, resultId }: a
                     }
                   />
                 </div>
+                <SignersModal setSigners={setSigners} signers={signers} />
               </>
             )}
             {categories?.map((category: any) => (

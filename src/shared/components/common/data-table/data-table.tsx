@@ -125,12 +125,12 @@ export function DataTable<TData, TValue>({
                 {showNumeration && (
                   <TableHead
                     className={cn(
-                      'w-[20px]',
+                      'w-[50px]',
                       showFilters
                         ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
                         : 'first:rounded-l-lg! last:rounded-r-lg!',
                     )}
-                    style={{ width: '20px', maxWidth: '20px' }}
+                    style={{ width: '50px', maxWidth: '50px' }}
                   >
                     T/r
                   </TableHead>
@@ -161,9 +161,9 @@ export function DataTable<TData, TValue>({
                   <TableHead
                     className="!bg-white !h-8 !p-0 hover:!bg-white even:!bg-white border-b-2 border-neutral-200"
                     style={{
-                      width: '20px',
-                      minWidth: '20px',
-                      maxWidth: '20px',
+                      width: '50px',
+                      minWidth: '50px',
+                      maxWidth: '50px',
                     }}
                   />
                 )}
@@ -196,7 +196,7 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row, idx) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {showNumeration && (
-                    <TableCell style={{ width: '20px', maxWidth: '20px' }}>
+                    <TableCell style={{ width: '50px', maxWidth: '50px' }}>
                       {currentPage > 1 ? idx + (currentPage * pageSize - (pageSize - 1)) : idx + 1}
                     </TableCell>
                   )}

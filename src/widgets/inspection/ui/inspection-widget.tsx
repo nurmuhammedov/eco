@@ -40,6 +40,7 @@ export const InspectionWidget: React.FC = () => {
   const isLegal = user?.role == UserRoles.LEGAL;
   const activeTab = paramsObject.status;
   const activeSubTab = paramsObject.subStatus;
+  const activeProcess = paramsObject.process;
 
   const { data: countObject = defaultCountDto } = useData<CountDto>('/inspections/count');
 
@@ -130,6 +131,31 @@ export const InspectionWidget: React.FC = () => {
             </TabsList>
           </Tabs>
         </div>
+        {activeSubTab == InspectionSubMenuStatus.CONDUCTED ? (
+          <div className="mb-3">
+            <Tabs
+              value={activeProcess || 'IN_PROCESS'}
+              onValueChange={(value) => {
+                addParams({ process: value, page: 1 });
+              }}
+            >
+              <TabsList>
+                <TabsTrigger value="IN_PROCESS">
+                  Jarayonda
+                  <Badge variant="destructive" className="ml-2">
+                    0
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger value="FINISHED">
+                  Yakunlangan
+                  <Badge variant="destructive" className="ml-2">
+                    0
+                  </Badge>
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+        ) : null}
         <InspectionList />
       </TabsContent>
     </Tabs>

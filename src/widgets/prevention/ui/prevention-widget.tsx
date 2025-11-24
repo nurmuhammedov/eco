@@ -1,9 +1,10 @@
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { Badge } from '@/shared/components/ui/badge';
-import { useCustomSearchParams } from '@/shared/hooks';
+import { useCustomSearchParams, useData } from '@/shared/hooks';
 import { useAuth } from '@/shared/hooks/use-auth';
 import { UserRoles } from '@/entities/user';
 import Table from '@/features/prevention/ui/table';
+import { TabsLayout } from '@/shared/layouts';
 
 const MONTHS = [
   { value: '1', label: 'Yanvar' },
@@ -34,32 +35,31 @@ const ASSIGNMENT_STATUSES = [
   { value: 'ASSIGNED', label: 'Inspektor belgilanganlar' },
 ];
 
-const PROCESS_STATUSES = [
-  { value: 'ALL', label: 'Barchasi' },
-  { value: 'IN_PROGRESS', label: 'Jarayonda' },
-  { value: 'COMPLETED', label: 'Yakunlangan' },
-];
-
 const PreventionWidget = () => {
   const { user } = useAuth();
   const { paramsObject, addParams } = useCustomSearchParams();
   const isRegional = user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD;
   const activeMonth = paramsObject.month || new Date().getMonth() + 1 + '';
   const activeType = paramsObject.mainTab || 'HF';
+  const activeRegion = paramsObject.region;
   const activeAssignment = paramsObject.assignment || !isRegional ? 'ASSIGNED' : 'UNASSIGNED';
-  const activeStatus = paramsObject.status || 'ALL';
+  const { data = [] } = useData<{ id: number; name: string }[]>('/offices/select');
 
   return (
     <>
       <div className="flex flex-col gap-3 w-full mb-6">
-        <Tabs value={activeMonth.toString()} onValueChange={(val) => addParams({ month: val, page: 1 })}>
-          <TabsList className="justify-start overflow-x-auto h-auto p-1 flex-nowrap sm:flex-wrap">
+        <Tabs
+          value={activeMonth.toString()}
+          onValueChange={(val) => addParams({ month: val, page: 1 })}
+          className="w-full"
+        >
+          <TabsList className="grid w-full h-auto grid-cols-12 gap-1 p-1">
             {MONTHS.map((month) => (
-              <TabsTrigger key={month.value} value={month.value} className="flex-shrink-0 ">
-                {month.label}
+              <TabsTrigger key={month.value} value={month.value} className="w-full flex justify-center px-1">
+                <span className="truncate">{month.label}</span>
                 <Badge
                   variant="destructive"
-                  className="ml-2 group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary"
+                  className="ml-2  group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary"
                 >
                   0
                 </Badge>
@@ -67,6 +67,20 @@ const PreventionWidget = () => {
             ))}
           </TabsList>
         </Tabs>
+
+        {!!data && data?.length > 0 ? (
+          <TabsLayout
+            classNameTabList="!mb-0"
+            tabs={
+              data?.map((item) => ({
+                id: item?.id?.toString(),
+                name: item.name?.split(' ')?.[0] ? item.name?.split(' ')?.[0] : '',
+              })) || []
+            }
+            activeTab={activeRegion?.toString() || data[0]?.id?.toString() || '1'}
+            onTabChange={(val) => addParams({ region: val, page: 1 })}
+          />
+        ) : null}
 
         <Tabs value={activeType} onValueChange={(val) => addParams({ mainTab: val, page: 1 })}>
           <TabsList className="justify-start h-auto p-1 flex-wrap">
@@ -90,28 +104,6 @@ const PreventionWidget = () => {
               {ASSIGNMENT_STATUSES.map((status) => (
                 <TabsTrigger key={status.value} value={status.value}>
                   {status.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-        )}
-
-        {activeAssignment === 'ASSIGNED' && (
-          <Tabs
-            value={activeStatus}
-            onValueChange={(val) => addParams({ status: val, page: 1 })}
-            className="animate-in fade-in slide-in-from-top-2 duration-300"
-          >
-            <TabsList className="justify-start h-auto p-1">
-              {PROCESS_STATUSES.map((status) => (
-                <TabsTrigger key={status.value} value={status.value}>
-                  {status.label}
-                  <Badge
-                    variant="destructive"
-                    className="ml-2 group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary"
-                  >
-                    0
-                  </Badge>
                 </TabsTrigger>
               ))}
             </TabsList>
