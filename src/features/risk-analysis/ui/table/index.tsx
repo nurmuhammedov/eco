@@ -6,11 +6,11 @@ import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { useCurrentRole, useCustomSearchParams } from '@/shared/hooks';
 import { useAuth } from '@/shared/hooks/use-auth';
 import { AssignedStatusTab, RiskAnalysisTab } from '@/widgets/risk-analysis/types';
-import { ColumnDef } from '@tanstack/react-table';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { AssignInspectorButton } from '../assign-inspector-button';
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
 
 interface Props {
   data?: any;
@@ -35,31 +35,43 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
     navigate(`/risk-analysis/detail?tin=${row.legalTin}&id=${row.id}&type=${type}`);
   };
 
-  const columns: ColumnDef<RiskAnalysisItem>[] = [
+  const columns: ExtendedColumnDef<RiskAnalysisItem, any>[] = [
     {
       header: t('risk_analysis_columns.registryNumber'),
       accessorKey: 'registryNumber',
+      filterKey: 'registryNumber',
+      filterType: 'search',
     },
     {
       header: t('risk_analysis_columns.name'),
       accessorKey: 'name',
+      filterKey: 'name',
+      filterType: 'search',
     },
     {
       header: t('risk_analysis_columns.legalName'),
       accessorKey: 'legalName',
+      filterKey: 'legalName',
+      filterType: 'search',
     },
     {
       header: t('risk_analysis_columns.legalTin'),
       accessorKey: 'legalTin',
+      filterKey: 'legalTin',
+      filterType: 'search',
     },
     {
       header: t('risk_analysis_columns.address'),
       accessorKey: 'address',
+      filterKey: 'address',
+      filterType: 'search',
     },
     {
       header: t('Ballar'),
       accessorKey: 'score',
       cell: ({ row }: any) => row.original?.score ?? "Yo'q",
+      filterKey: 'score',
+      filterType: 'search',
     },
     ...(activeAssignedStatus === AssignedStatusTab.NOT_ASSIGNED && user?.role == UserRoles.REGIONAL
       ? [
@@ -99,6 +111,7 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
         </Tabs>
       )}
       <DataTable
+        showFilters={true}
         isPaginated
         data={data || []}
         columns={columns}

@@ -1,7 +1,6 @@
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-
 import { Button } from '@/shared/components/ui/button.tsx';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/shared/components/ui/form.tsx';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx';
@@ -12,11 +11,11 @@ import { useCustomSearchParams, useEIMZO } from '@/shared/hooks';
 import { ApplicationModal } from '@/features/application/create-application';
 
 const articleOptions = [
-  { id: '55', name: '55-модда' },
-  { id: '70', name: '70-модда' },
-  { id: '97', name: '97-модда' },
-  { id: '97.1', name: '97.1-модда' },
-  { id: '98', name: '98-модда' },
+  { id: 'ARTICLE_55', name: '55-модда' },
+  { id: 'ARTICLE_70', name: '70-модда' },
+  { id: 'ARTICLE_97', name: '97-модда' },
+  { id: 'ARTICLE_97_1', name: '97.1-модда' },
+  { id: 'ARTICLE_98', name: '98-модда' },
 ];
 
 const schema = z.object({
@@ -84,9 +83,11 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
     handleCreateApplication({
       dtoList: items,
       resultId,
-      articleList: data.articleList,
-      fullName: data.punishedEmployeeFullName,
-      position: data.punishedEmployeePosition,
+      penalties: data.articleList,
+      violator: {
+        position: data.punishedEmployeePosition,
+        fullName: data.punishedEmployeeFullName,
+      },
       participants: data.users,
     });
   };

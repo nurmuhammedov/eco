@@ -248,7 +248,7 @@ export const appRoutes = [
     roles: [UserRoles.INSPECTOR],
   },
   {
-    path: 'preventions/view/:id',
+    path: 'preventions/detail/:id',
     component: PreventionViewPage,
     roles: [],
   },

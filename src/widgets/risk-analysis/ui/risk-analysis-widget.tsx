@@ -15,6 +15,8 @@ import { useNavigate } from 'react-router-dom';
 import { API_ENDPOINTS } from '@/shared/api';
 import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types';
 import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-statistics-cards';
+import { getCurrentMonthEnum, MONTHS } from '@/widgets/prevention/ui/prevention-widget';
+import { cn } from '@/shared/lib/utils';
 
 const TAB_TO_API_TYPE: Record<string, string> = {
   [RiskAnalysisTab.XICHO]: 'HF',
@@ -31,7 +33,13 @@ const RiskAnalysisWidget = () => {
   const navigate = useNavigate();
   const {
     addParams,
-    paramsObject: { mainTab = RiskAnalysisTab.XICHO, riskLevel = 'ALL', size = 10, page = 1 },
+    paramsObject: {
+      mainTab = RiskAnalysisTab.XICHO,
+      riskLevel = 'ALL',
+      size = 10,
+      page = 1,
+      month = getCurrentMonthEnum(),
+    },
   } = useCustomSearchParams();
 
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_HF, {
@@ -73,12 +81,34 @@ const RiskAnalysisWidget = () => {
       />
 
       <Tabs
+        className="mb-2 w-full"
+        value={month?.toString()}
+        onValueChange={(val) => addParams({ month: val, page: 1 })}
+      >
+        <div className={cn('flex w-full justify-between overflow-x-auto no-scrollbar overflow-y-hidden mb-2')}>
+          <TabsList className="h-auto p-1 w-full">
+            {MONTHS.map((type) => (
+              <TabsTrigger className="flex-1" key={type.value} value={type.value}>
+                {type.label}
+                <Badge
+                  variant="destructive"
+                  className="ml-2  group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary"
+                >
+                  {type?.count || 0}
+                </Badge>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
+      </Tabs>
+
+      <Tabs
         defaultValue={mainTab}
         value={mainTab}
         onValueChange={(tab) => addParams({ mainTab: tab, page: 1, riskLevel: 'ALL' })}
         className="w-full"
       >
-        <div className="flex justify-between items-center mb-2">
+        <div className={cn('flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden mb-2')}>
           <TabsList>
             <TabsTrigger value={RiskAnalysisTab.XICHO}>
               {t('risk_analysis_tabs.XICHO')}

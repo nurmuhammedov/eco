@@ -5,9 +5,18 @@ import SignersModal from '@/features/application/application-detail/ui/modals/si
 import { useState } from 'react';
 import { Eye } from 'lucide-react';
 import { Badge } from '@/shared/components/ui/badge';
+import { useData } from '@/shared/hooks';
 
 const InspectionMainInfo = ({ inspectionData }: any) => {
   const [signers, setSigners] = useState<any[]>([]);
+
+  const { data, isLoading } = useData<any>(
+    `/integration/postal-mail/${inspectionData?.notificationLetterId}`,
+    !!inspectionData &&
+      !!inspectionData?.notificationLetterStatus &&
+      !!inspectionData?.notificationLetterId &&
+      inspectionData?.notificationLetterStatus !== 'RECEIVED_BY_CLIENT',
+  );
 
   if (!inspectionData) {
     return null;
@@ -54,39 +63,35 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
       <DetailRow
         title="Xabardor qilish xati:"
         value={
-          <div className="flex items-center gap-2">
-            <span>Gibrid pochta holati: </span>
-            <Badge variant="info" className="text-sm">
-              Kelib tushdi
-            </Badge>{' '}
-            | <span>Yuborilgan sana: {getDate(inspectionData?.notificationLetterDate || new Date())}</span>
-            {/*|<FileLink url={inspectionData?.notificationLetterPath} />*/}
-          </div>
+          isLoading ? (
+            <span>Maʼlumotlar yuklanmoqda...</span>
+          ) : inspectionData?.notificationLetterPath ? (
+            <div className="flex items-center gap-2">
+              <FileLink url={inspectionData?.notificationLetterPath} /> | <span>Gibrid pochta holati: </span>
+              <Badge variant="info" className="text-sm">
+                {inspectionData?.notificationLetterStatus == 'RECEIVED_BY_CLIENT'
+                  ? 'Mijoz qabul qildi'
+                  : data == 'SENT_TO_POST'
+                    ? 'Pochtaga yuborildi'
+                    : data == 'INSUFFICIENT_FUNDS'
+                      ? 'Hisob yetarli emas'
+                      : data == 'SENT_TO_CLIENT'
+                        ? 'Mijozga yuborildi'
+                        : data == 'UNKNOWN'
+                          ? 'Noaniq'
+                          : 'Noaniq'}
+              </Badge>{' '}
+              |{' '}
+              <span>
+                Yuborilgan sana:{' '}
+                {inspectionData?.notificationLetterDate ? getDate(inspectionData?.notificationLetterDate) : '-'}
+              </span>
+            </div>
+          ) : (
+            '-'
+          )
         }
       />
-
-      {!!inspectionData?.act && (
-        <DetailRow
-          title="Dalolatnoma:"
-          value={
-            !!inspectionData?.act?.path ? (
-              <div className="flex items-center gap-2">
-                <FileLink url={inspectionData?.act?.path} />
-                <button
-                  className="cursor-pointer hover:text-yellow-200 text-[#A6B1BB]"
-                  onClick={() => {
-                    setSigners(inspectionData?.act?.signers || []);
-                  }}
-                >
-                  <Eye size="18" />
-                </button>
-              </div>
-            ) : (
-              '-'
-            )
-          }
-        />
-      )}
       <SignersModal setSigners={setSigners} signers={signers} />
     </div>
   );

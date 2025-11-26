@@ -8,10 +8,11 @@ function _correctParamsDataType(paramsObj: Record<string, string>): ISearchParam
     if (!isNaN(toNumber)) {
       copyParamsObj[key] = toNumber;
       continue;
-    }
-
-    if (value?.toString()?.toLowerCase() === 'true' || value?.toString()?.toLowerCase() === 'false') {
+    } else if (value?.toString()?.toLowerCase() === 'true' || value?.toString()?.toLowerCase() === 'false') {
       copyParamsObj[key] = value?.toString()?.toLowerCase() === 'true';
+      continue;
+    } else if (typeof value === 'string') {
+      copyParamsObj[key] = value?.toString()?.trim();
       continue;
     }
 

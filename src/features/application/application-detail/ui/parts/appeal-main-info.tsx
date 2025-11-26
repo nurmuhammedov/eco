@@ -11,7 +11,6 @@ interface Props {
 }
 
 const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
-  //TODO: zamenit dubliruyushisa translations
   const { t } = useTranslation();
 
   return (

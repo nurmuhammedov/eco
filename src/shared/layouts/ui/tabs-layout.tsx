@@ -19,6 +19,7 @@ interface TabsLayoutProps {
   defaultValue?: string;
   classNameTabList?: string;
   classNameTrigger?: string;
+  classNameWrapper?: string;
   onTabChange: (value: string) => void;
 }
 
@@ -32,10 +33,11 @@ export const TabsLayout = ({
   className = '',
   classNameTrigger = '',
   classNameTabList = '',
+  classNameWrapper = '',
 }: TabsLayoutProps) => {
   return (
     <Tabs defaultValue={defaultValue} value={activeTab} onValueChange={onTabChange} className={className}>
-      <div className="flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden">
+      <div className={cn('flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden', classNameWrapper)}>
         <TabsList className={classNameTabList}>
           {tabs.map((tab) => (
             <TabsTrigger key={tab.id} value={tab.id} className={cn(`hover:bg-neutral-100`, classNameTrigger)}>

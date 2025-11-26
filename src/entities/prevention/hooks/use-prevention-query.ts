@@ -10,7 +10,7 @@ export const usePreventions = (params: any) => {
 
 export const usePreventionDetail = (id: string) => {
   return useQuery({
-    queryKey: ['prevention', id],
+    queryKey: ['/preventions', id],
     queryFn: () => preventionAPI.getById(id),
     enabled: !!id,
   });

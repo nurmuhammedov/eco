@@ -1,9 +1,9 @@
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
-import { useFilesToFix } from '@/features/risk-analysis/hooks/use-files-to-fix.ts';
+// import { useFilesToFix } from '@/features/risk-analysis/hooks/use-files-to-fix.ts';
 import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts';
-import RiskAnalysisFilesToFix from '@/features/risk-analysis/ui/parts/risk-analysis-files-to-fix.tsx';
+// import RiskAnalysisFilesToFix from '@/features/risk-analysis/ui/parts/risk-analysis-files-to-fix.tsx';
 import { GoBack } from '@/shared/components/common';
 import { DetailCardAccordion } from '@/shared/components/common/detail-card';
 import DetailRow from '@/shared/components/common/detail-row.tsx';
@@ -27,7 +27,7 @@ const RiskAnalysisDetail = () => {
   const currentTin = tin;
   const objectId = id;
   let type = ty;
-  const { data: filesToFix } = useFilesToFix();
+  // const { data: filesToFix } = useFilesToFix();
   const { user } = useAuth();
 
   const { data: tableData, isLoading: isTableDataLoading } = usePaginatedData<any>(`/risk-analyses/belongings`, {
@@ -162,11 +162,11 @@ const RiskAnalysisDetail = () => {
             <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
           </DetailCardAccordion.Item>
         )}
-        {filesToFix && filesToFix?.length > 0 && (
-          <DetailCardAccordion.Item value="files" title="Xavfni tahlil etish uchun arizachi yuborgan ma’lumotlar">
-            <RiskAnalysisFilesToFix data={filesToFix} />
-          </DetailCardAccordion.Item>
-        )}
+        {/*{filesToFix && filesToFix?.length > 0 && (*/}
+        {/*  <DetailCardAccordion.Item value="files" title="Xavfni tahlil etish uchun arizachi yuborgan ma’lumotlar">*/}
+        {/*    <RiskAnalysisFilesToFix data={filesToFix} />*/}
+        {/*  </DetailCardAccordion.Item>*/}
+        {/*)}*/}
         {/*<DetailCardAccordion.Item value="checklists" title="Cheklistlar">*/}
         {/*  <RiskAnalysisChecklists />*/}
         {/*</DetailCardAccordion.Item>*/}

@@ -25,6 +25,12 @@ export default [
     icon: <Database />,
   },
   {
+    id: 'PREVENTION',
+    title: 'Profilaktika',
+    url: '/preventions',
+    icon: <ShieldCheck />,
+  },
+  {
     id: 'RISK_ANALYSIS',
     title: 'menu.risk_analysis',
     url: '/risk-analysis',
@@ -35,12 +41,6 @@ export default [
     title: 'Tekshiruvlar',
     url: '/inspections',
     icon: <Clipboard />,
-  },
-  {
-    id: 'PREVENTION',
-    title: 'Profilaktika',
-    url: '/preventions',
-    icon: <ShieldCheck />,
   },
   {
     id: 'ACCREDITATION',

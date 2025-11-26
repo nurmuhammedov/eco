@@ -18,8 +18,9 @@ import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Eye } from 'lucide-react';
 import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal';
+import { getDate } from '@/shared/utils/date';
 
-const InspectionReports = ({ status, acknowledgementPath, actPath, resultId }: any) => {
+const InspectionReports = ({ status, acknowledgementPath, act, resultId }: any) => {
   const { user } = useAuth();
   const [currentTab, setCurrentTab] = useState<'questions' | 'eliminated' | 'not_eliminated'>('questions');
   const [tabulation, setTabulation] = useState<'all' | 'positive' | 'negative'>('all');
@@ -166,47 +167,56 @@ const InspectionReports = ({ status, acknowledgementPath, actPath, resultId }: a
           />
         ) : (
           <>
-            {currentTab == 'questions' && status == InspectionSubMenuStatus.ASSIGNED && (
+            {currentTab == 'questions' && (
               <>
-                <div className="mb-4">
-                  <DetailRow
-                    title="Tilxat fayli:"
-                    boldTitle={true}
-                    value={
-                      !!acknowledgementPath ? (
-                        <div className="flex items-center gap-2">
-                          <FileLink url={acknowledgementPath} />
-                        </div>
-                      ) : (
-                        '-'
-                      )
-                    }
-                  />
-                </div>
-                <div className="mb-4">
-                  <DetailRow
-                    title="Dalolatnoma:"
-                    boldTitle={true}
-                    value={
-                      !!actPath ? (
-                        <div className="flex items-center gap-2">
-                          <span>20.11.2025</span> | <FileLink url={actPath} /> |
-                          <button
-                            className="cursor-pointer hover:text-yellow-200 text-[#A6B1BB]"
-                            onClick={() => {
-                              setSigners([]);
-                            }}
-                          >
-                            <Eye size="18" />
-                          </button>
-                        </div>
-                      ) : (
-                        '-'
-                      )
-                    }
-                  />
-                </div>
-                <SignersModal setSigners={setSigners} signers={signers} />
+                {!!acknowledgementPath && (
+                  <div className="mb-4">
+                    <DetailRow
+                      title="Tilxat fayli:"
+                      boldTitle={true}
+                      value={
+                        !!acknowledgementPath ? (
+                          <div className="flex items-center gap-2">
+                            <FileLink url={acknowledgementPath} />
+                          </div>
+                        ) : (
+                          '-'
+                        )
+                      }
+                    />
+                  </div>
+                )}
+                <>
+                  {!!act && (
+                    <>
+                      <div className="mb-4">
+                        <DetailRow
+                          title="Dalolatnoma:"
+                          boldTitle={true}
+                          value={
+                            !!act ? (
+                              <div className="flex items-center gap-2">
+                                <span>{act?.createdAt ? getDate(act?.createdAt) : ''}</span> |{' '}
+                                <FileLink url={act?.path} /> |
+                                <button
+                                  className="cursor-pointer hover:text-yellow-200 text-[#A6B1BB]"
+                                  onClick={() => {
+                                    setSigners(act?.signers);
+                                  }}
+                                >
+                                  <Eye size="18" />
+                                </button>
+                              </div>
+                            ) : (
+                              '-'
+                            )
+                          }
+                        />
+                      </div>
+                      <SignersModal setSigners={setSigners} signers={signers} />
+                    </>
+                  )}
+                </>
               </>
             )}
             {categories?.map((category: any) => (

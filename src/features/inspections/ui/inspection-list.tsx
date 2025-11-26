@@ -69,7 +69,7 @@ export const InspectionList: React.FC = () => {
       data={inspections || []}
       columns={columns as unknown as any}
       isLoading={isLoading}
-      className="h-[calc(100vh-280px)]"
+      className="h-[calc(100vh-320px)]"
     />
   );
 };
