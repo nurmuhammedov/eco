@@ -62,10 +62,10 @@ export const HoistIllegalAppealDtoSchema = z
       .optional()
       .transform((date) => date && format(date, 'yyyy-MM-dd')),
     labelPath: z.string().optional(),
-    labelExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
+    // labelExpiryDate: z
+    //   .date()
+    //   .optional()
+    //   .transform((date) => date && format(date, 'yyyy-MM-dd')),
     saleContractPath: z.string().optional(),
     saleContractExpiryDate: z
       .date()

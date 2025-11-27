@@ -16,10 +16,10 @@ export function useApplicationGrid() {
     'selected-main-card': filterParsers.string(MainApplicationCategory.REGISTER),
     'active-application-tab': filterParsers.string(
       user?.role == UserRoles.INDIVIDUAL
-        ? ApplicationCategory.HOKQ
+        ? ApplicationCategory.EQUIPMENTS
         : user?.role == UserRoles.INSPECTOR
           ? ApplicationCategory.ILLEGAL
-          : ApplicationCategory.XICHO,
+          : ApplicationCategory.HF,
     ),
   });
 

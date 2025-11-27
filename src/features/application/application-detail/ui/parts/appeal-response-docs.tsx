@@ -4,7 +4,6 @@ import { useResponseDocs } from '@/features/application/application-detail/hooks
 import RejectDocumentModal from '@/features/application/application-detail/ui/modals/reject-document-modal.tsx';
 import RejectMessageModal from '@/features/application/application-detail/ui/modals/reject-message-modal.tsx';
 import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx';
-
 import { DataTable } from '@/shared/components/common/data-table';
 import FileLink from '@/shared/components/common/file-link.tsx';
 import { Badge } from '@/shared/components/ui/badge.tsx';
@@ -23,7 +22,6 @@ export const signStatuses = new Map([
   [false, { label: 'Imzolanmagan', variant: 'warning' }],
 ] as const);
 
-//TODO:vinesti v enum ili const, sam map vinesti v otdelni fayl
 export const approveStatuses = new Map([
   ['AGREED', { label: 'Kelishildi', variant: 'success' }],
   ['NOT_AGREED', { label: 'Kelishilmadi', variant: 'error' }],
@@ -31,9 +29,8 @@ export const approveStatuses = new Map([
   ['NOT_APPROVED', { label: 'Tasdiqlanmadi', variant: 'error' }],
 ] as const);
 
-//TODO:vinesti  v enum ili const,  sam map vinesti v otdelni fayl
 export const documentTypes = new Map([
-  ['REPORT', "Ma'lumotnoma"],
+  ['REPORT', 'Maʼlumotnoma'],
   ['ACT', 'Dalolatnoma'],
   ['DECREE', 'Qaror'],
   ['APPEAL', 'Ariza'],
@@ -44,7 +41,6 @@ const managerTypes = [
   ApplicationTypeEnum.REGISTER_CRANE,
   ApplicationTypeEnum.DEREGISTER_CRANE,
   ApplicationTypeEnum.RE_REGISTER_CRANE,
-
   ApplicationTypeEnum.REGISTER_ELEVATOR,
   ApplicationTypeEnum.DEREGISTER_ELEVATOR,
   ApplicationTypeEnum.RE_REGISTER_ELEVATOR,

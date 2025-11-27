@@ -56,7 +56,10 @@ export const HoistAppealDtoSchema = z.object({
   labelPath: z
     .string({ required_error: 'Yuk ko‘targichning birkasi bilan sur‘ati fayli biriktirilmadi!' })
     .min(1, 'Yuk ko‘targichning birkasi bilan sur‘ati fayli biriktirilmadi!'),
-  labelExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
+  // labelExpiryDate: z
+  //   .date()
+  //   .optional()
+  //   .transform((date) => date && format(date, 'yyyy-MM-dd')),
   saleContractPath: z
     .string({ required_error: 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!' })
     .min(1, 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!'),

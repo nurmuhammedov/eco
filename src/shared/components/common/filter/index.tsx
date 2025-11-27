@@ -30,6 +30,7 @@ interface ApplicationFiltersFormValues {
   irsRegionId?: string;
   xrayRegionId?: string;
   executorId?: string;
+  formClass?: string;
   mode?: string;
   startDate?: Date;
   endDate?: Date;
@@ -183,7 +184,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
         return (
           <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
             <Controller
-              name="officeId"
+              name="hfOfficeId"
               control={control}
               render={({ field }) => (
                 <Select
@@ -211,7 +212,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
         return (
           <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
             <Controller
-              name="regionId"
+              name="irsRegionId"
               control={control}
               render={({ field }) => (
                 <Select
@@ -239,7 +240,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
         return (
           <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
             <Controller
-              name="regionId"
+              name="xrayRegionId"
               control={control}
               render={({ field }) => (
                 <Select
@@ -267,7 +268,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
         return (
           <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
             <Controller
-              name="officeId"
+              name="eqOfficeId"
               control={control}
               render={({ field }) => (
                 <Select
@@ -542,7 +543,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
       case 'intervalId':
         if (!isIntervalFilterEnabled) return null;
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1">
             <Controller
               name="intervalId"
               control={control}

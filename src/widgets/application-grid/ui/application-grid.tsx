@@ -67,7 +67,7 @@ export const ApplicationsGrid: React.FC = () => {
         user?.role == UserRoles.INDIVIDUAL
           ? [
               {
-                id: ApplicationCategory.HOKQ,
+                id: ApplicationCategory.EQUIPMENTS,
                 name: 'Xavfli obyektlar va qurilmalar',
               },
             ]

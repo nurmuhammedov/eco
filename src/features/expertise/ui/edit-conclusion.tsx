@@ -51,7 +51,7 @@ export const UpdateConclusion = () => {
         ...conclusion,
         customerTin: conclusion?.customerTin?.toString(),
         type: conclusion.type?.toString() as unknown as ExpertiseTypeEnum,
-        prefix: conclusion?.prefix,
+        expertiseName: conclusion?.expertiseName,
         regionId: conclusion?.regionId?.toString(),
         districtId: conclusion?.districtId?.toString(),
       });
@@ -312,7 +312,7 @@ export const UpdateConclusion = () => {
 
               <FormField
                 control={form.control}
-                name="prefix"
+                name="expertiseName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Ekspertiza obyekti nomi</FormLabel>

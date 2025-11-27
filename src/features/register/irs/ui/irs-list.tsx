@@ -1,67 +1,87 @@
 import { IrsUsageType } from '@/entities/create-application';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
-import { ColumnDef } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
-import Filter from '@/shared/components/common/filter';
-import { apiClient } from '@/shared/api';
-import { format } from 'date-fns';
-import { Button } from '@/shared/components/ui/button.tsx';
-import { Download } from 'lucide-react';
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
 
 export const IrsList = () => {
   const navigate = useNavigate();
   const {
-    paramsObject: { ...rest },
+    paramsObject: { size = 10, page = 1, mode = '', search = '', irsRegionId = '' },
   } = useCustomSearchParams();
-  const { data = [] } = usePaginatedData<any>(`/irs`, { ...rest });
+  const { data = [] } = usePaginatedData<any>(`/irs`, { page, size, mode, regionId: irsRegionId, search });
 
   const handleViewApplication = (id: string) => {
     navigate(`${id}/irs`);
   };
 
-  const columns: ColumnDef<ISearchParams>[] = [
+  const columns: ExtendedColumnDef<any, any>[] = [
     {
       header: 'INM hisobga olish sanasi',
+      maxSize: 120,
       accessorFn: (row) => getDate(row.registrationDate),
     },
     {
       header: 'INM ro‘yxat raqami',
+      maxSize: 120,
       accessorFn: (row) => row?.registryNumber,
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'Tashkilot nomi',
+      minSize: 220,
       accessorFn: (row) => row?.legalName,
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'Tashkilot manzili',
+      minSize: 220,
       accessorFn: (row) => row?.legalAddress,
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'Tashkilot STIR',
+      maxSize: 120,
       accessorFn: (row) => row?.legalTin,
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'INM manzili',
       accessorFn: (row) => row?.address,
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'Kategoriyasi',
+      maxSize: 110,
       accessorFn: (row) => row?.category,
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'Aktivligi',
+      maxSize: 100,
       accessorFn: (row) => row?.activity,
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'Soha',
       accessorFn: (row) => row?.sphere,
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'Radionuklid belgisi',
+      maxSize: 100,
       accessorFn: (row) => row?.symbol,
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'Foydalanish maqsadi',
@@ -82,34 +102,40 @@ export const IrsList = () => {
     },
   ];
 
-  const handleDownloadExel = async () => {
-    const res = await apiClient.downloadFile<Blob>('/irs/export/excel', {
-      mode: rest.mode,
-      ...rest,
-    });
-
-    const blob = res.data;
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const today = new Date();
-    const filename = `INMlar_${format(today, 'yyyy-MM-dd_hh:mm:ss')}.xlsx`;
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  };
+  // const handleDownloadExel = async () => {
+  //   const res = await apiClient.downloadFile<Blob>('/irs/export/excel', {
+  //     mode: rest.mode,
+  //     ...rest,
+  //   });
+  //
+  //   const blob = res.data;
+  //   const url = URL.createObjectURL(blob);
+  //   const a = document.createElement('a');
+  //   const today = new Date();
+  //   const filename = `INMlar (${format(today, 'yyyy-MM-dd_hh:mm:ss')}).xlsx`;
+  //   a.href = url;
+  //   a.download = filename;
+  //   document.body.appendChild(a);
+  //   a.click();
+  //   a.remove();
+  //   URL.revokeObjectURL(url);
+  // };
 
   return (
     <>
-      <div className={'flex justify-between items-start'}>
-        <Filter inputKeys={['search', 'irsRegionId']} />
-        <Button onClick={handleDownloadExel}>
-          <Download /> MS Exel
-        </Button>
-      </div>
-      <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-300px)]" />
+      {/*<div className={'flex justify-between items-start'}>*/}
+      {/*<Filter inputKeys={['search', 'irsRegionId']} />*/}
+      {/*  <Button onClick={handleDownloadExel}>*/}
+      {/*    <Download /> MS Exel*/}
+      {/*  </Button>*/}
+      {/*</div>*/}
+      <DataTable
+        showFilters
+        isPaginated
+        data={data || []}
+        columns={columns as unknown as any}
+        className="h-[calc(100svh-220px)]"
+      />
     </>
   );
 };

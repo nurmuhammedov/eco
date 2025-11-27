@@ -9,7 +9,6 @@ export const addExpertiseSchema = z.object({
       required_error: 'STIR  kiritilmadi!',
     })
     .length(9, 'STIR 9 ta raqamdan iborat bo‘lishi kerak'),
-
   customerPhoneNumber: z
     .string({ message: FORM_ERROR_MESSAGES.required })
     .trim()
@@ -21,18 +20,12 @@ export const addExpertiseSchema = z.object({
   type: z.nativeEnum(ExpertiseTypeEnum, {
     required_error: 'Ekspertiza turini tanlang',
   }),
-  // subType: z.nativeEnum(ExpertiseSubTypeEnum, {
-  //   required_error: 'Ekspertiza obyekti turini tanlang',
-  // }),
-
-  objectName: z.string({ required_error: 'Obyektini kiriting!' }).min(1, 'Obyektini kiriting!'),
+  objectName: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   regionId: z.string({ required_error: 'Viloyatni tanlang!' }),
   districtId: z.string({ required_error: 'Tumanni tanlang!' }),
-  // conclusionNumber: z.string({ required_error: 'Xulosa raqami kiritilmadi!' }).min(1, 'Xulosa raqami kiritilmadi!'),
-  // conclusionDate: z.date({ required_error: 'Xulosa sanasi kiritilmadi!' }),
-  prefix: z
+  expertiseName: z
     .string({ required_error: 'Majburiy maydon!' })
-    .max(500, { message: 'Obyekt nomi 500 belgidan oshmasligi kerak' })
-    .optional(),
+    .min(1, 'Majburiy maydon!')
+    .max(500, { message: 'Obyekt nomi 500 belgidan oshmasligi kerak' }),
   address: z.string({ required_error: 'Manzil kiritilmadi!' }).min(1, 'Manzil kiritilmadi!'),
 });

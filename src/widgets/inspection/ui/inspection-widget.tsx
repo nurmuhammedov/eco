@@ -41,8 +41,8 @@ const Cards = ({ activeRiskLevel, onTabChange }: any) => {
     id: month?.value,
     name: month?.label,
     count: month?.count,
-    inactiveClass: 'bg-yellow-50 border-yellow-200 text-yellow-700',
-    activeClass: 'bg-yellow-600 border-yellow-700 text-white shadow-sm',
+    inactiveClass: 'bg-[#016B7B]/10 border-[#016B7B]/20 text-[#016B7B]',
+    activeClass: 'bg-[#016B7B] border-[#015a67] text-white shadow-sm',
   }));
 
   return (

@@ -58,9 +58,9 @@ export const ConclusionsTable = () => {
       filterType: 'search',
     },
     {
-      accessorKey: 'prefix',
+      accessorKey: 'expertiseName',
       header: 'Ekspertiza obyektining nomi',
-      filterKey: 'prefix',
+      filterKey: 'expertiseName',
       filterType: 'search',
     },
     // {
@@ -74,6 +74,11 @@ export const ConclusionsTable = () => {
       header: 'Reyestr raqami',
       filterKey: 'registryNumber',
       filterType: 'search',
+    },
+    {
+      accessorKey: 'createdAt',
+      header: 'Rasmiylashtirish sanasi',
+      cell: (cell) => (cell.row.original.createdDate ? formatDate(cell.row.original.createdDate, 'dd.MM.yyyy') : null),
     },
     {
       accessorKey: 'status',
@@ -91,11 +96,7 @@ export const ConclusionsTable = () => {
       cell: (cell) =>
         cell.row.original.registrationDate ? formatDate(cell.row.original.registrationDate, 'dd.MM.yyyy') : null,
     },
-    {
-      accessorKey: 'createdAt',
-      header: 'Rasmiylashtirish sanasi',
-      cell: (cell) => (cell.row.original.createdAt ? formatDate(cell.row.original.createdAt, 'dd.MM.yyyy') : null),
-    },
+
     {
       header: 'Xulosa fayli',
       cell: ({ row }: any) => (

@@ -4,7 +4,10 @@ import { ISearchParams } from '@/shared/types';
 import { DataTable } from '@/shared/components/common/data-table';
 import { formatDate } from 'date-fns';
 import { Badge } from '@/shared/components/ui/badge.tsx';
-import { signStatuses } from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx';
+import {
+  documentTypes,
+  signStatuses,
+} from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx';
 import FileLink from '@/shared/components/common/file-link.tsx';
 import { Eye } from 'lucide-react';
 import { useState } from 'react';
@@ -25,10 +28,11 @@ const ApplicantDocsTable = () => {
       accessorKey: 'documentType',
       maxSize: 100,
       header: 'Hujjat nomi',
+      cell: (cell) => documentTypes.get(cell.row.original.documentType),
     },
     {
-      accessorKey: 'isFullySigned',
       maxSize: 100,
+      accessorKey: 'isFullySigned',
       header: 'Imzo holati',
       cell: (cell) => {
         const currentStatus = cell.row.original?.isFullySigned;

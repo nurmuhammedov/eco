@@ -39,7 +39,7 @@ export const AddConclusion = () => {
       districtId: undefined,
       address: '',
       // subType: undefined,
-      prefix: '',
+      expertiseName: '',
     },
   });
 
@@ -264,20 +264,6 @@ export const AddConclusion = () => {
 
                   <FormField
                     control={form.control}
-                    name="address"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Manzil</FormLabel>
-                        <FormControl>
-                          <Input {...field} disabled={!!selectedHfo?.address} placeholder="Manzilni kiriting..." />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
                     name="regionId"
                     render={({ field }) => (
                       <FormItem>
@@ -337,6 +323,22 @@ export const AddConclusion = () => {
                             ))}
                           </SelectContent>
                         </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Manzil <span className="text-red-400">(viloyat va tuman kiritilmasin)</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Input {...field} disabled={!!selectedHfo?.address} placeholder="Manzilni kiriting..." />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -422,7 +424,7 @@ export const AddConclusion = () => {
 
                   <FormField
                     control={form.control}
-                    name="prefix"
+                    name="expertiseName"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Ekspertiza obyekti nomi</FormLabel>

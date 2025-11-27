@@ -8,7 +8,6 @@ import DetailRow from '@/shared/components/common/detail-row.tsx';
 import FileLink from '@/shared/components/common/file-link.tsx';
 import { Coordinate } from '@/shared/components/common/yandex-map';
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
-//import { useDetail } from '@/shared/model';
 import { getDate } from '@/shared/utils/date.ts';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '@/shared/hooks/use-auth';
@@ -18,7 +17,6 @@ import { EquipmentPdfDocument } from '@/shared/components/common/EquipmentPdfDoc
 import { useState, useEffect } from 'react';
 import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx';
 import { EquipmentStickerPdf } from '@/shared/components/common/EquipmentStickerPdf';
-import { Button } from '@/shared/components/ui/button';
 
 const EquipmentsDetail = () => {
   const { isLoading, data } = useEquipmentsDetail();
@@ -39,12 +37,7 @@ const EquipmentsDetail = () => {
   if (isLoading || !data) {
     return null;
   }
-
   const equipmentPublicUrl = `${window.location.origin}/qr/${equipmentUuid}/equipments`;
-
-  const handleButtonClick = () => {
-    alert('Tugma bosildi!');
-  };
 
   const handleQrCanvasRef = (canvas: HTMLCanvasElement | null) => {
     if (canvas) {
@@ -57,9 +50,6 @@ const EquipmentsDetail = () => {
     <div>
       <div className="flex justify-between items-center mb-4">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
-        <Button onClick={handleButtonClick} className="bg-blue-500 text-white px-4 py-2 rounded-md">
-          Murojaatlar
-        </Button>
       </div>
       <DetailCardAccordion
         defaultValue={[
@@ -111,7 +101,6 @@ const EquipmentsDetail = () => {
           <AppealMainInfo data={data} type={data?.type} address={data?.address} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">
-          {/*<FilesSection files={data?.files || []} />*/}
           <FilesSection
             appealId={data?.appealId}
             userRole={user?.role}
@@ -128,7 +117,7 @@ const EquipmentsDetail = () => {
               value={equipmentPublicUrl}
               size={256}
               style={{ display: 'none' }}
-              ref={handleQrCanvasRef} // <--- ENG MUHIM O'ZGARISH
+              ref={handleQrCanvasRef}
             />
 
             <div className="flex items-center p-4 space-x-8">
@@ -136,7 +125,7 @@ const EquipmentsDetail = () => {
                 {' '}
                 <QRCodeCanvas
                   value={equipmentPublicUrl}
-                  size={128} // O'lchamini kichraytirdik
+                  size={128}
                   bgColor={'#ffffff'}
                   fgColor={'#000000'}
                   level={'L'}

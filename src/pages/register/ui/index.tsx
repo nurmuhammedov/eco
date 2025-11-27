@@ -1,4 +1,3 @@
-// src/pages/register/ui/index.tsx
 import { lazy } from 'react';
 
 const RegisterWidget = lazy(() => import('@/widgets/register/ui/register-widget'));

@@ -6,7 +6,6 @@ import { useLocation } from 'react-router-dom';
 
 export function Header() {
   const { pathname = '' } = useLocation();
-  console.log(pathname, 'pathname');
   return (
     <header className="sticky top-0 border-b border-neutral-200 flex justify-between items-center bg-white z-10 px-4 3xl:px-6 py-4 3xl:py-5 w-full">
       <div className="flex items-center gap-x-4">
@@ -25,6 +24,8 @@ export function Header() {
           <h1 className="text-2xl font-semibold">Tekshiruvlar</h1>
         ) : pathname == '/preventions' ? (
           <h1 className="text-2xl font-semibold">Profilaktika</h1>
+        ) : pathname == '/register' ? (
+          <h1 className="text-2xl font-semibold">Reyestrlar</h1>
         ) : null}
       </div>
       <div className="flex items-center gap-x-4">

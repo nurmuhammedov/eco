@@ -16,7 +16,7 @@ const ApplicationLogsModal = () => {
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Ilovalar jurnallari</DialogTitle>
           </DialogHeader>
-          <ApplicationLogsList />
+          <ApplicationLogsList isShow={isShow} />
         </DialogContent>
       </Dialog>
     </>

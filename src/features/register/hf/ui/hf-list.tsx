@@ -1,48 +1,41 @@
-import { ApplicationStatus } from '@/entities/application';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { ISearchParams } from '@/shared/types';
 import { getDate } from '@/shared/utils/date';
-import { ColumnDef } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
-import Filter from '@/shared/components/common/filter';
-import { Button } from '@/shared/components/ui/button';
-import { Download } from 'lucide-react';
-import { apiClient } from '@/shared/api';
-import { format } from 'date-fns';
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
 
 export const HfList = () => {
   const navigate = useNavigate();
   const {
-    paramsObject: { status = ApplicationStatus.ALL, ...rest },
+    paramsObject: { page = 1, size = 10, search = '', mode = '', hfOfficeId = '' },
   } = useCustomSearchParams();
 
-  const { data = [] } = usePaginatedData<any>(`/hf`, { ...rest, status: status !== 'ALL' ? status : '' });
+  const { data = [] } = usePaginatedData<any>(`/hf`, { page, size, search, mode, officeId: hfOfficeId });
 
   const handleViewApplication = (id: string) => {
     navigate(`${id}/hf`);
   };
+  //
+  // const handleDownloadExel = async () => {
+  //   const res = await apiClient.downloadFile<Blob>('/hf/export/excel', {
+  //     mode,
+  //     search,
+  //   });
+  //
+  //   const blob = res.data;
+  //   const url = URL.createObjectURL(blob);
+  //   const a = document.createElement('a');
+  //   const today = new Date();
+  //   const filename = `XICHOlar (${format(today, 'yyyy-MM-dd_hh:mm:ss')}).xlsx`;
+  //   a.href = url;
+  //   a.download = filename;
+  //   document.body.appendChild(a);
+  //   a.click();
+  //   a.remove();
+  //   URL.revokeObjectURL(url);
+  // };
 
-  const handleDownloadExel = async () => {
-    const res = await apiClient.downloadFile<Blob>('/hf/export/excel', {
-      mode: rest.mode,
-      ...rest,
-    });
-
-    const blob = res.data;
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const today = new Date();
-    const filename = `xicho_${format(today, 'yyyy-MM-dd_hh:mm:ss')}.xlsx`;
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  };
-
-  const columns: ColumnDef<ISearchParams>[] = [
+  const columns: ExtendedColumnDef<any, any>[] = [
     {
       header: 'Hisobga olish sanasi',
       accessorFn: (row) => getDate(row.registrationDate),
@@ -50,30 +43,44 @@ export const HfList = () => {
     {
       header: 'Hisobga olish raqami',
       accessorKey: 'registryNumber',
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'Tashkilot nomi',
       accessorKey: 'legalName',
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'Tashkilot manzili',
       accessorKey: 'legalAddress',
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'STIR',
       accessorKey: 'legalTin',
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'XICHOning nomi',
       accessorKey: 'name',
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       accessorKey: 'address',
       header: 'XICHO manzili',
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       header: 'XICHOning turi',
       accessorKey: 'typeName',
+      filterKey: 'search',
+      filterType: 'search',
     },
     {
       id: 'actions',
@@ -86,14 +93,20 @@ export const HfList = () => {
 
   return (
     <>
-      <div className={'flex justify-between items-start'}>
-        <Filter inputKeys={['search', 'mode', 'hfOfficeId']} />
-        <Button onClick={handleDownloadExel}>
-          <Download /> MS Exel
-        </Button>
-      </div>
+      {/*<div className={'flex justify-between items-start'}>*/}
+      {/*  <Filter inputKeys={['search', 'mode', 'hfOfficeId']} />*/}
+      {/*  <Button onClick={handleDownloadExel}>*/}
+      {/*    <Download /> MS Exel*/}
+      {/*  </Button>*/}
+      {/*</div>*/}
 
-      <DataTable isPaginated data={data || []} columns={columns as unknown as any} className="h-[calc(100svh-300px)]" />
+      <DataTable
+        showFilters={true}
+        isPaginated
+        data={data || []}
+        columns={columns as unknown as any}
+        className="h-[calc(100svh-220px)]"
+      />
     </>
   );
 };

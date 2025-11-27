@@ -56,7 +56,8 @@ export default ({ onSubmit }: DeRegisterEquipmentFormProps) => {
                       <SelectContent>
                         {APPLICATIONS_DATA?.filter(
                           (i) =>
-                            i.category == ApplicationCategory.HOKQ && i.parentId == MainApplicationCategory.REGISTER,
+                            i.category == ApplicationCategory.EQUIPMENTS &&
+                            i.parentId == MainApplicationCategory.REGISTER,
                         )?.map((option) => (
                           <SelectItem key={option.equipmentType || 'DEFAULT'} value={option.equipmentType || 'DEFAULT'}>
                             {option.name}

@@ -6,6 +6,7 @@ import FileLink from '@/shared/components/common/file-link.tsx';
 import { FC } from 'react';
 import { UpdateFileModal } from '../modals/update-file-modal';
 import FileEditModal from '@/features/register/modals/file-edit-modal';
+import { getDate } from '@/shared/utils/date';
 
 type FileType = {
   label: string;
@@ -41,14 +42,14 @@ const FilesSection: FC<Props> = ({ files, register = false, url, userRole, appli
           {file.data?.path && <FileLink url={file.data.path} className={'mb-1'} />}
           {file.data?.expiryDate && (
             <div className={'mr-1 text-xs text-gray-400 text-nowrap mb-1'}>
-              Amal qilish muddati: {file.data.expiryDate}
+              Amal qilish muddati: {getDate(file.data.expiryDate)}
             </div>
           )}
           {file.data?.number && (
             <div className={'text-xs text-gray-400 text-nowrap mb-1'}>Raqam: {file.data.number}</div>
           )}
           {file.data?.uploadDate && (
-            <div className={'text-xs text-gray-400 text-nowrap'}>Yuklash sanasi: {file.data.uploadDate}</div>
+            <div className={'text-xs text-gray-400 text-nowrap'}>Yuklash sanasi: {getDate(file.data.uploadDate)}</div>
           )}
         </div>
       );

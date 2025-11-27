@@ -24,7 +24,6 @@ interface RegisterIllegalHoistFormProps {
 
 export default ({ onSubmit }: RegisterIllegalHoistFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions } = useCreateIllegalHoistApplication();
-
   const [data, setData] = useState<any>(undefined);
 
   const identity = form.watch('identity');
@@ -436,45 +435,20 @@ export default ({ onSubmit }: RegisterIllegalHoistFormProps) => {
           </div>
         </CardForm>
         <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
-          <div className="pb-4 border-b">
-            <FormField
-              name="labelPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Yuk ko‘targichning birkasi bilan surati</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="labelExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-          </div>
-
+          <FormField
+            name="labelPath"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className={'mb-2'}>
+                <div className="flex items-end xl:items-center justify-between gap-2">
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Yuk ko‘targichning birkasi bilan surati</FormLabel>
+                  <FormControl>
+                    <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
+                  </FormControl>
+                </div>
+              </FormItem>
+            )}
+          />
           <div className="pb-4 border-b">
             <FormField
               name="saleContractPath"

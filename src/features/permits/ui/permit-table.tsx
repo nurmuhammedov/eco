@@ -102,7 +102,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
         <Tabs
           value={currentTab}
           onValueChange={(val) => {
-            addParams({ currentTab: val, page: 1 });
+            addParams({ currentTab: val }, 'page');
           }}
         >
           <TabsList>

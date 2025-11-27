@@ -20,7 +20,6 @@ import * as React from 'react';
 import { Fragment } from 'react';
 import { DataTablePagination } from './data-table-pagination';
 import { getCommonPinningStyles } from './models/get-common-pinning';
-import { useSearchParams } from 'react-router-dom';
 import { ColumnFilterInput } from '@/shared/components/common/data-table/column-filter-input';
 
 export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
@@ -36,7 +35,6 @@ interface DataTableProps<TData, TValue> {
   sizeQuery?: string;
   headerCenter?: boolean;
   pageSizeOptions?: number[];
-  // columns: ColumnDef<TData, TValue>[];
   columns: ExtendedColumnDef<TData, TValue>[];
   data: TData[] | ResponseData<TData>;
   onPageChange?: (page: number) => void;
@@ -50,8 +48,6 @@ export function DataTable<TData, TValue>({
   columns,
   className,
   onPageChange,
-  sizeQuery = 'size',
-  pageQuery = 'page',
   onPageSizeChange,
   isLoading = false,
   headerCenter = false,
@@ -60,7 +56,10 @@ export function DataTable<TData, TValue>({
   showNumeration = true,
   showFilters = false,
 }: DataTableProps<TData, TValue>) {
-  const { addParams } = useCustomSearchParams();
+  const {
+    paramsObject: { page = 1, size = 10 },
+    addParams,
+  } = useCustomSearchParams();
   const isContentData = data && typeof data === 'object' && 'content' in data;
   const tableData = isContentData ? data.content : data;
 
@@ -71,15 +70,11 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
-  const [searchParams] = useSearchParams();
-  const currentPage = +(searchParams.get(pageQuery) || 1);
-  const pageSize = +(searchParams.get(sizeQuery) || 10);
-
   const handlePageChange = (page: number) => {
     if (onPageChange) {
       onPageChange(page);
     } else if (isContentData) {
-      addParams({ [pageQuery]: page });
+      addParams({ page });
     }
   };
 
@@ -87,7 +82,7 @@ export function DataTable<TData, TValue>({
     if (onPageSizeChange) {
       onPageSizeChange(size);
     } else if (isContentData) {
-      addParams({ [sizeQuery]: size }, 'page', 'p');
+      addParams({ size }, 'page');
     }
   };
 
@@ -197,7 +192,7 @@ export function DataTable<TData, TValue>({
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {showNumeration && (
                     <TableCell style={{ width: '50px', maxWidth: '50px' }}>
-                      {currentPage > 1 ? idx + (currentPage * pageSize - (pageSize - 1)) : idx + 1}
+                      {page > 1 ? idx + (page * size - (page - 1)) : idx + 1}
                     </TableCell>
                   )}
                   {row.getVisibleCells().map((cell) => (

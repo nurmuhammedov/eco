@@ -20,11 +20,13 @@ function useDebounce(value: any, delay = 500) {
 
 export const ColumnFilterInput = ({ columnKey }: { columnKey: string }) => {
   const { paramsObject, addParams } = useCustomSearchParams();
-  const [value, setValue] = useState(paramsObject[columnKey] || '');
+  const [value, setValue] = useState(paramsObject[columnKey] || null);
   const dVal = useDebounce(value);
 
   useEffect(() => {
-    addParams({ [columnKey]: dVal, page: 1 });
+    if (value != null) {
+      addParams({ [columnKey]: dVal, page: 1 });
+    }
   }, [dVal]);
 
   return (
