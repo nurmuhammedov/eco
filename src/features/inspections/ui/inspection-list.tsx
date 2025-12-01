@@ -13,12 +13,21 @@ import { UserRoles } from '@/entities/user';
 
 export const InspectionList: React.FC = () => {
   const navigate = useNavigate();
+
   const {
-    paramsObject: { status = InspectionStatus.ALL, subStatus = InspectionSubMenuStatus.ASSIGNED, ...rest },
+    paramsObject: {
+      status = InspectionStatus.ALL,
+      subStatus = InspectionSubMenuStatus.ASSIGNED,
+      year = new Date().getFullYear(),
+      ...rest
+    },
   } = useCustomSearchParams();
+
   const { user } = useAuth();
+
   const { data: inspections, isLoading } = useInspections({
     ...rest,
+    year,
     status: [UserRoles.LEGAL, UserRoles?.INSPECTOR]?.includes(user?.role as unknown as UserRoles)
       ? subStatus
       : status === InspectionStatus.ALL
@@ -27,6 +36,7 @@ export const InspectionList: React.FC = () => {
           ? subStatus
           : status,
   });
+
   const handleView = (row: Inspection) => {
     navigate(`/inspections/info?inspectionId=${row.id}&tin=${row.tin}&name=${row.legalName}`);
   };

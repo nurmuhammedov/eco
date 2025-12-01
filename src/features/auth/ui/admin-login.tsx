@@ -9,9 +9,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/components/ui/button';
 import { ComponentPropsWithoutRef, useEffect, useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-// @ts-ignore
 import { loadCaptchaEnginge, LoadCanvasTemplateNoReload, validateCaptcha } from 'react-simple-captcha';
 import { clsx } from 'clsx';
+import React from 'react';
+import { apiConfig } from '@/shared/api/constants';
 
 const adminLoginFormSchema = z.object({
   username: z.string(),
@@ -26,8 +27,8 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
   const { mutateAsync, isPending } = useLogin();
 
   const [showPassword, setShowPassword] = useState(false);
-  //const [showCaptchaError, setCaptchaError] = useState(false);
-  //const [captchaValue, setCaptchaValue] = useState('');
+  const [showCaptchaError, setCaptchaError] = useState(false);
+  const [captchaValue, setCaptchaValue] = useState('');
 
   const form = useForm<AdminLoginDTO>({
     resolver: zodResolver(adminLoginFormSchema),
@@ -43,13 +44,15 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
   }, []);
 
   const handleLogin = async (data: z.infer<typeof adminLoginFormSchema>) => {
-    await mutateAsync(data);
-
-    /* if (validateCaptcha(captchaValue)) {
-    await mutateAsync(data);
+    if (apiConfig.oneIdClientId == 'ekotizim_clone_cirns_uz') {
+      if (validateCaptcha(captchaValue)) {
+        await mutateAsync(data);
+      } else {
+        setCaptchaError(true);
+      }
     } else {
-    setCaptchaError(true);
-    } */
+      await mutateAsync(data);
+    }
   };
 
   return (
@@ -106,21 +109,34 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
 
             <div className={'flex items-center'}>
               <LoadCanvasTemplateNoReload />
-              <div
-                className={clsx(
-                  'relative flex items-center rounded border border-neutral-300 focus-within:ring-1 focus-within:ring-teal w-full',
-                  /* {
-                    ['border-red-500']: showCaptchaError,
-                  }, */
-                )}
-              >
-                <Input
-                  placeholder={t('captcha')}
-                  type={'text'}
-                  //onChange={(val) => setCaptchaValue(val.target.value)}
-                  className="border-0 focus-visible:ring-0 w-full"
-                />
-              </div>
+              {apiConfig.oneIdClientId == 'ekotizim_clone_cirns_uz' ? (
+                <div
+                  className={clsx(
+                    'relative flex items-center rounded border border-neutral-300 focus-within:ring-1 focus-within:ring-teal w-full',
+                    {
+                      ['border-red-500']: showCaptchaError,
+                    },
+                  )}
+                >
+                  <Input
+                    placeholder="Rasmdagi matnni kiriting"
+                    onChange={(val) => setCaptchaValue(val.target.value)}
+                    className="border-0 focus-visible:ring-0 w-full"
+                  />
+                </div>
+              ) : (
+                <div
+                  className={clsx(
+                    'relative flex items-center rounded border border-neutral-300 focus-within:ring-1 focus-within:ring-teal w-full',
+                  )}
+                >
+                  <Input
+                    disabled={true}
+                    placeholder="Rasmdagi matnni kiriting"
+                    className="border-0 focus-visible:ring-0 w-full"
+                  />
+                </div>
+              )}
             </div>
 
             <Button type="submit" className="w-full" loading={isPending} disabled={isPending}>

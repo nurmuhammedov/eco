@@ -4,7 +4,6 @@ import { lazy } from 'react';
 
 // Error pages
 const NotFound = lazy(() => import('@/pages/error/ui/page-not-found'));
-// const UnAuthorized = lazy(() => import('@/features/auth/ui/unauthorized'));
 
 // Application pages
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'));
@@ -19,11 +18,13 @@ const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-
 const AdminLogin = lazy(() => import('@/pages/auth/ui/admin-login'));
 const OneIdLoginPage = lazy(() => import('@/pages/auth/ui/login-page'));
 
+// Other pages
 const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'));
 const ReportsPage = lazy(() => import('@/features/reports/ui/reports'));
 const ReportsDetail1 = lazy(() => import('@/features/reports/ui/report1'));
 const ReportsDetail2 = lazy(() => import('@/features/reports/ui/report2'));
 const ReportsDetail3 = lazy(() => import('@/features/reports/ui/report3'));
+const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'));
 const RegionsPage = lazy(() => import('@/pages/admin/regions/ui'));
 const DepartmentPage = lazy(() => import('@/pages/admin/department/ui'));
 const TemplatesPage = lazy(() => import('@/pages/admin/templates/page'));
@@ -37,6 +38,7 @@ const RegisterEquipmentAppealList = lazy(() => import('@/features/register/equip
 const EquipmentPrintPage = lazy(() => import('@/features/register/equipments/ui/EquipmentPrintPage'));
 const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'));
 const RegisterXrayDetail = lazy(() => import('@/features/register/xray/ui/xray-detail'));
+const RegisterAutoDetail = lazy(() => import('@/features/register/auto/ui/auto-detail'));
 const RiskAnalysisPage = lazy(() => import('@/pages/risk-analysis'));
 const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'));
 const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-info-by-id'));
@@ -53,7 +55,6 @@ const InspectionsPage = lazy(() => import('@/pages/inspections/page'));
 const InspectionSurveys = lazy(() => import('@/pages/admin/inspection/ui'));
 const AttestationPage = lazy(() => import('@/pages/attestation'));
 const InspectorTasks = lazy(() => import('@/features/risk-analysis/ui/inspector-tasks'));
-const CadastrePage = lazy(() => import('@/pages/cadastre'));
 const AddAttestationEmployeePage = lazy(() => import('@/pages/attestation/add-employee'));
 const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-page'));
 const ExpertiseOrganizations = lazy(() => import('@/pages/expertise/organizations-page'));
@@ -78,19 +79,29 @@ export const appRoutes = [
     roles: [],
   },
   {
-    path: 'applications/create',
-    component: CreateApplicationGrids,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
-  },
-  {
     path: 'risk-analysis/my-tasks',
     component: InspectorTasks,
     roles: [UserRoles.INSPECTOR],
   },
   {
+    path: 'applications/create',
+    component: CreateApplicationGrids,
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL],
+  },
+  {
     path: 'applications/inspector/create',
     component: CreateApplicationGridsIns,
     roles: [UserRoles.INSPECTOR, UserRoles.MANAGER],
+  },
+  {
+    path: 'applications/create/:type',
+    component: CreateApplicationForm,
+    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
+  },
+  {
+    path: 'applications/detail/:id',
+    component: ApplicationDetail,
+    roles: [],
   },
   {
     path: 'reports',
@@ -113,15 +124,11 @@ export const appRoutes = [
     roles: [],
   },
   {
-    path: 'applications/create/:type',
-    component: CreateApplicationForm,
-    roles: [UserRoles.LEGAL, UserRoles.INDIVIDUAL, UserRoles.INSPECTOR, UserRoles.MANAGER],
-  },
-  {
-    path: 'applications/detail/:id',
-    component: ApplicationDetail,
+    path: 'reports/create/REPORT_4',
+    component: ReportsDetail4,
     roles: [],
   },
+
   {
     path: 'attestations/detail/:id',
     component: AttestationDetail,
@@ -130,11 +137,6 @@ export const appRoutes = [
   {
     path: 'register',
     component: RegisterPage,
-    roles: [],
-  },
-  {
-    path: 'cadastre',
-    component: CadastrePage,
     roles: [],
   },
   {
@@ -153,11 +155,6 @@ export const appRoutes = [
     roles: [],
   },
   {
-    path: 'register/:id/qr-page',
-    component: EquipmentPrintPage,
-    roles: [],
-  },
-  {
     path: 'register/:id/irs',
     component: RegisterIrsDetail,
     roles: [],
@@ -165,6 +162,16 @@ export const appRoutes = [
   {
     path: 'register/:id/xrays',
     component: RegisterXrayDetail,
+    roles: [],
+  },
+  {
+    path: 'register/:id/auto',
+    component: RegisterAutoDetail,
+    roles: [],
+  },
+  {
+    path: 'register/:id/qr-page',
+    component: EquipmentPrintPage,
     roles: [],
   },
   {
@@ -326,5 +333,4 @@ export const publicRoutes = [
 
 export const specialComponents = {
   notFound: NotFound,
-  // unauthorized: UnAuthorized,
 };

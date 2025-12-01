@@ -6,7 +6,7 @@ const OrganizationsPage = () => {
   return (
     <>
       <div className="flex justify-end items-center mb-3">
-        <Button>
+        <Button disabled={true}>
           <PlusCircle className="mr-2 h-4 w-4" /> Qo‘shish
         </Button>
       </div>

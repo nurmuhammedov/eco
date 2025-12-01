@@ -76,10 +76,11 @@ export default function PreventionViewPage() {
                   : '-'
               }
             />
+            <DetailRow title="Bajarilgan ishlar ro‘yxati" value={prevention?.data?.report || '-'} />
           </DetailCardAccordion.Item>
-          <DetailCardAccordion.Item value="risk" title="Xavf tahlil qilish davrida tushadigan bali">
-            <></>
-          </DetailCardAccordion.Item>
+          {/*<DetailCardAccordion.Item value="risk" title="Xavf tahlil qilish davrida tushadigan bali">*/}
+          {/*  <></>*/}
+          {/*</DetailCardAccordion.Item>*/}
         </DetailCardAccordion>
       </div>
     </div>

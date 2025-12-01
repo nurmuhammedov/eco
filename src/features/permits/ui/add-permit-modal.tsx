@@ -28,11 +28,11 @@ const searchSchema = z.object({
     .refine((val) => val.length === 9 || val.length === 14, {
       message: 'STIR (JSHSHIR) faqat 9 yoki 14 xonali bo‘lishi kerak',
     }),
-  regNumber: z.string().min(1, 'Majbury maydon!'),
+  regNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majbury maydon!'),
 });
 
 const fileSchema = z.object({
-  filePath: z.string().min(1, 'Fayl yuklash majburiy!'),
+  filePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Fayl yuklash majburiy!'),
 });
 
 type SearchFormValues = z.infer<typeof searchSchema>;

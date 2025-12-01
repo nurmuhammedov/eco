@@ -7,7 +7,7 @@ interface FilterRowProps {
 }
 
 export const FilterRow: React.FC<FilterRowProps> = ({ children, className }) => {
-  return <div className={cn('flex flex-wrap items-center gap-3', className)}>{children}</div>;
+  return <div className={cn('flex flex-nowrap items-center gap-3', className)}>{children}</div>;
 };
 
 export default FilterRow;

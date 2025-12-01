@@ -12,7 +12,7 @@ const ExpertiseWidget = () => {
   } = useCustomSearchParams();
   const navigate = useNavigate();
   const handleTabChange = (tabKey: string) => {
-    addParams({ tab: tabKey, page: '1' });
+    addParams({ tab: tabKey }, 'page');
   };
 
   const { data } = useData<any>('/conclusions/count');

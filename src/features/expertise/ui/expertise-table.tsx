@@ -27,14 +27,6 @@ export const ExpertiseTable = () => {
       filterKey: 'legalTin',
       filterType: 'search',
     },
-    // {
-    //   accessorKey: 'region',
-    //   header: 'Viloyati',
-    // },
-    // {
-    //   accessorKey: 'district',
-    //   header: 'Tumani',
-    // },
     {
       accessorKey: 'address',
       header: 'Manzili',

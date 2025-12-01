@@ -10,3 +10,4 @@ export { createEntityDrawerHook } from './create-entity-hooks';
 export { getUserStatusDisplay } from './get-user-status-display';
 export { isObject, cleanParams } from './api';
 export { convertParamsToObject } from './params';
+export { truncateString } from './string';

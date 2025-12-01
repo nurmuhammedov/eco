@@ -1,6 +1,5 @@
 import { APPLICATIONS_DATA } from '@/entities/create-application/constants/constants';
 import { ApplicationTypeEnum } from '@/entities/create-application/types/enums';
-import { useRiskAnalysisIntervalsQuery } from '@/shared/api/dictionaries/hooks/use-risk-analysis-intervals-query';
 import { API_ENDPOINTS } from '@/shared/api/endpoints';
 import { FilterField, FilterRow } from '@/shared/components/common/filters';
 import SearchInput from '@/shared/components/common/search-input/ui/search-input';
@@ -9,10 +8,8 @@ import { Form, FormField, FormItem } from '@/shared/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { useCustomSearchParams } from '@/shared/hooks';
 import useData from '@/shared/hooks/api/useData';
-import { useAuth } from '@/shared/hooks/use-auth';
 import { debounce } from '@/shared/lib';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { getDate } from '@/shared/utils/date';
 import { format } from 'date-fns';
 import React, { useCallback, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -34,7 +31,7 @@ interface ApplicationFiltersFormValues {
   mode?: string;
   startDate?: Date;
   endDate?: Date;
-  intervalId?: string;
+  year?: string;
 }
 
 interface ApplicationFiltersProps {
@@ -45,7 +42,6 @@ interface ApplicationFiltersProps {
 const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-3' }) => {
   const { t } = useTranslation(['common']);
   const { paramsObject, addParams } = useCustomSearchParams();
-  const { user } = useAuth();
 
   const form = useForm<ApplicationFiltersFormValues>({
     defaultValues: {
@@ -56,7 +52,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
       mode: paramsObject.mode?.toString() || '',
       startDate: paramsObject.startDate ? new Date(paramsObject.startDate) : undefined,
       endDate: paramsObject.endDate ? new Date(paramsObject.endDate) : undefined,
-      intervalId: paramsObject.intervalId?.toString() || user?.interval?.id.toString(),
+      year: paramsObject.year?.toString() || '',
     },
   });
 
@@ -72,20 +68,21 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
   const isStartDateFilterEnabled = useMemo(() => inputKeys.includes('startDate'), [inputKeys]);
   const isEndDateFilterEnabled = useMemo(() => inputKeys.includes('endDate'), [inputKeys]);
   const modeFilterEnabled = useMemo(() => inputKeys.includes('mode'), [inputKeys]);
+  const isYearFilterEnabled = useMemo(() => inputKeys.includes('year'), [inputKeys]);
 
-  const isIntervalFilterEnabled = useMemo(() => inputKeys.includes('intervalId'), [inputKeys]);
+  const yearOptions = useMemo(() => {
+    const startYear = 2025;
+    const currentYear = new Date().getFullYear() + 1;
 
-  const { data: intervalOptionsData, isLoading: isLoadingIntervals } =
-    useRiskAnalysisIntervalsQuery(isIntervalFilterEnabled);
-
-  const intervalOptions = useMemo(() => {
-    if (!intervalOptionsData) return [];
-    return intervalOptionsData.map((interval) => (
-      <SelectItem key={interval.id} value={interval.id.toString()}>
-        <span className="whitespace-nowrap">{`${getDate(interval.startDate)} - ${getDate(interval.endDate)}`}</span>
-      </SelectItem>
-    ));
-  }, [intervalOptionsData]);
+    return Array.from({ length: currentYear - startYear + 1 }, (_, i) => {
+      const year = (startYear + i).toString();
+      return (
+        <SelectItem key={year} value={year}>
+          {year}
+        </SelectItem>
+      );
+    });
+  }, []);
 
   const dynamicApplicationTypeOptions = APPLICATIONS_DATA.map((item) => (
     <SelectItem key={item.type} value={item.type}>
@@ -116,10 +113,8 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
     if (data.endDate) {
       formattedData.endDate = format(data.endDate, 'yyyy-MM-dd');
     }
-    if (data.intervalId && data.intervalId?.toString() == user?.interval?.id?.toString()) {
-      delete formattedData.intervalId;
-    }
-    addParams(formattedData, 'page', data.intervalId == user?.interval?.id ? 'intervalId' : '');
+
+    addParams(formattedData, 'page');
   };
 
   const debouncedSubmit = useCallback(debounce(handleSubmit(onSubmit), 300), [handleSubmit, onSubmit]);
@@ -380,47 +375,10 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
             />
           </FilterField>
         );
-      // case 'startDate':
-      //   if (!isStartDateFilterEnabled) return null;
-      //   return (
-      //     <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
-      //       <FormField
-      //         control={control}
-      //         name="startDate"
-      //         render={({ field }) => (
-      //           <FormItem>
-      //             <div className="relative">
-      //               <DatePicker
-      //                 value={field.value}
-      //                 onChange={(date) => {
-      //                   field.onChange(date);
-      //                   handleSubmit(onSubmit)();
-      //                 }}
-      //                 placeholder="dan"
-      //               />
-      //               {field.value && (
-      //                 <button
-      //                   type="button"
-      //                   onClick={() => {
-      //                     field.onChange(undefined);
-      //                     handleSubmit(onSubmit)();
-      //                   }}
-      //                   className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
-      //                 >
-      //                   ✖
-      //                 </button>
-      //               )}
-      //             </div>
-      //           </FormItem>
-      //         )}
-      //       />
-      //     </FilterField>
-      //   );
-
       case 'startDate':
         if (!isStartDateFilterEnabled) return null;
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 min-w-60">
             <FormField
               control={control}
               name="startDate"
@@ -458,49 +416,10 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
           </FilterField>
         );
 
-      //
-      // case 'endDate':
-      //   if (!isEndDateFilterEnabled) return null;
-      //   return (
-      //     <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
-      //       <FormField
-      //         control={control}
-      //         name="endDate"
-      //         render={({ field }) => (
-      //           <FormItem>
-      //             <div className="relative">
-      //               <DatePicker
-      //                 value={field.value}
-      //                 onChange={(date) => {
-      //                   field.onChange(date);
-      //                   handleSubmit(onSubmit)();
-      //                 }}
-      //                 placeholder="gacha"
-      //               />
-      //               {field.value && (
-      //                 <button
-      //                   type="button"
-      //                   onClick={() => {
-      //                     field.onChange(undefined);
-      //                     handleSubmit(onSubmit)();
-      //                   }}
-      //                   className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
-      //                 >
-      //                   ✖
-      //                 </button>
-      //               )}
-      //             </div>
-      //           </FormItem>
-      //         )}
-      //       />
-      //     </FilterField>
-      //   );
-      //
-
       case 'endDate':
         if (!isEndDateFilterEnabled) return null;
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 min-w-60">
             <FormField
               control={control}
               name="endDate"
@@ -540,12 +459,12 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
           </FilterField>
         );
 
-      case 'intervalId':
-        if (!isIntervalFilterEnabled) return null;
+      case 'year':
+        if (!isYearFilterEnabled) return null;
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1">
+          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
             <Controller
-              name="intervalId"
+              name="year"
               control={control}
               render={({ field }) => (
                 <Select
@@ -553,18 +472,18 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                     field.onChange(value);
                     handleSubmit(onSubmit)();
                   }}
-                  value={field.value}
-                  disabled={isLoadingIntervals}
+                  value={field.value || new Date().getFullYear().toString()}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Davrni tanlang" />
+                    <SelectValue placeholder="Yilni tanlang" />
                   </SelectTrigger>
-                  <SelectContent>{intervalOptions}</SelectContent>
+                  <SelectContent>{yearOptions}</SelectContent>
                 </Select>
               )}
             />
           </FilterField>
         );
+
       default:
         return null;
     }
@@ -573,7 +492,9 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className={className}>
-        <FilterRow>{inputKeys.map((key) => renderInput(key))}</FilterRow>
+        <FilterRow className="flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden">
+          {inputKeys.map((key) => renderInput(key))}
+        </FilterRow>
       </form>
     </Form>
   );

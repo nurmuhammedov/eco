@@ -8,20 +8,17 @@ import { TabsLayout } from '@/shared/layouts';
 import { useCustomSearchParams } from '@/shared/hooks';
 import FileLink from '@/shared/components/common/file-link';
 
-// Murojaat ma'lumotlari uchun tip (interfeys)
-// Backenddan keladigan javobga moslashtirish kerak
 interface IEquipmentAppeal {
   id: string;
-  appealNumber: string; // Murojaat raqami
+  appealNumber: string;
   type: 'APPEAL' | 'COMPLAINT' | 'SUGGESTION';
   message: string;
-  createdAt: string; // Yaratilgan sana
+  createdAt: string;
   fullName?: string;
   phoneNumber?: string;
   filePath?: string;
 }
 
-// Murojaat turlarini o'zbekchaga o'girish uchun
 const appealTypeTranslations = {
   APPEAL: 'Murojaat',
   COMPLAINT: 'Shikoyat',
@@ -55,7 +52,7 @@ export const RegisterEquipmentAppealList = () => {
     {
       accessorKey: 'fullName',
       header: 'Yuboruvchi F.I.O.',
-      cell: ({ row }) => row.original.fullName || '-', // Agar bo'sh bo'lsa, '-' ko'rsatamiz
+      cell: ({ row }) => row.original.fullName || '-',
     },
     {
       accessorKey: 'phoneNumber',
@@ -65,7 +62,6 @@ export const RegisterEquipmentAppealList = () => {
     {
       accessorKey: 'message',
       header: 'Murojaat matni',
-      // Matn uzun bo'lsa, qisqartirib ko'rsatish mumkin
       cell: ({ row }) => (
         <span title={row.original.message}>
           {row.original.message.length > 50 ? `${row.original.message.substring(0, 50)}...` : row.original.message}
@@ -95,15 +91,9 @@ export const RegisterEquipmentAppealList = () => {
           ...tab,
           count: tab.id === activeTab ? (data?.page?.totalElements ?? 0) : undefined,
         }))}
-        onTabChange={(type) => addParams({ type }, 'page')} // `page=1` ga qaytarish
+        onTabChange={(type) => addParams({ type }, 'page')}
       >
-        <DataTable
-          isPaginated
-          data={data || []} // `usePaginatedData` dan kelgan ma'lumotlar
-          columns={columns}
-          // Jadval balandligini ekranga moslashtirish
-          className="h-[calc(100svh-320px)]"
-        />
+        <DataTable isPaginated data={data || []} columns={columns} className="h-[calc(100svh-320px)]" />
       </TabsLayout>
     </div>
   );

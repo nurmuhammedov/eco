@@ -192,7 +192,7 @@ export function DataTable<TData, TValue>({
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {showNumeration && (
                     <TableCell style={{ width: '50px', maxWidth: '50px' }}>
-                      {page > 1 ? idx + (page * size - (page - 1)) : idx + 1}
+                      {Number(page || 1) > 1 ? (Number(page || 1) - 1) * Number(size || 10) + idx + 1 : idx + 1}
                     </TableCell>
                   )}
                   {row.getVisibleCells().map((cell) => (

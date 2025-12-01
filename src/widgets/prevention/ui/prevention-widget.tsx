@@ -30,7 +30,7 @@ export const getCurrentMonthEnum = () => {
 const getRegionLabel = (name: string) => {
   const lowerName = name.toLowerCase();
   if (lowerName.includes('toshkent viloyati')) return 'Toshkent v.';
-  if (lowerName.includes('toshkent shahar')) return 'Toshkent sh.';
+  if (lowerName.includes('toshkent shahri')) return 'Toshkent sh.';
   return name.split(' ')[0];
 };
 
@@ -83,6 +83,7 @@ export const Cards = ({ activeRiskLevel, onTabChange, year, type }: RiskStatisti
     return {
       id: month.value,
       name: month.label,
+      year: year,
       count: monthCount?.[key] || '0',
       inactiveClass: 'bg-[#016B7B]/10 border-[#016B7B]/20 text-[#016B7B]',
       activeClass: 'bg-[#016B7B] border-[#015a67] text-white shadow-sm',
@@ -103,9 +104,10 @@ export const Cards = ({ activeRiskLevel, onTabChange, year, type }: RiskStatisti
               isActive ? stat.activeClass : `${stat.inactiveClass} hover:opacity-80`,
             )}
           >
-            <div>
-              <div className="flex gap-2 justify-between">
+            <div className="w-full">
+              <div className="flex gap-2 justify-between w-full">
                 <p className="text-sm font-medium mb-1 opacity-90">{stat.name}</p>
+                <p className="text-sm font-medium mb-1 opacity-90">{stat?.year}</p>
               </div>
               <h3 className={clsx('text-2xl font-bold')}>{stat.count}</h3>
             </div>
@@ -126,7 +128,7 @@ const PreventionWidget = () => {
   const isRegional = user?.role === UserRoles.REGIONAL;
   const isInspector = user?.role === UserRoles.INSPECTOR;
 
-  const { data = [] } = useData<{ id: number; name: string }[]>('/offices/select', !isInspector && !isRegional);
+  const { data = [] } = useData<{ id: number; name: string }[]>('/regions/select', !isInspector && !isRegional);
   const { data: counts = {} } = useData<any>('/preventions/count');
 
   const activeRegion = paramsObject.regionId?.toString() || (data && data.length > 0 ? data[0].id?.toString() : '');

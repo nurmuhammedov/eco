@@ -36,11 +36,12 @@ export const defaultCountDto: CountDto = {
   conductedCount: 0,
 };
 
-const Cards = ({ activeRiskLevel, onTabChange }: any) => {
+const Cards = ({ activeRiskLevel, onTabChange, year }: any) => {
   const stats = MONTHS?.map((month) => ({
     id: month?.value,
     name: month?.label,
     count: month?.count,
+    year: year,
     inactiveClass: 'bg-[#016B7B]/10 border-[#016B7B]/20 text-[#016B7B]',
     activeClass: 'bg-[#016B7B] border-[#015a67] text-white shadow-sm',
   }));
@@ -62,7 +63,7 @@ const Cards = ({ activeRiskLevel, onTabChange }: any) => {
             <div className="w-full">
               <div className="flex gap-2 justify-between w-full">
                 <p className="text-sm font-medium mb-1 opacity-90">{stat.name}</p>
-                <p className="text-sm font-medium mb-1 opacity-90">{new Date().getFullYear()}</p>
+                <p className="text-sm font-medium mb-1 opacity-90">{stat?.year}</p>
               </div>
               <h3 className={clsx('text-2xl font-bold')}>{stat.count}</h3>
             </div>
@@ -81,6 +82,7 @@ export const InspectionWidget: React.FC = () => {
   const activeTab = paramsObject.status;
   const activeSubTab = paramsObject.subStatus;
   const activeProcess = paramsObject.process;
+  const year = paramsObject.year || new Date().getFullYear();
   const month = paramsObject.month || getCurrentMonthEnum();
 
   const { data: countObject = defaultCountDto } = useData<CountDto>('/inspections/count');
@@ -96,7 +98,11 @@ export const InspectionWidget: React.FC = () => {
   if (isInspector || isLegal) {
     return (
       <>
-        <Cards activeRiskLevel={month.toString()} onTabChange={(val: string) => addParams({ month: val, page: 1 })} />
+        <Cards
+          year={year}
+          activeRiskLevel={month.toString()}
+          onTabChange={(val: string) => addParams({ month: val, page: 1 })}
+        />
 
         <Tabs value={activeSubTab || InspectionSubMenuStatus.ASSIGNED} onValueChange={handleSubTabChange}>
           <div className={cn('flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden')}>
@@ -128,8 +134,11 @@ export const InspectionWidget: React.FC = () => {
 
   return (
     <>
-      <Cards activeRiskLevel={month.toString()} onTabChange={(val: string) => addParams({ month: val, page: 1 })} />
-
+      <Cards
+        year={year}
+        activeRiskLevel={month.toString()}
+        onTabChange={(val: string) => addParams({ month: val, page: 1 })}
+      />
       <Tabs value={activeTab || InspectionStatus.ALL} onValueChange={handleTabChange}>
         <div className={cn('flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden')}>
           <TabsList>

@@ -36,6 +36,7 @@ const RiskAnalysisWidget = () => {
     paramsObject: {
       mainTab = RiskAnalysisTab.XICHO,
       riskLevel = 'ALL',
+      year = new Date().getFullYear(),
       size = 10,
       page = 1,
       month = getCurrentMonthEnum(),
@@ -45,6 +46,7 @@ const RiskAnalysisWidget = () => {
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_HF, {
     type: mainTab,
     level: riskLevel == 'ALL' ? undefined : riskLevel,
+    year,
     size,
     page,
   });

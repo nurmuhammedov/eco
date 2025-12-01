@@ -79,7 +79,7 @@ const Report1: React.FC = () => {
       minSize: 250,
     },
     {
-      header: 'XICHO', // Хавфли ишлаб чиқариш объекти
+      header: 'XICHO',
       columns: [
         {
           header: 'Reyestrda amalda',
@@ -195,7 +195,7 @@ const Report1: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     const today = new Date();
-    const filename = `report_3_${format(today, 'yyyy-MM-dd_hh:mm:ss')}.xlsx`;
+    const filename = `Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, qurilmalar va IIMlarni hududlar kesimida taqsimlanishi (${format(today, 'dd.MM.yyyy')}).xlsx`;
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -206,13 +206,13 @@ const Report1: React.FC = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-2">
         <GoBack title="Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, qurilmalar va IIMlarni hududlar kesimida taqsimlanishi" />
       </div>
 
-      <div className={'flex my-4 justify-between items-start'}>
-        <div className="flex-1">
-          <Filter inputKeys={['startDate']} />
+      <div className="flex my-2 justify-between items-start gap-2">
+        <div className="flex-1 flex justify-start">
+          <Filter className="mb-0" inputKeys={['startDate']} />
         </div>
         <Button onClick={handleDownloadExel}>
           <Download /> MS Exel

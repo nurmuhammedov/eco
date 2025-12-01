@@ -11,10 +11,8 @@ import {
 } from '@/shared/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { useAuth } from '@/shared/hooks/use-auth.ts';
-// import { getInitials } from '@/shared/utils';
 import { UserRoleLabels } from '@/entities/user';
-// import { UserRoles } from '@/entities/user';
-// import { useNavigate } from 'react-router-dom';
+import { truncateString } from '@/shared/lib';
 
 export default function UserDropdown() {
   const { user } = useAuth();
@@ -39,7 +37,7 @@ export default function UserDropdown() {
             </AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm">{user?.name}</p>
+            <p className="text-sm">{truncateString(user?.name)}</p>
             {user?.role && <p className="text-sm text-slate-500">{UserRoleLabels[user?.role] || ''}</p>}
           </div>
           <ChevronDown size={16} />

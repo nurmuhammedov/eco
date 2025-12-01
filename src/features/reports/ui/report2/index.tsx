@@ -111,7 +111,7 @@ const Report1: React.FC = () => {
 
   const columns: ColumnDef<IAppealData>[] = [
     {
-      header: 'Tr',
+      header: 'T/r',
       cell: ({ row }) => row.index + 1,
     },
     {
@@ -161,7 +161,7 @@ const Report1: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     const today = new Date();
-    const filename = `report_2_${format(today, 'yyyy-MM-dd_hh:mm:ss')}.xlsx`;
+    const filename = `Jismoniy va yuridik shaxslardan yuborilgan arizalarni turlari bo‘yicha hududlar kesimida taqsimlanishi (${format(today, 'dd.MM.yyyy')}).xlsx`;
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -172,7 +172,7 @@ const Report1: React.FC = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-2">
         <GoBack title="Jismoniy va yuridik shaxslardan yuborilgan arizalarni turlari bo‘yicha hududlar kesimida taqsimlanishi" />
       </div>
 
@@ -182,9 +182,9 @@ const Report1: React.FC = () => {
           <TabsTrigger value={InspectionStatus.LEGAL}>Yuridik shaxslar</TabsTrigger>
         </TabsList>
 
-        <div className={'flex my-4 justify-between items-start'}>
-          <div className="flex-1">
-            <Filter inputKeys={['startDate', 'endDate']} />
+        <div className="flex my-2 justify-between items-start gap-2">
+          <div className="flex-1 flex justify-start">
+            <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
           </div>
           <Button onClick={handleDownloadExel}>
             <Download /> MS Exel

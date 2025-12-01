@@ -108,7 +108,14 @@ const List: FC<Props> = ({ regions }) => {
           {
             header: 'Inspektor',
             accessorKey: 'executorName',
-            cell: ({ row }: any) => row?.original?.executorName || 'Inspektor biriktirilmagan',
+            cell: ({ row }: any) =>
+              row?.original?.executorName ? (
+                row?.original?.executorName
+              ) : user?.role === UserRoles.REGIONAL ? (
+                <AssignInspectorButton row={row.original} />
+              ) : (
+                'Inspektor biriktirilmagan'
+              ),
           },
         ]),
     {

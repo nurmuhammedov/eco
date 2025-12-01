@@ -18,9 +18,11 @@ import { z } from 'zod';
 import { useAdd } from '@/shared/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
+import { Textarea } from '@/shared/components/ui/textarea';
 
 const assignInspectorSchema = z.object({
   inspectorId: z.string({ required_error: 'Majburiy maydon! ' }).min(1, 'Majburiy maydon! '),
+  report: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
 });
 
 type AssignInspectorForm = z.infer<typeof assignInspectorSchema>;
@@ -64,16 +66,22 @@ export const ExecutionInspectorModal: React.FC = () => {
     resolver: zodResolver(assignInspectorSchema),
   });
 
-  const { mutate, isPending } = useAdd<any, any, any>(`/preventions/${id}/execution?type=${form.watch('inspectorId')}`);
+  const { mutate, isPending } = useAdd<any, any, any>(`/preventions/${id}/execution`);
 
-  const onSubmit = () => {
+  const onSubmit = (data: any) => {
     if (id) {
-      mutate(null, {
-        onSuccess: async () => {
-          handleClose();
-          await qc?.invalidateQueries({ queryKey: ['/preventions'] });
+      mutate(
+        {
+          report: data.report,
+          type: data.inspectorId,
         },
-      });
+        {
+          onSuccess: async () => {
+            handleClose();
+            await qc?.invalidateQueries({ queryKey: ['/preventions'] });
+          },
+        },
+      );
     }
   };
 
@@ -96,7 +104,7 @@ export const ExecutionInspectorModal: React.FC = () => {
               control={form.control}
               name="inspectorId"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="max-w-115">
                   <FormLabel>Profilaktika turi</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
@@ -110,6 +118,21 @@ export const ExecutionInspectorModal: React.FC = () => {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="report"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bajarilgan ishlar ro‘yxati</FormLabel>
+                  <FormControl>
+                    <Textarea className="resize-none" rows={7} placeholder="Bajarilgan ishlar ro‘yxati..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="outline">

@@ -10,6 +10,7 @@
     "lint": "eslint --fix .",
     "prepare": "husky",
     "build:test": "env-cmd -f .env.test npm run build",
+    "build:clone": "env-cmd -f .env.clone npm run build",
     "preview": "vite preview"
   },
   "dependencies": {

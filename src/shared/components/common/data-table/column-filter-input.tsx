@@ -25,7 +25,7 @@ export const ColumnFilterInput = ({ columnKey }: { columnKey: string }) => {
 
   useEffect(() => {
     if (value != null) {
-      addParams({ [columnKey]: dVal, page: 1 });
+      addParams({ [columnKey]: dVal }, 'page', 'p');
     }
   }, [dVal]);
 

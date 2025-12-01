@@ -14,6 +14,9 @@ import { Download } from 'lucide-react';
 import Filter from '@/shared/components/common/filter';
 import { apiClient } from '@/shared/api';
 import { format } from 'date-fns';
+import { cn } from '@/shared/lib/utils';
+import { AutoList } from '@/features/register/auto/ui/auto-list';
+import { AddPermitTransportModal } from '@/features/register/auto/ui/add-auto-modal';
 
 const RegisterWidget = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -27,8 +30,8 @@ const RegisterWidget = () => {
       xrayRegionId = '',
       irsRegionId = '',
       status = 'ALL',
-      type = 'ALL',
       tab = user?.role != UserRoles.INDIVIDUAL ? RegisterActiveTab.HF : RegisterActiveTab.EQUIPMENTS,
+      type = tab == RegisterActiveTab.EQUIPMENTS ? 'ALL' : '',
     },
     addParams,
   } = useCustomSearchParams();
@@ -146,61 +149,76 @@ const RegisterWidget = () => {
 
   return (
     <Fragment>
-      <Tabs value={tab} onValueChange={(tab: string) => addParams({ tab: tab.toString() }, 'page', 'type')}>
-        <div className={'flex justify-between items-center'}>
+      <Tabs value={tab} onValueChange={(tab: string) => addParams({ tab: tab.toString() }, 'page', 'type', 'status')}>
+        <div className={'flex justify-between items-center gap-2'}>
           {user?.role != UserRoles.INDIVIDUAL ? (
-            <TabsList>
-              <TabsTrigger value={RegisterActiveTab.HF}>
-                XICHO
-                <Badge variant="destructive" className="ml-2">
-                  {hfCount}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
-                Qurilmalar
-                <Badge variant="destructive" className="ml-2">
-                  {equipmentsCount}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger value={RegisterActiveTab.IRS}>
-                INM
-                <Badge variant="destructive" className="ml-2">
-                  {irsCount}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger value={RegisterActiveTab.XRAY}>
-                Rentgenlar
-                <Badge variant="destructive" className="ml-2">
-                  {xrayCount}
-                </Badge>
-              </TabsTrigger>
-            </TabsList>
+            <div className={cn('flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden')}>
+              <TabsList>
+                <TabsTrigger value={RegisterActiveTab.HF}>
+                  XICHO
+                  <Badge variant="destructive" className="ml-2">
+                    {hfCount}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
+                  Qurilmalar
+                  <Badge variant="destructive" className="ml-2">
+                    {equipmentsCount}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger value={RegisterActiveTab.IRS}>
+                  INM
+                  <Badge variant="destructive" className="ml-2">
+                    {irsCount}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger value={RegisterActiveTab.XRAY}>
+                  Rentgenlar
+                  <Badge variant="destructive" className="ml-2">
+                    {xrayCount}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger value={RegisterActiveTab.AUTO}>
+                  Harakatlanuvchi sig‘imlar
+                  <Badge variant="destructive" className="ml-2">
+                    0
+                  </Badge>
+                </TabsTrigger>
+              </TabsList>
+            </div>
           ) : (
-            <TabsList>
-              <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
-                Qurilmalar
-                <Badge variant="destructive" className="ml-2">
-                  {equipmentsCount}
-                </Badge>
-              </TabsTrigger>
-            </TabsList>
+            <div className={cn('flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden')}>
+              <TabsList>
+                <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
+                  Qurilmalar
+                  <Badge variant="destructive" className="ml-2">
+                    {equipmentsCount}
+                  </Badge>
+                </TabsTrigger>
+              </TabsList>
+            </div>
           )}
-          <div className="flex justify-start items-center gap-2">
-            <Filter
-              className=""
-              inputKeys={
-                tab == RegisterActiveTab.HF
-                  ? ['mode', 'hfOfficeId']
-                  : tab == RegisterActiveTab.EQUIPMENTS
-                    ? ['mode', 'eqOfficeId']
-                    : tab == RegisterActiveTab.IRS
-                      ? ['mode', 'irsRegionId']
-                      : ['mode', 'xrayRegionId']
-              }
-            />
+          <div className="flex flex-1 justify-end items-center gap-2">
+            {tab == RegisterActiveTab.AUTO ? (
+              // <Button disabled={true}>Qo‘shish</Button>
+              <AddPermitTransportModal />
+            ) : (
+              <Filter
+                className="mb-0"
+                inputKeys={
+                  tab == RegisterActiveTab.HF
+                    ? ['mode', 'hfOfficeId']
+                    : tab == RegisterActiveTab.EQUIPMENTS
+                      ? ['mode', 'eqOfficeId']
+                      : tab == RegisterActiveTab.IRS
+                        ? ['mode', 'irsRegionId']
+                        : ['mode', 'xrayRegionId']
+                }
+              />
+            )}
             {type !== 'ALL' && (
               <Button
-                disabled={isLoading}
+                disabled={isLoading || tab == RegisterActiveTab.AUTO}
                 loading={isLoading}
                 onClick={
                   tab == RegisterActiveTab.HF
@@ -217,17 +235,20 @@ const RegisterWidget = () => {
             )}
           </div>
         </div>
-        <TabsContent value={RegisterActiveTab.HF} className="mt-3">
+        <TabsContent value={RegisterActiveTab.HF} className="mt-2">
           <HfList />
         </TabsContent>
-        <TabsContent value={RegisterActiveTab.EQUIPMENTS} className="mt-3">
+        <TabsContent value={RegisterActiveTab.EQUIPMENTS} className="mt-2">
           <EquipmentsList />
         </TabsContent>
-        <TabsContent value={RegisterActiveTab.IRS} className="mt-3">
+        <TabsContent value={RegisterActiveTab.IRS} className="mt-2">
           <IrsList />
         </TabsContent>
-        <TabsContent value={RegisterActiveTab.XRAY} className="mt-3">
+        <TabsContent value={RegisterActiveTab.XRAY} className="mt-2">
           <XrayList />
+        </TabsContent>
+        <TabsContent value={RegisterActiveTab.AUTO} className="mt-2">
+          <AutoList />
         </TabsContent>
       </Tabs>
     </Fragment>

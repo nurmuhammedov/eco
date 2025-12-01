@@ -139,25 +139,26 @@ export const EquipmentsList = () => {
   // };
 
   return (
-    <TabsLayout
-      activeTab={type}
-      tabs={[
-        {
-          id: 'ALL',
-          name: 'Barcha qurilmalar',
-        },
-        ...(APPLICATIONS_DATA?.filter(
-          (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER,
-        )?.map((i) => ({
-          id: i?.equipmentType?.toString() || '',
-          name: i?.name?.toString() || '',
-        })) || []),
-      ]?.map((i) => ({
-        ...i,
-        count: i?.id == type ? (dataForNewCount ?? 0) : undefined,
-      }))}
-      onTabChange={(type) => addParams({ type: type }, 'page')}
-    >
+    <div className="flex flex-col gap-2">
+      <TabsLayout
+        activeTab={type}
+        tabs={[
+          {
+            id: 'ALL',
+            name: 'Barcha qurilmalar',
+          },
+          ...(APPLICATIONS_DATA?.filter(
+            (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER,
+          )?.map((i) => ({
+            id: i?.equipmentType?.toString() || '',
+            name: i?.name?.toString() || '',
+          })) || []),
+        ]?.map((i) => ({
+          ...i,
+          count: i?.id == type ? (dataForNewCount ?? 0) : undefined,
+        }))}
+        onTabChange={(type) => addParams({ type: type }, 'page')}
+      />
       <TabsLayout
         activeTab={status?.toString()}
         tabs={[
@@ -175,7 +176,7 @@ export const EquipmentsList = () => {
           },
           {
             id: 'EXPIRED',
-            name: "Muddati o'tgan qurilmalar",
+            name: 'Muddati o‘tgan qurilmalar',
           },
           {
             id: 'NO_DATE',
@@ -186,24 +187,15 @@ export const EquipmentsList = () => {
           count: i?.id == status ? (data?.page?.totalElements ?? 0) : undefined,
         }))}
         onTabChange={(type) => addParams({ status: type }, 'page')}
-      >
-        {/*<div className={'flex justify-between items-start'}>*/}
-        {/*<Filter inputKeys={['search', 'eqOfficeId']} />*/}
-        {/*  {type !== 'ALL' && (*/}
-        {/*    <Button onClick={handleDownloadExel}>*/}
-        {/*      <Download /> MS Exel*/}
-        {/*    </Button>*/}
-        {/*  )}*/}
-        {/*</div>*/}
+      />
 
-        <DataTable
-          showFilters
-          isPaginated
-          data={data || []}
-          columns={columns as unknown as any}
-          className="h-[calc(100svh-320px)]"
-        />
-      </TabsLayout>
-    </TabsLayout>
+      <DataTable
+        showFilters
+        isPaginated
+        data={data || []}
+        columns={columns as unknown as any}
+        className="h-[calc(100svh-320px)]"
+      />
+    </div>
   );
 };
