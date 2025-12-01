@@ -78,7 +78,7 @@ export const Cards = ({ activeRiskLevel, onTabChange, year, type }: RiskStatisti
   });
 
   const stats = MONTHS.map((month) => {
-    const key = `${month.value[0]}${month.value.slice(1).toLowerCase()}Count`;
+    const key = `${month.value.toLowerCase()}Count`;
 
     return {
       id: month.value,
@@ -129,7 +129,10 @@ const PreventionWidget = () => {
   const isInspector = user?.role === UserRoles.INSPECTOR;
 
   const { data = [] } = useData<{ id: number; name: string }[]>('/regions/select', !isInspector && !isRegional);
-  const { data: counts = {} } = useData<any>('/preventions/count');
+  const { data: counts = {} } = useData<any>('/preventions/count', !!year && !!activeMonth, {
+    year,
+    month: activeMonth,
+  });
 
   const activeRegion = paramsObject.regionId?.toString() || (data && data.length > 0 ? data[0].id?.toString() : '');
   const activeAssignment = paramsObject.assignment || (isInspector ? 'ASSIGNED' : 'ALL');

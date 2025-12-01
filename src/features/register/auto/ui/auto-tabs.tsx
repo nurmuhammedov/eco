@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { cn } from '@/shared/lib/utils';
-import { Archive, Layers, Fuel, Flame, FlaskConical, Snowflake } from 'lucide-react';
+import { Layers, Fuel, Flame, FlaskConical, ThermometerSnowflake, Atom } from 'lucide-react';
 import { ReactNode } from 'react';
 
 export enum AutoTabKey {
@@ -23,8 +23,8 @@ const tabIcons: Record<AutoTabKey, ReactNode> = {
   [AutoTabKey.OIL_PRODUCTS]: <Fuel className="h-5 w-5" />,
   [AutoTabKey.LPG_TRANSPORT]: <Flame className="h-5 w-5" />,
   [AutoTabKey.CHEMICALS]: <FlaskConical className="h-5 w-5" />,
-  [AutoTabKey.CRYOGENIC_GASES]: <Snowflake className="h-5 w-5" />,
-  [AutoTabKey.NUCLEAR_MATERIALS]: <Archive className="h-5 w-5" />,
+  [AutoTabKey.CRYOGENIC_GASES]: <ThermometerSnowflake className="h-5 w-5" />,
+  [AutoTabKey.NUCLEAR_MATERIALS]: <Atom className="h-5 w-5" />,
 };
 
 const tabs = [

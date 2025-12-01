@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/shared/components/ui/form.tsx';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx';
+import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -13,6 +14,9 @@ import { useQueryClient } from '@tanstack/react-query';
 
 const schema = z.object({
   paramValue: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
+  result: z.enum(['true', 'false'], {
+    required_error: 'Xulosa natijasini tanlash majburiy',
+  }),
 });
 
 interface Props {
@@ -37,7 +41,12 @@ const FileUploadModal: FC<Props> = ({ id, closeModal, title = 'Xulosa faylini yu
   };
 
   const onSubmit = (data: z.infer<typeof schema>) => {
-    mutateAsync({ filePath: data?.paramValue }).then(async () => {
+    const payload = {
+      filePath: data.paramValue,
+      result: data.result === 'true',
+    };
+
+    mutateAsync(payload).then(async () => {
       form.reset();
       closeModal();
       await qc.invalidateQueries({ queryKey: ['/conclusions'] });
@@ -69,6 +78,37 @@ const FileUploadModal: FC<Props> = ({ id, closeModal, title = 'Xulosa faylini yu
                       accept={[FileTypes.PDF]}
                     />
                   </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="result"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Xulosa natijasi</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col space-y-1"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="true" />
+                        </FormControl>
+                        <FormLabel className="font-normal cursor-pointer">Ijobiy</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="false" />
+                        </FormControl>
+                        <FormLabel className="font-normal cursor-pointer">Salbiy</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />

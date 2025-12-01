@@ -51,7 +51,10 @@ export const DetailConclusion = () => {
             <DetailRow title="Ekspert tashkiloti nomi:" value={legalData?.name || '-'} />
             <DetailRow title="Ekspert tashkiloti STIRsi:" value={legalData?.identity || '-'} />
             <DetailRow title="Ekspert tashkiloti manzili:" value={legalData?.address || '-'} />
-            <DetailRow title="Ekspertiza tashkilotining akkreditatsiya raqami:" value={'-'} />
+            <DetailRow
+              title="Ekspertiza tashkilotining akkreditatsiya raqami:"
+              value={detail?.accreditationRegistryNumber || '-'}
+            />
           </div>
         </DetailCardAccordion.Item>
 
@@ -110,8 +113,12 @@ export const DetailConclusion = () => {
               }
             />
             <DetailRow
-              title="Ekspertiza xulosasining bekor qilinganligi asosi va sanasi:"
+              title="Ekspertiza xulosasining bekor qilinganligi asosi"
               value={detail?.cancelledReason || '-'}
+            />
+            <DetailRow
+              title="Ekspertiza xulosasining bekor qilinganligi sanasi:"
+              value={detail?.cancelledDate ? getDate(detail?.cancelledDate) : '-'}
             />
           </div>
         </DetailCardAccordion.Item>

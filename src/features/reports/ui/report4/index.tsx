@@ -1,7 +1,7 @@
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { DataTable } from '@/shared/components/common/data-table';
-import { usePaginatedData } from '@/shared/hooks';
+import { useData } from '@/shared/hooks';
 import { ColumnDef } from '@tanstack/react-table';
 import Filter from '@/shared/components/common/filter';
 import { GoBack } from '@/shared/components/common';
@@ -13,51 +13,73 @@ import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from 
 
 const Report1: React.FC = () => {
   const { paramsObject } = useCustomSearchParams();
-  const { data: inspections, isLoading } = usePaginatedData(
-    '/reports/appeal-status',
-    {
-      ...paramsObject,
-      ownerType: 'LEGAL',
-    },
-    false,
+  const { data: inspections, isLoading } = useData<any[]>('/reports/appeal-status', true, {
+    ...paramsObject,
+    ownerType: 'LEGAL',
+  });
+
+  const tableData = useMemo(() => {
+    if (!inspections) return [];
+    const summaryRow = {
+      officeName: 'Respublika bo‘yicha',
+      isSummary: true,
+      count: 0,
+    };
+    return [summaryRow, ...inspections];
+  }, [inspections]);
+
+  const DoubleValueCell = () => (
+    <div className="grid grid-cols-2 w-full items-center">
+      <div className="text-center border-r border-gray-300 pr-2">0</div>
+      <div className="text-center pl-2">0</div>
+    </div>
   );
 
-  const columns: ColumnDef<any>[] = [
-    {
-      header: 'T/r',
-      cell: ({ row }) => row.index + 1,
-      size: 50,
-    },
-    {
-      header: 'Hududiy boshqarma/bo‘limlar',
-      accessorKey: 'officeName',
-      minSize: 250,
-    },
-    {
-      header: 'XICHO',
-      cell: ({ row }) => row?.original?.count || 0,
-    },
-    ...(APPLICATIONS_DATA.filter(
-      (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER,
-    )
-      .map((i) => ({
-        id: i?.equipmentType ?? '',
-        name: i?.name ?? '',
-      }))
-      .map((i) => ({
-        header: i?.name || '',
-        cell: ({ row }: any) => row?.original?.[`${i?.id}Count`] || 0,
-        minSize: 220,
-      })) ?? []),
-    {
-      header: 'INM',
-      cell: ({ row }) => row?.original?.count || 0,
-    },
-    {
-      header: 'Rentgenlar',
-      cell: ({ row }) => row?.original?.count || 0,
-    },
-  ];
+  const columns = useMemo<ColumnDef<any>[]>(
+    () => [
+      {
+        header: 'T/r',
+        cell: ({ row }) => (row.original.isSummary ? <span></span> : row.index + 1),
+        size: 50,
+      },
+      {
+        header: 'Hududiy boshqarma/bo‘limlar',
+        accessorKey: 'officeName',
+        minSize: 250,
+        cell: ({ row }) => (
+          <span className={row.original.isSummary ? 'font-bold text-base' : ''}>{row.original.officeName}</span>
+        ),
+      },
+      {
+        header: 'XICHO',
+        cell: () => <DoubleValueCell />,
+        minSize: 150,
+      },
+      ...(APPLICATIONS_DATA.filter(
+        (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER,
+      )
+        .map((i) => ({
+          id: i?.equipmentType ?? '',
+          name: i?.name ?? '',
+        }))
+        .map((i) => ({
+          header: i?.name || '',
+          cell: () => <DoubleValueCell />,
+          minSize: 150,
+        })) ?? []),
+      {
+        header: 'INM',
+        cell: () => <DoubleValueCell />,
+        minSize: 150,
+      },
+      {
+        header: 'Rentgenlar',
+        cell: () => <DoubleValueCell />,
+        minSize: 150,
+      },
+    ],
+    [],
+  );
 
   const handleDownloadExel = async () => {
     const res = await apiClient.downloadFile<Blob>('/reports/appeal-status/export-excel', {
@@ -69,7 +91,7 @@ const Report1: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     const today = new Date();
-    const filename = `Davlat ro‘yxatidan o‘tqazilgan amaldagi XICHO, INM, Bosim ostidagi idishlar va qurilmalar to‘g‘risida sanalar bo‘yicha maʼlumot (${format(today, 'dd.MM.yyyy')}).xlsx`;
+    const filename = `Hisobot (${format(today, 'dd.MM.yyyy')}).xlsx`;
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -96,8 +118,8 @@ const Report1: React.FC = () => {
       <DataTable
         showNumeration={false}
         headerCenter={true}
-        data={inspections || []}
-        columns={columns as unknown as any}
+        data={tableData}
+        columns={columns}
         isLoading={isLoading}
         className="h-[calc(100vh-240px)]"
       />
