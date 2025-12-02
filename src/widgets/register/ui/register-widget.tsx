@@ -247,7 +247,7 @@ const RegisterWidget = () => {
             )}
             {!(type == 'ALL' && tab == RegisterActiveTab.EQUIPMENTS) ? (
               <Button
-                disabled={isLoading}
+                disabled={isLoading || tab == RegisterActiveTab.AUTO}
                 loading={isLoading}
                 onClick={
                   tab == RegisterActiveTab.HF
