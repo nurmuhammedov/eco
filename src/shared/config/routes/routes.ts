@@ -302,7 +302,7 @@ export const appRoutes = [
   {
     path: '/accreditations/edit/:id',
     component: EditConclusion,
-    roles: [],
+    roles: [UserRoles.LEGAL],
   },
   {
     path: '/cadastre/detail/:id',

@@ -35,18 +35,18 @@ const getRegionLabel = (name: string) => {
 };
 
 export const MONTHS = [
-  { value: 'JANUARY', label: 'Yanvar', count: 12 },
-  { value: 'FEBRUARY', label: 'Fevral', count: 12 },
-  { value: 'MARCH', label: 'Mart', count: 12 },
-  { value: 'APRIL', label: 'Aprel', count: 12 },
-  { value: 'MAY', label: 'May', count: 12 },
-  { value: 'JUNE', label: 'Iyun', count: 12 },
-  { value: 'JULY', label: 'Iyul', count: 15 },
-  { value: 'AUGUST', label: 'Avgust', count: 20 },
-  { value: 'SEPTEMBER', label: 'Sentabr', count: 23 },
-  { value: 'OCTOBER', label: 'Oktabr', count: 31 },
-  { value: 'NOVEMBER', label: 'Noyabr', count: 42 },
-  { value: 'DECEMBER', label: 'Dekabr', count: 45 },
+  { value: 'JANUARY', label: 'Yanvar', count: 0 },
+  { value: 'FEBRUARY', label: 'Fevral', count: 0 },
+  { value: 'MARCH', label: 'Mart', count: 0 },
+  { value: 'APRIL', label: 'Aprel', count: 0 },
+  { value: 'MAY', label: 'May', count: 0 },
+  { value: 'JUNE', label: 'Iyun', count: 0 },
+  { value: 'JULY', label: 'Iyul', count: 0 },
+  { value: 'AUGUST', label: 'Avgust', count: 0 },
+  { value: 'SEPTEMBER', label: 'Sentabr', count: 0 },
+  { value: 'OCTOBER', label: 'Oktabr', count: 0 },
+  { value: 'NOVEMBER', label: 'Noyabr', count: 0 },
+  { value: 'DECEMBER', label: 'Dekabr', count: 0 },
 ];
 
 const RISK_TYPES = [
@@ -168,17 +168,6 @@ const PreventionWidget = () => {
           onTabChange={(val) => addParams({ month: val, page: 1 })}
         />
 
-        {regionTabs.length > 0 && !isRegional && !isInspector ? (
-          <TabsLayout
-            classNameTabList="!mb-0 w-full"
-            classNameWrapper="w-full"
-            classNameTrigger="flex-1"
-            tabs={regionTabs}
-            activeTab={activeRegion}
-            onTabChange={(val) => addParams({ regionId: val, page: 1 })}
-          />
-        ) : null}
-
         <Tabs value={activeType} onValueChange={(val) => addParams({ belongType: val, page: 1 })}>
           <div className={cn('flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden')}>
             <TabsList className="h-auto p-1">
@@ -196,6 +185,17 @@ const PreventionWidget = () => {
             </TabsList>
           </div>
         </Tabs>
+
+        {regionTabs.length > 0 && !isRegional && !isInspector ? (
+          <TabsLayout
+            classNameTabList="!mb-0 w-full"
+            classNameWrapper="w-full"
+            classNameTrigger="flex-1"
+            tabs={regionTabs}
+            activeTab={activeRegion}
+            onTabChange={(val) => addParams({ regionId: val, page: 1 })}
+          />
+        ) : null}
 
         {!isInspector && (
           <Tabs value={activeAssignment} onValueChange={(val) => addParams({ assignment: val, page: 1 })}>

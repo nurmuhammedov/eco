@@ -124,7 +124,7 @@ export const ConclusionsTable = () => {
         return (
           <div className="flex gap-2">
             <DataTableRowActions
-              showEdit={row.original?.processStatus != 'COMPLETED'}
+              showEdit={row.original?.processStatus != 'COMPLETED' && user?.role == UserRoles.LEGAL}
               row={row}
               showView
               onEdit={(row: any) => navigate(`edit/${row.original.id!}`)}

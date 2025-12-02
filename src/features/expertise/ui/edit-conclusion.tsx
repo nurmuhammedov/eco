@@ -16,9 +16,12 @@ import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/d
 import { useQuery } from '@tanstack/react-query';
 import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api';
 import { Textarea } from '@/shared/components/ui/textarea';
+import { UserRoles } from '@/entities/user';
+import { useAuth } from '@/shared/hooks/use-auth';
 
 export const UpdateConclusion = () => {
   const { id } = useParams();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { detail: conclusion, isFetching } = useDetail<any>('/conclusions', id, !!id);
 
@@ -118,7 +121,6 @@ export const UpdateConclusion = () => {
                           field.onChange(value);
                         }
                       }}
-                      disabled={true}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -145,7 +147,7 @@ export const UpdateConclusion = () => {
                   <FormItem>
                     <FormLabel>Obyekt nomi</FormLabel>
                     <FormControl>
-                      <Input {...field} disabled />
+                      <Input {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -164,7 +166,6 @@ export const UpdateConclusion = () => {
                         }
                       }}
                       value={field.value?.toString()}
-                      disabled={true}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -198,7 +199,6 @@ export const UpdateConclusion = () => {
                           field.onChange(value);
                         }
                       }}
-                      disabled={true}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -225,7 +225,7 @@ export const UpdateConclusion = () => {
                   <FormItem>
                     <FormLabel>Manzil</FormLabel>
                     <FormControl>
-                      <Input {...field} disabled />
+                      <Input {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -238,7 +238,7 @@ export const UpdateConclusion = () => {
                   <FormItem>
                     <FormLabel>Telefon raqami</FormLabel>
                     <FormControl>
-                      <PhoneInput disabled={conclusion?.processStatus == 'COMPLETED'} {...field} />
+                      <PhoneInput {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -253,7 +253,6 @@ export const UpdateConclusion = () => {
                     <FormLabel>Ekspertiza turi</FormLabel>
                     <Select
                       {...field}
-                      disabled={conclusion?.processStatus == 'COMPLETED'}
                       value={field.value}
                       onValueChange={(value) => {
                         if (value) {
@@ -318,20 +317,14 @@ export const UpdateConclusion = () => {
                   <FormItem>
                     <FormLabel>Ekspertiza obyekti nomi</FormLabel>
                     <FormControl>
-                      <Textarea
-                        disabled={conclusion?.processStatus == 'COMPLETED'}
-                        className="resize-none"
-                        rows={7}
-                        placeholder="Obyekt nomini kiriting..."
-                        {...field}
-                      />
+                      <Textarea className="resize-none" rows={7} placeholder="Obyekt nomini kiriting..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {conclusion?.processStatus != 'COMPLETED' && (
+              {conclusion?.processStatus != 'COMPLETED' && user?.role == UserRoles.LEGAL && (
                 <div className="md:col-span-4 flex justify-end">
                   <Button type="submit" disabled={isPending} loading={isPending}>
                     Yangilash

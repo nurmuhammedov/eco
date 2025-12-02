@@ -145,7 +145,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>{trigger}</Button>
+        <Button disabled={false}>{trigger}</Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[1000px] max-h-[95vh] overflow-y-auto">

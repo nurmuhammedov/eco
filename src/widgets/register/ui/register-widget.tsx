@@ -200,8 +200,9 @@ const RegisterWidget = () => {
           )}
           <div className="flex flex-1 justify-end items-center gap-2">
             {tab == RegisterActiveTab.AUTO ? (
-              // <Button disabled={true}>Qo‘shish</Button>
-              <AddPermitTransportModal />
+              <>
+                {(user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.REGIONAL) && <AddPermitTransportModal />}
+              </>
             ) : (
               <Filter
                 className="mb-0"

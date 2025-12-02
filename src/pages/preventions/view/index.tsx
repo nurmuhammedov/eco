@@ -76,11 +76,14 @@ export default function PreventionViewPage() {
                   : '-'
               }
             />
-            <DetailRow title="Bajarilgan ishlar ro‘yxati" value={prevention?.data?.report || '-'} />
+            <div className="grid grid-cols-2 gap-1 py-2 px-2.5 rounded-lg content-center odd:bg-neutral-50 items-center">
+              <h2 className="font-normal text-normal text-gray-700">Bajarilgan ishlar ro‘yxati</h2>
+              <p
+                className="font-normal text-normal text-gray-900 whitespace-pre-wrap"
+                dangerouslySetInnerHTML={{ __html: prevention?.data?.report || '-' }}
+              />
+            </div>
           </DetailCardAccordion.Item>
-          {/*<DetailCardAccordion.Item value="risk" title="Xavf tahlil qilish davrida tushadigan bali">*/}
-          {/*  <></>*/}
-          {/*</DetailCardAccordion.Item>*/}
         </DetailCardAccordion>
       </div>
     </div>

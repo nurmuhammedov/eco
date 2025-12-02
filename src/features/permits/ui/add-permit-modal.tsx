@@ -61,7 +61,7 @@ export const SearchResultDisplay = ({
     { label: 'Vakolatli tashkilot', value: data.organizationName },
     {
       label: 'Faoliyat turi',
-      value: data.activityTypeNames?.length ? data.activityTypeNames.join(', ') : 'Ko‘rsatilmagan',
+      value: data.activityTypes?.length ? data.activityTypes?.map((i) => i?.name || '').join(' | ') : 'Ko‘rsatilmagan',
     },
 
     ...(type === 'detail'

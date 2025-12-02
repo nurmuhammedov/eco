@@ -37,7 +37,7 @@ export interface PermitSearchResult {
   documentName: string;
   organizationName: string;
   activityAddresses: string[];
-  activityTypeNames: string[];
+  activityTypes: { typeId: number; name: string }[];
   category: string | null;
   documentId: number;
   status: string;

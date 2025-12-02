@@ -2,7 +2,6 @@ import Table from '@/features/risk-analysis/ui/table';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { Fragment, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useRiskAnalysis } from '../model/use-risk-analysis';
 import { RiskAnalysisTab } from '../types';
 import { Badge } from '@/shared/components/ui/badge';
 import { useData } from '@/shared/hooks/api';
@@ -51,11 +50,12 @@ const RiskAnalysisWidget = () => {
     page,
   });
 
-  const { hfCount, irsCount, xrayCount } = useRiskAnalysis();
-
-  const { data: elevatorCount = 0 } = useData<number>('/equipments/count?type=ELEVATOR');
-  const { data: attractionCount = 0 } = useData<number>('/equipments/count?type=ATTRACTION');
-  const { data: lpgPoweredCount = 0 } = useData<number>('/equipments/count?type=LPG_POWERED');
+  const { data: hfCount = 0 } = useData<number>('/hf/count', false);
+  const { data: irsCount = 0 } = useData<number>('/irs/count', false);
+  const { data: xrayCount = 0 } = useData<number>('/xrays/count', false);
+  const { data: elevatorCount = 0 } = useData<number>('/equipments/count?type=ELEVATOR', false);
+  const { data: attractionCount = 0 } = useData<number>('/equipments/count?type=ATTRACTION', false);
+  const { data: lpgPoweredCount = 0 } = useData<number>('/equipments/count?type=LPG_POWERED', false);
 
   const currentApiType = TAB_TO_API_TYPE[mainTab as string] || 'HF';
 
@@ -83,6 +83,55 @@ const RiskAnalysisWidget = () => {
       />
 
       <Tabs
+        defaultValue={mainTab}
+        value={mainTab}
+        onValueChange={(tab) => addParams({ mainTab: tab, page: 1, riskLevel: 'ALL' })}
+        className="w-full"
+      >
+        <div className={cn('flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden mb-2')}>
+          <TabsList>
+            <TabsTrigger value={RiskAnalysisTab.XICHO}>
+              {t('risk_analysis_tabs.XICHO')}
+              <Badge variant="destructive" className="ml-2">
+                {hfCount}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value={RiskAnalysisTab.INM}>
+              {t('risk_analysis_tabs.INM')}
+              <Badge variant="destructive" className="ml-2">
+                {irsCount}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value={RiskAnalysisTab.LIFT}>
+              {t('risk_analysis_tabs.LIFT')}
+              <Badge variant="destructive" className="ml-2">
+                {elevatorCount}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value={RiskAnalysisTab.ATTRACTION}>
+              {t('risk_analysis_tabs.ATTRACTION')}
+              <Badge variant="destructive" className="ml-2">
+                {attractionCount}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value={RiskAnalysisTab.XRAY}>
+              {t('risk_analysis_tabs.XRAY')}
+              <Badge variant="destructive" className="ml-2">
+                {xrayCount}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value={RiskAnalysisTab.LPG_POWERED}>
+              {t('risk_analysis_tabs.LPG_POWERED')}
+              <Badge variant="destructive" className="ml-2">
+                {lpgPoweredCount}
+              </Badge>
+            </TabsTrigger>
+          </TabsList>
+          {action}
+        </div>
+      </Tabs>
+
+      <Tabs
         className="mb-2 w-full"
         value={month?.toString()}
         onValueChange={(val) => addParams({ month: val, page: 1 })}
@@ -104,67 +153,7 @@ const RiskAnalysisWidget = () => {
         </div>
       </Tabs>
 
-      <Tabs
-        defaultValue={mainTab}
-        value={mainTab}
-        onValueChange={(tab) => addParams({ mainTab: tab, page: 1, riskLevel: 'ALL' })}
-        className="w-full"
-      >
-        <div className={cn('flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden mb-2')}>
-          <TabsList>
-            <TabsTrigger value={RiskAnalysisTab.XICHO}>
-              {t('risk_analysis_tabs.XICHO')}
-              {hfCount ? (
-                <Badge variant="destructive" className="ml-2">
-                  {hfCount}
-                </Badge>
-              ) : null}
-            </TabsTrigger>
-            <TabsTrigger value={RiskAnalysisTab.INM}>
-              {t('risk_analysis_tabs.INM')}
-              {irsCount ? (
-                <Badge variant="destructive" className="ml-2">
-                  {irsCount}
-                </Badge>
-              ) : null}
-            </TabsTrigger>
-            <TabsTrigger value={RiskAnalysisTab.LIFT}>
-              {t('risk_analysis_tabs.LIFT')}
-              {elevatorCount ? (
-                <Badge variant="destructive" className="ml-2">
-                  {elevatorCount}
-                </Badge>
-              ) : null}
-            </TabsTrigger>
-            <TabsTrigger value={RiskAnalysisTab.ATTRACTION}>
-              {t('risk_analysis_tabs.ATTRACTION')}
-              {attractionCount ? (
-                <Badge variant="destructive" className="ml-2">
-                  {attractionCount}
-                </Badge>
-              ) : null}
-            </TabsTrigger>
-            <TabsTrigger value={RiskAnalysisTab.XRAY}>
-              {t('risk_analysis_tabs.XRAY')}
-              {xrayCount ? (
-                <Badge variant="destructive" className="ml-2">
-                  {xrayCount}
-                </Badge>
-              ) : null}
-            </TabsTrigger>
-            <TabsTrigger value={RiskAnalysisTab.LPG_POWERED}>
-              {t('risk_analysis_tabs.LPG_POWERED')}
-              {lpgPoweredCount ? (
-                <Badge variant="destructive" className="ml-2">
-                  {lpgPoweredCount}
-                </Badge>
-              ) : null}
-            </TabsTrigger>
-          </TabsList>
-          {action}
-        </div>
-        <Table isLoading={isLoading} data={data} />
-      </Tabs>
+      <Table isLoading={isLoading} data={data} />
     </Fragment>
   );
 };
