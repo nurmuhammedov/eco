@@ -32,6 +32,7 @@ const RegisterWidget = () => {
       status = 'ALL',
       tab = user?.role != UserRoles.INDIVIDUAL ? RegisterActiveTab.HF : RegisterActiveTab.EQUIPMENTS,
       type = tab == RegisterActiveTab.EQUIPMENTS ? 'ALL' : '',
+      ...rest
     },
     addParams,
   } = useCustomSearchParams();
@@ -40,6 +41,7 @@ const RegisterWidget = () => {
   const { data: equipmentsCount = 0 } = useData<number>('/equipments/count', true, { mode });
   const { data: irsCount = 0 } = useData<number>('/irs/count', user?.role != UserRoles.INDIVIDUAL, { mode });
   const { data: xrayCount = 0 } = useData<number>('/xrays/count', user?.role != UserRoles.INDIVIDUAL, { mode });
+  const { data: tankersCount } = useData<any>('/tankers/count', user?.role != UserRoles.INDIVIDUAL, { mode });
 
   const handleDownloadHFExel = () => {
     setIsLoading(true);
@@ -147,6 +149,32 @@ const RegisterWidget = () => {
       });
   };
 
+  const handleDownloadTankersExel = () => {
+    setIsLoading(true);
+    apiClient
+      .downloadFile<Blob>('/tankers/export/excel', {
+        activityType: type !== 'ALL' ? type : '',
+        status: status !== 'ALL' ? status : '',
+        ...rest,
+      })
+      .then((res) => {
+        const blob = res.data;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const today = new Date();
+        const filename = `Harakatlanuvchi sig‘imlar (${format(today, 'dd.MM.yyyy')}).xlsx`;
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   return (
     <Fragment>
       <Tabs value={tab} onValueChange={(tab: string) => addParams({ tab: tab.toString() }, 'page', 'type', 'status')}>
@@ -181,7 +209,7 @@ const RegisterWidget = () => {
                 <TabsTrigger value={RegisterActiveTab.AUTO}>
                   Harakatlanuvchi sig‘imlar
                   <Badge variant="destructive" className="ml-2">
-                    0
+                    {tankersCount?.allCount || 0}
                   </Badge>
                 </TabsTrigger>
               </TabsList>
@@ -217,9 +245,9 @@ const RegisterWidget = () => {
                 }
               />
             )}
-            {type !== 'ALL' && (
+            {!(type == 'ALL' && tab == RegisterActiveTab.EQUIPMENTS) ? (
               <Button
-                disabled={isLoading || tab == RegisterActiveTab.AUTO}
+                disabled={isLoading}
                 loading={isLoading}
                 onClick={
                   tab == RegisterActiveTab.HF
@@ -228,12 +256,14 @@ const RegisterWidget = () => {
                       ? handleDownloadEquipmentsExel
                       : tab == RegisterActiveTab.IRS
                         ? handleDownloadIRSExel
-                        : handleDownloadXRaysExel
+                        : tab == RegisterActiveTab.XRAY
+                          ? handleDownloadXRaysExel
+                          : handleDownloadTankersExel
                 }
               >
                 <Download /> Exel
               </Button>
-            )}
+            ) : null}
           </div>
         </div>
         <TabsContent value={RegisterActiveTab.HF} className="mt-2">
@@ -249,7 +279,7 @@ const RegisterWidget = () => {
           <XrayList />
         </TabsContent>
         <TabsContent value={RegisterActiveTab.AUTO} className="mt-2">
-          <AutoList />
+          <AutoList tankersCount={tankersCount} />
         </TabsContent>
       </Tabs>
     </Fragment>

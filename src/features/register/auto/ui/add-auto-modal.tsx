@@ -36,23 +36,23 @@ const searchSchema = z.object({
   regNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
 });
 
-const transportItemSchema = z.object({
-  stateNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  model: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  capacityFactoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  inventoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  volume: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  measurementUnit: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  inspectionDate: z.date({ required_error: 'Majburiy maydon!' }),
-  expiryDate: z.date({ required_error: 'Majburiy maydon!' }),
+const tankerItemSchema = z.object({
+  numberPlate: z.string({ required_error: 'Majburiy maydon!' }).min(1),
+  model: z.string({ required_error: 'Majburiy maydon!' }).min(1),
+  factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1),
+  inventoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1),
+  capacity: z.string({ required_error: 'Majburiy maydon!' }).min(1),
+  capacityUnit: z.string({ required_error: 'Majburiy maydon!' }).min(1),
+  checkDate: z.date({ required_error: 'Majburiy maydon!' }),
+  validUntil: z.date({ required_error: 'Majburiy maydon!' }),
 });
 
-const transportFormSchema = z.object({
-  transports: z.array(transportItemSchema).min(1, 'Kamida bitta transport maʼlumotlari kiritilishi shart!'),
+const tankerFormSchema = z.object({
+  tankers: z.array(tankerItemSchema).min(1, 'Kamida bitta transport maʼlumotlari kiritilishi shart!'),
 });
 
 type SearchFormValues = z.infer<typeof searchSchema>;
-type TransportFormValues = z.infer<typeof transportFormSchema>;
+type TankerFormValues = z.infer<typeof tankerFormSchema>;
 
 export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTransportModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -65,19 +65,19 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
     mode: 'onChange',
   });
 
-  const transportForm = useForm<TransportFormValues>({
-    resolver: zodResolver(transportFormSchema),
+  const transportForm = useForm<TankerFormValues>({
+    resolver: zodResolver(tankerFormSchema),
     defaultValues: {
-      transports: [
+      tankers: [
         {
-          stateNumber: '',
+          numberPlate: '',
           model: '',
-          capacityFactoryNumber: '',
+          factoryNumber: '',
           inventoryNumber: '',
-          volume: '',
-          measurementUnit: '',
-          inspectionDate: undefined,
-          expiryDate: undefined,
+          capacity: '',
+          capacityUnit: '',
+          checkDate: undefined,
+          validUntil: undefined,
         },
       ],
     },
@@ -85,12 +85,12 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
 
   const { fields, append, remove } = useFieldArray({
     control: transportForm.control,
-    name: 'transports',
+    name: 'tankers',
   });
 
   const { mutateAsync: searchPermit, isPending } = useAdd<any, any, any>('/integration/iip/individual/license', '');
-  const { mutateAsync: addPermit, isPending: isAddPermitLoading } = useAdd<any, any, any>('/permits/individual');
-  const { mutateAsync: addLegalPermit, isPending: isAddLegalPermitLoading } = useAdd<any, any, any>('/permits/legal');
+  const { mutateAsync: addPermit, isPending: isAddPermitLoading } = useAdd<any, any, any>('/tankers/individual');
+  const { mutateAsync: addLegalPermit, isPending: isAddLegalPermitLoading } = useAdd<any, any, any>('/tankers/legal');
   const { mutateAsync: searchPermitLegal, isPending: isPendingLegal } = useAdd<any, any, any>(
     '/integration/iip/legal/license',
     '',
@@ -111,18 +111,16 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
 
   const handleSave = async () => {
     const searchValues = form.getValues();
-    const isTransportValid = await transportForm.trigger();
+    const isTankerValid = await transportForm.trigger();
 
-    if (!isTransportValid) {
-      return;
-    }
+    if (!isTankerValid) return;
 
-    const { transports } = transportForm.getValues();
+    const { tankers } = transportForm.getValues();
 
     const payload = {
       [searchValues.stir.length === 9 ? 'tin' : 'pin']: searchValues.stir,
       registerNumber: searchValues.regNumber,
-      transports: transports,
+      tankers,
     };
 
     const apiFn = searchValues.stir.length === 9 ? addLegalPermit : addPermit;
@@ -130,8 +128,8 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
     apiFn(payload).then(async () => {
       toast.success('Muvaffaqiyatli saqlandi!');
       handleClose();
-      await queryClient.invalidateQueries({ queryKey: ['/auto'] });
-      await queryClient.invalidateQueries({ queryKey: ['/auto/count'] });
+      await queryClient.invalidateQueries({ queryKey: ['/tankers'] });
+      await queryClient.invalidateQueries({ queryKey: ['/tankers/count'] });
     });
   };
 
@@ -145,7 +143,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button disabled={false}>{trigger}</Button>
+        <Button>{trigger}</Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[1000px] max-h-[95vh] overflow-y-auto">
@@ -171,6 +169,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                   )}
                 />
               </div>
+
               <div className="flex-1">
                 <FormField
                   control={form.control}
@@ -186,6 +185,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                   )}
                 />
               </div>
+
               <Button type="submit" disabled={isPending || isPendingLegal}>
                 {isPending || isPendingLegal ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Qidirish'}
               </Button>
@@ -197,7 +197,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
           <div className="flex flex-col gap-6">
             <SearchResultDisplay data={searchResult} />
 
-            <div className="text-lg font-semibold flex items-center gap-2 text-primary">Transport vositalari</div>
+            <div className="text-lg font-semibold flex items-center gap-2 text-primary">Transportlar</div>
 
             <Form {...transportForm}>
               <form className="space-y-4">
@@ -221,9 +221,10 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                       <div className="text-sm font-medium text-muted-foreground mb-3">Transport №{index + 1}</div>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {/* numberPlate */}
                         <FormField
                           control={transportForm.control}
-                          name={`transports.${index}.stateNumber`}
+                          name={`tankers.${index}.numberPlate`}
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel className="text-xs">Davlat raqami belgisi</FormLabel>
@@ -235,12 +236,13 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           )}
                         />
 
+                        {/* model */}
                         <FormField
                           control={transportForm.control}
-                          name={`transports.${index}.model`}
+                          name={`tankers.${index}.model`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-xs">Avtotransport vositasi modeli</FormLabel>
+                              <FormLabel className="text-xs">Modeli</FormLabel>
                               <FormControl>
                                 <Input {...field} placeholder="Modeli" />
                               </FormControl>
@@ -249,12 +251,13 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           )}
                         />
 
+                        {/* factoryNumber */}
                         <FormField
                           control={transportForm.control}
-                          name={`transports.${index}.capacityFactoryNumber`}
+                          name={`tankers.${index}.factoryNumber`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-xs">Sig‘imning zavod raqami</FormLabel>
+                              <FormLabel className="text-xs">Zavod raqami</FormLabel>
                               <FormControl>
                                 <Input {...field} placeholder="Zavod raqami" />
                               </FormControl>
@@ -263,56 +266,60 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           )}
                         />
 
+                        {/* inventoryNumber */}
                         <FormField
                           control={transportForm.control}
-                          name={`transports.${index}.inventoryNumber`}
+                          name={`tankers.${index}.inventoryNumber`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-xs">Sig‘imning ro‘yxat yoki inventarizatsiya raqami</FormLabel>
+                              <FormLabel className="text-xs">Inventar raqami</FormLabel>
                               <FormControl>
-                                <Input {...field} placeholder="Ro‘yxat yoki inventarizatsiya raqami" />
+                                <Input {...field} placeholder="Inventar raqami" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
 
+                        {/* capacity */}
                         <FormField
                           control={transportForm.control}
-                          name={`transports.${index}.volume`}
+                          name={`tankers.${index}.capacity`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-xs">Sig‘imning hajmi</FormLabel>
+                              <FormLabel className="text-xs">Sig‘im</FormLabel>
                               <FormControl>
-                                <Input {...field} placeholder="Sig‘imning hajmi" />
+                                <Input {...field} placeholder="Sig‘im" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
 
+                        {/* capacityUnit */}
                         <FormField
                           control={transportForm.control}
-                          name={`transports.${index}.measurementUnit`}
+                          name={`tankers.${index}.capacityUnit`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-xs">Sig‘im hajmining o‘lchov birligi</FormLabel>
+                              <FormLabel className="text-xs">O‘lchov birligi</FormLabel>
                               <FormControl>
-                                <Input {...field} placeholder="O‘lchov birligi" />
+                                <Input {...field} placeholder="Litr, m3, t ..." />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
 
+                        {/* checkDate */}
                         <FormField
                           control={transportForm.control}
-                          name={`transports.${index}.inspectionDate`}
+                          name={`tankers.${index}.checkDate`}
                           render={({ field }) => {
                             const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                             return (
                               <FormItem className="w-full">
-                                <FormLabel>Texnik ko‘rik o‘tkazilgan sana</FormLabel>
+                                <FormLabel>Texnik ko‘rik sanasi</FormLabel>
                                 <DatePicker
                                   value={
                                     dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined
@@ -327,14 +334,15 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           }}
                         />
 
+                        {/* validUntil */}
                         <FormField
                           control={transportForm.control}
-                          name={`transports.${index}.expiryDate`}
+                          name={`tankers.${index}.validUntil`}
                           render={({ field }) => {
                             const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                             return (
                               <FormItem className="w-full">
-                                <FormLabel>Texnik ko‘rik amal qilish muddati </FormLabel>
+                                <FormLabel>Amal qilish muddati</FormLabel>
                                 <DatePicker
                                   value={
                                     dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined
@@ -359,14 +367,14 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                   className="w-full border-dashed border-2 flex gap-2 items-center justify-center py-6"
                   onClick={() =>
                     append({
-                      stateNumber: '',
+                      numberPlate: '',
                       model: '',
-                      capacityFactoryNumber: '',
+                      factoryNumber: '',
                       inventoryNumber: '',
-                      volume: '',
-                      measurementUnit: '',
-                      inspectionDate: undefined as unknown as Date,
-                      expiryDate: undefined as unknown as Date,
+                      capacity: '',
+                      capacityUnit: '',
+                      checkDate: undefined as unknown as Date,
+                      validUntil: undefined as unknown as Date,
                     })
                   }
                 >
@@ -374,10 +382,10 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                   Yana transport qo‘shish
                 </Button>
 
-                {transportForm.formState.errors.transports && (
+                {transportForm.formState.errors.tankers && (
                   <p className="text-sm font-medium text-destructive text-center">
-                    {transportForm.formState.errors.transports.message ||
-                      transportForm.formState.errors.transports.root?.message}
+                    {transportForm.formState.errors.tankers.message ||
+                      transportForm.formState.errors.tankers.root?.message}
                   </p>
                 )}
               </form>
@@ -387,6 +395,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
               <Button onClick={handleClose} type="button" variant="outline">
                 Bekor qilish
               </Button>
+
               <Button type="button" onClick={handleSave} disabled={isAddPermitLoading || isAddLegalPermitLoading}>
                 {isAddPermitLoading || isAddLegalPermitLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />

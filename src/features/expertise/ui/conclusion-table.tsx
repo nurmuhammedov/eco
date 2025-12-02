@@ -57,12 +57,12 @@ export const ConclusionsTable = () => {
       filterKey: 'objectName',
       filterType: 'search',
     },
-    {
-      accessorKey: 'expertiseName',
-      header: 'Ekspertiza obyektining nomi',
-      filterKey: 'expertiseName',
-      filterType: 'search',
-    },
+    // {
+    //   accessorKey: 'expertiseName',
+    //   header: 'Ekspertiza obyektining nomi',
+    //   filterKey: 'expertiseName',
+    //   filterType: 'search',
+    // },
     // {
     //   accessorKey: 'type',
     //   size: 300,

@@ -1,40 +1,35 @@
 import { ApplicationStatus } from '@/entities/application';
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { useCustomSearchParams, useData, usePaginatedData } from '@/shared/hooks';
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { TabsLayout } from '@/shared/layouts';
 import { useNavigate } from 'react-router-dom';
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
-import { AutoTabKey, AutoTabs } from '@/features/register/auto/ui/auto-tabs';
+import { AutoTabKey, AutoTabs, tabs } from '@/features/register/auto/ui/auto-tabs';
 import { formatDate } from 'date-fns';
 
-export const AutoList = () => {
+export const AutoList = ({ tankersCount }: any) => {
   const navigate = useNavigate();
   const {
-    paramsObject: { status = ApplicationStatus.ALL, type = AutoTabKey.ALL, page = 1, size = 10, search = '' },
+    paramsObject: { status = ApplicationStatus.ALL, type = AutoTabKey.ALL, page = 1, size = 10, search = '', ...rest },
     addParams,
   } = useCustomSearchParams();
 
-  const { data } = useData<any>('/auto/count', false);
-
-  const { data: list } = usePaginatedData<any>(
-    `/auto`,
-    {
-      page,
-      size,
-      search,
-      type: type !== 'ALL' ? type : '',
-      status: status !== 'ALL' ? status : '',
-    },
-    false,
-  );
+  const { data: list } = usePaginatedData<any>(`/tankers`, {
+    page,
+    size,
+    search,
+    activityType: type !== 'ALL' ? type : '',
+    status: status !== 'ALL' ? status : '',
+    ...rest,
+  });
 
   const tabCounts = {
-    [AutoTabKey.ALL]: data?.allCount ?? 0,
-    [AutoTabKey.OIL_PRODUCTS]: data?.oilProductsCount ?? 0,
-    [AutoTabKey.LPG_TRANSPORT]: data?.lpgTransportCount ?? 0,
-    [AutoTabKey.CHEMICALS]: data?.chemicalsCount ?? 0,
-    [AutoTabKey.CRYOGENIC_GASES]: data?.cryogenicGasesCount ?? 0,
-    [AutoTabKey.NUCLEAR_MATERIALS]: data?.nuclearMaterialsCount ?? 0,
+    [AutoTabKey.ALL]: tankersCount?.allCount ?? 0,
+    [AutoTabKey.OIL_PRODUCTS]: tankersCount?.oilCount ?? 0,
+    [AutoTabKey.LPG_TRANSPORT]: tankersCount?.lpgCount ?? 0,
+    [AutoTabKey.CHEMICALS]: tankersCount?.chemicalCount ?? 0,
+    [AutoTabKey.CRYOGENIC_GASES]: tankersCount?.cryogenicCount ?? 0,
+    [AutoTabKey.NUCLEAR_MATERIALS]: tankersCount?.radioactiveCount ?? 0,
   };
 
   const handleViewApplication = (id: string, legalTin: string) => {
@@ -44,26 +39,20 @@ export const AutoList = () => {
   const columns: ExtendedColumnDef<any, any>[] = [
     {
       header: 'Tashkilot nomi',
-      accessorKey: 'legalName',
-      filterKey: 'legalName',
+      accessorKey: 'name',
+      filterKey: 'name',
       filterType: 'search',
     },
     {
-      accessorKey: 'legalTin',
+      accessorKey: 'tin',
       header: 'Tashkilot STIRi',
-      filterKey: 'legalTin',
+      filterKey: 'tin',
       filterType: 'search',
     },
     {
-      accessorKey: 'address',
-      header: 'Yuridik manzili',
-      filterKey: 'address',
-      filterType: 'search',
-    },
-    {
-      accessorKey: 'conclusionNumber',
+      accessorKey: 'registerNumber',
       header: 'Xulosa raqami',
-      filterKey: 'conclusionNumber',
+      filterKey: 'registerNumber',
       filterType: 'search',
     },
     {
@@ -74,11 +63,15 @@ export const AutoList = () => {
     {
       accessorKey: 'activityTypeName',
       header: 'Faoliyat turi',
+      cell: (cell) =>
+        cell.row.original.activityType
+          ? tabs?.find((i) => i?.key == cell.row.original?.activityType)?.label || '-'
+          : null,
     },
     {
-      accessorKey: 'autoNumber',
+      accessorKey: 'numberPlate',
       header: 'Davlat raqam belgisi',
-      filterKey: 'autoNumber',
+      filterKey: 'numberPlate',
       filterType: 'search',
     },
     {
@@ -90,7 +83,7 @@ export const AutoList = () => {
     {
       accessorKey: 'expiryDate',
       header: 'Texnik ko‘rik amal qilish muddati',
-      cell: (cell) => (cell.row.original.expiryDate ? formatDate(cell.row.original.expiryDate, 'dd.MM.yyyy') : null),
+      cell: (cell) => (cell.row.original.validUntil ? formatDate(cell.row.original.validUntil, 'dd.MM.yyyy') : null),
     },
     {
       id: 'actions',
@@ -100,7 +93,7 @@ export const AutoList = () => {
           showView
           row={row}
           showDelete
-          onView={(row) => handleViewApplication(row.original.id, row.original.legalTin)}
+          onView={(row) => handleViewApplication(row.original.id, row.original.tin)}
         />
       ),
     },
@@ -131,7 +124,7 @@ export const AutoList = () => {
           },
         ]?.map((i) => ({
           ...i,
-          count: i?.id == status ? (data?.page?.totalElements ?? 0) : undefined,
+          count: i?.id == status ? (list?.page?.totalElements ?? 0) : undefined,
         }))}
         onTabChange={(type) => addParams({ status: type }, 'page')}
       />

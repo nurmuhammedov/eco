@@ -5,11 +5,11 @@ import { ReactNode } from 'react';
 
 export enum AutoTabKey {
   ALL = 'ALL',
-  OIL_PRODUCTS = 'OIL_PRODUCTS',
-  LPG_TRANSPORT = 'LPG_TRANSPORT',
-  CHEMICALS = 'CHEMICALS',
-  CRYOGENIC_GASES = 'CRYOGENIC_GASES',
-  NUCLEAR_MATERIALS = 'NUCLEAR_MATERIALS',
+  OIL_PRODUCTS = 'OIL',
+  LPG_TRANSPORT = 'LPG',
+  CHEMICALS = 'CHEMICAL',
+  CRYOGENIC_GASES = 'CRYOGENIC',
+  NUCLEAR_MATERIALS = 'RADIOACTIVE',
 }
 
 interface TabsProps {
@@ -27,7 +27,7 @@ const tabIcons: Record<AutoTabKey, ReactNode> = {
   [AutoTabKey.NUCLEAR_MATERIALS]: <Atom className="h-5 w-5" />,
 };
 
-const tabs = [
+export const tabs = [
   { key: AutoTabKey.ALL, label: 'Barchasi' },
   { key: AutoTabKey.OIL_PRODUCTS, label: 'Neft mahsulotlarini tashish' },
   { key: AutoTabKey.LPG_TRANSPORT, label: 'Suyultirilgan uglevodorod gazini tashish' },
