@@ -1,17 +1,20 @@
-// src/features/application/create-application/model/use-create-chemical-container-application.ts
 import { ChemicalContainerAppealDtoSchema, CreateChemicalContainerApplicationDTO } from '@/entities/create-application';
+import { UserRoles } from '@/entities/user';
 import {
   useChildEquipmentTypes,
   useDistrictSelectQueries,
   useHazardousFacilityDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const useCreateChemicalContainerApplication = () => {
+  const { user } = useAuth();
+
   const form = useForm<CreateChemicalContainerApplicationDTO>({
     resolver: zodResolver(ChemicalContainerAppealDtoSchema),
     defaultValues: {
@@ -28,17 +31,22 @@ export const useCreateChemicalContainerApplication = () => {
       manufacturedAt: undefined,
       partialCheckDate: undefined,
       fullCheckDate: undefined,
+      nonDestructiveCheckDate: undefined,
+      capacity: '',
+      environment: '',
+      pressure: '',
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
       assignmentDecreePath: undefined,
       expertisePath: undefined,
+      expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
-      nonDestructiveCheckDate: undefined,
-      capacity: '',
-      environment: '',
-      pressure: '',
+      passportPath: undefined,
+      hydraulicTestPath: undefined,
+      nextHydraulicTestDate: undefined,
+      internalInspectionPath: undefined,
+      nextInternalInspectionDate: undefined,
     },
     mode: 'onChange',
   });
@@ -47,8 +55,8 @@ export const useCreateChemicalContainerApplication = () => {
 
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
-  const { data: childEquipmentTypes } = useChildEquipmentTypes('CHEMICAL_CONTAINER'); // Child equipment turi
+  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL);
+  const { data: childEquipmentTypes } = useChildEquipmentTypes('CHEMICAL_CONTAINER');
 
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);

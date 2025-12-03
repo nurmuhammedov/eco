@@ -1,17 +1,20 @@
-// src/features/application/create-application/model/use-create-boiler-application.ts
 import { BoilerAppealDtoSchema, CreateBoilerApplicationDTO } from '@/entities/create-application';
+import { UserRoles } from '@/entities/user';
 import {
   useChildEquipmentTypes,
   useDistrictSelectQueries,
   useHazardousFacilityDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const useCreateBoilerApplication = () => {
+  const { user } = useAuth();
+
   const form = useForm<CreateBoilerApplicationDTO>({
     resolver: zodResolver(BoilerAppealDtoSchema),
     defaultValues: {
@@ -28,17 +31,22 @@ export const useCreateBoilerApplication = () => {
       manufacturedAt: undefined,
       partialCheckDate: undefined,
       fullCheckDate: undefined,
+      nonDestructiveCheckDate: undefined,
+      capacity: '',
+      environment: '',
+      pressure: '',
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
       assignmentDecreePath: undefined,
       expertisePath: undefined,
+      expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
-      nonDestructiveCheckDate: undefined,
-      capacity: '',
-      environment: '',
-      pressure: '',
+      passportPath: undefined,
+      internalInspectionPath: undefined,
+      nextInternalInspectionDate: undefined,
+      hydraulicTestPath: undefined,
+      nextHydraulicTestDate: undefined,
     },
     mode: 'onChange',
   });
@@ -47,7 +55,7 @@ export const useCreateBoilerApplication = () => {
 
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
+  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL);
   const { data: childEquipmentTypes } = useChildEquipmentTypes('BOILER');
 
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);

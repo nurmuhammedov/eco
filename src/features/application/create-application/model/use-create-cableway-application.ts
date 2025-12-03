@@ -1,17 +1,20 @@
-// src/features/application/create-application/model/use-create-cableway-application.ts
 import { CablewayAppealDtoSchema, CreateCablewayApplicationDTO } from '@/entities/create-application';
+import { UserRoles } from '@/entities/user';
 import {
   useChildEquipmentTypes,
   useDistrictSelectQueries,
   useHazardousFacilityDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const useCreateCablewayApplication = () => {
+  const { user } = useAuth();
+
   const form = useForm<CreateCablewayApplicationDTO>({
     resolver: zodResolver(CablewayAppealDtoSchema),
     defaultValues: {
@@ -28,17 +31,19 @@ export const useCreateCablewayApplication = () => {
       manufacturedAt: undefined,
       partialCheckDate: undefined,
       fullCheckDate: undefined,
-      labelPath: undefined,
-      saleContractPath: undefined,
-      equipmentCertPath: undefined,
-      assignmentDecreePath: undefined,
-      expertisePath: undefined,
-      installationCertPath: undefined,
-      additionalFilePath: undefined,
-      nonDestructiveCheckDate: undefined,
       speed: '',
       passengerCount: '',
       length: '',
+      labelPath: undefined,
+      assignmentDecreePath: undefined,
+      passportPath: undefined,
+      saleContractPath: undefined,
+      expertisePath: undefined,
+      expertiseExpiryDate: undefined,
+      equipmentCertPath: undefined,
+      installationCertPath: undefined,
+      technicalInspectionPath: undefined,
+      nextTechnicalInspectionDate: undefined,
     },
     mode: 'onChange',
   });
@@ -47,8 +52,8 @@ export const useCreateCablewayApplication = () => {
 
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
-  const { data: childEquipmentTypes } = useChildEquipmentTypes('CABLEWAY'); // Child equipment turi
+  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL);
+  const { data: childEquipmentTypes } = useChildEquipmentTypes('CABLEWAY');
 
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);

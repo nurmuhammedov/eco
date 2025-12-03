@@ -20,7 +20,7 @@ export const BoilerUtilizerIllegalAppealDtoSchema = z
       .date()
       .optional()
       .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-    hazardousFacilityId: z.string().uuid('XICHO‘ ID noto‘g‘ri formatda!').optional().or(z.literal('')), // Ixtiyoriy
+    hazardousFacilityId: z.string().uuid('XICHO ID noto‘g‘ri formatda!').optional().or(z.literal('')), // Ixtiyoriy
     childEquipmentId: z
       .string({
         required_error: 'Qozon utilizator turini tanlanmadi!',

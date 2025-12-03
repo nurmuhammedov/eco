@@ -3,84 +3,101 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
 import { getDate } from '@/shared/utils/date';
 import { useNavigate } from 'react-router-dom';
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
+import { useHazardousFacilityTypeDictionarySelect } from '@/shared/api/dictionaries';
 
 export const HfList = () => {
   const navigate = useNavigate();
   const {
-    paramsObject: { page = 1, size = 10, search = '', mode = '', hfOfficeId = '' },
+    paramsObject: {
+      page = 1,
+      size = 10,
+      search = '',
+      mode = '',
+      registryNumber = '',
+      legalTin = '',
+      legalName = '',
+      legalAddress = '',
+      name = '',
+      address = '',
+      regionId = '',
+      officeId = '',
+      hfTypeId = '',
+    },
   } = useCustomSearchParams();
 
-  const { data = [] } = usePaginatedData<any>(`/hf`, { page, size, search, mode, officeId: hfOfficeId });
+  const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect();
+
+  const { data = [] } = usePaginatedData<any>(`/hf`, {
+    page,
+    size,
+    search,
+    mode,
+    registryNumber,
+    legalTin,
+    legalName,
+    legalAddress,
+    name,
+    address,
+    regionId,
+    officeId,
+    hfTypeId,
+  });
 
   const handleViewApplication = (id: string) => {
     navigate(`${id}/hf`);
   };
-  //
-  // const handleDownloadExel = async () => {
-  //   const res = await apiClient.downloadFile<Blob>('/hf/export/excel', {
-  //     mode,
-  //     search,
-  //   });
-  //
-  //   const blob = res.data;
-  //   const url = URL.createObjectURL(blob);
-  //   const a = document.createElement('a');
-  //   const today = new Date();
-  //   const filename = `XICHOlar (${format(today, 'yyyy-MM-dd_hh:mm:ss')}).xlsx`;
-  //   a.href = url;
-  //   a.download = filename;
-  //   document.body.appendChild(a);
-  //   a.click();
-  //   a.remove();
-  //   URL.revokeObjectURL(url);
-  // };
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
       header: 'Hisobga olish sanasi',
       accessorFn: (row) => getDate(row.registrationDate),
+      maxSize: 90,
     },
     {
       header: 'Hisobga olish raqami',
       accessorKey: 'registryNumber',
-      filterKey: 'search',
+      filterKey: 'registryNumber',
       filterType: 'search',
     },
     {
       header: 'Tashkilot nomi',
       accessorKey: 'legalName',
-      filterKey: 'search',
+      filterKey: 'legalName',
       filterType: 'search',
     },
     {
       header: 'Tashkilot manzili',
       accessorKey: 'legalAddress',
-      filterKey: 'search',
+      filterKey: 'legalAddress',
       filterType: 'search',
     },
     {
       header: 'STIR',
       accessorKey: 'legalTin',
-      filterKey: 'search',
-      filterType: 'search',
+      filterKey: 'legalTin',
+      filterType: 'number',
+      maxSize: 90,
+      filterMaxLength: 9,
     },
     {
-      header: 'XICHOning nomi',
+      header: 'XICHO nomi',
       accessorKey: 'name',
-      filterKey: 'search',
+      filterKey: 'name',
       filterType: 'search',
     },
     {
       accessorKey: 'address',
       header: 'XICHO manzili',
-      filterKey: 'search',
+      filterKey: 'address',
       filterType: 'search',
     },
     {
-      header: 'XICHOning turi',
+      header: 'XICHO turi',
       accessorKey: 'typeName',
-      filterKey: 'search',
-      filterType: 'search',
+      filterKey: 'hfTypeId',
+      filterType: 'select',
+      maxSize: 80,
+      filterOptions: hazardousFacilityTypes || [],
     },
     {
       id: 'actions',
@@ -93,13 +110,6 @@ export const HfList = () => {
 
   return (
     <>
-      {/*<div className={'flex justify-between items-start'}>*/}
-      {/*  <Filter inputKeys={['search', 'mode', 'hfOfficeId']} />*/}
-      {/*  <Button onClick={handleDownloadExel}>*/}
-      {/*    <Download /> MS Exel*/}
-      {/*  </Button>*/}
-      {/*</div>*/}
-
       <DataTable
         showFilters={true}
         isPaginated

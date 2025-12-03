@@ -1,11 +1,13 @@
 import { CreateLiftApplicationDTO, LifAppealDtoSchema } from '@/entities/create-application';
 import { BuildingSphereType } from '@/entities/create-application/types/enums';
+import { UserRoles } from '@/entities/user';
 import {
   useChildEquipmentTypes,
   useDistrictSelectQueries,
   useHazardousFacilityDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { useTranslatedObject } from '@/shared/hooks';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,6 +15,8 @@ import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const useCreateLiftApplication = () => {
+  const { user } = useAuth();
+
   const form = useForm<CreateLiftApplicationDTO>({
     resolver: zodResolver(LifAppealDtoSchema),
     defaultValues: {
@@ -29,16 +33,18 @@ export const useCreateLiftApplication = () => {
       manufacturedAt: undefined,
       partialCheckDate: undefined,
       fullCheckDate: undefined,
+      sphere: undefined,
+      liftingCapacity: '',
+      stopCount: '',
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
       assignmentDecreePath: undefined,
       expertisePath: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
-      sphere: undefined,
-      liftingCapacity: '',
-      stopCount: '',
+      passportPath: undefined,
+      technicalInspectionPath: undefined,
+      nextTechnicalInspectionDate: undefined,
     },
     mode: 'onChange',
   });
@@ -47,7 +53,7 @@ export const useCreateLiftApplication = () => {
 
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
+  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL);
   const { data: childEquipmentTypes } = useChildEquipmentTypes('ELEVATOR');
 
   const buildingSphereTypeOptions = useTranslatedObject(BuildingSphereType, 'building_sphere_type');

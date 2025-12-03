@@ -14,11 +14,38 @@ import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const useCreateHPOApplication = () => {
-  const form = useForm<CreateHPOApplicationDTO>({ resolver: zodResolver(HFAppealDtoSchema) });
-
-  const regionId = form.watch('regionId');
+  const form = useForm<CreateHPOApplicationDTO>({
+    resolver: zodResolver(HFAppealDtoSchema),
+    defaultValues: {
+      phoneNumber: '',
+      upperOrganization: '',
+      name: '',
+      hfTypeId: undefined,
+      spheres: [],
+      regionId: '',
+      districtId: '',
+      address: '',
+      location: '',
+      extraArea: '',
+      hazardousSubstance: '',
+      identificationCardPath: undefined,
+      receiptPath: undefined,
+      insurancePolicyPath: undefined,
+      insurancePolicyExpiryDate: undefined,
+      cadastralPassportPath: undefined,
+      projectDocumentationPath: undefined,
+      licensePath: undefined,
+      licenseExpiryDate: undefined,
+      expertOpinionPath: undefined,
+      appointmentOrderPath: undefined,
+      permitPath: undefined,
+      permitExpiryDate: undefined,
+      industrialSafetyDeclarationPath: undefined,
+    },
+  });
 
   const { spheres } = applicationFormConstants();
+  const regionId = form.watch('regionId');
 
   const { data: regions } = useRegionSelectQueries();
 

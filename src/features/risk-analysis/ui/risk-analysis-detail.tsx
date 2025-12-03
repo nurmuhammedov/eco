@@ -124,7 +124,7 @@ const RiskAnalysisDetail = () => {
               />
             </>
           ) : (
-            <div>Kerakli ma'lumotlar topilmadi...</div> // Yoki loader ko'rsatish mumkin
+            <div>Kerakli maʼlumotlar topilmadi...</div> // Yoki loader ko'rsatish mumkin
           )}
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">

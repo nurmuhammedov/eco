@@ -7,14 +7,15 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 export const XrayList = () => {
   const navigate = useNavigate();
   const {
-    paramsObject: { page = 1, size = 10, search = '', mode = '', xrayRegionId = '' },
+    paramsObject: { page = 1, size = 10, search = '', mode = '', officeId = '', regionId = '' },
   } = useCustomSearchParams();
   const { data = [] } = usePaginatedData<any>(`/xrays`, {
     page,
     size,
     search,
     mode,
-    regionId: xrayRegionId,
+    officeId,
+    regionId,
   });
 
   const handleViewApplication = (id: string) => {

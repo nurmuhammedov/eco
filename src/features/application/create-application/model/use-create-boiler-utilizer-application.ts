@@ -1,17 +1,20 @@
-// src/features/application/create-application/model/use-create-boiler-utilizer-application.ts
 import { BoilerUtilizerAppealDtoSchema, CreateBoilerUtilizerApplicationDTO } from '@/entities/create-application';
+import { UserRoles } from '@/entities/user';
 import {
   useChildEquipmentTypes,
   useDistrictSelectQueries,
   useHazardousFacilityDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const useCreateBoilerUtilizerApplication = () => {
+  const { user } = useAuth();
+
   const form = useForm<CreateBoilerUtilizerApplicationDTO>({
     resolver: zodResolver(BoilerUtilizerAppealDtoSchema),
     defaultValues: {
@@ -28,19 +31,24 @@ export const useCreateBoilerUtilizerApplication = () => {
       manufacturedAt: undefined,
       partialCheckDate: undefined,
       fullCheckDate: undefined,
+      nonDestructiveCheckDate: undefined,
+      capacity: '',
+      environment: '',
+      pressure: '',
+      density: '',
+      temperature: '',
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
       assignmentDecreePath: undefined,
       expertisePath: undefined,
+      expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
-      nonDestructiveCheckDate: undefined,
-      capacity: '',
-      environment: '',
-      pressure: '',
-      density: '', // Yangi
-      temperature: '',
+      passportPath: undefined,
+      hydraulicTestPath: undefined,
+      nextHydraulicTestDate: undefined,
+      internalInspectionPath: undefined,
+      nextInternalInspectionDate: undefined,
     },
     mode: 'onChange',
   });
@@ -49,8 +57,8 @@ export const useCreateBoilerUtilizerApplication = () => {
 
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
-  const { data: childEquipmentTypes } = useChildEquipmentTypes('BOILER_UTILIZER'); // Child equipment turi
+  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL);
+  const { data: childEquipmentTypes } = useChildEquipmentTypes('BOILER_UTILIZER');
 
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);

@@ -1,17 +1,20 @@
-// src/features/application/create-application/model/use-create-pipeline-application.ts
 import { CreatePipelineApplicationDTO, PipelineAppealDtoSchema } from '@/entities/create-application';
+import { UserRoles } from '@/entities/user';
 import {
   useChildEquipmentTypes,
   useDistrictSelectQueries,
   useHazardousFacilityDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const useCreatePipelineApplication = () => {
+  const { user } = useAuth();
+
   const form = useForm<CreatePipelineApplicationDTO>({
     resolver: zodResolver(PipelineAppealDtoSchema),
     defaultValues: {
@@ -28,19 +31,25 @@ export const useCreatePipelineApplication = () => {
       manufacturedAt: undefined,
       partialCheckDate: undefined,
       fullCheckDate: undefined,
-      labelPath: undefined,
-      saleContractPath: undefined,
-      equipmentCertPath: undefined,
-      assignmentDecreePath: undefined,
-      expertisePath: undefined,
-      installationCertPath: undefined,
-      additionalFilePath: undefined,
       nonDestructiveCheckDate: undefined,
       diameter: '',
       thickness: '',
       length: '',
       pressure: '',
       environment: '',
+      labelPath: undefined,
+      saleContractPath: undefined,
+      equipmentCertPath: undefined,
+      equipmentCertExpiryDate: undefined,
+      assignmentDecreePath: undefined,
+      expertisePath: undefined,
+      expertiseExpiryDate: undefined,
+      installationCertPath: undefined,
+      passportPath: undefined,
+      externalExaminationPath: undefined,
+      nextExternalExaminationDate: undefined,
+      hydraulicTestPath: undefined,
+      nextHydraulicTestDate: undefined,
     },
     mode: 'onChange',
   });
@@ -49,8 +58,8 @@ export const useCreatePipelineApplication = () => {
 
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
-  const { data: childEquipmentTypes } = useChildEquipmentTypes('PIPELINE'); // Child equipment turi 'PIPELINE'
+  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL);
+  const { data: childEquipmentTypes } = useChildEquipmentTypes('PIPELINE');
 
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);

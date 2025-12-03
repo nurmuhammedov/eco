@@ -21,10 +21,14 @@ import { Fragment } from 'react';
 import { DataTablePagination } from './data-table-pagination';
 import { getCommonPinningStyles } from './models/get-common-pinning';
 import { ColumnFilterInput } from '@/shared/components/common/data-table/column-filter-input';
+import { DateDisableStrategy } from '@/shared/components/ui/datepicker';
 
 export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   filterKey?: string;
-  filterType?: 'search' | 'select' | 'date';
+  filterType?: 'search' | 'select' | 'date' | 'number';
+  filterOptions?: { id: string; name: string }[];
+  filterDateStrategy?: DateDisableStrategy;
+  filterMaxLength?: number;
 };
 
 interface DataTableProps<TData, TValue> {
@@ -163,8 +167,8 @@ export function DataTable<TData, TValue>({
                   />
                 )}
                 {table.getAllColumns().map((column) => {
-                  const columnDef = column.columnDef;
-                  const key = (columnDef as any).filterKey as string | undefined;
+                  const columnDef = column.columnDef as ExtendedColumnDef<TData, TValue>;
+                  const key = columnDef.filterKey;
 
                   if (!key || key === 'actions')
                     return (
@@ -179,7 +183,7 @@ export function DataTable<TData, TValue>({
                       key={column.id}
                       className="!p-0 !h-8 !bg-white hover:!bg-white even:!bg-white border-b-2 border-neutral-200"
                     >
-                      <ColumnFilterInput columnKey={key} />
+                      <ColumnFilterInput column={columnDef} />
                     </TableHead>
                   );
                 })}

@@ -1,20 +1,20 @@
-import { CardForm, DeRegisterHFOtDTO } from '@/entities/create-application';
+import { CardForm, DeRegisterHFDTO } from '@/entities/create-application';
+import { useDeRegisterHFApplication } from '@/features/application/create-application/model/use-deregister-hpo-application.ts';
 import { GoBack } from '@/shared/components/common';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
-import { Textarea } from '@/shared/components/ui/textarea';
 import { PhoneInput } from '@/shared/components/ui/phone-input';
-import { useDeRegisterHfoApplication } from '@/features/application/create-application/model/use-deregister-hpo-application.ts';
+import { Textarea } from '@/shared/components/ui/textarea';
 
-interface DeRegisterHFOFormProps {
-  onSubmit: (data: DeRegisterHFOtDTO) => void;
+interface DeRegisterHFFormProps {
+  onSubmit: (data: DeRegisterHFDTO) => void;
 }
 
-export default ({ onSubmit }: DeRegisterHFOFormProps) => {
-  const { form } = useDeRegisterHfoApplication();
+export default ({ onSubmit }: DeRegisterHFFormProps) => {
+  const { form } = useDeRegisterHFApplication();
 
   return (
     <Form {...form}>
@@ -56,7 +56,7 @@ export default ({ onSubmit }: DeRegisterHFOFormProps) => {
               name="reasons"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Sabab</FormLabel>
+                  <FormLabel required>Sabab</FormLabel>
                   <FormControl>
                     <Input className="w-full 3xl:w-sm" placeholder="Sabab" {...field} />
                   </FormControl>
@@ -104,13 +104,13 @@ export default ({ onSubmit }: DeRegisterHFOFormProps) => {
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
                   <FormLabel className="max-w-1/2 2xl:max-w-3/7" required>
-                    justifiedDocumentPath
+                    XICHOni rekonstruksiya qilish yoki texnik jihatdan qayta jihozlashga loyiha hujjatlarining sanoat
+                    xavfsizligi ekspertizasi xulosasi
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
-                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
@@ -121,17 +121,19 @@ export default ({ onSubmit }: DeRegisterHFOFormProps) => {
             render={({ field }) => (
               <FormItem className="pb-4 border-b">
                 <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">filePath</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7" required>
+                    Identifikatsiya varaqasini o‘z ichiga olgan XICHOni sanoat xavfsizligi ekspertizasi natijalari
+                    to‘g‘risidagi xulosa nusxasi
+                  </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>
                 </div>
-                <FormMessage className="text-right" />
               </FormItem>
             )}
           />
         </CardForm>
-        <Button type="submit" className="mt-5" disabled={!form.formState.isValid}>
+        <Button type="submit" className="mt-5">
           Ariza yaratish
         </Button>
       </form>

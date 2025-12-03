@@ -28,3 +28,4 @@ export { useCreateIllegalLpgPoweredApplication } from './model/use-create-illega
 export { useCreateIllegalHoistApplication } from './model/use-create-illegal-hoist-application';
 export { useCreateIllegalCablewayApplication } from './model/use-create-illegal-cableway-application';
 export { useCreateAttractionApplication } from './model/use-create-attraction-application';
+export { useCreateEscalatorApplication } from './model/use-create-escalator-application';

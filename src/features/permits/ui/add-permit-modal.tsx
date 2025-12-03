@@ -53,7 +53,15 @@ export const SearchResultDisplay = ({
     ...(type === 'detail'
       ? [{ label: 'Turi', value: tabs.find((t) => t?.key?.toString() == data?.type?.toString())?.label || '' }]
       : [{ label: 'Hujjat turi', value: data?.documentType }]),
-    { label: 'Holati', value: data.status === 'ACTIVE' ? 'Faol' : 'Nofaol' },
+    {
+      label: 'Holati',
+      value:
+        data.status === 'ACTIVE' ? (
+          <span className="text-green-600">Faol</span>
+        ) : (
+          <span className="text-red-600">Faol emas</span>
+        ),
+    },
     { label: 'Ro‘yxatga olingan raqami', value: data.registerNumber },
     { label: 'Ro‘yxatga olingan sana', value: data.registrationDate },
     { label: 'Amal qilish muddati (tugash sanasi)', value: data.expiryDate },

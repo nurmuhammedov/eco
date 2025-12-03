@@ -6,68 +6,37 @@ import { z } from 'zod';
 
 export const LifAppealDtoSchema = z.object({
   phoneNumber: z
-    .string({ message: FORM_ERROR_MESSAGES.required })
+    .string({ required_error: 'Majburiy maydon!' })
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  hazardousFacilityId: z.string().uuid('XICHO ID noto‘g‘ri formatda!').optional().or(z.literal('')),
-  childEquipmentId: z.string({ required_error: 'Lift turi tanlanmadi!' }).min(1, 'Lift turi tanlanmadi!'),
-  factoryNumber: z.string({ required_error: 'Zavod raqami kiritilmadi!' }).min(1, 'Zavod raqami kiritilmadi!'),
-  regionId: z.string({ required_error: 'Viloyat tanlanmadi!' }).min(1, 'Viloyat tanlanmadi!'),
-  districtId: z.string({ required_error: 'Tuman tanlanmadi!' }).min(1, 'Tuman tanlanmadi!'),
-  address: z
-    .string({
-      required_error: 'Manzil kiritilmadi!',
-    })
-    .min(1, 'Manzil kiritilmadi!'),
-  model: z.string({ required_error: 'Model, marka kiritilmadi!' }).min(1, 'Model, marka kiritilmadi!'),
-  factory: z.string({ required_error: 'Zavod nomi kiritilmadi!' }).min(1, 'Zavod nomi kiritilmadi!'),
-  location: z
-    .string({
-      required_error: 'Joylashuv tanlanmadi!',
-    })
-    .min(1, 'Joylashuv tanlanmadi!'),
-  manufacturedAt: z
-    .date({ required_error: 'Ishlab chiqarilgan sana kiritilmadi!' })
-    .transform((date) => format(date, 'yyyy-MM-dd')),
-  partialCheckDate: z
-    .date({ required_error: 'O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi kiritilmadi!' })
-    .transform((date) => format(date, 'yyyy-MM-dd')),
-  fullCheckDate: z
-    .date({ required_error: 'O‘tkaziladigan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi kiritilmadi!' })
-    .transform((date) => format(date, 'yyyy-MM-dd')),
-  labelPath: z
-    .string({ required_error: 'Liftning birkasi bilan surʼati fayli biriktirilmadi!' })
-    .min(1, 'Liftning birkasi bilan surʼati fayli biriktirilmadi!'),
-  labelExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
-  saleContractPath: z
-    .string({ required_error: 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!' })
-    .min(1, 'Sotib olish-sotish shartnomasi fayli biriktirilmadi!'),
-  saleContractExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
-  equipmentCertPath: z
-    .string({ required_error: 'Qurilma sertifikati fayli biriktirilmadi!' })
-    .min(1, 'Qurilma sertifikati fayli biriktirilmadi!'),
-  equipmentCertExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
-  assignmentDecreePath: z
-    .string({ required_error: 'Masʼul shaxs tayinlanganligi to‘g‘risida buyruq fayli biriktirilmadi!' })
-    .min(1, 'Masʼul shaxs tayinlanganligi to‘g‘risida buyruq fayli biriktirilmadi!'),
-  assignmentDecreeExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
-  expertisePath: z
-    .string({ required_error: 'Ekspertiza loyihasi fayli biriktirilmadi!' })
-    .min(1, 'Ekspertiza loyihasi fayli biriktirilmadi!'),
-  expertiseExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
-  installationCertPath: z
-    .string({ required_error: 'Montaj guvohnomasi fayli biriktirilmadi!' })
-    .min(1, 'Montaj guvohnomasi fayli biriktirilmadi!'),
-  installationCertExpiryDate: z.date({ required_error: 'Sanasi kiritilmadi!' }),
-  additionalFilePath: z.string().optional(),
-  additionalFileExpiryDate: z.date().optional(),
+  hazardousFacilityId: z.string().optional(),
+  childEquipmentId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  regionId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  districtId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  model: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  factory: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  location: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  partialCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  fullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
   sphere: z.nativeEnum(BuildingSphereType, {
     errorMap: () => ({ message: 'Soha tanlanmadi!' }),
   }),
-  liftingCapacity: z
-    .string({ required_error: "Yuk ko'tara olish quvvati kiritilmadi!" })
-    .min(1, "Yuk ko'tara olish quvvati kiritilmadi!"),
-  stopCount: z.string({ required_error: 'Toʼxtashlar soni kiritilmadi!' }).min(1, 'Toʼxtashlar soni kiritilmadi!'),
+  liftingCapacity: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  stopCount: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  labelPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  assignmentDecreePath: z.string().optional(),
+  saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  equipmentCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  installationCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  passportPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  expertisePath: z.string().optional(),
+  technicalInspectionPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  nextTechnicalInspectionDate: z
+    .date({ required_error: 'Majburiy maydon!' })
+    .transform((date) => format(date, 'yyyy-MM-dd')),
 });

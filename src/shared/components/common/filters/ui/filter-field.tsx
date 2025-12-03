@@ -6,7 +6,7 @@ interface FilterFieldProps {
   className?: string;
 }
 export const FilterField: React.FC<FilterFieldProps> = ({ children, className }) => {
-  return <div className={cn('w-64 3xl:w-80', className)}>{children}</div>;
+  return <div className={cn('w-64 3xl:w-80 p-1', className)}>{children}</div>;
 };
 
 export default FilterField;

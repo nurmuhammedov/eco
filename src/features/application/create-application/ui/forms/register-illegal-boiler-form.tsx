@@ -193,11 +193,11 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                 name="hazardousFacilityId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>XICHO‘ tanlang</FormLabel>
+                    <FormLabel>XICHO tanlang</FormLabel>
                     <FormControl>
                       <Select onValueChange={field.onChange} value={field.value || ''}>
                         <SelectTrigger className="w-full 3xl:w-sm">
-                          <SelectValue placeholder="XICHO‘ni tanlang" />
+                          <SelectValue placeholder="XICHOni tanlang" />
                         </SelectTrigger>
                         <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
                       </Select>

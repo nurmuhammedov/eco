@@ -1,5 +1,5 @@
-// src/features/application/create-application/ui/forms/register-cableway-form.tsx
 import { CardForm, CreateCablewayApplicationDTO } from '@/entities/create-application';
+import { UserRoles } from '@/entities/user';
 import { NoteForm, useCreateCablewayApplication } from '@/features/application/create-application';
 import { GoBack } from '@/shared/components/common';
 import { InputFile } from '@/shared/components/common/file-upload';
@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/components/ui/input';
 import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { parseISO } from 'date-fns';
 
 interface RegisterCablewayFormProps {
@@ -20,6 +21,7 @@ interface RegisterCablewayFormProps {
 export default ({ onSubmit }: RegisterCablewayFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateCablewayApplication();
+  const { user } = useAuth();
 
   return (
     <Form {...form}>
@@ -41,24 +43,28 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="hazardousFacilityId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>XICHO‘ tanlang</FormLabel>
-                  <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value || ''}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="XICHO‘ni tanlang" />
-                      </SelectTrigger>
-                      <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
+            {user?.role !== UserRoles.INDIVIDUAL && (
+              <FormField
+                control={form.control}
+                name="hazardousFacilityId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>XICHO tanlang</FormLabel>
+                    <FormControl>
+                      <Select onValueChange={field.onChange} value={field.value || ''}>
+                        <SelectTrigger className="w-full 3xl:w-sm">
+                          <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
+                        </SelectTrigger>
+                        <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
               name="childEquipmentId"
@@ -137,95 +143,17 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
             />
             <FormField
               control={form.control}
-              name="regionId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Osma yo‘l joylashgan viloyat</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) => {
-                        if (value) {
-                          field.onChange(value);
-                          form.setValue('districtId', '');
-                        }
-                      }}
-                      value={field.value?.toString()}
-                    >
-                      <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="Qurilma joylashgan viloyat" />
-                      </SelectTrigger>
-                      <SelectContent>{regionOptions}</SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="districtId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Osma yo‘l joylashgan tuman</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value?.toString()}
-                      disabled={!form.watch('regionId')}
-                    >
-                      <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="Qurilma joylashgan tuman" />
-                      </SelectTrigger>
-                      <SelectContent>{districtOptions}</SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Osma yo‘lning joylashgan manzili</FormLabel>
-                  <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning joylashgan manzili" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem className="w-full 3xl:w-sm">
-                  <FormLabel required>Geolokatsiya (xaritadan joyni tanlang va koordinatalarni kiriting)</FormLabel>
-                  <FormControl>
-                    <YandexMapModal
-                      initialCoords={field.value ? field.value.split(',').map(Number) : null}
-                      onConfirm={(coords) => field.onChange(coords)}
-                      label="Xaritadan belgilash"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="partialCheckDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
                   <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi</FormLabel>
+                    <FormLabel required>Qisman texnik ko‘rik sanasi</FormLabel>
                     <DatePicker
-                      disableStrategy="after"
+                      disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Sanani tanlang"
+                      placeholder="Qisman texnik ko‘rik sanasini kiriting"
                     />
                     <FormMessage />
                   </FormItem>
@@ -239,29 +167,12 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
                   <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>O‘tkaziladigan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi</FormLabel>
+                    <FormLabel required>To‘liq texnik ko‘rik sanasi</FormLabel>
                     <DatePicker
+                      disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Sanani tanlang"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="nonDestructiveCheckDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi</FormLabel>
-                    <DatePicker
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Sanani tanlang"
+                      placeholder="To‘liq texnik ko‘rik sanasini kiriting"
                     />
                     <FormMessage />
                   </FormItem>
@@ -307,8 +218,87 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="regionId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Osma yo‘l joylashgan viloyat</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value);
+                          form.setValue('districtId', '');
+                        }
+                      }}
+                      value={field.value?.toString()}
+                    >
+                      <SelectTrigger className="w-full 3xl:w-sm">
+                        <SelectValue placeholder="Viloyatni tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>{regionOptions}</SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="districtId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Osma yo‘l joylashgan tuman</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value?.toString()}
+                      disabled={!form.watch('regionId')}
+                    >
+                      <SelectTrigger className="w-full 3xl:w-sm">
+                        <SelectValue placeholder="Tumanni tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>{districtOptions}</SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Osma yo‘l joylashgan manzil</FormLabel>
+                  <FormControl>
+                    <Input className="w-full 3xl:w-sm" placeholder="Aniq manzilni kiriting" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem className="w-full 3xl:w-sm">
+                  <FormLabel required>Geolokatsiya (xaritadan joyni tanlang)</FormLabel>
+                  <FormControl>
+                    <YandexMapModal
+                      initialCoords={field.value ? field.value.split(',').map(Number) : null}
+                      onConfirm={(coords) => field.onChange(coords)}
+                      label="Xaritadan belgilash"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
         </CardForm>
+
         <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
           <div className="pb-4 border-b">
             <FormField
@@ -327,27 +317,43 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                 </FormItem>
               )}
             />
+          </div>
+
+          <div className="pb-4 border-b">
             <FormField
+              name="assignmentDecreePath"
               control={form.control}
-              name="labelExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end xl:items-center justify-between gap-2">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="pb-4 border-b">
+            <FormField
+              name="passportPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end xl:items-center justify-between gap-2">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Qurilma pasporti
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
             />
           </div>
 
@@ -359,7 +365,7 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end xl:items-center justify-between gap-2">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Sotib olish-sotish shartnomasi fayli
+                      Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -367,110 +373,6 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                   </div>
                 </FormItem>
               )}
-            />
-            <FormField
-              control={form.control}
-              name="saleContractExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-          </div>
-
-          <div className="pb-4 border-b">
-            <FormField
-              name="equipmentCertPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Osma yo‘l sertifikati fayli
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="equipmentCertExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-          </div>
-
-          <div className="pb-4 border-b">
-            <FormField
-              name="assignmentDecreePath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq fayli
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="assignmentDecreeExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
             />
           </div>
 
@@ -482,7 +384,7 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end xl:items-center justify-between gap-2">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Ekspertiza loyihasi fayli
+                      Ekspertiza xulosasi
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -508,10 +410,29 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                         placeholder="Amal qilish muddati"
                       />
                     </div>
-                    <FormMessage />
                   </FormItem>
                 );
               }}
+            />
+          </div>
+
+          <div className="pb-4 border-b">
+            <FormField
+              name="equipmentCertPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end xl:items-center justify-between gap-2">
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">
+                      Osma yo‘lning muvofiqlik sertifikati (muqaddam foydalanishda bo'lgan osma arqonli yuruvchi yo'l
+                      uchun majburiy emas)
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
             />
           </div>
 
@@ -523,7 +444,26 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end xl:items-center justify-between gap-2">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Montaj guvohnomasi fayli
+                      Montaj dalolatnomasi
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="pb-4 border-b">
+            <FormField
+              name="technicalInspectionPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end xl:items-center justify-between gap-2">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Texnik ko'rikdan o'tkazilganligi
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -534,68 +474,28 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
             />
             <FormField
               control={form.control}
-              name="installationCertExpiryDate"
+              name="nextTechnicalInspectionDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
                   <FormItem className="w-full">
                     <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Navbatdagi texnik ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-          </div>
-
-          <div className="pb-4 border-b">
-            <FormField
-              name="additionalFilePath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilma pasporti</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="additionalFileExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
                   </FormItem>
                 );
               }}
             />
           </div>
         </CardForm>
-        <Button type="submit" className="mt-5" disabled={!form.formState.isValid}>
+        <Button type="submit" className="mt-5">
           Ariza yaratish
         </Button>
       </form>

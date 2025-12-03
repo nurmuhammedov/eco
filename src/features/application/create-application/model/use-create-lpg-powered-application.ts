@@ -1,17 +1,20 @@
-// src/features/application/create-application/model/use-create-lpg-powered-application.ts
 import { CreateLpgPoweredApplicationDTO, LpgPoweredAppealDtoSchema } from '@/entities/create-application';
+import { UserRoles } from '@/entities/user';
 import {
   useChildEquipmentTypes,
   useDistrictSelectQueries,
   useHazardousFacilityDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const useCreateLpgPoweredApplication = () => {
+  const { user } = useAuth();
+
   const form = useForm<CreateLpgPoweredApplicationDTO>({
     resolver: zodResolver(LpgPoweredAppealDtoSchema),
     defaultValues: {
@@ -28,18 +31,20 @@ export const useCreateLpgPoweredApplication = () => {
       manufacturedAt: undefined,
       partialCheckDate: undefined,
       fullCheckDate: undefined,
+      capacity: '',
+      pressure: '',
+      fuel: '',
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
       assignmentDecreePath: undefined,
       expertisePath: undefined,
+      expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
-      // nonDestructiveCheckDate DTO da yo'q
-      capacity: '',
-      pressure: '',
-      fuel: '',
+      passportPath: undefined,
       gasSupplyProjectPath: undefined,
+      technicalInspectionPath: undefined,
+      nextTechnicalInspectionDate: undefined,
     },
     mode: 'onChange',
   });
@@ -48,8 +53,8 @@ export const useCreateLpgPoweredApplication = () => {
 
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
-  const { data: childEquipmentTypes } = useChildEquipmentTypes('LPG_POWERED'); // Child equipment turi
+  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL);
+  const { data: childEquipmentTypes } = useChildEquipmentTypes('LPG_POWERED');
 
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);

@@ -1,10 +1,10 @@
-import { DeRegisterHFO, DeRegisterHFOtDTO } from '@/entities/create-application';
+import { DeRegisterHF, DeRegisterHFDTO } from '@/entities/create-application';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-export const useDeRegisterHfoApplication = () => {
-  const form = useForm<DeRegisterHFOtDTO>({
-    resolver: zodResolver(DeRegisterHFO),
+export const useDeRegisterHFApplication = () => {
+  const form = useForm<DeRegisterHFDTO>({
+    resolver: zodResolver(DeRegisterHF),
     defaultValues: {
       phoneNumber: '',
       registryNumber: '',

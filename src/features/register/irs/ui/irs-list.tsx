@@ -8,9 +8,9 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 export const IrsList = () => {
   const navigate = useNavigate();
   const {
-    paramsObject: { size = 10, page = 1, mode = '', search = '', irsRegionId = '' },
+    paramsObject: { size = 10, page = 1, mode = '', search = '', officeId = '', regionId = '' },
   } = useCustomSearchParams();
-  const { data = [] } = usePaginatedData<any>(`/irs`, { page, size, mode, regionId: irsRegionId, search });
+  const { data = [] } = usePaginatedData<any>(`/irs`, { page, size, mode, officeId, regionId, search });
 
   const handleViewApplication = (id: string) => {
     navigate(`${id}/irs`);

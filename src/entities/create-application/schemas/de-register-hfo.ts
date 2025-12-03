@@ -2,18 +2,18 @@ import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
 import { FORM_ERROR_MESSAGES } from '@/shared/validation';
 import { z } from 'zod';
 
-export const DeRegisterHFO = z.object({
+export const DeRegisterHF = z.object({
   phoneNumber: z
-    .string({ message: FORM_ERROR_MESSAGES.required })
+    .string({ required_error: 'Majburiy maydon!' })
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  description: z.string({ required_error: 'Talab qilinadigan maydon!' }).min(1, 'Talab qilinadigan maydon!'),
+  description: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   sign: z.string().optional(),
-  registryNumber: z.string({ required_error: 'Zavod raqami kiritilmadi!' }).min(1, 'Zavod raqami kiritilmadi!'),
-  reasons: z.string({ required_error: 'Talab qilinadigan maydon!' }).min(1, 'Talab qilinadigan maydon!'),
-  justifiedDocumentPath: z.string({ required_error: 'Talab qilinadigan maydon!' }).min(1, 'Talab qilinadigan maydon!'),
-  filePath: z.string().optional(),
+  registryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  reasons: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  justifiedDocumentPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  filePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   type: z.string().optional(),
 });

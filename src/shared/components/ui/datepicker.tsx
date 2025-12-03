@@ -12,6 +12,7 @@ export type DateDisableStrategy = 'before' | 'after' | 'range' | 'custom' | 'non
 export type DatePickerProps = {
   /** Selected date value */
   value: Date | undefined;
+  filter?: boolean;
   /** Date change handler function */
   onChange: (date: Date | undefined) => void;
   /** Format for displaying the date */
@@ -46,6 +47,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
   minDate,
   maxDate,
   className,
+  filter = false,
   buttonVariant = 'outline',
   disabled = false,
   icon = <CalendarIcon className="ml-auto size-4 opacity-50" />,
@@ -77,16 +79,30 @@ const DatePicker: React.FC<DatePickerProps> = ({
   return (
     <Popover open={isShow} onOpenChange={(val) => setIsShow(val)}>
       <PopoverTrigger asChild>
-        <FormControl>
-          <Button
-            variant={buttonVariant}
-            disabled={disabled}
-            className={cn('w-full pl-3 text-left font-normal', !value && 'text-neutral-350', className)}
+        {filter ? (
+          <div
+            className={
+              'w-full h-full flex items-center px-0 pl-8 pr-6 text-sm font-normal text-black bg-transparent outline-none cursor-pointer overflow-hidden'
+            }
+            role="button"
+            tabIndex={0}
           >
-            {value ? format(value, dateFormat) : <span>{placeholder}</span>}
-            {icon}
-          </Button>
-        </FormControl>
+            <span className={cn('truncate', !value && 'text-neutral-400')}>
+              {value ? format(value, dateFormat) : null}
+            </span>
+          </div>
+        ) : (
+          <FormControl>
+            <Button
+              variant={buttonVariant}
+              disabled={disabled}
+              className={cn('w-full pl-3 text-left font-normal', !value && 'text-neutral-350', className)}
+            >
+              {value ? format(value, dateFormat) : <span>{placeholder}</span>}
+              {icon}
+            </Button>
+          </FormControl>
+        )}
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar

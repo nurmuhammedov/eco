@@ -20,8 +20,7 @@ const SelectTrigger = React.forwardRef<
     )}
     {...props}
   >
-    {/*TODO: nowrapni togrilash kerak*/}
-    <div className="flex-1 min-w-0 text-left mr-2 overflow-hidden text-ellipsis whitespace-nowrap ">{children}</div>
+    <div className="flex-1 min-w-0 text-left mr-2 overflow-hidden text-ellipsis whitespace-nowrap">{children}</div>
     {/*<div className="flex-1 min-w-0 text-left mr-2 break-words whitespace-normal leading-snug">{children}</div>*/}
     <SelectPrimitive.Icon asChild className="flex-shrink-0">
       <ChevronDown className="size-4 opacity-50 ml-1" />
@@ -95,7 +94,11 @@ const SelectLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
 >(({ className, ...props }, ref) => (
-  <SelectPrimitive.Label ref={ref} className={cn('px-2 py-1.5 text-sm font-semibold', className)} {...props} />
+  <SelectPrimitive.Label
+    ref={ref}
+    className={cn('px-2 py-1.5 text-sm  text-silver-500 font-semibold', className)}
+    {...props}
+  />
 ));
 SelectLabel.displayName = SelectPrimitive.Label.displayName;
 

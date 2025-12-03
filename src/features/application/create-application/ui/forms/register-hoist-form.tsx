@@ -1,6 +1,6 @@
-// src/features/application/create-application/ui/forms/register-hoist-form.tsx
 import { CardForm, CreateHoistApplicationDTO } from '@/entities/create-application';
-import { NoteForm } from '@/features/application/create-application';
+import { UserRoles } from '@/entities/user';
+import { NoteForm, useCreateHoistApplication } from '@/features/application/create-application';
 import { GoBack } from '@/shared/components/common';
 import { InputFile } from '@/shared/components/common/file-upload';
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
@@ -11,8 +11,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/components/ui/input';
 import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { parseISO } from 'date-fns';
-import { useCreateHoistApplication } from '../../model/use-create-hoist-application';
 
 interface RegisterHoistFormProps {
   onSubmit: (data: CreateHoistApplicationDTO) => void;
@@ -21,6 +21,7 @@ interface RegisterHoistFormProps {
 export default ({ onSubmit }: RegisterHoistFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateHoistApplication();
+  const { user } = useAuth();
 
   return (
     <Form {...form}>
@@ -42,24 +43,28 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="hazardousFacilityId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>XICHO‘ tanlang</FormLabel>
-                  <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value || ''}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
-                        <SelectValue placeholder="XICHO‘ni tanlang" />
-                      </SelectTrigger>
-                      <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
+            {user?.role !== UserRoles.INDIVIDUAL && (
+              <FormField
+                control={form.control}
+                name="hazardousFacilityId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>XICHO tanlang</FormLabel>
+                    <FormControl>
+                      <Select onValueChange={field.onChange} value={field.value || ''}>
+                        <SelectTrigger className="w-full 3xl:w-sm">
+                          <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
+                        </SelectTrigger>
+                        <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
               name="childEquipmentId"
@@ -96,7 +101,7 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
               name="factory"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Yuk ko‘targich egasining nomi</FormLabel>
+                  <FormLabel required>Yuk ko‘targichni ishlab chiqargan zavod nomi</FormLabel>
                   <FormControl>
                     <Input className="w-full 3xl:w-sm" placeholder="Ishlab chiqargan zavod nomi" {...field} />
                   </FormControl>
@@ -135,6 +140,70 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
                   </FormItem>
                 );
               }}
+            />
+            <FormField
+              control={form.control}
+              name="partialCheckDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                return (
+                  <FormItem className="w-full 3xl:w-sm">
+                    <FormLabel required>Qisman texnik ko‘rik sanasi</FormLabel>
+                    <DatePicker
+                      disableStrategy={'after'}
+                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                      onChange={field.onChange}
+                      placeholder="Qisman texnik ko‘rik sanasini kiriting"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="fullCheckDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                return (
+                  <FormItem className="w-full 3xl:w-sm">
+                    <FormLabel required>To‘liq texnik ko‘rik sanasi</FormLabel>
+                    <DatePicker
+                      disableStrategy={'after'}
+                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                      onChange={field.onChange}
+                      placeholder="To‘liq texnik ko‘rik sanasini kiriting"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="height"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Ko‘tarish balandligi</FormLabel>
+                  <FormControl>
+                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Ko‘tarish balandligi" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="liftingCapacity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Yuk ko‘tarish qobiliyati</FormLabel>
+                  <FormControl>
+                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Yuk ko‘tarish qobiliyati" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
             <FormField
               control={form.control}
@@ -202,7 +271,7 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
               name="location"
               render={({ field }) => (
                 <FormItem className="w-full 3xl:w-sm">
-                  <FormLabel required>Geolokatsiya (xaritadan joyni tanlang va koordinatalarni kiriting)</FormLabel>
+                  <FormLabel required>Geolokatsiya (xaritadan joyni tanlang)</FormLabel>
                   <FormControl>
                     <YandexMapModal
                       initialCoords={field.value ? field.value.split(',').map(Number) : null}
@@ -214,167 +283,26 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="partialCheckDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi</FormLabel>
-                    <DatePicker
-                      disableStrategy="after"
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Sanani tanlang"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="fullCheckDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full 3xl:w-sm">
-                    <FormLabel required>O‘tkaziladigan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi</FormLabel>
-                    <DatePicker
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Sanani tanlang"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="height"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Ko‘tarish balandligi</FormLabel>
-                  <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Ko‘tarish balandligi" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="liftingCapacity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Yuk ko‘tarish qobiliyati</FormLabel>
-                  <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Yuk ko‘tarish qobiliyati" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </div>
         </CardForm>
-        <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
-          <FormField
-            name="labelPath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className={'mb-2'}>
-                <div className="flex items-end xl:items-center justify-between gap-2">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Yuk ko‘targichning birkasi bilan sur‘ati
-                  </FormLabel>
-                  <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <div className="pb-4 border-b">
-            <FormField
-              name="saleContractPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Sotib olish-sotish shartnomasi fayli
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="saleContractExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-          </div>
 
+        <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
           <div className="pb-4 border-b">
             <FormField
-              name="equipmentCertPath"
+              name="labelPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end xl:items-center justify-between gap-2">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Yuk ko‘targich sertifikati fayli
+                      Yuk ko‘targichning birkasi bilan sur‘ati
                     </FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
                     </FormControl>
                   </div>
                 </FormItem>
               )}
-            />
-            <FormField
-              control={form.control}
-              name="equipmentCertExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
             />
           </div>
 
@@ -386,7 +314,7 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end xl:items-center justify-between gap-2">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq fayli
+                      Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -395,27 +323,24 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
                 </FormItem>
               )}
             />
+          </div>
+
+          <div className="pb-4 border-b">
             <FormField
+              name="saleContractPath"
               control={form.control}
-              name="assignmentDecreeExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end xl:items-center justify-between gap-2">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
             />
           </div>
 
@@ -424,7 +349,7 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
               name="expertisePath"
               control={form.control}
               render={({ field }) => (
-                <FormItem className="mb-2">
+                <FormItem className={'mb-2'}>
                   <div className="flex items-end xl:items-center justify-between gap-2">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                       Ekspertiza loyihasi fayli
@@ -462,13 +387,70 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
 
           <div className="pb-4 border-b">
             <FormField
+              name="equipmentCertPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end xl:items-center justify-between gap-2">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Yuk ko‘targich muvofiqlik sertifikati
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="pb-4 border-b">
+            <FormField
               name="installationCertPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end xl:items-center justify-between gap-2">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Montaj guvohnomasi fayli
+                      Montaj dalolatnomasi
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="pb-4 border-b">
+            <FormField
+              name="passportPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end xl:items-center justify-between gap-2">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Qurilma pasporti
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="pb-4 border-b">
+            <FormField
+              name="technicalInspectionPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end xl:items-center justify-between gap-2">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Yuk ko‘targich to‘liq texnik ko‘rikdan o‘tkazilganligi
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -479,58 +461,19 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
             />
             <FormField
               control={form.control}
-              name="installationCertExpiryDate"
+              name="nextTechnicalInspectionDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
                 return (
                   <FormItem className="w-full">
                     <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Navbatdagi texnik ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-          </div>
-
-          <div className="pb-4 border-b">
-            <FormField
-              name="additionalFilePath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilma pasporti</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="additionalFileExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
-                return (
-                  <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -540,7 +483,7 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
             />
           </div>
         </CardForm>
-        <Button type="submit" className="mt-5" disabled={!form.formState.isValid}>
+        <Button type="submit" className="mt-5">
           Ariza yaratish
         </Button>
       </form>

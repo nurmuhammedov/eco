@@ -90,7 +90,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
           <Command>
             <CommandInput placeholder={t('Qidirish...') || 'Qidirish...'} />
             <CommandList>
-              <CommandEmpty>{t('Maʼlumot topilmadi') || 'Natija topilmadi.'}</CommandEmpty>
+              <CommandEmpty>{t('Maʼlumotlar topilmadi!') || 'Natija topilmadi!'}</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem

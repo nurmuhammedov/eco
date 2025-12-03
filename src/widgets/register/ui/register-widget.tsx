@@ -11,12 +11,13 @@ import { RegisterActiveTab } from '../types';
 import { useCustomSearchParams, useData } from '@/shared/hooks';
 import { Button } from '@/shared/components/ui/button';
 import { Download } from 'lucide-react';
-import Filter from '@/shared/components/common/filter';
-import { apiClient } from '@/shared/api';
+import { API_ENDPOINTS, apiClient } from '@/shared/api';
 import { format } from 'date-fns';
 import { cn } from '@/shared/lib/utils';
 import { AutoList } from '@/features/register/auto/ui/auto-list';
 import { AddPermitTransportModal } from '@/features/register/auto/ui/add-auto-modal';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { getSelectOptions } from '@/shared/lib/get-select-options';
 
 const RegisterWidget = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -24,17 +25,13 @@ const RegisterWidget = () => {
   const {
     paramsObject: {
       mode = '',
-      search = '',
-      hfOfficeId = '',
-      eqOfficeId = '',
-      xrayRegionId = '',
-      irsRegionId = '',
       status = 'ALL',
       tab = user?.role != UserRoles.INDIVIDUAL ? RegisterActiveTab.HF : RegisterActiveTab.EQUIPMENTS,
       type = tab == RegisterActiveTab.EQUIPMENTS ? 'ALL' : '',
       ...rest
     },
     addParams,
+    removeParams,
   } = useCustomSearchParams();
 
   const { data: hfCount = 0 } = useData<number>('/hf/count', user?.role != UserRoles.INDIVIDUAL, { mode });
@@ -43,118 +40,22 @@ const RegisterWidget = () => {
   const { data: xrayCount = 0 } = useData<number>('/xrays/count', user?.role != UserRoles.INDIVIDUAL, { mode });
   const { data: tankersCount } = useData<any>('/tankers/count', user?.role != UserRoles.INDIVIDUAL, { mode });
 
-  const handleDownloadHFExel = () => {
-    setIsLoading(true);
-    apiClient
-      .downloadFile<Blob>('/hf/export/excel', {
-        mode,
-        search,
-        officeId: hfOfficeId,
-      })
-      .then((res) => {
-        const blob = res.data;
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        const today = new Date();
-        const filename = `XICHOlar (${format(today, 'dd.MM.yyyy')}).xlsx`;
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+  const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(
+    `${API_ENDPOINTS.REGIONS_SELECT}`,
+    user?.role == UserRoles.CHAIRMAN || user?.role == UserRoles.MANAGER || user?.role == UserRoles.HEAD,
+  );
 
-  const handleDownloadEquipmentsExel = () => {
-    setIsLoading(true);
-    apiClient
-      .downloadFile<Blob>('/equipments/export/excel', {
-        mode,
-        officeId: eqOfficeId,
-        search,
-        type: type !== 'ALL' ? type : '',
-        status: status !== 'ALL' ? status : '',
-      })
-      .then((res) => {
-        const blob = res.data;
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        const today = new Date();
-        const filename = `Qurilmalar (${format(today, 'dd.MM.yyyy')}).xlsx`;
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+  const { data: officeOptions, isLoading: isLoadingOffices } = useData<any>(
+    `${API_ENDPOINTS.OFFICES}/select`,
+    user?.role == UserRoles.CHAIRMAN || user?.role == UserRoles.MANAGER || user?.role == UserRoles.HEAD,
+  );
 
-  const handleDownloadIRSExel = () => {
+  const handleDownloadExel = () => {
     setIsLoading(true);
     apiClient
-      .downloadFile<Blob>('/irs/export/excel', {
+      .downloadFile<Blob>(`/${tab}/export/excel`, {
         mode,
-        search,
-        regionId: irsRegionId,
-      })
-      .then((res) => {
-        const blob = res.data;
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        const today = new Date();
-        const filename = `INMlar (${format(today, 'dd.MM.yyyy')}).xlsx`;
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
-  const handleDownloadXRaysExel = () => {
-    setIsLoading(true);
-    apiClient
-      .downloadFile<Blob>('/xrays/export/excel', {
-        mode,
-        search,
-        regionId: xrayRegionId,
-      })
-      .then((res) => {
-        const blob = res.data;
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        const today = new Date();
-        const filename = `Rentgenlar (${format(today, 'dd.MM.yyyy')}).xlsx`;
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
-  const handleDownloadTankersExel = () => {
-    setIsLoading(true);
-    apiClient
-      .downloadFile<Blob>('/tankers/export/excel', {
-        activityType: type !== 'ALL' ? type : '',
-        status: status !== 'ALL' ? status : '',
+        status,
         ...rest,
       })
       .then((res) => {
@@ -162,7 +63,7 @@ const RegisterWidget = () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         const today = new Date();
-        const filename = `Harakatlanuvchi sig‘imlar (${format(today, 'dd.MM.yyyy')}).xlsx`;
+        const filename = `Reyestrlar (${format(today, 'dd.MM.yyyy')}).xlsx`;
         a.href = url;
         a.download = filename;
         document.body.appendChild(a);
@@ -232,34 +133,82 @@ const RegisterWidget = () => {
                 {(user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.REGIONAL) && <AddPermitTransportModal />}
               </>
             ) : (
-              <Filter
-                className="mb-0"
-                inputKeys={
-                  tab == RegisterActiveTab.HF
-                    ? ['mode', 'hfOfficeId']
-                    : tab == RegisterActiveTab.EQUIPMENTS
-                      ? ['mode', 'eqOfficeId']
-                      : tab == RegisterActiveTab.IRS
-                        ? ['mode', 'irsRegionId']
-                        : ['mode', 'xrayRegionId']
-                }
-              />
+              <div className="flex gap-2">
+                <Select
+                  onValueChange={(value) => {
+                    if (value && value !== 'ALL') {
+                      addParams({ mode: value }, 'page');
+                    } else {
+                      removeParams('mode');
+                    }
+                  }}
+                  value={mode || ''}
+                >
+                  <SelectTrigger className="max-w-70">
+                    <SelectValue placeholder="Rasmiylashtirish turi" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ALL">Barchasi</SelectItem>
+                    {getSelectOptions([
+                      { id: 'OFFICIAL', name: 'Arizachilar tomonidan ro‘yxatga olingan' },
+                      {
+                        id: 'UNOFFICIAL',
+                        name: "Qo'mita tomonidan ro'yxatga olingan",
+                      },
+                    ])}
+                  </SelectContent>
+                </Select>
+                {(user?.role == UserRoles.CHAIRMAN ||
+                  user?.role == UserRoles.MANAGER ||
+                  user?.role == UserRoles.HEAD) && (
+                  <>
+                    <Select
+                      onValueChange={(value) => {
+                        if (value && value !== 'ALL') {
+                          addParams({ regionId: value }, 'page');
+                        } else {
+                          removeParams('regionId');
+                        }
+                      }}
+                      value={rest?.regionId?.toString() || ''}
+                      disabled={isLoadingRegions}
+                    >
+                      <SelectTrigger className="max-w-50">
+                        <SelectValue placeholder="Hudud" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ALL">Barchasi</SelectItem>
+                        {getSelectOptions(regionOptions)}
+                      </SelectContent>
+                    </Select>
+                    <Select
+                      onValueChange={(value) => {
+                        if (value && value !== 'ALL') {
+                          addParams({ officeId: value }, 'page');
+                        } else {
+                          removeParams('officeId');
+                        }
+                      }}
+                      value={rest?.officeId?.toString() || ''}
+                      disabled={isLoadingOffices}
+                    >
+                      <SelectTrigger className="max-w-50">
+                        <SelectValue placeholder="Hududiy bo‘linma" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ALL">Barchasi</SelectItem>
+                        {getSelectOptions(officeOptions)}
+                      </SelectContent>
+                    </Select>
+                  </>
+                )}
+              </div>
             )}
             {!(type == 'ALL' && tab == RegisterActiveTab.EQUIPMENTS) ? (
               <Button
                 disabled={isLoading || tab == RegisterActiveTab.AUTO}
                 loading={isLoading}
-                onClick={
-                  tab == RegisterActiveTab.HF
-                    ? handleDownloadHFExel
-                    : tab == RegisterActiveTab.EQUIPMENTS
-                      ? handleDownloadEquipmentsExel
-                      : tab == RegisterActiveTab.IRS
-                        ? handleDownloadIRSExel
-                        : tab == RegisterActiveTab.XRAY
-                          ? handleDownloadXRaysExel
-                          : handleDownloadTankersExel
-                }
+                onClick={handleDownloadExel}
               >
                 <Download /> Exel
               </Button>

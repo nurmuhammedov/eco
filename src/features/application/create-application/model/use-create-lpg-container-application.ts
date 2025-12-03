@@ -1,17 +1,20 @@
-// src/features/application/create-application/model/use-create-lpg-container-application.ts
 import { CreateLpgContainerApplicationDTO, LpgContainerAppealDtoSchema } from '@/entities/create-application';
+import { UserRoles } from '@/entities/user';
 import {
   useChildEquipmentTypes,
   useDistrictSelectQueries,
   useHazardousFacilityDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries';
+import { useAuth } from '@/shared/hooks/use-auth';
 import { getSelectOptions } from '@/shared/lib/get-select-options';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const useCreateLpgContainerApplication = () => {
+  const { user } = useAuth();
+
   const form = useForm<CreateLpgContainerApplicationDTO>({
     resolver: zodResolver(LpgContainerAppealDtoSchema),
     defaultValues: {
@@ -28,17 +31,22 @@ export const useCreateLpgContainerApplication = () => {
       manufacturedAt: undefined,
       partialCheckDate: undefined,
       fullCheckDate: undefined,
+      nonDestructiveCheckDate: undefined,
+      capacity: '',
+      environment: '',
+      pressure: '',
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
       assignmentDecreePath: undefined,
       expertisePath: undefined,
+      expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
-      nonDestructiveCheckDate: undefined,
-      capacity: '',
-      environment: '',
-      pressure: '',
+      passportPath: undefined,
+      hydraulicTestPath: undefined,
+      nextHydraulicTestDate: undefined,
+      internalInspectionPath: undefined,
+      nextInternalInspectionDate: undefined,
     },
     mode: 'onChange',
   });
@@ -47,8 +55,8 @@ export const useCreateLpgContainerApplication = () => {
 
   const { data: regions } = useRegionSelectQueries();
   const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
-  const { data: childEquipmentTypes } = useChildEquipmentTypes('LPG_CONTAINER'); // Child equipment turi
+  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL);
+  const { data: childEquipmentTypes } = useChildEquipmentTypes('LPG_CONTAINER');
 
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);
