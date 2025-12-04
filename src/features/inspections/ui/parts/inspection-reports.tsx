@@ -1,32 +1,32 @@
 // path: src/features/inspections/ui/parts/inspection-reports.tsx
-import { useAuth } from '@/shared/hooks/use-auth';
-import { DataTable } from '@/shared/components/common/data-table';
-import { ColumnDef } from '@tanstack/react-table';
-import { format, formatDate } from 'date-fns';
-import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import InspectionChecklistFormV2 from '@/features/inspections/ui/parts/inspection-checklist-form-v2';
-import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/ui/inspection-widget';
-import { useState } from 'react';
-import { useData } from '@/shared/hooks';
-import { answerOptions } from '@/features/inspections/ui/parts/inspection-checklist-form';
-import { UserRoles } from '@/entities/user';
-import { NoData } from '@/shared/components/common/no-data';
-import DetailRow from '@/shared/components/common/detail-row';
-import FileLink from '@/shared/components/common/file-link';
-import ReportExecutionModal from '@/features/inspections/ui/parts/report-execution-modal';
-import { Badge } from '@/shared/components/ui/badge';
-import { Button } from '@/shared/components/ui/button';
-import { Eye } from 'lucide-react';
-import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal';
-import { getDate } from '@/shared/utils/date';
+import { useAuth } from '@/shared/hooks/use-auth'
+import { DataTable } from '@/shared/components/common/data-table'
+import { ColumnDef } from '@tanstack/react-table'
+import { format, formatDate } from 'date-fns'
+import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import InspectionChecklistFormV2 from '@/features/inspections/ui/parts/inspection-checklist-form-v2'
+import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/ui/inspection-widget'
+import { useState } from 'react'
+import { useData } from '@/shared/hooks'
+import { answerOptions } from '@/features/inspections/ui/parts/inspection-checklist-form'
+import { UserRoles } from '@/entities/user'
+import { NoData } from '@/shared/components/common/no-data'
+import DetailRow from '@/shared/components/common/detail-row'
+import FileLink from '@/shared/components/common/file-link'
+import ReportExecutionModal from '@/features/inspections/ui/parts/report-execution-modal'
+import { Badge } from '@/shared/components/ui/badge'
+import { Button } from '@/shared/components/ui/button'
+import { Eye } from 'lucide-react'
+import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal'
+import { getDate } from '@/shared/utils/date'
 
 const InspectionReports = ({ status, acknowledgementPath, act, resultId }: any) => {
-  const { user } = useAuth();
-  const [currentTab, setCurrentTab] = useState<'questions' | 'eliminated' | 'not_eliminated'>('questions');
-  const [tabulation, setTabulation] = useState<'all' | 'positive' | 'negative'>('all');
-  const [id, setId] = useState<any>(null);
-  const [inspectionTitle, setInspectionTitle] = useState<string>('');
-  const [signers, setSigners] = useState<any[]>([]);
+  const { user } = useAuth()
+  const [currentTab, setCurrentTab] = useState<'questions' | 'eliminated' | 'not_eliminated'>('questions')
+  const [tabulation, setTabulation] = useState<'all' | 'positive' | 'negative'>('all')
+  const [id, setId] = useState<any>(null)
+  const [inspectionTitle, setInspectionTitle] = useState<string>('')
+  const [signers, setSigners] = useState<any[]>([])
 
   const { data: categories = [] } = useData<any[]>(
     `/inspection-checklists`,
@@ -37,8 +37,8 @@ const InspectionReports = ({ status, acknowledgementPath, act, resultId }: any) 
       resolved: tabulation != 'all' && currentTab == 'eliminated' ? tabulation == 'positive' : null,
     },
     [],
-    6000,
-  );
+    6000
+  )
 
   const columns: ColumnDef<any>[] = [
     ...(currentTab == 'eliminated'
@@ -61,7 +61,7 @@ const InspectionReports = ({ status, acknowledgementPath, act, resultId }: any) 
             accessorKey: 'eliminated',
             header: 'Holati',
             cell: ({ row }: any) => (
-              <div className="flex gap-2 items-center">
+              <div className="flex items-center gap-2">
                 {row.original?.status == 'NEGATIVE' ? (
                   <Badge variant="info">{user?.role == UserRoles.LEGAL ? 'Yangi' : 'Yangi'}</Badge>
                 ) : row.original?.status == 'UPLOADED' ? (
@@ -73,8 +73,8 @@ const InspectionReports = ({ status, acknowledgementPath, act, resultId }: any) 
                 ) : null}
                 <Button
                   onClick={() => {
-                    setId(row.original?.id);
-                    setInspectionTitle(row?.original?.question || '');
+                    setId(row.original?.id)
+                    setInspectionTitle(row?.original?.question || '')
                   }}
                   variant="outline"
                   size="iconSm"
@@ -125,11 +125,11 @@ const InspectionReports = ({ status, acknowledgementPath, act, resultId }: any) 
               cell: ({ row }: any) => answerOptions?.find((i) => i?.value == row.original?.answer)?.labelKey || '',
             },
           ]),
-  ];
+  ]
 
   return (
     <div>
-      <div className="flex justify-between items-center ">
+      <div className="flex items-center justify-between">
         <div className="mt-2">
           <Tabs value={currentTab} onValueChange={(val) => setCurrentTab(val as any)}>
             <TabsList className="bg-[#EDEEEE]">
@@ -199,9 +199,9 @@ const InspectionReports = ({ status, acknowledgementPath, act, resultId }: any) 
                                 <span>{act?.createdAt ? getDate(act?.createdAt) : ''}</span> |{' '}
                                 <FileLink url={act?.path} /> |
                                 <button
-                                  className="cursor-pointer hover:text-yellow-200 text-[#A6B1BB]"
+                                  className="cursor-pointer text-[#A6B1BB] hover:text-yellow-200"
                                   onClick={() => {
-                                    setSigners(act?.signers);
+                                    setSigners(act?.signers)
                                   }}
                                 >
                                   <Eye size="18" />
@@ -220,8 +220,8 @@ const InspectionReports = ({ status, acknowledgementPath, act, resultId }: any) 
               </>
             )}
             {categories?.map((category: any) => (
-              <div key={category.inspectionCategoryId} className="mb-4 border rounded-xl p-4 bg-white">
-                <h3 className="text-lg font-semibold mb-4 text-black-600">{category.categoryName}</h3>
+              <div key={category.inspectionCategoryId} className="mb-4 rounded-xl border bg-white p-4">
+                <h3 className="text-black-600 mb-4 text-lg font-semibold">{category.categoryName}</h3>
                 <DataTable isLoading={false} columns={columns} data={category.checklists || []} />
               </div>
             ))}
@@ -233,13 +233,13 @@ const InspectionReports = ({ status, acknowledgementPath, act, resultId }: any) 
           description={inspectionTitle}
           id={id}
           closeModal={() => {
-            setId(null);
-            setInspectionTitle('');
+            setId(null)
+            setInspectionTitle('')
           }}
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default InspectionReports;
+export default InspectionReports

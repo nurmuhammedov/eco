@@ -1,54 +1,54 @@
-import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
-import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
-import { useEquipmentsDetail } from '@/features/register/equipments/hooks/use-equipments-detail.tsx';
-import { GoBack } from '@/shared/components/common';
-import { DetailCardAccordion } from '@/shared/components/common/detail-card';
-import DetailRow from '@/shared/components/common/detail-row.tsx';
-import FileLink from '@/shared/components/common/file-link.tsx';
-import { Coordinate } from '@/shared/components/common/yandex-map';
-import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
-import { getDate } from '@/shared/utils/date.ts';
-import { useParams, Link } from 'react-router-dom';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import { QRCodeCanvas } from 'qrcode.react';
-import { EquipmentPdfDocument } from '@/shared/components/common/EquipmentPdfDocument';
-import { useState, useEffect } from 'react';
-import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx';
-import { EquipmentStickerPdf } from '@/shared/components/common/EquipmentStickerPdf';
+import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
+import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
+import { useEquipmentsDetail } from '@/features/register/equipments/hooks/use-equipments-detail.tsx'
+import { GoBack } from '@/shared/components/common'
+import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import DetailRow from '@/shared/components/common/detail-row.tsx'
+import FileLink from '@/shared/components/common/file-link.tsx'
+import { Coordinate } from '@/shared/components/common/yandex-map'
+import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
+import { getDate } from '@/shared/utils/date.ts'
+import { useParams, Link } from 'react-router-dom'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { PDFDownloadLink } from '@react-pdf/renderer'
+import { QRCodeCanvas } from 'qrcode.react'
+import { EquipmentPdfDocument } from '@/shared/components/common/EquipmentPdfDocument'
+import { useState, useEffect } from 'react'
+import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx'
+import { EquipmentStickerPdf } from '@/shared/components/common/EquipmentStickerPdf'
 
 const EquipmentsDetail = () => {
-  const { isLoading, data } = useEquipmentsDetail();
-  const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[]);
-  const { user } = useAuth();
-  const { id: equipmentUuid } = useParams<{ id: string }>();
-  const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
-  const { data: legalData } = useLegalApplicantInfo(data?.ownerIdentity);
+  const { isLoading, data } = useEquipmentsDetail()
+  const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
+  const { user } = useAuth()
+  const { id: equipmentUuid } = useParams<{ id: string }>()
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('')
+  const { data: legalData } = useLegalApplicantInfo(data?.ownerIdentity)
 
   useEffect(() => {
-    const canvas = document.getElementById('pdf-qr-canvas') as HTMLCanvasElement;
+    const canvas = document.getElementById('pdf-qr-canvas') as HTMLCanvasElement
     if (canvas) {
-      const dataUrl = canvas.toDataURL();
-      setQrCodeDataUrl(dataUrl);
+      const dataUrl = canvas.toDataURL()
+      setQrCodeDataUrl(dataUrl)
     }
-  }, [data]);
+  }, [data])
 
   if (isLoading || !data) {
-    return null;
+    return null
   }
-  const equipmentPublicUrl = `${window.location.origin}/qr/${equipmentUuid}/equipments`;
+  const equipmentPublicUrl = `${window.location.origin}/qr/${equipmentUuid}/equipments`
 
   const handleQrCanvasRef = (canvas: HTMLCanvasElement | null) => {
     if (canvas) {
-      const dataUrl = canvas.toDataURL();
-      setQrCodeDataUrl(dataUrl);
+      const dataUrl = canvas.toDataURL()
+      setQrCodeDataUrl(dataUrl)
     }
-  };
+  }
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
       </div>
       <DetailCardAccordion
@@ -85,7 +85,7 @@ const EquipmentsDetail = () => {
         </DetailCardAccordion.Item>
         {data?.ownerType != 'LEGAL' ? (
           <DetailCardAccordion.Item value="applicant_info_individual" title="Arizachi to‘g‘risida ma’lumot">
-            <div className="py-1  flex flex-col">
+            <div className="flex flex-col py-1">
               <DetailRow title="Arizachi JSHIR:" value={data?.ownerIdentity || '-'} />
               <DetailRow title="Arizachi F.I.SH:" value={data?.ownerName || '-'} />
               <DetailRow title="Arizachining manzili:" value={data?.address || '-'} />
@@ -120,7 +120,7 @@ const EquipmentsDetail = () => {
               ref={handleQrCanvasRef}
             />
 
-            <div className="flex items-center p-4 space-x-8">
+            <div className="flex items-center space-x-8 p-4">
               <div className="flex-shrink-0">
                 {' '}
                 <QRCodeCanvas
@@ -155,7 +155,7 @@ const EquipmentsDetail = () => {
                           loading ? (
                             'Tayyorlanmoqda...'
                           ) : (
-                            <span className="text-[#0271FF] cursor-pointer hover:underline">Chop etish</span>
+                            <span className="cursor-pointer text-[#0271FF] hover:underline">Chop etish</span>
                           )
                         }
                       </PDFDownloadLink>
@@ -187,7 +187,7 @@ const EquipmentsDetail = () => {
                           loading ? (
                             'Tayyorlanmoqda...'
                           ) : (
-                            <span className="text-[#0271FF] cursor-pointer hover:underline">Yuklab olish</span>
+                            <span className="cursor-pointer text-[#0271FF] hover:underline">Yuklab olish</span>
                           )
                         }
                       </PDFDownloadLink>
@@ -208,7 +208,7 @@ const EquipmentsDetail = () => {
         )}
       </DetailCardAccordion>
     </div>
-  );
-};
+  )
+}
 
-export default EquipmentsDetail;
+export default EquipmentsDetail

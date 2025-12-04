@@ -1,5 +1,5 @@
 // src/features/editor/lib/borderUtils.ts
-import { BorderStyleType } from '../model/types';
+import { BorderStyleType } from '../model/types'
 
 /**
  * Border style options for TinyMCE editor
@@ -12,7 +12,7 @@ export const BORDER_STYLE_OPTIONS = [
   { text: 'Double', value: 'double' },
   { text: 'Dashed', value: 'dashed' },
   { text: 'Dotted', value: 'dotted' },
-];
+]
 
 /**
  * Get CSS border string based on style and color
@@ -23,19 +23,19 @@ export const BORDER_STYLE_OPTIONS = [
 export const getBorderStyle = (style?: BorderStyleType, color: string = '#000000'): string => {
   switch (style) {
     case 'thin':
-      return `1px solid ${color}`;
+      return `1px solid ${color}`
     case 'medium':
-      return `2px solid ${color}`;
+      return `2px solid ${color}`
     case 'thick':
-      return `3px solid ${color}`;
+      return `3px solid ${color}`
     case 'double':
-      return `4px double ${color}`;
+      return `4px double ${color}`
     case 'dashed':
-      return `2px dashed ${color}`;
+      return `2px dashed ${color}`
     case 'dotted':
-      return `2px dotted ${color}`;
+      return `2px dotted ${color}`
     case 'none':
     default:
-      return 'none';
+      return 'none'
   }
-};
+}

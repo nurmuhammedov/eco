@@ -1,26 +1,26 @@
-import { ApiResponse } from '@/shared/types/api';
-import { API_ENDPOINTS, apiClient } from '@/shared/api';
+import { ApiResponse } from '@/shared/types/api'
+import { API_ENDPOINTS, apiClient } from '@/shared/api'
 import {
   CreateEquipmentDTO,
   EquipmentResponse,
   FilterEquipmentDTO,
   UpdateEquipmentDTO,
-} from '@/entities/admin/equipment';
+} from '@/entities/admin/equipment'
 
 export const equipmentAPI = {
   getAll: async (params: FilterEquipmentDTO) => {
-    const { data } = await apiClient.getWithPagination<EquipmentResponse>(API_ENDPOINTS.CHILD_EQUIPMENTS, params);
-    return data || [];
+    const { data } = await apiClient.getWithPagination<EquipmentResponse>(API_ENDPOINTS.CHILD_EQUIPMENTS, params)
+    return data || []
   },
 
   getById: async (id: number) => {
-    const { data } = await apiClient.get<ApiResponse<EquipmentResponse>>(`${API_ENDPOINTS.CHILD_EQUIPMENTS}/${id}`);
-    return data.data;
+    const { data } = await apiClient.get<ApiResponse<EquipmentResponse>>(`${API_ENDPOINTS.CHILD_EQUIPMENTS}/${id}`)
+    return data.data
   },
   list: async () => {
-    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.REGIONS_SELECT}`);
+    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.REGIONS_SELECT}`)
 
-    return data.data;
+    return data.data
   },
   create: async (district: CreateEquipmentDTO) => {
     // if (!response.success && response.errors) {
@@ -29,24 +29,24 @@ export const equipmentAPI = {
     //   });
     // }
 
-    return await apiClient.post<EquipmentResponse, CreateEquipmentDTO>(API_ENDPOINTS.CHILD_EQUIPMENTS, district);
+    return await apiClient.post<EquipmentResponse, CreateEquipmentDTO>(API_ENDPOINTS.CHILD_EQUIPMENTS, district)
   },
   update: async (district: UpdateEquipmentDTO) => {
     const response = await apiClient.put<UpdateEquipmentDTO>(
       `${API_ENDPOINTS.CHILD_EQUIPMENTS}/${district.id}`,
-      district,
-    );
+      district
+    )
 
     if (!response.success) {
-      throw new Error(response.message);
+      throw new Error(response.message)
     }
 
-    return response;
+    return response
   },
   delete: async (id: number) => {
-    const response = await apiClient.delete(`${API_ENDPOINTS.CHILD_EQUIPMENTS}/${id}`);
+    const response = await apiClient.delete(`${API_ENDPOINTS.CHILD_EQUIPMENTS}/${id}`)
     if (!response.success) {
-      throw new Error(response.message);
+      throw new Error(response.message)
     }
   },
-};
+}

@@ -1,16 +1,16 @@
-import React from 'react';
-import { GoBack } from '@/shared/components/common';
-import { Button } from '@/shared/components/ui/button';
+import React from 'react'
+import { GoBack } from '@/shared/components/common'
+import { Button } from '@/shared/components/ui/button'
 
 interface EditTemplateActionsProps {
-  onSave: () => void;
+  onSave: () => void
 }
 
 export const EditTemplateContentActions: React.FC<EditTemplateActionsProps> = ({ onSave }) => {
   return (
-    <div className="flex justify-between mb-4">
+    <div className="mb-4 flex justify-between">
       <GoBack title="Shablonlar" />
       <Button onClick={onSave}>Saqlash</Button>
     </div>
-  );
-};
+  )
+}

@@ -1,21 +1,21 @@
-import { ConclusionsTable, ConclusionTabs } from '@/features/expertise';
-import { useCustomSearchParams, useData } from '@/shared/hooks';
-import { TabKey } from '@/features/expertise/ui/conclusion-tabs';
-import { Button } from '@/shared/components/ui/button';
-import { PlusCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { ConclusionsTable, ConclusionTabs } from '@/features/expertise'
+import { useCustomSearchParams, useData } from '@/shared/hooks'
+import { TabKey } from '@/features/expertise/ui/conclusion-tabs'
+import { Button } from '@/shared/components/ui/button'
+import { PlusCircle } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const ExpertiseWidget = () => {
   const {
     paramsObject: { tab = TabKey.ALL },
     addParams,
-  } = useCustomSearchParams();
-  const navigate = useNavigate();
+  } = useCustomSearchParams()
+  const navigate = useNavigate()
   const handleTabChange = (tabKey: string) => {
-    addParams({ tab: tabKey }, 'page');
-  };
+    addParams({ tab: tabKey }, 'page')
+  }
 
-  const { data } = useData<any>('/conclusions/count');
+  const { data } = useData<any>('/conclusions/count')
 
   const tabCounts = {
     [TabKey.ALL]: data?.allCount ?? 0,
@@ -24,15 +24,15 @@ const ExpertiseWidget = () => {
     [TabKey.TQ]: data?.tqcount ?? 0,
     [TabKey.LH]: data?.lhcount ?? 0,
     [TabKey.IX]: data?.ixcount ?? 0,
-  };
+  }
 
   const handle = () => {
-    navigate('/accreditations/add');
-  };
+    navigate('/accreditations/add')
+  }
 
   return (
     <>
-      <div className="flex justify-end items-center">
+      <div className="flex items-center justify-end">
         <Button onClick={handle}>
           <PlusCircle className="mr-2 h-4 w-4" /> Qo‘shish
         </Button>
@@ -42,7 +42,7 @@ const ExpertiseWidget = () => {
         <ConclusionsTable />
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ExpertiseWidget;
+export default ExpertiseWidget

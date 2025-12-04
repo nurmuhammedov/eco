@@ -1,15 +1,15 @@
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx';
-import { Input } from '@/shared/components/ui/input.tsx';
-import { Button } from '@/shared/components/ui/button.tsx';
-import { useSetFiles } from '@/features/inspections/hooks/use-set-files.ts';
-import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
-import { useEffect } from 'react';
-import { QK_INSPECTION } from '@/shared/constants/query-keys';
-import { toast } from 'sonner';
-import { useQueryClient } from '@tanstack/react-query';
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { Input } from '@/shared/components/ui/input.tsx'
+import { Button } from '@/shared/components/ui/button.tsx'
+import { useSetFiles } from '@/features/inspections/hooks/use-set-files.ts'
+import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts'
+import { useEffect } from 'react'
+import { QK_INSPECTION } from '@/shared/constants/query-keys'
+import { toast } from 'sonner'
+import { useQueryClient } from '@tanstack/react-query'
 
 const schema = z.object({
   specialCode: z.string({ required_error: 'Majburiy maydon!', message: 'Majburiy maydon!' }).default(''),
@@ -20,15 +20,15 @@ const schema = z.object({
   // programPath: z.string().optional().default(''),
   // measuresPath: z.string().optional().default(''),
   // resultPath: z.string().optional().default(''),
-});
+})
 
 const AddInspectionDocuments = ({ resetTab }: any) => {
-  const queryClient = useQueryClient();
-  const { mutateAsync, isPending } = useSetFiles();
+  const queryClient = useQueryClient()
+  const { mutateAsync, isPending } = useSetFiles()
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-  });
-  const { data: inspectionData } = useInspectionDetail();
+  })
+  const { data: inspectionData } = useInspectionDetail()
 
   useEffect(() => {
     if (inspectionData) {
@@ -40,24 +40,24 @@ const AddInspectionDocuments = ({ resetTab }: any) => {
         // schedulePath: inspectionData?.schedulePath,
         // measuresPath: inspectionData?.measuresPath,
         // resultPath: inspectionData?.resultPath,
-      });
+      })
     }
-  }, [inspectionData]);
+  }, [inspectionData])
 
   const onSubmit = (data: any) => {
     mutateAsync({
       ...data,
     }).then(async () => {
-      toast.success('Muvaffaqiyatli saqlandi!');
-      resetTab?.();
-      await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] });
-    });
-  };
+      toast.success('Muvaffaqiyatli saqlandi!')
+      resetTab?.()
+      await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] })
+    })
+  }
 
   return (
     <Form {...form}>
-      <form className="bg-white shadow rounded-lg p-4" onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-4 gap-2  mb-4">
+      <form className="rounded-lg bg-white p-4 shadow" onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="mb-4 grid grid-cols-4 gap-2">
           <div>
             <FormField
               control={form.control}
@@ -79,7 +79,7 @@ const AddInspectionDocuments = ({ resetTab }: any) => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}
 
-export default AddInspectionDocuments;
+export default AddInspectionDocuments

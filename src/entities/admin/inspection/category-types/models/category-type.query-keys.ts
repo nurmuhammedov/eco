@@ -1,2 +1,2 @@
-import { createQueryKeys } from '@/shared/lib';
-export const categoryTypeKeys = createQueryKeys('category-type');
+import { createQueryKeys } from '@/shared/lib'
+export const categoryTypeKeys = createQueryKeys('category-type')

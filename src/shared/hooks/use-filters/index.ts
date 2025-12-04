@@ -1,32 +1,32 @@
-import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, type Parser, useQueryStates } from 'nuqs';
-import { useCallback, useMemo } from 'react';
+import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, type Parser, useQueryStates } from 'nuqs'
+import { useCallback, useMemo } from 'react'
 
-export type FilterParser<T = any> = Parser<T>;
+export type FilterParser<T = any> = Parser<T>
 
-export type FilterParsers = Record<string, FilterParser>;
+export type FilterParsers = Record<string, FilterParser>
 
-export type FilterValues = Record<string, any>;
+export type FilterValues = Record<string, any>
 
 export interface UseFiltersConfig {
-  baseFilters?: FilterParsers;
-  defaultPage?: number;
-  defaultSize?: number;
-  preserveParams?: boolean;
-  onFiltersChange?: (filters: FilterValues) => void;
-  debug?: boolean;
+  baseFilters?: FilterParsers
+  defaultPage?: number
+  defaultSize?: number
+  preserveParams?: boolean
+  onFiltersChange?: (filters: FilterValues) => void
+  debug?: boolean
 }
 
 export interface UseFiltersResult {
-  filters: FilterValues;
-  setFilters: (newFilters: Record<string, any>) => void;
-  clearFilter: (key: string) => void;
-  clearAllFilters: () => void;
-  resetFilters: () => void;
+  filters: FilterValues
+  setFilters: (newFilters: Record<string, any>) => void
+  clearFilter: (key: string) => void
+  clearAllFilters: () => void
+  resetFilters: () => void
   metadata: {
-    hasFilters: boolean;
-    filterKeys: string[];
-    activeFiltersCount: number;
-  };
+    hasFilters: boolean
+    filterKeys: string[]
+    activeFiltersCount: number
+  }
 }
 
 export function useFilters(moduleFilters: FilterParsers = {}, config: UseFiltersConfig = {}): UseFiltersResult {
@@ -37,15 +37,15 @@ export function useFilters(moduleFilters: FilterParsers = {}, config: UseFilters
     preserveParams = true,
     onFiltersChange,
     debug = false,
-  } = config;
+  } = config
 
   const commonFilters: FilterParsers = useMemo(
     () => ({
       page: parseAsInteger.withDefault(defaultPage),
       size: parseAsInteger.withDefault(defaultSize),
     }),
-    [defaultPage, defaultSize],
-  );
+    [defaultPage, defaultSize]
+  )
 
   const mergedFilters: FilterParsers = useMemo(
     () => ({
@@ -53,55 +53,55 @@ export function useFilters(moduleFilters: FilterParsers = {}, config: UseFilters
       ...baseFilters,
       ...moduleFilters,
     }),
-    [commonFilters, baseFilters, moduleFilters],
-  );
+    [commonFilters, baseFilters, moduleFilters]
+  )
 
-  const [filters, setFiltersBase] = useQueryStates(mergedFilters);
+  const [filters, setFiltersBase] = useQueryStates(mergedFilters)
 
   const setFilters = useCallback(
     (newFilters: Record<string, any>) => {
       if (debug) {
-        console.log('Setting filters:', newFilters);
+        console.log('Setting filters:', newFilters)
       }
 
       const options = {
         shallow: true,
         preserveParams,
-      };
+      }
 
-      setFiltersBase(newFilters, options);
+      setFiltersBase(newFilters, options)
 
       if (onFiltersChange) {
-        const updatedFilters = { ...filters, ...newFilters };
-        onFiltersChange(updatedFilters);
+        const updatedFilters = { ...filters, ...newFilters }
+        onFiltersChange(updatedFilters)
       }
     },
-    [setFiltersBase, preserveParams, filters, onFiltersChange, debug],
-  );
+    [setFiltersBase, preserveParams, filters, onFiltersChange, debug]
+  )
 
   const clearFilter = useCallback(
     (key: string) => {
       if (key in mergedFilters) {
-        setFilters({ [key]: null });
+        setFilters({ [key]: null })
       } else if (debug) {
-        console.warn(`Filter key "${key}" not found in defined filters`);
+        console.warn(`Filter key "${key}" not found in defined filters`)
       }
     },
-    [mergedFilters, setFilters, debug],
-  );
+    [mergedFilters, setFilters, debug]
+  )
 
   const clearAllFilters = useCallback(() => {
     const resetFilters = Object.keys(mergedFilters).reduce<Record<string, null>>((acc, key) => {
-      acc[key] = null;
-      return acc;
-    }, {});
+      acc[key] = null
+      return acc
+    }, {})
 
-    setFilters(resetFilters);
-  }, [mergedFilters, setFilters]);
+    setFilters(resetFilters)
+  }, [mergedFilters, setFilters])
 
   const resetFilters = useCallback(() => {
-    setFiltersBase({}, { clearOnDefault: true });
-  }, [setFiltersBase]);
+    setFiltersBase({}, { clearOnDefault: true })
+  }, [setFiltersBase])
 
   const metadata = useMemo(
     () => ({
@@ -109,8 +109,8 @@ export function useFilters(moduleFilters: FilterParsers = {}, config: UseFilters
       hasFilters: Object.keys(filters).length > 0,
       activeFiltersCount: Object.values(filters).filter((value) => value !== null && value !== undefined).length,
     }),
-    [mergedFilters, filters],
-  );
+    [mergedFilters, filters]
+  )
 
   return {
     filters,
@@ -119,7 +119,7 @@ export function useFilters(moduleFilters: FilterParsers = {}, config: UseFilters
     clearAllFilters,
     resetFilters,
     metadata,
-  };
+  }
 }
 
 export const filterParsers = {
@@ -134,4 +134,4 @@ export const filterParsers = {
 
   stringArray: (defaultValue?: string[]): FilterParser<string[]> =>
     parseAsArrayOf(parseAsString).withDefault(defaultValue ?? []),
-};
+}

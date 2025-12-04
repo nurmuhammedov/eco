@@ -2,15 +2,15 @@
 // import { useAuth } from '@/shared/hooks/use-auth.ts';
 // import { useSearchParams } from 'react-router-dom';
 // import { UserRoles } from '@/entities/user';
-import { useChecklist } from '@/features/risk-analysis/hooks/use-checklist.ts';
-import FileLink from '@/shared/components/common/file-link.tsx';
+import { useChecklist } from '@/features/risk-analysis/hooks/use-checklist.ts'
+import FileLink from '@/shared/components/common/file-link.tsx'
 // import { Button } from '@/shared/components/ui/button.tsx';
 // import { Trash2 } from 'lucide-react';
 // import { useDeleteChecklist } from '@/features/risk-analysis/hooks/use-delete-checklist.ts';
 // import { toast } from 'sonner';
 
 const RiskAnalysisChecklists = () => {
-  const { data } = useChecklist();
+  const { data } = useChecklist()
   // const { user } = useAuth();
   // const [searchParams] = useSearchParams();
   // const currentIntervalId = searchParams.get('intervalId') || '';
@@ -23,9 +23,9 @@ const RiskAnalysisChecklists = () => {
       <div className="grid grid-cols-2 gap-x-8">
         {data?.map((item: any) => {
           return (
-            <div key={item.id} className="flex justify-between items-center border-b border-b-[#E5E7EB] py-4 px-3">
+            <div key={item.id} className="flex items-center justify-between border-b border-b-[#E5E7EB] px-3 py-4">
               <p>{item?.name || 'CHECKLIST NAME'}</p>
-              <p className="shrink-0 flex items-center gap-2">
+              <p className="flex shrink-0 items-center gap-2">
                 <FileLink url={item.path} />
                 {/*{isCanAction && (*/}
                 {/*  <Button*/}
@@ -43,11 +43,11 @@ const RiskAnalysisChecklists = () => {
                 {/*)}*/}
               </p>
             </div>
-          );
+          )
         })}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RiskAnalysisChecklists;
+export default RiskAnalysisChecklists

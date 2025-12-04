@@ -1,45 +1,45 @@
-import React, { useMemo } from 'react';
-import { MainCardsList } from './main-card-application';
-import TabsLayout from '@/shared/layouts/ui/tabs-layout';
-import { useApplicationGrid } from '@/widgets/application-grid';
-import ApplicationCard from '@/entities/create-application/ui/application-card';
-import { APPLICATION_CATEGORIES, ApplicationCategory } from '@/entities/create-application';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { UserRoles } from '@/entities/user';
+import React, { useMemo } from 'react'
+import { MainCardsList } from './main-card-application'
+import TabsLayout from '@/shared/layouts/ui/tabs-layout'
+import { useApplicationGrid } from '@/widgets/application-grid'
+import ApplicationCard from '@/entities/create-application/ui/application-card'
+import { APPLICATION_CATEGORIES, ApplicationCategory } from '@/entities/create-application'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
 
 export const ApplicationsGridIns: React.FC = () => {
   const { activeTab, mainCards, selectedMainCard, handleMainCardSelect, handleChangeTab, displayedSubCards } =
-    useApplicationGrid();
-  const { user } = useAuth();
+    useApplicationGrid()
+  const { user } = useAuth()
 
-  const hasMainCards = useMemo(() => mainCards.length > 0, [mainCards]);
-  const hasSubCards = useMemo(() => displayedSubCards.length > 0, [displayedSubCards]);
+  const hasMainCards = useMemo(() => mainCards.length > 0, [mainCards])
+  const hasSubCards = useMemo(() => displayedSubCards.length > 0, [displayedSubCards])
 
   const renderEmptyState = () => {
     if (!hasMainCards) {
       return (
-        <div className="text-center py-12">
+        <div className="py-12 text-center">
           <p className="text-slate-500">Bu toifada hozircha arizalar mavjud emas</p>
         </div>
-      );
+      )
     }
 
     if (selectedMainCard && !hasSubCards) {
       return (
-        <div className="text-center py-12">
+        <div className="py-12 text-center">
           <p className="text-slate-500">Tanlangan toifaga oid arizalar mavjud emas</p>
         </div>
-      );
+      )
     }
 
-    return null;
-  };
+    return null
+  }
 
   const SubApplication = React.memo(() => {
-    const gridClasses = 'grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-4';
+    const gridClasses = 'grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-4'
 
     if (!hasSubCards) {
-      return null;
+      return null
     }
 
     return (
@@ -48,10 +48,10 @@ export const ApplicationsGridIns: React.FC = () => {
           <ApplicationCard key={application.id} application={application} />
         ))}
       </div>
-    );
-  });
+    )
+  })
 
-  SubApplication.displayName = 'SubApplication';
+  SubApplication.displayName = 'SubApplication'
 
   return (
     <TabsLayout
@@ -91,7 +91,7 @@ export const ApplicationsGridIns: React.FC = () => {
               : APPLICATION_CATEGORIES
       }
       classNameTrigger="text-base mx-0.5"
-      className="font-medium 3xl:font-semibold"
+      className="3xl:font-semibold font-medium"
       onTabChange={(value) => handleChangeTab(value as ApplicationCategory)}
     >
       {activeTab && hasMainCards && (
@@ -102,9 +102,9 @@ export const ApplicationsGridIns: React.FC = () => {
 
       {activeTab && !hasSubCards && renderEmptyState()}
     </TabsLayout>
-  );
-};
+  )
+}
 
-ApplicationsGridIns.displayName = 'ApplicationsGrid';
+ApplicationsGridIns.displayName = 'ApplicationsGrid'
 
-export default React.memo(ApplicationsGridIns);
+export default React.memo(ApplicationsGridIns)

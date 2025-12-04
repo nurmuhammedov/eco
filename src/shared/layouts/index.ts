@@ -1,1 +1,1 @@
-export * from './ui/tabs-layout';
+export * from './ui/tabs-layout'

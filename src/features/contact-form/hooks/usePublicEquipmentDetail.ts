@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query'; // Loyihangizda react-query o'rniga boshqa narsa bo'lsa, shuni yozing
-import { getPublicEquipmentById } from '../api/getPublicEquipment';
+import { useQuery } from '@tanstack/react-query' // Loyihangizda react-query o'rniga boshqa narsa bo'lsa, shuni yozing
+import { getPublicEquipmentById } from '../api/getPublicEquipment'
 
 export const usePublicEquipmentDetail = (id?: string) => {
   return useQuery({
@@ -17,5 +17,5 @@ export const usePublicEquipmentDetail = (id?: string) => {
 
     // Agar xatolik yuz bersa, qayta urinishlar soni (ixtiyoriy)
     retry: 1,
-  });
-};
+  })
+}

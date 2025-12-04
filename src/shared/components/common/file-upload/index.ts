@@ -1,1 +1,1 @@
-export { InputFile } from './ui/file-upload';
+export { InputFile } from './ui/file-upload'

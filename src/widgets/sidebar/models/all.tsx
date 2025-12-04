@@ -1,4 +1,4 @@
-import { Navigation } from '@/widgets/sidebar/models/types';
+import { Navigation } from '@/widgets/sidebar/models/types'
 import {
   FileText,
   Database,
@@ -9,7 +9,7 @@ import {
   Archive,
   BarChart2,
   Award,
-} from 'lucide-react';
+} from 'lucide-react'
 
 export default [
   {
@@ -88,4 +88,4 @@ export default [
     url: '/permits',
     icon: <Award />,
   },
-] as Navigation;
+] as Navigation

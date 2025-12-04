@@ -1,18 +1,18 @@
-import { DataTable } from '@/shared/components/common/data-table';
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { formatDate } from 'date-fns';
-import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
-import { Badge } from '@/shared/components/ui/badge';
+import { DataTable } from '@/shared/components/common/data-table'
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { formatDate } from 'date-fns'
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { Badge } from '@/shared/components/ui/badge'
 
 export const ExpertiseTable = () => {
   const {
     paramsObject: { page = 1, size = 10, ...rest },
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
   const { data = [], isLoading } = usePaginatedData<any>('/accreditations', {
     page: page,
     size: size,
     ...rest,
-  });
+  })
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -73,7 +73,7 @@ export const ExpertiseTable = () => {
     //     );
     //   },
     // },
-  ];
+  ]
 
   return (
     <DataTable
@@ -85,5 +85,5 @@ export const ExpertiseTable = () => {
       isLoading={isLoading}
       className="h-[calc(100svh-220px)]"
     />
-  );
-};
+  )
+}

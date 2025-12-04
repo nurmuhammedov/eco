@@ -1,6 +1,6 @@
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { z } from 'zod';
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { z } from 'zod'
 
 export const DeRegisterHF = z.object({
   phoneNumber: z
@@ -16,4 +16,4 @@ export const DeRegisterHF = z.object({
   justifiedDocumentPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   filePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   type: z.string().optional(),
-});
+})

@@ -1,4 +1,4 @@
-import { BorderStyleType } from '../model/types';
+import { BorderStyleType } from '../model/types'
 import {
   registerAIPromptControls,
   registerBasicControls,
@@ -9,20 +9,20 @@ import {
   registerLayoutControls,
   registerReferenceControls,
   registerVisualControls,
-} from './controls';
+} from './controls'
 
 interface EditorControlsOptions {
-  borderStyleOptions: Array<{ text: string; value: string }>;
-  updateBorderStyle: (style: BorderStyleType, color: string) => void;
-  currentBorderColor: string;
+  borderStyleOptions: Array<{ text: string; value: string }>
+  updateBorderStyle: (style: BorderStyleType, color: string) => void
+  currentBorderColor: string
   customButtons?: Array<{
-    name: string;
-    text: string;
-    icon?: string;
-    tooltip?: string;
-    onAction: (editor: any) => void;
-  }>;
-  enablePromptAI?: boolean;
+    name: string
+    text: string
+    icon?: string
+    tooltip?: string
+    onAction: (editor: any) => void
+  }>
+  enablePromptAI?: boolean
 }
 
 /**
@@ -38,17 +38,17 @@ export const registerCustomControls = (editor: any, options: EditorControlsOptio
     currentBorderColor,
     customButtons = [],
     enablePromptAI = false,
-  } = options;
+  } = options
 
   // Register basic controls
-  registerBasicControls(editor, { borderStyleOptions, updateBorderStyle, currentBorderColor });
+  registerBasicControls(editor, { borderStyleOptions, updateBorderStyle, currentBorderColor })
 
   // Register document export buttons
-  registerExportControls(editor);
+  registerExportControls(editor)
 
   // Register AI prompt functionality if enabled
   if (enablePromptAI) {
-    registerAIPromptControls(editor);
+    registerAIPromptControls(editor)
   }
 
   // Register custom buttons
@@ -58,24 +58,24 @@ export const registerCustomControls = (editor: any, options: EditorControlsOptio
       tooltip: button.tooltip || button.text,
       icon: button.icon,
       onAction: () => button.onAction(editor),
-    });
-  });
+    })
+  })
 
   // Register document structure controls
-  registerDocumentStructureControls(editor);
+  registerDocumentStructureControls(editor)
 
   // Register collaboration controls
-  registerCollaborationControls(editor);
+  registerCollaborationControls(editor)
 
   // Register citation and reference controls
-  registerReferenceControls(editor);
+  registerReferenceControls(editor)
 
   // Register formatting controls
-  registerFormattingControls(editor);
+  registerFormattingControls(editor)
 
   // Register layout controls
-  registerLayoutControls(editor);
+  registerLayoutControls(editor)
 
   // Register visual elements controls
-  registerVisualControls(editor);
-};
+  registerVisualControls(editor)
+}

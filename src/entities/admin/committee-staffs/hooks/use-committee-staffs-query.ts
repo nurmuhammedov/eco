@@ -1,11 +1,11 @@
-import { getTime } from '@/shared/lib/get-time';
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { getTime } from '@/shared/lib/get-time'
+import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import {
   committeeStaffAPI,
   committeeStaffKeys,
   CommitteeStaffResponse,
   FilterCommitteeStaffDTO,
-} from '@/entities/admin/committee-staffs';
+} from '@/entities/admin/committee-staffs'
 
 export const useCommitteeStaffListQuery = (filters: FilterCommitteeStaffDTO) => {
   return useQuery({
@@ -13,8 +13,8 @@ export const useCommitteeStaffListQuery = (filters: FilterCommitteeStaffDTO) => 
     queryKey: committeeStaffKeys.list('committee-staff', filters),
     queryFn: () => committeeStaffAPI.list(filters),
     placeholderData: (previousData) => previousData,
-  });
-};
+  })
+}
 
 export const useCommitteeStaffQuery = (
   id: string,
@@ -26,7 +26,7 @@ export const useCommitteeStaffQuery = (
       ReturnType<typeof committeeStaffKeys.detail>
     >,
     'queryKey' | 'queryFn'
-  >,
+  >
 ) => {
   return useQuery({
     enabled: !!id,
@@ -35,5 +35,5 @@ export const useCommitteeStaffQuery = (
     queryKey: committeeStaffKeys.detail('committee-staff', id),
     placeholderData: (previousData) => previousData,
     ...options,
-  });
-};
+  })
+}

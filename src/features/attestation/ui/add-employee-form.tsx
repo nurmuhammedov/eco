@@ -1,24 +1,24 @@
 // src/features/attestation/ui/add-employee-form.tsx
 
-import { GoBack } from '@/shared/components/common';
-import { Button } from '@/shared/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { PlusCircle, Trash2 } from 'lucide-react';
-import { useAddEmployeeForm } from '../hooks/use-add-employee-form';
+import { GoBack } from '@/shared/components/common'
+import { Button } from '@/shared/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
+import DatePicker from '@/shared/components/ui/datepicker'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { PlusCircle, Trash2 } from 'lucide-react'
+import { useAddEmployeeForm } from '../hooks/use-add-employee-form'
 
 export const AddEmployeeForm = () => {
   const { form, fields, addEmployee, remove, hfOptions, employeeLevelOptions, isLoadingHf, onSubmit, isPending } =
-    useAddEmployeeForm();
+    useAddEmployeeForm()
 
   return (
     <Form {...form}>
       <form onSubmit={onSubmit}>
-        <div className="flex justify-between items-center mb-4">
+        <div className="mb-4 flex items-center justify-between">
           <GoBack title="Attestatsiyaga xodim qo'shish" />
           <Button onClick={onSubmit} loading={isPending}>
             Saqlash
@@ -61,7 +61,7 @@ export const AddEmployeeForm = () => {
                 <Trash2 className="h-4 w-4" />
               </Button>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
               <FormField
                 control={form.control}
                 name={`employeeList.${index}.pin`}
@@ -213,12 +213,12 @@ export const AddEmployeeForm = () => {
           </Card>
         ))}
 
-        <div className="flex justify-between mt-4">
+        <div className="mt-4 flex justify-between">
           <Button type="button" onClick={addEmployee}>
             <PlusCircle className="mr-2 h-4 w-4" /> Xodim qo‘shish
           </Button>
         </div>
       </form>
     </Form>
-  );
-};
+  )
+}

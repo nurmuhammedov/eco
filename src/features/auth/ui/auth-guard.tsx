@@ -1,21 +1,21 @@
-import { useCurrentUser } from '@/entities/auth';
+import { useCurrentUser } from '@/entities/auth'
 
-import { UserRoles } from '@/entities/user';
-import { Loader } from '@/shared/components/common';
-import { PropsWithChildren, useEffect } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { apiConfig } from '@/shared/api/constants';
+import { UserRoles } from '@/entities/user'
+import { Loader } from '@/shared/components/common'
+import { PropsWithChildren, useEffect } from 'react'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { apiConfig } from '@/shared/api/constants'
 
 interface Props extends PropsWithChildren {
-  allowedRoles?: UserRoles[];
+  allowedRoles?: UserRoles[]
 }
 
 export default function AuthGuard({ children, allowedRoles }: Props) {
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
-  const { isAuth, isPending, user } = useCurrentUser();
-  const apiUrl = apiConfig.oneIdClientId;
-  let redirectPath;
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const { isAuth, isPending, user } = useCurrentUser()
+  const apiUrl = apiConfig.oneIdClientId
+  let redirectPath
 
   useEffect(() => {
     if (
@@ -29,23 +29,23 @@ export default function AuthGuard({ children, allowedRoles }: Props) {
       )
     ) {
       if (apiUrl === 'test_cirns_uz') {
-        redirectPath = '/auth/login/admin';
+        redirectPath = '/auth/login/admin'
       } else {
-        redirectPath = '/auth/login';
+        redirectPath = '/auth/login'
       }
 
       navigate(redirectPath, {
         replace: true,
-      });
+      })
     }
-  }, [isPending, isAuth]);
+  }, [isPending, isAuth])
 
   if (isPending) {
-    return <Loader isVisible message="loading" />;
+    return <Loader isVisible message="loading" />
   }
 
   if (user && allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
-    return <Navigate to="/not-found" replace />;
+    return <Navigate to="/not-found" replace />
   }
 
   if (
@@ -55,5 +55,5 @@ export default function AuthGuard({ children, allowedRoles }: Props) {
     pathname == '/auth/login/admin/' ||
     pathname == '/auth/login/'
   )
-    return children;
+    return children
 }

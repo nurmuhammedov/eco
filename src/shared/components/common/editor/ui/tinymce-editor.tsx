@@ -1,8 +1,8 @@
 // src/features/editor/ui/TinyMCEEditor.tsx
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
-import { TinyMCEEditorProps, TinyMCEEditorRef } from '../model/types';
-import { getContentDimensions, mmToPx, PAPER_SIZES } from '../lib/paper-utils';
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import { Editor } from '@tinymce/tinymce-react'
+import { TinyMCEEditorProps, TinyMCEEditorRef } from '../model/types'
+import { getContentDimensions, mmToPx, PAPER_SIZES } from '../lib/paper-utils'
 
 /**
  * A4 formatga moslashtirilgan TinyMCE Editor komponenti
@@ -45,49 +45,49 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     pageMargin = 20, // mm
     customButtons = [],
     setup,
-  } = props;
+  } = props
 
   // Component state
-  const editorRef = useRef<any>(null);
-  const [isEditorReady, setIsEditorReady] = useState(false);
-  const [currentOrientation, setCurrentOrientation] = useState(orientation);
-  const [currentMargin, setCurrentMargin] = useState(pageMargin);
-  const [currentPageSize, setCurrentPageSize] = useState(pageSize);
+  const editorRef = useRef<any>(null)
+  const [isEditorReady, setIsEditorReady] = useState(false)
+  const [currentOrientation, setCurrentOrientation] = useState(orientation)
+  const [currentMargin, setCurrentMargin] = useState(pageMargin)
+  const [currentPageSize, setCurrentPageSize] = useState(pageSize)
 
   // Memoize paper dimensions
   const paperDimensions = useMemo(() => {
-    return getContentDimensions(currentPageSize, currentOrientation, currentMargin);
-  }, [currentPageSize, currentOrientation, currentMargin]);
+    return getContentDimensions(currentPageSize, currentOrientation, currentMargin)
+  }, [currentPageSize, currentOrientation, currentMargin])
 
   // Editor ID
-  const editorId = useMemo(() => id || `tinymce-editor-${Math.random().toString(36).substring(2, 11)}`, [id]);
+  const editorId = useMemo(() => id || `tinymce-editor-${Math.random().toString(36).substring(2, 11)}`, [id])
 
   // Update content when value prop changes
   useEffect(() => {
     if (isEditorReady && editorRef.current && value !== undefined && value !== editorRef.current.getContent()) {
-      editorRef.current.setContent(value);
+      editorRef.current.setContent(value)
     }
-  }, [value, isEditorReady]);
+  }, [value, isEditorReady])
 
   // Apply paper format when any of format parameters change
   useEffect(() => {
     if (isEditorReady && editorRef.current) {
-      applyPageFormat(editorRef.current, currentPageSize, currentOrientation, currentMargin);
+      applyPageFormat(editorRef.current, currentPageSize, currentOrientation, currentMargin)
     }
-  }, [currentPageSize, currentOrientation, currentMargin, isEditorReady]);
+  }, [currentPageSize, currentOrientation, currentMargin, isEditorReady])
 
   // Sahifani o'rnatish funksiyasi
   const applyPageFormat = (editor: any, format: string, orient: 'portrait' | 'landscape', margin: number) => {
-    const { widthPx, heightPx, widthMm, heightMm } = getContentDimensions(format, orient, margin);
+    const { widthPx, heightPx, widthMm, heightMm } = getContentDimensions(format, orient, margin)
 
     // Page format style qo'yish
-    const doc = editor.getDoc();
-    let style = doc.getElementById('mce-page-format');
+    const doc = editor.getDoc()
+    let style = doc.getElementById('mce-page-format')
 
     if (!style) {
-      style = doc.createElement('style');
-      style.id = 'mce-page-format';
-      doc.head.appendChild(style);
+      style = doc.createElement('style')
+      style.id = 'mce-page-format'
+      doc.head.appendChild(style)
     }
 
     const pageStyles = `
@@ -138,25 +138,25 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
         height: 5px;
         margin: 15px 0;
       }
-    `;
+    `
 
-    style.innerHTML = pageStyles;
+    style.innerHTML = pageStyles
 
     // Body elementi uchun container yaratish
     if (!doc.querySelector('.mce-content-container')) {
-      const bodyContent = doc.body.innerHTML;
-      const container = doc.createElement('div');
-      container.className = 'mce-content-container';
-      container.innerHTML = bodyContent;
-      doc.body.innerHTML = '';
-      doc.body.appendChild(container);
+      const bodyContent = doc.body.innerHTML
+      const container = doc.createElement('div')
+      container.className = 'mce-content-container'
+      container.innerHTML = bodyContent
+      doc.body.innerHTML = ''
+      doc.body.appendChild(container)
     }
 
     // Current values saqlash
-    setCurrentPageSize(format);
-    setCurrentOrientation(orient);
-    setCurrentMargin(margin);
-  };
+    setCurrentPageSize(format)
+    setCurrentOrientation(orient)
+    setCurrentMargin(margin)
+  }
 
   // Expose methods via ref
   useImperativeHandle(
@@ -165,111 +165,111 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
       getEditor: () => editorRef.current,
 
       getContent: (args = {}) => {
-        if (!editorRef.current) return '';
-        return editorRef.current.getContent(args);
+        if (!editorRef.current) return ''
+        return editorRef.current.getContent(args)
       },
 
       setContent: (content: string) => {
-        if (!editorRef.current) return;
-        editorRef.current.setContent(content);
+        if (!editorRef.current) return
+        editorRef.current.setContent(content)
       },
 
       insertContent: (content: string) => {
-        if (!editorRef.current) return;
-        editorRef.current.insertContent(content);
+        if (!editorRef.current) return
+        editorRef.current.insertContent(content)
       },
 
       focus: () => {
-        if (!editorRef.current) return;
-        editorRef.current.focus();
+        if (!editorRef.current) return
+        editorRef.current.focus()
       },
 
       blur: () => {
-        if (!editorRef.current) return;
-        editorRef.current.blur();
+        if (!editorRef.current) return
+        editorRef.current.blur()
       },
 
       save: () => {
-        if (!editorRef.current) return;
-        editorRef.current.save();
+        if (!editorRef.current) return
+        editorRef.current.save()
       },
 
       isDirty: () => {
-        if (!editorRef.current) return false;
-        return editorRef.current.isDirty();
+        if (!editorRef.current) return false
+        return editorRef.current.isDirty()
       },
 
       resetDirty: () => {
-        if (!editorRef.current) return;
-        editorRef.current.setDirty(false);
+        if (!editorRef.current) return
+        editorRef.current.setDirty(false)
       },
 
       enable: () => {
-        if (!editorRef.current) return;
-        editorRef.current.mode.set('design');
+        if (!editorRef.current) return
+        editorRef.current.mode.set('design')
       },
 
       disable: () => {
-        if (!editorRef.current) return;
-        editorRef.current.mode.set('readonly');
+        if (!editorRef.current) return
+        editorRef.current.mode.set('readonly')
       },
 
       show: () => {
-        if (!editorRef.current) return;
-        editorRef.current.show();
+        if (!editorRef.current) return
+        editorRef.current.show()
       },
 
       hide: () => {
-        if (!editorRef.current) return;
-        editorRef.current.hide();
+        if (!editorRef.current) return
+        editorRef.current.hide()
       },
 
       getSelectedContent: () => {
-        if (!editorRef.current) return '';
-        return editorRef.current.selection.getContent();
+        if (!editorRef.current) return ''
+        return editorRef.current.selection.getContent()
       },
 
       // A4 formatni boshqarish metodlari
       applyPageFormat: (format: string, orient: 'portrait' | 'landscape', margin: number) => {
-        if (!editorRef.current) return;
-        applyPageFormat(editorRef.current, format, orient, margin);
+        if (!editorRef.current) return
+        applyPageFormat(editorRef.current, format, orient, margin)
       },
 
       setPageSize: (format: string) => {
-        if (!editorRef.current) return;
-        applyPageFormat(editorRef.current, format, currentOrientation, currentMargin);
+        if (!editorRef.current) return
+        applyPageFormat(editorRef.current, format, currentOrientation, currentMargin)
       },
 
       setOrientation: (orient: 'portrait' | 'landscape') => {
-        if (!editorRef.current) return;
-        applyPageFormat(editorRef.current, currentPageSize, orient, currentMargin);
+        if (!editorRef.current) return
+        applyPageFormat(editorRef.current, currentPageSize, orient, currentMargin)
       },
 
       setMargin: (margin: number) => {
-        if (!editorRef.current) return;
-        applyPageFormat(editorRef.current, currentPageSize, currentOrientation, margin);
+        if (!editorRef.current) return
+        applyPageFormat(editorRef.current, currentPageSize, currentOrientation, margin)
       },
 
       // Page break qo'shish
       insertPageBreak: () => {
-        if (!editorRef.current) return;
-        editorRef.current.execCommand('mcePageBreak');
+        if (!editorRef.current) return
+        editorRef.current.execCommand('mcePageBreak')
       },
 
       // Print Preview
       printPreview: () => {
-        if (!editorRef.current) return;
-        const content = editorRef.current.getContent();
+        if (!editorRef.current) return
+        const content = editorRef.current.getContent()
 
         // Yangi oyna yaratish va chop etish stili bilan to'ldirish
-        const printWindow = window.open('', '_blank');
-        if (!printWindow) return;
+        const printWindow = window.open('', '_blank')
+        if (!printWindow) return
 
-        const paperSize = PAPER_SIZES[currentPageSize] || PAPER_SIZES.a4;
-        let { width, height } = paperSize;
+        const paperSize = PAPER_SIZES[currentPageSize] || PAPER_SIZES.a4
+        let { width, height } = paperSize
 
         if (currentOrientation === 'landscape') {
-          [width, height] = [height, width];
+          ;[width, height] = [height, width]
         }
 
         printWindow.document.write(`
@@ -305,52 +305,52 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
             </script>
           </body>
           </html>
-        `);
+        `)
 
-        printWindow.document.close();
+        printWindow.document.close()
       },
 
       // Export as PDF (requires implementation)
       exportPDF: () => {
-        if (!editorRef.current) return;
-        console.log('PDF export method. Implement with a PDF library like jsPDF');
+        if (!editorRef.current) return
+        console.log('PDF export method. Implement with a PDF library like jsPDF')
       },
     }),
-    [editorRef, isEditorReady, currentPageSize, currentOrientation, currentMargin, applyPageFormat],
-  );
+    [editorRef, isEditorReady, currentPageSize, currentOrientation, currentMargin, applyPageFormat]
+  )
 
   // Init handler
   const handleEditorInit = (_evt: any, editor: any) => {
-    editorRef.current = editor;
-    setIsEditorReady(true);
+    editorRef.current = editor
+    setIsEditorReady(true)
 
     // Optimize editor container
-    const editorContainer = editor.getContainer();
+    const editorContainer = editor.getContainer()
     if (editorContainer) {
-      editorContainer.style.display = 'flex';
-      editorContainer.style.flexDirection = 'column';
-      editorContainer.style.height = `${height || paperDimensions.heightPx + 200}px`;
+      editorContainer.style.display = 'flex'
+      editorContainer.style.flexDirection = 'column'
+      editorContainer.style.height = `${height || paperDimensions.heightPx + 200}px`
 
-      const contentElement = editorContainer.querySelector('.tox-edit-area');
+      const contentElement = editorContainer.querySelector('.tox-edit-area')
       if (contentElement) {
-        contentElement.style.flex = '1';
+        contentElement.style.flex = '1'
       }
     }
 
     // A4 format o'rnatish
-    applyPageFormat(editor, pageSize, orientation, pageMargin);
+    applyPageFormat(editor, pageSize, orientation, pageMargin)
 
     if (onInit) {
-      onInit(editor);
+      onInit(editor)
     }
-  };
+  }
 
   // Content change handler
   const handleEditorChange = (content: string, editor: any) => {
     if (onChange) {
-      onChange(content, editor);
+      onChange(content, editor)
     }
-  };
+  }
 
   // Default plugins
   const defaultPlugins = useMemo(() => {
@@ -378,13 +378,13 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
       'nonbreaking',
       'hr',
       'emoticons',
-    ];
-  }, []);
+    ]
+  }, [])
 
   // Merge plugins
   const mergedPlugins = useMemo(() => {
-    return plugins ? [...new Set([...defaultPlugins, ...plugins])] : defaultPlugins;
-  }, [defaultPlugins, plugins]);
+    return plugins ? [...new Set([...defaultPlugins, ...plugins])] : defaultPlugins
+  }, [defaultPlugins, plugins])
 
   // Default toolbar
   const defaultToolbar = useMemo(
@@ -392,8 +392,8 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
       'undo redo | formatselect | fontselect fontsizeselect | bold italic underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
       'link image media table | pagebreak nonbreaking hr | charmap emoticons | fullscreen preview print | code | pageformat printpreview | help',
     ],
-    [],
-  );
+    []
+  )
 
   // Editor config
   const editorInit = useMemo(() => {
@@ -535,19 +535,19 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
                 margin: String(currentMargin),
               },
               onSubmit: (api: any) => {
-                const data = api.getData();
-                const newSize = data.pageSize;
-                const newOrientation = data.orientation as 'portrait' | 'landscape';
-                const newMargin = parseInt(data.margin, 10) || 20;
+                const data = api.getData()
+                const newSize = data.pageSize
+                const newOrientation = data.orientation as 'portrait' | 'landscape'
+                const newMargin = parseInt(data.margin, 10) || 20
 
                 // Format qo'llash
-                applyPageFormat(editor, newSize, newOrientation, newMargin);
+                applyPageFormat(editor, newSize, newOrientation, newMargin)
 
-                api.close();
+                api.close()
               },
-            });
+            })
           },
-        });
+        })
 
         // Custom buttonlarni qo'shish
         customButtons.forEach((button) => {
@@ -556,55 +556,55 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
             tooltip: button.tooltip || button.text,
             icon: button.icon,
             onAction: () => button.onAction(editor),
-          });
-        });
+          })
+        })
 
         // Custom setup
         if (setup) {
-          setup(editor);
+          setup(editor)
         }
 
         // Event handlers
         if (onSave) {
           editor.on('save', (e: any) => {
-            e.preventDefault();
-            onSave(editor.getContent(), editor);
-            return false;
-          });
+            e.preventDefault()
+            onSave(editor.getContent(), editor)
+            return false
+          })
         }
 
         if (onBlur) {
           editor.on('blur', (e: any) => {
-            onBlur(e, editor);
-          });
+            onBlur(e, editor)
+          })
         }
 
         if (onFocus) {
           editor.on('focus', (e: any) => {
-            onFocus(e, editor);
-          });
+            onFocus(e, editor)
+          })
         }
       },
-    };
+    }
 
     // Configure image upload handler
     if (imageUploadHandler) {
       config.images_upload_handler = async (blobInfo: any, progress: any) => {
         try {
-          return await imageUploadHandler(blobInfo, progress);
+          return await imageUploadHandler(blobInfo, progress)
         } catch (error) {
-          console.error('Image upload error:', error);
-          throw error;
+          console.error('Image upload error:', error)
+          throw error
         }
-      };
+      }
     }
 
     // Configure file picker callback
     if (filePickerCallback) {
-      config.file_picker_callback = filePickerCallback;
+      config.file_picker_callback = filePickerCallback
     }
 
-    return config;
+    return config
   }, [
     editorId,
     defaultToolbar,
@@ -636,7 +636,7 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     paperDimensions.heightPx,
     customButtons,
     applyPageFormat,
-  ]);
+  ])
 
   // Editor wrapper style
   const editorWrapperStyle: React.CSSProperties = {
@@ -645,7 +645,7 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     flexDirection: 'column',
     overflow: 'hidden',
     ...style,
-  };
+  }
 
   return (
     <div className={`tinymce-editor-wrapper ${className}`} style={editorWrapperStyle}>
@@ -660,9 +660,9 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
         disabled={disabled}
       />
     </div>
-  );
-});
+  )
+})
 
-TinyMCEEditor.displayName = 'TinyMCEEditor';
+TinyMCEEditor.displayName = 'TinyMCEEditor'
 
-export default TinyMCEEditor;
+export default TinyMCEEditor

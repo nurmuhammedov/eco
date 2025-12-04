@@ -1,11 +1,11 @@
-import { cn } from '@/shared/lib/utils';
-import { ChevronRight } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import Icon from '@/shared/components/common/icon';
-import { Link, useLocation } from 'react-router-dom';
-import { NavigationItem } from '@/widgets/sidebar/models/types';
+import { cn } from '@/shared/lib/utils'
+import { ChevronRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import Icon from '@/shared/components/common/icon'
+import { Link, useLocation } from 'react-router-dom'
+import { NavigationItem } from '@/widgets/sidebar/models/types'
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/shared/components/ui/collapsible';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/shared/components/ui/collapsible'
 import {
   SidebarMenu,
   SidebarMenuAction,
@@ -14,12 +14,12 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from '@/shared/components/ui/sidebar';
+} from '@/shared/components/ui/sidebar'
 
 export function NavMain({ item }: { item: NavigationItem }) {
-  const { pathname } = useLocation();
-  const { t } = useTranslation(['common']);
-  const isActive = pathname.startsWith(item.url);
+  const { pathname } = useLocation()
+  const { t } = useTranslation(['common'])
+  const isActive = pathname.startsWith(item.url)
   return (
     <SidebarMenu>
       {
@@ -33,7 +33,7 @@ export function NavMain({ item }: { item: NavigationItem }) {
                   size="lg"
                   tooltip={t(item.title)}
                 >
-                  <div className="flex items-center gap-2 cursor-pointer">
+                  <div className="flex cursor-pointer items-center gap-2">
                     {typeof item.icon === 'string' ? <Icon name={item.icon} /> : item.icon}
                     <span>{t(item.title)}</span>
                   </div>
@@ -80,5 +80,5 @@ export function NavMain({ item }: { item: NavigationItem }) {
         </Collapsible>
       }
     </SidebarMenu>
-  );
+  )
 }

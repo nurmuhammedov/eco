@@ -1,10 +1,10 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx';
-import { Button } from '@/shared/components/ui/button.tsx';
-import { useState } from 'react';
-import { ApplicationLogsList } from '@/features/application/application-logs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx'
+import { Button } from '@/shared/components/ui/button.tsx'
+import { useState } from 'react'
+import { ApplicationLogsList } from '@/features/application/application-logs'
 
 const ApplicationLogsModal = () => {
-  const [isShow, setIsShow] = useState(false);
+  const [isShow, setIsShow] = useState(false)
 
   return (
     <>
@@ -12,7 +12,7 @@ const ApplicationLogsModal = () => {
         <DialogTrigger asChild>
           <Button>Ilovalar jurnallari</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[1124px] max-h-[95vh] overflow-y-auto">
+        <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[1124px]">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Ilovalar jurnallari</DialogTitle>
           </DialogHeader>
@@ -20,7 +20,7 @@ const ApplicationLogsModal = () => {
         </DialogContent>
       </Dialog>
     </>
-  );
-};
+  )
+}
 
-export default ApplicationLogsModal;
+export default ApplicationLogsModal

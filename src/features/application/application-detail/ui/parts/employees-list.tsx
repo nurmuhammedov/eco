@@ -1,39 +1,39 @@
 // src/features/application/application-detail/ui/parts/employees-list.tsx
 
-import { EmployeeLevel } from '@/entities/attestation/model/attestation.types.ts';
-import { useExecuteAttestation } from '@/features/application/application-detail/hooks/mutations/use-execute-attestation.tsx';
-import { DataTable } from '@/shared/components/common/data-table';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { Button } from '@/shared/components/ui/button.tsx';
-import DateTimePicker from '@/shared/components/ui/datetimepicker.tsx';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx';
-import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group.tsx';
-import { getDate } from '@/shared/utils/date.ts';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ColumnDef } from '@tanstack/react-table';
-import { format } from 'date-fns';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import { z } from 'zod';
+import { EmployeeLevel } from '@/entities/attestation/model/attestation.types.ts'
+import { useExecuteAttestation } from '@/features/application/application-detail/hooks/mutations/use-execute-attestation.tsx'
+import { DataTable } from '@/shared/components/common/data-table'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { Button } from '@/shared/components/ui/button.tsx'
+import DateTimePicker from '@/shared/components/ui/datetimepicker.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group.tsx'
+import { getDate } from '@/shared/utils/date.ts'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ColumnDef } from '@tanstack/react-table'
+import { format } from 'date-fns'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
+import { z } from 'zod'
 
 interface Employee {
-  pin: string;
-  level: EmployeeLevel;
-  certDate: string;
-  fullName: string;
-  certNumber: string;
-  profession: string;
-  certExpiryDate: string;
-  dateOfEmployment: string;
-  ctcTrainingToDate: string;
-  ctcTrainingFromDate: string;
+  pin: string
+  level: EmployeeLevel
+  certDate: string
+  fullName: string
+  certNumber: string
+  profession: string
+  certExpiryDate: string
+  dateOfEmployment: string
+  ctcTrainingToDate: string
+  ctcTrainingFromDate: string
 }
 
 interface EmployeesListProps {
-  data: Employee[];
-  showAttestationActions?: boolean;
+  data: Employee[]
+  showAttestationActions?: boolean
 }
 
 const attestationSchema = z.object({
@@ -42,36 +42,36 @@ const attestationSchema = z.object({
   result: z.record(z.enum(['PASSED', 'FAILED']), {
     required_error: '',
   }),
-});
+})
 
-type AttestationFormValues = z.infer<typeof attestationSchema>;
+type AttestationFormValues = z.infer<typeof attestationSchema>
 
 const EmployeesList = ({ data, showAttestationActions = false }: EmployeesListProps) => {
-  const { t } = useTranslation(['common']);
-  const { id: appealId } = useParams<{ id: string }>();
-  const { onSubmit: executeAttestation, isPending } = useExecuteAttestation(appealId || '');
+  const { t } = useTranslation(['common'])
+  const { id: appealId } = useParams<{ id: string }>()
+  const { onSubmit: executeAttestation, isPending } = useExecuteAttestation(appealId || '')
 
   const form = useForm<AttestationFormValues>({
     resolver: zodResolver(attestationSchema),
     defaultValues: {
       result: {},
     },
-  });
+  })
 
   const onSubmit = (formData: AttestationFormValues) => {
     const payload = {
       ...formData,
       dateOfAttestation: format(formData.dateOfAttestation, "yyyy-MM-dd'T'HH:mm"),
       appealId,
-    };
-    executeAttestation(payload);
-  };
+    }
+    executeAttestation(payload)
+  }
 
   const levelTranslations: Record<EmployeeLevel, string> = {
     [EmployeeLevel.LEADER]: t('attestation.LEADER'),
     [EmployeeLevel.TECHNICIAN]: t('attestation.TECHNICIAN'),
     [EmployeeLevel.EMPLOYEE]: t('attestation.EMPLOYEE'),
-  };
+  }
 
   const columns: ColumnDef<Employee>[] = [
     {
@@ -115,7 +115,7 @@ const EmployeesList = ({ data, showAttestationActions = false }: EmployeesListPr
       header: '“Kontexnazorato‘quv” DMda o‘qigan muddati',
       cell: ({ row }) => `${getDate(row.original.ctcTrainingFromDate)} - ${getDate(row.original.ctcTrainingToDate)}`,
     },
-  ];
+  ]
 
   if (showAttestationActions) {
     columns.push({
@@ -142,14 +142,14 @@ const EmployeesList = ({ data, showAttestationActions = false }: EmployeesListPr
           )}
         />
       ),
-    });
+    })
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         {showAttestationActions && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-4">
+          <div className="mb-4 grid grid-cols-1 gap-4 p-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="dateOfAttestation"
@@ -186,7 +186,7 @@ const EmployeesList = ({ data, showAttestationActions = false }: EmployeesListPr
         )}
         <DataTable columns={columns} data={data || []} />
         {showAttestationActions && (
-          <div className="flex justify-end mt-4">
+          <div className="mt-4 flex justify-end">
             <Button type="submit" loading={isPending}>
               Yakunlash
             </Button>
@@ -194,7 +194,7 @@ const EmployeesList = ({ data, showAttestationActions = false }: EmployeesListPr
         )}
       </form>
     </Form>
-  );
-};
+  )
+}
 
-export default EmployeesList;
+export default EmployeesList

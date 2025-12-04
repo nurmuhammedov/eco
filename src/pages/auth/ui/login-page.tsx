@@ -1,5 +1,5 @@
-import { OneIdLogin } from '@/features/auth';
+import { OneIdLogin } from '@/features/auth'
 
 export default function OneIdLoginPage() {
-  return <OneIdLogin />;
+  return <OneIdLogin />
 }

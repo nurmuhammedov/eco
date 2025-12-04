@@ -1,22 +1,22 @@
-import { Fragment, useMemo } from 'react';
-import { Input } from '@/shared/components/ui/input';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { useUIActionLabel } from '@/shared/hooks';
-import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import { useCategoryTypeDrawer } from '@/shared/hooks/entity-hooks';
-import { useCategoryTypeForm } from '../model/use-category-type-form';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { UIModeEnum } from '@/shared/types';
-import { CategoryTypeView } from '@/features/admin/inspection/category-types/ui/category-type-view';
-import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options';
+import { Fragment, useMemo } from 'react'
+import { Input } from '@/shared/components/ui/input'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { useUIActionLabel } from '@/shared/hooks'
+import { BaseDrawer } from '@/shared/components/common/base-drawer'
+import { useCategoryTypeDrawer } from '@/shared/hooks/entity-hooks'
+import { useCategoryTypeForm } from '../model/use-category-type-form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { UIModeEnum } from '@/shared/types'
+import { CategoryTypeView } from '@/features/admin/inspection/category-types/ui/category-type-view'
+import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options'
 
 export const CategoryTypeDrawer = () => {
-  const { isOpen, onClose, mode, isCreate } = useCategoryTypeDrawer();
-  const modeLabel = useUIActionLabel(mode);
-  const { form, onSubmit, isPending, isFetching, categoryTypeData } = useCategoryTypeForm();
-  const options = useMemo(() => getSelectOptions(inspectionCategoryOptions), [inspectionCategoryOptions]);
+  const { isOpen, onClose, mode, isCreate } = useCategoryTypeDrawer()
+  const modeLabel = useUIActionLabel(mode)
+  const { form, onSubmit, isPending, isFetching, categoryTypeData } = useCategoryTypeForm()
+  const options = useMemo(() => getSelectOptions(inspectionCategoryOptions), [inspectionCategoryOptions])
 
   return (
     <BaseDrawer
@@ -49,7 +49,7 @@ export const CategoryTypeDrawer = () => {
                           value={field.value}
                           onValueChange={(value) => {
                             if (value) {
-                              field.onChange(value);
+                              field.onChange(value)
                             }
                           }}
                         >
@@ -82,5 +82,5 @@ export const CategoryTypeDrawer = () => {
         </Form>
       )}
     </BaseDrawer>
-  );
-};
+  )
+}

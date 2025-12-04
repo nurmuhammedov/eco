@@ -1,28 +1,28 @@
-import { CardForm, CreateCadastrePassportApplicationDTO } from '@/entities/create-application';
-import { GoBack } from '@/shared/components/common';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types';
-import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
-import { Button } from '@/shared/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { PhoneInput } from '@/shared/components/ui/phone-input';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { useCreateCadastrePassportApplication } from '../../model/use-create-cadastre-passport-application';
+import { CardForm, CreateCadastrePassportApplicationDTO } from '@/entities/create-application'
+import { GoBack } from '@/shared/components/common'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
+import { Button } from '@/shared/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { PhoneInput } from '@/shared/components/ui/phone-input'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { useCreateCadastrePassportApplication } from '../../model/use-create-cadastre-passport-application'
 
 interface RegisterCraneFormProps {
-  onSubmit: (data: CreateCadastrePassportApplicationDTO) => void;
+  onSubmit: (data: CreateCadastrePassportApplicationDTO) => void
 }
 
 export default ({ onSubmit }: RegisterCraneFormProps) => {
-  const { form, regionOptions, districtOptions, hazardousFacilitiesOptions } = useCreateCadastrePassportApplication();
+  const { form, regionOptions, districtOptions, hazardousFacilitiesOptions } = useCreateCadastrePassportApplication()
 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="TXYZ kadastr pasportini ro‘yxatga olish" />
         <CardForm className="my-2">
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="hfId"
@@ -31,7 +31,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                   <FormLabel>XICHO ni tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value || ''}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
                       </SelectTrigger>
                       <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
@@ -50,7 +50,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                   <FormControl>
                     <Input
                       disabled
-                      className="w-full 3xl:w-sm"
+                      className="3xl:w-sm w-full"
                       placeholder="XICHO nomini kiriting"
                       {...field}
                       value={field.value ?? ''}
@@ -67,7 +67,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 <FormItem>
                   <FormLabel required>TXYZ manzili</FormLabel>
                   <FormControl>
-                    <Input disabled className="w-full 3xl:w-sm" placeholder="Manzilni kiriting" {...field} />
+                    <Input disabled className="3xl:w-sm w-full" placeholder="Manzilni kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -80,7 +80,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 <FormItem>
                   <FormLabel required>Tashkilot STIR</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="STIRni kiriting" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="STIRni kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -93,7 +93,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 <FormItem>
                   <FormLabel required>TXYZ kadastr pasportini ishlab chiqqan tashkilot nomi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Tashkilot nomini kiriting" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Tashkilot nomini kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -108,7 +108,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 <FormItem>
                   <FormLabel required>TXYZ kadastr pasportini ishlab chiqqan tashkilot manzili</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Tashkilot manzilini kiriting" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Tashkilot manzilini kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -124,13 +124,13 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                     <Select
                       onValueChange={(value) => {
                         if (value) {
-                          field.onChange(value);
-                          form.setValue('districtId', '');
+                          field.onChange(value)
+                          form.setValue('districtId', '')
                         }
                       }}
                       value={field.value?.toString()}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Viloyatni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{regionOptions}</SelectContent>
@@ -152,7 +152,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                       value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Tumanni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
@@ -170,7 +170,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 <FormItem>
                   <FormLabel required>Telefon raqam</FormLabel>
                   <FormControl>
-                    <PhoneInput className="w-full 3xl:w-sm" placeholder="+998 XX XXX XX XX" {...field} />
+                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -180,7 +180,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               control={form.control}
               name="location"
               render={({ field }) => (
-                <FormItem className="w-full 3xl:w-sm">
+                <FormItem className="3xl:w-sm w-full">
                   <FormLabel required>TXYZ lokatsiyasi</FormLabel>
                   <FormControl>
                     <YandexMapModal
@@ -196,7 +196,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
           </div>
         </CardForm>
 
-        <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
+        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <FormField
             control={form.control}
             name="passportPath"
@@ -228,5 +228,5 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

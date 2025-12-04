@@ -11,9 +11,9 @@ export const registerExportControls = (editor: any): void => {
         text: 'Exporting document as DOCX...',
         type: 'info',
         timeout: 2000,
-      });
+      })
     },
-  });
+  })
 
   editor.ui.registry.addButton('exportpdf', {
     text: 'Export PDF',
@@ -24,7 +24,7 @@ export const registerExportControls = (editor: any): void => {
         text: 'Exporting document as PDF...',
         type: 'info',
         timeout: 2000,
-      });
+      })
     },
-  });
-};
+  })
+}

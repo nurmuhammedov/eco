@@ -1,9 +1,9 @@
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/utils'
 
 interface SVGIconsProps {
-  width?: number;
-  height?: number;
-  className?: string;
+  width?: number
+  height?: number
+  className?: string
 }
 
 export const UZBFlagIcon = ({ width = 20, height = 20 }: SVGIconsProps) => (
@@ -44,7 +44,7 @@ export const UZBFlagIcon = ({ width = 20, height = 20 }: SVGIconsProps) => (
       <use xlinkHref="#uz-d" width="100%" height="100%" x="-24" y="-24" />
     </g>
   </svg>
-);
+)
 
 export const TechnocorpLogo = ({ width = 121, height = 16, className }: SVGIconsProps) => (
   <svg
@@ -83,4 +83,4 @@ export const TechnocorpLogo = ({ width = 121, height = 16, className }: SVGIcons
       />
     </g>
   </svg>
-);
+)

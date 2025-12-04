@@ -1,13 +1,13 @@
-import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import { Badge } from '@/shared/components/ui/badge';
-import { useCustomSearchParams, useData } from '@/shared/hooks';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { UserRoles } from '@/entities/user';
-import Table from '@/features/prevention/ui/table';
-import { TabsLayout } from '@/shared/layouts';
-import clsx from 'clsx';
-import { useMemo } from 'react';
-import { cn } from '@/shared/lib/utils';
+import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import { Badge } from '@/shared/components/ui/badge'
+import { useCustomSearchParams, useData } from '@/shared/hooks'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
+import Table from '@/features/prevention/ui/table'
+import { TabsLayout } from '@/shared/layouts'
+import clsx from 'clsx'
+import { useMemo } from 'react'
+import { cn } from '@/shared/lib/utils'
 
 export const getCurrentMonthEnum = () => {
   const monthNames = [
@@ -23,16 +23,16 @@ export const getCurrentMonthEnum = () => {
     'OCTOBER',
     'NOVEMBER',
     'DECEMBER',
-  ];
-  return monthNames[new Date().getMonth()];
-};
+  ]
+  return monthNames[new Date().getMonth()]
+}
 
 const getRegionLabel = (name: string) => {
-  const lowerName = name.toLowerCase();
-  if (lowerName.includes('toshkent viloyati')) return 'Toshkent v.';
-  if (lowerName.includes('toshkent shahri')) return 'Toshkent sh.';
-  return name.split(' ')[0];
-};
+  const lowerName = name.toLowerCase()
+  if (lowerName.includes('toshkent viloyati')) return 'Toshkent v.'
+  if (lowerName.includes('toshkent shahri')) return 'Toshkent sh.'
+  return name.split(' ')[0]
+}
 
 export const MONTHS = [
   { value: 'JANUARY', label: 'Yanvar', count: 0 },
@@ -47,7 +47,7 @@ export const MONTHS = [
   { value: 'OCTOBER', label: 'Oktabr', count: 0 },
   { value: 'NOVEMBER', label: 'Noyabr', count: 0 },
   { value: 'DECEMBER', label: 'Dekabr', count: 0 },
-];
+]
 
 const RISK_TYPES = [
   { value: 'HF', label: 'XICHO' },
@@ -56,29 +56,29 @@ const RISK_TYPES = [
   { value: 'ATTRACTION', label: 'Attraksion' },
   { value: 'XRAY', label: 'Rentgen' },
   { value: 'LPG_POWERED', label: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma' },
-];
+]
 
 const ASSIGNMENT_STATUSES = [
   { value: 'ALL', label: 'Barchasi' },
   { value: 'UNASSIGNED', label: 'Inspektor belgilanmaganlar' },
   { value: 'ASSIGNED', label: 'Inspektor belgilanganlar' },
-];
+]
 
 interface RiskStatisticsCardsProps {
-  activeRiskLevel: string;
-  year?: any;
-  type?: any;
-  onTabChange: (level: string) => void;
+  activeRiskLevel: string
+  year?: any
+  type?: any
+  onTabChange: (level: string) => void
 }
 
 export const Cards = ({ activeRiskLevel, onTabChange, year, type }: RiskStatisticsCardsProps) => {
   const { data: monthCount = {} } = useData<any>('/preventions/count/by-month', !!year && !!type, {
     year,
     type,
-  });
+  })
 
   const stats = MONTHS.map((month) => {
-    const key = `${month.value.toLowerCase()}Count`;
+    const key = `${month.value.toLowerCase()}Count`
 
     return {
       id: month.value,
@@ -87,55 +87,55 @@ export const Cards = ({ activeRiskLevel, onTabChange, year, type }: RiskStatisti
       count: monthCount?.[key] || '0',
       inactiveClass: 'bg-[#016B7B]/10 border-[#016B7B]/20 text-[#016B7B]',
       activeClass: 'bg-[#016B7B] border-[#015a67] text-white shadow-sm',
-    };
-  });
+    }
+  })
 
   return (
-    <div className="flex w-full gap-2 overflow-x-auto  no-scrollbar">
+    <div className="no-scrollbar flex w-full gap-2 overflow-x-auto">
       {stats.map((stat) => {
-        const isActive = activeRiskLevel === stat.id;
+        const isActive = activeRiskLevel === stat.id
 
         return (
           <div
             key={stat.id}
             onClick={() => onTabChange(stat.id)}
             className={clsx(
-              'relative flex-1 rounded-lg border p-3 flex items-center justify-between cursor-pointer transition-colors duration-200 select-none',
-              isActive ? stat.activeClass : `${stat.inactiveClass} hover:opacity-80`,
+              'relative flex flex-1 cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors duration-200 select-none',
+              isActive ? stat.activeClass : `${stat.inactiveClass} hover:opacity-80`
             )}
           >
             <div className="w-full">
-              <div className="flex gap-2 justify-between w-full">
-                <p className="text-sm font-medium mb-1 opacity-90">{stat.name}</p>
-                <p className="text-sm font-medium mb-1 opacity-90">{stat?.year}</p>
+              <div className="flex w-full justify-between gap-2">
+                <p className="mb-1 text-sm font-medium opacity-90">{stat.name}</p>
+                <p className="mb-1 text-sm font-medium opacity-90">{stat?.year}</p>
               </div>
               <h3 className={clsx('text-2xl font-bold')}>{stat.count}</h3>
             </div>
           </div>
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}
 
 const PreventionWidget = () => {
-  const { user } = useAuth();
-  const { paramsObject, addParams } = useCustomSearchParams();
-  const activeMonth = paramsObject.month || getCurrentMonthEnum();
-  const activeType = paramsObject.belongType || 'HF';
-  const year = paramsObject.year || new Date().getFullYear();
+  const { user } = useAuth()
+  const { paramsObject, addParams } = useCustomSearchParams()
+  const activeMonth = paramsObject.month || getCurrentMonthEnum()
+  const activeType = paramsObject.belongType || 'HF'
+  const year = paramsObject.year || new Date().getFullYear()
 
-  const isRegional = user?.role === UserRoles.REGIONAL;
-  const isInspector = user?.role === UserRoles.INSPECTOR;
+  const isRegional = user?.role === UserRoles.REGIONAL
+  const isInspector = user?.role === UserRoles.INSPECTOR
 
-  const { data = [] } = useData<{ id: number; name: string }[]>('/regions/select', !isInspector && !isRegional);
+  const { data = [] } = useData<{ id: number; name: string }[]>('/regions/select', !isInspector && !isRegional)
   const { data: counts = {} } = useData<any>('/preventions/count', !!year && !!activeMonth, {
     year,
     month: activeMonth,
-  });
+  })
 
-  const activeRegion = paramsObject.regionId?.toString() || (data && data.length > 0 ? data[0].id?.toString() : '');
-  const activeAssignment = paramsObject.assignment || (isInspector ? 'ASSIGNED' : 'ALL');
+  const activeRegion = paramsObject.regionId?.toString() || (data && data.length > 0 ? data[0].id?.toString() : '')
+  const activeAssignment = paramsObject.assignment || (isInspector ? 'ASSIGNED' : 'ALL')
 
   const regionTabs = useMemo(() => {
     return (
@@ -143,8 +143,8 @@ const PreventionWidget = () => {
         id: item?.id?.toString(),
         name: getRegionLabel(item.name || ''),
       })) || []
-    );
-  }, [data]);
+    )
+  }, [data])
 
   const riskTypes = useMemo(() => {
     return (
@@ -155,12 +155,12 @@ const PreventionWidget = () => {
           counts?.[`${item.value == 'LGP_POWERED' ? 'lpgPoweredCount' : item.value?.toString()?.toLowerCase()}Count`] ||
           0,
       })) || []
-    );
-  }, [counts]);
+    )
+  }, [counts])
 
   return (
     <>
-      <div className="flex flex-col gap-2 w-full mb-2">
+      <div className="mb-2 flex w-full flex-col gap-2">
         <Cards
           year={year}
           type={activeType}
@@ -169,14 +169,14 @@ const PreventionWidget = () => {
         />
 
         <Tabs value={activeType} onValueChange={(val) => addParams({ belongType: val, page: 1 })}>
-          <div className={cn('flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden')}>
+          <div className={cn('no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden')}>
             <TabsList className="h-auto p-1">
               {riskTypes.map((type) => (
                 <TabsTrigger key={type.value} value={type.value}>
                   {type.label}
                   <Badge
                     variant="destructive"
-                    className="ml-2 group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary"
+                    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
                   >
                     {type?.count || 0}
                   </Badge>
@@ -199,7 +199,7 @@ const PreventionWidget = () => {
 
         {!isInspector && (
           <Tabs value={activeAssignment} onValueChange={(val) => addParams({ assignment: val, page: 1 })}>
-            <div className={cn('flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden')}>
+            <div className={cn('no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden')}>
               <TabsList className="h-auto p-1">
                 {ASSIGNMENT_STATUSES.map((status) => (
                   <TabsTrigger key={status.value} value={status.value}>
@@ -214,7 +214,7 @@ const PreventionWidget = () => {
 
       <Table regions={data || []} />
     </>
-  );
-};
+  )
+}
 
-export default PreventionWidget;
+export default PreventionWidget

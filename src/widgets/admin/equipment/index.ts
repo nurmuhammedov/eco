@@ -1,1 +1,1 @@
-export { default as EquipmentWidget } from './ui/equipment-widget';
+export { default as EquipmentWidget } from './ui/equipment-widget'

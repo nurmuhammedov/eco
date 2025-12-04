@@ -1,7 +1,7 @@
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { format } from 'date-fns';
-import { z } from 'zod';
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { format } from 'date-fns'
+import { z } from 'zod'
 
 export const CraneAppealDtoSchema = z.object({
   phoneNumber: z
@@ -36,4 +36,4 @@ export const CraneAppealDtoSchema = z.object({
   nextPartialCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
   fullCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   nextFullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-});
+})

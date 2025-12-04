@@ -1,17 +1,17 @@
 import {
   LpgContainerIllegalAppealDtoSchema,
   RegisterIllegalLpgContainerApplicationDTO,
-} from '@/entities/create-application';
+} from '@/entities/create-application'
 import {
   useChildEquipmentTypes,
   useDistrictSelectQueries,
   useHazardousFacilityDictionarySelect,
   useRegionSelectQueries,
-} from '@/shared/api/dictionaries';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+} from '@/shared/api/dictionaries'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMemo } from 'react'
+import { useForm } from 'react-hook-form'
 
 export const useCreateIllegalLpgContainerApplication = () => {
   const form = useForm<RegisterIllegalLpgContainerApplicationDTO>({
@@ -45,19 +45,19 @@ export const useCreateIllegalLpgContainerApplication = () => {
       pressure: '',
     },
     mode: 'onChange',
-  });
+  })
 
-  const regionId = form.watch('regionId');
+  const regionId = form.watch('regionId')
 
-  const { data: regions } = useRegionSelectQueries();
-  const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect();
-  const { data: childEquipmentTypes } = useChildEquipmentTypes('LPG_CONTAINER'); // Child equipment turi
+  const { data: regions } = useRegionSelectQueries()
+  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect()
+  const { data: childEquipmentTypes } = useChildEquipmentTypes('LPG_CONTAINER') // Child equipment turi
 
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
-  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);
-  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions]);
-  const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes]);
+  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities])
+  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
+  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
+  const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes])
 
   return {
     form,
@@ -65,5 +65,5 @@ export const useCreateIllegalLpgContainerApplication = () => {
     districtOptions,
     childEquipmentOptions,
     hazardousFacilitiesOptions,
-  };
-};
+  }
+}

@@ -1,15 +1,15 @@
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { ColumnDef } from '@tanstack/react-table';
-import { useNavigate } from 'react-router-dom';
-import { GoBack } from '@/shared/components/common';
-import { TabsLayout } from '@/shared/layouts';
-import { useCustomSearchParams } from '@/shared/hooks';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { ColumnDef } from '@tanstack/react-table'
+import { useNavigate } from 'react-router-dom'
+import { GoBack } from '@/shared/components/common'
+import { TabsLayout } from '@/shared/layouts'
+import { useCustomSearchParams } from '@/shared/hooks'
 
 export const RegisterEquipmentAppealList = () => {
   // const { id: equipmentId } = useParams<{ id: string }>();
-  const { paramsObject, addParams } = useCustomSearchParams();
-  const activeTab = paramsObject.type || 'NEW';
-  const navigate = useNavigate();
+  const { paramsObject, addParams } = useCustomSearchParams()
+  const activeTab = paramsObject.type || 'NEW'
+  const navigate = useNavigate()
 
   const data: any = {
     page: {
@@ -19,7 +19,7 @@ export const RegisterEquipmentAppealList = () => {
       totalPages: 1,
     },
     content: [],
-  };
+  }
   // const { data } = usePaginatedData<any>('/inquiries', {
   //   ...paramsObject,
   //   belongId: equipmentId,
@@ -69,10 +69,10 @@ export const RegisterEquipmentAppealList = () => {
               }
             />
           </div>
-        );
+        )
       },
     },
-  ];
+  ]
 
   return (
     <div>
@@ -96,7 +96,7 @@ export const RegisterEquipmentAppealList = () => {
         <DataTable isPaginated data={data || []} columns={columns} className="h-[calc(100svh-320px)]" />
       </TabsLayout>
     </div>
-  );
-};
+  )
+}
 
-export default RegisterEquipmentAppealList;
+export default RegisterEquipmentAppealList

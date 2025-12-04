@@ -1,18 +1,18 @@
-import { GoBack } from '@/shared/components/common';
-import { useCustomSearchParams } from '@/shared/hooks';
-import { DetailCardAccordion } from '@/shared/components/common/detail-card';
-import RiskAnalysisIndicator from '@/features/risk-analysis/ui/parts/risk-analysis-info';
-import { useParams } from 'react-router-dom';
+import { GoBack } from '@/shared/components/common'
+import { useCustomSearchParams } from '@/shared/hooks'
+import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import RiskAnalysisIndicator from '@/features/risk-analysis/ui/parts/risk-analysis-info'
+import { useParams } from 'react-router-dom'
 
 const RiskAnalysisInfoById = () => {
   const {
     paramsObject: { tin, name },
-  } = useCustomSearchParams();
-  const { id } = useParams();
+  } = useCustomSearchParams()
+  const { id } = useParams()
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Tashkilot: ${name || ''} ${tin ? `(${tin})` : ''}`} />
       </div>
       <DetailCardAccordion defaultValue={['risk_anlalysis_info']}>
@@ -21,7 +21,7 @@ const RiskAnalysisInfoById = () => {
         </DetailCardAccordion.Item>
       </DetailCardAccordion>
     </>
-  );
-};
+  )
+}
 
-export default RiskAnalysisInfoById;
+export default RiskAnalysisInfoById

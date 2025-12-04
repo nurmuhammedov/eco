@@ -1,9 +1,9 @@
-import { Description } from '@/shared/components/common/description';
-import { Checklist } from '@/entities/admin/inspection';
-import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options';
+import { Description } from '@/shared/components/common/description'
+import { Checklist } from '@/entities/admin/inspection'
+import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options'
 
 export const ChecklistView = ({ data }: { data: Checklist | null }) => {
-  if (!data) return null;
+  if (!data) return null
 
   return (
     <Description>
@@ -26,5 +26,5 @@ export const ChecklistView = ({ data }: { data: Checklist | null }) => {
         {data?.corrective || '-'}
       </Description.Item>
     </Description>
-  );
-};
+  )
+}

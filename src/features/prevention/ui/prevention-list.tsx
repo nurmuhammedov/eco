@@ -1,23 +1,23 @@
-import { PreventionList, useDeletePrevention } from '@/entities/prevention';
-import { UserRoles } from '@/entities/user';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { Button } from '@/shared/components/ui/button';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { getDate } from '@/shared/utils/date';
-import { ColumnDef } from '@tanstack/react-table';
-import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { PreventionList, useDeletePrevention } from '@/entities/prevention'
+import { UserRoles } from '@/entities/user'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { Button } from '@/shared/components/ui/button'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { getDate } from '@/shared/utils/date'
+import { ColumnDef } from '@tanstack/react-table'
+import { FC } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface PreventionListProps {
-  data: any;
-  isLoading: boolean;
-  isPassed: boolean;
+  data: any
+  isLoading: boolean
+  isPassed: boolean
 }
 
 export const PreventionListTable: FC<PreventionListProps> = ({ data, isLoading, isPassed }) => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const { mutate: deletePrevention } = useDeletePrevention();
+  const navigate = useNavigate()
+  const { user } = useAuth()
+  const { mutate: deletePrevention } = useDeletePrevention()
 
   const columns: ColumnDef<PreventionList>[] = [
     {
@@ -62,7 +62,7 @@ export const PreventionListTable: FC<PreventionListProps> = ({ data, isLoading, 
                 <div className="flex gap-2">
                   <Button onClick={() => navigate(`/preventions/create/${row.original.tin}`)}>Tadbir o'tkazish</Button>
                 </div>
-              );
+              )
             },
           },
         ]
@@ -82,12 +82,12 @@ export const PreventionListTable: FC<PreventionListProps> = ({ data, isLoading, 
                       onDelete={() => deletePrevention(row.original.id)}
                     />
                   </div>
-                );
+                )
               },
             },
           ]
         : []),
-  ];
+  ]
 
-  return <DataTable columns={columns} data={data || []} isLoading={isLoading} className="h-[calc(100svh-320px)]" />;
-};
+  return <DataTable columns={columns} data={data || []} isLoading={isLoading} className="h-[calc(100svh-320px)]" />
+}

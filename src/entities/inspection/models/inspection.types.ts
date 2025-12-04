@@ -1,4 +1,4 @@
-import { z } from 'zod';
-import { inspectionSchema } from './inspection.schema';
+import { z } from 'zod'
+import { inspectionSchema } from './inspection.schema'
 
-export type Inspection = z.infer<typeof inspectionSchema>;
+export type Inspection = z.infer<typeof inspectionSchema>

@@ -7,7 +7,7 @@
 1. **Komponentni import qilish**:
 
    ```jsx
-   import Loader from 'path/to/Loader';
+   import Loader from 'path/to/Loader'
    ```
 
 2. **Asosiy foydalanish**:
@@ -20,26 +20,26 @@
 3. **State bilan ishlatish**:
 
    ```jsx
-   import { useState } from 'react';
+   import { useState } from 'react'
 
    function MyComponent() {
-     const [loading, setLoading] = useState(false);
+     const [loading, setLoading] = useState(false)
 
      const handleFetch = async () => {
-       setLoading(true);
+       setLoading(true)
        try {
-         await fetchData();
+         await fetchData()
        } finally {
-         setLoading(false);
+         setLoading(false)
        }
-     };
+     }
 
      return (
        <>
          <button onClick={handleFetch}>Ma'lumotlarni yuklash</button>
          <Loader isVisible={loading} message="loading.data" />
        </>
-     );
+     )
    }
    ```
 

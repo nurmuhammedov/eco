@@ -1,12 +1,12 @@
-import { useTranslation } from 'react-i18next';
-import { Description } from '@/shared/components/common/description';
-import { CommitteeStaffResponse } from '@/entities/admin/committee-staffs';
-import { formatPhoneNumber, getUserRoleDisplay, getUserStatusDisplay } from '@/shared/lib';
+import { useTranslation } from 'react-i18next'
+import { Description } from '@/shared/components/common/description'
+import { CommitteeStaffResponse } from '@/entities/admin/committee-staffs'
+import { formatPhoneNumber, getUserRoleDisplay, getUserStatusDisplay } from '@/shared/lib'
 
 export const CommitteeStaffView = ({ data }: { data: CommitteeStaffResponse | null }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('common')
 
-  if (!data) return null;
+  if (!data) return null
 
   return (
     <Description>
@@ -32,5 +32,5 @@ export const CommitteeStaffView = ({ data }: { data: CommitteeStaffResponse | nu
         {getUserStatusDisplay(!!data?.enabled, t)}
       </Description.Item>
     </Description>
-  );
-};
+  )
+}

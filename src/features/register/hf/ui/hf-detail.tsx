@@ -1,29 +1,29 @@
-import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
-import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
-import { useHfDetail } from '@/features/register/hf/hooks/use-hf-detail.tsx';
-import { GoBack } from '@/shared/components/common';
-import { DetailCardAccordion } from '@/shared/components/common/detail-card';
-import DetailRow from '@/shared/components/common/detail-row.tsx';
-import FileLink from '@/shared/components/common/file-link.tsx';
-import { Coordinate } from '@/shared/components/common/yandex-map';
-import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
-import { getDate } from '@/shared/utils/date.ts';
-import { Link } from 'react-router-dom';
-import { useAuth } from '@/shared/hooks/use-auth';
+import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
+import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
+import { useHfDetail } from '@/features/register/hf/hooks/use-hf-detail.tsx'
+import { GoBack } from '@/shared/components/common'
+import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import DetailRow from '@/shared/components/common/detail-row.tsx'
+import FileLink from '@/shared/components/common/file-link.tsx'
+import { Coordinate } from '@/shared/components/common/yandex-map'
+import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
+import { getDate } from '@/shared/utils/date.ts'
+import { Link } from 'react-router-dom'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 const HfDetail = () => {
-  const { isLoading, data } = useHfDetail();
-  const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[]);
-  const { user } = useAuth();
+  const { isLoading, data } = useHfDetail()
+  const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
+  const { user } = useAuth()
 
   if (isLoading || !data) {
-    return null;
+    return null
   }
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
       </div>
       <DetailCardAccordion
@@ -66,7 +66,7 @@ const HfDetail = () => {
         )}
       </DetailCardAccordion>
     </div>
-  );
-};
+  )
+}
 
-export default HfDetail;
+export default HfDetail

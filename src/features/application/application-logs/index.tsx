@@ -1,1 +1,1 @@
-export { ApplicationLogsList } from './ui/application-logs-table';
+export { ApplicationLogsList } from './ui/application-logs-table'

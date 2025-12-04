@@ -1,15 +1,15 @@
-import { Fragment } from 'react';
-import { ActionButton } from './action-button';
-import { useTranslation } from 'react-i18next';
-import { RegionDrawer, RegionList } from '@/features/admin/region';
-import { useRegionManagement } from '../model/use-region-management';
-import { DistrictDrawer, DistrictList } from '@/features/admin/districts';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
+import { Fragment } from 'react'
+import { ActionButton } from './action-button'
+import { useTranslation } from 'react-i18next'
+import { RegionDrawer, RegionList } from '@/features/admin/region'
+import { useRegionManagement } from '../model/use-region-management'
+import { DistrictDrawer, DistrictList } from '@/features/admin/districts'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 
 const RegionsManagement = () => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('common')
   const { activeTab, isOpenRegion, isOpenDistrict, handleChangeTab, openAddRegionDrawer, openAddDistrictDrawer } =
-    useRegionManagement();
+    useRegionManagement()
 
   return (
     <Fragment>
@@ -34,6 +34,6 @@ const RegionsManagement = () => {
       {isOpenRegion && <RegionDrawer />}
       {isOpenDistrict && <DistrictDrawer />}
     </Fragment>
-  );
-};
-export default RegionsManagement;
+  )
+}
+export default RegionsManagement

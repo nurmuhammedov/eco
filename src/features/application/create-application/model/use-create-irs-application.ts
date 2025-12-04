@@ -1,11 +1,11 @@
 // src/features/application/create-application/model/use-create-irs-application.ts
-import { CreateIrsApplicationDTO, IrsAppealDtoSchema } from '@/entities/create-application';
-import { IrsCategory, IrsIdentifierType, IrsUsageType } from '@/entities/create-application/types/enums';
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { CreateIrsApplicationDTO, IrsAppealDtoSchema } from '@/entities/create-application'
+import { IrsCategory, IrsIdentifierType, IrsUsageType } from '@/entities/create-application/types/enums'
+import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMemo } from 'react'
+import { useForm } from 'react-hook-form'
 
 export const useCreateIrsApplication = () => {
   const form = useForm<CreateIrsApplicationDTO>({
@@ -34,19 +34,19 @@ export const useCreateIrsApplication = () => {
       isValid: true, // Boolean
       usageType: undefined, // Enum
       storageLocation: '',
-      passportPath: undefined,
       additionalFilePath: undefined,
+      passportPath: undefined,
       regionId: '',
       districtId: '',
       address: '',
     },
     mode: 'onChange',
-  });
+  })
 
-  const regionId = form.watch('regionId');
+  const regionId = form.watch('regionId')
 
-  const { data: regions } = useRegionSelectQueries();
-  const { data: districts } = useDistrictSelectQueries(regionId);
+  const { data: regions } = useRegionSelectQueries()
+  const { data: districts } = useDistrictSelectQueries(regionId)
 
   const irsIdentifierTypeOptions = useMemo(
     () =>
@@ -54,20 +54,20 @@ export const useCreateIrsApplication = () => {
         Object.values(IrsIdentifierType).map((val) => ({
           id: val,
           name: val,
-        })),
+        }))
       ),
-    [],
-  );
+    []
+  )
   const irsCategoryOptions = useMemo(
     () =>
       getSelectOptions(
         Object.values(IrsCategory).map((val) => ({
           id: val,
           name: val,
-        })),
+        }))
       ),
-    [],
-  );
+    []
+  )
   const irsUsageTypeOptions = useMemo(
     () =>
       getSelectOptions([
@@ -76,18 +76,18 @@ export const useCreateIrsApplication = () => {
         { id: IrsUsageType.EXPORT, name: 'Chet-elga olib chiqish uchun' },
         { id: IrsUsageType.STORAGE, name: 'Vaqtinchalik saqlash uchun' },
       ]),
-    [],
-  );
+    []
+  )
   const irsStatusOptions = useMemo(
     () => [
       { id: 'true', name: 'Aktiv' },
       { id: 'false', name: 'Aktiv emas' },
     ],
-    [],
-  );
+    []
+  )
 
-  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);
-  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions]);
+  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
+  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
 
   return {
     form,
@@ -97,5 +97,5 @@ export const useCreateIrsApplication = () => {
     irsCategoryOptions,
     irsUsageTypeOptions,
     irsStatusOptions,
-  };
-};
+  }
+}

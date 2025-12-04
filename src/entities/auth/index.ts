@@ -1,1 +1,1 @@
-export { useLogout, useLogin, useCurrentUser, useLoginOneId } from './models/auth.fetcher';
+export { useLogout, useLogin, useCurrentUser, useLoginOneId } from './models/auth.fetcher'

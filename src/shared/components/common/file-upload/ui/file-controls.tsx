@@ -1,16 +1,16 @@
-import React from 'react';
-import { cn } from '@/shared/lib/utils';
-import { Download, Eye, Trash2 } from 'lucide-react';
-import { FileData } from '../models/file-data.interface';
+import React from 'react'
+import { cn } from '@/shared/lib/utils'
+import { Download, Eye, Trash2 } from 'lucide-react'
+import { FileData } from '../models/file-data.interface'
 
 interface FileControlsProps {
-  fileData: FileData | null;
-  fileUrl: string;
-  isLoading: boolean;
-  showPreview?: boolean;
-  showDownload?: boolean;
-  onPreviewClick: () => void;
-  onRemoveClick: () => void;
+  fileData: FileData | null
+  fileUrl: string
+  isLoading: boolean
+  showPreview?: boolean
+  showDownload?: boolean
+  onPreviewClick: () => void
+  onRemoveClick: () => void
 }
 
 export const FileControls: React.FC<FileControlsProps> = ({
@@ -23,7 +23,7 @@ export const FileControls: React.FC<FileControlsProps> = ({
   onRemoveClick,
 }) => {
   return (
-    <div className="flex-shrink-0 flex items-center border-l border-gray-100">
+    <div className="flex flex-shrink-0 items-center border-l border-gray-100">
       {/* Ko'rish tugmasi */}
       {showPreview && (
         <button
@@ -32,12 +32,12 @@ export const FileControls: React.FC<FileControlsProps> = ({
           disabled={isLoading}
           className={cn(
             'p-2 text-gray-500 transition-colors duration-150',
-            isLoading ? 'cursor-not-allowed' : 'hover:text-blue-400',
+            isLoading ? 'cursor-not-allowed' : 'hover:text-blue-400'
           )}
           title="Faylni ko'rish"
         >
           {isLoading ? (
-            <div className="size-4 rounded-full border-2 border-blue-400 border-t-gray-500 animate-spin" />
+            <div className="size-4 animate-spin rounded-full border-2 border-blue-400 border-t-gray-500" />
           ) : (
             <Eye size={16} />
           )}
@@ -49,7 +49,7 @@ export const FileControls: React.FC<FileControlsProps> = ({
         <a
           href={fileData?.blobUrl || fileUrl}
           download={fileData?.originalName}
-          className="p-2 text-gray-500 hover:text-blue-400 transition-colors duration-150"
+          className="p-2 text-gray-500 transition-colors duration-150 hover:text-blue-400"
           title="Faylni yuklab olish"
           onClick={(e) => e.stopPropagation()}
         >
@@ -61,11 +61,11 @@ export const FileControls: React.FC<FileControlsProps> = ({
       <button
         type="button"
         onClick={onRemoveClick}
-        className="p-2 text-gray-500 hover:text-red-500 transition-colors duration-150"
+        className="p-2 text-gray-500 transition-colors duration-150 hover:text-red-500"
         title="Faylni o'chirish"
       >
         <Trash2 size={16} />
       </button>
     </div>
-  );
-};
+  )
+}

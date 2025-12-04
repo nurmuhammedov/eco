@@ -34,18 +34,18 @@ export const registerAIPromptControls = (editor: any): void => {
           },
         ],
         onSubmit: (api: any) => {
-          const data = api.getData();
+          const data = api.getData()
           // Here you would integrate with an AI API
           editor.notificationManager.open({
             text: 'AI processing: ' + data.prompt,
             type: 'info',
             timeout: 2000,
-          });
-          api.close();
+          })
+          api.close()
         },
-      });
+      })
     },
-  });
+  })
 
   // Add AI prompt to menu
   editor.ui.registry.addMenuItem('aiprompt', {
@@ -53,12 +53,12 @@ export const registerAIPromptControls = (editor: any): void => {
     icon: 'accessibility-check',
     onAction: () => {
       // Trigger the AI prompt dialog
-      editor.execCommand('mceAIPrompt');
+      editor.execCommand('mceAIPrompt')
     },
-  });
+  })
 
   // Register command for AI prompt
   editor.addCommand('mceAIPrompt', () => {
-    editor.execCommand('mceAIPromptButton');
-  });
-};
+    editor.execCommand('mceAIPromptButton')
+  })
+}

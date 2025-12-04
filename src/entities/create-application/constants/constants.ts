@@ -3,8 +3,8 @@ import {
   ApplicationCategory,
   ApplicationTypeEnum,
   MainApplicationCategory,
-} from '@/entities/create-application';
-import { FileInput, FileOutput, FilePlus } from 'lucide-react';
+} from '@/entities/create-application'
+import { FileInput, FileOutput, FilePlus } from 'lucide-react'
 
 export const APPLICATION_CATEGORIES = [
   {
@@ -35,7 +35,7 @@ export const APPLICATION_CATEGORIES = [
     id: ApplicationCategory.CADASTRE,
     name: 'Kadastr',
   },
-];
+]
 
 export const MAIN_APPLICATION_BY_CATEGORY = {
   [ApplicationCategory.EQUIPMENTS]: [
@@ -65,7 +65,7 @@ export const MAIN_APPLICATION_BY_CATEGORY = {
   [ApplicationCategory.ACCREDITATION]: [],
   [ApplicationCategory.ATTESTATION_PREVENTION]: [],
   [ApplicationCategory.ILLEGAL]: [],
-};
+}
 
 export const REPORTS_DATA: ApplicationCardItem[] = [
   {
@@ -99,7 +99,7 @@ export const REPORTS_DATA: ApplicationCardItem[] = [
     type: ApplicationTypeEnum.REPORT_4,
     icon: 'escalator',
   },
-];
+]
 
 export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
@@ -789,4 +789,4 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_CABLEWAY,
     icon: 'cableway',
   },
-];
+]

@@ -1,6 +1,6 @@
-import { DeRegisterHF, DeRegisterHFDTO } from '@/entities/create-application';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { DeRegisterHF, DeRegisterHFDTO } from '@/entities/create-application'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
 export const useDeRegisterHFApplication = () => {
   const form = useForm<DeRegisterHFDTO>({
@@ -16,9 +16,9 @@ export const useDeRegisterHFApplication = () => {
       type: 'REPORT',
     },
     mode: 'onChange',
-  });
+  })
 
   return {
     form,
-  };
-};
+  }
+}

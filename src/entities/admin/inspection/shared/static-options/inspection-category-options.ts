@@ -5,4 +5,4 @@ export const inspectionCategoryOptions = [
   { id: 'IRS', name: 'INM' },
   { id: 'XRAY', name: 'Rentgen' },
   { id: 'LPG_POWERED', name: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma' },
-];
+]

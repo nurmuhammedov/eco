@@ -1,28 +1,28 @@
-import { GoBack } from '@/shared/components/common';
-import { DetailCardAccordion } from '@/shared/components/common/detail-card';
-import AttachInspectorModal from '@/features/inspections/ui/parts/attach-inspector-modal.tsx';
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
-import ObjectsList from '@/features/inspections/ui/parts/objects-list.tsx';
-import { useAuth } from '@/shared/hooks/use-auth.ts';
-import { UserRoles } from '@/entities/user';
-import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts';
-import InspectionsDetailInfo from '@/features/inspections/ui/parts/inpections-detail-info.tsx';
-import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts';
-import { InspectionStatus } from '@/widgets/inspection/ui/inspection-widget.tsx';
-import { useObjectList } from '@/features/inspections/hooks/use-object-list';
-import { useData } from '@/shared/hooks';
-import InspectionReports from '@/features/inspections/ui/parts/inspection-reports.tsx';
+import { GoBack } from '@/shared/components/common'
+import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import AttachInspectorModal from '@/features/inspections/ui/parts/attach-inspector-modal.tsx'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
+import ObjectsList from '@/features/inspections/ui/parts/objects-list.tsx'
+import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { UserRoles } from '@/entities/user'
+import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts'
+import InspectionsDetailInfo from '@/features/inspections/ui/parts/inpections-detail-info.tsx'
+import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts'
+import { InspectionStatus } from '@/widgets/inspection/ui/inspection-widget.tsx'
+import { useObjectList } from '@/features/inspections/hooks/use-object-list'
+import { useData } from '@/shared/hooks'
+import InspectionReports from '@/features/inspections/ui/parts/inspection-reports.tsx'
 
 const InspectionsInfo = () => {
   const {
     paramsObject: { tin: currentTin = '', name = '', inspectionId = '' },
-  } = useCustomSearchParams();
-  const { user } = useAuth();
-  const { data: inspectionData } = useInspectionDetail();
-  const { data } = useObjectList();
+  } = useCustomSearchParams()
+  const { user } = useAuth()
+  const { data: inspectionData } = useInspectionDetail()
+  const { data } = useObjectList()
   const { data: accordions = [] } = useData<any[]>('/inspection-results', !!inspectionId, {
     inspectionId,
-  });
+  })
 
   const typesList = [
     ...(data && data?.HF && Array.isArray(data?.HF) ? data.HF : []),
@@ -31,11 +31,11 @@ const InspectionsInfo = () => {
     ...(data && data?.IRS && Array.isArray(data?.IRS) ? data.IRS : []),
     ...(data && data?.XRAY && Array.isArray(data?.XRAY) ? data.XRAY : []),
     ...(data && data?.LPG_POWERED && Array.isArray(data?.LPG_POWERED) ? data.LPG_POWERED : []),
-  ];
+  ]
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Tashkilot: ${name} (${currentTin})`} />
       </div>
       <DetailCardAccordion defaultValue={['risk_anlalysis_info', 'inspection_info']}>
@@ -70,7 +70,7 @@ const InspectionsInfo = () => {
           ))}
       </DetailCardAccordion>
     </>
-  );
-};
+  )
+}
 
-export default InspectionsInfo;
+export default InspectionsInfo

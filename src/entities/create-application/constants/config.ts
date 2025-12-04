@@ -1,5 +1,5 @@
-import { API_ENDPOINTS } from '@/shared/api';
-import { ApplicationTypeEnum } from '../types/enums';
+import { API_ENDPOINTS } from '@/shared/api'
+import { ApplicationTypeEnum } from '../types/enums'
 
 export const applicationConfigs: Record<string, any> = {
   [ApplicationTypeEnum.REGISTER_HF]: {
@@ -190,4 +190,4 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: '/appeals/equipment/unofficial/cableway',
     pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/cableway',
   },
-};
+}

@@ -1,11 +1,11 @@
-import { getTime } from '@/shared/lib/get-time';
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { getTime } from '@/shared/lib/get-time'
+import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import {
   FilterTerritorialDepartmentsDTO,
   TerritorialDepartmentResponse,
   territorialDepartmentsAPI,
   territorialDepartmentsKeys,
-} from '@/entities/admin/territorial-departments';
+} from '@/entities/admin/territorial-departments'
 
 export const useTerritorialDepartmentsQuery = (filters: FilterTerritorialDepartmentsDTO) => {
   return useQuery({
@@ -13,8 +13,8 @@ export const useTerritorialDepartmentsQuery = (filters: FilterTerritorialDepartm
     queryKey: territorialDepartmentsKeys.list('territorial-departments', filters),
     queryFn: () => territorialDepartmentsAPI.list(filters),
     placeholderData: (previousData) => previousData,
-  });
-};
+  })
+}
 
 export const useTerritorialDepartmentQuery = (
   id: number,
@@ -26,7 +26,7 @@ export const useTerritorialDepartmentQuery = (
       ReturnType<typeof territorialDepartmentsKeys.detail>
     >,
     'queryKey' | 'queryFn'
-  >,
+  >
 ) => {
   return useQuery({
     enabled: !!id,
@@ -35,5 +35,5 @@ export const useTerritorialDepartmentQuery = (
     queryKey: territorialDepartmentsKeys.detail('territorial-departments', id),
     placeholderData: (previousData) => previousData,
     ...options,
-  });
-};
+  })
+}

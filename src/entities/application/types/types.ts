@@ -20,8 +20,8 @@ export enum ApplicationStatusForInspector {
 }
 
 export interface ApplicationFilters {
-  name: string;
-  search: string;
-  type: string;
-  status: ApplicationStatus | undefined;
+  name: string
+  search: string
+  type: string
+  status: ApplicationStatus | undefined
 }

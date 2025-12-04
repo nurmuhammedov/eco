@@ -1,33 +1,33 @@
-import { Button } from '@/shared/components/ui/button.tsx';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx';
-import { Input } from '@/shared/components/ui/input.tsx';
-import DatePicker from '@/shared/components/ui/datepicker.tsx';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { format, parseISO } from 'date-fns';
-import { useState } from 'react';
-import { useUpdateRegisterFile } from '../hooks/use-file-edit';
-import { QueryClient } from '@tanstack/react-query';
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys';
+import { Button } from '@/shared/components/ui/button.tsx'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { Input } from '@/shared/components/ui/input.tsx'
+import DatePicker from '@/shared/components/ui/datepicker.tsx'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { format, parseISO } from 'date-fns'
+import { useState } from 'react'
+import { useUpdateRegisterFile } from '../hooks/use-file-edit'
+import { QueryClient } from '@tanstack/react-query'
+import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
 
 const schema = z.object({
   documentNumber: z.string().min(1, 'Hujjat raqami majburiy'),
   documentDate: z.date({ required_error: 'Hujjat sanasi majburiy' }),
   expiryDate: z.date({ required_error: 'Amal qilish muddati majburiy' }),
-});
+})
 
-type FormType = z.infer<typeof schema>;
+type FormType = z.infer<typeof schema>
 
 const DocumentFormModal = ({ fieldName, url }: { fieldName: string; url?: string }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const form = useForm<FormType>({
     resolver: zodResolver(schema),
-  });
+  })
 
-  const { mutate: updateFile, isPending } = useUpdateRegisterFile(url);
-  const queryClient = new QueryClient();
+  const { mutate: updateFile, isPending } = useUpdateRegisterFile(url)
+  const queryClient = new QueryClient()
 
   const onSubmit = (data: FormType) => {
     updateFile(
@@ -41,20 +41,20 @@ const DocumentFormModal = ({ fieldName, url }: { fieldName: string; url?: string
       },
       {
         onSuccess: () => {
-          form.reset();
-          setOpen(false);
-          queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
+          form.reset()
+          setOpen(false)
+          queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] })
         },
-      },
-    );
-  };
+      }
+    )
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>Hujjat biriktirish</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[95vh] overflow-y-auto">
+      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Hujjat ma’lumotlari</DialogTitle>
         </DialogHeader>
@@ -77,7 +77,7 @@ const DocumentFormModal = ({ fieldName, url }: { fieldName: string; url?: string
               control={form.control}
               name="documentDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem>
                     <FormLabel required>Hujjat sanasi</FormLabel>
@@ -88,14 +88,14 @@ const DocumentFormModal = ({ fieldName, url }: { fieldName: string; url?: string
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
               control={form.control}
               name="expiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem>
                     <FormLabel required>Amal qilish muddati</FormLabel>
@@ -106,7 +106,7 @@ const DocumentFormModal = ({ fieldName, url }: { fieldName: string; url?: string
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <Button disabled={isPending} loading={isPending} type="submit" variant="success" className="w-full">
@@ -116,7 +116,7 @@ const DocumentFormModal = ({ fieldName, url }: { fieldName: string; url?: string
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default DocumentFormModal;
+export default DocumentFormModal

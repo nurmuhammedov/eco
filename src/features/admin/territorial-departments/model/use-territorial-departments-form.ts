@@ -1,4 +1,4 @@
-import { useRegionSelectQuery } from '@/entities/admin/districts';
+import { useRegionSelectQuery } from '@/entities/admin/districts'
 import {
   CreateTerritorialDepartmentsDTO,
   territorialDepartmentsSchema,
@@ -6,77 +6,77 @@ import {
   useCreateTerritorialDepartment,
   useTerritorialDepartmentQuery,
   useUpdateTerritorialDepartments,
-} from '@/entities/admin/territorial-departments';
-import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useEffect, useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+} from '@/entities/admin/territorial-departments'
+import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useCallback, useEffect, useMemo } from 'react'
+import { useForm } from 'react-hook-form'
 
 const DEFAULT_FORM_VALUES: CreateTerritorialDepartmentsDTO = {
   name: '',
   regionId: 0,
-};
+}
 
 export function useTerritorialDepartmentsForm() {
-  const { data, onClose, isCreate } = useTerritorialDepartmentsDrawer();
+  const { data, onClose, isCreate } = useTerritorialDepartmentsDrawer()
 
-  const territorialDepartmentId = useMemo(() => (data?.id ? data?.id : 0), [data]);
+  const territorialDepartmentId = useMemo(() => (data?.id ? data?.id : 0), [data])
 
   const form = useForm<CreateTerritorialDepartmentsDTO>({
     resolver: zodResolver(territorialDepartmentsSchema),
     defaultValues: DEFAULT_FORM_VALUES,
     mode: 'onChange',
-  });
+  })
 
-  const { data: regionOptions } = useRegionSelectQuery();
+  const { data: regionOptions } = useRegionSelectQuery()
 
-  const { mutateAsync: create, isPending: isCreating } = useCreateTerritorialDepartment();
+  const { mutateAsync: create, isPending: isCreating } = useCreateTerritorialDepartment()
 
-  const { mutateAsync: update, isPending: isUpdating } = useUpdateTerritorialDepartments();
+  const { mutateAsync: update, isPending: isUpdating } = useUpdateTerritorialDepartments()
 
-  const { data: foundedData, isLoading } = useTerritorialDepartmentQuery(territorialDepartmentId);
+  const { data: foundedData, isLoading } = useTerritorialDepartmentQuery(territorialDepartmentId)
 
   useEffect(() => {
     if (foundedData && !isCreate) {
-      form.reset(foundedData);
+      form.reset(foundedData)
     }
-  }, [foundedData, isCreate, form]);
+  }, [foundedData, isCreate, form])
 
   const handleClose = useCallback(() => {
-    form.reset(DEFAULT_FORM_VALUES);
-    onClose();
-  }, [form, onClose]);
+    form.reset(DEFAULT_FORM_VALUES)
+    onClose()
+  }, [form, onClose])
 
   const handleSubmit = useCallback(
     async (formData: CreateTerritorialDepartmentsDTO): Promise<boolean> => {
       try {
         if (isCreate) {
-          const response = await create(formData);
+          const response = await create(formData)
           if (response.success) {
-            handleClose();
-            return true;
+            handleClose()
+            return true
           }
         } else {
           const response = await update({
             id: territorialDepartmentId,
             ...formData,
-          } as UpdateTerritorialDepartmentsDTO);
+          } as UpdateTerritorialDepartmentsDTO)
           if (response.success) {
-            handleClose();
-            return true;
+            handleClose()
+            return true
           }
         }
 
-        return false;
+        return false
       } catch (error) {
-        console.error('[useEquipmentForm] Submission error:', error);
-        return false;
+        console.error('[useEquipmentForm] Submission error:', error)
+        return false
       }
     },
-    [isCreate, territorialDepartmentId, create, update, handleClose],
-  );
+    [isCreate, territorialDepartmentId, create, update, handleClose]
+  )
 
-  const isPending = isCreating || isUpdating;
+  const isPending = isCreating || isUpdating
 
   return {
     form,
@@ -85,5 +85,5 @@ export function useTerritorialDepartmentsForm() {
     regionOptions,
     onSubmit: handleSubmit,
     isFetching: isLoading,
-  };
+  }
 }

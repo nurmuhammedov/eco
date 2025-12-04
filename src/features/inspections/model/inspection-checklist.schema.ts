@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export enum ChecklistAnswerStatus {
   POSITIVE = 'POSITIVE',
@@ -20,30 +20,30 @@ export const checklistItemSchema = z
   .refine(
     (data) => {
       if (data.answer === ChecklistAnswerStatus.NEGATIVE) {
-        return data.description;
+        return data.description
       }
-      return true;
+      return true
     },
     {
       message: 'Majburiy maydon!',
       path: ['description'],
-    },
+    }
   )
   .refine(
     (data) => {
       if (data.answer === ChecklistAnswerStatus.NEGATIVE) {
-        return data.deadline;
+        return data.deadline
       }
-      return true;
+      return true
     },
     {
       message: 'Majburiy maydon!',
       path: ['deadline'],
-    },
-  );
+    }
+  )
 
 export const checklistFormSchema = z.object({
   items: z.array(checklistItemSchema),
-});
+})
 
-export type ChecklistFormValues = z.infer<typeof checklistFormSchema>;
+export type ChecklistFormValues = z.infer<typeof checklistFormSchema>

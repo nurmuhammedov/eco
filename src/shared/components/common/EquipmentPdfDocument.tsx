@@ -1,12 +1,12 @@
-import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
-import { getDate } from '@/shared/utils/date';
+import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer'
+import { getDate } from '@/shared/utils/date'
 
 interface PdfData {
-  registryNumber?: string;
-  ownerName?: string;
-  registrationDate?: string;
-  attractionName?: string;
-  qrCodeDataUrl: string;
+  registryNumber?: string
+  ownerName?: string
+  registrationDate?: string
+  attractionName?: string
+  qrCodeDataUrl: string
 }
 
 Font.register({
@@ -15,7 +15,7 @@ Font.register({
     { src: '/fonts/Roboto-Regular.ttf' }, // public papkasidagi faylga to'g'ridan-to'g'ri yo'l
     { src: '/fonts/Roboto-Bold.ttf', fontWeight: 'bold' },
   ],
-});
+})
 
 const styles = StyleSheet.create({
   page: {
@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 15,
   },
-});
-const noHyphenate = (word: string) => [word];
+})
+const noHyphenate = (word: string) => [word]
 export const EquipmentPdfDocument = ({ data }: { data: PdfData }) => (
   <Document>
     <Page size="A4" orientation="landscape" style={styles.page}>
@@ -129,4 +129,4 @@ export const EquipmentPdfDocument = ({ data }: { data: PdfData }) => (
       </View>
     </Page>
   </Document>
-);
+)

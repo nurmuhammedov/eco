@@ -1,27 +1,27 @@
-import { DetailCardAccordion } from '@/shared/components/common/detail-card';
-import { GoBack } from '@/shared/components/common';
-import { useSearchParams } from 'react-router-dom';
-import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts';
-import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
-import PointsClassification from '@/features/inspections/ui/parts/points-classification.tsx';
+import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { GoBack } from '@/shared/components/common'
+import { useSearchParams } from 'react-router-dom'
+import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts'
+import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
+import PointsClassification from '@/features/inspections/ui/parts/points-classification.tsx'
 
 const InspectionsDetail = () => {
-  const { data } = useObjectInfo();
-  const [searchParams] = useSearchParams();
-  const currentTin = searchParams.get('tin');
-  let type = searchParams.get('type') || '';
+  const { data } = useObjectInfo()
+  const [searchParams] = useSearchParams()
+  const currentTin = searchParams.get('tin')
+  let type = searchParams.get('type') || ''
 
   if (type !== 'hf' && type !== 'irs') {
-    type = data?.type;
+    type = data?.type
   }
 
   if (!data) {
-    return null;
+    return null
   }
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Tashkilot STIR: ${currentTin}`} />
       </div>
       <DetailCardAccordion defaultValue={['org_info', 'object_info', 'risk_analysis_info']}>
@@ -33,7 +33,7 @@ const InspectionsDetail = () => {
         </DetailCardAccordion.Item>
       </DetailCardAccordion>
     </>
-  );
-};
+  )
+}
 
-export default InspectionsDetail;
+export default InspectionsDetail

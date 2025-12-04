@@ -1,7 +1,7 @@
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { format } from 'date-fns';
-import { z } from 'zod';
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { format } from 'date-fns'
+import { z } from 'zod'
 
 export const EscalatorAppealDtoSchema = z.object({
   phoneNumber: z
@@ -31,11 +31,11 @@ export const EscalatorAppealDtoSchema = z.object({
   saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   equipmentCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   installationCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  passportPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  additionalFilePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   expertisePath: z.string().optional(),
   expertiseExpiryDate: z.date().nullable().optional(),
   technicalInspectionPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   nextTechnicalInspectionDate: z
     .date({ required_error: 'Majburiy maydon!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
-});
+})

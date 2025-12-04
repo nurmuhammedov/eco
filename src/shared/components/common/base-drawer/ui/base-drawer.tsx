@@ -1,13 +1,13 @@
-import { X } from 'lucide-react';
-import { cn } from '@/shared/lib/utils';
-import { BaseDrawerProps } from '../types';
-import { DrawerFooterActions } from './footer-action';
-import { Button } from '@/shared/components/ui/button';
-import { DialogDescription } from '@/shared/components/ui/dialog';
-import React, { Fragment, memo, useCallback, useMemo } from 'react';
-import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/shared/components/ui/drawer';
-import { useAppSelector } from '@/shared/hooks/use-store.ts';
-import { UIModeEnum } from '@/shared/types';
+import { X } from 'lucide-react'
+import { cn } from '@/shared/lib/utils'
+import { BaseDrawerProps } from '../types'
+import { DrawerFooterActions } from './footer-action'
+import { Button } from '@/shared/components/ui/button'
+import { DialogDescription } from '@/shared/components/ui/dialog'
+import React, { Fragment, memo, useCallback, useMemo } from 'react'
+import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/shared/components/ui/drawer'
+import { useAppSelector } from '@/shared/hooks/use-store.ts'
+import { UIModeEnum } from '@/shared/types'
 
 export const BaseDrawer = memo(function BaseDrawer({
   open,
@@ -25,44 +25,44 @@ export const BaseDrawer = memo(function BaseDrawer({
   showSubmitButton = true,
   ...props
 }: BaseDrawerProps) {
-  const { mode } = useAppSelector((state) => state.ui);
+  const { mode } = useAppSelector((state) => state.ui)
   const handleClose = useCallback(() => {
-    if (onClose) onClose();
-  }, [onClose]);
+    if (onClose) onClose()
+  }, [onClose])
 
   const handleSubmit = useCallback(
     (e?: React.FormEvent) => {
-      if (e) e.preventDefault();
-      if (onSubmit) onSubmit();
+      if (e) e.preventDefault()
+      if (onSubmit) onSubmit()
     },
-    [onSubmit],
-  );
+    [onSubmit]
+  )
 
-  const contentClassName = useMemo(() => cn('sm:!max-w-sm 3xl:!max-w-md', className), [className]);
+  const contentClassName = useMemo(() => cn('sm:!max-w-sm 3xl:!max-w-md', className), [className])
 
   const drawerHeader = useMemo(
     () => (
-      <DrawerHeader className="text-left shadow-xs border-b py-3 2xl:py-4 flex flex-row items-center gap-2">
+      <DrawerHeader className="flex flex-row items-center gap-2 border-b py-3 text-left shadow-xs 2xl:py-4">
         <Button
           size="icon"
           variant="ghost"
           onClick={handleClose}
           aria-label="Close Drawer"
-          className="border-none !size-6 3xl:!size-8 shadow-none"
+          className="3xl:!size-8 !size-6 border-none shadow-none"
         >
           <X className="text-neutral-400" />
         </Button>
         <DrawerTitle className="truncate">{title}</DrawerTitle>
       </DrawerHeader>
     ),
-    [title, handleClose],
-  );
+    [title, handleClose]
+  )
 
   const footerComponent = useMemo(() => {
-    if (footer === null || mode === UIModeEnum.VIEW) return null;
+    if (footer === null || mode === UIModeEnum.VIEW) return null
 
     return (
-      <DrawerFooter className="border-t py-4 flex">
+      <DrawerFooter className="flex border-t py-4">
         {footer || (
           <DrawerFooterActions
             loading={loading}
@@ -74,10 +74,10 @@ export const BaseDrawer = memo(function BaseDrawer({
           />
         )}
       </DrawerFooter>
-    );
-  }, [footer, loading, handleClose, disabled, handleSubmit, showCancelButton, showSubmitButton]);
+    )
+  }, [footer, loading, handleClose, disabled, handleSubmit, showCancelButton, showSubmitButton])
 
-  const contentElement = useMemo(() => <div className="p-4 flex-1 overflow-auto">{children}</div>, [children]);
+  const contentElement = useMemo(() => <div className="flex-1 overflow-auto p-4">{children}</div>, [children])
 
   const containerElement = useMemo(() => {
     const commonProps = {
@@ -89,12 +89,12 @@ export const BaseDrawer = memo(function BaseDrawer({
         </Fragment>
       ),
       className: 'flex flex-col h-full',
-    };
+    }
 
-    return asForm ? <form autoComplete="off" onSubmit={handleSubmit} {...commonProps} /> : <div {...commonProps} />;
-  }, [asForm, drawerHeader, contentElement, footerComponent, handleSubmit]);
+    return asForm ? <form autoComplete="off" onSubmit={handleSubmit} {...commonProps} /> : <div {...commonProps} />
+  }, [asForm, drawerHeader, contentElement, footerComponent, handleSubmit])
 
-  if (!open) return null;
+  if (!open) return null
 
   return (
     <Drawer open={open} direction={direction} onClose={handleClose} {...props}>
@@ -103,5 +103,5 @@ export const BaseDrawer = memo(function BaseDrawer({
         {containerElement}
       </DrawerContent>
     </Drawer>
-  );
-});
+  )
+})

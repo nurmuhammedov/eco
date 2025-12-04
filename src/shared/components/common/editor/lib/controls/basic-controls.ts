@@ -1,4 +1,4 @@
-import { BorderStyleType } from '../../model/types.ts';
+import { BorderStyleType } from '../../model/types.ts'
 
 /**
  * Registers basic editor controls like border styling
@@ -6,12 +6,12 @@ import { BorderStyleType } from '../../model/types.ts';
 export const registerBasicControls = (
   editor: any,
   options: {
-    borderStyleOptions: Array<{ text: string; value: string }>;
-    updateBorderStyle: (style: BorderStyleType, color: string) => void;
-    currentBorderColor: string;
-  },
+    borderStyleOptions: Array<{ text: string; value: string }>
+    updateBorderStyle: (style: BorderStyleType, color: string) => void
+    currentBorderColor: string
+  }
 ): void => {
-  const { borderStyleOptions, updateBorderStyle, currentBorderColor } = options;
+  const { borderStyleOptions, updateBorderStyle, currentBorderColor } = options
 
   // Register page border button
   editor.ui.registry.addMenuButton('pageborder', {
@@ -23,13 +23,13 @@ export const registerBasicControls = (
         type: 'menuitem',
         text: option.text,
         onAction: () => {
-          updateBorderStyle(option.value as BorderStyleType, currentBorderColor);
+          updateBorderStyle(option.value as BorderStyleType, currentBorderColor)
         },
-      }));
+      }))
 
-      callback(items);
+      callback(items)
     },
-  });
+  })
 
   // Register border color picker in context menu
   editor.ui.registry.addContextMenu('bordermenu', {
@@ -68,16 +68,16 @@ export const registerBasicControls = (
                   },
                 ],
                 onSubmit: (api: any) => {
-                  const data = api.getData();
-                  updateBorderStyle(editor.bodyElement.style.border ? 'medium' : 'none', data.bordercolor);
-                  api.close();
+                  const data = api.getData()
+                  updateBorderStyle(editor.bodyElement.style.border ? 'medium' : 'none', data.bordercolor)
+                  api.close()
                 },
-              });
+              })
             },
           },
-        ];
+        ]
       }
-      return [];
+      return []
     },
-  });
-};
+  })
+}

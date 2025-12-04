@@ -1,6 +1,6 @@
-import { z } from 'zod';
-import { UserRoles } from '@/entities/user';
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
+import { z } from 'zod'
+import { UserRoles } from '@/entities/user'
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 
 const ERROR_MESSAGES = {
   required: "Bu maydonni to'ldirish majburiy",
@@ -12,7 +12,7 @@ const ERROR_MESSAGES = {
   department: "Bo'limni tanlash majburiy",
   phone: "Telefon raqami formati +998XXXXXXXXX bo'lishi kerak",
   birthDateRequired: 'Tug‘ilgan sana kiritilishi shart!', // Tug'ilgan sana uchun xabar
-} as const;
+} as const
 
 // Bu o'zgarmadi, `birthDate` majburiy emas
 export const committeeBaseSchema = {
@@ -28,7 +28,7 @@ export const committeeBaseSchema = {
   }),
   directions: z.preprocess(
     (val) => (Array.isArray(val) && val.length > 0 ? val : undefined),
-    z.array(z.string().trim()).min(1, ERROR_MESSAGES.direction).default([]),
+    z.array(z.string().trim()).min(1, ERROR_MESSAGES.direction).default([])
   ),
   departmentId: z.string().min(1, ERROR_MESSAGES.department),
   phoneNumber: z
@@ -37,7 +37,7 @@ export const committeeBaseSchema = {
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: ERROR_MESSAGES.phone,
     }),
-};
+}
 
 // ... bu qism o'zgarmadi ...
 export const committeeStaffSchema = z
@@ -50,7 +50,7 @@ export const committeeStaffSchema = z
     ...data,
     phoneNumber: data.phoneNumber.startsWith('+') ? data.phoneNumber : `+${data.phoneNumber}`,
     fullName: data.fullName.replace(/\s+/g, ' '),
-  }));
+  }))
 
 export const committeeTableItemSchema = z.object({
   id: z.union([z.string().uuid(), z.string().regex(USER_PATTERNS.uuid, { message: 'Invalid UUID format' })]),
@@ -67,7 +67,7 @@ export const committeeTableItemSchema = z.object({
   position: z.string(),
   phoneNumber: z.string().regex(USER_PATTERNS.phone, { message: ERROR_MESSAGES.phone }),
   enabled: z.boolean().default(true),
-});
+})
 
 export const schemas = {
   // Yaratish rejimida: `committeeBaseSchema` ni olamiz va `birthDate` ni majburiy qilamiz
@@ -96,7 +96,7 @@ export const schemas = {
 
   table: committeeTableItemSchema,
   single: committeeTableItemSchema,
-};
+}
 
-export type CreateCommitteeStaffDTO = z.infer<typeof schemas.create>;
-export type UpdateCommitteeStaffDTO = z.infer<typeof schemas.update>;
+export type CreateCommitteeStaffDTO = z.infer<typeof schemas.create>
+export type UpdateCommitteeStaffDTO = z.infer<typeof schemas.update>

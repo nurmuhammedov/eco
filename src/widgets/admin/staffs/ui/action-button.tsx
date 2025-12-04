@@ -1,12 +1,12 @@
-import { memo } from 'react';
-import { PlusCircle } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/shared/components/ui/button';
-import { StaffsActiveTab, StaffsActiveTabActionButtonProps } from '../types';
+import { memo } from 'react'
+import { PlusCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Button } from '@/shared/components/ui/button'
+import { StaffsActiveTab, StaffsActiveTabActionButtonProps } from '../types'
 
 export const StaffsActionButton = memo(
   ({ title, activeTab, onAddCommitteeStaffs, onAddTerritorialStaffs }: StaffsActiveTabActionButtonProps) => {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('common')
     return (
       <div className="flex justify-between">
         <h5 className="text-2xl font-semibold uppercase">{title}</h5>
@@ -21,7 +21,7 @@ export const StaffsActionButton = memo(
           </Button>
         )}
       </div>
-    );
-  },
-);
-StaffsActionButton.displayName = 'StaffsActionButton';
+    )
+  }
+)
+StaffsActionButton.displayName = 'StaffsActionButton'

@@ -1,11 +1,11 @@
-import { ApplicationCardItem, ApplicationIcons, ApplicationTypeEnum } from '@/entities/create-application';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { ApplicationCardItem, ApplicationIcons, ApplicationTypeEnum } from '@/entities/create-application'
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface ApplicationCardProps {
-  application: ApplicationCardItem;
-  url?: string;
-  btnTitle?: string;
+  application: ApplicationCardItem
+  url?: string
+  btnTitle?: string
 }
 
 const SendSVGIcon = () => (
@@ -19,56 +19,56 @@ const SendSVGIcon = () => (
       />
     </svg>
   </span>
-);
+)
 
 const AnimatedButton = ({
   type,
   url = 'applications',
   btnTitle = 'Ariza yuborish',
 }: {
-  type: ApplicationTypeEnum;
-  url?: string;
-  btnTitle?: string;
+  type: ApplicationTypeEnum
+  url?: string
+  btnTitle?: string
 }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleNavigate = () => {
-    navigate(`/${url}/create/${type}`);
-  };
+    navigate(`/${url}/create/${type}`)
+  }
 
   return (
     <button
       type="button"
       onClick={handleNavigate}
-      className="group relative w-full h-10 px-4 py-2 border border-teal rounded-md text-teal overflow-hidden bg-transparent flex items-center justify-center text-sm font-medium hover:bg-teal hover:text-white transition-colors duration-300"
+      className="group border-teal text-teal hover:bg-teal relative flex h-10 w-full items-center justify-center overflow-hidden rounded-md border bg-transparent px-4 py-2 text-sm font-medium transition-colors duration-300 hover:text-white"
     >
       <span className="relative z-10 flex items-center">
         <SendSVGIcon />
         {btnTitle}
       </span>
-      <span className="absolute inset-0 bg-white/10 transform -skew-x-12 -translate-x-full opacity-0 group-hover:opacity-100 group-hover:translate-x-full transition-transform ease-out duration-700" />
+      <span className="absolute inset-0 -translate-x-full -skew-x-12 transform bg-white/10 opacity-0 transition-transform duration-700 ease-out group-hover:translate-x-full group-hover:opacity-100" />
     </button>
-  );
-};
+  )
+}
 
 function ApplicationCard({ application, url, btnTitle }: ApplicationCardProps) {
   return (
-    <div className="group p-6 relative border border-slate-100 bg-white flex flex-col justify-between rounded-md overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+    <div className="group relative flex flex-col justify-between overflow-hidden rounded-md border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-md">
       <div className="mb-5 flex items-center">
-        <div className="size-12 rounded-full flex items-center justify-center bg-[#E2E8F0] group-hover:bg-teal group-hover:scale-110 transition-all duration-300">
-          <div className="size-6 text-teal group-hover:text-white">
+        <div className="group-hover:bg-teal flex size-12 items-center justify-center rounded-full bg-[#E2E8F0] transition-all duration-300 group-hover:scale-110">
+          <div className="text-teal size-6 group-hover:text-white">
             {ApplicationIcons[application.icon]('currentColor')}
           </div>
         </div>
 
-        <div className="h-px flex-grow ml-4 bg-[#E2E8F0] group-hover:bg-teal w-[40%] group-hover:w-[60%] opacity-50 group-hover:opacity-100 transition-all duration-300" />
+        <div className="group-hover:bg-teal ml-4 h-px w-[40%] flex-grow bg-[#E2E8F0] opacity-50 transition-all duration-300 group-hover:w-[60%] group-hover:opacity-100" />
       </div>
-      <h3 className="text-base font-medium text-slate-800 line-clamp-2 leading-5">{application.title}</h3>
+      <h3 className="line-clamp-2 text-base leading-5 font-medium text-slate-800">{application.title}</h3>
 
-      <p className="text-sm text-gray-500 font-normal mb-6 mt-2 line-clamp-2">{application.description}</p>
+      <p className="mt-2 mb-6 line-clamp-2 text-sm font-normal text-gray-500">{application.description}</p>
       <AnimatedButton url={url} type={application.type} btnTitle={btnTitle} />
     </div>
-  );
+  )
 }
 
-export default React.memo(ApplicationCard);
+export default React.memo(ApplicationCard)

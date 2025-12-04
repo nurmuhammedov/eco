@@ -1,5 +1,5 @@
-import { Outlet } from 'react-router-dom';
-import { LoginInfoSection } from '@/features/auth';
+import { Outlet } from 'react-router-dom'
+import { LoginInfoSection } from '@/features/auth'
 
 export default function AuthLayout() {
   return (
@@ -7,5 +7,5 @@ export default function AuthLayout() {
       <LoginInfoSection />
       <Outlet />
     </section>
-  );
+  )
 }

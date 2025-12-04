@@ -1,29 +1,29 @@
-import { useTranslation } from 'react-i18next';
-import { ColumnDef } from '@tanstack/react-table';
-import { UIModeEnum } from '@/shared/types/ui-types';
-import { useFilters } from '@/shared/hooks/use-filters';
-import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
-import { formatPhoneNumber, getUserRoleDisplay, getUserStatusDisplay } from '@/shared/lib';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
+import { useTranslation } from 'react-i18next'
+import { ColumnDef } from '@tanstack/react-table'
+import { UIModeEnum } from '@/shared/types/ui-types'
+import { useFilters } from '@/shared/hooks/use-filters'
+import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks'
+import { formatPhoneNumber, getUserRoleDisplay, getUserStatusDisplay } from '@/shared/lib'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import {
   CommitteeStaffTableItem,
   FilterCommitteeStaffDTO,
   useCommitteeStaffListQuery,
   useDeleteCommitteeStaff,
-} from '@/entities/admin/committee-staffs';
+} from '@/entities/admin/committee-staffs'
 
 export function CommitteeStaffList() {
-  const { filters } = useFilters();
-  const { t } = useTranslation('common');
-  const { onOpen } = useCommitteeStaffsDrawer();
-  const { data, isLoading } = useCommitteeStaffListQuery(filters as FilterCommitteeStaffDTO);
-  const deleteData = useDeleteCommitteeStaff();
+  const { filters } = useFilters()
+  const { t } = useTranslation('common')
+  const { onOpen } = useCommitteeStaffsDrawer()
+  const { data, isLoading } = useCommitteeStaffListQuery(filters as FilterCommitteeStaffDTO)
+  const deleteData = useDeleteCommitteeStaff()
 
-  const onDelete = (id: string) => deleteData.mutate(id);
+  const onDelete = (id: string) => deleteData.mutate(id)
 
-  const onEdit = (id: string) => onOpen(UIModeEnum.EDIT, { id });
+  const onEdit = (id: string) => onOpen(UIModeEnum.EDIT, { id })
 
-  const onView = (id: string) => onOpen(UIModeEnum.VIEW, { id });
+  const onView = (id: string) => onOpen(UIModeEnum.VIEW, { id })
 
   const columns: ColumnDef<CommitteeStaffTableItem>[] = [
     {
@@ -80,7 +80,7 @@ export function CommitteeStaffList() {
         />
       ),
     },
-  ];
+  ]
 
   return (
     <DataTable
@@ -90,5 +90,5 @@ export function CommitteeStaffList() {
       isLoading={isLoading}
       className="h-[calc(100svh-270px)]"
     />
-  );
+  )
 }

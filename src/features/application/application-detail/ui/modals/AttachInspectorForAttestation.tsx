@@ -1,34 +1,34 @@
 // /src/features/application/application-detail/ui/modals/AttachInspectorForAttestation.tsx
 
-import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select.tsx';
-import { ApplicationModal } from '@/features/application/create-application';
-import { Button } from '@/shared/components/ui/button.tsx';
-import DatePicker from '@/shared/components/ui/datepicker.tsx';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select.tsx';
-import { Textarea } from '@/shared/components/ui/textarea.tsx';
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys';
-import { useEIMZO } from '@/shared/hooks';
-import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { DialogClose } from '@radix-ui/react-dialog';
-import { formatDate, parseISO } from 'date-fns';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
-import { z } from 'zod';
+import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select.tsx'
+import { ApplicationModal } from '@/features/application/create-application'
+import { Button } from '@/shared/components/ui/button.tsx'
+import DatePicker from '@/shared/components/ui/datepicker.tsx'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select.tsx'
+import { Textarea } from '@/shared/components/ui/textarea.tsx'
+import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
+import { useEIMZO } from '@/shared/hooks'
+import { getSelectOptions } from '@/shared/lib/get-select-options.tsx'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { DialogClose } from '@radix-ui/react-dialog'
+import { formatDate, parseISO } from 'date-fns'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useParams } from 'react-router-dom'
+import { z } from 'zod'
 
 const schema = z.object({
   deadline: z.date({ message: FORM_ERROR_MESSAGES.required }),
   inspectorId: z.string({ message: FORM_ERROR_MESSAGES.required }),
   resolution: z.string().optional().default(''),
-});
+})
 
 const AttachInspectorForAttestationModal = () => {
-  const [isShow, setIsShow] = useState(false);
-  const { id } = useParams();
+  const [isShow, setIsShow] = useState(false)
+  const { id } = useParams()
   const {
     error,
     isLoading,
@@ -43,20 +43,20 @@ const AttachInspectorForAttestationModal = () => {
     submitEndpoint: '/appeals/attestation/reply/regional-accept',
     successMessage: 'Muvaffaqiyatli tasdiqlandi',
     queryKey: QK_APPLICATIONS,
-  });
+  })
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-  });
-  const { data: inspectorSelectData } = useInspectorSelect();
-  const inspectorOptions = getSelectOptions(inspectorSelectData || []);
+  })
+  const { data: inspectorSelectData } = useInspectorSelect()
+  const inspectorOptions = getSelectOptions(inspectorSelectData || [])
 
   function onSubmit(data: z.infer<typeof schema>) {
     handleCreateApplication({
       ...data,
       deadline: formatDate(data.deadline, 'yyyy-MM-dd'),
       appealId: id,
-    });
-    setIsShow(false);
+    })
+    setIsShow(false)
   }
 
   return (
@@ -65,7 +65,7 @@ const AttachInspectorForAttestationModal = () => {
         <DialogTrigger asChild>
           <Button> Ijro etish</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[525px] max-h-[95vh] overflow-y-auto">
+        <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[525px]">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Ijrochini belgilash</DialogTitle>
           </DialogHeader>
@@ -75,9 +75,9 @@ const AttachInspectorForAttestationModal = () => {
                 control={form.control}
                 name="deadline"
                 render={({ field }) => {
-                  const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                  const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                   return (
-                    <FormItem className="w-full ">
+                    <FormItem className="w-full">
                       <FormLabel required>Ijro muddatini belgilash </FormLabel>
                       <DatePicker
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -86,7 +86,7 @@ const AttachInspectorForAttestationModal = () => {
                       />
                       <FormMessage />
                     </FormItem>
-                  );
+                  )
                 }}
               />
               <FormField
@@ -125,7 +125,7 @@ const AttachInspectorForAttestationModal = () => {
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-2 gap-3 ">
+              <div className="grid grid-cols-2 gap-3">
                 <DialogClose asChild>
                   <Button disabled={isLoading} variant="outline">
                     Bekor qilish
@@ -145,14 +145,14 @@ const AttachInspectorForAttestationModal = () => {
         isLoading={isLoading}
         documentUrl={documentUrl!}
         onClose={() => {
-          handleCloseModal();
-          setIsShow(true);
+          handleCloseModal()
+          setIsShow(true)
         }}
         isPdfLoading={isPdfLoading}
         submitApplicationMetaData={submitApplicationMetaData}
       />
     </>
-  );
-};
+  )
+}
 
-export default AttachInspectorForAttestationModal;
+export default AttachInspectorForAttestationModal

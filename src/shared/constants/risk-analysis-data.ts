@@ -218,4 +218,4 @@ export const riskAnalysisData = {
       rejectPlaceholder: `placeholder`,
     },
   ],
-};
+}

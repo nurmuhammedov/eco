@@ -1,1 +1,1 @@
-export { YandexMarker } from './yandex-marker';
+export { YandexMarker } from './yandex-marker'

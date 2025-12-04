@@ -1,20 +1,20 @@
 // src/features/application/create-application/ui/forms/register-irs-form.tsx
-import { CardForm, CreateIrsApplicationDTO } from '@/entities/create-application';
-import { GoBack } from '@/shared/components/common';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { Button } from '@/shared/components/ui/button';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { InputNumber } from '@/shared/components/ui/input-number'; // InputNumber import qilindi
-import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { format, parseISO } from 'date-fns';
-import { useCreateIrsApplication } from '../../model/use-create-irs-application';
+import { CardForm, CreateIrsApplicationDTO } from '@/entities/create-application'
+import { GoBack } from '@/shared/components/common'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { InputNumber } from '@/shared/components/ui/input-number' // InputNumber import qilindi
+import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { format, parseISO } from 'date-fns'
+import { useCreateIrsApplication } from '../../model/use-create-irs-application'
 
 interface RegisterIrsFormProps {
-  onSubmit: (data: CreateIrsApplicationDTO) => void;
+  onSubmit: (data: CreateIrsApplicationDTO) => void
 }
 
 export default ({ onSubmit }: RegisterIrsFormProps) => {
@@ -26,7 +26,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
     irsCategoryOptions,
     irsUsageTypeOptions,
     irsStatusOptions,
-  } = useCreateIrsApplication();
+  } = useCreateIrsApplication()
 
   return (
     <Form {...form}>
@@ -34,7 +34,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
         <GoBack title="Ionlashtiruvchi nurlanish manbalarini ro‘yxatga olish" />
         {/* NoteForm kerak bo'lsa qo'shiladi */}
         <CardForm className="my-2">
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="phoneNumber"
@@ -42,7 +42,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Ariza beruvchining telefon raqami</FormLabel>
                   <FormControl>
-                    <PhoneInput className="w-full 3xl:w-sm" placeholder="+998 XX XXX XX XX" {...field} />
+                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -55,7 +55,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel>Yuqori turuvchi tashkilot (mavjud bo‘lsa)</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Yuqori turuvchi tashkilot" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Yuqori turuvchi tashkilot" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -68,7 +68,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Masʼul shaxsning F.I.Sh.</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Rahbarning F.I.Sh." {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Rahbarning F.I.Sh." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -81,7 +81,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Masʼul shaxsning lavozimi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Rahbarning lavozimi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Rahbarning lavozimi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -96,7 +96,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                     Masʼul shaxsning radiatsiya xavfsizligi bo‘yicha <br /> tayyorgarlik holati
                   </FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Guvohnoma, sertifikat va h.k." {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Guvohnoma, sertifikat va h.k." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -109,7 +109,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Masʼul shaxsning ma‘lumoti</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Rahbarning ma‘lumoti" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Rahbarning ma‘lumoti" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -122,7 +122,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Masʼul shaxsning telefon raqami</FormLabel>
                   <FormControl>
-                    <PhoneInput className="w-full 3xl:w-sm" placeholder="+998 XX XXX XX XX" {...field} />
+                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -135,7 +135,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Bo‘linma nomi (INM bilan ishlovchi)</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Bo‘linma nomi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Bo‘linma nomi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -149,7 +149,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                   <FormLabel required>INMning identifikatsiya raqami (SRM/NUM)</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Identifikatsiya turini tanlang" />
                       </SelectTrigger>
                       <SelectContent>{irsIdentifierTypeOptions}</SelectContent>
@@ -166,7 +166,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Radionuklid belgisi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Radionuklid belgisi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Radionuklid belgisi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -179,7 +179,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Qo‘llash sohasi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qo‘llash sohasi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Qo‘llash sohasi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -192,7 +192,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Zavod raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Zavod raqami" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Zavod raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -205,7 +205,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Seriya raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Seriya raqami" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Seriya raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -219,7 +219,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                   <FormLabel required>Aktivligi, Bk</FormLabel>
                   <FormControl>
                     <InputNumber
-                      className="w-full 3xl:w-sm"
+                      className="3xl:w-sm w-full"
                       placeholder="Aktivligi, Bk"
                       {...field}
                       value={field.value?.toString()}
@@ -236,7 +236,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>INM turi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="INM turi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="INM turi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -250,7 +250,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                   <FormLabel required>INMlarning kategoriyasi</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Kategoriyani tanlang" />
                       </SelectTrigger>
                       <SelectContent>{irsCategoryOptions}</SelectContent>
@@ -267,7 +267,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Ishlab chiqarilgan mamlakat</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Ishlab chiqarilgan mamlakat" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Ishlab chiqarilgan mamlakat" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -277,9 +277,9 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
               control={form.control}
               name="manufacturedAt"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : undefined;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : undefined
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel required>Ishlab chiqarilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
@@ -289,7 +289,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
@@ -299,7 +299,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Kimdan olinganligi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Kimdan olinganligi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Kimdan olinganligi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -309,9 +309,9 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
               control={form.control}
               name="acceptedAt"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : undefined;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : undefined
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel required>Olingan sana</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -320,7 +320,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
@@ -331,7 +331,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                   <FormLabel required>INM holati</FormLabel>
                   <FormControl>
                     <Select onValueChange={(value) => field.onChange(value === 'true')} value={String(field.value)}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Holatni tanlang" />
                       </SelectTrigger>
                       <SelectContent>
@@ -355,7 +355,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                   <FormLabel required>INMdan foydalanish maqsadi</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Maqsadni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{irsUsageTypeOptions}</SelectContent>
@@ -372,7 +372,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Saqlash joyi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Saqlash joyi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Saqlash joyi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -388,13 +388,13 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                     <Select
                       onValueChange={(value) => {
                         if (value) {
-                          field.onChange(value);
-                          form.setValue('districtId', '');
+                          field.onChange(value)
+                          form.setValue('districtId', '')
                         }
                       }}
                       value={field.value?.toString()}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Viloyatni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{regionOptions}</SelectContent>
@@ -416,7 +416,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                       value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Tumanni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
@@ -433,7 +433,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Joylashgan manzil</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Joylashgan manzil" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Joylashgan manzil" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -441,13 +441,13 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
             />
           </div>
         </CardForm>
-        <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
+        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <FormField
             name="passportPath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                     INM (qurilma) pasporti va sertifikati fayli
                   </FormLabel>
@@ -462,8 +462,8 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
             name="additionalFilePath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qo‘shimcha ma‘lumotlar</FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -478,5 +478,5 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

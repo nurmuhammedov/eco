@@ -1,11 +1,11 @@
-import { getTime } from '@/shared/lib';
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { getTime } from '@/shared/lib'
+import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import {
   FilterHazardousFacilityTypeDTO,
   hazardousFacilityTypeAPI,
   hazardousFacilityTypeKeys,
   HazardousFacilityTypeResponse,
-} from '@/entities/admin/hazardous-facility-type';
+} from '@/entities/admin/hazardous-facility-type'
 
 export const useHazardousFacilityTypeListQuery = (filters: FilterHazardousFacilityTypeDTO) => {
   return useQuery({
@@ -13,8 +13,8 @@ export const useHazardousFacilityTypeListQuery = (filters: FilterHazardousFacili
     queryKey: hazardousFacilityTypeKeys.list('hazardous-facility-type', filters),
     queryFn: () => hazardousFacilityTypeAPI.list(filters),
     placeholderData: (previousData) => previousData,
-  });
-};
+  })
+}
 
 export const useHazardousFacilityTypeQuery = (
   id: number,
@@ -26,7 +26,7 @@ export const useHazardousFacilityTypeQuery = (
       ReturnType<typeof hazardousFacilityTypeKeys.detail>
     >,
     'queryKey' | 'queryFn'
-  >,
+  >
 ) => {
   return useQuery({
     enabled: !!id,
@@ -35,5 +35,5 @@ export const useHazardousFacilityTypeQuery = (
     queryKey: hazardousFacilityTypeKeys.detail('hazardous-facility-type', id),
     placeholderData: (previousData) => previousData,
     ...options,
-  });
-};
+  })
+}

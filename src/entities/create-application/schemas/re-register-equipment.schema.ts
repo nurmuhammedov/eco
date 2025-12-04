@@ -1,7 +1,7 @@
-import { z } from 'zod';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { format } from 'date-fns';
+import { z } from 'zod'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { format } from 'date-fns'
 
 export const ReRegisterEquipmentSchema = z.object({
   phoneNumber: z
@@ -63,4 +63,4 @@ export const ReRegisterEquipmentSchema = z.object({
   installationCertPath: z
     .string({ required_error: 'Montaj guvohnomasi fayli biriktirilmadi!' })
     .min(1, 'Montaj guvohnomasi fayli biriktirilmadi!'),
-});
+})

@@ -16,35 +16,35 @@ export const registerFormattingControls = (editor: any): void => {
           type: 'menuitem',
           text: 'Title',
           onAction: () => {
-            editor.formatter.apply('h1');
+            editor.formatter.apply('h1')
           },
         },
         {
           type: 'menuitem',
           text: 'Subtitle',
           onAction: () => {
-            editor.formatter.apply('h2');
+            editor.formatter.apply('h2')
           },
         },
         {
           type: 'menuitem',
           text: 'Heading 1',
           onAction: () => {
-            editor.formatter.apply('h1');
+            editor.formatter.apply('h1')
           },
         },
         {
           type: 'menuitem',
           text: 'Heading 2',
           onAction: () => {
-            editor.formatter.apply('h2');
+            editor.formatter.apply('h2')
           },
         },
         {
           type: 'menuitem',
           text: 'Heading 3',
           onAction: () => {
-            editor.formatter.apply('h3');
+            editor.formatter.apply('h3')
           },
         },
 
@@ -53,21 +53,21 @@ export const registerFormattingControls = (editor: any): void => {
           type: 'menuitem',
           text: 'Normal',
           onAction: () => {
-            editor.formatter.apply('p');
+            editor.formatter.apply('p')
           },
         },
         {
           type: 'menuitem',
           text: 'Quote',
           onAction: () => {
-            editor.formatter.apply('blockquote');
+            editor.formatter.apply('blockquote')
           },
         },
         {
           type: 'menuitem',
           text: 'Code Block',
           onAction: () => {
-            editor.formatter.apply('pre');
+            editor.formatter.apply('pre')
           },
         },
 
@@ -76,63 +76,63 @@ export const registerFormattingControls = (editor: any): void => {
           type: 'menuitem',
           text: 'Highlighted Text',
           onAction: () => {
-            editor.formatter.apply('hilitecolor', { value: '#ffff00' });
+            editor.formatter.apply('hilitecolor', { value: '#ffff00' })
           },
         },
         {
           type: 'menuitem',
           text: 'Important Text',
           onAction: () => {
-            editor.execCommand('FontName', false, 'Arial');
-            editor.execCommand('ForeColor', false, '#C0504D');
-            editor.execCommand('Bold', false);
+            editor.execCommand('FontName', false, 'Arial')
+            editor.execCommand('ForeColor', false, '#C0504D')
+            editor.execCommand('Bold', false)
           },
         },
         {
           type: 'menuitem',
           text: 'Subtle Reference',
           onAction: () => {
-            editor.execCommand('FontSize', false, '8pt');
-            editor.execCommand('ForeColor', false, '#808080');
-            editor.execCommand('FontName', false, 'Calibri');
+            editor.execCommand('FontSize', false, '8pt')
+            editor.execCommand('ForeColor', false, '#808080')
+            editor.execCommand('FontName', false, 'Calibri')
           },
         },
         {
           type: 'menuitem',
           text: 'Emphasis',
           onAction: () => {
-            editor.formatter.apply('italic');
+            editor.formatter.apply('italic')
           },
         },
         {
           type: 'menuitem',
           text: 'Strong',
           onAction: () => {
-            editor.formatter.apply('bold');
+            editor.formatter.apply('bold')
           },
         },
         {
           type: 'menuitem',
           text: 'Intense Emphasis',
           onAction: () => {
-            editor.execCommand('Bold', false);
-            editor.execCommand('Italic', false);
-            editor.execCommand('ForeColor', false, '#4F81BD');
+            editor.execCommand('Bold', false)
+            editor.execCommand('Italic', false)
+            editor.execCommand('ForeColor', false, '#4F81BD')
           },
         },
         {
           type: 'menuitem',
           text: 'Subtle Emphasis',
           onAction: () => {
-            editor.execCommand('Italic', false);
-            editor.execCommand('ForeColor', false, '#808080');
+            editor.execCommand('Italic', false)
+            editor.execCommand('ForeColor', false, '#808080')
           },
         },
-      ];
+      ]
 
-      callback(items);
+      callback(items)
     },
-  });
+  })
 
   // Register Word-like theme colors button
   editor.ui.registry.addMenuButton('themecolors', {
@@ -152,7 +152,7 @@ export const registerFormattingControls = (editor: any): void => {
               '#FFC000', // Accent 2
               '#5B9BD5', // Accent 3
               '#70AD47', // Accent 4
-            ]);
+            ])
           },
         },
         {
@@ -166,7 +166,7 @@ export const registerFormattingControls = (editor: any): void => {
               '#BF8F00', // Accent 2
               '#2E75B6', // Accent 3
               '#9B9B9B', // Accent 4
-            ]);
+            ])
           },
         },
         {
@@ -180,7 +180,7 @@ export const registerFormattingControls = (editor: any): void => {
               '#FFC000', // Accent 2
               '#4472C4', // Accent 3
               '#70AD47', // Accent 4
-            ]);
+            ])
           },
         },
         {
@@ -194,7 +194,7 @@ export const registerFormattingControls = (editor: any): void => {
               '#76923C', // Accent 2
               '#215967', // Accent 3
               '#7F497E', // Accent 4
-            ]);
+            ])
           },
         },
         {
@@ -208,14 +208,14 @@ export const registerFormattingControls = (editor: any): void => {
               '#BF8F00', // Accent 2
               '#2E75B6', // Accent 3
               '#548235', // Accent 4
-            ]);
+            ])
           },
         },
-      ];
+      ]
 
-      callback(items);
+      callback(items)
     },
-  });
+  })
 
   // Register theme colors application buttons
   editor.ui.registry.addMenuButton('applythemecolor', {
@@ -223,15 +223,15 @@ export const registerFormattingControls = (editor: any): void => {
     tooltip: 'Apply theme color to selection',
     icon: 'color-levels',
     fetch: (callback: any) => {
-      const body = editor.getBody();
-      const themeColorsAttr = body.getAttribute('data-theme-colors');
-      let themeColors = ['#4472C4', '#ED7D31', '#A5A5A5', '#FFC000', '#5B9BD5', '#70AD47'];
+      const body = editor.getBody()
+      const themeColorsAttr = body.getAttribute('data-theme-colors')
+      let themeColors = ['#4472C4', '#ED7D31', '#A5A5A5', '#FFC000', '#5B9BD5', '#70AD47']
 
       if (themeColorsAttr) {
         try {
-          themeColors = JSON.parse(themeColorsAttr);
+          themeColors = JSON.parse(themeColorsAttr)
         } catch (e) {
-          console.error('Error parsing theme colors', e);
+          console.error('Error parsing theme colors', e)
         }
       }
 
@@ -240,66 +240,66 @@ export const registerFormattingControls = (editor: any): void => {
           type: 'menuitem',
           text: 'Primary',
           onAction: () => {
-            editor.execCommand('ForeColor', false, themeColors[0]);
+            editor.execCommand('ForeColor', false, themeColors[0])
           },
         },
         {
           type: 'menuitem',
           text: 'Secondary',
           onAction: () => {
-            editor.execCommand('ForeColor', false, themeColors[1]);
+            editor.execCommand('ForeColor', false, themeColors[1])
           },
         },
         {
           type: 'menuitem',
           text: 'Accent 1',
           onAction: () => {
-            editor.execCommand('ForeColor', false, themeColors[2]);
+            editor.execCommand('ForeColor', false, themeColors[2])
           },
         },
         {
           type: 'menuitem',
           text: 'Accent 2',
           onAction: () => {
-            editor.execCommand('ForeColor', false, themeColors[3]);
+            editor.execCommand('ForeColor', false, themeColors[3])
           },
         },
         {
           type: 'menuitem',
           text: 'Accent 3',
           onAction: () => {
-            editor.execCommand('ForeColor', false, themeColors[4]);
+            editor.execCommand('ForeColor', false, themeColors[4])
           },
         },
         {
           type: 'menuitem',
           text: 'Accent 4',
           onAction: () => {
-            editor.execCommand('ForeColor', false, themeColors[5]);
+            editor.execCommand('ForeColor', false, themeColors[5])
           },
         },
-      ];
+      ]
 
-      callback(items);
+      callback(items)
     },
-  });
-};
+  })
+}
 
 /**
  * Helper function to apply theme colors
  */
 const applyThemeColors = (editor: any, colors: string[]): void => {
   // Store theme colors in editor body data attribute
-  const body = editor.getBody();
-  body.setAttribute('data-theme-colors', JSON.stringify(colors));
+  const body = editor.getBody()
+  body.setAttribute('data-theme-colors', JSON.stringify(colors))
 
   // Create or update theme colors style
-  const head = editor.getDoc().head;
-  let themeStyle = head.querySelector('#mce-theme-colors');
+  const head = editor.getDoc().head
+  let themeStyle = head.querySelector('#mce-theme-colors')
   if (!themeStyle) {
-    themeStyle = document.createElement('style');
-    themeStyle.id = 'mce-theme-colors';
-    head.appendChild(themeStyle);
+    themeStyle = document.createElement('style')
+    themeStyle.id = 'mce-theme-colors'
+    head.appendChild(themeStyle)
   }
 
   // Set CSS variables for theme colors
@@ -326,11 +326,11 @@ const applyThemeColors = (editor: any, colors: string[]): void => {
     .mce-theme-bg-accent2 { background-color: var(--theme-accent2) !important; }
     .mce-theme-bg-accent3 { background-color: var(--theme-accent3) !important; }
     .mce-theme-bg-accent4 { background-color: var(--theme-accent4) !important; }
-  `;
+  `
 
   editor.notificationManager.open({
     text: 'Theme colors applied',
     type: 'success',
     timeout: 2000,
-  });
-};
+  })
+}

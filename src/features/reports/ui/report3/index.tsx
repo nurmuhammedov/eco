@@ -1,14 +1,14 @@
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
-import React from 'react';
-import { DataTable } from '@/shared/components/common/data-table';
-import { usePaginatedData } from '@/shared/hooks';
-import { ColumnDef } from '@tanstack/react-table';
-import Filter from '@/shared/components/common/filter';
-import { GoBack } from '@/shared/components/common';
-import { apiClient } from '@/shared/api';
-import { format } from 'date-fns';
-import { Button } from '@/shared/components/ui/button';
-import { Download } from 'lucide-react';
+import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import React from 'react'
+import { DataTable } from '@/shared/components/common/data-table'
+import { usePaginatedData } from '@/shared/hooks'
+import { ColumnDef } from '@tanstack/react-table'
+import Filter from '@/shared/components/common/filter'
+import { GoBack } from '@/shared/components/common'
+import { apiClient } from '@/shared/api'
+import { format } from 'date-fns'
+import { Button } from '@/shared/components/ui/button'
+import { Download } from 'lucide-react'
 
 export enum InspectionStatus {
   LEGAL = 'LEGAL',
@@ -16,32 +16,32 @@ export enum InspectionStatus {
 }
 
 interface IReportData {
-  officeName: string;
-  activeHf: number;
-  inactiveHf: number;
-  activeEquipment: number;
-  inactiveEquipment: number;
-  expiredEquipment: number;
-  activeIrs: number;
-  inactiveIrs: number;
+  officeName: string
+  activeHf: number
+  inactiveHf: number
+  activeEquipment: number
+  inactiveEquipment: number
+  expiredEquipment: number
+  activeIrs: number
+  inactiveIrs: number
 
-  [key: string]: any;
+  [key: string]: any
 }
 
 const Report1: React.FC = () => {
-  const { paramsObject } = useCustomSearchParams();
+  const { paramsObject } = useCustomSearchParams()
   const { data: inspections, isLoading } = usePaginatedData<any>('/reports/registry', {
     ...paramsObject,
     ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,
     date: paramsObject?.startDate,
-  });
+  })
 
   function calcPercent(value: number, total: number): string {
-    if (!total || total === 0) return '0.00%';
-    return ((value / total) * 100).toFixed(2) + '%';
+    if (!total || total === 0) return '0.00%'
+    return ((value / total) * 100).toFixed(2) + '%'
   }
 
-  const data: any = inspections as unknown as any;
+  const data: any = inspections as unknown as any
   const totals = React.useMemo(() => {
     const initialTotals = {
       activeHf: 0,
@@ -50,22 +50,22 @@ const Report1: React.FC = () => {
       inactiveEquipment: 0,
       expiredEquipment: 0,
       activeIrs: 0,
-    };
+    }
 
     if (!data || data.length === 0) {
-      return initialTotals;
+      return initialTotals
     }
 
     return data.reduce(
       (acc: any, currentItem: any) => {
         for (const key in initialTotals) {
-          acc[key as keyof typeof initialTotals] += currentItem[key] || 0;
+          acc[key as keyof typeof initialTotals] += currentItem[key] || 0
         }
-        return acc;
+        return acc
       },
-      { ...initialTotals },
-    );
-  }, [data]);
+      { ...initialTotals }
+    )
+  }, [data])
 
   const columns: ColumnDef<IReportData>[] = [
     {
@@ -183,35 +183,35 @@ const Report1: React.FC = () => {
         },
       ],
     },
-  ];
+  ]
 
   const handleDownloadExel = async () => {
     const res = await apiClient.downloadFile<Blob>('/reports/registry/export-excel', {
       ...paramsObject,
       ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,
-    });
+    })
 
-    const blob = res.data;
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const today = new Date();
-    const filename = `Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, qurilmalar va IIMlarni hududlar kesimida taqsimlanishi (${format(today, 'dd.MM.yyyy')}).xlsx`;
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  };
+    const blob = res.data
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    const today = new Date()
+    const filename = `Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, qurilmalar va IIMlarni hududlar kesimida taqsimlanishi (${format(today, 'dd.MM.yyyy')}).xlsx`
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(url)
+  }
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-2">
+      <div className="mb-2 flex items-center justify-between">
         <GoBack title="Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, qurilmalar va IIMlarni hududlar kesimida taqsimlanishi" />
       </div>
 
-      <div className="flex my-2 justify-between items-start gap-2">
-        <div className="flex-1 flex justify-start">
+      <div className="my-2 flex items-start justify-between gap-2">
+        <div className="flex flex-1 justify-start">
           <Filter className="mb-0" inputKeys={['startDate']} />
         </div>
         <Button onClick={handleDownloadExel}>
@@ -228,7 +228,7 @@ const Report1: React.FC = () => {
         className="h-[calc(100vh-300px)]"
       />
     </div>
-  );
-};
+  )
+}
 
-export default Report1;
+export default Report1

@@ -1,8 +1,8 @@
-import { IrsCategory, IrsIdentifierType, IrsUsageType } from '@/entities/create-application/types/enums';
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { format } from 'date-fns';
-import { z } from 'zod';
+import { IrsCategory, IrsIdentifierType, IrsUsageType } from '@/entities/create-application/types/enums'
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { format } from 'date-fns'
+import { z } from 'zod'
 
 export const IrsAppealDtoSchema = z.object({
   phoneNumber: z
@@ -78,4 +78,4 @@ export const IrsAppealDtoSchema = z.object({
       required_error: 'Joylashgan manzil kiritilmadi!',
     })
     .min(1, 'Joylashgan manzil kiritilmadi!'),
-});
+})

@@ -1,7 +1,7 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useEffect, useMemo } from 'react';
-import { useTemplateDrawer } from '@/shared/hooks/entity-hooks';
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useCallback, useEffect, useMemo } from 'react'
+import { useTemplateDrawer } from '@/shared/hooks/entity-hooks'
 import {
   TemplateFormDTO,
   templateFormSchema,
@@ -9,15 +9,15 @@ import {
   useCreateTemplate,
   useTemplate,
   useUpdateTemplateData,
-} from '@/entities/admin/template';
-import { useTranslatedObject } from '@/shared/hooks';
-import { getSelectOptions } from '@/shared/lib/get-select-options.tsx';
+} from '@/entities/admin/template'
+import { useTranslatedObject } from '@/shared/hooks'
+import { getSelectOptions } from '@/shared/lib/get-select-options.tsx'
 
 const DEFAULT_FORM_VALUES = {
   name: '',
   description: '',
   type: TemplateType.IRS_APPEAL,
-};
+}
 
 const TEMPLATE_TYPE_MAP: Record<TemplateType, string> = {
   [TemplateType.IRS_APPEAL]: 'INM arizalari',
@@ -48,69 +48,69 @@ const TEMPLATE_TYPE_MAP: Record<TemplateType, string> = {
   [TemplateType.REPLY_ACCEPT_DECLARATION_APPEAL]: 'REPLY_ACCEPT_DECLARATION_APPEAL',
   [TemplateType.REPLY_REJECT_CADASTRE_PASSPORT_APPEAL]: 'REPLY_REJECT_CADASTRE_PASSPORT_APPEAL',
   [TemplateType.REPLY_REJECT_DECLARATION_APPEAL]: 'REPLY_REJECT_DECLARATION_APPEAL',
-} as const;
+} as const
 
-export const getTemplateType = (type: TemplateType): string => TEMPLATE_TYPE_MAP[type] || 'Ariza';
+export const getTemplateType = (type: TemplateType): string => TEMPLATE_TYPE_MAP[type] || 'Ariza'
 
 export function useTemplateForm() {
-  const { data, onClose, isCreate } = useTemplateDrawer();
+  const { data, onClose, isCreate } = useTemplateDrawer()
 
-  const templateTypes = useTranslatedObject(TemplateType, 'templates');
+  const templateTypes = useTranslatedObject(TemplateType, 'templates')
 
-  const templateTypeOptions = getSelectOptions(templateTypes);
+  const templateTypeOptions = getSelectOptions(templateTypes)
 
-  const templateId = useMemo(() => (data?.id ? data?.id : 0), [data]);
+  const templateId = useMemo(() => (data?.id ? data?.id : 0), [data])
 
   const form = useForm<TemplateFormDTO>({
     resolver: zodResolver(templateFormSchema),
     defaultValues: DEFAULT_FORM_VALUES,
     mode: 'onChange',
-  });
+  })
 
-  const { data: foundData, isLoading } = useTemplate(templateId);
+  const { data: foundData, isLoading } = useTemplate(templateId)
 
-  const { mutateAsync: createTemplate, isPending: isCreating } = useCreateTemplate();
+  const { mutateAsync: createTemplate, isPending: isCreating } = useCreateTemplate()
 
-  const { mutateAsync: updateTemplate, isPending: isUpdating } = useUpdateTemplateData();
+  const { mutateAsync: updateTemplate, isPending: isUpdating } = useUpdateTemplateData()
 
   useEffect(() => {
     if (foundData && !isCreate) {
-      form.reset(foundData);
+      form.reset(foundData)
     }
-  }, [foundData, isCreate, form]);
+  }, [foundData, isCreate, form])
 
   const handleClose = useCallback(() => {
-    form.reset(DEFAULT_FORM_VALUES);
-    onClose();
-  }, [form, onClose]);
+    form.reset(DEFAULT_FORM_VALUES)
+    onClose()
+  }, [form, onClose])
 
   const handleSubmit = async (formData: any): Promise<boolean> => {
     try {
       if (isCreate) {
-        const response = await createTemplate(formData);
+        const response = await createTemplate(formData)
         if (response.success) {
-          handleClose();
-          return true;
+          handleClose()
+          return true
         }
       } else {
         const response = await updateTemplate({
           id: templateId,
           ...formData,
-        });
+        })
         if (response.success) {
-          handleClose();
-          return true;
+          handleClose()
+          return true
         }
       }
 
-      return false;
+      return false
     } catch (error) {
-      console.error('[useTemplateForm] Submission error:', error);
-      return false;
+      console.error('[useTemplateForm] Submission error:', error)
+      return false
     }
-  };
+  }
 
-  const isPending = isCreating || isUpdating;
+  const isPending = isCreating || isUpdating
 
   return {
     form,
@@ -120,5 +120,5 @@ export function useTemplateForm() {
     templateTypeOptions,
     onSubmit: handleSubmit,
     isFetching: isLoading,
-  };
+  }
 }

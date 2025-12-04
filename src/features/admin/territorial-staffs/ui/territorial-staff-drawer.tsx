@@ -1,29 +1,29 @@
-import { Fragment, useMemo, useState } from 'react';
-import { UIModeEnum } from '@/shared/types';
-import { useTranslation } from 'react-i18next';
-import { useUIActionLabel } from '@/shared/hooks';
-import { Input } from '@/shared/components/ui/input';
-import { TerritorialStaffView } from './territorial-staff-view';
-import { PhoneInput } from '@/shared/components/ui/phone-input';
-import { MultiSelect } from '@/shared/components/ui/multi-select';
-import { InputNumber } from '@/shared/components/ui/input-number';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks';
-import { useTerritorialStaffForm } from '../model/use-territorial-staff-form';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { Button } from '@/shared/components/ui/button';
-import { format } from 'date-fns';
-import { apiClient } from '@/shared/api';
+import { Fragment, useMemo, useState } from 'react'
+import { UIModeEnum } from '@/shared/types'
+import { useTranslation } from 'react-i18next'
+import { useUIActionLabel } from '@/shared/hooks'
+import { Input } from '@/shared/components/ui/input'
+import { TerritorialStaffView } from './territorial-staff-view'
+import { PhoneInput } from '@/shared/components/ui/phone-input'
+import { MultiSelect } from '@/shared/components/ui/multi-select'
+import { InputNumber } from '@/shared/components/ui/input-number'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { BaseDrawer } from '@/shared/components/common/base-drawer'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
+import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks'
+import { useTerritorialStaffForm } from '../model/use-territorial-staff-form'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import DatePicker from '@/shared/components/ui/datepicker'
+import { Button } from '@/shared/components/ui/button'
+import { format } from 'date-fns'
+import { apiClient } from '@/shared/api'
 
 export const TerritorialStaffDrawer = () => {
-  const { t } = useTranslation('common');
-  const { isOpen, mode, onClose } = useTerritorialStaffsDrawer();
-  const modeState = useUIActionLabel(mode);
-  const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation('common')
+  const { isOpen, mode, onClose } = useTerritorialStaffsDrawer()
+  const modeState = useUIActionLabel(mode)
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     form,
@@ -35,12 +35,12 @@ export const TerritorialStaffDrawer = () => {
     userRoleOptions,
     departmentOptions,
     userPermissionOptions,
-  } = useTerritorialStaffForm();
+  } = useTerritorialStaffForm()
 
-  const roleOptions = useMemo(() => getSelectOptions(userRoleOptions), []);
+  const roleOptions = useMemo(() => getSelectOptions(userRoleOptions), [])
 
-  const pin = form.getValues('pin');
-  const birthDate = form.getValues('birthDate');
+  const pin = form.getValues('pin')
+  const birthDate = form.getValues('birthDate')
 
   return (
     <BaseDrawer
@@ -97,8 +97,8 @@ export const TerritorialStaffDrawer = () => {
                 loading={isLoading}
                 onClick={() => {
                   if (pin && birthDate) {
-                    const d = format(birthDate, 'yyyy-MM-dd');
-                    setIsLoading(true);
+                    const d = format(birthDate, 'yyyy-MM-dd')
+                    setIsLoading(true)
                     apiClient
                       .post<{ data: { fullName: string } }>('/integration/iip/individual', {
                         pin,
@@ -106,12 +106,12 @@ export const TerritorialStaffDrawer = () => {
                       })
                       .then((res) => {
                         if (res?.data?.data?.fullName) {
-                          form.setValue('fullName', res?.data?.data?.fullName);
+                          form.setValue('fullName', res?.data?.data?.fullName)
                         }
                       })
                       .finally(() => {
-                        setIsLoading(false);
-                      });
+                        setIsLoading(false)
+                      })
                   }
                 }}
               >
@@ -187,7 +187,7 @@ export const TerritorialStaffDrawer = () => {
                           value={field.value}
                           onValueChange={(value) => {
                             if (value) {
-                              field.onChange(value);
+                              field.onChange(value)
                             }
                           }}
                         >
@@ -213,7 +213,7 @@ export const TerritorialStaffDrawer = () => {
                           value={field.value}
                           onValueChange={(value) => {
                             if (value) {
-                              field.onChange(value);
+                              field.onChange(value)
                             }
                           }}
                         >
@@ -251,5 +251,5 @@ export const TerritorialStaffDrawer = () => {
         </Form>
       )}
     </BaseDrawer>
-  );
-};
+  )
+}

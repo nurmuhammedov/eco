@@ -197,10 +197,10 @@
   }
 
   .card-title {
-    @apply font-semibold leading-normal text-neutral-850;
+    @apply text-neutral-850 leading-normal font-semibold;
   }
 
   .page-sub-title {
-    @apply text-base 3xl:text-xl font-semibold;
+    @apply 3xl:text-xl text-base font-semibold;
   }
 }

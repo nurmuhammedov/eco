@@ -1,47 +1,47 @@
-import { DeviceType } from '@/shared/types/enums';
-import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
-import { detectDeviceType } from '@/shared/utils/detectDeviceType';
+import { DeviceType } from '@/shared/types/enums'
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
+import { detectDeviceType } from '@/shared/utils/detectDeviceType'
 
 interface WindowSize {
-  width: number;
-  height: number;
-  deviceType: DeviceType;
+  width: number
+  height: number
+  deviceType: DeviceType
 }
 
 export const useWindowSize = (): Readonly<WindowSize> => {
   const [windowSize, setWindowSize] = useState<WindowSize>(() => {
     if (typeof window === 'undefined') {
-      return { width: 0, height: 0, deviceType: DeviceType.DESKTOP };
+      return { width: 0, height: 0, deviceType: DeviceType.DESKTOP }
     }
     return {
       width: window.innerWidth,
       height: window.innerHeight,
       deviceType: detectDeviceType(window.innerWidth),
-    };
-  });
+    }
+  })
 
   const handleResize = useCallback((): void => {
     setWindowSize({
       width: window.innerWidth,
       height: window.innerHeight,
       deviceType: detectDeviceType(window.innerWidth),
-    });
-  }, []);
+    })
+  }, [])
 
   useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [handleResize]);
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [handleResize])
 
-  return windowSize;
-};
+  return windowSize
+}
 
 export function useWindowSize2() {
   return useSyncExternalStore(
     (callback) => {
-      window.addEventListener('resize', callback);
-      return () => window.removeEventListener('resize', callback);
+      window.addEventListener('resize', callback)
+      return () => window.removeEventListener('resize', callback)
     },
-    () => ({ width: window.innerWidth, height: window.innerHeight }),
-  );
+    () => ({ width: window.innerWidth, height: window.innerHeight })
+  )
 }

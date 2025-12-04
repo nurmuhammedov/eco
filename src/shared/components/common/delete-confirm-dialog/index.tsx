@@ -8,32 +8,32 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/shared/components/ui/alert-dialog';
-import { ButtonProps } from '@/shared/components/ui/button';
-import { cn } from '@/shared/lib/utils';
-import { Loader2, OctagonAlert, Trash2 } from 'lucide-react';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+} from '@/shared/components/ui/alert-dialog'
+import { ButtonProps } from '@/shared/components/ui/button'
+import { cn } from '@/shared/lib/utils'
+import { Loader2, OctagonAlert, Trash2 } from 'lucide-react'
+import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-type DialogSize = 'sm' | 'md' | 'lg' | 'xl';
+type DialogSize = 'sm' | 'md' | 'lg' | 'xl'
 
 export interface DeleteConfirmationDialogProps {
-  title?: string;
-  isOpen?: boolean;
-  disabled?: boolean;
-  cancelText?: string;
-  description?: string;
-  confirmText?: string;
-  loadingText?: string;
-  onCancel?: () => void;
-  dialogSize?: DialogSize;
-  trigger?: React.ReactNode;
-  children?: React.ReactNode;
-  contentClassName?: string;
-  icon?: React.ReactElement;
-  variant?: ButtonProps['variant'];
-  onConfirm: () => Promise<void> | void;
-  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  title?: string
+  isOpen?: boolean
+  disabled?: boolean
+  cancelText?: string
+  description?: string
+  confirmText?: string
+  loadingText?: string
+  onCancel?: () => void
+  dialogSize?: DialogSize
+  trigger?: React.ReactNode
+  children?: React.ReactNode
+  contentClassName?: string
+  icon?: React.ReactElement
+  variant?: ButtonProps['variant']
+  onConfirm: () => Promise<void> | void
+  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
@@ -51,37 +51,37 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
   dialogSize = 'md',
   contentClassName = '',
 }) => {
-  const { t } = useTranslation('common');
-  const [internalLoading, setInternalLoading] = useState<boolean>(false);
+  const { t } = useTranslation('common')
+  const [internalLoading, setInternalLoading] = useState<boolean>(false)
 
-  const dialogProps = isOpen !== undefined && setIsOpen ? { open: isOpen, onOpenChange: setIsOpen } : {};
+  const dialogProps = isOpen !== undefined && setIsOpen ? { open: isOpen, onOpenChange: setIsOpen } : {}
 
   const handleConfirm = async () => {
-    if (!onConfirm) return;
+    if (!onConfirm) return
 
-    setInternalLoading(true);
+    setInternalLoading(true)
 
     try {
-      await Promise.resolve(onConfirm());
+      await Promise.resolve(onConfirm())
       if (setIsOpen) {
-        setIsOpen(false);
+        setIsOpen(false)
       }
     } catch (_err) {
-      setInternalLoading(false);
+      setInternalLoading(false)
       // An error occurred during deletion
     } finally {
-      setInternalLoading(false);
+      setInternalLoading(false)
     }
-  };
+  }
 
   const handleCancel = () => {
     if (onCancel) {
-      onCancel();
+      onCancel()
     }
     if (setIsOpen) {
-      setIsOpen(false);
+      setIsOpen(false)
     }
-  };
+  }
 
   // Calculate dialog size class
   const sizeClassMap: Record<DialogSize, string> = {
@@ -89,8 +89,8 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
     md: 'max-w-md',
     lg: 'max-w-lg',
     xl: 'max-w-xl',
-  };
-  const sizeClass = sizeClassMap[dialogSize] || sizeClassMap.md;
+  }
+  const sizeClass = sizeClassMap[dialogSize] || sizeClassMap.md
 
   return (
     <AlertDialog {...dialogProps}>
@@ -99,11 +99,11 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
           type="button"
           aria-label="Delete"
           className={cn(
-            'p-1 flex items-center justify-center rounded transition-colors',
-            'focus:outline-none hover:bg-neutral-250',
+            'flex items-center justify-center rounded p-1 transition-colors',
+            'hover:bg-neutral-250 focus:outline-none'
           )}
         >
-          <span className="size-5 flex items-center justify-center">
+          <span className="flex size-5 items-center justify-center">
             <Trash2 className="size-4" />
           </span>
         </button>
@@ -112,7 +112,7 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
         <AlertDialogHeader>
           <AlertDialogTitle>
             <div
-              className={`mx-auto sm:mx-0 mb-4 flex size-9 items-center justify-center rounded-full bg-destructive/10`}
+              className={`bg-destructive/10 mx-auto mb-4 flex size-9 items-center justify-center rounded-full sm:mx-0`}
             >
               {React.cloneElement(icon, {
                 className: `${icon.props.className} text-destructive`,
@@ -143,7 +143,7 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
-};
+  )
+}
 
-export default DeleteConfirmationDialog;
+export default DeleteConfirmationDialog

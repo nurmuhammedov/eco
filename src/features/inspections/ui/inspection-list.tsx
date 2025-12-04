@@ -1,18 +1,18 @@
-import { useInspections } from '@/entities/inspection/hooks/use-inspection-query';
-import { Inspection } from '@/entities/inspection/models/inspection.types';
-import { DataTable } from '@/shared/components/common/data-table';
-import { Button } from '@/shared/components/ui/button';
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/ui/inspection-widget';
-import { ColumnDef } from '@tanstack/react-table';
-import { Eye } from 'lucide-react';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { UserRoles } from '@/entities/user';
+import { useInspections } from '@/entities/inspection/hooks/use-inspection-query'
+import { Inspection } from '@/entities/inspection/models/inspection.types'
+import { DataTable } from '@/shared/components/common/data-table'
+import { Button } from '@/shared/components/ui/button'
+import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/ui/inspection-widget'
+import { ColumnDef } from '@tanstack/react-table'
+import { Eye } from 'lucide-react'
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { UserRoles } from '@/entities/user'
 
 export const InspectionList: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const {
     paramsObject: {
@@ -21,9 +21,9 @@ export const InspectionList: React.FC = () => {
       year = new Date().getFullYear(),
       ...rest
     },
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
 
-  const { user } = useAuth();
+  const { user } = useAuth()
 
   const { data: inspections, isLoading } = useInspections({
     ...rest,
@@ -35,11 +35,11 @@ export const InspectionList: React.FC = () => {
         : status == InspectionStatus.ASSIGNED
           ? subStatus
           : status,
-  });
+  })
 
   const handleView = (row: Inspection) => {
-    navigate(`/inspections/info?inspectionId=${row.id}&tin=${row.tin}&name=${row.legalName}`);
-  };
+    navigate(`/inspections/info?inspectionId=${row.id}&tin=${row.tin}&name=${row.legalName}`)
+  }
 
   const columns: ColumnDef<Inspection>[] = [
     {
@@ -71,7 +71,7 @@ export const InspectionList: React.FC = () => {
         </Button>
       ),
     },
-  ];
+  ]
 
   return (
     <DataTable
@@ -81,5 +81,5 @@ export const InspectionList: React.FC = () => {
       isLoading={isLoading}
       className="h-[calc(100vh-320px)]"
     />
-  );
-};
+  )
+}

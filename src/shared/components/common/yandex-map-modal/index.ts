@@ -1,1 +1,1 @@
-export { default as YandexMapModal } from './ui/yandex-map-modal';
+export { default as YandexMapModal } from './ui/yandex-map-modal'

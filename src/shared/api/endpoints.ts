@@ -1,5 +1,5 @@
-const APPEALS_EQUIPMENT_URL = '/appeals/equipment/';
-const APPEALS_EQUIPMENT_GENERATE_PDF_URL = '/appeals/equipment/generate-pdf/';
+const APPEALS_EQUIPMENT_URL = '/appeals/equipment/'
+const APPEALS_EQUIPMENT_GENERATE_PDF_URL = '/appeals/equipment/generate-pdf/'
 
 export const API_ENDPOINTS: Record<string, string> = {
   LOGIN: '/auth/login',
@@ -100,4 +100,4 @@ export const API_ENDPOINTS: Record<string, string> = {
   APPEALS_CADASTRE_PASSPORT_GENERATE_PDF: '/appeals/cadastre-passport/generate-pdf',
 
   ATTESTATION: '/attestation',
-};
+}

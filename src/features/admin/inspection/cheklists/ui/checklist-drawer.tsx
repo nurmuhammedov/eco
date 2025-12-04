@@ -1,24 +1,24 @@
-import { Fragment, useMemo } from 'react';
-import { Input } from '@/shared/components/ui/input';
-import { Textarea } from '@/shared/components/ui/textarea';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { useUIActionLabel } from '@/shared/hooks';
-import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import { useChecklistDrawer } from '@/shared/hooks/entity-hooks';
-import { useChecklistForm } from '../model/use-checklist-form';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { ChecklistView } from '@/features/admin/inspection/cheklists/ui/checklist-view';
-import { UIModeEnum } from '@/shared/types';
-import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options';
+import { Fragment, useMemo } from 'react'
+import { Input } from '@/shared/components/ui/input'
+import { Textarea } from '@/shared/components/ui/textarea'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { useUIActionLabel } from '@/shared/hooks'
+import { BaseDrawer } from '@/shared/components/common/base-drawer'
+import { useChecklistDrawer } from '@/shared/hooks/entity-hooks'
+import { useChecklistForm } from '../model/use-checklist-form'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { ChecklistView } from '@/features/admin/inspection/cheklists/ui/checklist-view'
+import { UIModeEnum } from '@/shared/types'
+import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options'
 
 export const ChecklistDrawer = () => {
-  const { isOpen, onClose, mode, isCreate } = useChecklistDrawer();
-  const modeLabel = useUIActionLabel(mode);
-  const { form, checklistData, onSubmit, isPending, isFetching, categoryTypes } = useChecklistForm();
-  const categoryTypeOptions = useMemo(() => getSelectOptions(categoryTypes), [categoryTypes]);
-  const options = useMemo(() => getSelectOptions(inspectionCategoryOptions), [inspectionCategoryOptions]);
+  const { isOpen, onClose, mode, isCreate } = useChecklistDrawer()
+  const modeLabel = useUIActionLabel(mode)
+  const { form, checklistData, onSubmit, isPending, isFetching, categoryTypes } = useChecklistForm()
+  const categoryTypeOptions = useMemo(() => getSelectOptions(categoryTypes), [categoryTypes])
+  const options = useMemo(() => getSelectOptions(inspectionCategoryOptions), [inspectionCategoryOptions])
 
   return (
     <BaseDrawer
@@ -50,8 +50,8 @@ export const ChecklistDrawer = () => {
                           {...field}
                           onValueChange={(value) => {
                             if (value) {
-                              field.onChange(value);
-                              form.setValue('categoryTypeId', '');
+                              field.onChange(value)
+                              form.setValue('categoryTypeId', '')
                             }
                           }}
                           value={field.value}
@@ -79,7 +79,7 @@ export const ChecklistDrawer = () => {
                           value={field.value}
                           onValueChange={(value) => {
                             if (value) {
-                              field.onChange(value);
+                              field.onChange(value)
                             }
                           }}
                         >
@@ -161,5 +161,5 @@ export const ChecklistDrawer = () => {
         </Form>
       )}
     </BaseDrawer>
-  );
-};
+  )
+}

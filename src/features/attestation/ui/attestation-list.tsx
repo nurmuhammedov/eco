@@ -3,34 +3,34 @@ import {
   AttestationStatus,
   AttestationView,
   EmployeeLevel,
-} from '@/entities/attestation/model/attestation.types';
-import { UserRoles } from '@/entities/user';
-import { DataTable } from '@/shared/components/common/data-table';
-import { Badge } from '@/shared/components/ui/badge';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { ColumnDef } from '@tanstack/react-table';
-import React from 'react';
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { getDate } from '@/shared/utils/date';
-import { useTranslation } from 'react-i18next';
+} from '@/entities/attestation/model/attestation.types'
+import { UserRoles } from '@/entities/user'
+import { DataTable } from '@/shared/components/common/data-table'
+import { Badge } from '@/shared/components/ui/badge'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { ColumnDef } from '@tanstack/react-table'
+import React from 'react'
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { getDate } from '@/shared/utils/date'
+import { useTranslation } from 'react-i18next'
 
 export const AttestationList: React.FC = () => {
-  const { user } = useAuth();
-  const { t } = useTranslation();
+  const { user } = useAuth()
+  const { t } = useTranslation()
   const {
     paramsObject: { ...rest },
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
   const { data, isLoading } = usePaginatedData<any>(`/attestation`, {
     ...rest,
     page: rest.page || 1,
     size: rest?.size || 10,
-  });
+  })
 
   const levelTranslations: Record<string, string> = {
     [EmployeeLevel.LEADER]: t('attestation.LEADER'),
     [EmployeeLevel.TECHNICIAN]: t('attestation.TECHNICIAN'),
     [EmployeeLevel.EMPLOYEE]: t('attestation.EMPLOYEE'),
-  };
+  }
 
   const columnsForLegalIndividual: ColumnDef<AttestationView>[] = [
     { accessorKey: 'employeeName', header: 'Xodim F.I.SH.' },
@@ -59,7 +59,7 @@ export const AttestationList: React.FC = () => {
           <Badge variant="info">Jarayonda</Badge>
         ),
     },
-  ];
+  ]
   const columnsForOthers: ColumnDef<AttestationReportDto>[] = [
     { accessorKey: 'legalName', header: 'Tashkilot nomi' },
     { accessorKey: 'legalTin', header: 'Tashkilot STIR' },
@@ -71,12 +71,10 @@ export const AttestationList: React.FC = () => {
     { accessorKey: 'techniciansPassed', header: 'Attestatsiyadan o‘tgan muhandis-texnik xodimlar' },
     { accessorKey: 'employeesPassed', header: 'Attestatsiyadan o‘tgan oddiy xodimlar' },
     { accessorKey: 'failedEmployees', header: 'Attestatsiyadan o‘tmay qolgan xodimlar' },
-  ];
+  ]
 
   const columns =
-    user?.role === UserRoles.LEGAL || user?.role === UserRoles.INDIVIDUAL
-      ? columnsForLegalIndividual
-      : columnsForOthers;
+    user?.role === UserRoles.LEGAL || user?.role === UserRoles.INDIVIDUAL ? columnsForLegalIndividual : columnsForOthers
 
   return (
     <>
@@ -88,5 +86,5 @@ export const AttestationList: React.FC = () => {
         className="h-[calc(100svh-320px)]"
       />
     </>
-  );
-};
+  )
+}

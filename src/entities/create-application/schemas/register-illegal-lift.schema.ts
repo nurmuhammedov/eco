@@ -1,8 +1,8 @@
-import { BuildingSphereType } from '@/entities/create-application/types/enums';
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { format } from 'date-fns';
-import { z } from 'zod';
+import { BuildingSphereType } from '@/entities/create-application/types/enums'
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { format } from 'date-fns'
+import { z } from 'zod'
 
 export const LiftIllegalAppealDtoSchema = z
   .object({
@@ -98,7 +98,7 @@ export const LiftIllegalAppealDtoSchema = z
           code: z.ZodIssueCode.custom,
           message: 'Tug‘ilgan sana kiritilishi shart',
           path: ['birthDate'],
-        });
+        })
       }
     }
-  });
+  })

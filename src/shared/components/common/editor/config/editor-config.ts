@@ -45,7 +45,7 @@ export const DEFAULT_PLUGINS = [
   // Useful extras
   'importcss',
   'autoresize',
-];
+]
 
 /**
  * Default toolbar configuration for TinyMCE 6
@@ -53,7 +53,7 @@ export const DEFAULT_PLUGINS = [
 export const DEFAULT_TOOLBAR = [
   'undo redo | blocks | bold italic underline strikethrough | forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
   'link image table | charmap emoticons | fullscreen preview | code | pageborder | help',
-];
+]
 
 /**
  * Default menu configuration for TinyMCE 6
@@ -92,4 +92,4 @@ export const DEFAULT_MENU = {
     title: 'Help',
     items: 'help',
   },
-};
+}

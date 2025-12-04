@@ -1,14 +1,14 @@
-import { Fragment, memo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useDepartment } from '../model/use-department';
-import { DepartmentActionButton } from './action-button';
-import { DepartmentActiveTab } from '@/widgets/admin/department/types';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import { CentralApparatusDrawer, CentralApparatusList } from '@/features/admin/central-apparatus';
-import { TerritorialDepartmentsDrawer, TerritorialDepartmentsList } from '@/features/admin/territorial-departments';
+import { Fragment, memo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useDepartment } from '../model/use-department'
+import { DepartmentActionButton } from './action-button'
+import { DepartmentActiveTab } from '@/widgets/admin/department/types'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import { CentralApparatusDrawer, CentralApparatusList } from '@/features/admin/central-apparatus'
+import { TerritorialDepartmentsDrawer, TerritorialDepartmentsList } from '@/features/admin/territorial-departments'
 
 const DepartmentWidget = () => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('common')
   const {
     activeTab,
     onAddApparatus,
@@ -16,7 +16,7 @@ const DepartmentWidget = () => {
     handleChangeTab,
     isOpenCentralApparatus,
     isOpenTerritorialDepartments,
-  } = useDepartment();
+  } = useDepartment()
 
   return (
     <Fragment>
@@ -41,6 +41,6 @@ const DepartmentWidget = () => {
       {isOpenCentralApparatus && <CentralApparatusDrawer />}
       {isOpenTerritorialDepartments && <TerritorialDepartmentsDrawer />}
     </Fragment>
-  );
-};
-export default memo(DepartmentWidget);
+  )
+}
+export default memo(DepartmentWidget)

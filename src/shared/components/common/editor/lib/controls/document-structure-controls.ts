@@ -16,16 +16,16 @@ export const registerDocumentStructureControls = (editor: any): void => {
             <p>The table of contents will be generated here from document headings.</p>
           </div>
         </div>
-      `;
-      editor.insertContent(tocHtml);
+      `
+      editor.insertContent(tocHtml)
 
       editor.notificationManager.open({
         text: 'Table of Contents inserted. It will be updated when the document is saved.',
         type: 'info',
         timeout: 3000,
-      });
+      })
     },
-  });
+  })
 
   // Register Word-like footnote button
   editor.ui.registry.addButton('footnote', {
@@ -33,13 +33,13 @@ export const registerDocumentStructureControls = (editor: any): void => {
     tooltip: 'Insert Footnote',
     icon: 'character-count',
     onAction: () => {
-      const footnoteIndex = document.querySelectorAll('.mce-footnote').length + 1;
+      const footnoteIndex = document.querySelectorAll('.mce-footnote').length + 1
 
-      const footnoteHTML = `<sup class="mce-footnote" id="footnote-ref-${footnoteIndex}">[${footnoteIndex}]</sup>`;
-      editor.insertContent(footnoteHTML);
+      const footnoteHTML = `<sup class="mce-footnote" id="footnote-ref-${footnoteIndex}">[${footnoteIndex}]</sup>`
+      editor.insertContent(footnoteHTML)
 
       // Create the footnote section if it doesn't exist
-      let footnoteSection = editor.getBody().querySelector('.mce-footnotes-section');
+      let footnoteSection = editor.getBody().querySelector('.mce-footnotes-section')
 
       if (!footnoteSection) {
         const footnoteSectionHTML = `
@@ -48,24 +48,24 @@ export const registerDocumentStructureControls = (editor: any): void => {
             <h2>Footnotes</h2>
             <ol class="mce-footnotes-list"></ol>
           </div>
-        `;
-        editor.insertContent(footnoteSectionHTML);
-        footnoteSection = editor.getBody().querySelector('.mce-footnotes-section');
+        `
+        editor.insertContent(footnoteSectionHTML)
+        footnoteSection = editor.getBody().querySelector('.mce-footnotes-section')
       }
 
-      const footnotesList = footnoteSection.querySelector('.mce-footnotes-list');
-      const footnoteItem = document.createElement('li');
-      footnoteItem.id = `footnote-${footnoteIndex}`;
-      footnoteItem.innerHTML = `<p>Footnote ${footnoteIndex}</p>`;
-      footnotesList.appendChild(footnoteItem);
+      const footnotesList = footnoteSection.querySelector('.mce-footnotes-list')
+      const footnoteItem = document.createElement('li')
+      footnoteItem.id = `footnote-${footnoteIndex}`
+      footnoteItem.innerHTML = `<p>Footnote ${footnoteIndex}</p>`
+      footnotesList.appendChild(footnoteItem)
 
       editor.notificationManager.open({
         text: 'Footnote added',
         type: 'info',
         timeout: 2000,
-      });
+      })
     },
-  });
+  })
 
   // Register Word-like header and footer button
   editor.ui.registry.addButton('headerfooter', {
@@ -114,31 +114,31 @@ export const registerDocumentStructureControls = (editor: any): void => {
           },
         ],
         onSubmit: (api: any) => {
-          const data = api.getData();
+          const data = api.getData()
 
           // Update or create header
-          const headerElement = editor.getBody().querySelector('.mce-header');
+          const headerElement = editor.getBody().querySelector('.mce-header')
           if (!headerElement) {
-            const headerHTML = `<div class="mce-header" contenteditable="false">${data.header}</div>`;
-            editor.getBody().prepend(headerHTML);
+            const headerHTML = `<div class="mce-header" contenteditable="false">${data.header}</div>`
+            editor.getBody().prepend(headerHTML)
           } else {
-            headerElement.innerHTML = data.header;
+            headerElement.innerHTML = data.header
           }
 
           // Update or create footer
-          const footerElement = editor.getBody().querySelector('.mce-footer');
+          const footerElement = editor.getBody().querySelector('.mce-footer')
           if (!footerElement) {
-            const footerHTML = `<div class="mce-footer" contenteditable="false">${data.footer}</div>`;
-            editor.getBody().append(footerHTML);
+            const footerHTML = `<div class="mce-footer" contenteditable="false">${data.footer}</div>`
+            editor.getBody().append(footerHTML)
           } else {
-            footerElement.innerHTML = data.footer;
+            footerElement.innerHTML = data.footer
           }
 
-          api.close();
+          api.close()
         },
-      });
+      })
     },
-  });
+  })
 
   // Register find and replace functionality
   editor.ui.registry.addButton('advancedfind', {
@@ -229,13 +229,13 @@ export const registerDocumentStructureControls = (editor: any): void => {
           wholeWordReplace: false,
         },
         onAction: (api: any, details: any) => {
-          const data = api.getData();
+          const data = api.getData()
 
           if (details.name === 'findBtn') {
             // Use the find panel data
-            const findText = data.findText;
-            const matchCase = data.matchCase;
-            const wholeWord = data.wholeWord;
+            const findText = data.findText
+            const matchCase = data.matchCase
+            const wholeWord = data.wholeWord
 
             // Execute search
             editor.execCommand('SearchReplace', false, {
@@ -243,13 +243,13 @@ export const registerDocumentStructureControls = (editor: any): void => {
               matchCase: matchCase,
               wholeword: wholeWord,
               direction: 'forward',
-            });
+            })
           } else if (details.name === 'replaceBtn') {
             // Use the replace panel data
-            const findText = data.findTextReplace;
-            const replaceWith = data.replaceWith;
-            const matchCase = data.matchCaseReplace;
-            const wholeWord = data.wholeWordReplace;
+            const findText = data.findTextReplace
+            const replaceWith = data.replaceWith
+            const matchCase = data.matchCaseReplace
+            const wholeWord = data.wholeWordReplace
 
             // Execute replace
             editor.execCommand('SearchReplace', false, {
@@ -258,13 +258,13 @@ export const registerDocumentStructureControls = (editor: any): void => {
               matchCase: matchCase,
               wholeword: wholeWord,
               direction: 'forward',
-            });
+            })
           } else if (details.name === 'replaceAllBtn') {
             // Use the replace panel data
-            const findText = data.findTextReplace;
-            const replaceWith = data.replaceWith;
-            const matchCase = data.matchCaseReplace;
-            const wholeWord = data.wholeWordReplace;
+            const findText = data.findTextReplace
+            const replaceWith = data.replaceWith
+            const matchCase = data.matchCaseReplace
+            const wholeWord = data.wholeWordReplace
 
             // Execute replace all
             editor.execCommand('SearchReplace', false, {
@@ -274,20 +274,20 @@ export const registerDocumentStructureControls = (editor: any): void => {
               wholeword: wholeWord,
               all: true,
               direction: 'forward',
-            });
+            })
 
             // Get count of replacements
-            const count = editor.plugins.searchreplace.getCount();
+            const count = editor.plugins.searchreplace.getCount()
             editor.notificationManager.open({
               text: `${count} occurrences replaced`,
               type: 'success',
               timeout: 2000,
-            });
+            })
           }
         },
-      });
+      })
     },
-  });
+  })
 
   // Register Word-like document properties button
   editor.ui.registry.addMenuItem('docproperties', {
@@ -343,57 +343,57 @@ export const registerDocumentStructureControls = (editor: any): void => {
           },
         ],
         onSubmit: (api: any) => {
-          const data = api.getData();
+          const data = api.getData()
 
           // Update document title
-          editor.getDoc().title = data.title;
+          editor.getDoc().title = data.title
 
           // Store other metadata in custom data attributes on body
-          const body = editor.getBody();
-          body.setAttribute('data-author', data.author);
-          body.setAttribute('data-subject', data.subject);
-          body.setAttribute('data-keywords', data.keywords);
-          body.setAttribute('data-description', data.description);
+          const body = editor.getBody()
+          body.setAttribute('data-author', data.author)
+          body.setAttribute('data-subject', data.subject)
+          body.setAttribute('data-keywords', data.keywords)
+          body.setAttribute('data-description', data.description)
 
           // Set meta tags in document head
-          const head = editor.getDoc().head;
+          const head = editor.getDoc().head
 
           // Update or create author meta
-          let authorMeta = head.querySelector('meta[name="author"]');
+          let authorMeta = head.querySelector('meta[name="author"]')
           if (!authorMeta) {
-            authorMeta = document.createElement('meta');
-            authorMeta.setAttribute('name', 'author');
-            head.appendChild(authorMeta);
+            authorMeta = document.createElement('meta')
+            authorMeta.setAttribute('name', 'author')
+            head.appendChild(authorMeta)
           }
-          authorMeta.setAttribute('content', data.author);
+          authorMeta.setAttribute('content', data.author)
 
           // Update or create description meta
-          let descMeta = head.querySelector('meta[name="description"]');
+          let descMeta = head.querySelector('meta[name="description"]')
           if (!descMeta) {
-            descMeta = document.createElement('meta');
-            descMeta.setAttribute('name', 'description');
-            head.appendChild(descMeta);
+            descMeta = document.createElement('meta')
+            descMeta.setAttribute('name', 'description')
+            head.appendChild(descMeta)
           }
-          descMeta.setAttribute('content', data.description);
+          descMeta.setAttribute('content', data.description)
 
           // Update or create keywords meta
-          let keywordsMeta = head.querySelector('meta[name="keywords"]');
+          let keywordsMeta = head.querySelector('meta[name="keywords"]')
           if (!keywordsMeta) {
-            keywordsMeta = document.createElement('meta');
-            keywordsMeta.setAttribute('name', 'keywords');
-            head.appendChild(keywordsMeta);
+            keywordsMeta = document.createElement('meta')
+            keywordsMeta.setAttribute('name', 'keywords')
+            head.appendChild(keywordsMeta)
           }
-          keywordsMeta.setAttribute('content', data.keywords);
+          keywordsMeta.setAttribute('content', data.keywords)
 
-          api.close();
+          api.close()
 
           editor.notificationManager.open({
             text: 'Document properties updated',
             type: 'success',
             timeout: 2000,
-          });
+          })
         },
-      });
+      })
     },
-  });
-};
+  })
+}

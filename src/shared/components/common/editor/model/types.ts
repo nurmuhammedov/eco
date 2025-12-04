@@ -3,207 +3,207 @@
 /**
  * Border style options for the TinyMCE editor
  */
-export type BorderStyleType = 'none' | 'thin' | 'medium' | 'thick' | 'double' | 'dashed' | 'dotted';
+export type BorderStyleType = 'none' | 'thin' | 'medium' | 'thick' | 'double' | 'dashed' | 'dotted'
 
 /**
  * A4 formatga moslashtirilgan TinyMCE editor props uchun yozilgan tiplar
  */
 export interface TinyMCEEditorProps {
   /** Unique ID for the editor instance */
-  id?: string;
+  id?: string
 
   /** Initial editor content */
-  initialValue?: string;
+  initialValue?: string
 
   /** Current editor content (controlled mode) */
-  value?: string;
+  value?: string
 
   /** Callback when editor content changes */
-  onChange?: (content: string, editor: any) => void;
+  onChange?: (content: string, editor: any) => void
 
   /** Callback when editor is initialized */
-  onInit?: (editor: any) => void;
+  onInit?: (editor: any) => void
 
   /** Callback when editor loses focus */
-  onBlur?: (event: any, editor: any) => void;
+  onBlur?: (event: any, editor: any) => void
 
   /** Callback when editor gains focus */
-  onFocus?: (event: any, editor: any) => void;
+  onFocus?: (event: any, editor: any) => void
 
   /** Callback when editor content is saved */
-  onSave?: (content: string, editor: any) => void;
+  onSave?: (content: string, editor: any) => void
 
   /** Editor height in pixels */
-  height?: number;
+  height?: number
 
   /** Read-only mode */
-  readOnly?: boolean;
+  readOnly?: boolean
 
   /** Disabled mode */
-  disabled?: boolean;
+  disabled?: boolean
 
   /** Placeholder text when editor is empty */
-  placeholder?: string;
+  placeholder?: string
 
   /** Additional CSS classes for the editor container */
-  className?: string;
+  className?: string
 
   /** Inline styles for the editor container */
-  style?: React.CSSProperties;
+  style?: React.CSSProperties
 
   /** Inline mode (toolbar appears on selection) */
-  inline?: boolean;
+  inline?: boolean
 
   /** Dark mode theme */
-  darkMode?: boolean;
+  darkMode?: boolean
 
   /** Custom toolbar configuration */
-  toolbar?: string | string[];
+  toolbar?: string | string[]
 
   /** Custom plugins to load */
-  plugins?: string[];
+  plugins?: string[]
 
   /** Menu bar visibility or config */
-  menubar?: boolean | string;
+  menubar?: boolean | string
 
   /** Custom content CSS to load */
-  contentCss?: string;
+  contentCss?: string
 
   /** Additional inline styles for the editor content */
-  contentStyle?: string;
+  contentStyle?: string
 
   /** Border style for the editor content */
-  borderStyle?: BorderStyleType;
+  borderStyle?: BorderStyleType
 
   /** Border color for the editor content */
-  borderColor?: string;
+  borderColor?: string
 
   /** Enable browser's native spellchecker */
-  browserSpellcheck?: boolean;
+  browserSpellcheck?: boolean
 
   /** Custom image upload handler */
-  imageUploadHandler?: (blobInfo: any, progress: (percent: number) => void) => Promise<string>;
+  imageUploadHandler?: (blobInfo: any, progress: (percent: number) => void) => Promise<string>
 
   /** Custom file picker callback */
-  filePickerCallback?: (callback: any, value: any, meta: any) => void;
+  filePickerCallback?: (callback: any, value: any, meta: any) => void
 
   /** Paste preprocessing handler */
-  pastePreprocess?: (editor: any, args: any) => void;
+  pastePreprocess?: (editor: any, args: any) => void
 
   /** Paste postprocessing handler */
-  pastePostprocess?: (editor: any, args: any) => void;
+  pastePostprocess?: (editor: any, args: any) => void
 
   /** Editor UI language */
-  language?: string;
+  language?: string
 
   /** Custom language URL */
-  languageUrl?: string;
+  languageUrl?: string
 
   /** Autosave interval in milliseconds */
-  autosaveInterval?: number;
+  autosaveInterval?: number
 
   /** Custom templates */
-  templates?: Array<{ title: string; description: string; content: string }>;
+  templates?: Array<{ title: string; description: string; content: string }>
 
   /** Custom formats */
-  formats?: Record<string, any>;
+  formats?: Record<string, any>
 
   /** Allow paste from MS Word */
-  allowPasteFromWord?: boolean;
+  allowPasteFromWord?: boolean
 
   /** Paste as plain text */
-  pasteAsText?: boolean;
+  pasteAsText?: boolean
 
   /** Enable auto-resize */
-  autoresize?: boolean;
+  autoresize?: boolean
 
   /** Minimum height for auto-resize */
-  autoresizeMinHeight?: number;
+  autoresizeMinHeight?: number
 
   /** Maximum height for auto-resize */
-  autoresizeMaxHeight?: number;
+  autoresizeMaxHeight?: number
 
   /** Lazy load the TinyMCE script */
-  lazyLoad?: boolean;
+  lazyLoad?: boolean
 
   /** Enable touch device support */
-  touchEnabled?: boolean;
+  touchEnabled?: boolean
 
   /** Use relative URLs */
-  relativeUrls?: boolean;
+  relativeUrls?: boolean
 
   /** Remove script host from URLs */
-  removeScriptHost?: boolean;
+  removeScriptHost?: boolean
 
   /** Convert URLs to specified format */
-  convertUrls?: boolean;
+  convertUrls?: boolean
 
   /** Enable image advanced tab */
-  imageAdvtab?: boolean;
+  imageAdvtab?: boolean
 
   /** Enable automatic uploads */
-  automaticUploads?: boolean;
+  automaticUploads?: boolean
 
   /** Show word count */
-  wordcount?: boolean;
+  wordcount?: boolean
 
   /** Enable quick formatting toolbar */
-  quickbars?: boolean;
+  quickbars?: boolean
 
   /** Custom quick selection toolbar */
-  quickbarsSelectionToolbar?: string;
+  quickbarsSelectionToolbar?: string
 
   /** The page size for A4 format */
   // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-  pageSize?: 'a4' | 'letter' | 'legal' | string;
+  pageSize?: 'a4' | 'letter' | 'legal' | string
 
   /** Page orientation */
-  orientation?: 'portrait' | 'landscape';
+  orientation?: 'portrait' | 'landscape'
 
   /** Page margins in millimeters */
-  pageMargin?: number;
+  pageMargin?: number
 
   /** Custom buttons for adding to toolbar */
   customButtons?: Array<{
-    name: string;
-    text: string;
-    icon?: string;
-    tooltip?: string;
-    onAction: (editor: any) => void;
-  }>;
+    name: string
+    text: string
+    icon?: string
+    tooltip?: string
+    onAction: (editor: any) => void
+  }>
 
   /** Custom menu items */
-  customMenuItems?: Record<string, any>;
+  customMenuItems?: Record<string, any>
 
   /** Enable context menu */
-  contextMenu?: boolean;
+  contextMenu?: boolean
 
   /** Custom font formats */
-  fontFormats?: string;
+  fontFormats?: string
 
   /** Custom font size formats */
-  fontSizeFormats?: string;
+  fontSizeFormats?: string
 
   /** Custom line height formats */
-  lineHeightFormats?: string;
+  lineHeightFormats?: string
 
   /** Custom style formats */
-  styleFormats?: any[];
+  styleFormats?: any[]
 
   /** Enable watermark on printing */
-  printWatermark?: boolean;
+  printWatermark?: boolean
 
   /** Watermark text for printing */
-  watermarkText?: string;
+  watermarkText?: string
 
   /** Footer template for each page */
-  footerTemplate?: string;
+  footerTemplate?: string
 
   /** Header template for each page */
-  headerTemplate?: string;
+  headerTemplate?: string
 
   /** Setup function for custom advanced TinyMCE setup */
-  setup?: (editor: any) => void;
+  setup?: (editor: any) => void
 }
 
 /**
@@ -212,89 +212,89 @@ export interface TinyMCEEditorProps {
  */
 export interface TinyMCEEditorRef {
   /** Get the underlying TinyMCE editor instance */
-  getEditor: () => any;
+  getEditor: () => any
 
   /** Get editor content with optional arguments */
-  getContent: (args?: Record<string, any>) => string;
+  getContent: (args?: Record<string, any>) => string
 
   /** Set editor content */
-  setContent: (content: string) => void;
+  setContent: (content: string) => void
 
   /** Insert content at current cursor position */
-  insertContent: (content: string) => void;
+  insertContent: (content: string) => void
 
   /** Focus the editor */
-  focus: () => void;
+  focus: () => void
 
   /** Remove focus from the editor */
-  blur: () => void;
+  blur: () => void
 
   /** Save the editor content */
-  save: () => void;
+  save: () => void
 
   /** Check if editor content has changed */
-  isDirty: () => boolean;
+  isDirty: () => boolean
 
   /** Reset the dirty state */
-  resetDirty: () => void;
+  resetDirty: () => void
 
   /** Enable the editor */
-  enable: () => void;
+  enable: () => void
 
   /** Disable the editor (read-only mode) */
-  disable: () => void;
+  disable: () => void
 
   /** Show the editor */
-  show: () => void;
+  show: () => void
 
   /** Hide the editor */
-  hide: () => void;
+  hide: () => void
 
   /** Get selected content */
-  getSelectedContent: () => string;
+  getSelectedContent: () => string
 
   /** Set border style */
-  setBorderStyle?: (style: BorderStyleType, color?: string) => void;
+  setBorderStyle?: (style: BorderStyleType, color?: string) => void
 
   /** Create a new empty document */
-  createNewDocument?: () => void;
+  createNewDocument?: () => void
 
   /** Apply page format settings */
-  applyPageFormat: (format: string, orientation: 'portrait' | 'landscape', margin: number) => void;
+  applyPageFormat: (format: string, orientation: 'portrait' | 'landscape', margin: number) => void
 
   /** Set page orientation */
-  setOrientation: (orientation: 'portrait' | 'landscape') => void;
+  setOrientation: (orientation: 'portrait' | 'landscape') => void
 
   /** Set page margins */
-  setMargin: (margin: number) => void;
+  setMargin: (margin: number) => void
 
   /** Insert page break at cursor position */
-  insertPageBreak?: () => void;
+  insertPageBreak?: () => void
 
   /** Open print preview */
-  printPreview: () => void;
+  printPreview: () => void
 
   /** Print the document directly */
-  print?: () => void;
+  print?: () => void
 
   /** Export content as PDF */
-  exportPDF: () => void;
+  exportPDF: () => void
 
   /** Export content as Word document */
-  exportDOCX?: () => void;
+  exportDOCX?: () => void
 
   /** Add header to document */
-  addHeader?: (content: string) => void;
+  addHeader?: (content: string) => void
 
   /** Add footer to document */
-  addFooter?: (content: string) => void;
+  addFooter?: (content: string) => void
 
   /** Get page count in the document */
-  getPageCount?: () => number;
+  getPageCount?: () => number
 
   /** Update all page numbers in the document */
-  updatePageNumbers?: () => void;
+  updatePageNumbers?: () => void
 
   /** Add watermark to all pages */
-  addWatermark?: (text: string) => void;
+  addWatermark?: (text: string) => void
 }

@@ -1,7 +1,7 @@
-import ApplicationDetail from '@/pages/applications/ui/application-detail';
+import ApplicationDetail from '@/pages/applications/ui/application-detail'
 
 const AttestationDetail = () => {
-  return <ApplicationDetail showAttestationActions={true} />;
-};
+  return <ApplicationDetail showAttestationActions={true} />
+}
 
-export default AttestationDetail;
+export default AttestationDetail

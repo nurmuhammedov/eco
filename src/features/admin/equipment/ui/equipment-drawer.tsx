@@ -1,19 +1,19 @@
-import { Fragment } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useUIActionLabel } from '@/shared/hooks';
-import { Input } from '@/shared/components/ui/input';
-import { useEquipmentForm } from '../model/use-equipment-form';
-import { useEquipmentDrawer } from '@/shared/hooks/entity-hooks';
-import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { Fragment } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useUIActionLabel } from '@/shared/hooks'
+import { Input } from '@/shared/components/ui/input'
+import { useEquipmentForm } from '../model/use-equipment-form'
+import { useEquipmentDrawer } from '@/shared/hooks/entity-hooks'
+import { BaseDrawer } from '@/shared/components/common/base-drawer'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 
 export const EquipmentDrawer = () => {
-  const { t } = useTranslation();
-  const { isOpen, onClose, mode, isCreate } = useEquipmentDrawer();
-  const modeState = useUIActionLabel(mode);
-  const { form, onSubmit, isPending, isFetching, equipmentTypeOptions } = useEquipmentForm();
+  const { t } = useTranslation()
+  const { isOpen, onClose, mode, isCreate } = useEquipmentDrawer()
+  const modeState = useUIActionLabel(mode)
+  const { form, onSubmit, isPending, isFetching, equipmentTypeOptions } = useEquipmentForm()
 
   return (
     <BaseDrawer
@@ -43,7 +43,7 @@ export const EquipmentDrawer = () => {
                         value={field.value}
                         onValueChange={(value) => {
                           if (value) {
-                            field.onChange(value);
+                            field.onChange(value)
                           }
                         }}
                       >
@@ -76,5 +76,5 @@ export const EquipmentDrawer = () => {
         </div>
       </Form>
     </BaseDrawer>
-  );
-};
+  )
+}

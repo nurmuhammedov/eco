@@ -1,18 +1,18 @@
-import { Settings2 } from 'lucide-react';
-import { Table } from '@tanstack/react-table';
-import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { Settings2 } from 'lucide-react'
+import { Table } from '@tanstack/react-table'
+import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
 
-import { Button } from '@/shared/components/ui/button';
+import { Button } from '@/shared/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from '@/shared/components/ui/dropdown-menu.tsx';
+} from '@/shared/components/ui/dropdown-menu.tsx'
 
 interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>;
+  table: Table<TData>
 }
 
 export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
@@ -34,15 +34,15 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
-                className="capitalize mr-auto"
+                className="mr-auto capitalize"
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
                 {column.id}
               </DropdownMenuCheckboxItem>
-            );
+            )
           })}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

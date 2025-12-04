@@ -1,6 +1,6 @@
-import { EIMZOClient as client } from './e-imzo-client.js';
+import { EIMZOClient as client } from './e-imzo-client.js'
 
-const CAPIWS = window.CAPIWS;
+const CAPIWS = window.CAPIWS
 
 /**
  * @typedef Cert
@@ -42,19 +42,19 @@ export default class EIMZO {
     'A7BCFA5D490B351BE0754130DF03A068F855DB4333D43921125B9CF2670EF6A40370C646B90401955E1F7BC9CDBF59CE0B2C5467D820BE189C845D0B79CFC96F',
     'null',
     'E0A205EC4E7B78BBB56AFF83A733A1BB9FD39D562E67978CC5E7D73B0951DB1954595A20672A63332535E13CC6EC1E1FC8857BB09E0855D7E76E411B6FA16E9D',
-  ];
+  ]
 
   /**
    * @type {?Cert}
    */
-  _loadedKey = null;
+  _loadedKey = null
 
   get loadedKey() {
-    return this._loadedKey;
+    return this._loadedKey
   }
 
   set loadedKey(value) {
-    this._loadedKey = value;
+    this._loadedKey = value
   }
 
   /**
@@ -64,19 +64,19 @@ export default class EIMZO {
     return new Promise((resolve, reject) => {
       client.checkVersion(
         function (major, minor) {
-          resolve({ major, minor });
+          resolve({ major, minor })
         },
         function (error, message) {
-          reject(error, message);
-        },
-      );
-    });
+          reject(error, message)
+        }
+      )
+    })
   }
 
   async installApiKeys() {
     return new Promise((resolve, reject) => {
-      client.installApiKeys(resolve, reject);
-    });
+      client.installApiKeys(resolve, reject)
+    })
   }
 
   /**
@@ -86,19 +86,19 @@ export default class EIMZO {
     return new Promise((resolve, reject) => {
       client.listAllUserKeys(
         function (cert, index) {
-          return 'cert-' + cert.serialNumber + '-' + index;
+          return 'cert-' + cert.serialNumber + '-' + index
         },
         function (index, cert) {
-          return cert;
+          return cert
         },
         function (items, firstId) {
-          resolve(items, firstId);
+          resolve(items, firstId)
         },
         function (error, reason) {
-          reject(error, reason);
-        },
-      );
-    });
+          reject(error, reason)
+        }
+      )
+    })
   }
 
   /**
@@ -110,12 +110,12 @@ export default class EIMZO {
       client.loadKey(
         cert,
         (id) => {
-          this._loadedKey = cert;
-          resolve({ cert, id });
+          this._loadedKey = cert
+          resolve({ cert, id })
         },
-        reject,
-      );
-    });
+        reject
+      )
+    })
   }
 
   /**
@@ -132,14 +132,14 @@ export default class EIMZO {
         },
         (event, data) => {
           if (data.success) {
-            resolve(data.certificates);
+            resolve(data.certificates)
           } else {
-            reject('Failed');
+            reject('Failed')
           }
         },
-        reject,
-      );
-    });
+        reject
+      )
+    })
   }
 
   /**
@@ -147,12 +147,12 @@ export default class EIMZO {
    * @return {Promise<?string>}
    */
   async getMainCertificate(loadKeyId) {
-    let result = await this.getCertificateChain(loadKeyId);
+    let result = await this.getCertificateChain(loadKeyId)
 
     if (Array.isArray(result) && result.length > 0) {
-      return result[0];
+      return result[0]
     }
-    return null;
+    return null
   }
 
   /**
@@ -165,14 +165,14 @@ export default class EIMZO {
         { name: 'get_certificate_info', arguments: [cert] },
         (event, data) => {
           if (data.success) {
-            resolve(data.certificate_info);
+            resolve(data.certificate_info)
           } else {
-            reject('Failed');
+            reject('Failed')
           }
         },
-        reject,
-      );
-    });
+        reject
+      )
+    })
   }
 
   /**
@@ -181,7 +181,7 @@ export default class EIMZO {
    * @return {Promise<SignPkcs7Result>}
    */
   async signPkcs7(cert, content) {
-    let loadKeyResult = await this.loadKey(cert);
+    let loadKeyResult = await this.loadKey(cert)
 
     return new Promise((resolve, reject) => {
       CAPIWS.callFunction(
@@ -192,14 +192,14 @@ export default class EIMZO {
         },
         (event, data) => {
           if (data.success) {
-            resolve(data);
+            resolve(data)
           } else {
-            reject('Failed');
+            reject('Failed')
           }
         },
-        reject,
-      );
-    });
+        reject
+      )
+    })
   }
 
   /**
@@ -215,11 +215,11 @@ export default class EIMZO {
         content,
         timestamper,
         (/* string */ pkcs7) => {
-          resolve(pkcs7);
+          resolve(pkcs7)
         },
-        reject,
-      );
-    });
+        reject
+      )
+    })
   }
 
   /**
@@ -236,14 +236,14 @@ export default class EIMZO {
         },
         function (event, data) {
           if (data.success) {
-            resolve(data.timestamp_request_64);
+            resolve(data.timestamp_request_64)
           } else {
-            reject('Failed');
+            reject('Failed')
           }
         },
-        reject,
-      );
-    });
+        reject
+      )
+    })
   }
 
   /**
@@ -252,15 +252,15 @@ export default class EIMZO {
    */
   addApiKey(domain, key) {
     if (!this.apiKeys.includes(domain)) {
-      this.apiKeys.push(domain, key);
+      this.apiKeys.push(domain, key)
     }
   }
 
   async install() {
-    await this.checkVersion();
+    await this.checkVersion()
 
-    client.API_KEYS = this.apiKeys;
+    client.API_KEYS = this.apiKeys
 
-    await this.installApiKeys();
+    await this.installApiKeys()
   }
 }

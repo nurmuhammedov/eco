@@ -1,23 +1,23 @@
-import { Fragment, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Input } from '@/shared/components/ui/input';
-import { useUIActionLabel } from '@/shared/hooks';
-import { useDistrictForm } from '../model/use-district-form';
-import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
-import { InputNumber } from '@/shared/components/ui/input-number';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { Fragment, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Input } from '@/shared/components/ui/input'
+import { useUIActionLabel } from '@/shared/hooks'
+import { useDistrictForm } from '../model/use-district-form'
+import { useDistrictDrawer } from '@/shared/hooks/entity-hooks'
+import { InputNumber } from '@/shared/components/ui/input-number'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { BaseDrawer } from '@/shared/components/common/base-drawer'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 
 export const DistrictDrawer = () => {
-  const { t } = useTranslation('common');
-  const { isOpen, onClose, mode, isCreate } = useDistrictDrawer();
-  const modeState = useUIActionLabel(mode);
-  const { form, onSubmit, isPending, isFetching, regions } = useDistrictForm();
+  const { t } = useTranslation('common')
+  const { isOpen, onClose, mode, isCreate } = useDistrictDrawer()
+  const modeState = useUIActionLabel(mode)
+  const { form, onSubmit, isPending, isFetching, regions } = useDistrictForm()
 
-  const regionOptions = useMemo(() => getSelectOptions(regions), [regions]);
+  const regionOptions = useMemo(() => getSelectOptions(regions), [regions])
 
   return (
     <BaseDrawer
@@ -47,10 +47,10 @@ export const DistrictDrawer = () => {
                         value={field.value}
                         onValueChange={(value) => {
                           if (value) {
-                            field.onChange(value);
-                            form.setValue('name', '');
-                            form.setValue('soato', '');
-                            form.setValue('number', '');
+                            field.onChange(value)
+                            form.setValue('name', '')
+                            form.setValue('soato', '')
+                            form.setValue('number', '')
                           }
                         }}
                       >
@@ -110,5 +110,5 @@ export const DistrictDrawer = () => {
         </div>
       </Form>
     </BaseDrawer>
-  );
-};
+  )
+}

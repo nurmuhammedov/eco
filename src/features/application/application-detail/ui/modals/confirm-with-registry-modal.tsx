@@ -1,5 +1,5 @@
-import { useConfirmDocument } from '@/features/application/application-detail/hooks/mutations/se-confirm-document';
-import { Button } from '@/shared/components/ui/button';
+import { useConfirmDocument } from '@/features/application/application-detail/hooks/mutations/se-confirm-document'
+import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -8,35 +8,35 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'; // RadioGroup import qilindi
-import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
-import { z } from 'zod';
+} from '@/shared/components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group' // RadioGroup import qilindi
+import { zodResolver } from '@hookform/resolvers/zod'
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import { useParams } from 'react-router-dom'
+import { z } from 'zod'
 
 // Schema majburiy enum (string) qilib o'zgartirildi
 const schema = z.object({
   shouldRegister: z.enum(['true', 'false'], {
     required_error: 'Iltimos, variantlardan birini tanlang.',
   }),
-});
+})
 
 interface ConfirmWithRegistryModalProps {
-  documentId: string;
+  documentId: string
 }
 
 const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ documentId }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const { id: appealId } = useParams<{ id: string }>();
-  const { mutate: confirmDocument, isPending } = useConfirmDocument();
+  const [isOpen, setIsOpen] = React.useState(false)
+  const { id: appealId } = useParams<{ id: string }>()
+  const { mutate: confirmDocument, isPending } = useConfirmDocument()
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     // defaultValues olib tashlandi, shunda boshida hech qaysi tanlanmaydi
-  });
+  })
 
   const onSubmit = (data: z.infer<typeof schema>) => {
     confirmDocument(
@@ -47,19 +47,19 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
       },
       {
         onSuccess: () => {
-          setIsOpen(false);
-          form.reset(); // Formani tozalash
+          setIsOpen(false)
+          form.reset() // Formani tozalash
         },
-      },
-    );
-  };
+      }
+    )
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="success">Tasdiqlandi</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] max-h-[95vh] overflow-y-auto">
+      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Reyestrga qo‘shilsinmi?</DialogTitle>
         </DialogHeader>
@@ -76,13 +76,13 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
                       defaultValue={field.value}
                       className="flex flex-col space-y-1"
                     >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-3">
                         <FormControl>
                           <RadioGroupItem value="true" />
                         </FormControl>
                         <FormLabel className="font-normal">Ha</FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-3">
                         <FormControl>
                           <RadioGroupItem value="false" />
                         </FormControl>
@@ -108,7 +108,7 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default ConfirmWithRegistryModal;
+export default ConfirmWithRegistryModal

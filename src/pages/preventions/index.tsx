@@ -1,19 +1,19 @@
-import { usePreventions } from '@/entities/prevention';
-import { UserRoles } from '@/entities/user';
-import { PreventionListTable } from '@/features/prevention';
-import Filter from '@/shared/components/common/filter';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { PreventionFileHandler } from './ui/prevention-file-handler';
+import { usePreventions } from '@/entities/prevention'
+import { UserRoles } from '@/entities/user'
+import { PreventionListTable } from '@/features/prevention'
+import Filter from '@/shared/components/common/filter'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { PreventionFileHandler } from './ui/prevention-file-handler'
 
 export default function PreventionsPage() {
-  const { paramsObject, addParams } = useCustomSearchParams();
-  const { user } = useAuth();
+  const { paramsObject, addParams } = useCustomSearchParams()
+  const { user } = useAuth()
   const isPassed =
-    paramsObject.isPassed || user?.role === UserRoles.LEGAL || user?.role === UserRoles.INDIVIDUAL ? 'true' : 'false';
-  const currentYear = new Date().getFullYear();
+    paramsObject.isPassed || user?.role === UserRoles.LEGAL || user?.role === UserRoles.INDIVIDUAL ? 'true' : 'false'
+  const currentYear = new Date().getFullYear()
 
   const { data: preventionsData, isLoading } = usePreventions({
     ...paramsObject,
@@ -21,23 +21,23 @@ export default function PreventionsPage() {
     year: !isPassed ? paramsObject.year || currentYear : undefined,
     size: paramsObject?.size || '10',
     page: paramsObject.page || '1',
-  });
+  })
 
   const handleTabChange = (value: string) => {
-    addParams({ isPassed: value, year: String(currentYear) }, 'page');
-  };
+    addParams({ isPassed: value, year: String(currentYear) }, 'page')
+  }
 
   const handleYearChange = (value: string) => {
-    addParams({ year: value }, 'page');
-  };
+    addParams({ year: value }, 'page')
+  }
 
-  const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
+  const years = Array.from({ length: 10 }, (_, i) => currentYear - i)
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-4">Profilaktika</h1>
+      <h1 className="mb-4 text-2xl font-semibold">Profilaktika</h1>
       <Tabs value={String(isPassed)} onValueChange={handleTabChange}>
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <TabsList>
             {user?.role !== UserRoles.LEGAL && user?.role !== UserRoles.INDIVIDUAL && (
               <TabsTrigger value="false">Tadbir o'tkazilmaganlar</TabsTrigger>
@@ -72,5 +72,5 @@ export default function PreventionsPage() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

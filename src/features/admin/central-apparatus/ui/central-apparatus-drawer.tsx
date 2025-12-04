@@ -1,17 +1,17 @@
-import { useTranslation } from 'react-i18next';
-import { useUIActionLabel } from '@/shared/hooks';
-import { Input } from '@/shared/components/ui/input';
-import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { useCentralApparatusDrawer } from '@/shared/hooks/entity-hooks';
-import { useCentralApparatusForm } from '../model/use-central-apparatus-form';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { useTranslation } from 'react-i18next'
+import { useUIActionLabel } from '@/shared/hooks'
+import { Input } from '@/shared/components/ui/input'
+import { BaseDrawer } from '@/shared/components/common/base-drawer'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
+import { useCentralApparatusDrawer } from '@/shared/hooks/entity-hooks'
+import { useCentralApparatusForm } from '../model/use-central-apparatus-form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 
 export const CentralApparatusDrawer = () => {
-  const { t } = useTranslation('common');
-  const { isOpen, onClose, mode } = useCentralApparatusDrawer();
-  const { form, onSubmit, isPending, isCreate, isFetching } = useCentralApparatusForm();
-  const modeState = useUIActionLabel(mode);
+  const { t } = useTranslation('common')
+  const { isOpen, onClose, mode } = useCentralApparatusDrawer()
+  const { form, onSubmit, isPending, isCreate, isFetching } = useCentralApparatusForm()
+  const modeState = useUIActionLabel(mode)
 
   return (
     <BaseDrawer
@@ -45,5 +45,5 @@ export const CentralApparatusDrawer = () => {
         </div>
       </Form>
     </BaseDrawer>
-  );
-};
+  )
+}

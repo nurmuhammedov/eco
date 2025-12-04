@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom'
 
 const BlankLayout = () => {
   // Bu yerda hech qanday sidebar, header yoki boshqa elementlar yo'q
@@ -6,7 +6,7 @@ const BlankLayout = () => {
     <main>
       <Outlet />
     </main>
-  );
-};
+  )
+}
 
-export default BlankLayout;
+export default BlankLayout

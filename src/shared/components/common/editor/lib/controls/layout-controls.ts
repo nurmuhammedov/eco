@@ -8,10 +8,10 @@ export const registerLayoutControls = (editor: any): void => {
     tooltip: 'Apply table styles',
     icon: 'table',
     fetch: (callback: any) => {
-      const table = editor.dom.getParent(editor.selection.getStart(), 'table');
+      const table = editor.dom.getParent(editor.selection.getStart(), 'table')
       if (!table) {
-        callback([]);
-        return;
+        callback([])
+        return
       }
 
       const items = [
@@ -19,46 +19,46 @@ export const registerLayoutControls = (editor: any): void => {
           type: 'menuitem',
           text: 'Plain Table',
           onAction: () => {
-            editor.dom.removeClass(table, 'table-striped table-bordered table-hover table-condensed');
+            editor.dom.removeClass(table, 'table-striped table-bordered table-hover table-condensed')
           },
         },
         {
           type: 'menuitem',
           text: 'Striped Rows',
           onAction: () => {
-            editor.dom.removeClass(table, 'table-bordered table-hover table-condensed');
-            editor.dom.addClass(table, 'table-striped');
+            editor.dom.removeClass(table, 'table-bordered table-hover table-condensed')
+            editor.dom.addClass(table, 'table-striped')
           },
         },
         {
           type: 'menuitem',
           text: 'Bordered',
           onAction: () => {
-            editor.dom.removeClass(table, 'table-striped table-hover table-condensed');
-            editor.dom.addClass(table, 'table-bordered');
+            editor.dom.removeClass(table, 'table-striped table-hover table-condensed')
+            editor.dom.addClass(table, 'table-bordered')
           },
         },
         {
           type: 'menuitem',
           text: 'Hover Effect',
           onAction: () => {
-            editor.dom.removeClass(table, 'table-striped table-bordered table-condensed');
-            editor.dom.addClass(table, 'table-hover');
+            editor.dom.removeClass(table, 'table-striped table-bordered table-condensed')
+            editor.dom.addClass(table, 'table-hover')
           },
         },
         {
           type: 'menuitem',
           text: 'Condensed',
           onAction: () => {
-            editor.dom.removeClass(table, 'table-striped table-bordered table-hover');
-            editor.dom.addClass(table, 'table-condensed');
+            editor.dom.removeClass(table, 'table-striped table-bordered table-hover')
+            editor.dom.addClass(table, 'table-condensed')
           },
         },
-      ];
+      ]
 
-      callback(items);
+      callback(items)
     },
-  });
+  })
 
   // Register Word-like page layout button
   editor.ui.registry.addMenuButton('pagelayout', {
@@ -114,18 +114,18 @@ export const registerLayoutControls = (editor: any): void => {
                 },
               ],
               onSubmit: (api: any) => {
-                const data = api.getData();
+                const data = api.getData()
 
                 // Apply margins to editor body
-                const body = editor.getBody();
-                body.style.paddingTop = `${data.top}px`;
-                body.style.paddingRight = `${data.right}px`;
-                body.style.paddingBottom = `${data.bottom}px`;
-                body.style.paddingLeft = `${data.left}px`;
+                const body = editor.getBody()
+                body.style.paddingTop = `${data.top}px`
+                body.style.paddingRight = `${data.right}px`
+                body.style.paddingBottom = `${data.bottom}px`
+                body.style.paddingLeft = `${data.left}px`
 
-                api.close();
+                api.close()
               },
-            });
+            })
           },
         },
         {
@@ -174,28 +174,28 @@ export const registerLayoutControls = (editor: any): void => {
                 },
               ],
               onSubmit: (api: any) => {
-                const data = api.getData();
+                const data = api.getData()
 
-                let width = data.width;
-                let height = data.height;
+                let width = data.width
+                let height = data.height
 
                 // Standard paper sizes
                 if (data.pageSize === 'a4') {
-                  width = 210;
-                  height = 297;
+                  width = 210
+                  height = 297
                 } else if (data.pageSize === 'letter') {
-                  width = 215.9;
-                  height = 279.4;
+                  width = 215.9
+                  height = 279.4
                 } else if (data.pageSize === 'legal') {
-                  width = 215.9;
-                  height = 355.6;
+                  width = 215.9
+                  height = 355.6
                 }
 
                 // Set content style for editor
                 // This is just visual and would need additional handling for actual printing
-                const oldStyle = editor.dom.get('mce-page-size');
+                const oldStyle = editor.dom.get('mce-page-size')
                 if (oldStyle) {
-                  editor.dom.remove(oldStyle);
+                  editor.dom.remove(oldStyle)
                 }
 
                 const style = editor.dom.create(
@@ -207,14 +207,14 @@ export const registerLayoutControls = (editor: any): void => {
                     margin: 0 auto;
                     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                     background-color: white;
-                  }`,
-                );
+                  }`
+                )
 
-                editor.getDoc().head.appendChild(style);
+                editor.getDoc().head.appendChild(style)
 
-                api.close();
+                api.close()
               },
-            });
+            })
           },
         },
         {
@@ -249,15 +249,15 @@ export const registerLayoutControls = (editor: any): void => {
                 },
               ],
               onSubmit: (api: any) => {
-                const data = api.getData();
+                const data = api.getData()
 
                 // Change the orientation by swapping width and height
-                const oldStyle = editor.dom.get('mce-page-orientation');
+                const oldStyle = editor.dom.get('mce-page-orientation')
                 if (oldStyle) {
-                  editor.dom.remove(oldStyle);
+                  editor.dom.remove(oldStyle)
                 }
 
-                const style = editor.dom.create('style', { id: 'mce-page-orientation', type: 'text/css' });
+                const style = editor.dom.create('style', { id: 'mce-page-orientation', type: 'text/css' })
 
                 if (data.orientation === 'landscape') {
                   style.innerHTML = `
@@ -265,21 +265,21 @@ export const registerLayoutControls = (editor: any): void => {
                       max-width: 297mm;
                       min-height: 210mm;
                     }
-                  `;
+                  `
                 } else {
                   style.innerHTML = `
                     .mce-content-body {
                       max-width: 210mm;
                       min-height: 297mm;
                     }
-                  `;
+                  `
                 }
 
-                editor.getDoc().head.appendChild(style);
+                editor.getDoc().head.appendChild(style)
 
-                api.close();
+                api.close()
               },
-            });
+            })
           },
         },
         {
@@ -321,30 +321,30 @@ export const registerLayoutControls = (editor: any): void => {
                 },
               ],
               onSubmit: (api: any) => {
-                const data = api.getData();
+                const data = api.getData()
 
                 // Get selected content or create a div around the cursor
-                const selectedContent = editor.selection.getContent();
-                let columnsHtml = '';
+                const selectedContent = editor.selection.getContent()
+                let columnsHtml = ''
 
                 if (selectedContent) {
                   // Wrap selected content in a columns div
-                  columnsHtml = `<div class="mce-columns" style="column-count: ${data.columns}; column-gap: ${data.gap}px;">${selectedContent}</div>`;
-                  editor.selection.setContent(columnsHtml);
+                  columnsHtml = `<div class="mce-columns" style="column-count: ${data.columns}; column-gap: ${data.gap}px;">${selectedContent}</div>`
+                  editor.selection.setContent(columnsHtml)
                 } else {
                   // Insert an empty columns div
-                  columnsHtml = `<div class="mce-columns" style="column-count: ${data.columns}; column-gap: ${data.gap}px;"><p>Type your content here...</p></div>`;
-                  editor.insertContent(columnsHtml);
+                  columnsHtml = `<div class="mce-columns" style="column-count: ${data.columns}; column-gap: ${data.gap}px;"><p>Type your content here...</p></div>`
+                  editor.insertContent(columnsHtml)
                 }
 
-                api.close();
+                api.close()
               },
-            });
+            })
           },
         },
-      ];
+      ]
 
-      callback(items);
+      callback(items)
     },
-  });
-};
+  })
+}

@@ -1,8 +1,8 @@
-import Icon from '@/shared/components/common/icon';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/components/ui/table';
-import { useCustomSearchParams } from '@/shared/hooks';
-import { cn } from '@/shared/lib/utils';
-import { ResponseData } from '@/shared/types/api';
+import Icon from '@/shared/components/common/icon'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/components/ui/table'
+import { useCustomSearchParams } from '@/shared/hooks'
+import { cn } from '@/shared/lib/utils'
+import { ResponseData } from '@/shared/types/api'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -15,36 +15,36 @@ import {
   SortingState,
   useReactTable,
   VisibilityState,
-} from '@tanstack/react-table';
-import * as React from 'react';
-import { Fragment } from 'react';
-import { DataTablePagination } from './data-table-pagination';
-import { getCommonPinningStyles } from './models/get-common-pinning';
-import { ColumnFilterInput } from '@/shared/components/common/data-table/column-filter-input';
-import { DateDisableStrategy } from '@/shared/components/ui/datepicker';
+} from '@tanstack/react-table'
+import * as React from 'react'
+import { Fragment } from 'react'
+import { DataTablePagination } from './data-table-pagination'
+import { getCommonPinningStyles } from './models/get-common-pinning'
+import { ColumnFilterInput } from '@/shared/components/common/data-table/column-filter-input'
+import { DateDisableStrategy } from '@/shared/components/ui/datepicker'
 
 export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
-  filterKey?: string;
-  filterType?: 'search' | 'select' | 'date' | 'number';
-  filterOptions?: { id: string; name: string }[];
-  filterDateStrategy?: DateDisableStrategy;
-  filterMaxLength?: number;
-};
+  filterKey?: string
+  filterType?: 'search' | 'select' | 'date' | 'number'
+  filterOptions?: { id: string; name: string }[]
+  filterDateStrategy?: DateDisableStrategy
+  filterMaxLength?: number
+}
 
 interface DataTableProps<TData, TValue> {
-  className?: string;
-  isLoading?: boolean;
-  isPaginated?: boolean;
-  pageQuery?: 'page' | 'p';
-  sizeQuery?: string;
-  headerCenter?: boolean;
-  pageSizeOptions?: number[];
-  columns: ExtendedColumnDef<TData, TValue>[];
-  data: TData[] | ResponseData<TData>;
-  onPageChange?: (page: number) => void;
-  onPageSizeChange?: (size: number) => void;
-  showNumeration?: boolean;
-  showFilters?: boolean;
+  className?: string
+  isLoading?: boolean
+  isPaginated?: boolean
+  pageQuery?: 'page' | 'p'
+  sizeQuery?: string
+  headerCenter?: boolean
+  pageSizeOptions?: number[]
+  columns: ExtendedColumnDef<TData, TValue>[]
+  data: TData[] | ResponseData<TData>
+  onPageChange?: (page: number) => void
+  onPageSizeChange?: (size: number) => void
+  showNumeration?: boolean
+  showFilters?: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -63,32 +63,32 @@ export function DataTable<TData, TValue>({
   const {
     paramsObject: { page = 1, size = 10 },
     addParams,
-  } = useCustomSearchParams();
-  const isContentData = data && typeof data === 'object' && 'content' in data;
-  const tableData = isContentData ? data.content : data;
+  } = useCustomSearchParams()
+  const isContentData = data && typeof data === 'object' && 'content' in data
+  const tableData = isContentData ? data.content : data
 
-  const pageCount = isContentData ? data?.page?.totalPages : undefined;
+  const pageCount = isContentData ? data?.page?.totalPages : undefined
 
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = React.useState({})
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const handlePageChange = (page: number) => {
     if (onPageChange) {
-      onPageChange(page);
+      onPageChange(page)
     } else if (isContentData) {
-      addParams({ page });
+      addParams({ page })
     }
-  };
+  }
 
   const handlePageSizeChange = (size: number) => {
     if (onPageSizeChange) {
-      onPageSizeChange(size);
+      onPageSizeChange(size)
     } else if (isContentData) {
-      addParams({ size }, 'page');
+      addParams({ size }, 'page')
     }
-  };
+  }
 
   const table = useReactTable({
     data: tableData,
@@ -112,11 +112,11 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-  });
+  })
 
   return (
     <Fragment>
-      <div className={cn('relative rounded-md bg-white overflow-auto', className)}>
+      <div className={cn('relative overflow-auto rounded-md bg-white', className)}>
         <Table className="p-2">
           <TableHeader className="p-2 font-semibold text-black">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -127,7 +127,7 @@ export function DataTable<TData, TValue>({
                       'w-[50px]',
                       showFilters
                         ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
-                        : 'first:rounded-l-lg! last:rounded-r-lg!',
+                        : 'first:rounded-l-lg! last:rounded-r-lg!'
                     )}
                     style={{ width: '50px', maxWidth: '50px' }}
                   >
@@ -141,7 +141,7 @@ export function DataTable<TData, TValue>({
                     className={cn(
                       showFilters
                         ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
-                        : 'first:rounded-l-lg! last:rounded-r-lg!',
+                        : 'first:rounded-l-lg! last:rounded-r-lg!'
                     )}
                     style={{
                       ...getCommonPinningStyles({ column: header.column }),
@@ -155,10 +155,10 @@ export function DataTable<TData, TValue>({
             ))}
 
             {showFilters && (
-              <TableRow className="!bg-white hover:!bg-white even:!bg-white border-neutral-200">
+              <TableRow className="border-neutral-200 !bg-white even:!bg-white hover:!bg-white">
                 {showNumeration && (
                   <TableHead
-                    className="!bg-white !h-8 !p-0 hover:!bg-white even:!bg-white border-b-2 border-neutral-200"
+                    className="!h-8 border-b-2 border-neutral-200 !bg-white !p-0 even:!bg-white hover:!bg-white"
                     style={{
                       width: '50px',
                       minWidth: '50px',
@@ -167,25 +167,25 @@ export function DataTable<TData, TValue>({
                   />
                 )}
                 {table.getAllColumns().map((column) => {
-                  const columnDef = column.columnDef as ExtendedColumnDef<TData, TValue>;
-                  const key = columnDef.filterKey;
+                  const columnDef = column.columnDef as ExtendedColumnDef<TData, TValue>
+                  const key = columnDef.filterKey
 
                   if (!key || key === 'actions')
                     return (
                       <TableHead
                         key={column.id}
-                        className="!bg-white !p-0 !h-8 hover:!bg-white even:!bg-white border-b-2 border-neutral-200"
+                        className="!h-8 border-b-2 border-neutral-200 !bg-white !p-0 even:!bg-white hover:!bg-white"
                       ></TableHead>
-                    );
+                    )
 
                   return (
                     <TableHead
                       key={column.id}
-                      className="!p-0 !h-8 !bg-white hover:!bg-white even:!bg-white border-b-2 border-neutral-200"
+                      className="!h-8 border-b-2 border-neutral-200 !bg-white !p-0 even:!bg-white hover:!bg-white"
                     >
                       <ColumnFilterInput column={columnDef} />
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             )}
@@ -215,7 +215,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow className="hover:bg-white">
                 <TableCell colSpan={columns?.length + (showNumeration ? 1 : 0)} className="text-center">
-                  <div className="flex flex-col items-center gap-4 justify-center h-80 w-full">
+                  <div className="flex h-80 w-full flex-col items-center justify-center gap-4">
                     <Icon name="no-data" size={160} />
                     <p className="font-medium">Hech qanday maʼlumot topilmadi!</p>
                   </div>
@@ -236,5 +236,5 @@ export function DataTable<TData, TValue>({
         />
       )}
     </Fragment>
-  );
+  )
 }

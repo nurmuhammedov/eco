@@ -1,8 +1,8 @@
-import { apiConfig } from '@/shared/api/constants.ts';
-import { Button } from '@/shared/components/ui/button';
-import { isPDFUrl } from '@/shared/lib';
-import { cn } from '@/shared/lib/utils';
-import { useEffect, useRef, useState } from 'react';
+import { apiConfig } from '@/shared/api/constants.ts'
+import { Button } from '@/shared/components/ui/button'
+import { isPDFUrl } from '@/shared/lib'
+import { cn } from '@/shared/lib/utils'
+import { useEffect, useRef, useState } from 'react'
 
 // Zoom darajasi uchun enum
 export enum ZoomLevel {
@@ -26,19 +26,19 @@ export enum ViewMode {
 }
 
 interface PDFViewerProps {
-  title?: string;
-  width?: string;
-  height?: string;
-  className?: string;
-  viewMode?: ViewMode;
-  documentUrl: string;
-  lightMode?: boolean;
-  onLoad?: () => void;
-  showToolbar?: boolean;
-  initialZoom?: ZoomLevel | number;
-  onError?: (error: Error) => void;
-  onViewModeChange?: (mode: ViewMode) => void;
-  onZoomChange?: (zoom: ZoomLevel | number) => void;
+  title?: string
+  width?: string
+  height?: string
+  className?: string
+  viewMode?: ViewMode
+  documentUrl: string
+  lightMode?: boolean
+  onLoad?: () => void
+  showToolbar?: boolean
+  initialZoom?: ZoomLevel | number
+  onError?: (error: Error) => void
+  onViewModeChange?: (mode: ViewMode) => void
+  onZoomChange?: (zoom: ZoomLevel | number) => void
 }
 
 export const PDFViewer = ({
@@ -53,62 +53,62 @@ export const PDFViewer = ({
   onLoad,
   onError,
 }: PDFViewerProps) => {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('PDF faylni yuklashda xatolik yuz berdi');
-  const [key, setKey] = useState<number>(0);
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('PDF faylni yuklashda xatolik yuz berdi')
+  const [key, setKey] = useState<number>(0)
 
   useEffect(() => {
     if (!documentUrl) {
-      setHasError(true);
-      setErrorMessage("PDF URL ko'rsatilmagan");
-      setIsLoading(false);
-      onError?.(new Error("PDF URL ko'rsatilmagan"));
-      return;
+      setHasError(true)
+      setErrorMessage("PDF URL ko'rsatilmagan")
+      setIsLoading(false)
+      onError?.(new Error("PDF URL ko'rsatilmagan"))
+      return
     }
 
     if (!isPDFUrl(documentUrl)) {
-      setHasError(true);
-      setErrorMessage("PDF URL noto'g'ri formatda");
-      setIsLoading(false);
-      onError?.(new Error("PDF URL noto'g'ri formatda"));
-      return;
+      setHasError(true)
+      setErrorMessage("PDF URL noto'g'ri formatda")
+      setIsLoading(false)
+      onError?.(new Error("PDF URL noto'g'ri formatda"))
+      return
     }
 
-    setHasError(false);
-    setIsLoading(true);
-    setKey((prev) => prev + 1);
-  }, [documentUrl, onError]);
+    setHasError(false)
+    setIsLoading(true)
+    setKey((prev) => prev + 1)
+  }, [documentUrl, onError])
 
   const handleIframeLoad = () => {
-    setIsLoading(false);
-    onLoad?.();
-  };
+    setIsLoading(false)
+    onLoad?.()
+  }
 
   const handleIframeError = () => {
-    setHasError(true);
-    setIsLoading(false);
-    onError?.(new Error('PDF faylni yuklashda xatolik yuz berdi'));
-  };
+    setHasError(true)
+    setIsLoading(false)
+    onError?.(new Error('PDF faylni yuklashda xatolik yuz berdi'))
+  }
 
   const handleDownload = () => {
-    window.open(documentUrl, '_blank');
-  };
+    window.open(documentUrl, '_blank')
+  }
 
   const getPdfUrl = () => {
-    if (!documentUrl) return '';
-    const baseUrl = documentUrl.split('#')[0];
-    const toolbarParam = showToolbar ? '1' : '0';
-    const bgColor = lightMode ? '#ffffff' : '#1f1f1f';
-    const params = [`toolbar=${toolbarParam}`, 'navpanes=0', `view=${viewMode}`, `bgcolor=${bgColor}`].join('&');
-    return `${apiConfig.baseURL}${baseUrl}#${params}`;
-  };
+    if (!documentUrl) return ''
+    const baseUrl = documentUrl.split('#')[0]
+    const toolbarParam = showToolbar ? '1' : '0'
+    const bgColor = lightMode ? '#ffffff' : '#1f1f1f'
+    const params = [`toolbar=${toolbarParam}`, 'navpanes=0', `view=${viewMode}`, `bgcolor=${bgColor}`].join('&')
+    return `${apiConfig.baseURL}${baseUrl}#${params}`
+  }
 
   if (hasError) {
     return (
-      <div className="border rounded-lg p-6 bg-red-100 dark:bg-red-200/50 text-red-800">
-        <h3 className="text-lg font-semibold mb-2">Xatolik yuz berdi</h3>
+      <div className="rounded-lg border bg-red-100 p-6 text-red-800 dark:bg-red-200/50">
+        <h3 className="mb-2 text-lg font-semibold">Xatolik yuz berdi</h3>
         <p>{errorMessage}</p>
         {documentUrl && isPDFUrl(documentUrl) && (
           <Button
@@ -119,22 +119,22 @@ export const PDFViewer = ({
           </Button>
         )}
       </div>
-    );
+    )
   }
 
   return (
     <div
       className={cn(
-        'relative w-full overflow-hidden rounded-md shadow border border-gray-200 dark:border-gray-600',
-        className,
+        'relative w-full overflow-hidden rounded-md border border-gray-200 shadow dark:border-gray-600',
+        className
       )}
       style={{ width, height }}
     >
       {isLoading && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-sm dark:bg-gray-900/70">
           <div className="text-center">
-            <div className="inline-block w-8 h-8 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin mb-2"></div>
-            <p className="text-gray-600 dark:text-gray-300 text-sm">PDF yuklanmoqda...</p>
+            <div className="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
+            <p className="text-sm text-gray-600 dark:text-gray-300">PDF yuklanmoqda...</p>
           </div>
         </div>
       )}
@@ -150,10 +150,10 @@ export const PDFViewer = ({
         onError={handleIframeError}
         title={title || 'PDF Viewer'}
         className={cn(
-          'w-full h-full rounded-md transition-opacity duration-300',
-          isLoading ? 'opacity-0' : 'opacity-100',
+          'h-full w-full rounded-md transition-opacity duration-300',
+          isLoading ? 'opacity-0' : 'opacity-100'
         )}
       />
     </div>
-  );
-};
+  )
+}

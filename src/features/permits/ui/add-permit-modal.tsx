@@ -1,24 +1,24 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/shared/components/ui/dialog';
-import { Button } from '@/shared/components/ui/button';
-import { Input } from '@/shared/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { PermitSearchResult } from '@/entities/permit';
-import { useState } from 'react';
-import { Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-import { useAdd } from '@/shared/hooks';
-import { useQueryClient } from '@tanstack/react-query';
-import { tabs } from '@/features/permits/ui/permit-tabs';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types';
-import FileLink from '@/shared/components/common/file-link';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/shared/components/ui/dialog'
+import { Button } from '@/shared/components/ui/button'
+import { Input } from '@/shared/components/ui/input'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { PermitSearchResult } from '@/entities/permit'
+import { useState } from 'react'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { useAdd } from '@/shared/hooks'
+import { useQueryClient } from '@tanstack/react-query'
+import { tabs } from '@/features/permits/ui/permit-tabs'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import FileLink from '@/shared/components/common/file-link'
 
 interface AddPermitModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 const searchSchema = z.object({
@@ -29,21 +29,21 @@ const searchSchema = z.object({
       message: 'STIR (JSHSHIR) faqat 9 yoki 14 xonali bo‘lishi kerak',
     }),
   regNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majbury maydon!'),
-});
+})
 
 const fileSchema = z.object({
   filePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Fayl yuklash majburiy!'),
-});
+})
 
-type SearchFormValues = z.infer<typeof searchSchema>;
-type FileFormValues = z.infer<typeof fileSchema>;
+type SearchFormValues = z.infer<typeof searchSchema>
+type FileFormValues = z.infer<typeof fileSchema>
 
 export const SearchResultDisplay = ({
   data,
   type = 'modal',
 }: {
-  data: PermitSearchResult;
-  type?: 'detail' | 'modal';
+  data: PermitSearchResult
+  type?: 'detail' | 'modal'
 }) => {
   const infoRows = [
     { label: 'Ro‘yxat ID raqami', value: data.registerId },
@@ -75,71 +75,71 @@ export const SearchResultDisplay = ({
     ...(type === 'detail'
       ? [{ label: 'Fayl', value: data?.filePath && <FileLink url={data?.filePath} className={'mb-1'} /> }]
       : []),
-  ];
+  ]
 
   return (
-    <div className="mt-4 border rounded-md p-4 bg-muted/30">
+    <div className="bg-muted/30 mt-4 rounded-md border p-4">
       <div className="grid grid-cols-1 gap-y-2">
         {infoRows.map((row) => (
           <div key={row.label} className={'flex flex-row gap-1'}>
-            <div className="text-sm font-semibold text-black flex-2" style={{ whiteSpace: 'nowrap' }}>
+            <div className="flex-2 text-sm font-semibold text-black" style={{ whiteSpace: 'nowrap' }}>
               {row.label}:
             </div>
-            <div className="text-sm font-medium text-muted-foreground flex-3">{row.value}</div>
+            <div className="text-muted-foreground flex-3 text-sm font-medium">{row.value}</div>
           </div>
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
-  const [searchResult, setSearchResult] = useState<PermitSearchResult | null>(null);
-  const queryClient = useQueryClient();
+  const [searchResult, setSearchResult] = useState<PermitSearchResult | null>(null)
+  const queryClient = useQueryClient()
 
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchSchema),
     defaultValues: { stir: '', regNumber: '' },
-  });
+  })
 
   const fileForm = useForm<FileFormValues>({
     resolver: zodResolver(fileSchema),
     defaultValues: { filePath: '' },
-  });
+  })
 
-  const { mutateAsync: searchPermit, isPending } = useAdd<any, any, any>('/integration/iip/individual/license', '');
-  const { mutateAsync: addPermit, isPending: isAddPermitLoading } = useAdd<any, any, any>('/permits/individual');
-  const { mutateAsync: addLegalPermit, isPending: isAddLegalPermitLoading } = useAdd<any, any, any>('/permits/legal');
+  const { mutateAsync: searchPermit, isPending } = useAdd<any, any, any>('/integration/iip/individual/license', '')
+  const { mutateAsync: addPermit, isPending: isAddPermitLoading } = useAdd<any, any, any>('/permits/individual')
+  const { mutateAsync: addLegalPermit, isPending: isAddLegalPermitLoading } = useAdd<any, any, any>('/permits/legal')
   const { mutateAsync: searchPermitLegal, isPending: isPendingLegal } = useAdd<any, any, any>(
     '/integration/iip/legal/license',
-    '',
-  );
+    ''
+  )
 
   const onSubmit = (values: SearchFormValues) => {
-    setSearchResult(null);
+    setSearchResult(null)
     if (values?.stir?.length === 9) {
       searchPermitLegal({ tin: values?.stir, registerNumber: values?.regNumber }).then((data) => {
-        setSearchResult(data?.data);
-        toast.success('Muvaffaqiyatli topildi!');
-      });
+        setSearchResult(data?.data)
+        toast.success('Muvaffaqiyatli topildi!')
+      })
     } else {
       searchPermit({ pin: values?.stir, registerNumber: values?.regNumber }).then((data) => {
-        setSearchResult(data?.data);
-        toast.success('Muvaffaqiyatli topildi!');
-      });
+        setSearchResult(data?.data)
+        toast.success('Muvaffaqiyatli topildi!')
+      })
     }
-  };
+  }
 
   const handleAdd = async () => {
-    const searchValues = form.getValues();
-    const fileValid = await fileForm.trigger();
+    const searchValues = form.getValues()
+    const fileValid = await fileForm.trigger()
 
     if (!fileValid) {
-      toast.error('Iltimos, faylni yuklang!');
-      return;
+      toast.error('Iltimos, faylni yuklang!')
+      return
     }
 
-    const { filePath } = fileForm.getValues();
+    const { filePath } = fileForm.getValues()
 
     if (searchValues.stir.length === 9) {
       addLegalPermit({
@@ -147,33 +147,33 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
         registerNumber: searchValues.regNumber,
         filePath,
       }).then(async () => {
-        handleClose();
-        await queryClient.invalidateQueries({ queryKey: ['/permits'] });
-        await queryClient.invalidateQueries({ queryKey: ['/permits/count'] });
-      });
+        handleClose()
+        await queryClient.invalidateQueries({ queryKey: ['/permits'] })
+        await queryClient.invalidateQueries({ queryKey: ['/permits/count'] })
+      })
     } else {
       addPermit({
         pin: searchValues.stir,
         registerNumber: searchValues.regNumber,
         filePath,
       }).then(async () => {
-        handleClose();
-        await queryClient.invalidateQueries({ queryKey: ['/permits'] });
-        await queryClient.invalidateQueries({ queryKey: ['/permits/count'] });
-      });
+        handleClose()
+        await queryClient.invalidateQueries({ queryKey: ['/permits'] })
+        await queryClient.invalidateQueries({ queryKey: ['/permits/count'] })
+      })
     }
-  };
+  }
 
   const handleClose = () => {
-    form.reset();
-    fileForm.reset();
-    setSearchResult(null);
-    onOpenChange(false);
-  };
+    form.reset()
+    fileForm.reset()
+    setSearchResult(null)
+    onOpenChange(false)
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[800px] max-h-[95vh] overflow-y-auto">
+      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[800px]">
         <DialogHeader>
           <DialogTitle>Qo‘shish</DialogTitle>
         </DialogHeader>
@@ -248,9 +248,9 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
             <DialogFooter className="mt-4 sm:justify-center">
               <Button
                 onClick={() => {
-                  form.reset();
-                  fileForm.reset();
-                  setSearchResult(null);
+                  form.reset()
+                  fileForm.reset()
+                  setSearchResult(null)
                 }}
                 type="button"
                 variant="outline"
@@ -271,5 +271,5 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
         )}
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

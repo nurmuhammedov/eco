@@ -1,6 +1,6 @@
-import { getTime } from '@/shared/lib/get-time';
-import { useQuery } from '@tanstack/react-query';
-import { childEquipmentTypesAPI } from '@/shared/api/dictionaries';
+import { getTime } from '@/shared/lib/get-time'
+import { useQuery } from '@tanstack/react-query'
+import { childEquipmentTypesAPI } from '@/shared/api/dictionaries'
 
 export const useChildEquipmentTypes = (equipmentType?: string) => {
   return useQuery({
@@ -8,5 +8,5 @@ export const useChildEquipmentTypes = (equipmentType?: string) => {
     queryKey: ['child equipment types', equipmentType],
     staleTime: getTime(1, 'week'),
     queryFn: () => childEquipmentTypesAPI.list(equipmentType),
-  });
-};
+  })
+}

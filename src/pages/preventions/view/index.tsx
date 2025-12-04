@@ -1,37 +1,37 @@
-import { usePreventionDetail } from '@/entities/prevention';
-import { GoBack } from '@/shared/components/common';
-import { DetailCardAccordion } from '@/shared/components/common/detail-card';
-import DetailRow from '@/shared/components/common/detail-row';
-import { useParams } from 'react-router-dom';
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info';
-import { useCustomSearchParams, useData } from '@/shared/hooks';
-import { Badge } from '@/shared/components/ui/badge';
-import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { UserRoles } from '@/entities/user';
-import { ExecutionInspectorModal, preventionTypes } from '@/features/prevention/ui/parts/inspector-execution-modal';
+import { usePreventionDetail } from '@/entities/prevention'
+import { GoBack } from '@/shared/components/common'
+import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import DetailRow from '@/shared/components/common/detail-row'
+import { useParams } from 'react-router-dom'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
+import { useCustomSearchParams, useData } from '@/shared/hooks'
+import { Badge } from '@/shared/components/ui/badge'
+import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
+import { ExecutionInspectorModal, preventionTypes } from '@/features/prevention/ui/parts/inspector-execution-modal'
 
 export default function PreventionViewPage() {
-  const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const { id } = useParams<{ id: string }>()
+  const { user } = useAuth()
   const {
     paramsObject: { tin: currentTin = '' },
-  } = useCustomSearchParams();
-  const { data: prevention } = usePreventionDetail(id!);
-  let currentType = prevention?.data?.belongType;
+  } = useCustomSearchParams()
+  const { data: prevention } = usePreventionDetail(id!)
+  let currentType = prevention?.data?.belongType
 
   if (currentType !== 'HF' && currentType !== 'IRS') {
-    currentType = 'equipments';
+    currentType = 'equipments'
   }
 
   const { data } = useData(
     `/${currentType?.toLowerCase()}/${prevention?.data?.belongId}`,
-    !!prevention?.data?.belongType && !!prevention?.data?.belongId,
-  );
+    !!prevention?.data?.belongType && !!prevention?.data?.belongId
+  )
 
   return (
     <div>
-      <div className="flex justify-between gap-2 items-center mb-3">
+      <div className="mb-3 flex items-center justify-between gap-2">
         <GoBack title="Profilaktika tadbiri" />
         {user?.role === UserRoles.INSPECTOR && prevention?.data?.status == 'NEW' && <ExecutionInspectorModal />}
       </div>
@@ -76,10 +76,10 @@ export default function PreventionViewPage() {
                   : '-'
               }
             />
-            <div className="grid grid-cols-2 gap-1 py-2 px-2.5 rounded-lg content-center odd:bg-neutral-50 items-center">
-              <h2 className="font-normal text-normal text-gray-700">Bajarilgan ishlar ro‘yxati</h2>
+            <div className="grid grid-cols-2 content-center items-center gap-1 rounded-lg px-2.5 py-2 odd:bg-neutral-50">
+              <h2 className="text-normal font-normal text-gray-700">Bajarilgan ishlar ro‘yxati</h2>
               <p
-                className="font-normal text-normal text-gray-900 whitespace-pre-wrap"
+                className="text-normal font-normal whitespace-pre-wrap text-gray-900"
                 dangerouslySetInnerHTML={{ __html: prevention?.data?.report || '-' }}
               />
             </div>
@@ -87,5 +87,5 @@ export default function PreventionViewPage() {
         </DetailCardAccordion>
       </div>
     </div>
-  );
+  )
 }

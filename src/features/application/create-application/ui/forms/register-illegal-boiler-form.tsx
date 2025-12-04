@@ -1,59 +1,59 @@
-import { CardForm, RegisterIllegalBoilerApplicationDTO } from '@/entities/create-application';
-import { NoteForm } from '@/features/application/create-application';
-import { GoBack } from '@/shared/components/common';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
-import { Button } from '@/shared/components/ui/button';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { formatDate, parseISO } from 'date-fns';
-import { useCreateIllegalBoilerApplication } from '@/features/application/create-application/model/use-create-illegal-boiler-application.ts';
-import DetailRow from '@/shared/components/common/detail-row';
-import useAdd from '@/shared/hooks/api/useAdd';
-import { useMemo, useState } from 'react';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { useQuery } from '@tanstack/react-query';
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api';
+import { CardForm, RegisterIllegalBoilerApplicationDTO } from '@/entities/create-application'
+import { NoteForm } from '@/features/application/create-application'
+import { GoBack } from '@/shared/components/common'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
+import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { formatDate, parseISO } from 'date-fns'
+import { useCreateIllegalBoilerApplication } from '@/features/application/create-application/model/use-create-illegal-boiler-application.ts'
+import DetailRow from '@/shared/components/common/detail-row'
+import useAdd from '@/shared/hooks/api/useAdd'
+import { useMemo, useState } from 'react'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { useQuery } from '@tanstack/react-query'
+import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 
 interface RegisterBoilerFormProps {
-  onSubmit: (data: RegisterIllegalBoilerApplicationDTO) => void;
+  onSubmit: (data: RegisterIllegalBoilerApplicationDTO) => void
 }
 
 export default ({ onSubmit }: RegisterBoilerFormProps) => {
-  const { form, regionOptions, districtOptions, childEquipmentOptions } = useCreateIllegalBoilerApplication();
-  const [data, setData] = useState<any>(undefined);
+  const { form, regionOptions, districtOptions, childEquipmentOptions } = useCreateIllegalBoilerApplication()
+  const [data, setData] = useState<any>(undefined)
 
-  const identity = form.watch('identity');
-  const birthDateString = form.watch('birthDate');
+  const identity = form.watch('identity')
+  const birthDateString = form.watch('birthDate')
 
-  const isLegal = typeof identity === 'string' && identity.trim().length === 9;
-  const isIndividual = typeof identity === 'string' && identity.trim().length === 14;
+  const isLegal = typeof identity === 'string' && identity.trim().length === 9
+  const isIndividual = typeof identity === 'string' && identity.trim().length === 14
 
   const { data: hfoOptions } = useQuery({
     queryKey: ['hfoSelect', identity],
     queryFn: () => getHfoByTinSelect(identity),
     enabled: !!identity && identity.length === 9 && !!data,
     retry: 1,
-  });
+  })
 
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoOptions || []), [hfoOptions]);
+  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoOptions || []), [hfoOptions])
 
-  const { mutateAsync, isPending } = useAdd<any, any, any>('/integration/iip/legal');
+  const { mutateAsync, isPending } = useAdd<any, any, any>('/integration/iip/legal')
   const { mutateAsync: individualMutateAsync, isPending: individualIsLoading } = useAdd<any, any, any>(
-    '/integration/iip/individual',
-  );
+    '/integration/iip/individual'
+  )
 
-  console.log(form.formState.errors);
+  console.log(form.formState.errors)
 
   const handleSearch = () => {
     if (identity?.length === 9 && !form.formState.errors.identity) {
       mutateAsync({ tin: identity }).then((res) => {
-        setData(res.data);
-      });
+        setData(res.data)
+      })
     } else if (
       identity?.length === 14 &&
       birthDateString &&
@@ -62,21 +62,21 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
     ) {
       individualMutateAsync({ pin: identity, birthDate: formatDate(birthDateString || new Date(), 'yyyy-MM-dd') }).then(
         (res) => {
-          setData(res.data);
-        },
-      );
+          setData(res.data)
+        }
+      )
     } else {
-      form.trigger(['identity', 'birthDate']).then((r) => console.log(r));
+      form.trigger(['identity', 'birthDate']).then((r) => console.log(r))
     }
-  };
+  }
 
   const handleClear = () => {
-    setData(undefined);
+    setData(undefined)
 
-    form.setValue('identity', '');
-    form.setValue('birthDate', '');
-    form.setValue('hazardousFacilityId', undefined);
-  };
+    form.setValue('identity', '')
+    form.setValue('birthDate', '')
+    form.setValue('hazardousFacilityId', undefined)
+  }
 
   return (
     <Form {...form}>
@@ -85,7 +85,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
         <NoteForm equipmentName="qozon" />
 
         <CardForm className="my-2">
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="identity"
@@ -95,13 +95,13 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                   <FormControl>
                     <Input
                       disabled={!!data}
-                      className="w-full 3xl:w-sm"
+                      className="3xl:w-sm w-full"
                       placeholder="STIR yoki JSHSHIRni kiriting"
                       {...field}
                       onChange={(e) => {
-                        form.setValue('hazardousFacilityId', undefined);
-                        form.setValue('birthDate', undefined as unknown as string);
-                        field.onChange(e);
+                        form.setValue('hazardousFacilityId', undefined)
+                        form.setValue('birthDate', undefined as unknown as string)
+                        field.onChange(e)
                       }}
                     />
                   </FormControl>
@@ -115,25 +115,25 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                   control={form.control}
                   name="birthDate"
                   render={({ field }) => {
-                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                     return (
-                      <FormItem className="w-full  3xl:w-sm">
+                      <FormItem className="3xl:w-sm w-full">
                         <FormLabel>Tug‘ilgan sana</FormLabel>
                         <DatePicker
                           disabled={!!data}
-                          className="w-full 3xl:w-sm"
+                          className="3xl:w-sm w-full"
                           value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                           onChange={field.onChange}
                           placeholder="Sanani tanlang"
                         />
                         <FormMessage />
                       </FormItem>
-                    );
+                    )
                   }}
                 />
               </div>
             )}
-            <div className="w-full 3xl:w-sm flex items-end justify-start gap-2">
+            <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
               {!data ? (
                 <Button
                   type="button"
@@ -154,10 +154,10 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
           </div>
           {data && (
             <div className="mt-6 border-t pt-6">
-              <h3 className="text-lg font-semibold mb-4 text-gray-800">
+              <h3 className="mb-4 text-lg font-semibold text-gray-800">
                 {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-1 gap-x-6 gap-y-4">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
                 <DetailRow
                   title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH:'}
                   value={data?.name || data?.fullName || '-'}
@@ -173,7 +173,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
         </CardForm>
 
         <CardForm className="mb-2">
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="phoneNumber"
@@ -181,7 +181,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                 <FormItem>
                   <FormLabel required>Telefon raqami</FormLabel>
                   <FormControl>
-                    <PhoneInput className="w-full 3xl:w-sm" placeholder="+998 XX XXX XX XX" {...field} />
+                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -196,7 +196,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                     <FormLabel>XICHO tanlang</FormLabel>
                     <FormControl>
                       <Select onValueChange={field.onChange} value={field.value || ''}>
-                        <SelectTrigger className="w-full 3xl:w-sm">
+                        <SelectTrigger className="3xl:w-sm w-full">
                           <SelectValue placeholder="XICHOni tanlang" />
                         </SelectTrigger>
                         <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
@@ -216,7 +216,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                   <FormLabel required>Qozon turini tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Qozon turini tanlang" />
                       </SelectTrigger>
                       <SelectContent>{childEquipmentOptions}</SelectContent>
@@ -233,7 +233,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                 <FormItem>
                   <FormLabel>Qozonning zavod raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning zavod raqami" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Qurilmaning zavod raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -246,7 +246,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                 <FormItem>
                   <FormLabel>Qozonni ishlab chiqargan zavod nomi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Ishlab chiqargan zavod nomi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Ishlab chiqargan zavod nomi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -259,7 +259,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                 <FormItem>
                   <FormLabel>Model, marka</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Model, marka" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Model, marka" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -269,9 +269,9 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
               control={form.control}
               name="manufacturedAt"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel>Ishlab chiqarilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
@@ -281,7 +281,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
@@ -294,13 +294,13 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                     <Select
                       onValueChange={(value) => {
                         if (value) {
-                          field.onChange(value);
-                          form.setValue('districtId', '');
+                          field.onChange(value)
+                          form.setValue('districtId', '')
                         }
                       }}
                       value={field.value?.toString()}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Qurilma joylashgan viloyat" />
                       </SelectTrigger>
                       <SelectContent>{regionOptions}</SelectContent>
@@ -322,7 +322,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                       value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Qurilma joylashgan tuman" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
@@ -339,7 +339,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                 <FormItem>
                   <FormLabel required>Qozon joylashgan manzil</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilma joylashgan manzil" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Qurilma joylashgan manzil" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -349,7 +349,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
               control={form.control}
               name="location"
               render={({ field }) => (
-                <FormItem className="w-full 3xl:w-sm">
+                <FormItem className="3xl:w-sm w-full">
                   <FormLabel required>Joylashuv (xaritadan joyni tanlang va koordinatalarni kiriting)</FormLabel>
                   <FormControl>
                     <YandexMapModal
@@ -366,9 +366,9 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
               control={form.control}
               name="partialCheckDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel>Tashqi va ichki ko‘rik sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -377,16 +377,16 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
               control={form.control}
               name="fullCheckDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel>Gidrosinov o‘tkazish sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -395,16 +395,16 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
               control={form.control}
               name="nonDestructiveCheckDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel>Putur yetkazmaydigan nazoratdan o‘tkazish sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -413,7 +413,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
@@ -423,7 +423,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                 <FormItem>
                   <FormLabel>Hajmi</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Hajmi" {...field} />
+                    <Input type="text" className="3xl:w-sm w-full" placeholder="Hajmi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -436,7 +436,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                 <FormItem>
                   <FormLabel>Muhit</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Muhit" {...field} />
+                    <Input type="text" className="3xl:w-sm w-full" placeholder="Muhit" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -449,7 +449,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                 <FormItem>
                   <FormLabel>Ruxsat etilgan bosim</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Ruxsat etilgan bosim" {...field} />
+                    <Input type="text" className="3xl:w-sm w-full" placeholder="Ruxsat etilgan bosim" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -457,14 +457,14 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
             />
           </div>
         </CardForm>
-        <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
-          <div className="pb-4 border-b">
+        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
+          <div className="border-b pb-4">
             <FormField
               name="labelPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qozonning birkasi bilan sur‘ati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
@@ -477,10 +477,10 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
               control={form.control}
               name="labelExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -491,18 +491,18 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                       />
                     </div>
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="saleContractPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sotib olish-sotish shartnomasi fayli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -515,10 +515,10 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
               control={form.control}
               name="saleContractExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -529,18 +529,18 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                       />
                     </div>
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="equipmentCertPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilma sertifikati fayli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -553,10 +553,10 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
               control={form.control}
               name="equipmentCertExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -567,18 +567,18 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                       />
                     </div>
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="assignmentDecreePath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                       Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq fayli
                     </FormLabel>
@@ -593,10 +593,10 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
               control={form.control}
               name="assignmentDecreeExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -607,18 +607,18 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                       />
                     </div>
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="expertisePath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekspertiza loyihasi fayli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -631,10 +631,10 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
               control={form.control}
               name="expertiseExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -645,18 +645,18 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                       />
                     </div>
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="installationCertPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Montaj guvohnomasi fayli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -669,10 +669,10 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
               control={form.control}
               name="installationCertExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -683,18 +683,18 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                       />
                     </div>
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="additionalFilePath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qo‘shimcha ma‘lumotlar</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -707,10 +707,10 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
               control={form.control}
               name="additionalFileExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -721,7 +721,7 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
                       />
                     </div>
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
@@ -731,5 +731,5 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

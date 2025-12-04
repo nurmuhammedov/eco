@@ -1,10 +1,10 @@
-import { toast } from 'sonner';
-import { useEffect, useState } from 'react';
-import { useSignatureClient } from '@/shared/hooks';
+import { toast } from 'sonner'
+import { useEffect, useState } from 'react'
+import { useSignatureClient } from '@/shared/hooks'
 
 export function getSignatureKeys() {
-  const { Client, isScriptLoaded } = useSignatureClient();
-  const [signatureKeys, setSignatureKeys] = useState([]);
+  const { Client, isScriptLoaded } = useSignatureClient()
+  const [signatureKeys, setSignatureKeys] = useState([])
 
   useEffect(() => {
     if (isScriptLoaded) {
@@ -12,11 +12,11 @@ export function getSignatureKeys() {
         .then(() => {
           Client.listAllUserKeys()
             .then((res: any) => setSignatureKeys(res))
-            .catch(() => toast.error('Error connecting to E-IMZO'));
+            .catch(() => toast.error('Error connecting to E-IMZO'))
         })
-        .catch(() => toast.error('Error connecting to E-IMZO'));
+        .catch(() => toast.error('Error connecting to E-IMZO'))
     }
-  }, [isScriptLoaded]);
+  }, [isScriptLoaded])
 
-  return { signatureKeys };
+  return { signatureKeys }
 }

@@ -1,3 +1,3 @@
-import { createQueryKeys } from '@/shared/lib';
+import { createQueryKeys } from '@/shared/lib'
 
-export const districtKeys = createQueryKeys('district');
+export const districtKeys = createQueryKeys('district')

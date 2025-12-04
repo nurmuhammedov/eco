@@ -1,24 +1,24 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/shared/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
-import { Textarea } from '@/shared/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { Button } from '@/shared/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
+import { Textarea } from '@/shared/components/ui/textarea'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import {
   ChecklistAnswerStatus,
   ChecklistFormValues,
   checklistFormSchema,
-} from '../../model/inspection-checklist.schema';
-import { useCustomSearchParams } from '@/shared/hooks';
-import { formatDate, parseISO } from 'date-fns';
-import DatePicker from '@/shared/components/ui/datepicker';
-import InspectionChecklistModal from '@/features/inspections/ui/parts/inspection-checklist-modal';
+} from '../../model/inspection-checklist.schema'
+import { useCustomSearchParams } from '@/shared/hooks'
+import { formatDate, parseISO } from 'date-fns'
+import DatePicker from '@/shared/components/ui/datepicker'
+import InspectionChecklistModal from '@/features/inspections/ui/parts/inspection-checklist-modal'
 
 interface InspectionChecklistFormProps {
-  items: any[];
-  onSuccess?: () => void;
+  items: any[]
+  onSuccess?: () => void
 }
 
 export const answerOptions = [
@@ -34,11 +34,11 @@ export const answerOptions = [
     value: ChecklistAnswerStatus.UNRELATED,
     labelKey: 'Tadbiq etilmaydi',
   },
-];
+]
 
 export const InspectionChecklistForm = ({ items }: InspectionChecklistFormProps) => {
-  const { t } = useTranslation();
-  const { addParams } = useCustomSearchParams();
+  const { t } = useTranslation()
+  const { addParams } = useCustomSearchParams()
   const form = useForm<ChecklistFormValues>({
     resolver: zodResolver(checklistFormSchema),
     defaultValues: {
@@ -52,18 +52,18 @@ export const InspectionChecklistForm = ({ items }: InspectionChecklistFormProps)
         file: null,
       })),
     },
-  });
+  })
 
   const { fields } = useFieldArray({
     control: form.control,
     name: 'items',
-  });
+  })
 
-  const categoryTitle = items.length > 0 ? items[0].categoryTypeName : '';
+  const categoryTitle = items.length > 0 ? items[0].categoryTypeName : ''
 
   const handleFormSubmit = (_: ChecklistFormValues) => {
-    addParams({ modal: 'addUsers' });
-  };
+    addParams({ modal: 'addUsers' })
+  }
 
   return (
     <Form {...form}>
@@ -92,7 +92,7 @@ export const InspectionChecklistForm = ({ items }: InspectionChecklistFormProps)
                         className="flex flex-row flex-wrap items-center gap-x-6 gap-y-2"
                       >
                         {answerOptions.map((option) => (
-                          <FormItem key={option.value} className="flex items-center space-x-2 space-y-0">
+                          <FormItem key={option.value} className="flex items-center space-y-0 space-x-2">
                             <FormControl>
                               <RadioGroupItem value={option.value} />
                             </FormControl>
@@ -129,9 +129,9 @@ export const InspectionChecklistForm = ({ items }: InspectionChecklistFormProps)
                     control={form.control}
                     name={`items.${index}.deadline`}
                     render={({ field }) => {
-                      const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                      const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                       return (
-                        <FormItem className="w-full ">
+                        <FormItem className="w-full">
                           <FormLabel required>Bartaraf etish muddati</FormLabel>
                           <DatePicker
                             value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -140,7 +140,7 @@ export const InspectionChecklistForm = ({ items }: InspectionChecklistFormProps)
                           />
                           <FormMessage />
                         </FormItem>
-                      );
+                      )
                     }}
                   />
                 </>
@@ -169,5 +169,5 @@ export const InspectionChecklistForm = ({ items }: InspectionChecklistFormProps)
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

@@ -1,18 +1,18 @@
-import { ApplicationStatus } from '@/entities/application';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { TabsLayout } from '@/shared/layouts';
-import { useNavigate } from 'react-router-dom';
-import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
-import { AutoTabKey, AutoTabs, tabs } from '@/features/register/auto/ui/auto-tabs';
-import { formatDate } from 'date-fns';
+import { ApplicationStatus } from '@/entities/application'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { TabsLayout } from '@/shared/layouts'
+import { useNavigate } from 'react-router-dom'
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { AutoTabKey, AutoTabs, tabs } from '@/features/register/auto/ui/auto-tabs'
+import { formatDate } from 'date-fns'
 
 export const AutoList = ({ tankersCount }: any) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const {
     paramsObject: { status = ApplicationStatus.ALL, type = AutoTabKey.ALL, page = 1, size = 10, search = '', ...rest },
     addParams,
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
 
   const { data: list } = usePaginatedData<any>(`/tankers`, {
     page,
@@ -21,7 +21,7 @@ export const AutoList = ({ tankersCount }: any) => {
     activityType: type !== 'ALL' ? type : '',
     status: status !== 'ALL' ? status : '',
     ...rest,
-  });
+  })
 
   const tabCounts = {
     [AutoTabKey.ALL]: tankersCount?.allCount ?? 0,
@@ -30,11 +30,11 @@ export const AutoList = ({ tankersCount }: any) => {
     [AutoTabKey.CHEMICALS]: tankersCount?.chemicalCount ?? 0,
     [AutoTabKey.CRYOGENIC_GASES]: tankersCount?.cryogenicCount ?? 0,
     [AutoTabKey.NUCLEAR_MATERIALS]: tankersCount?.radioactiveCount ?? 0,
-  };
+  }
 
   const handleViewApplication = (id: string, legalTin: string) => {
-    navigate(`${id}/auto?tin=${legalTin}`);
-  };
+    navigate(`${id}/auto?tin=${legalTin}`)
+  }
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -97,7 +97,7 @@ export const AutoList = ({ tankersCount }: any) => {
         />
       ),
     },
-  ];
+  ]
 
   return (
     <div className="flex flex-col gap-2">
@@ -137,5 +137,5 @@ export const AutoList = ({ tankersCount }: any) => {
         className="h-[calc(100svh-375px)]"
       />
     </div>
-  );
-};
+  )
+}

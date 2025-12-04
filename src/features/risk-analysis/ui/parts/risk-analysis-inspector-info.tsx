@@ -1,22 +1,22 @@
-import { FC } from 'react';
-import { RiskAnalysisData } from '../riskAnalysis'; // Manzilni to'g'rilang
-import { useAuth } from '@/shared/hooks/use-auth.ts';
-import { format } from 'date-fns';
-import { cn } from '@/shared/lib/utils.ts';
-import { useSearchParams } from 'react-router-dom';
+import { FC } from 'react'
+import { RiskAnalysisData } from '../riskAnalysis' // Manzilni to'g'rilang
+import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { format } from 'date-fns'
+import { cn } from '@/shared/lib/utils.ts'
+import { useSearchParams } from 'react-router-dom'
 
 interface Props {
-  data: RiskAnalysisData | null;
+  data: RiskAnalysisData | null
 }
 
 const RiskAnalysisInspectorInfo: FC<Props> = ({ data }) => {
-  const { user } = useAuth();
-  const [searchParams] = useSearchParams();
-  const currentIntervalId = searchParams.get('intervalId') || '';
-  const isValidInterval = currentIntervalId == user?.interval?.id?.toString();
+  const { user } = useAuth()
+  const [searchParams] = useSearchParams()
+  const currentIntervalId = searchParams.get('intervalId') || ''
+  const isValidInterval = currentIntervalId == user?.interval?.id?.toString()
 
   if (!data) {
-    return <div className={'py-5 px-5'}>Ma'lumot mavjud emas</div>;
+    return <div className={'px-5 py-5'}>Ma'lumot mavjud emas</div>
   }
 
   return (
@@ -39,7 +39,7 @@ const RiskAnalysisInspectorInfo: FC<Props> = ({ data }) => {
         </span>
       </p>
     </div>
-  );
-};
+  )
+}
 
-export default RiskAnalysisInspectorInfo;
+export default RiskAnalysisInspectorInfo

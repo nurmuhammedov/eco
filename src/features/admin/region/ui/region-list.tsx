@@ -1,20 +1,20 @@
-import { useTranslation } from 'react-i18next';
-import { ColumnDef } from '@tanstack/react-table';
-import { UIModeEnum } from '@/shared/types/ui-types';
-import { useFilters } from '@/shared/hooks/use-filters';
-import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { type FilterRegionDTO, type Region, useDeleteRegion, useRegionsQuery } from '@/entities/admin/region';
+import { useTranslation } from 'react-i18next'
+import { ColumnDef } from '@tanstack/react-table'
+import { UIModeEnum } from '@/shared/types/ui-types'
+import { useFilters } from '@/shared/hooks/use-filters'
+import { useRegionDrawer } from '@/shared/hooks/entity-hooks'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { type FilterRegionDTO, type Region, useDeleteRegion, useRegionsQuery } from '@/entities/admin/region'
 
 export function RegionList() {
-  const { filters } = useFilters();
-  const { onOpen } = useRegionDrawer();
-  const { t } = useTranslation('common');
-  const { data, isLoading } = useRegionsQuery(filters as FilterRegionDTO);
-  const deleteRegion = useDeleteRegion();
-  const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
+  const { filters } = useFilters()
+  const { onOpen } = useRegionDrawer()
+  const { t } = useTranslation('common')
+  const { data, isLoading } = useRegionsQuery(filters as FilterRegionDTO)
+  const deleteRegion = useDeleteRegion()
+  const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id })
 
-  const onDelete = (id: number) => deleteRegion.mutate(id);
+  const onDelete = (id: number) => deleteRegion.mutate(id)
 
   const regionTableColumns: ColumnDef<Region>[] = [
     {
@@ -41,7 +41,7 @@ export function RegionList() {
         />
       ),
     },
-  ];
+  ]
 
   return (
     <DataTable
@@ -51,5 +51,5 @@ export function RegionList() {
       columns={regionTableColumns}
       className="h-[calc(100svh-270px)]"
     />
-  );
+  )
 }

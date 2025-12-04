@@ -1,5 +1,5 @@
-import { AccreditationSphere } from '@/entities/accreditation/models/accreditation.enums';
-import { SelectOption } from '@/shared/types';
+import { AccreditationSphere } from '@/entities/accreditation/models/accreditation.enums'
+import { SelectOption } from '@/shared/types'
 
 export const ACCREDITATION_SPHERE_OPTIONS: (SelectOption<AccreditationSphere> & { point: string })[] = [
   {
@@ -751,4 +751,4 @@ export const ACCREDITATION_SPHERE_OPTIONS: (SelectOption<AccreditationSphere> & 
     name: "Sanoatda qo'llaniladigan portlovchi moddalarni ishlab chiqarish, sinash va saqlash bilan bog'liq bo'lgan obyektlar",
     point: '4.10',
   },
-];
+]

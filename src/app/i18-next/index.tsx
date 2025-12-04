@@ -1,10 +1,10 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import { DEFAULT_LANG_CODE } from '@/app/config';
-import { loadResources, namespaces } from './utils';
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
+import { DEFAULT_LANG_CODE } from '@/app/config'
+import { loadResources, namespaces } from './utils'
 
 const initI18n = async () => {
-  const resources = await loadResources();
+  const resources = await loadResources()
   await i18n.use(initReactI18next).init({
     resources,
     ns: namespaces,
@@ -17,8 +17,8 @@ const initI18n = async () => {
       caches: ['localStorage'],
       order: ['localStorage', 'navigator'],
     },
-  });
-};
-void initI18n();
+  })
+}
+void initI18n()
 
-export default i18n;
+export default i18n

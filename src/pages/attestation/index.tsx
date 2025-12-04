@@ -1,7 +1,7 @@
-import { AttestationWidget } from '@/widgets/attestation/ui/attestation-widget';
+import { AttestationWidget } from '@/widgets/attestation/ui/attestation-widget'
 
 const AttestationPage = () => {
-  return <AttestationWidget />;
-};
+  return <AttestationWidget />
+}
 
-export default AttestationPage;
+export default AttestationPage

@@ -1,1 +1,1 @@
-export { ApplicationTable } from './ui/application-table';
+export { ApplicationTable } from './ui/application-table'

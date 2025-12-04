@@ -1,11 +1,11 @@
-import { Description } from '@/shared/components/common/description';
-import { CategoryType } from '@/entities/admin/inspection';
-import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options';
+import { Description } from '@/shared/components/common/description'
+import { CategoryType } from '@/entities/admin/inspection'
+import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options'
 
 export const CategoryTypeView = ({ data }: { data: CategoryType | null }) => {
-  if (!data) return null;
+  if (!data) return null
 
-  const categoryName = inspectionCategoryOptions?.find((i) => i.id == data.type)?.name || '-';
+  const categoryName = inspectionCategoryOptions?.find((i) => i.id == data.type)?.name || '-'
 
   return (
     <Description>
@@ -16,5 +16,5 @@ export const CategoryTypeView = ({ data }: { data: CategoryType | null }) => {
         {data.name}
       </Description.Item>
     </Description>
-  );
-};
+  )
+}

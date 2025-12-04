@@ -1,6 +1,6 @@
-import { z } from 'zod';
-import { UserRoles } from '@/entities/user';
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
+import { z } from 'zod'
+import { UserRoles } from '@/entities/user'
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 
 const ERROR_MESSAGES = {
   required: "Bu maydonni to'ldirish majburiy",
@@ -11,7 +11,7 @@ const ERROR_MESSAGES = {
   direction: "Kamida bitta yo'nalish tanlash majburiy",
   department: "Bo'limni tanlash majburiy",
   phone: "Telefon raqami formati +998XXXXXXXXX bo'lishi kerak",
-} as const;
+} as const
 
 export const territorialBaseSchema = {
   fullName: z.string({ message: ERROR_MESSAGES.fio }).min(1, ERROR_MESSAGES.required),
@@ -33,7 +33,7 @@ export const territorialBaseSchema = {
   directions: z.preprocess(
     // Convert empty arrays or null/undefined to undefined for proper validation
     (val) => (Array.isArray(val) && val.length > 0 ? val : undefined),
-    z.array(z.string().trim()).min(1, ERROR_MESSAGES.direction).default([]),
+    z.array(z.string().trim()).min(1, ERROR_MESSAGES.direction).default([])
   ),
   officeId: z.string().min(1, ERROR_MESSAGES.department),
   phoneNumber: z
@@ -42,7 +42,7 @@ export const territorialBaseSchema = {
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: ERROR_MESSAGES.phone,
     }),
-};
+}
 
 export const territorialStaffSchema = z
   .object({
@@ -56,7 +56,7 @@ export const territorialStaffSchema = z
     phoneNumber: data.phoneNumber.startsWith('+') ? data.phoneNumber : `+${data.phoneNumber}`,
     // Additional data cleanup if needed
     fullName: data.fullName.replace(/\s+/g, ' '),
-  }));
+  }))
 
 export const territorialTableItemSchema = z.object({
   id: z.union([z.string().uuid(), z.string().regex(USER_PATTERNS.uuid, { message: 'Invalid UUID format' })]),
@@ -73,7 +73,7 @@ export const territorialTableItemSchema = z.object({
   position: z.string(),
   phoneNumber: z.string().regex(USER_PATTERNS.phone, { message: ERROR_MESSAGES.phone }),
   enabled: z.boolean().default(true),
-});
+})
 
 export const schemas = {
   create: z.object(territorialBaseSchema),
@@ -88,4 +88,4 @@ export const schemas = {
   }),
   table: territorialTableItemSchema,
   single: territorialTableItemSchema,
-};
+}

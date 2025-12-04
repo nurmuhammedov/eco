@@ -1,18 +1,18 @@
-import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
-import { getDate } from '@/shared/utils/date';
+import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer'
+import { getDate } from '@/shared/utils/date'
 
 interface StickerData {
-  registryNumber?: string;
-  registrationDate?: string;
-  ownerName?: string;
-  attractionName?: string;
-  qrCodeDataUrl: string;
+  registryNumber?: string
+  registrationDate?: string
+  ownerName?: string
+  attractionName?: string
+  qrCodeDataUrl: string
 }
 
 Font.register({
   family: 'Roboto',
   fonts: [{ src: '/fonts/Roboto-Regular.ttf' }, { src: '/fonts/Roboto-Bold.ttf', fontWeight: 'bold' }],
-});
+})
 
 const styles = StyleSheet.create({
   page: {
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   infoValue: {
     color: '#000',
   },
-});
+})
 
 export const EquipmentStickerPdf = ({ data }: { data: StickerData }) => (
   <Document>
@@ -81,4 +81,4 @@ export const EquipmentStickerPdf = ({ data }: { data: StickerData }) => (
       </View>
     </Page>
   </Document>
-);
+)

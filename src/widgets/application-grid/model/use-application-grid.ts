@@ -3,14 +3,14 @@ import {
   APPLICATIONS_DATA,
   MAIN_APPLICATION_BY_CATEGORY,
   MainApplicationCategory,
-} from '@/entities/create-application';
-import { filterParsers, useFilters } from '@/shared/hooks/use-filters';
-import { useCallback, useMemo } from 'react';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { UserRoles } from '@/entities/user';
+} from '@/entities/create-application'
+import { filterParsers, useFilters } from '@/shared/hooks/use-filters'
+import { useCallback, useMemo } from 'react'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
 
 export function useApplicationGrid() {
-  const { user } = useAuth();
+  const { user } = useAuth()
 
   const { filters, setFilters } = useFilters({
     'selected-main-card': filterParsers.string(MainApplicationCategory.REGISTER),
@@ -19,19 +19,19 @@ export function useApplicationGrid() {
         ? ApplicationCategory.EQUIPMENTS
         : user?.role == UserRoles.INSPECTOR
           ? ApplicationCategory.ILLEGAL
-          : ApplicationCategory.HF,
+          : ApplicationCategory.HF
     ),
-  });
+  })
 
   const activeTab = useMemo<ApplicationCategory>(
     () => filters['active-application-tab'] as ApplicationCategory,
-    [filters],
-  );
+    [filters]
+  )
 
   const selectedMainCard = useMemo<MainApplicationCategory | null>(
     () => filters['selected-main-card'] as MainApplicationCategory | null,
-    [filters],
-  );
+    [filters]
+  )
 
   const handleChangeTab = useCallback(
     (tab: ApplicationCategory) =>
@@ -40,39 +40,39 @@ export function useApplicationGrid() {
         'active-application-tab': tab,
         'selected-main-card': null,
       })),
-    [setFilters],
-  );
+    [setFilters]
+  )
 
   const handleMainCardSelect = useCallback(
     (cardId: string) =>
       setFilters({
         'selected-main-card': filters['selected-main-card'] === cardId ? null : cardId,
       }),
-    [filters, setFilters],
-  );
+    [filters, setFilters]
+  )
 
   const mainCards = useMemo(() => {
-    if (!activeTab) return [];
+    if (!activeTab) return []
     // @ts-ignore
-    return MAIN_APPLICATION_BY_CATEGORY[activeTab] || [];
-  }, [activeTab]);
+    return MAIN_APPLICATION_BY_CATEGORY[activeTab] || []
+  }, [activeTab])
 
   const displayedSubCards = useMemo(() => {
-    if (!activeTab) return [];
+    if (!activeTab) return []
 
     // If there are main cards for this category
     // @ts-ignore
     if (MAIN_APPLICATION_BY_CATEGORY[activeTab]?.length > 0) {
       // If a main card is selected, show its sub applications
       if (selectedMainCard) {
-        return APPLICATIONS_DATA.filter((card) => card.category === activeTab && card.parentId === selectedMainCard);
+        return APPLICATIONS_DATA.filter((card) => card.category === activeTab && card.parentId === selectedMainCard)
       }
-      return []; // No main card selected, show no applications
+      return [] // No main card selected, show no applications
     }
 
     // If no main cards for this category, show all applications for the category with no parent
-    return APPLICATIONS_DATA.filter((card) => card.category === activeTab && !card.parentId);
-  }, [activeTab, selectedMainCard]);
+    return APPLICATIONS_DATA.filter((card) => card.category === activeTab && !card.parentId)
+  }, [activeTab, selectedMainCard])
 
   return {
     mainCards,
@@ -81,5 +81,5 @@ export function useApplicationGrid() {
     selectedMainCard,
     displayedSubCards,
     handleMainCardSelect,
-  };
+  }
 }

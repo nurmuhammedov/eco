@@ -1,18 +1,18 @@
-import { applicationConfigs, ApplicationTypeEnum } from '@/entities/create-application';
-import { useApplicationCreation, UseApplicationCreationProps } from '@/features/application/create-application/model';
+import { applicationConfigs, ApplicationTypeEnum } from '@/entities/create-application'
+import { useApplicationCreation, UseApplicationCreationProps } from '@/features/application/create-application/model'
 
 interface UseApplicationFactoryProps extends Omit<UseApplicationCreationProps, 'pdfEndpoint' | 'submitEndpoint'> {
-  applicationType: ApplicationTypeEnum;
+  applicationType: ApplicationTypeEnum
 }
 
 export function useApplicationFactory({ applicationType, onError }: UseApplicationFactoryProps) {
-  const config = applicationConfigs[applicationType];
+  const config = applicationConfigs[applicationType]
 
   const applicationCreation = useApplicationCreation({
     onError,
     pdfEndpoint: config.pdfEndpoint,
     submitEndpoint: config.submitEndpoint,
-  });
+  })
 
-  return { ...applicationCreation, config };
+  return { ...applicationCreation, config }
 }

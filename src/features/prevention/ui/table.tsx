@@ -1,26 +1,26 @@
-import { UserRoles } from '@/entities/user';
-import { AssignInspectorModal } from '@/features/prevention/ui/parts/assign-inspector-modal';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { FC } from 'react';
-import { useTranslation } from 'react-i18next';
-import { AssignInspectorButton } from '@/features/risk-analysis/ui/assign-inspector-button';
-import { getCurrentMonthEnum } from '@/widgets/prevention/ui/prevention-widget';
-import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
-import { useNavigate } from 'react-router-dom';
-import { Badge } from '@/shared/components/ui/badge';
+import { UserRoles } from '@/entities/user'
+import { AssignInspectorModal } from '@/features/prevention/ui/parts/assign-inspector-modal'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import { AssignInspectorButton } from '@/features/risk-analysis/ui/assign-inspector-button'
+import { getCurrentMonthEnum } from '@/widgets/prevention/ui/prevention-widget'
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { useNavigate } from 'react-router-dom'
+import { Badge } from '@/shared/components/ui/badge'
 
 interface Props {
-  regions?: any;
+  regions?: any
 }
 
 const List: FC<Props> = ({ regions }) => {
-  const { user } = useAuth();
-  const { t } = useTranslation('common');
-  const navigate = useNavigate();
-  const isRegional = user?.role === UserRoles.REGIONAL;
-  const isInspector = user?.role === UserRoles.INSPECTOR;
+  const { user } = useAuth()
+  const { t } = useTranslation('common')
+  const navigate = useNavigate()
+  const isRegional = user?.role === UserRoles.REGIONAL
+  const isInspector = user?.role === UserRoles.INSPECTOR
 
   const {
     paramsObject: {
@@ -37,7 +37,7 @@ const List: FC<Props> = ({ regions }) => {
       identity = '',
       ownerName = '',
     },
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
   const { data, isLoading } = usePaginatedData<any>(
     '/preventions',
     {
@@ -54,12 +54,12 @@ const List: FC<Props> = ({ regions }) => {
       address,
       assigned: activeAssignedStatus == 'ALL' ? '' : activeAssignedStatus === 'ASSIGNED',
     },
-    !!month && !!belongType && !!year,
-  );
+    !!month && !!belongType && !!year
+  )
 
   const handleView = (row: any) => {
-    navigate(`/preventions/detail/${row.id}?tin=${row.identity}`);
-  };
+    navigate(`/preventions/detail/${row.id}?tin=${row.identity}`)
+  }
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -140,7 +140,7 @@ const List: FC<Props> = ({ regions }) => {
       header: 'Amallar',
       cell: ({ row }: any) => <DataTableRowActions showView onView={() => handleView(row.original)} row={row} />,
     },
-  ];
+  ]
 
   return (
     <>
@@ -156,7 +156,7 @@ const List: FC<Props> = ({ regions }) => {
       />
       <AssignInspectorModal />
     </>
-  );
-};
+  )
+}
 
-export default List;
+export default List

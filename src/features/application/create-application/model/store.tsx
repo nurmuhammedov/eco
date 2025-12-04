@@ -1,8 +1,8 @@
-import { ApplicationTypeEnum } from '@/entities/create-application';
-import { ComponentType, lazy, LazyExoticComponent } from 'react';
+import { ApplicationTypeEnum } from '@/entities/create-application'
+import { ComponentType, lazy, LazyExoticComponent } from 'react'
 
 export interface FormComponentProps {
-  onSubmit: (data: any) => void;
+  onSubmit: (data: any) => void
 }
 
 const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormComponentProps>>> = {
@@ -27,7 +27,7 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.DEREGISTER_EQUIPMENT]: lazy(() => import('../ui/forms/deregister-equipment-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_HF]: lazy(() => import('../ui/forms/register-illegal-hf-form')),
   [ApplicationTypeEnum.REGISTER_EXPERTISE_CONCLUSION]: lazy(
-    () => import('../ui/forms/register-accreditation-conclusion-form'),
+    () => import('../ui/forms/register-accreditation-conclusion-form')
   ),
   [ApplicationTypeEnum.REGISTER_ATTESTATION]: lazy(() => import('../ui/forms/register-attestation-form')),
   [ApplicationTypeEnum.REGISTER_IRS]: lazy(() => import('../ui/forms/register-irs-form')),
@@ -37,7 +37,7 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.REGISTER_DECLARATION]: lazy(() => import('../ui/forms/register-declaration-form')),
   [ApplicationTypeEnum.RE_REGISTER_EQUIPMENT]: lazy(() => import('../ui/forms/reregister-equipment-form')),
   [ApplicationTypeEnum.REGISTER_ATTRACTION_PASSPORT]: lazy(
-    () => import('../ui/forms/register-attraction-passport-form'),
+    () => import('../ui/forms/register-attraction-passport-form')
   ),
   [ApplicationTypeEnum.REGISTER_ATTRACTION]: lazy(() => import('../ui/forms/register-attraction-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_CRANE]: lazy(() => import('../ui/forms/register-illegal-crane-form')),
@@ -46,34 +46,34 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.ILLEGAL_REGISTER_ELEVATOR]: lazy(() => import('../ui/forms/register-illegal-lift-form.tsx')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_ESCALATOR]: lazy(() => import('../ui/forms/register-illegal-escalator-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION_PASSPORT]: lazy(
-    () => import('../ui/forms/register-illegal-attraction-passport-form'),
+    () => import('../ui/forms/register-illegal-attraction-passport-form')
   ),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_PIPELINE]: lazy(() => import('../ui/forms/register-illegal-pipeline-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_CHEMICAL_CONTAINER]: lazy(
-    () => import('../ui/forms/register-illegal-chemical-container-form'),
+    () => import('../ui/forms/register-illegal-chemical-container-form')
   ),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_HEAT_PIPELINE]: lazy(
-    () => import('../ui/forms/register-illegal-heat-pipeline-form'),
+    () => import('../ui/forms/register-illegal-heat-pipeline-form')
   ),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER_UTILIZER]: lazy(
-    () => import('../ui/forms/register-illegal-boiler-utilizer-form'),
+    () => import('../ui/forms/register-illegal-boiler-utilizer-form')
   ),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_LPG_CONTAINER]: lazy(
-    () => import('../ui/forms/register-illegal-lpg-container-form'),
+    () => import('../ui/forms/register-illegal-lpg-container-form')
   ),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_LPG_POWERED]: lazy(
-    () => import('../ui/forms/register-illegal-lpg-powered-form'),
+    () => import('../ui/forms/register-illegal-lpg-powered-form')
   ),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_HOIST]: lazy(() => import('../ui/forms/register-illegal-hoist-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_CABLEWAY]: lazy(() => import('../ui/forms/register-illegal-cableway-form')),
-};
+}
 
 export function getFormComponentByType(
-  type: ApplicationTypeEnum,
+  type: ApplicationTypeEnum
 ): LazyExoticComponent<ComponentType<FormComponentProps>> | null {
-  return formComponentsMap[type] || null;
+  return formComponentsMap[type] || null
 }
 
 export function isValidApplicationType(type: ApplicationTypeEnum) {
-  return type in formComponentsMap;
+  return type in formComponentsMap
 }

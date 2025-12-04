@@ -1,27 +1,27 @@
-import { CardForm, CreateLpgContainerApplicationDTO } from '@/entities/create-application';
-import { UserRoles } from '@/entities/user';
-import { NoteForm, useCreateLpgContainerApplication } from '@/features/application/create-application';
-import { GoBack } from '@/shared/components/common';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
-import { Button } from '@/shared/components/ui/button';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { parseISO } from 'date-fns';
+import { CardForm, CreateLpgContainerApplicationDTO } from '@/entities/create-application'
+import { UserRoles } from '@/entities/user'
+import { NoteForm, useCreateLpgContainerApplication } from '@/features/application/create-application'
+import { GoBack } from '@/shared/components/common'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
+import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { parseISO } from 'date-fns'
 
 interface RegisterLpgContainerFormProps {
-  onSubmit: (data: CreateLpgContainerApplicationDTO) => void;
+  onSubmit: (data: CreateLpgContainerApplicationDTO) => void
 }
 
 export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
-    useCreateLpgContainerApplication();
-  const { user } = useAuth();
+    useCreateLpgContainerApplication()
+  const { user } = useAuth()
 
   return (
     <Form {...form}>
@@ -29,7 +29,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
         <GoBack title="Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatga olish" />
         <NoteForm equipmentName="idish (SUG)" />
         <CardForm className="mb-2">
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="phoneNumber"
@@ -37,7 +37,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                 <FormItem>
                   <FormLabel required>Telefon raqami</FormLabel>
                   <FormControl>
-                    <PhoneInput className="w-full 3xl:w-sm" placeholder="+998 XX XXX XX XX" {...field} />
+                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -53,7 +53,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                     <FormLabel>XICHO tanlang</FormLabel>
                     <FormControl>
                       <Select onValueChange={field.onChange} value={field.value || ''}>
-                        <SelectTrigger className="w-full 3xl:w-sm">
+                        <SelectTrigger className="3xl:w-sm w-full">
                           <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
                         </SelectTrigger>
                         <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
@@ -73,7 +73,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                   <FormLabel required>Idish (SUG) turini tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Idish (SUG) turini tanlang" />
                       </SelectTrigger>
                       <SelectContent>{childEquipmentOptions}</SelectContent>
@@ -90,7 +90,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                 <FormItem>
                   <FormLabel required>Idishning (SUG) zavod raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning zavod raqami" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Qurilmaning zavod raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -103,7 +103,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                 <FormItem>
                   <FormLabel required>Idishning (SUG) egasining nomi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Ishlab chiqargan zavod nomi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Ishlab chiqargan zavod nomi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -116,7 +116,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                 <FormItem>
                   <FormLabel required>Model, marka</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Model, marka" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Model, marka" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -126,9 +126,9 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
               control={form.control}
               name="manufacturedAt"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel required>Ishlab chiqarilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
@@ -138,16 +138,16 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
               control={form.control}
               name="partialCheckDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel required>
                       O‘tkazilgan tashki (NO), ichki koʻrik (VO) yoki gidrosinov (GI) sanasi
                     </FormLabel>
@@ -158,16 +158,16 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
               control={form.control}
               name="fullCheckDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel required>
                       O‘tkaziladigan tashki (NO), ichki koʻrik (VO) yoki gidrosinov (GI) sanasi
                     </FormLabel>
@@ -178,16 +178,16 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
               control={form.control}
               name="nonDestructiveCheckDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel required>Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -196,7 +196,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
@@ -206,7 +206,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                 <FormItem>
                   <FormLabel required>Hajmi</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Hajmi" {...field} />
+                    <Input type="text" className="3xl:w-sm w-full" placeholder="Hajmi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -219,7 +219,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                 <FormItem>
                   <FormLabel required>Muhit</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Muhit" {...field} />
+                    <Input type="text" className="3xl:w-sm w-full" placeholder="Muhit" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -232,7 +232,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                 <FormItem>
                   <FormLabel required>Ruxsat etilgan bosim</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Ruxsat etilgan bosim" {...field} />
+                    <Input type="text" className="3xl:w-sm w-full" placeholder="Ruxsat etilgan bosim" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -248,13 +248,13 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                     <Select
                       onValueChange={(value) => {
                         if (value) {
-                          field.onChange(value);
-                          form.setValue('districtId', '');
+                          field.onChange(value)
+                          form.setValue('districtId', '')
                         }
                       }}
                       value={field.value?.toString()}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Qurilma joylashgan viloyat" />
                       </SelectTrigger>
                       <SelectContent>{regionOptions}</SelectContent>
@@ -276,7 +276,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                       value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Qurilma joylashgan tuman" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
@@ -293,7 +293,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                 <FormItem>
                   <FormLabel required>Idishning (SUG) joylashgan manzili</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning joylashgan manzili" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Qurilmaning joylashgan manzili" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -303,7 +303,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
               control={form.control}
               name="location"
               render={({ field }) => (
-                <FormItem className="w-full 3xl:w-sm">
+                <FormItem className="3xl:w-sm w-full">
                   <FormLabel required>Geolokatsiya (xaritadan joyni tanlang)</FormLabel>
                   <FormControl>
                     <YandexMapModal
@@ -319,14 +319,14 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
           </div>
         </CardForm>
 
-        <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
-          <div className="pb-4 border-b">
+        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
+          <div className="border-b pb-4">
             <FormField
               name="labelPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                       Idishning (SUG) birkasi bilan sur‘ati
                     </FormLabel>
@@ -339,13 +339,13 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="assignmentDecreePath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                       Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq fayli
                     </FormLabel>
@@ -358,13 +358,13 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="saleContractPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                       Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
                     </FormLabel>
@@ -377,13 +377,13 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="expertisePath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekspertiza loyihasi fayli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -396,10 +396,10 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
               control={form.control}
               name="expertiseExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -410,18 +410,18 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                       />
                     </div>
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="equipmentCertPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                       Bosim ostida ishlovchi idish muvofiqlik sertifikati
                     </FormLabel>
@@ -434,13 +434,13 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="installationCertPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Montaj dalolatnomasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -451,13 +451,13 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
-              name="passportPath"
+              name="additionalFilePath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                       Bosim ostida ishlovchi idish pasporti
                     </FormLabel>
@@ -470,13 +470,13 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="hydraulicTestPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                       Idishning gidravlik sinov o'tkazilganligi
                     </FormLabel>
@@ -491,10 +491,10 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
               control={form.control}
               name="nextHydraulicTestDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel required>Navbatdagi gidravlik sinov sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -505,18 +505,18 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                       />
                     </div>
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="internalInspectionPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                       Idishning ichki ko'rikdan o'tkazilganligi
                     </FormLabel>
@@ -531,10 +531,10 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
               control={form.control}
               name="nextInternalInspectionDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel required>Navbatdagi ichki ko'rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -545,7 +545,7 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
                       />
                     </div>
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
@@ -555,5 +555,5 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

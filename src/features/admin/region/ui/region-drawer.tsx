@@ -1,19 +1,19 @@
-import { Fragment } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useUIActionLabel } from '@/shared/hooks';
-import { Input } from '@/shared/components/ui/input';
-import { useRegionForm } from '../model/use-region-form';
-import { useRegionDrawer } from '@/shared/hooks/entity-hooks';
-import { InputNumber } from '@/shared/components/ui/input-number';
-import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { Fragment } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useUIActionLabel } from '@/shared/hooks'
+import { Input } from '@/shared/components/ui/input'
+import { useRegionForm } from '../model/use-region-form'
+import { useRegionDrawer } from '@/shared/hooks/entity-hooks'
+import { InputNumber } from '@/shared/components/ui/input-number'
+import { BaseDrawer } from '@/shared/components/common/base-drawer'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 
 export const RegionDrawer = () => {
-  const { t } = useTranslation('common');
-  const { isOpen, onClose, mode } = useRegionDrawer();
-  const modeState = useUIActionLabel(mode);
-  const { form, onSubmit, isPending, isCreate, isFetching } = useRegionForm();
+  const { t } = useTranslation('common')
+  const { isOpen, onClose, mode } = useRegionDrawer()
+  const modeState = useUIActionLabel(mode)
+  const { form, onSubmit, isPending, isCreate, isFetching } = useRegionForm()
 
   return (
     <BaseDrawer
@@ -76,5 +76,5 @@ export const RegionDrawer = () => {
         </div>
       </Form>
     </BaseDrawer>
-  );
-};
+  )
+}

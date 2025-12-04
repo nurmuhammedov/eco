@@ -1,2 +1,2 @@
-import { createQueryKeys } from '@/shared/lib';
-export const checklistKeys = createQueryKeys('checklist');
+import { createQueryKeys } from '@/shared/lib'
+export const checklistKeys = createQueryKeys('checklist')

@@ -1,7 +1,7 @@
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { format } from 'date-fns';
-import { z } from 'zod';
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { format } from 'date-fns'
+import { z } from 'zod'
 
 export const DeclarationAppealDtoSchema = z.object({
   phoneNumber: z
@@ -27,4 +27,4 @@ export const DeclarationAppealDtoSchema = z.object({
   registrationOrganizationName: z.string().min(1, 'Roʻyxatga olgan tashkilot nomi kiritilishi shart'),
   declarationPath: z.string().min(1, 'Deklaratsiya titul varag‘i fayli biriktirilishi shart'),
   agreementPath: z.string().min(1, 'Kelishuv titul varag‘i fayli biriktirilishi shart'),
-});
+})

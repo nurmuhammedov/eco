@@ -1,19 +1,19 @@
-import { BoilerAppealDtoSchema, CreateBoilerApplicationDTO } from '@/entities/create-application';
-import { UserRoles } from '@/entities/user';
+import { BoilerAppealDtoSchema, CreateBoilerApplicationDTO } from '@/entities/create-application'
+import { UserRoles } from '@/entities/user'
 import {
   useChildEquipmentTypes,
   useDistrictSelectQueries,
   useHazardousFacilityDictionarySelect,
   useRegionSelectQueries,
-} from '@/shared/api/dictionaries';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+} from '@/shared/api/dictionaries'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMemo } from 'react'
+import { useForm } from 'react-hook-form'
 
 export const useCreateBoilerApplication = () => {
-  const { user } = useAuth();
+  const { user } = useAuth()
 
   const form = useForm<CreateBoilerApplicationDTO>({
     resolver: zodResolver(BoilerAppealDtoSchema),
@@ -42,26 +42,26 @@ export const useCreateBoilerApplication = () => {
       expertisePath: undefined,
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      passportPath: undefined,
+      additionalFilePath: undefined,
       internalInspectionPath: undefined,
       nextInternalInspectionDate: undefined,
       hydraulicTestPath: undefined,
       nextHydraulicTestDate: undefined,
     },
     mode: 'onChange',
-  });
+  })
 
-  const regionId = form.watch('regionId');
+  const regionId = form.watch('regionId')
 
-  const { data: regions } = useRegionSelectQueries();
-  const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL);
-  const { data: childEquipmentTypes } = useChildEquipmentTypes('BOILER');
+  const { data: regions } = useRegionSelectQueries()
+  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL)
+  const { data: childEquipmentTypes } = useChildEquipmentTypes('BOILER')
 
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities]);
-  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);
-  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions]);
-  const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes]);
+  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities])
+  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
+  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
+  const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes])
 
   return {
     form,
@@ -69,5 +69,5 @@ export const useCreateBoilerApplication = () => {
     districtOptions,
     childEquipmentOptions,
     hazardousFacilitiesOptions,
-  };
-};
+  }
+}

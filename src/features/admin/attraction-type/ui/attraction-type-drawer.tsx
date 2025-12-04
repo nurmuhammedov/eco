@@ -1,18 +1,18 @@
-import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { useUIActionLabel } from '@/shared/hooks';
-import { useAttractionTypeDrawer } from '@/shared/hooks/entity-hooks';
-import { useTranslation } from 'react-i18next';
-import { useAttractionTypeForm } from '../model/use-attraction-type-form';
+import { BaseDrawer } from '@/shared/components/common/base-drawer'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { useUIActionLabel } from '@/shared/hooks'
+import { useAttractionTypeDrawer } from '@/shared/hooks/entity-hooks'
+import { useTranslation } from 'react-i18next'
+import { useAttractionTypeForm } from '../model/use-attraction-type-form'
 
 export const AttractionTypeDrawer = () => {
-  const { t } = useTranslation('common');
-  const { isOpen, onClose, mode } = useAttractionTypeDrawer();
-  const { form, onSubmit, isPending, isCreate, isFetching, attractionOptions } = useAttractionTypeForm();
-  const modeState = useUIActionLabel(mode);
+  const { t } = useTranslation('common')
+  const { isOpen, onClose, mode } = useAttractionTypeDrawer()
+  const { form, onSubmit, isPending, isCreate, isFetching, attractionOptions } = useAttractionTypeForm()
+  const modeState = useUIActionLabel(mode)
 
   return (
     <BaseDrawer
@@ -56,7 +56,7 @@ export const AttractionTypeDrawer = () => {
                         value={field.value}
                         onValueChange={(value) => {
                           if (value) {
-                            field.onChange(value);
+                            field.onChange(value)
                           }
                         }}
                       >
@@ -75,5 +75,5 @@ export const AttractionTypeDrawer = () => {
         </div>
       </Form>
     </BaseDrawer>
-  );
-};
+  )
+}

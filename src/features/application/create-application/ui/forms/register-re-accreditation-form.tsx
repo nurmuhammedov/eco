@@ -1,20 +1,20 @@
-import { CardForm, ReAccreditationDTO } from '@/entities/create-application';
-import { useReRegisterAccreditation } from '@/features/application/create-application/model/use-re-register-accreditation';
-import { GoBack } from '@/shared/components/common';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { Button } from '@/shared/components/ui/button';
-import DatePicker from '@/shared/components/ui/datepicker.tsx';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input.tsx';
-import { MultiSelect } from '@/shared/components/ui/multi-select.tsx';
+import { CardForm, ReAccreditationDTO } from '@/entities/create-application'
+import { useReRegisterAccreditation } from '@/features/application/create-application/model/use-re-register-accreditation'
+import { GoBack } from '@/shared/components/common'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input.tsx'
+import { MultiSelect } from '@/shared/components/ui/multi-select.tsx'
 
 interface CreateAccreditationFormProps {
-  onSubmit: (data: ReAccreditationDTO) => void;
+  onSubmit: (data: ReAccreditationDTO) => void
 }
 
 export default ({ onSubmit }: CreateAccreditationFormProps) => {
-  const { form, accreditationSphereOptions } = useReRegisterAccreditation();
+  const { form, accreditationSphereOptions } = useReRegisterAccreditation()
 
   return (
     <Form {...form}>
@@ -40,7 +40,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             <FormField
               name="certificateDate"
               control={form.control}
@@ -87,7 +87,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
                 <FormItem>
                   <FormLabel required>Masʼul vakil F.IS.H.</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Masʼul vakil F.IS.H." {...field} />
+                    <Input type="text" className="3xl:w-sm w-full" placeholder="Masʼul vakil F.IS.H." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -96,12 +96,12 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
           </div>
         </CardForm>
 
-        <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 my-5">
+        <CardForm className="my-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <FormField
             name="accreditationFieldPath"
             control={form.control}
             render={() => (
-              <FormItem className="pb-4 border-b">
+              <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2">
                   <FormLabel required>Buyurtmachi faoliyat olib bormoqchi bo‘lgan akkreditatsiya sohasi</FormLabel>
                   <FormControl>
@@ -115,7 +115,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
             name="organizationCharterPath"
             control={form.control}
             render={() => (
-              <FormItem className="pb-4 border-b">
+              <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2">
                   <FormLabel required>
                     Buyurtmachi tomonidan akkreditatsiya qilish uchun to‘lov to‘langanligini tasdiqlovchi hujjat
@@ -131,7 +131,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
             name="declarationConformityPath"
             control={form.control}
             render={() => (
-              <FormItem className="pb-4 border-b">
+              <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2">
                   <FormLabel required>
                     Mavjud bino va inshootlar, jihozlar, asbob-uskunalar buyurtmachiga mulk huquqi yoki boshqa qonuniy
@@ -148,7 +148,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
             name="receiptPath"
             control={form.control}
             render={() => (
-              <FormItem className="pb-4 border-b">
+              <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2">
                   <FormLabel required>Ekspert tashkiloti nizomi</FormLabel>
                   <FormControl>
@@ -162,7 +162,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
             name="employeesInfoPath"
             control={form.control}
             render={() => (
-              <FormItem className="pb-4 border-b">
+              <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2">
                   <FormLabel required>
                     Akkreditasiya sohasidagi ishlarni bajaradigan hodimlar to‘g‘risidagi maʼlumotlar
@@ -178,7 +178,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
             name="propertyOwnerShipPath"
             control={form.control}
             render={() => (
-              <FormItem className="pb-4 border-b">
+              <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2">
                   <FormLabel required>Buyurtmachining sifat bo‘yicha va faoliyati bo‘yicha qo‘llanmasi</FormLabel>
                   <FormControl>
@@ -192,7 +192,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
             name="qualityPerformanceInstructionPath"
             control={form.control}
             render={() => (
-              <FormItem className="pb-4 border-b">
+              <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2">
                   <FormLabel required>
                     Buyurtmachining akkreditatsiya mezonlariga muvofiqligini tasdiqlovchi deklaratsiya
@@ -208,7 +208,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
             name="accreditationResourcedPath"
             control={form.control}
             render={() => (
-              <FormItem className="pb-4 border-b">
+              <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2">
                   <FormLabel required>
                     Akkreditasiya sohasidagi ishlarni bajarish uchun mavjud sharoitlar, jihozlar, dasturlar va
@@ -225,7 +225,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
             name="qualityManagementSystemPath"
             control={form.control}
             render={() => (
-              <FormItem className="pb-4 border-b">
+              <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2">
                   <FormLabel required>Buyurtmachining sifatni boshqarish tizimi xujjatlari</FormLabel>
                   <FormControl>
@@ -242,5 +242,5 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

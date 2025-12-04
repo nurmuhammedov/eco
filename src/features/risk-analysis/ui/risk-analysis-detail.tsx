@@ -1,54 +1,54 @@
-import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
-import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
+import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
+import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
 // import { useFilesToFix } from '@/features/risk-analysis/hooks/use-files-to-fix.ts';
-import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts';
+import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts'
 // import RiskAnalysisFilesToFix from '@/features/risk-analysis/ui/parts/risk-analysis-files-to-fix.tsx';
-import { GoBack } from '@/shared/components/common';
-import { DetailCardAccordion } from '@/shared/components/common/detail-card';
-import DetailRow from '@/shared/components/common/detail-row.tsx';
-import FileLink from '@/shared/components/common/file-link.tsx';
-import { Coordinate } from '@/shared/components/common/yandex-map';
-import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
-import { getDate } from '@/shared/utils/date.ts';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { ColumnDef } from '@tanstack/react-table';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { format, formatDate } from 'date-fns';
+import { GoBack } from '@/shared/components/common'
+import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import DetailRow from '@/shared/components/common/detail-row.tsx'
+import FileLink from '@/shared/components/common/file-link.tsx'
+import { Coordinate } from '@/shared/components/common/yandex-map'
+import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
+import { getDate } from '@/shared/utils/date.ts'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { ColumnDef } from '@tanstack/react-table'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { format, formatDate } from 'date-fns'
 
 const RiskAnalysisDetail = () => {
-  const { data } = useObjectInfo();
-  const navigate = useNavigate();
+  const { data } = useObjectInfo()
+  const navigate = useNavigate()
   const {
     paramsObject: { tin, id, type: ty, ...rest },
-  } = useCustomSearchParams();
-  const currentTin = tin;
-  const objectId = id;
-  let type = ty;
+  } = useCustomSearchParams()
+  const currentTin = tin
+  const objectId = id
+  let type = ty
   // const { data: filesToFix } = useFilesToFix();
-  const { user } = useAuth();
+  const { user } = useAuth()
 
   const { data: tableData, isLoading: isTableDataLoading } = usePaginatedData<any>(`/risk-analyses/belongings`, {
     ...rest,
     belongId: objectId,
     page: rest.page || 1,
     size: rest?.size || 10,
-  });
+  })
 
   if (type !== 'hf' && type !== 'irs') {
-    type = data?.type;
+    type = data?.type
   }
 
-  const currentBelongId = objectId; // Misol uchun
-  const currentIntervalId = user?.interval.id; // Misol uchun
+  const currentBelongId = objectId // Misol uchun
+  const currentIntervalId = user?.interval.id // Misol uchun
 
-  const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[]);
+  const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
 
   const handleView = (row: any) => {
-    navigate(`/risk-analysis/info/${row.original.id}?tin=${tin}&name=${data?.legalName || data?.ownerName || ''}`);
-  };
+    navigate(`/risk-analysis/info/${row.original.id}?tin=${tin}&name=${data?.legalName || data?.ownerName || ''}`)
+  }
 
   const columns: ColumnDef<any>[] = [
     {
@@ -85,24 +85,24 @@ const RiskAnalysisDetail = () => {
       header: 'Amallar',
       cell: ({ row }) => <DataTableRowActions row={row} showView={true} onView={handleView} />,
     },
-  ];
+  ]
 
   if (!data) {
-    return null;
+    return null
   }
 
   return (
     <>
-      <div className="flex justify-between items-center gap-2 mb-4">
+      <div className="mb-4 flex items-center justify-between gap-2">
         <GoBack
           title={`Tashkilot: ${data?.legalName || data?.ownerName || ''} ${currentTin ? `(${currentTin})` : ''}`}
         />
         {tableData?.content && tableData?.content?.length > 0 && (
-          <div className="flex justify-end items-center gap-2">
-            <div className="text-base font-normal truncate text-neutral-850">
+          <div className="flex items-center justify-end gap-2">
+            <div className="text-neutral-850 truncate text-base font-normal">
               Xavf tahlili natijasi: <span className="font-semibold">{tableData?.content?.[0]?.totalScore || 0}</span>
             </div>
-            <div className="text-base font-normal truncate text-neutral-850">
+            <div className="text-neutral-850 truncate text-base font-normal">
               Hozirgi holati: <span className="font-semibold">{tableData?.content?.[0]?.totalScore || 0}</span>
             </div>
           </div>
@@ -175,7 +175,7 @@ const RiskAnalysisDetail = () => {
         </DetailCardAccordion.Item> */}
       </DetailCardAccordion>
     </>
-  );
-};
+  )
+}
 
-export default RiskAnalysisDetail;
+export default RiskAnalysisDetail

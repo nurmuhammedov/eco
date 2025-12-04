@@ -5,13 +5,13 @@ export enum PermitDocumentType {
 }
 
 export interface Permit {
-  id: string | number;
-  organizationStir: string;
-  organizationName: string;
-  documentType: PermitDocumentType;
-  documentName: string;
-  registrationNumber: string;
-  registrationDate: string;
+  id: string | number
+  organizationStir: string
+  organizationName: string
+  documentType: PermitDocumentType
+  documentName: string
+  registrationNumber: string
+  registrationDate: string
 }
 
 export enum PermitTabKey {
@@ -24,22 +24,22 @@ export enum PermitTabKey {
 }
 
 export interface PermitSearchResult {
-  registerId: number;
-  name: string;
-  filePath: string;
-  tin: number;
-  pin: number;
-  type: number;
-  registerNumber: string;
-  registrationDate: string;
-  expiryDate: string;
-  documentType: string;
-  documentName: string;
-  organizationName: string;
-  activityAddresses: string[];
-  activityTypes: { typeId: number; name: string }[];
-  category: string | null;
-  documentId: number;
-  status: string;
-  brandMark: string | null;
+  registerId: number
+  name: string
+  filePath: string
+  tin: number
+  pin: number
+  type: number
+  registerNumber: string
+  registrationDate: string
+  expiryDate: string
+  documentType: string
+  documentName: string
+  organizationName: string
+  activityAddresses: string[]
+  activityTypes: { typeId: number; name: string }[]
+  category: string | null
+  documentId: number
+  status: string
+  brandMark: string | null
 }

@@ -1,11 +1,11 @@
-import { getTime } from '@/shared/lib/get-time';
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { getTime } from '@/shared/lib/get-time'
+import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import {
   centralApparatusAPI,
   centralApparatusKeys,
   CentralApparatusResponse,
   FilterCentralApparatusDTO,
-} from '@/entities/admin/central-apparatus';
+} from '@/entities/admin/central-apparatus'
 
 export const useCentralApparatusListQuery = (filters: FilterCentralApparatusDTO) => {
   return useQuery({
@@ -13,8 +13,8 @@ export const useCentralApparatusListQuery = (filters: FilterCentralApparatusDTO)
     queryKey: centralApparatusKeys.list('central-apparatus', filters),
     queryFn: () => centralApparatusAPI.list(filters),
     placeholderData: (previousData) => previousData,
-  });
-};
+  })
+}
 
 export const useCentralApparatusQuery = (
   id: number,
@@ -26,7 +26,7 @@ export const useCentralApparatusQuery = (
       ReturnType<typeof centralApparatusKeys.detail>
     >,
     'queryKey' | 'queryFn'
-  >,
+  >
 ) => {
   return useQuery({
     enabled: !!id,
@@ -35,5 +35,5 @@ export const useCentralApparatusQuery = (
     queryKey: centralApparatusKeys.detail('central-apparatus', id),
     placeholderData: (previousData) => previousData,
     ...options,
-  });
-};
+  })
+}

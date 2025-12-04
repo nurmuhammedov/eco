@@ -1,47 +1,47 @@
-import { APPLICATIONS_DATA } from '@/entities/create-application/constants/constants';
-import { ApplicationTypeEnum } from '@/entities/create-application/types/enums';
-import { API_ENDPOINTS } from '@/shared/api/endpoints';
-import { FilterField, FilterRow } from '@/shared/components/common/filters';
-import SearchInput from '@/shared/components/common/search-input/ui/search-input';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { Form, FormField, FormItem } from '@/shared/components/ui/form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { useCustomSearchParams } from '@/shared/hooks';
-import useData from '@/shared/hooks/api/useData';
-import { debounce } from '@/shared/lib';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { format } from 'date-fns';
-import React, { useCallback, useMemo } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { APPLICATIONS_DATA } from '@/entities/create-application/constants/constants'
+import { ApplicationTypeEnum } from '@/entities/create-application/types/enums'
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { FilterField, FilterRow } from '@/shared/components/common/filters'
+import SearchInput from '@/shared/components/common/search-input/ui/search-input'
+import DatePicker from '@/shared/components/ui/datepicker'
+import { Form, FormField, FormItem } from '@/shared/components/ui/form'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { useCustomSearchParams } from '@/shared/hooks'
+import useData from '@/shared/hooks/api/useData'
+import { debounce } from '@/shared/lib'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { format } from 'date-fns'
+import React, { useCallback, useMemo } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
-const ALL_ITEMS_VALUE = null;
+const ALL_ITEMS_VALUE = null
 
 interface ApplicationFiltersFormValues {
-  search?: string;
-  appealType?: ApplicationTypeEnum;
-  hfOfficeId?: string;
-  officeId?: string;
-  regionId?: string;
-  eqOfficeId?: string;
-  irsRegionId?: string;
-  xrayRegionId?: string;
-  executorId?: string;
-  formClass?: string;
-  mode?: string;
-  startDate?: Date;
-  endDate?: Date;
-  year?: string;
+  search?: string
+  appealType?: ApplicationTypeEnum
+  hfOfficeId?: string
+  officeId?: string
+  regionId?: string
+  eqOfficeId?: string
+  irsRegionId?: string
+  xrayRegionId?: string
+  executorId?: string
+  formClass?: string
+  mode?: string
+  startDate?: Date
+  endDate?: Date
+  year?: string
 }
 
 interface ApplicationFiltersProps {
-  inputKeys: (keyof ApplicationFiltersFormValues)[];
-  className?: string;
+  inputKeys: (keyof ApplicationFiltersFormValues)[]
+  className?: string
 }
 
 const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-3' }) => {
-  const { t } = useTranslation(['common']);
-  const { paramsObject, addParams } = useCustomSearchParams();
+  const { t } = useTranslation(['common'])
+  const { paramsObject, addParams } = useCustomSearchParams()
 
   const form = useForm<ApplicationFiltersFormValues>({
     defaultValues: {
@@ -54,84 +54,84 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
       endDate: paramsObject.endDate ? new Date(paramsObject.endDate) : undefined,
       year: paramsObject.year?.toString() || '',
     },
-  });
+  })
 
-  const { control, handleSubmit } = form;
+  const { control, handleSubmit } = form
 
-  const isOfficeFilterEnabled = useMemo(() => inputKeys.includes('officeId'), [inputKeys]);
-  const isRegionFilterEnabled = useMemo(() => inputKeys.includes('regionId'), [inputKeys]);
-  const isHfOfficeFilterEnabled = useMemo(() => inputKeys.includes('hfOfficeId'), [inputKeys]);
-  const isEqOfficeFilterEnabled = useMemo(() => inputKeys.includes('eqOfficeId'), [inputKeys]);
-  const isIrsRegionFilterEnabled = useMemo(() => inputKeys.includes('irsRegionId'), [inputKeys]);
-  const isXrayRegionFilterEnabled = useMemo(() => inputKeys.includes('xrayRegionId'), [inputKeys]);
-  const isExecutorFilterEnabled = useMemo(() => inputKeys.includes('executorId'), [inputKeys]);
-  const isStartDateFilterEnabled = useMemo(() => inputKeys.includes('startDate'), [inputKeys]);
-  const isEndDateFilterEnabled = useMemo(() => inputKeys.includes('endDate'), [inputKeys]);
-  const modeFilterEnabled = useMemo(() => inputKeys.includes('mode'), [inputKeys]);
-  const isYearFilterEnabled = useMemo(() => inputKeys.includes('year'), [inputKeys]);
+  const isOfficeFilterEnabled = useMemo(() => inputKeys.includes('officeId'), [inputKeys])
+  const isRegionFilterEnabled = useMemo(() => inputKeys.includes('regionId'), [inputKeys])
+  const isHfOfficeFilterEnabled = useMemo(() => inputKeys.includes('hfOfficeId'), [inputKeys])
+  const isEqOfficeFilterEnabled = useMemo(() => inputKeys.includes('eqOfficeId'), [inputKeys])
+  const isIrsRegionFilterEnabled = useMemo(() => inputKeys.includes('irsRegionId'), [inputKeys])
+  const isXrayRegionFilterEnabled = useMemo(() => inputKeys.includes('xrayRegionId'), [inputKeys])
+  const isExecutorFilterEnabled = useMemo(() => inputKeys.includes('executorId'), [inputKeys])
+  const isStartDateFilterEnabled = useMemo(() => inputKeys.includes('startDate'), [inputKeys])
+  const isEndDateFilterEnabled = useMemo(() => inputKeys.includes('endDate'), [inputKeys])
+  const modeFilterEnabled = useMemo(() => inputKeys.includes('mode'), [inputKeys])
+  const isYearFilterEnabled = useMemo(() => inputKeys.includes('year'), [inputKeys])
 
   const yearOptions = useMemo(() => {
-    const startYear = 2025;
-    const currentYear = new Date().getFullYear() + 1;
+    const startYear = 2025
+    const currentYear = new Date().getFullYear() + 1
 
     return Array.from({ length: currentYear - startYear + 1 }, (_, i) => {
-      const year = (startYear + i).toString();
+      const year = (startYear + i).toString()
       return (
         <SelectItem key={year} value={year}>
           {year}
         </SelectItem>
-      );
-    });
-  }, []);
+      )
+    })
+  }, [])
 
   const dynamicApplicationTypeOptions = APPLICATIONS_DATA.map((item) => (
     <SelectItem key={item.type} value={item.type}>
       {item.title}
     </SelectItem>
-  ));
+  ))
 
   const { data: officeOptionsDataFromApi, isLoading: isLoadingOffices } = useData<any>(
     `${API_ENDPOINTS.OFFICES}/select`,
-    isOfficeFilterEnabled || isHfOfficeFilterEnabled || isEqOfficeFilterEnabled,
-  );
+    isOfficeFilterEnabled || isHfOfficeFilterEnabled || isEqOfficeFilterEnabled
+  )
 
   const { data: regionOptionsDataFromApi, isLoading: isLoadingRegions } = useData<any>(
     `${API_ENDPOINTS.REGIONS_SELECT}`,
-    isRegionFilterEnabled || isIrsRegionFilterEnabled || isXrayRegionFilterEnabled,
-  );
+    isRegionFilterEnabled || isIrsRegionFilterEnabled || isXrayRegionFilterEnabled
+  )
 
   const { data: executorOptionsDataFromApi, isLoading: isLoadingExecutors } = useData<any>(
     `${API_ENDPOINTS.USERS}/office-users/inspectors/select`,
-    isExecutorFilterEnabled,
-  );
+    isExecutorFilterEnabled
+  )
 
   const onSubmit = (data: ApplicationFiltersFormValues) => {
-    const formattedData: any = { ...data };
+    const formattedData: any = { ...data }
     if (data.startDate) {
-      formattedData.startDate = format(data.startDate, 'yyyy-MM-dd');
+      formattedData.startDate = format(data.startDate, 'yyyy-MM-dd')
     }
     if (data.endDate) {
-      formattedData.endDate = format(data.endDate, 'yyyy-MM-dd');
+      formattedData.endDate = format(data.endDate, 'yyyy-MM-dd')
     }
 
-    addParams(formattedData, 'page');
-  };
+    addParams(formattedData, 'page')
+  }
 
-  const debouncedSubmit = useCallback(debounce(handleSubmit(onSubmit), 300), [handleSubmit, onSubmit]);
+  const debouncedSubmit = useCallback(debounce(handleSubmit(onSubmit), 300), [handleSubmit, onSubmit])
 
   const customDisabledFn = (date: Date) => {
     // @ts-ignore
-    const today = new Date(form.watch('startDate'));
-    today.setHours(0, 0, 0, 0);
+    const today = new Date(form.watch('startDate'))
+    today.setHours(0, 0, 0, 0)
 
-    return date < today;
-  };
+    return date < today
+  }
 
   const renderInput = (key: keyof ApplicationFiltersFormValues) => {
     switch (key) {
       case 'search':
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="3xl:w-auto w-auto max-w-80 flex-1">
             <Controller
               name="search"
               control={control}
@@ -140,25 +140,25 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                   {...field}
                   placeholder={t('search_placeholder', 'Qidirish ...')}
                   onChange={(value: string) => {
-                    field.onChange(value);
-                    debouncedSubmit();
+                    field.onChange(value)
+                    debouncedSubmit()
                   }}
                 />
               )}
             />
           </FilterField>
-        );
+        )
       case 'appealType':
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="3xl:w-auto w-auto max-w-80 flex-1">
             <Controller
               name="appealType"
               control={control}
               render={({ field }) => (
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value);
-                    handleSubmit(onSubmit)();
+                    field.onChange(value)
+                    handleSubmit(onSubmit)()
                   }}
                   value={field.value}
                 >
@@ -173,19 +173,19 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
               )}
             />
           </FilterField>
-        );
+        )
       case 'hfOfficeId':
-        if (!isHfOfficeFilterEnabled) return null;
+        if (!isHfOfficeFilterEnabled) return null
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="3xl:w-auto w-auto max-w-80 flex-1">
             <Controller
               name="hfOfficeId"
               control={control}
               render={({ field }) => (
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value);
-                    handleSubmit(onSubmit)();
+                    field.onChange(value)
+                    handleSubmit(onSubmit)()
                   }}
                   value={field.value}
                   disabled={isLoadingOffices}
@@ -201,19 +201,19 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
               )}
             />
           </FilterField>
-        );
+        )
       case 'irsRegionId':
-        if (!isIrsRegionFilterEnabled) return null;
+        if (!isIrsRegionFilterEnabled) return null
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="3xl:w-auto w-auto max-w-80 flex-1">
             <Controller
               name="irsRegionId"
               control={control}
               render={({ field }) => (
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value);
-                    handleSubmit(onSubmit)();
+                    field.onChange(value)
+                    handleSubmit(onSubmit)()
                   }}
                   value={field.value}
                   disabled={isLoadingRegions}
@@ -229,19 +229,19 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
               )}
             />
           </FilterField>
-        );
+        )
       case 'xrayRegionId':
-        if (!isXrayRegionFilterEnabled) return null;
+        if (!isXrayRegionFilterEnabled) return null
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="3xl:w-auto w-auto max-w-80 flex-1">
             <Controller
               name="xrayRegionId"
               control={control}
               render={({ field }) => (
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value);
-                    handleSubmit(onSubmit)();
+                    field.onChange(value)
+                    handleSubmit(onSubmit)()
                   }}
                   value={field.value}
                   disabled={isLoadingRegions}
@@ -257,19 +257,19 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
               )}
             />
           </FilterField>
-        );
+        )
       case 'eqOfficeId':
-        if (!isEqOfficeFilterEnabled) return null;
+        if (!isEqOfficeFilterEnabled) return null
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="3xl:w-auto w-auto max-w-80 flex-1">
             <Controller
               name="eqOfficeId"
               control={control}
               render={({ field }) => (
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value);
-                    handleSubmit(onSubmit)();
+                    field.onChange(value)
+                    handleSubmit(onSubmit)()
                   }}
                   value={field.value}
                   disabled={isLoadingOffices}
@@ -285,19 +285,19 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
               )}
             />
           </FilterField>
-        );
+        )
       case 'officeId':
-        if (!isOfficeFilterEnabled) return null;
+        if (!isOfficeFilterEnabled) return null
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="3xl:w-auto w-auto max-w-80 flex-1">
             <Controller
               name="officeId"
               control={control}
               render={({ field }) => (
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value);
-                    handleSubmit(onSubmit)();
+                    field.onChange(value)
+                    handleSubmit(onSubmit)()
                   }}
                   value={field.value}
                   disabled={isLoadingOffices}
@@ -313,19 +313,19 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
               )}
             />
           </FilterField>
-        );
+        )
       case 'mode':
-        if (!modeFilterEnabled) return null;
+        if (!modeFilterEnabled) return null
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="3xl:w-auto w-auto max-w-80 flex-1">
             <Controller
               name="mode"
               control={control}
               render={({ field }) => (
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value);
-                    handleSubmit(onSubmit)();
+                    field.onChange(value)
+                    handleSubmit(onSubmit)()
                   }}
                   value={field.value}
                 >
@@ -346,19 +346,19 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
               )}
             />
           </FilterField>
-        );
+        )
       case 'executorId':
-        if (!isExecutorFilterEnabled) return null;
+        if (!isExecutorFilterEnabled) return null
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="3xl:w-auto w-auto max-w-80 flex-1">
             <Controller
               name="executorId"
               control={control}
               render={({ field }) => (
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value);
-                    handleSubmit(onSubmit)();
+                    field.onChange(value)
+                    handleSubmit(onSubmit)()
                   }}
                   value={field.value}
                   disabled={isLoadingExecutors}
@@ -374,11 +374,11 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
               )}
             />
           </FilterField>
-        );
+        )
       case 'startDate':
-        if (!isStartDateFilterEnabled) return null;
+        if (!isStartDateFilterEnabled) return null
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 min-w-60">
+          <FilterField key={key} className="3xl:w-auto w-auto min-w-60 flex-1">
             <FormField
               control={control}
               name="startDate"
@@ -388,12 +388,12 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                     <DatePicker
                       value={field.value}
                       onChange={(date) => {
-                        field.onChange(date);
-                        const endDate = form.getValues('endDate');
+                        field.onChange(date)
+                        const endDate = form.getValues('endDate')
                         if (endDate && date && endDate < date) {
-                          form.setValue('endDate', undefined);
+                          form.setValue('endDate', undefined)
                         }
-                        handleSubmit(onSubmit)();
+                        handleSubmit(onSubmit)()
                       }}
                       placeholder="dan"
                     />
@@ -401,10 +401,10 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                       <button
                         type="button"
                         onClick={() => {
-                          field.onChange(undefined);
-                          handleSubmit(onSubmit)();
+                          field.onChange(undefined)
+                          handleSubmit(onSubmit)()
                         }}
-                        className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                        className="absolute top-1/2 right-12 -translate-y-1/2 text-gray-400 hover:text-red-500"
                       >
                         ✖
                       </button>
@@ -414,25 +414,25 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
               )}
             />
           </FilterField>
-        );
+        )
 
       case 'endDate':
-        if (!isEndDateFilterEnabled) return null;
+        if (!isEndDateFilterEnabled) return null
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 min-w-60">
+          <FilterField key={key} className="3xl:w-auto w-auto min-w-60 flex-1">
             <FormField
               control={control}
               name="endDate"
               render={({ field }) => {
-                const startDate = form.getValues('startDate');
+                const startDate = form.getValues('startDate')
                 return (
                   <FormItem>
                     <div className="relative">
                       <DatePicker
                         value={field.value}
                         onChange={(date) => {
-                          field.onChange(date);
-                          handleSubmit(onSubmit)();
+                          field.onChange(date)
+                          handleSubmit(onSubmit)()
                         }}
                         placeholder="gacha"
                         disableStrategy="custom"
@@ -443,34 +443,34 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                         <button
                           type="button"
                           onClick={() => {
-                            field.onChange(undefined);
-                            handleSubmit(onSubmit)();
+                            field.onChange(undefined)
+                            handleSubmit(onSubmit)()
                           }}
-                          className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
+                          className="absolute top-1/2 right-12 -translate-y-1/2 text-gray-400 hover:text-red-500"
                         >
                           ✖
                         </button>
                       )}
                     </div>
                   </FormItem>
-                );
+                )
               }}
             />
           </FilterField>
-        );
+        )
 
       case 'year':
-        if (!isYearFilterEnabled) return null;
+        if (!isYearFilterEnabled) return null
         return (
-          <FilterField key={key} className="w-auto 3xl:w-auto flex-1 max-w-80">
+          <FilterField key={key} className="3xl:w-auto w-auto max-w-80 flex-1">
             <Controller
               name="year"
               control={control}
               render={({ field }) => (
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value);
-                    handleSubmit(onSubmit)();
+                    field.onChange(value)
+                    handleSubmit(onSubmit)()
                   }}
                   value={field.value || new Date().getFullYear().toString()}
                 >
@@ -482,22 +482,22 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
               )}
             />
           </FilterField>
-        );
+        )
 
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className={className}>
-        <FilterRow className="flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden">
+        <FilterRow className="no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden">
           {inputKeys.map((key) => renderInput(key))}
         </FilterRow>
       </form>
     </Form>
-  );
-};
+  )
+}
 
-export default Filter;
+export default Filter

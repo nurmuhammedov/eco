@@ -1,2 +1,2 @@
-export { RegionList } from './ui/region-list.tsx';
-export { RegionDrawer } from './ui/region-drawer';
+export { RegionList } from './ui/region-list.tsx'
+export { RegionDrawer } from './ui/region-drawer'

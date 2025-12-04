@@ -1,4 +1,4 @@
-export { pick } from './pick';
+export { pick } from './pick'
 export {
   setStorage,
   getStorage,
@@ -8,6 +8,6 @@ export {
   getSessionStorage,
   clearSessionStorage,
   removeSessionStorage,
-} from './storage';
-export { getUserData } from './getUserData';
-export { getInitials } from './get-initial-letter';
+} from './storage'
+export { getUserData } from './getUserData'
+export { getInitials } from './get-initial-letter'

@@ -1,4 +1,4 @@
 // src/entities/admin/checklist-templates/models/checklist-templates.query-keys.ts
-import { createQueryKeys } from '@/shared/lib';
+import { createQueryKeys } from '@/shared/lib'
 
-export const checklistTemplateKeys = createQueryKeys('checklist-templates');
+export const checklistTemplateKeys = createQueryKeys('checklist-templates')

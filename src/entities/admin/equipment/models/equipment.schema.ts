@@ -1,17 +1,17 @@
-import { z } from 'zod';
-import { EquipmentTypeEnum } from './equipment.types';
+import { z } from 'zod'
+import { EquipmentTypeEnum } from './equipment.types'
 
 export const equipmentBaseSchema = {
   name: z.string().min(1, 'Tuman nomi majburiy'),
   equipmentType: z.nativeEnum(EquipmentTypeEnum, {
     errorMap: () => ({ message: 'Jihozlar turini tanlash majburiy' }),
   }),
-};
+}
 
 export const equipmentSchema = z.object({
   id: z.number().optional(),
   ...equipmentBaseSchema,
-});
+})
 
 export const schemas = {
   create: z.object(equipmentBaseSchema),
@@ -25,4 +25,4 @@ export const schemas = {
     size: z.number().optional().default(20),
   }),
   single: equipmentSchema,
-};
+}

@@ -1,25 +1,25 @@
-import { CardForm } from '@/entities/create-application';
-import { GoBack } from '@/shared/components/common';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { Button } from '@/shared/components/ui/button';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { Textarea } from '@/shared/components/ui/textarea';
-import { format } from 'date-fns';
-import { FC } from 'react';
-import { useParams } from 'react-router-dom';
-import { usePreventionForm } from '../model/use-prevention-form';
+import { CardForm } from '@/entities/create-application'
+import { GoBack } from '@/shared/components/common'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { Textarea } from '@/shared/components/ui/textarea'
+import { format } from 'date-fns'
+import { FC } from 'react'
+import { useParams } from 'react-router-dom'
+import { usePreventionForm } from '../model/use-prevention-form'
 
 export const PreventionForm: FC = () => {
-  const { form, onSubmit, isPending, isLoadingTypes, preventionTypesOptions } = usePreventionForm();
-  const { tin = undefined } = useParams();
+  const { form, onSubmit, isPending, isLoadingTypes, preventionTypesOptions } = usePreventionForm()
+  const { tin = undefined } = useParams()
   return (
     <Form {...form}>
       <form onSubmit={onSubmit} className="space-y-4">
         <GoBack title={`Profilaktika tadbirini o'tkazish - ${tin} (STIR)`} />
         <CardForm>
-          <div className="grid lg:grid-cols-1 xl:grid-cols-4 gap-4 mt-4">
+          <div className="mt-4 grid gap-4 lg:grid-cols-1 xl:grid-cols-4">
             <FormField
               control={form.control}
               name="date"
@@ -68,7 +68,7 @@ export const PreventionForm: FC = () => {
               </FormItem>
             )}
           />
-          <div className="grid lg:grid-cols-1 xl:grid-cols-4 gap-4 mt-4">
+          <div className="mt-4 grid gap-4 lg:grid-cols-1 xl:grid-cols-4">
             <FormField
               control={form.control}
               name="eventFilePath"
@@ -100,5 +100,5 @@ export const PreventionForm: FC = () => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

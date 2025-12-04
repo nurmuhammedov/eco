@@ -1,26 +1,26 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
 
 // Hook'lar
-import { usePublicEquipmentDetail } from '../hooks/usePublicEquipmentDetail';
-import { useSubmitAppeal } from '../hooks/useSubmitAppeal';
-import { useUploadFile } from '../hooks/useUploadFile';
-import { AppealDto } from '../api/postAppeal';
+import { usePublicEquipmentDetail } from '../hooks/usePublicEquipmentDetail'
+import { useSubmitAppeal } from '../hooks/useSubmitAppeal'
+import { useUploadFile } from '../hooks/useUploadFile'
+import { AppealDto } from '../api/postAppeal'
 
 // UI Komponentlar
-import { CameraCapture } from './CameraCapture';
-import { getDate } from '@/shared/utils/date.ts';
-import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
-import { Coordinate } from '@/shared/components/common/yandex-map';
-import { PhoneInput } from '@/shared/components/ui/phone-input';
-import { Button } from '@/shared/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { Textarea } from '@/shared/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { CameraCapture } from './CameraCapture'
+import { getDate } from '@/shared/utils/date.ts'
+import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
+import { Coordinate } from '@/shared/components/common/yandex-map'
+import { PhoneInput } from '@/shared/components/ui/phone-input'
+import { Button } from '@/shared/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { Textarea } from '@/shared/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 
 // Zod sxemasi
 const formSchema = z.object({
@@ -34,56 +34,56 @@ const formSchema = z.object({
     .refine((files) => !files || files.length === 0 || files[0].size <= 5 * 1024 * 1024, {
       message: 'Fayl hajmi 5MB dan oshmasligi kerak.',
     }),
-});
+})
 
-type SimpleFormValues = z.infer<typeof formSchema>;
+type SimpleFormValues = z.infer<typeof formSchema>
 
 export const ContactForm = () => {
-  const { id } = useParams<{ id: string }>();
-  const { data, isLoading: isLoadingEquipment } = usePublicEquipmentDetail(id);
-  const { mutate: submitAppeal, isPending: isSubmittingAppeal } = useSubmitAppeal();
-  const { mutateAsync: uploadFile, isPending: isUploadingFile } = useUploadFile();
+  const { id } = useParams<{ id: string }>()
+  const { data, isLoading: isLoadingEquipment } = usePublicEquipmentDetail(id)
+  const { mutate: submitAppeal, isPending: isSubmittingAppeal } = useSubmitAppeal()
+  const { mutateAsync: uploadFile, isPending: isUploadingFile } = useUploadFile()
 
-  const [submittedAppealNumber, setSubmittedAppealNumber] = useState<string | null>(null);
-  const [capturedImage, setCapturedImage] = useState<File | null>(null);
+  const [submittedAppealNumber, setSubmittedAppealNumber] = useState<string | null>(null)
+  const [capturedImage, setCapturedImage] = useState<File | null>(null)
 
   const form = useForm<SimpleFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: { fullName: '', phoneNumber: '', message: '' },
-  });
+  })
 
   const onSubmit = async (values: SimpleFormValues) => {
-    if (!id || !data) return;
+    if (!id || !data) return
 
-    let uploadedFilePath: string | undefined = undefined;
+    let uploadedFilePath: string | undefined = undefined
 
     // `fileToUpload` ni aniqlash bloki olib tashlandi, logikani soddalashtiramiz
     if (capturedImage) {
       // Birinchi navbatda kameradan olingan rasmni tekshiramiz
       try {
-        const uploadResponse = await uploadFile(capturedImage);
+        const uploadResponse = await uploadFile(capturedImage)
         if (uploadResponse && uploadResponse.data) {
-          uploadedFilePath = uploadResponse.data;
+          uploadedFilePath = uploadResponse.data
         } else {
-          throw new Error("Rasm yuklandi, lekin serverdan fayl yo'li kelmadi.");
+          throw new Error("Rasm yuklandi, lekin serverdan fayl yo'li kelmadi.")
         }
       } catch (error) {
-        alert('Rasmni yuklashda xatolik yuz berdi.');
-        return;
+        alert('Rasmni yuklashda xatolik yuz berdi.')
+        return
       }
     }
     // Agar kameradan rasm olinmagan bo'lsa, fayl inputini tekshiramiz
     else if (values.file && values.file.length > 0) {
       try {
-        const uploadResponse = await uploadFile(values.file[0]);
+        const uploadResponse = await uploadFile(values.file[0])
         if (uploadResponse && uploadResponse.data) {
-          uploadedFilePath = uploadResponse.data;
+          uploadedFilePath = uploadResponse.data
         } else {
-          throw new Error("Fayl yuklandi, lekin serverdan fayl yo'li kelmadi.");
+          throw new Error("Fayl yuklandi, lekin serverdan fayl yo'li kelmadi.")
         }
       } catch (error) {
-        alert('Faylni yuklashda xatolik yuz berdi.');
-        return;
+        alert('Faylni yuklashda xatolik yuz berdi.')
+        return
       }
     }
 
@@ -96,68 +96,68 @@ export const ContactForm = () => {
       belongId: data.id,
       belongType: 'EQUIPMENT',
       filePath: uploadedFilePath,
-    };
+    }
 
     // Asosiy murojaatni yuboramiz
     submitAppeal(appealDto, {
       onSuccess: (response) => {
         if (response && response.message) {
-          setSubmittedAppealNumber(response.message);
-          setCapturedImage(null);
-          form.reset();
-          setTimeout(() => setSubmittedAppealNumber(null), 10000);
+          setSubmittedAppealNumber(response.message)
+          setCapturedImage(null)
+          form.reset()
+          setTimeout(() => setSubmittedAppealNumber(null), 10000)
         }
       },
       onError: (error) => {
-        alert(`Murojaat yuborishda xatolik: ${error.message}`);
+        alert(`Murojaat yuborishda xatolik: ${error.message}`)
       },
-    });
-  };
+    })
+  }
 
   if (isLoadingEquipment) {
     return (
-      <div className="w-full max-w-4xl mx-auto p-6 text-center">
+      <div className="mx-auto w-full max-w-4xl p-6 text-center">
         <p>Yuklanmoqda...</p>
       </div>
-    );
+    )
   }
 
   if (!data) {
     return (
-      <div className="w-full max-w-4xl mx-auto p-6 text-center">
+      <div className="mx-auto w-full max-w-4xl p-6 text-center">
         <p>Ushbu ID bo'yicha qurilma ma'lumotlari topilmadi.</p>
       </div>
-    );
+    )
   }
 
-  const currentObjLocation = data.location?.split(',') || ([] as Coordinate[]);
+  const currentObjLocation = data.location?.split(',') || ([] as Coordinate[])
   const getStatusInfo = (statusKey?: string) => {
     switch (statusKey) {
       case 'ACTIVE':
-        return { text: 'Amaldagi qurilma', classes: 'bg-green-100 text-green-800' };
+        return { text: 'Amaldagi qurilma', classes: 'bg-green-100 text-green-800' }
       case 'INACTIVE':
-        return { text: 'Reyestrdan chiqarilgan qurilma', classes: 'bg-red-100 text-red-800' };
+        return { text: 'Reyestrdan chiqarilgan qurilma', classes: 'bg-red-100 text-red-800' }
       case 'EXPIRED':
-        return { text: "Muddati o'tgan qurilma", classes: 'bg-red-100 text-red-800' };
+        return { text: "Muddati o'tgan qurilma", classes: 'bg-red-100 text-red-800' }
       case 'NO_DATE':
-        return { text: 'Muddati kiritilmagan', classes: 'bg-yellow-100 text-yellow-800' };
+        return { text: 'Muddati kiritilmagan', classes: 'bg-yellow-100 text-yellow-800' }
       default:
-        return { text: "Noma'lum holat", classes: 'bg-gray-100 text-gray-800' };
+        return { text: "Noma'lum holat", classes: 'bg-gray-100 text-gray-800' }
     }
-  };
-  const statusInfo = getStatusInfo(data.status);
+  }
+  const statusInfo = getStatusInfo(data.status)
   const infoRowStyles =
-    'flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 px-4 border-b border-border last:border-b-0';
-  const infoLabelStyles = 'text-sm text-muted-foreground mb-1 sm:mb-0';
-  const infoValueStyles = 'text-sm font-medium text-foreground text-left sm:text-right';
+    'flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 px-4 border-b border-border last:border-b-0'
+  const infoLabelStyles = 'text-sm text-muted-foreground mb-1 sm:mb-0'
+  const infoValueStyles = 'text-sm font-medium text-foreground text-left sm:text-right'
 
-  const isProcessing = isUploadingFile || isSubmittingAppeal;
+  const isProcessing = isUploadingFile || isSubmittingAppeal
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6">
+    <div className="mx-auto w-full max-w-4xl space-y-6">
       {/* --- Qurilma ma'lumotlari bloki --- */}
-      <div className="bg-card text-card-foreground rounded-lg border shadow-md overflow-hidden">
-        <div className="p-4 bg-[var(--color-blue-200)]">
+      <div className="bg-card text-card-foreground overflow-hidden rounded-lg border shadow-md">
+        <div className="bg-[var(--color-blue-200)] p-4">
           <h2 className="text-lg font-semibold text-[var(--color-blue-400)]">Qurilma ma'lumotlari</h2>
         </div>
         <div className="p-2">
@@ -207,7 +207,7 @@ export const ContactForm = () => {
           </div>
           <div className={infoRowStyles}>
             <span className={infoLabelStyles}>Holati</span>
-            <span className={`${infoValueStyles} px-2 py-1 rounded-full text-xs font-medium ${statusInfo.classes}`}>
+            <span className={`${infoValueStyles} rounded-full px-2 py-1 text-xs font-medium ${statusInfo.classes}`}>
               {statusInfo.text}
             </span>
           </div>
@@ -228,7 +228,7 @@ export const ContactForm = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   download
-                  className="px-4 py-2 text-sm bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80 transition-colors"
+                  className="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-md px-4 py-2 text-sm transition-colors"
                 >
                   Yuklab olish
                 </a>
@@ -241,8 +241,8 @@ export const ContactForm = () => {
       </div>
 
       {/* --- Murojaat yuborish formasi --- */}
-      <div className="w-full bg-card text-card-foreground rounded-lg border shadow-md overflow-hidden">
-        <div className="p-4 bg-[var(--color-blue-200)]">
+      <div className="bg-card text-card-foreground w-full overflow-hidden rounded-lg border shadow-md">
+        <div className="bg-[var(--color-blue-200)] p-4">
           <h2 className="text-lg font-semibold text-[var(--color-blue-400)]">Murojaat yuborish</h2>
         </div>
 
@@ -306,7 +306,7 @@ export const ContactForm = () => {
                 <FormLabel>Rasm biriktirish (ixtiyoriy)</FormLabel>
                 {!capturedImage && <CameraCapture onCapture={(file) => setCapturedImage(file)} />}
                 {capturedImage && (
-                  <div className="mt-2 p-2 border rounded-md relative w-fit">
+                  <div className="relative mt-2 w-fit rounded-md border p-2">
                     <img
                       src={URL.createObjectURL(capturedImage)}
                       alt="Olingan rasm"
@@ -351,7 +351,7 @@ export const ContactForm = () => {
           </Form>
 
           {submittedAppealNumber && (
-            <div className="mt-4 p-4 rounded-md bg-green-100 text-green-800 border border-green-200">
+            <div className="mt-4 rounded-md border border-green-200 bg-green-100 p-4 text-green-800">
               <p>
                 Murojaat yuborildi, sizning murojaat raqamingiz{' '}
                 <strong className="font-bold">{submittedAppealNumber}</strong>
@@ -362,12 +362,12 @@ export const ContactForm = () => {
       </div>
 
       {/* --- Qurilma manzili (Yandex Map) --- */}
-      <div className="w-full bg-card text-card-foreground rounded-lg border shadow-md overflow-hidden">
-        <div className="p-4 bg-[var(--color-blue-200)]">
+      <div className="bg-card text-card-foreground w-full overflow-hidden rounded-lg border shadow-md">
+        <div className="bg-[var(--color-blue-200)] p-4">
           <h2 className="text-lg font-semibold text-[var(--color-blue-400)]">Qurilma manzili</h2>
         </div>
         <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
       </div>
     </div>
-  );
-};
+  )
+}

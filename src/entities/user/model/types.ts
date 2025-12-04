@@ -18,7 +18,7 @@ export const UserRoleLabels: Record<UserRoles, string> = {
   [UserRoles.REGIONAL]: 'Hududiy bo‘lim boshlig‘i',
   [UserRoles.INSPECTOR]: 'Inspektor',
   [UserRoles.INDIVIDUAL]: 'Jismoniy shaxs',
-};
+}
 
 export enum Direction {
   APPEAL = 'APPEAL',
@@ -38,17 +38,17 @@ export enum Direction {
 }
 
 interface IInterval {
-  id: number;
-  year: number;
-  startDate: string;
-  endDate: string;
-  status: 'CURRENT' | 'PAST' | 'FUTURE';
+  id: number
+  year: number
+  startDate: string
+  endDate: string
+  status: 'CURRENT' | 'PAST' | 'FUTURE'
 }
 
 export type UserState = {
-  id: string;
-  name: string;
-  interval: IInterval;
-  role: UserRoles;
-  directions: Direction[];
-};
+  id: string
+  name: string
+  interval: IInterval
+  role: UserRoles
+  directions: Direction[]
+}

@@ -1,1 +1,1 @@
-export { PDFViewer } from './ui/pdf-viewer';
+export { PDFViewer } from './ui/pdf-viewer'

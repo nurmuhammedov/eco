@@ -23,29 +23,29 @@ export enum ViewMode {
 
 export interface PDFViewerProps {
   /** PDF fayl URL manzili */
-  url: string;
+  url: string
   /** Hujjat sarlavhasi (ixtiyoriy) */
-  title?: string;
+  title?: string
   /** Qo'shimcha CSS klass */
-  className?: string;
+  className?: string
   /** PDF viewer balandligi */
-  height?: string;
+  height?: string
   /** PDF viewer kengligi */
-  width?: string;
+  width?: string
   /** Boshlang'ich zoom darajasi */
-  initialZoom?: ZoomLevel | number;
+  initialZoom?: ZoomLevel | number
   /** Ko'rsatish rejimi */
-  viewMode?: ViewMode;
+  viewMode?: ViewMode
   /** Toolbar ko'rsatilsinmi */
-  showToolbar?: boolean;
+  showToolbar?: boolean
   /** Light mode yoqilsinmi */
-  lightMode?: boolean;
+  lightMode?: boolean
   /** PDF yuklanganda callback */
-  onLoad?: () => void;
+  onLoad?: () => void
   /** Xatolik yuz berganda callback */
-  onError?: (error: Error) => void;
+  onError?: (error: Error) => void
   /** Zoom o'zgarganda callback */
-  onZoomChange?: (zoom: ZoomLevel | number) => void;
+  onZoomChange?: (zoom: ZoomLevel | number) => void
   /** Ko'rinish rejimi o'zgarganda callback */
-  onViewModeChange?: (mode: ViewMode) => void;
+  onViewModeChange?: (mode: ViewMode) => void
 }

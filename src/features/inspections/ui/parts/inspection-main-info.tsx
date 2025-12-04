@@ -1,25 +1,25 @@
-import DetailRow from '@/shared/components/common/detail-row.tsx';
-import { getDate } from '@/shared/utils/date.ts';
-import FileLink from '@/shared/components/common/file-link.tsx';
-import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx';
-import { useState } from 'react';
-import { Eye } from 'lucide-react';
-import { Badge } from '@/shared/components/ui/badge';
-import { useData } from '@/shared/hooks';
+import DetailRow from '@/shared/components/common/detail-row.tsx'
+import { getDate } from '@/shared/utils/date.ts'
+import FileLink from '@/shared/components/common/file-link.tsx'
+import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx'
+import { useState } from 'react'
+import { Eye } from 'lucide-react'
+import { Badge } from '@/shared/components/ui/badge'
+import { useData } from '@/shared/hooks'
 
 const InspectionMainInfo = ({ inspectionData }: any) => {
-  const [signers, setSigners] = useState<any[]>([]);
+  const [signers, setSigners] = useState<any[]>([])
 
   const { data, isLoading } = useData<any>(
     `/integration/postal-mail/${inspectionData?.notificationLetterId}`,
     !!inspectionData &&
       !!inspectionData?.notificationLetterStatus &&
       !!inspectionData?.notificationLetterId &&
-      inspectionData?.notificationLetterStatus !== 'RECEIVED_BY_CLIENT',
-  );
+      inspectionData?.notificationLetterStatus !== 'RECEIVED_BY_CLIENT'
+  )
 
   if (!inspectionData) {
-    return null;
+    return null
   }
 
   return (
@@ -29,7 +29,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
         value={getDate(inspectionData?.startDate) + ' - ' + getDate(inspectionData?.endDate)}
       />
       {inspectionData?.inspectors?.map((item: any, idx: number) => {
-        return <DetailRow key={item.id} title={`Tekshiruvchi inspektor ${idx + 1}:`} value={item?.name} />;
+        return <DetailRow key={item.id} title={`Tekshiruvchi inspektor ${idx + 1}:`} value={item?.name} />
       })}
 
       <DetailRow
@@ -46,9 +46,9 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
               <span>{inspectionData?.decreeNumber || '-'}</span> |
               <FileLink url={inspectionData?.decree?.path} />
               <button
-                className="cursor-pointer hover:text-yellow-200 text-[#A6B1BB]"
+                className="cursor-pointer text-[#A6B1BB] hover:text-yellow-200"
                 onClick={() => {
-                  setSigners(inspectionData?.decree?.signers || []);
+                  setSigners(inspectionData?.decree?.signers || [])
                 }}
               >
                 <Eye size="18" />
@@ -94,7 +94,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
       />
       <SignersModal setSigners={setSigners} signers={signers} />
     </div>
-  );
-};
+  )
+}
 
-export default InspectionMainInfo;
+export default InspectionMainInfo

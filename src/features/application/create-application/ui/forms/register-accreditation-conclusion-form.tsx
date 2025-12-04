@@ -1,7 +1,7 @@
-import { CardForm, AccreditationConclusionDTO } from '@/entities/create-application';
-import { GoBack } from '@/shared/components/common';
-import { Button } from '@/shared/components/ui/button';
-import DatePicker from '@/shared/components/ui/datepicker.tsx';
+import { CardForm, AccreditationConclusionDTO } from '@/entities/create-application'
+import { GoBack } from '@/shared/components/common'
+import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker.tsx'
 import {
   Form,
   FormControl,
@@ -10,30 +10,30 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input.tsx';
-import { useRegisterAccreditationConclusion } from '@/features/application/create-application/model/use-register-accreditation-conclusion.ts';
-import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select.tsx';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { parseISO } from 'date-fns';
-import { useLegalInfo } from '@/shared/hooks/use-legal-info.ts';
+} from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input.tsx'
+import { useRegisterAccreditationConclusion } from '@/features/application/create-application/model/use-register-accreditation-conclusion.ts'
+import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select.tsx'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { parseISO } from 'date-fns'
+import { useLegalInfo } from '@/shared/hooks/use-legal-info.ts'
 
 interface CreateAccreditationFormProps {
-  onSubmit: (data: AccreditationConclusionDTO) => void;
+  onSubmit: (data: AccreditationConclusionDTO) => void
 }
 
 export default ({ onSubmit }: CreateAccreditationFormProps) => {
-  const { form, regionOptions, districtOptions } = useRegisterAccreditationConclusion();
-  const { mutateAsync, isPending } = useLegalInfo();
+  const { form, regionOptions, districtOptions } = useRegisterAccreditationConclusion()
+  const { mutateAsync, isPending } = useLegalInfo()
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="Sanoat xavfsizligi ekspertiza xulosalarini ro‘yxatga olish" />
         <CardForm className="mt-4">
-          <h2 className="font-medium mb-2">Arizachi to‘g‘risida ma’lumotlar</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+          <h2 className="mb-2 font-medium">Arizachi to‘g‘risida ma’lumotlar</h2>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
             <FormField
               name="phoneNumber"
               control={form.control}
@@ -50,8 +50,8 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
           </div>
         </CardForm>
         <CardForm className="mt-4">
-          <h2 className="font-medium mb-2">Buyurtmachi to‘g‘risida asosiy ma’lumotlar</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 mb-4">
+          <h2 className="mb-2 font-medium">Buyurtmachi to‘g‘risida asosiy ma’lumotlar</h2>
+          <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
             <FormField
               name="customerTin"
               control={form.control}
@@ -70,19 +70,19 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
                 onClick={() => {
                   mutateAsync({ tin: Number(form.watch('customerTin')) })
                     .then((data) => {
-                      return data?.data?.data;
+                      return data?.data?.data
                     })
                     .then((data) => {
-                      form.setValue('customerLegalName', data?.legalName);
-                      form.setValue('customerLegalAddress', data?.legalAddress);
-                      form.setValue('address', data?.address);
-                      form.setValue('customerLegalForm', data?.legalForm);
-                      form.setValue('customerPhoneNumber', '+' + data?.phoneNumber);
-                      form.setValue('customerFullName', data?.fullName);
-                      form.setValue('regionId', String(data?.regionId));
-                      form.setValue('districtId', String(data?.districtId));
-                      form.clearErrors();
-                    });
+                      form.setValue('customerLegalName', data?.legalName)
+                      form.setValue('customerLegalAddress', data?.legalAddress)
+                      form.setValue('address', data?.address)
+                      form.setValue('customerLegalForm', data?.legalForm)
+                      form.setValue('customerPhoneNumber', '+' + data?.phoneNumber)
+                      form.setValue('customerFullName', data?.fullName)
+                      form.setValue('regionId', String(data?.regionId))
+                      form.setValue('districtId', String(data?.districtId))
+                      form.clearErrors()
+                    })
                 }}
                 disabled={isPending || form.watch('customerTin')?.length !== 9}
                 type="button"
@@ -91,7 +91,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
               </Button>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
             <FormField
               name="customerLegalName"
               control={form.control}
@@ -166,8 +166,8 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
                   <FormControl>
                     <Select
                       onValueChange={(v) => {
-                        field.onChange(v);
-                        form.setValue('districtId', '');
+                        field.onChange(v)
+                        form.setValue('districtId', '')
                       }}
                       value={String(field.value || '')}
                     >
@@ -219,13 +219,13 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
           </div>
         </CardForm>
         <CardForm className="mt-4">
-          <h2 className="font-medium mb-2">Murojaat to‘g‘risida ma’lumotlar</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+          <h2 className="mb-2 font-medium">Murojaat to‘g‘risida ma’lumotlar</h2>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
             <FormField
               control={form.control}
               name="monitoringLetterDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem>
                     <FormLabel required>Kuzatuv xati sanasi</FormLabel>
@@ -236,7 +236,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
@@ -256,7 +256,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
               control={form.control}
               name="submissionDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem>
                     <FormLabel required>Ekspertiza sanasi</FormLabel>
@@ -268,14 +268,14 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
                     <FormMessage />
                     <FormDescription>Ekspertiza xulosasini hisobga olish uchun topshirgan sana</FormDescription>
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
         </CardForm>
         <CardForm className="mt-4">
-          <h2 className="font-medium mb-2">Sanoat xavfsizligi ekspertiza xulosasi to‘g‘risida ma’lumotlar</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+          <h2 className="mb-2 font-medium">Sanoat xavfsizligi ekspertiza xulosasi to‘g‘risida ma’lumotlar</h2>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
             <FormField
               name="objectName"
               control={form.control}
@@ -329,7 +329,7 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
               )}
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 mt-4">
+          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
             <FormField
               name="expertiseConclusionNumber"
               control={form.control}
@@ -362,5 +362,5 @@ export default ({ onSubmit }: CreateAccreditationFormProps) => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

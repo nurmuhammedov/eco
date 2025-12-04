@@ -1,17 +1,17 @@
-import { Fragment } from 'react';
-import { ActionButton } from './action-button';
-import { useTranslation } from 'react-i18next';
+import { Fragment } from 'react'
+import { ActionButton } from './action-button'
+import { useTranslation } from 'react-i18next'
 // import { CategoryTypeDrawer, CategoryTypeList } from '@/features/admin/inspection/category-types';
 // import { ChecklistDrawer, ChecklistList } from '@/features/admin/inspection/cheklists';
-import { useInspectionManagement } from '../model/use-inspection-management';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import { CategoryTypeList } from '@/features/admin/inspection/category-types/ui/category-type-list';
-import { ChecklistList } from '@/features/admin/inspection/cheklists/ui/checklist-list';
-import { CategoryTypeDrawer } from '@/features/admin/inspection/category-types/ui/category-type-drawer';
-import { ChecklistDrawer } from '@/features/admin/inspection/cheklists/ui/checklist-drawer';
+import { useInspectionManagement } from '../model/use-inspection-management'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import { CategoryTypeList } from '@/features/admin/inspection/category-types/ui/category-type-list'
+import { ChecklistList } from '@/features/admin/inspection/cheklists/ui/checklist-list'
+import { CategoryTypeDrawer } from '@/features/admin/inspection/category-types/ui/category-type-drawer'
+import { ChecklistDrawer } from '@/features/admin/inspection/cheklists/ui/checklist-drawer'
 
 const InspectionManagement = () => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('common')
   const {
     activeTab,
     isOpenCategoryType,
@@ -19,7 +19,7 @@ const InspectionManagement = () => {
     handleChangeTab,
     openAddCategoryTypeDrawer,
     openAddChecklistDrawer,
-  } = useInspectionManagement();
+  } = useInspectionManagement()
 
   return (
     <Fragment>
@@ -48,7 +48,7 @@ const InspectionManagement = () => {
       {isOpenCategoryType && <CategoryTypeDrawer />}
       {isOpenChecklist && <ChecklistDrawer />}
     </Fragment>
-  );
-};
+  )
+}
 
-export default InspectionManagement;
+export default InspectionManagement

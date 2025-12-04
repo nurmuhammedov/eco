@@ -1,16 +1,16 @@
-import { FilterUserLogsDTO, UserLogs } from '@/entities/admin/user-logs/models/user-logs.types';
-import { DataTable } from '@/shared/components/common/data-table';
-import { ColumnDef } from '@tanstack/react-table';
-import { useUserLogsList } from '@/entities/admin/user-logs';
-import { useFilters } from '@/shared/hooks/use-filters';
-import { useUserLogsTypeLabel } from '@/shared/hooks/use-user-logs-type-label.ts';
+import { FilterUserLogsDTO, UserLogs } from '@/entities/admin/user-logs/models/user-logs.types'
+import { DataTable } from '@/shared/components/common/data-table'
+import { ColumnDef } from '@tanstack/react-table'
+import { useUserLogsList } from '@/entities/admin/user-logs'
+import { useFilters } from '@/shared/hooks/use-filters'
+import { useUserLogsTypeLabel } from '@/shared/hooks/use-user-logs-type-label.ts'
 
 export function UserLogsList() {
-  const { filters } = useFilters();
+  const { filters } = useFilters()
 
-  const { data, isLoading } = useUserLogsList(filters as FilterUserLogsDTO);
+  const { data, isLoading } = useUserLogsList(filters as FilterUserLogsDTO)
 
-  const getUserLogsTypeLabel = useUserLogsTypeLabel();
+  const getUserLogsTypeLabel = useUserLogsTypeLabel()
 
   const columns: ColumnDef<UserLogs>[] = [
     {
@@ -49,7 +49,7 @@ export function UserLogsList() {
       maxSize: -10,
       header: 'STIR',
     },
-  ];
+  ]
 
   return (
     <DataTable
@@ -59,5 +59,5 @@ export function UserLogsList() {
       isLoading={isLoading}
       className="h-[calc(100svh-250px)]"
     />
-  );
+  )
 }

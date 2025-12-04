@@ -1,20 +1,20 @@
-import { useTranslation } from 'react-i18next';
-import { ColumnDef } from '@tanstack/react-table';
-import { UIModeEnum } from '@/shared/types/ui-types';
-import { useFilters } from '@/shared/hooks/use-filters';
-import { useDistrictDrawer } from '@/shared/hooks/entity-hooks';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { District, FilterDistrictDTO, useDeleteDistrict, useDistrictsQuery } from '@/entities/admin/districts';
+import { useTranslation } from 'react-i18next'
+import { ColumnDef } from '@tanstack/react-table'
+import { UIModeEnum } from '@/shared/types/ui-types'
+import { useFilters } from '@/shared/hooks/use-filters'
+import { useDistrictDrawer } from '@/shared/hooks/entity-hooks'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { District, FilterDistrictDTO, useDeleteDistrict, useDistrictsQuery } from '@/entities/admin/districts'
 
 export function DistrictList() {
-  const { filters } = useFilters();
-  const { onOpen } = useDistrictDrawer();
-  const { t } = useTranslation('common');
-  const deleteRegion = useDeleteDistrict();
-  const { data, isLoading } = useDistrictsQuery(filters as FilterDistrictDTO);
-  const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
+  const { filters } = useFilters()
+  const { onOpen } = useDistrictDrawer()
+  const { t } = useTranslation('common')
+  const deleteRegion = useDeleteDistrict()
+  const { data, isLoading } = useDistrictsQuery(filters as FilterDistrictDTO)
+  const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id })
 
-  const onDelete = (id: number) => deleteRegion.mutate(id);
+  const onDelete = (id: number) => deleteRegion.mutate(id)
 
   const districtTableColumns: ColumnDef<District>[] = [
     {
@@ -48,7 +48,7 @@ export function DistrictList() {
         />
       ),
     },
-  ];
+  ]
 
   return (
     <DataTable
@@ -58,5 +58,5 @@ export function DistrictList() {
       columns={districtTableColumns}
       className="h-[calc(100svh-270px)]"
     />
-  );
+  )
 }

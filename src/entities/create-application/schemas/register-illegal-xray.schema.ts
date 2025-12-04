@@ -1,8 +1,8 @@
 // src/entities/create-application/schemas/register-irs.schema.ts
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { format, parseISO } from 'date-fns'; // parseISO ni import qiling
-import { z } from 'zod';
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { format, parseISO } from 'date-fns' // parseISO ni import qiling
+import { z } from 'zod'
 
 export const XrayIllegalAppealDtoSchema = z.object({
   legalTin: z.string().min(9, "STIR 9 ta raqamdan iborat bo'lishi kerak"),
@@ -82,4 +82,4 @@ export const XrayIllegalAppealDtoSchema = z.object({
       required_error: 'Joylashgan manzil kiritilmadi!',
     })
     .min(1, 'Joylashgan manzil kiritilmadi!'),
-});
+})

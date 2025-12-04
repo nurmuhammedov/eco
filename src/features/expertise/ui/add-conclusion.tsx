@@ -1,31 +1,31 @@
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import {
   getHfoByTinSelect,
   getLegalInfoByTin,
   createExpertiseApplication,
-} from '@/entities/expertise/api/expertise.api';
-import { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types';
-import { addExpertiseSchema } from '@/entities/expertise/model/expertise.schema';
-import { ExpertiseTypeOptions } from '@/entities/expertise/model/constants';
-import { Button } from '@/shared/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries';
-import { PhoneInput } from '@/shared/components/ui/phone-input';
-import { cleanParams } from '@/shared/lib';
-import { useNavigate } from 'react-router-dom';
-import { Textarea } from '@/shared/components/ui/textarea';
+} from '@/entities/expertise/api/expertise.api'
+import { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
+import { addExpertiseSchema } from '@/entities/expertise/model/expertise.schema'
+import { ExpertiseTypeOptions } from '@/entities/expertise/model/constants'
+import { Button } from '@/shared/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { PhoneInput } from '@/shared/components/ui/phone-input'
+import { cleanParams } from '@/shared/lib'
+import { useNavigate } from 'react-router-dom'
+import { Textarea } from '@/shared/components/ui/textarea'
 
 export const AddConclusion = () => {
-  const [stir, setStir] = useState('');
-  const [searchedStir, setSearchedStir] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [stir, setStir] = useState('')
+  const [searchedStir, setSearchedStir] = useState<string | null>(null)
+  const navigate = useNavigate()
   const form = useForm<AddExpertiseFormValues>({
     resolver: zodResolver(addExpertiseSchema),
     mode: 'onChange',
@@ -41,10 +41,10 @@ export const AddConclusion = () => {
       // subType: undefined,
       expertiseName: '',
     },
-  });
+  })
 
-  const watchedRegionId = form.watch('regionId');
-  const watchedHfId = form.watch('hfId');
+  const watchedRegionId = form.watch('regionId')
+  const watchedHfId = form.watch('hfId')
 
   const {
     data: legalInfo,
@@ -55,89 +55,89 @@ export const AddConclusion = () => {
     queryFn: () => getLegalInfoByTin(searchedStir!),
     enabled: !!searchedStir,
     retry: 1,
-  });
+  })
 
   const { data: hfoOptions, isFetching: isHfoLoading } = useQuery({
     queryKey: ['hfoSelect', searchedStir],
     queryFn: () => getHfoByTinSelect(searchedStir!),
     enabled: !!searchedStir,
     retry: 1,
-  });
+  })
 
-  const selectedRegionId = form.watch('regionId');
-  const { data: regions, isLoading: isRegionLoading } = useRegionSelectQueries();
-  const { data: districts, isLoading: isDistrictLoading } = useDistrictSelectQueries(selectedRegionId);
+  const selectedRegionId = form.watch('regionId')
+  const { data: regions, isLoading: isRegionLoading } = useRegionSelectQueries()
+  const { data: districts, isLoading: isDistrictLoading } = useDistrictSelectQueries(selectedRegionId)
 
   const { mutate, isPending: isSubmitting } = useMutation({
     mutationFn: createExpertiseApplication,
     onSuccess: () => {
-      toast.success('Muvaffaqiyatli saqlandi!', { richColors: true });
-      navigate(-1);
-      handleClearSearch();
+      toast.success('Muvaffaqiyatli saqlandi!', { richColors: true })
+      navigate(-1)
+      handleClearSearch()
     },
-  });
+  })
 
   useEffect(() => {
     if (legalInfo && searchedStir) {
-      form.setValue('customerTin', searchedStir);
+      form.setValue('customerTin', searchedStir)
       form.setValue(
         'customerPhoneNumber',
         legalInfo?.phoneNumber?.length == 9
           ? `+998${legalInfo?.phoneNumber}`
           : legalInfo?.phoneNumber?.length == 12
             ? `+${legalInfo?.phoneNumber}`
-            : `${legalInfo?.phoneNumber}`,
-      );
+            : `${legalInfo?.phoneNumber}`
+      )
     }
-  }, [legalInfo, searchedStir, form]);
+  }, [legalInfo, searchedStir, form])
 
-  const selectedHfo = hfoOptions?.find((hfo) => hfo.id === watchedHfId);
+  const selectedHfo = hfoOptions?.find((hfo) => hfo.id === watchedHfId)
   useEffect(() => {
     if (watchedHfId && hfoOptions) {
       if (selectedHfo) {
-        form.setValue('objectName', selectedHfo.name || '');
+        form.setValue('objectName', selectedHfo.name || '')
         form.setValue(
           'regionId',
           selectedHfo.regionId
             ? (selectedHfo.regionId?.toString() as unknown as string)
-            : (undefined as unknown as string),
-        );
+            : (undefined as unknown as string)
+        )
         form.setValue(
           'districtId',
           selectedHfo.districtId
             ? (selectedHfo.districtId?.toString() as unknown as string)
-            : (undefined as unknown as string),
-        );
-        form.setValue('address', selectedHfo.address || '');
+            : (undefined as unknown as string)
+        )
+        form.setValue('address', selectedHfo.address || '')
       }
     }
-  }, [watchedHfId, hfoOptions, form]);
+  }, [watchedHfId, hfoOptions, form])
 
   // Qidirish
   const handleSearch = () => {
     if (stir.length === 9) {
-      setSearchedStir(stir);
+      setSearchedStir(stir)
     } else {
-      toast.warning('STIR 9 ta raqamdan iborat bo‘lishi kerak.');
+      toast.warning('STIR 9 ta raqamdan iborat bo‘lishi kerak.')
     }
-  };
+  }
 
   // Tozalash
   const handleClearSearch = () => {
-    setStir('');
-    setSearchedStir(null);
-    form.reset();
-  };
+    setStir('')
+    setSearchedStir(null)
+    form.reset()
+  }
 
   // Formani yuborish
   const onSubmit = (data: AddExpertiseFormValues) => {
-    mutate(cleanParams({ ...data }));
-  };
+    mutate(cleanParams({ ...data }))
+  }
 
-  const hasLegalInfo = !!legalInfo && !isLegalInfoError;
+  const hasLegalInfo = !!legalInfo && !isLegalInfoError
 
   return (
-    <div className="space-y-2 mt-4">
+    <div className="mt-4 space-y-2">
       <Card>
         <CardHeader>
           <CardTitle>Tashkilotni qidirish</CardTitle>
@@ -176,21 +176,21 @@ export const AddConclusion = () => {
               <CardTitle>Tashkilot maʼlumotlari</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-2 py-4 px-2.5 rounded-lg content-center odd:bg-neutral-50 items-center">
-                <h2 className="font-medium text-normal text-gray-700">Tashkilot nomi:</h2>
-                <p className="font-normal text-normal text-gray-900">{legalInfo?.legalName || '-'}</p>
+              <div className="grid grid-cols-2 content-center items-center gap-2 rounded-lg px-2.5 py-4 odd:bg-neutral-50">
+                <h2 className="text-normal font-medium text-gray-700">Tashkilot nomi:</h2>
+                <p className="text-normal font-normal text-gray-900">{legalInfo?.legalName || '-'}</p>
               </div>
-              <div className="grid grid-cols-2 gap-2 py-4 px-2.5 rounded-lg content-center odd:bg-neutral-50 items-center">
-                <h2 className="font-medium text-normal text-gray-700">Tashkilot rahbari F.I.Sh.:</h2>
-                <p className="font-normal text-normal text-gray-900">{legalInfo?.fullName || '-'}</p>
+              <div className="grid grid-cols-2 content-center items-center gap-2 rounded-lg px-2.5 py-4 odd:bg-neutral-50">
+                <h2 className="text-normal font-medium text-gray-700">Tashkilot rahbari F.I.Sh.:</h2>
+                <p className="text-normal font-normal text-gray-900">{legalInfo?.fullName || '-'}</p>
               </div>
-              <div className="grid grid-cols-2 gap-2 py-4 px-2.5 rounded-lg content-center odd:bg-neutral-50 items-center">
-                <h2 className="font-medium text-normal text-gray-700">Manzil:</h2>
-                <p className="font-normal text-normal text-gray-900">{legalInfo?.legalAddress || '-'}</p>
+              <div className="grid grid-cols-2 content-center items-center gap-2 rounded-lg px-2.5 py-4 odd:bg-neutral-50">
+                <h2 className="text-normal font-medium text-gray-700">Manzil:</h2>
+                <p className="text-normal font-normal text-gray-900">{legalInfo?.legalAddress || '-'}</p>
               </div>
-              <div className="grid grid-cols-2 gap-2 py-4 px-2.5 rounded-lg content-center odd:bg-neutral-50 items-center">
-                <h2 className="font-medium text-normal text-gray-700">Telefon raqami:</h2>
-                <p className="font-normal text-normal text-gray-900">{legalInfo?.phoneNumber || '-'}</p>
+              <div className="grid grid-cols-2 content-center items-center gap-2 rounded-lg px-2.5 py-4 odd:bg-neutral-50">
+                <h2 className="text-normal font-medium text-gray-700">Telefon raqami:</h2>
+                <p className="text-normal font-normal text-gray-900">{legalInfo?.phoneNumber || '-'}</p>
               </div>
             </CardContent>
           </Card>
@@ -200,7 +200,7 @@ export const AddConclusion = () => {
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 md:grid-cols-4">
                   <FormField
                     control={form.control}
                     name="customerTin"
@@ -225,7 +225,7 @@ export const AddConclusion = () => {
                           value={field.value?.toString()}
                           onValueChange={(value) => {
                             if (value) {
-                              field.onChange(value);
+                              field.onChange(value)
                             }
                           }}
                           disabled={isHfoLoading}
@@ -270,8 +270,8 @@ export const AddConclusion = () => {
                         <FormLabel>Viloyat</FormLabel>
                         <Select
                           onValueChange={(value) => {
-                            field.onChange(value);
-                            form.setValue('districtId', undefined as unknown as string);
+                            field.onChange(value)
+                            form.setValue('districtId', undefined as unknown as string)
                           }}
                           value={field.value}
                           disabled={isRegionLoading || !!selectedHfo?.regionId}
@@ -305,7 +305,7 @@ export const AddConclusion = () => {
                           value={field.value}
                           onValueChange={(value) => {
                             if (value) {
-                              field.onChange(value);
+                              field.onChange(value)
                             }
                           }}
                           disabled={isDistrictLoading || !watchedRegionId || !!selectedHfo?.districtId}
@@ -368,7 +368,7 @@ export const AddConclusion = () => {
                           value={field.value}
                           onValueChange={(value) => {
                             if (value) {
-                              field.onChange(value);
+                              field.onChange(value)
                             }
                           }}
                         >
@@ -441,7 +441,7 @@ export const AddConclusion = () => {
                     )}
                   />
 
-                  <div className="md:col-span-4 flex justify-end">
+                  <div className="flex justify-end md:col-span-4">
                     <Button type="submit" disabled={isSubmitting} loading={isSubmitting}>
                       Yuborish
                     </Button>
@@ -453,5 +453,5 @@ export const AddConclusion = () => {
         </>
       )}
     </div>
-  );
-};
+  )
+}

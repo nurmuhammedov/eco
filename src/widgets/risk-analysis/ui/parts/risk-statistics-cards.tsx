@@ -1,34 +1,34 @@
-import { usePaginatedData } from '@/shared/hooks';
-import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types';
-import { API_ENDPOINTS } from '@/shared/api';
-import { Layers, ShieldCheck, AlertTriangle, Flame } from 'lucide-react';
-import clsx from 'clsx';
+import { usePaginatedData } from '@/shared/hooks'
+import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types'
+import { API_ENDPOINTS } from '@/shared/api'
+import { Layers, ShieldCheck, AlertTriangle, Flame } from 'lucide-react'
+import clsx from 'clsx'
 
 interface RiskStatisticsCardsProps {
-  type: string;
-  activeRiskLevel: string;
-  onTabChange: (level: string) => void;
+  type: string
+  activeRiskLevel: string
+  onTabChange: (level: string) => void
 }
 
 export const RiskStatisticsCards = ({ type, activeRiskLevel, onTabChange }: RiskStatisticsCardsProps) => {
-  const commonParams = { type, size: 1, page: 1 };
+  const commonParams = { type, size: 1, page: 1 }
 
   const { data: allData, isLoading } = usePaginatedData<RiskAnalysisItem>(
     API_ENDPOINTS.RISK_ASSESSMENT_HF,
-    commonParams,
-  );
+    commonParams
+  )
   const { data: lowData } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_HF, {
     ...commonParams,
     level: 'LOW',
-  });
+  })
   const { data: mediumData } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_HF, {
     ...commonParams,
     level: 'MEDIUM',
-  });
+  })
   const { data: highData } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_HF, {
     ...commonParams,
     level: 'HIGH',
-  });
+  })
 
   const stats = [
     {
@@ -63,38 +63,38 @@ export const RiskStatisticsCards = ({ type, activeRiskLevel, onTabChange }: Risk
       inactiveClass: 'bg-red-50 border-red-200 text-red-700',
       activeClass: 'bg-red-600 border-red-700 text-white shadow-sm',
     },
-  ];
+  ]
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-3">
+    <div className="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => {
-        const isActive = activeRiskLevel === stat.id;
+        const isActive = activeRiskLevel === stat.id
 
         return (
           <div
             key={stat.id}
             onClick={() => onTabChange(stat.id)}
             className={clsx(
-              'relative rounded-lg border p-4 flex items-center justify-between cursor-pointer transition-colors duration-200 select-none',
-              isActive ? stat.activeClass : `${stat.inactiveClass} hover:opacity-80`,
+              'relative flex cursor-pointer items-center justify-between rounded-lg border p-4 transition-colors duration-200 select-none',
+              isActive ? stat.activeClass : `${stat.inactiveClass} hover:opacity-80`
             )}
           >
             <div>
-              <p className="text-sm font-medium mb-1 opacity-90">{stat.name}</p>
+              <p className="mb-1 text-sm font-medium opacity-90">{stat.name}</p>
               <h3 className={clsx('text-2xl font-bold', isLoading && 'animate-pulse opacity-50')}>{stat.count}</h3>
             </div>
 
             <div
               className={clsx(
-                'p-2 rounded-full transition-colors',
-                isActive ? 'bg-white/20 text-white' : 'bg-white/60',
+                'rounded-full p-2 transition-colors',
+                isActive ? 'bg-white/20 text-white' : 'bg-white/60'
               )}
             >
               <stat.icon size={24} className="currentColor" />
             </div>
           </div>
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}

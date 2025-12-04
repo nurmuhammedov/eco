@@ -1,12 +1,12 @@
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { getDate } from '@/shared/utils/date';
-import { useNavigate } from 'react-router-dom';
-import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
-import { useHazardousFacilityTypeDictionarySelect } from '@/shared/api/dictionaries';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { getDate } from '@/shared/utils/date'
+import { useNavigate } from 'react-router-dom'
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { useHazardousFacilityTypeDictionarySelect } from '@/shared/api/dictionaries'
 
 export const HfList = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const {
     paramsObject: {
       page = 1,
@@ -23,9 +23,9 @@ export const HfList = () => {
       officeId = '',
       hfTypeId = '',
     },
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
 
-  const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect();
+  const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
 
   const { data = [] } = usePaginatedData<any>(`/hf`, {
     page,
@@ -41,11 +41,11 @@ export const HfList = () => {
     regionId,
     officeId,
     hfTypeId,
-  });
+  })
 
   const handleViewApplication = (id: string) => {
-    navigate(`${id}/hf`);
-  };
+    navigate(`${id}/hf`)
+  }
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -106,7 +106,7 @@ export const HfList = () => {
         <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
       ),
     },
-  ];
+  ]
 
   return (
     <>
@@ -118,5 +118,5 @@ export const HfList = () => {
         className="h-[calc(100svh-220px)]"
       />
     </>
-  );
-};
+  )
+}

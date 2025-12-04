@@ -1,7 +1,7 @@
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { format } from 'date-fns';
-import { z } from 'zod';
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { format } from 'date-fns'
+import { z } from 'zod'
 
 export const CablewayAppealDtoSchema = z.object({
   phoneNumber: z
@@ -32,7 +32,7 @@ export const CablewayAppealDtoSchema = z.object({
 
   assignmentDecreePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
 
-  passportPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  additionalFilePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
 
   saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
 
@@ -47,4 +47,4 @@ export const CablewayAppealDtoSchema = z.object({
   nextTechnicalInspectionDate: z
     .date({ required_error: 'Majburiy maydon!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
-});
+})

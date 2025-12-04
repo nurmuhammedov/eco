@@ -1,6 +1,6 @@
-import { UserState } from '@/entities/user';
+import { UserState } from '@/entities/user'
 
 export type AuthState = {
-  user: UserState | null;
-  isAuthenticated: boolean;
-};
+  user: UserState | null
+  isAuthenticated: boolean
+}

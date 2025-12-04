@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { ReactNode } from 'react';
-import { cn } from '@/shared/lib/utils';
-import { Badge } from '@/shared/components/ui/badge';
-import { ApplicationStatus } from '@/shared/types/enums';
-import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react'
+import { ReactNode } from 'react'
+import { cn } from '@/shared/lib/utils'
+import { Badge } from '@/shared/components/ui/badge'
+import { ApplicationStatus } from '@/shared/types/enums'
+import { cva, type VariantProps } from 'class-variance-authority'
 
 const statusBadgeVariants = cva('px-2 py-1 rounded-lg text-xs 3xl:text-sm font-semibold shadow-none', {
   variants: {
@@ -16,13 +16,13 @@ const statusBadgeVariants = cva('px-2 py-1 rounded-lg text-xs 3xl:text-sm font-s
     },
   },
   defaultVariants: { status: ApplicationStatus.NEW },
-});
+})
 
 export interface StatusBadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof statusBadgeVariants> {
-  children: ReactNode;
-  status: ApplicationStatus;
+  children: ReactNode
+  status: ApplicationStatus
 }
 
 export const StatusBadge = ({ children, status, className, ...props }: StatusBadgeProps) => {
@@ -30,5 +30,5 @@ export const StatusBadge = ({ children, status, className, ...props }: StatusBad
     <Badge className={cn(statusBadgeVariants({ status }), className)} {...props}>
       {children}
     </Badge>
-  );
-};
+  )
+}

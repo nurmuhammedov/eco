@@ -1,7 +1,7 @@
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { format } from 'date-fns';
-import { z } from 'zod';
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { format } from 'date-fns'
+import { z } from 'zod'
 
 export const AttractionAppealDtoSchema = z.object({
   phoneNumber: z
@@ -24,7 +24,7 @@ export const AttractionAppealDtoSchema = z.object({
   address: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   location: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   riskLevel: z.enum(['I', 'II', 'III', 'IV'], { required_error: 'Majburiy maydon!' }),
-  passportPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  additionalFilePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   labelPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   conformityCertPath: z.string().optional(),
   technicalJournalPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
@@ -49,4 +49,4 @@ export const AttractionAppealDtoSchema = z.object({
   cctvInstallationPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   qrPath: z.string().optional(),
   filesBuilt: z.boolean().default(false).optional(),
-});
+})

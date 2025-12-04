@@ -1,11 +1,11 @@
 // src/features/application/create-application/model/use-create-irs-application.ts
-import { CreateXrayApplicationDTO, XrayAppealDtoSchema } from '@/entities/create-application';
-import { stateService } from '@/entities/create-application/types/enums';
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { CreateXrayApplicationDTO, XrayAppealDtoSchema } from '@/entities/create-application'
+import { stateService } from '@/entities/create-application/types/enums'
+import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMemo } from 'react'
+import { useForm } from 'react-hook-form'
 
 export const useCreateXrayApplication = () => {
   const form = useForm<CreateXrayApplicationDTO>({
@@ -46,13 +46,13 @@ export const useCreateXrayApplication = () => {
       file13ExpiryDate: '',
     },
     mode: 'onChange',
-  });
+  })
 
-  const regionId = form.watch('regionId');
-  const { data: regions } = useRegionSelectQueries();
-  const { data: districts } = useDistrictSelectQueries(regionId);
-  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);
-  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions]);
+  const regionId = form.watch('regionId')
+  const { data: regions } = useRegionSelectQueries()
+  const { data: districts } = useDistrictSelectQueries(regionId)
+  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
+  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
 
   const stateServiceOptions = useMemo(
     () =>
@@ -60,15 +60,15 @@ export const useCreateXrayApplication = () => {
         Object.entries(stateService).map(([key, value]) => ({
           id: key, // `id` ga kalit (`X_RAY_PERMIT`) tushadi
           name: value, // `name` ga qiymat (`Rentgen...`) tushadi
-        })),
+        }))
       ),
-    [],
-  );
+    []
+  )
 
   return {
     form,
     regionOptions,
     districtOptions,
     stateServiceOptions,
-  };
-};
+  }
+}

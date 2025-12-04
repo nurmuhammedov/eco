@@ -1,27 +1,27 @@
-import { useTranslation } from 'react-i18next';
-import { ColumnDef } from '@tanstack/react-table';
-import { UIModeEnum } from '@/shared/types/ui-types';
-import { useFilters } from '@/shared/hooks/use-filters';
-import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
+import { useTranslation } from 'react-i18next'
+import { ColumnDef } from '@tanstack/react-table'
+import { UIModeEnum } from '@/shared/types/ui-types'
+import { useFilters } from '@/shared/hooks/use-filters'
+import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import {
   FilterTerritorialDepartmentsDTO,
   TerritorialDepartment,
   useDeleteTerritorialDepartments,
   useTerritorialDepartmentsQuery,
-} from '@/entities/admin/territorial-departments';
+} from '@/entities/admin/territorial-departments'
 
 export function TerritorialDepartmentsList() {
-  const { filters } = useFilters();
-  const { t } = useTranslation('common');
-  const { onOpen } = useTerritorialDepartmentsDrawer();
-  const { data, isLoading } = useTerritorialDepartmentsQuery(filters as FilterTerritorialDepartmentsDTO);
+  const { filters } = useFilters()
+  const { t } = useTranslation('common')
+  const { onOpen } = useTerritorialDepartmentsDrawer()
+  const { data, isLoading } = useTerritorialDepartmentsQuery(filters as FilterTerritorialDepartmentsDTO)
 
-  const deleteData = useDeleteTerritorialDepartments();
+  const deleteData = useDeleteTerritorialDepartments()
 
-  const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
+  const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id })
 
-  const onDelete = (id: number) => deleteData.mutate(id);
+  const onDelete = (id: number) => deleteData.mutate(id)
 
   const columns: ColumnDef<TerritorialDepartment>[] = [
     {
@@ -43,7 +43,7 @@ export function TerritorialDepartmentsList() {
         />
       ),
     },
-  ];
+  ]
 
   return (
     <DataTable
@@ -53,5 +53,5 @@ export function TerritorialDepartmentsList() {
       isLoading={isLoading}
       className="h-[calc(100svh-270px)]"
     />
-  );
+  )
 }

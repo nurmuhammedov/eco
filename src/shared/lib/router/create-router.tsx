@@ -1,7 +1,7 @@
-import { Loader } from '@/shared/components/common';
-import React, { LazyExoticComponent, Suspense } from 'react';
-import { RouterErrorBoundary } from '@/widgets/error-boundary';
-import { createBrowserRouter, Navigate, RouteObject } from 'react-router-dom';
+import { Loader } from '@/shared/components/common'
+import React, { LazyExoticComponent, Suspense } from 'react'
+import { RouterErrorBoundary } from '@/widgets/error-boundary'
+import { createBrowserRouter, Navigate, RouteObject } from 'react-router-dom'
 import {
   appRoutes,
   AuthGuardProps,
@@ -9,21 +9,21 @@ import {
   RouteConfig,
   publicRoutes,
   specialComponents,
-} from '@/shared/config/routes';
-import { useAuth } from '@/shared/hooks/use-auth';
+} from '@/shared/config/routes'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 const withSuspense = (Component: React.ComponentType) => (
   <Suspense fallback={<Loader isVisible />}>
     <Component />
   </Suspense>
-);
+)
 
 export const createProtectedRoute = (
   routeConfig: RouteConfig,
   AuthGuard: React.ComponentType<AuthGuardProps>,
-  className?: string,
+  className?: string
 ): RouteObject => {
-  const { component: Component, roles, path, children } = routeConfig;
+  const { component: Component, roles, path, children } = routeConfig
 
   const routeObject: RouteObject = {
     path,
@@ -32,35 +32,35 @@ export const createProtectedRoute = (
         <RouterErrorBoundary className={className}>{withSuspense(Component)}</RouterErrorBoundary>
       </AuthGuard>
     ),
-  };
-
-  if (children?.length) {
-    routeObject.children = children.map((child) => createProtectedRoute(child, AuthGuard));
   }
 
-  return routeObject;
-};
+  if (children?.length) {
+    routeObject.children = children.map((child) => createProtectedRoute(child, AuthGuard))
+  }
+
+  return routeObject
+}
 
 export const createAuthRoute = (routeConfig: RouteConfig): RouteObject => {
-  const { component: Component, path } = routeConfig;
+  const { component: Component, path } = routeConfig
 
   return {
     path,
     element: withSuspense(Component),
-  };
-};
+  }
+}
 
 export const createAppRouter = (
   AppLayout: LazyExoticComponent<React.ComponentType>,
   AuthLayout: LazyExoticComponent<React.ComponentType>,
-  AuthGuard: React.ComponentType<AuthGuardProps>,
+  AuthGuard: React.ComponentType<AuthGuardProps>
 ) => {
-  const { isAuthenticated } = useAuth();
-  const protectedRoutes = appRoutes.map((route) => createProtectedRoute(route, AuthGuard));
+  const { isAuthenticated } = useAuth()
+  const protectedRoutes = appRoutes.map((route) => createProtectedRoute(route, AuthGuard))
   const authLayoutRoutes = authRoutes.map((route: RouteConfig) =>
-    createProtectedRoute(route, AuthGuard, 'w-1/2 flex flex-col items-center justify-center gap-6'),
-  );
-  const standalonePublicRoutes = publicRoutes.map(createAuthRoute);
+    createProtectedRoute(route, AuthGuard, 'w-1/2 flex flex-col items-center justify-center gap-6')
+  )
+  const standalonePublicRoutes = publicRoutes.map(createAuthRoute)
 
   const routerConfig: RouteObject[] = [
     {
@@ -103,7 +103,7 @@ export const createAppRouter = (
             children: authLayoutRoutes,
           },
         ]),
-  ];
+  ]
 
-  return createBrowserRouter(routerConfig);
-};
+  return createBrowserRouter(routerConfig)
+}

@@ -1,9 +1,9 @@
-import { MapPinned } from 'lucide-react';
-import { getMapContentSize } from '../lib';
-import { Button } from '@/shared/components/ui/button';
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
-import { Coordinate, YandexMap } from '@/shared/components/common/yandex-map';
-import { MAP_DEFAULTS } from '@/shared/components/common/yandex-map/model/yandex-map-config';
+import { MapPinned } from 'lucide-react'
+import { getMapContentSize } from '../lib'
+import { Button } from '@/shared/components/ui/button'
+import React, { Fragment, useCallback, useEffect, useState } from 'react'
+import { Coordinate, YandexMap } from '@/shared/components/common/yandex-map'
+import { MAP_DEFAULTS } from '@/shared/components/common/yandex-map/model/yandex-map-config'
 import {
   Dialog,
   DialogClose,
@@ -12,38 +12,38 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog';
-import { cn } from '@/shared/lib/utils.ts';
+} from '@/shared/components/ui/dialog'
+import { cn } from '@/shared/lib/utils.ts'
 
 interface YandexMapModalProps {
-  label?: string;
-  initialCoords?: any;
-  onConfirm: (coords: string) => void;
+  label?: string
+  initialCoords?: any
+  onConfirm: (coords: string) => void
 }
 
 const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belgilash', onConfirm, initialCoords }) => {
-  const mapHeight = getMapContentSize();
-  const [open, setOpen] = useState(false);
-  const [selectedCoords, setSelectedCoords] = useState<Coordinate | null>(initialCoords || null);
+  const mapHeight = getMapContentSize()
+  const [open, setOpen] = useState(false)
+  const [selectedCoords, setSelectedCoords] = useState<Coordinate | null>(initialCoords || null)
 
   useEffect(() => {
     if (open && initialCoords) {
-      setSelectedCoords(initialCoords);
+      setSelectedCoords(initialCoords)
     }
-  }, [open, initialCoords]);
+  }, [open, initialCoords])
 
   const handleMapClick = useCallback((coords: Coordinate[]) => {
     if (coords.length > 0) {
-      setSelectedCoords(coords[0]);
+      setSelectedCoords(coords[0])
     }
-  }, []);
+  }, [])
 
   const handleConfirm = useCallback(() => {
     if (selectedCoords) {
-      onConfirm(selectedCoords.join(', '));
-      setOpen(false);
+      onConfirm(selectedCoords.join(', '))
+      setOpen(false)
     }
-  }, [selectedCoords, onConfirm]);
+  }, [selectedCoords, onConfirm])
 
   return (
     <Dialog>
@@ -92,7 +92,7 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belg
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default React.memo(YandexMapModal);
+export default React.memo(YandexMapModal)

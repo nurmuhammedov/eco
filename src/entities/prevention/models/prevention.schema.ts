@@ -1,5 +1,5 @@
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { z } from 'zod';
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { z } from 'zod'
 
 export const schemas = {
   single: z.object({
@@ -28,7 +28,7 @@ export const schemas = {
       legalName: z.string(),
       legalAddress: z.string(),
       regionName: z.string(),
-    }),
+    })
   ),
   create: z.object({
     tin: z.number({ required_error: FORM_ERROR_MESSAGES.required }),
@@ -42,4 +42,4 @@ export const schemas = {
     id: z.number(),
     name: z.string(),
   }),
-};
+}

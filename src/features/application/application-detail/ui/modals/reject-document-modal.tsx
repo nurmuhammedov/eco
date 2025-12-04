@@ -1,32 +1,32 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx';
-import { Button } from '@/shared/components/ui/button.tsx';
-import { DialogClose } from '@radix-ui/react-dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Textarea } from '@/shared/components/ui/textarea.tsx';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { FC, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useRejectDocument } from '@/features/application/application-detail/hooks/mutations/use-reject-document.tsx';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx'
+import { Button } from '@/shared/components/ui/button.tsx'
+import { DialogClose } from '@radix-ui/react-dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Textarea } from '@/shared/components/ui/textarea.tsx'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { FC, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useRejectDocument } from '@/features/application/application-detail/hooks/mutations/use-reject-document.tsx'
 
 const schema = z.object({
   description: z.string({ message: FORM_ERROR_MESSAGES.required }),
-});
+})
 
 interface Props {
-  documentId: any;
-  label: string;
+  documentId: any
+  label: string
 }
 
 const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
-  const [isShow, setIsShow] = useState(false);
-  const { mutateAsync, isPending } = useRejectDocument();
-  const { id } = useParams();
+  const [isShow, setIsShow] = useState(false)
+  const { mutateAsync, isPending } = useRejectDocument()
+  const { id } = useParams()
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-  });
+  })
 
   function onSubmit(data: z.infer<typeof schema>) {
     mutateAsync({
@@ -34,8 +34,8 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
       appealId: id,
       documentId,
     }).then(() => {
-      setIsShow(false);
-    });
+      setIsShow(false)
+    })
   }
 
   return (
@@ -43,7 +43,7 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
       <DialogTrigger asChild>
         <Button variant={'destructive'}> {label}</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[525px] max-h-[95vh] overflow-y-auto">
+      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[525px]">
         <DialogHeader>
           <DialogTitle className="text-[#4E75FF]">Izoh</DialogTitle>
         </DialogHeader>
@@ -62,7 +62,7 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-2 gap-3 ">
+            <div className="grid grid-cols-2 gap-3">
               <DialogClose asChild>
                 <Button disabled={isPending} variant="outline">
                   Bekor qilish
@@ -76,7 +76,7 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default RejectDocumentModal;
+export default RejectDocumentModal

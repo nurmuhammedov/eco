@@ -1,52 +1,52 @@
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { addExpertiseSchema } from '@/entities/expertise/model/expertise.schema';
-import { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types';
-import { ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/model/constants';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { Button } from '@/shared/components/ui/button';
-import { Input } from '@/shared/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { PhoneInput } from '@/shared/components/ui/phone-input';
-import { useDetail, useUpdate } from '@/shared/hooks';
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries';
-import { useQuery } from '@tanstack/react-query';
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api';
-import { Textarea } from '@/shared/components/ui/textarea';
-import { UserRoles } from '@/entities/user';
-import { useAuth } from '@/shared/hooks/use-auth';
+import { useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { addExpertiseSchema } from '@/entities/expertise/model/expertise.schema'
+import { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
+import { ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/model/constants'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
+import { Button } from '@/shared/components/ui/button'
+import { Input } from '@/shared/components/ui/input'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { PhoneInput } from '@/shared/components/ui/phone-input'
+import { useDetail, useUpdate } from '@/shared/hooks'
+import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useQuery } from '@tanstack/react-query'
+import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
+import { Textarea } from '@/shared/components/ui/textarea'
+import { UserRoles } from '@/entities/user'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 export const UpdateConclusion = () => {
-  const { id } = useParams();
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const { detail: conclusion, isFetching } = useDetail<any>('/conclusions', id, !!id);
+  const { id } = useParams()
+  const { user } = useAuth()
+  const navigate = useNavigate()
+  const { detail: conclusion, isFetching } = useDetail<any>('/conclusions', id, !!id)
 
   const form = useForm<AddExpertiseFormValues>({
     resolver: zodResolver(addExpertiseSchema),
     mode: 'onChange',
-  });
+  })
 
   const { mutateAsync, isPending } = useUpdate<AddExpertiseFormValues, any, any>(
     '/conclusions',
     id,
     'put',
-    'Muvaffaqiyatli yangilandi!',
-  );
+    'Muvaffaqiyatli yangilandi!'
+  )
 
   const { data: hfoOptions } = useQuery({
     queryKey: ['hfoSelect', form.watch('customerTin')],
     queryFn: () => getHfoByTinSelect(form.watch('customerTin')),
     enabled: !!form.watch('customerTin'),
     retry: 1,
-  });
+  })
 
-  const selectedRegionId = form.watch('regionId');
-  const { data: regions } = useRegionSelectQueries();
-  const { data: districts } = useDistrictSelectQueries(selectedRegionId);
+  const selectedRegionId = form.watch('regionId')
+  const { data: regions } = useRegionSelectQueries()
+  const { data: districts } = useDistrictSelectQueries(selectedRegionId)
 
   useEffect(() => {
     if (conclusion) {
@@ -57,13 +57,13 @@ export const UpdateConclusion = () => {
         expertiseName: conclusion?.expertiseName,
         regionId: conclusion?.regionId?.toString(),
         districtId: conclusion?.districtId?.toString(),
-      });
+      })
     }
-  }, [conclusion]);
+  }, [conclusion])
 
   const onSubmit = (data: AddExpertiseFormValues) => {
-    mutateAsync(data).then(() => navigate(-1));
-  };
+    mutateAsync(data).then(() => navigate(-1))
+  }
 
   if (isFetching) {
     return (
@@ -72,7 +72,7 @@ export const UpdateConclusion = () => {
           <p className="p-4 text-center">Yuklanmoqda...</p>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   if (!conclusion) {
@@ -82,11 +82,11 @@ export const UpdateConclusion = () => {
           <p className="p-4 text-center">Maʼlumotlar topilmadi</p>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   return (
-    <div className="space-y-4 mt-4">
+    <div className="mt-4 space-y-4">
       <Card>
         <CardHeader>
           <CardTitle>Ariza maʼlumotlari</CardTitle>
@@ -94,7 +94,7 @@ export const UpdateConclusion = () => {
 
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 md:grid-cols-4">
               <FormField
                 control={form.control}
                 name="customerTin"
@@ -118,7 +118,7 @@ export const UpdateConclusion = () => {
                       value={field.value?.toString()}
                       onValueChange={(value) => {
                         if (value) {
-                          field.onChange(value);
+                          field.onChange(value)
                         }
                       }}
                     >
@@ -162,7 +162,7 @@ export const UpdateConclusion = () => {
                     <Select
                       onValueChange={(value) => {
                         if (value) {
-                          field.onChange(value);
+                          field.onChange(value)
                         }
                       }}
                       value={field.value?.toString()}
@@ -196,7 +196,7 @@ export const UpdateConclusion = () => {
                       value={field.value?.toString()}
                       onValueChange={(value) => {
                         if (value) {
-                          field.onChange(value);
+                          field.onChange(value)
                         }
                       }}
                     >
@@ -256,7 +256,7 @@ export const UpdateConclusion = () => {
                       value={field.value}
                       onValueChange={(value) => {
                         if (value) {
-                          field.onChange(value);
+                          field.onChange(value)
                         }
                       }}
                     >
@@ -325,7 +325,7 @@ export const UpdateConclusion = () => {
               />
 
               {conclusion?.processStatus != 'COMPLETED' && user?.role == UserRoles.LEGAL && (
-                <div className="md:col-span-4 flex justify-end">
+                <div className="flex justify-end md:col-span-4">
                   <Button type="submit" disabled={isPending} loading={isPending}>
                     Yangilash
                   </Button>
@@ -336,5 +336,5 @@ export const UpdateConclusion = () => {
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}

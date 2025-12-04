@@ -1,6 +1,6 @@
-import { UserRoles } from '@/entities/user';
+import { UserRoles } from '@/entities/user'
 
-export const DefaultRoute = '/applications';
+export const DefaultRoute = '/applications'
 
 const roleHomeRoutes: Record<UserRoles, string> = {
   [UserRoles.ADMIN]: '/territories',
@@ -11,6 +11,6 @@ const roleHomeRoutes: Record<UserRoles, string> = {
   [UserRoles.HEAD]: DefaultRoute,
   [UserRoles.MANAGER]: DefaultRoute,
   [UserRoles.INDIVIDUAL]: DefaultRoute,
-};
+}
 
-export const getHomeRouteForLoggedInUser = (role: UserRoles) => roleHomeRoutes[role] || '/';
+export const getHomeRouteForLoggedInUser = (role: UserRoles) => roleHomeRoutes[role] || '/'

@@ -5,25 +5,25 @@ import {
   DialogTitle,
   DialogFooter,
   DialogTrigger,
-} from '@/shared/components/ui/dialog';
-import { Button } from '@/shared/components/ui/button';
-import { Input } from '@/shared/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, useFieldArray } from 'react-hook-form';
-import { PermitSearchResult } from '@/entities/permit';
-import { useState } from 'react';
-import { Loader2, Plus, Trash2 } from 'lucide-react';
-import { toast } from 'sonner';
-import { useAdd } from '@/shared/hooks';
-import { useQueryClient } from '@tanstack/react-query';
-import { SearchResultDisplay } from '@/features/permits/ui/add-permit-modal';
-import { parseISO } from 'date-fns';
-import DatePicker from '@/shared/components/ui/datepicker';
+} from '@/shared/components/ui/dialog'
+import { Button } from '@/shared/components/ui/button'
+import { Input } from '@/shared/components/ui/input'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm, useFieldArray } from 'react-hook-form'
+import { PermitSearchResult } from '@/entities/permit'
+import { useState } from 'react'
+import { Loader2, Plus, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { useAdd } from '@/shared/hooks'
+import { useQueryClient } from '@tanstack/react-query'
+import { SearchResultDisplay } from '@/features/permits/ui/add-permit-modal'
+import { parseISO } from 'date-fns'
+import DatePicker from '@/shared/components/ui/datepicker'
 
 interface AddPermitTransportModalProps {
-  trigger?: string;
+  trigger?: string
 }
 
 const searchSchema = z.object({
@@ -34,7 +34,7 @@ const searchSchema = z.object({
       message: 'STIR (JSHSHIR) faqat 9 yoki 14 xonali bo‘lishi kerak',
     }),
   regNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-});
+})
 
 const tankerItemSchema = z.object({
   numberPlate: z.string({ required_error: 'Majburiy maydon!' }).min(1),
@@ -45,25 +45,25 @@ const tankerItemSchema = z.object({
   capacityUnit: z.string({ required_error: 'Majburiy maydon!' }).min(1),
   checkDate: z.date({ required_error: 'Majburiy maydon!' }),
   validUntil: z.date({ required_error: 'Majburiy maydon!' }),
-});
+})
 
 const tankerFormSchema = z.object({
   tankers: z.array(tankerItemSchema).min(1, 'Kamida bitta transport maʼlumotlari kiritilishi shart!'),
-});
+})
 
-type SearchFormValues = z.infer<typeof searchSchema>;
-type TankerFormValues = z.infer<typeof tankerFormSchema>;
+type SearchFormValues = z.infer<typeof searchSchema>
+type TankerFormValues = z.infer<typeof tankerFormSchema>
 
 export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTransportModalProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchResult, setSearchResult] = useState<PermitSearchResult | null>(null);
-  const queryClient = useQueryClient();
+  const [isOpen, setIsOpen] = useState(false)
+  const [searchResult, setSearchResult] = useState<PermitSearchResult | null>(null)
+  const queryClient = useQueryClient()
 
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchSchema),
     defaultValues: { stir: '', regNumber: '' },
     mode: 'onChange',
-  });
+  })
 
   const transportForm = useForm<TankerFormValues>({
     resolver: zodResolver(tankerFormSchema),
@@ -81,64 +81,64 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
         },
       ],
     },
-  });
+  })
 
   const { fields, append, remove } = useFieldArray({
     control: transportForm.control,
     name: 'tankers',
-  });
+  })
 
-  const { mutateAsync: searchPermit, isPending } = useAdd<any, any, any>('/integration/iip/individual/license', '');
-  const { mutateAsync: addPermit, isPending: isAddPermitLoading } = useAdd<any, any, any>('/tankers/individual');
-  const { mutateAsync: addLegalPermit, isPending: isAddLegalPermitLoading } = useAdd<any, any, any>('/tankers/legal');
+  const { mutateAsync: searchPermit, isPending } = useAdd<any, any, any>('/integration/iip/individual/license', '')
+  const { mutateAsync: addPermit, isPending: isAddPermitLoading } = useAdd<any, any, any>('/tankers/individual')
+  const { mutateAsync: addLegalPermit, isPending: isAddLegalPermitLoading } = useAdd<any, any, any>('/tankers/legal')
   const { mutateAsync: searchPermitLegal, isPending: isPendingLegal } = useAdd<any, any, any>(
     '/integration/iip/legal/license',
-    '',
-  );
+    ''
+  )
 
   const onSearchSubmit = (values: SearchFormValues) => {
-    setSearchResult(null);
-    const searchFn = values?.stir?.length === 9 ? searchPermitLegal : searchPermit;
+    setSearchResult(null)
+    const searchFn = values?.stir?.length === 9 ? searchPermitLegal : searchPermit
 
     searchFn({
       [values.stir.length === 9 ? 'tin' : 'pin']: values.stir,
       registerNumber: values.regNumber,
     }).then((data) => {
-      setSearchResult(data?.data);
-      toast.success('Muvaffaqiyatli topildi!');
-    });
-  };
+      setSearchResult(data?.data)
+      toast.success('Muvaffaqiyatli topildi!')
+    })
+  }
 
   const handleSave = async () => {
-    const searchValues = form.getValues();
-    const isTankerValid = await transportForm.trigger();
+    const searchValues = form.getValues()
+    const isTankerValid = await transportForm.trigger()
 
-    if (!isTankerValid) return;
+    if (!isTankerValid) return
 
-    const { tankers } = transportForm.getValues();
+    const { tankers } = transportForm.getValues()
 
     const payload = {
       [searchValues.stir.length === 9 ? 'tin' : 'pin']: searchValues.stir,
       registerNumber: searchValues.regNumber,
       tankers,
-    };
+    }
 
-    const apiFn = searchValues.stir.length === 9 ? addLegalPermit : addPermit;
+    const apiFn = searchValues.stir.length === 9 ? addLegalPermit : addPermit
 
     apiFn(payload).then(async () => {
-      toast.success('Muvaffaqiyatli saqlandi!');
-      handleClose();
-      await queryClient.invalidateQueries({ queryKey: ['/tankers'] });
-      await queryClient.invalidateQueries({ queryKey: ['/tankers/count'] });
-    });
-  };
+      toast.success('Muvaffaqiyatli saqlandi!')
+      handleClose()
+      await queryClient.invalidateQueries({ queryKey: ['/tankers'] })
+      await queryClient.invalidateQueries({ queryKey: ['/tankers/count'] })
+    })
+  }
 
   const handleClose = () => {
-    form.reset();
-    transportForm.reset();
-    setSearchResult(null);
-    setIsOpen(false);
-  };
+    form.reset()
+    transportForm.reset()
+    setSearchResult(null)
+    setIsOpen(false)
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -146,7 +146,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
         <Button>{trigger}</Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[1000px] max-h-[95vh] overflow-y-auto">
+      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[1000px]">
         <DialogHeader>
           <DialogTitle>Transport qo‘shish</DialogTitle>
         </DialogHeader>
@@ -197,7 +197,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
           <div className="flex flex-col gap-6">
             <SearchResultDisplay data={searchResult} />
 
-            <div className="text-lg font-semibold flex items-center gap-2 text-primary">Transportlar</div>
+            <div className="text-primary flex items-center gap-2 text-lg font-semibold">Transportlar</div>
 
             <Form {...transportForm}>
               <form className="space-y-4">
@@ -205,7 +205,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                   {fields.map((field, index) => (
                     <div
                       key={field.id}
-                      className="relative border rounded-lg p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors"
+                      className="relative rounded-lg border bg-slate-50/50 p-4 transition-colors hover:bg-slate-50"
                     >
                       <Button
                         type="button"
@@ -218,9 +218,9 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                         <Trash2 className="h-4 w-4" />
                       </Button>
 
-                      <div className="text-sm font-medium text-muted-foreground mb-3">Transport №{index + 1}</div>
+                      <div className="text-muted-foreground mb-3 text-sm font-medium">Transport №{index + 1}</div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                         {/* numberPlate */}
                         <FormField
                           control={transportForm.control}
@@ -316,7 +316,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           control={transportForm.control}
                           name={`tankers.${index}.checkDate`}
                           render={({ field }) => {
-                            const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                            const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                             return (
                               <FormItem className="w-full">
                                 <FormLabel>Texnik ko‘rik sanasi</FormLabel>
@@ -330,7 +330,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                                 />
                                 <FormMessage />
                               </FormItem>
-                            );
+                            )
                           }}
                         />
 
@@ -339,7 +339,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           control={transportForm.control}
                           name={`tankers.${index}.validUntil`}
                           render={({ field }) => {
-                            const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                            const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                             return (
                               <FormItem className="w-full">
                                 <FormLabel>Amal qilish muddati</FormLabel>
@@ -353,7 +353,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                                 />
                                 <FormMessage />
                               </FormItem>
-                            );
+                            )
                           }}
                         />
                       </div>
@@ -364,7 +364,7 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full border-dashed border-2 flex gap-2 items-center justify-center py-6"
+                  className="flex w-full items-center justify-center gap-2 border-2 border-dashed py-6"
                   onClick={() =>
                     append({
                       numberPlate: '',
@@ -378,12 +378,12 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                     })
                   }
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="h-4 w-4" />
                   Yana transport qo‘shish
                 </Button>
 
                 {transportForm.formState.errors.tankers && (
-                  <p className="text-sm font-medium text-destructive text-center">
+                  <p className="text-destructive text-center text-sm font-medium">
                     {transportForm.formState.errors.tankers.message ||
                       transportForm.formState.errors.tankers.root?.message}
                   </p>
@@ -391,14 +391,14 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
               </form>
             </Form>
 
-            <DialogFooter className="mt-4 sm:justify-center gap-2">
+            <DialogFooter className="mt-4 gap-2 sm:justify-center">
               <Button onClick={handleClose} type="button" variant="outline">
                 Bekor qilish
               </Button>
 
               <Button type="button" onClick={handleSave} disabled={isAddPermitLoading || isAddLegalPermitLoading}>
                 {isAddPermitLoading || isAddLegalPermitLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
                 Saqlash
               </Button>
@@ -407,5 +407,5 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
         )}
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

@@ -1,15 +1,15 @@
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx';
-import { Button } from '@/shared/components/ui/button.tsx';
-import { Textarea } from '@/shared/components/ui/textarea.tsx';
-import { FC } from 'react';
-import { Input } from '@/shared/components/ui/input.tsx';
-import { useCustomSearchParams, useEIMZO } from '@/shared/hooks';
-import { QK_INSPECTION } from '@/shared/constants/query-keys.ts';
-import { ApplicationModal } from '@/features/application/create-application';
-import { InputFile } from '@/shared/components/common/file-upload';
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { Button } from '@/shared/components/ui/button.tsx'
+import { Textarea } from '@/shared/components/ui/textarea.tsx'
+import { FC } from 'react'
+import { Input } from '@/shared/components/ui/input.tsx'
+import { useCustomSearchParams, useEIMZO } from '@/shared/hooks'
+import { QK_INSPECTION } from '@/shared/constants/query-keys.ts'
+import { ApplicationModal } from '@/features/application/create-application'
+import { InputFile } from '@/shared/components/common/file-upload'
 
 const schema = z.object({
   objects: z.string().min(5).default(''),
@@ -20,13 +20,13 @@ const schema = z.object({
   sectionFifth: z.string().min(5).default(''),
   sectionSixth: z.string().min(5).default(''),
   acknowledgementPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Tilxat majburiy!'),
-});
+})
 
 const CreateDocument: FC<{ resetTab: () => void }> = () => {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-  });
-  const { paramsObject } = useCustomSearchParams();
+  })
+  const { paramsObject } = useCustomSearchParams()
   const {
     error,
     isLoading,
@@ -41,15 +41,15 @@ const CreateDocument: FC<{ resetTab: () => void }> = () => {
     submitEndpoint: '/inspections/act',
     successMessage: 'Muvaffaqiyatli saqlandi!',
     queryKey: QK_INSPECTION,
-  });
+  })
 
   function onSubmit(data: z.infer<typeof schema>) {
-    handleCreateApplication({ ...data, inspectionId: paramsObject?.inspectionId });
+    handleCreateApplication({ ...data, inspectionId: paramsObject?.inspectionId })
   }
 
   return (
     <Form {...form}>
-      <form className="bg-white shadow rounded-lg p-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="rounded-lg bg-white p-4 shadow" onSubmit={form.handleSubmit(onSubmit)}>
         <div className="space-y-3">
           <div className="grid grid-cols-3 gap-4">
             <div>
@@ -179,7 +179,7 @@ const CreateDocument: FC<{ resetTab: () => void }> = () => {
                         form={form}
                         name={field.name}
                         onUploadComplete={(url) => {
-                          form.setValue('acknowledgementPath', url, { shouldValidate: true });
+                          form.setValue('acknowledgementPath', url, { shouldValidate: true })
                         }}
                         buttonText="Faylni yuklang"
                       />
@@ -198,14 +198,14 @@ const CreateDocument: FC<{ resetTab: () => void }> = () => {
         isLoading={isLoading}
         documentUrl={documentUrl!}
         onClose={() => {
-          handleCloseModal();
+          handleCloseModal()
         }}
         isPdfLoading={isPdfLoading}
         submitApplicationMetaData={submitApplicationMetaData}
         title="Created document"
       />
     </Form>
-  );
-};
+  )
+}
 
-export default CreateDocument;
+export default CreateDocument

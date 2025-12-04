@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { UserLogsTypeEnum } from '@/entities/admin/user-logs';
+import { z } from 'zod'
+import { UserLogsTypeEnum } from '@/entities/admin/user-logs'
 
 export const UserLogsBaseSchema = {
   name: z.string().optional(),
@@ -9,12 +9,12 @@ export const UserLogsBaseSchema = {
   ownerName: z.string().optional(),
   username: z.string().optional(),
   appealNumber: z.string().optional(),
-};
+}
 
 export const userLogsSchema = z.object({
   id: z.number().optional(),
   ...UserLogsBaseSchema,
-});
+})
 
 export const schemas = {
   filter: z.object({
@@ -23,4 +23,4 @@ export const schemas = {
     size: z.number().optional().default(20),
   }),
   single: userLogsSchema,
-};
+}

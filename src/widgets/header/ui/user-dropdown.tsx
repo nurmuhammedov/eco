@@ -1,34 +1,34 @@
-import { useLogout } from '@/entities/auth';
-import { useTranslation } from 'react-i18next';
-import { ChevronDown, LogOut, User } from 'lucide-react';
-import { Loader } from '@/shared/components/common';
+import { useLogout } from '@/entities/auth'
+import { useTranslation } from 'react-i18next'
+import { ChevronDown, LogOut, User } from 'lucide-react'
+import { Loader } from '@/shared/components/common'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/shared/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
-import { useAuth } from '@/shared/hooks/use-auth.ts';
-import { UserRoleLabels } from '@/entities/user';
-import { truncateString } from '@/shared/lib';
+} from '@/shared/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar'
+import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { UserRoleLabels } from '@/entities/user'
+import { truncateString } from '@/shared/lib'
 
 export default function UserDropdown() {
-  const { user } = useAuth();
-  const { t } = useTranslation('auth');
-  const { mutateAsync, isPending } = useLogout();
+  const { user } = useAuth()
+  const { t } = useTranslation('auth')
+  const { mutateAsync, isPending } = useLogout()
   // const navigate = useNavigate();
   // const userName = getInitials(user?.name);
 
   if (isPending) {
-    return <Loader isVisible={isPending} />;
+    return <Loader isVisible={isPending} />
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex items-center space-x-2 cursor-pointer">
+        <div className="flex cursor-pointer items-center space-x-2">
           <Avatar>
             <AvatarImage src="" alt="@shadcn" />
             {/*<AvatarFallback>{userName}</AvatarFallback>*/}
@@ -56,5 +56,5 @@ export default function UserDropdown() {
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

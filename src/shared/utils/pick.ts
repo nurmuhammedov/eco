@@ -2,10 +2,10 @@ export function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pi
   return keys.reduce(
     (acc, key) => {
       if (key in obj) {
-        acc[key] = obj[key];
+        acc[key] = obj[key]
       }
-      return acc;
+      return acc
     },
-    {} as Pick<T, K>,
-  );
+    {} as Pick<T, K>
+  )
 }

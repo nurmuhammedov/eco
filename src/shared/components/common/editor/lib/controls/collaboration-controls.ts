@@ -9,18 +9,18 @@ export const registerCollaborationControls = (editor: any): void => {
       tooltip: 'Toggle Track Changes',
       icon: 'user',
       onAction: () => {
-        const trackChangesPlugin = editor.plugins.trackchanges;
+        const trackChangesPlugin = editor.plugins.trackchanges
         if (trackChangesPlugin.isEnabled()) {
-          trackChangesPlugin.disable();
+          trackChangesPlugin.disable()
         } else {
-          trackChangesPlugin.enable();
+          trackChangesPlugin.enable()
         }
       },
       onSetup: (api: any) => {
-        api.setActive(editor.plugins.trackchanges?.isEnabled() || false);
-        return () => {};
+        api.setActive(editor.plugins.trackchanges?.isEnabled() || false)
+        return () => {}
       },
-    });
+    })
   }
 
   // Comments functionality (if available)
@@ -56,19 +56,19 @@ export const registerCollaborationControls = (editor: any): void => {
               },
             ],
             onSubmit: (api: any) => {
-              const data = api.getData();
-              editor.plugins.comments.addComment(data.comment);
-              api.close();
+              const data = api.getData()
+              editor.plugins.comments.addComment(data.comment)
+              api.close()
             },
-          });
+          })
         } else {
           editor.notificationManager.open({
             text: 'Please select text to comment on',
             type: 'warning',
             timeout: 2000,
-          });
+          })
         }
       },
-    });
+    })
   }
-};
+}

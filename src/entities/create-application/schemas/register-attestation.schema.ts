@@ -1,7 +1,7 @@
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { format } from 'date-fns';
-import { z } from 'zod';
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { format } from 'date-fns'
+import { z } from 'zod'
 
 const employeeSchema = z.object({
   pin: z.string().length(14, FORM_ERROR_MESSAGES.pin),
@@ -17,7 +17,7 @@ const employeeSchema = z.object({
     .date()
     .transform((val) => format(val, 'yyyy-MM-dd'))
     .optional(),
-});
+})
 
 export const AttestationAppealFormSchema = z.object({
   hfId: z.string().min(1, { message: FORM_ERROR_MESSAGES.required }),
@@ -42,14 +42,14 @@ export const AttestationAppealFormSchema = z.object({
           code: z.ZodIssueCode.custom,
           message: "Iltimos, to'g'ri sana va vaqt kiriting",
           path: ['dateOfAttestation'],
-        });
+        })
       }
     }),
   employeeList: z.array(employeeSchema).min(1, 'Kamida bitta xodim kiritilishi shart'),
   phoneNumber: z.string().refine((val) => USER_PATTERNS.phone.test(val), {
     message: FORM_ERROR_MESSAGES.phone,
   }),
-});
+})
 
 export const AttestationAppealDtoSchema = AttestationAppealFormSchema.transform((data) => {
   return {
@@ -58,7 +58,7 @@ export const AttestationAppealDtoSchema = AttestationAppealFormSchema.transform(
       data.direction === 'REGIONAL' && data.dateOfAttestation
         ? format(data.dateOfAttestation, "yyyy-MM-dd'T'HH:mm")
         : null,
-  };
-});
+  }
+})
 
-export type CreateAttestationDTO = z.infer<typeof AttestationAppealDtoSchema>;
+export type CreateAttestationDTO = z.infer<typeof AttestationAppealDtoSchema>

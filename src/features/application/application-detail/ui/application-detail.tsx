@@ -1,36 +1,36 @@
 // src/features/application/application-detail/ui/application-detail.tsx
 
-import { ApplicationStatus } from '@/entities/application';
-import { APPLICATIONS_DATA, ApplicationTypeEnum } from '@/entities/create-application';
-import { UserRoles } from '@/entities/user';
-import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx';
-import AppealResponseDocs from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx';
-import ApplicantDocsTable from '@/features/application/application-detail/ui/parts/applicant-docs-table.tsx';
-import EmployeesList from '@/features/application/application-detail/ui/parts/employees-list';
-import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx';
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx';
-import { DetailCardAccordion } from '@/shared/components/common/detail-card';
-import DetailRow from '@/shared/components/common/detail-row';
-import Stepper from '@/shared/components/common/stepper';
-import { Coordinate } from '@/shared/components/common/yandex-map';
-import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
-import { getDate } from '@/shared/utils/date';
+import { ApplicationStatus } from '@/entities/application'
+import { APPLICATIONS_DATA, ApplicationTypeEnum } from '@/entities/create-application'
+import { UserRoles } from '@/entities/user'
+import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
+import AppealResponseDocs from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx'
+import ApplicantDocsTable from '@/features/application/application-detail/ui/parts/applicant-docs-table.tsx'
+import EmployeesList from '@/features/application/application-detail/ui/parts/employees-list'
+import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
+import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import DetailRow from '@/shared/components/common/detail-row'
+import Stepper from '@/shared/components/common/stepper'
+import { Coordinate } from '@/shared/components/common/yandex-map'
+import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx'
+import { getDate } from '@/shared/utils/date'
 
 const ApplicationDetail = ({
   data,
   userRole,
   showAttestationActions,
 }: {
-  data: any;
-  userRole?: UserRoles;
-  showAttestationActions?: boolean;
+  data: any
+  userRole?: UserRoles
+  showAttestationActions?: boolean
 }) => {
-  const currentObjLocation = data?.data?.location?.split(',') || ([] as Coordinate[]);
-  const isLegalApplication = data?.ownerType == 'LEGAL';
+  const currentObjLocation = data?.data?.location?.split(',') || ([] as Coordinate[])
+  const isLegalApplication = data?.ownerType == 'LEGAL'
 
   return (
-    <div className="grid grid-cols-1 gap-4 mt-4">
+    <div className="mt-4 grid grid-cols-1 gap-4">
       <DetailCardAccordion
         defaultValue={[
           'general',
@@ -43,7 +43,7 @@ const ApplicationDetail = ({
         ]}
       >
         <DetailCardAccordion.Item value="general" title="Ariza va ijro to‘g‘risida maʼlumot">
-          <div className="py-1  flex flex-col">
+          <div className="flex flex-col py-1">
             <DetailRow title="Ariza sanasi:" value={getDate(data?.createdAt)} />
             <DetailRow
               title="Ariza turi:"
@@ -72,7 +72,7 @@ const ApplicationDetail = ({
         </DetailCardAccordion.Item>
         {!isLegalApplication && (
           <DetailCardAccordion.Item value="applicant_info_individual" title="Arizachi to‘g‘risida ma’lumot">
-            <div className="py-1  flex flex-col">
+            <div className="flex flex-col py-1">
               <DetailRow title="Arizachi JSHIR:" value={data?.ownerIdentity || '-'} />
               <DetailRow title="Arizachi F.I.SH:" value={data?.ownerName || '-'} />
               <DetailRow title="Arizachining manzili:" value={data?.address || '-'} />
@@ -134,7 +134,7 @@ const ApplicationDetail = ({
         )}
       </DetailCardAccordion>
     </div>
-  );
-};
+  )
+}
 
-export { ApplicationDetail };
+export { ApplicationDetail }

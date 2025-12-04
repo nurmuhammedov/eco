@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const inspectionSchema = z.object({
   id: z.string().uuid(),
@@ -7,4 +7,4 @@ export const inspectionSchema = z.object({
   districtName: z.string(),
   legalName: z.string(),
   legalAddress: z.string(),
-});
+})

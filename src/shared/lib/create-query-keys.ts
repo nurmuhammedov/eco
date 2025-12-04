@@ -11,5 +11,5 @@ export const createQueryKeys = (slice: string) => {
       params
         ? ([...createQueryKeys(slice).entity(entity), operation, params] as const)
         : ([...createQueryKeys(slice).entity(entity), operation] as const),
-  };
-};
+  }
+}

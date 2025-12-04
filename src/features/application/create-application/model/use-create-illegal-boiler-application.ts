@@ -1,11 +1,11 @@
 // src/features/application/create-application/model/use-create-boiler-application.ts
-import { RegisterIllegalBoilerApplicationDTO } from '@/entities/create-application';
-import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
-import { BoilerIllegalAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-boiler.schema';
+import { RegisterIllegalBoilerApplicationDTO } from '@/entities/create-application'
+import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMemo } from 'react'
+import { useForm } from 'react-hook-form'
+import { BoilerIllegalAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-boiler.schema'
 
 export const useCreateIllegalBoilerApplication = () => {
   const form = useForm<RegisterIllegalBoilerApplicationDTO>({
@@ -39,21 +39,21 @@ export const useCreateIllegalBoilerApplication = () => {
       pressure: '',
     },
     mode: 'onChange',
-  });
+  })
 
-  const regionId = form.watch('regionId');
-  const { data: regions } = useRegionSelectQueries();
-  const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: childEquipmentTypes } = useChildEquipmentTypes('BOILER');
+  const regionId = form.watch('regionId')
+  const { data: regions } = useRegionSelectQueries()
+  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: childEquipmentTypes } = useChildEquipmentTypes('BOILER')
 
-  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);
-  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions]);
-  const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes]);
+  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
+  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
+  const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes])
 
   return {
     form,
     regionOptions,
     districtOptions,
     childEquipmentOptions,
-  };
-};
+  }
+}

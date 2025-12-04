@@ -1,27 +1,27 @@
-import { CardForm, DeRegisterHFDTO } from '@/entities/create-application';
-import { useDeRegisterHFApplication } from '@/features/application/create-application/model/use-deregister-hpo-application.ts';
-import { GoBack } from '@/shared/components/common';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { Button } from '@/shared/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { PhoneInput } from '@/shared/components/ui/phone-input';
-import { Textarea } from '@/shared/components/ui/textarea';
+import { CardForm, DeRegisterHFDTO } from '@/entities/create-application'
+import { useDeRegisterHFApplication } from '@/features/application/create-application/model/use-deregister-hpo-application.ts'
+import { GoBack } from '@/shared/components/common'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { Button } from '@/shared/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { PhoneInput } from '@/shared/components/ui/phone-input'
+import { Textarea } from '@/shared/components/ui/textarea'
 
 interface DeRegisterHFFormProps {
-  onSubmit: (data: DeRegisterHFDTO) => void;
+  onSubmit: (data: DeRegisterHFDTO) => void
 }
 
 export default ({ onSubmit }: DeRegisterHFFormProps) => {
-  const { form } = useDeRegisterHFApplication();
+  const { form } = useDeRegisterHFApplication()
 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="XICHOni ro'yxatdan chiqarish" />
-        <CardForm className="mb-2 mt-4">
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
+        <CardForm className="mt-4 mb-2">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="phoneNumber"
@@ -29,7 +29,7 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
                 <FormItem>
                   <FormLabel required>Telefon raqami</FormLabel>
                   <FormControl>
-                    <PhoneInput className="w-full 3xl:w-sm" placeholder="+998 XX XXX XX XX" {...field} />
+                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -42,7 +42,7 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
                 <FormItem>
                   <FormLabel required>Roʻyxatga olish raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="XICHO roʻyxatga olish raqami" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="XICHO roʻyxatga olish raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -50,7 +50,7 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
             />
           </div>
 
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="reasons"
@@ -58,7 +58,7 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
                 <FormItem>
                   <FormLabel required>Sabab</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Sabab" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Sabab" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -71,7 +71,7 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
                 <FormItem>
                   <FormLabel>Belgisi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Belgisi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Belgisi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -79,7 +79,7 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
             />
           </div>
 
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="description"
@@ -96,13 +96,13 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
           </div>
         </CardForm>
 
-        <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
+        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <FormField
             name="justifiedDocumentPath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel className="max-w-1/2 2xl:max-w-3/7" required>
                     XICHOni rekonstruksiya qilish yoki texnik jihatdan qayta jihozlashga loyiha hujjatlarining sanoat
                     xavfsizligi ekspertizasi xulosasi
@@ -119,8 +119,8 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
             name="filePath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel className="max-w-1/2 2xl:max-w-3/7" required>
                     Identifikatsiya varaqasini o‘z ichiga olgan XICHOni sanoat xavfsizligi ekspertizasi natijalari
                     to‘g‘risidagi xulosa nusxasi
@@ -138,5 +138,5 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

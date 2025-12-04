@@ -1,30 +1,30 @@
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { formatDate } from 'date-fns';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { formatDate } from 'date-fns'
 // import { tabs } from '@/features/expertise/ui/conclusion-tabs';
-import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
-import { useNavigate } from 'react-router-dom';
-import { Badge } from '@/shared/components/ui/badge';
-import { Button } from '@/shared/components/ui/button';
-import { useState } from 'react';
-import ExpertiseFileUploadModal from '@/features/expertise/ui/parts/expertise-file-upload-modal';
-import FileLink from '@/shared/components/common/file-link';
-import { UserRoles } from '@/entities/user';
-import { useAuth } from '@/shared/hooks/use-auth';
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { useNavigate } from 'react-router-dom'
+import { Badge } from '@/shared/components/ui/badge'
+import { Button } from '@/shared/components/ui/button'
+import { useState } from 'react'
+import ExpertiseFileUploadModal from '@/features/expertise/ui/parts/expertise-file-upload-modal'
+import FileLink from '@/shared/components/common/file-link'
+import { UserRoles } from '@/entities/user'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 export const ConclusionsTable = () => {
   const {
     paramsObject: { page = 1, size = 10, tab = 'ALL', ...rest },
-  } = useCustomSearchParams();
-  const { user } = useAuth();
-  const [id, setId] = useState<any>(null);
-  const navigate = useNavigate();
+  } = useCustomSearchParams()
+  const { user } = useAuth()
+  const [id, setId] = useState<any>(null)
+  const navigate = useNavigate()
   const { data = [], isLoading } = usePaginatedData<any>('/conclusions', {
     page: page,
     size: size,
     type: tab == 'ALL' ? null : tab,
     ...rest,
-  });
+  })
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -106,7 +106,7 @@ export const ConclusionsTable = () => {
           ) : user?.role == UserRoles.LEGAL ? (
             <Button
               onClick={() => {
-                setId(row.original?.id);
+                setId(row.original?.id)
               }}
               variant="info"
             >
@@ -131,10 +131,10 @@ export const ConclusionsTable = () => {
               onView={(row: any) => navigate(`detail/${row.original.id!}`)}
             />
           </div>
-        );
+        )
       },
     },
-  ];
+  ]
 
   return (
     <>
@@ -151,10 +151,10 @@ export const ConclusionsTable = () => {
         <ExpertiseFileUploadModal
           id={id}
           closeModal={() => {
-            setId(null);
+            setId(null)
           }}
         />
       )}
     </>
-  );
-};
+  )
+}

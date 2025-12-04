@@ -1,7 +1,7 @@
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { format } from 'date-fns';
-import { z } from 'zod';
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { format } from 'date-fns'
+import { z } from 'zod'
 
 export const PipelineIllegalAppealDtoSchema = z
   .object({
@@ -113,7 +113,7 @@ export const PipelineIllegalAppealDtoSchema = z
           code: z.ZodIssueCode.custom,
           message: 'Tug‘ilgan sana kiritilishi shart',
           path: ['birthDate'],
-        });
+        })
       }
     }
-  });
+  })

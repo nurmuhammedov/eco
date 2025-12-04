@@ -1,7 +1,7 @@
-import RiskAnalysisWidget from '@/widgets/risk-analysis/ui/risk-analysis-widget';
+import RiskAnalysisWidget from '@/widgets/risk-analysis/ui/risk-analysis-widget'
 
 const RiskAnalysisPage = () => {
-  return <RiskAnalysisWidget />;
-};
+  return <RiskAnalysisWidget />
+}
 
-export default RiskAnalysisPage;
+export default RiskAnalysisPage

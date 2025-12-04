@@ -1,7 +1,7 @@
-import { lazy } from 'react';
+import { lazy } from 'react'
 
-const StaffsWidget = lazy(() => import('@/widgets/admin/staffs/ui/staffs'));
+const StaffsWidget = lazy(() => import('@/widgets/admin/staffs/ui/staffs'))
 
 export default function StaffsPage() {
-  return <StaffsWidget />;
+  return <StaffsWidget />
 }

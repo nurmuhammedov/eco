@@ -1,22 +1,22 @@
 // src/features/admin/checklist-templates/ui/checklist-templates-drawer.tsx
-import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types';
-import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { Checkbox } from '@/shared/components/ui/checkbox';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { useUIActionLabel } from '@/shared/hooks';
-import { useChecklistTemplateDrawer } from '@/shared/hooks/entity-hooks';
-import { UIModeEnum } from '@/shared/types';
-import { useTranslation } from 'react-i18next';
-import { useChecklistTemplateForm } from '../model/use-checklist-template-form';
+import { BaseDrawer } from '@/shared/components/common/base-drawer'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
+import { Checkbox } from '@/shared/components/ui/checkbox'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { useUIActionLabel } from '@/shared/hooks'
+import { useChecklistTemplateDrawer } from '@/shared/hooks/entity-hooks'
+import { UIModeEnum } from '@/shared/types'
+import { useTranslation } from 'react-i18next'
+import { useChecklistTemplateForm } from '../model/use-checklist-template-form'
 
 export const ChecklistTemplatesDrawer = () => {
-  const { t } = useTranslation('common');
-  const { isOpen, onClose, mode } = useChecklistTemplateDrawer();
-  const { form, onSubmit, isPending, isCreate, isFetching } = useChecklistTemplateForm();
-  const actionLabel = useUIActionLabel(mode);
+  const { t } = useTranslation('common')
+  const { isOpen, onClose, mode } = useChecklistTemplateDrawer()
+  const { form, onSubmit, isPending, isCreate, isFetching } = useChecklistTemplateForm()
+  const actionLabel = useUIActionLabel(mode)
 
   return (
     <BaseDrawer asForm open={isOpen} title={actionLabel} onClose={onClose} onSubmit={onSubmit} loading={isPending}>
@@ -67,7 +67,7 @@ export const ChecklistTemplatesDrawer = () => {
                   control={form.control}
                   name="active"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                    <FormItem className="flex flex-row items-start space-y-0 space-x-3 rounded-md border p-4">
                       <FormControl>
                         <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                       </FormControl>
@@ -83,5 +83,5 @@ export const ChecklistTemplatesDrawer = () => {
         </div>
       </Form>
     </BaseDrawer>
-  );
-};
+  )
+}

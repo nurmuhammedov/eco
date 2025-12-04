@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const checklistBaseSchema = {
   category: z.string().min(1, 'Kategoriya majburiy'),
@@ -7,13 +7,13 @@ export const checklistBaseSchema = {
   question: z.string().min(1, 'Savolni kiriting'),
   negative: z.string().min(1, 'Yo‘q belgilanganda dalolatnomaga tushadigan matnni kiriting'),
   corrective: z.string().min(1, 'Yo‘q belgilanganda qilinadigan chora-tadbir matnni kiriting'),
-};
+}
 
 export const checklistSchema = z.object({
   id: z.number().optional(),
   categoryTypeName: z.string().optional(),
   ...checklistBaseSchema,
-});
+})
 
 export const checklistSchemas = {
   create: z.object(checklistBaseSchema),
@@ -27,4 +27,4 @@ export const checklistSchemas = {
     size: z.number().optional().default(20),
   }),
   single: checklistSchema,
-};
+}

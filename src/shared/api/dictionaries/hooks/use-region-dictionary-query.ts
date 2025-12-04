@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { regionsAPI } from '@/shared/api/dictionaries';
+import { useQuery } from '@tanstack/react-query'
+import { regionsAPI } from '@/shared/api/dictionaries'
 
 export const useRegionSelectQueries = () => {
   return useQuery({
@@ -7,5 +7,5 @@ export const useRegionSelectQueries = () => {
     staleTime: 0,
     queryKey: ['region-select'],
     queryFn: () => regionsAPI.list(),
-  });
-};
+  })
+}

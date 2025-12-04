@@ -1,20 +1,20 @@
-import { ColumnDef } from '@tanstack/react-table';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { useChecklistDrawer } from '@/shared/hooks/entity-hooks';
-import { UIModeEnum } from '@/shared/types/ui-types';
-import { useChecklistsQuery, useDeleteChecklist, Checklist } from '@/entities/admin/inspection';
-import { useCustomSearchParams } from '@/shared/hooks';
-import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options';
+import { ColumnDef } from '@tanstack/react-table'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { useChecklistDrawer } from '@/shared/hooks/entity-hooks'
+import { UIModeEnum } from '@/shared/types/ui-types'
+import { useChecklistsQuery, useDeleteChecklist, Checklist } from '@/entities/admin/inspection'
+import { useCustomSearchParams } from '@/shared/hooks'
+import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options'
 
 export function ChecklistList() {
-  const { onOpen } = useChecklistDrawer();
-  const { paramsObject } = useCustomSearchParams();
-  const { data, isLoading } = useChecklistsQuery({ page: paramsObject?.page || 1, size: paramsObject?.size || 10 });
-  const deleteItem = useDeleteChecklist();
+  const { onOpen } = useChecklistDrawer()
+  const { paramsObject } = useCustomSearchParams()
+  const { data, isLoading } = useChecklistsQuery({ page: paramsObject?.page || 1, size: paramsObject?.size || 10 })
+  const deleteItem = useDeleteChecklist()
 
-  const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id });
-  const onDelete = (id: number) => deleteItem.mutate(id);
-  const onView = (id: number) => onOpen(UIModeEnum.VIEW, { id });
+  const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id })
+  const onDelete = (id: number) => deleteItem.mutate(id)
+  const onView = (id: number) => onOpen(UIModeEnum.VIEW, { id })
 
   const columns: ColumnDef<Checklist>[] = [
     {
@@ -37,7 +37,7 @@ export function ChecklistList() {
         />
       ),
     },
-  ];
+  ]
 
   return (
     <DataTable
@@ -47,5 +47,5 @@ export function ChecklistList() {
       columns={columns}
       className="h-[calc(100svh-270px)]"
     />
-  );
+  )
 }

@@ -1,16 +1,16 @@
-import { useObjectListByPagination } from '@/features/inspections/hooks/use-object-list.ts';
-import useCustomSearchParams from '../../../../shared/hooks/api/useSearchParams.ts';
-import { ColumnDef } from '@tanstack/react-table';
-import { Button } from '@/shared/components/ui/button.tsx';
-import { Eye } from 'lucide-react';
-import { DataTable } from '@/shared/components/common/data-table';
-import { useNavigate } from 'react-router-dom';
-import { formatDate } from 'date-fns';
+import { useObjectListByPagination } from '@/features/inspections/hooks/use-object-list.ts'
+import useCustomSearchParams from '../../../../shared/hooks/api/useSearchParams.ts'
+import { ColumnDef } from '@tanstack/react-table'
+import { Button } from '@/shared/components/ui/button.tsx'
+import { Eye } from 'lucide-react'
+import { DataTable } from '@/shared/components/common/data-table'
+import { useNavigate } from 'react-router-dom'
+import { formatDate } from 'date-fns'
 
 const ObjectsList = () => {
-  const { paramsObject } = useCustomSearchParams();
-  const { data, isLoading } = useObjectListByPagination();
-  const navigate = useNavigate();
+  const { paramsObject } = useCustomSearchParams()
+  const { data, isLoading } = useObjectListByPagination()
+  const navigate = useNavigate()
 
   const columns: ColumnDef<any>[] = [
     {
@@ -49,13 +49,13 @@ const ObjectsList = () => {
         </Button>
       ),
     },
-  ];
+  ]
 
   return (
     <div>
       <DataTable isPaginated data={data || []} columns={columns as unknown as any} isLoading={isLoading} />
     </div>
-  );
-};
+  )
+}
 
-export default ObjectsList;
+export default ObjectsList

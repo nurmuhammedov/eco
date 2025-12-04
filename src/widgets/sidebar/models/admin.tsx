@@ -1,4 +1,4 @@
-import type { Navigation } from '@/widgets/sidebar/models/types';
+import type { Navigation } from '@/widgets/sidebar/models/types'
 import {
   ListChecks,
   ListTree,
@@ -10,7 +10,7 @@ import {
   Activity,
   AlertTriangle,
   Award,
-} from 'lucide-react';
+} from 'lucide-react'
 
 export default [
   {
@@ -68,4 +68,4 @@ export default [
     title: 'menu.user-logs',
     icon: <Activity />,
   },
-] as Navigation;
+] as Navigation

@@ -1,18 +1,18 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx';
-import { useState } from 'react';
-import { useAuth } from '@/shared/hooks/use-auth.ts';
-import { UserRoles } from '@/entities/user';
-import InspectionMainInfo from '@/features/inspections/ui/parts/inspection-main-info.tsx';
-import AddInspectionDocuments from '@/features/inspections/ui/parts/add-inspection-documents.tsx';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx'
+import { useState } from 'react'
+import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { UserRoles } from '@/entities/user'
+import InspectionMainInfo from '@/features/inspections/ui/parts/inspection-main-info.tsx'
+import AddInspectionDocuments from '@/features/inspections/ui/parts/add-inspection-documents.tsx'
 // import CreateDocument from '@/features/inspections/ui/parts/create-document.tsx';
 
 const InspectionsDetailInfo = ({ inspectionData }: any) => {
-  const [activeTab, setActiveTab] = useState('main_info');
-  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState('main_info')
+  const { user } = useAuth()
 
   const resetTab = () => {
-    setActiveTab('main_info');
-  };
+    setActiveTab('main_info')
+  }
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -39,6 +39,6 @@ const InspectionsDetailInfo = ({ inspectionData }: any) => {
       {/*  <CreateDocument resetTab={resetTab} />*/}
       {/*</TabsContent>*/}
     </Tabs>
-  );
-};
-export default InspectionsDetailInfo;
+  )
+}
+export default InspectionsDetailInfo

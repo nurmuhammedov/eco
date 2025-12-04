@@ -1,42 +1,42 @@
-import { cn } from '@/shared/lib/utils';
-import { Row } from '@tanstack/react-table';
-import { Eye, Pencil, Trash2, QrCode } from 'lucide-react';
-import React, { memo, ReactNode, useCallback } from 'react';
-import DeleteConfirmationDialog from '../delete-confirm-dialog';
+import { cn } from '@/shared/lib/utils'
+import { Row } from '@tanstack/react-table'
+import { Eye, Pencil, Trash2, QrCode } from 'lucide-react'
+import React, { memo, ReactNode, useCallback } from 'react'
+import DeleteConfirmationDialog from '../delete-confirm-dialog'
 
 interface ActionButtonConfig {
-  icon: ReactNode;
-  className?: string;
-  onClick: () => void;
-  ariaLabel: string;
-  isDelete?: boolean;
+  icon: ReactNode
+  className?: string
+  onClick: () => void
+  ariaLabel: string
+  isDelete?: boolean
 }
 
 export interface DataTableRowActionsProps<TData> {
-  row: Row<TData>;
+  row: Row<TData>
 
-  showEdit?: boolean;
-  showQr?: boolean;
-  showView?: boolean;
-  showDelete?: boolean;
+  showEdit?: boolean
+  showQr?: boolean
+  showView?: boolean
+  showDelete?: boolean
 
-  onEdit?: (row: Row<TData>) => void;
-  onQr?: (row: Row<TData>) => void;
-  onView?: (row: Row<TData>) => void;
-  onDelete?: (row: Row<TData>) => void;
+  onEdit?: (row: Row<TData>) => void
+  onQr?: (row: Row<TData>) => void
+  onView?: (row: Row<TData>) => void
+  onDelete?: (row: Row<TData>) => void
 
-  editClassName?: string;
-  qrClassName?: string;
-  viewClassName?: string;
-  deleteClassName?: string;
+  editClassName?: string
+  qrClassName?: string
+  viewClassName?: string
+  deleteClassName?: string
 
-  containerClassName?: string;
+  containerClassName?: string
 }
 
 const ActionButton = memo(({ icon, className, onClick, ariaLabel, isDelete = false }: ActionButtonConfig) => {
   // For delete button, wrap with confirmation dialog
   if (isDelete) {
-    return <DeleteConfirmationDialog onConfirm={onClick} />;
+    return <DeleteConfirmationDialog onConfirm={onClick} />
   }
 
   // For non-delete buttons, render normally
@@ -45,18 +45,18 @@ const ActionButton = memo(({ icon, className, onClick, ariaLabel, isDelete = fal
       type="button"
       aria-label={ariaLabel}
       className={cn(
-        'p-1 flex items-center justify-center rounded transition-colors',
-        'focus:outline-none hover:bg-neutral-250',
-        className,
+        'flex items-center justify-center rounded p-1 transition-colors',
+        'hover:bg-neutral-250 focus:outline-none',
+        className
       )}
       onClick={onClick}
     >
-      <span className="size-5 flex items-center justify-center">{icon}</span>
+      <span className="flex size-5 items-center justify-center">{icon}</span>
     </button>
-  );
-});
+  )
+})
 
-ActionButton.displayName = 'ActionButton';
+ActionButton.displayName = 'ActionButton'
 
 function DataTableRowActions<TData>({
   row,
@@ -76,24 +76,24 @@ function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>): React.ReactElement | null {
   // Memoize handlers with proper typing
   const handleEdit = useCallback((): void => {
-    if (onEdit) onEdit(row);
-  }, [onEdit, row]);
+    if (onEdit) onEdit(row)
+  }, [onEdit, row])
 
   // Make sure onDelete handler returns a Promise
   const handleDelete = useCallback(async (): Promise<void> => {
     if (onDelete) {
       // Convert the result to a Promise if it's not already
-      await Promise.resolve(onDelete(row));
+      await Promise.resolve(onDelete(row))
     }
-  }, [onDelete, row]);
+  }, [onDelete, row])
 
   const handleView = useCallback((): void => {
-    if (onView) onView(row);
-  }, [onView, row]);
+    if (onView) onView(row)
+  }, [onView, row])
 
   const handleQr = useCallback((): void => {
-    if (onQr) onQr(row);
-  }, [onQr, row]);
+    if (onQr) onQr(row)
+  }, [onQr, row])
 
   const buttons: ActionButtonConfig[] = [
     ...(showView && onView
@@ -137,10 +137,10 @@ function DataTableRowActions<TData>({
           },
         ]
       : []),
-  ];
+  ]
 
   if (buttons.length === 0) {
-    return null;
+    return null
   }
 
   return (
@@ -156,9 +156,9 @@ function DataTableRowActions<TData>({
         />
       ))}
     </div>
-  );
+  )
 }
 
-DataTableRowActions.displayName = 'DataTableRowActions';
+DataTableRowActions.displayName = 'DataTableRowActions'
 
-export { DataTableRowActions };
+export { DataTableRowActions }

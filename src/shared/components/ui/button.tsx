@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { Fragment } from 'react';
-import { Loader } from 'lucide-react';
-import { cn } from '@/shared/lib/utils';
-import { Slot } from '@radix-ui/react-slot';
-import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react'
+import { Fragment } from 'react'
+import { Loader } from 'lucide-react'
+import { cn } from '@/shared/lib/utils'
+import { Slot } from '@radix-ui/react-slot'
+import { cva, type VariantProps } from 'class-variance-authority'
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
@@ -35,24 +35,24 @@ const buttonVariants = cva(
       variant: 'default',
       size: 'default',
     },
-  },
-);
+  }
+)
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-  loading?: boolean;
+  asChild?: boolean
+  loading?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, loading = false, children, ...props }, ref) => {
-    const Comp = asChild ? Slot : 'button';
+    const Comp = asChild ? Slot : 'button'
 
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }), {
-          'opacity-50 cursor-not-allowed': loading,
+        className={cn('cursor-pointer', buttonVariants({ variant, size, className }), {
+          'cursor-not-allowed opacity-50': loading,
         })}
         ref={ref}
         aria-live="polite"
@@ -61,13 +61,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         <Fragment>
-          {loading && <Loader className="animate-spin size-4" />}
+          {loading && <Loader className="size-4 animate-spin" />}
           {children}
         </Fragment>
       </Comp>
-    );
-  },
-);
-Button.displayName = 'Button';
+    )
+  }
+)
+Button.displayName = 'Button'
 
-export { Button, buttonVariants };
+export { Button, buttonVariants }

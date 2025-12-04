@@ -1,57 +1,57 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx';
-import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { FC } from 'react';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { Button } from '@/shared/components/ui/button.tsx';
-import { useAdd } from '@/shared/hooks';
-import { useQueryClient } from '@tanstack/react-query';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { FC } from 'react'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { Button } from '@/shared/components/ui/button.tsx'
+import { useAdd } from '@/shared/hooks'
+import { useQueryClient } from '@tanstack/react-query'
 
 const schema = z.object({
   paramValue: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
   result: z.enum(['true', 'false'], {
     required_error: 'Xulosa natijasini tanlash majburiy',
   }),
-});
+})
 
 interface Props {
-  id: any;
-  closeModal: () => void;
-  title?: string;
+  id: any
+  closeModal: () => void
+  title?: string
 }
 
 const FileUploadModal: FC<Props> = ({ id, closeModal, title = 'Xulosa faylini yuklash' }) => {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-  });
-  const qc = useQueryClient();
+  })
+  const qc = useQueryClient()
 
-  const { mutateAsync, isPending } = useAdd(`/conclusions/${id}/file`);
+  const { mutateAsync, isPending } = useAdd(`/conclusions/${id}/file`)
 
   const handleModalChange = (isOpen: boolean) => {
     if (!isOpen) {
-      closeModal();
-      form.reset();
+      closeModal()
+      form.reset()
     }
-  };
+  }
 
   const onSubmit = (data: z.infer<typeof schema>) => {
     const payload = {
       filePath: data.paramValue,
       result: data.result === 'true',
-    };
+    }
 
     mutateAsync(payload).then(async () => {
-      form.reset();
-      closeModal();
-      await qc.invalidateQueries({ queryKey: ['/conclusions'] });
-    });
-  };
+      form.reset()
+      closeModal()
+      await qc.invalidateQueries({ queryKey: ['/conclusions'] })
+    })
+  }
 
   return (
     <Dialog onOpenChange={handleModalChange} open={!!id}>
@@ -94,17 +94,17 @@ const FileUploadModal: FC<Props> = ({ id, closeModal, title = 'Xulosa faylini yu
                       defaultValue={field.value}
                       className="flex flex-col space-y-1"
                     >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-3">
                         <FormControl>
                           <RadioGroupItem value="true" />
                         </FormControl>
-                        <FormLabel className="font-normal cursor-pointer">Ijobiy</FormLabel>
+                        <FormLabel className="cursor-pointer font-normal">Ijobiy</FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-y-0 space-x-3">
                         <FormControl>
                           <RadioGroupItem value="false" />
                         </FormControl>
-                        <FormLabel className="font-normal cursor-pointer">Salbiy</FormLabel>
+                        <FormLabel className="cursor-pointer font-normal">Salbiy</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -122,7 +122,7 @@ const FileUploadModal: FC<Props> = ({ id, closeModal, title = 'Xulosa faylini yu
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default FileUploadModal;
+export default FileUploadModal

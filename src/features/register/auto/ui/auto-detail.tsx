@@ -1,22 +1,22 @@
-import { GoBack } from '@/shared/components/common';
-import { DetailCardAccordion } from '@/shared/components/common/detail-card';
-import DetailRow from '@/shared/components/common/detail-row';
-import { useParams } from 'react-router-dom';
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info';
-import { useCustomSearchParams, useData } from '@/shared/hooks';
-import { formatDate } from 'date-fns';
-import { tabs } from '@/features/register/auto/ui/auto-tabs';
+import { GoBack } from '@/shared/components/common'
+import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import DetailRow from '@/shared/components/common/detail-row'
+import { useParams } from 'react-router-dom'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
+import { useCustomSearchParams, useData } from '@/shared/hooks'
+import { formatDate } from 'date-fns'
+import { tabs } from '@/features/register/auto/ui/auto-tabs'
 
 export default function PreventionViewPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>()
   const {
     paramsObject: { tin: currentTin = '' },
-  } = useCustomSearchParams();
-  const { data } = useData<any>(`/tankers/${id}`);
+  } = useCustomSearchParams()
+  const { data } = useData<any>(`/tankers/${id}`)
 
   return (
     <div>
-      <div className="flex justify-between gap-2 items-center mb-3">
+      <div className="mb-3 flex items-center justify-between gap-2">
         <GoBack title="Transport vositasi" />
       </div>
       <div className="mt-4">
@@ -60,5 +60,5 @@ export default function PreventionViewPage() {
         </DetailCardAccordion>
       </div>
     </div>
-  );
+  )
 }

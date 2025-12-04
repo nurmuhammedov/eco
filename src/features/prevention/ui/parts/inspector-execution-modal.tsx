@@ -1,4 +1,4 @@
-import { Button } from '@/shared/components/ui/button';
+import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -7,25 +7,25 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useAdd } from '@/shared/hooks';
-import { useQueryClient } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
-import { Textarea } from '@/shared/components/ui/textarea';
+} from '@/shared/components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { zodResolver } from '@hookform/resolvers/zod'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { useAdd } from '@/shared/hooks'
+import { useQueryClient } from '@tanstack/react-query'
+import { useParams } from 'react-router-dom'
+import { Textarea } from '@/shared/components/ui/textarea'
 
 const assignInspectorSchema = z.object({
   inspectorId: z.string({ required_error: 'Majburiy maydon! ' }).min(1, 'Majburiy maydon! '),
   report: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-});
+})
 
-type AssignInspectorForm = z.infer<typeof assignInspectorSchema>;
+type AssignInspectorForm = z.infer<typeof assignInspectorSchema>
 
 export const preventionTypes = [
   {
@@ -56,17 +56,17 @@ export const preventionTypes = [
     id: 'TSOT',
     name: 'Tadbirkorlik subyektlariga belgilangan tartibda tasdiqlangan cheklistni taqdim etish hamda cheklist natijalari asosida ularning faoliyatida qonunbuzilishlarga olib kelishi mumkin bo‘lgan kamchiliklarni bartaraf etishga ko‘maklashish',
   },
-];
+]
 
 export const ExecutionInspectorModal: React.FC = () => {
-  const { id } = useParams();
-  const [isShow, setIsShow] = useState(false);
-  const qc = useQueryClient();
+  const { id } = useParams()
+  const [isShow, setIsShow] = useState(false)
+  const qc = useQueryClient()
   const form = useForm<AssignInspectorForm>({
     resolver: zodResolver(assignInspectorSchema),
-  });
+  })
 
-  const { mutate, isPending } = useAdd<any, any, any>(`/preventions/${id}/execution`);
+  const { mutate, isPending } = useAdd<any, any, any>(`/preventions/${id}/execution`)
 
   const onSubmit = (data: any) => {
     if (id) {
@@ -77,17 +77,17 @@ export const ExecutionInspectorModal: React.FC = () => {
         },
         {
           onSuccess: async () => {
-            handleClose();
-            await qc?.invalidateQueries({ queryKey: ['/preventions'] });
+            handleClose()
+            await qc?.invalidateQueries({ queryKey: ['/preventions'] })
           },
-        },
-      );
+        }
+      )
     }
-  };
+  }
 
   const handleClose = () => {
-    form.reset();
-  };
+    form.reset()
+  }
 
   return (
     <Dialog onOpenChange={setIsShow} open={isShow}>
@@ -147,5 +147,5 @@ export const ExecutionInspectorModal: React.FC = () => {
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react'
 
 export enum UIModeEnum {
   EDIT = 'edit',
@@ -21,68 +21,68 @@ export const UI_COMPONENTS = {
   CHECKLIST_TEMPLATES_DRAWER: 'checklist-templates-drawer',
   CHECKLISTS: 'checklist',
   CATEGORY_TYPES: 'category-types',
-} as const;
+} as const
 
-export type UIComponentName = (typeof UI_COMPONENTS)[keyof typeof UI_COMPONENTS];
+export type UIComponentName = (typeof UI_COMPONENTS)[keyof typeof UI_COMPONENTS]
 
 export interface UIState<T = unknown> {
-  isOpen: boolean;
-  mode: UIModeEnum | undefined;
-  componentName: UIComponentName | undefined;
-  data: T | null;
+  isOpen: boolean
+  mode: UIModeEnum | undefined
+  componentName: UIComponentName | undefined
+  data: T | null
 }
 
 export interface UIComponentDataMap {
   [UI_COMPONENTS.REGION_DRAWER]: {
-    id: number;
-  };
+    id: number
+  }
   [UI_COMPONENTS.DISTRICT_DRAWER]: {
-    id: number;
-  };
+    id: number
+  }
   [UI_COMPONENTS.CENTRAL_APPARATUS_DRAWER]: {
-    id: number;
-  };
+    id: number
+  }
   [UI_COMPONENTS.TERRITORIAL_DEPARTMENTS_DRAWER]: {
-    id: number;
-  };
+    id: number
+  }
   [UI_COMPONENTS.COMMITTEE_STAFFS_DRAWER]: {
-    id: string;
-  };
+    id: string
+  }
   [UI_COMPONENTS.TERRITORIAL_STAFFS_DRAWER]: {
-    id: string;
-  };
+    id: string
+  }
   [UI_COMPONENTS.HAZARDOUS_FACILITY_TYPE_DRAWER]: {
-    id: number;
-  };
+    id: number
+  }
   [UI_COMPONENTS.TEMPLATE_DRAWER]: {
-    id: number;
-  };
+    id: number
+  }
   [UI_COMPONENTS.EQUIPMENT_DRAWER]: {
-    id: number;
-  };
+    id: number
+  }
   [UI_COMPONENTS.ATTRACTION_TYPE_DRAWER]: {
-    id: number;
-  };
+    id: number
+  }
   [UI_COMPONENTS.CHECKLIST_TEMPLATES_DRAWER]: {
-    id: number;
-  };
+    id: number
+  }
   [UI_COMPONENTS.CHECKLISTS]: {
-    id: number;
-  };
+    id: number
+  }
   [UI_COMPONENTS.CATEGORY_TYPES]: {
-    id: number;
-  };
+    id: number
+  }
 }
 
 export type PayloadUI<T extends UIComponentName> = {
-  mode: UIModeEnum;
-  componentName: T;
-  data?: UIComponentDataMap[T] | null;
-};
+  mode: UIModeEnum
+  componentName: T
+  data?: UIComponentDataMap[T] | null
+}
 
-export type FCC<P = object> = FC<{ children?: ReactNode } & P>;
+export type FCC<P = object> = FC<{ children?: ReactNode } & P>
 
 export type SelectOption<T> = {
-  name: string;
-  id: T;
-};
+  name: string
+  id: T
+}

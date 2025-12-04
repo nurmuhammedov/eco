@@ -1,33 +1,33 @@
-import React, { Fragment } from 'react';
-import { Badge } from '../ui/badge';
-import { cn } from '@/shared/lib/utils.ts';
-import { Skeleton } from '@/shared/components/ui/skeleton.tsx';
-import { Separator } from '@/shared/components/ui/separator.tsx';
+import React, { Fragment } from 'react'
+import { Badge } from '../ui/badge'
+import { cn } from '@/shared/lib/utils.ts'
+import { Skeleton } from '@/shared/components/ui/skeleton.tsx'
+import { Separator } from '@/shared/components/ui/separator.tsx'
 
 // Description Item component for displaying each field
 export const DescriptionItem = React.forwardRef<
   HTMLDivElement,
   {
-    label: React.ReactNode;
-    children?: React.ReactNode;
-    span?: number;
-    valueType?: 'text' | 'date' | 'status' | 'tags' | 'email' | 'phone';
-    formatter?: (value: any) => React.ReactNode;
-    className?: string;
+    label: React.ReactNode
+    children?: React.ReactNode
+    span?: number
+    valueType?: 'text' | 'date' | 'status' | 'tags' | 'email' | 'phone'
+    formatter?: (value: any) => React.ReactNode
+    className?: string
   }
 >(({ label, children, span = 1, valueType = 'text', formatter, className }, ref) => {
   // Format the value based on type
   const formattedValue = React.useMemo(() => {
-    if (formatter) return formatter(children);
-    if (children === undefined || children === null) return '-';
+    if (formatter) return formatter(children)
+    if (children === undefined || children === null) return '-'
 
     switch (valueType) {
       case 'date':
-        return new Date(children as string).toLocaleString();
+        return new Date(children as string).toLocaleString()
       case 'status':
-        return <Badge variant={children === 'active' ? 'default' : 'secondary'}>{children}</Badge>;
+        return <Badge variant={children === 'active' ? 'default' : 'secondary'}>{children}</Badge>
       case 'tags':
-        if (!Array.isArray(children)) return children;
+        if (!Array.isArray(children)) return children
         return (
           <div className="flex flex-wrap gap-1">
             {children.map((tag, i) => (
@@ -36,20 +36,20 @@ export const DescriptionItem = React.forwardRef<
               </Badge>
             ))}
           </div>
-        );
+        )
       default:
-        return children;
+        return children
     }
-  }, [children, formatter, valueType]);
+  }, [children, formatter, valueType])
 
   return (
     <div ref={ref} className={cn(span > 1 ? `col-span-${span}` : 'col-span-1', className)}>
       <div className="text-sm text-gray-500">{label}</div>
       <div className="mt-1 font-medium">{formattedValue}</div>
     </div>
-  );
-});
-DescriptionItem.displayName = 'DescriptionItem';
+  )
+})
+DescriptionItem.displayName = 'DescriptionItem'
 
 // Main Description component
 export function Description({
@@ -61,14 +61,14 @@ export function Description({
   children,
   className,
 }: {
-  title?: React.ReactNode;
-  extra?: React.ReactNode;
-  bordered?: boolean;
-  column?: number;
-  size?: 'small' | 'default' | 'large';
-  loading?: boolean;
-  children: React.ReactNode;
-  className?: string;
+  title?: React.ReactNode
+  extra?: React.ReactNode
+  bordered?: boolean
+  column?: number
+  size?: 'small' | 'default' | 'large'
+  loading?: boolean
+  children: React.ReactNode
+  className?: string
 }) {
   // Responsive column grid
   const grid = {
@@ -76,15 +76,15 @@ export function Description({
     2: 'grid-cols-1 md:grid-cols-2',
     3: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
     4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
-  }[Math.min(4, Math.max(1, column))];
+  }[Math.min(4, Math.max(1, column))]
 
   // Render loading skeleton if needed
   if (loading) {
     return (
-      <div className={cn('w-full space-y-4', bordered && 'border rounded-md', className)}>
+      <div className={cn('w-full space-y-4', bordered && 'rounded-md border', className)}>
         {title && (
           <Fragment>
-            <div className="flex justify-between items-center mb-3">
+            <div className="mb-3 flex items-center justify-between">
               <Skeleton className="h-6 w-32" />
               {extra && <Skeleton className="h-9 w-24" />}
             </div>
@@ -100,14 +100,14 @@ export function Description({
           ))}
         </div>
       </div>
-    );
+    )
   }
 
   return (
-    <div className={cn('w-full', bordered && 'border rounded-md', className)}>
+    <div className={cn('w-full', bordered && 'rounded-md border', className)}>
       {title && (
         <>
-          <div className="flex justify-between items-center mb-3">
+          <div className="mb-3 flex items-center justify-between">
             <div className="text-lg font-medium">{title}</div>
             {extra && <div>{extra}</div>}
           </div>
@@ -116,8 +116,8 @@ export function Description({
       )}
       <div className={cn('grid gap-4', grid)}>{children}</div>
     </div>
-  );
+  )
 }
 
 // Add Item as a subcomponent for better DX
-Description.Item = DescriptionItem;
+Description.Item = DescriptionItem

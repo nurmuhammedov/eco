@@ -1,33 +1,33 @@
-import { FileIcon } from './file-icon';
-import { cn } from '@/shared/lib/utils';
-import { AxiosProgressEvent } from 'axios';
-import { FilePlus } from 'lucide-react';
-import { FileControls } from './file-controls';
-import { FileTypes } from '../models/file-types';
-import { Input } from '@/shared/components/ui/input';
-import { useUploadFiles } from '../api/use-upload-files';
-import { FileData } from '../models/file-data.interface';
-import { FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form';
-import { formatFileSize, openFileInNewTab, truncateFilename } from '../lib/utils';
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FileIcon } from './file-icon'
+import { cn } from '@/shared/lib/utils'
+import { AxiosProgressEvent } from 'axios'
+import { FilePlus } from 'lucide-react'
+import { FileControls } from './file-controls'
+import { FileTypes } from '../models/file-types'
+import { Input } from '@/shared/components/ui/input'
+import { useUploadFiles } from '../api/use-upload-files'
+import { FileData } from '../models/file-data.interface'
+import { FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
+import { formatFileSize, openFileInNewTab, truncateFilename } from '../lib/utils'
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 export interface InputFileProps<T extends FieldValues> {
-  name: Path<T>;
-  accept?: FileTypes[];
-  form: UseFormReturn<T>;
-  className?: string;
-  maxSize?: number; // MB da
-  disabled?: boolean;
-  showPreview?: boolean;
-  showFileSize?: boolean;
-  showDownload?: boolean;
-  uploadEndpoint?: string;
-  onUploadStart?: () => void;
-  onUploadComplete?: (url: string) => void;
-  onUploadError?: (error: Error) => void;
-  onUploadProgress?: (progress: number) => void;
-  buttonText?: string;
-  maxFilenameLength?: number;
+  name: Path<T>
+  accept?: FileTypes[]
+  form: UseFormReturn<T>
+  className?: string
+  maxSize?: number // MB da
+  disabled?: boolean
+  showPreview?: boolean
+  showFileSize?: boolean
+  showDownload?: boolean
+  uploadEndpoint?: string
+  onUploadStart?: () => void
+  onUploadComplete?: (url: string) => void
+  onUploadError?: (error: Error) => void
+  onUploadProgress?: (progress: number) => void
+  buttonText?: string
+  maxFilenameLength?: number
 }
 
 function InputFileComponent<T extends FieldValues>({
@@ -54,147 +54,147 @@ function InputFileComponent<T extends FieldValues>({
     clearErrors,
     setError,
     formState: { errors },
-  } = form;
-  const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const [fileData, setFileData] = useState<FileData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  } = form
+  const [uploadProgress, setUploadProgress] = useState<number>(0)
+  const [fileData, setFileData] = useState<FileData | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   // Form watch qiladi URL qiymatini
-  const fileUrl: string = (watch(name) as string) || '';
+  const fileUrl: string = (watch(name) as string) || ''
 
   // Fayl ma'lumotlarini URL o'zgarganda sinxronlash
   useEffect(() => {
     if (!fileUrl && fileData) {
       // Blob URL ni tozalash
       if (fileData.blobUrl) {
-        URL.revokeObjectURL(fileData.blobUrl);
+        URL.revokeObjectURL(fileData.blobUrl)
       }
-      setFileData(null);
-      return;
+      setFileData(null)
+      return
     }
 
     if (fileUrl && (!fileData || fileData.url !== fileUrl)) {
       setFileData({
         url: fileUrl,
         originalName: fileUrl.split('/').pop() || 'Nomsiz fayl',
-      });
+      })
     }
-  }, [fileUrl, fileData]);
+  }, [fileUrl, fileData])
 
   // Komponent o'chirilganda blob URLni tozalash
   useEffect(() => {
     return () => {
       if (fileData?.blobUrl) {
-        URL.revokeObjectURL(fileData.blobUrl);
+        URL.revokeObjectURL(fileData.blobUrl)
       }
-    };
-  }, [fileData]);
+    }
+  }, [fileData])
 
-  const hasError = !!errors[name];
-  const acceptTypes = useMemo(() => accept.join(','), [accept]);
+  const hasError = !!errors[name]
+  const acceptTypes = useMemo(() => accept.join(','), [accept])
 
   const handleUploadProgress = useCallback(
     (progressEvent: AxiosProgressEvent) => {
-      const percent = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1));
-      setUploadProgress(percent);
-      onUploadProgress?.(percent);
+      const percent = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1))
+      setUploadProgress(percent)
+      onUploadProgress?.(percent)
     },
-    [onUploadProgress],
-  );
+    [onUploadProgress]
+  )
 
   const { mutate, isPending } = useUploadFiles({
     endpoint: uploadEndpoint,
     onUploadProgress: handleUploadProgress,
-  });
+  })
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const openFileDialog = useCallback(() => {
     if (!disabled && !isPending) {
-      fileInputRef.current?.click();
+      fileInputRef.current?.click()
     }
-  }, [disabled, isPending]);
+  }, [disabled, isPending])
 
   const validateFile = useCallback(
     (file: File): boolean => {
-      const type = file.type;
+      const type = file.type
 
-      const match = type.match(/^([^/]+)/);
-      const typeMatch = match ? match[1] : '';
-      const isImage = typeMatch === 'image';
+      const match = type.match(/^([^/]+)/)
+      const typeMatch = match ? match[1] : ''
+      const isImage = typeMatch === 'image'
 
       if (acceptTypes.includes(FileTypes.IMAGE) && isImage) {
-        return true;
+        return true
       }
 
       if (!accept.includes(type as FileTypes)) {
         setError(name, {
           type: 'type',
           message: `Fayl type error`,
-        });
-        return false;
+        })
+        return false
       }
 
       if (file.size > maxSize * 1024 * 1024) {
         setError(name, {
           type: 'size',
           message: `Fayl hajmi ${maxSize}MB dan oshmasligi kerak`,
-        });
-        return false;
+        })
+        return false
       }
-      return true;
+      return true
     },
-    [maxSize, name, setError],
-  );
+    [maxSize, name, setError]
+  )
 
   // Faylni Blob sifatida yuklash
   const loadFileAsBlob = useCallback(async () => {
-    if (!fileUrl || !fileData || fileData.blob) return null;
+    if (!fileUrl || !fileData || fileData.blob) return null
 
     try {
-      setIsLoading(true);
+      setIsLoading(true)
 
-      const response = await fetch(fileUrl);
-      if (!response.ok) throw new Error('Faylni yuklashda xatolik');
+      const response = await fetch(fileUrl)
+      if (!response.ok) throw new Error('Faylni yuklashda xatolik')
 
-      const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
+      const blob = await response.blob()
+      const blobUrl = URL.createObjectURL(blob)
 
       // FileData ni yangilash
       setFileData((prev) => {
         if (prev?.blobUrl) {
           // Eski blob URL ni tozalash
-          URL.revokeObjectURL(prev.blobUrl);
+          URL.revokeObjectURL(prev.blobUrl)
         }
-        return prev ? { ...prev, blob, blobUrl } : null;
-      });
+        return prev ? { ...prev, blob, blobUrl } : null
+      })
 
-      setIsLoading(false);
-      return { blob, blobUrl };
+      setIsLoading(false)
+      return { blob, blobUrl }
     } catch (error) {
-      console.error('Faylni yuklashda xatolik:', error);
-      setIsLoading(false);
-      return null;
+      console.error('Faylni yuklashda xatolik:', error)
+      setIsLoading(false)
+      return null
     }
-  }, [fileUrl, fileData]);
+  }, [fileUrl, fileData])
 
   // Faylni yangi oynada ochish uchun utility funksiyani chaqirish
   const handleOpenFileInNewTab = useCallback(() => {
-    openFileInNewTab(fileData, fileUrl, loadFileAsBlob);
-  }, [fileData, fileUrl, loadFileAsBlob]);
+    openFileInNewTab(fileData, fileUrl, loadFileAsBlob)
+  }, [fileData, fileUrl, loadFileAsBlob])
 
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files;
+      const files = event.target.files
 
       if (files && files.length > 0) {
-        const file = files[0];
+        const file = files[0]
 
         if (!validateFile(file)) {
-          return;
+          return
         }
 
-        const blobUrl = URL.createObjectURL(file);
+        const blobUrl = URL.createObjectURL(file)
 
         const fileInfo = {
           originalName: file.name,
@@ -202,16 +202,16 @@ function InputFileComponent<T extends FieldValues>({
           type: file.type,
           blob: file,
           blobUrl,
-        };
+        }
 
-        clearErrors(name);
-        onUploadStart?.();
-        setUploadProgress(0);
+        clearErrors(name)
+        onUploadStart?.()
+        setUploadProgress(0)
 
         mutate([file], {
           onSuccess: (url) => {
             if (url && url.length > 0) {
-              setValue(name, url as PathValue<T, Path<T>>, { shouldValidate: true });
+              setValue(name, url as PathValue<T, Path<T>>, { shouldValidate: true })
 
               setFileData({
                 url,
@@ -220,64 +220,64 @@ function InputFileComponent<T extends FieldValues>({
                 type: fileInfo.type,
                 blob: file,
                 blobUrl,
-              });
+              })
 
-              onUploadComplete?.(url);
+              onUploadComplete?.(url)
             }
           },
           onError: (error) => {
             // Blob URL ni tozalash
-            URL.revokeObjectURL(blobUrl);
+            URL.revokeObjectURL(blobUrl)
 
             setError(name, {
               type: 'upload',
               message: error.message || 'Fayl yuklashda xatolik',
-            });
-            onUploadError?.(error);
+            })
+            onUploadError?.(error)
           },
-        });
+        })
       }
 
       if (event.target) {
-        event.target.value = '';
+        event.target.value = ''
       }
     },
-    [clearErrors, mutate, setValue, name, validateFile, onUploadStart, onUploadComplete, onUploadError, setError],
-  );
+    [clearErrors, mutate, setValue, name, validateFile, onUploadStart, onUploadComplete, onUploadError, setError]
+  )
 
   const removeFile = useCallback(() => {
     // Blob URL ni tozalash
     if (fileData?.blobUrl) {
-      URL.revokeObjectURL(fileData.blobUrl);
+      URL.revokeObjectURL(fileData.blobUrl)
     }
 
-    setValue(name, '' as unknown as PathValue<T, Path<T>>, { shouldValidate: true });
-  }, [setValue, name, fileData]);
+    setValue(name, '' as unknown as PathValue<T, Path<T>>, { shouldValidate: true })
+  }, [setValue, name, fileData])
 
-  const showFileName = fileUrl && fileData?.originalName;
+  const showFileName = fileUrl && fileData?.originalName
 
   // Fayl nomini qisqartirish
   const displayFileName = useMemo(() => {
-    if (!fileData?.originalName) return '';
-    return truncateFilename(fileData.originalName, maxFilenameLength);
-  }, [fileData?.originalName, maxFilenameLength]);
+    if (!fileData?.originalName) return ''
+    return truncateFilename(fileData.originalName, maxFilenameLength)
+  }, [fileData?.originalName, maxFilenameLength])
 
   return (
     <div className="file-upload-container relative">
       <div
         className={cn(
-          'flex items-center w-full',
-          'border rounded overflow-hidden bg-white',
+          'flex w-full items-center',
+          'overflow-hidden rounded border bg-white',
           'transition-all duration-150 ease-in-out',
           hasError ? 'border-red-300' : 'border-blue-400',
           'hover:border-blue-400',
-          className,
+          className
         )}
       >
         {/* Fayl ikonkasi */}
-        <div className="h-9 flex items-center justify-center px-2.5 bg-gray-50 border-r border-gray-100 text-blue-400">
+        <div className="flex h-9 items-center justify-center border-r border-gray-100 bg-gray-50 px-2.5 text-blue-400">
           {isPending ? (
-            <div className="size-4 rounded-full border-2 border-blue-400 border-t-transparent animate-spin" />
+            <div className="size-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent" />
           ) : showFileName ? (
             <FileIcon fileType={fileData?.type} className="text-blue-400" />
           ) : (
@@ -289,10 +289,10 @@ function InputFileComponent<T extends FieldValues>({
         <div
           onClick={!showFileName ? openFileDialog : undefined}
           className={cn(
-            'flex-grow py-2 px-3 cursor-pointer truncate text-sm font-medium',
+            'flex-grow cursor-pointer truncate px-3 py-2 text-sm font-medium',
             'transition-colors duration-150',
             isPending && 'text-gray-400',
-            !showFileName && 'hover:bg-gray-50',
+            !showFileName && 'hover:bg-gray-50'
           )}
         >
           {isPending ? (
@@ -300,14 +300,14 @@ function InputFileComponent<T extends FieldValues>({
           ) : (
             <div className="flex items-center justify-between">
               <span
-                className={cn('truncate', showFileName ? 'text-blue-400 font-medium' : 'text-blue-400')}
+                className={cn('truncate', showFileName ? 'font-medium text-blue-400' : 'text-blue-400')}
                 title={showFileName ? fileData?.originalName : buttonText}
               >
                 {showFileName ? displayFileName : buttonText}
               </span>
 
               {showFileSize && fileData?.size && (
-                <span className="text-xs text-gray-500 ml-2 flex-shrink-0 whitespace-nowrap">
+                <span className="ml-2 flex-shrink-0 text-xs whitespace-nowrap text-gray-500">
                   {formatFileSize(fileData.size)}
                 </span>
               )}
@@ -340,11 +340,11 @@ function InputFileComponent<T extends FieldValues>({
       />
 
       {hasError && errors[name]?.message && (
-        <p className="text-red-500 text-xs mt-1">{errors[name]?.message as string}</p>
+        <p className="mt-1 text-xs text-red-500">{errors[name]?.message as string}</p>
       )}
     </div>
-  );
+  )
 }
 
 // Memo bilan optimizatsiya
-export const InputFile = memo(InputFileComponent) as typeof InputFileComponent;
+export const InputFile = memo(InputFileComponent) as typeof InputFileComponent

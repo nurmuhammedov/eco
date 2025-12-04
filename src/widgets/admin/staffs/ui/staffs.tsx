@@ -1,14 +1,14 @@
-import { Fragment, memo } from 'react';
-import { StaffsActiveTab } from '../types';
-import { useTranslation } from 'react-i18next';
-import { useStaffs } from '../model/use-staffs';
-import { StaffsActionButton } from './action-button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import { CommitteeStaffDrawer, CommitteeStaffList } from '@/features/admin/committee-staffs';
-import { TerritorialStaffDrawer, TerritorialStaffList } from '@/features/admin/territorial-staffs';
+import { Fragment, memo } from 'react'
+import { StaffsActiveTab } from '../types'
+import { useTranslation } from 'react-i18next'
+import { useStaffs } from '../model/use-staffs'
+import { StaffsActionButton } from './action-button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import { CommitteeStaffDrawer, CommitteeStaffList } from '@/features/admin/committee-staffs'
+import { TerritorialStaffDrawer, TerritorialStaffList } from '@/features/admin/territorial-staffs'
 
 const StaffsWidget = () => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('common')
   const {
     activeTab,
     handleChangeTab,
@@ -16,7 +16,7 @@ const StaffsWidget = () => {
     onAddTerritorialStaffs,
     isOpenCommitteeStaffs,
     isOpenTerritorialStaffs,
-  } = useStaffs();
+  } = useStaffs()
 
   return (
     <Fragment>
@@ -41,6 +41,6 @@ const StaffsWidget = () => {
       {isOpenCommitteeStaffs && <CommitteeStaffDrawer />}
       {isOpenTerritorialStaffs && <TerritorialStaffDrawer />}
     </Fragment>
-  );
-};
-export default memo(StaffsWidget);
+  )
+}
+export default memo(StaffsWidget)

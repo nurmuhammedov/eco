@@ -1,30 +1,30 @@
-import { CardForm, CreateDeclarationApplicationDTO } from '@/entities/create-application';
-import { GoBack } from '@/shared/components/common';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { Button } from '@/shared/components/ui/button';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { Textarea } from '@/shared/components/ui/textarea';
-import { parseISO } from 'date-fns';
-import { useCreateDeclarationApplication } from '../../model/use-create-declaration-application';
+import { CardForm, CreateDeclarationApplicationDTO } from '@/entities/create-application'
+import { GoBack } from '@/shared/components/common'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { Textarea } from '@/shared/components/ui/textarea'
+import { parseISO } from 'date-fns'
+import { useCreateDeclarationApplication } from '../../model/use-create-declaration-application'
 
 interface RegisterDeclarationFormProps {
-  onSubmit: (data: CreateDeclarationApplicationDTO) => void;
+  onSubmit: (data: CreateDeclarationApplicationDTO) => void
 }
 
 export default ({ onSubmit }: RegisterDeclarationFormProps) => {
-  const { form, regionOptions, districtOptions, hazardousFacilitiesOptions } = useCreateDeclarationApplication();
+  const { form, regionOptions, districtOptions, hazardousFacilitiesOptions } = useCreateDeclarationApplication()
 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="Sanoat xavfsizligi deklaratsiyasini ro‘yxatga olish" />
         <CardForm className="my-2">
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="phoneNumber"
@@ -32,7 +32,7 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                 <FormItem>
                   <FormLabel required>Telefon raqami</FormLabel>
                   <FormControl>
-                    <PhoneInput className="w-full 3xl:w-sm" placeholder="+998 XX XXX XX XX" {...field} />
+                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -46,7 +46,7 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                   <FormLabel>XICHO ni tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value || ''}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
                       </SelectTrigger>
                       <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
@@ -63,7 +63,7 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                 <FormItem>
                   <FormLabel required>XICHO nomi</FormLabel>
                   <FormControl>
-                    <Input disabled className="w-full 3xl:w-sm" placeholder="XICHO nomini kiriting" {...field} />
+                    <Input disabled className="3xl:w-sm w-full" placeholder="XICHO nomini kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -76,7 +76,7 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                 <FormItem>
                   <FormLabel required>Deklaratsiya qilingan obyektning manzili</FormLabel>
                   <FormControl>
-                    <Input disabled className="w-full 3xl:w-sm" placeholder="Manzilni kiriting" {...field} />
+                    <Input disabled className="3xl:w-sm w-full" placeholder="Manzilni kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -91,12 +91,12 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                   <FormControl>
                     <Select
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        form.setValue('districtId', '');
+                        field.onChange(value)
+                        form.setValue('districtId', '')
                       }}
                       value={field.value}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Viloyatni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{regionOptions}</SelectContent>
@@ -114,7 +114,7 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                   <FormLabel required>Deklaratsiya qilingan obyekt joylashgan tuman</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value} disabled={!form.watch('regionId')}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Tumanni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
@@ -144,7 +144,7 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                 <FormItem>
                   <FormLabel required>Deklaratsiya ishlab chiqqan tashkilot STIR</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="STIRni kiriting" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="STIRni kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -157,7 +157,7 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                 <FormItem>
                   <FormLabel required>Deklaratsiya ishlab chiqqan tashkilot nomi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Tashkilot nomini kiriting" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Tashkilot nomini kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -170,7 +170,7 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                 <FormItem>
                   <FormLabel required>Deklaratsiya qilingan obyektni ishlatayotgan tashkilot nomi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Tashkilot nomini kiriting" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Tashkilot nomini kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -183,7 +183,7 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                 <FormItem>
                   <FormLabel required>Deklaratsiya qilingan obyektning ekspertiza raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Ekspertiza raqamini kiriting" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Ekspertiza raqamini kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -193,9 +193,9 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
               control={form.control}
               name="expertiseDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel required>Deklaratsiya qilingan obyektning ekspertiza sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -204,7 +204,7 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
@@ -214,7 +214,7 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                 <FormItem>
                   <FormLabel required>Deklaratsiyani roʻyxatga olgan tashkilot nomi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Tashkilot nomini kiriting" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Tashkilot nomini kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -227,7 +227,7 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
                 <FormItem>
                   <FormLabel required>Deklaratsiya roʻyxat raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Roʻyxat raqamini kiriting" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Roʻyxat raqamini kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -236,13 +236,13 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
           </div>
         </CardForm>
         {/* Fayl yuklash uchun alohida Card */}
-        <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
+        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <FormField
             name="declarationPath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                     Sanoat xavfsizligi deklaratsiyasi titul varagʻi nusxasi (skan-kopiya)
                   </FormLabel>
@@ -258,8 +258,8 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
             name="agreementPath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                     Sanoat xavfsizligi deklaratsiyasini kelishilganlik titul varagʻi nusxasi (skan-kopiya)
                   </FormLabel>
@@ -277,5 +277,5 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

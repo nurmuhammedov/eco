@@ -13,4 +13,4 @@ export const PERMISSIONS = {
   REPORT: 'REPORT',
   IRS: 'IRS',
   EQUIPMENT: 'EQUIPMENT',
-};
+}

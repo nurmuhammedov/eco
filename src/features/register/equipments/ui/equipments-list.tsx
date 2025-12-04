@@ -1,15 +1,16 @@
-import { ApplicationStatus } from '@/entities/application';
-import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { TabsLayout } from '@/shared/layouts';
-import { getDate } from '@/shared/utils/date';
-import { useNavigate } from 'react-router-dom';
-import useData from '@/shared/hooks/api/useData';
-import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
+import { ApplicationStatus } from '@/entities/application'
+import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { TabsLayout } from '@/shared/layouts'
+import { getDate } from '@/shared/utils/date'
+import { useNavigate } from 'react-router-dom'
+import useData from '@/shared/hooks/api/useData'
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
 
 export const EquipmentsList = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const {
     paramsObject: {
       status = ApplicationStatus.ALL,
@@ -22,7 +23,7 @@ export const EquipmentsList = () => {
       regionId = '',
     },
     addParams,
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
 
   const { data } = usePaginatedData<any>(`/equipments`, {
     page,
@@ -33,27 +34,29 @@ export const EquipmentsList = () => {
     mode,
     type: type !== 'ALL' ? type : '',
     status: status !== 'ALL' ? status : '',
-  });
+  })
 
   const { data: dataForNewCount } = useData<number>(`/equipments/count`, true, {
     type: type !== 'ALL' ? type : '',
-  });
+  })
+
+  const { data: childEquipmentTypes } = useChildEquipmentTypes(type !== 'ALL' ? type : '')
 
   const handleViewApplication = (id: string) => {
-    navigate(`${id}/equipments`);
-  };
+    navigate(`${id}/equipments`)
+  }
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
       header: 'Hisobga olish sanasi',
-      maxSize: 95,
+      maxSize: 90,
       accessorFn: (row) => getDate(row.registrationDate),
     },
     {
       header: 'Hisobga olish raqami',
       accessorKey: 'registryNumber',
       maxSize: 90,
-      filterKey: 'search',
+      filterKey: 'registryNumber',
       filterType: 'search',
     },
     {
@@ -64,53 +67,59 @@ export const EquipmentsList = () => {
       header: 'Qurilmaning turi',
       accessorKey: 'childEquipment',
       maxSize: 150,
+      filterKey: 'childEquipmentId',
+      filterType: 'select',
+      filterOptions: childEquipmentTypes || [],
     },
     {
       header: 'Tashkilot/Fuqaro nomi',
       accessorKey: 'ownerName',
-      filterKey: 'search',
+      filterKey: 'ownerName',
       filterType: 'search',
     },
     {
       header: 'Tashkilot/Fuqaro manzili',
       accessorFn: (row) => row?.ownerAddress,
-      filterKey: 'search',
+      filterKey: 'ownerAddress',
       filterType: 'search',
+      minSize: 150,
     },
     {
       header: 'Tashkilot STIR/JSHSHIR',
       accessorKey: 'ownerIdentity',
-      filterKey: 'search',
-      filterType: 'search',
+      filterKey: 'ownerIdentity',
+      filterType: 'number',
+      filterMaxLength: 9,
     },
-    {
-      header: 'Qurilmaning zavod raqami',
-      accessorKey: 'factoryNumber',
-      filterKey: 'search',
-      filterType: 'search',
-    },
-    {
-      header: 'XICHO nomi',
-      accessorKey: 'hfName',
-      filterKey: 'search',
-      filterType: 'search',
-    },
+    // {
+    //   header: 'Qurilmaning zavod raqami',
+    //   accessorKey: 'factoryNumber',
+    //   filterKey: 'factoryNumber',
+    //   filterType: 'search',
+    //   maxSize: 100,
+    // },
+    // {
+    //   header: 'XICHO nomi',
+    //   accessorKey: 'hfName',
+    //   filterKey: 'search',
+    //   filterType: 'search',
+    // },
     {
       accessorKey: 'address',
       header: 'Qurilma manzili',
-      filterKey: 'search',
+      filterKey: 'address',
       filterType: 'search',
+      minSize: 150,
     },
     {
       accessorFn: (row) => (row.partialCheckDate ? getDate(row.partialCheckDate) : '-'),
-      maxSize: 95,
-
-      header: 'O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi',
+      maxSize: 90,
+      header: 'Qisman texnik koʻrik sanasi',
     },
     {
       accessorFn: (row) => (row.fullCheckDate ? getDate(row.fullCheckDate) : '-'),
-      maxSize: 120,
-      header: 'O‘tkaziladigan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi',
+      header: 'To‘liq texnik koʻrik sanasi',
+      maxSize: 90,
     },
     {
       id: 'actions',
@@ -119,7 +128,7 @@ export const EquipmentsList = () => {
         <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
       ),
     },
-  ];
+  ]
 
   // const handleDownloadExel = async () => {
   //   const res = await apiClient.downloadFile<Blob>('/equipments/export/excel', {
@@ -150,7 +159,7 @@ export const EquipmentsList = () => {
             name: 'Barcha qurilmalar',
           },
           ...(APPLICATIONS_DATA?.filter(
-            (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER,
+            (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
           )?.map((i) => ({
             id: i?.equipmentType?.toString() || '',
             name: i?.name?.toString() || '',
@@ -159,7 +168,7 @@ export const EquipmentsList = () => {
           ...i,
           count: i?.id == type ? (dataForNewCount ?? 0) : undefined,
         }))}
-        onTabChange={(type) => addParams({ type: type }, 'page')}
+        onTabChange={(type) => addParams({ type: type }, 'page', 'childEquipmentId')}
       />
       <TabsLayout
         activeTab={status?.toString()}
@@ -199,5 +208,5 @@ export const EquipmentsList = () => {
         className="h-[calc(100svh-320px)]"
       />
     </div>
-  );
-};
+  )
+}

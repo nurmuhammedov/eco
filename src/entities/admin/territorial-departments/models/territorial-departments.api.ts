@@ -1,21 +1,21 @@
-import { ApiResponse } from '@/shared/types/api';
-import { API_ENDPOINTS, apiClient } from '@/shared/api';
+import { ApiResponse } from '@/shared/types/api'
+import { API_ENDPOINTS, apiClient } from '@/shared/api'
 import type {
   CreateTerritorialDepartmentsDTO,
   FilterTerritorialDepartmentsDTO,
   TerritorialDepartmentResponse,
   UpdateTerritorialDepartmentsDTO,
-} from './territorial-departments.types';
+} from './territorial-departments.types'
 
 export const territorialDepartmentsAPI = {
   list: async (params: FilterTerritorialDepartmentsDTO) => {
-    const { data } = await apiClient.getWithPagination<TerritorialDepartmentResponse>(API_ENDPOINTS.OFFICES, params);
-    return data || [];
+    const { data } = await apiClient.getWithPagination<TerritorialDepartmentResponse>(API_ENDPOINTS.OFFICES, params)
+    return data || []
   },
 
   byId: async (id: number) => {
-    const { data } = await apiClient.get<ApiResponse<TerritorialDepartmentResponse>>(`${API_ENDPOINTS.OFFICES}/${id}`);
-    return data.data;
+    const { data } = await apiClient.get<ApiResponse<TerritorialDepartmentResponse>>(`${API_ENDPOINTS.OFFICES}/${id}`)
+    return data.data
   },
   create: async (data: CreateTerritorialDepartmentsDTO) => {
     // if (!response.success && response.errors) {
@@ -26,22 +26,22 @@ export const territorialDepartmentsAPI = {
 
     return await apiClient.post<TerritorialDepartmentResponse, CreateTerritorialDepartmentsDTO>(
       API_ENDPOINTS.OFFICES,
-      data,
-    );
+      data
+    )
   },
   update: async (data: UpdateTerritorialDepartmentsDTO) => {
-    const response = await apiClient.put<UpdateTerritorialDepartmentsDTO>(`${API_ENDPOINTS.OFFICES}/${data.id}`, data);
+    const response = await apiClient.put<UpdateTerritorialDepartmentsDTO>(`${API_ENDPOINTS.OFFICES}/${data.id}`, data)
 
     if (!response.success) {
-      throw new Error(response.message);
+      throw new Error(response.message)
     }
 
-    return response;
+    return response
   },
   delete: async (id: number) => {
-    const response = await apiClient.delete(`${API_ENDPOINTS.OFFICES}/${id}`);
+    const response = await apiClient.delete(`${API_ENDPOINTS.OFFICES}/${id}`)
     if (!response.success) {
-      throw new Error(response.message);
+      throw new Error(response.message)
     }
   },
-};
+}

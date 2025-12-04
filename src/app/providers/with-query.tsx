@@ -1,5 +1,5 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { FC, PropsWithChildren } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { FC, PropsWithChildren } from 'react'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -9,12 +9,12 @@ const queryClient = new QueryClient({
       staleTime: 0, // 0 minutes
     },
   },
-});
+})
 
 export const withQuery = (Component: FC<PropsWithChildren>): FC<PropsWithChildren> => {
   return (props) => (
     <QueryClientProvider client={queryClient}>
       <Component {...props} />
     </QueryClientProvider>
-  );
-};
+  )
+}

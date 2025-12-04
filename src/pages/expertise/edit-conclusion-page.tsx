@@ -1,5 +1,5 @@
-import { UpdateConclusion } from '@/features/expertise/ui/edit-conclusion';
-import { GoBack } from '@/shared/components/common';
+import { UpdateConclusion } from '@/features/expertise/ui/edit-conclusion'
+import { GoBack } from '@/shared/components/common'
 
 const EditConclusionPage = () => {
   return (
@@ -7,7 +7,7 @@ const EditConclusionPage = () => {
       <GoBack title="Ekspertiza xulosasini yangilash" />
       <UpdateConclusion />
     </div>
-  );
-};
+  )
+}
 
-export default EditConclusionPage;
+export default EditConclusionPage

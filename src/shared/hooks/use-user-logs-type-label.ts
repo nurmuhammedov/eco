@@ -1,11 +1,11 @@
-import { useTranslation } from 'react-i18next';
-import { UserLogsTypeEnum } from '@/entities/admin/user-logs';
+import { useTranslation } from 'react-i18next'
+import { UserLogsTypeEnum } from '@/entities/admin/user-logs'
 
 export const useUserLogsTypeLabel = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (type: UserLogsTypeEnum | null | undefined): string => {
-    if (!type) return '-';
-    return t(`user-logs.${type}`);
-  };
-};
+    if (!type) return '-'
+    return t(`user-logs.${type}`)
+  }
+}

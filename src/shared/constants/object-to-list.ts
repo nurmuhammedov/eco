@@ -1,7 +1,7 @@
-import { HFSphere } from '@/shared/types';
-import { useTranslatedObject } from '@/shared/hooks';
+import { HFSphere } from '@/shared/types'
+import { useTranslatedObject } from '@/shared/hooks'
 
 export function objectToList() {
-  const sphereOptions = useTranslatedObject(HFSphere, 'application');
-  return { sphereOptions };
+  const sphereOptions = useTranslatedObject(HFSphere, 'application')
+  return { sphereOptions }
 }

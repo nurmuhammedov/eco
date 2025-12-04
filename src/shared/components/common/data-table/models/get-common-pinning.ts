@@ -1,20 +1,20 @@
-import React from 'react';
-import { Column } from '@tanstack/react-table';
+import React from 'react'
+import { Column } from '@tanstack/react-table'
 
 export function getCommonPinningStyles<TData>({
   column,
   withBorder = false,
 }: {
-  column: Column<TData>;
-  withBorder?: boolean;
+  column: Column<TData>
+  withBorder?: boolean
 }): React.CSSProperties {
-  const columnSize = column.getSize();
-  const columnMinSize = column.columnDef.minSize;
-  const columnMaxSize = column.columnDef.maxSize;
+  const columnSize = column.getSize()
+  const columnMinSize = column.columnDef.minSize
+  const columnMaxSize = column.columnDef.maxSize
 
-  const isPinned = column.getIsPinned();
-  const isLastLeftPinnedColumn = isPinned === 'left' && column.getIsLastColumn('left');
-  const isFirstRightPinnedColumn = isPinned === 'right' && column.getIsFirstColumn('right');
+  const isPinned = column.getIsPinned()
+  const isLastLeftPinnedColumn = isPinned === 'left' && column.getIsLastColumn('left')
+  const isFirstRightPinnedColumn = isPinned === 'right' && column.getIsFirstColumn('right')
 
   return {
     boxShadow: withBorder
@@ -33,5 +33,5 @@ export function getCommonPinningStyles<TData>({
     minWidth: columnMinSize ? `${columnMinSize}px` : undefined,
     maxWidth: columnMaxSize ? `${columnMaxSize}px` : undefined,
     zIndex: isPinned ? 1 : 0,
-  };
+  }
 }

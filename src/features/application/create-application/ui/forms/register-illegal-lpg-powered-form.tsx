@@ -1,77 +1,77 @@
-import { CardForm, RegisterIllegalLpgPoweredAppApplicationDTO } from '@/entities/create-application';
-import { NoteForm, useCreateIllegalLpgPoweredApplication } from '@/features/application/create-application';
-import { GoBack } from '@/shared/components/common';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
-import { Button } from '@/shared/components/ui/button';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { formatDate, parseISO } from 'date-fns';
-import { useMemo, useState } from 'react';
-import useAdd from '@/shared/hooks/api/useAdd';
-import { useQuery } from '@tanstack/react-query';
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import DetailRow from '@/shared/components/common/detail-row';
+import { CardForm, RegisterIllegalLpgPoweredAppApplicationDTO } from '@/entities/create-application'
+import { NoteForm, useCreateIllegalLpgPoweredApplication } from '@/features/application/create-application'
+import { GoBack } from '@/shared/components/common'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
+import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { formatDate, parseISO } from 'date-fns'
+import { useMemo, useState } from 'react'
+import useAdd from '@/shared/hooks/api/useAdd'
+import { useQuery } from '@tanstack/react-query'
+import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import DetailRow from '@/shared/components/common/detail-row'
 
 interface RegisterIllegalLpgPoweredFormProps {
-  onSubmit: (data: RegisterIllegalLpgPoweredAppApplicationDTO) => void;
+  onSubmit: (data: RegisterIllegalLpgPoweredAppApplicationDTO) => void
 }
 
 export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
-  const { form, regionOptions, districtOptions, childEquipmentOptions } = useCreateIllegalLpgPoweredApplication();
+  const { form, regionOptions, districtOptions, childEquipmentOptions } = useCreateIllegalLpgPoweredApplication()
 
-  const [data, setData] = useState<any>(undefined);
+  const [data, setData] = useState<any>(undefined)
 
-  const identity = form.watch('identity');
-  const birthDateString = form.watch('birthDate');
+  const identity = form.watch('identity')
+  const birthDateString = form.watch('birthDate')
 
-  const cleanIdentity = identity?.trim() || '';
-  const isLegal = cleanIdentity.length === 9;
-  const isIndividual = cleanIdentity.length === 14;
+  const cleanIdentity = identity?.trim() || ''
+  const isLegal = cleanIdentity.length === 9
+  const isIndividual = cleanIdentity.length === 14
 
-  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal');
+  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
 
   const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
-    '/integration/iip/individual',
-  );
+    '/integration/iip/individual'
+  )
 
   const { data: hfoOptions } = useQuery({
     queryKey: ['hfoSelect', cleanIdentity],
     queryFn: () => getHfoByTinSelect(cleanIdentity),
     enabled: isLegal && !!data,
     retry: 1,
-  });
+  })
 
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoOptions || []), [hfoOptions]);
+  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoOptions || []), [hfoOptions])
 
   const handleSearch = () => {
     if (isLegal && !form.formState.errors.identity) {
       legalMutateAsync({ tin: cleanIdentity })
         .then((res) => setData(res.data))
-        .catch(() => setData(undefined));
+        .catch(() => setData(undefined))
     } else if (isIndividual && birthDateString && !form.formState.errors.birthDate && !form.formState.errors.identity) {
       individualMutateAsync({
         pin: cleanIdentity,
         birthDate: formatDate(birthDateString || new Date(), 'yyyy-MM-dd'),
       })
         .then((res) => setData(res.data))
-        .catch(() => setData(undefined));
+        .catch(() => setData(undefined))
     } else {
-      form.trigger(['identity', 'birthDate']).then((r) => console.log(r));
+      form.trigger(['identity', 'birthDate']).then((r) => console.log(r))
     }
-  };
+  }
 
   const handleClear = () => {
-    setData(undefined);
-    form.setValue('identity', '');
-    form.setValue('birthDate', undefined as unknown as string);
-    form.setValue('hazardousFacilityId', undefined);
-  };
+    setData(undefined)
+    form.setValue('identity', '')
+    form.setValue('birthDate', undefined as unknown as string)
+    form.setValue('hazardousFacilityId', undefined)
+  }
 
   return (
     <Form {...form}>
@@ -80,7 +80,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
         <NoteForm equipmentName="tabiiy gazdan foydalanuvchi qurilma" />
 
         <CardForm className="my-2">
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-4/5 mb-5">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="identity"
@@ -90,19 +90,19 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                   <FormControl>
                     <Input
                       disabled={!!data}
-                      className="w-full 3xl:w-sm"
+                      className="3xl:w-sm w-full"
                       placeholder="STIR yoki JSHSHIRni kiriting"
                       maxLength={14}
                       {...field}
                       onChange={(e) => {
-                        const val = e.target.value.replace(/\D/g, '');
-                        e.target.value = val;
-                        if (data) setData(undefined);
-                        form.setValue('hazardousFacilityId', undefined);
+                        const val = e.target.value.replace(/\D/g, '')
+                        e.target.value = val
+                        if (data) setData(undefined)
+                        form.setValue('hazardousFacilityId', undefined)
                         if (val.length !== 14) {
-                          form.setValue('birthDate', undefined as unknown as string);
+                          form.setValue('birthDate', undefined as unknown as string)
                         }
-                        field.onChange(e);
+                        field.onChange(e)
                       }}
                     />
                   </FormControl>
@@ -116,13 +116,13 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                 control={form.control}
                 name="birthDate"
                 render={({ field }) => {
-                  const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                  const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                   return (
-                    <FormItem className="w-full 3xl:w-sm">
+                    <FormItem className="3xl:w-sm w-full">
                       <FormLabel required>Tug‘ilgan sana</FormLabel>
                       <DatePicker
                         disabled={!!data}
-                        className="w-full 3xl:w-sm"
+                        className="3xl:w-sm w-full"
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Sanani tanlang"
@@ -130,12 +130,12 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                       />
                       <FormMessage />
                     </FormItem>
-                  );
+                  )
                 }}
               />
             )}
 
-            <div className="w-full 3xl:w-sm flex items-end justify-start gap-2">
+            <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
               {!data ? (
                 <Button
                   type="button"
@@ -160,10 +160,10 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
 
           {data && (
             <div className="mt-6 border-t pt-6">
-              <h3 className="text-lg font-semibold mb-4 text-gray-800">
+              <h3 className="mb-4 text-lg font-semibold text-gray-800">
                 {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-1 gap-x-6 gap-y-4">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
                 <DetailRow
                   title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH:'}
                   value={data?.name || data?.fullName || '-'}
@@ -180,7 +180,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
         </CardForm>
 
         <CardForm className="mb-2">
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="phoneNumber"
@@ -188,7 +188,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                 <FormItem>
                   <FormLabel required>Telefon raqami</FormLabel>
                   <FormControl>
-                    <PhoneInput className="w-full 3xl:w-sm" placeholder="+998 XX XXX XX XX" {...field} />
+                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -204,7 +204,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                     <FormLabel>XICHO tanlang</FormLabel>
                     <FormControl>
                       <Select onValueChange={field.onChange} value={field.value || ''}>
-                        <SelectTrigger className="w-full 3xl:w-sm">
+                        <SelectTrigger className="3xl:w-sm w-full">
                           <SelectValue placeholder="XICHO ni tanlang" />
                         </SelectTrigger>
                         <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
@@ -224,7 +224,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                   <FormLabel required>Qurilma turini tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Qurilma turini tanlang" />
                       </SelectTrigger>
                       <SelectContent>{childEquipmentOptions}</SelectContent>
@@ -241,7 +241,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                 <FormItem>
                   <FormLabel>Qurilmaning zavod raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning zavod raqami" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Qurilmaning zavod raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -254,7 +254,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                 <FormItem>
                   <FormLabel>Qurilma egasining nomi</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Ishlab chiqargan zavod nomi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Ishlab chiqargan zavod nomi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -267,7 +267,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                 <FormItem>
                   <FormLabel>Model, marka</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Model, marka" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Model, marka" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -277,9 +277,9 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
               control={form.control}
               name="manufacturedAt"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel>Ishlab chiqarilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
@@ -289,7 +289,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
@@ -302,13 +302,13 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                     <Select
                       onValueChange={(value) => {
                         if (value) {
-                          field.onChange(value);
-                          form.setValue('districtId', '');
+                          field.onChange(value)
+                          form.setValue('districtId', '')
                         }
                       }}
                       value={field.value?.toString()}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Qurilma joylashgan viloyat" />
                       </SelectTrigger>
                       <SelectContent>{regionOptions}</SelectContent>
@@ -330,7 +330,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                       value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Qurilma joylashgan tuman" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
@@ -347,7 +347,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                 <FormItem>
                   <FormLabel required>Qurilmaning joylashgan manzili</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning joylashgan manzili" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Qurilmaning joylashgan manzili" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -357,7 +357,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
               control={form.control}
               name="location"
               render={({ field }) => (
-                <FormItem className="w-full 3xl:w-sm">
+                <FormItem className="3xl:w-sm w-full">
                   <FormLabel required>Geolokatsiya (xaritadan joyni tanlang va koordinatalarni kiriting)</FormLabel>
                   <FormControl>
                     <YandexMapModal
@@ -374,9 +374,9 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
               control={form.control}
               name="partialCheckDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel>O‘tkazilgan tashki (NO), ichki koʻrik (VO) yoki gidrosinov (GI) sanasi</FormLabel>
                     <DatePicker
                       disableStrategy="after"
@@ -386,16 +386,16 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
               control={form.control}
               name="fullCheckDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel>O‘tkaziladigan tashki (NO), ichki koʻrik (VO) yoki gidrosinov (GI) sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -404,7 +404,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
@@ -414,7 +414,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                 <FormItem>
                   <FormLabel>Sarflash miqdori, m³/soat</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Sarflash miqdori, m³/soat" {...field} />
+                    <Input type="text" className="3xl:w-sm w-full" placeholder="Sarflash miqdori, m³/soat" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -427,7 +427,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                 <FormItem>
                   <FormLabel>Bosim, mPa</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Bosim, mPa" {...field} />
+                    <Input type="text" className="3xl:w-sm w-full" placeholder="Bosim, mPa" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -440,7 +440,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                 <FormItem>
                   <FormLabel>Yoqilg‘i turi</FormLabel>
                   <FormControl>
-                    <Input type="text" className="w-full 3xl:w-sm" placeholder="Yoqilg‘i turi" {...field} />
+                    <Input type="text" className="3xl:w-sm w-full" placeholder="Yoqilg‘i turi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -448,14 +448,14 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
             />
           </div>
         </CardForm>
-        <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
-          <div className="pb-4 border-b">
+        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
+          <div className="border-b pb-4">
             <FormField
               name="labelPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilmaning birkasi bilan surati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
@@ -468,10 +468,10 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
               control={form.control}
               name="labelExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -483,18 +483,18 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                     </div>
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="saleContractPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sotib olish-sotish shartnomasi fayli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -507,10 +507,10 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
               control={form.control}
               name="saleContractExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -522,18 +522,18 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                     </div>
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="equipmentCertPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilma sertifikati fayli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -546,10 +546,10 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
               control={form.control}
               name="equipmentCertExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -561,18 +561,18 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                     </div>
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="assignmentDecreePath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                       Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq fayli
                     </FormLabel>
@@ -587,10 +587,10 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
               control={form.control}
               name="assignmentDecreeExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -602,18 +602,18 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                     </div>
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="expertisePath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekspertiza loyihasi fayli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -626,10 +626,10 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
               control={form.control}
               name="expertiseExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -641,18 +641,18 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                     </div>
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="installationCertPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Montaj guvohnomasi fayli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -665,10 +665,10 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
               control={form.control}
               name="installationCertExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -680,7 +680,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                     </div>
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
@@ -689,8 +689,8 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
             name="gasSupplyProjectPath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel className="max-w-1/2 2xl:max-w-3/7">Gaz ta‘minoti loyihasi fayli</FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -700,13 +700,13 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
             )}
           />
 
-          <div className="pb-4 border-b">
+          <div className="border-b pb-4">
             <FormField
               name="additionalFilePath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end xl:items-center justify-between gap-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilma pasporti</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -719,10 +719,10 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
               control={form.control}
               name="additionalFileExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="flex items-end xl:items-center justify-between gap-2 mb-2">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -734,7 +734,7 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
                     </div>
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
           </div>
@@ -744,5 +744,5 @@ export default ({ onSubmit }: RegisterIllegalLpgPoweredFormProps) => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

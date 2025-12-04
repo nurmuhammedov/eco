@@ -1,5 +1,5 @@
 export type OptionItem<T> = {
-  id: T;
-  name: string;
-  type?: string;
-};
+  id: T
+  name: string
+  type?: string
+}

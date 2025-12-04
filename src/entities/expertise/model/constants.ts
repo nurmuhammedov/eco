@@ -28,7 +28,7 @@ export const ExpertiseTypeOptions = [
     value: ExpertiseTypeEnum.IX,
     label: 'Xavfli ishlab chiqarish obyektlarini identifikatsiyalash (IX)',
   },
-];
+]
 
 export enum ExpertiseSubTypeEnum {
   XICH = 'XICH',
@@ -148,4 +148,4 @@ export const ExpertiseSubTypeOptions = [
     label: 'Sanoat xavfsizligi ekspertizasi (TQSX)',
     type: ExpertiseTypeEnum.TQ,
   },
-];
+]

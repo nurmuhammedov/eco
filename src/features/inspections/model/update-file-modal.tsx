@@ -1,7 +1,7 @@
 // src/features/application/application-detail/ui/modals/update-file-modal.tsx
 
-import { InputFile } from '@/shared/components/common/file-upload';
-import { Button } from '@/shared/components/ui/button';
+import { InputFile } from '@/shared/components/common/file-upload'
+import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -10,31 +10,31 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog';
-import { Form, FormField } from '@/shared/components/ui/form';
-import { QK_INSPECTION } from '@/shared/constants/query-keys';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { QueryClient } from '@tanstack/react-query';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useUpdateApplicationFile } from '../hooks/use-file-update';
+} from '@/shared/components/ui/dialog'
+import { Form, FormField } from '@/shared/components/ui/form'
+import { QK_INSPECTION } from '@/shared/constants/query-keys'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { QueryClient } from '@tanstack/react-query'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { useUpdateApplicationFile } from '../hooks/use-file-update'
 
 const schema = z.object({
   filePath: z.string().min(1, 'Fayl yuklanishi shart'),
-});
+})
 
 interface UpdateFileModalProps {
-  inspectionId?: string;
+  inspectionId?: string
 }
 
 export const UpdateFileModal: React.FC<UpdateFileModalProps> = ({ inspectionId }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { mutate: updateFile, isPending } = useUpdateApplicationFile();
-  const queryClient = new QueryClient();
+  const [isOpen, setIsOpen] = useState(false)
+  const { mutate: updateFile, isPending } = useUpdateApplicationFile()
+  const queryClient = new QueryClient()
   const form = useForm<{ filePath: string }>({
     resolver: zodResolver(schema),
-  });
+  })
 
   const onSubmit = (data: { filePath: string }) => {
     updateFile(
@@ -44,13 +44,13 @@ export const UpdateFileModal: React.FC<UpdateFileModalProps> = ({ inspectionId }
       },
       {
         onSuccess: async () => {
-          form.reset();
-          setIsOpen(false);
-          await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] });
+          form.reset()
+          setIsOpen(false)
+          await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] })
         },
-      },
-    );
-  };
+      }
+    )
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -74,7 +74,7 @@ export const UpdateFileModal: React.FC<UpdateFileModalProps> = ({ inspectionId }
                   form={form}
                   name={field.name}
                   onUploadComplete={(url) => {
-                    form.setValue('filePath', url, { shouldValidate: true });
+                    form.setValue('filePath', url, { shouldValidate: true })
                   }}
                   buttonText="Yangi faylni tanlang"
                 />
@@ -94,5 +94,5 @@ export const UpdateFileModal: React.FC<UpdateFileModalProps> = ({ inspectionId }
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

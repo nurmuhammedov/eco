@@ -1,7 +1,7 @@
 // src/features/application/application-detail/ui/modals/update-file-modal.tsx
 
-import { InputFile } from '@/shared/components/common/file-upload';
-import { Button } from '@/shared/components/ui/button';
+import { InputFile } from '@/shared/components/common/file-upload'
+import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -10,33 +10,33 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog';
-import { Form, FormField } from '@/shared/components/ui/form';
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { QueryClient } from '@tanstack/react-query';
-import { Pencil } from 'lucide-react';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useUpdateApplicationFile } from '../../hooks/mutations/use-update-file';
+} from '@/shared/components/ui/dialog'
+import { Form, FormField } from '@/shared/components/ui/form'
+import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { QueryClient } from '@tanstack/react-query'
+import { Pencil } from 'lucide-react'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { useUpdateApplicationFile } from '../../hooks/mutations/use-update-file'
 
 const schema = z.object({
   filePath: z.string().min(1, 'Fayl yuklanishi shart'),
-});
+})
 
 interface UpdateFileModalProps {
-  appealId?: string;
-  fieldName: string;
+  appealId?: string
+  fieldName: string
 }
 
 export const UpdateFileModal: React.FC<UpdateFileModalProps> = ({ appealId, fieldName }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { mutate: updateFile, isPending } = useUpdateApplicationFile();
-  const queryClient = new QueryClient();
+  const [isOpen, setIsOpen] = useState(false)
+  const { mutate: updateFile, isPending } = useUpdateApplicationFile()
+  const queryClient = new QueryClient()
   const form = useForm<{ filePath: string }>({
     resolver: zodResolver(schema),
-  });
+  })
 
   const onSubmit = (data: { filePath: string }) => {
     updateFile(
@@ -47,13 +47,13 @@ export const UpdateFileModal: React.FC<UpdateFileModalProps> = ({ appealId, fiel
       },
       {
         onSuccess: () => {
-          form.reset();
-          setIsOpen(false);
-          queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] });
+          form.reset()
+          setIsOpen(false)
+          queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] })
         },
-      },
-    );
-  };
+      }
+    )
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -76,7 +76,7 @@ export const UpdateFileModal: React.FC<UpdateFileModalProps> = ({ appealId, fiel
                   form={form}
                   name={field.name}
                   onUploadComplete={(url) => {
-                    form.setValue('filePath', url, { shouldValidate: true });
+                    form.setValue('filePath', url, { shouldValidate: true })
                   }}
                   buttonText="Yangi faylni tanlang"
                 />
@@ -96,5 +96,5 @@ export const UpdateFileModal: React.FC<UpdateFileModalProps> = ({ appealId, fiel
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

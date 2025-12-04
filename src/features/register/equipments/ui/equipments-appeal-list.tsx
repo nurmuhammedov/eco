@@ -1,40 +1,40 @@
-import { DataTable } from '@/shared/components/common/data-table';
-import { usePaginatedData } from '@/shared/hooks';
-import { getDate } from '@/shared/utils/date';
-import { ColumnDef } from '@tanstack/react-table';
-import { useParams } from 'react-router-dom';
-import { GoBack } from '@/shared/components/common';
-import { TabsLayout } from '@/shared/layouts';
-import { useCustomSearchParams } from '@/shared/hooks';
-import FileLink from '@/shared/components/common/file-link';
+import { DataTable } from '@/shared/components/common/data-table'
+import { usePaginatedData } from '@/shared/hooks'
+import { getDate } from '@/shared/utils/date'
+import { ColumnDef } from '@tanstack/react-table'
+import { useParams } from 'react-router-dom'
+import { GoBack } from '@/shared/components/common'
+import { TabsLayout } from '@/shared/layouts'
+import { useCustomSearchParams } from '@/shared/hooks'
+import FileLink from '@/shared/components/common/file-link'
 
 interface IEquipmentAppeal {
-  id: string;
-  appealNumber: string;
-  type: 'APPEAL' | 'COMPLAINT' | 'SUGGESTION';
-  message: string;
-  createdAt: string;
-  fullName?: string;
-  phoneNumber?: string;
-  filePath?: string;
+  id: string
+  appealNumber: string
+  type: 'APPEAL' | 'COMPLAINT' | 'SUGGESTION'
+  message: string
+  createdAt: string
+  fullName?: string
+  phoneNumber?: string
+  filePath?: string
 }
 
 const appealTypeTranslations = {
   APPEAL: 'Murojaat',
   COMPLAINT: 'Shikoyat',
   SUGGESTION: 'Taklif',
-};
+}
 
 export const RegisterEquipmentAppealList = () => {
-  const { id: equipmentId } = useParams<{ id: string }>();
-  const { paramsObject, addParams } = useCustomSearchParams();
-  const activeTab = paramsObject.type || 'ALL';
+  const { id: equipmentId } = useParams<{ id: string }>()
+  const { paramsObject, addParams } = useCustomSearchParams()
+  const activeTab = paramsObject.type || 'ALL'
 
   const { data } = usePaginatedData<IEquipmentAppeal>('/inquiries', {
     ...paramsObject,
     belongId: equipmentId,
     type: activeTab !== 'ALL' ? activeTab : '',
-  });
+  })
 
   const columns: ColumnDef<IEquipmentAppeal>[] = [
     {
@@ -72,7 +72,7 @@ export const RegisterEquipmentAppealList = () => {
       header: 'Biriktirilgan fayl',
       cell: ({ row }) => (row.original.filePath ? <FileLink url={row.original.filePath} /> : '-'),
     },
-  ];
+  ]
 
   return (
     <div>
@@ -96,7 +96,7 @@ export const RegisterEquipmentAppealList = () => {
         <DataTable isPaginated data={data || []} columns={columns} className="h-[calc(100svh-320px)]" />
       </TabsLayout>
     </div>
-  );
-};
+  )
+}
 
-export default RegisterEquipmentAppealList;
+export default RegisterEquipmentAppealList

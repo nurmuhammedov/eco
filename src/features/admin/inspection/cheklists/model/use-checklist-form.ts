@@ -1,7 +1,7 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useEffect, useMemo } from 'react';
-import { useChecklistDrawer } from '@/shared/hooks/entity-hooks';
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useCallback, useEffect, useMemo } from 'react'
+import { useChecklistDrawer } from '@/shared/hooks/entity-hooks'
 import {
   CreateChecklistDTO,
   checklistSchema,
@@ -10,7 +10,7 @@ import {
   useChecklistQuery,
   useCategoryTypeSelectQuery,
   useUpdateChecklist,
-} from '@/entities/admin/inspection';
+} from '@/entities/admin/inspection'
 
 const DEFAULT_VALUES: CreateChecklistDTO = {
   category: '',
@@ -19,22 +19,22 @@ const DEFAULT_VALUES: CreateChecklistDTO = {
   question: '',
   negative: '',
   corrective: '',
-};
+}
 
 export function useChecklistForm() {
-  const { data, onClose, isCreate } = useChecklistDrawer();
-  const checklistId = useMemo(() => (data?.id ? data.id : 0), [data]);
+  const { data, onClose, isCreate } = useChecklistDrawer()
+  const checklistId = useMemo(() => (data?.id ? data.id : 0), [data])
 
   const form = useForm<CreateChecklistDTO>({
     resolver: zodResolver(checklistSchema),
     defaultValues: DEFAULT_VALUES,
     mode: 'onBlur',
-  });
+  })
 
-  const { data: categoryTypes } = useCategoryTypeSelectQuery(form?.watch('category'));
-  const { mutateAsync: createItem, isPending: isCreating } = useCreateChecklist();
-  const { mutateAsync: updateItem, isPending: isUpdating } = useUpdateChecklist();
-  const { data: checklistData, isLoading } = useChecklistQuery(checklistId);
+  const { data: categoryTypes } = useCategoryTypeSelectQuery(form?.watch('category'))
+  const { mutateAsync: createItem, isPending: isCreating } = useCreateChecklist()
+  const { mutateAsync: updateItem, isPending: isUpdating } = useUpdateChecklist()
+  const { data: checklistData, isLoading } = useChecklistQuery(checklistId)
 
   useEffect(() => {
     if (checklistData && !isCreate) {
@@ -45,34 +45,34 @@ export function useChecklistForm() {
         negative: checklistData.negative,
         question: checklistData.question,
         category: checklistData.category?.toString(),
-      });
+      })
     }
-  }, [checklistData, isCreate, form]);
+  }, [checklistData, isCreate, form])
 
   const handleClose = useCallback(() => {
-    form.reset(DEFAULT_VALUES);
-    onClose();
-  }, [form, onClose]);
+    form.reset(DEFAULT_VALUES)
+    onClose()
+  }, [form, onClose])
 
   const handleSubmit = useCallback(
     async (formData: CreateChecklistDTO): Promise<boolean> => {
       try {
         const response = isCreate
           ? await createItem(formData)
-          : await updateItem({ id: checklistId, ...formData } as UpdateChecklistDTO);
+          : await updateItem({ id: checklistId, ...formData } as UpdateChecklistDTO)
 
         if (response.success) {
-          handleClose();
-          return true;
+          handleClose()
+          return true
         }
-        return false;
+        return false
       } catch (error) {
-        console.error('[useChecklistForm] Submission error:', error);
-        return false;
+        console.error('[useChecklistForm] Submission error:', error)
+        return false
       }
     },
-    [isCreate, checklistId, createItem, updateItem, handleClose],
-  );
+    [isCreate, checklistId, createItem, updateItem, handleClose]
+  )
 
   return {
     form,
@@ -82,5 +82,5 @@ export function useChecklistForm() {
     onSubmit: handleSubmit,
     isFetching: isLoading,
     isPending: isCreating || isUpdating,
-  };
+  }
 }

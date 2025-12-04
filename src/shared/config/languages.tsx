@@ -1,5 +1,5 @@
-import { Language } from '@/shared/types/language';
-import { UZBFlagIcon } from '@/shared/components/SVGIcons';
+import { Language } from '@/shared/types/language'
+import { UZBFlagIcon } from '@/shared/components/SVGIcons'
 
 export const SYSTEM_LANGUAGES = [
   { value: Language.UZ, text: 'Lotin', label: 'Lotin', flag: <UZBFlagIcon /> },
@@ -9,4 +9,4 @@ export const SYSTEM_LANGUAGES = [
     label: 'Кирилл',
     flag: <UZBFlagIcon />,
   },
-] as const;
+] as const

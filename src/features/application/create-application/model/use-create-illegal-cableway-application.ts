@@ -1,12 +1,9 @@
-import {
-  CablewayIllegalAppealDtoSchema,
-  RegisterIllegalCablewayAppApplicationDTO,
-} from '@/entities/create-application';
-import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { CablewayIllegalAppealDtoSchema, RegisterIllegalCablewayAppApplicationDTO } from '@/entities/create-application'
+import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMemo } from 'react'
+import { useForm } from 'react-hook-form'
 
 export const useCreateIllegalCablewayApplication = () => {
   const form = useForm<RegisterIllegalCablewayAppApplicationDTO>({
@@ -40,22 +37,22 @@ export const useCreateIllegalCablewayApplication = () => {
       length: '',
     },
     mode: 'onChange',
-  });
+  })
 
-  const regionId = form.watch('regionId');
+  const regionId = form.watch('regionId')
 
-  const { data: regions } = useRegionSelectQueries();
-  const { data: districts } = useDistrictSelectQueries(regionId);
-  const { data: childEquipmentTypes } = useChildEquipmentTypes('CABLEWAY'); // Child equipment turi
+  const { data: regions } = useRegionSelectQueries()
+  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: childEquipmentTypes } = useChildEquipmentTypes('CABLEWAY') // Child equipment turi
 
-  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts]);
-  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions]);
-  const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes]);
+  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
+  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
+  const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes])
 
   return {
     form,
     regionOptions,
     districtOptions,
     childEquipmentOptions,
-  };
-};
+  }
+}

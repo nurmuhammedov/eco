@@ -1,29 +1,29 @@
-import { useTranslation } from 'react-i18next';
-import { ColumnDef } from '@tanstack/react-table';
-import { UIModeEnum } from '@/shared/types/ui-types';
-import { useFilters } from '@/shared/hooks/use-filters';
-import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks';
-import { formatPhoneNumber, getUserRoleDisplay, getUserStatusDisplay } from '@/shared/lib';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
+import { useTranslation } from 'react-i18next'
+import { ColumnDef } from '@tanstack/react-table'
+import { UIModeEnum } from '@/shared/types/ui-types'
+import { useFilters } from '@/shared/hooks/use-filters'
+import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks'
+import { formatPhoneNumber, getUserRoleDisplay, getUserStatusDisplay } from '@/shared/lib'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import {
   FilterTerritorialStaffDTO,
   TerritorialStaffTableItem,
   useDeleteTerritorialStaff,
   useTerritorialStaffListQuery,
-} from '@/entities/admin/territorial-staffs';
+} from '@/entities/admin/territorial-staffs'
 
 export function TerritorialStaffList() {
-  const { filters } = useFilters();
-  const { t } = useTranslation('common');
-  const { onOpen } = useTerritorialStaffsDrawer();
-  const { data, isLoading } = useTerritorialStaffListQuery(filters as FilterTerritorialStaffDTO);
-  const deleteData = useDeleteTerritorialStaff();
+  const { filters } = useFilters()
+  const { t } = useTranslation('common')
+  const { onOpen } = useTerritorialStaffsDrawer()
+  const { data, isLoading } = useTerritorialStaffListQuery(filters as FilterTerritorialStaffDTO)
+  const deleteData = useDeleteTerritorialStaff()
 
-  const onDelete = (id: string) => deleteData.mutate(id);
+  const onDelete = (id: string) => deleteData.mutate(id)
 
-  const onEdit = (id: string) => onOpen(UIModeEnum.EDIT, { id });
+  const onEdit = (id: string) => onOpen(UIModeEnum.EDIT, { id })
 
-  const onView = (id: string) => onOpen(UIModeEnum.VIEW, { id });
+  const onView = (id: string) => onOpen(UIModeEnum.VIEW, { id })
 
   const columns: ColumnDef<TerritorialStaffTableItem>[] = [
     {
@@ -80,7 +80,7 @@ export function TerritorialStaffList() {
         />
       ),
     },
-  ];
+  ]
 
   return (
     <DataTable
@@ -90,5 +90,5 @@ export function TerritorialStaffList() {
       isLoading={isLoading}
       className="h-[calc(100svh-270px)]"
     />
-  );
+  )
 }

@@ -1,9 +1,9 @@
 export interface EquipmentConfig {
-  id: string;
-  key: string;
-  title: string;
-  addLabel: string;
-  apiEndpoint: string;
+  id: string
+  key: string
+  title: string
+  addLabel: string
+  apiEndpoint: string
 }
 
 export const EQUIPMENT_CONFIG: EquipmentConfig[] = [
@@ -98,14 +98,14 @@ export const EQUIPMENT_CONFIG: EquipmentConfig[] = [
     apiEndpoint: '/api/gas-pipelines',
     addLabel: 'Идиш қўшиш',
   },
-];
+]
 
 export function getEquipmentById(id: string): EquipmentConfig | undefined {
-  return EQUIPMENT_CONFIG.find((item) => item.id === id);
+  return EQUIPMENT_CONFIG.find((item) => item.id === id)
 }
 
 export function getEquipmentByKey(key: string): EquipmentConfig | undefined {
-  return EQUIPMENT_CONFIG.find((item) => item.key === key);
+  return EQUIPMENT_CONFIG.find((item) => item.key === key)
 }
 
-export const DEFAULT_EQUIPMENT = EQUIPMENT_CONFIG[0];
+export const DEFAULT_EQUIPMENT = EQUIPMENT_CONFIG[0]

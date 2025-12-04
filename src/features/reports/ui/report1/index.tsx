@@ -1,16 +1,16 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
-import React from 'react';
-import { DataTable } from '@/shared/components/common/data-table';
-import { usePaginatedData } from '@/shared/hooks';
-import { ColumnDef } from '@tanstack/react-table';
-import { ISearchParams } from '@/shared/types';
-import Filter from '@/shared/components/common/filter';
-import { GoBack } from '@/shared/components/common';
-import { Button } from '@/shared/components/ui/button';
-import { Download } from 'lucide-react';
-import { apiClient } from '@/shared/api';
-import { format } from 'date-fns';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import React from 'react'
+import { DataTable } from '@/shared/components/common/data-table'
+import { usePaginatedData } from '@/shared/hooks'
+import { ColumnDef } from '@tanstack/react-table'
+import { ISearchParams } from '@/shared/types'
+import Filter from '@/shared/components/common/filter'
+import { GoBack } from '@/shared/components/common'
+import { Button } from '@/shared/components/ui/button'
+import { Download } from 'lucide-react'
+import { apiClient } from '@/shared/api'
+import { format } from 'date-fns'
 
 export enum InspectionStatus {
   LEGAL = 'LEGAL',
@@ -18,20 +18,20 @@ export enum InspectionStatus {
 }
 
 const Report1: React.FC = () => {
-  const { paramsObject, addParams } = useCustomSearchParams();
-  const activeTab = paramsObject.ownerType;
+  const { paramsObject, addParams } = useCustomSearchParams()
+  const activeTab = paramsObject.ownerType
   const { data: inspections, isLoading } = usePaginatedData('/reports/appeal-status', {
     ...paramsObject,
     ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,
-  });
+  })
 
   const handleTabChange = (value: string) => {
-    addParams({ ownerType: value });
-  };
+    addParams({ ownerType: value })
+  }
 
   function calcPercent(value: number, total: number): string {
-    if (!total || total == 0) return '0.0%';
-    return ((value / total) * 100).toFixed(2) + '%';
+    if (!total || total == 0) return '0.0%'
+    return ((value / total) * 100).toFixed(2) + '%'
   }
 
   const columns: ColumnDef<ISearchParams>[] = [
@@ -139,30 +139,30 @@ const Report1: React.FC = () => {
         },
       ],
     },
-  ];
+  ]
 
   const handleDownloadExel = async () => {
     const res = await apiClient.downloadFile<Blob>('/reports/appeal-status/export-excel', {
       ...paramsObject,
       ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,
-    });
+    })
 
-    const blob = res.data;
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const today = new Date();
-    const filename = `Jismoniy va yuridik shaxslardan yuborilgan arizalarni hududlar kesimida taqsimlanishi (${format(today, 'dd.MM.yyyy')}).xlsx`;
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  };
+    const blob = res.data
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    const today = new Date()
+    const filename = `Jismoniy va yuridik shaxslardan yuborilgan arizalarni hududlar kesimida taqsimlanishi (${format(today, 'dd.MM.yyyy')}).xlsx`
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(url)
+  }
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-2">
+      <div className="mb-2 flex items-center justify-between">
         <GoBack title="Jismoniy va yuridik shaxslardan yuborilgan arizalarni hududlar kesimida taqsimlanishi" />
       </div>
 
@@ -172,8 +172,8 @@ const Report1: React.FC = () => {
           <TabsTrigger value={InspectionStatus.LEGAL}>Yuridik shaxslar</TabsTrigger>
         </TabsList>
 
-        <div className="flex my-2 justify-between items-start gap-2">
-          <div className="flex-1 flex justify-start">
+        <div className="my-2 flex items-start justify-between gap-2">
+          <div className="flex flex-1 justify-start">
             <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
           </div>
           <Button onClick={handleDownloadExel}>
@@ -203,7 +203,7 @@ const Report1: React.FC = () => {
         </TabsContent>
       </Tabs>
     </div>
-  );
-};
+  )
+}
 
-export default Report1;
+export default Report1

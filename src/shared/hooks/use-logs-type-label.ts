@@ -7,4 +7,4 @@ export const useLogsTypeLabel = () => {
   //   if (!type) return '-';
   //   return t(`logs_type.${type}`);
   // };
-};
+}

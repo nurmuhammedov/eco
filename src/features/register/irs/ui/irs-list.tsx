@@ -1,20 +1,20 @@
-import { IrsUsageType } from '@/entities/create-application';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { getDate } from '@/shared/utils/date';
-import { useNavigate } from 'react-router-dom';
-import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
+import { IrsUsageType } from '@/entities/create-application'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { getDate } from '@/shared/utils/date'
+import { useNavigate } from 'react-router-dom'
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 
 export const IrsList = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const {
     paramsObject: { size = 10, page = 1, mode = '', search = '', officeId = '', regionId = '' },
-  } = useCustomSearchParams();
-  const { data = [] } = usePaginatedData<any>(`/irs`, { page, size, mode, officeId, regionId, search });
+  } = useCustomSearchParams()
+  const { data = [] } = usePaginatedData<any>(`/irs`, { page, size, mode, officeId, regionId, search })
 
   const handleViewApplication = (id: string) => {
-    navigate(`${id}/irs`);
-  };
+    navigate(`${id}/irs`)
+  }
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -100,7 +100,7 @@ export const IrsList = () => {
         <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
       ),
     },
-  ];
+  ]
 
   // const handleDownloadExel = async () => {
   //   const res = await apiClient.downloadFile<Blob>('/irs/export/excel', {
@@ -137,5 +137,5 @@ export const IrsList = () => {
         className="h-[calc(100svh-220px)]"
       />
     </>
-  );
-};
+  )
+}

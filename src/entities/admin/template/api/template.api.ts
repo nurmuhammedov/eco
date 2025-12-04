@@ -1,15 +1,15 @@
-import { ApiResponse, ResponseData } from '@/shared/types';
-import { API_ENDPOINTS, apiClient } from '@/shared/api';
-import { Template, TemplateFormDTO } from '@/entities/admin/template';
+import { ApiResponse, ResponseData } from '@/shared/types'
+import { API_ENDPOINTS, apiClient } from '@/shared/api'
+import { Template, TemplateFormDTO } from '@/entities/admin/template'
 
 export const templateAPI = {
   list: async (filters: any) => {
-    const { data } = await apiClient.getWithPagination<ResponseData<Template>>(API_ENDPOINTS.TEMPLATES, filters);
-    return data || [];
+    const { data } = await apiClient.getWithPagination<ResponseData<Template>>(API_ENDPOINTS.TEMPLATES, filters)
+    return data || []
   },
   byId: async (id: number) => {
-    const { data } = await apiClient.get<ApiResponse<Template>>(`${API_ENDPOINTS.TEMPLATES}/${id}`);
-    return data.data;
+    const { data } = await apiClient.get<ApiResponse<Template>>(`${API_ENDPOINTS.TEMPLATES}/${id}`)
+    return data.data
   },
   create: async (data: TemplateFormDTO) => {
     // if (!response.success && response.errors) {
@@ -18,24 +18,24 @@ export const templateAPI = {
     //   });
     // }
 
-    return await apiClient.post<Template, TemplateFormDTO>(API_ENDPOINTS.TEMPLATES, data);
+    return await apiClient.post<Template, TemplateFormDTO>(API_ENDPOINTS.TEMPLATES, data)
   },
   updateData: async (id: number, templateData: Partial<TemplateFormDTO>) => {
-    const response = await apiClient.put<Template>(`${API_ENDPOINTS.TEMPLATES}/${id}`, templateData);
+    const response = await apiClient.put<Template>(`${API_ENDPOINTS.TEMPLATES}/${id}`, templateData)
 
     if (!response.success) {
-      throw new Error(response.message);
+      throw new Error(response.message)
     }
 
-    return response;
+    return response
   },
   updateContent: async (id: number, templateData: Partial<TemplateFormDTO>) => {
-    const response = await apiClient.patch<Template>(`${API_ENDPOINTS.UPDATE_TEMPLATE_CONTENT}/${id}`, templateData);
+    const response = await apiClient.patch<Template>(`${API_ENDPOINTS.UPDATE_TEMPLATE_CONTENT}/${id}`, templateData)
 
     if (!response.success) {
-      throw new Error(response.message);
+      throw new Error(response.message)
     }
 
-    return response;
+    return response
   },
-};
+}

@@ -1,10 +1,10 @@
-import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx';
-import DetailRow from '@/shared/components/common/detail-row.tsx';
+import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx'
+import DetailRow from '@/shared/components/common/detail-row.tsx'
 
 const LegalApplicantInfo = ({ tinNumber }: any) => {
-  const { data } = useLegalApplicantInfo(tinNumber);
+  const { data } = useLegalApplicantInfo(tinNumber)
   return (
-    <div className="py-1  flex flex-col">
+    <div className="flex flex-col py-1">
       <DetailRow title="Tashkilot STIR:" value={data?.identity || '-'} />
       <DetailRow title="Tashkilot nomi:" value={data?.name || '-'} />
       {/*<DetailRow title="Tashkilot tashkiliy-huquqiy shakli:" value={data?.legalForm || '-'} />*/}
@@ -23,7 +23,7 @@ const LegalApplicantInfo = ({ tinNumber }: any) => {
         }
       />
     </div>
-  );
-};
+  )
+}
 
-export default LegalApplicantInfo;
+export default LegalApplicantInfo

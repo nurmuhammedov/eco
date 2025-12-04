@@ -1,21 +1,21 @@
-import Icon from '@/shared/components/common/icon';
+import Icon from '@/shared/components/common/icon'
 
 export const LoginInfoSection = () => {
   return (
-    <div className="w-1/2 flex flex-col items-center justify-center pt-20 pb-8 bg-no-repeat bg-cover bg-[url(@/shared/assets/images/login-hero.png)]">
+    <div className="flex w-1/2 flex-col items-center justify-center bg-[url(@/shared/assets/images/login-hero.png)] bg-cover bg-no-repeat pt-20 pb-8">
       <div className="flex flex-col items-center justify-center">
-        <h4 className="text-white px-4 max-w-lg text-center font-semibold 3xl:font-bold text-xl 3xl:text-2xl mb-8">
+        <h4 className="3xl:font-bold 3xl:text-2xl mb-8 max-w-lg px-4 text-center text-xl font-semibold text-white">
           O‘zbekiston Respublikasi Vazirlar Mahkamasi huzuridagi sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi
         </h4>
-        <Icon name="logo" className="size-44 3xl:size-60" />
+        <Icon name="logo" className="3xl:size-60 size-44" />
       </div>
-      <div className="max-w-full text-center text-white mt-20 px-4">
-        <h6 className="text-xl 3xl:text-2xl opacity-50">Sanoat, radiatsiya va yadro xavfsizligi sohasida</h6>
-        <p className="text-2xl 3xl:text-3xl font-semibold opacity-100">
+      <div className="mt-20 max-w-full px-4 text-center text-white">
+        <h6 className="3xl:text-2xl text-xl opacity-50">Sanoat, radiatsiya va yadro xavfsizligi sohasida</h6>
+        <p className="3xl:text-3xl text-2xl font-semibold opacity-100">
           &laquo;Yagona integratsiyalashgan ekotizim&raquo;
         </p>
-        <h6 className="text-xl 3xl:text-2xl opacity-50">axborot tizimi</h6>
+        <h6 className="3xl:text-2xl text-xl opacity-50">axborot tizimi</h6>
       </div>
     </div>
-  );
-};
+  )
+}

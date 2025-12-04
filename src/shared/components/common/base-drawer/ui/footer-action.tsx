@@ -1,7 +1,7 @@
-import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/shared/components/ui/button';
-import type { DrawerFooterActionsProps } from '../types';
+import { memo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Button } from '@/shared/components/ui/button'
+import type { DrawerFooterActionsProps } from '../types'
 
 export const DrawerFooterActions = memo(function DrawerFooterActions({
   loading,
@@ -13,11 +13,11 @@ export const DrawerFooterActions = memo(function DrawerFooterActions({
   submitLabel = 'actions.save',
   cancelLabel = 'actions.cancel',
 }: DrawerFooterActionsProps) {
-  const { t } = useTranslation('common');
-  if (!showCancel && !showSubmit) return null;
+  const { t } = useTranslation('common')
+  if (!showCancel && !showSubmit) return null
 
   return (
-    <div className="flex gap-x-4 justify-between">
+    <div className="flex justify-between gap-x-4">
       {showCancel && (
         <Button type="button" variant="outline" className="w-full" onClick={onCancel}>
           {t(cancelLabel)}
@@ -29,5 +29,5 @@ export const DrawerFooterActions = memo(function DrawerFooterActions({
         </Button>
       )}
     </div>
-  );
-});
+  )
+})

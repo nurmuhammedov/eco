@@ -1,4 +1,4 @@
-import { Button } from '@/shared/components/ui/button';
+import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -7,27 +7,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog';
-import React from 'react';
-import { useAdd, useCustomSearchParams } from '@/shared/hooks';
-import { riskAnalysisData } from '@/shared/constants/risk-analysis-data';
-import { idNames } from '@/features/risk-analysis/hooks/use-reject-risk-item';
-import { QK_RISK_ANALYSIS } from '@/shared/constants/query-keys';
-import { useQueryClient } from '@tanstack/react-query';
+} from '@/shared/components/ui/dialog'
+import React from 'react'
+import { useAdd, useCustomSearchParams } from '@/shared/hooks'
+import { riskAnalysisData } from '@/shared/constants/risk-analysis-data'
+import { idNames } from '@/features/risk-analysis/hooks/use-reject-risk-item'
+import { QK_RISK_ANALYSIS } from '@/shared/constants/query-keys'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface ConfirmWithRegistryModalProps {
-  documentId?: string;
+  documentId?: string
 }
 
 const ConfirmModal: React.FC<ConfirmWithRegistryModalProps> = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const queryClient = useQueryClient();
+  const [isOpen, setIsOpen] = React.useState(false)
+  const queryClient = useQueryClient()
   const {
     paramsObject: { type = 'hf', id = undefined, tin = undefined },
-  } = useCustomSearchParams();
-  const currentIdName = idNames.get(type);
-  const list = riskAnalysisData[type as unknown as 'hf'] as unknown as any[];
-  const { mutate, isPending } = useAdd(`/${type?.toLowerCase()}-risk-indicators/success-all`);
+  } = useCustomSearchParams()
+  const currentIdName = idNames.get(type)
+  const list = riskAnalysisData[type as unknown as 'hf'] as unknown as any[]
+  const { mutate, isPending } = useAdd(`/${type?.toLowerCase()}-risk-indicators/success-all`)
 
   const onSubmit = () => {
     mutate(
@@ -39,12 +39,12 @@ const ConfirmModal: React.FC<ConfirmWithRegistryModalProps> = () => {
       })),
       {
         onSuccess: async () => {
-          setIsOpen(false);
-          await queryClient.invalidateQueries({ queryKey: [QK_RISK_ANALYSIS] });
+          setIsOpen(false)
+          await queryClient.invalidateQueries({ queryKey: [QK_RISK_ANALYSIS] })
         },
-      },
-    );
-  };
+      }
+    )
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -53,12 +53,12 @@ const ConfirmModal: React.FC<ConfirmWithRegistryModalProps> = () => {
           Hech qanday kamchiliklar yo‘q
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] max-h-[95vh] overflow-y-auto">
+      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Haqiqatdan ham tasdiqlaysizmi?</DialogTitle>
         </DialogHeader>
         <DialogFooter>
-          <div className="pt-10 flex items-center gap-4">
+          <div className="flex items-center gap-4 pt-10">
             <DialogClose asChild>
               <Button type="button" variant="outline">
                 Bekor qilish
@@ -71,7 +71,7 @@ const ConfirmModal: React.FC<ConfirmWithRegistryModalProps> = () => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default ConfirmModal;
+export default ConfirmModal

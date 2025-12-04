@@ -1,14 +1,14 @@
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { getDate } from '@/shared/utils/date';
-import { useNavigate } from 'react-router-dom';
-import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table';
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { getDate } from '@/shared/utils/date'
+import { useNavigate } from 'react-router-dom'
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 
 export const XrayList = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const {
     paramsObject: { page = 1, size = 10, search = '', mode = '', officeId = '', regionId = '' },
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
   const { data = [] } = usePaginatedData<any>(`/xrays`, {
     page,
     size,
@@ -16,11 +16,11 @@ export const XrayList = () => {
     mode,
     officeId,
     regionId,
-  });
+  })
 
   const handleViewApplication = (id: string) => {
-    navigate(`${id}/xrays`);
-  };
+    navigate(`${id}/xrays`)
+  }
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -70,7 +70,7 @@ export const XrayList = () => {
         <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
       ),
     },
-  ];
+  ]
 
   return (
     <>
@@ -82,5 +82,5 @@ export const XrayList = () => {
         className="h-[calc(100svh-220px)]"
       />
     </>
-  );
-};
+  )
+}

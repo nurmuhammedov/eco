@@ -1,5 +1,5 @@
-import { EquipmentWidget } from '@/widgets/admin/equipment';
+import { EquipmentWidget } from '@/widgets/admin/equipment'
 
 export default function EquipmentPage() {
-  return <EquipmentWidget />;
+  return <EquipmentWidget />
 }

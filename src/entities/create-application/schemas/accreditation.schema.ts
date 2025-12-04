@@ -1,10 +1,10 @@
 // src/entities/accreditation/models/accreditation.schema.ts
 
-import { AccreditationSphere } from '@/entities/accreditation/models/accreditation.enums';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { z } from 'zod';
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns.ts';
-import { format } from 'date-fns';
+import { AccreditationSphere } from '@/entities/accreditation/models/accreditation.enums'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { z } from 'zod'
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns.ts'
+import { format } from 'date-fns'
 
 const baseAccreditationFilesSchema = {
   accreditationFieldPath: z.string().min(1, FORM_ERROR_MESSAGES.required),
@@ -17,7 +17,7 @@ const baseAccreditationFilesSchema = {
   propertyOwnerShipPath: z.string().min(1, FORM_ERROR_MESSAGES.required),
   qualityPerformanceInstructionPath: z.string().min(1, FORM_ERROR_MESSAGES.required),
   qualityManagementSystemPath: z.string().min(1, FORM_ERROR_MESSAGES.required),
-};
+}
 
 export const AccreditationDtoSchema = z.object({
   accreditationSpheres: z.array(z.nativeEnum(AccreditationSphere)).min(1, 'Akkreditatsiya sohasini tanlang'),
@@ -31,7 +31,7 @@ export const AccreditationDtoSchema = z.object({
   propertyOwnerShipPath: z.string().min(1, FORM_ERROR_MESSAGES.required),
   qualityPerformanceInstructionPath: z.string().min(1, FORM_ERROR_MESSAGES.required),
   qualityManagementSystemPath: z.string().min(1, FORM_ERROR_MESSAGES.required),
-});
+})
 
 export const ReAccreditationDtoSchema = z.object({
   ...baseAccreditationFilesSchema,
@@ -39,7 +39,7 @@ export const ReAccreditationDtoSchema = z.object({
   certificateNumber: z.string().min(1, "Attestat ro'yxat raqamini kiriting"),
   certificateDate: z.date({ required_error: 'Attestat berilgan sanani tanlang' }),
   certificateValidityDate: z.date({ required_error: 'Attestat amal qilish muddatini tanlang' }),
-});
+})
 
 export const AccreditationConclusionDtoSchema = z.object({
   phoneNumber: z.string().regex(USER_PATTERNS.phone, { message: FORM_ERROR_MESSAGES.phone }).default(''),
@@ -65,7 +65,7 @@ export const AccreditationConclusionDtoSchema = z.object({
   address: z.string().min(1, FORM_ERROR_MESSAGES.required),
   expertiseConclusionPath: z.string().min(1, FORM_ERROR_MESSAGES.required),
   expertiseConclusionNumber: z.string().min(1, FORM_ERROR_MESSAGES.required),
-});
+})
 
 export const ExpandAccreditationDtoSchema = z.object({
   ...baseAccreditationFilesSchema,
@@ -73,4 +73,4 @@ export const ExpandAccreditationDtoSchema = z.object({
   certificateNumber: z.string().min(1, "Attestat ro'yxat raqamini kiriting"),
   certificateDate: z.date({ required_error: 'Attestat berilgan sanani tanlang' }),
   certificateValidityDate: z.date({ required_error: 'Attestat amal qilish muddatini tanlang' }),
-});
+})

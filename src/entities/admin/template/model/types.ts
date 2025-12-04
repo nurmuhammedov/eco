@@ -1,18 +1,18 @@
 export interface Template {
-  id: number;
-  name: string;
-  createdAt: string;
-  type: TemplateType;
-  description: string;
-  content: string | null;
-  updatedAt: string | null;
+  id: number
+  name: string
+  createdAt: string
+  type: TemplateType
+  description: string
+  content: string | null
+  updatedAt: string | null
 }
 
-export type TemplateFormDTO = Omit<Template, 'id' | 'updated_at'>;
+export type TemplateFormDTO = Omit<Template, 'id' | 'updated_at'>
 
 export interface TemplateCardProps {
-  template: Template;
-  onEdit?: (id: number) => void;
+  template: Template
+  onEdit?: (id: number) => void
 }
 
 export enum TemplateType {

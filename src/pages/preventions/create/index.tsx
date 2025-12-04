@@ -1,5 +1,5 @@
-import { PreventionForm } from '@/features/prevention';
+import { PreventionForm } from '@/features/prevention'
 
 export default function PreventionCreatePage() {
-  return <PreventionForm />;
+  return <PreventionForm />
 }

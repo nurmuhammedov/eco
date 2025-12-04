@@ -1,6 +1,6 @@
-import { DeRegisterEquipment, DeRegisterEquipmentDTO } from '@/entities/create-application';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { DeRegisterEquipment, DeRegisterEquipmentDTO } from '@/entities/create-application'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
 export const useDeRegisterEquipmentApplication = () => {
   const form = useForm<DeRegisterEquipmentDTO>({
@@ -16,9 +16,9 @@ export const useDeRegisterEquipmentApplication = () => {
       additionalInfoPath: undefined,
     },
     mode: 'onChange',
-  });
+  })
 
   return {
     form,
-  };
-};
+  }
+}

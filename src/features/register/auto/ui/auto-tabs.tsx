@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { cn } from '@/shared/lib/utils';
-import { Layers, Fuel, Flame, FlaskConical, ThermometerSnowflake, Atom } from 'lucide-react';
-import { ReactNode } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
+import { cn } from '@/shared/lib/utils'
+import { Layers, Fuel, Flame, FlaskConical, ThermometerSnowflake, Atom } from 'lucide-react'
+import { ReactNode } from 'react'
 
 export enum AutoTabKey {
   ALL = 'ALL',
@@ -13,9 +13,9 @@ export enum AutoTabKey {
 }
 
 interface TabsProps {
-  activeTab: AutoTabKey;
-  onTabChange: (tabKey: string) => void;
-  counts?: Record<string, number>;
+  activeTab: AutoTabKey
+  onTabChange: (tabKey: string) => void
+  counts?: Record<string, number>
 }
 
 const tabIcons: Record<AutoTabKey, ReactNode> = {
@@ -25,7 +25,7 @@ const tabIcons: Record<AutoTabKey, ReactNode> = {
   [AutoTabKey.CHEMICALS]: <FlaskConical className="h-5 w-5" />,
   [AutoTabKey.CRYOGENIC_GASES]: <ThermometerSnowflake className="h-5 w-5" />,
   [AutoTabKey.NUCLEAR_MATERIALS]: <Atom className="h-5 w-5" />,
-};
+}
 
 export const tabs = [
   { key: AutoTabKey.ALL, label: 'Barchasi' },
@@ -34,24 +34,24 @@ export const tabs = [
   { key: AutoTabKey.CHEMICALS, label: 'Kimyoviy moddalarni tashish' },
   { key: AutoTabKey.CRYOGENIC_GASES, label: 'Suyultirilgan va siqilgan kriogen gazini tashish' },
   { key: AutoTabKey.NUCLEAR_MATERIALS, label: 'Yadroviy va radioaktiv materiallarni tashish' },
-];
+]
 
 export const AutoTabs = ({ activeTab, onTabChange, counts }: TabsProps) => {
   return (
-    <div className="flex justify-between overflow-x-auto no-scrollbar overflow-y-hidden gap-2">
+    <div className="no-scrollbar flex justify-between gap-2 overflow-x-auto overflow-y-hidden">
       {tabs.map((tab) => {
-        const isActive = activeTab == tab.key;
+        const isActive = activeTab == tab.key
 
         return (
           <Card
             key={tab.key}
             onClick={() => onTabChange(tab.key)}
             className={cn(
-              'cursor-pointer flex-1 transition-all hover:shadow-md py-3 gap-1',
-              isActive ? 'bg-teal text-white shadow' : 'bg-card text-card-foreground border-border',
+              'flex-1 cursor-pointer gap-1 py-3 transition-all hover:shadow-md',
+              isActive ? 'bg-teal text-white shadow' : 'bg-card text-card-foreground border-border'
             )}
           >
-            <CardContent className="pb-1 flex flex-row items-center justify-between space-y-0 ">
+            <CardContent className="flex flex-row items-center justify-between space-y-0 pb-1">
               <div className="text-2xl font-bold">{counts?.[tab.key] || 0}</div>
               <span className={cn(!isActive && 'text-muted-foreground')}>
                 {tabIcons[tab.key as unknown as AutoTabKey]}
@@ -61,8 +61,8 @@ export const AutoTabs = ({ activeTab, onTabChange, counts }: TabsProps) => {
               <CardTitle className="text-sm font-medium">{tab.label}</CardTitle>
             </CardHeader>
           </Card>
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}

@@ -1,15 +1,15 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const categoryTypeBaseSchema = {
   category: z.string().min(1, 'Kategoriya majburiy'),
   type: z.string().min(1, 'Tekshiruv turi majburiy'),
-};
+}
 
 export const categoryTypeSchema = z.object({
   id: z.number().optional(),
   name: z.string().optional(),
   ...categoryTypeBaseSchema,
-});
+})
 
 export const categoryTypeSchemas = {
   create: z.object(categoryTypeBaseSchema),
@@ -23,4 +23,4 @@ export const categoryTypeSchemas = {
     size: z.number().optional().default(20),
   }),
   single: categoryTypeSchema,
-};
+}

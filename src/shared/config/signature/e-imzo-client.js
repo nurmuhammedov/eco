@@ -1,16 +1,16 @@
 /* eslint-disable */
 Date.prototype.yyyymmdd = function () {
-  var yyyy = this.getFullYear().toString();
-  var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
-  var dd = this.getDate().toString();
-  return yyyy + (mm[1] ? mm : '0' + mm[0]) + (dd[1] ? dd : '0' + dd[0]); // padding
-};
+  var yyyy = this.getFullYear().toString()
+  var mm = (this.getMonth() + 1).toString() // getMonth() is zero-based
+  var dd = this.getDate().toString()
+  return yyyy + (mm[1] ? mm : '0' + mm[0]) + (dd[1] ? dd : '0' + dd[0]) // padding
+}
 Date.prototype.ddmmyyyy = function () {
-  var yyyy = this.getFullYear().toString();
-  var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
-  var dd = this.getDate().toString();
-  return (dd[1] ? dd : '0' + dd[0]) + '.' + (mm[1] ? mm : '0' + mm[0]) + '.' + yyyy; // padding
-};
+  var yyyy = this.getFullYear().toString()
+  var mm = (this.getMonth() + 1).toString() // getMonth() is zero-based
+  var dd = this.getDate().toString()
+  return (dd[1] ? dd : '0' + dd[0]) + '.' + (mm[1] ? mm : '0' + mm[0]) + '.' + yyyy // padding
+}
 var dates = {
   convert: function (d) {
     // Converts the date in d to a date-object. The input can be:
@@ -32,7 +32,7 @@ var dates = {
             ? new Date(d)
             : typeof d === 'object'
               ? new Date(d.year, d.month, d.date)
-              : NaN;
+              : NaN
   },
   compare: function (a, b) {
     // Compare two dates (could be of any type supported by the convert
@@ -44,7 +44,7 @@ var dates = {
     // NOTE: The code inside isFinite does an assignment (=).
     return isFinite((a = this.convert(a).valueOf())) && isFinite((b = this.convert(b).valueOf()))
       ? (a > b) - (a < b)
-      : NaN;
+      : NaN
   },
   inRange: function (d, start, end) {
     // Checks if date in d is between dates in start and end.
@@ -57,49 +57,49 @@ var dates = {
       isFinite((start = this.convert(start).valueOf())) &&
       isFinite((end = this.convert(end).valueOf()))
       ? start <= d && d <= end
-      : NaN;
+      : NaN
   },
-};
+}
 String.prototype.splitKeep = function (splitter, ahead) {
-  var self = this;
-  var result = [];
+  var self = this
+  var result = []
   if (splitter != '') {
     // Substitution of matched string
     function getSubst(value) {
-      var substChar = value[0] == '0' ? '1' : '0';
-      var subst = '';
+      var substChar = value[0] == '0' ? '1' : '0'
+      var subst = ''
       for (var i = 0; i < value.length; i++) {
-        subst += substChar;
+        subst += substChar
       }
-      return subst;
+      return subst
     }
-    var matches = [];
+    var matches = []
     // Getting mached value and its index
-    var replaceName = splitter instanceof RegExp ? 'replace' : 'replaceAll';
+    var replaceName = splitter instanceof RegExp ? 'replace' : 'replaceAll'
     var r = self[replaceName](splitter, function (m, i, e) {
-      matches.push({ value: m, index: i });
-      return getSubst(m);
-    });
+      matches.push({ value: m, index: i })
+      return getSubst(m)
+    })
     // Finds split substrings
-    var lastIndex = 0;
+    var lastIndex = 0
     for (var i = 0; i < matches.length; i++) {
-      var m = matches[i];
-      var nextIndex = ahead == true ? m.index : m.index + m.value.length;
+      var m = matches[i]
+      var nextIndex = ahead == true ? m.index : m.index + m.value.length
       if (nextIndex != lastIndex) {
-        var part = self.substring(lastIndex, nextIndex);
-        result.push(part);
-        lastIndex = nextIndex;
+        var part = self.substring(lastIndex, nextIndex)
+        result.push(part)
+        lastIndex = nextIndex
       }
     }
     if (lastIndex < self.length) {
-      var part = self.substring(lastIndex, self.length);
-      result.push(part);
+      var part = self.substring(lastIndex, self.length)
+      result.push(part)
     }
   } else {
-    result.add(self);
+    result.add(self)
   }
-  return result;
-};
+  return result
+}
 
 export const EIMZOClient = {
   NEW_API: false,
@@ -116,64 +116,64 @@ export const EIMZOClient = {
       function (event, data) {
         if (data.success === true) {
           if (data.major && data.minor) {
-            var installedVersion = parseInt(data.major) * 100 + parseInt(data.minor);
-            EIMZOClient.NEW_API = installedVersion >= 336;
-            success(data.major, data.minor);
+            var installedVersion = parseInt(data.major) * 100 + parseInt(data.minor)
+            EIMZOClient.NEW_API = installedVersion >= 336
+            success(data.major, data.minor)
           } else {
-            fail(null, 'E-IMZO Version is undefined');
+            fail(null, 'E-IMZO Version is undefined')
           }
         } else {
-          fail(null, data.reason);
+          fail(null, data.reason)
         }
       },
       function (e) {
-        fail(e, null);
-      },
-    );
+        fail(e, null)
+      }
+    )
   },
   installApiKeys: function (success, fail) {
     CAPIWS.apikey(
       EIMZOClient.API_KEYS,
       function (event, data) {
         if (data.success) {
-          success();
+          success()
         } else {
-          fail(null, data.reason);
+          fail(null, data.reason)
         }
       },
       function (e) {
-        fail(e, null);
-      },
-    );
+        fail(e, null)
+      }
+    )
   },
   listAllUserKeys: function (itemIdGen, itemUiGen, success, fail) {
-    var items = [];
-    var errors = [];
+    var items = []
+    var errors = []
     if (!EIMZOClient.NEW_API) {
-      fail(null, 'Please install new version of E-IMZO');
+      fail(null, 'Please install new version of E-IMZO')
     } else {
       EIMZOClient._findPfxs2(itemIdGen, itemUiGen, items, errors, function (firstItmId2) {
         EIMZOClient._findTokens2(itemIdGen, itemUiGen, items, errors, function (firstItmId3) {
           if (items.length === 0 && errors.length > 0) {
-            fail(errors[0].e, errors[0].r);
+            fail(errors[0].e, errors[0].r)
           } else {
-            var firstId = null;
+            var firstId = null
             if (items.length === 1) {
               if (firstItmId2) {
-                firstId = firstItmId2;
+                firstId = firstItmId2
               } else if (firstItmId3) {
-                firstId = firstItmId3;
+                firstId = firstItmId3
               }
             }
-            success(items, firstId);
+            success(items, firstId)
           }
-        });
-      });
+        })
+      })
     }
   },
   loadKey: function (itemObject, success, fail) {
     if (itemObject) {
-      var vo = itemObject;
+      var vo = itemObject
       if (vo.type === 'pfx') {
         CAPIWS.callFunction(
           {
@@ -183,7 +183,7 @@ export const EIMZOClient = {
           },
           function (event, data) {
             if (data.success) {
-              var id = data.keyId;
+              var id = data.keyId
               CAPIWS.callFunction(
                 {
                   name: 'verify_password',
@@ -192,23 +192,23 @@ export const EIMZOClient = {
                 },
                 function (event, data) {
                   if (data.success) {
-                    success(id);
+                    success(id)
                   } else {
-                    fail(null, data.reason);
+                    fail(null, data.reason)
                   }
                 },
                 function (e) {
-                  fail(e, null);
-                },
-              );
+                  fail(e, null)
+                }
+              )
             } else {
-              fail(null, data.reason);
+              fail(null, data.reason)
             }
           },
           function (e) {
-            fail(e, null);
-          },
-        );
+            fail(e, null)
+          }
+        )
       } else if (vo.type === 'ftjc') {
         CAPIWS.callFunction(
           {
@@ -218,7 +218,7 @@ export const EIMZOClient = {
           },
           function (event, data) {
             if (data.success) {
-              var id = data.keyId;
+              var id = data.keyId
               CAPIWS.callFunction(
                 {
                   plugin: 'ftjc',
@@ -227,29 +227,29 @@ export const EIMZOClient = {
                 },
                 function (event, data) {
                   if (data.success) {
-                    success(id);
+                    success(id)
                   } else {
-                    fail(null, data.reason);
+                    fail(null, data.reason)
                   }
                 },
                 function (e) {
-                  fail(e, null);
-                },
-              );
+                  fail(e, null)
+                }
+              )
             } else {
-              fail(null, data.reason);
+              fail(null, data.reason)
             }
           },
           function (e) {
-            fail(e, null);
-          },
-        );
+            fail(e, null)
+          }
+        )
       }
     }
   },
   changeKeyPassword: function (itemObject, success, fail) {
     if (itemObject) {
-      var vo = itemObject;
+      var vo = itemObject
       if (vo.type === 'pfx') {
         CAPIWS.callFunction(
           {
@@ -259,7 +259,7 @@ export const EIMZOClient = {
           },
           function (event, data) {
             if (data.success) {
-              var id = data.keyId;
+              var id = data.keyId
               CAPIWS.callFunction(
                 {
                   name: 'change_password',
@@ -268,23 +268,23 @@ export const EIMZOClient = {
                 },
                 function (event, data) {
                   if (data.success) {
-                    success();
+                    success()
                   } else {
-                    fail(null, data.reason);
+                    fail(null, data.reason)
                   }
                 },
                 function (e) {
-                  fail(e, null);
-                },
-              );
+                  fail(e, null)
+                }
+              )
             } else {
-              fail(null, data.reason);
+              fail(null, data.reason)
             }
           },
           function (e) {
-            fail(e, null);
-          },
-        );
+            fail(e, null)
+          }
+        )
       } else if (vo.type === 'ftjc') {
         CAPIWS.callFunction(
           {
@@ -294,7 +294,7 @@ export const EIMZOClient = {
           },
           function (event, data) {
             if (data.success) {
-              var id = data.keyId;
+              var id = data.keyId
               CAPIWS.callFunction(
                 {
                   name: 'change_pin',
@@ -303,23 +303,23 @@ export const EIMZOClient = {
                 },
                 function (event, data) {
                   if (data.success) {
-                    success();
+                    success()
                   } else {
-                    fail(null, data.reason);
+                    fail(null, data.reason)
                   }
                 },
                 function (e) {
-                  fail(e, null);
-                },
-              );
+                  fail(e, null)
+                }
+              )
             } else {
-              fail(null, data.reason);
+              fail(null, data.reason)
             }
           },
           function (e) {
-            fail(e, null);
-          },
-        );
+            fail(e, null)
+          }
+        )
       }
     }
   },
@@ -332,9 +332,9 @@ export const EIMZOClient = {
       },
       function (event, data) {
         if (data.success) {
-          var pkcs7 = data.pkcs7_64;
+          var pkcs7 = data.pkcs7_64
           if (timestamper) {
-            var sn = data.signer_serial_number;
+            var sn = data.signer_serial_number
             timestamper(
               data.signature_hex,
               function (tst) {
@@ -346,52 +346,52 @@ export const EIMZOClient = {
                   },
                   function (event, data) {
                     if (data.success) {
-                      var pkcs7tst = data.pkcs7_64;
-                      success(pkcs7tst);
+                      var pkcs7tst = data.pkcs7_64
+                      success(pkcs7tst)
                     } else {
-                      fail(null, data.reason);
+                      fail(null, data.reason)
                     }
                   },
                   function (e) {
-                    fail(e, null);
-                  },
-                );
+                    fail(e, null)
+                  }
+                )
               },
-              fail,
-            );
+              fail
+            )
           } else {
-            success(pkcs7);
+            success(pkcs7)
           }
         } else {
-          fail(null, data.reason);
+          fail(null, data.reason)
         }
       },
       function (e) {
-        fail(e, null);
-      },
-    );
+        fail(e, null)
+      }
+    )
   },
   _getX500Val: function (s, f) {
-    var res = s.splitKeep(/,[A-Z]+=/g, true);
+    var res = s.splitKeep(/,[A-Z]+=/g, true)
     for (var i in res) {
-      var n = res[i].search((i > 0 ? ',' : '') + f + '=');
+      var n = res[i].search((i > 0 ? ',' : '') + f + '=')
       if (n !== -1) {
-        return res[i].slice(n + f.length + 1 + (i > 0 ? 1 : 0));
+        return res[i].slice(n + f.length + 1 + (i > 0 ? 1 : 0))
       }
     }
-    return '';
+    return ''
   },
   _findPfxs2: function (itemIdGen, itemUiGen, items, errors, callback) {
-    var itmkey0;
+    var itmkey0
     CAPIWS.callFunction(
       { plugin: 'pfx', name: 'list_all_certificates' },
       function (event, data) {
         if (data.success) {
           for (var rec in data.certificates) {
-            var el = data.certificates[rec];
-            var x500name_ex = el.alias.toUpperCase();
-            x500name_ex = x500name_ex.replace('1.2.860.3.16.1.1=', 'INN=');
-            x500name_ex = x500name_ex.replace('1.2.860.3.16.1.2=', 'PINFL=');
+            var el = data.certificates[rec]
+            var x500name_ex = el.alias.toUpperCase()
+            x500name_ex = x500name_ex.replace('1.2.860.3.16.1.1=', 'INN=')
+            x500name_ex = x500name_ex.replace('1.2.860.3.16.1.2=', 'PINFL=')
             var vo = {
               disk: el.disk,
               path: el.path,
@@ -399,7 +399,7 @@ export const EIMZOClient = {
               alias: el.alias,
               serialNumber: EIMZOClient._getX500Val(x500name_ex, 'SERIALNUMBER'),
               validFrom: new Date(
-                EIMZOClient._getX500Val(x500name_ex, 'VALIDFROM').replace(/\./g, '-').replace(' ', 'T'),
+                EIMZOClient._getX500Val(x500name_ex, 'VALIDFROM').replace(/\./g, '-').replace(' ', 'T')
               ),
               validTo: new Date(EIMZOClient._getX500Val(x500name_ex, 'VALIDTO').replace(/\./g, '-').replace(' ', 'T')),
               CN: EIMZOClient._getX500Val(x500name_ex, 'CN'),
@@ -411,37 +411,37 @@ export const EIMZOClient = {
               O: EIMZOClient._getX500Val(x500name_ex, 'O'),
               T: EIMZOClient._getX500Val(x500name_ex, 'T'),
               type: 'pfx',
-            };
-            if (!vo.TIN && !vo.PINFL) continue;
-            var itmkey = itemIdGen(vo, rec);
-            if (!itmkey0) {
-              itmkey0 = itmkey;
             }
-            var itm = itemUiGen(itmkey, vo);
-            items.push(itm);
+            if (!vo.TIN && !vo.PINFL) continue
+            var itmkey = itemIdGen(vo, rec)
+            if (!itmkey0) {
+              itmkey0 = itmkey
+            }
+            var itm = itemUiGen(itmkey, vo)
+            items.push(itm)
           }
         } else {
-          errors.push({ r: data.reason });
+          errors.push({ r: data.reason })
         }
-        callback(itmkey0);
+        callback(itmkey0)
       },
       function (e) {
-        errors.push({ e: e });
-        callback(itmkey0);
-      },
-    );
+        errors.push({ e: e })
+        callback(itmkey0)
+      }
+    )
   },
   _findTokens2: function (itemIdGen, itemUiGen, items, errors, callback) {
-    var itmkey0;
+    var itmkey0
     CAPIWS.callFunction(
       { plugin: 'ftjc', name: 'list_all_keys', arguments: [''] },
       function (event, data) {
         if (data.success) {
           for (var rec in data.tokens) {
-            var el = data.tokens[rec];
-            var x500name_ex = el.info.toUpperCase();
-            x500name_ex = x500name_ex.replace('1.2.860.3.16.1.1=', 'INN=');
-            x500name_ex = x500name_ex.replace('1.2.860.3.16.1.2=', 'PINFL=');
+            var el = data.tokens[rec]
+            var x500name_ex = el.info.toUpperCase()
+            x500name_ex = x500name_ex.replace('1.2.860.3.16.1.1=', 'INN=')
+            x500name_ex = x500name_ex.replace('1.2.860.3.16.1.2=', 'PINFL=')
             var vo = {
               cardUID: el.cardUID,
               statusInfo: el.statusInfo,
@@ -459,24 +459,24 @@ export const EIMZOClient = {
               O: EIMZOClient._getX500Val(x500name_ex, 'O'),
               T: EIMZOClient._getX500Val(x500name_ex, 'T'),
               type: 'ftjc',
-            };
-            if (!vo.TIN && !vo.PINFL) continue;
-            var itmkey = itemIdGen(vo, rec);
-            if (!itmkey0) {
-              itmkey0 = itmkey;
             }
-            var itm = itemUiGen(itmkey, vo);
-            items.push(itm);
+            if (!vo.TIN && !vo.PINFL) continue
+            var itmkey = itemIdGen(vo, rec)
+            if (!itmkey0) {
+              itmkey0 = itmkey
+            }
+            var itm = itemUiGen(itmkey, vo)
+            items.push(itm)
           }
         } else {
-          errors.push({ r: data.reason });
+          errors.push({ r: data.reason })
         }
-        callback(itmkey0);
+        callback(itmkey0)
       },
       function (e) {
-        errors.push({ e: e });
-        callback(itmkey0);
-      },
-    );
+        errors.push({ e: e })
+        callback(itmkey0)
+      }
+    )
   },
-};
+}

@@ -1,13 +1,13 @@
-import { cn } from '@/shared/lib/utils';
-import { getInitials } from '@/shared/utils';
-import { TemplateType } from '@/entities/admin/template';
+import { cn } from '@/shared/lib/utils'
+import { getInitials } from '@/shared/utils'
+import { TemplateType } from '@/entities/admin/template'
 
 interface TemplateTypeStyleMap {
   [key: string]: {
-    text: string;
-    border: string;
-    background: string;
-  };
+    text: string
+    border: string
+    background: string
+  }
 }
 
 const TEMPLATE_TYPE_STYLES: TemplateTypeStyleMap = {
@@ -31,27 +31,27 @@ const TEMPLATE_TYPE_STYLES: TemplateTypeStyleMap = {
     border: 'border-gray-200',
     text: 'text-gray-700',
   },
-};
+}
 
 interface TemplateTypeIconProps {
-  name: string;
-  type: TemplateType;
-  className?: string;
+  name: string
+  type: TemplateType
+  className?: string
 }
 
 export const TemplateTypeIcon = ({ name, type, className }: TemplateTypeIconProps) => {
-  const style = TEMPLATE_TYPE_STYLES[type] || TEMPLATE_TYPE_STYLES.default;
+  const style = TEMPLATE_TYPE_STYLES[type] || TEMPLATE_TYPE_STYLES.default
 
   return (
     <div
       className={cn(
-        'size-10 rounded-md flex items-center justify-center border',
+        'flex size-10 items-center justify-center rounded-md border',
         style.background,
         style.border,
-        className,
+        className
       )}
     >
-      <span className={cn('font-semibold text-sm', style.text)}>{getInitials(name)}</span>
+      <span className={cn('text-sm font-semibold', style.text)}>{getInitials(name)}</span>
     </div>
-  );
-};
+  )
+}

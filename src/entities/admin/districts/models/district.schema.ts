@@ -1,16 +1,16 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const districtBaseSchema = {
   name: z.string().min(1, 'Tuman nomi majburiy'),
   soato: z.coerce.string().min(1, 'MHOBTni kiritish majburiy'),
   number: z.coerce.string().min(1, 'Raqamni kiritish majburiy'),
   regionId: z.string().min(1, 'Viloyatni tanlash majburiy'),
-};
+}
 
 export const districtSchema = z.object({
   id: z.number().optional(),
   ...districtBaseSchema,
-});
+})
 
 export const schemas = {
   create: z.object(districtBaseSchema),
@@ -24,4 +24,4 @@ export const schemas = {
     size: z.number().optional().default(20),
   }),
   single: districtSchema,
-};
+}

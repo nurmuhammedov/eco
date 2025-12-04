@@ -1,3 +1,3 @@
-import { createQueryKeys } from '@/shared/lib';
+import { createQueryKeys } from '@/shared/lib'
 
-export const committeeStaffKeys = createQueryKeys('committee-staffs');
+export const committeeStaffKeys = createQueryKeys('committee-staffs')

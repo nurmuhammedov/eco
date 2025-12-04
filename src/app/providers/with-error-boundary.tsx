@@ -1,6 +1,6 @@
-import React from 'react';
-import { Toaster } from 'sonner';
-import { ErrorBoundary } from '@/widgets/error-boundary';
+import React from 'react'
+import { Toaster } from 'sonner'
+import { ErrorBoundary } from '@/widgets/error-boundary'
 
 export const withErrorBoundary = (Component: React.ComponentType) => {
   return function WithErrorBoundary(props: any) {
@@ -9,6 +9,6 @@ export const withErrorBoundary = (Component: React.ComponentType) => {
         <Toaster expand />
         <Component {...props} />
       </ErrorBoundary>
-    );
-  };
-};
+    )
+  }
+}

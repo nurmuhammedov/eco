@@ -1,1 +1,1 @@
-declare module 'react-simple-captcha';
+declare module 'react-simple-captcha'

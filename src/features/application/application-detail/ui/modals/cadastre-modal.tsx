@@ -1,29 +1,29 @@
-import { ApplicationModal } from '@/features/application/create-application';
-import { Button } from '@/shared/components/ui/button.tsx';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx';
-import { Input } from '@/shared/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import { Textarea } from '@/shared/components/ui/textarea.tsx';
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts';
-import { useEIMZO } from '@/shared/hooks';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { DialogClose } from '@radix-ui/react-dialog';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
-import { z } from 'zod';
+import { ApplicationModal } from '@/features/application/create-application'
+import { Button } from '@/shared/components/ui/button.tsx'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { Input } from '@/shared/components/ui/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import { Textarea } from '@/shared/components/ui/textarea.tsx'
+import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts'
+import { useEIMZO } from '@/shared/hooks'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { DialogClose } from '@radix-ui/react-dialog'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useParams } from 'react-router-dom'
+import { z } from 'zod'
 
 const schema = z.object({
   conclusion: z.string(),
-});
+})
 
 const schema2 = z.object({
   registryNumber: z.string(),
-});
+})
 
 const RejectApplicationModal = ({ url = 'cadastre-passport' }: any) => {
-  const [isShow, setIsShow] = useState(false);
+  const [isShow, setIsShow] = useState(false)
 
   const {
     error,
@@ -39,7 +39,7 @@ const RejectApplicationModal = ({ url = 'cadastre-passport' }: any) => {
     submitEndpoint: `/appeals/${url}/confirmation`,
     successMessage: 'Ariza muvaffaqiyatli tasdiqlandi!',
     queryKey: QK_APPLICATIONS,
-  });
+  })
 
   const {
     error: rejectError,
@@ -55,26 +55,26 @@ const RejectApplicationModal = ({ url = 'cadastre-passport' }: any) => {
     submitEndpoint: `/appeals/${url}/rejection`,
     successMessage: 'Ariza muvaffaqiyatli qaytarildi!',
     queryKey: QK_APPLICATIONS,
-  });
+  })
 
   const form = useForm<z.infer<typeof schema2>>({
     resolver: zodResolver(schema2),
-  });
+  })
 
   const rejectForm = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-  });
+  })
 
-  const { id } = useParams();
+  const { id } = useParams()
 
   function onSubmit(data: z.infer<typeof schema2>) {
-    handleCreateApplication({ ...data, appealId: id });
-    setIsShow(false);
+    handleCreateApplication({ ...data, appealId: id })
+    setIsShow(false)
   }
 
   function onRejectSubmit(data: z.infer<typeof schema>) {
-    rejectCreateApplication({ ...data, appealId: id });
-    setIsShow(false);
+    rejectCreateApplication({ ...data, appealId: id })
+    setIsShow(false)
   }
 
   return (
@@ -83,7 +83,7 @@ const RejectApplicationModal = ({ url = 'cadastre-passport' }: any) => {
         <DialogTrigger asChild>
           <Button>Arizani ijro etish</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[725px] max-h-[95vh] overflow-y-auto">
+        <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[725px]">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Arizani ijro etish</DialogTitle>
           </DialogHeader>
@@ -109,7 +109,7 @@ const RejectApplicationModal = ({ url = 'cadastre-passport' }: any) => {
                       </FormItem>
                     )}
                   />
-                  <div className="grid grid-cols-2 gap-3 mt-35">
+                  <div className="mt-35 grid grid-cols-2 gap-3">
                     <DialogClose asChild>
                       <Button variant="outline">Bekor qilish</Button>
                     </DialogClose>
@@ -159,8 +159,8 @@ const RejectApplicationModal = ({ url = 'cadastre-passport' }: any) => {
         isLoading={isLoading}
         documentUrl={documentUrl!}
         onClose={() => {
-          handleCloseModal();
-          setIsShow(true);
+          handleCloseModal()
+          setIsShow(true)
         }}
         isPdfLoading={isPdfLoading}
         submitApplicationMetaData={submitApplicationMetaData}
@@ -171,14 +171,14 @@ const RejectApplicationModal = ({ url = 'cadastre-passport' }: any) => {
         isLoading={isRejectLoading}
         documentUrl={rejectDocumentUrl!}
         onClose={() => {
-          rejectCloseModal();
-          setIsShow(true);
+          rejectCloseModal()
+          setIsShow(true)
         }}
         isPdfLoading={rejectPdfLoading}
         submitApplicationMetaData={rejectSubmitApplicationMetaData}
       />
     </>
-  );
-};
+  )
+}
 
-export default RejectApplicationModal;
+export default RejectApplicationModal

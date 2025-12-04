@@ -1,5 +1,5 @@
 // src/features/editor/lib/styleUtils.ts
-import { CSSProperties, useMemo } from 'react';
+import { CSSProperties, useMemo } from 'react'
 
 /**
  * Custom hook for editor styling
@@ -17,8 +17,8 @@ export const useEditorStyles = (style?: CSSProperties) => {
       overflow: 'hidden',
       position: 'relative',
       ...style, // Apply custom styles
-    };
-  }, [style]);
+    }
+  }, [style])
 
   // Add additional style properties if needed
   const editorContentStyle = useMemo<string>(() => {
@@ -158,11 +158,11 @@ export const useEditorStyles = (style?: CSSProperties) => {
         margin-left: 20px;
         color: #666;
       }
-    `;
-  }, []);
+    `
+  }, [])
 
   return {
     editorWrapperStyle,
     editorContentStyle,
-  };
-};
+  }
+}

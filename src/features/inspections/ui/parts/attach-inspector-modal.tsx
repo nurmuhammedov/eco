@@ -1,19 +1,19 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx';
-import { Button } from '@/shared/components/ui/button.tsx';
-import { DialogClose } from '@radix-ui/react-dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { formatDate, parseISO } from 'date-fns';
-import DatePicker from '@/shared/components/ui/datepicker.tsx';
-import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select.tsx';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { useMemo, useState } from 'react';
-import { MultiSelect } from '@/shared/components/ui/multi-select.tsx';
-import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection';
-import { useCustomSearchParams, useEIMZO } from '@/shared/hooks';
-import { ApplicationModal } from '@/features/application/create-application';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx'
+import { Button } from '@/shared/components/ui/button.tsx'
+import { DialogClose } from '@radix-ui/react-dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { formatDate, parseISO } from 'date-fns'
+import DatePicker from '@/shared/components/ui/datepicker.tsx'
+import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select.tsx'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { useMemo, useState } from 'react'
+import { MultiSelect } from '@/shared/components/ui/multi-select.tsx'
+import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection'
+import { useCustomSearchParams, useEIMZO } from '@/shared/hooks'
+import { ApplicationModal } from '@/features/application/create-application'
 
 const schema = z.object({
   startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
@@ -24,15 +24,15 @@ const schema = z.object({
     z.object({
       resultIdForObject: z.string(),
       checklistCategoryIdList: z.array(z.number()).min(1, FORM_ERROR_MESSAGES.required),
-    }),
+    })
   ),
-});
+})
 
 const AttachInspectorModal = ({ data = [] }: any) => {
-  const [isShow, setIsShow] = useState(false);
+  const [isShow, setIsShow] = useState(false)
   const {
     paramsObject: { inspectionId: id = '' },
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -42,22 +42,22 @@ const AttachInspectorModal = ({ data = [] }: any) => {
         checklistCategoryIdList: [],
       })),
     },
-  });
+  })
 
-  const { data: inspectorSelectData } = useInspectorSelect(isShow);
-  const { data: categoryTypes } = useCategoryTypeSelectQuery(undefined, isShow);
+  const { data: inspectorSelectData } = useInspectorSelect(isShow)
+  const { data: categoryTypes } = useCategoryTypeSelectQuery(undefined, isShow)
 
   const filteredCategoryTypes = useMemo(() => {
-    if (!categoryTypes) return {};
+    if (!categoryTypes) return {}
 
     return data.reduce(
       (acc: any, obj: any) => {
-        acc[obj.id] = categoryTypes.filter((ct: any) => ct.type === obj.belongType);
-        return acc;
+        acc[obj.id] = categoryTypes.filter((ct: any) => ct.type === obj.belongType)
+        return acc
       },
-      {} as Record<string, any[]>,
-    );
-  }, [categoryTypes, data]);
+      {} as Record<string, any[]>
+    )
+  }, [categoryTypes, data])
 
   const {
     error,
@@ -74,7 +74,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
     queryKey: 'inspections-attach-inspectors',
     successMessage: 'Muvaffaqiyatli saqlandi!',
     onSuccessNavigateTo: `/inspections`,
-  });
+  })
 
   function onSubmit(values: z.infer<typeof schema>) {
     handleCreateApplication({
@@ -83,9 +83,9 @@ const AttachInspectorModal = ({ data = [] }: any) => {
       endDate: formatDate(values.endDate, 'yyyy-MM-dd'),
       inspectorIdList: values.inspectorIdList,
       checklistDtoList: values.checklistDtoList,
-    });
+    })
 
-    setIsShow(false);
+    setIsShow(false)
   }
 
   return (
@@ -95,19 +95,19 @@ const AttachInspectorModal = ({ data = [] }: any) => {
           <Button size="sm">Inspektorni(larni) belgilash</Button>
         </DialogTrigger>
 
-        <DialogContent className="sm:max-w-[750px] max-h-[95vh] overflow-y-auto">
+        <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[750px]">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Inspektorni(larni) belgilash</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="grid grid-cols-2 gap-2 mb-4">
+              <div className="mb-4 grid grid-cols-2 gap-2">
                 <FormField
                   control={form.control}
                   name="startDate"
                   render={({ field }) => {
-                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                     return (
                       <FormItem>
                         <FormLabel required>Tekshiruv boshlanish sanasi</FormLabel>
@@ -118,7 +118,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                         />
                         <FormMessage />
                       </FormItem>
-                    );
+                    )
                   }}
                 />
 
@@ -126,7 +126,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                   control={form.control}
                   name="endDate"
                   render={({ field }) => {
-                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                     return (
                       <FormItem>
                         <FormLabel required>Tekshiruv tugash sanasi</FormLabel>
@@ -137,7 +137,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                         />
                         <FormMessage />
                       </FormItem>
-                    );
+                    )
                   }}
                 />
 
@@ -164,8 +164,8 @@ const AttachInspectorModal = ({ data = [] }: any) => {
 
               <div className="mt-6">
                 {form.watch('checklistDtoList').map((block, index) => (
-                  <div key={block.resultIdForObject} className="border rounded-xl p-4 mb-4 bg-slate-50">
-                    <div className="font-semibold text-sm mb-2 text-slate-700">
+                  <div key={block.resultIdForObject} className="mb-4 rounded-xl border bg-slate-50 p-4">
+                    <div className="mb-2 text-sm font-semibold text-slate-700">
                       {data[index].belongName} | {data[index].belongRegistryNumber}
                     </div>
 
@@ -195,7 +195,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                 ))}
               </div>
 
-              <div className="grid grid-cols-2 gap-3 mt-8">
+              <div className="mt-8 grid grid-cols-2 gap-3">
                 <DialogClose asChild>
                   <Button disabled={isLoading} variant="outline">
                     Bekor qilish
@@ -217,13 +217,13 @@ const AttachInspectorModal = ({ data = [] }: any) => {
         documentUrl={documentUrl || ''}
         isPdfLoading={isPdfLoading}
         onClose={() => {
-          handleCloseModal();
-          setIsShow(true);
+          handleCloseModal()
+          setIsShow(true)
         }}
         submitApplicationMetaData={submitApplicationMetaData}
       />
     </>
-  );
-};
+  )
+}
 
-export default AttachInspectorModal;
+export default AttachInspectorModal

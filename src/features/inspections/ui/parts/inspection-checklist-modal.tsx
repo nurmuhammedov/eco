@@ -1,14 +1,14 @@
-import { useForm, useFieldArray } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Button } from '@/shared/components/ui/button.tsx';
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/shared/components/ui/form.tsx';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx';
-import { Input } from '@/shared/components/ui/input';
-import { MultiSelect } from '@/shared/components/ui/multi-select.tsx';
+import { useForm, useFieldArray } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Button } from '@/shared/components/ui/button.tsx'
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/shared/components/ui/form.tsx'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx'
+import { Input } from '@/shared/components/ui/input'
+import { MultiSelect } from '@/shared/components/ui/multi-select.tsx'
 
-import { useCustomSearchParams, useEIMZO } from '@/shared/hooks';
-import { ApplicationModal } from '@/features/application/create-application';
+import { useCustomSearchParams, useEIMZO } from '@/shared/hooks'
+import { ApplicationModal } from '@/features/application/create-application'
 
 const articleOptions = [
   { id: 'ARTICLE_55', name: '55-модда' },
@@ -16,7 +16,7 @@ const articleOptions = [
   { id: 'ARTICLE_97', name: '97-модда' },
   { id: 'ARTICLE_97_1', name: '97.1-модда' },
   { id: 'ARTICLE_98', name: '98-модда' },
-];
+]
 
 const schema = z.object({
   articleList: z
@@ -30,19 +30,19 @@ const schema = z.object({
       z.object({
         fullName: z.string({ required_error: 'Majburiy maydon' }).min(1, 'Majburiy maydon'),
         position: z.string({ required_error: 'Majburiy maydon' }).min(1, 'Majburiy maydon'),
-      }),
+      })
     )
     .min(1, 'Kamida bitta foydalanuvchi qo‘shilishi kerak'),
-});
+})
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<typeof schema>
 
 const AttachInspectorModal = ({ items = [], resultId }: any) => {
   const {
     addParams,
     removeParams,
     paramsObject: { modal = '' },
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
 
   const {
     error,
@@ -59,10 +59,10 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
     queryKey: '/inspection-results',
     successMessage: 'Muvaffaqiyatli saqlandi!',
     onEnd: () => {
-      removeParams('modal');
-      form.reset();
+      removeParams('modal')
+      form.reset()
     },
-  });
+  })
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -72,12 +72,12 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
       punishedEmployeePosition: '',
       users: [{ fullName: '', position: '' }],
     },
-  });
+  })
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'users',
-  });
+  })
 
   const onSubmit = (data: FormValues) => {
     handleCreateApplication({
@@ -89,30 +89,30 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
         fullName: data.punishedEmployeeFullName,
       },
       participants: data.users,
-    });
-  };
+    })
+  }
 
   return (
     <>
       <Dialog
         onOpenChange={(val) => {
-          form.reset();
+          form.reset()
           if (val) {
-            addParams({ modal: 'addUsers' });
+            addParams({ modal: 'addUsers' })
           } else {
-            removeParams('modal');
+            removeParams('modal')
           }
         }}
         open={modal === 'addUsers'}
       >
-        <DialogContent className="sm:max-w-[800px] max-h-[95vh] overflow-y-auto">
+        <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[800px]">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Maʼlumotlarni to‘ldiring</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="border rounded-xl p-4 space-y-4 bg-slate-50">
+              <div className="space-y-4 rounded-xl border bg-slate-50 p-4">
                 <h3 className="font-semibold">Ko‘rilgan choralar</h3>
 
                 <FormField
@@ -211,8 +211,8 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
                   type="button"
                   variant="outline"
                   onClick={() => {
-                    form.reset();
-                    removeParams('modal');
+                    form.reset()
+                    removeParams('modal')
                   }}
                 >
                   Bekor qilish
@@ -232,12 +232,12 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
         documentUrl={documentUrl || ''}
         isPdfLoading={isPdfLoading}
         onClose={() => {
-          handleCloseModal();
+          handleCloseModal()
         }}
         submitApplicationMetaData={submitApplicationMetaData}
       />
     </>
-  );
-};
+  )
+}
 
-export default AttachInspectorModal;
+export default AttachInspectorModal

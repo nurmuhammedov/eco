@@ -1,28 +1,28 @@
-import { useQuery } from '@tanstack/react-query';
-import { inspectionsApi } from '@/features/inspections/model/inspections.model.ts';
-import { QK_INSPECTION } from '@/shared/constants/query-keys.ts';
-import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts';
+import { useQuery } from '@tanstack/react-query'
+import { inspectionsApi } from '@/features/inspections/model/inspections.model.ts'
+import { QK_INSPECTION } from '@/shared/constants/query-keys.ts'
+import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts'
 
 export const useObjectList = () => {
   const {
     paramsObject: { inspectionId = '' },
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
 
   return useQuery({
     queryKey: [QK_INSPECTION, inspectionId, 'list'],
     queryFn: () => inspectionsApi.getObjectList(inspectionId),
     enabled: !!inspectionId,
-  });
-};
+  })
+}
 
 export const useObjectListByPagination = () => {
   const {
     paramsObject: { inspectionId = '', page = 1, size = 10 },
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
 
   return useQuery({
     queryKey: [QK_INSPECTION, inspectionId, page, size],
     queryFn: () => inspectionsApi.getObjectListByPagination({ page, size }, inspectionId),
     enabled: !!inspectionId,
-  });
-};
+  })
+}

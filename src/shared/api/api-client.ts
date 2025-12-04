@@ -1,14 +1,14 @@
-import type { ApiResponse, ResponseData } from '@/shared/types/api';
-import { AxiosError, AxiosProgressEvent } from 'axios';
-import { axiosInstance } from './axios-instance';
+import type { ApiResponse, ResponseData } from '@/shared/types/api'
+import { AxiosError, AxiosProgressEvent } from 'axios'
+import { axiosInstance } from './axios-instance'
 
-type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
+type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete'
 
-type RequestParams = Record<string, string | number | boolean | null | undefined | object>;
+type RequestParams = Record<string, string | number | boolean | null | undefined | object>
 
-type RequestHeaders = Record<string, string>;
+type RequestHeaders = Record<string, string>
 
-type ProgressCallback = (progressEvent: AxiosProgressEvent) => void;
+type ProgressCallback = (progressEvent: AxiosProgressEvent) => void
 
 async function apiRequest<T>(
   method: HttpMethod,
@@ -17,7 +17,7 @@ async function apiRequest<T>(
   headers?: RequestHeaders,
   onUploadProgress?: ProgressCallback,
   usePagination?: boolean,
-  downloadFile?: boolean,
+  downloadFile?: boolean
 ): Promise<ApiResponse<any>> {
   try {
     const requestConfig = {
@@ -26,40 +26,40 @@ async function apiRequest<T>(
       headers,
       onUploadProgress,
       ...(method === 'get' || method === 'delete' ? { params: payload as RequestParams } : { data: payload as object }),
-    };
+    }
 
     if (usePagination) {
-      const response = await axiosInstance.request<ApiResponse<ResponseData<T>>>(requestConfig);
+      const response = await axiosInstance.request<ApiResponse<ResponseData<T>>>(requestConfig)
 
       return {
         success: true,
         status: response.status,
         data: response.data.data,
-      };
+      }
     } else if (downloadFile) {
       const response = await axiosInstance.request<T>({
         ...requestConfig,
         responseType: 'blob',
-      });
+      })
 
       return {
         success: true,
         status: response.status,
         data: response.data,
-      };
+      }
     } else {
-      const response = await axiosInstance.request<T>(requestConfig);
+      const response = await axiosInstance.request<T>(requestConfig)
       return {
         success: true,
         status: response.status,
         data: response.data,
-      };
+      }
     }
   } catch (error) {
     const axiosError = error as AxiosError<{
-      message?: string;
-      errors?: Record<string, string>;
-    }>;
+      message?: string
+      errors?: Record<string, string>
+    }>
 
     // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw {
@@ -71,7 +71,7 @@ async function apiRequest<T>(
         axiosError.response?.data?.message ||
         axiosError.message ||
         'Serverda nomaʼlum xatolik yuz berdi. Xatolik haqida xabar bering!',
-    };
+    }
   }
 }
 
@@ -80,44 +80,44 @@ export const apiClient = {
     url: string,
     params?: RequestParams,
     headers?: RequestHeaders,
-    onDownloadProgress?: ProgressCallback,
+    onDownloadProgress?: ProgressCallback
   ): Promise<ApiResponse<T>> => apiRequest<T>('get', url, params, headers, onDownloadProgress),
 
   getWithPagination: <T>(
     url: string,
     params?: RequestParams,
     headers?: RequestHeaders,
-    onDownloadProgress?: ProgressCallback,
+    onDownloadProgress?: ProgressCallback
   ): Promise<ApiResponse<ResponseData<T>>> => apiRequest<T>('get', url, params, headers, onDownloadProgress, true),
 
   downloadFile: <T>(
     url: string,
     params?: RequestParams,
     headers?: RequestHeaders,
-    onDownloadProgress?: ProgressCallback,
+    onDownloadProgress?: ProgressCallback
   ): Promise<ApiResponse<T>> => apiRequest('get', url, params, headers, onDownloadProgress, false, true),
 
   post: <T, B extends object = object>(
     url: string,
     body?: B,
     headers?: RequestHeaders,
-    onUploadProgress?: ProgressCallback,
+    onUploadProgress?: ProgressCallback
   ): Promise<ApiResponse<T>> => apiRequest<T>('post', url, body, headers, onUploadProgress),
 
   put: <T, B extends object = object>(
     url: string,
     body: B,
     headers?: RequestHeaders,
-    onUploadProgress?: ProgressCallback,
+    onUploadProgress?: ProgressCallback
   ): Promise<ApiResponse<T>> => apiRequest<T>('put', url, body, headers, onUploadProgress),
 
   patch: <T, B extends object = object>(
     url: string,
     body: B,
     headers?: RequestHeaders,
-    onUploadProgress?: ProgressCallback,
+    onUploadProgress?: ProgressCallback
   ): Promise<ApiResponse<T>> => apiRequest<T>('patch', url, body, headers, onUploadProgress),
 
   delete: <T>(url: string, params?: RequestParams, headers?: RequestHeaders, body?: any): Promise<ApiResponse<T>> =>
     apiRequest<T>('delete', url, params, headers, body),
-};
+}

@@ -1,11 +1,11 @@
-import { getTime } from '@/shared/lib/get-time';
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { getTime } from '@/shared/lib/get-time'
+import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import {
   FilterTerritorialStaffDTO,
   territorialStaffAPI,
   territorialStaffKeys,
   TerritorialStaffResponse,
-} from '@/entities/admin/territorial-staffs';
+} from '@/entities/admin/territorial-staffs'
 
 export const useTerritorialStaffListQuery = (filters: FilterTerritorialStaffDTO) => {
   return useQuery({
@@ -13,8 +13,8 @@ export const useTerritorialStaffListQuery = (filters: FilterTerritorialStaffDTO)
     queryKey: territorialStaffKeys.list('territorial-staff', filters),
     queryFn: () => territorialStaffAPI.list(filters),
     placeholderData: (previousData) => previousData,
-  });
-};
+  })
+}
 
 export const useTerritorialStaffQuery = (
   id: string,
@@ -26,7 +26,7 @@ export const useTerritorialStaffQuery = (
       ReturnType<typeof territorialStaffKeys.detail>
     >,
     'queryKey' | 'queryFn'
-  >,
+  >
 ) => {
   return useQuery({
     enabled: !!id,
@@ -35,5 +35,5 @@ export const useTerritorialStaffQuery = (
     queryKey: territorialStaffKeys.detail('territorial-staff', id),
     placeholderData: (previousData) => previousData,
     ...options,
-  });
-};
+  })
+}

@@ -1,16 +1,16 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 const ERROR_MESSAGES = {
   name_required: 'Nomi kiritilishi shart',
   child_equipment_id_required: 'Attraksion turi tanlanishi shart',
-};
+}
 
 export const attractionTypeBaseSchema = {
   name: z.string().min(1, ERROR_MESSAGES.name_required),
   childEquipmentId: z.coerce.string({
     errorMap: () => ({ message: ERROR_MESSAGES.child_equipment_id_required }),
   }),
-};
+}
 
 export const schemas = {
   create: z.object(attractionTypeBaseSchema),
@@ -29,4 +29,4 @@ export const schemas = {
     name: z.string(),
     childEquipment: z.string(),
   }),
-};
+}

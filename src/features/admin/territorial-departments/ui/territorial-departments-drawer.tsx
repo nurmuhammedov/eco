@@ -1,22 +1,22 @@
-import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { useUIActionLabel } from '@/shared/hooks';
-import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { Fragment, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useTerritorialDepartmentsForm } from '../model/use-territorial-departments-form';
+import { BaseDrawer } from '@/shared/components/common/base-drawer'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { useUIActionLabel } from '@/shared/hooks'
+import { useTerritorialDepartmentsDrawer } from '@/shared/hooks/entity-hooks'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { Fragment, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useTerritorialDepartmentsForm } from '../model/use-territorial-departments-form'
 
 export const TerritorialDepartmentsDrawer = () => {
-  const { t } = useTranslation('common');
-  const { isOpen, onClose, isCreate, mode } = useTerritorialDepartmentsDrawer();
-  const { form, onSubmit, isPending, isFetching, regionOptions: regions } = useTerritorialDepartmentsForm();
-  const modeState = useUIActionLabel(mode);
+  const { t } = useTranslation('common')
+  const { isOpen, onClose, isCreate, mode } = useTerritorialDepartmentsDrawer()
+  const { form, onSubmit, isPending, isFetching, regionOptions: regions } = useTerritorialDepartmentsForm()
+  const modeState = useUIActionLabel(mode)
 
-  const regionOptions = useMemo(() => getSelectOptions(regions), [regions]);
+  const regionOptions = useMemo(() => getSelectOptions(regions), [regions])
 
   return (
     <BaseDrawer
@@ -58,7 +58,7 @@ export const TerritorialDepartmentsDrawer = () => {
                         value={String(field.value)}
                         onValueChange={(value) => {
                           if (value) {
-                            field.onChange(Number(value));
+                            field.onChange(Number(value))
                           }
                         }}
                       >
@@ -77,5 +77,5 @@ export const TerritorialDepartmentsDrawer = () => {
         </div>
       </Form>
     </BaseDrawer>
-  );
-};
+  )
+}

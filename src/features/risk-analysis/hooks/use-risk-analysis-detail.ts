@@ -1,14 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
-import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api.ts';
-import { useSearchParams } from 'react-router-dom';
-import { QK_RISK_ANALYSIS } from '@/shared/constants/query-keys.ts';
+import { useQuery } from '@tanstack/react-query'
+import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api.ts'
+import { useSearchParams } from 'react-router-dom'
+import { QK_RISK_ANALYSIS } from '@/shared/constants/query-keys.ts'
 
 export const useRiskAnalysisDetail = () => {
-  const [searchParams] = useSearchParams();
-  const tin = searchParams.get('tin');
-  const id = searchParams.get('id');
-  const type = searchParams.get('type');
-  const intervalId = searchParams.get('intervalId');
+  const [searchParams] = useSearchParams()
+  const tin = searchParams.get('tin')
+  const id = searchParams.get('id')
+  const type = searchParams.get('type')
+  const intervalId = searchParams.get('intervalId')
   // const navigate = useNavigate();
 
   // if (!intervalId || !id || !tin) {
@@ -23,7 +23,7 @@ export const useRiskAnalysisDetail = () => {
           id,
           tin,
         },
-        type,
+        type
       ),
-  });
-};
+  })
+}

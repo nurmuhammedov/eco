@@ -1,9 +1,9 @@
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { HFSphere } from '@/shared/types';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { z } from 'zod';
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { HFSphere } from '@/shared/types'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { z } from 'zod'
 
-export const HFSphereEnum = z.enum(Object.values(HFSphere) as [string, ...string[]]);
+export const HFSphereEnum = z.enum(Object.values(HFSphere) as [string, ...string[]])
 
 export const RegisterIllegalHFSchema = z.object({
   phoneNumber: z
@@ -47,4 +47,4 @@ export const RegisterIllegalHFSchema = z.object({
   fireSafetyConclusionPath: z.string().optional(),
   replyLetterPath: z.string().optional(),
   filesBuilt: z.boolean().optional(),
-});
+})

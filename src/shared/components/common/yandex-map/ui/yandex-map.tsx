@@ -1,7 +1,7 @@
-import React, { useCallback, useRef } from 'react';
-import { MAP_DEFAULTS } from '../model/yandex-map-config';
-import { Map, Placemark, YMaps } from '@pbe/react-yandex-maps';
-import type { Coordinate, YandexMapProps } from '../model/yandex-map-types';
+import React, { useCallback, useRef } from 'react'
+import { MAP_DEFAULTS } from '../model/yandex-map-config'
+import { Map, Placemark, YMaps } from '@pbe/react-yandex-maps'
+import type { Coordinate, YandexMapProps } from '../model/yandex-map-types'
 
 const YandexMap: React.FC<YandexMapProps> = ({
   onMapClick,
@@ -11,15 +11,15 @@ const YandexMap: React.FC<YandexMapProps> = ({
   height = MAP_DEFAULTS.height,
   center = MAP_DEFAULTS.center,
 }) => {
-  const mapRef = useRef<ymaps.Map | null>(null);
+  const mapRef = useRef<ymaps.Map | null>(null)
 
   const handleMapClick = useCallback(
     (e: ymaps.IEvent) => {
-      const coords = e.get('coords') as Coordinate;
-      onMapClick?.([coords]);
+      const coords = e.get('coords') as Coordinate
+      onMapClick?.([coords])
     },
-    [onMapClick],
-  );
+    [onMapClick]
+  )
 
   return (
     <YMaps>
@@ -35,7 +35,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
         ))}
       </Map>
     </YMaps>
-  );
-};
+  )
+}
 
-export default React.memo(YandexMap);
+export default React.memo(YandexMap)

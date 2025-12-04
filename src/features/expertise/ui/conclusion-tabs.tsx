@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { cn } from '@/shared/lib/utils';
-import { Archive, Clock, FileText, ShieldAlert, Star, ShieldX } from 'lucide-react';
-import { ReactNode } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
+import { cn } from '@/shared/lib/utils'
+import { Archive, Clock, FileText, ShieldAlert, Star, ShieldX } from 'lucide-react'
+import { ReactNode } from 'react'
 
 export enum TabKey {
   ALL = 'ALL',
@@ -13,9 +13,9 @@ export enum TabKey {
 }
 
 interface PermitTabsProps {
-  activeTab: TabKey;
-  onTabChange: (tabKey: string) => void;
-  counts?: Record<string, number>;
+  activeTab: TabKey
+  onTabChange: (tabKey: string) => void
+  counts?: Record<string, number>
 }
 
 const tabIcons: Record<TabKey, ReactNode> = {
@@ -25,7 +25,7 @@ const tabIcons: Record<TabKey, ReactNode> = {
   [TabKey.BI]: <ShieldAlert className="h-5 w-5" />,
   [TabKey.XD]: <Clock className="h-5 w-5" />,
   [TabKey.IX]: <ShieldX className="h-5 w-5" />,
-};
+}
 
 export const tabs = [
   { key: TabKey.ALL, label: 'Barchasi' },
@@ -41,24 +41,24 @@ export const tabs = [
   { key: TabKey.BI, label: 'Xavfli ishlab chiqarish obyektidagi binolar va inshootlar (BI)' },
   { key: TabKey.XD, label: 'Sanoat xavfsizligi deklaratsiyasi (XD)' },
   { key: TabKey.IX, label: 'Xavfli ishlab chiqarish obyektlarini identifikatsiyalash (IX)' },
-];
+]
 
 export const ConclusionTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
       {tabs.map((tab) => {
-        const isActive = activeTab == tab.key;
+        const isActive = activeTab == tab.key
 
         return (
           <Card
             key={tab.key}
             onClick={() => onTabChange(tab.key)}
             className={cn(
-              'cursor-pointer transition-all hover:shadow-md py-3 gap-1',
-              isActive ? 'bg-teal text-white shadow' : 'bg-card text-card-foreground border-border',
+              'cursor-pointer gap-1 py-3 transition-all hover:shadow-md',
+              isActive ? 'bg-teal text-white shadow' : 'bg-card text-card-foreground border-border'
             )}
           >
-            <CardContent className="pb-1 flex flex-row items-center justify-between space-y-0 ">
+            <CardContent className="flex flex-row items-center justify-between space-y-0 pb-1">
               <div className="text-2xl font-bold">{counts?.[tab.key] || 0}</div>
               <span className={cn(!isActive && 'text-muted-foreground')}>{tabIcons[tab.key as unknown as TabKey]}</span>
             </CardContent>
@@ -66,8 +66,8 @@ export const ConclusionTabs = ({ activeTab, onTabChange, counts }: PermitTabsPro
               <CardTitle className="text-sm font-medium">{tab.label}</CardTitle>
             </CardHeader>
           </Card>
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}

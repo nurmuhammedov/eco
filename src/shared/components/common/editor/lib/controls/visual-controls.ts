@@ -47,49 +47,49 @@ export const registerVisualControls = (editor: any): void => {
           },
         ],
         onSubmit: (api: any) => {
-          const data = api.getData();
-          const diagramType = data.diagramType;
-          const itemCount = parseInt(data.itemCount, 10) || 3;
+          const data = api.getData()
+          const diagramType = data.diagramType
+          const itemCount = parseInt(data.itemCount, 10) || 3
 
           // Generate appropriate SmartArt HTML based on selection
-          let smartArtHtml = '';
+          let smartArtHtml = ''
 
           switch (diagramType) {
             case 'process':
-              smartArtHtml = generateProcessDiagram(itemCount);
-              break;
+              smartArtHtml = generateProcessDiagram(itemCount)
+              break
             case 'cycle':
-              smartArtHtml = generateCycleDiagram(itemCount);
-              break;
+              smartArtHtml = generateCycleDiagram(itemCount)
+              break
             case 'hierarchy':
-              smartArtHtml = generateHierarchyDiagram(itemCount);
-              break;
+              smartArtHtml = generateHierarchyDiagram(itemCount)
+              break
             case 'relationship':
-              smartArtHtml = generateRelationshipDiagram(itemCount);
-              break;
+              smartArtHtml = generateRelationshipDiagram(itemCount)
+              break
             case 'matrix':
-              smartArtHtml = generateMatrixDiagram(itemCount);
-              break;
+              smartArtHtml = generateMatrixDiagram(itemCount)
+              break
             case 'pyramid':
-              smartArtHtml = generatePyramidDiagram(itemCount);
-              break;
+              smartArtHtml = generatePyramidDiagram(itemCount)
+              break
             default:
-              smartArtHtml = generateProcessDiagram(itemCount);
+              smartArtHtml = generateProcessDiagram(itemCount)
           }
 
-          editor.insertContent(smartArtHtml);
-          api.close();
+          editor.insertContent(smartArtHtml)
+          api.close()
         },
-      });
+      })
     },
-  });
-};
+  })
+}
 
 /**
  * Generate process diagram HTML
  */
 const generateProcessDiagram = (itemCount: number): string => {
-  let items = '';
+  let items = ''
   for (let i = 1; i <= itemCount; i++) {
     items += `
       <div class="process-item">
@@ -99,7 +99,7 @@ const generateProcessDiagram = (itemCount: number): string => {
         </div>
         ${i < itemCount ? '<div class="process-arrow">→</div>' : ''}
       </div>
-    `;
+    `
   }
 
   return `
@@ -149,15 +149,15 @@ const generateProcessDiagram = (itemCount: number): string => {
         }
       </style>
     </div>
-  `;
-};
+  `
+}
 
 /**
  * Generate cycle diagram HTML
  */
 const generateCycleDiagram = (itemCount: number): string => {
-  let items = '';
-  const degreeIncrement = 360 / itemCount;
+  let items = ''
+  const degreeIncrement = 360 / itemCount
 
   for (let i = 1; i <= itemCount; i++) {
     items += `
@@ -167,7 +167,7 @@ const generateCycleDiagram = (itemCount: number): string => {
           <p>Description</p>
         </div>
       </div>
-    `;
+    `
   }
 
   return `
@@ -225,14 +225,14 @@ const generateCycleDiagram = (itemCount: number): string => {
         }
       </style>
     </div>
-  `;
-};
+  `
+}
 
 /**
  * Generate hierarchy diagram HTML
  */
 const generateHierarchyDiagram = (itemCount: number): string => {
-  let childItems = '';
+  let childItems = ''
   for (let i = 1; i <= itemCount; i++) {
     childItems += `
       <div class="hierarchy-child">
@@ -241,7 +241,7 @@ const generateHierarchyDiagram = (itemCount: number): string => {
           <p>Description</p>
         </div>
       </div>
-    `;
+    `
   }
 
   return `
@@ -316,22 +316,22 @@ const generateHierarchyDiagram = (itemCount: number): string => {
         }
       </style>
     </div>
-  `;
-};
+  `
+}
 
 /**
  * Generate relationship diagram HTML
  */
 const generateRelationshipDiagram = (itemCount: number): string => {
   // Simplified relationship diagram - just shows items around a central item
-  let items = '';
-  const degreeIncrement = 360 / itemCount;
+  let items = ''
+  const degreeIncrement = 360 / itemCount
 
   for (let i = 1; i <= itemCount; i++) {
-    const angle = (i - 1) * degreeIncrement;
-    const radians = (angle * Math.PI) / 180;
-    const x = Math.cos(radians) * 120;
-    const y = Math.sin(radians) * 120;
+    const angle = (i - 1) * degreeIncrement
+    const radians = (angle * Math.PI) / 180
+    const x = Math.cos(radians) * 120
+    const y = Math.sin(radians) * 120
 
     items += `
       <div class="relationship-item" style="transform: translate(${x}px, ${y}px);">
@@ -341,7 +341,7 @@ const generateRelationshipDiagram = (itemCount: number): string => {
         </div>
         <div class="relationship-line" style="width: ${Math.sqrt(x * x + y * y)}px; transform: rotate(${angle}deg) translateX(-50%);"></div>
       </div>
-    `;
+    `
   }
 
   return `
@@ -429,33 +429,33 @@ const generateRelationshipDiagram = (itemCount: number): string => {
         }
       </style>
     </div>
-  `;
-};
+  `
+}
 
 /**
  * Generate matrix diagram HTML
  */
 const generateMatrixDiagram = (itemCount: number): string => {
   // For matrix, we'll make a square grid if possible
-  const size = Math.ceil(Math.sqrt(itemCount));
-  let cells = '';
+  const size = Math.ceil(Math.sqrt(itemCount))
+  let cells = ''
 
   for (let i = 0; i < size; i++) {
-    let row = '';
+    let row = ''
     for (let j = 0; j < size; j++) {
-      const index = i * size + j + 1;
+      const index = i * size + j + 1
       if (index <= itemCount) {
         row += `
           <div class="matrix-cell">
             <h3>Item ${index}</h3>
             <p>Description</p>
           </div>
-        `;
+        `
       } else {
-        row += `<div class="matrix-cell matrix-empty"></div>`;
+        row += `<div class="matrix-cell matrix-empty"></div>`
       }
     }
-    cells += `<div class="matrix-row">${row}</div>`;
+    cells += `<div class="matrix-row">${row}</div>`
   }
 
   return `
@@ -502,19 +502,19 @@ const generateMatrixDiagram = (itemCount: number): string => {
         }
       </style>
     </div>
-  `;
-};
+  `
+}
 
 /**
  * Generate pyramid diagram HTML
  */
 const generatePyramidDiagram = (itemCount: number): string => {
   // Create a pyramid with layers
-  let layers = '';
-  const maxWidth = 80;
+  let layers = ''
+  const maxWidth = 80
 
   for (let i = 1; i <= itemCount; i++) {
-    const width = maxWidth - (i - 1) * (maxWidth / itemCount);
+    const width = maxWidth - (i - 1) * (maxWidth / itemCount)
     layers += `
       <div class="pyramid-layer" style="width: ${width}%;">
         <div class="pyramid-item">
@@ -522,7 +522,7 @@ const generatePyramidDiagram = (itemCount: number): string => {
           <p>Description</p>
         </div>
       </div>
-    `;
+    `
   }
 
   return `
@@ -562,5 +562,5 @@ const generatePyramidDiagram = (itemCount: number): string => {
         }
       </style>
     </div>
-  `;
-};
+  `
+}

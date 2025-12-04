@@ -1,7 +1,7 @@
-import { ApplicationsGrid } from '@/widgets/application-grid';
+import { ApplicationsGrid } from '@/widgets/application-grid'
 
 const CreateApplicationGridsPage = () => {
-  return <ApplicationsGrid />;
-};
+  return <ApplicationsGrid />
+}
 
-export default CreateApplicationGridsPage;
+export default CreateApplicationGridsPage

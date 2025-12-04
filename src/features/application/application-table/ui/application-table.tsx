@@ -1,36 +1,36 @@
-import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application';
-import { ApplicationCategory, APPLICATIONS_DATA } from '@/entities/create-application';
-import { UserRoles } from '@/entities/user';
-import { useApplicationList } from '@/features/application/application-table/hooks';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import Filter from '@/shared/components/common/filter';
-import { useCustomSearchParams } from '@/shared/hooks';
-import { useAuth } from '@/shared/hooks/use-auth';
-import { ISearchParams } from '@/shared/types';
-import { getDate } from '@/shared/utils/date';
-import { ColumnDef } from '@tanstack/react-table';
-import { FileWarning } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application'
+import { ApplicationCategory, APPLICATIONS_DATA } from '@/entities/create-application'
+import { UserRoles } from '@/entities/user'
+import { useApplicationList } from '@/features/application/application-table/hooks'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import Filter from '@/shared/components/common/filter'
+import { useCustomSearchParams } from '@/shared/hooks'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { ISearchParams } from '@/shared/types'
+import { getDate } from '@/shared/utils/date'
+import { ColumnDef } from '@tanstack/react-table'
+import { FileWarning } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 export const ApplicationTable = () => {
-  const { user } = useAuth();
+  const { user } = useAuth()
 
   const {
     paramsObject: { status = ApplicationStatus.ALL, mode, search = '', ...rest },
-  } = useCustomSearchParams();
+  } = useCustomSearchParams()
 
   const { data: applications = [] } = useApplicationList({
     ...rest,
     status: status !== 'ALL' ? status : '',
     search,
     mode,
-  });
+  })
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleViewApplication = (id: string) => {
-    navigate(`detail/${id}`);
-  };
+    navigate(`detail/${id}`)
+  }
 
   const columns: ColumnDef<ISearchParams>[] = [
     {
@@ -108,7 +108,7 @@ export const ApplicationTable = () => {
               </p>
             )}
           </div>
-        );
+        )
       },
     },
     {
@@ -118,7 +118,7 @@ export const ApplicationTable = () => {
         <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
       ),
     },
-  ];
+  ]
 
   return (
     <>
@@ -131,5 +131,5 @@ export const ApplicationTable = () => {
         className="h-[calc(100svh-280px)]"
       />
     </>
-  );
-};
+  )
+}

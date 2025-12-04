@@ -1,1 +1,1 @@
-export { PermitsWidget } from './ui/permits-widget';
+export { PermitsWidget } from './ui/permits-widget'

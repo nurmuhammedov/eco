@@ -1,28 +1,28 @@
-import { Button, buttonVariants } from '@/shared/components/ui/button.tsx';
-import { Check, Minus } from 'lucide-react';
-import { Textarea } from '@/shared/components/ui/textarea.tsx';
-import { FC } from 'react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form.tsx';
-import { useRejectRiskItem } from '@/features/risk-analysis/hooks/use-reject-risk-item.ts';
-import { useAuth } from '@/shared/hooks/use-auth.ts';
-import { UserRoles } from '@/entities/user';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { useSearchParams } from 'react-router-dom';
-import { useUploadFiles } from '@/shared/components/common/file-upload/api/use-upload-files.ts';
-import { useAttachFile } from '@/features/risk-analysis/hooks/use-attach-file.ts';
-import FileLink from '@/shared/components/common/file-link.tsx';
-import { useCancelPoints } from '@/features/risk-analysis/hooks/use-cancel-points.ts';
-import { clsx } from 'clsx';
-import { Indicator } from '../riskAnalysis'; // To'g'ri tipni import qilamiz
+import { Button, buttonVariants } from '@/shared/components/ui/button.tsx'
+import { Check, Minus } from 'lucide-react'
+import { Textarea } from '@/shared/components/ui/textarea.tsx'
+import { FC } from 'react'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form.tsx'
+import { useRejectRiskItem } from '@/features/risk-analysis/hooks/use-reject-risk-item.ts'
+import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { UserRoles } from '@/entities/user'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { useSearchParams } from 'react-router-dom'
+import { useUploadFiles } from '@/shared/components/common/file-upload/api/use-upload-files.ts'
+import { useAttachFile } from '@/features/risk-analysis/hooks/use-attach-file.ts'
+import FileLink from '@/shared/components/common/file-link.tsx'
+import { useCancelPoints } from '@/features/risk-analysis/hooks/use-cancel-points.ts'
+import { clsx } from 'clsx'
+import { Indicator } from '../riskAnalysis' // To'g'ri tipni import qilamiz
 
 interface Props {
-  number: string;
-  data: Indicator;
-  displayIndex: number;
-  info?: boolean;
+  number: string
+  data: Indicator
+  displayIndex: number
+  info?: boolean
 }
 
 const schema = z
@@ -39,9 +39,9 @@ const schema = z
         type: 'string',
         inclusive: true,
         message: 'Too short value',
-      });
+      })
     }
-  });
+  })
 
 const statusMap: Record<string, string> = {
   UPLOADED: 'Tadbirkor tomonidan ijro uchun fayl yuklangan',
@@ -51,30 +51,30 @@ const statusMap: Record<string, string> = {
   EXPIRED: "Faylning amal qilish muddati o'tgan",
   NOT_EXISTING: 'Reestrda ushbu fayl mavjud emas',
   NOT_EXPIRY_DATE: 'Faylning amal qilish muddati kiritilmagan',
-};
+}
 
 const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
-  const [searchParams] = useSearchParams();
-  const currentCat = searchParams.get('type') || '';
-  const info = (searchParams.get('info') || 'false') == 'true';
+  const [searchParams] = useSearchParams()
+  const currentCat = searchParams.get('type') || ''
+  const info = (searchParams.get('info') || 'false') == 'true'
   // const currentInervalId = searchParams.get('intervalId') || '';
-  const paragraphName = `PARAGRAPH_${currentCat?.toUpperCase()}_${number}`;
-  const { mutate } = useRejectRiskItem();
-  const { user } = useAuth();
+  const paragraphName = `PARAGRAPH_${currentCat?.toUpperCase()}_${number}`
+  const { mutate } = useRejectRiskItem()
+  const { user } = useAuth()
   // const isValidInterval = currentInervalId == user?.interval?.id?.toString();
-  const isValidInterval = true;
-  const isChairman = user?.role === UserRoles.CHAIRMAN;
-  const isInspector = user?.role === UserRoles.INSPECTOR;
-  const isLegal = user?.role === UserRoles.LEGAL;
-  const { mutate: attachFile, isPending: isPendingAttachFile } = useAttachFile();
-  const { mutateAsync: sendFiles, isPending } = useUploadFiles();
-  const { mutate: cancelPoints } = useCancelPoints();
-  const isConfirmed = data?.score === 0;
+  const isValidInterval = true
+  const isChairman = user?.role === UserRoles.CHAIRMAN
+  const isInspector = user?.role === UserRoles.INSPECTOR
+  const isLegal = user?.role === UserRoles.LEGAL
+  const { mutate: attachFile, isPending: isPendingAttachFile } = useAttachFile()
+  const { mutateAsync: sendFiles, isPending } = useUploadFiles()
+  const { mutate: cancelPoints } = useCancelPoints()
+  const isConfirmed = data?.score === 0
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-  });
-  const isReject = form.watch('isReject');
+  })
+  const isReject = form.watch('isReject')
   const onSubmit = (data: any) => {
     mutate({
       data: {
@@ -82,21 +82,21 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
         indicatorType: paragraphName,
       },
       type: currentCat,
-    });
-  };
+    })
+  }
 
-  let statusText: string | null = null;
+  let statusText: string | null = null
 
   if (data?.status) {
     if (data.score > 0) {
-      statusText = statusMap[data.status];
+      statusText = statusMap[data.status]
     }
   }
 
   return (
     <div key={data.text}>
       <div
-        className={clsx('bg-[#EDEEEE] shadow-md p-2.5 rounded font-medium', {
+        className={clsx('rounded bg-[#EDEEEE] p-2.5 font-medium shadow-md', {
           'bg-red-200': !!data?.score && data?.score > 0,
           'bg-green-200': isConfirmed,
         })}
@@ -117,27 +117,27 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
         </div>
       </div>
       <div
-        className={clsx('flex items-center py-5 px-2.5 gap-4 my-2', {
+        className={clsx('my-2 flex items-center gap-4 px-2.5 py-5', {
           'bg-red-50': !!data?.score && data?.score > 0,
           'bg-green-50': isConfirmed,
         })}
       >
-        <div className="flex-grow flex flex-col">
+        <div className="flex flex-grow flex-col">
           <span>{data.text}</span>
 
-          {statusText && <span className={clsx('text-sm font-semibold mt-1 italic')}>* {statusText}</span>}
+          {statusText && <span className={clsx('mt-1 text-sm font-semibold italic')}>* {statusText}</span>}
         </div>
 
         {!info && (
           <Form {...form}>
-            <div className="flex-shrink-0 flex gap-3  w-full max-w-[600px] items-center">
-              <div className="flex gap-1 flex-shrink-0">
+            <div className="flex w-full max-w-[600px] flex-shrink-0 items-center gap-3">
+              <div className="flex flex-shrink-0 gap-1">
                 {isInspector && isValidInterval && (
                   <>
                     <Button
                       onClick={() => {
                         if (confirm('Cancel points?')) {
-                          cancelPoints(data.id);
+                          cancelPoints(data.id)
                         }
                       }}
                       disabled={!isInspector || isConfirmed || !data?.filePath}
@@ -150,7 +150,7 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
                     </Button>
                     <Button
                       onClick={() => {
-                        form.setValue('isReject', !isReject);
+                        form.setValue('isReject', !isReject)
                       }}
                       disabled={!!data || !isInspector}
                       type="button"
@@ -198,7 +198,7 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
                         <FormControl>
                           <Textarea
                             disabled={!isReject || !!data}
-                            className="resize-none w-full"
+                            className="w-full resize-none"
                             rows={2}
                             placeholder="Boshqarma boshlig‘i rezolyutsiyasi"
                             {...field}
@@ -227,7 +227,7 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
                   <input
                     disabled={isPending || isPendingAttachFile}
                     onChange={(e) => {
-                      const files = e.target.files;
+                      const files = e.target.files
                       if (files?.length) {
                         // 3. XATOLIKNI TUZATAMIZ:
                         sendFiles([files[0]]).then((filePath) => {
@@ -235,8 +235,8 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
                           attachFile({
                             id: number, // Indikator ID si `number` propidan olinadi
                             path: filePath, // Fayl manzili `sendFiles` natijasidan olinadi
-                          });
-                        });
+                          })
+                        })
                       }
                     }}
                     className="hidden"
@@ -251,7 +251,7 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RiskAnalysisItem;
+export default RiskAnalysisItem

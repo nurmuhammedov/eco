@@ -1,29 +1,29 @@
-import { Fragment, useMemo, useState } from 'react';
-import { UIModeEnum } from '@/shared/types';
-import { useTranslation } from 'react-i18next';
-import { Input } from '@/shared/components/ui/input';
-import { useUIActionLabel } from '@/shared/hooks';
-import { CommitteeStaffView } from './committee-staff-view';
-import { PhoneInput } from '@/shared/components/ui/phone-input';
-import { InputNumber } from '@/shared/components/ui/input-number';
-import { MultiSelect } from '@/shared/components/ui/multi-select';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { BaseDrawer } from '@/shared/components/common/base-drawer';
-import FormSkeleton from '@/shared/components/common/form-skeleton/ui';
-import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks';
-import { useCommitteeStaffForm } from '../model/use-committee-staff-form';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Button } from '@/shared/components/ui/button';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { apiClient } from '@/shared/api';
-import { format } from 'date-fns';
+import { Fragment, useMemo, useState } from 'react'
+import { UIModeEnum } from '@/shared/types'
+import { useTranslation } from 'react-i18next'
+import { Input } from '@/shared/components/ui/input'
+import { useUIActionLabel } from '@/shared/hooks'
+import { CommitteeStaffView } from './committee-staff-view'
+import { PhoneInput } from '@/shared/components/ui/phone-input'
+import { InputNumber } from '@/shared/components/ui/input-number'
+import { MultiSelect } from '@/shared/components/ui/multi-select'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { BaseDrawer } from '@/shared/components/common/base-drawer'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
+import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks'
+import { useCommitteeStaffForm } from '../model/use-committee-staff-form'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker'
+import { apiClient } from '@/shared/api'
+import { format } from 'date-fns'
 
 export const CommitteeStaffDrawer = () => {
-  const { t } = useTranslation('common');
-  const { isOpen, mode, onClose } = useCommitteeStaffsDrawer();
-  const modeState = useUIActionLabel(mode);
-  const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation('common')
+  const { isOpen, mode, onClose } = useCommitteeStaffsDrawer()
+  const modeState = useUIActionLabel(mode)
+  const [isLoading, setIsLoading] = useState(false)
   const {
     form,
     onSubmit,
@@ -34,12 +34,12 @@ export const CommitteeStaffDrawer = () => {
     userRoleOptions,
     departmentOptions,
     userPermissionOptions,
-  } = useCommitteeStaffForm();
+  } = useCommitteeStaffForm()
 
-  const roleOptions = useMemo(() => getSelectOptions(userRoleOptions), []);
+  const roleOptions = useMemo(() => getSelectOptions(userRoleOptions), [])
 
-  const pin = form.getValues('pin');
-  const birthDate = form.getValues('birthDate');
+  const pin = form.getValues('pin')
+  const birthDate = form.getValues('birthDate')
 
   return (
     <BaseDrawer
@@ -96,8 +96,8 @@ export const CommitteeStaffDrawer = () => {
                 loading={isLoading}
                 onClick={() => {
                   if (pin && birthDate) {
-                    const d = format(birthDate, 'yyyy-MM-dd');
-                    setIsLoading(true);
+                    const d = format(birthDate, 'yyyy-MM-dd')
+                    setIsLoading(true)
                     apiClient
                       .post<{ data: { fullName: string } }>('/integration/iip/individual', {
                         pin,
@@ -105,12 +105,12 @@ export const CommitteeStaffDrawer = () => {
                       })
                       .then((res) => {
                         if (res?.data?.data?.fullName) {
-                          form.setValue('fullName', res?.data?.data?.fullName);
+                          form.setValue('fullName', res?.data?.data?.fullName)
                         }
                       })
                       .finally(() => {
-                        setIsLoading(false);
-                      });
+                        setIsLoading(false)
+                      })
                   }
                 }}
               >
@@ -186,7 +186,7 @@ export const CommitteeStaffDrawer = () => {
                           value={field.value}
                           onValueChange={(value) => {
                             if (value) {
-                              field.onChange(value);
+                              field.onChange(value)
                             }
                           }}
                         >
@@ -212,7 +212,7 @@ export const CommitteeStaffDrawer = () => {
                           value={field.value}
                           onValueChange={(value) => {
                             if (value) {
-                              field.onChange(value);
+                              field.onChange(value)
                             }
                           }}
                         >
@@ -250,5 +250,5 @@ export const CommitteeStaffDrawer = () => {
         </Form>
       )}
     </BaseDrawer>
-  );
-};
+  )
+}

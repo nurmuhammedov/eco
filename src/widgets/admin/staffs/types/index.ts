@@ -4,8 +4,8 @@ export enum StaffsActiveTab {
 }
 
 export type StaffsActiveTabActionButtonProps = {
-  title: string;
-  activeTab: StaffsActiveTab;
-  onAddCommitteeStaffs: () => void;
-  onAddTerritorialStaffs: () => void;
-};
+  title: string
+  activeTab: StaffsActiveTab
+  onAddCommitteeStaffs: () => void
+  onAddTerritorialStaffs: () => void
+}

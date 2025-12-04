@@ -1,2 +1,2 @@
-export * from './category-types';
-export * from './checklists';
+export * from './category-types'
+export * from './checklists'

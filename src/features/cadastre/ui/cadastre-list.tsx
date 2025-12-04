@@ -1,19 +1,19 @@
-import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types';
-import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table';
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks';
-import { ColumnDef } from '@tanstack/react-table';
-import { useTranslation } from 'react-i18next';
-import { getDate } from '@/shared/utils/date';
-import { useNavigate } from 'react-router-dom';
+import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types'
+import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { ColumnDef } from '@tanstack/react-table'
+import { useTranslation } from 'react-i18next'
+import { getDate } from '@/shared/utils/date'
+import { useNavigate } from 'react-router-dom'
 
 export const CadastreList = () => {
-  const { t } = useTranslation('common');
-  const { paramsObject } = useCustomSearchParams();
-  const navigate = useNavigate();
+  const { t } = useTranslation('common')
+  const { paramsObject } = useCustomSearchParams()
+  const navigate = useNavigate()
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>('/cadastre-passports', {
     page: paramsObject?.page || 1,
     size: paramsObject?.size || 10,
-  });
+  })
 
   const columns: ColumnDef<any>[] = [
     {
@@ -56,10 +56,10 @@ export const CadastreList = () => {
               onView={() => navigate(`/cadastre/detail/${row.original.appealId}?id=${row.original.id}`)}
             />
           </div>
-        );
+        )
       },
     },
-  ];
+  ]
 
   return (
     <DataTable
@@ -69,5 +69,5 @@ export const CadastreList = () => {
       isLoading={isLoading}
       className="h-[calc(100svh-220px)]"
     />
-  );
-};
+  )
+}

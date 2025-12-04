@@ -1,4 +1,4 @@
-import { useDocumentSigning } from '@/shared/components/common/signature/model';
+import { useDocumentSigning } from '@/shared/components/common/signature/model'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,22 +9,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/shared/components/ui/alert-dialog';
-import { Button } from '@/shared/components/ui/button';
-import { useSignatureClient } from '@/shared/hooks';
-import { getSignatureKeys } from '@/shared/lib';
-import { SignatureKey } from '@/shared/types/signature';
-import { Loader2, Signature } from 'lucide-react';
-import { useState } from 'react';
-import { SignatureSelect } from '../index';
-import { apiConfig } from '@/shared/api/constants';
+} from '@/shared/components/ui/alert-dialog'
+import { Button } from '@/shared/components/ui/button'
+import { useSignatureClient } from '@/shared/hooks'
+import { getSignatureKeys } from '@/shared/lib'
+import { SignatureKey } from '@/shared/types/signature'
+import { Loader2, Signature } from 'lucide-react'
+import { useState } from 'react'
+import { SignatureSelect } from '../index'
+import { apiConfig } from '@/shared/api/constants'
 
 interface SignatureModalProps {
-  isLoading: boolean;
-  documentUrl: string;
-  onCancel?: () => void;
-  submitApplicationMetaData: (sign: string) => void;
-  onConfirm?: (certificate: SignatureKey | null) => void;
+  isLoading: boolean
+  documentUrl: string
+  onCancel?: () => void
+  submitApplicationMetaData: (sign: string) => void
+  onConfirm?: (certificate: SignatureKey | null) => void
 }
 
 export const SignatureModal = ({
@@ -34,45 +34,45 @@ export const SignatureModal = ({
   documentUrl,
   submitApplicationMetaData,
 }: SignatureModalProps) => {
-  const { Client } = useSignatureClient();
-  const { signatureKeys } = getSignatureKeys();
-  const [open, setOpen] = useState(false);
-  const [selectedCertificate, setSelectedCertificate] = useState<SignatureKey | null>(null);
-  const { mutateAsync: signDocument, isPending } = useDocumentSigning();
+  const { Client } = useSignatureClient()
+  const { signatureKeys } = getSignatureKeys()
+  const [open, setOpen] = useState(false)
+  const [selectedCertificate, setSelectedCertificate] = useState<SignatureKey | null>(null)
+  const { mutateAsync: signDocument, isPending } = useDocumentSigning()
 
-  const isLoadingSignature = isLoading || isPending;
+  const isLoadingSignature = isLoading || isPending
 
   const handleSelectCertificate = (cert: SignatureKey) => {
-    setSelectedCertificate(cert);
-  };
+    setSelectedCertificate(cert)
+  }
 
   const handleConfirm = async () => {
     if (onConfirm) {
-      onConfirm(selectedCertificate);
+      onConfirm(selectedCertificate)
     }
 
     if (apiConfig.oneIdClientId == 'test_cirns_uz') {
-      submitApplicationMetaData('testServer');
+      submitApplicationMetaData('testServer')
     } else {
       await signDocument({
         Client,
         documentUrl,
         signature: selectedCertificate,
         onSuccess: (result) => submitApplicationMetaData(result),
-      });
+      })
     }
 
-    setSelectedCertificate(null);
-    setOpen(false);
-  };
+    setSelectedCertificate(null)
+    setOpen(false)
+  }
 
   const handleCancel = () => {
     if (onCancel) {
-      onCancel();
+      onCancel()
     }
-    setOpen(false);
-    setSelectedCertificate(null);
-  };
+    setOpen(false)
+    setSelectedCertificate(null)
+  }
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -89,7 +89,7 @@ export const SignatureModal = ({
           </Button>
         </AlertDialogTrigger>
       )}
-      <AlertDialogContent className="max-w-[95vw]! w-auto!">
+      <AlertDialogContent className="w-auto! max-w-[95vw]!">
         <AlertDialogHeader>
           <AlertDialogTitle>Elektron kalitni tanlang</AlertDialogTitle>
           <AlertDialogDescription>
@@ -102,7 +102,7 @@ export const SignatureModal = ({
           <SignatureSelect onSelect={handleSelectCertificate} certificates={signatureKeys} />
 
           {selectedCertificate && (
-            <div className="mt-4 p-3 bg-green-50 rounded-md border border-green-100">
+            <div className="mt-4 rounded-md border border-green-100 bg-green-50 p-3">
               <p className="text-sm text-green-800">
                 <span className="font-medium">Tanlangan kalit:</span> {selectedCertificate.CN}
               </p>
@@ -115,7 +115,7 @@ export const SignatureModal = ({
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={!selectedCertificate}
-            className={!selectedCertificate ? 'opacity-50 cursor-not-allowed' : ''}
+            className={!selectedCertificate ? 'cursor-not-allowed opacity-50' : ''}
           >
             {isPending && <Loader2 className="size-4 animate-spin" />}
             Tasdiqlash
@@ -123,5 +123,5 @@ export const SignatureModal = ({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
-};
+  )
+}

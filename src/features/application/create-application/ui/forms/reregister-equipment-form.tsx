@@ -4,27 +4,27 @@ import {
   CardForm,
   MainApplicationCategory,
   ReRegisterEquipmentDTO,
-} from '@/entities/create-application';
-import { NoteForm } from '@/features/application/create-application';
-import { GoBack } from '@/shared/components/common';
-import { InputFile } from '@/shared/components/common/file-upload';
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts';
-import { YandexMapModal } from '@/shared/components/common/yandex-map-modal';
-import { Button } from '@/shared/components/ui/button';
-import DatePicker from '@/shared/components/ui/datepicker';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { PhoneInput } from '@/shared/components/ui/phone-input.tsx';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { parseISO } from 'date-fns';
-import { useReRegisterEquipment } from '@/features/application/create-application/model/use-re-register-equipment';
+} from '@/entities/create-application'
+import { NoteForm } from '@/features/application/create-application'
+import { GoBack } from '@/shared/components/common'
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
+import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { parseISO } from 'date-fns'
+import { useReRegisterEquipment } from '@/features/application/create-application/model/use-re-register-equipment'
 
 interface RegisterCraneFormProps {
-  onSubmit: (data: ReRegisterEquipmentDTO) => void;
+  onSubmit: (data: ReRegisterEquipmentDTO) => void
 }
 
 export default ({ onSubmit }: RegisterCraneFormProps) => {
-  const { form, regionOptions, districtOptions, hazardousFacilitiesOptions } = useReRegisterEquipment();
+  const { form, regionOptions, districtOptions, hazardousFacilitiesOptions } = useReRegisterEquipment()
 
   return (
     <Form {...form}>
@@ -32,7 +32,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
         <GoBack title="Qurilmani qayta roʻyxatga olish" />
         <NoteForm equipmentName="qurilma" />
         <CardForm className="mb-2">
-          <div className="md:grid md:grid-cols-2 xl:grid-cols-3 3xl:flex 3xl:flex-wrap gap-x-4 gap-y-5 4xl:w-5/5 mb-5">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="phoneNumber"
@@ -40,7 +40,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 <FormItem>
                   <FormLabel required>Telefon raqami</FormLabel>
                   <FormControl>
-                    <PhoneInput className="w-full 3xl:w-sm" placeholder="+998 XX XXX XX XX" {...field} />
+                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -55,14 +55,14 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                   <FormLabel required>Qurilmaning turi</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Qurilma turini tanlang" />
                       </SelectTrigger>
                       <SelectContent>
                         {APPLICATIONS_DATA?.filter(
                           (i) =>
                             i.category == ApplicationCategory.EQUIPMENTS &&
-                            i.parentId == MainApplicationCategory.REGISTER,
+                            i.parentId == MainApplicationCategory.REGISTER
                         )?.map((option) => (
                           <SelectItem key={option.equipmentType || 'DEFAULT'} value={option.equipmentType || 'DEFAULT'}>
                             {option.name}
@@ -84,7 +84,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                   <FormLabel>XICHO ni tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value || ''}>
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
                       </SelectTrigger>
                       <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
@@ -101,7 +101,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 <FormItem>
                   <FormLabel required>Qurilmaning eski roʻyxatga olish raqami</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Qurilmaning roʻyxatga olish raqami" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Qurilmaning roʻyxatga olish raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -111,9 +111,9 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               control={form.control}
               name="partialCheckDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel required>O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi</FormLabel>
                     <DatePicker
                       disableStrategy="after"
@@ -123,16 +123,16 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
               control={form.control}
               name="fullCheckDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value;
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
-                  <FormItem className="w-full 3xl:w-sm">
+                  <FormItem className="3xl:w-sm w-full">
                     <FormLabel required>Toʻliq texnik koʻrik sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -141,7 +141,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                     />
                     <FormMessage />
                   </FormItem>
-                );
+                )
               }}
             />
             <FormField
@@ -154,13 +154,13 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                     <Select
                       onValueChange={(value) => {
                         if (value) {
-                          field.onChange(value);
-                          form.setValue('districtId', '');
+                          field.onChange(value)
+                          form.setValue('districtId', '')
                         }
                       }}
                       value={field.value?.toString()}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Viloyatni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{regionOptions}</SelectContent>
@@ -182,7 +182,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                       value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
-                      <SelectTrigger className="w-full 3xl:w-sm">
+                      <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Tumanni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
@@ -199,7 +199,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 <FormItem>
                   <FormLabel required>Qurilma joylashgan manzil</FormLabel>
                   <FormControl>
-                    <Input className="w-full 3xl:w-sm" placeholder="Aniq manzilni kiriting" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Aniq manzilni kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -209,7 +209,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               control={form.control}
               name="location"
               render={({ field }) => (
-                <FormItem className="w-full 3xl:w-sm">
+                <FormItem className="3xl:w-sm w-full">
                   <FormLabel required>Joylashuv (Xarita)</FormLabel>
                   <FormControl>
                     <YandexMapModal
@@ -225,13 +225,13 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
           </div>
         </CardForm>
 
-        <CardForm className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-8 gap-y-4 mb-5">
+        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <FormField
             name="labelPath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                     Qurilmaning surati
                   </FormLabel>
@@ -247,8 +247,8 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
             name="saleContractPath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                     Sotib olish-sotish shartnomasi
                   </FormLabel>
@@ -264,8 +264,8 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
             name="equipmentCertPath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                     Qurilma sertifikati
                   </FormLabel>
@@ -281,8 +281,8 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
             name="assignmentDecreePath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                     Masʼul shaxs tayinlanganligi to‘g‘risida buyruq
                   </FormLabel>
@@ -298,8 +298,8 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
             name="expertisePath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                     Ekspertiza loyihasi
                   </FormLabel>
@@ -315,8 +315,8 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
             name="installationCertPath"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="pb-4 border-b">
-                <div className="flex items-end xl:items-center justify-between gap-2">
+              <FormItem className="border-b pb-4">
+                <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                     Montaj guvohnomasi fayli
                   </FormLabel>
@@ -334,5 +334,5 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
         </Button>
       </form>
     </Form>
-  );
-};
+  )
+}

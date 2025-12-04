@@ -1,1 +1,1 @@
-export { FORM_ERROR_MESSAGES } from './error-messages';
+export { FORM_ERROR_MESSAGES } from './error-messages'

@@ -1,7 +1,7 @@
-import { z } from 'zod';
-import { ExpertiseTypeEnum } from './constants';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
+import { z } from 'zod'
+import { ExpertiseTypeEnum } from './constants'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 
 export const addExpertiseSchema = z.object({
   customerTin: z
@@ -28,4 +28,4 @@ export const addExpertiseSchema = z.object({
     .min(1, 'Majburiy maydon!')
     .max(500, { message: 'Obyekt nomi 500 belgidan oshmasligi kerak' }),
   address: z.string({ required_error: 'Manzil kiritilmadi!' }).min(1, 'Manzil kiritilmadi!'),
-});
+})

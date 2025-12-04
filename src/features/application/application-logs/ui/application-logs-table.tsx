@@ -1,14 +1,14 @@
-import { DataTable } from '@/shared/components/common/data-table';
-import { ColumnDef } from '@tanstack/react-table';
-import { useUserLogsTypeLabel } from '@/shared/hooks/use-user-logs-type-label.ts';
-import { useApplicationLogs } from '@/features/application/application-detail/hooks/use-applicant-logs.tsx';
-import { ISearchParams } from '@/shared/types';
-import { formatDate } from 'date-fns';
+import { DataTable } from '@/shared/components/common/data-table'
+import { ColumnDef } from '@tanstack/react-table'
+import { useUserLogsTypeLabel } from '@/shared/hooks/use-user-logs-type-label.ts'
+import { useApplicationLogs } from '@/features/application/application-detail/hooks/use-applicant-logs.tsx'
+import { ISearchParams } from '@/shared/types'
+import { formatDate } from 'date-fns'
 
 export const ApplicationLogsList = ({ isShow }: any) => {
-  const { data, isLoading } = useApplicationLogs(isShow);
+  const { data, isLoading } = useApplicationLogs(isShow)
 
-  const getUserLogsTypeLabel = useUserLogsTypeLabel();
+  const getUserLogsTypeLabel = useUserLogsTypeLabel()
 
   const columns: ColumnDef<ISearchParams>[] = [
     {
@@ -38,7 +38,7 @@ export const ApplicationLogsList = ({ isShow }: any) => {
       maxSize: -10,
       header: 'Tavsifi',
     },
-  ];
+  ]
 
   return (
     <DataTable
@@ -48,5 +48,5 @@ export const ApplicationLogsList = ({ isShow }: any) => {
       isLoading={isLoading}
       className="h-[calc(100svh-220px)]"
     />
-  );
-};
+  )
+}

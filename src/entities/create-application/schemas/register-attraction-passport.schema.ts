@@ -1,7 +1,7 @@
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { format } from 'date-fns';
-import { z } from 'zod';
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { format } from 'date-fns'
+import { z } from 'zod'
 
 export const AttractionPassportAppealDtoSchema = z.object({
   phoneNumber: z
@@ -68,4 +68,4 @@ export const AttractionPassportAppealDtoSchema = z.object({
     .min(1, 'Attraksionni soz holatda va undan xavfsiz foydalanish boʻyicha masʼul shaxs buyrugʻi biriktirilmadi!'),
 
   filesBuilt: z.boolean().default(false).optional(),
-});
+})

@@ -3,12 +3,12 @@ import {
   TerritorialDepartmentResponse,
   territorialDepartmentsAPI,
   territorialDepartmentsKeys,
-} from '@/entities/admin/territorial-departments';
-import type { ResponseData } from '@/shared/types/api';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+} from '@/entities/admin/territorial-departments'
+import type { ResponseData } from '@/shared/types/api'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export const useCreateTerritorialDepartment = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: territorialDepartmentsAPI.create,
@@ -17,50 +17,50 @@ export const useCreateTerritorialDepartment = () => {
       // Cancel in-flight queries
       await queryClient.cancelQueries({
         queryKey: territorialDepartmentsKeys.list('territorial-departments'),
-      });
+      })
 
       // Capture current state for rollback
       const previousList = queryClient.getQueryData<ResponseData<TerritorialDepartmentResponse>>(
-        territorialDepartmentsKeys.list('territorial-departments'),
-      );
+        territorialDepartmentsKeys.list('territorial-departments')
+      )
 
       if (previousList) {
         // Create a temporary territorial-departments with fake ID
         const temporaryData: CreateTerritorialDepartmentsDTO & { id: number } = {
           ...newData,
           id: -Date.now(), // Temporary negative ID to identify new items
-        };
+        }
 
         // Add to the list
         queryClient.setQueryData(territorialDepartmentsKeys.list('territorial-departments'), {
           ...previousList,
           content: [...previousList.content, temporaryData],
-        });
+        })
       }
 
-      return { previousList };
+      return { previousList }
     },
 
     onSuccess: (createdData) => {
       // Invalidate list queries to get fresh data with correct ID
       queryClient.invalidateQueries({
         queryKey: territorialDepartmentsKeys.list('territorial-departments'),
-      });
+      })
 
       // Add the newly created territorial-departments to cache
       if (createdData.data.id) {
         queryClient.setQueryData(
           territorialDepartmentsKeys.detail('territorial-departments', createdData.data.id),
-          createdData,
-        );
+          createdData
+        )
       }
     },
 
     onError: (_err, _newData, context) => {
       // Revert optimistic updates on error
       if (context?.previousList) {
-        queryClient.setQueryData(territorialDepartmentsKeys.list('territorial-departments'), context.previousList);
+        queryClient.setQueryData(territorialDepartmentsKeys.list('territorial-departments'), context.previousList)
       }
     },
-  });
-};
+  })
+}

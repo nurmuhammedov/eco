@@ -1,5 +1,5 @@
-import { AddConclusion } from '@/features/expertise/ui/add-conclusion';
-import { GoBack } from '@/shared/components/common';
+import { AddConclusion } from '@/features/expertise/ui/add-conclusion'
+import { GoBack } from '@/shared/components/common'
 
 const AddConclusionPage = () => {
   return (
@@ -7,7 +7,7 @@ const AddConclusionPage = () => {
       <GoBack title="Ekspertiza xulosasini qo‘shish" />
       <AddConclusion />
     </div>
-  );
-};
+  )
+}
 
-export default AddConclusionPage;
+export default AddConclusionPage

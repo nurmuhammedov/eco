@@ -1,8 +1,8 @@
 // src/pages/attestation/add-employee.tsx
-import { AddEmployeeWidget } from '@/widgets/attestation/ui/add-employee-widget';
+import { AddEmployeeWidget } from '@/widgets/attestation/ui/add-employee-widget'
 
 const AddEmployeePage = () => {
-  return <AddEmployeeWidget />;
-};
+  return <AddEmployeeWidget />
+}
 
-export default AddEmployeePage;
+export default AddEmployeePage

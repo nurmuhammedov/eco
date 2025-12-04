@@ -1,6 +1,6 @@
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns';
-import { FORM_ERROR_MESSAGES } from '@/shared/validation';
-import { z } from 'zod';
+import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { z } from 'zod'
 
 export const CadastrePassportAppealDtoSchema = z.object({
   phoneNumber: z
@@ -20,4 +20,4 @@ export const CadastrePassportAppealDtoSchema = z.object({
   location: z.string().min(1, { message: 'Lokatsiyani tanlash majburiy' }),
   passportPath: z.string().min(1, { message: 'Pasport faylini yuklash majburiy' }),
   agreementPath: z.string().min(1, { message: "Kelishuv varag'i faylini yuklash majburiy" }),
-});
+})

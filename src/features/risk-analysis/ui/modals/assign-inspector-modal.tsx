@@ -1,6 +1,6 @@
 // src/features/risk-analysis/ui/modals/assign-inspector-modal.tsx
-import { useAssignInspector } from '@/features/risk-analysis/hooks/use-assign-inspector';
-import { Button } from '@/shared/components/ui/button';
+import { useAssignInspector } from '@/features/risk-analysis/hooks/use-assign-inspector'
+import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -8,32 +8,32 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/shared/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import useData from '@/shared/hooks/api/useData';
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams';
-import { getSelectOptions } from '@/shared/lib/get-select-options';
-import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+} from '@/shared/components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import useData from '@/shared/hooks/api/useData'
+import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { zodResolver } from '@hookform/resolvers/zod'
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const assignInspectorSchema = z.object({
   inspectorId: z.string().min(1, 'Inspektor tanlanishi shart'),
-});
+})
 
-type AssignInspectorForm = z.infer<typeof assignInspectorSchema>;
+type AssignInspectorForm = z.infer<typeof assignInspectorSchema>
 
 export const AssignInspectorModal: React.FC = () => {
-  const { paramsObject, removeParams } = useCustomSearchParams();
-  const { data: inspectors, isLoading: inspectorsLoading } = useData<any[]>('/users/office-users/inspectors/select');
-  const { mutate, isPending } = useAssignInspector();
-  const objectId = paramsObject.objectId;
+  const { paramsObject, removeParams } = useCustomSearchParams()
+  const { data: inspectors, isLoading: inspectorsLoading } = useData<any[]>('/users/office-users/inspectors/select')
+  const { mutate, isPending } = useAssignInspector()
+  const objectId = paramsObject.objectId
 
   const form = useForm<AssignInspectorForm>({
     resolver: zodResolver(assignInspectorSchema),
-  });
+  })
 
   const onSubmit = (data: AssignInspectorForm) => {
     if (objectId) {
@@ -44,17 +44,17 @@ export const AssignInspectorModal: React.FC = () => {
         },
         {
           onSuccess: () => {
-            handleClose();
+            handleClose()
           },
-        },
-      );
+        }
+      )
     }
-  };
+  }
 
   const handleClose = () => {
-    form.reset();
-    removeParams('objectId');
-  };
+    form.reset()
+    removeParams('objectId')
+  }
 
   return (
     <Dialog open={!!objectId} onOpenChange={handleClose}>
@@ -96,5 +96,5 @@ export const AssignInspectorModal: React.FC = () => {
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
