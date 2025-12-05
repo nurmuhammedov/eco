@@ -91,7 +91,7 @@ export const Cards = ({ activeRiskLevel, onTabChange, year, type }: RiskStatisti
   })
 
   return (
-    <div className="no-scrollbar flex w-full gap-2 overflow-x-auto">
+    <div className="scrollbar-hidden flex w-full gap-2 overflow-x-auto">
       {stats.map((stat) => {
         const isActive = activeRiskLevel === stat.id
 
@@ -169,7 +169,7 @@ const PreventionWidget = () => {
         />
 
         <Tabs value={activeType} onValueChange={(val) => addParams({ belongType: val, page: 1 })}>
-          <div className={cn('no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden')}>
+          <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
             <TabsList className="h-auto p-1">
               {riskTypes.map((type) => (
                 <TabsTrigger key={type.value} value={type.value}>
@@ -199,7 +199,7 @@ const PreventionWidget = () => {
 
         {!isInspector && (
           <Tabs value={activeAssignment} onValueChange={(val) => addParams({ assignment: val, page: 1 })}>
-            <div className={cn('no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden')}>
+            <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
               <TabsList className="h-auto p-1">
                 {ASSIGNMENT_STATUSES.map((status) => (
                   <TabsTrigger key={status.value} value={status.value}>

@@ -4,18 +4,22 @@ import { TabKey } from '@/features/expertise/ui/conclusion-tabs'
 import { Button } from '@/shared/components/ui/button'
 import { PlusCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { UserRoles } from '@/entities/user'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 const ExpertiseWidget = () => {
   const {
     paramsObject: { tab = TabKey.ALL },
     addParams,
   } = useCustomSearchParams()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const handleTabChange = (tabKey: string) => {
     addParams({ tab: tabKey }, 'page')
   }
 
   const { data } = useData<any>('/conclusions/count')
+  const { data: status } = useData<any>('/accreditations/status', user?.role === UserRoles.LEGAL)
 
   const tabCounts = {
     [TabKey.ALL]: data?.allCount ?? 0,
@@ -32,11 +36,14 @@ const ExpertiseWidget = () => {
 
   return (
     <>
-      <div className="flex items-center justify-end">
-        <Button onClick={handle}>
-          <PlusCircle className="mr-2 h-4 w-4" /> Qo‘shish
-        </Button>
-      </div>
+      {status === 'ACTIVE' && (
+        <div className="flex items-center justify-end">
+          <Button onClick={handle}>
+            <PlusCircle className="mr-2 h-4 w-4" /> Qo‘shish
+          </Button>
+        </div>
+      )}
+
       <div className="flex flex-col gap-5">
         <ConclusionTabs activeTab={tab} onTabChange={handleTabChange} counts={tabCounts} />
         <ConclusionsTable />

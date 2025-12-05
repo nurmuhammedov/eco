@@ -75,7 +75,7 @@ const RegisterWidget = () => {
       <Tabs value={tab} onValueChange={(tab: string) => addParams({ tab: tab.toString() }, 'page', 'type', 'status')}>
         <div className={'flex items-center justify-between gap-2'}>
           {user?.role != UserRoles.INDIVIDUAL ? (
-            <div className={cn('no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden')}>
+            <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
               <TabsList>
                 <TabsTrigger value={RegisterActiveTab.HF}>
                   XICHO
@@ -110,7 +110,7 @@ const RegisterWidget = () => {
               </TabsList>
             </div>
           ) : (
-            <div className={cn('no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden')}>
+            <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
               <TabsList>
                 <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
                   Qurilmalar

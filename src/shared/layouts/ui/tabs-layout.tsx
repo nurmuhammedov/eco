@@ -37,7 +37,7 @@ export const TabsLayout = ({
 }: TabsLayoutProps) => {
   return (
     <Tabs defaultValue={defaultValue} value={activeTab} onValueChange={onTabChange} className={className}>
-      <div className={cn('no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden', classNameWrapper)}>
+      <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden', classNameWrapper)}>
         <TabsList className={classNameTabList}>
           {tabs.map((tab) => (
             <TabsTrigger key={tab.id} value={tab.id} className={cn(`hover:bg-neutral-100`, classNameTrigger)}>

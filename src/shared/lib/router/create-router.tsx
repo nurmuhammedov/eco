@@ -6,8 +6,8 @@ import {
   appRoutes,
   AuthGuardProps,
   authRoutes,
-  RouteConfig,
   publicRoutes,
+  RouteConfig,
   specialComponents,
 } from '@/shared/config/routes'
 import { useAuth } from '@/shared/hooks/use-auth'
@@ -58,7 +58,7 @@ export const createAppRouter = (
   const { isAuthenticated } = useAuth()
   const protectedRoutes = appRoutes.map((route) => createProtectedRoute(route, AuthGuard))
   const authLayoutRoutes = authRoutes.map((route: RouteConfig) =>
-    createProtectedRoute(route, AuthGuard, 'w-1/2 flex flex-col items-center justify-center gap-6')
+    createProtectedRoute(route, AuthGuard, 'flex-1 min-h-screen w-full')
   )
   const standalonePublicRoutes = publicRoutes.map(createAuthRoute)
 

@@ -3,6 +3,7 @@ import { ISearchParams } from '@/shared/types'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 const useDetail = <T>(
   endpoint: string,
@@ -12,9 +13,10 @@ const useDetail = <T>(
   staleTime: number = 600000
 ) => {
   const { i18n } = useTranslation()
+  const { user } = useAuth()
 
   const queryMethods = useQuery<T, Error>({
-    queryKey: [endpoint, id, params, i18n.language],
+    queryKey: [endpoint, id, params, i18n.language, user?.role],
     queryFn: async () => {
       if (!id) {
         toast.error(

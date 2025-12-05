@@ -53,7 +53,16 @@ export const ExpertiseTable = () => {
     {
       accessorKey: 'status',
       header: 'Holati',
-      cell: ({ row }) => (row.original.status == 'ACTIVE' ? <Badge variant="success">Aktiv</Badge> : null),
+      cell: ({ row }) =>
+        row.original.status == 'ACTIVE' ? (
+          <Badge variant="success">Aktiv</Badge>
+        ) : row.original.status == 'EXPIRED' ? (
+          <Badge variant="error">Muddati o‘tgan</Badge>
+        ) : row.original.status == 'STOPPED' ? (
+          <Badge variant="error">To‘xtatilgan</Badge>
+        ) : row.original.status == 'CANCELLED' ? (
+          <Badge variant="error">Bekor qilingan</Badge>
+        ) : null,
     },
     // {
     //   id: 'actions',

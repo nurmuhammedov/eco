@@ -47,7 +47,7 @@ const Cards = ({ activeRiskLevel, onTabChange, year }: any) => {
   }))
 
   return (
-    <div className="no-scrollbar mb-2 flex w-full gap-2 overflow-x-auto">
+    <div className="scrollbar-hidden mb-2 flex w-full gap-2 overflow-x-auto">
       {stats.map((stat) => {
         const isActive = activeRiskLevel === stat.id
 
@@ -105,7 +105,7 @@ export const InspectionWidget: React.FC = () => {
         />
 
         <Tabs value={activeSubTab || InspectionSubMenuStatus.ASSIGNED} onValueChange={handleSubTabChange}>
-          <div className={cn('no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden')}>
+          <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
             <TabsList>
               <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
                 Tekshiruv o‘tkazilmagan
@@ -140,7 +140,7 @@ export const InspectionWidget: React.FC = () => {
         onTabChange={(val: string) => addParams({ month: val, page: 1 })}
       />
       <Tabs value={activeTab || InspectionStatus.ALL} onValueChange={handleTabChange}>
-        <div className={cn('no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden')}>
+        <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
           <TabsList>
             <TabsTrigger value={InspectionStatus.ALL}>
               Barchasi
@@ -176,7 +176,7 @@ export const InspectionWidget: React.FC = () => {
                 addParams({ subStatus: value, page: 1 })
               }}
             >
-              <div className={cn('no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden')}>
+              <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
                 <TabsList>
                   <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
                     Tekshiruv o‘tkazilmagan
@@ -202,7 +202,7 @@ export const InspectionWidget: React.FC = () => {
                   addParams({ process: value, page: 1 })
                 }}
               >
-                <div className={cn('no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden')}>
+                <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
                   <TabsList>
                     <TabsTrigger value="IN_PROCESS">
                       Jarayonda

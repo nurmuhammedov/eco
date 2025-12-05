@@ -88,7 +88,7 @@ const RiskAnalysisWidget = () => {
         onValueChange={(tab) => addParams({ mainTab: tab, page: 1, riskLevel: 'ALL' })}
         className="w-full"
       >
-        <div className={cn('no-scrollbar mb-2 flex justify-between overflow-x-auto overflow-y-hidden')}>
+        <div className={cn('scrollbar-hidden mb-2 flex justify-between overflow-x-auto overflow-y-hidden')}>
           <TabsList>
             <TabsTrigger value={RiskAnalysisTab.XICHO}>
               {t('risk_analysis_tabs.XICHO')}
@@ -136,7 +136,7 @@ const RiskAnalysisWidget = () => {
         value={month?.toString()}
         onValueChange={(val) => addParams({ month: val, page: 1 })}
       >
-        <div className={cn('no-scrollbar mb-2 flex w-full justify-between overflow-x-auto overflow-y-hidden')}>
+        <div className={cn('scrollbar-hidden mb-2 flex w-full justify-between overflow-x-auto overflow-y-hidden')}>
           <TabsList className="h-auto w-full p-1">
             {MONTHS.map((type) => (
               <TabsTrigger className="flex-1" key={type.value} value={type.value}>

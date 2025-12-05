@@ -1,4 +1,4 @@
-import { PDFViewer } from '@/features/view-pdf'
+import { PDFViewer } from '@/features/view-pdf' // Yo'lni loyihangizga moslang
 import { SignatureModal } from '@/shared/components/common/signature'
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { Button } from '@/shared/components/ui/button'
@@ -45,12 +45,17 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
       )
     }
 
-    return <PDFViewer documentUrl={documentUrl} />
+    // O'ZGARISH: PDFViewer ga h-full berildi
+    return <PDFViewer documentUrl={documentUrl} className="h-full" />
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="flex max-h-[98vh] w-[740px] max-w-[98vw] flex-col p-0">
+      {/* O'ZGARISH:
+         1. h-[95vh]: Modal balandligi ekranning 95 foizini egallaydi.
+         2. flex flex-col: Ichki elementlarni vertikal joylashtirish uchun.
+      */}
+      <DialogContent className="flex h-[1000px] max-h-[95vh] w-[740px] max-w-[98vw] flex-col gap-0 p-0">
         <DialogHeader className="flex-shrink-0 border-b p-6 pb-4">
           <DialogTitle className="flex items-end gap-x-2">
             <FileText className="h-5 w-5 text-yellow-600" /> {title}
@@ -65,11 +70,17 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
           </div>
         )}
 
-        <div className="min-h-0 flex-1 overflow-y-auto p-6 pt-4">{renderContent()}</div>
+        {/* O'ZGARISH:
+           1. flex-1: Bo'sh qolgan barcha joyni egallaydi.
+           2. overflow-hidden: Agar PDF katta bo'lsa, modal cho'zilib ketmaydi, ichki qism chegaralanadi.
+           3. relative: Ichki elementlar (PDF) to'g'ri joylashishi uchun.
+        */}
+        <div className="relative flex-1 overflow-hidden bg-gray-50">{renderContent()}</div>
 
-        <DialogFooter className="flex-shrink-0 border-t p-6 pt-4">
+        {/* Footer - qotib turadi (flex-shrink-0) */}
+        <DialogFooter className="flex-shrink-0 border-t bg-white p-6 pt-4">
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
-            <Pencil className="size-4" /> O'zgartirish
+            <Pencil className="mr-2 size-4" /> O‘zgartirish
           </Button>
           <SignatureModal
             isLoading={isLoading}

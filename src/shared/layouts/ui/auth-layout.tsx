@@ -3,7 +3,7 @@ import { LoginInfoSection } from '@/features/auth'
 
 export default function AuthLayout() {
   return (
-    <section className="flex h-screen">
+    <section className="flex flex-col lg:flex-row">
       <LoginInfoSection />
       <Outlet />
     </section>

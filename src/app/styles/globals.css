@@ -101,13 +101,17 @@
       sans-serif;
   }
 
-  .no-scrollbar::-webkit-scrollbar {
+  .scrollbar-hidden::-webkit-scrollbar {
     display: none;
   }
 
-  .no-scrollbar {
+  .scrollbar-hidden {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .scrollbar-x-hidden {
+    height: 0;
   }
 }
 

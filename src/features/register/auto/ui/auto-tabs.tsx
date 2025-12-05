@@ -38,7 +38,7 @@ export const tabs = [
 
 export const AutoTabs = ({ activeTab, onTabChange, counts }: TabsProps) => {
   return (
-    <div className="no-scrollbar flex justify-between gap-2 overflow-x-auto overflow-y-hidden">
+    <div className="scrollbar-hidden flex justify-between gap-2 overflow-x-auto overflow-y-hidden">
       {tabs.map((tab) => {
         const isActive = activeTab == tab.key
 

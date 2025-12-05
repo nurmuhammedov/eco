@@ -1,8 +1,10 @@
-import { PermitTabs, PermitTable } from '@/features/permits'
+import { PermitTable, PermitTabs } from '@/features/permits'
 import { PermitTabKey } from '@/entities/permit'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { AddPermitModal } from '@/features/permits/ui/add-permit-modal'
 import { useState } from 'react'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
 
 export const PermitsWidget = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -10,6 +12,7 @@ export const PermitsWidget = () => {
     paramsObject: { tab: activeTab = PermitTabKey.ALL },
     addParams,
   } = useCustomSearchParams()
+  const { user } = useAuth()
 
   const handleTabChange = (tabKey: string) => {
     addParams({ tab: tabKey, page: '1' })
@@ -27,15 +30,12 @@ export const PermitsWidget = () => {
   }
 
   return (
-    <>
-      {/*<div className="flex justify-between gap-2 items-center">*/}
-      {/*  <h1 className="text-2xl font-semibold">Ruxsatnomalar</h1>*/}
-      {/*</div>*/}
-      <div className="flex flex-col gap-5">
-        <PermitTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts} />
-        <PermitTable setIsModalOpen={setIsModalOpen} />
+    <div className="flex flex-col gap-5">
+      <PermitTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts} />
+      <PermitTable setIsModalOpen={setIsModalOpen} />
+      {user?.role !== UserRoles.CHAIRMAN && user?.role !== UserRoles.INDIVIDUAL && user?.role !== UserRoles.LEGAL && (
         <AddPermitModal open={isModalOpen} onOpenChange={setIsModalOpen} />
-      </div>
-    </>
+      )}
+    </div>
   )
 }

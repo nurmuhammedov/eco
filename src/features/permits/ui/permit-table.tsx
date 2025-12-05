@@ -6,8 +6,11 @@ import { PermitDetailModal } from '@/features/permits/ui/permit-detail-modal'
 import { tabs } from '@/features/permits/ui/permit-tabs'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { Button } from '@/shared/components/ui/button'
+import { UserRoles } from '@/entities/user'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 export const PermitTable = ({ setIsModalOpen }: any) => {
+  const { user } = useAuth()
   const {
     addParams,
     paramsObject: {
@@ -112,9 +115,11 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
             <TabsTrigger value="EXPIRED">Muddatidan o‘tganlar</TabsTrigger>
           </TabsList>
         </Tabs>
-        <Button type="button" onClick={() => setIsModalOpen((p: boolean) => !p)}>
-          Qo‘shish
-        </Button>
+        {user?.role !== UserRoles.CHAIRMAN && user?.role !== UserRoles.INDIVIDUAL && user?.role !== UserRoles.LEGAL && (
+          <Button type="button" onClick={() => setIsModalOpen((p: boolean) => !p)}>
+            Qo‘shish
+          </Button>
+        )}
       </div>
       <DataTable
         showNumeration={true}

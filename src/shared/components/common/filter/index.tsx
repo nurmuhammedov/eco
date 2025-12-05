@@ -492,7 +492,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className={className}>
-        <FilterRow className="no-scrollbar flex justify-between overflow-x-auto overflow-y-hidden">
+        <FilterRow className="scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden">
           {inputKeys.map((key) => renderInput(key))}
         </FilterRow>
       </form>

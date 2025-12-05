@@ -4,25 +4,21 @@ import { isPDFUrl } from '@/shared/lib'
 import { cn } from '@/shared/lib/utils'
 import { useEffect, useRef, useState } from 'react'
 
-// Zoom darajasi uchun enum
 export enum ZoomLevel {
-  TINY = 50,
-  SMALL = 75,
-  NORMAL = 100,
-  LARGE = 125,
-  XLARGE = 150,
-  XXLARGE = 200,
-  PAGE_WIDTH = 'page-width',
-  PAGE_FIT = 'page-fit',
+  // TINY = 50,
+  SMALL = 80,
+  // NORMAL = 100,
+  // LARGE = 125,
+  // PAGE_WIDTH = 'page-width',
+  // PAGE_FIT = 'page-fit',
 }
 
-// Ko'rish rejimi uchun enum
 export enum ViewMode {
   SINGLE_PAGE = 'SinglePage',
-  TWO_PAGE = 'TwoPage',
-  CONTINUOUS = 'Continuous',
-  FIT_H = 'FitH',
-  FIT_V = 'FitV',
+  // TWO_PAGE = 'TwoPage',
+  // CONTINUOUS = 'Continuous',
+  // FIT_H = 'FitH',
+  // FIT_V = 'FitV',
 }
 
 interface PDFViewerProps {
@@ -46,10 +42,11 @@ export const PDFViewer = ({
   title,
   className,
   width = '100%',
-  height = '600px',
+  // height propini olib tashladik yoki ishlatmaymiz, chunki bizga 100% kerak
   viewMode = ViewMode.SINGLE_PAGE,
   showToolbar = false,
   lightMode = true,
+  initialZoom = ZoomLevel.SMALL,
   onLoad,
   onError,
 }: PDFViewerProps) => {
@@ -62,17 +59,17 @@ export const PDFViewer = ({
   useEffect(() => {
     if (!documentUrl) {
       setHasError(true)
-      setErrorMessage("PDF URL ko'rsatilmagan")
+      setErrorMessage('PDF manzili (URL) ko‘rsatilmagan')
       setIsLoading(false)
-      onError?.(new Error("PDF URL ko'rsatilmagan"))
+      onError?.(new Error('PDF manzili (URL) ko‘rsatilmagan'))
       return
     }
 
     if (!isPDFUrl(documentUrl)) {
       setHasError(true)
-      setErrorMessage("PDF URL noto'g'ri formatda")
+      setErrorMessage('PDF manzili noto‘g‘ri formatda')
       setIsLoading(false)
-      onError?.(new Error("PDF URL noto'g'ri formatda"))
+      onError?.(new Error('PDF manzili noto‘g‘ri formatda'))
       return
     }
 
@@ -101,7 +98,13 @@ export const PDFViewer = ({
     const baseUrl = documentUrl.split('#')[0]
     const toolbarParam = showToolbar ? '1' : '0'
     const bgColor = lightMode ? '#ffffff' : '#1f1f1f'
-    const params = [`toolbar=${toolbarParam}`, 'navpanes=0', `view=${viewMode}`, `bgcolor=${bgColor}`].join('&')
+    const params = [
+      `toolbar=${toolbarParam}`,
+      'navpanes=0',
+      `view=${viewMode}`,
+      `zoom=${initialZoom}`,
+      `bgcolor=${bgColor}`,
+    ].join('&')
     return `${apiConfig.baseURL}${baseUrl}#${params}`
   }
 
@@ -115,7 +118,7 @@ export const PDFViewer = ({
             onClick={handleDownload}
             className="mt-4 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
           >
-            Yuklab olishga urinish
+            Yuklab olish
           </Button>
         )}
       </div>
@@ -124,11 +127,9 @@ export const PDFViewer = ({
 
   return (
     <div
-      className={cn(
-        'relative w-full overflow-hidden rounded-md border border-gray-200 shadow dark:border-gray-600',
-        className
-      )}
-      style={{ width, height }}
+      // O'ZGARISH: h-full qo'shildi, overflow-y-auto olib tashlandi
+      className={cn('relative h-full w-full overflow-hidden rounded-md dark:border-gray-600', className)}
+      style={{ width }}
     >
       {isLoading && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-sm dark:bg-gray-900/70">
@@ -141,16 +142,15 @@ export const PDFViewer = ({
 
       <iframe
         key={key}
-        width="100%"
-        height="100%"
         allowFullScreen
         ref={iframeRef}
         src={getPdfUrl()}
         onLoad={handleIframeLoad}
         onError={handleIframeError}
-        title={title || 'PDF Viewer'}
+        style={{ height: '100%', width: '100%' }}
+        title={title || 'PDF ko‘ruvchi'}
         className={cn(
-          'h-full w-full rounded-md transition-opacity duration-300',
+          'scrollbar-x-hidden block h-full w-full rounded-md transition-opacity duration-300',
           isLoading ? 'opacity-0' : 'opacity-100'
         )}
       />

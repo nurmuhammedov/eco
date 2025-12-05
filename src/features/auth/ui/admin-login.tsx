@@ -7,11 +7,10 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import { Input } from '@/shared/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/shared/components/ui/button'
-import { ComponentPropsWithoutRef, useEffect, useState } from 'react'
+import React, { ComponentPropsWithoutRef, useEffect, useState } from 'react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
-import { loadCaptchaEnginge, LoadCanvasTemplateNoReload, validateCaptcha } from 'react-simple-captcha'
+import { LoadCanvasTemplateNoReload, loadCaptchaEnginge, validateCaptcha } from 'react-simple-captcha'
 import { clsx } from 'clsx'
-import React from 'react'
 import { apiConfig } from '@/shared/api/constants'
 
 const adminLoginFormSchema = z.object({
@@ -58,12 +57,12 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
   return (
     <Form {...form}>
       <form
-        className={cn('flex w-full flex-col items-center justify-center gap-6', className)}
+        className={cn('flex h-full min-h-screen w-full flex-1 flex-col items-center justify-center gap-6', className)}
         onSubmit={form.handleSubmit(handleLogin)}
       >
         <div className="3xl:w-2/5 w-3/5">
           <div className="flex flex-col items-center gap-2 text-center">
-            <h1 className="text-2xl font-bold">{t('admin_panel')}</h1>
+            <h1 className="text-2xl font-bold whitespace-nowrap">{t('admin_panel')}</h1>
           </div>
           <div className="grid gap-4">
             <FormField
