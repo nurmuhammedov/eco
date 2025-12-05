@@ -81,21 +81,8 @@ export const DetailConclusion = () => {
               title="Ekspertiza xulosasi turi:"
               value={ExpertiseTypeOptions?.find((i) => i?.value == detail?.type)?.label || '-'}
             />
-            {/*<DetailRow*/}
-            {/*  title="Ekspertiza obyekti turi:"*/}
-            {/*  value={ExpertiseSubTypeOptions?.find((i) => i?.value == detail?.subType)?.label || '-'}*/}
-            {/*/>*/}
             <DetailRow title="Ekspertiza obyekti nomi" value={detail?.expertiseName || '-'} />
-            <DetailRow title="Ekspertiza xulosasi natijasi:" value={detail?.result || '-'} />
             <DetailRow title="Ekspertiza xulosasi reyestr raqami:" value={detail?.registryNumber || '-'} />
-            <DetailRow
-              title="Ekspertiza xulosasi reyestrga qo‘yilgan sana:"
-              value={detail?.registrationDate ? getDate(detail?.registrationDate) : '-'}
-            />
-            <DetailRow
-              title="Ekspertiza xulosasi:"
-              value={detail?.filePath ? <FileLink url={detail?.filePath} /> : '-'}
-            />
             <DetailRow
               title="Ekspertiza xulosasi holati:"
               value={
@@ -112,6 +99,29 @@ export const DetailConclusion = () => {
                 )
               }
             />
+            <DetailRow
+              title="Ekspertiza xulosasi natijasi:"
+              value={
+                typeof detail?.result == 'boolean' ? (
+                  detail?.result ? (
+                    <Badge variant="success">Ijobiy</Badge>
+                  ) : (
+                    <Badge variant="error">Salbiy</Badge>
+                  )
+                ) : (
+                  '-'
+                )
+              }
+            />
+            <DetailRow
+              title="Ekspertiza xulosasi reyestrga qo‘yilgan sana:"
+              value={detail?.registrationDate ? getDate(detail?.registrationDate) : '-'}
+            />
+            <DetailRow
+              title="Ekspertiza xulosasi:"
+              value={detail?.filePath ? <FileLink url={detail?.filePath} /> : '-'}
+            />
+
             <DetailRow
               title="Ekspertiza xulosasining bekor qilinganligi asosi"
               value={detail?.cancelledReason || '-'}

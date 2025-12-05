@@ -20,7 +20,7 @@ export const HfList = () => {
       name = '',
       address = '',
       regionId = '',
-      officeId = '',
+      districtId = '',
       hfTypeId = '',
     },
   } = useCustomSearchParams()
@@ -39,7 +39,7 @@ export const HfList = () => {
     name,
     address,
     regionId,
-    officeId,
+    districtId,
     hfTypeId,
   })
 

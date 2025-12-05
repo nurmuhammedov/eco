@@ -152,7 +152,7 @@ const PreventionWidget = () => {
         value: item?.value,
         label: item.label,
         count:
-          counts?.[`${item.value == 'LGP_POWERED' ? 'lpgPoweredCount' : item.value?.toString()?.toLowerCase()}Count`] ||
+          counts?.[`${item.value == 'LPG_POWERED' ? 'lpgPoweredCount' : item.value?.toString()?.toLowerCase()}Count`] ||
           0,
       })) || []
     )

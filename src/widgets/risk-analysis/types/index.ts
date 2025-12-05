@@ -4,7 +4,7 @@ export enum RiskAnalysisTab {
   LIFT = 'ELEVATOR',
   ATTRACTION = 'ATTRACTION',
   XRAY = 'XRAY',
-  LPG_POWERED = 'LGP_POWERED',
+  LPG_POWERED = 'LPG_POWERED',
 }
 
 export enum AssignedStatusTab {

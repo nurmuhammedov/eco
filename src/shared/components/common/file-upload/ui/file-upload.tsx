@@ -332,6 +332,7 @@ function InputFileComponent<T extends FieldValues>({
       <Input
         ref={fileInputRef}
         hidden
+        allowCyrillic={true}
         type="file"
         multiple={false}
         accept={acceptTypes}

@@ -19,8 +19,14 @@ export const EquipmentsList = () => {
       size = 10,
       search = '',
       mode = '',
-      officeId = '',
       regionId = '',
+      districtId = '',
+      registryNumber = '',
+      childEquipmentId = '',
+      ownerName = '',
+      ownerIdentity = '',
+      hfName = '',
+      address = '',
     },
     addParams,
   } = useCustomSearchParams()
@@ -29,11 +35,17 @@ export const EquipmentsList = () => {
     page,
     size,
     search,
-    officeId,
     regionId,
+    districtId,
     mode,
     type: type !== 'ALL' ? type : '',
     status: status !== 'ALL' ? status : '',
+    registryNumber,
+    childEquipmentId,
+    ownerName,
+    ownerIdentity,
+    hfName,
+    address,
   })
 
   const { data: dataForNewCount } = useData<number>(`/equipments/count`, true, {
@@ -78,32 +90,18 @@ export const EquipmentsList = () => {
       filterType: 'search',
     },
     {
-      header: 'Tashkilot/Fuqaro manzili',
-      accessorFn: (row) => row?.ownerAddress,
-      filterKey: 'ownerAddress',
-      filterType: 'search',
-      minSize: 150,
-    },
-    {
       header: 'Tashkilot STIR/JSHSHIR',
       accessorKey: 'ownerIdentity',
       filterKey: 'ownerIdentity',
       filterType: 'number',
-      filterMaxLength: 9,
+      filterMaxLength: 14,
     },
-    // {
-    //   header: 'Qurilmaning zavod raqami',
-    //   accessorKey: 'factoryNumber',
-    //   filterKey: 'factoryNumber',
-    //   filterType: 'search',
-    //   maxSize: 100,
-    // },
-    // {
-    //   header: 'XICHO nomi',
-    //   accessorKey: 'hfName',
-    //   filterKey: 'search',
-    //   filterType: 'search',
-    // },
+    {
+      header: 'XICHO nomi',
+      accessorKey: 'hfName',
+      filterKey: 'hfName',
+      filterType: 'search',
+    },
     {
       accessorKey: 'address',
       header: 'Qurilma manzili',
@@ -129,25 +127,6 @@ export const EquipmentsList = () => {
       ),
     },
   ]
-
-  // const handleDownloadExel = async () => {
-  //   const res = await apiClient.downloadFile<Blob>('/equipments/export/excel', {
-  //     ...rest,
-  //     type: type !== 'ALL' ? type : '',
-  //     status: status !== 'ALL' ? status : '',
-  //   });
-  //   const blob = res.data;
-  //   const url = URL.createObjectURL(blob);
-  //   const a = document.createElement('a');
-  //   const today = new Date();
-  //   const filename = `Qurilmalar (${format(today, 'yyyy-MM-dd_hh:mm:ss')}).xlsx`;
-  //   a.href = url;
-  //   a.download = filename;
-  //   document.body.appendChild(a);
-  //   a.click();
-  //   a.remove();
-  //   URL.revokeObjectURL(url);
-  // };
 
   return (
     <div className="flex flex-col gap-2">

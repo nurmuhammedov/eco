@@ -1,17 +1,22 @@
 import * as React from 'react'
 import { cn } from '@/shared/lib/utils'
 
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
-  ({ className, type, onChange, ...props }, ref) => {
+interface InputProps extends React.ComponentProps<'input'> {
+  allowCyrillic?: boolean
+}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, onChange, allowCyrillic = false, ...props }, ref) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const originalValue = e.target.value
-      const cleanValue = originalValue.replace(/[\u0400-\u04FF]/g, '')
-      if (originalValue !== cleanValue) {
-        e.target.value = cleanValue
+      if (!allowCyrillic) {
+        const originalValue = e.target.value
+        const cleanValue = originalValue.replace(/[\u0400-\u04FF]/g, '')
+        if (originalValue !== cleanValue) {
+          e.target.value = cleanValue
+        }
       }
-      if (onChange) {
-        onChange(e)
-      }
+
+      onChange?.(e)
     }
 
     return (
@@ -28,6 +33,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
     )
   }
 )
+
 Input.displayName = 'Input'
 
 export { Input }

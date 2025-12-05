@@ -1,4 +1,4 @@
-import { IrsUsageType } from '@/entities/create-application'
+import { IrsCategory, IrsUsageType } from '@/entities/create-application'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
@@ -8,9 +8,44 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 export const IrsList = () => {
   const navigate = useNavigate()
   const {
-    paramsObject: { size = 10, page = 1, mode = '', search = '', officeId = '', regionId = '' },
+    paramsObject: {
+      size = 10,
+      page = 1,
+      mode = '',
+      search = '',
+      regionId = '',
+      districtId = '',
+      registryNumber = '',
+      legalName = '',
+      legalAddress = '',
+      legalTin = '',
+      address = '',
+      category = '',
+      activity = '',
+      sphere = '',
+      symbol = '',
+      usageType = '',
+    },
   } = useCustomSearchParams()
-  const { data = [] } = usePaginatedData<any>(`/irs`, { page, size, mode, officeId, regionId, search })
+
+  const { data = [] } = usePaginatedData<any>(`/irs`, {
+    page,
+    size,
+    mode,
+    regionId,
+    districtId,
+    search,
+    registryNumber,
+    legalName,
+    legalAddress,
+    legalTin,
+    address,
+    category,
+    activity,
+    sphere,
+    symbol,
+    usageType,
+  })
 
   const handleViewApplication = (id: string) => {
     navigate(`${id}/irs`)
@@ -26,61 +61,65 @@ export const IrsList = () => {
       header: 'INM ro‘yxat raqami',
       maxSize: 120,
       accessorFn: (row) => row?.registryNumber,
-      filterKey: 'search',
+      filterKey: 'registryNumber',
       filterType: 'search',
     },
     {
       header: 'Tashkilot nomi',
       minSize: 220,
       accessorFn: (row) => row?.legalName,
-      filterKey: 'search',
+      filterKey: 'legalName',
       filterType: 'search',
     },
     {
       header: 'Tashkilot manzili',
       minSize: 220,
       accessorFn: (row) => row?.legalAddress,
-      filterKey: 'search',
+      filterKey: 'legalAddress',
       filterType: 'search',
     },
     {
       header: 'Tashkilot STIR',
       maxSize: 120,
       accessorFn: (row) => row?.legalTin,
-      filterKey: 'search',
+      filterKey: 'legalTin',
       filterType: 'search',
     },
     {
       header: 'INM manzili',
       accessorFn: (row) => row?.address,
-      filterKey: 'search',
+      filterKey: 'address',
       filterType: 'search',
     },
     {
       header: 'Kategoriyasi',
       maxSize: 110,
       accessorFn: (row) => row?.category,
-      filterKey: 'search',
-      filterType: 'search',
+      filterKey: 'category',
+      filterType: 'select',
+      filterOptions: Object.values(IrsCategory).map((val) => ({
+        id: val,
+        name: val,
+      })),
     },
     {
       header: 'Aktivligi',
       maxSize: 100,
       accessorFn: (row) => row?.activity,
-      filterKey: 'search',
+      filterKey: 'activity',
       filterType: 'search',
     },
     {
       header: 'Soha',
       accessorFn: (row) => row?.sphere,
-      filterKey: 'search',
+      filterKey: 'sphere',
       filterType: 'search',
     },
     {
       header: 'Radionuklid belgisi',
       maxSize: 100,
       accessorFn: (row) => row?.symbol,
-      filterKey: 'search',
+      filterKey: 'symbol',
       filterType: 'search',
     },
     {
@@ -92,6 +131,14 @@ export const IrsList = () => {
           { id: IrsUsageType.EXPORT, name: 'Chet-elga olib chiqish uchun' },
           { id: IrsUsageType.STORAGE, name: 'Vaqtinchalik saqlash uchun' },
         ]?.find((i) => i?.id == row?.usageType)?.name || '',
+      filterKey: 'usageType',
+      filterType: 'select',
+      filterOptions: [
+        { id: IrsUsageType.USAGE, name: 'Ishlatish (foydalanish) uchun' },
+        { id: IrsUsageType.DISPOSAL, name: 'Ko‘mish uchun' },
+        { id: IrsUsageType.EXPORT, name: 'Chet-elga olib chiqish uchun' },
+        { id: IrsUsageType.STORAGE, name: 'Vaqtinchalik saqlash uchun' },
+      ],
     },
     {
       id: 'actions',

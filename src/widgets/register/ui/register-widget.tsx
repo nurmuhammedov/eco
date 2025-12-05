@@ -18,6 +18,7 @@ import { AutoList } from '@/features/register/auto/ui/auto-list'
 import { AddPermitTransportModal } from '@/features/register/auto/ui/add-auto-modal'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
 
 const RegisterWidget = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -40,15 +41,8 @@ const RegisterWidget = () => {
   const { data: xrayCount = 0 } = useData<number>('/xrays/count', user?.role != UserRoles.INDIVIDUAL, { mode })
   const { data: tankersCount } = useData<any>('/tankers/count', user?.role != UserRoles.INDIVIDUAL, { mode })
 
-  const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(
-    `${API_ENDPOINTS.REGIONS_SELECT}`,
-    user?.role == UserRoles.CHAIRMAN || user?.role == UserRoles.MANAGER || user?.role == UserRoles.HEAD
-  )
-
-  const { data: officeOptions, isLoading: isLoadingOffices } = useData<any>(
-    `${API_ENDPOINTS.OFFICES}/select`,
-    user?.role == UserRoles.CHAIRMAN || user?.role == UserRoles.MANAGER || user?.role == UserRoles.HEAD
-  )
+  const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(`${API_ENDPOINTS.REGIONS_SELECT}`)
+  const { data: districts, isLoading: isDistrictsLoading } = useDistrictSelectQueries(rest?.regionId)
 
   const handleDownloadExel = () => {
     setIsLoading(true)
@@ -156,50 +150,44 @@ const RegisterWidget = () => {
                     ])}
                   </SelectContent>
                 </Select>
-                {(user?.role == UserRoles.CHAIRMAN ||
-                  user?.role == UserRoles.MANAGER ||
-                  user?.role == UserRoles.HEAD) && (
-                  <>
-                    <Select
-                      onValueChange={(value) => {
-                        if (value && value !== 'ALL') {
-                          addParams({ regionId: value }, 'page')
-                        } else {
-                          removeParams('regionId')
-                        }
-                      }}
-                      value={rest?.regionId?.toString() || ''}
-                      disabled={isLoadingRegions}
-                    >
-                      <SelectTrigger className="max-w-50">
-                        <SelectValue placeholder="Hudud" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ALL">Barchasi</SelectItem>
-                        {getSelectOptions(regionOptions)}
-                      </SelectContent>
-                    </Select>
-                    <Select
-                      onValueChange={(value) => {
-                        if (value && value !== 'ALL') {
-                          addParams({ officeId: value }, 'page')
-                        } else {
-                          removeParams('officeId')
-                        }
-                      }}
-                      value={rest?.officeId?.toString() || ''}
-                      disabled={isLoadingOffices}
-                    >
-                      <SelectTrigger className="max-w-50">
-                        <SelectValue placeholder="Hududiy bo‘linma" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ALL">Barchasi</SelectItem>
-                        {getSelectOptions(officeOptions)}
-                      </SelectContent>
-                    </Select>
-                  </>
-                )}
+                <Select
+                  onValueChange={(value) => {
+                    if (value && value !== 'ALL') {
+                      addParams({ regionId: value }, 'page', 'districtId')
+                    } else {
+                      removeParams('regionId', 'districtId')
+                    }
+                  }}
+                  value={rest?.regionId?.toString() || ''}
+                  disabled={isLoadingRegions}
+                >
+                  <SelectTrigger className="max-w-50">
+                    <SelectValue placeholder="Hudud" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ALL">Barchasi</SelectItem>
+                    {getSelectOptions(regionOptions)}
+                  </SelectContent>
+                </Select>
+                <Select
+                  onValueChange={(value) => {
+                    if (value && value !== 'ALL') {
+                      addParams({ districtId: value }, 'page')
+                    } else {
+                      removeParams('districtId')
+                    }
+                  }}
+                  value={rest?.districtId?.toString() || ''}
+                  disabled={isDistrictsLoading}
+                >
+                  <SelectTrigger className="max-w-50">
+                    <SelectValue placeholder="Tuman" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ALL">Barchasi</SelectItem>
+                    {getSelectOptions(districts)}
+                  </SelectContent>
+                </Select>
               </div>
             )}
             {!(type == 'ALL' && tab == RegisterActiveTab.EQUIPMENTS) ? (

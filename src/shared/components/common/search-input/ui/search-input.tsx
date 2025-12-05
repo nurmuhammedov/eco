@@ -36,6 +36,7 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
         <SearchIcon className="absolute top-1/2 left-2 -translate-y-1/2 text-neutral-400" size={16} />
 
         <Input
+          allowCyrillic={true}
           ref={ref}
           disabled={isLoading}
           onChange={handleChange}
