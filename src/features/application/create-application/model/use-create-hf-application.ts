@@ -1,8 +1,4 @@
-import {
-  applicationFormConstants,
-  type CreateHPOApplicationDTO,
-  HFAppealDtoSchema,
-} from '@/entities/create-application'
+import { applicationFormConstants, type CreateHFApplicationDTO, HFAppealDtoSchema } from '@/entities/create-application'
 import {
   useDistrictSelectQueries,
   useHazardousFacilityTypeDictionarySelect,
@@ -13,8 +9,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
-export const useCreateHPOApplication = () => {
-  const form = useForm<CreateHPOApplicationDTO>({
+export const useCreateHfApplication = () => {
+  const form = useForm<CreateHFApplicationDTO>({
     resolver: zodResolver(HFAppealDtoSchema),
     defaultValues: {
       phoneNumber: '',

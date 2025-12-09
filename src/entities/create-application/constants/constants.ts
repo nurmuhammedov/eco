@@ -131,7 +131,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     title: 'XICHO reyestriga o‘zgartirish kiritish',
     description: 'XICHO reyestriga o‘zgartirish kiritish uchun ariza shakli',
     category: ApplicationCategory.HF,
-    type: ApplicationTypeEnum.MODIFY_HF,
+    type: ApplicationTypeEnum.RE_REGISTER_HF,
     icon: 'factoryUpdateIcon',
   },
   {
@@ -788,5 +788,13 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     category: ApplicationCategory.ILLEGAL_EQUIPMENTS,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_CABLEWAY,
     icon: 'cableway',
+  },
+  {
+    id: 79,
+    title: 'XICHO reyestriga o‘zgartirish kiritish',
+    description: 'XICHO reyestriga o‘zgartirish kiritish uchun ariza shakli',
+    category: ApplicationCategory.ILLEGAL,
+    type: ApplicationTypeEnum.RE_REGISTER_ILLEGAL_HF,
+    icon: 'factoryRegisterIcon',
   },
 ]

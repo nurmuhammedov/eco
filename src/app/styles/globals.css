@@ -207,4 +207,16 @@
   .page-sub-title {
     @apply 3xl:text-xl text-base font-semibold;
   }
+
+  [class*='ymaps-2'][class*='-copyright'] {
+    display: none !important;
+  }
+
+  [class*='ymaps-2'][class*='-map-copyrights-promo'] {
+    display: none !important;
+  }
+
+  .ymaps-2-1-79-map-copyrights-promo {
+    display: none !important;
+  }
 }

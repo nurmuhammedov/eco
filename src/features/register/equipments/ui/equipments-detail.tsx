@@ -9,12 +9,12 @@ import FileLink from '@/shared/components/common/file-link.tsx'
 import { Coordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { getDate } from '@/shared/utils/date.ts'
-import { useParams, Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { QRCodeCanvas } from 'qrcode.react'
 import { EquipmentPdfDocument } from '@/shared/components/common/EquipmentPdfDocument'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx'
 import { EquipmentStickerPdf } from '@/shared/components/common/EquipmentStickerPdf'
 
@@ -58,6 +58,7 @@ const EquipmentsDetail = () => {
           'applicant_info_individual',
           'object_info',
           'object_location',
+          'object_qr',
           'object_files',
         ]}
       >
@@ -110,7 +111,7 @@ const EquipmentsDetail = () => {
           />
         </DetailCardAccordion.Item>
 
-        {data?.type == 'ATTRACTION' ? (
+        {data?.type == 'ATTRACTION' || data?.type == 'CRANE' ? (
           <DetailCardAccordion.Item value="object_qr" title="Qurilma pasport ma‘lumotlari">
             <QRCodeCanvas
               id="pdf-qr-canvas"

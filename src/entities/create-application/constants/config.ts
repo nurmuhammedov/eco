@@ -10,9 +10,13 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: '/appeals/hf/deregister',
     pdfEndpoint: '/appeals/hf/deregister/generate-pdf',
   },
-  [ApplicationTypeEnum.MODIFY_HF]: {
-    submitEndpoint: API_ENDPOINTS.APPEAL_HF + '/modify',
-    pdfEndpoint: API_ENDPOINTS.APPEAL_HF_PDF_GENERATION.replace('/register', '/modify'),
+  [ApplicationTypeEnum.RE_REGISTER_HF]: {
+    submitEndpoint: '/appeals/hf/reregister',
+    pdfEndpoint: '/appeals/hf/reregister/generate-pdf',
+  },
+  [ApplicationTypeEnum.RE_REGISTER_ILLEGAL_HF]: {
+    submitEndpoint: '/appeals/hf/unofficial/reregister',
+    pdfEndpoint: '/appeals/hf/unofficial/reregister/generate-pdf',
   },
   [ApplicationTypeEnum.REGISTER_CRANE]: {
     submitEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_CRANE,

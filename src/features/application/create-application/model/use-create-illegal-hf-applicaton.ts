@@ -11,7 +11,10 @@ import { useForm } from 'react-hook-form'
 import { RegisterIllegalHFSchema } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
 
 export const useCreateIllegalHFApplication = () => {
-  const form = useForm<RegisterIllegalHFSchemaDTO>({ resolver: zodResolver(RegisterIllegalHFSchema) })
+  const form = useForm<RegisterIllegalHFSchemaDTO>({
+    resolver: zodResolver(RegisterIllegalHFSchema),
+    mode: 'onChange',
+  })
 
   const regionId = form.watch('regionId')
 
@@ -23,11 +26,14 @@ export const useCreateIllegalHFApplication = () => {
 
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
 
-  const districtOptions = useMemo(() => getSelectOptions(districts), [districts])
+  const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
 
-  const regionOptions = useMemo(() => getSelectOptions(regions), [regions, regionId])
+  const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
 
-  const hazardousFacilityTypeOptions = useMemo(() => getSelectOptions(hazardousFacilityTypes), [hazardousFacilityTypes])
+  const hazardousFacilityTypeOptions = useMemo(
+    () => getSelectOptions(hazardousFacilityTypes || []),
+    [hazardousFacilityTypes]
+  )
 
   return { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions }
 }

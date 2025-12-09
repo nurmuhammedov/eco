@@ -1,4 +1,5 @@
 import { ReRegisterEquipmentDTO } from '@/entities/create-application'
+import { ReRegisterEquipmentSchema } from '@/entities/create-application/schemas/re-register-equipment.schema'
 import {
   useDistrictSelectQueries,
   useHazardousFacilityDictionarySelect,
@@ -8,7 +9,6 @@ import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { ReRegisterEquipmentSchema } from '@/entities/create-application/schemas/re-register-equipment.schema'
 
 export const useReRegisterEquipment = () => {
   const form = useForm<ReRegisterEquipmentDTO>({

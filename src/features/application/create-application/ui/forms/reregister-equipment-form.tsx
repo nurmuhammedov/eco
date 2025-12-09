@@ -6,6 +6,7 @@ import {
   ReRegisterEquipmentDTO,
 } from '@/entities/create-application'
 import { NoteForm } from '@/features/application/create-application'
+import { useReRegisterEquipment } from '@/features/application/create-application/model/use-re-register-equipment'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
@@ -17,13 +18,12 @@ import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
-import { useReRegisterEquipment } from '@/features/application/create-application/model/use-re-register-equipment'
 
-interface RegisterCraneFormProps {
+interface ReRegisterEquipmentFormProps {
   onSubmit: (data: ReRegisterEquipmentDTO) => void
 }
 
-export default ({ onSubmit }: RegisterCraneFormProps) => {
+export default ({ onSubmit }: ReRegisterEquipmentFormProps) => {
   const { form, regionOptions, districtOptions, hazardousFacilitiesOptions } = useReRegisterEquipment()
 
   return (
@@ -61,8 +61,8 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                       <SelectContent>
                         {APPLICATIONS_DATA?.filter(
                           (i) =>
-                            i.category == ApplicationCategory.EQUIPMENTS &&
-                            i.parentId == MainApplicationCategory.REGISTER
+                            i.category === ApplicationCategory.EQUIPMENTS &&
+                            i.parentId === MainApplicationCategory.REGISTER
                         )?.map((option) => (
                           <SelectItem key={option.equipmentType || 'DEFAULT'} value={option.equipmentType || 'DEFAULT'}>
                             {option.name}
@@ -94,6 +94,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="oldRegistryNumber"
@@ -107,6 +108,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="partialCheckDate"
@@ -126,6 +128,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 )
               }}
             />
+
             <FormField
               control={form.control}
               name="fullCheckDate"
@@ -135,6 +138,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                   <FormItem className="3xl:w-sm w-full">
                     <FormLabel required>Toʻliq texnik koʻrik sanasi</FormLabel>
                     <DatePicker
+                      disableStrategy="after"
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
                       placeholder="Sanani tanlang"
@@ -144,6 +148,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 )
               }}
             />
+
             <FormField
               control={form.control}
               name="regionId"
@@ -170,6 +175,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="districtId"
@@ -192,6 +198,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="address"
@@ -205,12 +212,13 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="location"
               render={({ field }) => (
                 <FormItem className="3xl:w-sm w-full">
-                  <FormLabel required>Joylashuv (Xarita)</FormLabel>
+                  <FormLabel required>Joylashuv (Xaritadan joyni tanlang)</FormLabel>
                   <FormControl>
                     <YandexMapModal
                       initialCoords={field.value ? field.value.split(',').map(Number) : null}
@@ -226,110 +234,122 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
         </CardForm>
 
         <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
-          <FormField
-            name="labelPath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Qurilmaning surati
-                  </FormLabel>
-                  <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
-                  </FormControl>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="saleContractPath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Sotib olish-sotish shartnomasi
-                  </FormLabel>
-                  <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                  </FormControl>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="equipmentCertPath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Qurilma sertifikati
-                  </FormLabel>
-                  <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                  </FormControl>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="assignmentDecreePath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Masʼul shaxs tayinlanganligi to‘g‘risida buyruq
-                  </FormLabel>
-                  <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                  </FormControl>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="expertisePath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Ekspertiza loyihasi
-                  </FormLabel>
-                  <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                  </FormControl>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="installationCertPath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                    Montaj guvohnomasi fayli
-                  </FormLabel>
-                  <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                  </FormControl>
-                </div>
-                <FormMessage className="text-right" />
-              </FormItem>
-            )}
-          />
+          <div className="border-b pb-4">
+            <FormField
+              name="labelPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Qurilmaning birkasi bilan surati
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="saleContractPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="equipmentCertPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Qurilma sertifikati
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="assignmentDecreePath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Masʼul shaxs tayinlanganligi to‘g‘risida buyruq
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="expertisePath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Ekspertiza xulosasi
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="installationCertPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Montaj dalolatnomasi
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
         </CardForm>
-        <Button type="submit" className="mt-5" disabled={!form.formState.isValid}>
+
+        <Button type="submit" className="mt-5">
           Ariza yaratish
         </Button>
       </form>

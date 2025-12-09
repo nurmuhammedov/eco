@@ -30,7 +30,8 @@ export enum BuildingSphereType {
 export enum ApplicationTypeEnum {
   REGISTER_HF = 'REGISTER_HF',
   DEREGISTER_HF = 'DEREGISTER_HF',
-  MODIFY_HF = 'MODIFY_HF',
+  RE_REGISTER_HF = 'RE_REGISTER_HF',
+  RE_REGISTER_ILLEGAL_HF = 'RE_REGISTER_ILLEGAL_HF',
 
   REPORT_1 = 'REPORT_1',
   REPORT_2 = 'REPORT_2',

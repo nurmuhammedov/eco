@@ -497,7 +497,7 @@ export default ({ onSubmit }: RegisterIllegalLiftFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sotib olish-sotish shartnomasi fayli</FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilmaning oldi sotdi shartnomasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>

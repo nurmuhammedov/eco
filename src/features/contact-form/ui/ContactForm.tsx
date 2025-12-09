@@ -125,7 +125,7 @@ export const ContactForm = () => {
   if (!data) {
     return (
       <div className="mx-auto w-full max-w-4xl p-6 text-center">
-        <p>Ushbu ID bo'yicha qurilma ma'lumotlari topilmadi.</p>
+        <p>Ushbu ID bo‘yicha qurilma maʼlumotlari topilmadi.</p>
       </div>
     )
   }
@@ -155,10 +155,9 @@ export const ContactForm = () => {
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6">
-      {/* --- Qurilma ma'lumotlari bloki --- */}
       <div className="bg-card text-card-foreground overflow-hidden rounded-lg border shadow-md">
         <div className="bg-[var(--color-blue-200)] p-4">
-          <h2 className="text-lg font-semibold text-[var(--color-blue-400)]">Qurilma ma'lumotlari</h2>
+          <h2 className="text-lg font-semibold text-[var(--color-blue-400)]">Qurilma maʼlumotlari</h2>
         </div>
         <div className="p-2">
           <div className={infoRowStyles}>
@@ -240,7 +239,6 @@ export const ContactForm = () => {
         </div>
       </div>
 
-      {/* --- Murojaat yuborish formasi --- */}
       <div className="bg-card text-card-foreground w-full overflow-hidden rounded-lg border shadow-md">
         <div className="bg-[var(--color-blue-200)] p-4">
           <h2 className="text-lg font-semibold text-[var(--color-blue-400)]">Murojaat yuborish</h2>
@@ -361,7 +359,6 @@ export const ContactForm = () => {
         </div>
       </div>
 
-      {/* --- Qurilma manzili (Yandex Map) --- */}
       <div className="bg-card text-card-foreground w-full overflow-hidden rounded-lg border shadow-md">
         <div className="bg-[var(--color-blue-200)] p-4">
           <h2 className="text-lg font-semibold text-[var(--color-blue-400)]">Qurilma manzili</h2>

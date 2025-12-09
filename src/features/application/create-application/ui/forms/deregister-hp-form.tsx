@@ -1,5 +1,5 @@
 import { CardForm, DeRegisterHFDTO } from '@/entities/create-application'
-import { useDeRegisterHFApplication } from '@/features/application/create-application/model/use-deregister-hpo-application.ts'
+import { useDeRegisterHFApplication } from '@/features/application/create-application/model/use-deregister-hf-application.ts'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
@@ -19,7 +19,7 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="XICHOni ro'yxatdan chiqarish" />
+        <GoBack title="XICHOni ro‘yxatdan chiqarish" />
         <CardForm className="mt-4 mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
@@ -96,7 +96,7 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
           </div>
         </CardForm>
 
-        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
+        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2">
           <FormField
             name="justifiedDocumentPath"
             control={form.control}

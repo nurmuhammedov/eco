@@ -17,21 +17,37 @@ import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useCreateIllegalHFApplication } from '@/features/application/create-application/model/use-create-illegal-hf-applicaton'
-import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info'
 import DetailRow from '@/shared/components/common/detail-row'
+import useAdd from '@/shared/hooks/api/useAdd'
+import { useState } from 'react'
 
 export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
   const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } =
     useCreateIllegalHFApplication()
-
+  const [data, setData] = useState<any>(undefined)
+  const { mutateAsync, isPending } = useAdd<any, any, any>('/integration/iip/legal')
   const legalTin = form.watch('legalTin')
 
-  const { data, isLoading: isLegalInfoLoading } = useLegalApplicantInfo(legalTin, legalTin?.trim()?.length === 9)
+  const handleSearch = async () => {
+    const isValid = await form.trigger('legalTin')
+
+    if (isValid && legalTin && legalTin.length === 9) {
+      mutateAsync({ tin: legalTin }).then((res) => {
+        setData(res.data)
+      })
+    }
+  }
+
+  const handleClear = () => {
+    setData(undefined)
+    form.setValue('legalTin', '')
+  }
 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="XICHOni ro‘yxatga olish" />
+
         <CardForm className="my-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
@@ -41,28 +57,50 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                 <FormItem>
                   <FormLabel required>STIR</FormLabel>
                   <FormControl>
-                    <Input className={'3xl:w-sm w-full'} placeholder="STIRni kiriting" {...field} />
+                    <Input
+                      disabled={!!data}
+                      className={'3xl:w-sm w-full'}
+                      placeholder="STIRni kiriting"
+                      maxLength={9}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
 
-          {isLegalInfoLoading && <div className=""></div>}
+            <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
+              {!data ? (
+                <Button
+                  type="button"
+                  onClick={handleSearch}
+                  disabled={isPending || !legalTin || legalTin.length !== 9}
+                  loading={isPending}
+                >
+                  Qidirish
+                </Button>
+              ) : (
+                <Button type="button" variant="destructive" onClick={handleClear}>
+                  O‘chirish
+                </Button>
+              )}
+            </div>
+          </div>
 
           {data && (
             <div className="mt-6 border-t pt-6">
-              <h3 className="mb-4 text-lg font-semibold text-gray-800">Tashkilot ma'lumotlari</h3>
+              <h3 className="mb-4 text-lg font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
               <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
                 <DetailRow title="Tashkilot nomi:" value={data?.name || '-'} />
                 <DetailRow title="Tashkilot rahbari F.I.SH:" value={data?.directorName || '-'} />
-                <DetailRow title="Tashkilot manzili:" value={data?.address || '-'} />
+                <DetailRow title="Tashkilot manzili:" value={data?.address || data?.legalAddress || '-'} />
                 <DetailRow title="Tashkilot telefon raqami:" value={data?.phoneNumber || '-'} />
               </div>
             </div>
           )}
         </CardForm>
+
         <CardForm className="my-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
@@ -96,7 +134,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Bog'lanish uchun telefon raqami</FormLabel>
+                  <FormLabel required>Bog‘lanish uchun telefon raqami</FormLabel>
                   <FormControl>
                     <PhoneInput className="3xl:w-sm w-full" {...field} />
                   </FormControl>
@@ -126,13 +164,11 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               control={form.control}
               name="spheres"
               render={({ field }) => (
-                // <FormItem> butun blokni o'rab turadi
                 <FormItem className="flex flex-col">
                   <FormLabel>Tarmoqlar</FormLabel>
                   <FormControl>
-                    {/* MultiSelect'ni FormControl ichiga joylaymiz */}
                     <MultiSelect
-                      className="3xl:w-sm w-full" // Bu klasslar balandlikni to'g'rilashga yordam beradi
+                      className="3xl:w-sm w-full"
                       value={field.value || []}
                       onChange={field.onChange}
                       options={spheres}
@@ -208,7 +244,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                   <FormLabel required>Joylashuv</FormLabel>
                   <FormControl>
                     <YandexMapModal
-                      initialCoords={field.value ? [field.value] : null}
+                      initialCoords={field.value ? field.value.split(',').map(Number) : null}
                       onConfirm={(coords) => field.onChange(coords)}
                       {...field}
                     />
@@ -248,7 +284,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                   </FormControl>
                   <FormMessage />
                   <FormDescription>
-                    VM ning 2008 yil 10 dekabrdagi 271-son qaroriga muvofiq
+                    VM ning 2008-yil 10-dekabrdagi 271-son qaroriga muvofiq
                     <br /> xavfli moddalarning nomi va miqdori
                   </FormDescription>
                 </FormItem>
@@ -256,6 +292,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             />
           </div>
         </CardForm>
+
         <CardForm className="mb-5 grid grid-cols-2 gap-x-8 gap-y-4 2xl:grid-cols-3">
           <FormField
             name="projectDocumentationPath"
@@ -263,7 +300,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel>Loyiha hujjatlari(PDF)</FormLabel>
+                  <FormLabel>Loyiha hujjatlari (PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -277,7 +314,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel>Sug‘urta polisi(PDF)</FormLabel>
+                  <FormLabel>Sug‘urta polisi (PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -291,7 +328,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel>Ma'sul xodim tayinlanganligi buyrug‘i(PDF)</FormLabel>
+                  <FormLabel>Mas‘ul xodim tayinlanganligi buyrug‘i (PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -305,7 +342,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Identifikatsiya varag‘i(PDF)</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Identifikatsiya varag‘i (PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -319,7 +356,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekspertiza xulosasi(PDF)</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekspertiza xulosasi (PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -333,7 +370,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Litsenziya(PDF)</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Litsenziya (PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -347,7 +384,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekologiya qo‘mitasidan xulosasi(PDF)</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekologiya qo‘mitasidan xulosasi (PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -361,7 +398,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ruxsatnoma(PDF)</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ruxsatnoma (PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -376,7 +413,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                    XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi(PDF)
+                    XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi (PDF)
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
@@ -392,7 +429,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                    XICHO xodimlarning sanoat xavfsizligi bo‘yicha attestatsiyadan o‘tganligi(PDF)
+                    XICHO xodimlarning sanoat xavfsizligi bo‘yicha attestatsiyadan o‘tganligi (PDF)
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
@@ -407,7 +444,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">XICHO kadastr pasporti(PDF)</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">XICHO kadastr pasporti (PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -421,7 +458,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Yong‘in xavfsizligi xulosasi(PDF)</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Yong‘in xavfsizligi xulosasi (PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -435,7 +472,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sanoat xavfsizligi deklaratsiyasi(PDF)</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sanoat xavfsizligi deklaratsiyasi (PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -449,7 +486,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilmalarni sinovdan o‘tganligi(PDF)</FormLabel>
+                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilmalarni sinovdan o‘tganligi (PDF)</FormLabel>
                   <FormControl>
                     <InputFile form={form} {...field} />
                   </FormControl>
@@ -458,7 +495,10 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             )}
           />
         </CardForm>
-        <Button type="submit">Ariza yaratish</Button>
+
+        <Button type="submit" disabled={!data}>
+          Ariza yaratish
+        </Button>
       </form>
     </Form>
   )

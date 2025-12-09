@@ -2,7 +2,7 @@ import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { z } from 'zod'
 
-export const DeRegisterHF = z.object({
+export const DeRegisterHFSchema = z.object({
   phoneNumber: z
     .string({ required_error: 'Majburiy maydon!' })
     .trim()

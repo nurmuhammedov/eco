@@ -11,35 +11,52 @@ import { apiClient } from '@/shared/api'
 import { format } from 'date-fns'
 import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application'
 
+const toCamelCase = (str: string) => {
+  if (!str) return ''
+  if (!str.includes('_')) return str.toLowerCase().replace('way', 'Way')
+  return str.toLowerCase().replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
+}
+
+// UPDATED: isSummary qo‘shildi
+const DoubleValueCell = ({
+  present = 0,
+  period = 0,
+  isSummary = false,
+}: {
+  present: number
+  period: number
+  isSummary?: boolean
+}) => (
+  <div className="grid w-full grid-cols-2 items-center">
+    <div className={`border-r border-gray-300 pr-2 text-center ${isSummary ? 'font-bold' : ''}`}>{present}</div>
+    <div className={`pl-2 text-center ${isSummary ? 'font-bold' : ''}`}>{period}</div>
+  </div>
+)
+
 const Report1: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
-  const { data: inspections, isLoading } = useData<any[]>('/reports/appeal-status', true, {
+  const { data: inspections, isLoading } = useData<any[]>('/reports/registry/present-and-period', true, {
     ...paramsObject,
-    ownerType: 'LEGAL',
   })
 
   const tableData = useMemo(() => {
     if (!inspections) return []
-    const summaryRow = {
-      officeName: 'Respublika bo‘yicha',
+    let summaryRow = inspections.find((i) => i?.officeName === 'Respublika bo‘yicha')
+    summaryRow = {
       isSummary: true,
-      count: 0,
+      ...summaryRow,
     }
-    return [summaryRow, ...inspections]
+    return [
+      summaryRow,
+      ...(inspections?.filter((i) => i?.officeName !== 'Respublika bo‘yicha' && !!i?.officeName) || []),
+    ]
   }, [inspections])
-
-  const DoubleValueCell = () => (
-    <div className="grid w-full grid-cols-2 items-center">
-      <div className="border-r border-gray-300 pr-2 text-center">0</div>
-      <div className="pl-2 text-center">0</div>
-    </div>
-  )
 
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
       {
         header: 'T/r',
-        cell: ({ row }) => (row.original.isSummary ? <span></span> : row.index + 1),
+        cell: ({ row }) => (row.original.isSummary ? <span></span> : row.index),
         size: 50,
       },
       {
@@ -52,30 +69,70 @@ const Report1: React.FC = () => {
       },
       {
         header: 'XICHO',
-        cell: () => <DoubleValueCell />,
+        cell: ({ row }: any) => (
+          <DoubleValueCell
+            present={row.original['hfPresentCount']}
+            period={row.original['hfPeriodCount']}
+            isSummary={row.original.isSummary}
+          />
+        ),
         minSize: 150,
       },
-      ...(APPLICATIONS_DATA.filter(
+
+      // Dynamic equipment columns
+      ...APPLICATIONS_DATA.filter(
         (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
       )
         .map((i) => ({
           id: i?.equipmentType ?? '',
           name: i?.name ?? '',
         }))
-        .map((i) => ({
-          header: i?.name || '',
-          cell: () => <DoubleValueCell />,
-          minSize: 150,
-        })) ?? []),
+        .map((i) => {
+          let baseKey = toCamelCase(i.id as unknown as string)
+
+          if (baseKey === 'cableway') {
+            baseKey = 'cableWay'
+          }
+
+          const presentKey = `${baseKey}PresentCount`
+          const periodKey = `${baseKey}PeriodCount`
+
+          return {
+            header: i?.name || '',
+            cell: ({ row }: any) => (
+              <DoubleValueCell
+                present={row.original[presentKey]}
+                period={row.original[periodKey]}
+                isSummary={row.original.isSummary}
+              />
+            ),
+            minSize: 150,
+          }
+        }),
+
       {
         header: 'INM',
-        cell: () => <DoubleValueCell />,
+        accessorKey: 'inm',
         minSize: 150,
+        cell: ({ row }) => (
+          <DoubleValueCell
+            present={row.original['irsPresentCount']}
+            period={row.original['irsPeriodCount']}
+            isSummary={row.original.isSummary}
+          />
+        ),
       },
       {
         header: 'Rentgenlar',
-        cell: () => <DoubleValueCell />,
+        accessorKey: 'xray',
         minSize: 150,
+        cell: ({ row }) => (
+          <DoubleValueCell
+            present={row.original['xrayPresentCount']}
+            period={row.original['xrayPeriodCount']}
+            isSummary={row.original.isSummary}
+          />
+        ),
       },
     ],
     []

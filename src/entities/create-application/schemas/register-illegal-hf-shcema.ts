@@ -1,29 +1,25 @@
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { HFSphere } from '@/shared/types'
-import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { z } from 'zod'
 
 export const HFSphereEnum = z.enum(Object.values(HFSphere) as [string, ...string[]])
 
 export const RegisterIllegalHFSchema = z.object({
   phoneNumber: z
-    .string({ required_error: 'Telefon raqam kiritilmadi!' })
+    .string({ required_error: 'Majburiy maydon!' })
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
-      message: FORM_ERROR_MESSAGES.phone,
+      message: 'Telefon raqam noto‘g‘ri formatda',
     }),
-
-  legalTin: z.string({ required_error: 'STIR kiritilmadi!' }).min(1, 'STIR kiritilmadi!'),
-
-  name: z.string({ required_error: 'XICHO ning nomi kiritilmadi!' }).min(1, 'XICHO ning nomi kiritilmadi!'),
-
-  address: z.string({ required_error: 'Manzil kiritilmadi!' }).min(1, 'Manzil kiritilmadi!'),
-
-  regionId: z.string({ required_error: 'Viloyat tanlanmadi!' }).min(1, 'Viloyat tanlanmadi!'),
-
-  districtId: z.string({ required_error: 'Tuman tanlanmadi!' }).min(1, 'Tuman tanlanmadi!'),
-
-  location: z.string({ required_error: 'Koordinatalar kiritilmadi!' }).min(1, 'Koordinatalar kiritilmadi!'),
+  legalTin: z
+    .string({ required_error: 'Majburiy maydon!' })
+    .regex(/^\d+$/, 'Faqat raqamlar kiritilishi kerak')
+    .length(9, 'STIR 9 xonali bo‘lishi kerak'), // Aniq 9 xonalilik talabi
+  name: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  address: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  regionId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  districtId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  location: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
 
   upperOrganization: z.string().optional(),
   hfTypeId: z.string().optional(),

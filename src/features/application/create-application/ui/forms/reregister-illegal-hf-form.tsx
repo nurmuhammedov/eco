@@ -1,8 +1,6 @@
-import { CardForm } from '@/entities/create-application'
-import { useCreateHPOApplication } from '@/features/application/create-application'
+import { CardForm, ReRegisterIllegalHFApplicationDTO } from '@/entities/create-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 import { Button } from '@/shared/components/ui/button.tsx'
 import {
@@ -18,18 +16,103 @@ import { Input } from '@/shared/components/ui/input'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { useReRegisterIllegalHFApplication } from '@/features/application/create-application/model/use-re-register-illegal-hf-application'
+import DetailRow from '@/shared/components/common/detail-row'
 import DatePicker from '@/shared/components/ui/datepicker.tsx'
 import { parseISO } from 'date-fns'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 
-export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
-  const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } = useCreateHPOApplication()
+export default ({ onSubmit }: { onSubmit: (data: ReRegisterIllegalHFApplicationDTO) => void }) => {
+  const {
+    form,
+    spheres,
+    regionOptions,
+    districtOptions,
+    hazardousFacilityTypeOptions,
+    hazardousFacilitiesOptions,
+    handleSearch,
+    handleClear,
+    orgData,
+    isSearching,
+  } = useReRegisterIllegalHFApplication()
 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="XICHOni ro‘yxatga olish" />
+        <GoBack title="XICHOni qayta ro‘yxatdan o‘tkazish" />
+
+        <CardForm className="my-2">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+            <FormField
+              control={form.control}
+              name="legalTin"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>STIR</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={!!orgData}
+                      className={'3xl:w-sm w-full'}
+                      placeholder="STIRni kiriting"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
+              {!orgData ? (
+                <Button
+                  type="button"
+                  onClick={handleSearch}
+                  disabled={isSearching || !form.watch('legalTin') || form.watch('legalTin')?.length !== 9}
+                  loading={isSearching}
+                >
+                  Qidirish
+                </Button>
+              ) : (
+                <Button type="button" variant="destructive" onClick={handleClear}>
+                  O‘chirish
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {orgData && (
+            <div className="mt-6 border-t pt-6">
+              <h3 className="mb-4 text-lg font-semibold text-gray-800">Tashkilot ma'lumotlari</h3>
+              <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
+                <DetailRow title="Tashkilot nomi:" value={orgData?.name || '-'} />
+                <DetailRow title="Tashkilot rahbari F.I.SH:" value={orgData?.directorName || '-'} />
+                <DetailRow title="Tashkilot manzili:" value={orgData?.address || '-'} />
+                <DetailRow title="Tashkilot telefon raqami:" value={orgData?.phoneNumber || '-'} />
+              </div>
+            </div>
+          )}
+        </CardForm>
+
         <CardForm className="my-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+            <FormField
+              control={form.control}
+              name="hazardousFacilityId"
+              render={({ field }) => (
+                <FormItem className="col-span-full xl:col-span-1">
+                  <FormLabel required>O‘zgartirish kiritilayotgan XICHO ni tanlang</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value || ''}>
+                      <SelectTrigger className="3xl:w-sm w-full">
+                        <SelectValue placeholder="XICHO ni tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="upperOrganization"
@@ -61,7 +144,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Bog'lanish uchun telefon raqami</FormLabel>
+                  <FormLabel required>Bog‘lanish uchun telefon raqami</FormLabel>
                   <FormControl>
                     <PhoneInput className="3xl:w-sm w-full" {...field} />
                   </FormControl>
@@ -171,7 +254,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                   <FormLabel required>Joylashuv</FormLabel>
                   <FormControl>
                     <YandexMapModal
-                      initialCoords={field.value ? [field.value] : null}
+                      initialCoords={field.value ? field.value.split(',').map(Number) : null}
                       onConfirm={(coords) => field.onChange(coords)}
                       {...field}
                     />
@@ -224,6 +307,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
           </div>
         </CardForm>
 
+        {/* Hujjatlar bloki (Yangi namunadan olingan, sanalar bilan) */}
         <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <div className="border-b pb-4">
             <FormField
@@ -397,7 +481,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ma'sul xodim tayinlanganligi buyrug‘i</FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Maʼsul xodim tayinlanganligi buyrug‘i</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -462,6 +546,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             />
           </div>
         </CardForm>
+
         <Button type="submit">Ariza yaratish</Button>
       </form>
     </Form>
