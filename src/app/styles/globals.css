@@ -110,7 +110,7 @@
     scrollbar-width: none;
   }
 
-  .scrollbar-x-hidden {
+  .scrollbar-x-hidden::-webkit-scrollbar {
     height: 0;
   }
 }
