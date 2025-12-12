@@ -1,4 +1,4 @@
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 
 export const inspectionsApi = {
   getObjectList: async (id: any) => {

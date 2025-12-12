@@ -11,13 +11,13 @@ const DetailRow: React.FC<InfoCardProps> = ({ title, value, boldTitle = false })
     return null
   }
   return (
-    <div className="grid grid-cols-2 content-center items-center gap-1 rounded-lg px-2.5 py-2 odd:bg-neutral-50">
+    <div className="grid grid-cols-2 content-center items-center gap-0.5 rounded-lg px-2 py-1.5 odd:bg-neutral-50">
       {boldTitle ? (
-        <h2 className="text-base font-medium text-gray-700">{title}</h2>
+        <h2 className="text-sm font-medium text-gray-700">{title}</h2>
       ) : (
-        <h2 className="text-normal font-normal text-gray-700">{title}</h2>
+        <h2 className="text-sm font-normal text-gray-700">{title}</h2>
       )}
-      <p className="text-normal font-normal text-gray-900">{value}</p>
+      <div className="text-sm font-normal text-gray-900">{value}</div>
     </div>
   )
 }

@@ -1,6 +1,7 @@
-import { UserRoles } from '@/entities/user'
-import AttractionTypePage from '@/pages/admin/attraction-type/page'
+import { UserRoles } from '@/entities/user/model/types'
 import { lazy } from 'react'
+
+const AttractionTypePage = lazy(() => import('@/pages/admin/attraction-type/page'))
 
 // Error pages
 const NotFound = lazy(() => import('@/pages/error/ui/page-not-found'))
@@ -31,7 +32,8 @@ const TemplatesPage = lazy(() => import('@/pages/admin/templates/page'))
 const EquipmentPage = lazy(() => import('@/pages/admin/equipment/equipment-page'))
 const TemplateEditContentPage = lazy(() => import('@/pages/admin/templates/template-edit-content'))
 const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facility/ui'))
-const RegisterPage = lazy(() => import('@/pages/register/ui'))
+const RegisterPage = lazy(() => import('@/pages/register'))
+const RegisterHFUpdatePage = lazy(() => import('@/pages/register/hf/hf-update'))
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'))
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'))
 const RegisterEquipmentAppealList = lazy(() => import('@/features/register/equipments/ui/equipments-appeal-list'))
@@ -143,6 +145,11 @@ export const appRoutes = [
     path: 'register/:id/hf',
     component: RegisterHFDetail,
     roles: [],
+  },
+  {
+    path: 'register/hf/update/:id',
+    component: RegisterHFUpdatePage,
+    roles: [UserRoles.INSPECTOR],
   },
   {
     path: 'register/:id/equipments',

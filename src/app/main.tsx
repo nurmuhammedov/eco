@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { withProviders } from '@/app/providers'
 import '@/app/styles/globals.css'
 
-export const App = () => null // Actual content will be rendered via router provider
+export const App = () => null
 
 const AppWithProviders = withProviders(App)
 const container = document.getElementById('root')

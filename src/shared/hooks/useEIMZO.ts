@@ -1,5 +1,5 @@
 import { createPdf } from '@/features/application/create-application/api/create-application'
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'

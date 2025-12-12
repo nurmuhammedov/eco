@@ -1,4 +1,4 @@
-import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer'
+import { Document, Font, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { getDate } from '@/shared/utils/date'
 
 interface StickerData {
@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   },
   infoValue: {
     color: '#000',
+    fontWeight: 'bold',
   },
 })
 
@@ -63,11 +64,11 @@ export const EquipmentStickerPdf = ({ data }: { data: StickerData }) => (
 
       <View style={styles.infoSection}>
         <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Ro'yxatga olingan sana:</Text>
+          <Text style={styles.infoLabel}>Ro‘yxatga olingan sana:</Text>
           <Text style={styles.infoValue}>{getDate(data.registrationDate) || '-'}</Text>
         </View>
         <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Ro'yxatga olingan raqam:</Text>
+          <Text style={styles.infoLabel}>Ro‘yxatga olingan raqam:</Text>
           <Text style={styles.infoValue}>{data.registryNumber || '-'}</Text>
         </View>
         <View style={styles.infoRow}>

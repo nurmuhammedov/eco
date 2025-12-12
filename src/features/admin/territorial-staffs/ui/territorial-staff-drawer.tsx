@@ -17,7 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import DatePicker from '@/shared/components/ui/datepicker'
 import { Button } from '@/shared/components/ui/button'
 import { format } from 'date-fns'
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 
 export const TerritorialStaffDrawer = () => {
   const { t } = useTranslation('common')

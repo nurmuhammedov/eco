@@ -3,14 +3,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useChecklistDrawer } from '@/shared/hooks/entity-hooks'
 import {
-  CreateChecklistDTO,
   checklistSchema,
+  CreateChecklistDTO,
   UpdateChecklistDTO,
-  useCreateChecklist,
   useChecklistQuery,
-  useCategoryTypeSelectQuery,
+  useCreateChecklist,
   useUpdateChecklist,
 } from '@/entities/admin/inspection'
+import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection/category-types/hooks/use-category-type-select-query'
 
 const DEFAULT_VALUES: CreateChecklistDTO = {
   category: '',

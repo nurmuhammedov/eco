@@ -11,6 +11,7 @@ import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { getDate } from '@/shared/utils/date.ts'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { Logs } from '@/features/register/hf/ui/parts/logs'
 
 const HfDetail = () => {
   const { isLoading, data } = useHfDetail()
@@ -64,6 +65,9 @@ const HfDetail = () => {
             <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
           </DetailCardAccordion.Item>
         )}
+        <DetailCardAccordion.Item value="history" title="O‘zgartirishlar tarixi">
+          <Logs />
+        </DetailCardAccordion.Item>
       </DetailCardAccordion>
     </div>
   )

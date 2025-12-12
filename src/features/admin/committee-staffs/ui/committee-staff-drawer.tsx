@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/comp
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { format } from 'date-fns'
 
 export const CommitteeStaffDrawer = () => {

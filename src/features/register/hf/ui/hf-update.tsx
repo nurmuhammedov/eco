@@ -1,11 +1,11 @@
-import { CardForm, ReRegisterHFApplicationDTO } from '@/entities/create-application'
-import { useReRegisterHFApplication } from '@/features/application/create-application/model/use-re-register-hf-application'
+import { CardForm } from '@/entities/create-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 import { Button } from '@/shared/components/ui/button.tsx'
 import DatePicker from '@/shared/components/ui/datepicker.tsx'
+import DetailRow from '@/shared/components/common/detail-row'
 import {
   Form,
   FormControl,
@@ -17,45 +17,38 @@ import {
 } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
-import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
+import { useUpdateHF } from '@/features/register/hf/hooks/use-update-hf'
+import { UpdateHFDTO } from '@/features/register/hf/model/update-hf.schema'
+import { AppealFormSkeleton } from '@/features/application/create-application'
 
-interface ReRegisterHFFormProps {
-  onSubmit: (data: ReRegisterHFApplicationDTO) => void
-}
+export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO) => void; isPending?: boolean }) => {
+  const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions, orgData, isLoading } =
+    useUpdateHF()
 
-export default ({ onSubmit }: ReRegisterHFFormProps) => {
-  const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions, hazardousFacilitiesOptions } =
-    useReRegisterHFApplication()
+  if (isLoading) {
+    return <AppealFormSkeleton />
+  }
+
+  console.log(form.formState.errors)
+  console.log(form.getValues())
 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="XICHO reyestriga o‘zgartirish kiritish" />
-
-        <CardForm className="my-2">
-          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="hazardousFacilityId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>O‘zgartirish kiritilayotgan XICHO ni tanlang</FormLabel>
-                  <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="3xl:w-sm w-full">
-                        <SelectValue placeholder="XICHO ni tanlang" />
-                      </SelectTrigger>
-                      <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </CardForm>
+        <GoBack title="XICHOni maʼlumotlarini o‘zgartirish" />
+        {orgData && (
+          <CardForm className="my-2">
+            <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
+            <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
+              <DetailRow title="Tashkilot nomi:" value={orgData?.legalName || '-'} />
+              <DetailRow title="Tashkilot rahbari F.I.SH:" value={orgData?.fullName || '-'} />
+              <DetailRow title="Tashkilot manzili:" value={orgData?.legalAddress || '-'} />
+              <DetailRow title="Tashkilot telefon raqami:" value={orgData?.phoneNumber || '-'} />
+            </div>
+          </CardForm>
+        )}
 
         <CardForm className="my-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
@@ -64,14 +57,20 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               name="upperOrganization"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Yuqori tashkilotning nomi (mavjud bo‘lsa)</FormLabel>
+                  <FormLabel>Yuqori tashkilotning nomi</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Yuqori tashkilotning nomi" {...field} />
+                    <Input
+                      className="3xl:w-sm w-full"
+                      placeholder="Yuqori tashkilot (mavjud bo‘lsa)"
+                      {...field}
+                      value={field?.value || ''}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="name"
@@ -85,19 +84,7 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                 </FormItem>
               )}
             />
-            <FormField
-              name="phoneNumber"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Bog‘lanish uchun telefon raqami</FormLabel>
-                  <FormControl>
-                    <PhoneInput className="3xl:w-sm w-full" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="hfTypeId"
@@ -105,7 +92,14 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                 <FormItem>
                   <FormLabel required>XICHO ning turi</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value)
+                        }
+                      }}
+                      value={field.value}
+                    >
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="XICHO ning turi" />
                       </SelectTrigger>
@@ -116,31 +110,13 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="spheres"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel required>Tarmoqlar</FormLabel>
-                  <FormControl>
-                    <MultiSelect
-                      className="3xl:w-sm w-full"
-                      {...field}
-                      options={spheres}
-                      maxDisplayItems={5}
-                      placeholder="Tarmoqlar"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="regionId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>XICHO joylashgan viloyat</FormLabel>
+                  <FormLabel required>Viloyat</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={(value) => {
@@ -152,7 +128,7 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                       value={field.value}
                     >
                       <SelectTrigger className="3xl:w-sm w-full">
-                        <SelectValue placeholder="XICHO joylashgan viloyat" />
+                        <SelectValue placeholder="Viloyatni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{regionOptions}</SelectContent>
                     </Select>
@@ -161,12 +137,13 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="districtId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>XICHO joylashgan tuman</FormLabel>
+                  <FormLabel required>Tuman</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={(value) => {
@@ -178,7 +155,7 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                       disabled={!form.watch('regionId')}
                     >
                       <SelectTrigger className="3xl:w-sm w-full">
-                        <SelectValue placeholder="XICHO joylashgan tuman" />
+                        <SelectValue placeholder="Tumanni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
                     </Select>
@@ -187,81 +164,92 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="address"
               render={({ field }) => (
-                <FormItem className="3xl:w-sm w-full">
-                  <FormLabel required>XICHO joylashgan manzil</FormLabel>
+                <FormItem>
+                  <FormLabel required>Manzil</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Alisher Navoiy ko‘chasi, 1-uy" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Ko‘cha, uy raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="location"
               render={({ field }) => (
-                <FormItem className="3xl:w-sm w-full">
-                  <FormLabel required>Joylashuv</FormLabel>
+                <FormItem>
+                  <FormLabel required>Joylashuv (Xarita)</FormLabel>
                   <FormControl>
-                    <YandexMapModal
-                      initialCoords={field.value ? field.value.split(',').map(Number) : null}
-                      onConfirm={(coords) => field.onChange(coords)}
-                      {...field}
-                    />
+                    <div className="3xl:w-sm w-full">
+                      <YandexMapModal
+                        initialCoords={field.value ? field.value.split(',').map(Number) : null}
+                        onConfirm={(coords) => field.onChange(coords)}
+                        {...field}
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="extraArea"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required className="3xl:w-sm w-full">
-                    XICHO sexlari, uchastkalari va maydonchalari nomi
-                  </FormLabel>
+                  <FormLabel required>XICHO sexlari va maydonchalari</FormLabel>
                   <FormControl>
-                    <Input
-                      className="3xl:w-sm w-full"
-                      placeholder="XICHO sexlari, uchastkalari va maydonchalari nomi"
-                      {...field}
-                    />
+                    <Input className="3xl:w-sm w-full" placeholder="Sexlar, uchastkalar nomi" {...field} />
                   </FormControl>
                   <FormMessage />
-                  <FormDescription>
-                    XICHO sexlari, uchastkalari, maydonchalari va boshqa <br /> ishlab chiqarish obyektlarining nomi
-                  </FormDescription>
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="hazardousSubstance"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required className="3xl:w-sm w-full">
-                    Xavfli moddalarning nomi va miqdori
-                  </FormLabel>
+                  <FormLabel required>Xavfli moddalar</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Xavfli moddalarning nomi va miqdori" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Nomi va miqdori" {...field} />
                   </FormControl>
                   <FormMessage />
-                  <FormDescription>
-                    VM ning 2008 yil 10 dekabrdagi 271-son qaroriga muvofiq
-                    <br /> xavfli moddalarning nomi va miqdori
-                  </FormDescription>
+                  <FormDescription>VM 271-son qaroriga muvofiq</FormDescription>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="spheres"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel required>Tarmoqlar</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      className="3xl:w-sm w-full"
+                      {...field}
+                      options={spheres}
+                      maxDisplayItems={10}
+                      placeholder="Tarmoqlarni tanlang"
+                    />
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
           </div>
         </CardForm>
 
-        {/* 3-CARD: Hujjatlar */}
         <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <div className="border-b pb-4">
             <FormField
@@ -270,13 +258,14 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    <FormLabel required className="max-w-1/2">
                       Identifikatsiya varag‘i
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
                   </div>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -289,53 +278,13 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                      XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi
-                    </FormLabel>
+                    <FormLabel className="max-w-1/2">To‘lov kvitansiyasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
                   </div>
                 </FormItem>
               )}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              control={form.control}
-              name="insurancePolicyPath"
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sug‘urta polisi</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="insurancePolicyExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                  </FormItem>
-                )
-              }}
             />
           </div>
 
@@ -346,7 +295,7 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">XICHO kadastr pasporti</FormLabel>
+                    <FormLabel className="max-w-1/2">XICHO kadastr pasporti</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -363,51 +312,13 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Loyiha hujjatlari</FormLabel>
+                    <FormLabel className="max-w-1/2">Loyiha hujjatlari</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
                   </div>
                 </FormItem>
               )}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              control={form.control}
-              name="licensePath"
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Litsenziya</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="licenseExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                  </FormItem>
-                )
-              }}
             />
           </div>
 
@@ -418,7 +329,7 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Loyiha ekspertiza xulosasi (LH)</FormLabel>
+                    <FormLabel className="max-w-1/2">Loyiha ekspertiza xulosasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -435,7 +346,7 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Maʼsul xodim tayinlanganligi buyrug‘i</FormLabel>
+                    <FormLabel className="max-w-1/2">Maʼsul xodim buyrug‘i</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -448,11 +359,104 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
           <div className="border-b pb-4">
             <FormField
               control={form.control}
+              name="industrialSafetyDeclarationPath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2">Sanoat xavfsizligi deklaratsiyasi</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
+              name="insurancePolicyPath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2">Sug‘urta polisi</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="insurancePolicyExpiryDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="w-full">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                      <FormLabel className="text-muted-foreground text-xs">Amal qilish muddati</FormLabel>
+                      <DatePicker
+                        className={'max-w-2/3'}
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        disableStrategy={'before'}
+                        placeholder="Sanani tanlang"
+                      />
+                    </div>
+                  </FormItem>
+                )
+              }}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
+              name="licensePath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2">Litsenziya</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="licenseExpiryDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="w-full">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                      <FormLabel className="text-muted-foreground text-xs">Amal qilish muddati</FormLabel>
+                      <DatePicker
+                        className={'max-w-2/3'}
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        disableStrategy={'before'}
+                        placeholder="Sanani tanlang"
+                      />
+                    </div>
+                  </FormItem>
+                )
+              }}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
               name="permitPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
+                    <FormLabel className="max-w-1/2">Ruxsatnoma</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -468,13 +472,13 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel className="text-muted-foreground text-xs">Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                   </FormItem>
@@ -482,26 +486,11 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               }}
             />
           </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              control={form.control}
-              name="industrialSafetyDeclarationPath"
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sanoat xavfsizligi deklaratsiyasi</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-          </div>
         </CardForm>
 
-        <Button type="submit">Ariza yaratish</Button>
+        <Button type="submit" loading={isPending}>
+          Tahrirlash
+        </Button>
       </form>
     </Form>
   )

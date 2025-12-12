@@ -1,5 +1,5 @@
 import { toast } from 'sonner'
-import { axiosInstance } from '@/shared/api'
+import { axiosInstance } from '@/shared/api/axios-instance'
 import { AxiosError, AxiosRequestConfig } from 'axios'
 
 export async function convertPdfToBase64(pdfUrl: string): Promise<string | null> {

@@ -1,6 +1,7 @@
-import { apiClient, API_ENDPOINTS } from '@/shared/api'
+import { API_ENDPOINTS } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { ApiResponse } from '@/shared/types/api'
-import { CreateChecklistDTO, UpdateChecklistDTO, ChecklistResponse, FilterChecklistDTO } from './checklist.types'
+import { ChecklistResponse, CreateChecklistDTO, FilterChecklistDTO, UpdateChecklistDTO } from './checklist.types'
 
 export const inspectionChecklistAPI = {
   fetchChecklists: async (params: FilterChecklistDTO) => {

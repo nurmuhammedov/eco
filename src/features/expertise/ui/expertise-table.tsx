@@ -6,11 +6,12 @@ import { Badge } from '@/shared/components/ui/badge'
 
 export const ExpertiseTable = () => {
   const {
-    paramsObject: { page = 1, size = 10, ...rest },
+    paramsObject: { page = 1, size = 10, status = 'ALL', ...rest },
   } = useCustomSearchParams()
   const { data = [], isLoading } = usePaginatedData<any>('/accreditations', {
     page: page,
     size: size,
+    status: status == 'ALL' ? '' : status,
     ...rest,
   })
 
@@ -60,6 +61,10 @@ export const ExpertiseTable = () => {
           <Badge variant="error">Muddati o‘tgan</Badge>
         ) : row.original.status == 'STOPPED' ? (
           <Badge variant="error">To‘xtatilgan</Badge>
+        ) : row.original.status == 'EXPIRING_SOON' ? (
+          <Badge variant="warning" className="whitespace-nowrap">
+            Muddati yaqinlashayotgan
+          </Badge>
         ) : row.original.status == 'CANCELLED' ? (
           <Badge variant="error">Bekor qilingan</Badge>
         ) : null,
@@ -92,7 +97,7 @@ export const ExpertiseTable = () => {
       data={data}
       showFilters={true}
       isLoading={isLoading}
-      className="h-[calc(100svh-220px)]"
+      className="h-[calc(100svh-320px)]"
     />
   )
 }

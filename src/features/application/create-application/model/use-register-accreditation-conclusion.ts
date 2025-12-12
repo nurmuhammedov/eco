@@ -1,6 +1,6 @@
 import { AccreditationConclusionDtoSchema, AccreditationConclusionDTO } from '@/entities/create-application'
 import { API_ENDPOINTS } from '@/shared/api'
-import { useEIMZO } from '@/shared/hooks'
+import { useEIMZO } from '@/shared/hooks/useEIMZO'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'

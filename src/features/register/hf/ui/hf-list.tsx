@@ -4,9 +4,12 @@ import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useHazardousFacilityTypeDictionarySelect } from '@/shared/api/dictionaries'
+import { UserRoles } from '@/entities/user'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 export const HfList = () => {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const {
     paramsObject: {
       page = 1,
@@ -45,6 +48,10 @@ export const HfList = () => {
 
   const handleViewApplication = (id: string) => {
     navigate(`${id}/hf`)
+  }
+
+  const handleEditApplication = (data: any) => {
+    navigate(`/register/hf/update/${data?.id}?tin=${data?.legalTin}`)
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [
@@ -101,9 +108,16 @@ export const HfList = () => {
     },
     {
       id: 'actions',
-      maxSize: 40,
+      maxSize: user?.role === UserRoles.INSPECTOR ? 70 : 40,
       cell: ({ row }) => (
-        <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
+        <DataTableRowActions
+          showView
+          row={row}
+          showEdit={user?.role === UserRoles.INSPECTOR}
+          showDelete
+          onView={(row) => handleViewApplication(row.original.id)}
+          onEdit={(row) => handleEditApplication(row.original)}
+        />
       ),
     },
   ]

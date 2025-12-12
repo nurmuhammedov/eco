@@ -44,15 +44,9 @@ export default [
   },
   {
     id: 'ACCREDITATION',
-    title: 'menu.accreditation',
+    title: 'Ekpertiza xulosalari',
     url: '/accreditations',
     icon: <CheckCircle />,
-    items: [
-      {
-        url: '/accreditations',
-        title: 'Ekpertiza xulosalari',
-      },
-    ],
   },
   {
     id: 'ATTESTATION_COMMITTEE',

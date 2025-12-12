@@ -1,5 +1,6 @@
 import { ApiResponse, ResponseData } from '@/shared/types'
-import { API_ENDPOINTS, apiClient } from '@/shared/api'
+import { API_ENDPOINTS } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { Template, TemplateFormDTO } from '@/entities/admin/template'
 
 export const templateAPI = {

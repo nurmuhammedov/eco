@@ -81,11 +81,11 @@ export default ({ onSubmit }: { onSubmit: (data: ReRegisterIllegalHFApplicationD
 
           {orgData && (
             <div className="mt-6 border-t pt-6">
-              <h3 className="mb-4 text-lg font-semibold text-gray-800">Tashkilot ma'lumotlari</h3>
+              <h3 className="mb-4 text-lg font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
               <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
-                <DetailRow title="Tashkilot nomi:" value={orgData?.name || '-'} />
-                <DetailRow title="Tashkilot rahbari F.I.SH:" value={orgData?.directorName || '-'} />
-                <DetailRow title="Tashkilot manzili:" value={orgData?.address || '-'} />
+                <DetailRow title="Tashkilot nomi:" value={orgData?.legalName || '-'} />
+                <DetailRow title="Tashkilot rahbari F.I.SH:" value={orgData?.fullName || '-'} />
+                <DetailRow title="Tashkilot manzili:" value={orgData?.legalAddress || '-'} />
                 <DetailRow title="Tashkilot telefon raqami:" value={orgData?.phoneNumber || '-'} />
               </div>
             </div>
@@ -222,7 +222,15 @@ export default ({ onSubmit }: { onSubmit: (data: ReRegisterIllegalHFApplicationD
                 <FormItem>
                   <FormLabel required>XICHO joylashgan tuman</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value} disabled={!form.watch('regionId')}>
+                    <Select
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value)
+                        }
+                      }}
+                      value={field.value}
+                      disabled={!form.watch('regionId')}
+                    >
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="XICHO joylashgan tuman" />
                       </SelectTrigger>

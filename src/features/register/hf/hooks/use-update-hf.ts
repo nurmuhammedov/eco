@@ -1,8 +1,6 @@
-import { applicationFormConstants, ReRegisterHFApplicationDTO } from '@/entities/create-application'
-import { ReRegisterHFSchema } from '@/entities/create-application/schemas/re-register-hf.schema'
+import { applicationFormConstants } from '@/entities/create-application'
 import {
   useDistrictSelectQueries,
-  useHazardousFacilityDictionarySelect,
   useHazardousFacilityTypeDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries'
@@ -10,24 +8,31 @@ import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { useQuery } from '@tanstack/react-query'
 import { useDetail } from '@/shared/hooks'
+import { useParams, useSearchParams } from 'react-router-dom'
+import { UpdateHFDTO, UpdateHFSchema } from '@/features/register/hf/model/update-hf.schema'
+import { apiClient } from '@/shared/api/api-client'
 
-export const useReRegisterHFApplication = () => {
-  const form = useForm<ReRegisterHFApplicationDTO>({
-    resolver: zodResolver(ReRegisterHFSchema),
+export const useUpdateHF = () => {
+  const { id } = useParams<{ id: string }>()
+  const [searchParams] = useSearchParams()
+  const tin = searchParams.get('tin')
+
+  const form = useForm<UpdateHFDTO>({
+    resolver: zodResolver(UpdateHFSchema),
     defaultValues: {
-      hazardousFacilityId: undefined,
-      phoneNumber: '',
-      upperOrganization: '',
       name: '',
-      hfTypeId: undefined,
-      spheres: [],
+      upperOrganization: '',
       regionId: '',
       districtId: '',
       address: '',
       location: '',
+      hfTypeId: undefined,
       extraArea: '',
       hazardousSubstance: '',
+      spheres: [],
+
       identificationCardPath: undefined,
       receiptPath: undefined,
       insurancePolicyPath: undefined,
@@ -44,27 +49,33 @@ export const useReRegisterHFApplication = () => {
     },
   })
 
-  const { spheres } = applicationFormConstants()
   const regionId = form.watch('regionId')
-  const hazardousFacilityId = form.watch('hazardousFacilityId')
+  const { spheres } = applicationFormConstants()
 
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
-  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect()
 
-  const { data: detail } = useDetail<any>(`/hf/`, hazardousFacilityId, !!hazardousFacilityId)
+  const { data: orgData, isLoading: isOrgLoading } = useQuery({
+    queryKey: ['legal-entity', tin],
+    queryFn: async () => {
+      const res = await apiClient.post<any>('/integration/iip/legal', { tin })
+      return res.data
+    },
+    enabled: !!tin && tin.length === 9,
+  })
+
+  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/hf/`, id, !!id)
 
   useEffect(() => {
     if (detail) {
       const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
-      form.reset((p) => ({
-        ...p,
+
+      form.reset({
         name: detail.name || '',
-        phoneNumber: detail.phoneNumber || '',
         upperOrganization: detail.upperOrganization || '',
-        hfTypeId: detail.hfTypeId ? detail.hfTypeId : undefined,
-        regionId: detail.regionId ? detail.regionId : '',
+        hfTypeId: detail.hfTypeId ? String(detail.hfTypeId) : undefined,
+        regionId: detail.regionId ? String(detail.regionId) : undefined,
         address: detail.address || '',
         location: detail.location || '',
         extraArea: detail.extraArea || '',
@@ -83,18 +94,19 @@ export const useReRegisterHFApplication = () => {
         permitPath: detail.files?.permitPath?.path || '',
         permitExpiryDate: parseDate(detail.files?.permitPath?.expiryDate),
         industrialSafetyDeclarationPath: detail.files?.industrialSafetyDeclarationPath?.path || '',
-      }))
+      })
 
-      setTimeout(() => {
-        form.setValue('districtId', detail.districtId ? detail.districtId : '')
-      }, 500)
+      if (detail.districtId) {
+        setTimeout(() => {
+          form.setValue('districtId', String(detail.districtId))
+        }, 500)
+      }
     }
   }, [detail, form])
 
   const districtOptions = useMemo(() => getSelectOptions(districts), [districts])
   const regionOptions = useMemo(() => getSelectOptions(regions), [regions, regionId])
   const hazardousFacilityTypeOptions = useMemo(() => getSelectOptions(hazardousFacilityTypes), [hazardousFacilityTypes])
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities), [hazardousFacilities])
 
   return {
     form,
@@ -102,6 +114,7 @@ export const useReRegisterHFApplication = () => {
     regionOptions,
     districtOptions,
     hazardousFacilityTypeOptions,
-    hazardousFacilitiesOptions,
+    orgData: orgData?.data,
+    isLoading: isOrgLoading || isDetailLoading,
   }
 }

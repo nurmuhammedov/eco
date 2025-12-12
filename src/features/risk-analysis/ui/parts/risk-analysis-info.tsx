@@ -1,13 +1,11 @@
 import { Tabs } from '@/shared/components/ui/tabs.tsx'
-import { useState, useEffect, FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useAuth } from '@/shared/hooks/use-auth.ts'
 import { UserRoles } from '@/entities/user'
-// import RiskAnalysisForm from '@/features/risk-analysis/ui/parts/risk-analysis-form.tsx';
-// import { useRiskAnalysisDetail } from '@/features/risk-analysis/model/use-risk-analysis-detail.ts';
 import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info.tsx'
 import { Badge } from '@/shared/components/ui/badge.tsx'
 import { RiskAnalysisData } from '../riskAnalysis'
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import RiskAnalysisForm from '@/features/risk-analysis/ui/parts/risk-analysis-form'
 
 interface RiskAnalysisIndicatorProps {
@@ -19,8 +17,6 @@ const RiskAnalysisIndicator: FC<RiskAnalysisIndicatorProps> = ({ belongId }) => 
   const isInspector = user?.role === UserRoles.INSPECTOR
   const defaultTab = isInspector ? 'analysis_indicators' : 'inspector_info'
   const [activeTab, setActiveTab] = useState(defaultTab)
-
-  // const { isLoading: isRiskDetailLoading, isError: isRiskDetailError } = useRiskAnalysisDetail();
 
   const [analysisData, setAnalysisData] = useState<RiskAnalysisData | null>(null)
   const [isAnalysisLoading, setAnalysisLoading] = useState<boolean>(true)
@@ -39,8 +35,6 @@ const RiskAnalysisIndicator: FC<RiskAnalysisIndicatorProps> = ({ belongId }) => 
         const url = `/risk-analyses/${belongId}`
         const response = await apiClient.get<{ data: RiskAnalysisData }>(url)
         setAnalysisData(response.data.data)
-      } catch (err) {
-        setAnalysisError("Ma'lumotlarni yuklashda xatolik yuz berdi")
       } finally {
         setAnalysisLoading(false)
       }

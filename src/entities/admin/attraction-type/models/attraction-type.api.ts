@@ -1,4 +1,4 @@
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { ApiResponse } from '@/shared/types'
 import { AttractionTypeResponse, CreateAttractionTypeDTO, UpdateAttractionTypeDTO } from './attraction-type.types'
 

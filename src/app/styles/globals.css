@@ -6,10 +6,10 @@
 
 @theme {
   --text-xm: 10px;
-
+  --font-sans: 'Golos Text', 'system-ui', sans-serif;
   --breakpoint-3xl: 120rem;
   --breakpoint-4xl: 160rem;
-  --font-golos-text: Golos Text, sans-serif;
+  --font-golos-text: 'Golos Text', sans-serif;
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);

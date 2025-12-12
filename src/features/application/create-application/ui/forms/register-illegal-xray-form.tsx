@@ -1,4 +1,3 @@
-// src/features/application/create-application/ui/forms/register-irs-form.tsx
 import { CardForm, CreateIllegalXrayApplicationDTO } from '@/entities/create-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
@@ -8,7 +7,7 @@ import DatePicker from '@/shared/components/ui/datepicker'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
-import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from '@/shared/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { format, parseISO } from 'date-fns'
 import { useCreateIllegalXrayApplication } from '../../model/use-create-illegal-xray-application'
 import { useLegalIipInfo } from '@/features/application/application-detail/hooks/use-legal-iip-info'
@@ -20,7 +19,7 @@ interface RegisterIllegalXrayFormProps {
 
 const generateYearOptions = () => {
   const currentYear = new Date().getFullYear()
-  const startYear = 1950 // Qaysi yildan boshlanishini belgilang
+  const startYear = 1950
   const years = []
   for (let i = currentYear; i >= startYear; i--) {
     years.push(i)
@@ -36,10 +35,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
 
   const isLegal = typeof legalTin === 'string' && legalTin.trim().length === 9
 
-  const { data: legalData, isLoading: isLegalLoading } = useLegalIipInfo(
-    legalTin,
-    !!isLegal // `!!` juda muhim!
-  )
+  const { data: legalData, isLoading: isLegalLoading } = useLegalIipInfo(legalTin, !!isLegal)
 
   const data = legalData
   const isLoading = isLegalLoading
@@ -72,7 +68,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
           {data && (
             <div className="mt-6 border-t pt-6">
               {/* Sarlavhani ham dinamik qilamiz */}
-              <h3 className="mb-4 text-lg font-semibold text-gray-800">Tashkilot ma'lumotlari</h3>
+              <h3 className="mb-4 text-lg font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
               <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
                 <DetailRow title="Tashkilot nomi:" value={data?.name || '-'} />
                 <DetailRow title="Tashkilot rahbari F.I.SH:" value={data?.fullName || '-'} />

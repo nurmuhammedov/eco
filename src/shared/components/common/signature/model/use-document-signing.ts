@@ -1,5 +1,5 @@
 import { toast } from 'sonner'
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { useMutation } from '@tanstack/react-query'
 import { SignatureClient, SignatureKey } from '@/shared/types/signature'
 import { convertPdfToBase64 } from '@/shared/components/common/signature/model'
@@ -39,7 +39,7 @@ export const signDocumentWithMetadata = async ({ Client, signature, documentUrl 
     const keyId = keyResponse?.id
 
     if (!keyId) {
-      toast.error('Kalit topilmadi!', { richColors: true })
+      // toast.error('Kalit topilmadi!', { richColors: true })
       return false
     }
 

@@ -11,8 +11,9 @@ import { useInspectorSelect } from '@/features/application/application-detail/ho
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { useMemo, useState } from 'react'
 import { MultiSelect } from '@/shared/components/ui/multi-select.tsx'
-import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection'
-import { useCustomSearchParams, useEIMZO } from '@/shared/hooks'
+import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection/category-types/hooks/use-category-type-select-query'
+import { useCustomSearchParams } from '@/shared/hooks'
+import { useEIMZO } from '@/shared/hooks/useEIMZO'
 import { ApplicationModal } from '@/features/application/create-application'
 
 const schema = z.object({

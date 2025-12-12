@@ -108,7 +108,7 @@ export const useReRegisterIllegalHFApplication = () => {
 
       setTimeout(() => {
         form.setValue('districtId', detail.districtId ? detail.districtId : '')
-      }, 300)
+      }, 500)
     }
   }, [detail, form])
 

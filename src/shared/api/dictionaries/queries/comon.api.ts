@@ -1,4 +1,4 @@
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import type { ApiResponse, ResponseData } from '@/shared/types'
 
 export const CommonService = {

@@ -3,7 +3,8 @@ import {
   CreateHFApplicationDTO,
   CreateLiftApplicationDTO,
 } from '@/entities/create-application'
-import { API_ENDPOINTS, apiClient } from '@/shared/api'
+import { API_ENDPOINTS } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { toast } from 'sonner'
 
 export const createApplicationsAPI = {

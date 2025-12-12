@@ -1,4 +1,4 @@
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { ISearchParams } from '@/shared/types'
 
 export const applicationListApi = {

@@ -1,4 +1,4 @@
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 
 export const riskAnalysisDetailApi = {
   rejectRiskItem: async ({ type, data }: { type: any; data: any }) => {

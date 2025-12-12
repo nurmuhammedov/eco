@@ -1,5 +1,5 @@
 import { toast } from 'sonner'
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { useCallback, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { createPdf } from '../api/create-application'

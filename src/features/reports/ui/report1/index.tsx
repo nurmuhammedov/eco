@@ -9,7 +9,7 @@ import Filter from '@/shared/components/common/filter'
 import { GoBack } from '@/shared/components/common'
 import { Button } from '@/shared/components/ui/button'
 import { Download } from 'lucide-react'
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { format } from 'date-fns'
 
 export enum InspectionStatus {

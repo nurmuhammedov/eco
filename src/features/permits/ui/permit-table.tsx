@@ -8,6 +8,7 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 import { Button } from '@/shared/components/ui/button'
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { Badge } from '@/shared/components/ui/badge'
 
 export const PermitTable = ({ setIsModalOpen }: any) => {
   const { user } = useAuth()
@@ -24,7 +25,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
       documentName = '',
     },
   } = useCustomSearchParams()
-  const { data = [], isLoading } = usePaginatedData<any>('/permits', {
+  const { data, isLoading } = usePaginatedData<any>('/permits', {
     page: page,
     size: size,
     tin: tin,
@@ -77,7 +78,8 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
       accessorKey: 'createdAt',
       maxSize: 100,
       header: 'Amal qilish muddati',
-      cell: (cell) => (cell.row.original.expiryDate ? formatDate(cell.row.original.expiryDate, 'dd.MM.yyyy') : null),
+      cell: (cell) =>
+        cell.row.original.expiryDate ? formatDate(cell.row.original.expiryDate, 'dd.MM.yyyy') : 'Cheksiz',
     },
     {
       id: 'actions',
@@ -109,10 +111,38 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
           }}
         >
           <TabsList>
-            <TabsTrigger value="ALL">Barchasi</TabsTrigger>
-            <TabsTrigger value="ACTIVE">Aktiv</TabsTrigger>
-            <TabsTrigger value="EXPIRING_SOON">Muddati yaqinlashayotganlar</TabsTrigger>
-            <TabsTrigger value="EXPIRED">Muddatidan o‘tganlar</TabsTrigger>
+            <TabsTrigger value="ALL">
+              Barchasi
+              {currentTab === 'ALL' && (
+                <Badge variant="destructive" className="ml-2">
+                  {data?.page?.totalElements ?? 0}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="ACTIVE">
+              Aktiv
+              {currentTab === 'ACTIVE' && (
+                <Badge variant="destructive" className="ml-2">
+                  {data?.page?.totalElements ?? 0}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="EXPIRING_SOON">
+              Muddati yaqinlashayotganlar{' '}
+              {currentTab === 'EXPIRING_SOON' && (
+                <Badge variant="destructive" className="ml-2">
+                  {data?.page?.totalElements ?? 0}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="EXPIRED">
+              Muddatidan o‘tganlar{' '}
+              {currentTab === 'EXPIRED' && (
+                <Badge variant="destructive" className="ml-2">
+                  {data?.page?.totalElements ?? 0}
+                </Badge>
+              )}
+            </TabsTrigger>
           </TabsList>
         </Tabs>
         {user?.role !== UserRoles.CHAIRMAN && user?.role !== UserRoles.INDIVIDUAL && user?.role !== UserRoles.LEGAL && (
@@ -125,10 +155,10 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
         showNumeration={true}
         isPaginated={true}
         columns={columns}
-        data={data}
+        data={data || []}
         showFilters={true}
         isLoading={isLoading}
-        className="h-[calc(100svh-430px)]"
+        className={`${user?.role === UserRoles.CHAIRMAN || user?.role === UserRoles.INDIVIDUAL || user?.role === UserRoles.LEGAL ? 'h-[calc(100svh-380px)]' : 'h-[calc(100svh-430px)]'}`}
       />
       <PermitDetailModal />
     </>

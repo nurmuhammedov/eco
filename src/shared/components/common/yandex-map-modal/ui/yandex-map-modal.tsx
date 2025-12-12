@@ -1,7 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import { MapPinned } from 'lucide-react'
 import { z } from 'zod'
-import { getMapContentSize } from '../lib'
 import { Button } from '@/shared/components/ui/button'
 import { Coordinate, YandexMap } from '@/shared/components/common/yandex-map'
 import {
@@ -20,6 +19,7 @@ import { Label } from '@/shared/components/ui/label'
 const UZBEKISTAN_CENTER: [number, number] = [41.3775, 64.5853]
 const DEFAULT_COUNTRY_ZOOM = 6
 const SELECTED_POINT_ZOOM = 17
+const REGION_ZOOM = 12
 
 const coordinateSchema = z.object({
   lat: z.coerce
@@ -41,7 +41,7 @@ interface YandexMapModalProps {
 }
 
 const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belgilash', onConfirm, initialCoords }) => {
-  const idealMapHeight = getMapContentSize()
+  // getMapContentSize() olib tashlandi, CSS orqali hal qilamiz
   const [open, setOpen] = useState(false)
 
   const [lat, setLat] = useState('')
@@ -96,13 +96,21 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belg
     }
   }, [lat, lng])
 
-  const handleMapClick = useCallback((coords: Coordinate[]) => {
+  const handleMapClick = useCallback((coords: Coordinate[], currentMapZoom: number) => {
     if (coords.length > 0) {
       const [newLat, newLng] = coords[0]
 
       setLat(newLat.toFixed(6))
       setLng(newLng.toFixed(6))
       setMapCoords([[newLat, newLng]])
+      setMapCenter([newLat, newLng])
+
+      if (currentMapZoom < REGION_ZOOM) {
+        setMapZoom(REGION_ZOOM)
+      } else {
+        setMapZoom(currentMapZoom)
+      }
+
       const result = coordinateSchema.safeParse({ lat: newLat, lng: newLng })
 
       if (result.success) {
@@ -149,7 +157,7 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belg
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="flex max-h-[95vh] w-[98vw] max-w-[98vw] flex-col p-6">
+      <DialogContent className="flex max-h-[95vh] w-full max-w-5xl flex-col p-6">
         <DialogHeader className="mb-4 shrink-0">
           <DialogTitle>Joylashuvni belgilang</DialogTitle>
         </DialogHeader>
@@ -197,10 +205,9 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belg
 
           <div
             className={cn(
-              'relative min-h-[300px] w-full shrink overflow-hidden rounded-md border',
+              'relative h-[50vh] w-full shrink overflow-hidden rounded-md border md:h-[60vh]',
               "[&_[class*='copyright']]:hidden"
             )}
-            style={{ height: idealMapHeight }}
           >
             <YandexMap
               width="100%"

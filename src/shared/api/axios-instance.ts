@@ -30,25 +30,31 @@ axiosInstance.interceptors.response.use(
 
     const status = error?.response?.status
     const requestUrl = error?.response?.config?.url
+
     const errorMessage = error.response?.data?.message
+    const validationErrors = error.response?.data?.errors
 
     if (status === 401 && requestUrl === '/api/v1/auth/login') {
-      toast.error(
-        errorMessage || 'Login yoki parol noto‘g‘ri. Iltimos, ma’lumotlarni tekshirib, qayta urinib ko‘ring.',
-        {
-          richColors: true,
-        }
-      )
+      toast.error('Login yoki parol noto‘g‘ri. Iltimos, ma’lumotlarni tekshirib, qayta urinib ko‘ring.', {
+        richColors: true,
+      })
     } else if (status === 401 && requestUrl === '/api/v1/users/me') {
       if (!isQrPath && !isLoginPath) {
-        toast.error(errorMessage || 'Kirish maʼlumotlari topilmadi yoki noto‘g‘ri. Iltimos, tizimga qayta kiring.', {
+        toast.error('Kirish maʼlumotlari topilmadi yoki noto‘g‘ri. Iltimos, tizimga qayta kiring.', {
           richColors: true,
         })
       }
     } else if (status >= 400 && status < 600) {
-      toast.error(errorMessage || 'So‘rovda xatolik yuz berdi. Ma’lumotlarni tekshirib ko‘ring.', {
-        richColors: true,
-      })
+      if (validationErrors && Object.keys(validationErrors).length > 0) {
+        Object.values(validationErrors).forEach((errMessage: any) => {
+          const msg = Array.isArray(errMessage) ? errMessage.join(', ') : errMessage
+          toast.error(msg, { richColors: true })
+        })
+      } else {
+        toast.error(errorMessage || 'So‘rovda xatolik yuz berdi. Ma’lumotlarni tekshirib ko‘ring.', {
+          richColors: true,
+        })
+      }
     }
 
     if (status === 401) {

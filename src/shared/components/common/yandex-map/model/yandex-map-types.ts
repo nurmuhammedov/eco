@@ -13,5 +13,5 @@ export interface YandexMapProps {
   height?: string
   coords?: Coordinate[]
   center?: [number, number]
-  onMapClick?: (coords: Coordinate[]) => void
+  onMapClick?: (coords: Coordinate[], currentMapZoom: number) => void
 }

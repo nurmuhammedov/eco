@@ -1,4 +1,4 @@
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { AxiosProgressEvent } from 'axios'
 import { useMutation } from '@tanstack/react-query'
 

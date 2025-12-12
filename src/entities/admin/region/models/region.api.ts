@@ -1,5 +1,6 @@
 import { ApiResponse } from '@/shared/types/api'
-import { API_ENDPOINTS, apiClient } from '@/shared/api'
+import { API_ENDPOINTS } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { CreateRegionDTO, type FilterRegionDTO, RegionResponse, UpdateRegionDTO } from './region.types'
 
 export const regionAPI = {

@@ -7,7 +7,7 @@ import Filter from '@/shared/components/common/filter'
 import { GoBack } from '@/shared/components/common'
 import { Button } from '@/shared/components/ui/button'
 import { Download } from 'lucide-react'
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { format } from 'date-fns'
 import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application'
 
@@ -17,7 +17,6 @@ const toCamelCase = (str: string) => {
   return str.toLowerCase().replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
 }
 
-// UPDATED: isSummary qo‘shildi
 const DoubleValueCell = ({
   present = 0,
   period = 0,
@@ -29,7 +28,7 @@ const DoubleValueCell = ({
 }) => (
   <div className="grid w-full grid-cols-2 items-center">
     <div className={`border-r border-gray-300 pr-2 text-center ${isSummary ? 'font-bold' : ''}`}>{present}</div>
-    <div className={`pl-2 text-center ${isSummary ? 'font-bold' : ''}`}>{period}</div>
+    <div className={`pl-2 text-center ${isSummary ? 'font-bold' : ''} ${period ? 'text-green-600' : ''}`}>{period}</div>
   </div>
 )
 

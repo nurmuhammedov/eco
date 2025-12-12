@@ -11,9 +11,31 @@ export default defineConfig({
     cssMinify: true,
     minify: true,
     target: 'esnext',
+    reportCompressedSize: false,
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
+      onwarn(warning, warn) {
+        if (warning.code === 'INVALID_ANNOTATION') {
+          return
+        }
+        warn(warning)
+      },
       treeshake: true,
-      output: { manualChunks: { vendor: ['react', 'react-dom'] } },
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('@pbe/react-yandex-maps') || id.includes('yandex-maps')) {
+              return 'maps-vendor'
+            }
+
+            if (id.includes('tinymce') || id.includes('@tinymce')) {
+              return 'editor-vendor'
+            }
+
+            return 'vendor'
+          }
+        },
+      },
     },
   },
   plugins: [
@@ -24,9 +46,9 @@ export default defineConfig({
       esbuildOptions: { loader: 'tsx' },
     }),
     compression({
-      algorithm: 'brotliCompress', // 🔥 Brotli ni ishlatamiz
-      threshold: 1024, // 1KB dan katta fayllarni siqish
-      deleteOriginFile: false, // Asl fayllarni o‘chirmaslik
+      algorithm: 'brotliCompress',
+      threshold: 1024,
+      deleteOriginFile: false,
     }),
   ],
   server: {
@@ -34,6 +56,9 @@ export default defineConfig({
     port: 5173,
   },
   resolve: {
-    alias: { '@': path.resolve(__dirname, './src') },
+    alias: { '@': path.resolve(__dirname, './src'), buffer: 'buffer' },
+  },
+  define: {
+    global: 'window',
   },
 })

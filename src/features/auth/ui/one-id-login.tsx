@@ -1,4 +1,4 @@
-import { useLoginOneId } from '@/entities/auth'
+import { useLoginOneId } from '@/entities/auth/models/auth.fetcher'
 import Icon from '@/shared/components/common/icon'
 import { apiConfig } from '@/shared/api/constants'
 

@@ -1,13 +1,13 @@
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '@/shared/components/ui/button.tsx'
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/shared/components/ui/form.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx'
 import { Input } from '@/shared/components/ui/input'
 import { MultiSelect } from '@/shared/components/ui/multi-select.tsx'
-
-import { useCustomSearchParams, useEIMZO } from '@/shared/hooks'
+import { useCustomSearchParams } from '@/shared/hooks'
+import { useEIMZO } from '@/shared/hooks/useEIMZO'
 import { ApplicationModal } from '@/features/application/create-application'
 
 const articleOptions = [

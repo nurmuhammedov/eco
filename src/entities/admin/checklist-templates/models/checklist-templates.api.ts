@@ -1,11 +1,12 @@
 // src/entities/admin/checklist-templates/models/checklist-templates.api.ts
-import { API_ENDPOINTS, apiClient } from '@/shared/api'
+import { API_ENDPOINTS } from '@/shared/api'
 import {
   ChecklistTemplate,
   CreateChecklistTemplateDTO,
   FilterChecklistTemplateDTO,
   UpdateChecklistTemplateDTO,
 } from './checklist-templates.types'
+import { apiClient } from '@/shared/api/api-client'
 
 export const checklistTemplateAPI = {
   getAll: (params?: FilterChecklistTemplateDTO) => {

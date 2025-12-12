@@ -36,9 +36,9 @@ const ExpertiseWidget = () => {
 
   return (
     <>
-      {status === 'ACTIVE' && (
+      {user?.role === UserRoles.LEGAL && (
         <div className="flex items-center justify-end">
-          <Button onClick={handle}>
+          <Button onClick={handle} disabled={!status || status === 'EXPIRED'}>
             <PlusCircle className="mr-2 h-4 w-4" /> Qo‘shish
           </Button>
         </div>

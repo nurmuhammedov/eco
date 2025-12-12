@@ -1,10 +1,11 @@
-import { apiClient, API_ENDPOINTS } from '@/shared/api'
+import { API_ENDPOINTS } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { ApiResponse } from '@/shared/types/api'
 import {
-  CreateCategoryTypeDTO,
-  UpdateCategoryTypeDTO,
   CategoryTypeResponse,
+  CreateCategoryTypeDTO,
   FilterCategoryTypeDTO,
+  UpdateCategoryTypeDTO,
 } from './category-type.types'
 
 export const inspectionCategoryTypeAPI = {

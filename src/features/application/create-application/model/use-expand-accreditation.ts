@@ -1,7 +1,7 @@
 import { ExpandAccreditationDTO, ExpandAccreditationDtoSchema } from '@/entities/create-application'
 import { API_ENDPOINTS } from '@/shared/api'
 import { ACCREDITATION_SPHERE_OPTIONS } from '@/shared/constants/accreditation-data'
-import { useEIMZO } from '@/shared/hooks'
+import { useEIMZO } from '@/shared/hooks/useEIMZO'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'

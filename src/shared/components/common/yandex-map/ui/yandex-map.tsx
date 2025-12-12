@@ -16,9 +16,15 @@ const YandexMap: React.FC<YandexMapProps> = ({
   const handleMapClick = useCallback(
     (e: ymaps.IEvent) => {
       const coords = e.get('coords') as Coordinate
-      onMapClick?.([coords])
+
+      let currentZoom = zoom
+      if (mapRef.current) {
+        currentZoom = mapRef.current.getZoom()
+      }
+
+      onMapClick?.([coords], currentZoom)
     },
-    [onMapClick]
+    [onMapClick, zoom]
   )
 
   const handleApiLoad = (ymaps: any) => {
@@ -42,6 +48,8 @@ const YandexMap: React.FC<YandexMapProps> = ({
 
   useEffect(() => {
     if (mapRef.current) {
+      // Faqat center o'zgarganda markazlashamiz.
+      // Zoomni faqat prop o'zgargandagina yangilaymiz.
       mapRef.current
         .setCenter(center, zoom, {
           duration: 300,
@@ -61,7 +69,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
           center,
           zoom,
           controls: ['zoomControl', 'typeSelector'],
-          type: 'yandex#hybrid',
+          type: 'yandex#map',
         }}
         instanceRef={(ref) => (mapRef.current = ref)}
         onLoad={handleApiLoad}

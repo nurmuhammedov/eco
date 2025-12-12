@@ -1,4 +1,5 @@
-import { API_ENDPOINTS, apiClient } from '@/shared/api'
+import { API_ENDPOINTS } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { ApiResponse } from '@/shared/types'
 import { CreatePreventionDTO, Prevention, PreventionListResponse, PreventionType } from './prevention.types'
 

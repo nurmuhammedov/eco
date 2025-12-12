@@ -10,7 +10,7 @@ export const LoginInfoSection = () => {
         </h4>
         <Icon name="logo" className="3xl:size-60 size-44 max-w-full text-white" />
         <div className="mt-16 max-w-full text-center text-white">
-          <h6 className="3xl:text-2xl text-xl opacity-70">Sanoat, radiatsiya va yadro xavfsizligi sohasida</h6>
+          {/*<h6 className="3xl:text-2xl text-xl opacity-70">Sanoat, radiatsiya va yadro xavfsizligi sohasida</h6>*/}
           <p className="3xl:text-3xl my-2 text-2xl font-bold tracking-wide">
             &laquo;Sanoat xavfsizligi ekotizimi&raquo;
           </p>

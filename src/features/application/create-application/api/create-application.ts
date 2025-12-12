@@ -1,4 +1,4 @@
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import { ApiResponse } from '@/shared/types'
 
 export async function createPdf<T extends Record<string, any>>(

@@ -1,4 +1,4 @@
-import { apiClient } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
 import type { BaseEntity, PaginationParams } from '@/entities/base'
 
 export function createBaseApi<T extends BaseEntity, F extends Record<string, any>>(endpoint: string) {
