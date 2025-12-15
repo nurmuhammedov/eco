@@ -43,8 +43,8 @@ export const useCreateEscalatorApplication = () => {
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
       additionalFilePath: undefined,
-      technicalInspectionPath: undefined,
-      nextTechnicalInspectionDate: undefined,
+      fullCheckPath: undefined,
+      nextFullCheckDate: undefined,
     },
     mode: 'onChange',
   })

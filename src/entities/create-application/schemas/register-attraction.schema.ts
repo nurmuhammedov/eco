@@ -24,7 +24,7 @@ export const AttractionAppealDtoSchema = z.object({
   address: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   location: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   riskLevel: z.enum(['I', 'II', 'III', 'IV'], { required_error: 'Majburiy maydon!' }),
-  additionalFilePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  passportPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   labelPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   conformityCertPath: z.string().optional(),
   technicalJournalPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),

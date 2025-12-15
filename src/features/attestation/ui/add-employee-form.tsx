@@ -31,11 +31,11 @@ export const AddEmployeeForm = () => {
               name="hfId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>XICHO ni tanlang</FormLabel>
+                  <FormLabel required>XICHOni tanlang</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value} disabled={isLoadingHf}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="XICHO ni tanlang" />
+                        <SelectValue placeholder="XICHOni tanlang" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>{getSelectOptions(hfOptions || [])}</SelectContent>

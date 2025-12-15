@@ -43,11 +43,11 @@ export default ({ onSubmit }: RegisterDeclarationFormProps) => {
               name="hfId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>XICHO ni tanlang</FormLabel>
+                  <FormLabel>XICHOni tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value || ''}>
                       <SelectTrigger className="3xl:w-sm w-full">
-                        <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
+                        <SelectValue placeholder="XICHOni tanlang (ixtiyoriy)" />
                       </SelectTrigger>
                       <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
                     </Select>

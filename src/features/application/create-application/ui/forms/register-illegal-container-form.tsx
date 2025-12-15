@@ -206,7 +206,7 @@ export default ({ onSubmit }: RegisterIllegalContainerFormProps) => {
                     <FormControl>
                       <Select onValueChange={field.onChange} value={field.value || ''}>
                         <SelectTrigger className="3xl:w-sm w-full">
-                          <SelectValue placeholder="XICHO ni tanlang" />
+                          <SelectValue placeholder="XICHOni tanlang" />
                         </SelectTrigger>
                         <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
                       </Select>
@@ -378,11 +378,11 @@ export default ({ onSubmit }: RegisterIllegalContainerFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel>Tashqi va ichki ko‘rik sanasi</FormLabel>
+                    <FormLabel>Tashqi va ichki ko‘rik o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Tashqi va ichki ko‘rik sanasini kiriting"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -396,11 +396,11 @@ export default ({ onSubmit }: RegisterIllegalContainerFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel>Gidrosinov o‘tkazish sanasi</FormLabel>
+                    <FormLabel>Gidravlik sinov o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Gidrosinov sanasini kiriting"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -414,11 +414,11 @@ export default ({ onSubmit }: RegisterIllegalContainerFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel>Putur yetkazmaydigan nazoratdan o‘tkazish sanasi</FormLabel>
+                    <FormLabel>Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Putur yetkazmaydigan nazorat sanasi"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -474,7 +474,7 @@ export default ({ onSubmit }: RegisterIllegalContainerFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Idishning birkasi bilan surati</FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Idishning birkasi bilan surʼati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
                     </FormControl>

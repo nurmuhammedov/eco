@@ -205,7 +205,7 @@ export default ({ onSubmit }: RegisterIllegalCablewayFormProps) => {
                     <FormControl>
                       <Select onValueChange={field.onChange} value={field.value || ''}>
                         <SelectTrigger className="3xl:w-sm w-full">
-                          <SelectValue placeholder="XICHO ni tanlang" />
+                          <SelectValue placeholder="XICHOni tanlang" />
                         </SelectTrigger>
                         <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
                       </Select>
@@ -474,7 +474,7 @@ export default ({ onSubmit }: RegisterIllegalCablewayFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Osma yo‘lning birkasi bilan surati</FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Osma yo‘lning birkasi bilan surʼati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
                     </FormControl>

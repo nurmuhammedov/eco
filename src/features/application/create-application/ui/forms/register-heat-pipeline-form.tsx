@@ -54,7 +54,7 @@ export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
                     <FormControl>
                       <Select onValueChange={field.onChange} value={field.value || ''}>
                         <SelectTrigger className="3xl:w-sm w-full">
-                          <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
+                          <SelectValue placeholder="XICHOni tanlang (ixtiyoriy)" />
                         </SelectTrigger>
                         <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
                       </Select>
@@ -148,7 +148,7 @@ export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Qisman texnik ko‘rik sanasi</FormLabel>
+                    <FormLabel required>Qisman texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
@@ -166,7 +166,7 @@ export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>To‘liq texnik ko‘rik sanasi</FormLabel>
+                    <FormLabel required>To‘liq texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
@@ -184,7 +184,7 @@ export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Putur yetkazmaydigan nazoratdan o‘tkazish sanasi</FormLabel>
+                    <FormLabel required>Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
@@ -496,7 +496,7 @@ export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
 
           <div className="border-b pb-4">
             <FormField
-              name="hydraulicTestPath"
+              name="fullCheckPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
@@ -513,7 +513,7 @@ export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
             />
             <FormField
               control={form.control}
-              name="nextHydraulicTestDate"
+              name="nextFullCheckDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
@@ -536,7 +536,7 @@ export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
 
           <div className="border-b pb-4">
             <FormField
-              name="externalExaminationPath"
+              name="partialCheckPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
@@ -553,7 +553,7 @@ export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
             />
             <FormField
               control={form.control}
-              name="nextExternalExaminationDate"
+              name="nextPartialCheckDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (

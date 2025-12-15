@@ -25,7 +25,7 @@ export const useCreateAttractionApplication = () => {
       address: '',
       location: '',
       riskLevel: undefined,
-      additionalFilePath: undefined,
+      passportPath: undefined,
       labelPath: undefined,
       conformityCertPath: undefined,
       technicalJournalPath: undefined,

@@ -1,6 +1,5 @@
 import { PDFViewer } from '@/features/view-pdf' // Yo'lni loyihangizga moslang
 import { SignatureModal } from '@/shared/components/common/signature'
-import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { Button } from '@/shared/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { FileText, Loader2, Pencil } from 'lucide-react'
@@ -40,7 +39,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
     if (!documentUrl) {
       return (
         <div className="flex h-full flex-col items-center justify-center py-8">
-          <p className="text-center text-gray-600">Hujjat topilmadi</p>
+          <p className="text-center text-gray-600">Hujjat topilmadi!</p>
         </div>
       )
     }
@@ -62,13 +61,13 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
           </DialogTitle>
         </DialogHeader>
 
-        {error && (
-          <div className="flex-shrink-0 px-6 pt-4">
-            <Alert variant="destructive" className="mb-4">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          </div>
-        )}
+        {/*{error && (*/}
+        {/*  <div className="flex-shrink-0 px-6 pt-4">*/}
+        {/*    <Alert variant="destructive" className="mb-4">*/}
+        {/*      <AlertDescription>{error}</AlertDescription>*/}
+        {/*    </Alert>*/}
+        {/*  </div>*/}
+        {/*)}*/}
 
         {/* O'ZGARISH:
            1. flex-1: Bo'sh qolgan barcha joyni egallaydi.
@@ -80,9 +79,10 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
         {/* Footer - qotib turadi (flex-shrink-0) */}
         <DialogFooter className="flex-shrink-0 border-t bg-white p-6 pt-4">
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
-            <Pencil className="mr-2 size-4" /> O‘zgartirish
+            <Pencil className="mr-2 size-4" /> Hujjatni o‘zgartirish
           </Button>
           <SignatureModal
+            error={error}
             isLoading={isLoading}
             documentUrl={documentUrl}
             submitApplicationMetaData={submitApplicationMetaData}

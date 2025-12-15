@@ -35,8 +35,6 @@ export const LifAppealDtoSchema = z.object({
   installationCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   additionalFilePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   expertisePath: z.string().optional(),
-  technicalInspectionPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  nextTechnicalInspectionDate: z
-    .date({ required_error: 'Majburiy maydon!' })
-    .transform((date) => format(date, 'yyyy-MM-dd')),
+  fullCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  nextFullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 })

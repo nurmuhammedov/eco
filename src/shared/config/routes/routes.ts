@@ -28,16 +28,14 @@ const ReportsDetail3 = lazy(() => import('@/features/reports/ui/report3'))
 const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
 const RegionsPage = lazy(() => import('@/pages/admin/regions/ui'))
 const DepartmentPage = lazy(() => import('@/pages/admin/department/ui'))
-const TemplatesPage = lazy(() => import('@/pages/admin/templates/page'))
 const EquipmentPage = lazy(() => import('@/pages/admin/equipment/equipment-page'))
-const TemplateEditContentPage = lazy(() => import('@/pages/admin/templates/template-edit-content'))
 const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facility/ui'))
 const RegisterPage = lazy(() => import('@/pages/register'))
 const RegisterHFUpdatePage = lazy(() => import('@/pages/register/hf/hf-update'))
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'))
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'))
 const RegisterEquipmentAppealList = lazy(() => import('@/features/register/equipments/ui/equipments-appeal-list'))
-const EquipmentPrintPage = lazy(() => import('@/features/register/equipments/ui/EquipmentPrintPage'))
+const EquipmentPrintPage = lazy(() => import('@/features/register/equipments/ui/equipment-print-page'))
 const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'))
 const RegisterXrayDetail = lazy(() => import('@/features/register/xray/ui/xray-detail'))
 const RegisterAutoDetail = lazy(() => import('@/features/register/auto/ui/auto-detail'))
@@ -196,16 +194,16 @@ export const appRoutes = [
     component: InspectionSurveys,
     roles: [UserRoles.ADMIN],
   },
-  {
-    path: 'templates',
-    component: TemplatesPage,
-    roles: [UserRoles.ADMIN],
-  },
-  {
-    path: 'templates/:id',
-    component: TemplateEditContentPage,
-    roles: [UserRoles.ADMIN],
-  },
+  // {
+  //   path: 'templates',
+  //   component: TemplatesPage,
+  //   roles: [UserRoles.ADMIN],
+  // },
+  // {
+  //   path: 'templates/:id',
+  //   component: TemplateEditContentPage,
+  //   roles: [UserRoles.ADMIN],
+  // },
   {
     path: 'staffs',
     component: StaffsPage,

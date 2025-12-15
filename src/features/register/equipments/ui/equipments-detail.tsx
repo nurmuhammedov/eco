@@ -9,7 +9,7 @@ import FileLink from '@/shared/components/common/file-link.tsx'
 import { Coordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { getDate } from '@/shared/utils/date.ts'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { QRCodeCanvas } from 'qrcode.react'
@@ -17,6 +17,8 @@ import { EquipmentPdfDocument } from '@/shared/components/common/equipment-pdf-d
 import { useEffect, useState } from 'react'
 import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx'
 import { EquipmentStickerPdf } from '@/shared/components/common/equipment-sticker-pdf'
+import { Button } from '@/shared/components/ui/button'
+import { UserRoles } from '@/entities/user'
 
 const EquipmentsDetail = () => {
   const { isLoading, data } = useEquipmentsDetail()
@@ -25,6 +27,7 @@ const EquipmentsDetail = () => {
   const { id: equipmentUuid } = useParams<{ id: string }>()
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('')
   const { data: legalData } = useLegalApplicantInfo(data?.ownerIdentity)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const canvas = document.getElementById('pdf-qr-canvas') as HTMLCanvasElement
@@ -50,6 +53,9 @@ const EquipmentsDetail = () => {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
+        {user?.role === UserRoles.CHAIRMAN && (
+          <Button onClick={() => navigate(`/register/${equipmentUuid}/equipments/appeal`)}>Murojaatlar</Button>
+        )}
       </div>
       <DetailCardAccordion
         defaultValue={[

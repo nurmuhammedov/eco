@@ -1,15 +1,14 @@
 import type { Navigation } from '@/widgets/sidebar/models/types'
 import {
-  ListChecks,
-  ListTree,
-  MapPin,
-  PencilRuler,
-  MousePointerClick,
-  Users,
-  Clipboard,
   Activity,
   AlertTriangle,
   Award,
+  Clipboard,
+  ListChecks,
+  ListTree,
+  MapPin,
+  MousePointerClick,
+  Users,
 } from 'lucide-react'
 
 export default [
@@ -34,11 +33,6 @@ export default [
     icon: <AlertTriangle />,
   },
   {
-    url: '/templates',
-    title: 'menu.templates',
-    icon: <PencilRuler />,
-  },
-  {
     url: '/equipments',
     title: 'menu.sub_types',
     icon: <MousePointerClick />,
@@ -58,11 +52,6 @@ export default [
     title: 'Ruxsatnomalar',
     icon: <Award />,
   },
-  // {
-  //   url: '/checklist-templates',
-  //   title: 'menu.checklist_templates',
-  //   icon: <ListChecks />,
-  // },
   {
     url: '/user-logs',
     title: 'menu.user-logs',

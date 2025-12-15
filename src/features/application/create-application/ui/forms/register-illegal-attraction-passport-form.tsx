@@ -444,7 +444,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Attraksionning surati</FormLabel>
+                    <FormLabel>Attraksionning surʼati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
                     </FormControl>
@@ -774,7 +774,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
                   <FormLabel>
-                    Attraksionlarning texnik tayyorligi dalolatnomasi ( yangi o‘rnatilgan 2023 yil 28 maydan so‘ng
+                    Attraksionlarning texnik tayyorligi dalolatnomasi (yangi o‘rnatilgan 2023 yil 28 maydan so‘ng
                     muomalaga kiritilgan attraksionlar uchun - majburiy, qolgan attraksionlar uchun - mavjud bo‘lsa)
                   </FormLabel>
                   <FormControl>
@@ -830,7 +830,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel>Attraksionga video kuzatuv moslamasi o’rnatilganligi surati</FormLabel>
+                  <FormLabel>Attraksionga video kuzatuv moslamasi o’rnatilganligi surʼati</FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
                   </FormControl>
@@ -845,7 +845,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel>Attraksionga QR kod axborot taxtachasiga o’rnatilganligi surati</FormLabel>
+                  <FormLabel>Attraksionga QR kod axborot taxtachasiga o’rnatilganligi surʼati</FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
                   </FormControl>

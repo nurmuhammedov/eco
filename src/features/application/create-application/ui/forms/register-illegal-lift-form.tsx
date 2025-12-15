@@ -202,11 +202,11 @@ export default ({ onSubmit }: RegisterIllegalLiftFormProps) => {
                 name="hazardousFacilityId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>XICHO ni tanlang</FormLabel>
+                    <FormLabel>XICHOni tanlang</FormLabel>
                     <FormControl>
                       <Select onValueChange={field.onChange} value={field.value || ''}>
                         <SelectTrigger className="3xl:w-sm w-full">
-                          <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
+                          <SelectValue placeholder="XICHOni tanlang (ixtiyoriy)" />
                         </SelectTrigger>
                         <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
                       </Select>
@@ -374,12 +374,12 @@ export default ({ onSubmit }: RegisterIllegalLiftFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel>Qisman texnik ko‘rik sanasi</FormLabel>
+                    <FormLabel>Qisman texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy="after"
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Qisman texnik ko‘rik sanasi"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -393,11 +393,11 @@ export default ({ onSubmit }: RegisterIllegalLiftFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel>To‘liq texnik ko‘rik sanasi</FormLabel>
+                    <FormLabel>To‘liq texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="To‘liq texnik ko‘rik sanasi"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -458,7 +458,7 @@ export default ({ onSubmit }: RegisterIllegalLiftFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Liftning birkasi bilan surati</FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Liftning birkasi bilan surʼati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
                     </FormControl>

@@ -23,6 +23,9 @@ export const CablewayAppealDtoSchema = z.object({
   manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
   partialCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
   fullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  nonDestructiveCheckDate: z
+    .date({ required_error: 'Majburiy maydon!' })
+    .transform((date) => format(date, 'yyyy-MM-dd')),
 
   speed: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   passengerCount: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
@@ -43,8 +46,6 @@ export const CablewayAppealDtoSchema = z.object({
 
   installationCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
 
-  technicalInspectionPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  nextTechnicalInspectionDate: z
-    .date({ required_error: 'Majburiy maydon!' })
-    .transform((date) => format(date, 'yyyy-MM-dd')),
+  fullCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  nextFullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 })

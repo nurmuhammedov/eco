@@ -286,7 +286,7 @@ export default ({ onSubmit }: RegisterAttractionPassportFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Attraksionning birkasi bilan surati</FormLabel>
+                    <FormLabel required>Attraksionning birkasi bilan surʼati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
                     </FormControl>

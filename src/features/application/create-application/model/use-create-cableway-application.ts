@@ -31,6 +31,7 @@ export const useCreateCablewayApplication = () => {
       manufacturedAt: undefined,
       partialCheckDate: undefined,
       fullCheckDate: undefined,
+      nonDestructiveCheckDate: undefined,
       speed: '',
       passengerCount: '',
       length: '',
@@ -42,8 +43,8 @@ export const useCreateCablewayApplication = () => {
       expertiseExpiryDate: undefined,
       equipmentCertPath: undefined,
       installationCertPath: undefined,
-      technicalInspectionPath: undefined,
-      nextTechnicalInspectionDate: undefined,
+      fullCheckPath: undefined,
+      nextFullCheckDate: undefined,
     },
     mode: 'onChange',
   })

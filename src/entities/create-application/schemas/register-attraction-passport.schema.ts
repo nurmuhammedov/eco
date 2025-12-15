@@ -36,8 +36,8 @@ export const AttractionPassportAppealDtoSchema = z.object({
 
   // File paths
   labelPath: z
-    .string({ required_error: 'Attraksionning birkasi bilan surati biriktirilmadi!' })
-    .min(1, 'Attraksionning birkasi bilan surati biriktirilmadi!'),
+    .string({ required_error: 'Attraksionning birkasi bilan surʼati biriktirilmadi!' })
+    .min(1, 'Attraksionning birkasi bilan surʼati biriktirilmadi!'),
   labelExpiryDate: z.date({ required_error: 'Sana kiritilmadi!' }),
   passportPath: z
     .string({ required_error: 'Attraksion pasporti fayli biriktirilmadi!' })

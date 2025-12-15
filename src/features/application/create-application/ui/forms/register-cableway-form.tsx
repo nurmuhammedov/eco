@@ -54,7 +54,7 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                     <FormControl>
                       <Select onValueChange={field.onChange} value={field.value || ''}>
                         <SelectTrigger className="3xl:w-sm w-full">
-                          <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
+                          <SelectValue placeholder="XICHOni tanlang (ixtiyoriy)" />
                         </SelectTrigger>
                         <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
                       </Select>
@@ -148,12 +148,12 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Qisman texnik ko‘rik sanasi</FormLabel>
+                    <FormLabel required>Qisman texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Qisman texnik ko‘rik sanasini kiriting"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -167,12 +167,31 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>To‘liq texnik ko‘rik sanasi</FormLabel>
+                    <FormLabel required>To‘liq texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="To‘liq texnik ko‘rik sanasini kiriting"
+                      placeholder="Sanani tanlang"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="nonDestructiveCheckDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="3xl:w-sm w-full">
+                    <FormLabel required>Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi</FormLabel>
+                    <DatePicker
+                      disableStrategy={'after'}
+                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                      onChange={field.onChange}
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -457,13 +476,13 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
 
           <div className="border-b pb-4">
             <FormField
-              name="technicalInspectionPath"
+              name="fullCheckPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Texnik ko'rikdan o'tkazilganligi
+                      Texnik ko‘rikdan o‘tkazilganligi
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -474,7 +493,7 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
             />
             <FormField
               control={form.control}
-              name="nextTechnicalInspectionDate"
+              name="nextFullCheckDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (

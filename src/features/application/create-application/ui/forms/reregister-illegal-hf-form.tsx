@@ -99,11 +99,11 @@ export default ({ onSubmit }: { onSubmit: (data: ReRegisterIllegalHFApplicationD
               name="hazardousFacilityId"
               render={({ field }) => (
                 <FormItem className="col-span-full xl:col-span-1">
-                  <FormLabel required>O‘zgartirish kiritilayotgan XICHO ni tanlang</FormLabel>
+                  <FormLabel required>O‘zgartirish kiritilayotgan XICHOni tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value || ''}>
                       <SelectTrigger className="3xl:w-sm w-full">
-                        <SelectValue placeholder="XICHO ni tanlang" />
+                        <SelectValue placeholder="XICHOni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
                     </Select>

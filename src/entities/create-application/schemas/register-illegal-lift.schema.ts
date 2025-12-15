@@ -51,8 +51,8 @@ export const LiftIllegalAppealDtoSchema = z
       .optional()
       .transform((date) => date && format(date, 'yyyy-MM-dd')),
     labelPath: z
-      .string({ required_error: 'Liftning birkasi bilan surati fayli biriktirilmadi!' })
-      .min(1, 'Liftning birkasi bilan surati fayli biriktirilmadi!'),
+      .string({ required_error: 'Liftning birkasi bilan surʼati fayli biriktirilmadi!' })
+      .min(1, 'Liftning birkasi bilan surʼati fayli biriktirilmadi!'),
     labelExpiryDate: z
       .date()
       .optional()

@@ -16,6 +16,7 @@ export const withErrorBoundary = (Component: React.ComponentType) => {
               position={'top-right'}
               richColors
               visibleToasts={5}
+              duration={10000}
               toastOptions={{
                 classNames: {
                   toast: 'font-golos-text select-none text-sm cursor-pointer !w-[400px]',

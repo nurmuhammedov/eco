@@ -43,8 +43,8 @@ export const useCreateLpgPoweredApplication = () => {
       installationCertPath: undefined,
       additionalFilePath: undefined,
       gasSupplyProjectPath: undefined,
-      technicalInspectionPath: undefined,
-      nextTechnicalInspectionDate: undefined,
+      fullCheckPath: undefined,
+      nextFullCheckDate: undefined,
     },
     mode: 'onChange',
   })

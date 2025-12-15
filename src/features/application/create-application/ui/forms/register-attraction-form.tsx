@@ -136,6 +136,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
+                      disableStrategy={'after'}
                       placeholder="Sanani tanlang"
                     />
                     <FormMessage />
@@ -155,6 +156,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
                       placeholder="Sanani tanlang"
+                      disableStrategy={'before'}
                     />
                     <FormMessage />
                   </FormItem>
@@ -283,7 +285,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
           </div>
         </CardForm>
 
-        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
+        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-1 2xl:grid-cols-2">
           <div className="border-b pb-4">
             <FormField
               name="labelPath"
@@ -292,7 +294,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Attraksionning surati
+                      Attraksionning surʼati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
@@ -305,13 +307,14 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
 
           <div className="border-b pb-4">
             <FormField
-              name="additionalFilePath"
+              name="passportPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Attraksion pasporti
+                      Attraksion ishlab chiqaruvchisi tomonidan va (yoki) ixtisoslashtirilgan tashkilot tomonidan
+                      tayyorlangan attraksion pasporti
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -330,7 +333,9 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                      Muvofiqlik sertifikati yoki muvofiqlik to‘g‘risidagi deklaratsiyaning nusxasi
+                      Muvofiqlik sertifikati yoki muvofiqlik to‘g‘risidagi deklaratsiyaning nusxasi (2023 yil 28 maydan
+                      so‘ng muomalaga kiritilgan attraksionlar uchun - majburiy, qolgan attraksionlar uchun - mavjud
+                      bo‘lsa)
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -349,7 +354,9 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Kundalik texnik xizmat ko‘rsatish jurnali
+                      Kundalik texnik xizmat ko‘rsatish attraksion ishlari boshlanishidan oldin olib boriladi. Natijalar
+                      bo‘yicha attraksionlardan xavfsiz foydalanishga javobgar shaxs attraksionni kundalik foydalanishga
+                      ruxsat berganligi to‘g‘rida jurnali
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -368,7 +375,8 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Attraksionlarga davriy texnik xizmat ko‘rsatish reja-jadvali
+                      Attraksionlarga davriy texnik xizmat ko‘rsatish attraksion egasi yoki attraksionni ijaraga olgan
+                      shaxs tomonidan tasdiqlangan reja-jadvali
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -387,7 +395,9 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Texnik shahodat sinovlari bo'yicha mas’ul mutaxassis buyrug‘i
+                      Texnik shahodat sinovlari attraksiondan foydalanish qo‘llanmasi va mazkur Qoidalar talablariga
+                      muvofiq attraksionlarni soz holatda saqlash va xavfsiz foydalanish uchun masʼul bo‘lgan mutaxassis
+                      boshchiligida amalga oshiriladi. Masʼul mutaxassis buyrug‘i
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -406,7 +416,8 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Mavsumiy texnik shahodat sinovlaridan o‘tganligi to‘g‘risida ma’lumotlar
+                      Mavsumiy foydalaniladigan attraksionlar to‘liq texnik shahodat sinovlaridan o‘tganligi to‘g‘risida
+                      maʼlumotlar
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -447,7 +458,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Mavsumga tayyorligi to‘g‘risidagi dalolatnoma
+                      Bog‘ attraksionining mavsumga tayyorligi to‘g‘risidagi dalolatnomasi
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -487,7 +498,8 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                      Attraksionlarning texnik tayyorligi dalolatnomasi
+                      Attraksionlarning texnik tayyorligi dalolatnomasi (yangi o‘rnatilgan 2023 yil 28 maydan so‘ng
+                      muomalaga kiritilgan attraksionlar uchun - majburiy, qolgan attraksionlar uchun - mavjud bo‘lsa)
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -506,7 +518,8 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Xodimlar bilim sinovi ma’lumoti
+                      Bog‘ xodimlarning mehnatni muhofaza qilish bo‘yicha bilimlarini sinovdan o‘tganligi to‘g‘risida
+                      maʼlumot
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -605,7 +618,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Video kuzatuv moslamasi o’rnatilganligi surati
+                      Video kuzatuv moslamasi o’rnatilganligi surʼati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
@@ -624,7 +637,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                      Attraksionga QR kod axborot taxtachasiga o’rnatilganligi surati
+                      Attraksionga QR kod axborot taxtachasiga o’rnatilganligi surʼati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />

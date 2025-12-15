@@ -54,7 +54,7 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
                     <FormControl>
                       <Select onValueChange={field.onChange} value={field.value || ''}>
                         <SelectTrigger className="3xl:w-sm w-full">
-                          <SelectValue placeholder="XICHO ni tanlang (ixtiyoriy)" />
+                          <SelectValue placeholder="XICHOni tanlang (ixtiyoriy)" />
                         </SelectTrigger>
                         <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
                       </Select>
@@ -148,9 +148,7 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>
-                      O‘tkazilgan tashki (NO), ichki koʻrik (VO) yoki gidrosinov (GI) sanasi
-                    </FormLabel>
+                    <FormLabel required>Qisman texnik koʻrikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
@@ -168,9 +166,7 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>
-                      O‘tkaziladigan tashki (NO), ichki koʻrik (VO) yoki gidrosinov (GI) sanasi
-                    </FormLabel>
+                    <FormLabel required>Toʻliq texnik koʻrikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
@@ -473,7 +469,7 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
 
           <div className="border-b pb-4">
             <FormField
-              name="technicalInspectionPath"
+              name="fullCheckPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
@@ -490,7 +486,7 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
             />
             <FormField
               control={form.control}
-              name="nextTechnicalInspectionDate"
+              name="nextFullCheckDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (

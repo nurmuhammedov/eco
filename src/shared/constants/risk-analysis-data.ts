@@ -193,7 +193,7 @@ export const riskAnalysisData = {
       rejectPlaceholder: `placeholder`,
     },
     {
-      title: `Lift davriy texnik ko'rikdan o'tganligi`,
+      title: `Lift davriy texnik ko‘rikdan o'tganligi`,
       point: 15,
       rejectPlaceholder: `placeholder`,
     },

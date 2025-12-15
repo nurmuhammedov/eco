@@ -32,7 +32,7 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="XICHO reyestriga o‘zgartirish kiritish" />
+        <GoBack title="XICHOga o‘zgartirish kiritish" />
 
         <CardForm className="my-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
@@ -41,11 +41,11 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               name="hazardousFacilityId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>O‘zgartirish kiritilayotgan XICHO ni tanlang</FormLabel>
+                  <FormLabel required>O‘zgartirish kiritilayotgan XICHOni tanlang</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="3xl:w-sm w-full">
-                        <SelectValue placeholder="XICHO ni tanlang" />
+                        <SelectValue placeholder="XICHOni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{hazardousFacilitiesOptions}</SelectContent>
                     </Select>

@@ -22,6 +22,7 @@ import { apiConfig } from '@/shared/api/constants'
 interface SignatureModalProps {
   isLoading: boolean
   documentUrl: string
+  error: any
   onCancel?: () => void
   submitApplicationMetaData: (sign: string) => void
   onConfirm?: (certificate: SignatureKey | null) => void
@@ -30,6 +31,7 @@ interface SignatureModalProps {
 export const SignatureModal = ({
   onCancel,
   onConfirm,
+  error,
   isLoading,
   documentUrl,
   submitApplicationMetaData,
@@ -77,13 +79,13 @@ export const SignatureModal = ({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       {apiConfig.oneIdClientId == 'test_cirns_uz' ? (
-        <Button loading={isLoading} onClick={handleConfirm} disabled={isLoading}>
+        <Button loading={isLoading} onClick={handleConfirm} disabled={isLoading || !!error}>
           <Signature className="size-4" />
           Imzolash
         </Button>
       ) : (
         <AlertDialogTrigger asChild>
-          <Button loading={isLoading} disabled={isLoadingSignature}>
+          <Button loading={isLoading} disabled={isLoadingSignature || !!error}>
             <Signature className="size-4" />
             Imzolash
           </Button>
@@ -114,7 +116,7 @@ export const SignatureModal = ({
           <AlertDialogCancel onClick={handleCancel}>Bekor qilish</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
-            disabled={!selectedCertificate}
+            disabled={!selectedCertificate || !!error}
             className={!selectedCertificate ? 'cursor-not-allowed opacity-50' : ''}
           >
             {isPending && <Loader2 className="size-4 animate-spin" />}

@@ -112,7 +112,7 @@ export const EquipmentsList = () => {
     {
       accessorFn: (row) => (row.partialCheckDate ? getDate(row.partialCheckDate) : '-'),
       maxSize: 90,
-      header: 'Qisman texnik koʻrik sanasi',
+      header: 'Qisman texnik koʻrikdan o‘tkazilgan sana',
     },
     {
       accessorFn: (row) => (row.fullCheckDate ? getDate(row.fullCheckDate) : '-'),

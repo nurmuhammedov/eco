@@ -632,7 +632,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Shaxsiy ximoya vositalarining foto surati</FormLabel>
+                    <FormLabel required>Shaxsiy ximoya vositalarining foto surʼati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
