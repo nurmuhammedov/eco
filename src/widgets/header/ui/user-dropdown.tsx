@@ -18,8 +18,6 @@ export default function UserDropdown() {
   const { user } = useAuth()
   const { t } = useTranslation('auth')
   const { mutateAsync, isPending } = useLogout()
-  // const navigate = useNavigate();
-  // const userName = getInitials(user?.name);
 
   if (isPending) {
     return <Loader isVisible={isPending} />
@@ -31,7 +29,6 @@ export default function UserDropdown() {
         <div className="flex cursor-pointer items-center space-x-2">
           <Avatar>
             <AvatarImage src="" alt="@shadcn" />
-            {/*<AvatarFallback>{userName}</AvatarFallback>*/}
             <AvatarFallback>
               <User size={22} />
             </AvatarFallback>
@@ -45,11 +42,6 @@ export default function UserDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-44">
         <DropdownMenuGroup>
-          {/*{user?.role == UserRoles.LEGAL && (*/}
-          {/*  <DropdownMenuItem className="flex justify-between" onClick={() => navigate('/checklists')}>*/}
-          {/*    Checklists <File size={16} />*/}
-          {/*  </DropdownMenuItem>*/}
-          {/*)}*/}
           <DropdownMenuItem disabled={isPending} className="flex justify-between" onClick={() => mutateAsync()}>
             {t('logout')} <LogOut size={16} />
           </DropdownMenuItem>
