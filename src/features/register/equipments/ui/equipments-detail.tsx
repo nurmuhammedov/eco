@@ -54,7 +54,7 @@ const EquipmentsDetail = () => {
       <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
         {user?.role === UserRoles.CHAIRMAN && (
-          <Button onClick={() => navigate(`/register/${equipmentUuid}/equipments/appeal`)}>Murojaatlar</Button>
+          <Button onClick={() => navigate(`/register/${equipmentUuid}/equipments/appeals`)}>Murojaatlar</Button>
         )}
       </div>
       <DetailCardAccordion

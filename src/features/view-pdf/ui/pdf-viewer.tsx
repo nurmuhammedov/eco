@@ -5,20 +5,11 @@ import { cn } from '@/shared/lib/utils'
 import { useEffect, useRef, useState } from 'react'
 
 export enum ZoomLevel {
-  // TINY = 50,
   SMALL = 80,
-  // NORMAL = 100,
-  // LARGE = 125,
-  // PAGE_WIDTH = 'page-width',
-  // PAGE_FIT = 'page-fit',
 }
 
 export enum ViewMode {
   SINGLE_PAGE = 'SinglePage',
-  // TWO_PAGE = 'TwoPage',
-  // CONTINUOUS = 'Continuous',
-  // FIT_H = 'FitH',
-  // FIT_V = 'FitV',
 }
 
 interface PDFViewerProps {
@@ -42,7 +33,6 @@ export const PDFViewer = ({
   title,
   className,
   width = '100%',
-  // height propini olib tashladik yoki ishlatmaymiz, chunki bizga 100% kerak
   viewMode = ViewMode.SINGLE_PAGE,
   showToolbar = false,
   lightMode = true,
@@ -127,7 +117,6 @@ export const PDFViewer = ({
 
   return (
     <div
-      // O'ZGARISH: h-full qo'shildi, overflow-y-auto olib tashlandi
       className={cn('relative h-full w-full overflow-hidden rounded-md dark:border-gray-600', className)}
       style={{ width }}
     >

@@ -1,4 +1,4 @@
-import { PDFViewer } from '@/features/view-pdf' // Yo'lni loyihangizga moslang
+import { PDFViewer } from '@/features/view-pdf'
 import { SignatureModal } from '@/shared/components/common/signature'
 import { Button } from '@/shared/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
@@ -44,16 +44,11 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
       )
     }
 
-    // O'ZGARISH: PDFViewer ga h-full berildi
     return <PDFViewer documentUrl={documentUrl} className="h-full" />
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      {/* O'ZGARISH:
-         1. h-[95vh]: Modal balandligi ekranning 95 foizini egallaydi.
-         2. flex flex-col: Ichki elementlarni vertikal joylashtirish uchun.
-      */}
       <DialogContent className="flex h-[1000px] max-h-[95vh] w-[740px] max-w-[98vw] flex-col gap-0 p-0">
         <DialogHeader className="flex-shrink-0 border-b p-6 pb-4">
           <DialogTitle className="flex items-end gap-x-2">
@@ -61,22 +56,8 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
           </DialogTitle>
         </DialogHeader>
 
-        {/*{error && (*/}
-        {/*  <div className="flex-shrink-0 px-6 pt-4">*/}
-        {/*    <Alert variant="destructive" className="mb-4">*/}
-        {/*      <AlertDescription>{error}</AlertDescription>*/}
-        {/*    </Alert>*/}
-        {/*  </div>*/}
-        {/*)}*/}
-
-        {/* O'ZGARISH:
-           1. flex-1: Bo'sh qolgan barcha joyni egallaydi.
-           2. overflow-hidden: Agar PDF katta bo'lsa, modal cho'zilib ketmaydi, ichki qism chegaralanadi.
-           3. relative: Ichki elementlar (PDF) to'g'ri joylashishi uchun.
-        */}
         <div className="relative flex-1 overflow-hidden bg-gray-50">{renderContent()}</div>
 
-        {/* Footer - qotib turadi (flex-shrink-0) */}
         <DialogFooter className="flex-shrink-0 border-t bg-white p-6 pt-4">
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
             <Pencil className="mr-2 size-4" /> Hujjatni o‘zgartirish

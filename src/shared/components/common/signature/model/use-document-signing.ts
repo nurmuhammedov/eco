@@ -8,7 +8,7 @@ import { getTimeStamp } from '@/shared/components/common/signature/api/get-time-
 interface SignDocumentParams {
   documentUrl: string
   Client: SignatureClient
-  signature: SignatureKey | null
+  signature: SignatureKey | string | null
   onSuccess?: (result: any) => void
 }
 
@@ -33,31 +33,33 @@ export const signDocumentWithMetadata = async ({ Client, signature, documentUrl 
       return false
     }
 
-    const keyResponse = await Client.loadKey(signature as unknown as SignatureKey).catch(() => {
-      toast.error('Kiritilgan parol noto‘g‘ri!', { richColors: true })
-    })
-    const keyId = keyResponse?.id
+    let keyId
+
+    if (signature !== 'ckc') {
+      const keyResponse = await Client.loadKey(signature as unknown as SignatureKey).catch(() => {
+        toast.error('Kiritilgan parol noto‘g‘ri!', { richColors: true })
+      })
+      keyId = keyResponse?.id
+    } else {
+      keyId = 'ckc'
+    }
 
     if (!keyId) {
-      // toast.error('Kalit topilmadi!', { richColors: true })
       return false
     }
 
-    // 2. Convert PDF to base64
     const documentBase64 = await convertPdfToBase64(documentUrl)
     if (!documentBase64) {
       toast.error('Hujjat ustida ishlashda xatolik!')
       return false
     }
 
-    // 3. Create a new PKCS7
     const pkcs7Signature = await Client.createPkcs7(keyId, documentBase64)
     if (!pkcs7Signature) {
       toast.error('Hujjat imzolashda xatolik!')
       return false
     }
 
-    // 4. Fetch timestamp
     const timestampResponse = await getTimeStamp({ sign: pkcs7Signature })
     const { pkcs7b64, status } = timestampResponse
 
@@ -66,7 +68,6 @@ export const signDocumentWithMetadata = async ({ Client, signature, documentUrl 
       return false
     }
 
-    // 5. Send to server
     const signatureResponse = await apiClient.post('/e-imzo/attached', { sign: pkcs7b64 })
 
     if (signatureResponse.status !== 200) {

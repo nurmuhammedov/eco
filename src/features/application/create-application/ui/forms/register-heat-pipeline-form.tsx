@@ -351,7 +351,7 @@ export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel className="max-w-1/2 2xl:max-w-3/7">Quvurning birkasi bilan sur‘ati</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
+                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
                     </FormControl>
                   </div>
                 </FormItem>

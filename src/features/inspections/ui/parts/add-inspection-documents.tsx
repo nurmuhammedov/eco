@@ -13,13 +13,6 @@ import { useQueryClient } from '@tanstack/react-query'
 
 const schema = z.object({
   specialCode: z.string({ required_error: 'Majburiy maydon!', message: 'Majburiy maydon!' }).default(''),
-  // notificationLetterPath: z.string().optional().default(''),
-  // notificationLetterDate: z.date().optional().nullable().default(null),
-  // orderPath: z.string().optional().default(''),
-  // schedulePath: z.string().optional().default(''),
-  // programPath: z.string().optional().default(''),
-  // measuresPath: z.string().optional().default(''),
-  // resultPath: z.string().optional().default(''),
 })
 
 const AddInspectionDocuments = ({ resetTab }: any) => {
@@ -34,12 +27,6 @@ const AddInspectionDocuments = ({ resetTab }: any) => {
     if (inspectionData) {
       form.reset({
         specialCode: inspectionData?.specialCode,
-        // notificationLetterPath: inspectionData?.notificationLetterPath,
-        // programPath: inspectionData?.programPath,
-        // orderPath: inspectionData?.orderPath,
-        // schedulePath: inspectionData?.schedulePath,
-        // measuresPath: inspectionData?.measuresPath,
-        // resultPath: inspectionData?.resultPath,
       })
     }
   }, [inspectionData])

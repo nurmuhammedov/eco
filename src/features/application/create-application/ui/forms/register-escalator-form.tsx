@@ -329,7 +329,7 @@ export default ({ onSubmit }: RegisterEscalatorFormProps) => {
                       Eskalatorning birkasi bilan sur‘ati
                     </FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
+                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
                     </FormControl>
                   </div>
                 </FormItem>

@@ -1,23 +1,29 @@
 import { UserRoles } from '@/entities/user/model/types'
 import { lazy } from 'react'
 
-const AttractionTypePage = lazy(() => import('@/pages/admin/attraction-type/page'))
+// Auth pages
+const AdminLogin = lazy(() => import('@/pages/auth/ui/admin-login'))
+const OneIdLoginPage = lazy(() => import('@/pages/auth/ui/login-page'))
 
-// Error pages
+// NotFound page
 const NotFound = lazy(() => import('@/pages/error/ui/page-not-found'))
 
-// Application pages
+// Applications pages
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'))
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'))
-const AttestationDetail = lazy(() => import('@/pages/attestation/attestation-detail'))
-
 const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'))
 const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
 
-// Auth pages
-const AdminLogin = lazy(() => import('@/pages/auth/ui/admin-login'))
-const OneIdLoginPage = lazy(() => import('@/pages/auth/ui/login-page'))
+// Prevention
+const Preventions = lazy(() => import('@/widgets/prevention'))
+const PreventionDetail = lazy(() => import('@/features/prevention/ui/prevention-detail'))
+
+// Permits
+const Permits = lazy(() => import('@/widgets/permits'))
+
+//ContactPage
+const ContactPage = lazy(() => import('@/pages/qr-form'))
 
 // Other pages
 const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'))
@@ -42,35 +48,23 @@ const RegisterAutoDetail = lazy(() => import('@/features/register/auto/ui/auto-d
 const RiskAnalysisPage = lazy(() => import('@/pages/risk-analysis'))
 const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'))
 const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-info-by-id'))
-const PermitPage = lazy(() => import('@/pages/permits/page'))
 const ExpertisePage = lazy(() => import('@/pages/expertise/page'))
 const AddConclusionPage = lazy(() => import('@/pages/expertise/add-conclusion-page'))
 const UserLogsPage = lazy(() => import('@/pages/admin/user-logs/page'))
-const ChecklistTemplatesPage2 = lazy(() => import('@/features/checklists'))
-const PreventionsPage = lazy(() => import('@/widgets/prevention/ui/prevention-widget.tsx'))
-const PreventionCreatePage = lazy(() => import('@/pages/preventions/create'))
-const PreventionViewPage = lazy(() => import('@/pages/preventions/view'))
+
 const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'))
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'))
 const InspectionSurveys = lazy(() => import('@/pages/admin/inspection/ui'))
-const AttestationPage = lazy(() => import('@/pages/attestation'))
 const InspectorTasks = lazy(() => import('@/features/risk-analysis/ui/inspector-tasks'))
-const AddAttestationEmployeePage = lazy(() => import('@/pages/attestation/add-employee'))
 const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-page'))
 const ExpertiseOrganizations = lazy(() => import('@/pages/expertise/organizations-page'))
 const EditConclusion = lazy(() => import('@/pages/expertise/edit-conclusion-page'))
-const CadastreDetailPage = lazy(() => import('@/pages/cadastre/detail'))
-const ContactPage = lazy(() => import('@/pages/qr-form'))
+const AttractionTypePage = lazy(() => import('@/pages/admin/attraction-type/page'))
 
 export const appRoutes = [
   {
     path: 'applications',
     component: Applications,
-    roles: [],
-  },
-  {
-    path: 'permits',
-    component: PermitPage,
     roles: [],
   },
   {
@@ -128,12 +122,6 @@ export const appRoutes = [
     component: ReportsDetail4,
     roles: [],
   },
-
-  {
-    path: 'attestations/detail/:id',
-    component: AttestationDetail,
-    roles: [],
-  },
   {
     path: 'register',
     component: RegisterPage,
@@ -155,7 +143,7 @@ export const appRoutes = [
     roles: [],
   },
   {
-    path: 'register/:id/equipments/appeal',
+    path: 'register/:id/equipments/appeals',
     component: RegisterEquipmentAppealList,
     roles: [],
   },
@@ -194,16 +182,7 @@ export const appRoutes = [
     component: InspectionSurveys,
     roles: [UserRoles.ADMIN],
   },
-  // {
-  //   path: 'templates',
-  //   component: TemplatesPage,
-  //   roles: [UserRoles.ADMIN],
-  // },
-  // {
-  //   path: 'templates/:id',
-  //   component: TemplateEditContentPage,
-  //   roles: [UserRoles.ADMIN],
-  // },
+
   {
     path: 'staffs',
     component: StaffsPage,
@@ -225,14 +204,14 @@ export const appRoutes = [
     roles: [UserRoles.ADMIN],
   },
   {
-    path: 'expertise-organizations',
-    component: ExpertiseOrganizations,
-    roles: [],
-  },
-  {
     path: 'user-logs',
     component: UserLogsPage,
     roles: [UserRoles.ADMIN],
+  },
+  {
+    path: 'expertise-organizations',
+    component: ExpertiseOrganizations,
+    roles: [],
   },
   {
     path: 'risk-analysis',
@@ -250,26 +229,6 @@ export const appRoutes = [
     roles: [],
   },
   {
-    path: 'preventions',
-    component: PreventionsPage,
-    roles: [],
-  },
-  {
-    path: 'preventions/create/:tin',
-    component: PreventionCreatePage,
-    roles: [UserRoles.INSPECTOR],
-  },
-  {
-    path: 'preventions/detail/:id',
-    component: PreventionViewPage,
-    roles: [],
-  },
-  {
-    path: 'checklists',
-    component: ChecklistTemplatesPage2,
-    roles: [UserRoles.LEGAL],
-  },
-  {
     path: 'inspections',
     component: InspectionsPage,
     roles: [],
@@ -279,6 +238,20 @@ export const appRoutes = [
     component: InspectionsInfoPage,
     roles: [],
   },
+
+  // Prevention
+  {
+    path: 'preventions',
+    component: Preventions,
+    roles: [],
+  },
+  {
+    path: 'preventions/detail/:id',
+    component: PreventionDetail,
+    roles: [],
+  },
+
+  // Conclusions
   {
     path: 'accreditations',
     component: ExpertisePage,
@@ -287,16 +260,6 @@ export const appRoutes = [
   {
     path: 'accreditations/add',
     component: AddConclusionPage,
-    roles: [],
-  },
-  {
-    path: 'attestations',
-    component: AttestationPage,
-    roles: [],
-  },
-  {
-    path: '/attestations/add',
-    component: AddAttestationEmployeePage,
     roles: [],
   },
   {
@@ -309,10 +272,19 @@ export const appRoutes = [
     component: EditConclusion,
     roles: [UserRoles.LEGAL],
   },
+
+  //Permits
   {
-    path: '/cadastre/detail/:id',
-    component: CadastreDetailPage,
+    path: 'permits',
+    component: Permits,
     roles: [],
+  },
+]
+
+export const publicRoutes = [
+  {
+    path: '/qr/:id/equipments',
+    component: ContactPage,
   },
 ]
 
@@ -326,13 +298,6 @@ export const authRoutes = [
     path: 'login/admin',
     roles: [],
     component: AdminLogin,
-  },
-]
-
-export const publicRoutes = [
-  {
-    path: '/qr/:id/equipments',
-    component: ContactPage,
   },
 ]
 

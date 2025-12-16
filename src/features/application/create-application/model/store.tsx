@@ -7,7 +7,7 @@ export interface FormComponentProps {
 
 const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormComponentProps>>> = {
   [ApplicationTypeEnum.REGISTER_HF]: lazy(() => import('../ui/forms/register-hp-form')),
-  [ApplicationTypeEnum.DEREGISTER_HF]: lazy(() => import('../ui/forms/deregister-hp-form')),
+  [ApplicationTypeEnum.DEREGISTER_HF]: lazy(() => import('../ui/forms/deregister-hf-form')),
   [ApplicationTypeEnum.RE_REGISTER_HF]: lazy(() => import('../ui/forms/reregister-hf-form')),
   [ApplicationTypeEnum.RE_REGISTER_ILLEGAL_HF]: lazy(() => import('../ui/forms/reregister-illegal-hf-form')),
   [ApplicationTypeEnum.REGISTER_ELEVATOR]: lazy(() => import('../ui/forms/register-lift-form')),
@@ -23,34 +23,24 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.REGISTER_LPG_POWERED]: lazy(() => import('../ui/forms/register-lpg-powered-form')),
   [ApplicationTypeEnum.REGISTER_HOIST]: lazy(() => import('../ui/forms/register-hoist-form')),
   [ApplicationTypeEnum.REGISTER_CABLEWAY]: lazy(() => import('../ui/forms/register-cableway-form')),
-  // [ApplicationTypeEnum.REGISTER_ACCREDITATION]: lazy(() => import('../ui/forms/register-accreditation-form')),
-  // [ApplicationTypeEnum.RE_REGISTER_ACCREDITATION]: lazy(() => import('../ui/forms/register-re-accreditation-form')),
-  // [ApplicationTypeEnum.EXPAND_ACCREDITATION]: lazy(() => import('../ui/forms/register-expand-accreditation-form')),
   [ApplicationTypeEnum.DEREGISTER_EQUIPMENT]: lazy(() => import('../ui/forms/deregister-equipment-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_HF]: lazy(() => import('../ui/forms/register-illegal-hf-form')),
-  // [ApplicationTypeEnum.REGISTER_EXPERTISE_CONCLUSION]: lazy(
-  //   () => import('../ui/forms/register-accreditation-conclusion-form')
-  // ),
-  // [ApplicationTypeEnum.REGISTER_ATTESTATION]: lazy(() => import('../ui/forms/register-attestation-form')),
   [ApplicationTypeEnum.REGISTER_IRS]: lazy(() => import('../ui/forms/register-irs-form')),
   [ApplicationTypeEnum.REGISTER_XRAY]: lazy(() => import('../ui/forms/register-xray-form')),
-  [ApplicationTypeEnum.ILLEGAL_REGISTER_XRAY]: lazy(() => import('../ui/forms/register-illegal-xray-form')),
-  // [ApplicationTypeEnum.REGISTER_CADASTRE_PASSPORT]: lazy(() => import('../ui/forms/register-cadastre-passport-form')),
-  // [ApplicationTypeEnum.REGISTER_DECLARATION]: lazy(() => import('../ui/forms/register-declaration-form')),
   [ApplicationTypeEnum.RE_REGISTER_EQUIPMENT]: lazy(() => import('../ui/forms/reregister-equipment-form')),
-  [ApplicationTypeEnum.REGISTER_ATTRACTION_PASSPORT]: lazy(
-    () => import('../ui/forms/register-attraction-passport-form')
-  ),
   [ApplicationTypeEnum.REGISTER_ATTRACTION]: lazy(() => import('../ui/forms/register-attraction-form')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_XRAY]: lazy(() => import('../ui/forms/register-illegal-xray-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_CRANE]: lazy(() => import('../ui/forms/register-illegal-crane-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_CONTAINER]: lazy(() => import('../ui/forms/register-illegal-container-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER]: lazy(() => import('../ui/forms/register-illegal-boiler-form.tsx')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_ELEVATOR]: lazy(() => import('../ui/forms/register-illegal-lift-form.tsx')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_ESCALATOR]: lazy(() => import('../ui/forms/register-illegal-escalator-form')),
-  [ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION_PASSPORT]: lazy(
-    () => import('../ui/forms/register-illegal-attraction-passport-form')
-  ),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_PIPELINE]: lazy(() => import('../ui/forms/register-illegal-pipeline-form')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_HOIST]: lazy(() => import('../ui/forms/register-illegal-hoist-form')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_CABLEWAY]: lazy(() => import('../ui/forms/register-illegal-cableway-form')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION_PASSPORT]: lazy(
+    () => import('../ui/forms/register-illegal-attraction-form')
+  ),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_CHEMICAL_CONTAINER]: lazy(
     () => import('../ui/forms/register-illegal-chemical-container-form')
   ),
@@ -66,8 +56,6 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.ILLEGAL_REGISTER_LPG_POWERED]: lazy(
     () => import('../ui/forms/register-illegal-lpg-powered-form')
   ),
-  [ApplicationTypeEnum.ILLEGAL_REGISTER_HOIST]: lazy(() => import('../ui/forms/register-illegal-hoist-form')),
-  [ApplicationTypeEnum.ILLEGAL_REGISTER_CABLEWAY]: lazy(() => import('../ui/forms/register-illegal-cableway-form')),
 }
 
 export function getFormComponentByType(

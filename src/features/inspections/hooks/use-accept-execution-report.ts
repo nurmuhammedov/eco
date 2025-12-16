@@ -8,10 +8,10 @@ export function useAcceptExecutionReport() {
 
   return useMutation({
     mutationFn: (id) => inspectionsApi.acceptInspectionReport(id),
-    onSuccess: async () => {
+    onSuccess: () => {
       toast.success('Muvaffaqiyatli saqlandi!')
-      await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] })
-      await queryClient.invalidateQueries({ queryKey: ['/inspection-checklists'] })
+      queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] }).catch((err) => console.error(err))
+      queryClient.invalidateQueries({ queryKey: ['/inspection-checklists'] }).catch((err) => console.error(err))
     },
   })
 }

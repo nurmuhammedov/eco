@@ -38,7 +38,6 @@ export const AddConclusion = () => {
       regionId: undefined,
       districtId: undefined,
       address: '',
-      // subType: undefined,
       expertiseName: '',
     },
   })

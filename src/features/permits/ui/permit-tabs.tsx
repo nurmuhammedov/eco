@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
-import { PermitTabKey } from '@/entities/permit'
+import { PermitTabKey } from '@/features/permits/model/types'
 import { cn } from '@/shared/lib/utils'
-import { Archive, Clock, FileText, ShieldAlert, Star, ShieldX } from 'lucide-react'
+import { Archive, Clock, FileText, ShieldAlert, ShieldX, Star } from 'lucide-react'
+import React from 'react'
 
 interface PermitTabsProps {
   activeTab: PermitTabKey
@@ -23,8 +24,6 @@ export const tabs = [
   { key: PermitTabKey.PERMIT, label: 'Ruxsatnoma' },
   { key: PermitTabKey.LICENSE, label: 'Litsenziya' },
   { key: PermitTabKey.CONCLUSION, label: 'Xulosa' },
-  // { key: PermitTabKey.NEARING_EXPIRY, label: 'Muddati yaqinlashayotganlar' },
-  // { key: PermitTabKey.EXPIRED, label: 'Muddatidan o‘tganlar' },
 ]
 
 export const PermitTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) => {

@@ -1,14 +1,12 @@
-// ** React and sonner imports
 import { toast } from 'sonner'
 import { useEffect, useMemo, useState } from 'react'
 
-// ** E-imzo client imports
-import SignatureClient from '@/shared/config/signature/Eimzo.js'
+import Signature from '@/shared/config/signature/e-imzo-init.js'
 import SignatureScript from '@/shared/config/signature/e-imzo.js?raw'
 
 export function useSignatureClient() {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false)
-  const Client: SignatureClient = useMemo(() => new SignatureClient(), [])
+  const Client: Signature = useMemo(() => new Signature(), [])
 
   useEffect(() => {
     const scriptContent = SignatureScript

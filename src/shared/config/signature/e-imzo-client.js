@@ -1,4 +1,3 @@
-/* eslint-disable */
 Date.prototype.yyyymmdd = function () {
   var yyyy = this.getFullYear().toString()
   var mm = (this.getMonth() + 1).toString() // getMonth() is zero-based
@@ -103,13 +102,15 @@ String.prototype.splitKeep = function (splitter, ahead) {
 
 export const EIMZOClient = {
   NEW_API: false,
+  NEW_API2: false,
+  NEW_API3: false,
   API_KEYS: [
     'ekotizim.cirns.uz',
     '68E8B670606F7FEF4C8EF38F15FE86747EFBB5531550E5543192E38B07D24D8751C9756D021D711B7202AC39E5C440E65822EDC4AFB41B0E7FAB11970C0B49B6',
-    // 'localhost',
-    // '96D0C1491615C82B9A54D9989779DF825B690748224C2B04F500F370D51827CE2644D8D4A82C18184D73AB8530BB8ED537269603F61DB0D03D2104ABF789970B',
-    // '127.0.0.1',
-    // 'A7BCFA5D490B351BE0754130DF03A068F855DB4333D43921125B9CF2670EF6A40370C646B90401955E1F7BC9CDBF59CE0B2C5467D820BE189C845D0B79CFC96F',
+    'localhost',
+    '96D0C1491615C82B9A54D9989779DF825B690748224C2B04F500F370D51827CE2644D8D4A82C18184D73AB8530BB8ED537269603F61DB0D03D2104ABF789970B',
+    '127.0.0.1',
+    'A7BCFA5D490B351BE0754130DF03A068F855DB4333D43921125B9CF2670EF6A40370C646B90401955E1F7BC9CDBF59CE0B2C5467D820BE189C845D0B79CFC96F',
   ],
   checkVersion: function (success, fail) {
     CAPIWS.version(
@@ -118,6 +119,8 @@ export const EIMZOClient = {
           if (data.major && data.minor) {
             var installedVersion = parseInt(data.major) * 100 + parseInt(data.minor)
             EIMZOClient.NEW_API = installedVersion >= 336
+            EIMZOClient.NEW_API2 = installedVersion >= 412
+            EIMZOClient.NEW_API3 = installedVersion >= 486
             success(data.major, data.minor)
           } else {
             fail(null, 'E-IMZO Version is undefined')
@@ -152,8 +155,8 @@ export const EIMZOClient = {
     if (!EIMZOClient.NEW_API) {
       fail(null, 'Please install new version of E-IMZO')
     } else {
-      EIMZOClient._findPfxs2(itemIdGen, itemUiGen, items, errors, function (firstItmId2) {
-        EIMZOClient._findTokens2(itemIdGen, itemUiGen, items, errors, function (firstItmId3) {
+      if (EIMZOClient.NEW_API2) {
+        EIMZOClient._findPfxs2(itemIdGen, itemUiGen, items, errors, function (firstItmId2) {
           if (items.length === 0 && errors.length > 0) {
             fail(errors[0].e, errors[0].r)
           } else {
@@ -161,46 +164,118 @@ export const EIMZOClient = {
             if (items.length === 1) {
               if (firstItmId2) {
                 firstId = firstItmId2
-              } else if (firstItmId3) {
-                firstId = firstItmId3
               }
             }
             success(items, firstId)
           }
         })
-      })
+      } else {
+        EIMZOClient._findPfxs2(itemIdGen, itemUiGen, items, errors, function (firstItmId2) {
+          EIMZOClient._findTokens2(itemIdGen, itemUiGen, items, errors, function (firstItmId3) {
+            if (items.length === 0 && errors.length > 0) {
+              fail(errors[0].e, errors[0].r)
+            } else {
+              var firstId = null
+              if (items.length === 1) {
+                if (firstItmId2) {
+                  firstId = firstItmId2
+                } else if (firstItmId3) {
+                  firstId = firstItmId3
+                }
+              }
+              success(items, firstId)
+            }
+          })
+        })
+      }
     }
   },
-  loadKey: function (itemObject, success, fail) {
+  idCardIsPLuggedIn: function (success, fail) {
+    if (!EIMZOClient.NEW_API2) {
+      console.log('E-IMZO version should be 4.12 or newer')
+      success(false)
+    } else {
+      CAPIWS.callFunction(
+        { plugin: 'idcard', name: 'list_readers' },
+        function (event, data) {
+          if (data.success) {
+            success(data.readers.length > 0)
+          } else {
+            fail(null, data.reason)
+          }
+        },
+        function (e) {
+          fail(e, null)
+        }
+      )
+    }
+  },
+  isBAIKTokenPLuggedIn: function (success, fail) {
+    if (!EIMZOClient.NEW_API3) {
+      console.log('E-IMZO version should be 4.86 or newer')
+      success(false)
+    } else {
+      CAPIWS.callFunction(
+        { plugin: 'baikey', name: 'list_tokens' },
+        function (event, data) {
+          if (data.success) {
+            success(data.tokens.length > 0)
+          } else {
+            fail(null, data.reason)
+          }
+        },
+        function (e) {
+          fail(e, null)
+        }
+      )
+    }
+  },
+  isCKCPLuggedIn: function (success, fail) {
+    if (!EIMZOClient.NEW_API3) {
+      console.log('E-IMZO version should be 4.86 or newer')
+      success(false)
+    } else {
+      CAPIWS.callFunction(
+        { plugin: 'ckc', name: 'list_ckc' },
+        function (event, data) {
+          if (data.success) {
+            success(data.devices.length > 0)
+          } else {
+            fail(null, data.reason)
+          }
+        },
+        function (e) {
+          fail(e, null)
+        }
+      )
+    }
+  },
+  loadKey: function (itemObject, success, fail, verifyPassword) {
     if (itemObject) {
       var vo = itemObject
       if (vo.type === 'pfx') {
         CAPIWS.callFunction(
-          {
-            plugin: 'pfx',
-            name: 'load_key',
-            arguments: [vo.disk, vo.path, vo.name, vo.alias],
-          },
+          { plugin: 'pfx', name: 'load_key', arguments: [vo.disk, vo.path, vo.name, vo.alias] },
           function (event, data) {
             if (data.success) {
               var id = data.keyId
-              CAPIWS.callFunction(
-                {
-                  name: 'verify_password',
-                  plugin: 'pfx',
-                  arguments: [id],
-                },
-                function (event, data) {
-                  if (data.success) {
-                    success(id)
-                  } else {
-                    fail(null, data.reason)
+              if (verifyPassword) {
+                CAPIWS.callFunction(
+                  { name: 'verify_password', plugin: 'pfx', arguments: [id] },
+                  function (event, data) {
+                    if (data.success) {
+                      success(id)
+                    } else {
+                      fail(null, data.reason)
+                    }
+                  },
+                  function (e) {
+                    fail(e, null)
                   }
-                },
-                function (e) {
-                  fail(e, null)
-                }
-              )
+                )
+              } else {
+                success(id)
+              }
             } else {
               fail(null, data.reason)
             }
@@ -211,31 +286,27 @@ export const EIMZOClient = {
         )
       } else if (vo.type === 'ftjc') {
         CAPIWS.callFunction(
-          {
-            plugin: 'ftjc',
-            name: 'load_key',
-            arguments: [vo.cardUID],
-          },
+          { plugin: 'ftjc', name: 'load_key', arguments: [vo.cardUID] },
           function (event, data) {
             if (data.success) {
               var id = data.keyId
-              CAPIWS.callFunction(
-                {
-                  plugin: 'ftjc',
-                  name: 'verify_pin',
-                  arguments: [id, '1'],
-                },
-                function (event, data) {
-                  if (data.success) {
-                    success(id)
-                  } else {
-                    fail(null, data.reason)
+              if (verifyPassword) {
+                CAPIWS.callFunction(
+                  { plugin: 'ftjc', name: 'verify_pin', arguments: [id, '1'] },
+                  function (event, data) {
+                    if (data.success) {
+                      success(id)
+                    } else {
+                      fail(null, data.reason)
+                    }
+                  },
+                  function (e) {
+                    fail(e, null)
                   }
-                },
-                function (e) {
-                  fail(e, null)
-                }
-              )
+                )
+              } else {
+                success(id)
+              }
             } else {
               fail(null, data.reason)
             }
@@ -252,20 +323,12 @@ export const EIMZOClient = {
       var vo = itemObject
       if (vo.type === 'pfx') {
         CAPIWS.callFunction(
-          {
-            plugin: 'pfx',
-            name: 'load_key',
-            arguments: [vo.disk, vo.path, vo.name, vo.alias],
-          },
+          { plugin: 'pfx', name: 'load_key', arguments: [vo.disk, vo.path, vo.name, vo.alias] },
           function (event, data) {
             if (data.success) {
               var id = data.keyId
               CAPIWS.callFunction(
-                {
-                  name: 'change_password',
-                  plugin: 'pfx',
-                  arguments: [id],
-                },
+                { name: 'change_password', plugin: 'pfx', arguments: [id] },
                 function (event, data) {
                   if (data.success) {
                     success()
@@ -287,20 +350,12 @@ export const EIMZOClient = {
         )
       } else if (vo.type === 'ftjc') {
         CAPIWS.callFunction(
-          {
-            plugin: 'ftjc',
-            name: 'load_key',
-            arguments: [vo.cardUID],
-          },
+          { plugin: 'ftjc', name: 'load_key', arguments: [vo.cardUID] },
           function (event, data) {
             if (data.success) {
               var id = data.keyId
               CAPIWS.callFunction(
-                {
-                  name: 'change_pin',
-                  plugin: 'ftjc',
-                  arguments: [id, '1'],
-                },
+                { name: 'change_pin', plugin: 'ftjc', arguments: [id, '1'] },
                 function (event, data) {
                   if (data.success) {
                     success()
@@ -323,45 +378,24 @@ export const EIMZOClient = {
       }
     }
   },
-  createPkcs7: function (id, data, timestamper, success, fail) {
+  createPkcs7: function (id, data, timestamper, success, fail, detached, isDataBase64Encoded) {
+    var data64
+    if (isDataBase64Encoded === true) {
+      data64 = data
+    } else {
+      data64 = Base64.encode(data)
+    }
+    if (detached === true) {
+      detached = 'yes'
+    } else {
+      detached = 'no'
+    }
     CAPIWS.callFunction(
-      {
-        plugin: 'pkcs7',
-        name: 'create_pkcs7',
-        arguments: [Base64.encode(data), id, 'no'],
-      },
+      { plugin: 'pkcs7', name: 'create_pkcs7', arguments: [data64, id, detached] },
       function (event, data) {
         if (data.success) {
           var pkcs7 = data.pkcs7_64
-          if (timestamper) {
-            var sn = data.signer_serial_number
-            timestamper(
-              data.signature_hex,
-              function (tst) {
-                CAPIWS.callFunction(
-                  {
-                    plugin: 'pkcs7',
-                    name: 'attach_timestamp_token_pkcs7',
-                    arguments: [pkcs7, sn, tst],
-                  },
-                  function (event, data) {
-                    if (data.success) {
-                      var pkcs7tst = data.pkcs7_64
-                      success(pkcs7tst)
-                    } else {
-                      fail(null, data.reason)
-                    }
-                  },
-                  function (e) {
-                    fail(e, null)
-                  }
-                )
-              },
-              fail
-            )
-          } else {
-            success(pkcs7)
-          }
+          success(pkcs7)
         } else {
           fail(null, data.reason)
         }

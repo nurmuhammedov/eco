@@ -1,5 +1,4 @@
 // src/features/application/application-detail/model/use-application-detail.tsx
-
 import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'

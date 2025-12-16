@@ -19,12 +19,12 @@ export enum ApplicationCategory {
 }
 
 export enum BuildingSphereType {
-  RESIDENTIAL = 'RESIDENTIAL', // Turar joy binosi
-  HOTEL = 'HOTEL', // Mehmonxona
-  SOCIAL = 'SOCIAL', // Ijtimoiy soha
-  INDUSTRIAL = 'INDUSTRIAL', // Sanoat korxonasi
-  SERVICE = 'SERVICE', // Xizmat ko‘rsatish objekti
-  OTHER = 'OTHER', // Boshqa objektlar
+  RESIDENTIAL = 'RESIDENTIAL',
+  HOTEL = 'HOTEL',
+  SOCIAL = 'SOCIAL',
+  INDUSTRIAL = 'INDUSTRIAL',
+  SERVICE = 'SERVICE',
+  OTHER = 'OTHER',
 }
 
 export enum ApplicationTypeEnum {

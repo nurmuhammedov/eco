@@ -1,9 +1,9 @@
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
   DialogTrigger,
 } from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
@@ -11,8 +11,8 @@ import { Input } from '@/shared/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm, useFieldArray } from 'react-hook-form'
-import { PermitSearchResult } from '@/entities/permit'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { PermitSearchResult } from '@/features/permits/model/types'
 import { useState } from 'react'
 import { Loader2, Plus, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -221,7 +221,6 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                       <div className="text-muted-foreground mb-3 text-sm font-medium">Transport №{index + 1}</div>
 
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                        {/* numberPlate */}
                         <FormField
                           control={transportForm.control}
                           name={`tankers.${index}.numberPlate`}
@@ -236,7 +235,6 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           )}
                         />
 
-                        {/* model */}
                         <FormField
                           control={transportForm.control}
                           name={`tankers.${index}.model`}
@@ -251,7 +249,6 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           )}
                         />
 
-                        {/* factoryNumber */}
                         <FormField
                           control={transportForm.control}
                           name={`tankers.${index}.factoryNumber`}
@@ -266,7 +263,6 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           )}
                         />
 
-                        {/* inventoryNumber */}
                         <FormField
                           control={transportForm.control}
                           name={`tankers.${index}.inventoryNumber`}
@@ -281,7 +277,6 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           )}
                         />
 
-                        {/* capacity */}
                         <FormField
                           control={transportForm.control}
                           name={`tankers.${index}.capacity`}
@@ -296,7 +291,6 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           )}
                         />
 
-                        {/* capacityUnit */}
                         <FormField
                           control={transportForm.control}
                           name={`tankers.${index}.capacityUnit`}
@@ -311,7 +305,6 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           )}
                         />
 
-                        {/* checkDate */}
                         <FormField
                           control={transportForm.control}
                           name={`tankers.${index}.checkDate`}
@@ -334,7 +327,6 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                           }}
                         />
 
-                        {/* validUntil */}
                         <FormField
                           control={transportForm.control}
                           name={`tankers.${index}.validUntil`}

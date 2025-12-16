@@ -7,10 +7,11 @@ export const useCreateHPOApplicationMutations = () => {
   return useMutation({
     mutationFn: createApplicationsAPI.createHPOApplication,
     onSuccess: (createdData) => {
-      queryClient.invalidateQueries({
-        queryKey: ['create-hpo-application'],
-      })
-
+      queryClient
+        .invalidateQueries({
+          queryKey: ['create-hpo-application'],
+        })
+        .catch((err) => console.log(err))
       queryClient.setQueryData(['create-hpo-application'], createdData)
     },
   })
@@ -22,9 +23,11 @@ export const useCreateCraneApplicationMutations = () => {
   return useMutation({
     mutationFn: createApplicationsAPI.createCraneApplication,
     onSuccess: (createdData) => {
-      queryClient.invalidateQueries({
-        queryKey: ['create-crane-application'],
-      })
+      queryClient
+        .invalidateQueries({
+          queryKey: ['create-crane-application'],
+        })
+        .catch((err) => console.log(err))
 
       queryClient.setQueryData(['create-crane-application'], createdData)
     },
@@ -37,10 +40,11 @@ export const useCreateLiftApplicationMutations = () => {
   return useMutation({
     mutationFn: createApplicationsAPI.createLiftApplication,
     onSuccess: (createdData) => {
-      queryClient.invalidateQueries({
-        queryKey: ['create-crane-application'],
-      })
-
+      queryClient
+        .invalidateQueries({
+          queryKey: ['create-crane-application'],
+        })
+        .catch((err) => console.log(err))
       queryClient.setQueryData(['create-crane-application'], createdData)
     },
   })

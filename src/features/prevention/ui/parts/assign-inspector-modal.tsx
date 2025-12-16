@@ -47,9 +47,9 @@ export const AssignInspectorModal: React.FC = () => {
   const onSubmit = () => {
     if (objectId) {
       mutate(null, {
-        onSuccess: async () => {
+        onSuccess: () => {
           handleClose()
-          await qc?.invalidateQueries({ queryKey: ['/preventions'] })
+          qc?.invalidateQueries({ queryKey: ['/preventions'] }).catch((err) => console.error(err))
         },
       })
     }
@@ -92,8 +92,8 @@ export const AssignInspectorModal: React.FC = () => {
                   Bekor qilish
                 </Button>
               </DialogClose>
-              <Button type="submit" disabled={isPending}>
-                {isPending ? 'Saqlanmoqda...' : 'Saqlash'}
+              <Button type="submit" disabled={isPending} loading={isPending}>
+                Saqlash
               </Button>
             </DialogFooter>
           </form>

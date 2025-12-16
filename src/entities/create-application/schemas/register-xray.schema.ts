@@ -1,7 +1,7 @@
 // src/entities/create-application/schemas/register-irs.schema.ts
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
-import { format, parseISO } from 'date-fns' // parseISO ni import qiling
+import { format, parseISO } from 'date-fns'
 import { z } from 'zod'
 
 export const XrayAppealDtoSchema = z.object({
@@ -11,17 +11,17 @@ export const XrayAppealDtoSchema = z.object({
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  licenseNumber: z.string().optional(), // Ixtiyoriy
+  licenseNumber: z.string().optional(),
   model: z.string({ required_error: 'Model kiritilmadi!' }).min(1, 'Model kiritilmadi!'),
   licenseRegistryNumber: z
     .string({ required_error: 'Ruxsatnoma raqami kiritilmadi!' })
     .min(1, 'Ruxsatnoma raqami kiritilmadi!'),
-  licenseDate: z // String qabul qilinadi, keyin Date ga o'giriladi
+  licenseDate: z
     .string({ required_error: 'Ruxsatnoma berilgan sana kiritilmadi!' })
     .min(1, 'Ruxsatnoma berilgan sana kiritilmadi!')
     .refine((val) => !isNaN(parseISO(val).valueOf()), { message: 'Sana noto‘g‘ri formatda' })
     .transform((val) => format(parseISO(val), 'yyyy-MM-dd')),
-  licenseExpiryDate: z // String qabul qilinadi, keyin Date ga o'giriladi
+  licenseExpiryDate: z
     .string({ required_error: 'Ruxsatnomani amal qilish muddati kiritilmadi!' })
     .min(1, 'Ruxsatnomani amal qilish muddati kiritilmadi!')
     .refine((val) => !isNaN(parseISO(val).valueOf()), { message: 'Sana noto‘g‘ri formatda' })
@@ -30,12 +30,11 @@ export const XrayAppealDtoSchema = z.object({
   manufacturedYear: z
     .string({ required_error: 'Ishlab chiqarilgan yil kiritilmadi!' })
     .min(4, 'Ishlab chiqarilgan yil kiritilmadi!')
-    .regex(/^\d{4}$/, 'Yil noto‘g‘ri formatda') // Yil faqat 4 ta raqamdan iborat bo'lishini tekshiradi
+    .regex(/^\d{4}$/, 'Yil noto‘g‘ri formatda')
     .refine((val) => parseInt(val, 10) <= new Date().getFullYear(), {
       message: 'Ishlab chiqarilgan yil kelajak sanasi bo‘lishi mumkin emas',
     })
     .refine((val) => parseInt(val, 10) >= 1900, {
-      // Juda eski sanalarni cheklash (ixtiyoriy)
       message: 'Ishlab chiqarilgan yil juda eski',
     }),
 

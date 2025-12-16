@@ -69,24 +69,6 @@ export const ExpertiseTable = () => {
           <Badge variant="error">Bekor qilingan</Badge>
         ) : null,
     },
-    // {
-    //   id: 'actions',
-    //   size: 10,
-    //   header: 'Amallar',
-    //   cell: ({ row }: any) => {
-    //     return (
-    //       <div className="flex gap-2">
-    //         <DataTableRowActions
-    //           row={row}
-    //           showView
-    //           onView={() => {
-    //             addParams({ detailId: row.original.id });
-    //           }}
-    //         />
-    //       </div>
-    //     );
-    //   },
-    // },
   ]
 
   return (

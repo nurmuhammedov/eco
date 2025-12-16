@@ -106,5 +106,3 @@ export const ApplicationsGridIns: React.FC = () => {
 }
 
 ApplicationsGridIns.displayName = 'ApplicationsGrid'
-
-export default React.memo(ApplicationsGridIns)

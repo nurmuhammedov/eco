@@ -2,7 +2,6 @@ import DetailRow from '@/shared/components/common/detail-row.tsx'
 import { getDate } from '@/shared/utils/date.ts'
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ACCREDITATION_SPHERE_OPTIONS } from '@/shared/constants/accreditation-data.ts'
 
 interface Props {
   address: any
@@ -70,24 +69,6 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
       <DetailRow title={t(`labels.${type}.thirdSymbolsGroup`)} value={data?.thirdSymbolsGroup} />
       <DetailRow title={t(`labels.${type}.expertiseConclusionNumber`)} value={data?.expertiseConclusionNumber} />
       <DetailRow title={t(`labels.${type}.responsiblePersonName`)} value={data?.responsiblePersonName} />
-      {data?.accreditationSpheres && (
-        <DetailRow
-          title={t(`labels.${type}.accreditationSpheres`)}
-          value={
-            <div>
-              {Array.isArray(data?.accreditationSpheres) &&
-                data?.accreditationSpheres?.map((item: string) => {
-                  const currentItem = ACCREDITATION_SPHERE_OPTIONS.find((accItem) => String(accItem.id) === item)
-                  return (
-                    <p>
-                      {currentItem?.point}. {currentItem?.name}
-                    </p>
-                  )
-                })}
-            </div>
-          }
-        />
-      )}
       <DetailRow title={t(`labels.${type}.address`)} value={address} />
       <DetailRow title={t(`labels.${type}.location`)} value={data?.location} />
       <DetailRow title={t(`labels.${type}.extraArea`)} value={data?.extraArea} />

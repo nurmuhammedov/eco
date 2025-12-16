@@ -14,14 +14,28 @@ import {
   useCreateCommitteeStaff,
   useUpdateCommitteeStaff,
 } from '@/entities/admin/committee-staffs'
-// schemas va DTO'larni to'g'ridan-to'g'ri .schema faylidan olamiz
 import {
-  schemas,
   type CreateCommitteeStaffDTO,
+  schemas,
   type UpdateCommitteeStaffDTO,
 } from '@/entities/admin/committee-staffs/models/committee-staffs.schema'
-import { PERMISSIONS } from '@/entities/permission'
 import { format, parseISO } from 'date-fns'
+
+const PERMISSIONS = {
+  APPEAL: 'APPEAL',
+  REGISTRY: 'REGISTRY',
+  RISK_ANALYSIS: 'RISK_ANALYSIS',
+  INSPECTION: 'INSPECTION',
+  PREVENTION: 'PREVENTION',
+  ATTESTATION_COMMITTEE: 'ATTESTATION_COMMITTEE',
+  ACCREDITATION: 'ACCREDITATION',
+  CADASTRE: 'CADASTRE',
+  PERMITS: 'PERMITS',
+  HF: 'HF',
+  REPORT: 'REPORT',
+  IRS: 'IRS',
+  EQUIPMENT: 'EQUIPMENT',
+}
 
 const DEFAULT_FORM_VALUES: Partial<CreateCommitteeStaffDTO> = {
   pin: '',
@@ -108,18 +122,19 @@ export function useCommitteeStaffForm() {
 
           const dataToSend = {
             ...updateData,
-            birthDate: formattedBirthDate, // Bu yerda `birthDate` string bo'lib qoladi
+            birthDate: formattedBirthDate,
             directions,
           }
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { id, ...restOfData } = dataToSend
 
           const payload = {
             ...restOfData,
-            id: committeeStaffId, // id'ni to'g'ridan-to'g'ri qo'shamiz
-            birthDate: updateData.birthDate, // Asl Date obyektini (yoki undefined) yuboramiz
+            id: committeeStaffId,
+            birthDate: updateData.birthDate,
           }
 
-          const response = await updateCommitteeStaff(payload as any) // "as any" vaqtincha yechim
+          const response = await updateCommitteeStaff(payload as any)
           if (response.success) handleClose()
         }
         return true

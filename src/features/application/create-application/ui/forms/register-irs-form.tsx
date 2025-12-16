@@ -7,7 +7,7 @@ import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
-import { InputNumber } from '@/shared/components/ui/input-number' // InputNumber import qilindi
+import { InputNumber } from '@/shared/components/ui/input-number'
 import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { format, parseISO } from 'date-fns'

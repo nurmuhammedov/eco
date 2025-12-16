@@ -34,9 +34,9 @@ const ApplicantDocsTable = () => {
       maxSize: 100,
       accessorKey: 'isFullySigned',
       header: 'Imzo holati',
-      cell: (cell) => {
-        const currentStatus = cell.row.original?.isFullySigned
-        const currentLabel = signStatuses.get(currentStatus)
+      cell: (cell: any) => {
+        const status = cell.row.original?.isFullySigned
+        const currentLabel = signStatuses.get(status)
         const signersList = cell.row.original?.signers as any[]
         if (currentLabel) {
           return (

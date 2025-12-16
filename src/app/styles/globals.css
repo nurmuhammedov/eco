@@ -121,7 +121,7 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    border-color: rgba(192, 192, 192, 0.5);
   }
 
   :root {

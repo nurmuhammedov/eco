@@ -297,7 +297,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                       Attraksionning surʼati
                     </FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
+                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -621,7 +621,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                       Video kuzatuv moslamasi o’rnatilganligi surʼati
                     </FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
+                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -640,7 +640,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
                       Attraksionga QR kod axborot taxtachasiga o’rnatilganligi surʼati
                     </FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE]} />
+                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
                     </FormControl>
                   </div>
                 </FormItem>

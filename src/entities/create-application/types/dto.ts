@@ -1,23 +1,17 @@
 // src/entities/create-application/types/dto.ts
 import {
-  AccreditationConclusionDtoSchema,
-  AccreditationDtoSchema,
   AttestationAppealDtoSchema,
   AttractionIllegalAppealDtoSchema,
-  AttractionPassportAppealDtoSchema,
   BoilerAppealDtoSchema,
   BoilerUtilizerAppealDtoSchema,
   BoilerUtilizerIllegalAppealDtoSchema,
   CablewayAppealDtoSchema,
-  CadastrePassportAppealDtoSchema,
   ChemicalContainerAppealDtoSchema,
   ContainerAppealDtoSchema,
   ContainerIllegalAppealDtoSchema,
   CraneAppealDtoSchema,
-  DeclarationAppealDtoSchema,
   EscalatorAppealDtoSchema,
   EscalatorIllegalAppealDtoSchema,
-  ExpandAccreditationDtoSchema,
   HeatPipelineAppealDtoSchema,
   HFAppealDtoSchema,
   HoistAppealDtoSchema,
@@ -28,7 +22,6 @@ import {
   LpgPoweredAppealDtoSchema,
   PipelineAppealDtoSchema,
   PipelineIllegalAppealDtoSchema,
-  ReAccreditationDtoSchema,
   XrayAppealDtoSchema,
   XrayIllegalAppealDtoSchema,
 } from '@/entities/create-application/schemas'
@@ -70,15 +63,8 @@ export type CreateCablewayApplicationDTO = z.infer<typeof CablewayAppealDtoSchem
 export type CreateIrsApplicationDTO = z.infer<typeof IrsAppealDtoSchema>
 export type CreateXrayApplicationDTO = z.infer<typeof XrayAppealDtoSchema>
 export type CreateIllegalXrayApplicationDTO = z.infer<typeof XrayIllegalAppealDtoSchema>
-export type CreateAttractionPassportApplicationDTO = z.infer<typeof AttractionPassportAppealDtoSchema>
 export type CreateAttractionApplicationDTO = z.infer<typeof AttractionAppealDtoSchema>
-export type CreateAccreditationDTO = z.infer<typeof AccreditationDtoSchema>
-export type ReAccreditationDTO = z.infer<typeof ReAccreditationDtoSchema>
-export type AccreditationConclusionDTO = z.infer<typeof AccreditationConclusionDtoSchema>
-export type ExpandAccreditationDTO = z.infer<typeof ExpandAccreditationDtoSchema>
 export type CreateAttestationDTO = z.infer<typeof AttestationAppealDtoSchema>
-export type CreateCadastrePassportApplicationDTO = z.infer<typeof CadastrePassportAppealDtoSchema>
-export type CreateDeclarationApplicationDTO = z.infer<typeof DeclarationAppealDtoSchema>
 export type DeRegisterEquipmentDTO = z.infer<typeof DeRegisterEquipmentSchema>
 export type ReRegisterEquipmentDTO = z.infer<typeof ReRegisterEquipmentSchema>
 export type RegisterIllegalHFSchemaDTO = z.infer<typeof RegisterIllegalHFSchema>

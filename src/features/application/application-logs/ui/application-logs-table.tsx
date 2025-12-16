@@ -19,7 +19,7 @@ export const ApplicationLogsList = ({ isShow }: any) => {
     {
       accessorKey: 'executorId',
       maxSize: -10,
-      header: 'Ijrochi id',
+      header: 'Ijrochi ID',
     },
     {
       accessorKey: 'status',

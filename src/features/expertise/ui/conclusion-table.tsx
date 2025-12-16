@@ -1,7 +1,6 @@
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { formatDate } from 'date-fns'
-// import { tabs } from '@/features/expertise/ui/conclusion-tabs';
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '@/shared/components/ui/badge'
@@ -57,18 +56,6 @@ export const ConclusionsTable = () => {
       filterKey: 'objectName',
       filterType: 'search',
     },
-    // {
-    //   accessorKey: 'expertiseName',
-    //   header: 'Ekspertiza obyektining nomi',
-    //   filterKey: 'expertiseName',
-    //   filterType: 'search',
-    // },
-    // {
-    //   accessorKey: 'type',
-    //   size: 300,
-    //   header: 'Xulosa turi',
-    //   cell: (cell) => tabs.find((t) => t?.key?.toString() == cell.row.original.type?.toString())?.label || '',
-    // },
     {
       accessorKey: 'registryNumber',
       header: 'Reyestr raqami',

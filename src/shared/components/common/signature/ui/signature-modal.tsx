@@ -14,7 +14,7 @@ import { Button } from '@/shared/components/ui/button'
 import { useSignatureClient } from '@/shared/hooks'
 import { getSignatureKeys } from '@/shared/lib'
 import { SignatureKey } from '@/shared/types/signature'
-import { Loader2, Signature } from 'lucide-react'
+import { Loader2, Signature, UsbIcon } from 'lucide-react'
 import { useState } from 'react'
 import { SignatureSelect } from '../index'
 import { apiConfig } from '@/shared/api/constants'
@@ -37,7 +37,7 @@ export const SignatureModal = ({
   submitApplicationMetaData,
 }: SignatureModalProps) => {
   const { Client } = useSignatureClient()
-  const { signatureKeys } = getSignatureKeys()
+  const { signatureKeys, isCKCPLuggedIn } = getSignatureKeys()
   const [open, setOpen] = useState(false)
   const [selectedCertificate, setSelectedCertificate] = useState<SignatureKey | null>(null)
   const { mutateAsync: signDocument, isPending } = useDocumentSigning()
@@ -48,7 +48,7 @@ export const SignatureModal = ({
     setSelectedCertificate(cert)
   }
 
-  const handleConfirm = async () => {
+  const handleConfirm = async (ckc: boolean = false) => {
     if (onConfirm) {
       onConfirm(selectedCertificate)
     }
@@ -59,7 +59,7 @@ export const SignatureModal = ({
       await signDocument({
         Client,
         documentUrl,
-        signature: selectedCertificate,
+        signature: ckc ? 'ckc' : selectedCertificate,
         onSuccess: (result) => submitApplicationMetaData(result),
       })
     }
@@ -79,17 +79,28 @@ export const SignatureModal = ({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       {apiConfig.oneIdClientId == 'test_cirns_uz' ? (
-        <Button loading={isLoading} onClick={handleConfirm} disabled={isLoading || !!error}>
+        <Button loading={isLoading} onClick={() => handleConfirm()} disabled={isLoading || !!error}>
           <Signature className="size-4" />
           Imzolash
         </Button>
       ) : (
-        <AlertDialogTrigger asChild>
-          <Button loading={isLoading} disabled={isLoadingSignature || !!error}>
-            <Signature className="size-4" />
-            Imzolash
+        <>
+          <Button
+            variant="success"
+            loading={isLoading}
+            onClick={() => handleConfirm(true)}
+            disabled={isLoading || !!error || !isCKCPLuggedIn}
+          >
+            <UsbIcon className="size-4" />
+            USB token orqali imzolash
           </Button>
-        </AlertDialogTrigger>
+          <AlertDialogTrigger asChild>
+            <Button loading={isLoading} disabled={isLoadingSignature || !!error}>
+              <Signature className="size-4" />
+              Imzolash
+            </Button>
+          </AlertDialogTrigger>
+        </>
       )}
       <AlertDialogContent className="w-auto! max-w-[95vw]!">
         <AlertDialogHeader>
@@ -102,20 +113,19 @@ export const SignatureModal = ({
 
         <div className="py-4">
           <SignatureSelect onSelect={handleSelectCertificate} certificates={signatureKeys} />
-
-          {selectedCertificate && (
-            <div className="mt-4 rounded-md border border-green-100 bg-green-50 p-3">
-              <p className="text-sm text-green-800">
-                <span className="font-medium">Tanlangan kalit:</span> {selectedCertificate.CN}
-              </p>
-            </div>
-          )}
+          {/*{selectedCertificate && (*/}
+          {/*  <div className="mt-4 rounded-md border border-green-100 bg-green-50 p-3">*/}
+          {/*    <p className="text-sm text-green-800">*/}
+          {/*      <span className="font-medium">Tanlangan kalit:</span> {selectedCertificate.CN}*/}
+          {/*    </p>*/}
+          {/*  </div>*/}
+          {/*)}*/}
         </div>
 
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel}>Bekor qilish</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleConfirm}
+            onClick={() => handleConfirm()}
             disabled={!selectedCertificate || !!error}
             className={!selectedCertificate ? 'cursor-not-allowed opacity-50' : ''}
           >

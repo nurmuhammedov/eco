@@ -10,11 +10,3 @@ export const useInspections = (params: ISearchParams) => {
     queryFn: () => inspectionAPI.getAll(params),
   })
 }
-
-// export const useInspectionById = (id: string) => {
-//   return useQuery({
-//     queryKey: [INSPECTION_QUERY_KEY, id],
-//     queryFn: () => inspectionAPI.getById(id),
-//     enabled: !!id,
-//   });
-// };

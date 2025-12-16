@@ -1,5 +1,4 @@
-declare module '@/shared/config/signature/Eimzo.js' {
-  import { SignatureCert, SignatureKey } from '@app/interfaces'
+declare module '@/shared/config/signature/e-imzo-init.js' {
   export default class {
     addApiKey: (domain: string, key: string) => void
     createPkcs7: (id: string, content: string) => Promise<string>
@@ -8,10 +7,10 @@ declare module '@/shared/config/signature/Eimzo.js' {
     getMainCertificate: (loadKeyId: string) => Promise<string | null>
     getTimestampToken: (signature: string) => Promise<string>
     install: () => Promise<void>
-    listAllUserKeys: () => Promise<SignatureKey[]>
-    loadKey: (cert: SignatureKey) => Promise<SignatureCert>
+    listAllUserKeys: () => Promise<any[]>
+    isCKCPLuggedIn: () => Promise<any[]>
+    loadKey: (cert: SignatureKey) => Promise<any>
     signPkcs7: (cert: SignatureCert, content: string) => Promise<string>
-
     constructor()
   }
 }

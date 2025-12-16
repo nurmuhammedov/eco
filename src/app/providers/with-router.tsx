@@ -9,7 +9,6 @@ const AuthLayout = lazy(() => import('@/shared/layouts/ui/auth-layout'))
 
 export const withRouter = (_Component: FC): FC => {
   return () => {
-    // Create router instance
     const router = createAppRouter(AppLayout, AuthLayout, AuthGuard)
 
     return (

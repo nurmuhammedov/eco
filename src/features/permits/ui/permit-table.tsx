@@ -82,6 +82,19 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
         cell.row.original.expiryDate ? formatDate(cell.row.original.expiryDate, 'dd.MM.yyyy') : 'Cheksiz',
     },
     {
+      accessorKey: 'status',
+      maxSize: 60,
+      header: 'Holati',
+      cell: ({ row }) =>
+        row.original.licenseStatus == 'ACTIVE' ? (
+          <span className="text-green-600">Faol</span>
+        ) : row.original.processStatus == 'EXPIRED' ? (
+          <span className="text-red-600">Faol emas</span>
+        ) : (
+          '-'
+        ),
+    },
+    {
       id: 'actions',
       size: 10,
       header: 'Amallar',

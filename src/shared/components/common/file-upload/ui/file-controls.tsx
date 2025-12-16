@@ -23,33 +23,31 @@ export const FileControls: React.FC<FileControlsProps> = ({
   onRemoveClick,
 }) => {
   return (
-    <div className="flex flex-shrink-0 items-center border-l border-gray-100">
-      {/* Ko'rish tugmasi */}
+    <div className="flex items-center border-l border-gray-100">
       {showPreview && (
         <button
           type="button"
           onClick={onPreviewClick}
           disabled={isLoading}
           className={cn(
-            'p-2 text-gray-500 transition-colors duration-150',
-            isLoading ? 'cursor-not-allowed' : 'hover:text-blue-400'
+            'p-2 text-gray-500 transition-colors',
+            isLoading ? 'cursor-not-allowed' : 'hover:text-blue-500'
           )}
-          title="Faylni ko'rish"
+          title="Faylni ko‘rish"
         >
           {isLoading ? (
-            <div className="size-4 animate-spin rounded-full border-2 border-blue-400 border-t-gray-500" />
+            <div className="size-4 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
           ) : (
             <Eye size={16} />
           )}
         </button>
       )}
 
-      {/* Yuklab olish tugmasi */}
       {showDownload && (
         <a
           href={fileData?.blobUrl || fileUrl}
           download={fileData?.originalName}
-          className="p-2 text-gray-500 transition-colors duration-150 hover:text-blue-400"
+          className="p-2 text-gray-500 transition-colors hover:text-blue-500"
           title="Faylni yuklab olish"
           onClick={(e) => e.stopPropagation()}
         >
@@ -57,12 +55,11 @@ export const FileControls: React.FC<FileControlsProps> = ({
         </a>
       )}
 
-      {/* O'chirish tugmasi */}
       <button
         type="button"
         onClick={onRemoveClick}
-        className="p-2 text-gray-500 transition-colors duration-150 hover:text-red-500"
-        title="Faylni o'chirish"
+        className="p-2 text-gray-500 transition-colors hover:text-red-500"
+        title="Faylni o‘chirish"
       >
         <Trash2 size={16} />
       </button>

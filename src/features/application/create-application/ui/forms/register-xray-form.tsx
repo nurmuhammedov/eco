@@ -18,7 +18,7 @@ interface RegisterXrayFormProps {
 
 const generateYearOptions = () => {
   const currentYear = new Date().getFullYear()
-  const startYear = 1950 // Qaysi yildan boshlanishini belgilang
+  const startYear = 1950
   const years = []
   for (let i = currentYear; i >= startYear; i--) {
     years.push(i)

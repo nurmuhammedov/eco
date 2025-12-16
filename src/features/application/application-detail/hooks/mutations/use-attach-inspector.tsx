@@ -9,7 +9,7 @@ export function useAttachInspector() {
     mutationFn: applicationDetailApi.attachInspector,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] })
-      toast.success('Inspector attached successfully!')
+      toast.success('Muvaffaqiyatli saqlandi!')
     },
   })
 }

@@ -1,5 +1,3 @@
-import { FC, ReactNode } from 'react'
-
 export enum UIModeEnum {
   EDIT = 'edit',
   VIEW = 'view',
@@ -8,15 +6,15 @@ export enum UIModeEnum {
 }
 
 export const UI_COMPONENTS = {
-  REGION_DRAWER: 'region-drawer', // Viloyatlar
-  DISTRICT_DRAWER: 'regions-drawer', // Tumanlar
-  TEMPLATE_DRAWER: 'template-drawer', // Shablonlar
-  EQUIPMENT_DRAWER: 'equipment-drawer', // Qurilmaning quyi turlari
-  CENTRAL_APPARATUS_DRAWER: 'central-apparatus', // Markaziy apparat
-  TERRITORIAL_DEPARTMENTS_DRAWER: 'territorial-departments', // Hududiy bo'limlar
-  COMMITTEE_STAFFS_DRAWER: 'committee-staffs', // Qo'mita xodimlari
-  TERRITORIAL_STAFFS_DRAWER: 'territorial-staffs', // Hududiy bo'lim xodimlari
-  HAZARDOUS_FACILITY_TYPE_DRAWER: 'hazardous-facility-type', // Xavfli ishlab chiqarish obyektlari turlari
+  REGION_DRAWER: 'region-drawer',
+  DISTRICT_DRAWER: 'regions-drawer',
+  TEMPLATE_DRAWER: 'template-drawer',
+  EQUIPMENT_DRAWER: 'equipment-drawer',
+  CENTRAL_APPARATUS_DRAWER: 'central-apparatus',
+  TERRITORIAL_DEPARTMENTS_DRAWER: 'territorial-departments',
+  COMMITTEE_STAFFS_DRAWER: 'committee-staffs',
+  TERRITORIAL_STAFFS_DRAWER: 'territorial-staffs',
+  HAZARDOUS_FACILITY_TYPE_DRAWER: 'hazardous-facility-type',
   ATTRACTION_TYPE_DRAWER: 'attraction-type-drawer',
   CHECKLIST_TEMPLATES_DRAWER: 'checklist-templates-drawer',
   CHECKLISTS: 'checklist',
@@ -78,11 +76,4 @@ export type PayloadUI<T extends UIComponentName> = {
   mode: UIModeEnum
   componentName: T
   data?: UIComponentDataMap[T] | null
-}
-
-export type FCC<P = object> = FC<{ children?: ReactNode } & P>
-
-export type SelectOption<T> = {
-  name: string
-  id: T
 }

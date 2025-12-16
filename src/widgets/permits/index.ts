@@ -1,1 +1,3 @@
-export { PermitsWidget } from './ui/permits-widget'
+import PermitsWidget from './ui/permits-widget'
+
+export default PermitsWidget

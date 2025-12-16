@@ -1,5 +1,5 @@
 import { PermitTable, PermitTabs } from '@/features/permits'
-import { PermitTabKey } from '@/entities/permit'
+import { PermitTabKey } from '@/features/permits/model/types'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { AddPermitModal } from '@/features/permits/ui/add-permit-modal'
 import { useState } from 'react'
@@ -39,3 +39,5 @@ export const PermitsWidget = () => {
     </div>
   )
 }
+
+export default PermitsWidget

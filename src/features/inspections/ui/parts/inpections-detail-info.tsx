@@ -22,9 +22,6 @@ const InspectionsDetailInfo = ({ inspectionData }: any) => {
           {!inspectionData?.specialCode && (
             <TabsTrigger value="add_inspection_documents">Tekshiruv maʼlumotlarini yangilash</TabsTrigger>
           )}
-          {/*{inspectionData?.status === 'IN_PROCESS' && (*/}
-          {/*  <TabsTrigger value="create_document">Dalolatnoma tuzish</TabsTrigger>*/}
-          {/*)}*/}
         </TabsList>
       )}
       <TabsContent value="main_info">
@@ -35,9 +32,6 @@ const InspectionsDetailInfo = ({ inspectionData }: any) => {
           <AddInspectionDocuments resetTab={resetTab} />
         </TabsContent>
       )}
-      {/*<TabsContent value="create_document">*/}
-      {/*  <CreateDocument resetTab={resetTab} />*/}
-      {/*</TabsContent>*/}
     </Tabs>
   )
 }

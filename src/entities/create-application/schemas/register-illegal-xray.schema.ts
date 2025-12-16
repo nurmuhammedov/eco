@@ -1,7 +1,7 @@
 // src/entities/create-application/schemas/register-irs.schema.ts
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
-import { format, parseISO } from 'date-fns' // parseISO ni import qiling
+import { format, parseISO } from 'date-fns'
 import { z } from 'zod'
 
 export const XrayIllegalAppealDtoSchema = z.object({
@@ -12,7 +12,7 @@ export const XrayIllegalAppealDtoSchema = z.object({
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  licenseNumber: z.string().optional(), // Ixtiyoriy
+  licenseNumber: z.string().optional(),
   model: z.string({ required_error: 'Model kiritilmadi!' }).min(1, 'Model kiritilmadi!'),
   licenseRegistryNumber: z
     .string({ required_error: 'Ruxsatnoma raqami kiritilmadi!' })

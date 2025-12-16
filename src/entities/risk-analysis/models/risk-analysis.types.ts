@@ -7,12 +7,3 @@ export interface RiskAnalysisItem {
   legalName: string
   legalTin: number
 }
-
-export interface RiskAnalysisParams {
-  isAssigned?: boolean
-  page?: number
-  size?: number
-  intervalId?: number
-
-  [key: string]: any
-}

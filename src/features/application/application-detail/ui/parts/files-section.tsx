@@ -1,5 +1,3 @@
-// src/features/application/application-detail/ui/parts/files-section.tsx
-
 import { ApplicationStatus } from '@/entities/application'
 import { UserRoles } from '@/entities/user'
 import FileLink from '@/shared/components/common/file-link.tsx'

@@ -123,7 +123,6 @@ export const ApplicationTable = () => {
   return (
     <>
       <Filter inputKeys={['search', 'appealType', 'officeId', 'executorId', 'mode', 'startDate', 'endDate']} />
-
       <DataTable
         isPaginated
         data={applications || []}

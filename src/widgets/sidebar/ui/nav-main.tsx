@@ -1,7 +1,6 @@
 import { cn } from '@/shared/lib/utils'
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import Icon from '@/shared/components/common/icon'
 import { Link, useLocation } from 'react-router-dom'
 import { NavigationItem } from '@/widgets/sidebar/models/types'
 
@@ -34,14 +33,14 @@ export function NavMain({ item }: { item: NavigationItem }) {
                   tooltip={t(item.title)}
                 >
                   <div className="flex cursor-pointer items-center gap-2">
-                    {typeof item.icon === 'string' ? <Icon name={item.icon} /> : item.icon}
+                    {item.icon}
                     <span>{t(item.title)}</span>
                   </div>
                 </SidebarMenuButton>
               ) : (
                 <SidebarMenuButton asChild={!item.items?.length} size="lg" isActive={isActive} tooltip={t(item.title)}>
                   <Link to={item.url}>
-                    {typeof item.icon === 'string' ? <Icon name={item.icon} /> : item.icon}
+                    {item.icon}
                     <span>{t(item.title)}</span>
                   </Link>
                 </SidebarMenuButton>

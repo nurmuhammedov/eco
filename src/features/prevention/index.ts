@@ -1,2 +1,4 @@
-export { PreventionListTable } from './ui/prevention-list'
-export { PreventionForm } from './ui/prevention-form'
+import PreventionDetail from './ui/prevention-detail'
+import PreventionTable from './ui/table'
+
+export { PreventionTable, PreventionDetail }

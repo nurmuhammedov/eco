@@ -1,23 +1,41 @@
 import React, { ReactNode } from 'react'
+import { cn } from '@/shared/lib/utils' // clsx yoki classnames o'rniga
 
-interface InfoCardProps {
+interface DetailRowProps {
   title: string
+  value: ReactNode | string | null
   boldTitle?: boolean
-  value: ReactNode
+  className?: string
 }
 
-const DetailRow: React.FC<InfoCardProps> = ({ title, value, boldTitle = false }) => {
-  if (!value) {
+const DetailRow: React.FC<DetailRowProps> = ({ title, value, boldTitle = false, className }) => {
+  // Agar value bo'sh bo'lsa, komponent chizilmaydi
+  if (value === null || value === undefined || value === '') {
     return null
   }
+
   return (
-    <div className="grid grid-cols-2 content-center items-center gap-0.5 rounded-lg px-2 py-1.5 odd:bg-neutral-50">
-      {boldTitle ? (
-        <h2 className="text-sm font-medium text-gray-700">{title}</h2>
-      ) : (
-        <h2 className="text-sm font-normal text-gray-700">{title}</h2>
+    <div
+      className={cn(
+        // O'zgarishlar:
+        // py-1.5 -> py-1: Balandlikni kamaytiradi
+        // rounded-lg -> rounded-md: Burchaklarni moslashtirish
+        // gap-2: Label va Value orasini biroz ochish
+        'grid grid-cols-2 items-center gap-4 rounded-md px-2 py-1 odd:bg-neutral-50',
+        className
       )}
-      <div className="text-sm font-normal text-gray-900">{value}</div>
+    >
+      <span
+        className={cn(
+          'text-sm',
+          // Label rangi biroz ochroq (gray-500) bo'lsa, ma'lumot (value) yaqqolroq ko'rinadi
+          boldTitle ? 'font-semibold text-gray-800' : 'font-medium text-gray-500'
+        )}
+      >
+        {title}
+      </span>
+
+      <div className="text-sm font-medium break-words text-gray-900">{value}</div>
     </div>
   )
 }

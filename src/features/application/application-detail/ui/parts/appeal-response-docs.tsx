@@ -75,7 +75,7 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
       accessorKey: 'isFullySigned',
       maxSize: 100,
       header: 'Imzo holati',
-      cell: (cell) => {
+      cell: (cell: any) => {
         const currentStatus = cell.row.original?.isFullySigned
         const currentLabel = signStatuses.get(currentStatus)
         const signersList = cell.row.original?.signers as any[]

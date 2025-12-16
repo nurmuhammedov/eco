@@ -40,7 +40,7 @@ export const UpdateConclusion = () => {
   const { data: hfoOptions } = useQuery({
     queryKey: ['hfoSelect', form.watch('customerTin')],
     queryFn: () => getHfoByTinSelect(form.watch('customerTin')),
-    enabled: !!form.watch('customerTin'),
+    enabled: !!form.watch('customerTin') && form.watch('customerTin')?.length == 9,
     retry: 1,
   })
 
@@ -102,8 +102,15 @@ export const UpdateConclusion = () => {
                   <FormItem>
                     <FormLabel>STIR</FormLabel>
                     <FormControl>
-                      <Input {...field} disabled />
+                      <Input
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e)
+                          form.setValue('hfId', undefined)
+                        }}
+                      />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -124,7 +131,7 @@ export const UpdateConclusion = () => {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Obyektni tanlang..." />
+                          <SelectValue placeholder="Obyektni tanlang" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>

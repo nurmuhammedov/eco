@@ -1,5 +1,3 @@
-// src/features/application/application-detail/model/mutations/use-update-file.tsx
-
 import { applicationDetailApi } from '@/features/application/application-detail/model/application-detail.api.ts'
 import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'

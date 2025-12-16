@@ -3,11 +3,11 @@ import { Badge } from '@/shared/components/ui/badge'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
-import Table from '@/features/prevention/ui/table'
+import { PreventionTable } from '@/features/prevention'
 import { TabsLayout } from '@/shared/layouts'
-import clsx from 'clsx'
 import { useMemo } from 'react'
 import { cn } from '@/shared/lib/utils'
+import PreventionCards from '@/widgets/prevention/ui/parts/prevention-cards'
 
 export const getCurrentMonthEnum = () => {
   const monthNames = [
@@ -64,60 +64,6 @@ const ASSIGNMENT_STATUSES = [
   { value: 'ASSIGNED', label: 'Inspektor belgilanganlar' },
 ]
 
-interface RiskStatisticsCardsProps {
-  activeRiskLevel: string
-  year?: any
-  type?: any
-  onTabChange: (level: string) => void
-}
-
-export const Cards = ({ activeRiskLevel, onTabChange, year, type }: RiskStatisticsCardsProps) => {
-  const { data: monthCount = {} } = useData<any>('/preventions/count/by-month', !!year && !!type, {
-    year,
-    type,
-  })
-
-  const stats = MONTHS.map((month) => {
-    const key = `${month.value.toLowerCase()}Count`
-
-    return {
-      id: month.value,
-      name: month.label,
-      year: year,
-      count: monthCount?.[key] || '0',
-      inactiveClass: 'bg-[#016B7B]/10 border-[#016B7B]/20 text-[#016B7B]',
-      activeClass: 'bg-[#016B7B] border-[#015a67] text-white shadow-sm',
-    }
-  })
-
-  return (
-    <div className="scrollbar-hidden flex w-full gap-2 overflow-x-auto">
-      {stats.map((stat) => {
-        const isActive = activeRiskLevel === stat.id
-
-        return (
-          <div
-            key={stat.id}
-            onClick={() => onTabChange(stat.id)}
-            className={clsx(
-              'relative flex flex-1 cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors duration-200 select-none',
-              isActive ? stat.activeClass : `${stat.inactiveClass} hover:opacity-80`
-            )}
-          >
-            <div className="w-full">
-              <div className="flex w-full justify-between gap-2">
-                <p className="mb-1 text-sm font-medium opacity-90">{stat.name}</p>
-                <p className="mb-1 text-sm font-medium opacity-90">{stat?.year}</p>
-              </div>
-              <h3 className={clsx('text-2xl font-bold')}>{stat.count}</h3>
-            </div>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
 const PreventionWidget = () => {
   const { user } = useAuth()
   const { paramsObject, addParams } = useCustomSearchParams()
@@ -161,7 +107,7 @@ const PreventionWidget = () => {
   return (
     <>
       <div className="mb-2 flex w-full flex-col gap-2">
-        <Cards
+        <PreventionCards
           year={year}
           type={activeType}
           activeRiskLevel={activeMonth}
@@ -212,7 +158,7 @@ const PreventionWidget = () => {
         )}
       </div>
 
-      <Table regions={data || []} />
+      <PreventionTable regions={data || []} />
     </>
   )
 }

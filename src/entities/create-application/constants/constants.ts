@@ -23,18 +23,6 @@ export const APPLICATION_CATEGORIES = [
     id: ApplicationCategory.XRAY,
     name: 'Rentgen',
   },
-  // {
-  //   id: ApplicationCategory.ACCREDITATION,
-  //   name: 'Akkreditatsiya',
-  // },
-  // {
-  //   id: ApplicationCategory.ATTESTATION_PREVENTION,
-  //   name: 'Attestatsiya',
-  // },
-  // {
-  //   id: ApplicationCategory.CADASTRE,
-  //   name: 'Kadastr',
-  // },
 ]
 
 export const MAIN_APPLICATION_BY_CATEGORY = {
@@ -61,9 +49,6 @@ export const MAIN_APPLICATION_BY_CATEGORY = {
   ],
   [ApplicationCategory.INM]: [],
   [ApplicationCategory.XRAY]: [],
-  // [ApplicationCategory.CADASTRE]: [],
-  // [ApplicationCategory.ACCREDITATION]: [],
-  // [ApplicationCategory.ATTESTATION_PREVENTION]: [],
   [ApplicationCategory.ILLEGAL]: [],
 }
 

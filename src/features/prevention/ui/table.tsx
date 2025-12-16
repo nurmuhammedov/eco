@@ -15,7 +15,7 @@ interface Props {
   regions?: any
 }
 
-const List: FC<Props> = ({ regions }) => {
+const PreventionTable: FC<Props> = ({ regions }) => {
   const { user } = useAuth()
   const { t } = useTranslation('common')
   const navigate = useNavigate()
@@ -124,7 +124,7 @@ const List: FC<Props> = ({ regions }) => {
       cell: ({ row }: any) =>
         row.original?.status ? (
           row.original?.status == 'CONDUCTED' ? (
-            <Badge variant="success">Bajrilgan</Badge>
+            <Badge variant="success">Bajarilgan</Badge>
           ) : (
             <Badge variant="info">Yangi</Badge>
           )
@@ -159,4 +159,4 @@ const List: FC<Props> = ({ regions }) => {
   )
 }
 
-export default List
+export default PreventionTable

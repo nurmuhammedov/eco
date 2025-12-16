@@ -50,7 +50,8 @@ const RegisterWidget = () => {
     apiClient
       .downloadFile<Blob>(`/${tab}/export/excel`, {
         mode,
-        status,
+        status: status === 'ALL' ? '' : status,
+        type,
         ...rest,
       })
       .then((res) => {
@@ -124,7 +125,7 @@ const RegisterWidget = () => {
           )}
           <div className="flex flex-1 items-center justify-end gap-2">
             {tab == RegisterActiveTab.AUTO ? (
-              <>{user?.role == UserRoles.MANAGER && <AddPermitTransportModal />}</>
+              <>{user?.role == UserRoles.REGIONAL && <AddPermitTransportModal />}</>
             ) : (
               <div className="flex gap-2">
                 <Select
@@ -162,7 +163,7 @@ const RegisterWidget = () => {
                   value={rest?.regionId?.toString() || ''}
                   disabled={isLoadingRegions}
                 >
-                  <SelectTrigger className="max-w-50">
+                  <SelectTrigger className="max-w-60 min-w-40">
                     <SelectValue placeholder="Hudud" />
                   </SelectTrigger>
                   <SelectContent>
@@ -181,7 +182,7 @@ const RegisterWidget = () => {
                   value={rest?.districtId?.toString() || ''}
                   disabled={isDistrictsLoading}
                 >
-                  <SelectTrigger className="max-w-50">
+                  <SelectTrigger className="max-w-60 min-w-40">
                     <SelectValue placeholder="Tuman" />
                   </SelectTrigger>
                   <SelectContent>
