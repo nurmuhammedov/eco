@@ -52,7 +52,6 @@ function InputNumber<
     shouldUnregister,
   })
 
-  // Regex pattern memo'lash
   const validationRegex = useMemo(() => {
     if (allowDecimals) {
       return allowNegative ? /^-?\d*\.?\d*$/ : /^\d*\.?\d*$/
@@ -60,7 +59,6 @@ function InputNumber<
     return allowNegative ? /^-?\d*$/ : /^\d*$/
   }, [allowDecimals, allowNegative])
 
-  // ARIA atributlarini memo'lash
   const ariaAttributes = useMemo(
     () => ({
       'aria-valuemin': min,
@@ -71,31 +69,25 @@ function InputNumber<
     [min, max, field.value, error]
   )
 
-  // Input o'zgarishini boshqarish
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value
 
-      // Bo'sh input uchun
       if (!newValue) {
         field.onChange(undefined)
         return
       }
 
-      // Validatsiya
       if (validationRegex.test(newValue)) {
         e.target.value = newValue
 
-        // To'liq son bo'lsa parse qilish
         const numberValue = parseFloat(newValue)
 
         if (!isNaN(numberValue)) {
           field.onChange(numberValue)
         } else if (newValue === '-' && allowNegative) {
-          // Faqat minus belgisi uchun
           e.target.value = '-'
         } else if (newValue === '.' && allowDecimals) {
-          // Faqat nuqta belgisi uchun
           e.target.value = '0.'
           field.onChange(0)
         }
@@ -126,20 +118,16 @@ function InputNumber<
             finalValue = max
           }
 
-          // Decimal qismni formatlash
           if (allowDecimals && decimalPlaces !== undefined) {
             finalValue = Number(finalValue.toFixed(decimalPlaces))
           }
 
-          // Formatlangan qiymatni o'rnatish
           if (finalValue !== numberValue) {
             field.onChange(finalValue)
-            // Input qiymatini ham yangilash kerak
             e.target.value = finalValue.toString()
           }
         }
       } else if (inputValue === '-' || inputValue === '.' || inputValue === '0.') {
-        // Noto'g'ri qiymatlarni tozalash
         e.target.value = ''
         field.onChange(undefined)
       }
@@ -147,10 +135,8 @@ function InputNumber<
     [field, min, max, allowDecimals, decimalPlaces]
   )
 
-  // Klaviaturani boshqarish
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      // Yuqori/pastga tugmalar bilan qiymatni o'zgartirish
       if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
         e.preventDefault()
 
@@ -159,7 +145,6 @@ function InputNumber<
         const stepValue = e.key === 'ArrowUp' ? step : -step
         let newValue = currentValue + stepValue
 
-        // Cheklovlarni qo'llash
         if (min !== undefined && newValue < min) {
           newValue = min
         }
@@ -168,7 +153,6 @@ function InputNumber<
           newValue = max
         }
 
-        // O'nlik kasr qismini formatlash
         if (allowDecimals && decimalPlaces !== undefined) {
           newValue = Number(newValue.toFixed(decimalPlaces))
         }
@@ -180,7 +164,6 @@ function InputNumber<
     [step, min, max, allowDecimals, decimalPlaces, field]
   )
 
-  // Input qiymatini formatlash
   const formatInputValue = useCallback(() => {
     if (field.value === undefined || field.value === null) {
       return ''
@@ -206,7 +189,6 @@ function InputNumber<
   )
 }
 
-// FormField bilan qo'llash uchun ForwardRef versiyasi
 const ForwardedNumberInput = forwardRef<HTMLInputElement, BaseNumberInputProps>((props, ref) => {
   return <Input {...props} type="text" ref={ref} />
 })

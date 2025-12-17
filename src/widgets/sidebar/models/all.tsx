@@ -1,14 +1,15 @@
 import { Navigation } from '@/widgets/sidebar/models/types'
 import {
-  FileText,
-  Database,
   AlertCircle,
-  Clipboard,
-  ShieldCheck,
-  CheckCircle,
   Archive,
-  BarChart2,
   Award,
+  BarChart2,
+  CheckCircle,
+  Clipboard,
+  Database,
+  FileText,
+  ShieldCheck,
+  MessageSquareText,
 } from 'lucide-react'
 
 export default [
@@ -87,5 +88,11 @@ export default [
     title: 'Ruxsat etuvchi hujjatlar',
     url: '/permits',
     icon: <Award />,
+  },
+  {
+    id: 'INQUIRY',
+    title: 'Murojaatlar',
+    url: '/inquiries',
+    icon: <MessageSquareText />,
   },
 ] as Navigation

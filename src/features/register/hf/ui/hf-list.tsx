@@ -25,12 +25,14 @@ export const HfList = () => {
       regionId = '',
       districtId = '',
       hfTypeId = '',
+      startDate = '',
+      endDate = '',
     },
   } = useCustomSearchParams()
 
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
 
-  const { data = [] } = usePaginatedData<any>(`/hf`, {
+  const { data = [], isLoading } = usePaginatedData<any>(`/hf`, {
     page,
     size,
     search,
@@ -44,6 +46,8 @@ export const HfList = () => {
     regionId,
     districtId,
     hfTypeId,
+    startDate,
+    endDate,
   })
 
   const handleViewApplication = (id: string) => {
@@ -59,6 +63,8 @@ export const HfList = () => {
       header: 'Hisobga olish sanasi',
       accessorFn: (row) => getDate(row.registrationDate),
       maxSize: 90,
+      filterKey: 'registrationDate',
+      filterType: 'date-range',
     },
     {
       header: 'Hisobga olish raqami',
@@ -108,12 +114,12 @@ export const HfList = () => {
     },
     {
       id: 'actions',
-      maxSize: user?.role === UserRoles.INSPECTOR ? 70 : 40,
+      maxSize: user?.role === UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN ? 70 : 40,
       cell: ({ row }) => (
         <DataTableRowActions
           showView
           row={row}
-          showEdit={user?.role === UserRoles.INSPECTOR}
+          showEdit={user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.CHAIRMAN}
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
           onEdit={(row) => handleEditApplication(row.original)}
@@ -126,6 +132,7 @@ export const HfList = () => {
     <>
       <DataTable
         showFilters={true}
+        isLoading={isLoading}
         isPaginated
         data={data || []}
         columns={columns as unknown as any}

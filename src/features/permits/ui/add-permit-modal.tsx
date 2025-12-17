@@ -236,7 +236,7 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
                     control={fileForm.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-semibold">Fayl biriktirish</FormLabel>
+                        <FormLabel className="font-semibold !whitespace-nowrap">Fayl biriktirish</FormLabel>
                         <FormControl>
                           <InputFile
                             uploadEndpoint="/attachments/permits"

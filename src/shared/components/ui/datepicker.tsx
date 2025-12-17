@@ -10,30 +10,18 @@ import React, { useState } from 'react'
 export type DateDisableStrategy = 'before' | 'after' | 'range' | 'custom' | 'none'
 
 export type DatePickerProps = {
-  /** Selected date value */
   value: Date | undefined
   filter?: boolean
-  /** Date change handler function */
   onChange: (date: Date | undefined) => void
-  /** Format for displaying the date */
   dateFormat?: string
-  /** Placeholder text when no date is selected */
   placeholder?: string
-  /** Strategy for disabling dates */
   disableStrategy?: DateDisableStrategy
-  /** Function to determine disabled dates when using 'custom' strategy */
   customDisabledFn?: (date: Date) => boolean
-  /** Start date for 'range' disable strategy */
   minDate?: Date
-  /** End date for 'range' disable strategy */
   maxDate?: Date
-  /** Additional className for styling */
   className?: string
-  /** Optional button variant */
   buttonVariant?: 'default' | 'outline' | 'ghost'
-  /** Whether the field is disabled */
   disabled?: boolean
-  /** Icon to display (defaults to CalendarIcon) */
   icon?: React.ReactNode
 }
 
@@ -41,7 +29,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
   value,
   onChange,
   dateFormat = 'dd.MM.yyyy',
-  placeholder = 'Sana tanlang',
+  placeholder = 'Sanani tanlang',
   disableStrategy = 'none',
   customDisabledFn,
   minDate,
@@ -54,7 +42,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
 }) => {
   const [isShow, setIsShow] = useState(false)
 
-  // Function to determine which dates should be disabled
   const getDisabledDates = (date: Date): boolean => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
@@ -77,7 +64,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
   }
 
   return (
-    <Popover open={isShow} onOpenChange={(val) => setIsShow(val)}>
+    <Popover modal={true} open={isShow} onOpenChange={(val) => setIsShow(val)}>
       <PopoverTrigger asChild>
         {filter ? (
           <div
@@ -104,7 +91,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           </FormControl>
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="z-[60] w-auto p-0" align="start">
         <Calendar
           mode="single"
           selected={value}

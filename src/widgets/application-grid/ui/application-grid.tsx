@@ -74,7 +74,7 @@ export const ApplicationsGrid: React.FC = () => {
           : user?.role == UserRoles.INSPECTOR
             ? [
                 {
-                  id: ApplicationCategory.ILLEGAL,
+                  id: ApplicationCategory.ILLEGAL_HF,
                   name: 'XICHO',
                 },
               ]

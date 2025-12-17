@@ -21,19 +21,21 @@ export const UserRoleLabels: Record<UserRoles, string> = {
 }
 
 export enum Direction {
+  HF = 'HF',
+  IRS = 'IRS',
+  EQUIPMENT = 'EQUIPMENT',
+  XRAY = 'XRAY',
   APPEAL = 'APPEAL',
   REGISTRY = 'REGISTRY',
+  PREVENTION = 'PREVENTION',
   RISK_ANALYSIS = 'RISK_ANALYSIS',
   INSPECTION = 'INSPECTION',
-  PREVENTION = 'PREVENTION',
   ATTESTATION_REGIONAL = 'ATTESTATION_REGIONAL',
   ACCREDITATION = 'ACCREDITATION',
   CADASTRE = 'CADASTRE',
   PERMITS = 'PERMITS',
-  HF = 'HF',
-  IRS = 'IRS',
-  EQUIPMENT = 'EQUIPMENT',
   REPORT = 'REPORT',
+  INQUIRY = 'INQUIRY',
 }
 
 export type UserState = {

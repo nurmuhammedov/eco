@@ -27,6 +27,8 @@ export function Header() {
           <h1 className="text-2xl font-semibold">Tekshiruvlar</h1>
         ) : pathname == '/preventions' ? (
           <h1 className="text-2xl font-semibold">Profilaktika</h1>
+        ) : pathname == '/inquiries' ? (
+          <h1 className="text-2xl font-semibold">Murojaatlar</h1>
         ) : null}
       </div>
       <div className="flex items-center gap-x-4">

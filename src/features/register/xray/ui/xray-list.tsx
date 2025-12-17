@@ -7,9 +7,19 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 export const XrayList = () => {
   const navigate = useNavigate()
   const {
-    paramsObject: { page = 1, size = 10, search = '', mode = '', officeId = '', regionId = '', districtId = '' },
+    paramsObject: {
+      page = 1,
+      size = 10,
+      search = '',
+      mode = '',
+      officeId = '',
+      regionId = '',
+      districtId = '',
+      startDate = '',
+      endDate = '',
+    },
   } = useCustomSearchParams()
-  const { data = [] } = usePaginatedData<any>(`/xrays`, {
+  const { data = [], isLoading } = usePaginatedData<any>(`/xrays`, {
     page,
     size,
     search,
@@ -17,6 +27,8 @@ export const XrayList = () => {
     officeId,
     regionId,
     districtId,
+    startDate,
+    endDate,
   })
 
   const handleViewApplication = (id: string) => {
@@ -27,6 +39,8 @@ export const XrayList = () => {
     {
       header: 'Ruxsatnoma berilgan sana',
       accessorFn: (row) => getDate(row.registrationDate),
+      filterKey: 'registrationDate',
+      filterType: 'date-range',
     },
     {
       header: "Ruxsatnoma reestri bo'yicha tartib raqami",
@@ -74,14 +88,13 @@ export const XrayList = () => {
   ]
 
   return (
-    <>
-      <DataTable
-        showFilters
-        isPaginated
-        data={data || []}
-        columns={columns as unknown as any}
-        className="h-[calc(100svh-220px)]"
-      />
-    </>
+    <DataTable
+      showFilters
+      isLoading={isLoading}
+      isPaginated
+      data={data || []}
+      columns={columns as unknown as any}
+      className="h-[calc(100svh-220px)]"
+    />
   )
 }

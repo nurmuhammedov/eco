@@ -27,11 +27,13 @@ export const EquipmentsList = () => {
       ownerIdentity = '',
       hfName = '',
       address = '',
+      startDate = '',
+      endDate = '',
     },
     addParams,
   } = useCustomSearchParams()
 
-  const { data } = usePaginatedData<any>(`/equipments`, {
+  const { data, isLoading } = usePaginatedData<any>(`/equipments`, {
     page,
     size,
     search,
@@ -46,6 +48,8 @@ export const EquipmentsList = () => {
     ownerIdentity,
     hfName,
     address,
+    startDate,
+    endDate,
   })
 
   const { data: dataForNewCount } = useData<number>(`/equipments/count`, true, {
@@ -63,6 +67,8 @@ export const EquipmentsList = () => {
       header: 'Hisobga olish sanasi',
       maxSize: 90,
       accessorFn: (row) => getDate(row.registrationDate),
+      filterKey: 'registrationDate',
+      filterType: 'date-range',
     },
     {
       header: 'Hisobga olish raqami',
@@ -181,6 +187,7 @@ export const EquipmentsList = () => {
 
       <DataTable
         showFilters
+        isLoading={isLoading}
         isPaginated
         data={data || []}
         columns={columns as unknown as any}

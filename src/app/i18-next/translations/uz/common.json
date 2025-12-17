@@ -95,21 +95,22 @@
     "ADMIN": "Administrator"
   },
   "permission": {
-    "APPEAL": "Arizalar",
     "HF": "XICHO",
     "EQUIPMENT": "Qurilmalar",
     "IRS": "INM",
+    "XRAY": "Rentgenlar",
+    "APPEAL": "Arizalar",
     "REGISTRY": "Reyestrlar",
-    "ATTESTATION": "Attestatsiya",
-    "ATTESTATION_COMMITTEE": "Attestatsiya",
-    "ATTESTATION_REGIONAL": "Attestatsiya",
-    "REPORT": "Hisobotlar",
+    "PREVENTION": "Profilaktika",
     "RISK_ANALYSIS": "Xavf tahlil qilish",
     "INSPECTION": "Tekshiruvlar",
-    "PREVENTION": "Profilaktika",
+    "ATTESTATION_COMMITTEE": "Attestatsiya",
+    "ATTESTATION_REGIONAL": "Attestatsiya",
     "ACCREDITATION": "Ekspertiza",
     "CADASTRE": "Kadastr",
-    "PERMITS": "Ruxsat etuvchi hujjatlar"
+    "PERMITS": "Ruxsat etuvchi hujjatlar",
+    "REPORT": "Hisobotlar",
+    "INQUIRY": "Murojaatlar"
   },
   "application": {
     "OIL": "Neft",

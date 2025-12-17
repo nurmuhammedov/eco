@@ -86,6 +86,7 @@ export const ConclusionsTable = () => {
 
     {
       header: 'Xulosa fayli',
+      minSize: 200,
       cell: ({ row }: any) => (
         <div>
           {row.original?.processStatus == 'COMPLETED' && row.original.filePath ? (
@@ -105,8 +106,7 @@ export const ConclusionsTable = () => {
     },
     {
       id: 'actions',
-      size: 10,
-      header: 'Amallar',
+      size: 50,
       cell: ({ row }: any) => {
         return (
           <div className="flex gap-2">
@@ -132,7 +132,7 @@ export const ConclusionsTable = () => {
         data={data}
         showFilters={true}
         isLoading={isLoading}
-        className="h-[calc(100svh-460px)]"
+        className="h-[calc(100svh-420px)]"
       />
       {user?.role == UserRoles.LEGAL && (
         <ExpertiseFileUploadModal

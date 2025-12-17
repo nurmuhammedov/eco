@@ -1,14 +1,24 @@
 import { useCustomSearchParams } from '@/shared/hooks'
 import SearchInput from '@/shared/components/common/search-input/ui/search-input'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ExtendedColumnDef } from './data-table'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
 import DatePicker from '@/shared/components/ui/datepicker'
-import { SearchIcon, X, Check } from 'lucide-react'
-import { format } from 'date-fns'
+import { Calendar as CalendarIcon, Check, SearchIcon, X } from 'lucide-react'
+import { format, parseISO } from 'date-fns'
 import { cn } from '@/shared/lib/utils'
+import { Calendar } from '@/shared/components/ui/calendar'
+import { DateRange } from 'react-day-picker'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/shared/components/ui/command'
 
-function useDebounce(value: any, delay = 500) {
+function useDebounce(value: any, delay = 800) {
   const [debouncedValue, setDebouncedValue] = useState(value)
 
   useEffect(() => {
@@ -29,17 +39,104 @@ interface ColumnFilterInputProps<TData, TValue> {
 }
 
 export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputProps<TData, TValue>) => {
-  const { filterKey, filterType = 'search', filterOptions, filterDateStrategy = 'none', filterMaxLength = 30 } = column
-  const { paramsObject, addParams } = useCustomSearchParams()
+  const {
+    filterKey,
+    filterType = 'search',
+    filterOptions,
+    filterDateStrategy = 'none',
+    filterMaxLength = 30,
+    filterRangeKeys = ['startDate', 'endDate'],
+  } = column
+
+  const { paramsObject, addParams, removeParams } = useCustomSearchParams()
 
   const [open, setOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
+
+  const iconStyle = 'absolute left-2 top-1/2 -translate-y-1/2 text-neutral-400 size-4 pointer-events-none z-10'
+  const clearButtonStyle =
+    'absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 cursor-pointer z-10 flex items-center justify-center bg-white'
+  const wrapperStyle = 'relative w-full border-none bg-white transition-colors h-8'
+  const triggerContentStyle =
+    'w-full h-full flex items-center px-0 pl-8 pr-6 text-sm font-normal text-black bg-transparent outline-none cursor-pointer overflow-hidden'
+
+  if (filterType === 'date-range') {
+    const startDateVal = paramsObject[filterRangeKeys[0]]
+    const endDateVal = paramsObject[filterRangeKeys[1]]
+
+    const [date, setDate] = useState<DateRange | undefined>(() => {
+      if (startDateVal) {
+        return {
+          from: parseISO(String(startDateVal)),
+          to: endDateVal ? parseISO(String(endDateVal)) : undefined,
+        }
+      }
+      return undefined
+    })
+
+    const handleDateSelect = (range: DateRange | undefined) => {
+      setDate(range)
+      if (range?.from) {
+        const params: any = {
+          [filterRangeKeys[0]]: format(range.from, 'yyyy-MM-dd'),
+        }
+        if (range.to) {
+          params[filterRangeKeys[1]] = format(range.to, 'yyyy-MM-dd')
+        } else {
+          removeParams(filterRangeKeys[1])
+        }
+        addParams(params, 'page', 'p')
+      } else {
+        removeParams(filterRangeKeys[0], filterRangeKeys[1])
+      }
+    }
+
+    const formattedValue = useMemo(() => {
+      if (!date?.from) return ''
+      if (!date.to) return format(date.from, 'dd.MM.yyyy')
+      return `${format(date.from, 'dd.MM.yyyy')} - ${format(date.to, 'dd.MM.yyyy')}`
+    }, [date])
+
+    return (
+      <div className={wrapperStyle}>
+        <CalendarIcon className={iconStyle} />
+        <Popover>
+          <PopoverTrigger asChild>
+            <div className={triggerContentStyle} role="button" tabIndex={0}>
+              <span className={cn('truncate text-xs', !date && 'text-neutral-400')}>{formattedValue}</span>
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              initialFocus
+              mode="range"
+              defaultMonth={date?.from}
+              selected={date}
+              onSelect={handleDateSelect}
+              numberOfMonths={2}
+            />
+          </PopoverContent>
+        </Popover>
+        {date && (
+          <div
+            onClick={(e) => {
+              e.stopPropagation()
+              setDate(undefined)
+              removeParams(filterRangeKeys[0], filterRangeKeys[1])
+            }}
+            className={clearButtonStyle}
+          >
+            <X size={14} />
+          </div>
+        )}
+      </div>
+    )
+  }
 
   if (!filterKey) return null
 
   const initialValue = paramsObject[filterKey] || ''
   const [value, setValue] = useState(initialValue)
-  const debouncedValue = useDebounce(value, 300)
+  const debouncedValue = useDebounce(value, 800)
 
   useEffect(() => {
     if ((filterType === 'search' || filterType === 'number') && value !== null) {
@@ -52,27 +149,11 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
     addParams({ [filterKey]: val }, 'page', 'p')
   }
 
-  const iconStyle = 'absolute left-2 top-1/2 -translate-y-1/2 text-neutral-400 size-4 pointer-events-none z-10'
-
-  const clearButtonStyle =
-    'absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 cursor-pointer z-10 flex items-center justify-center bg-white'
-
-  const wrapperStyle = 'relative w-full border-none bg-white transition-colors h-8'
-
-  const triggerContentStyle =
-    'w-full h-full flex items-center px-0 pl-8 pr-6 text-sm font-normal text-black bg-transparent outline-none cursor-pointer overflow-hidden'
-
   const selectedOptionLabel = useMemo(() => {
     if (!filterOptions || !value) return ''
     const option = filterOptions.find((opt) => opt.id.toString() === value.toString())
     return option ? option?.name : value
   }, [filterOptions, value])
-
-  const filteredOptions = useMemo(() => {
-    if (!filterOptions) return []
-    if (!searchQuery) return filterOptions
-    return filterOptions.filter((opt) => opt?.name?.toString().toLowerCase().includes(searchQuery?.toLowerCase()))
-  }, [filterOptions, searchQuery])
 
   if (filterType === 'select') {
     return (
@@ -86,34 +167,20 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
             </div>
           </PopoverTrigger>
 
-          <PopoverContent className="max-w-[150px] p-0" align="start">
-            <div className="flex max-h-[250px] flex-col">
-              <div className="flex items-center border-b px-3 pt-3 pb-2">
-                <SearchIcon className="mr-2 h-4 w-4 opacity-50" />
-                <input
-                  className="placeholder:text-muted-foreground flex h-4 w-full rounded-md bg-transparent py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Qidirish..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  autoFocus
-                />
-              </div>
-
-              <div className="overflow-y-auto p-1">
-                {filteredOptions.length === 0 ? (
-                  <div className="text-muted-foreground py-6 text-center text-sm">Topilmadi!</div>
-                ) : (
-                  filteredOptions.map((option) => (
-                    <div
+          <PopoverContent className="w-[200px] p-0" align="start">
+            <Command>
+              <CommandInput hideIcon placeholder="Qidirish..." className="h-9 pl-2" />
+              <CommandList>
+                <CommandEmpty>Topilmadi!</CommandEmpty>
+                <CommandGroup>
+                  {filterOptions?.map((option) => (
+                    <CommandItem
+                      className="pl-1"
                       key={option.id}
-                      className={cn(
-                        'hover:bg-accent hover:text-accent-foreground relative flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-                        value?.toString() === option.id?.toString() && 'bg-neutral-100'
-                      )}
-                      onClick={() => {
-                        handleImmediateChange(option.id?.toString())
+                      value={option.name}
+                      onSelect={() => {
+                        handleImmediateChange(option.id.toString())
                         setOpen(false)
-                        setSearchQuery('')
                       }}
                     >
                       <Check
@@ -123,11 +190,11 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
                         )}
                       />
                       {option.name}
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
           </PopoverContent>
         </Popover>
 

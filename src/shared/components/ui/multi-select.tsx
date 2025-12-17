@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { cn } from '@/shared/lib/utils'
-import { useTranslation } from 'react-i18next'
 import { Check, ChevronDown, X } from 'lucide-react'
+import { cn } from '@/shared/lib/utils'
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
 import {
   Command,
   CommandEmpty,
@@ -10,12 +10,10 @@ import {
   CommandItem,
   CommandList,
 } from '@/shared/components/ui/command'
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
-import { Button } from '@/shared/components/ui/button'
 
 export type MultiSelectOption = {
-  name: string
   id: string | number
+  name: string
   disabled?: boolean
 }
 
@@ -24,13 +22,28 @@ interface MultiSelectProps {
   value?: (string | number)[]
   onChange?: (value: (string | number)[]) => void
   className?: string
-  maxDisplayItems?: number
   placeholder?: string
+  searchPlaceholder?: string
+  emptyText?: string
+  maxDisplayItems?: number
+  disabled?: boolean
 }
 
 const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
-  ({ options, value = [], onChange, className, placeholder = 'Select options...', maxDisplayItems = 2 }, ref) => {
-    const { t } = useTranslation('common')
+  (
+    {
+      options,
+      value = [],
+      onChange,
+      className,
+      placeholder = 'Tanlang...',
+      searchPlaceholder = 'Qidirish...',
+      emptyText = "Ma'lumot topilmadi",
+      maxDisplayItems = 3,
+      disabled,
+    },
+    ref
+  ) => {
     const [open, setOpen] = React.useState(false)
 
     const handleSelect = (optionId: string | number) => {
@@ -39,71 +52,85 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       onChange(newValue)
     }
 
+    const handleRemove = (e: React.MouseEvent, optionId: string | number) => {
+      e.stopPropagation()
+      if (!onChange) return
+      onChange(value.filter((id) => id !== optionId))
+    }
+
     const selectedOptions = options.filter((option) => value.includes(option.id))
 
     return (
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover modal={true} open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
+          <button
             ref={ref}
-            variant="outline"
+            disabled={disabled}
             role="combobox"
             aria-expanded={open}
-            className={cn('h-auto min-h-10 w-full justify-between', className)}
-            onClick={() => setOpen(!open)}
+            className={cn(
+              'flex h-auto min-h-9 w-full items-center justify-between rounded border border-neutral-300 bg-white px-3 py-1 text-base shadow-xs transition-colors',
+              'md:text-sm',
+              'focus-visible:ring-teal focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+              className
+            )}
           >
-            <div className="flex flex-wrap items-center gap-1">
+            <div className="mr-2 flex flex-1 flex-wrap items-center gap-1.5 text-left">
               {selectedOptions.length > 0 ? (
-                selectedOptions.length > maxDisplayItems ? (
-                  <span className="text-muted-foreground text-sm">
-                    {t('selected_items_count', { count: selectedOptions.length })}
-                  </span>
-                ) : (
-                  selectedOptions.map((option) => (
+                <>
+                  {selectedOptions.slice(0, maxDisplayItems).map((option) => (
                     <div
                       key={option.id}
-                      className="bg-muted flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-xs font-medium"
+                      className="flex items-center gap-1 rounded-sm border border-neutral-200 bg-neutral-100 px-1.5 py-0.5 text-xs font-medium text-neutral-900"
                     >
                       {option.name}
-                      <button
-                        type="button"
-                        aria-label={`Remove ${option.name}`}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleSelect(option.id)
-                        }}
-                        className="ring-offset-background ml-1 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none"
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        onClick={(e) => handleRemove(e, option.id)}
+                        className="ml-0.5 cursor-pointer rounded-sm text-neutral-500 hover:text-red-500"
                       >
                         <X className="h-3 w-3" />
-                      </button>
+                      </div>
                     </div>
-                  ))
-                )
+                  ))}
+
+                  {selectedOptions.length > maxDisplayItems && (
+                    <span className="rounded-sm border border-neutral-200 bg-neutral-100 px-1.5 py-0.5 text-xs text-neutral-500">
+                      +{selectedOptions.length - maxDisplayItems} ta
+                    </span>
+                  )}
+                </>
               ) : (
-                <span className="text-muted-foreground">{placeholder}</span>
+                <span className="text-neutral-350">{placeholder}</span>
               )}
             </div>
             <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
-          </Button>
+          </button>
         </PopoverTrigger>
-        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+
+        <PopoverContent className="z-[60] w-[var(--radix-popover-trigger-width)] p-0" align="start">
           <Command>
-            <CommandInput placeholder={t('Qidirish...') || 'Qidirish...'} />
+            <CommandInput placeholder={searchPlaceholder} />
             <CommandList>
-              <CommandEmpty>{t('Maʼlumotlar topilmadi!') || 'Natija topilmadi!'}</CommandEmpty>
+              <CommandEmpty>{emptyText}</CommandEmpty>
               <CommandGroup>
-                {options.map((option) => (
-                  <CommandItem
-                    key={option.id}
-                    onSelect={() => {
-                      handleSelect(option.id)
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <Check className={cn('mr-2 h-4 w-4', value.includes(option.id) ? 'opacity-100' : 'opacity-0')} />
-                    {option.name}
-                  </CommandItem>
-                ))}
+                {options.map((option) => {
+                  const isSelected = value.includes(option.id)
+                  return (
+                    <CommandItem key={option.id} value={option.name} onSelect={() => handleSelect(option.id)}>
+                      <div
+                        className={cn(
+                          'mr-2 flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-neutral-300',
+                          isSelected ? 'border-teal-600 bg-teal-600 text-white' : 'opacity-50 [&_svg]:invisible'
+                        )}
+                      >
+                        <Check className={cn('h-3 w-3')} />
+                      </div>
+                      {option.name}
+                    </CommandItem>
+                  )
+                })}
               </CommandGroup>
             </CommandList>
           </Command>

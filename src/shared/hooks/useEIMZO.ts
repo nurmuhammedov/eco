@@ -101,7 +101,7 @@ export function useEIMZO({
         if (onSuccessNavigateTo) {
           navigate(onSuccessNavigateTo)
         }
-        toast.success(successMessage || 'Muvaffaqiyatli saqlandi!', { richColors: true })
+        toast.success(successMessage || 'Muvaffaqiyatli saqlandi!')
         onEnd?.()
         queryClient.invalidateQueries({ queryKey: [queryKey] }).then((r) => console.log(r))
       }

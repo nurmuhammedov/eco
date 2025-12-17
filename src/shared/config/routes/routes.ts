@@ -25,6 +25,9 @@ const Permits = lazy(() => import('@/widgets/permits'))
 //ContactPage
 const ContactPage = lazy(() => import('@/pages/qr-form'))
 
+//Inquiries
+const Inquiries = lazy(() => import('@/features/inquiries'))
+
 // Other pages
 const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'))
 const ReportsPage = lazy(() => import('@/features/reports/ui/reports'))
@@ -135,7 +138,7 @@ export const appRoutes = [
   {
     path: 'register/hf/update/:id',
     component: RegisterHFUpdatePage,
-    roles: [UserRoles.INSPECTOR],
+    roles: [UserRoles.INSPECTOR, UserRoles.CHAIRMAN],
   },
   {
     path: 'register/:id/equipments',
@@ -277,6 +280,13 @@ export const appRoutes = [
   {
     path: 'permits',
     component: Permits,
+    roles: [],
+  },
+
+  //Inquiries
+  {
+    path: 'inquiries',
+    component: Inquiries,
     roles: [],
   },
 ]

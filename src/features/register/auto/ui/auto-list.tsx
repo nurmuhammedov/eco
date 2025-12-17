@@ -14,7 +14,7 @@ export const AutoList = ({ tankersCount }: any) => {
     addParams,
   } = useCustomSearchParams()
 
-  const { data: list } = usePaginatedData<any>(`/tankers`, {
+  const { data: list, isLoading } = usePaginatedData<any>(`/tankers`, {
     page,
     size,
     search,
@@ -132,6 +132,7 @@ export const AutoList = ({ tankersCount }: any) => {
       <DataTable
         showFilters
         isPaginated
+        isLoading={isLoading}
         data={list || []}
         columns={columns as unknown as any}
         className="h-[calc(100svh-375px)]"

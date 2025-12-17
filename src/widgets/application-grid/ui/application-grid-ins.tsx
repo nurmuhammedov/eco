@@ -69,7 +69,7 @@ export const ApplicationsGridIns: React.FC = () => {
           : user?.role == UserRoles.INSPECTOR
             ? [
                 {
-                  id: ApplicationCategory.ILLEGAL,
+                  id: ApplicationCategory.ILLEGAL_HF,
                   name: 'XICHO',
                 },
                 {

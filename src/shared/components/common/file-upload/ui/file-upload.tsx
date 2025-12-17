@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
 import { AxiosProgressEvent } from 'axios'
-import { FilePlus } from 'lucide-react'
+import { Paperclip } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { Input } from '@/shared/components/ui/input'
 import { FileIcon } from './file-icon'
@@ -348,10 +348,11 @@ function InputFileComponent<T extends FieldValues>({
             {isPending ? (
               <div className="size-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent" />
             ) : (
-              <FilePlus className="size-4 text-blue-400" />
+              <Paperclip className="size-4 text-blue-400" />
             )}
           </div>
-          <div className="flex-grow px-3 py-2 text-sm font-medium text-blue-400">
+          {/* O‘zgartirish: whitespace-nowrap va truncate qo‘shildi */}
+          <div className="flex-grow truncate px-3 py-2 text-sm font-medium whitespace-nowrap text-blue-400">
             {isPending ? `Yuklanmoqda... (${uploadProgress}%)` : buttonText}
           </div>
         </div>

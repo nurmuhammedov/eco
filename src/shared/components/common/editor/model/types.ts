@@ -1,4 +1,4 @@
-// src/features/editor/model/types.ts
+// src/features/editor/model/types.tsx
 
 /**
  * Border style options for the TinyMCE editor

@@ -25,10 +25,12 @@ export const IrsList = () => {
       sphere = '',
       symbol = '',
       usageType = '',
+      startDate = '',
+      endDate = '',
     },
   } = useCustomSearchParams()
 
-  const { data = [] } = usePaginatedData<any>(`/irs`, {
+  const { data = [], isLoading } = usePaginatedData<any>(`/irs`, {
     page,
     size,
     mode,
@@ -45,6 +47,8 @@ export const IrsList = () => {
     sphere,
     symbol,
     usageType,
+    startDate,
+    endDate,
   })
 
   const handleViewApplication = (id: string) => {
@@ -56,6 +60,8 @@ export const IrsList = () => {
       header: 'INM hisobga olish sanasi',
       maxSize: 120,
       accessorFn: (row) => getDate(row.registrationDate),
+      filterKey: 'registrationDate',
+      filterType: 'date-range',
     },
     {
       header: 'INM ro‘yxat raqami',
@@ -149,40 +155,14 @@ export const IrsList = () => {
     },
   ]
 
-  // const handleDownloadExel = async () => {
-  //   const res = await apiClient.downloadFile<Blob>('/irs/export/excel', {
-  //     mode: rest.mode,
-  //     ...rest,
-  //   });
-  //
-  //   const blob = res.data;
-  //   const url = URL.createObjectURL(blob);
-  //   const a = document.createElement('a');
-  //   const today = new Date();
-  //   const filename = `INMlar (${format(today, 'yyyy-MM-dd_hh:mm:ss')}).xlsx`;
-  //   a.href = url;
-  //   a.download = filename;
-  //   document.body.appendChild(a);
-  //   a.click();
-  //   a.remove();
-  //   URL.revokeObjectURL(url);
-  // };
-
   return (
-    <>
-      {/*<div className={'flex justify-between items-start'}>*/}
-      {/*<Filter inputKeys={['search', 'irsRegionId']} />*/}
-      {/*  <Button onClick={handleDownloadExel}>*/}
-      {/*    <Download /> MS Exel*/}
-      {/*  </Button>*/}
-      {/*</div>*/}
-      <DataTable
-        showFilters
-        isPaginated
-        data={data || []}
-        columns={columns as unknown as any}
-        className="h-[calc(100svh-220px)]"
-      />
-    </>
+    <DataTable
+      showFilters
+      isPaginated
+      isLoading={isLoading}
+      data={data || []}
+      columns={columns as unknown as any}
+      className="h-[calc(100svh-220px)]"
+    />
   )
 }

@@ -22,13 +22,15 @@ import { DataTablePagination } from './data-table-pagination'
 import { getCommonPinningStyles } from './models/get-common-pinning'
 import { ColumnFilterInput } from '@/shared/components/common/data-table/column-filter-input'
 import { DateDisableStrategy } from '@/shared/components/ui/datepicker'
+import { DataTableLoading } from './data-table-loading'
 
 export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   filterKey?: string
-  filterType?: 'search' | 'select' | 'date' | 'number'
+  filterType?: 'search' | 'select' | 'date' | 'number' | 'date-range'
   filterOptions?: { id: string; name: string }[]
   filterDateStrategy?: DateDisableStrategy
   filterMaxLength?: number
+  filterRangeKeys?: [string, string]
 }
 
 interface DataTableProps<TData, TValue> {
@@ -65,7 +67,7 @@ export function DataTable<TData, TValue>({
     addParams,
   } = useCustomSearchParams()
   const isContentData = data && typeof data === 'object' && 'content' in data
-  const tableData = isContentData ? data.content : data
+  const tableData = isContentData ? data.content : Array.isArray(data) ? data : []
 
   const pageCount = isContentData ? data?.page?.totalPages : undefined
 
@@ -114,10 +116,15 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
+  const fixedTableStyle: React.CSSProperties = {
+    width: '100%',
+    // tableLayout: 'fixed',
+  }
+
   return (
     <Fragment>
       <div className={cn('relative overflow-auto rounded-md bg-white', className)}>
-        <Table className="p-2">
+        <Table className="p-2" style={fixedTableStyle}>
           <TableHeader className="p-2 font-semibold text-black">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -175,6 +182,7 @@ export function DataTable<TData, TValue>({
                       <TableHead
                         key={column.id}
                         className="!h-8 border-b-2 border-neutral-200 !bg-white !p-0 even:!bg-white hover:!bg-white"
+                        // style={getCommonPinningStyles({ column })}
                       ></TableHead>
                     )
 
@@ -182,6 +190,7 @@ export function DataTable<TData, TValue>({
                     <TableHead
                       key={column.id}
                       className="!h-8 border-b-2 border-neutral-200 !bg-white !p-0 even:!bg-white hover:!bg-white"
+                      // style={getCommonPinningStyles({ column })}
                     >
                       <ColumnFilterInput column={columnDef} />
                     </TableHead>
@@ -191,7 +200,9 @@ export function DataTable<TData, TValue>({
             )}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              <DataTableLoading isLoading={isLoading} columns={columns} showNumeration={showNumeration} />
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row, idx) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {showNumeration && (

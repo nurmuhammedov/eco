@@ -51,7 +51,7 @@ export const RegisterEquipmentAppealList = () => {
     },
     {
       accessorKey: 'fullName',
-      header: 'Yuboruvchi F.I.O.',
+      header: 'Yuboruvchi F.I.SH.',
       cell: ({ row }) => row.original.fullName || '-',
     },
     {

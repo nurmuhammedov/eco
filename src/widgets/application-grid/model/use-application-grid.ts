@@ -18,8 +18,10 @@ export function useApplicationGrid() {
       user?.role == UserRoles.INDIVIDUAL
         ? ApplicationCategory.EQUIPMENTS
         : user?.role == UserRoles.INSPECTOR
-          ? ApplicationCategory.ILLEGAL
-          : ApplicationCategory.HF
+          ? ApplicationCategory.ILLEGAL_HF
+          : user?.role == UserRoles.MANAGER
+            ? ApplicationCategory.ILLEGAL_XRAY
+            : ApplicationCategory.HF
     ),
   })
 

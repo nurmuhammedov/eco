@@ -1,9 +1,7 @@
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
-// import { useFilesToFix } from '@/features/risk-analysis/hooks/use-files-to-fix.ts';
 import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts'
-// import RiskAnalysisFilesToFix from '@/features/risk-analysis/ui/parts/risk-analysis-files-to-fix.tsx';
 import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row.tsx'
@@ -12,7 +10,6 @@ import { Coordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { getDate } from '@/shared/utils/date.ts'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '@/shared/hooks/use-auth'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
@@ -27,8 +24,6 @@ const RiskAnalysisDetail = () => {
   const currentTin = tin
   const objectId = id
   let type = ty
-  // const { data: filesToFix } = useFilesToFix();
-  const { user } = useAuth()
 
   const { data: tableData, isLoading: isTableDataLoading } = usePaginatedData<any>(`/risk-analyses/belongings`, {
     ...rest,
@@ -41,8 +36,7 @@ const RiskAnalysisDetail = () => {
     type = data?.type
   }
 
-  const currentBelongId = objectId // Misol uchun
-  const currentIntervalId = user?.interval.id // Misol uchun
+  const currentBelongId = objectId
 
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
 
@@ -110,21 +104,12 @@ const RiskAnalysisDetail = () => {
       </div>
       <DetailCardAccordion defaultValue={['risk_anlalysis_info']}>
         <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
-          {currentBelongId && currentIntervalId ? (
+          {currentBelongId ? (
             <>
-              {/*<RiskAnalysisIndicator*/}
-              {/*  belongId={currentBelongId}*/}
-              {/*  intervalId={Number(currentIntervalId)} // Agar intervalId ham string bo'lsa, songa o'giramiz*/}
-              {/*/>*/}
-              <DataTable
-                data={tableData || []}
-                columns={columns}
-                isLoading={isTableDataLoading}
-                // className="h-[calc(100svh-270px)]"
-              />
+              <DataTable data={tableData || []} columns={columns} isLoading={isTableDataLoading} />
             </>
           ) : (
-            <div>Kerakli maʼlumotlar topilmadi...</div> // Yoki loader ko'rsatish mumkin
+            <div>Kerakli maʼlumotlar topilmadi...</div>
           )}
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
@@ -162,17 +147,6 @@ const RiskAnalysisDetail = () => {
             <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
           </DetailCardAccordion.Item>
         )}
-        {/*{filesToFix && filesToFix?.length > 0 && (*/}
-        {/*  <DetailCardAccordion.Item value="files" title="Xavfni tahlil etish uchun arizachi yuborgan ma’lumotlar">*/}
-        {/*    <RiskAnalysisFilesToFix data={filesToFix} />*/}
-        {/*  </DetailCardAccordion.Item>*/}
-        {/*)}*/}
-        {/*<DetailCardAccordion.Item value="checklists" title="Cheklistlar">*/}
-        {/*  <RiskAnalysisChecklists />*/}
-        {/*</DetailCardAccordion.Item>*/}
-        {/* <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
-          <RiskAnalysisInfo />
-        </DetailCardAccordion.Item> */}
       </DetailCardAccordion>
     </>
   )

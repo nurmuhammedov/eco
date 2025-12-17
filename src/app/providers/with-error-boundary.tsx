@@ -16,12 +16,16 @@ export const withErrorBoundary = (Component: React.ComponentType) => {
               position={'top-right'}
               richColors
               visibleToasts={5}
+              closeButton={true}
               duration={10000}
               toastOptions={{
                 classNames: {
-                  toast: 'font-golos-text select-none text-sm cursor-pointer !w-[400px]',
+                  toast:
+                    'font-golos-text select-none text-sm cursor-pointer !w-[400px] group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg',
                   title: 'font-golos-text text-sm',
-                  description: 'font-golos text-sm',
+                  description: 'font-golos-text font-golos-text group-[.toast]:text-muted-foreground',
+                  actionButton: 'font-golos-text group-[.toast]:bg-primary group-[.toast]:text-primary-foreground',
+                  cancelButton: 'font-golos-text group-[.toast]:bg-muted group-[.toast]:text-muted-foreground',
                 },
               }}
             />,

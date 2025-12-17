@@ -1,134 +1,197 @@
+import { useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { FileWarning } from 'lucide-react'
+
 import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application'
 import { ApplicationCategory, APPLICATIONS_DATA } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
+
 import { useApplicationList } from '@/features/application/application-table/hooks'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
-import Filter from '@/shared/components/common/filter'
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+
 import { useCustomSearchParams } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { ISearchParams } from '@/shared/types'
 import { getDate } from '@/shared/utils/date'
-import { ColumnDef } from '@tanstack/react-table'
-import { FileWarning } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import useData from '../../../../shared/hooks/api/useData'
+import { API_ENDPOINTS } from '@/shared/api'
+import { UserRoles } from '@/entities/user'
+
+const ALLOWED_CATEGORIES: ApplicationCategory[] = [
+  ApplicationCategory.HF,
+  ApplicationCategory.EQUIPMENTS,
+  ApplicationCategory.IRS,
+  ApplicationCategory.XRAY,
+]
 
 export const ApplicationTable = () => {
+  const navigate = useNavigate()
   const { user } = useAuth()
 
   const {
-    paramsObject: { status = ApplicationStatus.ALL, mode, search = '', ...rest },
+    paramsObject: { status = ApplicationStatus.ALL, mode, search = '', startDate = '', endDate = '', ...rest },
   } = useCustomSearchParams()
 
-  const { data: applications = [] } = useApplicationList({
+  const { data: applications = [], isLoading } = useApplicationList({
     ...rest,
-    status: status !== 'ALL' ? status : '',
+    status: status !== ApplicationStatus.ALL ? status : '',
     search,
     mode,
+    startDate,
+    endDate,
   })
 
-  const navigate = useNavigate()
+  const { data: officeSelect } = useData<any>(`${API_ENDPOINTS.OFFICES}/select`)
+  const { data: executorOptions } = useData<any>(`${API_ENDPOINTS.USERS}/office-users/inspectors/select`)
 
-  const handleViewApplication = (id: string) => {
-    navigate(`detail/${id}`)
+  const handleViewApplication = (id: any) => {
+    navigate(`/applications/detail/${id}`)
   }
 
-  const columns: ColumnDef<ISearchParams>[] = [
-    {
-      accessorKey: 'number',
-      maxSize: 100,
-      header: 'Ariza raqami',
-    },
-    {
-      header: 'Ariza sanasi',
-      maxSize: 100,
-      accessorFn: (row) => getDate(row.createdAt),
-    },
-    {
-      header: 'Ariza turi',
-      cell: (cell) => APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.title || '',
-    },
-    ...(user?.role != UserRoles.LEGAL && user?.role != UserRoles.INDIVIDUAL
-      ? [
-          {
-            accessorKey: 'ownerName',
-            header: 'Arizachi tashkilot nomi',
-          },
-          {
-            accessorKey: 'ownerIdentity',
-            header: 'Arizachi tashkilot STIR/ Fuqaro JSHSHIR',
-          },
-        ]
-      : []),
-    {
-      maxSize: 200,
-      accessorKey: 'test',
-      header: 'Qo‘mita maʼsul bo‘limi',
-      cell: (cell) =>
-        APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category == ApplicationCategory.HF ||
-        APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
-          ApplicationCategory.DEFAULT ||
-        APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
-          ApplicationCategory.CADASTRE ||
-        APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
-          ApplicationCategory.ACCREDITATION
-          ? `Аxborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi`
-          : APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
-                ApplicationCategory.EQUIPMENTS ||
-              cell.row.original.appealType?.startsWith('RE_') ||
-              cell.row.original.appealType?.startsWith('DE')
-            ? `Davlat xizmatlarini ko‘rsatish boʼlimi`
-            : APPLICATIONS_DATA?.find((i) => i?.type == cell.row.original.appealType)?.category ==
-                ApplicationCategory.INM
-              ? `Litsenziyalash hamda INMlarni hisobga olish bo‘limi`
-              : '',
-    },
-    {
-      minSize: 200,
-      accessorKey: 'officeName',
-      header: 'Ijrochi hududiy boshqarma',
-    },
-    {
-      accessorKey: 'executorName',
-      header: 'Maʼsul ijrochi',
-    },
-    {
-      maxSize: 80,
-      header: 'Ijro muddati',
-      accessorFn: (row) => getDate(row.deadline),
-    },
-    {
-      header: 'Ariza holati',
-      cell: (cell) => {
-        return (
-          <div className="flex gap-2">
-            {ApplicationStatusBadge({ status: cell.row.original.status })}
+  // const applicationCategoryMap = useMemo(() => {
+  //   return APPLICATIONS_DATA.reduce<Record<string, ApplicationCategory>>((acc, item) => {
+  //     if (item.type && item.category) {
+  //       acc[item.type] = item.category
+  //     }
+  //     return acc
+  //   }, {})
+  // }, [])
+
+  // const committeeByCategoryMap = useMemo<Partial<Record<ApplicationCategory, string>>>(
+  //   () => ({
+  //     [ApplicationCategory.HF]:
+  //       'Axborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi',
+  //     [ApplicationCategory.DEFAULT]:
+  //       'Axborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi',
+  //     [ApplicationCategory.CADASTRE]:
+  //       'Axborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi',
+  //     [ApplicationCategory.ACCREDITATION]:
+  //       'Axborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi',
+  //
+  //     [ApplicationCategory.EQUIPMENTS]: 'Davlat xizmatlarini ko‘rsatish bo‘limi',
+  //
+  //     [ApplicationCategory.IRS]: 'Litsenziyalash hamda INMlarni hisobga olish bo‘limi',
+  //   }),
+  //   []
+  // )
+
+  const appealTypeFilterOptions = useMemo(() => {
+    return APPLICATIONS_DATA.filter((item) => item.category && ALLOWED_CATEGORIES.includes(item.category)).map(
+      (item) => ({
+        id: item.type,
+        name: item.title,
+      })
+    )
+  }, [])
+
+  const columns: ExtendedColumnDef<any, any>[] = useMemo(() => {
+    return [
+      {
+        accessorKey: 'number',
+        header: 'Ariza raqami',
+        filterKey: 'search',
+        filterType: 'search',
+      },
+      {
+        header: 'Ariza sanasi',
+        maxSize: 90,
+        accessorFn: (row: any) => getDate(row.createdAt),
+      },
+      {
+        header: 'Ariza turi',
+        accessorKey: 'appealType',
+        filterKey: 'appealType',
+        filterType: 'select',
+        filterOptions: appealTypeFilterOptions,
+        cell: (cell: any) => APPLICATIONS_DATA.find((item) => item.type === cell.row.original.appealType)?.title || '',
+      },
+      // {
+      //   header: 'Qo‘mita maʼsul bo‘limi',
+      //   minSize: 260,
+      //   cell: (cell: any) => {
+      //     const appealType = cell.row.original.appealType
+      //     const category = applicationCategoryMap[appealType]
+      //     if (appealType?.startsWith('DE') || appealType?.startsWith('RE_')) {
+      //       return 'Davlat xizmatlarini ko‘rsatish bo‘limi'
+      //     }
+      //     return category ? committeeByCategoryMap[category] || '' : ''
+      //   },
+      // },
+      ...((user?.role !== UserRoles.LEGAL && user?.role !== UserRoles.INDIVIDUAL
+        ? [
+            {
+              accessorKey: 'ownerName',
+              header: 'Arizachi tashkilot nomi',
+              filterKey: 'ownerName',
+              filterType: 'search',
+            },
+            {
+              accessorKey: 'ownerIdentity',
+              header: 'Arizachi STIR/JSHSHIR',
+              filterKey: 'search',
+              filterType: 'number',
+              filterMaxLength: 14,
+            },
+          ]
+        : []) as unknown as any),
+      {
+        accessorKey: 'officeName',
+        header: 'Ijrochi hududiy boshqarma',
+        filterKey: 'officeId',
+        filterType: 'select',
+        filterOptions: officeSelect || [],
+      },
+      {
+        accessorKey: 'executorName',
+        header: 'Maʼsul ijrochi',
+        filterKey: 'executorId',
+        filterType: 'select',
+        filterOptions: executorOptions || [],
+      },
+      {
+        header: 'Ijro muddati',
+        maxSize: 90,
+        accessorFn: (row: any) => getDate(row.deadline),
+        filterKey: 'deadline',
+        filterType: 'date-range',
+      },
+      {
+        header: 'Ariza holati',
+        cell: (cell: any) => (
+          <div className="flex items-center gap-2">
+            {ApplicationStatusBadge({
+              status: cell.row.original.status,
+            })}
             {cell.row.original.isRejected && (
-              <p title="Has rejected file!">
+              <span title="Rad etilgan fayl mavjud">
                 <FileWarning size={18} className="text-yellow-200" />
-              </p>
+              </span>
             )}
           </div>
-        )
+        ),
       },
-    },
-    {
-      id: 'actions',
-      maxSize: 40,
-      cell: ({ row }) => (
-        <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
-      ),
-    },
-  ]
+      {
+        id: 'actions',
+        maxSize: 40,
+        cell: ({ row }: any) => (
+          <DataTableRowActions
+            showView
+            showDelete
+            row={row}
+            onView={(row: any) => handleViewApplication(row?.original?.id)}
+          />
+        ),
+      },
+    ]
+  }, [appealTypeFilterOptions, user, officeSelect, executorOptions])
 
   return (
-    <>
-      <Filter inputKeys={['search', 'appealType', 'officeId', 'executorId', 'mode', 'startDate', 'endDate']} />
-      <DataTable
-        isPaginated
-        data={applications || []}
-        columns={columns as unknown as any}
-        className="h-[calc(100svh-280px)]"
-      />
-    </>
+    <DataTable
+      showFilters
+      isLoading={isLoading}
+      isPaginated
+      data={applications}
+      columns={columns || []}
+      className="h-[calc(100svh-220px)]"
+    />
   )
 }

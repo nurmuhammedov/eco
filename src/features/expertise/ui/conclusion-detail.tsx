@@ -49,7 +49,7 @@ export const DetailConclusion = () => {
         <DetailCardAccordion.Item value="expert_org" title="Ekspert tashkiloti to‘g‘risida ma’lumot">
           <div className="flex flex-col py-1">
             <DetailRow title="Ekspert tashkiloti nomi:" value={legalData?.name || '-'} />
-            <DetailRow title="Ekspert tashkiloti STIRsi:" value={legalData?.identity || '-'} />
+            <DetailRow title="Ekspert tashkiloti STIRi:" value={legalData?.identity || '-'} />
             <DetailRow title="Ekspert tashkiloti manzili:" value={legalData?.address || '-'} />
             <DetailRow
               title="Ekspertiza tashkilotining akkreditatsiya raqami:"
@@ -61,7 +61,7 @@ export const DetailConclusion = () => {
         <DetailCardAccordion.Item value="customer_org" title="Tashkilot to‘g‘risida ma’lumot">
           <div className="flex flex-col py-1">
             <DetailRow title="Tashkilot nomi:" value={customerData?.name || '-'} />
-            <DetailRow title="Tashkilot STIRsi:" value={customerData?.identity || '-'} />
+            <DetailRow title="Tashkilot STIRi:" value={customerData?.identity || '-'} />
             <DetailRow title="Tashkilot yuridik manzili:" value={customerData?.address || '-'} />
             <DetailRow title="Tashkilot telefon raqami:" value={customerData?.phoneNumber || '-'} />
             <DetailRow title="Tashkilot rahbari F.I.Sh:" value={customerData?.directorName || '-'} />

@@ -338,7 +338,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
                       { id: 'OFFICIAL', name: "Arizachilar tomonidan ro'yxatga olingan" },
                       {
                         id: 'UNOFFICIAL',
-                        name: "Qo'mita tomonidan ro'yxatga olingan",
+                        name: 'Qo‘mita tomonidan ro‘yxatga olingan',
                       },
                     ])}
                   </SelectContent>

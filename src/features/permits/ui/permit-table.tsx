@@ -96,8 +96,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
     },
     {
       id: 'actions',
-      size: 10,
-      header: 'Amallar',
+      size: 40,
       cell: ({ row }: any) => {
         return (
           <div className="flex gap-2">

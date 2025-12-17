@@ -2,10 +2,11 @@ import { ConclusionsTable, ConclusionTabs } from '@/features/expertise'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { TabKey } from '@/features/expertise/ui/conclusion-tabs'
 import { Button } from '@/shared/components/ui/button'
-import { PlusCircle } from 'lucide-react'
+import { AlertCircle, PlusCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 
 const ExpertiseWidget = () => {
   const {
@@ -34,11 +35,25 @@ const ExpertiseWidget = () => {
     navigate('/accreditations/add')
   }
 
+  const isDisabled = status === 'EXPIRED'
+
   return (
     <>
       {user?.role === UserRoles.LEGAL && (
-        <div className="flex items-center justify-end">
-          <Button onClick={handle} disabled={!status || status === 'EXPIRED'}>
+        <div className="flex items-center justify-end gap-4">
+          {isDisabled && (
+            <Alert
+              variant="destructive"
+              className="m-0 flex h-10 w-auto items-center border-red-200 bg-red-50 px-4 py-2 text-red-600"
+            >
+              <AlertCircle className="mr-2 h-4 w-4" />
+              <AlertDescription className="text-sm font-medium whitespace-nowrap">
+                Ekspert tashkilotining muddati o‘tgani sababidan tizimda amal bajarish cheklandi
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <Button onClick={handle} disabled={isDisabled}>
             <PlusCircle className="mr-2 h-4 w-4" /> Qo‘shish
           </Button>
         </div>
