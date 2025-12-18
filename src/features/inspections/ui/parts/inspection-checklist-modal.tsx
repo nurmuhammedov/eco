@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/compo
 import { Input } from '@/shared/components/ui/input'
 import { MultiSelect } from '@/shared/components/ui/multi-select.tsx'
 import { useCustomSearchParams } from '@/shared/hooks'
-import { useEIMZO } from '@/shared/hooks/useEIMZO'
+import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { ApplicationModal } from '@/features/application/create-application'
 
 const articleOptions = [
@@ -53,7 +53,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
     handleCloseModal,
     handleCreateApplication,
     submitApplicationMetaData,
-  } = useEIMZO({
+  } = useEimzo({
     pdfEndpoint: '/inspection-results/act/generate-pdf',
     submitEndpoint: '/inspection-results/act',
     queryKey: '/inspection-results',

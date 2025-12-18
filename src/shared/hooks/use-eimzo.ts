@@ -16,7 +16,7 @@ export interface UseApplicationCreationProps {
   queryKey: string
 }
 
-export function useEIMZO({
+export function useEimzo({
   pdfEndpoint,
   submitEndpoint,
   onSuccessNavigateTo,

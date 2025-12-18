@@ -13,7 +13,7 @@ import { useMemo, useState } from 'react'
 import { MultiSelect } from '@/shared/components/ui/multi-select.tsx'
 import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection/category-types/hooks/use-category-type-select-query'
 import { useCustomSearchParams } from '@/shared/hooks'
-import { useEIMZO } from '@/shared/hooks/useEIMZO'
+import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { ApplicationModal } from '@/features/application/create-application'
 
 const schema = z.object({
@@ -69,7 +69,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
     handleCloseModal,
     handleCreateApplication,
     submitApplicationMetaData,
-  } = useEIMZO({
+  } = useEimzo({
     pdfEndpoint: '/inspections/decree/generate-pdf',
     submitEndpoint: '/inspections/decree',
     queryKey: 'inspections-attach-inspectors',

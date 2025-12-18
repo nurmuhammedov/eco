@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
 import { Textarea } from '@/shared/components/ui/textarea.tsx'
 import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts'
-import { useEIMZO } from '@/shared/hooks/useEIMZO'
+import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { useState } from 'react'
@@ -28,7 +28,7 @@ const RejectApplicationModal = () => {
     handleCloseModal,
     handleCreateApplication,
     submitApplicationMetaData,
-  } = useEIMZO({
+  } = useEimzo({
     pdfEndpoint: '/appeals/reply/reject/generate-pdf',
     submitEndpoint: '/appeals/reply/reject',
     successMessage: 'Ariza muvaffaqiyatli qaytarildi!',

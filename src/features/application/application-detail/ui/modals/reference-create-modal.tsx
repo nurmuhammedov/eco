@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Textarea } from '@/shared/components/ui/textarea.tsx'
 import { useState } from 'react'
-import { useEIMZO } from '@/shared/hooks/useEIMZO'
+import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { ApplicationModal } from '@/features/application/create-application'
 import { useParams } from 'react-router-dom'
 import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts'
@@ -28,7 +28,7 @@ const ReferenceCreateModal = () => {
     handleCloseModal,
     handleCreateApplication,
     submitApplicationMetaData,
-  } = useEIMZO({
+  } = useEimzo({
     pdfEndpoint: '/appeals/reply/generate-pdf',
     submitEndpoint: '/appeals/reply',
     successMessage: 'Muvaffaqiyatli saqlandi!',

@@ -1,5 +1,5 @@
 import { DeviceType } from '@/shared/types/enums'
-import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { detectDeviceType } from '@/shared/utils/detectDeviceType'
 
 interface WindowSize {
@@ -34,14 +34,4 @@ export const useWindowSize = (): Readonly<WindowSize> => {
   }, [handleResize])
 
   return windowSize
-}
-
-export function useWindowSize2() {
-  return useSyncExternalStore(
-    (callback) => {
-      window.addEventListener('resize', callback)
-      return () => window.removeEventListener('resize', callback)
-    },
-    () => ({ width: window.innerWidth, height: window.innerHeight })
-  )
 }
