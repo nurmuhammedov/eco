@@ -23,4 +23,5 @@ export enum HFSphere {
   CHEMISTRY = 'CHEMISTRY',
   COAL = 'COAL',
   GEOLOGY = 'GEOLOGY',
+  OTHERS = 'OTHERS',
 }

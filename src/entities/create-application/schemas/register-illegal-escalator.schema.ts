@@ -3,112 +3,68 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
 
-export const EscalatorIllegalAppealDtoSchema = z
-  .object({
-    phoneNumber: z
-      .string({ message: FORM_ERROR_MESSAGES.required })
-      .trim()
-      .refine((val) => USER_PATTERNS.phone.test(val), {
-        message: FORM_ERROR_MESSAGES.phone,
-      }),
-    identity: z
-      .string({ required_error: 'STIR yoki JSHSHIR kiritilishi shart' })
-      .min(9, 'STIR 9 xonali bo‘lishi kerak')
-      .max(14, 'JSHSHIR 14 xonali bo‘lishi kerak')
-      .regex(/^\d+$/, 'Faqat raqamlar kiritilishi kerak'),
-    birthDate: z
-      .date()
-      .optional()
-      .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-    hazardousFacilityId: z.string().uuid('XICHO ID noto‘g‘ri formatda!').optional().or(z.literal('')), // Ixtiyoriy
-    childEquipmentId: z
-      .string({
-        required_error: 'Eskalator turini tanlanmadi!',
+export const RegisterIllegalEscalatorBaseSchema = z.object({
+  phoneNumber: z
+    .string({ required_error: 'Majburiy maydon!' })
+    .trim()
+    .refine((val) => USER_PATTERNS.phone.test(val), {
+      message: FORM_ERROR_MESSAGES.phone,
+    }),
+  identity: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  birthDate: z
+    .date()
+    .optional()
+    .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+
+  hazardousFacilityId: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => (val ? val : null)),
+  childEquipmentId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  regionId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  districtId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  model: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  factory: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  location: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  partialCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  fullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  passengersPerMinute: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  length: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  speed: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  height: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+
+  labelPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  assignmentDecreePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  equipmentCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  installationCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  additionalFilePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  expertisePath: z.string().optional(),
+  expertiseExpiryDate: z
+    .date()
+    .nullable()
+    .optional()
+    .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+  fullCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  nextFullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+})
+
+export const escalatorRefinement = (data: any, ctx: z.RefinementCtx) => {
+  if (data.identity && data.identity.length === 14) {
+    if (!data.birthDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Majburiy maydon!',
+        path: ['birthDate'],
       })
-      .min(1, 'Eskalator turini tanlanmadi!'),
-    factoryNumber: z.string().optional(),
-    regionId: z
-      .string({
-        required_error: 'Eskalator joylashgan viloyat tanlanmadi!',
-      })
-      .min(1, 'Eskalator joylashgan viloyat tanlanmadi!'),
-    districtId: z
-      .string({
-        required_error: 'Eskalator joylashgan tuman tanlanmadi!',
-      })
-      .min(1, 'Eskalator joylashgan tuman tanlanmadi!'),
-    address: z
-      .string({
-        required_error: 'Eskalator joylashgan manzil kiritilmadi!',
-      })
-      .min(1, 'Eskalator joylashgan manzil kiritilmadi!'),
-    model: z.string().optional(),
-    factory: z.string().optional(),
-    location: z
-      .string({
-        required_error: 'Joylashuv tanlanmadi!',
-      })
-      .min(1, 'Joylashuv tanlanmadi!'),
-    manufacturedAt: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    partialCheckDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    fullCheckDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    labelPath: z.string().optional(),
-    labelExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    saleContractPath: z.string().optional(),
-    saleContractExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    equipmentCertPath: z.string().optional(),
-    equipmentCertExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    assignmentDecreePath: z.string().optional(),
-    assignmentDecreeExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    expertisePath: z.string().optional(),
-    expertiseExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    installationCertPath: z.string().optional(),
-    installationCertExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    additionalFilePath: z.string().optional(),
-    additionalFileExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    passengersPerMinute: z.string().optional(),
-    length: z.string().optional(),
-    speed: z.string().optional(),
-    height: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.identity && data.identity.length === 14) {
-      if (!data.birthDate) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Tug‘ilgan sana kiritilishi shart',
-          path: ['birthDate'],
-        })
-      }
     }
-  })
+  }
+}
+
+export const RegisterIllegalEscalatorSchema = RegisterIllegalEscalatorBaseSchema.superRefine(escalatorRefinement)
+
+export type RegisterIllegalEscalatorDTO = z.infer<typeof RegisterIllegalEscalatorSchema>

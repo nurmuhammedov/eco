@@ -38,9 +38,7 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.ILLEGAL_REGISTER_PIPELINE]: lazy(() => import('../ui/forms/register-illegal-pipeline-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_HOIST]: lazy(() => import('../ui/forms/register-illegal-hoist-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_CABLEWAY]: lazy(() => import('../ui/forms/register-illegal-cableway-form')),
-  [ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION_PASSPORT]: lazy(
-    () => import('../ui/forms/register-illegal-attraction-form')
-  ),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION]: lazy(() => import('../ui/forms/register-illegal-attraction-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_CHEMICAL_CONTAINER]: lazy(
     () => import('../ui/forms/register-illegal-chemical-container-form')
   ),

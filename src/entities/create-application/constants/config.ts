@@ -158,7 +158,7 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: '/appeals/equipment/unofficial/escalator',
     pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/escalator',
   },
-  [ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION_PASSPORT]: {
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION]: {
     submitEndpoint: '/appeals/equipment/unofficial/attraction',
     pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/attraction',
   },

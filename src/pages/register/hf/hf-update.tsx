@@ -13,7 +13,7 @@ const Update = () => {
 
   const onSubmit = (values: any) => {
     mutateAsync(values).then(() => {
-      toast.success('Muvaffaqiyatli tahrirlandi!', { richColors: true })
+      toast.success('Muvaffaqiyatli saqlandi!', { richColors: true })
       navigate(-1)
       queryClient.invalidateQueries({ queryKey: ['/hf'] }).catch((err) => console.error(err))
       queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] }).catch((err) => console.error(err))

@@ -1,14 +1,11 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FileWarning } from 'lucide-react'
-
 import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application'
 import { ApplicationCategory, APPLICATIONS_DATA } from '@/entities/create-application'
-
 import { useApplicationList } from '@/features/application/application-table/hooks'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
-
 import { useCustomSearchParams } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { getDate } from '@/shared/utils/date'
@@ -47,33 +44,6 @@ export const ApplicationTable = () => {
     navigate(`/applications/detail/${id}`)
   }
 
-  // const applicationCategoryMap = useMemo(() => {
-  //   return APPLICATIONS_DATA.reduce<Record<string, ApplicationCategory>>((acc, item) => {
-  //     if (item.type && item.category) {
-  //       acc[item.type] = item.category
-  //     }
-  //     return acc
-  //   }, {})
-  // }, [])
-
-  // const committeeByCategoryMap = useMemo<Partial<Record<ApplicationCategory, string>>>(
-  //   () => ({
-  //     [ApplicationCategory.HF]:
-  //       'Axborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi',
-  //     [ApplicationCategory.DEFAULT]:
-  //       'Axborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi',
-  //     [ApplicationCategory.CADASTRE]:
-  //       'Axborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi',
-  //     [ApplicationCategory.ACCREDITATION]:
-  //       'Axborot-tahlil, akkreditatsiyalash, kadastrni yuritish va ijro nazorati bosh boshqarmasi',
-  //
-  //     [ApplicationCategory.EQUIPMENTS]: 'Davlat xizmatlarini ko‘rsatish bo‘limi',
-  //
-  //     [ApplicationCategory.IRS]: 'Litsenziyalash hamda INMlarni hisobga olish bo‘limi',
-  //   }),
-  //   []
-  // )
-
   const appealTypeFilterOptions = useMemo(() => {
     return APPLICATIONS_DATA.filter((item) => item.category && ALLOWED_CATEGORIES.includes(item.category)).map(
       (item) => ({
@@ -104,18 +74,6 @@ export const ApplicationTable = () => {
         filterOptions: appealTypeFilterOptions,
         cell: (cell: any) => APPLICATIONS_DATA.find((item) => item.type === cell.row.original.appealType)?.title || '',
       },
-      // {
-      //   header: 'Qo‘mita maʼsul bo‘limi',
-      //   minSize: 260,
-      //   cell: (cell: any) => {
-      //     const appealType = cell.row.original.appealType
-      //     const category = applicationCategoryMap[appealType]
-      //     if (appealType?.startsWith('DE') || appealType?.startsWith('RE_')) {
-      //       return 'Davlat xizmatlarini ko‘rsatish bo‘limi'
-      //     }
-      //     return category ? committeeByCategoryMap[category] || '' : ''
-      //   },
-      // },
       ...((user?.role !== UserRoles.LEGAL && user?.role !== UserRoles.INDIVIDUAL
         ? [
             {

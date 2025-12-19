@@ -19,6 +19,7 @@ import { useLegalApplicantInfo } from '@/features/application/application-detail
 import { EquipmentStickerPdf } from '@/shared/components/common/equipment-sticker-pdf'
 import { Button } from '@/shared/components/ui/button'
 import { UserRoles } from '@/entities/user'
+import { Logs } from '@/features/register/hf/ui/parts/logs'
 
 const EquipmentsDetail = () => {
   const { isLoading, data } = useEquipmentsDetail()
@@ -203,6 +204,9 @@ const EquipmentsDetail = () => {
             <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
           </DetailCardAccordion.Item>
         )}
+        <DetailCardAccordion.Item value="history" title="O‘zgartirishlar tarixi">
+          <Logs url="equipments" />
+        </DetailCardAccordion.Item>
       </DetailCardAccordion>
     </div>
   )

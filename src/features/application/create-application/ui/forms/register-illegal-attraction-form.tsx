@@ -1,183 +1,175 @@
-import { CardForm, RegisterIllegalAttractionApplicationDTO } from '@/entities/create-application'
+import { CardForm, RegisterIllegalAttractionDTO } from '@/entities/create-application'
+import { AppealFormSkeleton } from '@/features/application/create-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
+import DetailRow from '@/shared/components/common/detail-row'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { formatDate, parseISO } from 'date-fns'
-import { useCreateIllegalAttractionPassportApplication } from '@/features/application/create-application/model/use-create-illegal-attraction-passport-application.ts'
-import DetailRow from '@/shared/components/common/detail-row'
-import { useState } from 'react'
-import useAdd from '@/shared/hooks/api/useAdd'
+import { parseISO } from 'date-fns'
+import { useRegisterIllegalAttraction } from '@/features/application/create-application/model/use-create-illegal-attraction-passport-application'
 
-interface RegisterIllegalAttractionPassportFormProps {
-  onSubmit: (data: RegisterIllegalAttractionApplicationDTO) => void
+interface RegisterIllegalAttractionFormProps {
+  onSubmit: (data: RegisterIllegalAttractionDTO) => void
+  isPending?: boolean
 }
 
-export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
-  const { form, regionOptions, districtOptions, attractionNameOptions, attractionSortOptions, riskLevelOptions } =
-    useCreateIllegalAttractionPassportApplication()
-
-  const [data, setData] = useState<any>(undefined)
+export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormProps) => {
+  const {
+    form,
+    isUpdate,
+    attractionNameOptions,
+    attractionSortOptions,
+    districtOptions,
+    regionOptions,
+    riskLevelOptions,
+    ownerData,
+    isLoading,
+    isSearchLoading,
+    isSubmitPending,
+    handleSearch,
+    handleClear,
+    handleSubmit,
+  } = useRegisterIllegalAttraction(onSubmit)
 
   const identity = form.watch('identity')
   const birthDateString = form.watch('birthDate')
+  const isLegal = identity?.length === 9
+  const isIndividual = identity?.length === 14
 
-  const cleanIdentity = identity?.trim() || ''
-  const isLegal = cleanIdentity.length === 9
-  const isIndividual = cleanIdentity.length === 14
-
-  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
-
-  const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
-    '/integration/iip/individual'
-  )
-
-  const handleSearch = () => {
-    if (isLegal && !form.formState.errors.identity) {
-      legalMutateAsync({ tin: cleanIdentity })
-        .then((res) => setData(res.data))
-        .catch(() => setData(undefined))
-    } else if (isIndividual && birthDateString && !form.formState.errors.birthDate && !form.formState.errors.identity) {
-      individualMutateAsync({
-        pin: cleanIdentity,
-        birthDate: formatDate(birthDateString || new Date(), 'yyyy-MM-dd'),
-      })
-        .then((res) => setData(res.data))
-        .catch(() => setData(undefined))
-    } else {
-      form.trigger(['identity', 'birthDate']).then((r) => console.log(r))
-    }
-  }
-
-  const handleClear = () => {
-    setData(undefined)
-    form.setValue('identity', '')
-    form.setValue('birthDate', undefined as unknown as any)
+  if (isLoading) {
+    return <AppealFormSkeleton />
   }
 
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="Attraksion ro‘yxatga olish" />
+      <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
+        <GoBack title={isUpdate ? 'Attraksion maʼlumotlarini tahrirlash' : 'Attraksionni ro‘yxatga olish arizasi'} />
 
-        <CardForm className="my-2">
-          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="identity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>STIR yoki JSHSHIR</FormLabel>
-                  <FormControl>
-                    <Input
-                      className={'3xl:w-sm w-full'}
-                      placeholder="STIR yoki JSHSHIRni kiriting"
-                      disabled={!!data}
-                      maxLength={14}
-                      {...field}
-                      onChange={(e) => {
-                        const val = e.target.value.replace(/\D/g, '')
-                        e.target.value = val
-                        if (data) setData(undefined)
-                        if (val.length !== 14) {
-                          form.setValue('birthDate', undefined as unknown as any)
-                        }
-                        field.onChange(e)
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {isIndividual && (
-              <div>
+        {((isUpdate && isLegal) || !isUpdate) && (
+          <CardForm className="my-2">
+            {!isUpdate ? (
+              <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
                 <FormField
                   control={form.control}
-                  name="birthDate"
-                  render={({ field }) => {
-                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                    return (
-                      <FormItem className="3xl:w-sm w-full">
-                        <FormLabel>Tug‘ilgan sana</FormLabel>
-                        <DatePicker
-                          disabled={!!data}
+                  name="identity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>STIR yoki JSHSHIR</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={!!ownerData}
                           className="3xl:w-sm w-full"
-                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                          onChange={field.onChange}
-                          placeholder="Sanani tanlang"
+                          placeholder="STIR yoki JSHSHIRni kiriting"
+                          maxLength={14}
+                          {...field}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/\D/g, '')
+                            e.target.value = val
+                            if (ownerData) handleClear()
+                            if (val.length !== 14) {
+                              form.setValue('birthDate', undefined as any)
+                            }
+                            field.onChange(e)
+                          }}
                         />
-                        <FormMessage />
-                      </FormItem>
-                    )
-                  }}
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
+
+                {isIndividual && (
+                  <FormField
+                    control={form.control}
+                    name="birthDate"
+                    render={({ field }) => {
+                      const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                      return (
+                        <FormItem className="3xl:w-sm w-full">
+                          <FormLabel required>Tug‘ilgan sana</FormLabel>
+                          <DatePicker
+                            disabled={!!ownerData}
+                            className="3xl:w-sm w-full"
+                            value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                            onChange={field.onChange}
+                            placeholder="Sanani tanlang"
+                            disableStrategy="after"
+                          />
+                          <FormMessage />
+                        </FormItem>
+                      )
+                    }}
+                  />
+                )}
+
+                <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
+                  {!ownerData ? (
+                    <Button
+                      type="button"
+                      onClick={handleSearch}
+                      disabled={isSearchLoading || !identity || (!isLegal && !(isIndividual && birthDateString))}
+                      loading={isSearchLoading}
+                    >
+                      Qidirish
+                    </Button>
+                  ) : (
+                    <Button type="button" variant="destructive" onClick={handleClear}>
+                      O‘chirish
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ) : null}
+
+            {ownerData && (
+              <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
+                <h3 className="mb-4 text-base font-semibold text-gray-800">
+                  {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
+                </h3>
+                <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
+                  <DetailRow
+                    title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH:'}
+                    value={isLegal ? ownerData?.legalName || '-' : ownerData?.fullName || '-'}
+                  />
+                  {isLegal && (
+                    <>
+                      <DetailRow
+                        title="Tashkilot rahbari:"
+                        value={ownerData?.directorName || ownerData?.fullName || '-'}
+                      />
+                      <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
+                      <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
+                    </>
+                  )}
+                </div>
               </div>
             )}
+          </CardForm>
+        )}
 
-            <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
-              {!data ? (
-                <Button
-                  type="button"
-                  onClick={handleSearch}
-                  disabled={
-                    isLegalPending ||
-                    isIndividualPending ||
-                    !cleanIdentity ||
-                    (!isLegal && !(isIndividual && birthDateString))
-                  }
-                  loading={isLegalPending || isIndividualPending}
-                >
-                  Qidirish
-                </Button>
-              ) : (
-                <Button type="button" variant="destructive" onClick={handleClear}>
-                  O‘chirish
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {data && (
-            <div className="mt-6 border-t pt-6">
-              <h3 className="mb-4 text-lg font-semibold text-gray-800">
-                {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
-              </h3>
-              <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
-                <DetailRow
-                  title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH:'}
-                  value={data?.name || data?.fullName || '-'}
-                />
-                {isLegal && <DetailRow title="Tashkilot rahbari F.I.SH:" value={data?.directorName || '-'} />}
-                {isLegal && <DetailRow title="Manzil:" value={data?.address || data?.legalAddress || '-'} />}
-                {isLegal && <DetailRow title="Telefon raqami:" value={data?.phoneNumber || '-'} />}
-              </div>
-            </div>
-          )}
-        </CardForm>
-
-        <CardForm className="my-2">
+        <CardForm className="mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Telefon raqami</FormLabel>
-                  <FormControl>
-                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* Attraksion nomi */}
+            {!isUpdate && (
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Telefon raqami</FormLabel>
+                    <FormControl>
+                      <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="attractionName"
@@ -191,7 +183,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-            {/* Attraksion turi */}
             <FormField
               control={form.control}
               name="childEquipmentId"
@@ -199,7 +190,14 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 <FormItem>
                   <FormLabel required>Attraksion turi</FormLabel>
                   <FormControl>
-                    <Select onValueChange={(val) => field.onChange(val)} value={String(field.value || '')}>
+                    <Select
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value)
+                        }
+                      }}
+                      value={String(field.value || '')}
+                    >
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Attraksion turini tanlang" />
                       </SelectTrigger>
@@ -210,7 +208,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-            {/* Attraksion tipi */}
             <FormField
               control={form.control}
               name="childEquipmentSortId"
@@ -219,7 +216,11 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                   <FormLabel required>Attraksion tipi</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={(val) => field.onChange(val)}
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value)
+                        }
+                      }}
                       value={String(field.value || '')}
                       disabled={!form.watch('childEquipmentId')}
                     >
@@ -233,13 +234,12 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="factory"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Attraksionni ishlab chiqaruvchi zavod nomi</FormLabel>
+                  <FormLabel required>Attraksionni ishlab chiqaruvchi zavod nomi</FormLabel>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Zavod nomi" {...field} />
                   </FormControl>
@@ -247,8 +247,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-
-            {/* Ishlab chiqarilgan sana */}
             <FormField
               control={form.control}
               name="manufacturedAt"
@@ -256,7 +254,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel>Attraksion ishlab chiqarilgan sana</FormLabel>
+                    <FormLabel required>Attraksion ishlab chiqarilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -268,7 +266,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 )
               }}
             />
-            {/* Dastlabki foydalanishga qabul qilingan sana */}
             <FormField
               control={form.control}
               name="acceptedAt"
@@ -276,10 +273,11 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel>Dastlabki foydalanishga qabul qilingan sana</FormLabel>
+                    <FormLabel required>Dastlabki foydalanishga qabul qilingan sana</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
+                      disableStrategy={'after'}
                       placeholder="Sanani tanlang"
                     />
                     <FormMessage />
@@ -287,7 +285,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 )
               }}
             />
-            {/* Xizmat muddati */}
             <FormField
               control={form.control}
               name="servicePeriod"
@@ -300,19 +297,19 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
                       placeholder="Sanani tanlang"
+                      disableStrategy={'before'}
                     />
                     <FormMessage />
                   </FormItem>
                 )
               }}
             />
-            {/* Attraksion zavod raqami */}
             <FormField
               control={form.control}
               name="factoryNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Attraksion zavod raqami</FormLabel>
+                  <FormLabel required>Attraksion zavod raqami</FormLabel>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Zavod raqami" {...field} />
                   </FormControl>
@@ -320,13 +317,12 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-            {/* Ishlab chiqarilgan mamlakat */}
             <FormField
               control={form.control}
               name="country"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Attraksion ishlab chiqarilgan mamlakat</FormLabel>
+                  <FormLabel required>Attraksion ishlab chiqarilgan mamlakat</FormLabel>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Mamlakat" {...field} />
                   </FormControl>
@@ -334,7 +330,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-            {/* Viloyat va Tuman */}
             <FormField
               control={form.control}
               name="regionId"
@@ -344,8 +339,10 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                   <FormControl>
                     <Select
                       onValueChange={(v) => {
-                        field.onChange(v)
-                        form.setValue('districtId', 0)
+                        if (v) {
+                          field.onChange(v)
+                          form.setValue('districtId', 0)
+                        }
                       }}
                       value={String(field.value || '')}
                     >
@@ -367,7 +364,11 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                   <FormLabel required>Attraksion joylashgan tuman</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={(v) => field.onChange(v)}
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value)
+                        }
+                      }}
                       value={String(field.value || '')}
                       disabled={!form.watch('regionId')}
                     >
@@ -381,7 +382,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-            {/* Manzil va Geolokatsiya */}
             <FormField
               control={form.control}
               name="address"
@@ -400,9 +400,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
               name="location"
               render={({ field }) => (
                 <FormItem className="3xl:w-sm w-full">
-                  <FormLabel required>
-                    Geolokatsiya (xaritadan attraksion joylashgan joyni tanlang va koordinatalarini kiriting)
-                  </FormLabel>
+                  <FormLabel required>Geolokatsiya (xaritadan attraksion joylashgan joyni tanlang)</FormLabel>
                   <FormControl>
                     <YandexMapModal
                       initialCoords={field.value ? field.value.split(',').map(Number) : null}
@@ -413,15 +411,21 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-            {/* Biomechanik xavf darajasi (toifa) */}
             <FormField
               control={form.control}
               name="riskLevel"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel> Attraksionning biomexanik xavf darajasi</FormLabel>
+                  <FormLabel required>Attraksionning biomexanik xavf darajasi</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value)
+                        }
+                      }}
+                      value={field.value}
+                    >
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Xavf darajasini tanlang" />
                       </SelectTrigger>
@@ -435,8 +439,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
           </div>
         </CardForm>
 
-        {/* Fayl yuklash maydonlari */}
-        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
+        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-1 2xl:grid-cols-2">
           <div className="border-b pb-4">
             <FormField
               name="labelPath"
@@ -444,7 +447,9 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Attraksionning surʼati</FormLabel>
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Attraksionning surʼati
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
                     </FormControl>
@@ -461,7 +466,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                       Attraksion ishlab chiqaruvchisi tomonidan va (yoki) ixtisoslashtirilgan tashkilot tomonidan
                       tayyorlangan attraksion pasporti
                     </FormLabel>
@@ -481,7 +486,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">
                       Muvofiqlik sertifikati yoki muvofiqlik to‘g‘risidagi deklaratsiyaning nusxasi (2023 yil 28 maydan
                       so‘ng muomalaga kiritilgan attraksionlar uchun - majburiy, qolgan attraksionlar uchun - mavjud
                       bo‘lsa)
@@ -495,35 +500,17 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
             />
           </div>
 
-          <FormField
-            name="technicalJournalPath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className={'mb-2'}>
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel>
-                    Kundalik texnik xizmat ko‘rsatish attraksion ishlari boshlanishidan oldin olib boriladi. Natijalar
-                    bo‘yicha attraksionlardan xavfsiz foydalanishga javobgar shaxs attraksionni kundalik foydalanishga
-                    ruxsat berganligi to‘g‘risida jurnali.
-                  </FormLabel>
-                  <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-
           <div className="border-b pb-4">
             <FormField
-              name="seasonalInspectionPath"
+              name="technicalJournalPath"
               control={form.control}
               render={({ field }) => (
-                <FormItem className="mb-2">
+                <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>
-                      Mavsumiy foydalaniladigan attraksionlar to‘liq texnik shahodat sinovlaridan o‘tganligi to‘g‘risida
-                      ma’lumotlar.
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Kundalik texnik xizmat ko‘rsatish attraksion ishlari boshlanishidan oldin olib boriladi. Natijalar
+                      bo‘yicha attraksionlardan xavfsiz foydalanishga javobgar shaxs attraksionni kundalik foydalanishga
+                      ruxsat berganligi to‘g‘rida jurnali
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -532,7 +519,67 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
+          </div>
 
+          <div className="border-b pb-4">
+            <FormField
+              name="servicePlanPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Attraksionlarga davriy texnik xizmat ko‘rsatish attraksion egasi yoki attraksionni ijaraga olgan
+                      shaxs tomonidan tasdiqlangan reja-jadvali
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="technicalManualPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Texnik shahodat sinovlari attraksiondan foydalanish qo‘llanmasi va mazkur Qoidalar talablariga
+                      muvofiq attraksionlarni soz holatda saqlash va xavfsiz foydalanish uchun masʼul bo‘lgan mutaxassis
+                      boshchiligida amalga oshiriladi. Masʼul mutaxassis buyrug‘i
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="seasonalInspectionPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Mavsumiy foydalaniladigan attraksionlar to‘liq texnik shahodat sinovlaridan o‘tganligi to‘g‘risida
+                      maʼlumotlar
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="seasonalInspectionExpiryDate"
@@ -541,7 +588,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -564,7 +611,9 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Bog‘ attraksionining mavsumga tayyorligi to‘g‘risidagi dalolatnomasi.</FormLabel>
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Bog‘ attraksionining mavsumga tayyorligi to‘g‘risidagi dalolatnomasi
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -572,7 +621,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="seasonalReadinessActExpiryDate"
@@ -581,7 +629,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -590,7 +638,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                         placeholder="Amal qilish muddati"
                       />
                     </div>
-                    <FormMessage />
                   </FormItem>
                 )
               }}
@@ -599,14 +646,14 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
 
           <div className="border-b pb-4">
             <FormField
-              name="servicePlanPath"
+              name="technicalReadinessActPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>
-                      Attraksionlarga davriy texnik xizmat ko‘rsatish attraksion egasi yoki attraksionni ijaraga olgan
-                      shaxs tomonidan tasdiqlangan reja-jadvali.
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">
+                      Attraksionlarning texnik tayyorligi dalolatnomasi (yangi o‘rnatilgan 2023 yil 28 maydan so‘ng
+                      muomalaga kiritilgan attraksionlar uchun - majburiy, qolgan attraksionlar uchun - mavjud bo‘lsa)
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -614,73 +661,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                   </div>
                 </FormItem>
               )}
-            />
-
-            <FormField
-              control={form.control}
-              name="servicePlanExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="technicalManualPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>
-                      Texnik shahodat sinovlari attraksiondan foydalanish qo‘llanmasi va mazkur Qoidalar talablariga
-                      muvofiq attraksionlarni soz holatda saqlash va xavfsiz foydalanish uchun mas’ul bo‘lgan mutaxassis
-                      boshchiligida amalga oshiriladi. Mas’ul mutaxassis buyrug‘i
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="technicalManualExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
             />
           </div>
 
@@ -691,9 +671,9 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
                       Bog‘ xodimlarning mehnatni muhofaza qilish bo‘yicha bilimlarini sinovdan o‘tganligi to‘g‘risida
-                      ma’lumot.
+                      maʼlumot
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -702,7 +682,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="employeeSafetyKnowledgeExpiryDate"
@@ -711,7 +690,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -720,7 +699,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                         placeholder="Amal qilish muddati"
                       />
                     </div>
-                    <FormMessage />
                   </FormItem>
                 )
               }}
@@ -734,7 +712,9 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Ruxsatnoma</FormLabel>
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Ruxsatnoma
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -742,7 +722,6 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="usageRightsExpiryDate"
@@ -751,7 +730,7 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -760,30 +739,11 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                         placeholder="Amal qilish muddati"
                       />
                     </div>
-                    <FormMessage />
                   </FormItem>
                 )
               }}
             />
           </div>
-
-          <FormField
-            name="technicalReadinessActPath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel>
-                    Attraksionlarning texnik tayyorligi dalolatnomasi (yangi o‘rnatilgan 2023 yil 28 maydan so‘ng
-                    muomalaga kiritilgan attraksionlar uchun - majburiy, qolgan attraksionlar uchun - mavjud bo‘lsa)
-                  </FormLabel>
-                  <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
 
           <div className="border-b pb-4">
             <FormField
@@ -792,7 +752,9 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Attraksionni saqlashga qo’yish dalolatnomasi</FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">
+                      Attraksionni saqlashga qo’yish dalolatnomasi
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -800,63 +762,49 @@ export default ({ onSubmit }: RegisterIllegalAttractionPassportFormProps) => {
                 </FormItem>
               )}
             />
+          </div>
 
+          <div className="border-b pb-4">
             <FormField
+              name="cctvInstallationPath"
               control={form.control}
-              name="preservationActExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Video kuzatuv moslamasi o’rnatilganligi surʼati
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
             />
           </div>
 
-          <FormField
-            name="cctvInstallationPath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel>Attraksionga video kuzatuv moslamasi o’rnatilganligi surʼati</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            name="qrPath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel>Attraksionga QR kod axborot taxtachasiga o’rnatilganligi surʼati</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
+          <div className="border-b pb-4">
+            <FormField
+              name="qrPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">
+                      Attraksionga QR kod axborot taxtachasiga o’rnatilganligi surʼati
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
         </CardForm>
 
-        <Button type="submit" className="mt-5" disabled={!data}>
-          Ariza yaratish
+        <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>
+          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
         </Button>
       </form>
     </Form>

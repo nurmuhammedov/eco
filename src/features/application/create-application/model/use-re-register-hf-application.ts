@@ -64,7 +64,7 @@ export const useReRegisterHFApplication = () => {
         phoneNumber: detail.phoneNumber || '',
         upperOrganization: detail.upperOrganization || '',
         hfTypeId: detail.hfTypeId ? detail.hfTypeId : undefined,
-        regionId: detail.regionId ? detail.regionId : '',
+        regionId: detail.regionId ? String(detail.regionId) : '',
         address: detail.address || '',
         location: detail.location || '',
         extraArea: detail.extraArea || '',
@@ -86,7 +86,7 @@ export const useReRegisterHFApplication = () => {
       }))
 
       setTimeout(() => {
-        form.setValue('districtId', detail.districtId ? detail.districtId : '')
+        form.setValue('districtId', detail.districtId ? String(detail.districtId) : '')
       }, 500)
     }
   }, [detail, form])

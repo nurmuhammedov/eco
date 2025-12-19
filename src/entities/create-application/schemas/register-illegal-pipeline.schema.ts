@@ -3,117 +3,79 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
 
-export const PipelineIllegalAppealDtoSchema = z
-  .object({
-    phoneNumber: z
-      .string({ message: FORM_ERROR_MESSAGES.required })
-      .trim()
-      .refine((val) => USER_PATTERNS.phone.test(val), {
-        message: FORM_ERROR_MESSAGES.phone,
-      }),
-    identity: z
-      .string({ required_error: 'STIR yoki JSHSHIR kiritilishi shart' })
-      .min(9, 'STIR 9 xonali bo‘lishi kerak')
-      .max(14, 'JSHSHIR 14 xonali bo‘lishi kerak')
-      .regex(/^\d+$/, 'Faqat raqamlar kiritilishi kerak'),
-    birthDate: z
-      .date()
-      .optional()
-      .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-    hazardousFacilityId: z.string().uuid('XICHO ID noto‘g‘ri formatda!').optional().or(z.literal('')),
-    childEquipmentId: z
-      .string({
-        required_error: 'Quvur turini tanlanmadi!',
+export const RegisterIllegalPipelineBaseSchema = z.object({
+  phoneNumber: z
+    .string({ required_error: 'Majburiy maydon!' })
+    .trim()
+    .refine((val) => USER_PATTERNS.phone.test(val), {
+      message: FORM_ERROR_MESSAGES.phone,
+    }),
+  identity: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  birthDate: z
+    .date()
+    .optional()
+    .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+
+  hazardousFacilityId: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => (val ? val : null)),
+  childEquipmentId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  regionId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  districtId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  model: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  factory: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  location: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  partialCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  fullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  nonDestructiveCheckDate: z
+    .date({ required_error: 'Majburiy maydon!' })
+    .transform((date) => format(date, 'yyyy-MM-dd')),
+  diameter: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  thickness: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  length: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  pressure: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  environment: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+
+  labelPath: z.string().optional(),
+  saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  equipmentCertPath: z.string().optional(),
+  equipmentCertExpiryDate: z
+    .date()
+    .nullable()
+    .optional()
+    .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+  assignmentDecreePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  expertisePath: z.string().optional(),
+  expertiseExpiryDate: z
+    .date()
+    .nullable()
+    .optional()
+    .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+  installationCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  additionalFilePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  partialCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  nextPartialCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  fullCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  nextFullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+})
+
+export const pipelineRefinement = (data: any, ctx: z.RefinementCtx) => {
+  if (data.identity && data.identity.length === 14) {
+    if (!data.birthDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Majburiy maydon!',
+        path: ['birthDate'],
       })
-      .min(1, 'Quvur turini tanlanmadi!'),
-    factoryNumber: z.string().optional(),
-    regionId: z
-      .string({
-        required_error: 'Quvur joylashgan viloyat tanlanmadi!',
-      })
-      .min(1, 'Quvur joylashgan viloyat tanlanmadi!'),
-    districtId: z
-      .string({
-        required_error: 'Quvur joylashgan tuman tanlanmadi!',
-      })
-      .min(1, 'Quvur joylashgan tuman tanlanmadi!'),
-    address: z
-      .string({
-        required_error: 'Quvur joylashgan manzil kiritilmadi!',
-      })
-      .min(1, 'Quvur joylashgan manzil kiritilmadi!'),
-    model: z.string().optional(),
-    factory: z.string().optional(),
-    location: z
-      .string({
-        required_error: 'Joylashuv tanlanmadi!',
-      })
-      .min(1, 'Joylashuv tanlanmadi!'),
-    manufacturedAt: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    partialCheckDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    fullCheckDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    labelPath: z.string().optional(),
-    labelExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    saleContractPath: z.string().optional(),
-    saleContractExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    equipmentCertPath: z.string().optional(),
-    equipmentCertExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    assignmentDecreePath: z.string().optional(),
-    assignmentDecreeExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    expertisePath: z.string().optional(),
-    expertiseExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    installationCertPath: z.string().optional(),
-    installationCertExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    additionalFilePath: z.string().optional(), // Ixtiyoriy
-    additionalFileExpiryDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    nonDestructiveCheckDate: z
-      .date()
-      .optional()
-      .transform((date) => date && format(date, 'yyyy-MM-dd')),
-    diameter: z.string().optional(),
-    thickness: z.string().optional(),
-    length: z.string().optional(),
-    pressure: z.string().optional(),
-    environment: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.identity && data.identity.length === 14) {
-      if (!data.birthDate) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Tug‘ilgan sana kiritilishi shart',
-          path: ['birthDate'],
-        })
-      }
     }
-  })
+  }
+}
+
+export const RegisterIllegalPipelineSchema = RegisterIllegalPipelineBaseSchema.superRefine(pipelineRefinement)
+
+export type RegisterIllegalPipelineDTO = z.infer<typeof RegisterIllegalPipelineSchema>

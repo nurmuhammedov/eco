@@ -149,10 +149,10 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                           form.setValue('districtId', '')
                         }
                       }}
-                      value={field.value}
+                      value={field.value?.toString()}
                     >
                       <SelectTrigger className="3xl:w-sm w-full">
-                        <SelectValue placeholder="XICHO joylashgan viloyat" />
+                        <SelectValue placeholder="Viloyatni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{regionOptions}</SelectContent>
                     </Select>
@@ -174,11 +174,11 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                           field.onChange(value)
                         }
                       }}
-                      value={field.value}
+                      value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
                       <SelectTrigger className="3xl:w-sm w-full">
-                        <SelectValue placeholder="XICHO joylashgan tuman" />
+                        <SelectValue placeholder="Tumanni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
                     </Select>

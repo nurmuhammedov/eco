@@ -118,7 +118,6 @@ export function DataTable<TData, TValue>({
 
   const fixedTableStyle: React.CSSProperties = {
     width: '100%',
-    // tableLayout: 'fixed',
   }
 
   return (

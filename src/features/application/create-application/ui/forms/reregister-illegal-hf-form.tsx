@@ -80,13 +80,13 @@ export default ({ onSubmit }: { onSubmit: (data: ReRegisterIllegalHFApplicationD
           </div>
 
           {orgData && (
-            <div className="mt-6 border-t pt-6">
-              <h3 className="mb-4 text-lg font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
-              <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
-                <DetailRow title="Tashkilot nomi:" value={orgData?.legalName || '-'} />
-                <DetailRow title="Tashkilot rahbari F.I.SH:" value={orgData?.fullName || '-'} />
-                <DetailRow title="Tashkilot manzili:" value={orgData?.legalAddress || '-'} />
-                <DetailRow title="Tashkilot telefon raqami:" value={orgData?.phoneNumber || '-'} />
+            <div className="mt-3 border-t pt-3">
+              <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
+              <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
+                <DetailRow title={'Tashkilot nomi:'} value={orgData?.legalName || '-'} />
+                <DetailRow title="Tashkilot rahbari:" value={orgData?.fullName || '-'} />
+                <DetailRow title="Manzil:" value={orgData?.address || orgData?.legalAddress || '-'} />
+                <DetailRow title="Telefon raqami:" value={orgData?.phoneNumber || '-'} />
               </div>
             </div>
           )}
@@ -203,10 +203,10 @@ export default ({ onSubmit }: { onSubmit: (data: ReRegisterIllegalHFApplicationD
                           form.setValue('districtId', '')
                         }
                       }}
-                      value={field.value}
+                      value={field.value?.toString()}
                     >
                       <SelectTrigger className="3xl:w-sm w-full">
-                        <SelectValue placeholder="XICHO joylashgan viloyat" />
+                        <SelectValue placeholder="Viloyatni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{regionOptions}</SelectContent>
                     </Select>
@@ -228,11 +228,11 @@ export default ({ onSubmit }: { onSubmit: (data: ReRegisterIllegalHFApplicationD
                           field.onChange(value)
                         }
                       }}
-                      value={field.value}
+                      value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
                       <SelectTrigger className="3xl:w-sm w-full">
-                        <SelectValue placeholder="XICHO joylashgan tuman" />
+                        <SelectValue placeholder="Tumanni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
                     </Select>

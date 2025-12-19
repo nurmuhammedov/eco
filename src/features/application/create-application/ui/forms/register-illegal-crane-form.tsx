@@ -1,202 +1,177 @@
-import { CardForm, RegisterIllegalCraneApplicationDTO } from '@/entities/create-application'
-import { NoteForm } from '@/features/application/create-application'
+import { CardForm, RegisterIllegalCraneDTO } from '@/entities/create-application'
+import { AppealFormSkeleton, NoteForm } from '@/features/application/create-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
+import DetailRow from '@/shared/components/common/detail-row'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
-import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
+import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { formatDate, parseISO } from 'date-fns'
-import { useCreateIllegalCraneApplication } from '@/features/application/create-application/model/use-create-illegal-crane-application.ts'
-import { useMemo, useState } from 'react'
-import useAdd from '@/shared/hooks/api/useAdd'
-import { useQuery } from '@tanstack/react-query'
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
-import { getSelectOptions } from '@/shared/lib/get-select-options'
-import DetailRow from '@/shared/components/common/detail-row'
+import { parseISO } from 'date-fns'
+import { useRegisterIllegalCrane } from '@/features/application/create-application/model/use-create-illegal-crane-application'
 
-interface RegisterCraneFormProps {
-  onSubmit: (data: RegisterIllegalCraneApplicationDTO) => void
+interface RegisterIllegalCraneFormProps {
+  onSubmit: (data: RegisterIllegalCraneDTO) => void
+  isPending?: boolean
 }
 
-export default ({ onSubmit }: RegisterCraneFormProps) => {
-  const { form, childEquipmentOptions, districtOptions, regionOptions } = useCreateIllegalCraneApplication()
-
-  const [data, setData] = useState<any>(undefined)
+export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) => {
+  const {
+    form,
+    isUpdate,
+    childEquipmentOptions,
+    districtOptions,
+    regionOptions,
+    hazardousFacilitiesOptions,
+    ownerData,
+    isLoading,
+    isSearchLoading,
+    isSubmitPending,
+    handleSearch,
+    handleClear,
+    handleSubmit,
+  } = useRegisterIllegalCrane(onSubmit)
 
   const identity = form.watch('identity')
   const birthDateString = form.watch('birthDate')
+  const isLegal = identity?.length === 9
+  const isIndividual = identity?.length === 14
 
-  const cleanIdentity = identity?.trim() || ''
-  const isLegal = cleanIdentity.length === 9
-  const isIndividual = cleanIdentity.length === 14
-
-  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
-
-  const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
-    '/integration/iip/individual'
-  )
-
-  const { data: hfoOptions } = useQuery({
-    queryKey: ['hfoSelect', cleanIdentity],
-    queryFn: () => getHfoByTinSelect(cleanIdentity),
-    enabled: isLegal && !!data,
-    retry: 1,
-  })
-
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoOptions || []), [hfoOptions])
-
-  const handleSearch = () => {
-    if (isLegal && !form.formState.errors.identity) {
-      legalMutateAsync({ tin: cleanIdentity })
-        .then((res) => setData(res.data))
-        .catch(() => setData(undefined))
-    } else if (isIndividual && birthDateString && !form.formState.errors.birthDate && !form.formState.errors.identity) {
-      individualMutateAsync({
-        pin: cleanIdentity,
-        birthDate: formatDate(birthDateString || new Date(), 'yyyy-MM-dd'),
-      })
-        .then((res) => setData(res.data))
-        .catch(() => setData(undefined))
-    } else {
-      form.trigger(['identity', 'birthDate']).then((r) => console.log(r))
-    }
-  }
-
-  const handleClear = () => {
-    setData(undefined)
-    form.setValue('identity', '')
-    form.setValue('birthDate', undefined as unknown as string)
-    form.setValue('hazardousFacilityId', undefined)
+  if (isLoading) {
+    return <AppealFormSkeleton />
   }
 
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="Kranni ro‘yxatga olish arizasi" />
+      <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
+        <GoBack title={isUpdate ? 'Kran maʼlumotlarini tahrirlash' : 'Kranni ro‘yxatga olish arizasi'} />
         <NoteForm equipmentName="kran" />
 
-        <CardForm className="my-2">
-          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="identity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>STIR yoki JSHSHIR</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={!!data}
-                      className="3xl:w-sm w-full"
-                      placeholder="STIR yoki JSHSHIRni kiriting"
-                      maxLength={14}
-                      {...field}
-                      onChange={(e) => {
-                        const val = e.target.value.replace(/\D/g, '')
-                        e.target.value = val
-                        if (data) setData(undefined)
-                        form.setValue('hazardousFacilityId', undefined)
-                        if (val.length !== 14) {
-                          form.setValue('birthDate', undefined as unknown as string)
-                        }
-                        field.onChange(e)
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {isIndividual && (
-              <FormField
-                control={form.control}
-                name="birthDate"
-                render={({ field }) => {
-                  const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                  return (
-                    <FormItem className="3xl:w-sm w-full">
-                      <FormLabel required>Tug‘ilgan sana</FormLabel>
-                      <DatePicker
-                        disabled={!!data}
-                        className="3xl:w-sm w-full"
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        placeholder="Sanani tanlang"
-                        disableStrategy="after"
-                      />
+        {((isUpdate && isLegal) || !isUpdate) && (
+          <CardForm className="my-2">
+            {!isUpdate ? (
+              <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+                <FormField
+                  control={form.control}
+                  name="identity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>STIR yoki JSHSHIR</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={!!ownerData}
+                          className="3xl:w-sm w-full"
+                          placeholder="STIR yoki JSHSHIRni kiriting"
+                          maxLength={14}
+                          {...field}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/\D/g, '')
+                            e.target.value = val
+                            if (ownerData) handleClear()
+                            if (val.length !== 14) {
+                              form.setValue('birthDate', undefined as any)
+                            }
+                            field.onChange(e)
+                          }}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )
-                }}
-              />
-            )}
-
-            <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
-              {!data ? (
-                <Button
-                  type="button"
-                  onClick={handleSearch}
-                  disabled={
-                    isLegalPending ||
-                    isIndividualPending ||
-                    !cleanIdentity ||
-                    (!isLegal && !(isIndividual && birthDateString))
-                  }
-                  loading={isLegalPending || isIndividualPending}
-                >
-                  Qidirish
-                </Button>
-              ) : (
-                <Button type="button" variant="destructive" onClick={handleClear}>
-                  O‘chirish
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {data && (
-            <div className="mt-6 border-t pt-6">
-              <h3 className="mb-4 text-lg font-semibold text-gray-800">
-                {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
-              </h3>
-              <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
-                <DetailRow
-                  title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH:'}
-                  value={data?.name || data?.fullName || '-'}
+                  )}
                 />
-                {isLegal && (
-                  <>
-                    <DetailRow title="Tashkilot rahbari:" value={data?.directorName || '-'} />
-                    <DetailRow title="Manzil:" value={data?.address || data?.legalAddress || '-'} />
-                  </>
+
+                {isIndividual && (
+                  <FormField
+                    control={form.control}
+                    name="birthDate"
+                    render={({ field }) => {
+                      const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                      return (
+                        <FormItem className="3xl:w-sm w-full">
+                          <FormLabel required>Tug‘ilgan sana</FormLabel>
+                          <DatePicker
+                            disabled={!!ownerData}
+                            className="3xl:w-sm w-full"
+                            value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                            onChange={field.onChange}
+                            placeholder="Sanani tanlang"
+                            disableStrategy="after"
+                          />
+                          <FormMessage />
+                        </FormItem>
+                      )
+                    }}
+                  />
                 )}
+
+                <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
+                  {!ownerData ? (
+                    <Button
+                      type="button"
+                      onClick={handleSearch}
+                      disabled={isSearchLoading || !identity || (!isLegal && !(isIndividual && birthDateString))}
+                      loading={isSearchLoading}
+                    >
+                      Qidirish
+                    </Button>
+                  ) : (
+                    <Button type="button" variant="destructive" onClick={handleClear}>
+                      O‘chirish
+                    </Button>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-        </CardForm>
+            ) : null}
+
+            {ownerData && (
+              <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
+                <h3 className="mb-4 text-base font-semibold text-gray-800">
+                  {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
+                </h3>
+                <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
+                  <DetailRow
+                    title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH:'}
+                    value={isLegal ? ownerData?.legalName || '-' : ownerData?.fullName || '-'}
+                  />
+                  {isLegal && (
+                    <>
+                      <DetailRow
+                        title="Tashkilot rahbari:"
+                        value={ownerData?.directorName || ownerData?.fullName || '-'}
+                      />
+                      <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
+                      <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+          </CardForm>
+        )}
 
         <CardForm className="mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Telefon raqami</FormLabel>
-                  <FormControl>
-                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {!isUpdate && (
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Telefon raqami</FormLabel>
+                    <FormControl>
+                      <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
-            {isLegal && !!data && (
+            {isLegal && (
               <FormField
                 control={form.control}
                 name="hazardousFacilityId"
@@ -224,7 +199,14 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 <FormItem>
                   <FormLabel required>Kran turini tanlang</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value)
+                        }
+                      }}
+                      value={field.value}
+                    >
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Kran turini tanlang" />
                       </SelectTrigger>
@@ -240,7 +222,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="factoryNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Kranning zavod raqami</FormLabel>
+                  <FormLabel required>Kranning zavod raqami</FormLabel>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Kranning zavod raqami" {...field} />
                   </FormControl>
@@ -253,7 +235,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="factory"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ishlab chiqargan zavod nomi</FormLabel>
+                  <FormLabel required>Ishlab chiqargan zavod nomi</FormLabel>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Ishlab chiqargan zavod nomi" {...field} />
                   </FormControl>
@@ -266,7 +248,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="model"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Model, marka</FormLabel>
+                  <FormLabel required>Model, marka</FormLabel>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Model, marka" {...field} />
                   </FormControl>
@@ -279,7 +261,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="boomLength"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Strelasining uzunligi (m)</FormLabel>
+                  <FormLabel required>Strelasining uzunligi (m)</FormLabel>
                   <FormControl>
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Strelasining uzunligi" {...field} />
                   </FormControl>
@@ -292,7 +274,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               name="liftingCapacity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Yuk koʻtara olish quvvati (tonna)</FormLabel>
+                  <FormLabel required>Yuk koʻtara olish quvvati (tonna)</FormLabel>
                   <FormControl>
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Yuk koʻtara olish quvvati" {...field} />
                   </FormControl>
@@ -307,7 +289,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel>Ishlab chiqarilgan sana</FormLabel>
+                    <FormLabel required>Ishlab chiqarilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -326,8 +308,9 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel>Qisman texnik koʻrikdan o‘tkazilgan sana</FormLabel>
+                    <FormLabel required>Qisman texnik koʻrikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
+                      disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
                       placeholder="Sanani tanlang"
@@ -344,8 +327,9 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel>Toʻliq texnik koʻrikdan o‘tkazilgan sana</FormLabel>
+                    <FormLabel required>Toʻliq texnik koʻrikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
+                      disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
                       placeholder="Sanani tanlang"
@@ -389,7 +373,11 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                   <FormLabel required>Kran joylashgan tuman</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => {
+                        if (value) {
+                          field.onChange(value)
+                        }
+                      }}
                       value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
@@ -435,7 +423,8 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
             />
           </div>
         </CardForm>
-        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
+
+        <CardForm className="mb-2 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <div className="border-b pb-4">
             <FormField
               name="labelPath"
@@ -443,12 +432,13 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Kranning birkasi bilan surʼati</FormLabel>
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Kranning birkasi bilan surʼati
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
                     </FormControl>
                   </div>
-                  <FormMessage className="text-right" />
                 </FormItem>
               )}
             />
@@ -461,118 +451,15 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sotib olish-sotish shartnomasi</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                  <FormMessage className="text-right" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="saleContractExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="equipmentCertPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilma sertifikati</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                  <FormMessage className="text-right" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="equipmentCertExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="assignmentDecreePath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                      Masʼul shaxs tayinlanganligi to‘g‘risida buyruq
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Sotib olish-sotish shartnomasi
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
                   </div>
-                  <FormMessage className="text-right" />
                 </FormItem>
               )}
-            />
-            <FormField
-              control={form.control}
-              name="assignmentDecreeExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
             />
           </div>
 
@@ -588,7 +475,6 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
                   </div>
-                  <FormMessage className="text-right" />
                 </FormItem>
               )}
             />
@@ -628,25 +514,98 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
                   </div>
-                  <FormMessage className="text-right" />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="assignmentDecreePath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Masʼul shaxs tayinlanganligi to‘g‘risida buyruq
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="equipmentCertPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilma sertifikati</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="additionalFilePath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Kranning pasporti
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="partialCheckPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Kranning qisman texnik ko‘rikdan o‘tkazilganligi
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="installationCertExpiryDate"
+              name="nextPartialCheckDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Navbatdagi qisman texnik ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -658,35 +617,36 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
 
           <div className="border-b pb-4">
             <FormField
-              name="additionalFilePath"
+              name="fullCheckPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qoʻshimcha maʼlumotlar</FormLabel>
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Kranning to‘liq texnik ko‘rikdan o‘tkazilganligi
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
                   </div>
-                  <FormMessage className="text-right" />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="additionalFileExpiryDate"
+              name="nextFullCheckDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Navbatdagi to‘liq texnik ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -696,8 +656,9 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
             />
           </div>
         </CardForm>
-        <Button type="submit" className="mt-5" disabled={!data}>
-          Ariza yaratish
+
+        <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>
+          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
         </Button>
       </form>
     </Form>

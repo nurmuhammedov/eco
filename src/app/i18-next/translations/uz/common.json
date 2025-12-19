@@ -118,7 +118,8 @@
     "BOILER": "Qozon",
     "CHEMISTRY": "Kimyo",
     "COAL": "Koʻmir",
-    "GEOLOGY": "Geologiya"
+    "GEOLOGY": "Geologiya",
+    "OTHERS": "Boshqalar"
   },
   "attestation": {
     "EMPLOYEE": "Xodim",

@@ -5,14 +5,14 @@ import { useParams } from 'react-router-dom'
 import { format } from 'date-fns'
 import FileLink from '@/shared/components/common/file-link'
 
-export const Logs = () => {
+export const Logs = ({ url = 'hf' }: any) => {
   const { id } = useParams()
 
   const {
     paramsObject: { page = 1, size = 10 },
   } = useCustomSearchParams()
 
-  const { data = [] } = usePaginatedData<any>(`/hf/${id}/logs`, {
+  const { data = [] } = usePaginatedData<any>(`/${url}/${id}/logs`, {
     page,
     size,
   })

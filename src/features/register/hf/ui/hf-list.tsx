@@ -114,7 +114,7 @@ export const HfList = () => {
     },
     {
       id: 'actions',
-      maxSize: user?.role === UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN ? 70 : 40,
+      maxSize: user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN ? 75 : 50,
       cell: ({ row }) => (
         <DataTableRowActions
           showView

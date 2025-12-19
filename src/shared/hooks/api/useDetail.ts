@@ -10,7 +10,7 @@ const useDetail = <T>(
   id?: string | number | boolean | null,
   enabled: boolean = true,
   params?: ISearchParams,
-  staleTime: number = 600000
+  staleTime: number = 0
 ) => {
   const { i18n } = useTranslation()
   const { user } = useAuth()

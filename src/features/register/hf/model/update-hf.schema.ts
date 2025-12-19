@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import { HFSphereEnum } from '@/entities/create-application'
 
 export const UpdateHFSchema = z.object({
   name: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
@@ -15,7 +14,22 @@ export const UpdateHFSchema = z.object({
   hfTypeId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   extraArea: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   hazardousSubstance: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  spheres: z.array(HFSphereEnum, { required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  spheres: z
+    .array(z.string({ required_error: 'Majburiy maydon!' }))
+    .min(1, 'Majburiy maydon!')
+    .default([]),
+  managerCount: z
+    .string({ required_error: 'Majburiy maydon!' })
+    .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
+    .min(1, 'Majburiy maydon!'),
+  engineerCount: z
+    .string({ required_error: 'Majburiy maydon!' })
+    .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
+    .min(1, 'Majburiy maydon!'),
+  workerCount: z
+    .string({ required_error: 'Majburiy maydon!' })
+    .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
+    .min(1, 'Majburiy maydon!'),
 
   identificationCardPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   receiptPath: z

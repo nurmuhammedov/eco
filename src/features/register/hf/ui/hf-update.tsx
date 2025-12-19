@@ -31,9 +31,6 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
     return <AppealFormSkeleton />
   }
 
-  console.log(form.formState.errors)
-  console.log(form.getValues())
-
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
@@ -41,11 +38,11 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
         {orgData && (
           <CardForm className="my-2">
             <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
-            <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
-              <DetailRow title="Tashkilot nomi:" value={orgData?.legalName || '-'} />
-              <DetailRow title="Tashkilot rahbari F.I.SH:" value={orgData?.fullName || '-'} />
-              <DetailRow title="Tashkilot manzili:" value={orgData?.legalAddress || '-'} />
-              <DetailRow title="Tashkilot telefon raqami:" value={orgData?.phoneNumber || '-'} />
+            <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
+              <DetailRow title={'Tashkilot nomi:'} value={orgData?.legalName || '-'} />
+              <DetailRow title="Tashkilot rahbari:" value={orgData?.fullName || '-'} />
+              <DetailRow title="Manzil:" value={orgData?.address || orgData?.legalAddress || '-'} />
+              <DetailRow title="Telefon raqami:" value={orgData?.phoneNumber || '-'} />
             </div>
           </CardForm>
         )}
@@ -110,13 +107,12 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="regionId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Viloyat</FormLabel>
+                  <FormLabel required>XICHO joylashgan viloyat</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={(value) => {
@@ -125,7 +121,7 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
                           form.setValue('districtId', '')
                         }
                       }}
-                      value={field.value}
+                      value={field.value?.toString()}
                     >
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Viloyatni tanlang" />
@@ -137,13 +133,12 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="districtId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Tuman</FormLabel>
+                  <FormLabel required>XICHO joylashgan tuman</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={(value) => {
@@ -151,7 +146,7 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
                           field.onChange(value)
                         }
                       }}
-                      value={field.value}
+                      value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
                       <SelectTrigger className="3xl:w-sm w-full">
@@ -164,7 +159,6 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="address"
@@ -242,6 +236,48 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
                       maxDisplayItems={10}
                       placeholder="Tarmoqlarni tanlang"
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="managerCount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Rahbar xodimlar soni</FormLabel>
+                  <FormControl>
+                    <Input className="3xl:w-sm w-full" placeholder="Kiriting" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="engineerCount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Muhandis-texnik xodimlar soni</FormLabel>
+                  <FormControl>
+                    <Input className="3xl:w-sm w-full" placeholder="Kiriting" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="workerCount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Oddiy ishchi xodimlar soni</FormLabel>
+                  <FormControl>
+                    <Input className="3xl:w-sm w-full" placeholder="Kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -489,7 +525,7 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
         </CardForm>
 
         <Button type="submit" loading={isPending}>
-          Tahrirlash
+          Saqlash
         </Button>
       </form>
     </Form>

@@ -58,35 +58,30 @@ export const IrsList = () => {
   const columns: ExtendedColumnDef<any, any>[] = [
     {
       header: 'INM hisobga olish sanasi',
-      maxSize: 120,
       accessorFn: (row) => getDate(row.registrationDate),
       filterKey: 'registrationDate',
       filterType: 'date-range',
     },
     {
       header: 'INM ro‘yxat raqami',
-      maxSize: 120,
       accessorFn: (row) => row?.registryNumber,
       filterKey: 'registryNumber',
       filterType: 'search',
     },
     {
       header: 'Tashkilot nomi',
-      minSize: 220,
       accessorFn: (row) => row?.legalName,
       filterKey: 'legalName',
       filterType: 'search',
     },
     {
       header: 'Tashkilot manzili',
-      minSize: 220,
       accessorFn: (row) => row?.legalAddress,
       filterKey: 'legalAddress',
       filterType: 'search',
     },
     {
       header: 'Tashkilot STIR',
-      maxSize: 120,
       accessorFn: (row) => row?.legalTin,
       filterKey: 'legalTin',
       filterType: 'search',
@@ -99,7 +94,6 @@ export const IrsList = () => {
     },
     {
       header: 'Kategoriyasi',
-      maxSize: 110,
       accessorFn: (row) => row?.category,
       filterKey: 'category',
       filterType: 'select',
@@ -110,7 +104,6 @@ export const IrsList = () => {
     },
     {
       header: 'Aktivligi',
-      maxSize: 100,
       accessorFn: (row) => row?.activity,
       filterKey: 'activity',
       filterType: 'search',
@@ -123,7 +116,6 @@ export const IrsList = () => {
     },
     {
       header: 'Radionuklid belgisi',
-      maxSize: 100,
       accessorFn: (row) => row?.symbol,
       filterKey: 'symbol',
       filterType: 'search',

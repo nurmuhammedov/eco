@@ -32,7 +32,6 @@ export const useUpdateHF = () => {
       extraArea: '',
       hazardousSubstance: '',
       spheres: [],
-
       identificationCardPath: undefined,
       receiptPath: undefined,
       insurancePolicyPath: undefined,
@@ -71,36 +70,38 @@ export const useUpdateHF = () => {
     if (detail) {
       const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
 
-      form.reset({
+      form.reset((p) => ({
+        ...p,
         name: detail.name || '',
         upperOrganization: detail.upperOrganization || '',
-        hfTypeId: detail.hfTypeId ? String(detail.hfTypeId) : undefined,
-        regionId: detail.regionId ? String(detail.regionId) : undefined,
+        hfTypeId: detail.hfTypeId ? String(detail.hfTypeId) : 'undefined',
+        regionId: detail.regionId ? String(detail.regionId) : '',
         address: detail.address || '',
         location: detail.location || '',
         extraArea: detail.extraArea || '',
         hazardousSubstance: detail.hazardousSubstance || '',
+        managerCount: detail.managerCount || '',
+        engineerCount: detail.engineerCount || '',
+        workerCount: detail.workerCount || '',
         spheres: detail.spheres || [],
         identificationCardPath: detail.files?.identificationCardPath?.path || '',
         receiptPath: detail.files?.receiptPath?.path || '',
         insurancePolicyPath: detail.files?.insurancePolicyPath?.path || '',
-        insurancePolicyExpiryDate: parseDate(detail.files?.insurancePolicyPath?.expiryDate),
+        insurancePolicyExpiryDate: parseDate(detail.files?.insurancePolicyPath?.expiryDate) as unknown as Date,
         cadastralPassportPath: detail.files?.cadastralPassportPath?.path || '',
         projectDocumentationPath: detail.files?.projectDocumentationPath?.path || '',
         licensePath: detail.files?.licensePath?.path || '',
-        licenseExpiryDate: parseDate(detail.files?.licensePath?.expiryDate),
+        licenseExpiryDate: parseDate(detail.files?.licensePath?.expiryDate) as unknown as Date,
         expertOpinionPath: detail.files?.expertOpinionPath?.path || '',
         appointmentOrderPath: detail.files?.appointmentOrderPath?.path || '',
         permitPath: detail.files?.permitPath?.path || '',
-        permitExpiryDate: parseDate(detail.files?.permitPath?.expiryDate),
+        permitExpiryDate: parseDate(detail.files?.permitPath?.expiryDate) as unknown as Date,
         industrialSafetyDeclarationPath: detail.files?.industrialSafetyDeclarationPath?.path || '',
-      })
+      }))
 
-      if (detail.districtId) {
-        setTimeout(() => {
-          form.setValue('districtId', String(detail.districtId))
-        }, 500)
-      }
+      setTimeout(() => {
+        form.setValue('districtId', detail.districtId ? String(detail.districtId) : '')
+      }, 500)
     }
   }, [detail, form])
 

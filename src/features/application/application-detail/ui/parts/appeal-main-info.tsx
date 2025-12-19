@@ -18,10 +18,8 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
       <DetailRow title={t(`labels.${type}.upperOrganization`)} value={data?.upperOrganization} />
       <DetailRow title={t(`labels.${type}.name`)} value={data?.name} />
       <DetailRow title={t(`labels.${type}.parentOrganization`)} value={data?.parentOrganization} />
-
       <DetailRow title={t(`labels.${type}.supervisorName`)} value={data?.supervisorName} />
       <DetailRow title={t(`labels.${type}.supervisorPosition`)} value={data?.supervisorPosition} />
-
       <DetailRow title={t(`labels.${type}.supervisorStatus`)} value={data?.supervisorStatus} />
       <DetailRow title={t(`labels.${type}.supervisorEducation`)} value={data?.supervisorEducation} />
       <DetailRow title={t(`labels.${type}.supervisorPhoneNumber`)} value={data?.supervisorPhoneNumber} />
@@ -100,6 +98,9 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
       <DetailRow title={t(`labels.${type}.fuel`)} value={data?.parameters?.fuel} />
       <DetailRow title={t(`labels.${type}.sphere`)} value={data?.sphere} />
       <DetailRow title={t(`oldRegistryNumber`)} value={data?.registryNumber || ''} />
+      <DetailRow title={t(`Rahbar xodimlar soni`)} value={data?.managerCount || ''} />
+      <DetailRow title={t(`Muhandis-texnik xodimlar soni`)} value={data?.engineerCount || ''} />
+      <DetailRow title={t(`Oddiy ishchi xodimlar soni`)} value={data?.workerCount || ''} />
     </div>
   )
 }

@@ -31,7 +31,6 @@ export const useReRegisterIllegalHFApplication = () => {
       location: '',
       extraArea: '',
       hazardousSubstance: '',
-
       identificationCardPath: undefined,
       receiptPath: undefined,
       insurancePolicyPath: undefined,
@@ -77,20 +76,20 @@ export const useReRegisterIllegalHFApplication = () => {
       const currentId = form.getValues('hazardousFacilityId')
       const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
 
-      form.reset({
+      form.reset((p) => ({
+        ...p,
         legalTin: currentTin,
         hazardousFacilityId: currentId,
         name: detail.name || '',
         phoneNumber: detail.phoneNumber || '',
         upperOrganization: detail.upperOrganization || '',
         hfTypeId: detail.hfTypeId ? detail.hfTypeId : undefined,
-        regionId: detail.regionId ? detail.regionId : '',
+        regionId: detail.regionId ? String(detail.regionId) : '',
         address: detail.address || '',
         location: detail.location || '',
         extraArea: detail.extraArea || '',
         hazardousSubstance: detail.hazardousSubstance || '',
         spheres: detail.spheres || [],
-
         identificationCardPath: detail.files?.identificationCardPath?.path || '',
         receiptPath: detail.files?.receiptPath?.path || '',
         insurancePolicyPath: detail.files?.insurancePolicyPath?.path || '',
@@ -104,10 +103,10 @@ export const useReRegisterIllegalHFApplication = () => {
         permitPath: detail.files?.permitPath?.path || '',
         permitExpiryDate: parseDate(detail.files?.permitPath?.expiryDate),
         industrialSafetyDeclarationPath: detail.files?.industrialSafetyDeclarationPath?.path || '',
-      })
+      }))
 
       setTimeout(() => {
-        form.setValue('districtId', detail.districtId ? detail.districtId : '')
+        form.setValue('districtId', detail.districtId ? String(detail.districtId) : '')
       }, 500)
     }
   }, [detail, form])

@@ -8,9 +8,13 @@ import { useNavigate } from 'react-router-dom'
 import useData from '@/shared/hooks/api/useData'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
+import { UserRoles } from '@/entities/user'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 export const EquipmentsList = () => {
   const navigate = useNavigate()
+  const { user } = useAuth()
+
   const {
     paramsObject: {
       status = ApplicationStatus.ALL,
@@ -34,14 +38,14 @@ export const EquipmentsList = () => {
   } = useCustomSearchParams()
 
   const { data, isLoading } = usePaginatedData<any>(`/equipments`, {
+    status: status !== 'ALL' ? status : '',
+    type: type !== 'ALL' ? type : '',
     page,
     size,
     search,
     regionId,
     districtId,
     mode,
-    type: type !== 'ALL' ? type : '',
-    status: status !== 'ALL' ? status : '',
     registryNumber,
     childEquipmentId,
     ownerName,
@@ -60,6 +64,10 @@ export const EquipmentsList = () => {
 
   const handleViewApplication = (id: string) => {
     navigate(`${id}/equipments`)
+  }
+
+  const handleEditApplication = (id: string, type: string, tin: string) => {
+    navigate(`/applications/create/ILLEGAL_REGISTER_${type}?id=${id}&tin=${tin}`)
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [
@@ -127,9 +135,16 @@ export const EquipmentsList = () => {
     },
     {
       id: 'actions',
-      maxSize: 50,
+      maxSize: user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN ? 75 : 50,
       cell: ({ row }) => (
-        <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
+        <DataTableRowActions
+          showView
+          showEdit={user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN}
+          row={row}
+          showDelete
+          onView={(row) => handleViewApplication(row.original.id)}
+          onEdit={(row) => handleEditApplication(row.original.id, row.original.type, row.original.ownerIdentity)}
+        />
       ),
     },
   ]
