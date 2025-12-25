@@ -32,8 +32,16 @@ export const useRegisterIllegalCableway = (externalSubmit?: (data: RegisterIlleg
 
   const formSchema = isUpdate
     ? RegisterIllegalCablewayBaseSchema.extend({
-        phoneNumber: z.string().optional(),
-        birthDate: z.string().optional(),
+        phoneNumber: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        birthDate: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
       }).superRefine(cablewayRefinement)
     : RegisterIllegalCablewaySchema
 
@@ -65,7 +73,7 @@ export const useRegisterIllegalCableway = (externalSubmit?: (data: RegisterIlleg
       expertisePath: undefined,
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
+      passportPath: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
     },
@@ -148,7 +156,7 @@ export const useRegisterIllegalCableway = (externalSubmit?: (data: RegisterIlleg
         expertiseExpiryDate: parseDate(detail.files?.expertisePath?.expiryDate),
         installationCertPath: detail.files?.installationCertPath?.path,
         fullCheckPath: detail.files?.fullCheckPath?.path,
-        additionalFilePath: detail.files?.passportPath?.path,
+        passportPath: detail.files?.passportPath?.path,
         nextFullCheckDate: parseDate(detail.files?.fullCheckPath?.expiryDate),
       } as any)
 
@@ -191,7 +199,7 @@ export const useRegisterIllegalCableway = (externalSubmit?: (data: RegisterIlleg
     if (isUpdate) {
       const updatePayload = {
         ...data,
-        passportPath: data.additionalFilePath,
+        passportPath: data.passportPath,
       }
 
       updateMutate(updatePayload, {

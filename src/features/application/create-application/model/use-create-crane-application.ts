@@ -40,7 +40,7 @@ export const useCreateCraneApplication = () => {
       expertisePath: undefined,
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
+      passportPath: undefined,
       partialCheckPath: undefined,
       nextPartialCheckDate: undefined,
       fullCheckPath: undefined,

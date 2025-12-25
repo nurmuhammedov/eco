@@ -22,6 +22,8 @@ import { parseISO } from 'date-fns'
 import { useUpdateHF } from '@/features/register/hf/hooks/use-update-hf'
 import { UpdateHFDTO } from '@/features/register/hf/model/update-hf.schema'
 import { AppealFormSkeleton } from '@/features/application/create-application'
+import { Alert, AlertTitle } from '@/shared/components/ui/alert'
+import { TriangleAlert } from 'lucide-react'
 
 export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO) => void; isPending?: boolean }) => {
   const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions, orgData, isLoading } =
@@ -35,6 +37,13 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="XICHOni maʼlumotlarini o‘zgartirish" />
+        <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
+          <TriangleAlert className="size-4 !text-yellow-600" />
+          <AlertTitle className="text-yellow-700">
+            Maʼlumotlar lotin harfida kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
+            yuboriladi!
+          </AlertTitle>
+        </Alert>
         {orgData && (
           <CardForm className="my-2">
             <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>

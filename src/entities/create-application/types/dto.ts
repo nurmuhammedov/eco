@@ -2,7 +2,6 @@
 import {
   BoilerAppealDtoSchema,
   BoilerUtilizerAppealDtoSchema,
-  BoilerUtilizerIllegalAppealDtoSchema,
   CablewayAppealDtoSchema,
   ChemicalContainerAppealDtoSchema,
   ContainerAppealDtoSchema,
@@ -23,13 +22,7 @@ import { z } from 'zod'
 import { DeRegisterEquipmentSchema } from '@/entities/create-application/schemas/de-register-equipment'
 import { ReRegisterEquipmentSchema } from '@/entities/create-application/schemas/re-register-equipment.schema'
 import { RegisterIllegalHFSchema } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
-import {
-  AttractionAppealDtoSchema,
-  HoistIllegalAppealDtoSchema,
-  LpgContainerIllegalAppealDtoSchema,
-  LpgPoweredIllegalAppealDtoSchema,
-} from '@/entities/create-application'
-import { CablewayIllegalAppealDtoSchema } from '@/entities/create-application/schemas/register-illegal-cableway.schema.ts'
+import { AttractionAppealDtoSchema } from '@/entities/create-application'
 import { DeRegisterHFSchema } from '@/entities/create-application/schemas/de-register-hf.schema.ts'
 import { ReRegisterHFSchema } from '@/entities/create-application/schemas/re-register-hf.schema'
 import { ReRegisterIllegalHFSchema } from '@/entities/create-application/schemas/re-register-illegal-hf.schema'
@@ -57,9 +50,4 @@ export type CreateAttractionApplicationDTO = z.infer<typeof AttractionAppealDtoS
 export type DeRegisterEquipmentDTO = z.infer<typeof DeRegisterEquipmentSchema>
 export type ReRegisterEquipmentDTO = z.infer<typeof ReRegisterEquipmentSchema>
 export type RegisterIllegalHFSchemaDTO = z.infer<typeof RegisterIllegalHFSchema>
-export type RegisterIllegalBoilerUtilizerApplicationDTO = z.infer<typeof BoilerUtilizerIllegalAppealDtoSchema>
-export type RegisterIllegalLpgContainerApplicationDTO = z.infer<typeof LpgContainerIllegalAppealDtoSchema>
-export type RegisterIllegalLpgPoweredAppApplicationDTO = z.infer<typeof LpgPoweredIllegalAppealDtoSchema>
-export type RegisterIllegalHoistAppApplicationDTO = z.infer<typeof HoistIllegalAppealDtoSchema>
-export type RegisterIllegalCablewayAppApplicationDTO = z.infer<typeof CablewayIllegalAppealDtoSchema>
 export type DeRegisterHFDTO = z.infer<typeof DeRegisterHFSchema>

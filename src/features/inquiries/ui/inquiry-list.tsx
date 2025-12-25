@@ -96,7 +96,7 @@ const InquiryTable = () => {
       filterKey: 'type',
       filterType: 'select',
       filterOptions: [
-        { name: 'Ariza', id: 'APPEAL' },
+        { name: 'Murojaat', id: 'APPEAL' },
         { name: 'Shikoyat', id: 'COMPLAINT' },
         { name: 'Taklif', id: 'SUGGESTION' },
       ],

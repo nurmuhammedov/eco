@@ -40,7 +40,7 @@ export const useCreateHoistApplication = () => {
       expertisePath: undefined,
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
+      passportPath: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
     },

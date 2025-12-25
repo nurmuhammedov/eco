@@ -10,7 +10,11 @@ export const EscalatorAppealDtoSchema = z.object({
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  hazardousFacilityId: z.string().optional(),
+  hazardousFacilityId: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   childEquipmentId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   regionId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
@@ -31,9 +35,17 @@ export const EscalatorAppealDtoSchema = z.object({
   saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   equipmentCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   installationCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  additionalFilePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  expertisePath: z.string().optional(),
-  expertiseExpiryDate: z.date().nullable().optional(),
+  passportPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  expertisePath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  expertiseExpiryDate: z
+    .date()
+    .nullable()
+    .optional()
+    .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
   fullCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   nextFullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 })

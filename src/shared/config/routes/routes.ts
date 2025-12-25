@@ -71,11 +71,6 @@ export const appRoutes = [
     roles: [],
   },
   {
-    path: 'expertise',
-    component: ExpertisePage,
-    roles: [],
-  },
-  {
     path: 'risk-analysis/my-tasks',
     component: InspectorTasks,
     roles: [UserRoles.INSPECTOR],
@@ -103,27 +98,27 @@ export const appRoutes = [
   {
     path: 'reports',
     component: ReportsPage,
-    roles: [],
+    roles: [UserRoles.CHAIRMAN],
   },
   {
     path: 'reports/create/REPORT_1',
     component: ReportsDetail1,
-    roles: [],
+    roles: [UserRoles.CHAIRMAN],
   },
   {
     path: 'reports/create/REPORT_2',
     component: ReportsDetail2,
-    roles: [],
+    roles: [UserRoles.CHAIRMAN],
   },
   {
     path: 'reports/create/REPORT_3',
     component: ReportsDetail3,
-    roles: [],
+    roles: [UserRoles.CHAIRMAN],
   },
   {
     path: 'reports/create/REPORT_4',
     component: ReportsDetail4,
-    roles: [],
+    roles: [UserRoles.CHAIRMAN],
   },
   {
     path: 'register',
@@ -163,7 +158,7 @@ export const appRoutes = [
   {
     path: 'register/:id/auto',
     component: RegisterAutoDetail,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
   {
     path: 'register/:id/qr-page',
@@ -214,61 +209,68 @@ export const appRoutes = [
   {
     path: 'expertise-organizations',
     component: ExpertiseOrganizations,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
   {
     path: 'risk-analysis',
     component: RiskAnalysisPage,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
   {
     path: 'risk-analysis/detail',
     component: RiskAnalysisDetailPage,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
   {
     path: 'risk-analysis/info/:id',
     component: RiskAnalysisDetailInfoPage,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
   {
     path: 'inspections',
     component: InspectionsPage,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
   {
     path: 'inspections/info',
     component: InspectionsInfoPage,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
 
   // Prevention
   {
     path: 'preventions',
     component: Preventions,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
   {
     path: 'preventions/detail/:id',
     component: PreventionDetail,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
 
   // Conclusions
   {
     path: 'accreditations',
     component: ExpertisePage,
-    roles: [],
+    roles: [
+      UserRoles.INSPECTOR,
+      UserRoles.LEGAL,
+      UserRoles.REGIONAL,
+      UserRoles.MANAGER,
+      UserRoles.HEAD,
+      UserRoles.CHAIRMAN,
+    ],
   },
   {
     path: 'accreditations/add',
     component: AddConclusionPage,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
   {
     path: '/accreditations/detail/:id',
     component: ConclusionDetail,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
   {
     path: '/accreditations/edit/:id',
@@ -280,14 +282,14 @@ export const appRoutes = [
   {
     path: 'permits',
     component: Permits,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
 
   //Inquiries
   {
     path: 'inquiries',
     component: Inquiries,
-    roles: [],
+    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
   },
 ]
 

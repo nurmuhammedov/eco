@@ -32,8 +32,16 @@ export const useRegisterIllegalHoist = (externalSubmit?: (data: RegisterIllegalH
 
   const formSchema = isUpdate
     ? RegisterIllegalHoistBaseSchema.extend({
-        phoneNumber: z.string().optional(),
-        birthDate: z.string().optional(),
+        phoneNumber: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        birthDate: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
       }).superRefine(hoistRefinement)
     : RegisterIllegalHoistSchema
 
@@ -63,7 +71,7 @@ export const useRegisterIllegalHoist = (externalSubmit?: (data: RegisterIllegalH
       expertisePath: undefined,
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
+      passportPath: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
     },
@@ -149,7 +157,7 @@ export const useRegisterIllegalHoist = (externalSubmit?: (data: RegisterIllegalH
         installationCertPath: detail.files?.installationCertPath?.path,
 
         // Mappings
-        additionalFilePath: detail.files?.passportPath?.path,
+        passportPath: detail.files?.passportPath?.path,
         fullCheckPath: detail.files?.fullCheckPath?.path,
         nextPartialCheckDate: parseDate(detail.files?.partialCheckPath?.expiryDate),
       } as any)
@@ -193,7 +201,7 @@ export const useRegisterIllegalHoist = (externalSubmit?: (data: RegisterIllegalH
     if (isUpdate) {
       const updatePayload = {
         ...data,
-        passportPath: data.additionalFilePath,
+        passportPath: data.passportPath,
       }
 
       updateMutate(updatePayload, {

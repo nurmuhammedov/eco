@@ -40,14 +40,22 @@ export const RegisterIllegalLpgPoweredBaseSchema = z.object({
   assignmentDecreePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   gasSupplyProjectPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  expertisePath: z.string().optional(),
+  expertisePath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   expertiseExpiryDate: z
     .date()
     .nullable()
     .optional()
     .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-  additionalFilePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  equipmentCertPath: z.string().optional(),
+  passportPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  equipmentCertPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   equipmentCertExpiryDate: z
     .date()
     .nullable()

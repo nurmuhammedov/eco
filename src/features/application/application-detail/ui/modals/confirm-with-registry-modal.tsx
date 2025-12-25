@@ -10,14 +10,13 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
-import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group' // RadioGroup import qilindi
+import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import { z } from 'zod'
 
-// Schema majburiy enum (string) qilib o'zgartirildi
 const schema = z.object({
   shouldRegister: z.enum(['true', 'false'], {
     required_error: 'Iltimos, variantlardan birini tanlang.',
@@ -35,7 +34,6 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    // defaultValues olib tashlandi, shunda boshida hech qaysi tanlanmaydi
   })
 
   const onSubmit = (data: z.infer<typeof schema>) => {
@@ -43,12 +41,12 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
       {
         appealId,
         documentId,
-        shouldRegister: data.shouldRegister === 'true', // string'ni boolenga o'tkazamiz
+        shouldRegister: data.shouldRegister === 'true',
       },
       {
         onSuccess: () => {
           setIsOpen(false)
-          form.reset() // Formani tozalash
+          form.reset()
         },
       }
     )

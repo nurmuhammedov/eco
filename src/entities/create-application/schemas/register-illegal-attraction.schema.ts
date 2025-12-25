@@ -33,7 +33,11 @@ export const RegisterIllegalAttractionBaseSchema = z.object({
 
   passportPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   labelPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  conformityCertPath: z.string().optional(),
+  conformityCertPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   technicalJournalPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   servicePlanPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   technicalManualPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
@@ -45,16 +49,28 @@ export const RegisterIllegalAttractionBaseSchema = z.object({
   seasonalReadinessActExpiryDate: z
     .date({ required_error: 'Majburiy maydon!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
-  technicalReadinessActPath: z.string().optional(),
+  technicalReadinessActPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   employeeSafetyKnowledgePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   employeeSafetyKnowledgeExpiryDate: z
     .date({ required_error: 'Majburiy maydon!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   usageRightsPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   usageRightsExpiryDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  preservationActPath: z.string().optional(),
+  preservationActPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   cctvInstallationPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  qrPath: z.string().optional(),
+  qrPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   filesBuilt: z.boolean().default(false).optional(),
 })
 

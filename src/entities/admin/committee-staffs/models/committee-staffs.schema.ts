@@ -42,7 +42,11 @@ export const committeeBaseSchema = {
 // ... bu qism o'zgarmadi ...
 export const committeeStaffSchema = z
   .object({
-    id: z.string().optional(),
+    id: z
+      .string()
+      .optional()
+      .nullable()
+      .transform((val) => (val ? val : null)),
     ...committeeBaseSchema,
   })
   .strict()
@@ -76,7 +80,11 @@ export const schemas = {
     birthDate: z.date({ required_error: 'Tug‘ilgan sana kiritilishi shart!' }),
   }),
   update: z.object({
-    id: z.string().optional(),
+    id: z
+      .string()
+      .optional()
+      .nullable()
+      .transform((val) => (val ? val : null)),
     fullName: committeeBaseSchema.fullName.optional(),
     position: committeeBaseSchema.position.optional(),
     birthDate: committeeBaseSchema.birthDate.optional(),

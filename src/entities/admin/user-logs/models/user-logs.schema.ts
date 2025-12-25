@@ -2,13 +2,33 @@ import { z } from 'zod'
 import { UserLogsTypeEnum } from '@/entities/admin/user-logs'
 
 export const UserLogsBaseSchema = {
-  name: z.string().optional(),
+  name: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   status: z.nativeEnum(UserLogsTypeEnum),
-  ownerIdentity: z.string().optional(),
+  ownerIdentity: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   createdAt: z.date().optional(),
-  ownerName: z.string().optional(),
-  username: z.string().optional(),
-  appealNumber: z.string().optional(),
+  ownerName: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  username: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  appealNumber: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
 }
 
 export const userLogsSchema = z.object({

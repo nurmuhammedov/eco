@@ -15,7 +15,12 @@ export const addExpertiseSchema = z.object({
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  hfId: z.string().optional().nullable(),
+  hfId: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null))
+    .nullable(),
 
   type: z.nativeEnum(ExpertiseTypeEnum, {
     required_error: 'Ekspertiza turini tanlang',

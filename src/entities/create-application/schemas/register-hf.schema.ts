@@ -17,22 +17,62 @@ export const HFAppealDtoSchema = z.object({
   hfTypeId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   regionId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   districtId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  upperOrganization: z.string().optional(),
+  upperOrganization: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   name: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   extraArea: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   hazardousSubstance: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   spheres: z.array(HFSphereEnum, { required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   identificationCardPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  receiptPath: z.string().optional(),
-  insurancePolicyPath: z.string().optional(),
+  receiptPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  insurancePolicyPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   insurancePolicyExpiryDate: z.date().optional(),
-  cadastralPassportPath: z.string().optional(),
-  projectDocumentationPath: z.string().optional(),
-  licensePath: z.string().optional(),
+  cadastralPassportPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  projectDocumentationPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  licensePath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   licenseExpiryDate: z.date().optional(),
-  expertOpinionPath: z.string().optional(),
-  appointmentOrderPath: z.string().optional(),
-  permitPath: z.string().optional(),
+  expertOpinionPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  appointmentOrderPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  permitPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   permitExpiryDate: z.date().optional(),
-  industrialSafetyDeclarationPath: z.string().optional(),
+  industrialSafetyDeclarationPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
 })

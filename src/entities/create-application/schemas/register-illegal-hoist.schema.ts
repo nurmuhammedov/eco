@@ -38,15 +38,27 @@ export const RegisterIllegalHoistBaseSchema = z.object({
   labelPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   assignmentDecreePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  expertisePath: z.string().optional(),
+  expertisePath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   expertiseExpiryDate: z
     .date()
     .nullable()
     .optional()
     .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-  equipmentCertPath: z.string().optional(),
-  installationCertPath: z.string().optional(),
-  additionalFilePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  equipmentCertPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  installationCertPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  passportPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   fullCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   nextFullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 })

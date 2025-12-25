@@ -453,3 +453,326 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     icon: 'radiationRegisterIcon',
   },
 ]
+
+export const applicationsList = [
+  {
+    id: 37,
+    title: 'Kranni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_CRANE,
+  },
+  {
+    id: 38,
+    title: 'Bosim ostida ishlovchi idishni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_CONTAINER,
+  },
+  {
+    id: 39,
+    title: 'Bug‘ qozonni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_BOILER,
+  },
+  {
+    id: 40,
+    title: 'Liftni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_ELEVATOR,
+  },
+  {
+    id: 41,
+    title: 'Eskalatorni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_ESCALATOR,
+  },
+  {
+    id: 42,
+    title: 'Attraksionni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_ATTRACTION,
+  },
+  {
+    id: 43,
+    title: 'Quvurni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_PIPELINE,
+  },
+  {
+    id: 44,
+    title: 'Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_CHEMICAL_CONTAINER,
+  },
+  {
+    id: 45,
+    title: 'Bug‘ va issiq suv quvurlarini ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_HEAT_PIPELINE,
+  },
+  {
+    id: 46,
+    title: 'Qozon utilizatorlarini ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_BOILER_UTILIZER,
+  },
+  {
+    id: 47,
+    title: 'Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_LPG_CONTAINER,
+  },
+  {
+    id: 48,
+    title: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_LPG_POWERED,
+  },
+  {
+    id: 49,
+    title: 'Yuk ko‘targichni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_HOIST,
+  },
+  {
+    id: 50,
+    title: 'Osma arqonli yuruvchi yo‘lni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_CABLEWAY,
+  },
+  {
+    id: 1,
+    title: 'XICHOni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_HF,
+  },
+  {
+    id: 3,
+    title: 'XICHOni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_HF,
+  },
+  {
+    id: 65,
+    title: 'Kranni ro‘yxatga olish arizasi',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_CRANE,
+  },
+  {
+    id: 66,
+    title: 'Bosim ostida ishlovchi idishni ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_CONTAINER,
+  },
+  {
+    id: 67,
+    title: 'Bug‘ qozonni ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER,
+  },
+  {
+    id: 68,
+    title: 'Liftni ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_ELEVATOR,
+  },
+  {
+    id: 69,
+    title: 'Eskalatorni ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_ESCALATOR,
+  },
+  {
+    id: 70,
+    title: 'Atraksion ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION,
+  },
+  {
+    id: 71,
+    title: 'Quvurlarni ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_PIPELINE,
+  },
+  {
+    id: 72,
+    title: 'Bosim ostida ishlovchi idishlarni (kimyo) ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_CHEMICAL_CONTAINER,
+  },
+  {
+    id: 73,
+    title: 'Bug‘ va issiq suv quvurlarini ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_HEAT_PIPELINE,
+  },
+  {
+    id: 74,
+    title: 'Qozon utilizatorlarini ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER_UTILIZER,
+  },
+  {
+    id: 75,
+    title: 'Bosim ostida ishlovchi idishlarni (SUG) ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_LPG_CONTAINER,
+  },
+  {
+    id: 76,
+    title: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalarni ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_LPG_POWERED,
+  },
+  {
+    id: 77,
+    title: 'Yuk ko‘targichni ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_HOIST,
+  },
+  {
+    id: 78,
+    title: 'Osma arqonli yuruvchi yo‘lni ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_CABLEWAY,
+  },
+  {
+    id: 2,
+    title: 'XICHOni ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_HF,
+  },
+  {
+    id: 55,
+    title: 'Rentgenni ro‘yxatga olish',
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_XRAY,
+  },
+  {
+    id: 51,
+    title: 'Ionlashtiruvchi nurlanish manbalarini ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_IRS,
+  },
+  {
+    id: 52,
+    title: 'Ionlashtiruvchi nurlanish manbalarini qabul qilish',
+    type: ApplicationTypeEnum.ACCEPT_IRS,
+  },
+  {
+    id: 53,
+    title: 'Ionlashtiruvchi nurlanish manbalarini topshirish',
+    type: ApplicationTypeEnum.TRANSFER_IRS,
+  },
+  {
+    id: 54,
+    title: 'Rentgenni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_XRAY,
+  },
+  {
+    id: 101,
+    title: 'Kranni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_CRANE,
+  },
+  {
+    id: 102,
+    title: 'Kranni qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_CRANE,
+  },
+  {
+    id: 103,
+    title: 'Bosim ostida ishlovchi idishni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_CONTAINER,
+  },
+  {
+    id: 104,
+    title: 'Bosim ostida ishlovchi idishni qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_CONTAINER,
+  },
+  {
+    id: 105,
+    title: 'Bug‘ qozonni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_BOILER,
+  },
+  {
+    id: 106,
+    title: 'Bug‘ qozonni qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_BOILER,
+  },
+  {
+    id: 107,
+    title: 'Liftni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_ELEVATOR,
+  },
+  {
+    id: 108,
+    title: 'Liftni qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_ELEVATOR,
+  },
+  {
+    id: 109,
+    title: 'Eskalatorni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_ESCALATOR,
+  },
+  {
+    id: 110,
+    title: 'Eskalatorni qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_ESCALATOR,
+  },
+  {
+    id: 111,
+    title: 'Attraksionni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_ATTRACTION,
+  },
+  {
+    id: 112,
+    title: 'Attraksionni qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_ATTRACTION,
+  },
+  {
+    id: 113,
+    title: 'Quvurni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_PIPELINE,
+  },
+  {
+    id: 114,
+    title: 'Quvurni qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_PIPELINE,
+  },
+  {
+    id: 115,
+    title: 'Bosim ostida ishlovchi idishni (kimyo) ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_CHEMICAL_CONTAINER,
+  },
+  {
+    id: 116,
+    title: 'Bosim ostida ishlovchi idishni (kimyo) qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_CHEMICAL_CONTAINER,
+  },
+  {
+    id: 117,
+    title: 'Bug‘ va issiq suv quvurini ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_HEAT_PIPELINE,
+  },
+  {
+    id: 118,
+    title: 'Bug‘ va issiq suv quvurini qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_HEAT_PIPELINE,
+  },
+  {
+    id: 119,
+    title: 'Qozon utilizatorini ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_BOILER_UTILIZER,
+  },
+  {
+    id: 120,
+    title: 'Qozon utilizatorini qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_BOILER_UTILIZER,
+  },
+  {
+    id: 121,
+    title: 'Bosim ostida ishlovchi idishni (SUG) ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_LPG_CONTAINER,
+  },
+  {
+    id: 122,
+    title: 'Bosim ostida ishlovchi idishni (SUG) qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_LPG_CONTAINER,
+  },
+  {
+    id: 123,
+    title: 'Tabiiy gazdan foydalanuvchi qurilmani ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_LPG_POWERED,
+  },
+  {
+    id: 124,
+    title: 'Tabiiy gazdan foydalanuvchi qurilmani qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_LPG_POWERED,
+  },
+  {
+    id: 125,
+    title: 'Yuk ko‘targichni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_HOIST,
+  },
+  {
+    id: 126,
+    title: 'Yuk ko‘targichni qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_HOIST,
+  },
+  {
+    id: 127,
+    title: 'Osma arqonli yuruvchi yo‘lni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_CABLEWAY,
+  },
+  {
+    id: 128,
+    title: 'Osma arqonli yuruvchi yo‘lni qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.REREGISTER_CABLEWAY,
+  },
+]

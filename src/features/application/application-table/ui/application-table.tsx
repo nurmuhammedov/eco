@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FileWarning } from 'lucide-react'
 import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application'
-import { ApplicationCategory, APPLICATIONS_DATA } from '@/entities/create-application'
+import { applicationsList } from '@/entities/create-application'
 import { useApplicationList } from '@/features/application/application-table/hooks'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
@@ -12,13 +12,6 @@ import { getDate } from '@/shared/utils/date'
 import useData from '../../../../shared/hooks/api/useData'
 import { API_ENDPOINTS } from '@/shared/api'
 import { UserRoles } from '@/entities/user'
-
-const ALLOWED_CATEGORIES: ApplicationCategory[] = [
-  ApplicationCategory.HF,
-  ApplicationCategory.EQUIPMENTS,
-  ApplicationCategory.IRS,
-  ApplicationCategory.XRAY,
-]
 
 export const ApplicationTable = () => {
   const navigate = useNavigate()
@@ -44,15 +37,6 @@ export const ApplicationTable = () => {
     navigate(`/applications/detail/${id}`)
   }
 
-  const appealTypeFilterOptions = useMemo(() => {
-    return APPLICATIONS_DATA.filter((item) => item.category && ALLOWED_CATEGORIES.includes(item.category)).map(
-      (item) => ({
-        id: item.type,
-        name: item.title,
-      })
-    )
-  }, [])
-
   const columns: ExtendedColumnDef<any, any>[] = useMemo(() => {
     return [
       {
@@ -71,8 +55,8 @@ export const ApplicationTable = () => {
         accessorKey: 'appealType',
         filterKey: 'appealType',
         filterType: 'select',
-        filterOptions: appealTypeFilterOptions,
-        cell: (cell: any) => APPLICATIONS_DATA.find((item) => item.type === cell.row.original.appealType)?.title || '',
+        filterOptions: applicationsList?.map((i) => ({ id: i?.type, name: i?.title })),
+        cell: (cell: any) => applicationsList.find((item) => item.type === cell.row.original.appealType)?.title || '',
       },
       ...((user?.role !== UserRoles.LEGAL && user?.role !== UserRoles.INDIVIDUAL
         ? [
@@ -140,7 +124,7 @@ export const ApplicationTable = () => {
         ),
       },
     ]
-  }, [appealTypeFilterOptions, user, officeSelect, executorOptions])
+  }, [user, officeSelect, executorOptions])
 
   return (
     <DataTable

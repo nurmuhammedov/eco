@@ -32,8 +32,16 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
 
   const formSchema = isUpdate
     ? RegisterIllegalHeatPipelineBaseSchema.extend({
-        phoneNumber: z.string().optional(),
-        birthDate: z.string().optional(),
+        phoneNumber: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        birthDate: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
       }).superRefine(heatPipelineRefinement)
     : RegisterIllegalHeatPipelineSchema
 
@@ -67,7 +75,7 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
       expertisePath: undefined,
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
+      passportPath: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
       partialCheckPath: undefined,
@@ -157,7 +165,7 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
         installationCertPath: detail.files?.installationCertPath?.path,
         partialCheckPath: detail.files?.partialCheckPath?.path,
         fullCheckPath: detail.files?.fullCheckPath?.path,
-        additionalFilePath: detail.files?.passportPath?.path,
+        passportPath: detail.files?.passportPath?.path,
         nextPartialCheckDate: parseDate(detail.files?.partialCheckPath?.expiryDate),
         nextFullCheckDate: parseDate(detail.files?.fullCheckPath?.expiryDate),
       } as any)
@@ -201,7 +209,7 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
     if (isUpdate) {
       const updatePayload = {
         ...data,
-        passportPath: data.additionalFilePath,
+        passportPath: data.passportPath,
       }
 
       updateMutate(updatePayload, {

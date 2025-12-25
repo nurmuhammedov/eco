@@ -425,7 +425,7 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
 
           <div className="border-b pb-4">
             <FormField
-              name="additionalFilePath"
+              name="passportPath"
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>

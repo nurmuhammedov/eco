@@ -21,26 +21,106 @@ export const RegisterIllegalHFSchema = z.object({
   districtId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   location: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
 
-  upperOrganization: z.string().optional(),
-  hfTypeId: z.string().optional(),
-  hfTypeName: z.string().optional(),
-  extraArea: z.string().optional(),
-  hazardousSubstance: z.string().optional(),
+  upperOrganization: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  hfTypeId: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  hfTypeName: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  extraArea: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  hazardousSubstance: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   spheres: z.array(HFSphereEnum).optional(),
-  identificationCardPath: z.string().optional(),
-  receiptPath: z.string().optional(),
-  expertOpinionPath: z.string().optional(),
-  projectDocumentationPath: z.string().optional(),
-  cadastralPassportPath: z.string().optional(),
-  industrialSafetyDeclarationPath: z.string().optional(),
-  insurancePolicyPath: z.string().optional(),
-  licensePath: z.string().optional(),
-  permitPath: z.string().optional(),
-  certificationPath: z.string().optional(),
-  deviceTestingPath: z.string().optional(),
-  appointmentOrderPath: z.string().optional(),
-  ecologicalConclusionPath: z.string().optional(),
-  fireSafetyConclusionPath: z.string().optional(),
-  replyLetterPath: z.string().optional(),
+  identificationCardPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  receiptPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  expertOpinionPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  projectDocumentationPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  cadastralPassportPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  industrialSafetyDeclarationPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  insurancePolicyPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  licensePath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  permitPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  certificationPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  deviceTestingPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  appointmentOrderPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  ecologicalConclusionPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  fireSafetyConclusionPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  replyLetterPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   filesBuilt: z.boolean().optional(),
 })

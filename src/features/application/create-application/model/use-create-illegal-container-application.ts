@@ -32,8 +32,16 @@ export const useRegisterIllegalContainer = (externalSubmit?: (data: RegisterIlle
 
   const formSchema = isUpdate
     ? RegisterIllegalContainerBaseSchema.extend({
-        phoneNumber: z.string().optional(),
-        birthDate: z.string().optional(),
+        phoneNumber: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        birthDate: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
       }).superRefine(containerRefinement)
     : RegisterIllegalContainerSchema
 
@@ -65,7 +73,7 @@ export const useRegisterIllegalContainer = (externalSubmit?: (data: RegisterIlle
       expertisePath: undefined,
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
+      passportPath: undefined,
       partialCheckPath: undefined,
       nextPartialCheckDate: undefined,
       fullCheckPath: undefined,
@@ -151,7 +159,7 @@ export const useRegisterIllegalContainer = (externalSubmit?: (data: RegisterIlle
         installationCertPath: detail.files?.installationCertPath?.path,
         partialCheckPath: detail.files?.partialCheckPath?.path,
         fullCheckPath: detail.files?.fullCheckPath?.path,
-        additionalFilePath: detail.files?.passportPath?.path,
+        passportPath: detail.files?.passportPath?.path,
         nextPartialCheckDate: parseDate(detail.files?.partialCheckPath?.expiryDate),
         nextFullCheckDate: parseDate(detail.files?.fullCheckPath?.expiryDate),
       } as any)
@@ -195,7 +203,7 @@ export const useRegisterIllegalContainer = (externalSubmit?: (data: RegisterIlle
     if (isUpdate) {
       const updatePayload = {
         ...data,
-        passportPath: data.additionalFilePath,
+        passportPath: data.passportPath,
       }
 
       updateMutate(updatePayload, {

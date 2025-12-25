@@ -24,7 +24,12 @@ const itemSchema = z
     answer: z.nativeEnum(ChecklistAnswerStatus, {
       errorMap: () => ({ message: 'Javob tanlanishi shart' }),
     }),
-    description: z.string().optional().nullable(),
+    description: z
+      .string()
+      .optional()
+      .nullable()
+      .transform((val) => (val ? val : null))
+      .nullable(),
     deadline: z.union([z.string(), z.date()]).optional().nullable(),
   })
   .superRefine((data, ctx) => {

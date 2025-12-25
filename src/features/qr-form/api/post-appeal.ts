@@ -3,7 +3,7 @@ import { publicApi } from '@/shared/api/public'
 
 export interface AppealDto {
   type: 'APPEAL' | 'COMPLAINT' | 'SUGGESTION'
-  fullName?: string
+  fullName?: string | null
   phoneNumber?: string
   message: string
   belongId: string

@@ -10,7 +10,11 @@ export const ReRegisterEquipmentSchema = z.object({
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  hazardousFacilityId: z.string().optional(),
+  hazardousFacilityId: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   type: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   regionId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   districtId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),

@@ -22,7 +22,12 @@ import { useAuth } from '@/shared/hooks/use-auth.ts'
 const schema = z.object({
   deadline: z.date({ message: FORM_ERROR_MESSAGES.required }),
   inspectorId: z.string({ message: FORM_ERROR_MESSAGES.required }),
-  resolution: z.string().optional().default(''),
+  resolution: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null))
+    .default(''),
 })
 
 const AttachInspectorModal = () => {
@@ -119,6 +124,7 @@ const AttachInspectorModal = () => {
                       rows={7}
                       placeholder="Boshqarma boshlig‘i rezolyutsiyasi"
                       {...field}
+                      value={field.value || ''}
                     />
                   </FormControl>
                   <FormMessage />

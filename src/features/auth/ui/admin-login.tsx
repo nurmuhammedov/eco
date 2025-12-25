@@ -28,6 +28,8 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
   const [showPassword, setShowPassword] = useState(false)
   const [showCaptchaError, setCaptchaError] = useState(false)
   const [captchaValue, setCaptchaValue] = useState('')
+  const [isBlocked, setIsBlocked] = useState(false)
+  const [blockTime, setBlockTime] = useState(0)
 
   const form = useForm<AdminLoginDTO>({
     resolver: zodResolver(adminLoginFormSchema),
@@ -40,23 +42,74 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
 
   useEffect(() => {
     loadCaptchaEnginge(5)
+    const storedBlockTime = localStorage.getItem('admin_block_time')
+    if (storedBlockTime) {
+      const remaining = Math.ceil((parseInt(storedBlockTime) - Date.now()) / 1000)
+      if (remaining > 0) {
+        setIsBlocked(true)
+        setBlockTime(remaining)
+      } else {
+        localStorage.removeItem('admin_block_time')
+        localStorage.removeItem('admin_failed_attempts')
+      }
+    }
   }, [])
 
-  const handleLogin = async (data: z.infer<typeof adminLoginFormSchema>) => {
-    if (apiConfig.oneIdClientId == 'ekotizim_clone_cirns_uz') {
-      if (validateCaptcha(captchaValue)) {
-        await mutateAsync(data)
-      } else {
-        setCaptchaError(true)
-      }
-    } else {
-      await mutateAsync(data)
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (isBlocked && blockTime > 0) {
+      interval = setInterval(() => {
+        setBlockTime((prev) => {
+          if (prev <= 1) {
+            setIsBlocked(false)
+            localStorage.removeItem('admin_block_time')
+            localStorage.removeItem('admin_failed_attempts')
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
     }
+    return () => clearInterval(interval)
+  }, [isBlocked, blockTime])
+
+  const handleLogin = async (data: z.infer<typeof adminLoginFormSchema>) => {
+    if (isBlocked) return
+
+    try {
+      if (apiConfig.oneIdClientId == 'ekotizim_clone_cirns_uz') {
+        if (validateCaptcha(captchaValue)) {
+          await mutateAsync({ ...data, captcha: captchaValue } as any)
+          localStorage.removeItem('admin_failed_attempts')
+        } else {
+          setCaptchaError(true)
+        }
+      } else {
+        await mutateAsync(data)
+        localStorage.removeItem('admin_failed_attempts')
+      }
+    } catch (error) {
+      const attempts = parseInt(localStorage.getItem('admin_failed_attempts') || '0') + 1
+      localStorage.setItem('admin_failed_attempts', attempts.toString())
+      if (attempts >= 3) {
+        setIsBlocked(true)
+        const blockUntil = Date.now() + 5 * 60 * 1000
+        localStorage.setItem('admin_block_time', blockUntil.toString())
+        setBlockTime(300)
+      }
+    }
+  }
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60)
+    const s = seconds % 60
+    return `${m}:${s < 10 ? '0' : ''}${s}`
   }
 
   return (
     <Form {...form}>
       <form
+        autoComplete="off"
         className={cn('flex h-full min-h-screen w-full flex-1 flex-col items-center justify-center gap-6', className)}
         onSubmit={form.handleSubmit(handleLogin)}
       >
@@ -72,7 +125,7 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
                 <FormItem>
                   <FormLabel>{t('username')}</FormLabel>
                   <FormControl>
-                    <Input required placeholder={t('username')} {...field} />
+                    <Input required placeholder={t('username')} {...field} disabled={isBlocked} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -91,8 +144,9 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
                         placeholder={t('password')}
                         type={showPassword ? 'text' : 'password'}
                         className="border-0 focus-visible:ring-0"
+                        disabled={isBlocked}
                       />
-                      <button type="button" onClick={togglePasswordVisibility}>
+                      <button type="button" onClick={togglePasswordVisibility} disabled={isBlocked}>
                         {showPassword ? (
                           <EyeOffIcon className="text-muted-foreground size-5" />
                         ) : (
@@ -121,6 +175,7 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
                     placeholder="Rasmdagi matnni kiriting"
                     onChange={(val) => setCaptchaValue(val.target.value)}
                     className="w-full border-0 focus-visible:ring-0"
+                    disabled={isBlocked}
                   />
                 </div>
               ) : (
@@ -138,7 +193,14 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
               )}
             </div>
 
-            <Button type="submit" className="w-full" loading={isPending} disabled={isPending}>
+            {isBlocked && (
+              <div className="rounded-md bg-red-50 p-3 text-sm text-red-500">
+                Parol 3 marta noto‘g‘ri kiritildi. Tizimga kirish 5 daqiqaga cheklandi. <br />
+                Qolgan vaqt: {formatTime(blockTime)}
+              </div>
+            )}
+
+            <Button type="submit" className="w-full" loading={isPending} disabled={isPending || isBlocked}>
               {t('sign_in')}
             </Button>
           </div>

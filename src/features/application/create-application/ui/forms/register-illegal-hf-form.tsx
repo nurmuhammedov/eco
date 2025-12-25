@@ -149,7 +149,7 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                 <FormItem>
                   <FormLabel>XICHO ning turi</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value || undefined}>
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="XICHO ning turi" />
                       </SelectTrigger>

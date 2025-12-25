@@ -32,8 +32,16 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
 
   const formSchema = isUpdate
     ? RegisterIllegalAttractionBaseSchema.extend({
-        phoneNumber: z.string().optional(),
-        birthDate: z.string().optional(),
+        phoneNumber: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        birthDate: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
       }).superRefine(attractionRefinement)
     : RegisterIllegalAttractionSchema
 

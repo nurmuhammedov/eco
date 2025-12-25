@@ -32,8 +32,16 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
 
   const formSchema = isUpdate
     ? RegisterIllegalLpgPoweredBaseSchema.extend({
-        phoneNumber: z.string().optional(),
-        birthDate: z.string().optional(),
+        phoneNumber: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        birthDate: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
       }).superRefine(lpgPoweredRefinement)
     : RegisterIllegalLpgPoweredSchema
 
@@ -65,7 +73,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
       expertisePath: undefined,
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
+      passportPath: undefined,
       gasSupplyProjectPath: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
@@ -152,7 +160,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
         expertisePath: detail.files?.expertisePath?.path,
         expertiseExpiryDate: parseDate(detail.files?.expertisePath?.expiryDate),
         installationCertPath: detail.files?.installationCertPath?.path,
-        additionalFilePath: detail.files?.passportPath?.path, // Mapped to passportPath
+        passportPath: detail.files?.passportPath?.path, // Mapped to passportPath
         gasSupplyProjectPath: detail.files?.gasSupplyProjectPath?.path,
         fullCheckPath: detail.files?.fullCheckPath?.path,
       } as any)
@@ -196,7 +204,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
     if (isUpdate) {
       const updatePayload = {
         ...data,
-        passportPath: data.additionalFilePath,
+        passportPath: data.passportPath,
       }
 
       updateMutate(updatePayload, {

@@ -37,7 +37,7 @@ export const useCreateCablewayApplication = () => {
       length: '',
       labelPath: undefined,
       assignmentDecreePath: undefined,
-      additionalFilePath: undefined,
+      passportPath: undefined,
       saleContractPath: undefined,
       expertisePath: undefined,
       expertiseExpiryDate: undefined,

@@ -46,7 +46,11 @@ export const territorialBaseSchema = {
 
 export const territorialStaffSchema = z
   .object({
-    id: z.string().optional(),
+    id: z
+      .string()
+      .optional()
+      .nullable()
+      .transform((val) => (val ? val : null)),
     ...territorialBaseSchema,
   })
   .strict() // Prevents additional properties

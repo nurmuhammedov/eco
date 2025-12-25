@@ -2,8 +2,6 @@ import { ApplicationStatus } from '@/entities/application'
 import { UserRoles } from '@/entities/user'
 import FileLink from '@/shared/components/common/file-link.tsx'
 import { FC } from 'react'
-import { UpdateFileModal } from '../modals/update-file-modal'
-import FileEditModal from '@/features/register/modals/file-edit-modal'
 import { getDate } from '@/shared/utils/date'
 
 type FileType = {
@@ -27,9 +25,9 @@ interface Props {
   edit?: boolean
 }
 
-const FilesSection: FC<Props> = ({ files, register = false, url, userRole, applicationStatus, appealId, edit }) => {
-  const canEdit = userRole === UserRoles.INSPECTOR && applicationStatus === ApplicationStatus.IN_PROCESS && edit
-  const canInspectorEdit = userRole === UserRoles.INSPECTOR && register && !appealId
+const FilesSection: FC<Props> = ({ files }) => {
+  // const canEdit = userRole === UserRoles.INSPECTOR && applicationStatus === ApplicationStatus.IN_PROCESS && edit
+  // const canInspectorEdit = userRole === UserRoles.INSPECTOR && register && !appealId
 
   const showFileData = (file: FileType) => {
     if (!file.data.path && !file.data.number && !file.data.uploadDate && !file.data.expiryDate) {
@@ -60,8 +58,9 @@ const FilesSection: FC<Props> = ({ files, register = false, url, userRole, appli
         <div key={file.label} className="flex items-center justify-between border-b border-b-[#E5E7EB] px-3 py-4">
           <p className={'pr-5'}>{file.label}</p>
           <div className="flex items-center gap-2">
-            {canInspectorEdit ? <FileEditModal url={url} fieldName={file.fieldName} /> : showFileData(file)}
-            {canEdit && <UpdateFileModal appealId={appealId} fieldName={file.fieldName} />}
+            {showFileData(file)}
+            {/*{canInspectorEdit ? <FileEditModal url={url} fieldName={file.fieldName} /> : showFileData(file)}*/}
+            {/*{canEdit && <UpdateFileModal appealId={appealId} fieldName={file.fieldName} />}*/}
           </div>
         </div>
       ))}

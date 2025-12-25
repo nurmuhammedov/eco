@@ -12,7 +12,11 @@ export const XrayIllegalAppealDtoSchema = z.object({
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  licenseNumber: z.string().optional(),
+  licenseNumber: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   model: z.string({ required_error: 'Model kiritilmadi!' }).min(1, 'Model kiritilmadi!'),
   licenseRegistryNumber: z
     .string({ required_error: 'Ruxsatnoma raqami kiritilmadi!' })
@@ -44,28 +48,80 @@ export const XrayIllegalAppealDtoSchema = z.object({
       required_error: "Davlat xizmatining to'liq nomi tanlanmadi!",
     })
     .min(1, 'Joylashgan tuman tanlanmadi!'),
-  file1Path: z.string().optional(),
+  file1Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   file1ExpiryDate: z.date().optional(),
-  file2Path: z.string().optional(),
+  file2Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   file2ExpiryDate: z.date().optional(),
-  file3Path: z.string().optional(),
+  file3Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   file3ExpiryDate: z.date().optional(),
-  file4Path: z.string().optional(),
-  file5Path: z.string().optional(),
+  file4Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  file5Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   file5ExpiryDate: z.date().optional(),
-  file6Path: z.string().optional(),
+  file6Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   file6ExpiryDate: z.date().optional(),
-  file7Path: z.string().optional(),
+  file7Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   file7ExpiryDate: z.date().optional(),
-  file8Path: z.string().optional(),
+  file8Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   file8ExpiryDate: z.date().optional(),
-  file9Path: z.string().optional(),
+  file9Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   file9ExpiryDate: z.date().optional(),
-  file10Path: z.string().optional(),
-  file11Path: z.string().optional(),
+  file10Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  file11Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   file11ExpiryDate: z.date().optional(),
-  file12Path: z.string().optional(),
-  file13Path: z.string().optional(),
+  file12Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  file13Path: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   file13ExpiryDate: z.date().optional(),
   regionId: z
     .string({

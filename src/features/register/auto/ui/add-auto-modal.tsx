@@ -19,7 +19,7 @@ import { toast } from 'sonner'
 import { useAdd } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
 import { SearchResultDisplay } from '@/features/permits/ui/add-permit-modal'
-import { parseISO } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import DatePicker from '@/shared/components/ui/datepicker'
 
 interface AddPermitTransportModalProps {
@@ -37,14 +37,14 @@ const searchSchema = z.object({
 })
 
 const tankerItemSchema = z.object({
-  numberPlate: z.string({ required_error: 'Majburiy maydon!' }).min(1),
-  model: z.string({ required_error: 'Majburiy maydon!' }).min(1),
-  factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1),
-  inventoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1),
-  capacity: z.string({ required_error: 'Majburiy maydon!' }).min(1),
-  capacityUnit: z.string({ required_error: 'Majburiy maydon!' }).min(1),
-  checkDate: z.date({ required_error: 'Majburiy maydon!' }),
-  validUntil: z.date({ required_error: 'Majburiy maydon!' }),
+  numberPlate: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  model: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  inventoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  capacity: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  capacityUnit: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  checkDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  validUntil: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
 const tankerFormSchema = z.object({
@@ -365,8 +365,8 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                       inventoryNumber: '',
                       capacity: '',
                       capacityUnit: '',
-                      checkDate: undefined as unknown as Date,
-                      validUntil: undefined as unknown as Date,
+                      checkDate: undefined as unknown as string,
+                      validUntil: undefined as unknown as string,
                     })
                   }
                 >

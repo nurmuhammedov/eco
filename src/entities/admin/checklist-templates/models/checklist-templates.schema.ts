@@ -24,7 +24,11 @@ export const schemas = {
   create: z.object(checklistTemplateBaseSchema),
   update: z.object({
     id: z.number(),
-    name: z.string().optional(),
+    name: z
+      .string()
+      .optional()
+      .nullable()
+      .transform((val) => (val ? val : null)),
     path: pdfFileSchema.optional(),
     active: z.boolean().optional(),
   }),

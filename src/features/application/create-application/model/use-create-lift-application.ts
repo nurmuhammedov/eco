@@ -42,7 +42,7 @@ export const useCreateLiftApplication = () => {
       assignmentDecreePath: undefined,
       expertisePath: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
+      passportPath: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
     },

@@ -11,7 +11,11 @@ export const IrsAppealDtoSchema = z.object({
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  parentOrganization: z.string().optional(),
+  parentOrganization: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   supervisorName: z.string({ required_error: 'Rahbar F.I.Sh. kiritilmadi!' }).min(1, 'Rahbar F.I.Sh. kiritilmadi!'),
   supervisorPosition: z
     .string({ required_error: 'Rahbar lavozimi kiritilmadi!' })
@@ -62,7 +66,11 @@ export const IrsAppealDtoSchema = z.object({
   }),
   storageLocation: z.string({ required_error: 'Saqlash joyi kiritilmadi!' }).min(1, 'Saqlash joyi kiritilmadi!'),
   passportPath: z.string({ required_error: 'Pasport fayli biriktirilmadi!' }).min(1, 'Pasport fayli biriktirilmadi!'),
-  additionalFilePath: z.string().optional(),
+  additionalFilePath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   regionId: z
     .string({
       required_error: 'Joylashgan viloyat tanlanmadi!',

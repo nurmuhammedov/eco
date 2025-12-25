@@ -31,7 +31,7 @@ export const inquiryTabsConfig = [
 ]
 
 export const appealTypeTranslations: Record<string, string> = {
-  APPEAL: 'Ariza',
+  APPEAL: 'Murojaat',
   COMPLAINT: 'Shikoyat',
   SUGGESTION: 'Taklif',
 }

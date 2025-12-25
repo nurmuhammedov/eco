@@ -32,8 +32,16 @@ export const useRegisterIllegalLpgContainer = (externalSubmit?: (data: RegisterI
 
   const formSchema = isUpdate
     ? RegisterIllegalLpgContainerBaseSchema.extend({
-        phoneNumber: z.string().optional(),
-        birthDate: z.string().optional(),
+        phoneNumber: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        birthDate: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
       }).superRefine(lpgContainerRefinement)
     : RegisterIllegalLpgContainerSchema
 
@@ -65,7 +73,7 @@ export const useRegisterIllegalLpgContainer = (externalSubmit?: (data: RegisterI
       expertisePath: undefined,
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
-      additionalFilePath: undefined,
+      passportPath: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
       partialCheckPath: undefined,
@@ -154,7 +162,7 @@ export const useRegisterIllegalLpgContainer = (externalSubmit?: (data: RegisterI
         installationCertPath: detail.files?.installationCertPath?.path,
 
         // Mappings
-        additionalFilePath: detail.files?.passportPath?.path,
+        passportPath: detail.files?.passportPath?.path,
         partialCheckPath: detail.files?.partialCheckPath?.path,
         fullCheckPath: detail.files?.fullCheckPath?.path,
         nextPartialCheckDate: parseDate(detail.files?.partialCheckPath?.expiryDate),
@@ -200,7 +208,7 @@ export const useRegisterIllegalLpgContainer = (externalSubmit?: (data: RegisterI
     if (isUpdate) {
       const updatePayload = {
         ...data,
-        passportPath: data.additionalFilePath,
+        passportPath: data.passportPath,
       }
 
       updateMutate(updatePayload, {

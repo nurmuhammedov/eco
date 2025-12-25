@@ -11,7 +11,11 @@ export const checklistBaseSchema = {
 
 export const checklistSchema = z.object({
   id: z.number().optional(),
-  categoryTypeName: z.string().optional(),
+  categoryTypeName: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   ...checklistBaseSchema,
 })
 

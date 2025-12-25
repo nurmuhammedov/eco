@@ -101,7 +101,13 @@ export default ({ onSubmit }: DeRegisterEquipmentFormProps) => {
                 <FormItem className="col-span-full w-full xl:col-span-3">
                   <FormLabel>Qurilmani roʻyxatdan chiqarish sababi</FormLabel>
                   <FormControl>
-                    <Textarea className="w-full resize-none" rows={5} placeholder="Ariza bayoni..." {...field} />
+                    <Textarea
+                      className="w-full resize-none"
+                      rows={5}
+                      placeholder="Ariza bayoni..."
+                      {...field}
+                      value={field.value || ''}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -10,10 +10,18 @@ export const DeRegisterHFSchema = z.object({
       message: FORM_ERROR_MESSAGES.phone,
     }),
   description: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  sign: z.string().optional(),
+  sign: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   registryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   reasons: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   justifiedDocumentPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   filePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  type: z.string().optional(),
+  type: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
 })

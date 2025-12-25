@@ -11,7 +11,11 @@ export const XrayAppealDtoSchema = z.object({
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  licenseNumber: z.string().optional(),
+  licenseNumber: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   model: z.string({ required_error: 'Model kiritilmadi!' }).min(1, 'Model kiritilmadi!'),
   licenseRegistryNumber: z
     .string({ required_error: 'Ruxsatnoma raqami kiritilmadi!' })

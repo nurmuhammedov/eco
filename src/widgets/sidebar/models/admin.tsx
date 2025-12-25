@@ -2,7 +2,6 @@ import type { Navigation } from '@/widgets/sidebar/models/types'
 import {
   Activity,
   AlertTriangle,
-  Award,
   Clipboard,
   ListChecks,
   ListTree,
@@ -46,11 +45,6 @@ export default [
     url: '/inspection-surveys',
     title: 'menu.inspection',
     icon: <Clipboard />,
-  },
-  {
-    url: '/permits',
-    title: 'Ruxsatnomalar',
-    icon: <Award />,
   },
   {
     url: '/user-logs',

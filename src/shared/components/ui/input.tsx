@@ -3,6 +3,7 @@ import { cn } from '@/shared/lib/utils'
 
 interface InputProps extends React.ComponentProps<'input'> {
   allowCyrillic?: boolean
+  value?: any
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(

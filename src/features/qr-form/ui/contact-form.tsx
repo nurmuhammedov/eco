@@ -29,7 +29,11 @@ const formSchema = z.object({
   type: z.enum(['APPEAL', 'COMPLAINT', 'SUGGESTION'], {
     required_error: 'Murojaat turini tanlang',
   }),
-  fullName: z.string().optional(),
+  fullName: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   phoneNumber: z
     .string()
     .trim()

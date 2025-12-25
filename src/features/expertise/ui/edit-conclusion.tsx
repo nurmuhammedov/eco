@@ -106,7 +106,7 @@ export const UpdateConclusion = () => {
                         {...field}
                         onChange={(e) => {
                           field.onChange(e)
-                          form.setValue('hfId', undefined)
+                          form.setValue('hfId', null)
                         }}
                       />
                     </FormControl>

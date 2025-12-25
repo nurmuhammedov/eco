@@ -14,10 +14,26 @@ export const DeRegisterEquipmentSchema = z.object({
       required_error: 'Majburiy maydon!',
     })
     .min(1, 'Majburiy maydon!'),
-  description: z.string().optional(),
+  description: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
   registryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   purchaseAgreementPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  orderSuspensionPath: z.string().optional(),
-  laboratoryReportPath: z.string().optional(),
-  additionalInfoPath: z.string().optional(),
+  orderSuspensionPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  laboratoryReportPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  additionalInfoPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
 })
