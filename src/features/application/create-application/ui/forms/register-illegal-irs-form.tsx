@@ -1,51 +1,134 @@
-import { CardForm, CreateIrsApplicationDTO } from '@/entities/create-application'
-import { useCreateIrsApplication } from '@/features/application/create-application/model/use-create-irs-application'
+import { CardForm } from '@/entities/create-application'
+import { AppealFormSkeleton, NoteForm } from '@/features/application/create-application'
 import { GoBack } from '@/shared/components/common'
+import DetailRow from '@/shared/components/common/detail-row'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { InputNumber } from '@/shared/components/ui/input-number'
-import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
+import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
+import { useRegisterIllegalIrs } from '@/features/application/create-application/model/use-create-illegal-irs-application'
+import { RegisterIllegalIrsDTO } from '@/entities/create-application/schemas/register-illegal-irs.schema'
 
-interface RegisterIrsFormProps {
-  onSubmit: (data: CreateIrsApplicationDTO) => void
+interface RegisterIllegalIrsFormProps {
+  onSubmit: (data: RegisterIllegalIrsDTO) => void
+  isPending?: boolean
 }
 
-export default ({ onSubmit }: RegisterIrsFormProps) => {
+export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) => {
   const {
     form,
+    isUpdate,
     regionOptions,
     districtOptions,
     irsIdentifierTypeOptions,
     irsCategoryOptions,
     irsUsageTypeOptions,
     irsStatusOptions,
-  } = useCreateIrsApplication()
+    ownerData,
+    isLoading,
+    isSearchLoading,
+    isSubmitPending,
+    handleSearch,
+    handleClear,
+    handleSubmit,
+  } = useRegisterIllegalIrs(onSubmit)
+
+  const identity = form.watch('identity')
+
+  if (isLoading) {
+    return <AppealFormSkeleton />
+  }
 
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="Ionlashtiruvchi nurlanish manbalarini ro‘yxatga olish" />
+      <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
+        <GoBack title={isUpdate ? 'INM maʼlumotlarini tahrirlash' : 'INMni ro‘yxatga olish arizasi'} />
+        <NoteForm equipmentName="INM" onlyLatin={true} />
+
+        <CardForm className="my-2">
+          {!isUpdate ? (
+            <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="identity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>STIR</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={!!ownerData}
+                        className="3xl:w-sm w-full"
+                        placeholder="STIRni kiriting"
+                        maxLength={9}
+                        {...field}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '')
+                          e.target.value = val
+                          if (ownerData) handleClear()
+                          field.onChange(e)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
+                {!ownerData ? (
+                  <Button
+                    type="button"
+                    onClick={handleSearch}
+                    disabled={isSearchLoading || !identity || identity.length !== 9}
+                    loading={isSearchLoading}
+                  >
+                    Qidirish
+                  </Button>
+                ) : (
+                  <Button type="button" variant="destructive" onClick={handleClear}>
+                    O‘chirish
+                  </Button>
+                )}
+              </div>
+            </div>
+          ) : null}
+
+          {ownerData && (
+            <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
+              <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
+              <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
+                <DetailRow title="Tashkilot nomi:" value={ownerData?.legalName || '-'} />
+                <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || '-'} />
+                <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
+                <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
+              </div>
+            </div>
+          )}
+        </CardForm>
+
         <CardForm className="mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Ariza beruvchining telefon raqami</FormLabel>
-                  <FormControl>
-                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {!isUpdate && (
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Ariza beruvchining telefon raqami</FormLabel>
+                    <FormControl>
+                      <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="parentOrganization"
@@ -146,7 +229,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>INMning identifikatsiya raqami (SRM/NUM)</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select onValueChange={(val) => val && field.onChange(val)} value={field.value}>
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Identifikatsiya turini tanlang" />
                       </SelectTrigger>
@@ -253,7 +336,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>INMlarning kategoriyasi</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select onValueChange={(val) => val && field.onChange(val)} value={field.value}>
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Kategoriyani tanlang" />
                       </SelectTrigger>
@@ -341,7 +424,10 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>INM holati</FormLabel>
                   <FormControl>
-                    <Select onValueChange={(value) => field.onChange(value === 'true')} value={String(field.value)}>
+                    <Select
+                      onValueChange={(value) => value && field.onChange(value === 'true')}
+                      value={String(field.value)}
+                    >
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Holatni tanlang" />
                       </SelectTrigger>
@@ -365,7 +451,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>INMdan foydalanish maqsadi</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select onValueChange={(val) => val && field.onChange(val)} value={field.value}>
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Maqsadni tanlang" />
                       </SelectTrigger>
@@ -429,7 +515,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
                   <FormLabel required>Joylashgan tuman</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(val) => val && field.onChange(val)}
                       value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
@@ -458,6 +544,7 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
             />
           </div>
         </CardForm>
+
         <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <FormField
             name="passportPath"
@@ -490,8 +577,9 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
             )}
           />
         </CardForm>
-        <Button type="submit" className="mt-5">
-          Ariza yaratish
+
+        <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>
+          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
         </Button>
       </form>
     </Form>

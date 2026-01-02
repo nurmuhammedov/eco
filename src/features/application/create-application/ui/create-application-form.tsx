@@ -3,6 +3,7 @@ import { AppealFormSkeleton, ApplicationModal } from '@/features/application/cre
 import { Suspense } from 'react'
 import { useParams } from 'react-router-dom'
 import { getFormComponentByType, isValidApplicationType } from '../model/store'
+import { GoBack } from '@/shared/components/common'
 
 export const CreateApplicationForm = () => {
   const { type } = useParams<{ type: ApplicationTypeEnum }>()
@@ -26,8 +27,7 @@ export const CreateApplicationForm = () => {
   if (!isValidApplicationType(type!)) {
     return (
       <div className="error-container">
-        <h3>Noto‘g‘ri ariza turi</h3>
-        <p>Ko‘rsatilgan ariza turi ({type}) mavjud emas!</p>
+        <GoBack title={'Ushbu ariza turi mavjud emas!'} />
       </div>
     )
   }

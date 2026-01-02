@@ -32,7 +32,7 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
   }
 
   const handleView = (row: RiskAnalysisItem) => {
-    navigate(`/risk-analysis/detail?tin=${row.legalTin}&id=${row.id}&type=${type}`)
+    navigate(`/risk-analysis/detail?tin=${row.legalTin}&id=${row.belongId}&type=${type}`)
   }
 
   const columns: ExtendedColumnDef<RiskAnalysisItem, any>[] = [

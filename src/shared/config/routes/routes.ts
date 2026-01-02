@@ -265,12 +265,26 @@ export const appRoutes = [
   {
     path: 'accreditations/add',
     component: AddConclusionPage,
-    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
+    roles: [
+      UserRoles.LEGAL,
+      UserRoles.INSPECTOR,
+      UserRoles.REGIONAL,
+      UserRoles.MANAGER,
+      UserRoles.HEAD,
+      UserRoles.CHAIRMAN,
+    ],
   },
   {
     path: '/accreditations/detail/:id',
     component: ConclusionDetail,
-    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
+    roles: [
+      UserRoles.LEGAL,
+      UserRoles.INSPECTOR,
+      UserRoles.REGIONAL,
+      UserRoles.MANAGER,
+      UserRoles.HEAD,
+      UserRoles.CHAIRMAN,
+    ],
   },
   {
     path: '/accreditations/edit/:id',

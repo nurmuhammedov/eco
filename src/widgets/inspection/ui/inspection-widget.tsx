@@ -2,13 +2,13 @@ import { InspectionList } from '@/features/inspections/ui/inspection-list'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import { useAuth } from '@/shared/hooks/use-auth'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { UserRoles } from '@/entities/user'
 import { useData } from '@/shared/hooks'
 import { Badge } from '@/shared/components/ui/badge'
 import clsx from 'clsx'
 import { cn } from '@/shared/lib/utils'
-import { getCurrentMonthEnum, MONTHS } from '@/widgets/prevention/ui/prevention-widget'
+import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
 
 export enum InspectionStatus {
   ALL = 'ALL',
@@ -36,12 +36,25 @@ export const defaultCountDto: CountDto = {
   conductedCount: 0,
 }
 
-const Cards = ({ activeRiskLevel, onTabChange, year }: any) => {
-  const stats = MONTHS?.map((month) => ({
-    id: month?.value,
-    name: month?.label,
-    count: month?.count,
-    year: year,
+const Cards = ({ onTabChange, regionId }: any) => {
+  const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
+
+  const activeRegion = regionId?.toString() || (regions && regions.length > 0 ? regions[0].id?.toString() : '')
+
+  const regionTabs = useMemo(() => {
+    return (
+      regions?.map((item) => ({
+        id: item?.id?.toString(),
+        name: getRegionLabel(item.name || ''),
+        count: 0,
+      })) || []
+    )
+  }, [regions])
+
+  const stats = regionTabs?.map((month) => ({
+    id: month?.id,
+    name: month?.name,
+    count: month?.count || 0,
     inactiveClass: 'bg-[#016B7B]/10 border-[#016B7B]/20 text-[#016B7B]',
     activeClass: 'bg-[#016B7B] border-[#015a67] text-white shadow-sm',
   }))
@@ -49,23 +62,22 @@ const Cards = ({ activeRiskLevel, onTabChange, year }: any) => {
   return (
     <div className="scrollbar-hidden mb-2 flex w-full gap-2 overflow-x-auto">
       {stats.map((stat) => {
-        const isActive = activeRiskLevel === stat.id
+        const isActive = activeRegion === stat.id
 
         return (
           <div
             key={stat.id}
             onClick={() => onTabChange(stat.id)}
             className={clsx(
-              'relative flex flex-1 cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors duration-200 select-none',
+              'relative flex min-w-fit flex-1 shrink grow cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors duration-200 select-none',
               isActive ? stat.activeClass : `${stat.inactiveClass} hover:opacity-80`
             )}
           >
             <div className="w-full">
               <div className="flex w-full justify-between gap-2">
-                <p className="mb-1 text-sm font-medium opacity-90">{stat.name}</p>
-                <p className="mb-1 text-sm font-medium opacity-90">{stat?.year}</p>
+                <p className="mb-1 text-sm font-medium whitespace-nowrap opacity-90">{stat.name}</p>
               </div>
-              <h3 className={clsx('text-2xl font-bold')}>{stat.count}</h3>
+              <h3 className="text-2xl font-bold">{stat.count}</h3>
             </div>
           </div>
         )
@@ -82,8 +94,9 @@ export const InspectionWidget: React.FC = () => {
   const activeTab = paramsObject.status
   const activeSubTab = paramsObject.subStatus
   const activeProcess = paramsObject.process
-  const year = paramsObject.year || new Date().getFullYear()
-  const month = paramsObject.month || getCurrentMonthEnum()
+  const regionId = paramsObject.regionId
+  // const year = paramsObject.year || new Date().getFullYear()
+  // const month = paramsObject.month || getCurrentMonthEnum()
 
   const { data: countObject = defaultCountDto } = useData<CountDto>('/inspections/count')
 
@@ -98,11 +111,7 @@ export const InspectionWidget: React.FC = () => {
   if (isInspector || isLegal) {
     return (
       <>
-        <Cards
-          year={year}
-          activeRiskLevel={month.toString()}
-          onTabChange={(val: string) => addParams({ month: val, page: 1 })}
-        />
+        <Cards regionId={regionId} onTabChange={(val: string) => addParams({ regionId: val, page: 1 })} />
 
         <Tabs value={activeSubTab || InspectionSubMenuStatus.ASSIGNED} onValueChange={handleSubTabChange}>
           <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
@@ -134,11 +143,7 @@ export const InspectionWidget: React.FC = () => {
 
   return (
     <>
-      <Cards
-        year={year}
-        activeRiskLevel={month.toString()}
-        onTabChange={(val: string) => addParams({ month: val, page: 1 })}
-      />
+      <Cards regionId={regionId} onTabChange={(val: string) => addParams({ regionId: val, page: 1 })} />
       <Tabs value={activeTab || InspectionStatus.ALL} onValueChange={handleTabChange}>
         <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
           <TabsList>

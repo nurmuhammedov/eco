@@ -1,20 +1,21 @@
-import { CardForm, CreateIllegalXrayApplicationDTO } from '@/entities/create-application'
+import { CardForm, RegisterIllegalXrayDTO } from '@/entities/create-application'
+import { AppealFormSkeleton, NoteForm } from '@/features/application/create-application'
 import { GoBack } from '@/shared/components/common'
+import DetailRow from '@/shared/components/common/detail-row'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
-import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
+import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { format, parseISO } from 'date-fns'
-import { useCreateIllegalXrayApplication } from '../../model/use-create-illegal-xray-application'
-import { useLegalIipInfo } from '@/features/application/application-detail/hooks/use-legal-iip-info'
-import DetailRow from '@/shared/components/common/detail-row'
+import { parseISO } from 'date-fns'
+import { useRegisterIllegalXray } from '@/features/application/create-application/model/use-create-illegal-xray-application'
 
 interface RegisterIllegalXrayFormProps {
-  onSubmit: (data: CreateIllegalXrayApplicationDTO) => void
+  onSubmit: (data: RegisterIllegalXrayDTO) => void
+  isPending?: boolean
 }
 
 const generateYearOptions = () => {
@@ -29,70 +30,113 @@ const generateYearOptions = () => {
 
 const yearOptions = generateYearOptions()
 
-export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
-  const { form, regionOptions, districtOptions, stateServiceOptions } = useCreateIllegalXrayApplication()
-  const legalTin = form.watch('legalTin')
+export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) => {
+  const {
+    form,
+    isUpdate,
+    districtOptions,
+    regionOptions,
+    stateServiceOptions,
+    ownerData,
+    isLoading,
+    isSearchLoading,
+    isSubmitPending,
+    handleSearch,
+    handleClear,
+    handleSubmit,
+  } = useRegisterIllegalXray(onSubmit)
 
-  const isLegal = typeof legalTin === 'string' && legalTin.trim().length === 9
+  const identity = form.watch('identity')
 
-  const { data: legalData, isLoading: isLegalLoading } = useLegalIipInfo(legalTin, !!isLegal)
-
-  const data = legalData
-  const isLoading = isLegalLoading
+  if (isLoading) {
+    return <AppealFormSkeleton />
+  }
 
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="Rentgenni ro‘yxatga olish" />
-        <CardForm className="my-2">
-          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="legalTin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>STIR</FormLabel>
-                  <FormControl>
-                    <Input className={'3xl:w-sm w-full'} placeholder="STIR" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+      <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
+        <GoBack title={isUpdate ? 'Rentgen maʼlumotlarini tahrirlash' : 'Rentgen uskunasini ro‘yxatga olish'} />
+        <NoteForm equipmentName="rentgen" onlyLatin={true} />
+        {(isUpdate || !isUpdate) && (
+          <CardForm className="my-2">
+            {!isUpdate ? (
+              <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+                <FormField
+                  control={form.control}
+                  name="identity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>STIR</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={!!ownerData}
+                          className="3xl:w-sm w-full"
+                          placeholder="STIRni kiriting"
+                          maxLength={9}
+                          {...field}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/\D/g, '')
+                            e.target.value = val
+                            if (ownerData) handleClear()
+                            field.onChange(e)
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          {/* Yuklanish indikatori */}
-          {isLoading && <div className="">Yuklanmoqda...</div>}
-
-          {/* Ma'lumotlar bloki (`data` o'zgaruvchisidan foydalanadi) */}
-          {data && (
-            <div className="mt-6 border-t pt-6">
-              {/* Sarlavhani ham dinamik qilamiz */}
-              <h3 className="mb-4 text-lg font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
-              <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
-                <DetailRow title="Tashkilot nomi:" value={data?.name || '-'} />
-                <DetailRow title="Tashkilot rahbari F.I.SH:" value={data?.fullName || '-'} />
-                <DetailRow title="Manzil:" value={data?.address || data?.legalAddress || '-'} />
-                <DetailRow title="Telefon raqami:" value={data?.phoneNumber || '-'} />
+                <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
+                  {!ownerData ? (
+                    <Button
+                      type="button"
+                      onClick={handleSearch}
+                      disabled={isSearchLoading || !identity || identity.length !== 9}
+                      loading={isSearchLoading}
+                    >
+                      Qidirish
+                    </Button>
+                  ) : (
+                    <Button type="button" variant="destructive" onClick={handleClear}>
+                      O‘chirish
+                    </Button>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-        </CardForm>
-        <CardForm className="my-2">
+            ) : null}
+
+            {ownerData && (
+              <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
+                <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
+                <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
+                  <DetailRow title={'Tashkilot nomi:'} value={ownerData?.legalName || '-'} />
+                  <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || '-'} />
+                  <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
+                  <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
+                </div>
+              </div>
+            )}
+          </CardForm>
+        )}
+
+        <CardForm className="mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Ariza beruvchining telefon raqami</FormLabel>
-                  <FormControl>
-                    <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {!isUpdate && (
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Telefon raqami</FormLabel>
+                    <FormControl>
+                      <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="licenseNumber"
@@ -100,7 +144,12 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 <FormItem>
                   <FormLabel>License tizimidagi ruxsatnoma raqami</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="License tizimidagi ruxsatnoma raqami" {...field} />
+                    <Input
+                      className="3xl:w-sm w-full"
+                      placeholder="License tizimidagi ruxsatnoma raqami"
+                      {...field}
+                      value={field.value || ''}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -111,13 +160,9 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               name="licenseRegistryNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>License tizimidagi ruxsatnoma reestri tartib raqami</FormLabel>
+                  <FormLabel required>License tizimidagi ruxsatnoma reyestri tartib raqami</FormLabel>
                   <FormControl>
-                    <Input
-                      className="3xl:w-sm w-full"
-                      placeholder="License tizimidagi ruxsatnoma reestri tartib raqami"
-                      {...field}
-                    />
+                    <Input className="3xl:w-sm w-full" placeholder="Reyestr raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,15 +185,15 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               control={form.control}
               name="licenseDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : undefined
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>License tizimi orqali ruxsatnoma berilgan sana</FormLabel>
+                    <FormLabel required>Ruxsatnoma berilgan sana</FormLabel>
                     <DatePicker
-                      disableStrategy={'after'}
+                      disableStrategy="after"
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
-                      placeholder="License tizimi orqali ruxsatnoma berilgan sana"
+                      onChange={field.onChange}
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -159,14 +204,15 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               control={form.control}
               name="licenseExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : undefined
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Ruxsatnomani amal qilish muddati</FormLabel>
+                    <FormLabel required>Ruxsatnomaning amal qilish muddati</FormLabel>
                     <DatePicker
+                      disableStrategy="before"
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
-                      placeholder="Ruxsatnomani amal qilish muddati"
+                      onChange={field.onChange}
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -207,7 +253,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                   <FormLabel required>Rentgen joylashgan tuman (shahar)</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(val) => val && field.onChange(val)}
                       value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
@@ -253,8 +299,12 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => {
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Rentgen uskunasining ishlab ciqarilgan yili</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormLabel required>Ishlab chiqarilgan yili</FormLabel>
+                    <Select
+                      onValueChange={(val) => val && field.onChange(val)}
+                      defaultValue={field.value}
+                      value={field.value}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Yilni tanlang..." />
                       </SelectTrigger>
@@ -276,11 +326,11 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               name="stateService"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Davlat xizmatining to'liq nomi</FormLabel>
+                  <FormLabel required>Davlat xizmatining to‘liq nomi</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select onValueChange={(val) => val && field.onChange(val)} value={field.value}>
                       <SelectTrigger className="3xl:w-sm w-full">
-                        <SelectValue placeholder="Davlat xizmatining to'liq nomini tanlang" />
+                        <SelectValue placeholder="Kategoriyani tanlang" />
                       </SelectTrigger>
                       <SelectContent>{stateServiceOptions}</SelectContent>
                     </Select>
@@ -291,6 +341,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
             />
           </div>
         </CardForm>
+
         <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <div className="border-b pb-4">
             <FormField
@@ -299,7 +350,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Mehnat vazirligi tomonidan berilgan ekspertiza hulosasi</FormLabel>
+                    <FormLabel required>Mehnat vazirligi ekspertiza xulosasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -307,7 +358,6 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="file1ExpiryDate"
@@ -316,12 +366,13 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -330,6 +381,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               }}
             />
           </div>
+
           <div className="border-b pb-4">
             <FormField
               name="file2Path"
@@ -337,7 +389,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Sanitar-epidemologik hulosa barcha betlari</FormLabel>
+                    <FormLabel required>Sanitariya-epidemiologik xulosa</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -345,7 +397,6 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="file2ExpiryDate"
@@ -354,12 +405,13 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -368,6 +420,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               }}
             />
           </div>
+
           <div className="border-b pb-4">
             <FormField
               name="file3Path"
@@ -375,7 +428,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Sanitar-epidemologik hulosa obʼekt toifasi koʼrsatilgan qismi</FormLabel>
+                    <FormLabel required>SES xulosa obyekt toifasi qismi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -383,7 +436,6 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="file3ExpiryDate"
@@ -392,12 +444,13 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -406,6 +459,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               }}
             />
           </div>
+
           <div className="border-b pb-4">
             <FormField
               name="file4Path"
@@ -413,7 +467,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Buyruq va “А” toifaga kirgan xodimlar roʼyhati ilova shaklida</FormLabel>
+                    <FormLabel required>Buyruq va “А” toifaga kirgan xodimlar ro‘yxati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -422,6 +476,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               )}
             />
           </div>
+
           <div className="border-b pb-4">
             <FormField
               name="file5Path"
@@ -429,7 +484,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Radiatsiyaviy xavfsizlik boʼyicha oʼqiganlik yuzasidan sertifikat</FormLabel>
+                    <FormLabel required>Radiatsiyaviy xavfsizlik sertifikati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -437,7 +492,6 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="file5ExpiryDate"
@@ -446,12 +500,13 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -460,6 +515,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               }}
             />
           </div>
+
           <div className="border-b pb-4">
             <FormField
               name="file6Path"
@@ -467,7 +523,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Tibbiy koʼrik hulosasi</FormLabel>
+                    <FormLabel required>Tibbiy ko‘rik xulosasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -475,7 +531,6 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="file6ExpiryDate"
@@ -484,12 +539,13 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -498,6 +554,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               }}
             />
           </div>
+
           <div className="border-b pb-4">
             <FormField
               name="file7Path"
@@ -505,7 +562,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Dozimetr protokoli (bayonnomasi)</FormLabel>
+                    <FormLabel required>Dozimetr protokoli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -513,7 +570,6 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="file7ExpiryDate"
@@ -522,12 +578,13 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -536,6 +593,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               }}
             />
           </div>
+
           <div className="border-b pb-4">
             <FormField
               name="file8Path"
@@ -543,7 +601,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Davriy qiyoslov sertifikati</FormLabel>
+                    <FormLabel required>Davriy qiyoslov sertifikati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -551,7 +609,6 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="file8ExpiryDate"
@@ -560,12 +617,13 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -574,6 +632,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               }}
             />
           </div>
+
           <div className="border-b pb-4">
             <FormField
               name="file9Path"
@@ -581,7 +640,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Dalolatnoma</FormLabel>
+                    <FormLabel required>Dalolatnoma</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -589,7 +648,6 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="file9ExpiryDate"
@@ -598,12 +656,13 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -612,6 +671,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               }}
             />
           </div>
+
           <div className="border-b pb-4">
             <FormField
               name="file10Path"
@@ -619,7 +679,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Kuzatuv xati, INM pasporti va inventarizatsiya</FormLabel>
+                    <FormLabel required>Kuzatuv xati, INM pasporti va inventarizatsiya</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -628,6 +688,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               )}
             />
           </div>
+
           <div className="border-b pb-4">
             <FormField
               name="file11Path"
@@ -635,7 +696,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Yoʼriqnomalar</FormLabel>
+                    <FormLabel required>Yo‘riqnomalar</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -643,7 +704,6 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="file11ExpiryDate"
@@ -652,13 +712,13 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -667,6 +727,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               }}
             />
           </div>
+
           <div className="border-b pb-4">
             <FormField
               name="file12Path"
@@ -674,7 +735,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Shaxsiy ximoya vositalarining foto surʼati</FormLabel>
+                    <FormLabel required>Shaxsiy himoya vositalarining fotosurati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -683,6 +744,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               )}
             />
           </div>
+
           <div className="border-b pb-4">
             <FormField
               name="file13Path"
@@ -690,7 +752,7 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel>Dalolatnoma-koʼrsatma va uning bajarilish maʼlumotlari</FormLabel>
+                    <FormLabel required>Dalolatnoma-ko‘rsatma va uning bajarilish maʼlumotlari</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -698,7 +760,6 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="file13ExpiryDate"
@@ -707,12 +768,13 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                       />
                     </div>
                     <FormMessage />
@@ -722,8 +784,9 @@ export default ({ onSubmit }: RegisterIllegalXrayFormProps) => {
             />
           </div>
         </CardForm>
-        <Button type="submit" className="mt-5" disabled={!form.formState.isValid}>
-          Ariza yaratish
+
+        <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>
+          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
         </Button>
       </form>
     </Form>

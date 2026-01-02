@@ -10,6 +10,7 @@ import { Coordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { getDate } from '@/shared/utils/date.ts'
 import { Link } from 'react-router-dom'
+import { Logs } from '@/features/register/hf/ui/parts/logs'
 
 const XrayDetail = () => {
   const { isLoading, data } = useXrayDetail()
@@ -52,7 +53,7 @@ const XrayDetail = () => {
           <LegalApplicantInfo tinNumber={data?.legalTin} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
-          <AppealMainInfo data={data} type={'IRS'} address={data?.address} />
+          <AppealMainInfo data={data} type={'XRAY'} address={data?.address} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">
           <FilesSection files={data?.files || []} />
@@ -62,6 +63,9 @@ const XrayDetail = () => {
             <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
           </DetailCardAccordion.Item>
         )}
+        <DetailCardAccordion.Item value="history" title="O‘zgartirishlar tarixi">
+          <Logs url="xrays" />
+        </DetailCardAccordion.Item>
       </DetailCardAccordion>
     </div>
   )

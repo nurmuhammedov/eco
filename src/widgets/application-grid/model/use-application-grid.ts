@@ -20,7 +20,7 @@ export function useApplicationGrid() {
         : user?.role == UserRoles.INSPECTOR
           ? ApplicationCategory.ILLEGAL_HF
           : user?.role == UserRoles.MANAGER
-            ? ApplicationCategory.ILLEGAL_XRAY
+            ? ApplicationCategory.ILLEGAL_IRS
             : ApplicationCategory.HF
     ),
   })

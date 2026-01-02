@@ -93,7 +93,6 @@ export default ({ onSubmit }: DeRegisterEquipmentFormProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="description"
@@ -115,7 +114,6 @@ export default ({ onSubmit }: DeRegisterEquipmentFormProps) => {
             />
           </div>
         </CardForm>
-
         <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           {fileFields.map((fileField) => (
             <FormField
@@ -135,7 +133,6 @@ export default ({ onSubmit }: DeRegisterEquipmentFormProps) => {
             />
           ))}
         </CardForm>
-
         <Button type="submit" className="mt-5">
           Ariza yaratish
         </Button>

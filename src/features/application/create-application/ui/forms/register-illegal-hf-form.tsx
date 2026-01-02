@@ -1,8 +1,11 @@
 import { CardForm } from '@/entities/create-application'
 import { GoBack } from '@/shared/components/common'
+import DetailRow from '@/shared/components/common/detail-row'
 import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
-import { Button } from '@/shared/components/ui/button.tsx'
+import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker'
 import {
   Form,
   FormControl,
@@ -16,53 +19,56 @@ import { Input } from '@/shared/components/ui/input'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { useCreateIllegalHFApplication } from '@/features/application/create-application/model/use-create-illegal-hf-applicaton'
-import DetailRow from '@/shared/components/common/detail-row'
-import useAdd from '@/shared/hooks/api/useAdd'
-import { useState } from 'react'
+import { parseISO } from 'date-fns'
+import { RegisterIllegalHfDTO } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
+import { useRegisterIllegalHf } from '@/features/application/create-application/model/use-create-illegal-hf-applicaton'
 
-export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
-  const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } =
-    useCreateIllegalHFApplication()
-  const [data, setData] = useState<any>(undefined)
-  const { mutateAsync, isPending } = useAdd<any, any, any>('/integration/iip/legal')
-  const legalTin = form.watch('legalTin')
+interface RegisterIllegalHfFormProps {
+  onSubmit: (data: RegisterIllegalHfDTO) => void
+  isPending?: boolean
+}
 
-  const handleSearch = async () => {
-    const isValid = await form.trigger('legalTin')
+export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => {
+  const {
+    form,
+    spheres,
+    regionOptions,
+    districtOptions,
+    hazardousFacilityTypeOptions,
+    ownerData,
+    isSearchLoading,
+    handleSearch,
+    handleClear,
+    handleSubmit,
+  } = useRegisterIllegalHf(onSubmit)
 
-    if (isValid && legalTin && legalTin.length === 9) {
-      mutateAsync({ tin: legalTin }).then((res) => {
-        setData(res.data)
-      })
-    }
-  }
-
-  const handleClear = () => {
-    setData(undefined)
-    form.setValue('legalTin', '')
-  }
+  const identity = form.watch('identity')
 
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="XICHOni ro‘yxatga olish" />
-
+      <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
+        <GoBack title="XICHOni ro‘yxatga olish (Noqonuniy)" />
         <CardForm className="my-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
-              name="legalTin"
+              name="identity"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>STIR</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={!!data}
-                      className={'3xl:w-sm w-full'}
+                      disabled={!!ownerData}
+                      className="3xl:w-sm w-full"
                       placeholder="STIRni kiriting"
                       maxLength={9}
                       {...field}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '')
+                        e.target.value = val
+                        if (ownerData) handleClear()
+                        field.onChange(e)
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -71,12 +77,12 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             />
 
             <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
-              {!data ? (
+              {!ownerData ? (
                 <Button
                   type="button"
                   onClick={handleSearch}
-                  disabled={isPending || !legalTin || legalTin.length !== 9}
-                  loading={isPending}
+                  disabled={isSearchLoading || !identity || identity.length !== 9}
+                  loading={isSearchLoading}
                 >
                   Qidirish
                 </Button>
@@ -88,14 +94,14 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
             </div>
           </div>
 
-          {data && (
-            <div className="mt-6 border-t pt-6">
-              <h3 className="mb-4 text-lg font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
-              <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-1">
-                <DetailRow title="Tashkilot nomi:" value={data?.name || '-'} />
-                <DetailRow title="Tashkilot rahbari F.I.SH:" value={data?.directorName || '-'} />
-                <DetailRow title="Tashkilot manzili:" value={data?.address || data?.legalAddress || '-'} />
-                <DetailRow title="Tashkilot telefon raqami:" value={data?.phoneNumber || '-'} />
+          {ownerData && (
+            <div className="mt-4 border-t pt-4">
+              <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
+              <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
+                <DetailRow title="Tashkilot nomi:" value={ownerData?.legalName || '-'} />
+                <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || '-'} />
+                <DetailRow title="Manzil:" value={ownerData?.legalAddress || '-'} />
+                <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
               </div>
             </div>
           )}
@@ -147,9 +153,9 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               name="hfTypeId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>XICHO ning turi</FormLabel>
+                  <FormLabel required>XICHO ning turi</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value || undefined}>
+                    <Select onValueChange={(val) => val && field.onChange(val)} value={field.value}>
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="XICHO ning turi" />
                       </SelectTrigger>
@@ -165,13 +171,13 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               name="spheres"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Tarmoqlar</FormLabel>
+                  <FormLabel required>Tarmoqlar</FormLabel>
                   <FormControl>
                     <MultiSelect
                       className="3xl:w-sm w-full"
-                      value={field.value || []}
-                      onChange={field.onChange}
+                      {...field}
                       options={spheres}
+                      maxDisplayItems={5}
                       placeholder="Tarmoqlar"
                     />
                   </FormControl>
@@ -212,7 +218,11 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                 <FormItem>
                   <FormLabel required>XICHO joylashgan tuman</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={(val) => val && field.onChange(val)}
+                      value={field.value}
+                      disabled={!form.watch('regionId')}
+                    >
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="XICHO joylashgan tuman" />
                       </SelectTrigger>
@@ -258,7 +268,9 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               name="extraArea"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="3xl:w-sm w-full">XICHO sexlari, uchastkalari va maydonchalari nomi</FormLabel>
+                  <FormLabel required className="3xl:w-sm w-full">
+                    XICHO sexlari, uchastkalari va maydonchalari nomi
+                  </FormLabel>
                   <FormControl>
                     <Input
                       className="3xl:w-sm w-full"
@@ -278,13 +290,15 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
               name="hazardousSubstance"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="3xl:w-sm w-full">Xavfli moddalarning nomi va miqdori</FormLabel>
+                  <FormLabel required className="3xl:w-sm w-full">
+                    Xavfli moddalarning nomi va miqdori
+                  </FormLabel>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Xavfli moddalarning nomi va miqdori" {...field} />
                   </FormControl>
                   <FormMessage />
                   <FormDescription>
-                    VM ning 2008-yil 10-dekabrdagi 271-son qaroriga muvofiq
+                    VM ning 2008 yil 10 dekabrdagi 271-son qaroriga muvofiq
                     <br /> xavfli moddalarning nomi va miqdori
                   </FormDescription>
                 </FormItem>
@@ -293,210 +307,246 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
           </div>
         </CardForm>
 
-        <CardForm className="mb-5 grid grid-cols-2 gap-x-8 gap-y-4 2xl:grid-cols-3">
-          <FormField
-            name="projectDocumentationPath"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel>Loyiha hujjatlari (PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="insurancePolicyPath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel>Sug‘urta polisi (PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="appointmentOrderPath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel>Mas‘ul xodim tayinlanganligi buyrug‘i (PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="identificationCardPath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Identifikatsiya varag‘i (PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="expertOpinionPath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekspertiza xulosasi (PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="licensePath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Litsenziya (PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="ecologicalConclusionPath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekologiya qo‘mitasidan xulosasi (PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="permitPath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ruxsatnoma (PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="receiptPath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                    XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi (PDF)
-                  </FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="certificationPath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                    XICHO xodimlarning sanoat xavfsizligi bo‘yicha attestatsiyadan o‘tganligi (PDF)
-                  </FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="cadastralPassportPath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">XICHO kadastr pasporti (PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="replyLetterPath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Yong‘in xavfsizligi xulosasi (PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="industrialSafetyDeclarationPath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sanoat xavfsizligi deklaratsiyasi (PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="deviceTestingPath"
-            render={({ field }) => (
-              <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilmalarni sinovdan o‘tganligi (PDF)</FormLabel>
-                  <FormControl>
-                    <InputFile form={form} {...field} />
-                  </FormControl>
-                </div>
-              </FormItem>
-            )}
-          />
+        <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
+          <div className="border-b pb-4">
+            <FormField
+              name="identificationCardPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                      Identifikatsiya varag‘i
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="receiptPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">
+                      XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
+              name="insurancePolicyPath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sug‘urta polisi</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="insurancePolicyExpiryDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="w-full">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <DatePicker
+                        className={'max-w-2/3'}
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        disableStrategy={'before'}
+                        placeholder="Amal qilish muddati"
+                      />
+                    </div>
+                  </FormItem>
+                )
+              }}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
+              name="cadastralPassportPath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">XICHO kadastr pasporti</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="projectDocumentationPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Loyiha hujjatlari</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
+              name="licensePath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Litsenziya</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="licenseExpiryDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="w-full">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <DatePicker
+                        className={'max-w-2/3'}
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        disableStrategy={'before'}
+                        placeholder="Amal qilish muddati"
+                      />
+                    </div>
+                  </FormItem>
+                )
+              }}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
+              name="expertOpinionPath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Loyiha ekspertiza xulosasi (LH)</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
+              name="appointmentOrderPath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Maʼsul xodim tayinlanganligi buyrug‘i</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
+              name="permitPath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="permitExpiryDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="w-full">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <DatePicker
+                        className={'max-w-2/3'}
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        disableStrategy={'before'}
+                        placeholder="Amal qilish muddati"
+                      />
+                    </div>
+                  </FormItem>
+                )
+              }}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
+              name="industrialSafetyDeclarationPath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sanoat xavfsizligi deklaratsiyasi</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
         </CardForm>
 
-        <Button type="submit" disabled={!data}>
+        <Button type="submit" disabled={!ownerData} loading={isPending}>
           Ariza yaratish
         </Button>
       </form>

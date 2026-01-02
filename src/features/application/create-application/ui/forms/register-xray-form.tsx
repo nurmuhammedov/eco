@@ -8,8 +8,8 @@ import DatePicker from '@/shared/components/ui/datepicker'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
-import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from '@/shared/components/ui/select'
-import { format, parseISO } from 'date-fns'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { parseISO } from 'date-fns'
 import { useCreateXrayApplication } from '../../model/use-create-xray-application'
 
 interface RegisterXrayFormProps {
@@ -34,8 +34,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="Rentgenni ro‘yxatga olish" />
-        {/* NoteForm kerak bo'lsa qo'shiladi */}
+        <GoBack title="Rentgen uskunasini ro‘yxatga olish" />
         <CardForm className="my-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
@@ -58,7 +57,12 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 <FormItem>
                   <FormLabel>License tizimidagi ruxsatnoma raqami</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="License tizimidagi ruxsatnoma raqami" {...field} />
+                    <Input
+                      className="3xl:w-sm w-full"
+                      placeholder="License tizimidagi ruxsatnoma raqami"
+                      {...field}
+                      value={field.value || ''}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -69,11 +73,11 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               name="licenseRegistryNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>License tizimidagi ruxsatnoma reestri tartib raqami</FormLabel>
+                  <FormLabel required>License tizimidagi ruxsatnoma reyestri tartib raqami</FormLabel>
                   <FormControl>
                     <Input
                       className="3xl:w-sm w-full"
-                      placeholder="License tizimidagi ruxsatnoma reestri tartib raqami"
+                      placeholder="License tizimidagi ruxsatnoma reyestri tartib raqami"
                       {...field}
                     />
                   </FormControl>
@@ -98,14 +102,14 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               name="licenseDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : undefined
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
                     <FormLabel required>License tizimi orqali ruxsatnoma berilgan sana</FormLabel>
                     <DatePicker
-                      disableStrategy={'after'}
+                      disableStrategy="after"
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
+                      onChange={field.onChange}
                       placeholder="License tizimi orqali ruxsatnoma berilgan sana"
                     />
                     <FormMessage />
@@ -117,14 +121,15 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               name="licenseExpiryDate"
               render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : undefined
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Ruxsatnomani amal qilish muddati</FormLabel>
+                    <FormLabel required>Ruxsatnomaning amal qilish muddati</FormLabel>
                     <DatePicker
+                      disableStrategy="before"
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
-                      placeholder="Ruxsatnomani amal qilish muddati"
+                      onChange={field.onChange}
+                      placeholder="Ruxsatnomaning amal qilish muddati"
                     />
                     <FormMessage />
                   </FormItem>
@@ -211,7 +216,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => {
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Rentgen uskunasining ishlab ciqarilgan yili</FormLabel>
+                    <FormLabel required>Rentgen uskunasining ishlab chiqarilgan yili</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger>
                         <SelectValue placeholder="Yilni tanlang..." />
@@ -234,7 +239,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               name="stateService"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Davlat xizmatining to'liq nomi</FormLabel>
+                  <FormLabel required>Davlat xizmatining to‘liq nomi</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="3xl:w-sm w-full">
@@ -257,7 +262,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Mehnat vazirligi tomonidan berilgan ekspertiza hulosasi</FormLabel>
+                    <FormLabel required>Mehnat vazirligi tomonidan berilgan ekspertiza xulosasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -276,6 +281,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
@@ -295,7 +301,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Sanitar-epidemologik hulosa barcha betlari</FormLabel>
+                    <FormLabel required>Sanitariya-epidemiologik xulosa barcha betlari</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -314,6 +320,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
@@ -333,7 +340,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Sanitar-epidemologik hulosa obʼekt toifasi koʼrsatilgan qismi</FormLabel>
+                    <FormLabel required>Sanitariya-epidemiologik xulosa obyekt toifasi ko‘rsatilgan qismi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -352,6 +359,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
@@ -371,7 +379,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Buyruq va “А” toifaga kirgan xodimlar roʼyhati ilova shaklida</FormLabel>
+                    <FormLabel required>Buyruq va “А” toifaga kirgan xodimlar ro‘yxati ilova shaklida</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -387,7 +395,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Radiatsiyaviy xavfsizlik boʼyicha oʼqiganlik yuzasidan sertifikat</FormLabel>
+                    <FormLabel required>Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganligi to‘g‘risida sertifikat</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -406,6 +414,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
@@ -425,7 +434,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Tibbiy koʼrik hulosasi</FormLabel>
+                    <FormLabel required>Tibbiy ko‘rik xulosasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -444,6 +453,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
@@ -482,6 +492,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
@@ -520,6 +531,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
@@ -558,6 +570,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
@@ -593,7 +606,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Yoʼriqnomalar</FormLabel>
+                    <FormLabel required>Yo‘riqnomalar</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -612,10 +625,10 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        disableStrategy={'before'}
                         placeholder="Amal qilish muddati"
                       />
                     </div>
@@ -632,7 +645,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Shaxsiy ximoya vositalarining foto surʼati</FormLabel>
+                    <FormLabel required>Shaxsiy himoya vositalarining fotosurati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -648,7 +661,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Dalolatnoma-koʼrsatma va uning bajarilish maʼlumotlari</FormLabel>
+                    <FormLabel required>Dalolatnoma-ko‘rsatma va uning bajarilish maʼlumotlari</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -667,6 +680,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
+                        disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
@@ -680,7 +694,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
             />
           </div>
         </CardForm>
-        <Button type="submit" className="mt-5" disabled={!form.formState.isValid}>
+        <Button type="submit" className="mt-5">
           Ariza yaratish
         </Button>
       </form>

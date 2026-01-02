@@ -4,13 +4,18 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
 
-export const IrsAppealDtoSchema = z.object({
+export const RegisterIllegalIrsSchema = z.object({
   phoneNumber: z
     .string({ required_error: 'Majburiy maydon!' })
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
+  identity: z
+    .string({ required_error: 'Majburiy maydon!' })
+    .length(9, 'STIR 9 xonadan iborat bo‘lishi kerak')
+    .regex(/^\d+$/, 'Faqat raqamlar bo‘lishi kerak'),
+
   parentOrganization: z
     .string()
     .optional()
@@ -65,3 +70,5 @@ export const IrsAppealDtoSchema = z.object({
   districtId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
 })
+
+export type RegisterIllegalIrsDTO = z.infer<typeof RegisterIllegalIrsSchema>

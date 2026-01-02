@@ -76,13 +76,13 @@ export const ApplicationsGridIns: React.FC = () => {
                   id: ApplicationCategory.ILLEGAL_EQUIPMENTS,
                   name: 'Xavfli obyektlar va qurilmalar',
                 },
-                {
-                  id: ApplicationCategory.ILLEGAL_XRAY,
-                  name: 'Rentgen',
-                },
               ]
             : user?.role == UserRoles.MANAGER
               ? [
+                  {
+                    id: ApplicationCategory.ILLEGAL_IRS,
+                    name: 'INM',
+                  },
                   {
                     id: ApplicationCategory.ILLEGAL_XRAY,
                     name: 'Rentgen',

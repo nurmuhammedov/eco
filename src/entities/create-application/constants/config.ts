@@ -102,6 +102,10 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: '/appeals/xray/unofficial',
     pdfEndpoint: '/appeals/xray/unofficial/generate-pdf',
   },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_IRS]: {
+    submitEndpoint: '/appeals/irs/unofficial',
+    pdfEndpoint: '/appeals/irs/unofficial/generate-pdf',
+  },
   [ApplicationTypeEnum.REGISTER_ACCREDITATION]: {
     submitEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION,
     pdfEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_GENERATE_PDF,

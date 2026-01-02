@@ -10,6 +10,7 @@ import { Coordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { getDate } from '@/shared/utils/date.ts'
 import { Link } from 'react-router-dom'
+import { Logs } from '@/features/register/hf/ui/parts/logs'
 
 const IrsDetail = () => {
   const { isLoading, data } = useIrsDetail()
@@ -62,6 +63,9 @@ const IrsDetail = () => {
             <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
           </DetailCardAccordion.Item>
         )}
+        <DetailCardAccordion.Item value="history" title="O‘zgartirishlar tarixi">
+          <Logs url="irs" />
+        </DetailCardAccordion.Item>
       </DetailCardAccordion>
     </div>
   )

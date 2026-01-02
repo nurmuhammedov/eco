@@ -11,11 +11,12 @@ import { Button } from '@/shared/components/ui/button'
 import { NotebookText } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { useNavigate } from 'react-router-dom'
-import { API_ENDPOINTS } from '@/shared/api'
 import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types'
 import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-statistics-cards'
-import { getCurrentMonthEnum, MONTHS } from '@/widgets/prevention/ui/prevention-widget'
 import { cn } from '@/shared/lib/utils'
+import { TabsLayout } from '@/shared/layouts'
+import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
+import { getQuarter } from 'date-fns'
 
 const TAB_TO_API_TYPE: Record<string, string> = {
   [RiskAnalysisTab.XICHO]: 'HF',
@@ -38,17 +39,29 @@ const RiskAnalysisWidget = () => {
       year = new Date().getFullYear(),
       size = 10,
       page = 1,
-      month = getCurrentMonthEnum(),
+      regionId,
+      quarter = getQuarter(new Date()).toString(),
+      // month = getCurrentMonthEnum(),
     },
   } = useCustomSearchParams()
 
-  const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_HF, {
-    type: mainTab,
-    level: riskLevel == 'ALL' ? undefined : riskLevel,
-    year,
-    size,
-    page,
-  })
+  const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
+
+  const activeRegion = regionId?.toString() || (regions && regions.length > 0 ? regions[0].id?.toString() : '')
+
+  const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(
+    '/risk-analyses',
+    {
+      type: mainTab,
+      level: riskLevel == 'ALL' ? undefined : riskLevel,
+      year,
+      size,
+      page,
+      quarter,
+      regionId: activeRegion,
+    },
+    !!activeRegion
+  )
 
   const { data: hfCount = 0 } = useData<number>('/hf/count', false)
   const { data: irsCount = 0 } = useData<number>('/irs/count', false)
@@ -73,6 +86,16 @@ const RiskAnalysisWidget = () => {
   const handleCardTabChange = (level: string) => {
     addParams({ riskLevel: level }, 'page')
   }
+
+  const regionTabs = useMemo(() => {
+    return (
+      regions?.map((item) => ({
+        id: item?.id?.toString(),
+        name: getRegionLabel(item.name || ''),
+        count: 0,
+      })) || []
+    )
+  }, [regions])
 
   return (
     <Fragment>
@@ -131,27 +154,39 @@ const RiskAnalysisWidget = () => {
         </div>
       </Tabs>
 
-      <Tabs
-        className="mb-2 w-full"
-        value={month?.toString()}
-        onValueChange={(val) => addParams({ month: val, page: 1 })}
-      >
-        <div className={cn('scrollbar-hidden mb-2 flex w-full justify-between overflow-x-auto overflow-y-hidden')}>
-          <TabsList className="h-auto w-full p-1">
-            {MONTHS.map((type) => (
-              <TabsTrigger className="flex-1" key={type.value} value={type.value}>
-                {type.label}
-                <Badge
-                  variant="destructive"
-                  className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-                >
-                  {type?.count || 0}
-                </Badge>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </div>
-      </Tabs>
+      {/*<Tabs*/}
+      {/*  className="mb-2 w-full"*/}
+      {/*  value={month?.toString()}*/}
+      {/*  onValueChange={(val) => addParams({ month: val, page: 1 })}*/}
+      {/*>*/}
+      {/*  <div className={cn('scrollbar-hidden mb-2 flex w-full justify-between overflow-x-auto overflow-y-hidden')}>*/}
+      {/*    <TabsList className="h-auto w-full p-1">*/}
+      {/*      {MONTHS.map((type) => (*/}
+      {/*        <TabsTrigger className="flex-1" key={type.value} value={type.value}>*/}
+      {/*          {type.label}*/}
+      {/*          <Badge*/}
+      {/*            variant="destructive"*/}
+      {/*            className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
+      {/*          >*/}
+      {/*            {type?.count || 0}*/}
+      {/*          </Badge>*/}
+      {/*        </TabsTrigger>*/}
+      {/*      ))}*/}
+      {/*    </TabsList>*/}
+      {/*  </div>*/}
+      {/*</Tabs>*/}
+
+      {regionTabs.length > 0 ? (
+        <TabsLayout
+          classNameTabList="!mb-0 w-full"
+          classNameWrapper="w-full"
+          classNameTrigger="flex-1"
+          className="mb-2"
+          tabs={regionTabs}
+          activeTab={activeRegion}
+          onTabChange={(val) => addParams({ regionId: val, page: 1 })}
+        />
+      ) : null}
 
       <Table isLoading={isLoading} data={data} />
     </Fragment>

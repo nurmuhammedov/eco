@@ -27,7 +27,7 @@ export const getCurrentMonthEnum = () => {
   return monthNames[new Date().getMonth()]
 }
 
-const getRegionLabel = (name: string) => {
+export const getRegionLabel = (name: string) => {
   const lowerName = name.toLowerCase()
   if (lowerName.includes('toshkent viloyati')) return 'Toshkent v.'
   if (lowerName.includes('toshkent shahri')) return 'Toshkent sh.'

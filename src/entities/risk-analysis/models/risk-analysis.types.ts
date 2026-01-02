@@ -1,5 +1,6 @@
 export interface RiskAnalysisItem {
   id: string
+  belongId: string
   inspectorName: string | null
   registryNumber: string
   address: string

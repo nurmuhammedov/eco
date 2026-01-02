@@ -10,6 +10,8 @@ import { Eye } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserRoles } from '@/entities/user'
+import { getQuarter } from 'date-fns'
+import { useData } from '@/shared/hooks'
 
 export const InspectionList: React.FC = () => {
   const navigate = useNavigate()
@@ -19,14 +21,22 @@ export const InspectionList: React.FC = () => {
       status = InspectionStatus.ALL,
       subStatus = InspectionSubMenuStatus.ASSIGNED,
       year = new Date().getFullYear(),
+      regionId,
+      quarter = getQuarter(new Date()).toString(),
       ...rest
     },
   } = useCustomSearchParams()
 
   const { user } = useAuth()
 
+  const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
+
+  const activeRegion = regionId?.toString() || (regions && regions.length > 0 ? regions[0].id?.toString() : '')
+
   const { data: inspections, isLoading } = useInspections({
     ...rest,
+    quarter,
+    regionId: activeRegion,
     year,
     status: [UserRoles.LEGAL, UserRoles?.INSPECTOR]?.includes(user?.role as unknown as UserRoles)
       ? subStatus

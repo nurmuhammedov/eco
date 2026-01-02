@@ -4,9 +4,12 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
 
 export const IrsList = () => {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const {
     paramsObject: {
       size = 10,
@@ -53,6 +56,10 @@ export const IrsList = () => {
 
   const handleViewApplication = (id: string) => {
     navigate(`${id}/irs`)
+  }
+
+  const handleEditApplication = (id: string, tin: string) => {
+    navigate(`/applications/create/ILLEGAL_REGISTER_IRS?id=${id}&tin=${tin}`)
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [
@@ -140,9 +147,21 @@ export const IrsList = () => {
     },
     {
       id: 'actions',
-      maxSize: 40,
+      maxSize:
+        user?.role == UserRoles.MANAGER || user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN
+          ? 80
+          : 40,
       cell: ({ row }) => (
-        <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
+        <DataTableRowActions
+          showView
+          row={row}
+          showDelete
+          onView={(row) => handleViewApplication(row.original.id)}
+          showEdit={
+            user?.role == UserRoles.MANAGER || user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN
+          }
+          onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
+        />
       ),
     },
   ]

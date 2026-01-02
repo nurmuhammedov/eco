@@ -3,9 +3,12 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { UserRoles } from '@/entities/user'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 export const XrayList = () => {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const {
     paramsObject: {
       page = 1,
@@ -35,6 +38,9 @@ export const XrayList = () => {
     navigate(`${id}/xrays`)
   }
 
+  const handleEditApplication = (id: string, tin: string) => {
+    navigate(`/applications/create/ILLEGAL_REGISTER_XRAY?id=${id}&tin=${tin}`)
+  }
   const columns: ExtendedColumnDef<any, any>[] = [
     {
       header: 'Ruxsatnoma berilgan sana',
@@ -80,9 +86,21 @@ export const XrayList = () => {
     },
     {
       id: 'actions',
-      maxSize: 40,
+      maxSize:
+        user?.role == UserRoles.MANAGER || user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN
+          ? 70
+          : 40,
       cell: ({ row }) => (
-        <DataTableRowActions showView row={row} showDelete onView={(row) => handleViewApplication(row.original.id)} />
+        <DataTableRowActions
+          showView
+          row={row}
+          showDelete
+          onView={(row) => handleViewApplication(row.original.id)}
+          showEdit={
+            user?.role == UserRoles.MANAGER || user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN
+          }
+          onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
+        />
       ),
     },
   ]

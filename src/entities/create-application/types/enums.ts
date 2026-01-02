@@ -10,12 +10,11 @@ export enum ApplicationCategory {
   IRS = 'IRS',
   XRAY = 'XRAY',
 
-  CADASTRE = 'CADASTRE',
-  ACCREDITATION = 'ACCREDITATION',
-
   ILLEGAL_HF = 'ILLEGAL_HF',
   ILLEGAL_EQUIPMENTS = 'ILLEGAL_EQUIPMENTS',
+  ILLEGAL_IRS = 'ILLEGAL_IRS',
   ILLEGAL_XRAY = 'ILLEGAL_XRAY',
+
   DEFAULT = 'DEFAULT',
 }
 
@@ -155,6 +154,7 @@ export enum ApplicationTypeEnum {
   ILLEGAL_REGISTER_HOIST = 'ILLEGAL_REGISTER_HOIST',
   ILLEGAL_REGISTER_CABLEWAY = 'ILLEGAL_REGISTER_CABLEWAY',
   ILLEGAL_REGISTER_XRAY = 'ILLEGAL_REGISTER_XRAY',
+  ILLEGAL_REGISTER_IRS = 'ILLEGAL_REGISTER_IRS',
 }
 
 export enum IrsIdentifierType {
@@ -178,5 +178,5 @@ export enum IrsUsageType {
   USAGE = 'USAGE', // Ishlatish (foydalanish) uchun
   DISPOSAL = 'DISPOSAL', // Ko‘mish uchun
   EXPORT = 'EXPORT', // Chet-elga olib chiqish uchun
-  STORAGE = 'STORAGE', // Vaqtinchalik saqlash uchun
+  STORAGE = 'TEMPORARY_STORAGE', // Vaqtinchalik saqlash uchun
 }
