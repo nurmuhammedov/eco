@@ -58,8 +58,8 @@ export function useChecklistForm() {
     async (formData: CreateChecklistDTO): Promise<boolean> => {
       try {
         const response = isCreate
-          ? await createItem(formData)
-          : await updateItem({ id: checklistId, ...formData } as UpdateChecklistDTO)
+          ? await createItem({ categoryId: formData?.category, ...formData } as CreateChecklistDTO)
+          : await updateItem({ id: checklistId, categoryId: formData?.category, ...formData } as UpdateChecklistDTO)
 
         if (response.success) {
           handleClose()
