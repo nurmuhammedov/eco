@@ -18,8 +18,9 @@ import { Button } from '@/shared/components/ui/button'
 import { Eye } from 'lucide-react'
 import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal'
 import { getDate } from '@/shared/utils/date'
+import AddInspectionDocuments from '@/features/inspections/ui/parts/add-inspection-documents.tsx'
 
-const InspectionReports = ({ status, acknowledgementPath, act, resultId }: any) => {
+const InspectionReports = ({ status, acknowledgementPath, act, resultId, specialCode }: any) => {
   const { user } = useAuth()
   const [currentTab, setCurrentTab] = useState<'questions' | 'eliminated' | 'not_eliminated'>('questions')
   const [tabulation, setTabulation] = useState<'all' | 'positive' | 'negative'>('all')
@@ -128,6 +129,11 @@ const InspectionReports = ({ status, acknowledgementPath, act, resultId }: any) 
 
   return (
     <div>
+      {user?.role == UserRoles.INSPECTOR && status == InspectionStatus.ASSIGNED ? (
+        <AddInspectionDocuments resultId={resultId} specialCode={specialCode} />
+      ) : (
+        <DetailRow title="Ombudsman maxsus kodi" value={specialCode || '-'} />
+      )}
       <div className="flex items-center justify-between">
         <div className="mt-2">
           <Tabs value={currentTab} onValueChange={(val) => setCurrentTab(val as any)}>

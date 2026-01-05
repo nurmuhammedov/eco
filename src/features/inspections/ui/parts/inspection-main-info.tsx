@@ -33,7 +33,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
       })}
 
       <DetailRow
-        title="Ombudsman maxsus kod:"
+        title="Ombudsman maxsus kodi:"
         value={<span style={{ color: 'green' }}>{inspectionData?.specialCode || '-'}</span>}
       />
 

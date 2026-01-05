@@ -12,7 +12,6 @@ import { ApplicationModal } from '@/features/application/create-application'
 
 const articleOptions = [
   { id: 'ARTICLE_55', name: '55-модда' },
-  { id: 'ARTICLE_70', name: '70-модда' },
   { id: 'ARTICLE_97', name: '97-модда' },
   { id: 'ARTICLE_97_1', name: '97.1-модда' },
   { id: 'ARTICLE_98', name: '98-модда' },

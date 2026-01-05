@@ -23,9 +23,9 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     const location = window.location.pathname
-    const qrPathRegex = /^\/qr\/[^/]+\/equipments\/?$/
+    // const qrPathRegex = /^\/qr\/[^/]+\/equipments\/?$/
 
-    const isQrPath = qrPathRegex.test(location)
+    const isQrPath = location.startsWith('/qr/') || location.startsWith('/public/')
     const isLoginPath = location.startsWith('/auth/login')
 
     const status = error?.response?.status

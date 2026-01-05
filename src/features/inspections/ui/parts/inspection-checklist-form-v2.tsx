@@ -221,14 +221,6 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
               <div className="flex-1">
                 <h4 className="mb-1 flex gap-3 text-sm font-medium text-amber-900">
                   <span>Diqqat, tilxat fayli yuklanmagan!</span>
-                  <a
-                    href="https://test.cirns.uz/api/v1/offices/select"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-sm font-semibold text-blue-600 hover:underline"
-                  >
-                    Tilxat uchun shablon
-                  </a>
                 </h4>
                 <p className="mb-3 text-sm leading-relaxed text-amber-800">
                   2022 yil 13-sentyabrdagi PQ-374-sonli qarorining 3-bob 18-bandiga asosan tilxat yuklanishi talab

@@ -25,6 +25,9 @@ const Permits = lazy(() => import('@/widgets/permits'))
 //ContactPage
 const ContactPage = lazy(() => import('@/pages/qr-form'))
 
+//Public risk analysis info
+const PublicRiskAnalysisInfo = lazy(() => import('@/features/risk-analysis/ui/public-risk-analysis-info.tsx'))
+
 //Inquiries
 const Inquiries = lazy(() => import('@/features/inquiries'))
 
@@ -214,39 +217,88 @@ export const appRoutes = [
   {
     path: 'risk-analysis',
     component: RiskAnalysisPage,
-    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
+    roles: [
+      UserRoles.LEGAL,
+      UserRoles.INSPECTOR,
+      UserRoles.REGIONAL,
+      UserRoles.MANAGER,
+      UserRoles.HEAD,
+      UserRoles.CHAIRMAN,
+    ],
   },
   {
     path: 'risk-analysis/detail',
     component: RiskAnalysisDetailPage,
-    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
+    roles: [
+      UserRoles.LEGAL,
+      UserRoles.INSPECTOR,
+      UserRoles.REGIONAL,
+      UserRoles.MANAGER,
+      UserRoles.HEAD,
+      UserRoles.CHAIRMAN,
+    ],
   },
   {
     path: 'risk-analysis/info/:id',
     component: RiskAnalysisDetailInfoPage,
-    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
+    roles: [
+      UserRoles.LEGAL,
+      UserRoles.INSPECTOR,
+      UserRoles.REGIONAL,
+      UserRoles.MANAGER,
+      UserRoles.HEAD,
+      UserRoles.CHAIRMAN,
+    ],
   },
   {
     path: 'inspections',
     component: InspectionsPage,
-    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
+    roles: [
+      UserRoles.LEGAL,
+      UserRoles.INSPECTOR,
+      UserRoles.REGIONAL,
+      UserRoles.MANAGER,
+      UserRoles.HEAD,
+      UserRoles.CHAIRMAN,
+    ],
   },
   {
     path: 'inspections/info',
     component: InspectionsInfoPage,
-    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
+    roles: [
+      UserRoles.LEGAL,
+      UserRoles.INSPECTOR,
+      UserRoles.REGIONAL,
+      UserRoles.MANAGER,
+      UserRoles.HEAD,
+      UserRoles.CHAIRMAN,
+    ],
   },
 
   // Prevention
   {
     path: 'preventions',
     component: Preventions,
-    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
+    roles: [
+      UserRoles.LEGAL,
+      UserRoles.INSPECTOR,
+      UserRoles.REGIONAL,
+      UserRoles.MANAGER,
+      UserRoles.HEAD,
+      UserRoles.CHAIRMAN,
+    ],
   },
   {
     path: 'preventions/detail/:id',
     component: PreventionDetail,
-    roles: [UserRoles.INSPECTOR, UserRoles.REGIONAL, UserRoles.MANAGER, UserRoles.HEAD, UserRoles.CHAIRMAN],
+    roles: [
+      UserRoles.LEGAL,
+      UserRoles.INSPECTOR,
+      UserRoles.REGIONAL,
+      UserRoles.MANAGER,
+      UserRoles.HEAD,
+      UserRoles.CHAIRMAN,
+    ],
   },
 
   // Conclusions
@@ -311,6 +363,10 @@ export const publicRoutes = [
   {
     path: '/qr/:id/equipments',
     component: ContactPage,
+  },
+  {
+    path: '/public/risk-analysis/:id',
+    component: PublicRiskAnalysisInfo,
   },
 ]
 
