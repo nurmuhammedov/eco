@@ -100,7 +100,7 @@ export const AutoList = ({ tankersCount }: any) => {
   ]
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-1 flex-col gap-2">
       <AutoTabs activeTab={type} onTabChange={(tabKey) => addParams({ type: tabKey }, 'page')} counts={tabCounts} />
 
       <TabsLayout

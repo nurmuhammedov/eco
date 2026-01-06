@@ -74,7 +74,11 @@ const RegisterWidget = () => {
 
   return (
     <Fragment>
-      <Tabs value={tab} onValueChange={(tab: string) => addParams({ tab: tab.toString() }, 'page', 'type', 'status')}>
+      <Tabs
+        className="flex flex-1 flex-col"
+        value={tab}
+        onValueChange={(tab: string) => addParams({ tab: tab.toString() }, 'page', 'type', 'status')}
+      >
         <div className={'flex items-center justify-between gap-2'}>
           {user?.role != UserRoles.INDIVIDUAL ? (
             <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
@@ -203,19 +207,19 @@ const RegisterWidget = () => {
             ) : null}
           </div>
         </div>
-        <TabsContent value={RegisterActiveTab.HF} className="mt-2">
+        <TabsContent value={RegisterActiveTab.HF} className="mt-2 flex flex-1 flex-col">
           <HfList />
         </TabsContent>
-        <TabsContent value={RegisterActiveTab.EQUIPMENTS} className="mt-2">
+        <TabsContent value={RegisterActiveTab.EQUIPMENTS} className="mt-2 flex flex-1 flex-col">
           <EquipmentsList />
         </TabsContent>
-        <TabsContent value={RegisterActiveTab.IRS} className="mt-2">
+        <TabsContent value={RegisterActiveTab.IRS} className="mt-2 flex flex-1 flex-col">
           <IrsList />
         </TabsContent>
-        <TabsContent value={RegisterActiveTab.XRAY} className="mt-2">
+        <TabsContent value={RegisterActiveTab.XRAY} className="mt-2 flex flex-1 flex-col">
           <XrayList />
         </TabsContent>
-        <TabsContent value={RegisterActiveTab.AUTO} className="mt-2">
+        <TabsContent value={RegisterActiveTab.AUTO} className="mt-2 flex flex-1 flex-col">
           <AutoList tankersCount={tankersCount} />
         </TabsContent>
       </Tabs>

@@ -1,15 +1,10 @@
 import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types'
-import { UserRoles } from '@/entities/user'
-import { AssignInspectorModal } from '@/features/risk-analysis/ui/modals/assign-inspector-modal'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
-import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
-import { useCurrentRole, useCustomSearchParams } from '@/shared/hooks'
-import { useAuth } from '@/shared/hooks/use-auth'
-import { AssignedStatusTab, RiskAnalysisTab } from '@/widgets/risk-analysis/types'
+import { useCustomSearchParams } from '@/shared/hooks'
+import { RiskAnalysisTab } from '@/widgets/risk-analysis/types'
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { AssignInspectorButton } from '../assign-inspector-button'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 
 interface Props {
@@ -18,18 +13,18 @@ interface Props {
 }
 
 const List: FC<Props> = ({ data = [], isLoading = false }) => {
-  const currentRole = useCurrentRole()
-  const isRegional = currentRole === UserRoles.REGIONAL
-  const { user } = useAuth()
+  // const currentRole = useCurrentRole()
+  // const isRegional = currentRole === UserRoles.REGIONAL
+  // const { user } = useAuth()
   const navigate = useNavigate()
-  const { paramsObject, addParams } = useCustomSearchParams()
-  const activeAssignedStatus = (paramsObject.assignedStatus as AssignedStatusTab) || AssignedStatusTab.NOT_ASSIGNED
+  const { paramsObject } = useCustomSearchParams()
+  // const activeAssignedStatus = (paramsObject.assignedStatus as AssignedStatusTab) || AssignedStatusTab.NOT_ASSIGNED
   const { t } = useTranslation('common')
   const type = paramsObject.mainTab || RiskAnalysisTab.XICHO
-
-  const handleAssignedStatusChange = (status: string) => {
-    addParams({ assignedStatus: status, page: 1 })
-  }
+  //
+  // const handleAssignedStatusChange = (status: string) => {
+  //   addParams({ assignedStatus: status, page: 1 })
+  // }
 
   const handleView = (row: RiskAnalysisItem) => {
     navigate(`/risk-analysis/detail?tin=${row.legalTin}&id=${row.belongId}&type=${type}`)
@@ -73,18 +68,18 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
       filterKey: 'score',
       filterType: 'search',
     },
-    ...(activeAssignedStatus === AssignedStatusTab.NOT_ASSIGNED && user?.role == UserRoles.REGIONAL
-      ? [
-          {
-            id: 'assignInspector',
-            header: 'Inspektorni belgilash',
-            cell: ({ row }: any) => <AssignInspectorButton disabled={!!paramsObject?.intervalId} row={row.original} />,
-            meta: {
-              className: 'w-[200px]',
-            },
-          },
-        ]
-      : []),
+    // ...(activeAssignedStatus === AssignedStatusTab.NOT_ASSIGNED && user?.role == UserRoles.REGIONAL
+    //   ? [
+    //       {
+    //         id: 'assignInspector',
+    //         header: 'Inspektorni belgilash',
+    //         cell: ({ row }: any) => <AssignInspectorButton disabled={!!paramsObject?.intervalId} row={row.original} />,
+    //         meta: {
+    //           className: 'w-[200px]',
+    //         },
+    //       },
+    //     ]
+    //   : []),
     {
       id: 'actions',
       header: 'Amallar',
@@ -92,34 +87,33 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
     },
   ]
 
-  const assignedStatusTabs = [
-    { id: AssignedStatusTab.NOT_ASSIGNED, label: t('risk_analysis_tabs.NOT_ASSIGNED') },
-    { id: AssignedStatusTab.ASSIGNED, label: t('risk_analysis_tabs.ASSIGNED') },
-  ]
+  // const assignedStatusTabs = [
+  //   { id: AssignedStatusTab.NOT_ASSIGNED, label: t('risk_analysis_tabs.NOT_ASSIGNED') },
+  //   { id: AssignedStatusTab.ASSIGNED, label: t('risk_analysis_tabs.ASSIGNED') },
+  // ]
 
   return (
-    <div>
-      {isRegional && (
-        <Tabs value={activeAssignedStatus} onValueChange={handleAssignedStatusChange} className="mb-4">
-          <TabsList>
-            {assignedStatusTabs.map((tab) => (
-              <TabsTrigger key={tab.id} value={tab.id}>
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-      )}
+    <>
+      {/*{isRegional && (*/}
+      {/*  <Tabs value={activeAssignedStatus} onValueChange={handleAssignedStatusChange} className="mb-4">*/}
+      {/*    <TabsList>*/}
+      {/*      {assignedStatusTabs.map((tab) => (*/}
+      {/*        <TabsTrigger key={tab.id} value={tab.id}>*/}
+      {/*          {tab.label}*/}
+      {/*        </TabsTrigger>*/}
+      {/*      ))}*/}
+      {/*    </TabsList>*/}
+      {/*  </Tabs>*/}
+      {/*)}*/}
       <DataTable
         showFilters={true}
         isPaginated
         data={data || []}
         columns={columns}
         isLoading={isLoading}
-        className={user?.role == UserRoles.REGIONAL ? 'h-[calc(100svh-380px)]' : 'h-[calc(100svh-320px)]'}
+        className={'h-[calc(100svh-360px)]'}
       />
-      <AssignInspectorModal />
-    </div>
+    </>
   )
 }
 

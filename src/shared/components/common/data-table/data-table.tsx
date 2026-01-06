@@ -122,7 +122,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <Fragment>
-      <div className={cn('relative overflow-auto rounded-md bg-white', className)}>
+      <div className={cn('relative flex-1 overflow-auto rounded-md bg-white', className)}>
         <Table className="p-2" style={fixedTableStyle}>
           <TableHeader className="p-2 font-semibold text-black">
             {table.getHeaderGroups().map((headerGroup) => (

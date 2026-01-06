@@ -1,6 +1,6 @@
 import { useCustomSearchParams } from '@/shared/hooks'
 import SearchInput from '@/shared/components/common/search-input/ui/search-input'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { ExtendedColumnDef } from './data-table'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
 import DatePicker from '@/shared/components/ui/datepicker'
@@ -17,22 +17,22 @@ import {
   CommandItem,
   CommandList,
 } from '@/shared/components/ui/command'
-
-function useDebounce(value: any, delay = 800) {
-  const [debouncedValue, setDebouncedValue] = useState(value)
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value)
-    }, delay)
-
-    return () => {
-      clearTimeout(handler)
-    }
-  }, [value, delay])
-
-  return debouncedValue
-}
+//
+// function useDebounce(value: any, delay = 800) {
+//   const [debouncedValue, setDebouncedValue] = useState(value)
+//
+//   useEffect(() => {
+//     const handler = setTimeout(() => {
+//       setDebouncedValue(value)
+//     }, delay)
+//
+//     return () => {
+//       clearTimeout(handler)
+//     }
+//   }, [value, delay])
+//
+//   return debouncedValue
+// }
 
 interface ColumnFilterInputProps<TData, TValue> {
   column: ExtendedColumnDef<TData, TValue>
@@ -134,24 +134,24 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
 
   if (!filterKey) return null
 
-  const initialValue = paramsObject[filterKey] || ''
-  const [value, setValue] = useState(initialValue)
-  const debouncedValue = useDebounce(value, 800)
+  const value = paramsObject[filterKey] || ''
+  // const [value, setValue] = useState(initialValue)
+  // const debouncedValue = useDebounce(value, 800)
 
-  useEffect(() => {
-    if ((filterType === 'search' || filterType === 'number') && value !== null) {
-      addParams({ [filterKey]: debouncedValue }, 'page', 'p')
-    }
-  }, [debouncedValue, filterKey, filterType])
+  // useEffect(() => {
+  //   if ((filterType === 'search' || filterType === 'number') && value !== null) {
+  //     addParams({ [filterKey]: debouncedValue }, 'page', 'p')
+  //   }
+  // }, [debouncedValue, filterKey, filterType])
 
   const handleImmediateChange = (val: any) => {
-    setValue(val)
+    // setValue(val)
     addParams({ [filterKey]: val }, 'page', 'p')
   }
 
   const selectedOptionLabel = useMemo(() => {
     if (!filterOptions || !value) return ''
-    const option = filterOptions.find((opt) => opt.id.toString() === value.toString())
+    const option = filterOptions?.find((opt) => opt.id.toString() === value.toString())
     return option ? option?.name : value
   }, [filterOptions, value])
 
@@ -250,7 +250,7 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
         onChange={(val) => {
           const re = /^[0-9\b]+$/
           if (val === '' || re.test(val)) {
-            setValue(val)
+            addParams({ [filterKey]: val }, 'page', 'p')
           }
         }}
         className="h-8 w-full bg-white text-xs font-normal"
@@ -263,7 +263,7 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
     <SearchInput
       value={value}
       placeholder=""
-      onChange={(val) => setValue(val)}
+      onChange={(val) => addParams({ [filterKey]: val }, 'page', 'p')}
       className="h-8 w-full bg-white text-xs font-normal"
       variant="underline"
     />

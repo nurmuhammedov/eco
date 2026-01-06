@@ -129,15 +129,13 @@ export const HfList = () => {
   ]
 
   return (
-    <>
-      <DataTable
-        showFilters={true}
-        isLoading={isLoading}
-        isPaginated
-        data={data || []}
-        columns={columns as unknown as any}
-        className="h-[calc(100svh-220px)]"
-      />
-    </>
+    <DataTable
+      showFilters={true}
+      isLoading={isLoading}
+      isPaginated
+      data={data || []}
+      columns={columns as unknown as any}
+      className="h-[calc(100svh-220px)]"
+    />
   )
 }

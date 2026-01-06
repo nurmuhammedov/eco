@@ -6,7 +6,7 @@ import { ReactNode } from 'react'
 interface Tab {
   id: string
   name: string
-  count?: number
+  count?: number | null
   renderName?: ReactNode
 }
 

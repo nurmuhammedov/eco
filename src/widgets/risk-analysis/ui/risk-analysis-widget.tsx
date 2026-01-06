@@ -7,16 +7,14 @@ import { Badge } from '@/shared/components/ui/badge'
 import { useData } from '@/shared/hooks/api'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { UserRoles } from '@/entities/user'
-import { Button } from '@/shared/components/ui/button'
-import { NotebookText } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { useNavigate } from 'react-router-dom'
 import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types'
 import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-statistics-cards'
 import { cn } from '@/shared/lib/utils'
 import { TabsLayout } from '@/shared/layouts'
 import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
 import { getQuarter } from 'date-fns'
+import { API_ENDPOINTS } from '@/shared/api'
 
 const TAB_TO_API_TYPE: Record<string, string> = {
   [RiskAnalysisTab.XICHO]: 'HF',
@@ -30,7 +28,6 @@ const TAB_TO_API_TYPE: Record<string, string> = {
 const RiskAnalysisWidget = () => {
   const { t } = useTranslation('common')
   const { user } = useAuth()
-  const navigate = useNavigate()
   const {
     addParams,
     paramsObject: {
@@ -41,7 +38,6 @@ const RiskAnalysisWidget = () => {
       page = 1,
       regionId,
       quarter = getQuarter(new Date()).toString(),
-      // month = getCurrentMonthEnum(),
     },
   } = useCustomSearchParams()
 
@@ -63,7 +59,6 @@ const RiskAnalysisWidget = () => {
     !!activeRegion
   )
 
-  const { data: hfCount = 0 } = useData<number>('/hf/count', false)
   const { data: irsCount = 0 } = useData<number>('/irs/count', false)
   const { data: xrayCount = 0 } = useData<number>('/xrays/count', false)
   const { data: elevatorCount = 0 } = useData<number>('/equipments/count?type=ELEVATOR', false)
@@ -72,16 +67,22 @@ const RiskAnalysisWidget = () => {
 
   const currentApiType = TAB_TO_API_TYPE[mainTab as string] || 'HF'
 
-  const action = useMemo(() => {
-    if ([UserRoles.INSPECTOR, UserRoles.INDIVIDUAL]?.includes(user?.role as unknown as UserRoles)) {
-      return (
-        <Button onClick={() => navigate('/risk-analysis/my-tasks')}>
-          <NotebookText /> Mening topshiriqlarim
-        </Button>
-      )
-    }
-    return null
-  }, [user?.role])
+  const { data: allData } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_HF, {
+    type: 'HF',
+    size: 1,
+    page: 1,
+  })
+
+  // const action = useMemo(() => {
+  //   if ([UserRoles.INSPECTOR]?.includes(user?.role as unknown as UserRoles)) {
+  //     return (
+  //       <Button onClick={() => navigate('/risk-analysis/my-tasks')}>
+  //         <NotebookText /> Mening topshiriqlarim
+  //       </Button>
+  //     )
+  //   }
+  //   return null
+  // }, [user?.role])
 
   const handleCardTabChange = (level: string) => {
     addParams({ riskLevel: level }, 'page')
@@ -89,13 +90,17 @@ const RiskAnalysisWidget = () => {
 
   const regionTabs = useMemo(() => {
     return (
-      regions?.map((item) => ({
-        id: item?.id?.toString(),
-        name: getRegionLabel(item.name || ''),
-        count: 0,
-      })) || []
+      regions?.map((item) => {
+        const id = item?.id?.toString()
+        const isActive = id === activeRegion
+        return {
+          id,
+          name: getRegionLabel(item.name || ''),
+          count: isActive ? data?.page?.totalElements || 0 : null,
+        }
+      }) || []
     )
-  }, [regions])
+  }, [regions, activeRegion, data])
 
   return (
     <Fragment>
@@ -116,7 +121,7 @@ const RiskAnalysisWidget = () => {
             <TabsTrigger value={RiskAnalysisTab.XICHO}>
               {t('risk_analysis_tabs.XICHO')}
               <Badge variant="destructive" className="ml-2">
-                {hfCount}
+                {allData?.page?.totalElements || 0}
               </Badge>
             </TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.INM}>
@@ -150,33 +155,34 @@ const RiskAnalysisWidget = () => {
               </Badge>
             </TabsTrigger>
           </TabsList>
-          {action}
+          {/*{action}*/}
         </div>
       </Tabs>
 
       {/*<Tabs*/}
-      {/*  className="mb-2 w-full"*/}
-      {/*  value={month?.toString()}*/}
-      {/*  onValueChange={(val) => addParams({ month: val, page: 1 })}*/}
+      {/* className="mb-2 w-full"*/}
+      {/* value={month?.toString()}*/}
+      {/* onValueChange={(val) => addParams({ month: val, page: 1 })}*/}
       {/*>*/}
-      {/*  <div className={cn('scrollbar-hidden mb-2 flex w-full justify-between overflow-x-auto overflow-y-hidden')}>*/}
-      {/*    <TabsList className="h-auto w-full p-1">*/}
-      {/*      {MONTHS.map((type) => (*/}
-      {/*        <TabsTrigger className="flex-1" key={type.value} value={type.value}>*/}
-      {/*          {type.label}*/}
-      {/*          <Badge*/}
-      {/*            variant="destructive"*/}
-      {/*            className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
-      {/*          >*/}
-      {/*            {type?.count || 0}*/}
-      {/*          </Badge>*/}
-      {/*        </TabsTrigger>*/}
-      {/*      ))}*/}
-      {/*    </TabsList>*/}
-      {/*  </div>*/}
+      {/* <div className={cn('scrollbar-hidden mb-2 flex w-full justify-between overflow-x-auto overflow-y-hidden')}>*/}
+      {/* <TabsList className="h-auto w-full p-1">*/}
+      {/* {MONTHS.map((type) => (*/}
+      {/* <TabsTrigger className="flex-1" key={type.value} value={type.value}>*/}
+      {/* {type.label}*/}
+      {/* <Badge*/}
+      {/* variant="destructive"*/}
+      {/* className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
+      {/* >*/}
+      {/* {type?.count || 0}*/}
+      {/* </Badge>*/}
+      {/* </TabsTrigger>*/}
+      {/* ))}*/}
+      {/* </TabsList>*/}
+      {/* </div>*/}
       {/*</Tabs>*/}
 
-      {regionTabs.length > 0 ? (
+      {regionTabs.length > 0 &&
+      ![UserRoles.INSPECTOR, UserRoles.REGIONAL]?.includes(user?.role as unknown as UserRoles) ? (
         <TabsLayout
           classNameTabList="!mb-0 w-full"
           classNameWrapper="w-full"
