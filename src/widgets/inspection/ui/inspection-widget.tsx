@@ -9,6 +9,7 @@ import { Badge } from '@/shared/components/ui/badge'
 import clsx from 'clsx'
 import { cn } from '@/shared/lib/utils'
 import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
+import { getQuarter } from 'date-fns'
 
 export enum InspectionStatus {
   ALL = 'ALL',
@@ -36,20 +37,30 @@ export const defaultCountDto: CountDto = {
   conductedCount: 0,
 }
 
-const Cards = ({ onTabChange, regionId }: any) => {
+interface RegionCountDto {
+  count: number
+  region: string
+  regionId: number
+}
+
+const Cards = ({ onTabChange, regionId, year, quarter }: any) => {
   const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
+  const { data: regionCounts = [] } = useData<RegionCountDto[]>('/inspections/count/by-region', true, { year, quarter })
 
   const activeRegion = regionId?.toString() || (regions && regions.length > 0 ? regions[0].id?.toString() : '')
 
   const regionTabs = useMemo(() => {
     return (
-      regions?.map((item) => ({
-        id: item?.id?.toString(),
-        name: getRegionLabel(item.name || ''),
-        count: 0,
-      })) || []
+      regions?.map((item) => {
+        const countItem = regionCounts.find((c) => c.regionId === item.id)
+        return {
+          id: item?.id?.toString(),
+          name: getRegionLabel(item.name || ''),
+          count: countItem?.count || 0,
+        }
+      }) || []
     )
-  }, [regions])
+  }, [regions, regionCounts])
 
   const stats = regionTabs?.map((month) => ({
     id: month?.id,
@@ -89,16 +100,30 @@ const Cards = ({ onTabChange, regionId }: any) => {
 export const InspectionWidget: React.FC = () => {
   const { user } = useAuth()
   const { paramsObject, addParams } = useCustomSearchParams()
-  const isInspector = user?.role == UserRoles.INSPECTOR
-  const isLegal = user?.role == UserRoles.LEGAL
+
+  const isInspector = user?.role === UserRoles.INSPECTOR
+  const isLegal = user?.role === UserRoles.LEGAL
+  const isRegional = user?.role === UserRoles.REGIONAL
+
   const activeTab = paramsObject.status
   const activeSubTab = paramsObject.subStatus
-  const activeProcess = paramsObject.process
   const regionId = paramsObject.regionId
-  // const year = paramsObject.year || new Date().getFullYear()
-  // const month = paramsObject.month || getCurrentMonthEnum()
 
-  const { data: countObject = defaultCountDto } = useData<CountDto>('/inspections/count')
+  const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
+
+  const activeRegion = regionId?.toString() || (regions && regions.length > 0 ? regions[0].id?.toString() : '')
+
+  const { data: countObject = defaultCountDto } = useData<CountDto>('/inspections/count', true, {
+    year: paramsObject?.year || new Date().getFullYear(),
+    quarter: paramsObject?.quarter || getQuarter(new Date()).toString(),
+    regionId: paramsObject?.regionId || activeRegion,
+    status: paramsObject?.status || '',
+    legalName: paramsObject?.legalName || '',
+    legalTin: paramsObject?.legalTin || '',
+    legalRegionId: paramsObject?.legalRegionId || '',
+    legalDistrictId: paramsObject?.legalDistrictId || '',
+    legalAddress: paramsObject?.legalAddress || '',
+  })
 
   const handleTabChange = (value: string) => {
     addParams({ status: value, page: 1 })
@@ -111,7 +136,14 @@ export const InspectionWidget: React.FC = () => {
   if (isInspector || isLegal) {
     return (
       <>
-        <Cards regionId={regionId} onTabChange={(val: string) => addParams({ regionId: val, page: 1 })} />
+        {!isInspector && (
+          <Cards
+            year={paramsObject?.year ? paramsObject?.year : new Date().getFullYear()}
+            quarter={paramsObject?.quarter ? paramsObject?.quarter : getQuarter(new Date()).toString()}
+            regionId={regionId}
+            onTabChange={(val: string) => addParams({ regionId: val }, 'page', 'legalDistrictId')}
+          />
+        )}
 
         <Tabs value={activeSubTab || InspectionSubMenuStatus.ASSIGNED} onValueChange={handleSubTabChange}>
           <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
@@ -142,8 +174,15 @@ export const InspectionWidget: React.FC = () => {
   }
 
   return (
-    <>
-      <Cards regionId={regionId} onTabChange={(val: string) => addParams({ regionId: val, page: 1 })} />
+    <div>
+      {!isRegional && (
+        <Cards
+          year={paramsObject?.year ? paramsObject?.year : new Date().getFullYear()}
+          quarter={paramsObject?.quarter ? paramsObject?.quarter : getQuarter(new Date()).toString()}
+          regionId={regionId}
+          onTabChange={(val: string) => addParams({ regionId: val }, 'page', 'legalDistrictId')}
+        />
+      )}
       <Tabs value={activeTab || InspectionStatus.ALL} onValueChange={handleTabChange}>
         <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
           <TabsList>
@@ -199,36 +238,9 @@ export const InspectionWidget: React.FC = () => {
               </div>
             </Tabs>
           </div>
-          {activeSubTab == InspectionSubMenuStatus.CONDUCTED ? (
-            <div className="mb-3">
-              <Tabs
-                value={activeProcess || 'IN_PROCESS'}
-                onValueChange={(value) => {
-                  addParams({ process: value, page: 1 })
-                }}
-              >
-                <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
-                  <TabsList>
-                    <TabsTrigger value="IN_PROCESS">
-                      Jarayonda
-                      <Badge variant="destructive" className="ml-2">
-                        0
-                      </Badge>
-                    </TabsTrigger>
-                    <TabsTrigger value="FINISHED">
-                      Yakunlangan
-                      <Badge variant="destructive" className="ml-2">
-                        0
-                      </Badge>
-                    </TabsTrigger>
-                  </TabsList>
-                </div>
-              </Tabs>
-            </div>
-          ) : null}
           <InspectionList />
         </TabsContent>
       </Tabs>
-    </>
+    </div>
   )
 }
