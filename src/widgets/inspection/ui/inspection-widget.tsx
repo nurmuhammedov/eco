@@ -47,28 +47,46 @@ const Cards = ({ onTabChange, regionId, year, quarter }: any) => {
   const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
   const { data: regionCounts = [] } = useData<RegionCountDto[]>('/inspections/count/by-region', true, { year, quarter })
 
-  const activeRegion = regionId?.toString() || (regions && regions.length > 0 ? regions[0].id?.toString() : '')
+  const activeRegion = regionId?.toString() || 'ALL'
 
-  const regionTabs = useMemo(() => {
-    return (
+  const { regionTabs, totalCount } = useMemo(() => {
+    let sum = 0
+    const tabs =
       regions?.map((item) => {
         const countItem = regionCounts.find((c) => c.regionId === item.id)
+        const count = countItem?.count || 0
+        sum += count
         return {
           id: item?.id?.toString(),
           name: getRegionLabel(item.name || ''),
-          count: countItem?.count || 0,
+          count: count,
+          isAll: false,
         }
       }) || []
-    )
+    return { regionTabs: tabs, totalCount: sum }
   }, [regions, regionCounts])
 
-  const stats = regionTabs?.map((month) => ({
-    id: month?.id,
-    name: month?.name,
-    count: month?.count || 0,
-    inactiveClass: 'bg-[#016B7B]/10 border-[#016B7B]/20 text-[#016B7B]',
-    activeClass: 'bg-[#016B7B] border-[#015a67] text-white shadow-sm',
-  }))
+  const allTab = {
+    id: 'ALL',
+    name: 'Barchasi',
+    count: totalCount,
+    isAll: true,
+  }
+
+  const stats = [allTab, ...regionTabs].map((month) => {
+    const isAll = month.id === 'ALL'
+    return {
+      id: month?.id,
+      name: month?.name,
+      count: month?.count || 0,
+      inactiveClass: isAll
+        ? 'bg-[#016B7B]/10 border-[#016B7B]/20 text-[#016B7B]'
+        : 'bg-slate-100 border-slate-200 text-slate-600',
+      activeClass: isAll
+        ? 'bg-[#016B7B] border-[#015a67] text-white shadow-sm'
+        : 'bg-slate-800 border-slate-900 text-white shadow-sm',
+    }
+  })
 
   return (
     <div className="scrollbar-hidden mb-2 flex w-full gap-2 overflow-x-auto">
@@ -109,14 +127,12 @@ export const InspectionWidget: React.FC = () => {
   const activeSubTab = paramsObject.subStatus
   const regionId = paramsObject.regionId
 
-  const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
-
-  const activeRegion = regionId?.toString() || (regions && regions.length > 0 ? regions[0].id?.toString() : '')
+  const activeRegion = regionId?.toString() || 'ALL'
 
   const { data: countObject = defaultCountDto } = useData<CountDto>('/inspections/count', true, {
     year: paramsObject?.year || new Date().getFullYear(),
     quarter: paramsObject?.quarter || getQuarter(new Date()).toString(),
-    regionId: paramsObject?.regionId || activeRegion,
+    regionId: activeRegion === 'ALL' ? '' : activeRegion,
     status: paramsObject?.status === 'ALL' ? '' : paramsObject?.status || '',
     legalName: paramsObject?.legalName || '',
     legalTin: paramsObject?.legalTin || '',

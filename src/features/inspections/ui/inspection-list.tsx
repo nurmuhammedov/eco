@@ -10,7 +10,6 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserRoles } from '@/entities/user'
 import { getQuarter } from 'date-fns'
-import { useData } from '@/shared/hooks'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table.tsx'
 import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
 
@@ -25,22 +24,24 @@ export const InspectionList: React.FC = () => {
       status = InspectionStatus.ALL,
       subStatus = InspectionSubMenuStatus.ASSIGNED,
       year = new Date().getFullYear(),
-      regionId,
+      regionId = 'ALL',
       quarter = getQuarter(new Date()).toString(),
       ...rest
     },
   } = useCustomSearchParams()
 
-  const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
+  // const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
 
-  const activeRegion = regionId?.toString() || (regions && regions.length > 0 ? regions[0].id?.toString() : '')
+  // const activeRegion = regionId?.toString() || (regions && regions.length > 0 ? regions[0].id?.toString() : '')
 
-  const { data: districts } = useDistrictSelectQueries(isInspector || isRegional ? undefined : activeRegion)
+  const { data: districts } = useDistrictSelectQueries(
+    isInspector || isRegional ? undefined : regionId == 'ALL' ? '' : regionId
+  )
 
   const { data: inspections, isLoading } = useInspections({
     ...rest,
     quarter,
-    regionId: activeRegion,
+    regionId: regionId == 'ALL' ? '' : regionId,
     year,
     status: [UserRoles.LEGAL, UserRoles?.INSPECTOR]?.includes(user?.role as unknown as UserRoles)
       ? subStatus

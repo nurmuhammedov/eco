@@ -8,6 +8,5 @@ export const useInspections = (params: ISearchParams) => {
   return useQuery({
     queryKey: [INSPECTION_QUERY_KEY, params],
     queryFn: () => inspectionAPI.getAll(params),
-    enabled: !!params?.regionId,
   })
 }
