@@ -1,4 +1,5 @@
 import { useConfirmDocument } from '@/features/application/application-detail/hooks/mutations/se-confirm-document'
+import { useApplicationDetail } from '@/features/application/application-detail/hooks/use-application-detail'
 import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
@@ -31,10 +32,13 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
   const [isOpen, setIsOpen] = React.useState(false)
   const { id: appealId } = useParams<{ id: string }>()
   const { mutate: confirmDocument, isPending } = useConfirmDocument()
+  const { data: applicationData } = useApplicationDetail()
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   })
+
+  const isDeregister = applicationData?.appealType?.startsWith('DEREGISTER')
 
   const onSubmit = (data: z.infer<typeof schema>) => {
     confirmDocument(
@@ -59,7 +63,7 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
       </DialogTrigger>
       <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Reyestrga qo‘shilsinmi?</DialogTitle>
+          <DialogTitle>{isDeregister ? 'Reyestrdan chiqarilsinmi?' : 'Reyestrga qo‘shilsinmi?'}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -72,15 +76,15 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      className="flex flex-col space-y-1"
+                      className="flex flex-col items-start space-y-1"
                     >
-                      <FormItem className="flex items-center space-y-0 space-x-3">
+                      <FormItem className="flex flex-row items-center space-y-0 space-x-1">
                         <FormControl>
                           <RadioGroupItem value="true" />
                         </FormControl>
                         <FormLabel className="font-normal">Ha</FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-y-0 space-x-3">
+                      <FormItem className="flex flex-row items-center space-y-0 space-x-1">
                         <FormControl>
                           <RadioGroupItem value="false" />
                         </FormControl>

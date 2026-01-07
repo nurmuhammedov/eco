@@ -117,7 +117,7 @@ export const InspectionWidget: React.FC = () => {
     year: paramsObject?.year || new Date().getFullYear(),
     quarter: paramsObject?.quarter || getQuarter(new Date()).toString(),
     regionId: paramsObject?.regionId || activeRegion,
-    status: paramsObject?.status || '',
+    status: paramsObject?.status === 'ALL' ? '' : paramsObject?.status || '',
     legalName: paramsObject?.legalName || '',
     legalTin: paramsObject?.legalTin || '',
     legalRegionId: paramsObject?.legalRegionId || '',
