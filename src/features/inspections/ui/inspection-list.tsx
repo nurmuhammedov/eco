@@ -31,7 +31,6 @@ export const InspectionList: React.FC = () => {
   } = useCustomSearchParams()
 
   // const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
-
   // const activeRegion = regionId?.toString() || (regions && regions.length > 0 ? regions[0].id?.toString() : '')
 
   const { data: districts } = useDistrictSelectQueries(

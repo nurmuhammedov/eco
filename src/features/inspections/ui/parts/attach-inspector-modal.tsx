@@ -15,6 +15,7 @@ import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection/category
 import { useCustomSearchParams } from '@/shared/hooks'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { ApplicationModal } from '@/features/application/create-application'
+import { Input } from '@/shared/components/ui/input'
 
 const schema = z.object({
   startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
@@ -25,6 +26,7 @@ const schema = z.object({
     z.object({
       resultIdForObject: z.string(),
       checklistCategoryIdList: z.array(z.number()).min(1, FORM_ERROR_MESSAGES.required),
+      specialCode: z.string().min(1, FORM_ERROR_MESSAGES.required),
     })
   ),
 })
@@ -44,6 +46,10 @@ const AttachInspectorModal = ({ data = [] }: any) => {
       })),
     },
   })
+
+  // Sanalarni kuzatish (watch)
+  const startDate = form.watch('startDate')
+  const endDate = form.watch('endDate')
 
   const { data: inspectorSelectData } = useInspectorSelect(isShow)
   const { data: categoryTypes } = useCategoryTypeSelectQuery(undefined, isShow)
@@ -116,6 +122,16 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                           value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                           onChange={field.onChange}
                           placeholder="Boshlanish sanasini tanlang"
+                          disableStrategy="custom"
+                          customDisabledFn={(date) => {
+                            const today = new Date()
+                            today.setHours(0, 0, 0, 0)
+                            // Bugungi kundan oldingi sanalarni o‘chirish
+                            if (date < today) return true
+                            // Agar tugash sanasi tanlangan bo‘lsa, undan keyingi sanalarni o‘chirish
+                            if (endDate && date > endDate) return true
+                            return false
+                          }}
                         />
                         <FormMessage />
                       </FormItem>
@@ -135,6 +151,16 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                           value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                           onChange={field.onChange}
                           placeholder="Tugash sanasini tanlang"
+                          disableStrategy="custom"
+                          customDisabledFn={(date) => {
+                            const today = new Date()
+                            today.setHours(0, 0, 0, 0)
+                            // Bugungi kundan oldingi sanalarni o‘chirish
+                            if (date < today) return true
+                            // Agar boshlanish sanasi tanlangan bo‘lsa, undan oldingi sanalarni o‘chirish
+                            if (startDate && date < startDate) return true
+                            return false
+                          }}
                         />
                         <FormMessage />
                       </FormItem>
@@ -170,28 +196,44 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                       {data[index].belongName} | {data[index].belongRegistryNumber}
                     </div>
 
-                    <FormField
-                      control={form.control}
-                      name={`checklistDtoList.${index}.checklistCategoryIdList`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel required>Kategoriya tanlang</FormLabel>
-                          <FormControl>
-                            <MultiSelect
-                              {...field}
-                              options={(filteredCategoryTypes[data[index].id] || []).map((ct: any) => ({
-                                name: ct.name,
-                                id: ct.id,
-                              }))}
-                              value={field.value}
-                              onChange={field.onChange}
-                              placeholder="Kategoriyalarni tanlang"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="flex flex-col gap-2">
+                      <FormField
+                        control={form.control}
+                        name={`checklistDtoList.${index}.checklistCategoryIdList`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel required>Kategoriya tanlang</FormLabel>
+                            <FormControl>
+                              <MultiSelect
+                                {...field}
+                                options={(filteredCategoryTypes[data[index].id] || []).map((ct: any) => ({
+                                  name: ct.name,
+                                  id: ct.id,
+                                }))}
+                                value={field.value}
+                                onChange={field.onChange}
+                                placeholder="Kategoriyalarni tanlang"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name={`checklistDtoList.${index}.specialCode`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel required>Ombudsman maxsus kodi</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="Kod kiriting" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
