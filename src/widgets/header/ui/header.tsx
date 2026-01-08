@@ -2,7 +2,7 @@ import { SidebarTrigger } from '@/shared/components/ui/sidebar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useCustomSearchParams } from '@/shared/hooks'
 import UserDropdown from '@/widgets/header/ui/user-dropdown'
-import { getQuarter } from 'date-fns'
+import { getQuarter, subQuarters } from 'date-fns'
 import { useLocation } from 'react-router-dom'
 import { useMemo } from 'react'
 
@@ -17,11 +17,14 @@ export function Header() {
   const { pathname = '' } = useLocation()
   const { paramsObject, addParams } = useCustomSearchParams()
 
-  const currentYear = new Date().getFullYear().toString()
-  const currentQuarter = getQuarter(new Date()).toString()
+  const isRiskAnalysis = pathname === '/risk-analysis'
+  const dateBasis = isRiskAnalysis ? subQuarters(new Date(), 1) : new Date()
 
-  const selectedYear = paramsObject.year?.toString() || currentYear
-  const selectedQuarter = paramsObject.quarter?.toString() || currentQuarter
+  const defaultYear = dateBasis.getFullYear().toString()
+  const defaultQuarter = getQuarter(dateBasis).toString()
+
+  const selectedYear = paramsObject.year?.toString() || defaultYear
+  const selectedQuarter = paramsObject.quarter?.toString() || defaultQuarter
 
   const yearOptions = useMemo(() => {
     const startYear = 2025
@@ -30,13 +33,12 @@ export function Header() {
   }, [])
 
   const handleYearChange = (year: string) => {
-    // Agar sahifa 'preventions' bo'lsa, quarter parametrini yubormaymiz
     const isPrevention = pathname === '/preventions'
 
     addParams(
       {
         year,
-        quarter: isPrevention ? undefined : currentQuarter,
+        quarter: isPrevention ? undefined : defaultQuarter,
       },
       'page'
     )

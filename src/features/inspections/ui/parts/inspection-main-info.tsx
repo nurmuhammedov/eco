@@ -32,10 +32,10 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
         return <DetailRow key={item.id} title={`Tekshiruvchi inspektor ${idx + 1}:`} value={item?.name} />
       })}
 
-      <DetailRow
-        title="Ombudsman maxsus kodi:"
-        value={<span style={{ color: 'green' }}>{inspectionData?.specialCode || '-'}</span>}
-      />
+      {/*<DetailRow*/}
+      {/*  title="Ombudsman maxsus kodi:"*/}
+      {/*  value={<span style={{ color: 'green' }}>{inspectionData?.specialCode || '-'}</span>}*/}
+      {/*/>*/}
 
       <DetailRow
         title="Tekshiruv buyrug‘i:"

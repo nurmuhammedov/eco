@@ -13,8 +13,19 @@ import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-stati
 import { cn } from '@/shared/lib/utils'
 import { TabsLayout } from '@/shared/layouts'
 import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
-import { getQuarter } from 'date-fns'
-import { API_ENDPOINTS } from '@/shared/api'
+import { getQuarter, subQuarters } from 'date-fns'
+
+interface RiskCountResponse {
+  lowCount: number
+  mediumCount: number
+  highCount: number
+}
+
+interface RegionCountDto {
+  regionId: number
+  count: number
+  region: string
+}
 
 const TAB_TO_API_TYPE: Record<string, string> = {
   [RiskAnalysisTab.XICHO]: 'HF',
@@ -28,27 +39,35 @@ const TAB_TO_API_TYPE: Record<string, string> = {
 const RiskAnalysisWidget = () => {
   const { t } = useTranslation('common')
   const { user } = useAuth()
+
+  const previousQuarterDate = subQuarters(new Date(), 1)
+  const defaultYear = previousQuarterDate.getFullYear()
+  const defaultQuarter = getQuarter(previousQuarterDate).toString()
+
   const {
     addParams,
     paramsObject: {
       mainTab = RiskAnalysisTab.XICHO,
       riskLevel = 'ALL',
-      year = new Date().getFullYear(),
+      year = defaultYear,
       size = 10,
       page = 1,
       regionId,
-      quarter = getQuarter(new Date()).toString(),
+      quarter = defaultQuarter,
     },
   } = useCustomSearchParams()
 
   const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
 
-  const activeRegion = regionId?.toString() || (regions && regions.length > 0 ? regions[0].id?.toString() : '')
+  // Agar regionId URL da bo'lmasa, birinchi regionni olamiz
+  const activeRegion = regionId?.toString() || (regions.length > 0 ? regions[0].id.toString() : '')
+
+  const currentApiType = TAB_TO_API_TYPE[mainTab as string] || 'HF'
 
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(
     '/risk-analyses',
     {
-      type: mainTab,
+      type: currentApiType,
       level: riskLevel == 'ALL' ? undefined : riskLevel,
       year,
       size,
@@ -65,24 +84,19 @@ const RiskAnalysisWidget = () => {
   const { data: attractionCount = 0 } = useData<number>('/equipments/count?type=ATTRACTION', false)
   const { data: lpgPoweredCount = 0 } = useData<number>('/equipments/count?type=LPG_POWERED', false)
 
-  const currentApiType = TAB_TO_API_TYPE[mainTab as string] || 'HF'
-
-  const { data: allData } = usePaginatedData<RiskAnalysisItem>(API_ENDPOINTS.RISK_ASSESSMENT_HF, {
+  const { data: hfRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
     type: 'HF',
-    size: 1,
-    page: 1,
+    year,
+    quarter,
   })
 
-  // const action = useMemo(() => {
-  //   if ([UserRoles.INSPECTOR]?.includes(user?.role as unknown as UserRoles)) {
-  //     return (
-  //       <Button onClick={() => navigate('/risk-analysis/my-tasks')}>
-  //         <NotebookText /> Mening topshiriqlarim
-  //       </Button>
-  //     )
-  //   }
-  //   return null
-  // }, [user?.role])
+  const { data: regionCounts = [] } = useData<RegionCountDto[]>('/risk-analyses/count/by-region', true, {
+    type: currentApiType,
+    year,
+    quarter,
+  })
+
+  const hfTotalCount = (hfRiskCounts?.lowCount || 0) + (hfRiskCounts?.mediumCount || 0) + (hfRiskCounts?.highCount || 0)
 
   const handleCardTabChange = (level: string) => {
     addParams({ riskLevel: level }, 'page')
@@ -92,22 +106,27 @@ const RiskAnalysisWidget = () => {
     return (
       regions?.map((item) => {
         const id = item?.id?.toString()
-        const isActive = id === activeRegion
+        const countItem = regionCounts.find((c) => c.regionId === item.id)
+        const count = countItem?.count || 0
+
         return {
           id,
           name: getRegionLabel(item.name || ''),
-          count: isActive ? data?.page?.totalElements || 0 : null,
+          count: count,
         }
       }) || []
     )
-  }, [regions, activeRegion, data])
+  }, [regions, regionCounts])
 
   return (
     <Fragment>
       <RiskStatisticsCards
-        type={currentApiType}
+        type={currentApiType || ''}
         activeRiskLevel={riskLevel as string}
         onTabChange={handleCardTabChange}
+        year={year}
+        quarter={quarter}
+        regionId={activeRegion}
       />
 
       <Tabs
@@ -121,7 +140,7 @@ const RiskAnalysisWidget = () => {
             <TabsTrigger value={RiskAnalysisTab.XICHO}>
               {t('risk_analysis_tabs.XICHO')}
               <Badge variant="destructive" className="ml-2">
-                {allData?.page?.totalElements || 0}
+                {hfTotalCount}
               </Badge>
             </TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.INM}>
@@ -155,31 +174,8 @@ const RiskAnalysisWidget = () => {
               </Badge>
             </TabsTrigger>
           </TabsList>
-          {/*{action}*/}
         </div>
       </Tabs>
-
-      {/*<Tabs*/}
-      {/* className="mb-2 w-full"*/}
-      {/* value={month?.toString()}*/}
-      {/* onValueChange={(val) => addParams({ month: val, page: 1 })}*/}
-      {/*>*/}
-      {/* <div className={cn('scrollbar-hidden mb-2 flex w-full justify-between overflow-x-auto overflow-y-hidden')}>*/}
-      {/* <TabsList className="h-auto w-full p-1">*/}
-      {/* {MONTHS.map((type) => (*/}
-      {/* <TabsTrigger className="flex-1" key={type.value} value={type.value}>*/}
-      {/* {type.label}*/}
-      {/* <Badge*/}
-      {/* variant="destructive"*/}
-      {/* className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
-      {/* >*/}
-      {/* {type?.count || 0}*/}
-      {/* </Badge>*/}
-      {/* </TabsTrigger>*/}
-      {/* ))}*/}
-      {/* </TabsList>*/}
-      {/* </div>*/}
-      {/*</Tabs>*/}
 
       {regionTabs.length > 0 &&
       ![UserRoles.INSPECTOR, UserRoles.REGIONAL]?.includes(user?.role as unknown as UserRoles) ? (
@@ -191,6 +187,7 @@ const RiskAnalysisWidget = () => {
           tabs={regionTabs}
           activeTab={activeRegion}
           onTabChange={(val) => addParams({ regionId: val, page: 1 })}
+          outlineInactiveCount={true}
         />
       ) : null}
 
