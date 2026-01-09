@@ -16,6 +16,8 @@ import { useCustomSearchParams } from '@/shared/hooks'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { ApplicationModal } from '@/features/application/create-application'
 import { Input } from '@/shared/components/ui/input'
+import { apiClient } from '@/shared/api/api-client'
+import { toast } from 'sonner'
 
 const schema = z.object({
   startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
@@ -33,6 +35,7 @@ const schema = z.object({
 
 const AttachInspectorModal = ({ data = [] }: any) => {
   const [isShow, setIsShow] = useState(false)
+  const [isCodeLoading, setIsCodeLoading] = useState(false)
   const {
     paramsObject: { inspectionId: id = '' },
   } = useCustomSearchParams()
@@ -43,11 +46,11 @@ const AttachInspectorModal = ({ data = [] }: any) => {
       checklistDtoList: data.map((item: any) => ({
         resultIdForObject: item.id,
         checklistCategoryIdList: [],
+        specialCode: '',
       })),
     },
   })
 
-  // Sanalarni kuzatish (watch)
   const startDate = form.watch('startDate')
   const endDate = form.watch('endDate')
 
@@ -82,6 +85,31 @@ const AttachInspectorModal = ({ data = [] }: any) => {
     successMessage: 'Muvaffaqiyatli saqlandi!',
     onSuccessNavigateTo: `/inspections`,
   })
+
+  const handleGetCode = async (index: number) => {
+    const currentItem = data[index]
+    const riskAnalysisId = currentItem?.riskAnalysisId
+
+    if (!riskAnalysisId) {
+      toast.error('Risk tahlil ID topilmadi!')
+      return
+    }
+
+    setIsCodeLoading(true)
+    try {
+      const response = await apiClient.get<any>(`/integration/ombudsman/${riskAnalysisId}`)
+      const code = response.data?.data?.requestDocNumber || ''
+      if (!code) {
+        toast.error('Ushbu xavf tahlil natijasida tekshiruv yaratilmagan!')
+      }
+      form.setValue(`checklistDtoList.${index}.specialCode`, code)
+    } catch (e) {
+      console.error('Kodni olishda xatolik:', e)
+      form.setValue(`checklistDtoList.${index}.specialCode`, '')
+    } finally {
+      setIsCodeLoading(false)
+    }
+  }
 
   function onSubmit(values: z.infer<typeof schema>) {
     handleCreateApplication({
@@ -126,9 +154,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                           customDisabledFn={(date) => {
                             const today = new Date()
                             today.setHours(0, 0, 0, 0)
-                            // Bugungi kundan oldingi sanalarni o‘chirish
                             if (date < today) return true
-                            // Agar tugash sanasi tanlangan bo‘lsa, undan keyingi sanalarni o‘chirish
                             if (endDate && date > endDate) return true
                             return false
                           }}
@@ -155,9 +181,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                           customDisabledFn={(date) => {
                             const today = new Date()
                             today.setHours(0, 0, 0, 0)
-                            // Bugungi kundan oldingi sanalarni o‘chirish
                             if (date < today) return true
-                            // Agar boshlanish sanasi tanlangan bo‘lsa, undan oldingi sanalarni o‘chirish
                             if (startDate && date < startDate) return true
                             return false
                           }}
@@ -220,19 +244,24 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                         )}
                       />
 
-                      <FormField
-                        control={form.control}
-                        name={`checklistDtoList.${index}.specialCode`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel required>Ombudsman maxsus kodi</FormLabel>
-                            <FormControl>
-                              <Input {...field} placeholder="Kod kiriting" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      <div className="flex items-end gap-2">
+                        <FormField
+                          control={form.control}
+                          name={`checklistDtoList.${index}.specialCode`}
+                          render={({ field }) => (
+                            <FormItem className="flex-1">
+                              <FormLabel required>Ombudsman maxsus kodi</FormLabel>
+                              <FormControl>
+                                <Input {...field} placeholder="Kod kiriting" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <Button type="button" onClick={() => handleGetCode(index)} loading={isCodeLoading}>
+                          Kodni olish
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}

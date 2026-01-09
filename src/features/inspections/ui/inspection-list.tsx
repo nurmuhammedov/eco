@@ -52,7 +52,7 @@ export const InspectionList: React.FC = () => {
   })
 
   const handleView = (row: Inspection) => {
-    navigate(`/inspections/info?inspectionId=${row.id}&tin=${row.tin}&name=${row.legalName}`)
+    navigate(`/inspections/info?inspectionId=${row.id}&tin=${row.tin}&name=${row.legalName}&year=${year}`)
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [

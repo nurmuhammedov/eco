@@ -1,4 +1,3 @@
-import { ApplicationStatus } from '@/entities/application'
 import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
@@ -17,7 +16,7 @@ export const EquipmentsList = () => {
 
   const {
     paramsObject: {
-      status = ApplicationStatus.ALL,
+      status = 'ACTIVE',
       type = 'ALL',
       page = 1,
       size = 10,

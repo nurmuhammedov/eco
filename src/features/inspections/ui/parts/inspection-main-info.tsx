@@ -5,10 +5,13 @@ import SignersModal from '@/features/application/application-detail/ui/modals/si
 import { useState } from 'react'
 import { Eye } from 'lucide-react'
 import { Badge } from '@/shared/components/ui/badge'
-import { useData } from '@/shared/hooks'
+import { useCustomSearchParams, useData } from '@/shared/hooks'
 
 const InspectionMainInfo = ({ inspectionData }: any) => {
   const [signers, setSigners] = useState<any[]>([])
+  const {
+    paramsObject: { year = new Date().getFullYear() },
+  } = useCustomSearchParams()
 
   const { data, isLoading } = useData<any>(
     `/integration/postal-mail/${inspectionData?.notificationLetterId}`,
@@ -18,12 +21,23 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
       inspectionData?.notificationLetterStatus !== 'RECEIVED_BY_CLIENT'
   )
 
+  const { data: programs } = useData<any>(`/programs/by-year`, !!year, {
+    year,
+  })
+
+  console.log(programs, 'programs')
+
   if (!inspectionData) {
     return null
   }
+  console.log(data, inspectionData, 'signers')
 
   return (
     <div>
+      <DetailRow
+        title="Tekshiruv dasturi:"
+        value={!!programs?.path ? <FileLink url={programs?.path} title={`${year} yil tekshiruv dasturi`} /> : '-'}
+      />
       <DetailRow
         title="Tekshiruv sanasi:"
         value={getDate(inspectionData?.startDate) + ' - ' + getDate(inspectionData?.endDate)}
@@ -31,12 +45,10 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
       {inspectionData?.inspectors?.map((item: any, idx: number) => {
         return <DetailRow key={item.id} title={`Tekshiruvchi inspektor ${idx + 1}:`} value={item?.name} />
       })}
-
       {/*<DetailRow*/}
       {/*  title="Ombudsman maxsus kodi:"*/}
       {/*  value={<span style={{ color: 'green' }}>{inspectionData?.specialCode || '-'}</span>}*/}
       {/*/>*/}
-
       <DetailRow
         title="Tekshiruv buyrug‘i:"
         value={
@@ -59,7 +71,6 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
           )
         }
       />
-
       <DetailRow
         title="Xabardor qilish xati:"
         value={

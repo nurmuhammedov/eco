@@ -6,11 +6,13 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 import { useHazardousFacilityTypeDictionarySelect } from '@/shared/api/dictionaries'
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { TabsLayout } from '@/shared/layouts'
 
 export const HfList = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const {
+    addParams,
     paramsObject: {
       page = 1,
       size = 10,
@@ -21,6 +23,7 @@ export const HfList = () => {
       legalName = '',
       legalAddress = '',
       name = '',
+      active = 'true',
       address = '',
       regionId = '',
       districtId = '',
@@ -32,7 +35,7 @@ export const HfList = () => {
 
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
 
-  const { data = [], isLoading } = usePaginatedData<any>(`/hf`, {
+  const { data, isLoading } = usePaginatedData<any>(`/hf`, {
     page,
     size,
     search,
@@ -43,6 +46,7 @@ export const HfList = () => {
     legalAddress,
     name,
     address,
+    active: active == 'ALL' ? '' : active,
     regionId,
     districtId,
     hfTypeId,
@@ -129,13 +133,37 @@ export const HfList = () => {
   ]
 
   return (
-    <DataTable
-      showFilters={true}
-      isLoading={isLoading}
-      isPaginated
-      data={data || []}
-      columns={columns as unknown as any}
-      className="h-[calc(100svh-220px)]"
-    />
+    <>
+      <TabsLayout
+        activeTab={active?.toString()}
+        className="mb-2"
+        tabs={[
+          {
+            id: 'ALL',
+            name: 'Barchasi',
+          },
+          {
+            id: 'true',
+            name: 'Amaldagi XICHOlar',
+          },
+          {
+            id: 'false',
+            name: 'Reyestrdan chiqarilgan XICHOlar',
+          },
+        ]?.map((i) => ({
+          ...i,
+          count: i?.id == active?.toString() ? (data?.page?.totalElements ?? 0) : undefined,
+        }))}
+        onTabChange={(type) => addParams({ active: type }, 'page')}
+      />
+      <DataTable
+        showFilters={true}
+        isLoading={isLoading}
+        isPaginated
+        data={data || []}
+        columns={columns as unknown as any}
+        className="h-[calc(100svh-220px)]"
+      />
+    </>
   )
 }
