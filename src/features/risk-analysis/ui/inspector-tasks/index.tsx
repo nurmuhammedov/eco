@@ -53,6 +53,7 @@ export const RegisterEquipmentAppealList = () => {
     },
     {
       accessorKey: 'actions',
+      id: 'org_actions',
       header: 'Tashkilot tomonidan qilingan o‘zgarishlar',
     },
     {

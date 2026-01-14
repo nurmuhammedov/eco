@@ -47,6 +47,7 @@ interface DataTableProps<TData, TValue> {
   onPageSizeChange?: (size: number) => void
   showNumeration?: boolean
   showFilters?: boolean
+  pageCount?: number
 }
 
 export function DataTable<TData, TValue>({
@@ -61,6 +62,7 @@ export function DataTable<TData, TValue>({
   pageSizeOptions,
   showNumeration = true,
   showFilters = false,
+  pageCount: propPageCount,
 }: DataTableProps<TData, TValue>) {
   const {
     paramsObject: { page = 1, size = 10 },
@@ -69,7 +71,7 @@ export function DataTable<TData, TValue>({
   const isContentData = data && typeof data === 'object' && 'content' in data
   const tableData = isContentData ? data.content : Array.isArray(data) ? data : []
 
-  const pageCount = isContentData ? data?.page?.totalPages : undefined
+  const pageCount = isContentData ? data?.page?.totalPages : propPageCount
 
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -79,7 +81,7 @@ export function DataTable<TData, TValue>({
   const handlePageChange = (page: number) => {
     if (onPageChange) {
       onPageChange(page)
-    } else if (isContentData) {
+    } else if (isContentData || propPageCount !== undefined) {
       addParams({ page })
     }
   }
@@ -87,7 +89,7 @@ export function DataTable<TData, TValue>({
   const handlePageSizeChange = (size: number) => {
     if (onPageSizeChange) {
       onPageSizeChange(size)
-    } else if (isContentData) {
+    } else if (isContentData || propPageCount !== undefined) {
       addParams({ size }, 'page')
     }
   }
@@ -103,7 +105,7 @@ export function DataTable<TData, TValue>({
     },
     pageCount,
     enableSorting: true,
-    manualPagination: isPaginated || isContentData,
+    manualPagination: isPaginated || isContentData || propPageCount !== undefined,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -130,47 +132,43 @@ export function DataTable<TData, TValue>({
                 {showNumeration && (
                   <TableHead
                     className={cn(
-                      'w-[50px]',
+                      'w-[1%] whitespace-nowrap',
                       showFilters
                         ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
                         : 'first:rounded-l-lg! last:rounded-r-lg!'
                     )}
-                    style={{ width: '50px', maxWidth: '50px' }}
                   >
-                    T/r
+                    T/R
                   </TableHead>
                 )}
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    className={cn(
-                      showFilters
-                        ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
-                        : 'first:rounded-l-lg! last:rounded-r-lg!'
-                    )}
-                    style={{
-                      ...getCommonPinningStyles({ column: header.column }),
-                      ...(headerCenter ? { textAlign: 'center' } : {}),
-                    }}
-                  >
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
+                {headerGroup.headers.map((header) => {
+                  const isActions = header.id === 'actions'
+                  return (
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className={cn(
+                        showFilters
+                          ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
+                          : 'first:rounded-l-lg! last:rounded-r-lg!',
+                        isActions && 'w-[1%] whitespace-nowrap'
+                      )}
+                      style={{
+                        ...getCommonPinningStyles({ column: header.column }),
+                        ...(headerCenter ? { textAlign: 'center' } : {}),
+                      }}
+                    >
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  )
+                })}
               </TableRow>
             ))}
 
             {showFilters && (
               <TableRow className="border-neutral-200 !bg-white even:!bg-white hover:!bg-white">
                 {showNumeration && (
-                  <TableHead
-                    className="!h-8 border-b-2 border-neutral-200 !bg-white !p-0 even:!bg-white hover:!bg-white"
-                    style={{
-                      width: '50px',
-                      minWidth: '50px',
-                      maxWidth: '50px',
-                    }}
-                  />
+                  <TableHead className="!h-8 w-[1%] border-b-2 border-neutral-200 !bg-white !p-0 even:!bg-white hover:!bg-white" />
                 )}
                 {table.getAllColumns().map((column) => {
                   const columnDef = column.columnDef as ExtendedColumnDef<TData, TValue>
@@ -205,21 +203,25 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row, idx) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {showNumeration && (
-                    <TableCell style={{ width: '50px', maxWidth: '50px' }}>
+                    <TableCell className="w-[1%] whitespace-nowrap">
                       {Number(page || 1) > 1 ? (Number(page || 1) - 1) * Number(size || 10) + idx + 1 : idx + 1}
                     </TableCell>
                   )}
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      style={{
-                        width: cell.column.getSize(),
-                        ...getCommonPinningStyles({ column: cell.column }),
-                      }}
-                    >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    const isActions = cell.column.id === 'actions'
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        className={cn(isActions && 'w-[1%] whitespace-nowrap')}
+                        style={{
+                          width: isActions ? undefined : cell.column.getSize(),
+                          ...getCommonPinningStyles({ column: cell.column }),
+                        }}
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    )
+                  })}
                 </TableRow>
               ))
             ) : (
@@ -236,13 +238,16 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {isPaginated && isContentData && (
+      {isPaginated && (isContentData || propPageCount !== undefined) && (
         <DataTablePagination
-          data={data}
+          data={isContentData ? data : undefined}
           isLoading={isLoading}
           onPageChange={handlePageChange}
           pageSizeOptions={pageSizeOptions}
           onPageSizeChange={handlePageSizeChange}
+          pageCount={propPageCount}
+          currentPage={Number(page)}
+          pageSize={Number(size)}
         />
       )}
     </Fragment>

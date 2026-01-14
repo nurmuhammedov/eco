@@ -221,7 +221,7 @@ export const ContactForm = () => {
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>F.I.SH (ixtiyoriy)</FormLabel>
+                      <FormLabel>F.I.SH. (ixtiyoriy)</FormLabel>
                       <FormControl>
                         <Input placeholder="Ism-sharifingiz" {...field} />
                       </FormControl>

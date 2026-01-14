@@ -112,7 +112,7 @@ export const XrayList = () => {
       isPaginated
       data={data || []}
       columns={columns as unknown as any}
-      className="h-[calc(100svh-220px)]"
+      className="min-h-0 flex-1"
     />
   )
 }

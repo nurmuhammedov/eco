@@ -14,6 +14,8 @@ interface ApplicationModalProps {
   isPdfLoading: boolean
   submitApplicationMetaData: (sign: string) => void
   title?: string
+  showSignature?: boolean
+  customAction?: React.ReactNode
 }
 
 export const ApplicationModal: React.FC<ApplicationModalProps> = ({
@@ -25,6 +27,8 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
   isPdfLoading,
   submitApplicationMetaData,
   title = 'Hujjatni shakklantirish',
+  showSignature = true,
+  customAction,
 }) => {
   const renderContent = () => {
     if (isPdfLoading) {
@@ -62,12 +66,15 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
             <Pencil className="mr-2 size-4" /> Hujjatni o‘zgartirish
           </Button>
-          <SignatureModal
-            error={error}
-            isLoading={isLoading}
-            documentUrl={documentUrl}
-            submitApplicationMetaData={submitApplicationMetaData}
-          />
+          {showSignature && (
+            <SignatureModal
+              error={error}
+              isLoading={isLoading}
+              documentUrl={documentUrl}
+              submitApplicationMetaData={submitApplicationMetaData}
+            />
+          )}
+          {customAction}
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -1,4 +1,5 @@
 import { InspectionList } from '@/features/inspections/ui/inspection-list'
+import { TenDaysDecreeList } from '@/features/inspections/ten-days-decree/ui/ten-days-decree-list'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import { useAuth } from '@/shared/hooks/use-auth'
@@ -15,6 +16,7 @@ export enum InspectionStatus {
   ALL = 'ALL',
   NEW = 'NEW',
   ASSIGNED = 'ASSIGNED',
+  TEN_DAYS = 'TEN_DAYS',
 }
 
 export enum InspectionSubMenuStatus {
@@ -122,6 +124,7 @@ export const InspectionWidget: React.FC = () => {
   const isInspector = user?.role === UserRoles.INSPECTOR
   const isLegal = user?.role === UserRoles.LEGAL
   const isRegional = user?.role === UserRoles.REGIONAL
+  const isChairmanOrHead = user?.role === UserRoles.CHAIRMAN || user?.role === UserRoles.HEAD
 
   const activeTab = paramsObject.status
   const activeSubTab = paramsObject.subStatus
@@ -133,7 +136,10 @@ export const InspectionWidget: React.FC = () => {
     year: paramsObject?.year || new Date().getFullYear(),
     quarter: paramsObject?.quarter || getQuarter(new Date()).toString(),
     regionId: activeRegion === 'ALL' ? '' : activeRegion,
-    status: paramsObject?.status === 'ALL' ? '' : paramsObject?.status || '',
+    status:
+      paramsObject?.status === 'ALL' || paramsObject?.status === InspectionStatus.TEN_DAYS
+        ? ''
+        : paramsObject?.status || '',
     legalName: paramsObject?.legalName || '',
     legalTin: paramsObject?.legalTin || '',
     legalRegionId: paramsObject?.legalRegionId || '',
@@ -151,7 +157,7 @@ export const InspectionWidget: React.FC = () => {
 
   if (isInspector || isLegal) {
     return (
-      <>
+      <div className="flex h-full flex-col overflow-hidden">
         {!isInspector && (
           <Cards
             year={paramsObject?.year ? paramsObject?.year : new Date().getFullYear()}
@@ -161,7 +167,11 @@ export const InspectionWidget: React.FC = () => {
           />
         )}
 
-        <Tabs value={activeSubTab || InspectionSubMenuStatus.ASSIGNED} onValueChange={handleSubTabChange}>
+        <Tabs
+          value={activeSubTab || InspectionSubMenuStatus.ASSIGNED}
+          onValueChange={handleSubTabChange}
+          className="flex flex-1 flex-col overflow-hidden"
+        >
           <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
             <TabsList>
               <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
@@ -178,19 +188,19 @@ export const InspectionWidget: React.FC = () => {
               </TabsTrigger>
             </TabsList>
           </div>
-          <TabsContent value={InspectionSubMenuStatus.CONDUCTED}>
+          <TabsContent value={InspectionSubMenuStatus.CONDUCTED} className="mt-2 flex-1 overflow-hidden">
             <InspectionList />
           </TabsContent>
-          <TabsContent value={InspectionSubMenuStatus.ASSIGNED}>
+          <TabsContent value={InspectionSubMenuStatus.ASSIGNED} className="mt-2 flex-1 overflow-hidden">
             <InspectionList />
           </TabsContent>
         </Tabs>
-      </>
+      </div>
     )
   }
 
   return (
-    <div>
+    <div className="flex h-full flex-col overflow-hidden">
       {!isRegional && (
         <Cards
           year={paramsObject?.year ? paramsObject?.year : new Date().getFullYear()}
@@ -199,7 +209,11 @@ export const InspectionWidget: React.FC = () => {
           onTabChange={(val: string) => addParams({ regionId: val }, 'page', 'legalDistrictId')}
         />
       )}
-      <Tabs value={activeTab || InspectionStatus.ALL} onValueChange={handleTabChange}>
+      <Tabs
+        value={activeTab || InspectionStatus.ALL}
+        onValueChange={handleTabChange}
+        className="flex flex-1 flex-col overflow-hidden"
+      >
         <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
           <TabsList>
             <TabsTrigger value={InspectionStatus.ALL}>
@@ -220,17 +234,21 @@ export const InspectionWidget: React.FC = () => {
                 {(countObject.assignedCount || 0) + (countObject.conductedCount || 0)}
               </Badge>
             </TabsTrigger>
+            {isChairmanOrHead && (
+              <TabsTrigger value={InspectionStatus.TEN_DAYS}>Imzolash kerak bo'lgan hujjatlar</TabsTrigger>
+            )}
           </TabsList>
         </div>
-        <TabsContent value={InspectionStatus.ALL}>
+        <TabsContent value={InspectionStatus.ALL} className="mt-2 flex-1 overflow-hidden">
           <InspectionList />
         </TabsContent>
-        <TabsContent value={InspectionStatus.NEW}>
+        <TabsContent value={InspectionStatus.NEW} className="mt-2 flex-1 overflow-hidden">
           <InspectionList />
         </TabsContent>
-        <TabsContent value={InspectionStatus.ASSIGNED}>
+        <TabsContent value={InspectionStatus.ASSIGNED} className="mt-2 flex flex-1 flex-col overflow-hidden">
           <div className="mb-3">
             <Tabs
+              defaultValue={InspectionSubMenuStatus.ASSIGNED}
               value={activeSubTab || InspectionSubMenuStatus.ASSIGNED}
               onValueChange={(value) => {
                 addParams({ subStatus: value, page: 1 })
@@ -255,6 +273,9 @@ export const InspectionWidget: React.FC = () => {
             </Tabs>
           </div>
           <InspectionList />
+        </TabsContent>
+        <TabsContent value={InspectionStatus.TEN_DAYS} className="mt-2 flex-1 overflow-hidden">
+          <TenDaysDecreeList />
         </TabsContent>
       </Tabs>
     </div>

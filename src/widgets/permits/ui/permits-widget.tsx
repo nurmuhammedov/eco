@@ -30,9 +30,11 @@ export const PermitsWidget = () => {
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
       <PermitTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts} />
-      <PermitTable setIsModalOpen={setIsModalOpen} />
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <PermitTable setIsModalOpen={setIsModalOpen} />
+      </div>
       {user?.role !== UserRoles.CHAIRMAN && user?.role !== UserRoles.INDIVIDUAL && user?.role !== UserRoles.LEGAL && (
         <AddPermitModal open={isModalOpen} onOpenChange={setIsModalOpen} />
       )}

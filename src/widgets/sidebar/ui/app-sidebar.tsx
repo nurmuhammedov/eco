@@ -39,7 +39,9 @@ export function AppSidebar() {
       return legalNavigation.filter((navItem) => user.directions.includes(navItem.id as Direction))
     }
 
-    return allNavigation.filter((navItem) => user.directions.includes(navItem.id as Direction))
+    const baseNavigation = NAVIGATIONS[user.role] || allNavigation
+
+    return baseNavigation.filter((navItem) => user.directions.includes(navItem.id as Direction))
   }, [user])
 
   if (!user) return null

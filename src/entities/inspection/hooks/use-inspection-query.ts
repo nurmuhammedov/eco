@@ -4,9 +4,10 @@ import { inspectionAPI } from '../api/inspection.api'
 
 const INSPECTION_QUERY_KEY = 'inspections'
 
-export const useInspections = (params: ISearchParams) => {
+export const useInspections = (params: ISearchParams, enabled: boolean = true) => {
   return useQuery({
     queryKey: [INSPECTION_QUERY_KEY, params],
     queryFn: () => inspectionAPI.getAll(params),
+    enabled,
   })
 }

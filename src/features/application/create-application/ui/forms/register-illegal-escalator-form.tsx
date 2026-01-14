@@ -134,7 +134,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalEscalatorFormPro
                 </h3>
                 <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
                   <DetailRow
-                    title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH:'}
+                    title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH.:'}
                     value={isLegal ? ownerData?.legalName || '-' : ownerData?.fullName || '-'}
                   />
                   {isLegal && (

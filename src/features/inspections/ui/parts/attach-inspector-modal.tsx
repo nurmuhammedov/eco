@@ -18,11 +18,16 @@ import { ApplicationModal } from '@/features/application/create-application'
 import { Input } from '@/shared/components/ui/input'
 import { apiClient } from '@/shared/api/api-client'
 import { toast } from 'sonner'
+import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Send } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const schema = z.object({
   startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
   endDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
   inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
+  duration: z.enum(['ONE_DAY', 'TEN_DAYS'], { required_error: FORM_ERROR_MESSAGES.required }),
 
   checklistDtoList: z.array(
     z.object({
@@ -36,9 +41,12 @@ const schema = z.object({
 const AttachInspectorModal = ({ data = [] }: any) => {
   const [isShow, setIsShow] = useState(false)
   const [isCodeLoading, setIsCodeLoading] = useState(false)
+  const [formData, setFormData] = useState<any>(null)
   const {
     paramsObject: { inspectionId: id = '' },
   } = useCustomSearchParams()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -48,11 +56,13 @@ const AttachInspectorModal = ({ data = [] }: any) => {
         checklistCategoryIdList: [],
         specialCode: '',
       })),
+      // duration default qiymati olib tashlandi
     },
   })
 
   const startDate = form.watch('startDate')
   const endDate = form.watch('endDate')
+  const duration = form.watch('duration')
 
   const { data: inspectorSelectData } = useInspectorSelect(isShow)
   const { data: categoryTypes } = useCategoryTypeSelectQuery(undefined, isShow)
@@ -80,10 +90,30 @@ const AttachInspectorModal = ({ data = [] }: any) => {
     submitApplicationMetaData,
   } = useEimzo({
     pdfEndpoint: '/inspections/decree/generate-pdf',
-    submitEndpoint: '/inspections/decree',
+    submitEndpoint: '/inspections/decree/one-day',
     queryKey: 'inspections-attach-inspectors',
     successMessage: 'Muvaffaqiyatli saqlandi!',
     onSuccessNavigateTo: `/inspections`,
+  })
+
+  // 10 kunlik uchun alohida mutation
+  const { mutate: submitTenDays, isPending: isTenDaysLoading } = useMutation({
+    mutationFn: () =>
+      apiClient.post('/inspections/decree/ten-days', {
+        dto: formData,
+        filePath: documentUrl,
+      }),
+    onSuccess: (response: any) => {
+      if (response && response.success) {
+        handleCloseModal()
+        toast.success('Muvaffaqiyatli yuborildi!')
+        navigate('/inspections')
+        queryClient.invalidateQueries({ queryKey: ['inspections-attach-inspectors'] })
+      }
+    },
+    onError: (e: any) => {
+      toast.error(e.message || 'Xatolik yuz berdi!')
+    },
   })
 
   const handleGetCode = async (index: number) => {
@@ -112,13 +142,16 @@ const AttachInspectorModal = ({ data = [] }: any) => {
   }
 
   function onSubmit(values: z.infer<typeof schema>) {
-    handleCreateApplication({
+    const data = {
       inspectionId: id,
       startDate: formatDate(values.startDate, 'yyyy-MM-dd'),
       endDate: formatDate(values.endDate, 'yyyy-MM-dd'),
       inspectorIdList: values.inspectorIdList,
       checklistDtoList: values.checklistDtoList,
-    })
+      duration: values.duration,
+    }
+    setFormData(data)
+    handleCreateApplication(data)
 
     setIsShow(false)
   }
@@ -140,77 +173,142 @@ const AttachInspectorModal = ({ data = [] }: any) => {
               <div className="mb-4 grid grid-cols-2 gap-2">
                 <FormField
                   control={form.control}
-                  name="startDate"
-                  render={({ field }) => {
-                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                    return (
-                      <FormItem>
-                        <FormLabel required>Tekshiruv boshlanish sanasi</FormLabel>
-                        <DatePicker
-                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                          onChange={field.onChange}
-                          placeholder="Boshlanish sanasini tanlang"
-                          disableStrategy="custom"
-                          customDisabledFn={(date) => {
-                            const today = new Date()
-                            today.setHours(0, 0, 0, 0)
-                            if (date < today) return true
-                            if (endDate && date > endDate) return true
-                            return false
-                          }}
-                        />
-                        <FormMessage />
-                      </FormItem>
-                    )
-                  }}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="endDate"
-                  render={({ field }) => {
-                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                    return (
-                      <FormItem>
-                        <FormLabel required>Tekshiruv tugash sanasi</FormLabel>
-                        <DatePicker
-                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                          onChange={field.onChange}
-                          placeholder="Tugash sanasini tanlang"
-                          disableStrategy="custom"
-                          customDisabledFn={(date) => {
-                            const today = new Date()
-                            today.setHours(0, 0, 0, 0)
-                            if (date < today) return true
-                            if (startDate && date < startDate) return true
-                            return false
-                          }}
-                        />
-                        <FormMessage />
-                      </FormItem>
-                    )
-                  }}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="inspectorIdList"
+                  name="duration"
                   render={({ field }) => (
-                    <FormItem className="col-span-2">
-                      <FormLabel required>Inspektor(lar)ni tanlang</FormLabel>
+                    <FormItem className="col-span-2 space-y-3">
+                      <FormLabel required>Tekshiruv muddati</FormLabel>
                       <FormControl>
-                        <MultiSelect
-                          {...field}
-                          options={inspectorSelectData || []}
-                          value={field.value}
-                          onChange={field.onChange}
-                          placeholder="Inspektorlarni tanlang"
-                        />
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex flex-col space-y-1"
+                        >
+                          <FormItem className="flex flex-row items-center space-y-0 space-x-3">
+                            <FormControl>
+                              <RadioGroupItem value="ONE_DAY" />
+                            </FormControl>
+                            <FormLabel className="font-normal">1 kunlik tekshiruv</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex flex-row items-center space-y-0 space-x-3">
+                            <FormControl>
+                              <RadioGroupItem value="TEN_DAYS" />
+                            </FormControl>
+                            <FormLabel className="font-normal">10 kunlik tekshiruv</FormLabel>
+                          </FormItem>
+                        </RadioGroup>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {duration === 'ONE_DAY' && (
+                  <FormField
+                    control={form.control}
+                    name="startDate"
+                    render={({ field }) => {
+                      const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                      return (
+                        <FormItem className="col-span-2">
+                          <FormLabel required>Tekshiruv o‘tkaziladigan sana</FormLabel>
+                          <DatePicker
+                            value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                            onChange={(date) => {
+                              field.onChange(date)
+                              form.setValue('endDate', date as Date)
+                            }}
+                            placeholder="Sanani tanlang"
+                            disableStrategy="custom"
+                            customDisabledFn={(date) => {
+                              const today = new Date()
+                              today.setHours(0, 0, 0, 0)
+                              return date < today
+                            }}
+                          />
+                          <FormMessage />
+                        </FormItem>
+                      )
+                    }}
+                  />
+                )}
+
+                {duration === 'TEN_DAYS' && (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="startDate"
+                      render={({ field }) => {
+                        const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                        return (
+                          <FormItem>
+                            <FormLabel required>Tekshiruv boshlanish sanasi</FormLabel>
+                            <DatePicker
+                              value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                              onChange={field.onChange}
+                              placeholder="Boshlanish sanasini tanlang"
+                              disableStrategy="custom"
+                              customDisabledFn={(date) => {
+                                const today = new Date()
+                                today.setHours(0, 0, 0, 0)
+                                if (date < today) return true
+                                return !!(endDate && date > endDate)
+                              }}
+                            />
+                            <FormMessage />
+                          </FormItem>
+                        )
+                      }}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="endDate"
+                      render={({ field }) => {
+                        const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                        return (
+                          <FormItem>
+                            <FormLabel required>Tekshiruv tugash sanasi</FormLabel>
+                            <DatePicker
+                              value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                              onChange={field.onChange}
+                              placeholder="Tugash sanasini tanlang"
+                              disableStrategy="custom"
+                              customDisabledFn={(date) => {
+                                const today = new Date()
+                                today.setHours(0, 0, 0, 0)
+                                if (date < today) return true
+                                return !!(startDate && date < startDate)
+                              }}
+                            />
+                            <FormMessage />
+                          </FormItem>
+                        )
+                      }}
+                    />
+                  </>
+                )}
+
+                {duration && (
+                  <FormField
+                    control={form.control}
+                    name="inspectorIdList"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <FormLabel required>Inspektor(lar)ni tanlang</FormLabel>
+                        <FormControl>
+                          <MultiSelect
+                            {...field}
+                            options={inspectorSelectData || []}
+                            value={field.value}
+                            onChange={field.onChange}
+                            placeholder="Inspektorlarni tanlang"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
 
               <div className="mt-6">
@@ -285,7 +383,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
       <ApplicationModal
         error={error}
         isOpen={isModalOpen}
-        isLoading={isLoading}
+        isLoading={isLoading || isTenDaysLoading}
         documentUrl={documentUrl || ''}
         isPdfLoading={isPdfLoading}
         onClose={() => {
@@ -293,6 +391,15 @@ const AttachInspectorModal = ({ data = [] }: any) => {
           setIsShow(true)
         }}
         submitApplicationMetaData={submitApplicationMetaData}
+        showSignature={duration !== 'TEN_DAYS'}
+        customAction={
+          duration === 'TEN_DAYS' ? (
+            <Button onClick={() => submitTenDays()} loading={isTenDaysLoading} disabled={isTenDaysLoading}>
+              <Send className="mr-2 size-4" />
+              Imzolash uchun yuborish
+            </Button>
+          ) : null
+        }
       />
     </>
   )

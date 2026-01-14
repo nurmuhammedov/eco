@@ -1,15 +1,16 @@
 import { Navigation } from '@/widgets/sidebar/models/types'
 import {
-  AlertCircle,
-  Archive,
-  Award,
+  Activity,
+  BadgeCheck,
   BarChart2,
   CheckCircle,
-  Clipboard,
+  ClipboardList,
   Database,
+  FileBadge,
   FileText,
-  ShieldCheck,
+  Map,
   MessageSquareText,
+  ShieldCheck,
 } from 'lucide-react'
 
 export default [
@@ -35,47 +36,37 @@ export default [
     id: 'RISK_ANALYSIS',
     title: 'menu.risk_analysis',
     url: '/risk-analysis',
-    icon: <AlertCircle />,
+    icon: <Activity />,
   },
   {
     id: 'INSPECTION',
     title: 'Tekshiruvlar',
     url: '/inspections',
-    icon: <Clipboard />,
+    icon: <ClipboardList />,
   },
   {
     id: 'ACCREDITATION',
-    title: 'menu.accreditation',
-    url: '/expertise-organizations',
+    title: 'Ekspertiza xulosalari',
+    url: '/accreditations',
     icon: <CheckCircle />,
-    items: [
-      {
-        url: '/expertise-organizations',
-        title: 'Ekpertiza tashkilotlari',
-      },
-      {
-        url: '/accreditations',
-        title: 'Ekpertiza xulosalari',
-      },
-    ],
   },
   {
     id: 'ATTESTATION_COMMITTEE',
     title: 'menu.attestation',
     url: '/attestations',
-    icon: <FileText />,
+    icon: <BadgeCheck />,
   },
   {
     id: 'ATTESTATION_REGIONAL',
     title: 'menu.attestation',
     url: '/attestations',
-    icon: <FileText />,
+    icon: <BadgeCheck />,
   },
   {
     id: 'CADASTRE',
     title: 'menu.cadastre',
     url: '/cadastre',
-    icon: <Archive />,
+    icon: <Map />,
   },
   {
     id: 'REPORT',
@@ -87,7 +78,7 @@ export default [
     id: 'PERMITS',
     title: 'Ruxsat etuvchi hujjatlar',
     url: '/permits',
-    icon: <Award />,
+    icon: <FileBadge />,
   },
   {
     id: 'INQUIRY',

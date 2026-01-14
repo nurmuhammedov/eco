@@ -124,7 +124,7 @@ export const ConclusionsTable = () => {
   ]
 
   return (
-    <>
+    <div className="flex h-full min-h-0 flex-1 flex-col gap-2 overflow-hidden">
       <DataTable
         showNumeration={true}
         isPaginated={true}
@@ -132,7 +132,7 @@ export const ConclusionsTable = () => {
         data={data}
         showFilters={true}
         isLoading={isLoading}
-        className="h-[calc(100svh-420px)]"
+        className="flex-1"
       />
       {user?.role == UserRoles.LEGAL && (
         <ExpertiseFileUploadModal
@@ -142,6 +142,6 @@ export const ConclusionsTable = () => {
           }}
         />
       )}
-    </>
+    </div>
   )
 }

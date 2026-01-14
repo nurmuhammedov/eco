@@ -6,7 +6,7 @@ import { XrayList } from '@/features/register/xray/ui/xray-list'
 import { Badge } from '@/shared/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { useAuth } from '@/shared/hooks/use-auth'
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import { RegisterActiveTab } from '../types'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { Button } from '@/shared/components/ui/button'
@@ -73,9 +73,9 @@ const RegisterWidget = () => {
   }
 
   return (
-    <Fragment>
+    <div className="flex h-full flex-col">
       <Tabs
-        className="flex flex-1 flex-col"
+        className="flex flex-1 flex-col overflow-hidden"
         value={tab}
         onValueChange={(tab: string) => addParams({ tab: tab.toString() }, 'page', 'type', 'status')}
       >
@@ -207,23 +207,23 @@ const RegisterWidget = () => {
             ) : null}
           </div>
         </div>
-        <TabsContent value={RegisterActiveTab.HF} className="mt-2 flex flex-1 flex-col">
+        <TabsContent value={RegisterActiveTab.HF} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
           <HfList />
         </TabsContent>
-        <TabsContent value={RegisterActiveTab.EQUIPMENTS} className="mt-2 flex flex-1 flex-col">
+        <TabsContent value={RegisterActiveTab.EQUIPMENTS} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
           <EquipmentsList />
         </TabsContent>
-        <TabsContent value={RegisterActiveTab.IRS} className="mt-2 flex flex-1 flex-col">
+        <TabsContent value={RegisterActiveTab.IRS} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
           <IrsList />
         </TabsContent>
-        <TabsContent value={RegisterActiveTab.XRAY} className="mt-2 flex flex-1 flex-col">
+        <TabsContent value={RegisterActiveTab.XRAY} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
           <XrayList />
         </TabsContent>
-        <TabsContent value={RegisterActiveTab.AUTO} className="mt-2 flex flex-1 flex-col">
+        <TabsContent value={RegisterActiveTab.AUTO} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
           <AutoList tankersCount={tankersCount} />
         </TabsContent>
       </Tabs>
-    </Fragment>
+    </div>
   )
 }
 

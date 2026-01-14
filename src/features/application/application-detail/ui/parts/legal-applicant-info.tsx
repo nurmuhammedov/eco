@@ -7,7 +7,7 @@ const LegalApplicantInfo = ({ tinNumber }: any) => {
     <div className="flex flex-col py-1">
       <DetailRow title="Tashkilot STIR:" value={data?.identity || '-'} />
       <DetailRow title="Tashkilot nomi:" value={data?.name || '-'} />
-      <DetailRow title="Tashkilot rahbari F.I.SH:" value={data?.directorName || '-'} />
+      <DetailRow title="Tashkilot rahbari F.I.SH.:" value={data?.directorName || '-'} />
       <DetailRow title="Tashkilot manzili:" value={data?.address || '-'} />
       <DetailRow title="Tashkilot telefon raqami:" value={data?.phoneNumber || '-'} />
       <DetailRow

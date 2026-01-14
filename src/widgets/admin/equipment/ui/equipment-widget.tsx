@@ -1,4 +1,4 @@
-import { Fragment, memo } from 'react'
+import { memo } from 'react'
 import { PlusCircle } from 'lucide-react'
 import { useEquipment } from '../model/use-equipment'
 import { Button } from '@/shared/components/ui/button'
@@ -8,8 +8,8 @@ const EquipmentWidget = () => {
   const { isOpenEquipment, onAddEquipment } = useEquipment()
 
   return (
-    <Fragment>
-      <div className="mb-3 flex items-center justify-between">
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      <div className="flex items-center justify-between">
         <h5 className="text-xl font-semibold uppercase">Qurilmalarning quyi turlari </h5>
         <Button onClick={onAddEquipment}>
           <PlusCircle /> Quyi tur qo'shish
@@ -17,7 +17,7 @@ const EquipmentWidget = () => {
       </div>
       <EquipmentList />
       {isOpenEquipment && <EquipmentDrawer />}
-    </Fragment>
+    </div>
   )
 }
 export default memo(EquipmentWidget)

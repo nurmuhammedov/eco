@@ -143,19 +143,10 @@ const PreventionTable: FC<Props> = ({ regions }) => {
   ]
 
   return (
-    <>
-      <DataTable
-        isPaginated
-        showFilters
-        data={data || []}
-        columns={columns}
-        isLoading={isLoading}
-        className={
-          isInspector ? 'h-[calc(100svh-310px)]' : isRegional ? 'h-[calc(100svh-350px)]' : 'h-[calc(100svh-400px)]'
-        }
-      />
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      <DataTable isPaginated showFilters data={data || []} columns={columns} isLoading={isLoading} className="flex-1" />
       <AssignInspectorModal />
-    </>
+    </div>
   )
 }
 

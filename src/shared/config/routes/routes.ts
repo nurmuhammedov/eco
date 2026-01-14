@@ -66,6 +66,10 @@ const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-
 const ExpertiseOrganizations = lazy(() => import('@/pages/expertise/organizations-page'))
 const EditConclusion = lazy(() => import('@/pages/expertise/edit-conclusion-page'))
 const AttractionTypePage = lazy(() => import('@/pages/admin/attraction-type/page'))
+const DecreeSignerPage = lazy(() =>
+  import('@/features/admin/decree-signers').then((module) => ({ default: module.DecreeSignersPage }))
+)
+const HybridMailPage = lazy(() => import('@/features/admin/hybrid-mail/ui/hybrid-mail-page'))
 
 export const appRoutes = [
   {
@@ -202,6 +206,17 @@ export const appRoutes = [
   {
     path: 'attraction-types',
     component: AttractionTypePage,
+    roles: [UserRoles.ADMIN],
+  },
+
+  {
+    path: 'decree-signers',
+    component: DecreeSignerPage,
+    roles: [UserRoles.ADMIN], // Or specific super admin role if exists, sticking to ADMIN as per context
+  },
+  {
+    path: 'hybrid-mail',
+    component: HybridMailPage,
     roles: [UserRoles.ADMIN],
   },
   {

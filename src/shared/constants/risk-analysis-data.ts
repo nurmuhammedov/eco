@@ -109,7 +109,7 @@ export const riskAnalysisData = {
       rejectPlaceholder: `12.12.2024 kuni baxtsiz xadis ray bergan`,
     },
     {
-      title: `Atom energetikasi va yadro texnologiyalari, ionlashtiruvchi nurlanish manbalari va radiatsiya ta'sirida bo'lgan ob'ektlarda takrorlagichlarda tekshiruvlar o'tkazilmaydi.`,
+      title: `Atom energetikasi va yadro texnologiyalari, ionlashtiruvchi nurlanish manbalari va radiatsiya ta'sirida bo'lgan ob'ektlarda takrorlagichlarda tekshiruvlar o‘tkazilmaydi.`,
       point: 5,
       rejectPlaceholder: `Hujjatlar va ma'lumotnoma taqdim etilmagan`,
     },
@@ -119,7 +119,7 @@ export const riskAnalysisData = {
       rejectPlaceholder: `Normativ hujjatlar talablari buzilgan, -son qaror, -bandi`,
     },
     {
-      title: `Inmlar va rentgen uskunalarini yillik inventarizasiyasi o'tkazilmaganligi va vakolatli organga taqdim etilganligi to'g'risidagi ma'lumotlar mavjud emasligi`,
+      title: `Inmlar va rentgen uskunalarini yillik inventarizasiyasi o‘tkazilmaganligi va vakolatli organga taqdim etilganligi to'g'risidagi ma'lumotlar mavjud emasligi`,
       point: 10,
       rejectPlaceholder: "Ma'lumot taqdim etilmagan",
     },

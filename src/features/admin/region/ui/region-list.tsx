@@ -7,7 +7,7 @@ import { DataTable, DataTableRowActions } from '@/shared/components/common/data-
 import { type FilterRegionDTO, type Region, useDeleteRegion, useRegionsQuery } from '@/entities/admin/region'
 
 export function RegionList() {
-  const { filters } = useFilters()
+  const { filters } = useFilters({}, { defaultSize: 20 })
   const { onOpen } = useRegionDrawer()
   const { t } = useTranslation('common')
   const { data, isLoading } = useRegionsQuery(filters as FilterRegionDTO)
@@ -44,12 +44,6 @@ export function RegionList() {
   ]
 
   return (
-    <DataTable
-      isPaginated
-      data={data || []}
-      isLoading={isLoading}
-      columns={regionTableColumns}
-      className="h-[calc(100svh-270px)]"
-    />
+    <DataTable isPaginated data={data || []} isLoading={isLoading} columns={regionTableColumns} className="flex-1" />
   )
 }

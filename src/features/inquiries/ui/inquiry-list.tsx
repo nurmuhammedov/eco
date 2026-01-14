@@ -128,7 +128,7 @@ const InquiryTable = () => {
   ]
 
   return (
-    <div className="space-y-4">
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
       <InquiryTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts} />
       <DataTable
         showNumeration={true}
@@ -137,7 +137,7 @@ const InquiryTable = () => {
         data={data}
         showFilters={true}
         isLoading={isLoading}
-        className="h-[calc(100svh-320px)]"
+        className="flex-1"
       />
     </div>
   )

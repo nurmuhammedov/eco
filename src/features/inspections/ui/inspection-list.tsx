@@ -1,4 +1,4 @@
-import { useInspections } from '@/entities/inspection/hooks/use-inspection-query'
+import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
 import { Inspection } from '@/entities/inspection/models/inspection.types'
 import { DataTable } from '@/shared/components/common/data-table'
 import { Button } from '@/shared/components/ui/button'
@@ -37,19 +37,27 @@ export const InspectionList: React.FC = () => {
     isInspector || isRegional ? undefined : regionId == 'ALL' ? '' : regionId
   )
 
-  const { data: inspections, isLoading } = useInspections({
-    ...rest,
-    quarter,
-    regionId: regionId == 'ALL' ? '' : regionId,
-    year,
-    status: [UserRoles.LEGAL, UserRoles?.INSPECTOR]?.includes(user?.role as unknown as UserRoles)
-      ? subStatus
-      : status === InspectionStatus.ALL
-        ? undefined
-        : status == InspectionStatus.ASSIGNED
-          ? subStatus
-          : status,
-  })
+  const {
+    data: inspections,
+    isLoading,
+    totalPages,
+  } = usePaginatedData<Inspection>(
+    '/inspections',
+    {
+      ...rest,
+      quarter,
+      regionId: regionId == 'ALL' ? '' : regionId,
+      year,
+      status: [UserRoles.LEGAL, UserRoles?.INSPECTOR]?.includes(user?.role as unknown as UserRoles)
+        ? subStatus
+        : status === InspectionStatus.ALL
+          ? undefined
+          : status == InspectionStatus.ASSIGNED
+            ? subStatus
+            : status,
+    },
+    status !== InspectionStatus.TEN_DAYS
+  )
 
   const handleView = (row: Inspection) => {
     navigate(`/inspections/info?inspectionId=${row.id}&tin=${row.tin}&name=${row.legalName}&year=${year}`)
@@ -108,13 +116,16 @@ export const InspectionList: React.FC = () => {
   ]
 
   return (
-    <DataTable
-      isPaginated
-      showFilters={true}
-      data={inspections || []}
-      columns={columns as unknown as any}
-      isLoading={isLoading}
-      className="h-[calc(100vh-360px)]"
-    />
+    <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
+      <DataTable
+        isPaginated
+        showFilters={true}
+        data={inspections || []}
+        columns={columns as unknown as any}
+        isLoading={isLoading}
+        pageCount={totalPages}
+        className="flex-1"
+      />
+    </div>
   )
 }

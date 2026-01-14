@@ -20,12 +20,22 @@ const usePaginatedData = <T>(
     staleTime,
   })
 
-  const { page } = queryMethods.data || {}
+  const responseData: any = queryMethods.data || {}
+  const page = responseData.page
+
+  const size = page?.size || params?.size || 10
+
+  const totalElements = page?.totalElements ?? responseData.totalElements ?? responseData.total ?? responseData.count
+
+  const computedTotalPages = totalElements ? Math.ceil(Number(totalElements) / Number(size)) : 0
+
+  const totalPages = page?.totalPages ?? responseData.totalPages ?? computedTotalPages
 
   return {
     ...queryMethods,
     data: queryMethods.data,
-    totalPages: page?.totalPages,
+    totalPages,
+    totalElements,
   }
 }
 

@@ -115,7 +115,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="mb-2 flex items-center justify-between">
         <Tabs
           value={currentTab}
           onValueChange={(val) => {
@@ -170,7 +170,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
         data={data || []}
         showFilters={true}
         isLoading={isLoading}
-        className={`${user?.role === UserRoles.CHAIRMAN || user?.role === UserRoles.INDIVIDUAL || user?.role === UserRoles.LEGAL ? 'h-[calc(100svh-380px)]' : 'h-[calc(100svh-430px)]'}`}
+        className="flex-1"
       />
       <PermitDetailModal />
     </>

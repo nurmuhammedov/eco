@@ -28,7 +28,7 @@ export const tabs = [
 
 export const PermitTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) => {
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+    <div className="mb-2 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
       {tabs.map((tab) => {
         const isActive = activeTab == tab.key
         const isNearingExpiry = tab.key === PermitTabKey.NEARING_EXPIRY

@@ -8,6 +8,8 @@ import {
   MapPin,
   MousePointerClick,
   Users,
+  Signature,
+  Mail,
 } from 'lucide-react'
 
 export default [
@@ -25,6 +27,11 @@ export default [
     url: '/staffs',
     title: 'menu.staffs',
     icon: <Users />,
+  },
+  {
+    url: '/decree-signers',
+    title: 'Imzolovchi shaxslar',
+    icon: <Signature />,
   },
   {
     url: '/hazardous-facilities',
@@ -50,5 +57,10 @@ export default [
     url: '/user-logs',
     title: 'menu.user-logs',
     icon: <Activity />,
+  },
+  {
+    url: '/hybrid-mail',
+    title: 'Gibrid pochta',
+    icon: <Mail />,
   },
 ] as Navigation

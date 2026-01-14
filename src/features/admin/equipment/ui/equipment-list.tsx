@@ -44,12 +44,5 @@ export function EquipmentList() {
     },
   ]
 
-  return (
-    <DataTable
-      data={data || []}
-      isLoading={isLoading}
-      columns={equipmentTableColumns}
-      className="h-[calc(100svh-220px)]"
-    />
-  )
+  return <DataTable data={data || []} isLoading={isLoading} columns={equipmentTableColumns} className="flex-1" />
 }

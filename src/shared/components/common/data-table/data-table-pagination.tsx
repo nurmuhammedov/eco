@@ -16,6 +16,9 @@ interface PaginationProps<T = any> {
   pageSizeOptions?: number[]
   onPageChange: (page: number) => void
   onPageSizeChange: (size: number) => void
+  pageCount?: number
+  currentPage?: number
+  pageSize?: number
 }
 
 export function DataTablePagination<T>({
@@ -28,11 +31,23 @@ export function DataTablePagination<T>({
   showSizeChanger = true,
   showQuickJumper = true,
   pageSizeOptions = [10, 20, 50, 100],
+  pageCount: manualPageCount,
+  currentPage: manualCurrentPage,
+  pageSize: manualPageSize,
 }: PaginationProps<T>) {
   const { t } = useTranslation('common')
 
-  // Move all hook calls above any conditional returns
-  const shouldRender = !!(data && data.page && data.page.totalElements > 0)
+  const {
+    totalPages: apiTotalPages,
+    totalElements: apiTotalElements,
+    size: apiSize,
+    number: apiPage,
+  } = data?.page ?? {}
+
+  const totalPages = apiTotalPages ?? manualPageCount ?? 0
+  const totalElements = apiTotalElements ?? 0
+
+  const shouldRender = totalElements > 0 || totalPages > 0
 
   const pageInfo = useMemo(() => {
     if (!shouldRender)
@@ -45,13 +60,14 @@ export function DataTablePagination<T>({
         endItem: 0,
       }
 
-    const { totalPages, totalElements, size: pageSize, number: page } = data?.page ?? {}
-    const currentPage = page + 1
+    const pageSize = apiSize ?? manualPageSize ?? 10
+    const currentPage = apiPage !== undefined ? apiPage + 1 : (manualCurrentPage ?? 1)
+
     const startItem = (currentPage - 1) * pageSize + 1
-    const endItem = Math.min(startItem + pageSize - 1, totalElements)
+    const endItem = Math.min(startItem + pageSize - 1, totalElements || currentPage * pageSize) // Use constructed total if unknown
 
     return { currentPage, totalPages, pageSize, totalElements, startItem, endItem }
-  }, [data, shouldRender])
+  }, [totalPages, totalElements, apiSize, apiPage, manualPageSize, manualCurrentPage, shouldRender])
 
   const getPageItems = useMemo(() => {
     // Skip if only one page
@@ -137,7 +153,7 @@ export function DataTablePagination<T>({
   }
 
   return (
-    <div className={cn('flex flex-col items-center justify-between gap-4 pt-3 md:flex-row', className)}>
+    <div className={cn('flex flex-col items-center justify-between gap-4 pt-2 md:flex-row', className)}>
       {showTotal && pageInfo.totalElements > 0 && (
         <div className="flex flex-row items-center gap-2">
           {showSizeChanger && (

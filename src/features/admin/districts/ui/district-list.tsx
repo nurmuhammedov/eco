@@ -7,7 +7,7 @@ import { DataTable, DataTableRowActions } from '@/shared/components/common/data-
 import { District, FilterDistrictDTO, useDeleteDistrict, useDistrictsQuery } from '@/entities/admin/districts'
 
 export function DistrictList() {
-  const { filters } = useFilters()
+  const { filters } = useFilters({}, { defaultSize: 20 })
   const { onOpen } = useDistrictDrawer()
   const { t } = useTranslation('common')
   const deleteRegion = useDeleteDistrict()
@@ -51,12 +51,6 @@ export function DistrictList() {
   ]
 
   return (
-    <DataTable
-      isPaginated
-      data={data || []}
-      isLoading={isLoading}
-      columns={districtTableColumns}
-      className="h-[calc(100svh-270px)]"
-    />
+    <DataTable isPaginated data={data || []} isLoading={isLoading} columns={districtTableColumns} className="flex-1" />
   )
 }

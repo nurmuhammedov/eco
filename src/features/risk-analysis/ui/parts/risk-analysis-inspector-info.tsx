@@ -15,7 +15,7 @@ const RiskAnalysisInspectorInfo: FC<Props> = ({ data }) => {
   return (
     <div>
       {/*<p className="flex items-center gap-2 border-b-neutral-100 border-b px-2 py-3">*/}
-      {/*  <span className="text-neutral-500">Belgilangan inspektor F.I.SH:</span>*/}
+      {/*  <span className="text-neutral-500">Belgilangan inspektor F.I.SH.:</span>*/}
       {/*  <span className="font-medium">{data.inspectorName || 'Kiritilmagan'}</span>*/}
       {/*</p>*/}
       {/*<p className="flex items-center gap-2 border-b border-b-neutral-100 px-2 py-3">*/}

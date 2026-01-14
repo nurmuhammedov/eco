@@ -38,7 +38,7 @@ const ExpertiseWidget = () => {
   const isDisabled = status === 'EXPIRED'
 
   return (
-    <>
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
       {user?.role === UserRoles.LEGAL && (
         <div className="flex items-center justify-end gap-4">
           {isDisabled && (
@@ -59,11 +59,11 @@ const ExpertiseWidget = () => {
         </div>
       )}
 
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-1 flex-col gap-2 overflow-hidden">
         <ConclusionTabs activeTab={tab} onTabChange={handleTabChange} counts={tabCounts} />
         <ConclusionsTable />
       </div>
-    </>
+    </div>
   )
 }
 

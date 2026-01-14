@@ -1,6 +1,6 @@
 import { useCustomSearchParams } from '@/shared/hooks'
 import SearchInput from '@/shared/components/common/search-input/ui/search-input'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ExtendedColumnDef } from './data-table'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
 import DatePicker from '@/shared/components/ui/datepicker'
@@ -17,22 +17,22 @@ import {
   CommandItem,
   CommandList,
 } from '@/shared/components/ui/command'
-//
-// function useDebounce(value: any, delay = 800) {
-//   const [debouncedValue, setDebouncedValue] = useState(value)
-//
-//   useEffect(() => {
-//     const handler = setTimeout(() => {
-//       setDebouncedValue(value)
-//     }, delay)
-//
-//     return () => {
-//       clearTimeout(handler)
-//     }
-//   }, [value, delay])
-//
-//   return debouncedValue
-// }
+
+function useDebounce(value: any, delay = 800) {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
 
 interface ColumnFilterInputProps<TData, TValue> {
   column: ExtendedColumnDef<TData, TValue>
@@ -52,9 +52,9 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
 
   const [open, setOpen] = useState(false)
 
-  const iconStyle = 'absolute left-2 top-1/2 -translate-y-1/2 text-neutral-400 size-4 pointer-events-none z-10'
+  const iconStyle = 'absolute left-2 top-1/2 -translate-y-1/2 text-neutral-400 size-4 pointer-events-none'
   const clearButtonStyle =
-    'absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 cursor-pointer z-10 flex items-center justify-center bg-white'
+    'absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 cursor-pointer flex items-center justify-center bg-white'
   const wrapperStyle = 'relative w-full border-none bg-white transition-colors h-8'
   const triggerContentStyle =
     'w-full h-full flex items-center px-0 pl-8 pr-6 text-sm font-normal text-black bg-transparent outline-none cursor-pointer overflow-hidden'
@@ -134,18 +134,21 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
 
   if (!filterKey) return null
 
-  const value = paramsObject[filterKey] || ''
-  // const [value, setValue] = useState(initialValue)
-  // const debouncedValue = useDebounce(value, 800)
+  const initialValue = paramsObject[filterKey] || ''
+  const [value, setValue] = useState(initialValue)
+  const debouncedValue = useDebounce(value, 800)
 
-  // useEffect(() => {
-  //   if ((filterType === 'search' || filterType === 'number') && value !== null) {
-  //     addParams({ [filterKey]: debouncedValue }, 'page', 'p')
-  //   }
-  // }, [debouncedValue, filterKey, filterType])
+  useEffect(() => {
+    if (filterType === 'search' || filterType === 'number') {
+      // Check if value actually changed from params to avoid loop/unnecessary pushes
+      if (debouncedValue !== (paramsObject[filterKey] || '')) {
+        addParams({ [filterKey]: debouncedValue }, 'page', 'p')
+      }
+    }
+  }, [debouncedValue, filterKey, filterType])
 
   const handleImmediateChange = (val: any) => {
-    // setValue(val)
+    setValue(val) // Update local state
     addParams({ [filterKey]: val }, 'page', 'p')
   }
 
@@ -250,7 +253,7 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
         onChange={(val) => {
           const re = /^[0-9\b]+$/
           if (val === '' || re.test(val)) {
-            addParams({ [filterKey]: val }, 'page', 'p')
+            setValue(val)
           }
         }}
         className="h-8 w-full bg-white text-xs font-normal"
@@ -263,7 +266,7 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
     <SearchInput
       value={value}
       placeholder=""
-      onChange={(val) => addParams({ [filterKey]: val }, 'page', 'p')}
+      onChange={(val) => setValue(val)}
       className="h-8 w-full bg-white text-xs font-normal"
       variant="underline"
     />

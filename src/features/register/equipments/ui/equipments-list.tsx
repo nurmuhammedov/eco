@@ -149,7 +149,7 @@ export const EquipmentsList = () => {
   ]
 
   return (
-    <div className="flex flex-1 flex-col gap-2">
+    <div className="flex min-h-0 flex-1 flex-col gap-2">
       <TabsLayout
         activeTab={type}
         tabs={[
@@ -205,7 +205,7 @@ export const EquipmentsList = () => {
         isPaginated
         data={data || []}
         columns={columns as unknown as any}
-        className="h-[calc(100svh-320px)]"
+        className="flex-1"
       />
     </div>
   )

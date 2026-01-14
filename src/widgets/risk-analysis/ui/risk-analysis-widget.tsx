@@ -54,6 +54,14 @@ const RiskAnalysisWidget = () => {
       page = 1,
       regionId,
       quarter = defaultQuarter,
+      name,
+      registryNumber,
+      ownerName,
+      address,
+      identity,
+      inspectorId,
+      periodId,
+      status,
     },
   } = useCustomSearchParams()
 
@@ -74,6 +82,14 @@ const RiskAnalysisWidget = () => {
       page,
       quarter,
       regionId: activeRegion,
+      name,
+      registryNumber,
+      ownerName,
+      address,
+      identity,
+      inspectorId,
+      periodId,
+      status,
     },
     !!activeRegion
   )
@@ -94,6 +110,15 @@ const RiskAnalysisWidget = () => {
     type: currentApiType,
     year,
     quarter,
+    level: riskLevel == 'ALL' ? undefined : riskLevel,
+    name,
+    registryNumber,
+    ownerName,
+    address,
+    identity,
+    inspectorId,
+    periodId,
+    status,
   })
 
   const hfTotalCount = (hfRiskCounts?.lowCount || 0) + (hfRiskCounts?.mediumCount || 0) + (hfRiskCounts?.highCount || 0)

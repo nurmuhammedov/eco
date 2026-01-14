@@ -80,17 +80,43 @@ const PreventionWidget = () => {
     month: activeMonth,
   })
 
+  const { executorId, registryNumber, name, ownerName, identity, address } = paramsObject
+
+  const assigned =
+    paramsObject.assignment === 'ASSIGNED' ? true : paramsObject.assignment === 'UNASSIGNED' ? false : undefined
+
+  const { data: regionCounts = [] } = useData<{ regionId: number; count: number }[]>(
+    '/preventions/count/by-region',
+    !!year && !!activeMonth,
+    {
+      year,
+      month: activeMonth,
+      belongType: activeType,
+      executorId,
+      registryNumber,
+      name,
+      ownerName,
+      identity,
+      address,
+      assigned,
+    }
+  )
+
   const activeRegion = paramsObject.regionId?.toString() || (data && data.length > 0 ? data[0].id?.toString() : '')
   const activeAssignment = paramsObject.assignment || (isInspector ? 'ASSIGNED' : 'ALL')
 
   const regionTabs = useMemo(() => {
     return (
-      data?.map((item) => ({
-        id: item?.id?.toString(),
-        name: getRegionLabel(item.name || ''),
-      })) || []
+      data?.map((item) => {
+        const countItem = regionCounts.find((c) => c.regionId === item.id)
+        return {
+          id: item?.id?.toString(),
+          name: getRegionLabel(item.name || ''),
+          count: countItem?.count || 0,
+        }
+      }) || []
     )
-  }, [data])
+  }, [data, regionCounts])
 
   const riskTypes = useMemo(() => {
     return (
@@ -141,6 +167,7 @@ const PreventionWidget = () => {
             tabs={regionTabs}
             activeTab={activeRegion}
             onTabChange={(val) => addParams({ regionId: val, page: 1 })}
+            outlineInactiveCount={true}
           />
         ) : null}
 
