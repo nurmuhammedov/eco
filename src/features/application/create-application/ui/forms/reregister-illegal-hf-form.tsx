@@ -83,7 +83,7 @@ export default ({ onSubmit }: { onSubmit: (data: ReRegisterIllegalHFApplicationD
             <div className="mt-3 border-t pt-3">
               <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
-                <DetailRow title={'Tashkilot nomi:'} value={orgData?.legalName || '-'} />
+                <DetailRow title={'Tashkilot nomi:'} value={orgData?.name || orgData?.legalName || '-'} />
                 <DetailRow title="Tashkilot rahbari:" value={orgData?.fullName || '-'} />
                 <DetailRow title="Manzil:" value={orgData?.address || orgData?.legalAddress || '-'} />
                 <DetailRow title="Telefon raqami:" value={orgData?.phoneNumber || '-'} />

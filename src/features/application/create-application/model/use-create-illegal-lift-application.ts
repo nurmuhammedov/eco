@@ -30,6 +30,7 @@ export const useRegisterIllegalLift = (externalSubmit?: (data: RegisterIllegalLi
   const queryClient = useQueryClient()
 
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
+  const [isManualSearchLoading, setIsManualSearchLoading] = useState(false)
 
   const formSchema = isUpdate
     ? RegisterIllegalLiftBaseSchema.extend({
@@ -83,7 +84,7 @@ export const useRegisterIllegalLift = (externalSubmit?: (data: RegisterIllegalLi
 
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/equipments/elevator/', id)
 
-  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
+  /* const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal') */
   const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
     '/integration/iip/individual'
   )
@@ -102,7 +103,7 @@ export const useRegisterIllegalLift = (externalSubmit?: (data: RegisterIllegalLi
     queryFn: async () => {
       if (!tin) return null
       if (tin.length === 9) {
-        const res = await apiClient.post<any>('/integration/iip/legal', { tin })
+        const res = await apiClient.get<any>('/users/legal/' + tin)
         return res.data?.data
       }
       if (tin.length === 14 && detail?.birthDate) {
@@ -171,9 +172,13 @@ export const useRegisterIllegalLift = (externalSubmit?: (data: RegisterIllegalLi
     if (!identity) return
 
     if (identity.length === 9) {
-      legalMutateAsync({ tin: identity })
-        .then((res) => setManualOwnerData(res.data))
+      setIsManualSearchLoading(true)
+      setIsManualSearchLoading(true)
+      apiClient
+        .post<any>('/integration/iip/legal', { tin: identity })
+        .then((res) => setManualOwnerData(res.data?.data))
         .catch(() => setManualOwnerData(null))
+        .finally(() => setIsManualSearchLoading(false))
     } else if (identity.length === 14 && birthDate) {
       individualMutateAsync({
         pin: identity,
@@ -233,7 +238,7 @@ export const useRegisterIllegalLift = (externalSubmit?: (data: RegisterIllegalLi
     sphereSelectOptions,
     ownerData: currentOwnerData,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isLegalPending || isIndividualPending,
+    isSearchLoading: isIndividualPending || isManualSearchLoading,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,

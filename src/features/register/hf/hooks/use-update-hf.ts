@@ -58,7 +58,7 @@ export const useUpdateHF = () => {
   const { data: orgData, isLoading: isOrgLoading } = useQuery({
     queryKey: ['legal-entity', tin],
     queryFn: async () => {
-      const res = await apiClient.post<any>('/integration/iip/legal', { tin })
+      const res = await apiClient.get<any>('/users/legal/' + tin)
       return res.data
     },
     enabled: !!tin && tin.length === 9,

@@ -2,6 +2,7 @@ import js from '@eslint/js'
 import tslint from 'typescript-eslint'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default tslint.config(
   js.configs.recommended,
@@ -51,5 +52,6 @@ export default tslint.config(
       'no-unsafe-negation': ['off'],
       'no-extra-boolean-cast': 'off',
     },
-  }
+  },
+  eslintConfigPrettier
 )

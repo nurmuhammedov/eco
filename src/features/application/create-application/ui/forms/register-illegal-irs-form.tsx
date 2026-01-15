@@ -103,7 +103,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
             <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
               <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
-                <DetailRow title="Tashkilot nomi:" value={ownerData?.legalName || '-'} />
+                <DetailRow title="Tashkilot nomi:" value={ownerData?.name || ownerData?.legalName || '-'} />
                 <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || '-'} />
                 <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
                 <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
@@ -552,7 +552,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
                     INM (qurilma) pasporti va sertifikati fayli
                   </FormLabel>
                   <FormControl>

@@ -29,6 +29,7 @@ export const useRegisterIllegalContainer = (externalSubmit?: (data: RegisterIlle
   const queryClient = useQueryClient()
 
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
+  const [isManualSearchLoading, setIsManualSearchLoading] = useState(false)
 
   const formSchema = isUpdate
     ? RegisterIllegalContainerBaseSchema.extend({
@@ -86,7 +87,7 @@ export const useRegisterIllegalContainer = (externalSubmit?: (data: RegisterIlle
 
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/equipments/container/', id)
 
-  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
+  /* const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal') */
   const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
     '/integration/iip/individual'
   )
@@ -104,7 +105,7 @@ export const useRegisterIllegalContainer = (externalSubmit?: (data: RegisterIlle
     queryFn: async () => {
       if (!tin) return null
       if (tin.length === 9) {
-        const res = await apiClient.post<any>('/integration/iip/legal', { tin })
+        const res = await apiClient.get<any>('/users/legal/' + tin)
         return res.data?.data
       }
       if (tin.length === 14 && detail?.birthDate) {
@@ -177,9 +178,13 @@ export const useRegisterIllegalContainer = (externalSubmit?: (data: RegisterIlle
     if (!identity) return
 
     if (identity.length === 9) {
-      legalMutateAsync({ tin: identity })
-        .then((res) => setManualOwnerData(res.data))
+      setIsManualSearchLoading(true)
+      setIsManualSearchLoading(true)
+      apiClient
+        .post<any>('/integration/iip/legal', { tin: identity })
+        .then((res) => setManualOwnerData(res.data?.data))
         .catch(() => setManualOwnerData(null))
+        .finally(() => setIsManualSearchLoading(false))
     } else if (identity.length === 14 && birthDate) {
       individualMutateAsync({
         pin: identity,
@@ -234,7 +239,7 @@ export const useRegisterIllegalContainer = (externalSubmit?: (data: RegisterIlle
     hazardousFacilitiesOptions,
     ownerData: currentOwnerData,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isLegalPending || isIndividualPending,
+    isSearchLoading: isIndividualPending || isManualSearchLoading,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,

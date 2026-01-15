@@ -56,67 +56,71 @@ export const CommitteeStaffDrawer = () => {
       ) : (
         <Form {...form}>
           <div className="space-y-4">
-            <FormField
-              name="pin"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>{t('short.pin')}</FormLabel>
-                  <FormControl>
-                    <InputNumber maxLength={14} placeholder="142536945201203" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {isCreate && (
+              <Fragment>
+                <FormField
+                  name="pin"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>{t('short.pin')}</FormLabel>
+                      <FormControl>
+                        <InputNumber maxLength={14} placeholder="142536945201203" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              name="birthDate"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required={isCreate}>Tug‘ilgan sana</FormLabel>
-                  <FormControl>
-                    <DatePicker
-                      value={field.value ?? undefined}
-                      onChange={field.onChange}
-                      disableStrategy="after"
-                      placeholder="Sanani tanlang"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  name="birthDate"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required={isCreate}>Tug‘ilgan sana</FormLabel>
+                      <FormControl>
+                        <DatePicker
+                          value={field.value ?? undefined}
+                          onChange={field.onChange}
+                          disableStrategy="after"
+                          placeholder="Sanani tanlang"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <div className="flex justify-end">
-              <Button
-                type="button"
-                disabled={!pin || !birthDate}
-                loading={isLoading}
-                onClick={() => {
-                  if (pin && birthDate) {
-                    const d = format(birthDate, 'yyyy-MM-dd')
-                    setIsLoading(true)
-                    apiClient
-                      .post<{ data: { fullName: string } }>('/integration/iip/individual', {
-                        pin,
-                        birthDate: d,
-                      })
-                      .then((res) => {
-                        if (res?.data?.data?.fullName) {
-                          form.setValue('fullName', res?.data?.data?.fullName)
-                        }
-                      })
-                      .finally(() => {
-                        setIsLoading(false)
-                      })
-                  }
-                }}
-              >
-                Qidirish
-              </Button>
-            </div>
+                <div className="flex justify-end">
+                  <Button
+                    type="button"
+                    disabled={!pin || !birthDate}
+                    loading={isLoading}
+                    onClick={() => {
+                      if (pin && birthDate) {
+                        const d = format(birthDate, 'yyyy-MM-dd')
+                        setIsLoading(true)
+                        apiClient
+                          .post<{ data: { fullName: string } }>('/integration/iip/individual', {
+                            pin,
+                            birthDate: d,
+                          })
+                          .then((res) => {
+                            if (res?.data?.data?.fullName) {
+                              form.setValue('fullName', res?.data?.data?.fullName)
+                            }
+                          })
+                          .finally(() => {
+                            setIsLoading(false)
+                          })
+                      }
+                    }}
+                  >
+                    Qidirish
+                  </Button>
+                </div>
+              </Fragment>
+            )}
 
             {isFetching && !isCreate ? (
               <FormSkeleton length={7} />

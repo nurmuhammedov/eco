@@ -9,10 +9,11 @@ import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import useAdd from '@/shared/hooks/api/useAdd'
+
 import { useQuery } from '@tanstack/react-query'
 import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 import { useDetail } from '@/shared/hooks'
+import { apiClient } from '@/shared/api/api-client'
 
 export const useReRegisterIllegalHFApplication = () => {
   const form = useForm<ReRegisterIllegalHFApplicationDTO>({
@@ -59,7 +60,8 @@ export const useReRegisterIllegalHFApplication = () => {
   const { data: districts } = useDistrictSelectQueries(regionId)
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
 
-  const { mutateAsync: searchLegal, isPending: isSearching } = useAdd<any, any, any>('/integration/iip/legal')
+  /* const { mutateAsync: searchLegal, isPending: isSearching } = useAdd<any, any, any>('/integration/iip/legal') */
+  const [isSearching, setIsSearching] = useState(false)
 
   const { data: hfoList } = useQuery({
     queryKey: ['hfoSelect', legalTin],
@@ -113,10 +115,14 @@ export const useReRegisterIllegalHFApplication = () => {
 
   const handleSearch = () => {
     if (legalTin?.length === 9 && !form.formState.errors.legalTin) {
-      searchLegal({ tin: legalTin }).then((res) => {
-        setOrgData(res.data)
-        form.setValue('hazardousFacilityId', undefined as any)
-      })
+      setIsSearching(true)
+      apiClient
+        .post<any>('/integration/iip/legal', { tin: legalTin })
+        .then((res) => {
+          setOrgData(res.data?.data)
+          form.setValue('hazardousFacilityId', undefined as any)
+        })
+        .finally(() => setIsSearching(false))
     } else {
       form.trigger('legalTin').catch((err) => console.log(err))
     }

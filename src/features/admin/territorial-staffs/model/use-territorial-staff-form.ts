@@ -8,12 +8,13 @@ import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks'
 import {
   CreateTerritorialStaffDTO,
-  territorialStaffSchema,
+  schemas,
   UpdateTerritorialStaffDTO,
   useCreateTerritorialStaff,
   useTerritorialStaffQuery,
   useUpdateTerritorialStaff,
 } from '@/entities/admin/territorial-staffs'
+import { parseISO } from 'date-fns'
 
 const DEFAULT_FORM_VALUES: CreateTerritorialStaffDTO = {
   pin: '',
@@ -46,7 +47,7 @@ export function useTerritorialStaffForm() {
   const territorialStaffId = useMemo(() => (data?.id ? data?.id : ''), [data])
 
   const form = useForm<CreateTerritorialStaffDTO>({
-    resolver: zodResolver(territorialStaffSchema),
+    resolver: zodResolver(isCreate ? schemas.create : (schemas.update as any)),
     defaultValues: DEFAULT_FORM_VALUES,
     mode: 'onChange',
   })
@@ -60,17 +61,24 @@ export function useTerritorialStaffForm() {
   useEffect(() => {
     if (fetchByIdData && !isCreate) {
       form.reset({
-        pin: fetchByIdData.pin,
+        id: fetchByIdData.id,
+        pin: String(fetchByIdData.pin),
         role: fetchByIdData.role,
         fullName: fetchByIdData.fullName,
         position: fetchByIdData.position,
         directions: fetchByIdData.directions,
-        birthDate: fetchByIdData.birthDate,
+        birthDate: fetchByIdData.birthDate ? parseISO(fetchByIdData.birthDate as unknown as string) : undefined,
         phoneNumber: fetchByIdData.phoneNumber,
         officeId: String(fetchByIdData.officeId),
-      })
+      } as any)
     }
   }, [fetchByIdData, isCreate, form])
+
+  useEffect(() => {
+    if (Object.keys(form.formState.errors).length > 0) {
+      console.error('[TerritorialStaffForm] Validation Errors:', form.formState.errors)
+    }
+  }, [form.formState.errors])
 
   const handleClose = useCallback(() => {
     form.reset(DEFAULT_FORM_VALUES)
@@ -88,8 +96,8 @@ export function useTerritorialStaffForm() {
           }
         } else {
           const response = await updateTerritorialStaff({
-            id: territorialStaffId,
             ...formData,
+            id: territorialStaffId,
           } as UpdateTerritorialStaffDTO)
           if (response.success) {
             handleClose()
@@ -99,7 +107,7 @@ export function useTerritorialStaffForm() {
 
         return false
       } catch (error) {
-        console.error('[useEquipmentForm] Submission error:', error)
+        console.error('[useTerritorialStaffForm] Submission error:', error)
         return false
       }
     },

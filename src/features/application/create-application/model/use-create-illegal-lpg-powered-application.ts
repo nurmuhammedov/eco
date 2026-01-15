@@ -29,6 +29,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
   const queryClient = useQueryClient()
 
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
+  const [isManualSearchLoading, setIsManualSearchLoading] = useState(false)
 
   const formSchema = isUpdate
     ? RegisterIllegalLpgPoweredBaseSchema.extend({
@@ -85,7 +86,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
 
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/equipments/lpg-powered/', id)
 
-  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
+  /* const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal') */
   const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
     '/integration/iip/individual'
   )
@@ -103,7 +104,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
     queryFn: async () => {
       if (!tin) return null
       if (tin.length === 9) {
-        const res = await apiClient.post<any>('/integration/iip/legal', { tin })
+        const res = await apiClient.get<any>('/users/legal/' + tin)
         return res.data?.data
       }
       if (tin.length === 14 && detail?.birthDate) {
@@ -178,9 +179,13 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
     if (!identity) return
 
     if (identity.length === 9) {
-      legalMutateAsync({ tin: identity })
-        .then((res) => setManualOwnerData(res.data))
+      setIsManualSearchLoading(true)
+      setIsManualSearchLoading(true)
+      apiClient
+        .post<any>('/integration/iip/legal', { tin: identity })
+        .then((res) => setManualOwnerData(res.data?.data))
         .catch(() => setManualOwnerData(null))
+        .finally(() => setIsManualSearchLoading(false))
     } else if (identity.length === 14 && birthDate) {
       individualMutateAsync({
         pin: identity,
@@ -235,7 +240,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
     hazardousFacilitiesOptions,
     ownerData: currentOwnerData,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isLegalPending || isIndividualPending,
+    isSearchLoading: isIndividualPending || isManualSearchLoading,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,

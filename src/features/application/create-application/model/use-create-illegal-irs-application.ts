@@ -3,7 +3,6 @@ import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/d
 import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import useAdd from '@/shared/hooks/api/useAdd'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
@@ -26,24 +25,29 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
   const queryClient = useQueryClient()
 
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
-
-  const formSchema = isUpdate
-    ? RegisterIllegalIrsSchema.extend({
-        phoneNumber: z
-          .string()
-          .optional()
-          .nullable()
-          .transform((val) => (val ? val : null)),
-        identity: z
-          .string()
-          .optional()
-          .nullable()
-          .transform((val) => (val ? val : null)),
-      })
-    : RegisterIllegalIrsSchema
+  const [isManualSearchLoading, setIsManualSearchLoading] = useState(false)
 
   const form = useForm<RegisterIllegalIrsDTO>({
-    resolver: zodResolver(formSchema),
+    resolver: (values, context, options) => {
+      const actualSchema = isUpdate
+        ? RegisterIllegalIrsSchema.extend({
+            passportPath: z.string().optional().nullable(),
+            phoneNumber: z.string().optional().nullable(),
+            identity: z.string().optional().nullable(),
+          })
+        : RegisterIllegalIrsSchema
+
+      if (isUpdate) {
+        const cleanedValues = Object.fromEntries(
+          Object.entries(values).map(([k, v]) => {
+            if (v === '' || v === null || v === '+998') return [k, undefined]
+            return [k, v]
+          })
+        )
+        return zodResolver(actualSchema)(cleanedValues as any, context, options)
+      }
+      return zodResolver(actualSchema)(values, context, options)
+    },
     defaultValues: {
       phoneNumber: '',
       identity: '',
@@ -80,7 +84,6 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
 
   const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/irs/`, id, isUpdate)
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/irs/', id, 'put')
-  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
 
   const regionId = form.watch('regionId')
 
@@ -92,7 +95,7 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     queryFn: async () => {
       if (!tin) return null
       if (tin.length === 9) {
-        const res = await apiClient.post<any>('/integration/iip/legal', { tin })
+        const res = await apiClient.get<any>('/users/legal/' + tin)
         return res.data?.data
       }
       return null
@@ -148,9 +151,13 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     if (!identity) return
 
     if (identity.length === 9) {
-      legalMutateAsync({ tin: identity })
-        .then((res) => setManualOwnerData(res.data))
+      setIsManualSearchLoading(true)
+      setIsManualSearchLoading(true)
+      apiClient
+        .post<any>('/integration/iip/legal', { tin: identity })
+        .then((res) => setManualOwnerData(res.data?.data))
         .catch(() => setManualOwnerData(null))
+        .finally(() => setIsManualSearchLoading(false))
     } else {
       form.trigger(['identity'])
     }
@@ -162,8 +169,15 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
   }
 
   const handleSubmit = (data: RegisterIllegalIrsDTO) => {
+    const cleanedData = Object.fromEntries(
+      Object.entries(data).map(([key, value]) => {
+        if (value === '' || value === null || value === undefined || value === '+998') return [key, null]
+        return [key, value]
+      })
+    )
+
     if (isUpdate) {
-      updateMutate(data, {
+      updateMutate(cleanedData, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
           toast.success('Muvaffaqiyatli saqlandi!')
@@ -229,7 +243,7 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     irsStatusOptions,
     ownerData: currentOwnerData,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isLegalPending,
+    isSearchLoading: isManualSearchLoading,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,

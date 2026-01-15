@@ -4,7 +4,6 @@ import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/d
 import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import useAdd from '@/shared/hooks/api/useAdd'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
@@ -23,24 +22,51 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
   const queryClient = useQueryClient()
 
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
-
-  const formSchema = isUpdate
-    ? RegisterIllegalXraySchema.extend({
-        phoneNumber: z
-          .string()
-          .optional()
-          .nullable()
-          .transform((val) => (val ? val : null)),
-        identity: z
-          .string()
-          .optional()
-          .nullable()
-          .transform((val) => (val ? val : null)),
-      })
-    : RegisterIllegalXraySchema
+  const [isManualSearchLoading, setIsManualSearchLoading] = useState(false)
 
   const form = useForm<RegisterIllegalXrayDTO>({
-    resolver: zodResolver(formSchema),
+    resolver: (values, context, options) => {
+      const actualSchema = isUpdate
+        ? RegisterIllegalXraySchema.extend({
+            file1Path: z.string().optional().nullable(),
+            file1ExpiryDate: z.date().optional().nullable(),
+            file2Path: z.string().optional().nullable(),
+            file2ExpiryDate: z.date().optional().nullable(),
+            file3Path: z.string().optional().nullable(),
+            file3ExpiryDate: z.date().optional().nullable(),
+            file4Path: z.string().optional().nullable(),
+            file5Path: z.string().optional().nullable(),
+            file5ExpiryDate: z.date().optional().nullable(),
+            file6Path: z.string().optional().nullable(),
+            file6ExpiryDate: z.date().optional().nullable(),
+            file7Path: z.string().optional().nullable(),
+            file7ExpiryDate: z.date().optional().nullable(),
+            file8Path: z.string().optional().nullable(),
+            file8ExpiryDate: z.date().optional().nullable(),
+            file9Path: z.string().optional().nullable(),
+            file9ExpiryDate: z.date().optional().nullable(),
+            file10Path: z.string().optional().nullable(),
+            file11Path: z.string().optional().nullable(),
+            file11ExpiryDate: z.date().optional().nullable(),
+            file12Path: z.string().optional().nullable(),
+            file13Path: z.string().optional().nullable(),
+            file13ExpiryDate: z.date().optional().nullable(),
+            phoneNumber: z.string().optional().nullable(),
+            identity: z.string().optional().nullable(),
+          })
+        : RegisterIllegalXraySchema
+
+      if (isUpdate) {
+        const cleanedValues = Object.fromEntries(
+          Object.entries(values).map(([k, v]) => {
+            if (v === '' || v === null || v === '+998') return [k, undefined]
+            return [k, v]
+          })
+        )
+        return zodResolver(actualSchema)(cleanedValues as any, context, options)
+      }
+      return zodResolver(actualSchema)(values, context, options)
+    },
     defaultValues: {
       phoneNumber: '',
       identity: '',
@@ -83,7 +109,6 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
 
   const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/xrays`, id, isUpdate)
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/xrays', id)
-  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
 
   const regionId = form.watch('regionId')
   const { data: regions } = useRegionSelectQueries()
@@ -93,7 +118,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
     queryKey: ['owner-data', tin],
     queryFn: async () => {
       if (!tin || tin.length !== 9) return null
-      const res = await apiClient.post<any>('/integration/iip/legal', { tin })
+      const res = await apiClient.get<any>('/users/legal/' + tin)
       return res.data?.data
     },
     enabled: isUpdate && !!tin && tin.length === 9,
@@ -152,9 +177,13 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
     const identity = form.getValues('identity')?.trim()
     if (!identity || identity.length !== 9) return
 
-    legalMutateAsync({ tin: identity })
-      .then((res) => setManualOwnerData(res.data))
+    setIsManualSearchLoading(true)
+    setIsManualSearchLoading(true)
+    apiClient
+      .post<any>('/integration/iip/legal', { tin: identity })
+      .then((res) => setManualOwnerData(res.data?.data))
       .catch(() => setManualOwnerData(null))
+      .finally(() => setIsManualSearchLoading(false))
   }
 
   const handleClear = () => {
@@ -163,8 +192,15 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
   }
 
   const handleSubmit = (data: RegisterIllegalXrayDTO) => {
+    const cleanedData = Object.fromEntries(
+      Object.entries(data).map(([key, value]) => {
+        if (value === '' || value === null || value === undefined || value === '+998') return [key, null]
+        return [key, value]
+      })
+    )
+
     if (isUpdate) {
-      updateMutate(data, {
+      updateMutate(cleanedData, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
           toast.success('Muvaffaqiyatli saqlandi!')
@@ -199,7 +235,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
     stateServiceOptions,
     ownerData: currentOwnerData,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isLegalPending,
+    isSearchLoading: isManualSearchLoading,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,

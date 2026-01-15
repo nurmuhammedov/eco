@@ -110,7 +110,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
                 <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
                 <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
-                  <DetailRow title={'Tashkilot nomi:'} value={ownerData?.legalName || '-'} />
+                  <DetailRow title={'Tashkilot nomi:'} value={ownerData?.name || ownerData?.legalName || '-'} />
                   <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || '-'} />
                   <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
                   <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
@@ -350,7 +350,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Mehnat vazirligi ekspertiza xulosasi</FormLabel>
+                    <FormLabel required={!isUpdate}>Mehnat vazirligi ekspertiza xulosasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -366,7 +366,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
@@ -389,7 +389,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Sanitariya-epidemiologik xulosa</FormLabel>
+                    <FormLabel required={!isUpdate}>Sanitariya-epidemiologik xulosa</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -405,7 +405,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
@@ -428,7 +428,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>SES xulosa obyekt toifasi qismi</FormLabel>
+                    <FormLabel required={!isUpdate}>SES xulosa obyekt toifasi qismi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -444,7 +444,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
@@ -467,7 +467,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Buyruq va “А” toifaga kirgan xodimlar ro‘yxati</FormLabel>
+                    <FormLabel required={!isUpdate}>Buyruq va “А” toifaga kirgan xodimlar ro‘yxati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -484,7 +484,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Radiatsiyaviy xavfsizlik sertifikati</FormLabel>
+                    <FormLabel required={!isUpdate}>Radiatsiyaviy xavfsizlik sertifikati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -500,7 +500,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
@@ -523,7 +523,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Tibbiy ko‘rik xulosasi</FormLabel>
+                    <FormLabel required={!isUpdate}>Tibbiy ko‘rik xulosasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -539,7 +539,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
@@ -562,7 +562,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Dozimetr protokoli</FormLabel>
+                    <FormLabel required={!isUpdate}>Dozimetr protokoli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -578,7 +578,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
@@ -601,7 +601,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Davriy qiyoslov sertifikati</FormLabel>
+                    <FormLabel required={!isUpdate}>Davriy qiyoslov sertifikati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -617,7 +617,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
@@ -640,7 +640,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Dalolatnoma</FormLabel>
+                    <FormLabel required={!isUpdate}>Dalolatnoma</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -656,7 +656,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
@@ -679,7 +679,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Kuzatuv xati, INM pasporti va inventarizatsiya</FormLabel>
+                    <FormLabel required={!isUpdate}>Kuzatuv xati, INM pasporti va inventarizatsiya</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -696,7 +696,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Yo‘riqnomalar</FormLabel>
+                    <FormLabel required={!isUpdate}>Yo‘riqnomalar</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -712,7 +712,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
@@ -735,7 +735,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Shaxsiy himoya vositalarining fotosurati</FormLabel>
+                    <FormLabel required={!isUpdate}>Shaxsiy himoya vositalarining fotosurati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -752,7 +752,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required>Dalolatnoma-ko‘rsatma va uning bajarilish maʼlumotlari</FormLabel>
+                    <FormLabel required={!isUpdate}>Dalolatnoma-ko‘rsatma va uning bajarilish maʼlumotlari</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -768,7 +768,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
