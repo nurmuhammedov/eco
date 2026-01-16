@@ -108,22 +108,22 @@ export const appRoutes = [
     roles: [UserRoles.CHAIRMAN],
   },
   {
-    path: 'reports/create/REPORT_1',
+    path: 'reports/REPORT_1',
     component: ReportsDetail1,
     roles: [UserRoles.CHAIRMAN],
   },
   {
-    path: 'reports/create/REPORT_2',
+    path: 'reports/REPORT_2',
     component: ReportsDetail2,
     roles: [UserRoles.CHAIRMAN],
   },
   {
-    path: 'reports/create/REPORT_3',
+    path: 'reports/REPORT_3',
     component: ReportsDetail3,
     roles: [UserRoles.CHAIRMAN],
   },
   {
-    path: 'reports/create/REPORT_4',
+    path: 'reports/REPORT_4',
     component: ReportsDetail4,
     roles: [UserRoles.CHAIRMAN],
   },

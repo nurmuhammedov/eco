@@ -148,7 +148,7 @@ export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Qisman texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
+                    <FormLabel required>Quvurning tashqi ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
@@ -166,7 +166,7 @@ export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>To‘liq texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
+                    <FormLabel required>Quvurning gidravlik sinovdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}

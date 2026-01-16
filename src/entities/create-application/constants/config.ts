@@ -198,4 +198,12 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: '/appeals/equipment/unofficial/cableway',
     pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/cableway',
   },
+  [ApplicationTypeEnum.REGISTER_OIL_CONTAINER]: {
+    submitEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_OIL_CONTAINER,
+    pdfEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_OIL_CONTAINER,
+  },
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_OIL_CONTAINER]: {
+    submitEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_UNOFFICIAL_OIL_CONTAINER,
+    pdfEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_UNOFFICIAL_OIL_CONTAINER,
+  },
 }

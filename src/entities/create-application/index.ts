@@ -40,6 +40,8 @@ export * from './schemas/register-attraction.schema'
 export * from './schemas/re-register-hf.schema'
 export * from './schemas/de-register-hf.schema'
 export * from './schemas/re-register-illegal-hf.schema'
+export * from './schemas/oil-container.schema'
+export * from './schemas/illegal-oil-container.schema'
 
 //other
 export * from './ui/application-card'

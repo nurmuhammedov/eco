@@ -148,7 +148,7 @@ export default ({ onSubmit }: RegisterBoilerUtilizerFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Tashqi va ichki ko‘rik o‘tkazilgan sana</FormLabel>
+                    <FormLabel required>Ichki ko‘rik o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}

@@ -286,7 +286,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalContainerFormPro
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Tashqi va ichki ko‘rik o‘tkazilgan sana</FormLabel>
+                    <FormLabel required>Ichki ko‘rik o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -619,7 +619,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalContainerFormPro
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Idishning tashqi va ichki ko‘rikdan o‘tkazilganligi
+                      Idishning ichki ko'rikdan o'tkazilganligi
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -636,7 +636,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalContainerFormPro
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel required>Navbatdagi tashqi va ichki ko‘rik sanasi</FormLabel>
+                      <FormLabel required>Navbatdagi ichki ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}

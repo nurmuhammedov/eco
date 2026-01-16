@@ -24,10 +24,14 @@ import { AttractionAppealDtoSchema } from '@/entities/create-application'
 import { DeRegisterHFSchema } from '@/entities/create-application/schemas/de-register-hf.schema.ts'
 import { ReRegisterHFSchema } from '@/entities/create-application/schemas/re-register-hf.schema'
 import { ReRegisterIllegalHFSchema } from '@/entities/create-application/schemas/re-register-illegal-hf.schema'
+import { OilContainerAppealDtoSchema } from '@/entities/create-application/schemas/oil-container.schema'
+import { IllegalOilContainerAppealDtoSchema } from '@/entities/create-application/schemas/illegal-oil-container.schema'
 
 export type CreateHFApplicationDTO = z.infer<typeof HFAppealDtoSchema>
 export type ReRegisterHFApplicationDTO = z.infer<typeof ReRegisterHFSchema>
 export type ReRegisterIllegalHFApplicationDTO = z.infer<typeof ReRegisterIllegalHFSchema>
+export type CreateOilContainerApplicationDTO = z.infer<typeof OilContainerAppealDtoSchema>
+export type CreateIllegalOilContainerApplicationDTO = z.infer<typeof IllegalOilContainerAppealDtoSchema>
 export type CreateCraneApplicationDTO = z.infer<typeof CraneAppealDtoSchema>
 export type CreateLiftApplicationDTO = z.infer<typeof LifAppealDtoSchema>
 export type CreateContainerApplicationDTO = z.infer<typeof ContainerAppealDtoSchema>

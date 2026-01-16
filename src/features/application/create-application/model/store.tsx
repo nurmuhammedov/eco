@@ -55,6 +55,10 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.ILLEGAL_REGISTER_LPG_POWERED]: lazy(
     () => import('../ui/forms/register-illegal-lpg-powered-form')
   ),
+  [ApplicationTypeEnum.REGISTER_OIL_CONTAINER]: lazy(() => import('../ui/forms/register-oil-container-form')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_OIL_CONTAINER]: lazy(
+    () => import('../ui/forms/register-illegal-oil-container-form')
+  ),
 }
 
 export function getFormComponentByType(

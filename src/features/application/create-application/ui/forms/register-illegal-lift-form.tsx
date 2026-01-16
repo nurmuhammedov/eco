@@ -303,7 +303,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLiftFormProps) =
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Toʼliq texnik koʼrikdan oʼtkazilgan sana</FormLabel>
+                    <FormLabel required>Texnik koʼrikdan oʼtkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -608,7 +608,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLiftFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
-                      <FormLabel required>Navbatdagi to‘liq texnik ko‘rik sanasi</FormLabel>
+                      <FormLabel required>Navbatdagi texnik ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}

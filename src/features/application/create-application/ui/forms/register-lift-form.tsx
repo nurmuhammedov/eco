@@ -173,7 +173,7 @@ export default ({ onSubmit }: RegisterLiftFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Toʼliq texnik koʼrikdan oʼtkazilgan sana</FormLabel>
+                    <FormLabel required>Texnik koʼrikdan oʼtkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}

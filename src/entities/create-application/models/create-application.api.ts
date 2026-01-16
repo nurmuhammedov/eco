@@ -23,4 +23,40 @@ export const createApplicationsAPI = {
     }
     return response
   },
+  createOilContainerApplication: async (data: any) => {
+    const response = await apiClient.post<any>(API_ENDPOINTS.APPEAL_EQUIPMENT_OIL_CONTAINER, data)
+    if (!response.success && response.errors) {
+      toast.error(Object.values(response.errors).join(', '), {
+        richColors: true,
+      })
+    }
+    return response
+  },
+  createIllegalOilContainerApplication: async (data: any) => {
+    const response = await apiClient.post<any>(API_ENDPOINTS.APPEAL_EQUIPMENT_UNOFFICIAL_OIL_CONTAINER, data)
+    if (!response.success && response.errors) {
+      toast.error(Object.values(response.errors).join(', '), {
+        richColors: true,
+      })
+    }
+    return response
+  },
+  generatePdfOilContainer: async (data: any) => {
+    const response = await apiClient.post<any>(API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_OIL_CONTAINER, data)
+    if (!response.success && response.errors) {
+      toast.error(Object.values(response.errors).join(', '), {
+        richColors: true,
+      })
+    }
+    return response
+  },
+  generatePdfIllegalOilContainer: async (data: any) => {
+    const response = await apiClient.post<any>(API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_UNOFFICIAL_OIL_CONTAINER, data)
+    if (!response.success && response.errors) {
+      toast.error(Object.values(response.errors).join(', '), {
+        richColors: true,
+      })
+    }
+    return response
+  },
 }

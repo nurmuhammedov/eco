@@ -297,4 +297,24 @@ export const ApplicationIcons = {
       <path d="M16 14l-2 2-2-2" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
+  oilBarrel: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none" className="h-full w-full">
+      <path
+        d="M3 6c0 1.66 4.03 3 9 3s9-1.34 9-3V18c0 1.66-4.03 3-9 3s-9-1.34-9-3V6z"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3 6c0-1.66 4.03-3 9-3s9 1.34 9 3"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M3 14c0 1.66 4.03 3 9 3s9-1.34 9-3" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M8 12h8" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
 }

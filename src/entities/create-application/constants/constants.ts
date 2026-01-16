@@ -263,6 +263,17 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     icon: 'cableway',
   },
   {
+    id: 130,
+    title: 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish',
+    name: 'Neft mahsulotlar saqlovchi idish',
+    description: 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish ariza shakli',
+    category: ApplicationCategory.EQUIPMENTS,
+    type: ApplicationTypeEnum.REGISTER_OIL_CONTAINER,
+    equipmentType: ApplicationTypeEnum.OIL_CONTAINER,
+    parentId: MainApplicationCategory.REGISTER,
+    icon: 'oilBarrel',
+  },
+  {
     id: 1,
     title: 'XICHOni ro‘yxatga olish',
     description: 'XICHOni ro‘yxatga olish ariza shakli',
@@ -403,6 +414,15 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     category: ApplicationCategory.ILLEGAL_EQUIPMENTS,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_CABLEWAY,
     icon: 'cableway',
+  },
+  {
+    id: 131,
+    title: 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish',
+    name: 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish',
+    description: 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish',
+    category: ApplicationCategory.ILLEGAL_EQUIPMENTS,
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_OIL_CONTAINER,
+    icon: 'oilBarrel',
   },
   {
     id: 2,
@@ -698,6 +718,13 @@ export const applicationsList = [
     id: 51,
     title: 'Ionlashtiruvchi nurlanish manbalarini ro‘yxatga olish',
     type: ApplicationTypeEnum.REGISTER_IRS,
+  },
+
+  // OIL CONTAINER
+  {
+    id: 132,
+    title: 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_OIL_CONTAINER,
   },
 
   // XRAY
