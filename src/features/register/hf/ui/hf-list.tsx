@@ -64,14 +64,14 @@ export const HfList = () => {
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
-      header: 'Hisobga olish sanasi',
+      header: 'Roʻyxatga olish sanasi',
       accessorFn: (row) => getDate(row.registrationDate),
       maxSize: 90,
       filterKey: 'registrationDate',
       filterType: 'date-range',
     },
     {
-      header: 'Hisobga olish raqami',
+      header: 'Roʻyxatga olish raqami',
       accessorKey: 'registryNumber',
       filterKey: 'registryNumber',
       filterType: 'search',

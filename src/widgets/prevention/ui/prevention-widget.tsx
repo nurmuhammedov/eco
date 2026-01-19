@@ -171,7 +171,7 @@ const PreventionWidget = () => {
           />
         ) : null}
 
-        {!isInspector && (
+        {!isInspector && !(isRegional && (activeType === 'IRS' || activeType === 'XRAY')) && (
           <Tabs value={activeAssignment} onValueChange={(val) => addParams({ assignment: val, page: 1 })}>
             <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
               <TabsList className="h-auto p-1">

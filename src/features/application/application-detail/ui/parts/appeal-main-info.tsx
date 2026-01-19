@@ -2,6 +2,12 @@ import DetailRow from '@/shared/components/common/detail-row.tsx'
 import { getDate } from '@/shared/utils/date.ts'
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next'
+import {
+  APPLICATIONS_DATA,
+  IrsUsageType,
+  MAIN_APPLICATION_BY_CATEGORY,
+  stateService,
+} from '@/entities/create-application'
 
 interface Props {
   address: any
@@ -11,6 +17,22 @@ interface Props {
 
 const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
   const { t } = useTranslation()
+
+  const serviceName =
+    Object.values(MAIN_APPLICATION_BY_CATEGORY)
+      .flat()
+      .find((i) => i.id === data?.stateService)?.title ||
+    APPLICATIONS_DATA.find((i) => i.type === data?.stateService)?.title ||
+    (stateService as any)[data?.stateService]
+
+  const USAGE_TYPE_MAP: Record<string, string> = {
+    [IrsUsageType.USAGE]: 'Ishlatish (foydalanish) uchun',
+    [IrsUsageType.DISPOSAL]: 'Ko‘mish uchun',
+    [IrsUsageType.EXPORT]: 'Chet-elga olib chiqish uchun',
+    [IrsUsageType.STORAGE]: 'Vaqtinchalik saqlash uchun',
+  }
+
+  const usageTypeName = USAGE_TYPE_MAP[data?.usageType]
 
   return (
     <div className="flex flex-col py-1">
@@ -22,7 +44,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
       <DetailRow title={t(`labels.${type}.licenseRegistryNumber`)} value={data?.licenseRegistryNumber} />
       <DetailRow title={t(`labels.${type}.licenseDate`)} value={getDate(data?.licenseDate)} />
       <DetailRow title={t(`labels.${type}.licenseExpiryDate`)} value={getDate(data?.licenseExpiryDate)} />
-      <DetailRow title={t(`labels.${type}.stateService`)} value={data?.stateService} />
+      <DetailRow title={t(`labels.${type}.stateService`)} value={serviceName || data?.stateService} />
 
       <DetailRow title={t(`labels.${type}.upperOrganization`)} value={data?.upperOrganization} />
       <DetailRow title={t(`labels.${type}.name`)} value={data?.name} />
@@ -57,7 +79,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
         />
       )}
 
-      <DetailRow title={t(`labels.${type}.usageType`)} value={data?.usageType} />
+      <DetailRow title={t(`labels.${type}.usageType`)} value={usageTypeName || data?.usageType} />
       <DetailRow title={t(`labels.${type}.storageLocation`)} value={data?.storageLocation} />
       <DetailRow title={t(`labels.${type}.hfTypeId`)} value={data?.hfTypeName} />
 

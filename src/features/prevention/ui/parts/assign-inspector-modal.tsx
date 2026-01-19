@@ -30,9 +30,12 @@ type AssignInspectorForm = z.infer<typeof assignInspectorSchema>
 export const AssignInspectorModal: React.FC = () => {
   const { paramsObject, removeParams } = useCustomSearchParams()
   const { user } = useAuth()
+  const isHead = user?.role === UserRoles.HEAD
+  const isRegional = user?.role === UserRoles.REGIONAL
+
   const { data: inspectors, isLoading: inspectorsLoading } = useData<any[]>(
-    '/users/office-users/inspectors/select',
-    user?.role === UserRoles.REGIONAL
+    isHead ? '/users/committee-users/managers/select' : '/users/office-users/inspectors/select',
+    isRegional || isHead
   )
   const objectId = paramsObject.objectId
   const qc = useQueryClient()

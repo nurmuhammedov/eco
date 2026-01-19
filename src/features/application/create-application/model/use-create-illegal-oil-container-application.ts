@@ -186,14 +186,21 @@ export const useRegisterIllegalOilContainer = (
   }
 
   const handleSubmit = (data: CreateIllegalOilContainerApplicationDTO) => {
-    if (isUpdate) {
-      // In update mode, usually we send what changed.
-      // For now, mirroring boiler implementation
-      const updatePayload = {
-        ...data,
-      }
+    // @ts-ignore
+    const identity = form.getValues('identity')
+    // @ts-ignore
+    const birthDate = form.getValues('birthDate')
 
-      updateMutate(updatePayload, {
+    const formattedBirthDate = birthDate ? format(new Date(birthDate), 'yyyy-MM-dd') : undefined
+
+    const payload = {
+      ...data,
+      identity,
+      birthDate: formattedBirthDate,
+    }
+
+    if (isUpdate) {
+      updateMutate(payload, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
           toast.success('Muvaffaqiyatli saqlandi!')
@@ -202,7 +209,7 @@ export const useRegisterIllegalOilContainer = (
       })
     } else {
       if (externalSubmit) {
-        externalSubmit(data)
+        externalSubmit(payload as any)
       }
     }
   }

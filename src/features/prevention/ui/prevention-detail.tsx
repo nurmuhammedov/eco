@@ -19,7 +19,12 @@ const PreventionDetail = () => {
 
   const tin = paramsObject.tin || ''
 
-  const requestType = details?.belongType === 'HF' || details?.belongType === 'IRS' ? details.belongType : 'equipments'
+  const requestType =
+    details?.belongType === 'HF' || details?.belongType === 'IRS'
+      ? details.belongType
+      : details?.belongType === 'XRAY'
+        ? 'xrays'
+        : 'equipments'
 
   const { data: objectData } = useData(
     `/${requestType.toLowerCase()}/${details?.belongId}`,
@@ -48,7 +53,7 @@ const PreventionDetail = () => {
           </DetailCardAccordion.Item>
 
           <DetailCardAccordion.Item value="main" title="Profilaktika maʼlumotlar va qayta ishlash">
-            <DetailRow title="Hisobga olish raqami" value={details?.registryNumber} />
+            <DetailRow title="Roʻyxatga olish raqami" value={details?.registryNumber} />
             <DetailRow title="Hudud" value={details?.regionName} />
             <DetailRow title="Tashkilot nomi" value={details?.ownerName} />
             <DetailRow title="Tashkilot STIR" value={details?.identity} />

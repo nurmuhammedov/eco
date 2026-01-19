@@ -115,7 +115,7 @@ export const ReportsGrid: React.FC = () => {
     <Fragment>
       <div className="mb-6 flex items-center justify-between">
         <h5 className="text-2xl font-semibold text-gray-800">
-          Hisobotlar <span className="text-red-400">(ushbu bo‘lim ishlab chiqish jarayonmida)</span>
+          Hisobotlar <span className="text-red-400">(ushbu sahifa ishlab chiqish jarayonida)</span>
         </h5>
       </div>
 

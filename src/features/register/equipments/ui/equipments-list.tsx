@@ -71,14 +71,14 @@ export const EquipmentsList = () => {
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
-      header: 'Hisobga olish sanasi',
+      header: 'Roʻyxatga olish sanasi',
       maxSize: 90,
       accessorFn: (row) => getDate(row.registrationDate),
       filterKey: 'registrationDate',
       filterType: 'date-range',
     },
     {
-      header: 'Hisobga olish raqami',
+      header: 'Roʻyxatga olish raqami',
       accessorKey: 'registryNumber',
       maxSize: 90,
       filterKey: 'registryNumber',

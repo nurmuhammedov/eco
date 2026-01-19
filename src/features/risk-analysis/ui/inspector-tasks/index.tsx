@@ -29,7 +29,7 @@ export const RegisterEquipmentAppealList = () => {
   const columns: ColumnDef<any>[] = [
     {
       accessorKey: 'registryNumber',
-      header: 'Hisobga olish raqami',
+      header: 'Roʻyxatga olish raqami',
     },
     {
       accessorKey: 'name',

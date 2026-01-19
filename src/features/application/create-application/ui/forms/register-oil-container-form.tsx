@@ -129,7 +129,7 @@ export default ({ onSubmit }: RegisterOilContainerFormProps) => {
                     <Select
                       onValueChange={(value) => {
                         if (value) {
-                          field.onChange(Number(value))
+                          field.onChange(value)
                           form.setValue('districtId', undefined as any)
                         }
                       }}
@@ -153,7 +153,7 @@ export default ({ onSubmit }: RegisterOilContainerFormProps) => {
                   <FormLabel required>Qurilma joylashgan tuman</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={(value) => field.onChange(Number(value))}
+                      onValueChange={(value) => field.onChange(value)}
                       value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
@@ -320,9 +320,7 @@ export default ({ onSubmit }: RegisterOilContainerFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Montaj dalolatnomasi
-                    </FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Montaj dalolatnomasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>

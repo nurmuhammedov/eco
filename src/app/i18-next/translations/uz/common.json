@@ -66,7 +66,7 @@
     "ASSIGNED": "Inspektor belgilanganlar"
   },
   "risk_analysis_columns": {
-    "registryNumber": "Hisobga olish raqami",
+    "registryNumber": "Roʻyxatga olish raqami",
     "name": "Nomi",
     "legalName": "Yuridik shaxs nomi",
     "legalTin": "STIR",
@@ -249,7 +249,8 @@
       "file11ExpiryDate": "Amal qilish muddati",
       "file12Path": "Shaxsiy himoya vositalarining fotosurati",
       "file13Path": "Dalolatnoma-ko‘rsatma va uning bajarilish maʼlumotlari",
-      "file13ExpiryDate": "Amal qilish muddati"
+      "file13ExpiryDate": "Amal qilish muddati",
+      "registryNumber": "Roʻyxatga olish raqami"
     },
     "ATTRACTION": {
       "phoneNumber": "Telefon raqami",
@@ -294,7 +295,7 @@
       "additionalInfoPath": "Qurilmani yaroqsiz holga kelganligini tasdiqlovchi hujjat",
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
-      "hazardousFacilityId": "XICHOni tanlang",
+      "hazardousFacilityId": "XICHO",
       "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
       "partialCheckDate": "O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi",
       "fullCheckDate": "Toʻliq texnik koʻrikdan o‘tkazilgan sana",
@@ -339,8 +340,8 @@
     },
     "ELEVATOR": {
       "phoneNumber": "Telefon raqami",
-      "hazardousFacilityId": "XICHOni tanlang",
-      "childEquipmentId": "Lift turini tanlang",
+      "hazardousFacilityId": "XICHO",
+      "childEquipmentId": "Lift turi",
       "factoryNumber": "Liftning zavod raqami",
       "factory": "Ishlab chiqargan zavod nomi",
       "model": "Model, marka",
@@ -376,8 +377,8 @@
     },
     "CRANE": {
       "phoneNumber": "Telefon raqami",
-      "hazardousFacilityId": "XICHOni tanlang",
-      "childEquipmentId": "Kran turini tanlang",
+      "hazardousFacilityId": "XICHO",
+      "childEquipmentId": "Kran turi",
       "factoryNumber": "Kranning zavod raqami",
       "factory": "Ishlab chiqargan zavod nomi",
       "model": "Model, marka",
@@ -415,8 +416,8 @@
     },
     "CONTAINER": {
       "phoneNumber": "Telefon raqami",
-      "hazardousFacilityId": "XICHO tanlang",
-      "childEquipmentId": "Idish turini tanlang",
+      "hazardousFacilityId": "XICHO",
+      "childEquipmentId": "Idish turi",
       "factoryNumber": "Idishning zavod raqami",
       "factory": "Idishni ishlab chiqargan zavod nomi",
       "model": "Model, marka",
@@ -454,10 +455,26 @@
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
       "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami"
     },
+    "OIL_CONTAINER": {
+      "address": "Qurilma joylashgan manzil",
+      "location": "Joylashuv (xaritadan joyni tanlang)",
+      "labelPath": "Qozonning birkasi bilan sur‘ati",
+      "childEquipmentId": "Idish turi",
+      "nonDestructiveCheckDate": "Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi",
+      "capacity": "Hajmi",
+      "registryNumber": "Qurilmaning roʻyxatga olish raqami",
+      "expertisePath": "Ekspertiza xulosasi",
+      "passportPath": "Qozonning pasporti",
+      "saleContractPath": "Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)",
+      "equipmentCertPath": "Qozonning muvofiqlik sertifikati",
+      "assignmentDecreePath": "Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq",
+      "installationCertPath": "Montaj dalolatnomasi",
+      "hazardousFacilityId": "XICHO"
+    },
     "BOILER": {
       "phoneNumber": "Telefon raqami",
-      "hazardousFacilityId": "XICHO tanlang",
-      "childEquipmentId": "Qozon turini tanlang",
+      "hazardousFacilityId": "XICHO",
+      "childEquipmentId": "Qozon turi",
       "factoryNumber": "Qozonning zavod raqami",
       "factory": "Qozonni ishlab chiqargan zavod nomi",
       "model": "Model, marka",
@@ -497,8 +514,8 @@
     },
     "ESCALATOR": {
       "phoneNumber": "Telefon raqami",
-      "hazardousFacilityId": "XICHO tanlang",
-      "childEquipmentId": "Eskalator turini tanlang",
+      "hazardousFacilityId": "XICHO",
+      "childEquipmentId": "Eskalator turi",
       "factoryNumber": "Eskalatorning zavod raqami",
       "factory": "Eskalatorni ishlab chiqargan zavod nomi",
       "model": "Model, marka",
@@ -536,8 +553,8 @@
     },
     "PIPELINE": {
       "phoneNumber": "Telefon raqami",
-      "hazardousFacilityId": "XICHO tanlang",
-      "childEquipmentId": "Quvur turini tanlang",
+      "hazardousFacilityId": "XICHO",
+      "childEquipmentId": "Quvur turi",
       "factoryNumber": "Quvurning zavod raqami",
       "factory": "Quvurni ishlab chiqargan zavod nomi",
       "model": "Model, marka",
@@ -580,8 +597,8 @@
     },
     "CHEMICAL_CONTAINER": {
       "phoneNumber": "Telefon raqami",
-      "hazardousFacilityId": "XICHO tanlang",
-      "childEquipmentId": "Idish turini tanlang",
+      "hazardousFacilityId": "XICHO",
+      "childEquipmentId": "Idish turi",
       "factoryNumber": "Idishning zavod raqami",
       "factory": "Idishni ishlab chiqargan zavod nomi",
       "model": "Model, marka",
@@ -622,7 +639,7 @@
     "HEAT_PIPELINE": {
       "phoneNumber": "Telefon raqami",
       "hazardousFacilityId": "XICHO tanlang",
-      "childEquipmentId": "Quvur turini tanlang",
+      "childEquipmentId": "Quvur turi",
       "factoryNumber": "Quvurning zavod raqami",
       "factory": "Quvur egasining nomi",
       "model": "Model, marka",
@@ -665,7 +682,7 @@
     "BOILER_UTILIZER": {
       "phoneNumber": "Telefon raqami",
       "hazardousFacilityId": "XICHO tanlang",
-      "childEquipmentId": "Qozon utilizator turini tanlang",
+      "childEquipmentId": "Qozon utilizator turi",
       "factoryNumber": "Qozon utilizatorining zavod raqami",
       "factory": "Qozon utilizatori egasining nomi",
       "model": "Model, marka",
@@ -708,7 +725,7 @@
     "LPG_CONTAINER": {
       "phoneNumber": "Telefon raqami",
       "hazardousFacilityId": "XICHO tanlang",
-      "childEquipmentId": "Idish (SUG) turini tanlang",
+      "childEquipmentId": "Idish (SUG) turi",
       "factoryNumber": "Idishning (SUG) zavod raqami",
       "factory": "Idishning (SUG) egasining nomi",
       "model": "Model, marka",
@@ -749,7 +766,7 @@
     "LPG_POWERED": {
       "phoneNumber": "Telefon raqami",
       "hazardousFacilityId": "XICHO tanlang",
-      "childEquipmentId": "Qurilma turini tanlang",
+      "childEquipmentId": "Qurilma turi",
       "factoryNumber": "Qurilmaning zavod raqami",
       "factory": "Qurilma egasining nomi",
       "model": "Model, marka",
@@ -788,7 +805,7 @@
     "HOIST": {
       "phoneNumber": "Telefon raqami",
       "hazardousFacilityId": "XICHO tanlang",
-      "childEquipmentId": "Yuk ko‘targich turini tanlang",
+      "childEquipmentId": "Yuk ko‘targich turi",
       "factoryNumber": "Yuk ko‘targichning zavod raqami",
       "factory": "Yuk ko‘targichni ishlab chiqargan zavod nomi",
       "model": "Model, marka",
@@ -825,7 +842,7 @@
     "CABLEWAY": {
       "phoneNumber": "Telefon raqami",
       "hazardousFacilityId": "XICHO tanlang",
-      "childEquipmentId": "Osma yo‘l turini tanlang",
+      "childEquipmentId": "Osma yo‘l turi",
       "factoryNumber": "Osma yo‘lning zavod raqami",
       "factory": "Osma yo‘l egasining nomi",
       "model": "Model, marka",
@@ -889,7 +906,8 @@
       "districtId": "Joylashgan tuman",
       "address": "Joylashgan manzil",
       "passportPath": "INM (qurilma) pasporti va sertifikati fayli",
-      "additionalFilePath": "Qo‘shimcha ma‘lumotlar"
+      "additionalFilePath": "Qo‘shimcha ma‘lumotlar",
+      "registryNumber": "Roʻyxatga olish raqami"
     }
   },
   "user-logs": {

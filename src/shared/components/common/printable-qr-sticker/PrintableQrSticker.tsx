@@ -29,10 +29,10 @@ export const PrintableQrSticker = ({ data }: PrintableQrStickerProps) => {
       </div>
       <div className="space-y-2 text-sm">
         <p>
-          <strong>Hisobga olish sanasi:</strong> {getDate(formattedDate)}
+          <strong>Roʻyxatga olish sanasi:</strong> {getDate(formattedDate)}
         </p>
         <p>
-          <strong>Hisobga olish raqami:</strong> {data.registryNumber || '-'}
+          <strong>Roʻyxatga olish raqami:</strong> {data.registryNumber || '-'}
         </p>
         <p>
           <strong>Tashkilot STIR:</strong> {data.ownerIdentity || '-'}

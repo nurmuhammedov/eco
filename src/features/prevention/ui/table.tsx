@@ -38,6 +38,10 @@ const PreventionTable: FC<Props> = ({ regions }) => {
       ownerName = '',
     },
   } = useCustomSearchParams()
+
+  const isHead = user?.role === UserRoles.HEAD
+  const canAssign = belongType === 'IRS' || belongType === 'XRAY' ? isHead : isRegional
+
   const { data, isLoading } = usePaginatedData<any>(
     '/preventions',
     {
@@ -93,7 +97,7 @@ const PreventionTable: FC<Props> = ({ regions }) => {
       filterType: 'search',
     },
 
-    ...(activeAssignedStatus === 'UNASSIGNED' && isRegional
+    ...(activeAssignedStatus === 'UNASSIGNED' && canAssign
       ? [
           {
             id: 'assignInspector',
@@ -111,7 +115,7 @@ const PreventionTable: FC<Props> = ({ regions }) => {
             cell: ({ row }: any) =>
               row?.original?.executorName ? (
                 row?.original?.executorName
-              ) : user?.role === UserRoles.REGIONAL ? (
+              ) : canAssign ? (
                 <AssignInspectorButton row={row.original} />
               ) : (
                 'Inspektor biriktirilmagan'

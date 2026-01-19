@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
+import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import { Badge } from '@/shared/components/ui/badge'
 
 export const IrsList = () => {
   const navigate = useNavigate()
@@ -30,8 +32,12 @@ export const IrsList = () => {
       usageType = '',
       startDate = '',
       endDate = '',
+      valid,
     },
+    addParams,
   } = useCustomSearchParams()
+
+  const activeValid = String(valid ?? 'true')
 
   const { data = [], isLoading } = usePaginatedData<any>(`/irs`, {
     page,
@@ -52,6 +58,13 @@ export const IrsList = () => {
     usageType,
     startDate,
     endDate,
+    valid: activeValid === 'all' ? undefined : activeValid === 'true' ? true : activeValid !== 'false',
+  })
+
+  // Separate query to get persistent count for Active tab
+  const { totalElements: activeTotal = 0 } = usePaginatedData<any>(`/irs`, {
+    size: 1,
+    valid: true,
   })
 
   const handleViewApplication = (id: string) => {
@@ -167,13 +180,30 @@ export const IrsList = () => {
   ]
 
   return (
-    <DataTable
-      showFilters
-      isPaginated
-      isLoading={isLoading}
-      data={data || []}
-      columns={columns as unknown as any}
-      className="min-h-0 flex-1"
-    />
+    <div className="flex h-full flex-col gap-2">
+      <Tabs value={activeValid} onValueChange={(val) => addParams({ valid: val, page: 1 })}>
+        <TabsList>
+          <TabsTrigger value="all">Barchasi</TabsTrigger>
+          <TabsTrigger value="true">
+            Amaldagi INMlar
+            <Badge
+              variant="destructive"
+              className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+            >
+              {activeTotal || 0}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger value="false">Reyestrdan chiqarilgan INMlar</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      <DataTable
+        showFilters
+        isPaginated
+        isLoading={isLoading}
+        data={data || []}
+        columns={columns as unknown as any}
+        className="min-h-0 flex-1"
+      />
+    </div>
   )
 }

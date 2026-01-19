@@ -21,7 +21,7 @@ const employeeSchema = z.object({
 
 export const AttestationAppealFormSchema = z.object({
   hfId: z.string().min(1, { message: FORM_ERROR_MESSAGES.required }),
-  hfRegistryNumber: z.string().min(1, 'Hisobga olish raqami kiritilishi majburiy'),
+  hfRegistryNumber: z.string().min(1, 'Roʻyxatga olish raqami kiritilishi majburiy'),
   upperOrganizationName: z.string().transform((val) => (val ? val : '')),
   legalName: z.string().transform((val) => (val ? val : '')),
   legalTin: z.string().length(9, FORM_ERROR_MESSAGES.required),

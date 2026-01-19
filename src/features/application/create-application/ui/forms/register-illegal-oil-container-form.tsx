@@ -243,7 +243,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
+                      // O'ZGARISH: Date obyektini stringga o'tkazamiz
+                      onChange={(date) => field.onChange(date ? date.toISOString() : undefined)}
                       placeholder="Sanani tanlang"
                     />
                     <FormMessage />
@@ -262,7 +263,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                     <Select
                       onValueChange={(value) => {
                         if (value) {
-                          field.onChange(Number(value))
+                          field.onChange(value)
                           form.setValue('districtId', undefined as any)
                         }
                       }}
@@ -286,7 +287,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                   <FormLabel required>Qozon joylashgan tuman</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={(value) => field.onChange(Number(value))}
+                      onValueChange={(value) => field.onChange(value)}
                       value={field.value?.toString()}
                       disabled={!form.watch('regionId')}
                     >
@@ -398,9 +399,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                      Ekspertiza xulosasi (ishlash muddatini o‘tagan bo‘lsa majburiy)
-                    </FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekspertiza xulosasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -438,9 +437,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">
-                      Qozonning muvofiqlik sertifikati (muqaddam foydalanishda bo‘lgan bug‘qozon uchun majburiy emas)
-                    </FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilmaning muvofiqlik sertifikati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -457,9 +454,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
-                      Montaj dalolatnomasi
-                    </FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Montaj dalolatnomasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
