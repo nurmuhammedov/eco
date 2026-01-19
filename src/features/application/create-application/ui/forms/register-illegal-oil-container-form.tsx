@@ -239,7 +239,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi</FormLabel>
+                    <FormLabel required={!isUpdate}>Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -342,7 +342,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
                       Qozonning birkasi bilan sur‘ati
                     </FormLabel>
                     <FormControl>
@@ -361,7 +361,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
                       Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
                     <FormControl>
@@ -380,7 +380,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
                       Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
                     </FormLabel>
                     <FormControl>
@@ -471,7 +471,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
                       Qozonning pasporti
                     </FormLabel>
                     <FormControl>

@@ -33,12 +33,84 @@ export const useRegisterIllegalPipeline = (externalSubmit?: (data: RegisterIlleg
 
   const formSchema = isUpdate
     ? RegisterIllegalPipelineBaseSchema.extend({
-        phoneNumber: z
+        // Dates
+        partialCheckDate: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+        fullCheckDate: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+        nonDestructiveCheckDate: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+        equipmentCertExpiryDate: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+        expertiseExpiryDate: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+        nextPartialCheckDate: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+        nextFullCheckDate: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+        // Paths
+        labelPath: z
           .string()
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
-        birthDate: z
+        saleContractPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        equipmentCertPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        assignmentDecreePath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        expertisePath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        installationCertPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        passportPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        partialCheckPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        fullCheckPath: z
           .string()
           .optional()
           .nullable()

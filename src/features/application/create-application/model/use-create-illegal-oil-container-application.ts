@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
@@ -32,7 +33,57 @@ export const useRegisterIllegalOilContainer = (
 
   // Assuming similar refinement needs as Boiler, adapting schema if updated
   // For now using the base schema since no specific refinement was requested/provided
-  const formSchema = IllegalOilContainerAppealDtoSchema
+  const formSchema = isUpdate
+    ? IllegalOilContainerAppealDtoSchema.extend({
+        // Dates
+        nonDestructiveCheckDate: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+        expertiseExpiryDate: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+        // Paths
+        labelPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        saleContractPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        equipmentCertPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        assignmentDecreePath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        expertisePath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        installationCertPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        passportPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+      })
+    : IllegalOilContainerAppealDtoSchema
 
   const form = useForm<CreateIllegalOilContainerApplicationDTO>({
     resolver: zodResolver(formSchema),
