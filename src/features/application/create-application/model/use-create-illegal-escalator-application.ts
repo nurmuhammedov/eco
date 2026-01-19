@@ -95,6 +95,21 @@ export const useRegisterIllegalEscalator = (externalSubmit?: (data: RegisterIlle
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
+        phoneNumber: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        identity: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        birthDate: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
       }).superRefine(escalatorRefinement)
     : RegisterIllegalEscalatorSchema
 

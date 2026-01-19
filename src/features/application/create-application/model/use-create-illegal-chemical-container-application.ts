@@ -112,6 +112,21 @@ export const useRegisterIllegalChemicalContainer = (
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
+        phoneNumber: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        identity: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        birthDate: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
       }).superRefine(chemicalContainerRefinement)
     : RegisterIllegalChemicalContainerSchema
 
@@ -203,7 +218,7 @@ export const useRegisterIllegalChemicalContainer = (
       form.reset({
         phoneNumber: detail.phoneNumber || '',
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
-        birthDate: isUpdate ? '1900-01-01' : parseDate(detail.birthDate),
+        birthDate: parseDate(detail.birthDate),
         hazardousFacilityId: detail.hfId,
         childEquipmentId: detail.childEquipmentId ? String(detail.childEquipmentId) : '',
         factoryNumber: detail.factoryNumber || '',

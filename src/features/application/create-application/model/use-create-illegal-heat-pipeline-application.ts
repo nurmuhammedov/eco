@@ -110,6 +110,21 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
+        phoneNumber: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        identity: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        birthDate: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
       }).superRefine(heatPipelineRefinement)
     : RegisterIllegalHeatPipelineSchema
 

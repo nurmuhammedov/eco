@@ -134,7 +134,7 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
       form.reset({
         phoneNumber: detail.phoneNumber || '',
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
-        birthDate: isUpdate ? '1900-01-01' : parseDate(detail.birthDate),
+        birthDate: parseDate(detail.birthDate),
         attractionName: detail.attractionName || '',
         childEquipmentId: detail.childEquipmentId,
         childEquipmentSortId: detail.childEquipmentSortId,

@@ -110,6 +110,21 @@ export const useRegisterIllegalContainer = (externalSubmit?: (data: RegisterIlle
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
+        phoneNumber: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        identity: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
+        birthDate: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
       }).superRefine(containerRefinement)
     : RegisterIllegalContainerSchema
 
