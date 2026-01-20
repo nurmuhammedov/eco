@@ -105,27 +105,27 @@ export const appRoutes = [
   {
     path: 'reports',
     component: ReportsPage,
-    roles: [UserRoles.CHAIRMAN],
+    roles: [],
   },
   {
     path: 'reports/REPORT_1',
     component: ReportsDetail1,
-    roles: [UserRoles.CHAIRMAN],
+    roles: [],
   },
   {
     path: 'reports/REPORT_2',
     component: ReportsDetail2,
-    roles: [UserRoles.CHAIRMAN],
+    roles: [],
   },
   {
     path: 'reports/REPORT_3',
     component: ReportsDetail3,
-    roles: [UserRoles.CHAIRMAN],
+    roles: [],
   },
   {
     path: 'reports/REPORT_4',
     component: ReportsDetail4,
-    roles: [UserRoles.CHAIRMAN],
+    roles: [],
   },
   {
     path: 'register',

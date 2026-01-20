@@ -41,13 +41,9 @@ interface YandexMapModalProps {
 }
 
 const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belgilash', onConfirm, initialCoords }) => {
-  // getMapContentSize() olib tashlandi, CSS orqali hal qilamiz
   const [open, setOpen] = useState(false)
-
-  const [lat, setLat] = useState('')
-  const [lng, setLng] = useState('')
-
-  const [errors, setErrors] = useState<{ lat?: string; lng?: string }>({})
+  const [inputValue, setInputValue] = useState('')
+  const [error, setError] = useState<string | null>(null)
   const [isValid, setIsValid] = useState(false)
 
   const [mapCenter, setMapCenter] = useState<[number, number]>(UZBEKISTAN_CENTER)
@@ -57,51 +53,70 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belg
   useEffect(() => {
     if (initialCoords && initialCoords.length === 2) {
       const [initLat, initLng] = initialCoords
-      setLat(String(initLat))
-      setLng(String(initLng))
+      setInputValue(`${initLat}, ${initLng}`)
       setMapCenter([initLat, initLng])
       setMapCoords([[initLat, initLng]])
       setMapZoom(SELECTED_POINT_ZOOM)
       setIsValid(true)
-      setErrors({})
+      setError(null)
     } else {
-      setLat('')
-      setLng('')
+      setInputValue('')
       setMapCenter(UZBEKISTAN_CENTER)
       setMapCoords([])
       setMapZoom(DEFAULT_COUNTRY_ZOOM)
       setIsValid(false)
-      setErrors({})
+      setError(null)
     }
   }, [initialCoords, open])
 
-  const handleCheckLocation = useCallback(() => {
-    const result = coordinateSchema.safeParse({ lat, lng })
+  const validateInput = (value: string): { isValid: boolean; lat?: number; lng?: number; error?: string } => {
+    // Check for correct format: "lat, lng" (comma)
+    if (!value.includes(',')) {
+      return { isValid: false, error: 'Koordinatalar orasida vergul bo‘lishi kerak (masalan: 41.311081, 69.240562)' }
+    }
+
+    const parts = value.split(',')
+    if (parts.length !== 2) {
+      return { isValid: false, error: 'Noto‘g‘ri format' }
+    }
+
+    const latStr = parts[0].trim()
+    const lngStr = parts[1].trim()
+
+    const result = coordinateSchema.safeParse({ lat: latStr, lng: lngStr })
 
     if (!result.success) {
       const fieldErrors = result.error.flatten().fieldErrors
-      setErrors({
-        lat: fieldErrors.lat?.[0],
-        lng: fieldErrors.lng?.[0],
-      })
+      const errorMessage = fieldErrors.lat?.[0] || fieldErrors.lng?.[0] || 'Noto‘g‘ri koordinatalar'
+      return { isValid: false, error: errorMessage }
+    }
+
+    return { isValid: true, lat: result.data.lat, lng: result.data.lng }
+  }
+
+  const handleCheckLocation = useCallback(() => {
+    const validation = validateInput(inputValue)
+
+    if (!validation.isValid) {
+      setError(validation.error || 'Xatolik')
       setIsValid(false)
     } else {
-      setErrors({})
+      setError(null)
       setIsValid(true)
-      const newLat = result.data.lat
-      const newLng = result.data.lng
-      setMapCenter([newLat, newLng])
-      setMapCoords([[newLat, newLng]])
-      setMapZoom(SELECTED_POINT_ZOOM)
+      if (validation.lat !== undefined && validation.lng !== undefined) {
+        setMapCenter([validation.lat, validation.lng])
+        setMapCoords([[validation.lat, validation.lng]])
+        setMapZoom(SELECTED_POINT_ZOOM)
+      }
     }
-  }, [lat, lng])
+  }, [inputValue])
 
   const handleMapClick = useCallback((coords: Coordinate[], currentMapZoom: number) => {
     if (coords.length > 0) {
       const [newLat, newLng] = coords[0]
+      const formattedInput = `${newLat.toFixed(6)}, ${newLng.toFixed(6)}`
 
-      setLat(newLat.toFixed(6))
-      setLng(newLng.toFixed(6))
+      setInputValue(formattedInput)
       setMapCoords([[newLat, newLng]])
       setMapCenter([newLat, newLng])
 
@@ -114,28 +129,26 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belg
       const result = coordinateSchema.safeParse({ lat: newLat, lng: newLng })
 
       if (result.success) {
-        setErrors({})
+        setError(null)
         setIsValid(true)
       } else {
         const fieldErrors = result.error.flatten().fieldErrors
-        setErrors({
-          lat: fieldErrors.lat?.[0],
-          lng: fieldErrors.lng?.[0],
-        })
+        setError(fieldErrors.lat?.[0] || fieldErrors.lng?.[0] || 'Xatolik')
         setIsValid(false)
       }
     }
   }, [])
 
   const handleConfirm = useCallback(() => {
-    const result = coordinateSchema.safeParse({ lat, lng })
-    if (result.success) {
-      onConfirm(`${result.data.lat}, ${result.data.lng}`)
+    const validation = validateInput(inputValue)
+    if (validation.isValid) {
+      // Return normalized string "lat, lng"
+      onConfirm(`${validation.lat}, ${validation.lng}`)
       setOpen(false)
     } else {
       handleCheckLocation()
     }
-  }, [lat, lng, onConfirm, handleCheckLocation])
+  }, [inputValue, onConfirm, handleCheckLocation])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -163,37 +176,23 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belg
         </DialogHeader>
 
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-2">
-          <div className="grid shrink-0 grid-cols-1 items-start gap-4 md:grid-cols-[1fr_1fr_auto]">
+          <div className="grid shrink-0 grid-cols-1 items-start gap-4 md:grid-cols-[1fr_auto]">
             <div className="grid gap-2">
-              <Label htmlFor="lat">Kenglik</Label>
+              <Label htmlFor="coords">Koordinatalar</Label>
               <Input
-                id="lat"
-                type="number"
-                placeholder="41.311081"
-                value={lat}
+                id="coords"
+                value={inputValue}
+                placeholder="41.311081, 69.240562"
                 onChange={(e) => {
-                  setLat(e.target.value)
-                  setIsValid(false)
+                  setInputValue(e.target.value)
+                  setIsValid(false) // Re-validate on change or just reset valid state
+                  // Real-time validation could be annoying, so waiting for 'Joyni belgilash' or blur is better usually,
+                  // but let's clear error on type to avoid stale error
+                  if (error) setError(null)
                 }}
-                className={cn(errors.lat ? 'border-red-500' : '')}
+                className={cn(error ? 'border-red-500' : '')}
               />
-              {errors.lat && <span className="text-xs text-red-500">{errors.lat}</span>}
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="lng">Uzunlik</Label>
-              <Input
-                id="lng"
-                type="number"
-                placeholder="69.240562"
-                value={lng}
-                onChange={(e) => {
-                  setLng(e.target.value)
-                  setIsValid(false)
-                }}
-                className={cn(errors.lng ? 'border-red-500' : '')}
-              />
-              {errors.lng && <span className="text-xs text-red-500">{errors.lng}</span>}
+              {error && <span className="text-xs text-red-500">{error}</span>}
             </div>
 
             <div className="pt-8 md:pt-6">
