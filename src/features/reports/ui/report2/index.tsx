@@ -92,6 +92,16 @@ const Report1: React.FC = () => {
     )
   }, [inspections])
 
+  const tableData = React.useMemo(() => {
+    if (!inspections) return []
+    const summaryRow = {
+      isSummary: true,
+      appealType: 'Respublika bo‘yicha',
+      ...totals,
+    }
+    return [summaryRow, ...inspections]
+  }, [inspections, totals])
+
   const regionConfigs = [
     { header: "Qoraqalpog'iston XB", key: 'karakalpakstan' },
     { header: 'Andijon XB', key: 'andijan' },
@@ -112,12 +122,15 @@ const Report1: React.FC = () => {
   const columns: ColumnDef<IAppealData>[] = [
     {
       header: 'T/r',
-      cell: ({ row }) => row.index + 1,
+      cell: ({ row }: any) => (row.original.isSummary ? '' : row.index),
     },
     {
       header: 'Ariza turi',
       accessorKey: 'appealType',
       minSize: 350,
+      cell: ({ row }: any) => (
+        <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.appealType}</span>
+      ),
     },
     {
       header: 'Jami',
@@ -126,6 +139,9 @@ const Report1: React.FC = () => {
           header: 'dona',
           accessorKey: 'total',
           size: 70,
+          cell: ({ row }: any) => (
+            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.total}</span>
+          ),
         },
         {
           header: '%',
@@ -141,6 +157,9 @@ const Report1: React.FC = () => {
           header: 'dona',
           accessorKey: region.key,
           size: 70,
+          cell: ({ row }: any) => (
+            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[region.key]}</span>
+          ),
         },
         {
           header: '%',
@@ -194,7 +213,7 @@ const Report1: React.FC = () => {
           <DataTable
             showNumeration={false}
             headerCenter={true}
-            data={inspections || []}
+            data={tableData}
             columns={columns as unknown as any}
             isLoading={isLoading}
             className="h-[calc(100vh-300px)]"
@@ -204,7 +223,7 @@ const Report1: React.FC = () => {
           <DataTable
             showNumeration={false}
             headerCenter={true}
-            data={inspections || []}
+            data={tableData}
             columns={columns as unknown as any}
             isLoading={isLoading}
             className="h-[calc(100vh-320px)]"

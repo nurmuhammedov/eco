@@ -40,14 +40,14 @@ const Report1: React.FC = () => {
 
   const tableData = useMemo(() => {
     if (!inspections) return []
-    let summaryRow = inspections.find((i) => i?.officeName === 'Respublika bo‘yicha')
+    let summaryRow = inspections.find((i) => i?.regionName === 'Respublika bo‘yicha')
     summaryRow = {
       isSummary: true,
       ...summaryRow,
     }
     return [
       summaryRow,
-      ...(inspections?.filter((i) => i?.officeName !== 'Respublika bo‘yicha' && !!i?.officeName) || []),
+      ...(inspections?.filter((i) => i?.regionName !== 'Respublika bo‘yicha' && !!i?.regionName) || []),
     ]
   }, [inspections])
 
@@ -59,11 +59,11 @@ const Report1: React.FC = () => {
         size: 50,
       },
       {
-        header: 'Hududiy boshqarma/bo‘limlar',
-        accessorKey: 'officeName',
+        header: 'Hududlar',
+        accessorKey: 'regionName',
         minSize: 250,
         cell: ({ row }) => (
-          <span className={row.original.isSummary ? 'text-base font-bold' : ''}>{row.original.officeName}</span>
+          <span className={row.original.isSummary ? 'text-base font-bold' : ''}>{row.original.regionName}</span>
         ),
       },
       {

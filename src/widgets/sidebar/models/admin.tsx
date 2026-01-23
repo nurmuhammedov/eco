@@ -10,6 +10,7 @@ import {
   Users,
   Signature,
   Mail,
+  Server,
 } from 'lucide-react'
 
 export default [
@@ -62,5 +63,10 @@ export default [
     url: '/hybrid-mail',
     title: 'Gibrid pochta',
     icon: <Mail />,
+  },
+  {
+    url: '/metrics/',
+    title: 'Server ko‘rsatgichlari',
+    icon: <Server />,
   },
 ] as Navigation

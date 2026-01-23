@@ -47,7 +47,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title="XICHOni ro‘yxatga olish (Noqonuniy)" />
+        <GoBack title="XICHOni ro‘yxatga olish" />
         <CardForm className="my-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
@@ -64,8 +64,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                       maxLength={9}
                       {...field}
                       onChange={(e) => {
-                        const val = e.target.value.replace(/\D/g, '')
-                        e.target.value = val
+                        e.target.value = e.target.value.replace(/\D/g, '')
                         if (ownerData) handleClear()
                         field.onChange(e)
                       }}

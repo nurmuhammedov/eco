@@ -25,6 +25,9 @@ const Permits = lazy(() => import('@/widgets/permits'))
 //ContactPage
 const ContactPage = lazy(() => import('@/pages/qr-form'))
 
+//MetricsPage
+const MetricsPage = lazy(() => import('@/pages/admin/metrics/page'))
+
 //Public risk analysis info
 const PublicRiskAnalysisInfo = lazy(() => import('@/features/risk-analysis/ui/public-risk-analysis-info.tsx'))
 
@@ -222,6 +225,11 @@ export const appRoutes = [
   {
     path: 'user-logs',
     component: UserLogsPage,
+    roles: [UserRoles.ADMIN],
+  },
+  {
+    path: 'metrics',
+    component: MetricsPage,
     roles: [UserRoles.ADMIN],
   },
   {

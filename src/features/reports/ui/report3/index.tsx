@@ -3,7 +3,6 @@ import React from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { usePaginatedData } from '@/shared/hooks'
 import { ColumnDef } from '@tanstack/react-table'
-import Filter from '@/shared/components/common/filter'
 import { GoBack } from '@/shared/components/common'
 import { apiClient } from '@/shared/api/api-client'
 import { format } from 'date-fns'
@@ -16,29 +15,29 @@ export enum InspectionStatus {
 }
 
 interface IReportData {
-  officeName: string
+  regionName: string
   activeHf: number
   inactiveHf: number
   activeEquipment: number
   inactiveEquipment: number
   expiredEquipment: number
+  noDateEquipment: number
   activeIrs: number
   inactiveIrs: number
 
   [key: string]: any
 }
 
-const Report1: React.FC = () => {
+const Report3: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
   const { data: inspections, isLoading } = usePaginatedData<any>('/reports/registry', {
     ...paramsObject,
     ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,
-    date: paramsObject?.startDate,
   })
 
   function calcPercent(value: number, total: number): string {
-    if (!total || total === 0) return '0.00%'
-    return ((value / total) * 100).toFixed(2) + '%'
+    if (!total || total === 0) return '0%'
+    return parseFloat(((value / total) * 100).toFixed(2)) + '%'
   }
 
   const data: any = inspections as unknown as any
@@ -49,7 +48,9 @@ const Report1: React.FC = () => {
       activeEquipment: 0,
       inactiveEquipment: 0,
       expiredEquipment: 0,
+      noDateEquipment: 0,
       activeIrs: 0,
+      inactiveIrs: 0,
     }
 
     if (!data || data.length === 0) {
@@ -67,16 +68,29 @@ const Report1: React.FC = () => {
     )
   }, [data])
 
+  const tableData = React.useMemo(() => {
+    if (!data) return []
+    const summaryRow = {
+      isSummary: true,
+      regionName: 'Respublika bo‘yicha',
+      ...totals,
+    }
+    return [summaryRow, ...data]
+  }, [data, totals])
+
   const columns: ColumnDef<IReportData>[] = [
     {
       header: 'T/r',
-      cell: ({ row }) => row.index + 1,
+      cell: ({ row }: any) => (row.original.isSummary ? '' : row.index),
       size: 50,
     },
     {
-      header: 'Hududiy boshqarma/bo‘limlar',
-      accessorKey: 'officeName',
+      header: 'Hududlar',
+      accessorKey: 'regionName',
       minSize: 250,
+      cell: ({ row }: any) => (
+        <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.regionName}</span>
+      ),
     },
     {
       header: 'XICHO',
@@ -88,6 +102,9 @@ const Report1: React.FC = () => {
               header: 'dona',
               accessorKey: 'activeHf',
               size: 80,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.activeHf}</span>
+              ),
             },
             {
               header: '%',
@@ -103,6 +120,9 @@ const Report1: React.FC = () => {
               header: 'dona',
               accessorKey: 'inactiveHf',
               size: 80,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inactiveHf}</span>
+              ),
             },
             {
               header: '%',
@@ -123,6 +143,9 @@ const Report1: React.FC = () => {
               header: 'dona',
               accessorKey: 'activeEquipment',
               size: 80,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.activeEquipment}</span>
+              ),
             },
             {
               header: '%',
@@ -138,6 +161,9 @@ const Report1: React.FC = () => {
               header: 'dona',
               accessorKey: 'inactiveEquipment',
               size: 80,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inactiveEquipment}</span>
+              ),
             },
             {
               header: '%',
@@ -153,10 +179,31 @@ const Report1: React.FC = () => {
               header: 'dona',
               accessorKey: 'expiredEquipment',
               size: 80,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.expiredEquipment}</span>
+              ),
             },
             {
               header: '%',
               cell: ({ row }) => calcPercent(row.original.expiredEquipment, totals.expiredEquipment),
+              size: 80,
+            },
+          ],
+        },
+        {
+          header: 'Muddati kiritilmaganlar',
+          columns: [
+            {
+              header: 'dona',
+              accessorKey: 'noDateEquipment',
+              size: 80,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.noDateEquipment}</span>
+              ),
+            },
+            {
+              header: '%',
+              cell: ({ row }) => calcPercent(row.original.noDateEquipment, totals.noDateEquipment),
               size: 80,
             },
           ],
@@ -173,10 +220,31 @@ const Report1: React.FC = () => {
               header: 'dona',
               accessorKey: 'activeIrs',
               size: 80,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.activeIrs}</span>
+              ),
             },
             {
               header: '%',
               cell: ({ row }) => calcPercent(row.original.activeIrs, totals.activeIrs),
+              size: 80,
+            },
+          ],
+        },
+        {
+          header: 'Reyestrdan chiqarilgan',
+          columns: [
+            {
+              header: 'dona',
+              accessorKey: 'inactiveIrs',
+              size: 80,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inactiveIrs}</span>
+              ),
+            },
+            {
+              header: '%',
+              cell: ({ row }) => calcPercent(row.original.inactiveIrs, totals.inactiveIrs),
               size: 80,
             },
           ],
@@ -207,13 +275,17 @@ const Report1: React.FC = () => {
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
-        <GoBack title="Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, qurilmalar va IIMlarni hududlar kesimida taqsimlanishi" />
+        <GoBack
+          title={
+            <>
+              Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, qurilmalar va IIMlarni hududlar kesimida
+              taqsimlanishi <span className="italic">(bugungi kun holatiga)</span>
+            </>
+          }
+        />
       </div>
 
-      <div className="my-2 flex items-start justify-between gap-2">
-        <div className="flex flex-1 justify-start">
-          <Filter className="mb-0" inputKeys={['startDate']} />
-        </div>
+      <div className="my-2 flex items-start justify-end gap-2">
         <Button onClick={handleDownloadExel}>
           <Download /> MS Exel
         </Button>
@@ -222,7 +294,7 @@ const Report1: React.FC = () => {
       <DataTable
         showNumeration={false}
         headerCenter={true}
-        data={inspections || []}
+        data={tableData}
         columns={columns as unknown as any}
         isLoading={isLoading}
         className="h-[calc(100vh-300px)]"
@@ -231,4 +303,4 @@ const Report1: React.FC = () => {
   )
 }
 
-export default Report1
+export default Report3

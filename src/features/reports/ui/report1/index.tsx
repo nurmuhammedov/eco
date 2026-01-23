@@ -34,21 +34,60 @@ const Report1: React.FC = () => {
     return ((value / total) * 100).toFixed(2) + '%'
   }
 
+  const tableData = React.useMemo(() => {
+    if (!inspections) return []
+    const list = (inspections as unknown as any[]) || []
+    const totals = list.reduce(
+      (acc: any, curr: any) => {
+        acc.total += curr.total || 0
+        acc.inProcess += curr.inProcess || 0
+        acc.inAgreement += curr.inAgreement || 0
+        acc.inApproval += curr.inApproval || 0
+        acc.completed += curr.completed || 0
+        acc.rejected += curr.rejected || 0
+        acc.canceled += curr.canceled || 0
+        return acc
+      },
+      {
+        total: 0,
+        inProcess: 0,
+        inAgreement: 0,
+        inApproval: 0,
+        completed: 0,
+        rejected: 0,
+        canceled: 0,
+      }
+    )
+
+    const summaryRow = {
+      isSummary: true,
+      officeName: 'Respublika bo‘yicha',
+      ...totals,
+    }
+
+    return [summaryRow, ...list]
+  }, [inspections])
+
   const columns: ColumnDef<ISearchParams>[] = [
     {
       header: 'T/r',
-      cell: ({ row }) => row.index + 1,
+      cell: ({ row }: any) => (row.original.isSummary ? '' : row.index),
     },
     {
       header: 'Hududiy boshqarma/bo‘limlar',
       accessorKey: 'officeName',
+      cell: ({ row }: any) => (
+        <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.officeName}</span>
+      ),
     },
     {
       header: 'Jami',
       columns: [
         {
           header: 'dona',
-          cell: ({ row }) => row.original.total,
+          cell: ({ row }: any) => (
+            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.total}</span>
+          ),
         },
         {
           header: '%',
@@ -64,7 +103,9 @@ const Report1: React.FC = () => {
           columns: [
             {
               header: 'dona',
-              cell: ({ row }) => row.original.inProcess,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inProcess}</span>
+              ),
             },
             {
               header: '%',
@@ -77,7 +118,9 @@ const Report1: React.FC = () => {
           columns: [
             {
               header: 'dona',
-              cell: ({ row }) => row.original.inAgreement,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inAgreement}</span>
+              ),
             },
             {
               header: '%',
@@ -90,7 +133,9 @@ const Report1: React.FC = () => {
           columns: [
             {
               header: 'dona',
-              cell: ({ row }) => row.original.inApproval,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inApproval}</span>
+              ),
             },
             {
               header: '%',
@@ -103,7 +148,9 @@ const Report1: React.FC = () => {
           columns: [
             {
               header: 'dona',
-              cell: ({ row }) => row.original.completed,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.completed}</span>
+              ),
             },
             {
               header: '%',
@@ -116,7 +163,9 @@ const Report1: React.FC = () => {
           columns: [
             {
               header: 'dona',
-              cell: ({ row }) => row.original.rejected,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.rejected}</span>
+              ),
             },
             {
               header: '%',
@@ -129,7 +178,9 @@ const Report1: React.FC = () => {
           columns: [
             {
               header: 'dona',
-              cell: ({ row }) => row.original.canceled,
+              cell: ({ row }: any) => (
+                <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.canceled}</span>
+              ),
             },
             {
               header: '%',
@@ -185,7 +236,7 @@ const Report1: React.FC = () => {
           <DataTable
             showNumeration={false}
             headerCenter={true}
-            data={inspections || []}
+            data={tableData}
             columns={columns as unknown as any}
             isLoading={isLoading}
             className="h-[calc(100vh-300px)]"
@@ -195,7 +246,7 @@ const Report1: React.FC = () => {
           <DataTable
             showNumeration={false}
             headerCenter={true}
-            data={inspections || []}
+            data={tableData}
             columns={columns as unknown as any}
             isLoading={isLoading}
             className="h-[calc(100vh-320px)]"

@@ -48,8 +48,8 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
           <CardForm className="my-2">
             <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
             <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
-              <DetailRow title={'Tashkilot nomi:'} value={orgData?.legalName || '-'} />
-              <DetailRow title="Tashkilot rahbari:" value={orgData?.fullName || '-'} />
+              <DetailRow title={'Tashkilot nomi:'} value={orgData?.name || orgData?.legalName || '-'} />
+              <DetailRow title="Tashkilot rahbari:" value={orgData?.directorName || orgData?.fullName || '-'} />
               <DetailRow title="Manzil:" value={orgData?.address || orgData?.legalAddress || '-'} />
               <DetailRow title="Telefon raqami:" value={orgData?.phoneNumber || '-'} />
             </div>

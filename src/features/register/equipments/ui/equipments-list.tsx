@@ -123,13 +123,13 @@ export const EquipmentsList = () => {
       minSize: 150,
     },
     {
-      accessorFn: (row) => (row.partialCheckDate ? getDate(row.partialCheckDate) : '-'),
+      accessorFn: (row) => (row.nextPartialCheckDate ? getDate(row.nextPartialCheckDate) : '-'),
       maxSize: 90,
-      header: 'Qisman texnik koʻrik sanasi',
+      header: 'Keyingi qisman texnik koʻrik sanasi',
     },
     {
-      accessorFn: (row) => (row.fullCheckDate ? getDate(row.fullCheckDate) : '-'),
-      header: 'To‘liq texnik koʻrik sanasi',
+      accessorFn: (row) => (row.nextFullCheckDate ? getDate(row.nextFullCheckDate) : '-'),
+      header: 'Keyingi to‘liq texnik koʻrik sanasi',
       maxSize: 90,
     },
     {

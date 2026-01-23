@@ -39,7 +39,11 @@ export const IrsList = () => {
 
   const activeValid = String(valid ?? 'true')
 
-  const { data = [], isLoading } = usePaginatedData<any>(`/irs`, {
+  const {
+    data = [],
+    isLoading,
+    totalElements = 0,
+  } = usePaginatedData<any>(`/irs`, {
     page,
     size,
     mode,
@@ -59,12 +63,6 @@ export const IrsList = () => {
     startDate,
     endDate,
     valid: activeValid === 'all' ? undefined : activeValid === 'true' ? true : activeValid !== 'false',
-  })
-
-  // Separate query to get persistent count for Active tab
-  const { totalElements: activeTotal = 0 } = usePaginatedData<any>(`/irs`, {
-    size: 1,
-    valid: true,
   })
 
   const handleViewApplication = (id: string) => {
@@ -183,17 +181,39 @@ export const IrsList = () => {
     <div className="flex h-full flex-col gap-2">
       <Tabs value={activeValid} onValueChange={(val) => addParams({ valid: val, page: 1 })}>
         <TabsList>
-          <TabsTrigger value="all">Barchasi</TabsTrigger>
+          <TabsTrigger value="all">
+            Barchasi
+            {activeValid === 'all' && (
+              <Badge
+                variant="destructive"
+                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+              >
+                {totalElements || 0}
+              </Badge>
+            )}
+          </TabsTrigger>
           <TabsTrigger value="true">
             Amaldagi INMlar
-            <Badge
-              variant="destructive"
-              className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-            >
-              {activeTotal || 0}
-            </Badge>
+            {activeValid === 'true' && (
+              <Badge
+                variant="destructive"
+                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+              >
+                {totalElements || 0}
+              </Badge>
+            )}
           </TabsTrigger>
-          <TabsTrigger value="false">Reyestrdan chiqarilgan INMlar</TabsTrigger>
+          <TabsTrigger value="false">
+            Reyestrdan chiqarilgan INMlar
+            {activeValid === 'false' && (
+              <Badge
+                variant="destructive"
+                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+              >
+                {totalElements || 0}
+              </Badge>
+            )}
+          </TabsTrigger>
         </TabsList>
       </Tabs>
       <DataTable
