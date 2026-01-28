@@ -58,6 +58,10 @@ export default [
         url: '/accreditations',
         title: 'Ekpertiza xulosalari',
       },
+      {
+        url: '/declarations',
+        title: 'Deklaratsiya',
+      },
     ],
   },
   {

@@ -61,6 +61,10 @@ const ExpertisePage = lazy(() => import('@/pages/expertise/page'))
 const AddConclusionPage = lazy(() => import('@/pages/expertise/add-conclusion-page'))
 const UserLogsPage = lazy(() => import('@/pages/admin/user-logs/page'))
 
+const DeclarationsPage = lazy(() => import('@/pages/declarations/page'))
+const AddDeclarationPage = lazy(() => import('@/pages/declarations/add-declaration-page'))
+const DeclarationDetailPage = lazy(() => import('@/pages/declarations/declaration-detail-page'))
+
 const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'))
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'))
 const InspectionSurveys = lazy(() => import('@/pages/admin/inspection/ui'))
@@ -365,6 +369,27 @@ export const appRoutes = [
     path: '/accreditations/edit/:id',
     component: EditConclusion,
     roles: [UserRoles.LEGAL],
+  },
+
+  // Declarations
+  {
+    path: 'declarations',
+    component: DeclarationsPage,
+    roles: [
+      UserRoles.LEGAL,
+      UserRoles.CHAIRMAN,
+      // Add other roles if they need read access, keeping safe with requested scope
+    ],
+  },
+  {
+    path: 'declarations/add',
+    component: AddDeclarationPage,
+    roles: [UserRoles.LEGAL],
+  },
+  {
+    path: 'declarations/detail/:id',
+    component: DeclarationDetailPage,
+    roles: [UserRoles.LEGAL, UserRoles.CHAIRMAN],
   },
 
   //Permits

@@ -36,6 +36,7 @@ export enum Direction {
   PERMITS = 'PERMITS',
   REPORT = 'REPORT',
   INQUIRY = 'INQUIRY',
+  DECLARATION = 'DECLARATION',
 }
 
 export type UserState = {

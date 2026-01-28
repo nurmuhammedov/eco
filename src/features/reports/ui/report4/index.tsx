@@ -40,15 +40,51 @@ const Report1: React.FC = () => {
 
   const tableData = useMemo(() => {
     if (!inspections) return []
-    let summaryRow = inspections.find((i) => i?.regionName === 'Respublika bo‘yicha')
-    summaryRow = {
+    const regions = inspections.filter((i) => i?.regionName !== 'Respublika bo‘yicha' && !!i?.regionName)
+
+    const summaryRow: any = {
+      regionName: 'Respublika bo‘yicha',
       isSummary: true,
-      ...summaryRow,
+      hfPresentCount: 0,
+      hfPeriodCount: 0,
+      irsPresentCount: 0,
+      irsPeriodCount: 0,
+      xrayPresentCount: 0,
+      xrayPeriodCount: 0,
     }
-    return [
-      summaryRow,
-      ...(inspections?.filter((i) => i?.regionName !== 'Respublika bo‘yicha' && !!i?.regionName) || []),
-    ]
+
+    const dynamicItems = APPLICATIONS_DATA.filter(
+      (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
+    )
+
+    dynamicItems.forEach((i) => {
+      let baseKey = toCamelCase(String(i.equipmentType || ''))
+      if (baseKey === 'cableway') baseKey = 'cableWay'
+      summaryRow[`${baseKey}PresentCount`] = 0
+      summaryRow[`${baseKey}PeriodCount`] = 0
+    })
+
+    regions.forEach((row) => {
+      summaryRow.hfPresentCount += row.hfPresentCount || 0
+      summaryRow.hfPeriodCount += row.hfPeriodCount || 0
+      summaryRow.irsPresentCount += row.irsPresentCount || 0
+      summaryRow.irsPeriodCount += row.irsPeriodCount || 0
+      summaryRow.xrayPresentCount += row.xrayPresentCount || 0
+      summaryRow.xrayPeriodCount += row.xrayPeriodCount || 0
+
+      dynamicItems.forEach((i) => {
+        let baseKey = toCamelCase(String(i.equipmentType || ''))
+        if (baseKey === 'cableway') baseKey = 'cableWay'
+
+        const presentKey = `${baseKey}PresentCount`
+        const periodKey = `${baseKey}PeriodCount`
+
+        summaryRow[presentKey] += row[presentKey] || 0
+        summaryRow[periodKey] += row[periodKey] || 0
+      })
+    })
+
+    return [summaryRow, ...regions]
   }, [inspections])
 
   const columns = useMemo<ColumnDef<any>[]>(
@@ -87,7 +123,7 @@ const Report1: React.FC = () => {
           name: i?.name ?? '',
         }))
         .map((i) => {
-          let baseKey = toCamelCase(i.id as unknown as string)
+          let baseKey = toCamelCase(String(i.id))
 
           if (baseKey === 'cableway') {
             baseKey = 'cableWay'

@@ -110,7 +110,8 @@
     "CADASTRE": "Kadastr",
     "PERMITS": "Ruxsat etuvchi hujjatlar",
     "REPORT": "Hisobotlar",
-    "INQUIRY": "Murojaatlar"
+    "INQUIRY": "Murojaatlar",
+    "DECLARATION": "Deklaratsiya"
   },
   "application": {
     "OIL": "Neft",

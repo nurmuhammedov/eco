@@ -50,6 +50,12 @@ export default [
     icon: <CheckCircle />,
   },
   {
+    id: 'DECLARATION',
+    title: 'Deklaratsiya',
+    url: '/declarations',
+    icon: <FileText />,
+  },
+  {
     id: 'ATTESTATION_COMMITTEE',
     title: 'menu.attestation',
     url: '/attestations',

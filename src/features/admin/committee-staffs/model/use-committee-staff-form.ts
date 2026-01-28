@@ -37,6 +37,7 @@ const PERMISSIONS = {
   PERMITS: 'PERMITS',
   REPORT: 'REPORT',
   INQUIRY: 'INQUIRY',
+  DECLARATION: 'DECLARATION',
 }
 
 const DEFAULT_FORM_VALUES: Partial<CreateCommitteeStaffDTO> = {
