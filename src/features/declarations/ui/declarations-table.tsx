@@ -3,7 +3,6 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { formatDate } from 'date-fns'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import FileLink from '@/shared/components/common/file-link'
-import { Badge } from '@/shared/components/ui/badge'
 
 import { useNavigate } from 'react-router-dom'
 
@@ -73,31 +72,10 @@ export const DeclarationsTable = () => {
       header: 'Ro‘yxatga olish sanasi',
       cell: (cell) => (cell.row.original.createdAt ? formatDate(cell.row.original.createdAt, 'dd.MM.yyyy') : null),
     },
-
     {
       header: 'Deklaratsiya fayli',
       minSize: 200,
-      cell: ({ row }: any) => (
-        <div>
-          {row.original.filePath ? (
-            <FileLink url={row.original.filePath} />
-          ) : (
-            <span className="text-sm text-gray-400">Fayl yo'q</span>
-          )}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'status',
-      header: 'Holati',
-      cell: ({ row }) =>
-        row.original.status == 'ACTIVE' ? (
-          <Badge variant="success">Aktiv</Badge>
-        ) : row.original.status == 'EXPIRED' ? (
-          <Badge variant="error">Muddati o‘tgan</Badge>
-        ) : row.original.status == 'CANCELLED' ? (
-          <Badge variant="error">Bekor qilingan</Badge>
-        ) : null,
+      cell: ({ row }: any) => <div>{row.original.filePath ? <FileLink url={row.original.filePath} /> : '-'}</div>,
     },
     {
       id: 'actions',

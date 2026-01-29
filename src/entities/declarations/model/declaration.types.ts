@@ -1,29 +1,6 @@
 import { z } from 'zod'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
-export enum DeclarationStatus {
-  ACTIVE = 'ACTIVE',
-  EXPIRED = 'EXPIRED',
-  CANCELLED = 'CANCELLED',
-}
-
-export interface Declaration {
-  id: string
-  registryNumber: string
-  createdAt: string
-  hfRegistryNumber: string
-  hfName: string
-  address: string
-  legalName: string
-  legalTin: string
-  customerName: string
-  customerTin: string
-  conclusionRegistryNumber: string
-  processStatus: DeclarationStatus
-  filePath?: string
-  status: 'ACTIVE' | 'EXPIRED' | 'CANCELLED'
-}
-
 export const createDeclarationSchema = z.object({
   customerTin: z.string({ required_error: FORM_ERROR_MESSAGES.required }),
   customerPhoneNumber: z.string({ required_error: FORM_ERROR_MESSAGES.required }).min(9, {

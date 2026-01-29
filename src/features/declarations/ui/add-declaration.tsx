@@ -223,6 +223,39 @@ export const AddDeclaration = () => {
 
                   <FormField
                     control={form.control}
+                    name="conclusionId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Ekspertiza xulosasi</FormLabel>
+                        <Select
+                          value={field.value}
+                          onValueChange={(value) => {
+                            if (value) {
+                              field.onChange(value)
+                            }
+                          }}
+                          disabled={isConclusionsLoading}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Xulosani tanlang..." />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {conclusionOptions?.map((option: any) => (
+                              <SelectItem key={option.id} value={option.id}>
+                                {option.registryNumber || option.name || 'Nomaʼlum xulosa'}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
                     name="hfId"
                     render={({ field }) => (
                       <FormItem>
@@ -364,40 +397,6 @@ export const AddDeclaration = () => {
                     )}
                   />
 
-                  {/* New Field for Expertise Conclusion */}
-                  <FormField
-                    control={form.control}
-                    name="conclusionId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Ekspertiza xulosasi</FormLabel>
-                        <Select
-                          value={field.value}
-                          onValueChange={(value) => {
-                            if (value) {
-                              field.onChange(value)
-                            }
-                          }}
-                          disabled={isConclusionsLoading}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Xulosani tanlang..." />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {conclusionOptions?.map((option: any) => (
-                              <SelectItem key={option.id} value={option.id}>
-                                {option.registryNumber || option.name || 'Nomaʼlum xulosa'}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
                   <div className="col-span-2 md:col-span-2">
                     <FormField
                       control={form.control}
@@ -410,7 +409,7 @@ export const AddDeclaration = () => {
                               buttonText="Faylni tanlang"
                               showPreview={true}
                               form={form}
-                              // uploadEndpoint="/attachments/declarations"
+                              uploadEndpoint="/attachments/declarations"
                               name={field.name}
                               accept={[FileTypes.PDF]}
                             />

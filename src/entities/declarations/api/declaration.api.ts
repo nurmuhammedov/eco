@@ -5,11 +5,6 @@ import { CreateDeclarationFormValues } from '../model/declaration.types'
 // Mock endpoint paths
 const BASE_URL = '/declarations'
 
-export const getDeclarations = async (params: any) => {
-  const response = await apiClient.get<ApiResponse<any>>(BASE_URL, { params })
-  return response.data
-}
-
 export const createDeclaration = async (data: CreateDeclarationFormValues) => {
   const response = await apiClient.post(BASE_URL, data)
   return response.data
@@ -22,10 +17,4 @@ export const getExpertiseConclusionsSelect = async (tin?: string) => {
     customerTin: tin,
   })
   return response.data?.data || []
-}
-export const getDeclarationById = async (id: string, params?: any) => {
-  // Mock implementation - in real app should fetch from API
-  // For now returning the same structure as we might expect
-  const response = await apiClient.get<ApiResponse<any>>(`${BASE_URL}/${id}`, { params })
-  return response.data
 }
