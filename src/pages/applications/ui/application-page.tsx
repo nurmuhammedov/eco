@@ -50,8 +50,8 @@ const ApplicationPage = () => {
   }, [user?.role, navigate])
 
   return (
-    <>
-      <div className="mb-2 flex flex-row items-center justify-between gap-2">
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      <div className="flex flex-row items-center justify-between gap-2 pt-0.5">
         <div className="min-w-0 flex-1">
           <TabsLayout activeTab={status} tabs={applicationStatus} onTabChange={handleChangeTab} />
         </div>
@@ -102,8 +102,10 @@ const ApplicationPage = () => {
           {action}
         </div>
       </div>
-      <ApplicationTable />
-    </>
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <ApplicationTable />
+      </div>
+    </div>
   )
 }
 export default ApplicationPage

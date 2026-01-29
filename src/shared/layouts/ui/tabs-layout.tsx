@@ -39,7 +39,12 @@ export const TabsLayout = ({
 }: TabsLayoutProps) => {
   return (
     <Tabs defaultValue={defaultValue} value={activeTab} onValueChange={onTabChange} className={className}>
-      <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden', classNameWrapper)}>
+      <div
+        className={cn(
+          'scrollbar-hidden -m-1 flex justify-between overflow-x-auto overflow-y-hidden p-1',
+          classNameWrapper
+        )}
+      >
         <TabsList className={classNameTabList}>
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id

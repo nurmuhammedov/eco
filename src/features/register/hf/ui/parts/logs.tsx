@@ -61,13 +61,5 @@ export const Logs = ({ url = 'hf' }: any) => {
     },
   ]
 
-  return (
-    <DataTable
-      showFilters={true}
-      isPaginated
-      data={data || []}
-      columns={columns as unknown as any}
-      className="h-[calc(100svh-220px)]"
-    />
-  )
+  return <DataTable showFilters={true} isPaginated data={data || []} columns={columns as unknown as any} />
 }

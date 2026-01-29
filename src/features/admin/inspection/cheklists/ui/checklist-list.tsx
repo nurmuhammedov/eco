@@ -39,13 +39,5 @@ export function ChecklistList() {
     },
   ]
 
-  return (
-    <DataTable
-      isPaginated
-      data={data || []}
-      isLoading={isLoading}
-      columns={columns}
-      className="h-[calc(100svh-270px)]"
-    />
-  )
+  return <DataTable isPaginated data={data || []} isLoading={isLoading} columns={columns} />
 }

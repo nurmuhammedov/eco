@@ -40,13 +40,5 @@ export const ApplicationLogsList = ({ isShow }: any) => {
     },
   ]
 
-  return (
-    <DataTable
-      isPaginated
-      data={data || []}
-      columns={columns}
-      isLoading={isLoading}
-      className="h-[calc(100svh-220px)]"
-    />
-  )
+  return <DataTable isPaginated data={data || []} columns={columns} isLoading={isLoading} />
 }

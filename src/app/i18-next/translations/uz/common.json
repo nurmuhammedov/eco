@@ -193,6 +193,7 @@
   "previous": "Oldingi",
   "next": "Keyingi",
   "showing_items": "{{start}} - {{end}} / Umumiy {{total}} ta maʼlumot",
+  "total_elements": "Jami: {{count}} ta",
   "central_apparatus": "Markaziy apparat",
   "territorial_departments": "Hududiy boʻlimlar",
   "committee_staffs": "Qoʻmita xodimlari",

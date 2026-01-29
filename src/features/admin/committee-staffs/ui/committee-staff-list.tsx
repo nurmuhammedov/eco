@@ -82,13 +82,5 @@ export function CommitteeStaffList() {
     },
   ]
 
-  return (
-    <DataTable
-      isPaginated
-      data={data || []}
-      columns={columns}
-      isLoading={isLoading}
-      className="h-[calc(100svh-270px)]"
-    />
-  )
+  return <DataTable isPaginated data={data || []} columns={columns} isLoading={isLoading} />
 }

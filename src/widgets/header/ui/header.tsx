@@ -1,4 +1,5 @@
 import { SidebarTrigger } from '@/shared/components/ui/sidebar'
+import { Separator } from '@/shared/components/ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useCustomSearchParams } from '@/shared/hooks'
 import UserDropdown from '@/widgets/header/ui/user-dropdown'
@@ -51,25 +52,31 @@ export function Header() {
   const showYearFilter = ['/risk-analysis', '/inspections', '/preventions'].includes(pathname)
   const showQuarterFilter = showYearFilter && pathname !== '/preventions'
 
+  const title = useMemo(() => {
+    if (pathname === '/register') return 'Reyestrlar'
+    if (pathname === '/applications') return 'Arizalar'
+    if (pathname === '/permits') return 'Ruxsatnomalar'
+    if (pathname === '/expertise') return 'Ekspertiza'
+    if (pathname === '/risk-analysis') return 'Xavfni tahlil qilish'
+    if (pathname === '/reports') return 'Hisobotlar'
+    if (pathname === '/declarations') return 'Deklaratsiya'
+    if (pathname === '/accreditations') return 'Ekspertiza xulosalari'
+    if (pathname === '/expertise-organizations') return 'Ekspertiza tashkilotlari'
+    if (pathname === '/inspections') return 'Tekshiruvlar'
+    if (pathname === '/preventions') return 'Profilaktika'
+    if (pathname === '/inquiries') return 'Murojaatlar'
+    return ''
+  }, [pathname])
+
   return (
-    <header className="3xl:px-6 3xl:py-5 sticky top-0 z-10 flex w-full items-center justify-between border-b border-neutral-200 bg-white px-4 py-4">
-      <div className="flex items-center gap-x-4">
+    <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b bg-white px-4 shadow-sm transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+      <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-1" />
-        <h1 className="text-2xl font-semibold">
-          {pathname === '/register' && 'Reyestrlar'}
-          {pathname === '/applications' && 'Arizalar'}
-          {pathname === '/permits' && 'Ruxsatnomalar'}
-          {pathname === '/expertise' && 'Ekspertiza'}
-          {pathname === '/risk-analysis' && 'Xavfni tahlil qilish'}
-          {pathname === '/accreditations' && 'Ekspertiza xulosalari'}
-          {pathname === '/expertise-organizations' && 'Ekspertiza tashkilotlari'}
-          {pathname === '/inspections' && 'Tekshiruvlar'}
-          {pathname === '/preventions' && 'Profilaktika'}
-          {pathname === '/inquiries' && 'Murojaatlar'}
-        </h1>
+        <Separator orientation="vertical" className="mr-2 h-4" />
+        {title && <h1 className="text-foreground text-lg leading-none font-semibold">{title}</h1>}
       </div>
 
-      <div className="flex items-center gap-x-4">
+      <div className="ml-auto flex items-center gap-4">
         {showYearFilter && (
           <div className="flex items-center gap-x-2">
             <Select value={selectedYear} onValueChange={handleYearChange}>

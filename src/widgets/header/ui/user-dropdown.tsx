@@ -26,24 +26,29 @@ export default function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex cursor-pointer items-center space-x-2">
-          <Avatar>
+        <div className="group flex cursor-pointer items-center space-x-2">
+          <Avatar className="border-border h-10 w-10 border">
             <AvatarImage src="" alt="@shadcn" />
-            <AvatarFallback>
-              <User size={22} />
+            <AvatarFallback className="bg-neutral-100 text-neutral-900">
+              <User size={20} />
             </AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm">{truncateString(user?.name)}</p>
-            {user?.role && <p className="text-sm text-slate-500">{UserRoleLabels[user?.role] || ''}</p>}
+            <p className="text-sm leading-none font-medium">{truncateString(user?.name)}</p>
+            {user?.role && <p className="text-muted-foreground text-xs">{UserRoleLabels[user?.role] || ''}</p>}
           </div>
-          <ChevronDown size={16} />
+          <ChevronDown className="text-muted-foreground h-4 w-4 opacity-50 transition-transform duration-200 group-data-[state=open]:rotate-180" />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-44">
+      <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuGroup>
-          <DropdownMenuItem disabled={isPending} className="flex justify-between" onClick={() => mutateAsync()}>
-            {t('logout')} <LogOut size={16} />
+          <DropdownMenuItem
+            disabled={isPending}
+            className="text-destructive focus:text-destructive flex cursor-pointer items-center"
+            onClick={() => mutateAsync()}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            {t('logout')}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

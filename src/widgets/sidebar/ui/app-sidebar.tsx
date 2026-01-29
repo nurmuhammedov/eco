@@ -5,9 +5,8 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-  useSidebar,
 } from '@/shared/components/ui/sidebar'
-import { cn } from '@/shared/lib/utils'
+
 import { NAVIGATIONS } from '@/widgets/sidebar/models/navigations'
 import { Navigation } from '@/widgets/sidebar/models/types'
 import { NavMain } from '@/widgets/sidebar/ui/nav-main'
@@ -19,8 +18,8 @@ import { AppLogo } from './app-logo'
 import { useAuth } from '@/shared/hooks/use-auth'
 
 export function AppSidebar() {
-  const { state } = useSidebar()
-  const sidebarOpen = state === 'expanded'
+  // const { state } = useSidebar()
+
   const { user } = useAuth()
 
   const displayedNavigations: Navigation = useMemo(() => {
@@ -47,17 +46,16 @@ export function AppSidebar() {
   if (!user) return null
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" variant="sidebar">
+      <SidebarHeader>
+        <SidebarGroup className="border-b p-0">
+          <AppLogo />
+        </SidebarGroup>
+      </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
-          <SidebarHeader
-            className={cn({
-              'border-b border-neutral-200/20': sidebarOpen,
-            })}
-          >
-            <AppLogo />
-          </SidebarHeader>
-          <SidebarGroupContent className="space-y-0.5">
+          <SidebarGroupContent className="space-y-1">
             {displayedNavigations.map((item) => (
               <NavMain key={item.title} item={item} />
             ))}

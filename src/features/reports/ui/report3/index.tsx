@@ -273,7 +273,7 @@ const Report3: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="flex h-full flex-col">
       <div className="mb-2 flex items-center justify-between">
         <GoBack
           title={
@@ -297,7 +297,6 @@ const Report3: React.FC = () => {
         data={tableData}
         columns={columns as unknown as any}
         isLoading={isLoading}
-        className="h-[calc(100vh-300px)]"
       />
     </div>
   )

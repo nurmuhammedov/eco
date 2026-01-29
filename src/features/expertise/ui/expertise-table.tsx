@@ -79,7 +79,6 @@ export const ExpertiseTable = () => {
       data={data}
       showFilters={true}
       isLoading={isLoading}
-      className="h-[calc(100svh-320px)]"
     />
   )
 }

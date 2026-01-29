@@ -212,12 +212,16 @@ const Report1: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="flex h-full flex-col">
       <div className="mb-2 flex items-center justify-between">
         <GoBack title="Jismoniy va yuridik shaxslardan yuborilgan arizalarni hududlar kesimida taqsimlanishi" />
       </div>
 
-      <Tabs value={activeTab || InspectionStatus.INDIVIDUAL} onValueChange={handleTabChange}>
+      <Tabs
+        value={activeTab || InspectionStatus.INDIVIDUAL}
+        onValueChange={handleTabChange}
+        className="flex flex-1 flex-col overflow-hidden"
+      >
         <TabsList>
           <TabsTrigger value={InspectionStatus.INDIVIDUAL}>Jismoniy shaxslar</TabsTrigger>
           <TabsTrigger value={InspectionStatus.LEGAL}>Yuridik shaxslar</TabsTrigger>
@@ -232,24 +236,22 @@ const Report1: React.FC = () => {
           </Button>
         </div>
 
-        <TabsContent value={InspectionStatus.INDIVIDUAL}>
+        <TabsContent value={InspectionStatus.INDIVIDUAL} className="flex flex-1 flex-col overflow-hidden">
           <DataTable
             showNumeration={false}
             headerCenter={true}
             data={tableData}
             columns={columns as unknown as any}
             isLoading={isLoading}
-            className="h-[calc(100vh-300px)]"
           />
         </TabsContent>
-        <TabsContent value={InspectionStatus.LEGAL}>
+        <TabsContent value={InspectionStatus.LEGAL} className="flex flex-1 flex-col overflow-hidden">
           <DataTable
             showNumeration={false}
             headerCenter={true}
             data={tableData}
             columns={columns as unknown as any}
             isLoading={isLoading}
-            className="h-[calc(100vh-320px)]"
           />
         </TabsContent>
       </Tabs>

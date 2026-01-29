@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
 import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/components/ui/button'
 import { useTranslation } from 'react-i18next'
 import { ResponseData } from '@/shared/types/api'
-import { Button } from '@/shared/components/ui/button'
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import ReactPaginate from 'react-paginate'
 
 interface PaginationProps<T = any> {
   data?: ResponseData<T>
@@ -12,7 +13,7 @@ interface PaginationProps<T = any> {
   showTotal?: boolean
   isLoading?: boolean
   showSizeChanger?: boolean
-  showQuickJumper?: boolean
+  showQuickJumper?: boolean // Note: Quick jumper (first/last) is handled differently with react-paginate or custom buttons outside
   pageSizeOptions?: number[]
   onPageChange: (page: number) => void
   onPageSizeChange: (size: number) => void
@@ -64,238 +65,113 @@ export function DataTablePagination<T>({
     const currentPage = apiPage !== undefined ? apiPage + 1 : (manualCurrentPage ?? 1)
 
     const startItem = (currentPage - 1) * pageSize + 1
-    const endItem = Math.min(startItem + pageSize - 1, totalElements || currentPage * pageSize) // Use constructed total if unknown
+    const endItem = Math.min(startItem + pageSize - 1, totalElements || currentPage * pageSize)
 
     return { currentPage, totalPages, pageSize, totalElements, startItem, endItem }
   }, [totalPages, totalElements, apiSize, apiPage, manualPageSize, manualCurrentPage, shouldRender])
 
-  const getPageItems = useMemo(() => {
-    // Skip if only one page
-    if (!shouldRender || pageInfo.totalPages <= 1) {
-      return { items: pageInfo.totalPages ? [1] : [], jumpPrev: false, jumpNext: false }
-    }
-
-    // Always show first, last and up to 5 pages around current
-    const items: number[] = []
-    let jumpPrev = false
-    let jumpNext = false
-
-    // Define constants
-    const allPages = Array.from({ length: pageInfo.totalPages }, (_, i) => i + 1)
-    const MIN_VISIBLE = 7 // min buttons: 1 ... 4 5 6 ... 100
-
-    // Logic for pages <= MIN_VISIBLE
-    if (pageInfo.totalPages <= MIN_VISIBLE) {
-      return { items: allPages, jumpPrev: false, jumpNext: false }
-    }
-
-    // Logic for many pages (Ant Design algorithm)
-    // Always include first page
-    items.push(1)
-
-    // Show ellipsis before current
-    if (pageInfo.currentPage > 4) {
-      jumpPrev = true
-    } else {
-      // Show 2,3,4 if near start
-      for (let i = 2; i < pageInfo.currentPage; i++) {
-        items.push(i)
-      }
-    }
-
-    // Pages around current
-    const leftBound = Math.max(2, pageInfo.currentPage - 1)
-    const rightBound = Math.min(pageInfo.totalPages - 1, pageInfo.currentPage + 1)
-
-    for (let i = leftBound; i <= rightBound; i++) {
-      items.push(i)
-    }
-
-    // Show ellipsis after current
-    if (pageInfo.currentPage < pageInfo.totalPages - 3) {
-      jumpNext = true
-    } else {
-      // Show pages if near end
-      for (let i = pageInfo.currentPage + 2; i < pageInfo.totalPages; i++) {
-        items.push(i)
-      }
-    }
-
-    // Always include last page
-    if (pageInfo.totalPages > 1) {
-      items.push(pageInfo.totalPages)
-    }
-
-    return { items, jumpPrev, jumpNext }
-  }, [pageInfo, shouldRender])
-
-  const hasPageItems = useMemo(() => getPageItems.items.length > 1, [getPageItems])
-
-  // Return null after all model are called
-  if (!shouldRender) {
-    return null
+  // Handle page click from ReactPaginate (zero-indexed)
+  const handlePageClick = (event: { selected: number }) => {
+    onPageChange(event.selected + 1)
   }
 
-  // Handle page change - always use 1-indexed pages here
+  // Handle manual page change (1-indexed)
   const handlePageChange = (page: number) => {
     onPageChange(page)
   }
 
-  // Jump to page groups
-  const jumpPrevious = () => {
-    const newPage = Math.max(1, pageInfo.currentPage - 3)
-    handlePageChange(newPage)
-  }
-
-  const jumpNext = () => {
-    const newPage = Math.min(pageInfo.totalPages, pageInfo.currentPage + 3)
-    handlePageChange(newPage)
+  if (!shouldRender) {
+    return null
   }
 
   return (
-    <div className={cn('flex flex-col items-center justify-between gap-4 pt-2 md:flex-row', className)}>
-      {showTotal && pageInfo.totalElements > 0 && (
-        <div className="flex flex-row items-center gap-2">
-          {showSizeChanger && (
-            <Select
-              disabled={isLoading}
-              value={String(pageInfo.pageSize)}
-              onValueChange={(value) => onPageSizeChange(Number(value))}
-            >
-              <SelectTrigger className="h-8 w-20">
-                <SelectValue placeholder={pageInfo.pageSize} />
-              </SelectTrigger>
-              <SelectContent side="top">
-                {pageSizeOptions.map((size) => (
-                  <SelectItem key={size} value={String(size)}>
-                    {size}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-          <div className="text-muted-foreground text-sm">
-            {t('showing_items', {
-              start: pageInfo.startItem,
-              end: pageInfo.endItem,
-              total: pageInfo.totalElements,
-            })}
-          </div>
-        </div>
-      )}
+    <div className={cn('mt-2 flex flex-col-reverse items-center justify-between gap-2 lg:flex-row', className)}>
+      <div className="flex w-full items-center justify-between gap-4 lg:w-auto lg:justify-start">
+        {showSizeChanger && (
+          <Select
+            disabled={isLoading}
+            value={String(pageInfo.pageSize)}
+            onValueChange={(value) => onPageSizeChange(Number(value))}
+          >
+            <SelectTrigger className="h-9 w-[90px] min-w-[90px]">
+              <SelectValue placeholder={pageInfo.pageSize} />
+            </SelectTrigger>
+            <SelectContent side="top">
+              {pageSizeOptions.map((size) => (
+                <SelectItem key={size} value={String(size)}>
+                  {size}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+        {showTotal && (
+          <span className="text-muted-foreground text-sm whitespace-nowrap">
+            {t('total_elements', { count: pageInfo.totalElements })}
+          </span>
+        )}
+      </div>
 
-      {/* Pagination controls */}
-      <div className="flex items-center gap-2">
+      <div className="scrollbar-hidden flex max-w-full items-center gap-1 overflow-x-auto select-none">
         {/* First page */}
         {showQuickJumper && (
           <Button
-            size="icon"
-            variant="outline"
-            className="flex size-9"
             onClick={() => handlePageChange(1)}
-            disabled={pageInfo.currentPage === 1 || isLoading || !hasPageItems}
+            disabled={pageInfo.currentPage <= 1 || isLoading}
+            className={cn(
+              'border-input text-foreground hover:bg-accent hover:text-accent-foreground flex h-9 w-auto min-w-9 items-center justify-center rounded-md border bg-white px-2 shadow-none transition-all',
+              pageInfo.currentPage <= 1 && 'pointer-events-none opacity-50'
+            )}
           >
-            <span className="sr-only">{t('first_page')}</span>
-            <ChevronsLeft className="size-4" />
+            <ChevronsLeft className="h-4 w-4" />
           </Button>
         )}
 
-        {/* Previous page */}
-        <Button
-          className="h-9"
-          variant="outline"
-          disabled={pageInfo.currentPage === 1 || isLoading || !hasPageItems}
-          onClick={() => handlePageChange(pageInfo.currentPage - 1)}
-        >
-          <ChevronLeft className="size-4" />
-          <span className="">{t('previous')}</span>
-        </Button>
-
-        {/* Page numbers with ellipsis */}
-        <div className="flex items-center gap-2.5">
-          {/* Render actual page numbers */}
-          {getPageItems.items.map((pageNumber, index) => {
-            // Show ellipsis after first page if needed
-            if (index === 1 && getPageItems.jumpPrev) {
-              return (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  key="prev-ellipsis"
-                  disabled={isLoading}
-                  onClick={jumpPrevious}
-                  className="inline-flex size-9"
-                >
-                  <MoreHorizontal className="size-4" />
-                </Button>
-              )
-            }
-
-            // Show ellipsis before last page if needed
-            if (index === getPageItems.items.length - 2 && getPageItems.jumpNext) {
-              return (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  key="next-ellipsis"
-                  onClick={jumpNext}
-                  disabled={isLoading}
-                  className="inline-flex size-9"
-                >
-                  <MoreHorizontal className="size-4" />
-                </Button>
-              )
-            }
-
-            // Skip rendering duplicate items
-            if (
-              index > 0 &&
-              index < getPageItems.items.length - 1 &&
-              getPageItems.items.indexOf(pageNumber) !== getPageItems.items.lastIndexOf(pageNumber)
-            ) {
-              return null
-            }
-
-            return (
-              <Button
-                key={`page-${pageNumber}`}
-                variant={pageNumber === pageInfo.currentPage ? 'default' : 'outline'}
-                size="sm"
-                className={cn(
-                  'size-9',
-                  pageNumber === pageInfo.currentPage ? 'bg-blue-400 text-white hover:bg-blue-400/90' : '',
-                  'inline-flex'
-                )}
-                onClick={() => handlePageChange(pageNumber)}
-                disabled={isLoading}
-              >
-                {pageNumber}
-              </Button>
-            )
-          })}
-        </div>
-
-        <Button
-          className="h-9"
-          variant="outline"
-          onClick={() => handlePageChange(pageInfo.currentPage + 1)}
-          disabled={pageInfo.currentPage >= pageInfo.totalPages || isLoading || !hasPageItems}
-        >
-          <span>{t('next')}</span>
-          <ChevronRight className="size-4" />
-        </Button>
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel={<ChevronRight className="h-4 w-4" />}
+          previousLabel={<ChevronLeft className="h-4 w-4" />}
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={3} // 3 items in middle
+          marginPagesDisplayed={3} // 3 items on sides
+          pageCount={pageInfo.totalPages}
+          forcePage={pageInfo.currentPage - 1}
+          renderOnZeroPageCount={null}
+          containerClassName="flex items-center gap-1"
+          // Page Numbers
+          pageClassName="rounded-md"
+          pageLinkClassName="flex h-9 min-w-9 w-auto px-3 items-center justify-center rounded-md border border-input bg-white text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-all"
+          // Active Page
+          activeClassName="!bg-[#016b7b] !border-[#016b7b] !text-white hover:!bg-[#016b7b]/90 hover:!scale-105"
+          activeLinkClassName="!bg-[#016b7b] !border-[#016b7b] !text-white hover:!bg-[#016b7b]/90"
+          // Navigation (Prev/Next)
+          previousClassName="rounded-md"
+          nextClassName="rounded-md"
+          previousLinkClassName={cn(
+            'flex h-9 min-w-9 w-auto px-2 items-center justify-center rounded-md border border-input bg-white text-foreground transition-all hover:bg-accent hover:text-accent-foreground',
+            pageInfo.currentPage <= 1 && 'pointer-events-none opacity-50'
+          )}
+          nextLinkClassName={cn(
+            'flex h-9 min-w-9 w-auto px-2 items-center justify-center rounded-md border border-input bg-white text-foreground transition-all hover:bg-accent hover:text-accent-foreground',
+            pageInfo.currentPage >= pageInfo.totalPages && 'pointer-events-none opacity-50'
+          )}
+          // Break (...)
+          breakClassName="flex items-center justify-center"
+          breakLinkClassName="flex h-9 min-w-9 w-auto items-center justify-center px-1 text-sm text-muted-foreground"
+          disabledClassName="opacity-50 pointer-events-none"
+        />
 
         {/* Last page */}
         {showQuickJumper && (
           <Button
-            variant="outline"
-            size="icon"
-            className="flex size-9"
             onClick={() => handlePageChange(pageInfo.totalPages)}
-            disabled={pageInfo.currentPage >= pageInfo.totalPages || isLoading || !hasPageItems}
+            disabled={pageInfo.currentPage >= pageInfo.totalPages || isLoading}
+            className={cn(
+              'border-input text-foreground hover:bg-accent hover:text-accent-foreground flex h-9 w-auto min-w-9 items-center justify-center rounded-md border bg-white px-2 shadow-none transition-all',
+              pageInfo.currentPage >= pageInfo.totalPages && 'pointer-events-none opacity-50'
+            )}
           >
-            <span className="sr-only">{t('last_page')}</span>
-            <ChevronsRight className="size-4" />
+            <ChevronsRight className="h-4 w-4" />
           </Button>
         )}
       </div>

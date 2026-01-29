@@ -193,7 +193,7 @@ const Report1: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="flex h-full flex-col">
       <div className="mb-2 flex items-center justify-between">
         <GoBack title="Davlat ro‘yxatidan o‘tqazilgan amaldagi XICHO, INM, Bosim ostidagi idishlar va qurilmalar to‘g‘risida sanalar bo‘yicha maʼlumot" />
       </div>
@@ -207,14 +207,7 @@ const Report1: React.FC = () => {
         </Button>
       </div>
 
-      <DataTable
-        showNumeration={false}
-        headerCenter={true}
-        data={tableData}
-        columns={columns}
-        isLoading={isLoading}
-        className="h-[calc(100vh-240px)]"
-      />
+      <DataTable showNumeration={false} headerCenter={true} data={tableData} columns={columns} isLoading={isLoading} />
     </div>
   )
 }

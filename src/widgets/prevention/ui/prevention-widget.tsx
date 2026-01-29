@@ -133,7 +133,7 @@ const PreventionWidget = () => {
 
   return (
     <>
-      <div className="mb-2 flex w-full flex-col gap-2">
+      <div className="flex w-full flex-col gap-2">
         <PreventionCards
           year={year}
           type={activeType}

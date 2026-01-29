@@ -12,7 +12,6 @@ import {
   PieChart,
   ShieldCheck,
   TrendingUp,
-  UserCheck,
 } from 'lucide-react'
 import { Card } from '@/shared/components/ui/card'
 import { Link } from 'react-router-dom'
@@ -74,12 +73,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
     items: [
       { id: 'prev-stats', title: 'Profilaktika ishlari statistikasi', icon: ShieldCheck, url: '#' },
       { id: 'prev-inspector-load', title: 'Profilaktika hududlar kesimida', icon: Map, url: '#' },
-      {
-        id: 'prev-fix-rate',
-        title: 'Profilaktik tadbirga inspektorlar biriktirilishi boyicha hisobot',
-        icon: UserCheck,
-        url: '#',
-      },
     ],
   },
   {

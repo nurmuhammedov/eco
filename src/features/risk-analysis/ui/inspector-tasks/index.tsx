@@ -94,7 +94,7 @@ export const RegisterEquipmentAppealList = () => {
         }))}
         onTabChange={(type) => addParams({ type }, 'page')}
       >
-        <DataTable isPaginated data={data || []} columns={columns} className="h-[calc(100svh-320px)]" />
+        <DataTable isPaginated data={data || []} columns={columns} />
       </TabsLayout>
     </div>
   )

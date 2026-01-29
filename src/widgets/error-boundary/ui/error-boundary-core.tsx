@@ -86,7 +86,7 @@ export class ErrorBoundaryCore extends Component<
     const { children, fallback: CustomFallback, className } = this.props
 
     if (!hasError) {
-      return <div className={cn('h-full', className)}>{children}</div>
+      return <div className={cn('flex h-full flex-col', className)}>{children}</div>
     }
 
     const fallbackProps: ErrorFallbackProps = {

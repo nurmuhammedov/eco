@@ -1,6 +1,6 @@
 import Table from '@/features/risk-analysis/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
-import { Fragment, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RiskAnalysisTab } from '../types'
 import { Badge } from '@/shared/components/ui/badge'
@@ -144,7 +144,7 @@ const RiskAnalysisWidget = () => {
   }, [regions, regionCounts])
 
   return (
-    <Fragment>
+    <>
       <RiskStatisticsCards
         type={currentApiType || ''}
         activeRiskLevel={riskLevel as string}
@@ -217,7 +217,7 @@ const RiskAnalysisWidget = () => {
       ) : null}
 
       <Table isLoading={isLoading} data={data} />
-    </Fragment>
+    </>
   )
 }
 

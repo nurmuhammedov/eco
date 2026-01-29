@@ -92,29 +92,7 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
   //   { id: AssignedStatusTab.ASSIGNED, label: t('risk_analysis_tabs.ASSIGNED') },
   // ]
 
-  return (
-    <>
-      {/*{isRegional && (*/}
-      {/*  <Tabs value={activeAssignedStatus} onValueChange={handleAssignedStatusChange} className="mb-4">*/}
-      {/*    <TabsList>*/}
-      {/*      {assignedStatusTabs.map((tab) => (*/}
-      {/*        <TabsTrigger key={tab.id} value={tab.id}>*/}
-      {/*          {tab.label}*/}
-      {/*        </TabsTrigger>*/}
-      {/*      ))}*/}
-      {/*    </TabsList>*/}
-      {/*  </Tabs>*/}
-      {/*)}*/}
-      <DataTable
-        showFilters={true}
-        isPaginated
-        data={data || []}
-        columns={columns}
-        isLoading={isLoading}
-        className={'h-[calc(100svh-360px)]'}
-      />
-    </>
-  )
+  return <DataTable showFilters={true} isPaginated data={data || []} columns={columns} isLoading={isLoading} />
 }
 
 export default List

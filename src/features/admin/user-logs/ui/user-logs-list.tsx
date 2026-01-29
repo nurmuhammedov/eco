@@ -51,13 +51,5 @@ export function UserLogsList() {
     },
   ]
 
-  return (
-    <DataTable
-      isPaginated
-      data={data || []}
-      columns={columns}
-      isLoading={isLoading}
-      className="h-[calc(100svh-250px)]"
-    />
-  )
+  return <DataTable isPaginated data={data || []} columns={columns} isLoading={isLoading} />
 }

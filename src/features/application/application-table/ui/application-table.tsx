@@ -126,14 +126,5 @@ export const ApplicationTable = () => {
     ]
   }, [user, officeSelect, executorOptions])
 
-  return (
-    <DataTable
-      showFilters
-      isLoading={isLoading}
-      isPaginated
-      data={applications}
-      columns={columns || []}
-      className="h-[calc(100svh-220px)]"
-    />
-  )
+  return <DataTable showFilters isLoading={isLoading} isPaginated data={applications} columns={columns || []} />
 }

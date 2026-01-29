@@ -41,13 +41,5 @@ export function AttractionTypeList() {
     },
   ]
 
-  return (
-    <DataTable
-      isPaginated
-      data={data?.data || []}
-      columns={columns}
-      isLoading={isLoading}
-      className="h-[calc(100svh-240px)]"
-    />
-  )
+  return <DataTable isPaginated data={data?.data || []} columns={columns} isLoading={isLoading} />
 }

@@ -65,15 +65,17 @@ const OrganizationsPage = () => {
   }
 
   return (
-    <>
-      <div className="mb-2 flex items-center justify-end">
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      <div className="flex items-center justify-end">
         <Button disabled={true}>
           <PlusCircle className="mr-2 h-4 w-4" /> Qo‘shish
         </Button>
       </div>
       <ExpertiseTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts} />
-      <ExpertiseTable />
-    </>
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <ExpertiseTable />
+      </div>
+    </div>
   )
 }
 

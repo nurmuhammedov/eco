@@ -79,9 +79,9 @@ const RegisterWidget = () => {
         value={tab}
         onValueChange={(tab: string) => addParams({ tab: tab.toString() }, 'page', 'type', 'status')}
       >
-        <div className={'flex items-center justify-between gap-2'}>
+        <div className={'flex items-center justify-between gap-2 pt-0.5'}>
           {user?.role != UserRoles.INDIVIDUAL ? (
-            <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
+            <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto')}>
               <TabsList>
                 <TabsTrigger value={RegisterActiveTab.HF}>
                   XICHO

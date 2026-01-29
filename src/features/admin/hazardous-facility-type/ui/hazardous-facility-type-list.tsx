@@ -46,13 +46,5 @@ export function HazardousFacilityTypeList() {
     },
   ]
 
-  return (
-    <DataTable
-      isPaginated
-      columns={columns}
-      data={data || []}
-      isLoading={isLoading}
-      className="h-[calc(100svh-270px)]"
-    />
-  )
+  return <DataTable isPaginated columns={columns} data={data || []} isLoading={isLoading} />
 }

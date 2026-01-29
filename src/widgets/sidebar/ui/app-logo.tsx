@@ -10,22 +10,17 @@ export function AppLogo() {
   const sidebarOpen = state === 'expanded'
 
   return (
-    <div className="flex flex-row items-center gap-x-2.5 font-bold">
-      <div>
-        <Icon
-          name="logo"
-          className={cn('size-8 md:size-9 lg:size-12', {
-            hidden: !sidebarOpen,
-          })}
-        />
+    <div className="flex flex-row items-center gap-x-3 overflow-hidden py-2">
+      <div className="relative size-8 min-w-8">
+        <Icon name="logo" className="size-full object-contain" />
       </div>
-      <h6
-        className={cn('text-xm 3xl:text-sm leading-4 font-semibold', {
-          hidden: !sidebarOpen,
+      <div
+        className={cn('flex flex-col opacity-100 transition-opacity duration-300', {
+          'hidden w-0 opacity-0': !sidebarOpen,
         })}
       >
-        {t('app.name')}
-      </h6>
+        <h6 className="text-sidebar-foreground text-xs leading-tight font-medium">{t('app.name')}</h6>
+      </div>
     </div>
   )
 }

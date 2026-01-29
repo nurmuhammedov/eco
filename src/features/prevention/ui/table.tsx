@@ -147,10 +147,10 @@ const PreventionTable: FC<Props> = ({ regions }) => {
   ]
 
   return (
-    <div className="flex h-full flex-col gap-2 overflow-hidden">
+    <>
       <DataTable isPaginated showFilters data={data || []} columns={columns} isLoading={isLoading} className="flex-1" />
       <AssignInspectorModal />
-    </div>
+    </>
   )
 }
 
