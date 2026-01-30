@@ -44,4 +44,5 @@ export type UserState = {
   name: string
   role: UserRoles
   directions: Direction[]
+  isSupervisor?: boolean
 }

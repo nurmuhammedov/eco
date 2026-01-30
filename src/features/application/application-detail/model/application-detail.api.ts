@@ -34,8 +34,9 @@ export const applicationDetailApi = {
     const { data } = await apiClient.get<any>(`/appeal-execution-processes/appeal/${id}`)
     return data.data
   },
-  getInspectorListSelect: async () => {
-    const { data } = await apiClient.get<any>(`/users/office-users/inspectors/select`)
+  getInspectorListSelect: async (isSupervisor?: boolean) => {
+    const url = isSupervisor ? `/users/regulator-users/inspectors/select` : `/users/office-users/inspectors/select`
+    const { data } = await apiClient.get<any>(url)
     return data.data
   },
   getManagerListSelect: async () => {

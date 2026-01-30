@@ -38,7 +38,7 @@ const AttachInspectorModal = () => {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   })
-  const { data: inspectorSelectData } = useInspectorSelect()
+  const { data: inspectorSelectData } = useInspectorSelect(true, user?.isSupervisor)
   const { data: managerSelectData } = useManagerSelect()
 
   const isManager = user?.role == UserRoles.HEAD

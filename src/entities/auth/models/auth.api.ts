@@ -10,16 +10,24 @@ const normalizeUser = (data: any): UserState => {
   // Handle direct user object (like in getMe)
   if (data.role === 'SUPERVISOR') {
     data.role = UserRoles.REGIONAL
+    data.isSupervisor = true
   } else if (data.role === 'CONTROLLER') {
     data.role = UserRoles.INSPECTOR
+    data.isSupervisor = false
+  } else {
+    data.isSupervisor = false
   }
 
   // Handle object with user property (like potentially in login)
   if (data.user && typeof data.user === 'object') {
     if (data.user.role === 'SUPERVISOR') {
       data.user.role = UserRoles.REGIONAL
+      data.user.isSupervisor = true
     } else if (data.user.role === 'CONTROLLER') {
       data.user.role = UserRoles.INSPECTOR
+      data.user.isSupervisor = false
+    } else {
+      data.user.isSupervisor = false
     }
   }
 
