@@ -1,18 +1,9 @@
-import * as React from 'react'
-import { DayPicker, DropdownProps } from 'react-day-picker'
-import { uz } from 'date-fns/locale'
 import { buttonVariants } from '@/shared/components/ui/button'
 import { cn } from '@/shared/lib/utils'
-import { Check, ChevronLeft, ChevronRight } from 'lucide-react'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/shared/components/ui/command'
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
+import { uz } from 'date-fns/locale'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import * as React from 'react'
+import { DayPicker, DropdownProps } from 'react-day-picker'
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -55,8 +46,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
           'h-9 w-9 p-0 font-normal aria-selected:opacity-100 cursor-pointer'
         ),
         day_range_end: 'day-range-end',
-        day_selected:
-          'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
+        day_selected: 'bg-[#016b7b] text-white hover:bg-[#016b7b] hover:text-white focus:bg-[#016b7b] focus:text-white',
         day_today: 'bg-accent text-accent-foreground',
         day_outside:
           'day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground',
@@ -68,86 +58,35 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
       components={{
         IconLeft: () => <ChevronLeft className="h-4 w-4" />,
         IconRight: () => <ChevronRight className="h-4 w-4" />,
-        Dropdown: ({ value, onChange, children, name }: DropdownProps) => {
+        Dropdown: ({ value, onChange, children }: DropdownProps) => {
           const options = React.Children.toArray(children) as React.ReactElement<React.HTMLProps<HTMLOptionElement>>[]
           const selected = options.find((child) => child.props.value === value)
-          const [open, setOpen] = React.useState(false)
-
-          const handleChange = (newValue: string) => {
+          const handleChange = (value: string) => {
             const changeEvent = {
-              target: { value: newValue },
+              target: { value },
             } as React.ChangeEvent<HTMLSelectElement>
             onChange?.(changeEvent)
-            setOpen(false)
           }
-
-          const isYearDropdown = name === 'years'
-
           return (
-            <Popover modal={true} open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <button
-                  className={cn(
-                    'flex h-7 cursor-pointer items-center justify-between rounded-md px-2 py-1 text-sm font-medium focus:outline-none',
-                    'text-foreground bg-transparent',
-                    'hover:bg-accent hover:text-accent-foreground border border-transparent',
-                    open && 'bg-accent text-accent-foreground'
-                  )}
-                >
-                  {selected?.props?.children}
-                  <ChevronLeft
-                    className={cn('ml-1 h-4 w-4 rotate-[-90deg] opacity-50 transition', open && 'rotate-90')}
-                  />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="z-[65] w-[140px] p-0" align="center">
-                <Command
-                  filter={
-                    isYearDropdown
-                      ? (value, search) => {
-                          if (value.startsWith(search)) return 1
-                          return 0
-                        }
-                      : undefined
-                  }
-                >
-                  <CommandInput hideIcon={true} placeholder="Qidirish..." className="h-9 pl-5" />
-
-                  <CommandList className="max-h-[200px]">
-                    <CommandEmpty>Topilmadi</CommandEmpty>
-                    <CommandGroup>
-                      {options.map((option) => {
-                        const label = String(option.props.children as string | number)
-                        const optionValue = option.props.value
-
-                        return (
-                          <CommandItem
-                            key={String(optionValue)}
-                            value={label}
-                            onSelect={() => {
-                              if (optionValue !== undefined && optionValue !== null) {
-                                handleChange(String(optionValue))
-                              }
-                            }}
-                            className="pr-1 pl-1"
-                          >
-                            <div
-                              className={cn(
-                                'mr-2 flex h-4 w-4 shrink-0 items-center justify-center',
-                                value === optionValue ? 'opacity-100' : 'opacity-0'
-                              )}
-                            >
-                              <Check className="h-4 w-4" />
-                            </div>
-                            {label}
-                          </CommandItem>
-                        )
-                      })}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+            <div className="relative flex items-center">
+              <span className="pointer-events-none absolute left-2 text-sm font-medium">
+                {selected?.props?.children}
+              </span>
+              <select
+                className="z-10 h-7 w-full cursor-pointer appearance-none bg-transparent pr-6 pl-2 text-sm font-medium text-transparent focus:outline-none"
+                value={value?.toString()}
+                onChange={(e) => {
+                  handleChange(e.target.value)
+                }}
+              >
+                {options.map((option) => (
+                  <option value={option.props.value?.toString() ?? ''} className="text-foreground bg-background">
+                    {option.props.children}
+                  </option>
+                ))}
+              </select>
+              <ChevronLeft className="pointer-events-none absolute top-1.5 right-1 h-4 w-4 -rotate-90 opacity-50" />
+            </div>
           )
         },
       }}

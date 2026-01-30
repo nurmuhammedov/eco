@@ -61,7 +61,6 @@ export const AddDeclaration = () => {
     retry: 1,
   })
 
-  // New query for Expertise Conclusions
   const { data: conclusionOptions, isFetching: isConclusionsLoading } = useQuery({
     queryKey: ['conclusionsSelect', searchedStir],
     queryFn: () => getExpertiseConclusionsSelect(searchedStir!),
@@ -119,7 +118,6 @@ export const AddDeclaration = () => {
     }
   }, [watchedHfId, hfoOptions, form])
 
-  // Qidirish
   const handleSearch = () => {
     if (stir.length === 9) {
       setSearchedStir(stir)
@@ -128,14 +126,12 @@ export const AddDeclaration = () => {
     }
   }
 
-  // Tozalash
   const handleClearSearch = () => {
     setStir('')
     setSearchedStir(null)
     form.reset()
   }
 
-  // Formani yuborish
   const onSubmit = (data: CreateDeclarationFormValues) => {
     mutate(cleanParams({ ...data }) as any)
   }
@@ -146,7 +142,7 @@ export const AddDeclaration = () => {
     <div className="mt-4 space-y-2">
       <Card>
         <CardHeader>
-          <CardTitle>Tashkilotni qidirish</CardTitle>
+          <CardTitle>XICHO tashkiloti STIRni kiriting</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-start space-x-4">

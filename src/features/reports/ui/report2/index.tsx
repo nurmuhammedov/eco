@@ -200,7 +200,7 @@ const Report1: React.FC = () => {
         onValueChange={handleTabChange}
         className="flex flex-1 flex-col overflow-hidden"
       >
-        <TabsList>
+        <TabsList className="w-max">
           <TabsTrigger value={InspectionStatus.INDIVIDUAL}>Jismoniy shaxslar</TabsTrigger>
           <TabsTrigger value={InspectionStatus.LEGAL}>Yuridik shaxslar</TabsTrigger>
         </TabsList>

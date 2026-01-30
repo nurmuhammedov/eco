@@ -21,14 +21,16 @@ import {
 } from '@/shared/components/ui/alert-dialog'
 
 const DecreeSignersPage = () => {
-  const [activeTab, setActiveTab] = useState('IRS_XRAY')
   const [modalOpen, setModalOpen] = useState(false)
+  const { paramsObject, addParams } = useCustomSearchParams()
+  const { page = 1, size = 10, tab = 'IRS_XRAY' } = paramsObject
 
-  const { paramsObject } = useCustomSearchParams()
-  const { page = 1, size = 10 } = paramsObject
+  // Hozirda backend declaration uchun alohida tipga ega emas, shuning uchun OTHER ishlatiladi
+  // Ammo kelajakda API o'zgarsa, bu yerni to'g'irlash oson bo'ladi
+  const queryBelongType: any = tab === 'DECLARATION' ? 'OTHER' : tab
 
   const { data: signersData, isLoading } = useDecreeSigners({
-    belongType: activeTab,
+    belongType: queryBelongType,
     page: Number(page),
     size: Number(size),
   })
@@ -43,7 +45,9 @@ const DecreeSignersPage = () => {
       header: 'Yo‘nalish',
       cell: ({ row }) => {
         const type = row.original.belongType
-        return type === 'IRS_XRAY' ? 'INM va Rentgen' : 'Boshqalar'
+        if (type === 'IRS_XRAY') return 'INM va Rentgen'
+        if (type === 'OTHER') return 'XICHO va Boshqa'
+        return type
       },
     },
     {
@@ -84,17 +88,23 @@ const DecreeSignersPage = () => {
         </Button>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex w-full flex-1 flex-col">
+      <Tabs
+        value={tab as string}
+        onValueChange={(val) => addParams({ tab: val })}
+        className="flex w-full flex-1 flex-col"
+      >
         <TabsList className="w-max">
-          <TabsTrigger value="IRS_XRAY">INM va Rentgen</TabsTrigger>
-          <TabsTrigger value="OTHER">Boshqalar</TabsTrigger>
+          <TabsTrigger value="IRS_XRAY">INM va Rentgen tekshiruvlar</TabsTrigger>
+          <TabsTrigger value="OTHER">XICHO va Boshqa tekshiruvlar</TabsTrigger>
+          <TabsTrigger value="DECLARATION">Deklaratsiya tasdiqlash</TabsTrigger>
         </TabsList>
         <TabsContent value="IRS_XRAY" className="mt-4 flex flex-1 flex-col overflow-hidden">
-          {/* DataTable expects data array directly if no pagination object structure is enforced by wrapper, 
-               but here we assume standard data table usage */}
           <DataTable columns={columns} data={signersData || []} isLoading={isLoading} />
         </TabsContent>
         <TabsContent value="OTHER" className="mt-4 flex flex-1 flex-col overflow-hidden">
+          <DataTable columns={columns} data={signersData || []} isLoading={isLoading} />
+        </TabsContent>
+        <TabsContent value="DECLARATION" className="mt-4 flex flex-1 flex-col overflow-hidden">
           <DataTable columns={columns} data={signersData || []} isLoading={isLoading} />
         </TabsContent>
       </Tabs>

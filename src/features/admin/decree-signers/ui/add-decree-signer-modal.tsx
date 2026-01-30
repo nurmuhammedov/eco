@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query'
 
 const schema = z.object({
   userId: z.string({ required_error: 'Foydalanuvchini tanlang' }),
-  belongType: z.enum(['IRS_XRAY', 'OTHER'], { required_error: "Bo'limni tanlang" }),
+  belongType: z.enum(['IRS_XRAY', 'OTHER', 'DECLARATION'], { required_error: "Bo'limni tanlang" }),
 })
 
 interface AddDecreeSignerModalProps {
@@ -40,7 +40,12 @@ export const AddDecreeSignerModal = ({ open, onOpenChange }: AddDecreeSignerModa
   })
 
   const onSubmit = (values: z.infer<typeof schema>) => {
-    createSigner(values)
+    const payload = { ...values }
+    // Backend hozircha DECLARATION ni qabul qilmaydi, shuning uchun OTHER ga o'giramiz
+    if (payload.belongType === 'DECLARATION') {
+      payload.belongType = 'OTHER'
+    }
+    createSigner(payload as any)
   }
 
   return (
@@ -88,8 +93,9 @@ export const AddDecreeSignerModal = ({ open, onOpenChange }: AddDecreeSignerModa
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="IRS_XRAY">INM va Rentgen</SelectItem>
-                      <SelectItem value="OTHER">Boshqalar</SelectItem>
+                      <SelectItem value="IRS_XRAY">INM va Rentgen tekshiruvlar</SelectItem>
+                      <SelectItem value="OTHER">XICHO va Boshqa tekshiruvlar</SelectItem>
+                      <SelectItem value="DECLARATION">Deklaratsiya tasdiqlash</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
