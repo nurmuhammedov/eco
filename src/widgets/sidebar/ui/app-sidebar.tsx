@@ -18,10 +18,7 @@ import { AppLogo } from './app-logo'
 import { useAuth } from '@/shared/hooks/use-auth'
 
 export function AppSidebar() {
-  // const { state } = useSidebar()
-
   const { user } = useAuth()
-
   const displayedNavigations: Navigation = useMemo(() => {
     if (!user) return []
 
@@ -40,7 +37,21 @@ export function AppSidebar() {
 
     const baseNavigation = NAVIGATIONS[user.role] || allNavigation
 
-    return baseNavigation.filter((navItem) => user.directions.includes(navItem.id as Direction))
+    return baseNavigation.reduce((acc: any[], navItem: any) => {
+      if (navItem.items?.length) {
+        const filteredItems = navItem.items.filter((subItem: any) =>
+          subItem.id ? user.directions.includes(subItem.id as Direction) : false
+        )
+
+        if (filteredItems.length > 0) {
+          acc.push({ ...navItem, items: filteredItems })
+        }
+      } else if (user.directions.includes(navItem.id as Direction)) {
+        acc.push(navItem)
+      }
+
+      return acc
+    }, [])
   }, [user])
 
   if (!user) return null

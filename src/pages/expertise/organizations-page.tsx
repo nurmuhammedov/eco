@@ -1,6 +1,4 @@
 import { ExpertiseTable } from '@/features/expertise/ui/expertise-table'
-import { Button } from '@/shared/components/ui/button'
-import { PlusCircle } from 'lucide-react'
 import { ExpertiseTabKey, ExpertiseTabs } from '@/features/expertise/ui/expertise-tabs'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 
@@ -66,11 +64,6 @@ const OrganizationsPage = () => {
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">
-      <div className="flex items-center justify-end">
-        <Button disabled={true}>
-          <PlusCircle className="mr-2 h-4 w-4" /> Qo‘shish
-        </Button>
-      </div>
       <ExpertiseTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <ExpertiseTable />

@@ -3,7 +3,7 @@ import {
   Activity,
   BadgeCheck,
   BarChart2,
-  CheckCircle,
+  Building2,
   ClipboardList,
   Database,
   FileBadge,
@@ -48,17 +48,20 @@ export default [
     id: 'ACCREDITATION',
     title: 'menu.accreditation',
     url: '/expertise-organizations',
-    icon: <CheckCircle />,
+    icon: <Building2 />,
     items: [
       {
+        id: 'ACCREDITATION',
         url: '/expertise-organizations',
-        title: 'Ekpertiza tashkilotlari',
+        title: 'Ekspert tashkilotlar',
       },
       {
+        id: 'CONCLUSION',
         url: '/accreditations',
-        title: 'Ekpertiza xulosalari',
+        title: 'Ekspertiza xulosalari',
       },
       {
+        id: 'DECLARATION',
         url: '/declarations',
         title: 'Deklaratsiya',
       },

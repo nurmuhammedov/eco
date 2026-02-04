@@ -32,7 +32,10 @@ const PreventionDetail = () => {
   )
 
   const preventionTypeName = details?.type ? preventionTypes.find((i) => i.id === details.type)?.name : '-'
-  const showExecutionModal = user?.role === UserRoles.INSPECTOR && details?.status === 'NEW'
+  const showExecutionModal =
+    details?.status === 'NEW' &&
+    ((user?.role === UserRoles.MANAGER && (details?.belongType === 'IRS' || details?.belongType === 'XRAY')) ||
+      (user?.role === UserRoles.INSPECTOR && details?.belongType !== 'IRS' && details?.belongType !== 'XRAY'))
   const hasFiles = details?.resultPathList && details.resultPathList.length > 0
 
   return (

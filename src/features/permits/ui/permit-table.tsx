@@ -83,13 +83,14 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
     },
     {
       accessorKey: 'status',
-      maxSize: 60,
-      header: 'Holati',
+      header: 'License.gov.uzdagi holati',
       cell: ({ row }) =>
-        row.original.licenseStatus == 'ACTIVE' ? (
+        row.original?.licenseStatus == 'ACTIVE' ? (
           <span className="text-green-600">Faol</span>
-        ) : row.original.processStatus == 'EXPIRED' ? (
+        ) : row.original?.licenseStatus == 'EXPIRED' ? (
           <span className="text-red-600">Faol emas</span>
+        ) : row.original?.licenseStatus == 'CANCELED' ? (
+          <span className="text-red-600">Bekor qilingan</span>
         ) : (
           '-'
         ),

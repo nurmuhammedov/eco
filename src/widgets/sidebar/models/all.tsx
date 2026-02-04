@@ -3,13 +3,15 @@ import {
   Activity,
   BadgeCheck,
   BarChart2,
-  CheckCircle,
+  Building2,
   ClipboardList,
   Database,
   FileBadge,
+  FileCheck,
   FileText,
   Map,
   MessageSquareText,
+  ScrollText,
   ShieldCheck,
 } from 'lucide-react'
 
@@ -46,9 +48,21 @@ export default [
   },
   {
     id: 'ACCREDITATION',
+    title: 'Ekspert tashkilotlar',
+    url: '/expertise-organizations',
+    icon: <Building2 />,
+  },
+  {
+    id: 'CONCLUSION',
     title: 'Ekspertiza xulosalari',
     url: '/accreditations',
-    icon: <CheckCircle />,
+    icon: <FileCheck />,
+  },
+  {
+    id: 'DECLARATION',
+    title: 'Deklaratsiya',
+    url: '/declarations',
+    icon: <ScrollText />,
   },
   {
     id: 'ATTESTATION_COMMITTEE',

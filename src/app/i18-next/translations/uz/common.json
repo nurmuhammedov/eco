@@ -106,12 +106,13 @@
     "INSPECTION": "Tekshiruvlar",
     "ATTESTATION_COMMITTEE": "Attestatsiya",
     "ATTESTATION_REGIONAL": "Attestatsiya",
-    "ACCREDITATION": "Ekspertiza",
+    "ACCREDITATION": "Ekspert tashkilotlar",
     "CADASTRE": "Kadastr",
     "PERMITS": "Ruxsat etuvchi hujjatlar",
     "REPORT": "Hisobotlar",
     "INQUIRY": "Murojaatlar",
-    "DECLARATION": "Deklaratsiya"
+    "DECLARATION": "Deklaratsiya",
+    "CONCLUSION": "Ekspertiza xulosalari"
   },
   "application": {
     "OIL": "Neft",
@@ -460,15 +461,15 @@
     "OIL_CONTAINER": {
       "address": "Qurilma joylashgan manzil",
       "location": "Joylashuv (xaritadan joyni tanlang)",
-      "labelPath": "Qozonning birkasi bilan sur‘ati",
+      "labelPath": "Idishning birkasi bilan sur‘ati",
       "childEquipmentId": "Idish turi",
       "nonDestructiveCheckDate": "Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi",
       "capacity": "Hajmi",
       "registryNumber": "Qurilmaning roʻyxatga olish raqami",
       "expertisePath": "Ekspertiza xulosasi",
-      "passportPath": "Qozonning pasporti",
+      "passportPath": "Idishning pasporti",
       "saleContractPath": "Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)",
-      "equipmentCertPath": "Qozonning muvofiqlik sertifikati",
+      "equipmentCertPath": "Idishning muvofiqlik sertifikati",
       "assignmentDecreePath": "Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq",
       "installationCertPath": "Montaj dalolatnomasi",
       "hazardousFacilityId": "XICHO"

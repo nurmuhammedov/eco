@@ -4,11 +4,13 @@ import {
   Archive,
   Award,
   BarChart2,
-  CheckCircle,
+  Building2,
   Clipboard,
   Database,
+  FileCheck,
   FileText,
   MessageSquareText,
+  ScrollText,
   ShieldCheck,
 } from 'lucide-react'
 
@@ -45,15 +47,21 @@ export default [
   },
   {
     id: 'ACCREDITATION',
-    title: 'Ekpertiza xulosalari',
+    title: 'Ekspert tashkilotlar',
+    url: '/expertise-organizations',
+    icon: <Building2 />,
+  },
+  {
+    id: 'CONCLUSION',
+    title: 'Ekspertiza xulosalari',
     url: '/accreditations',
-    icon: <CheckCircle />,
+    icon: <FileCheck />,
   },
   {
     id: 'DECLARATION',
     title: 'Deklaratsiya',
     url: '/declarations',
-    icon: <FileText />,
+    icon: <ScrollText />,
   },
   {
     id: 'ATTESTATION_COMMITTEE',

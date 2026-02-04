@@ -5,12 +5,16 @@ import { InquiryTabs } from './inquiry-tabs'
 import { appealTypeTranslations, InquiryBelongType } from '../model/types'
 import { formatDate } from 'date-fns'
 import FileLink from '@/shared/components/common/file-link'
+import { useNavigate } from 'react-router-dom'
+import { Button } from '@/shared/components/ui/button.tsx'
 
 const InquiryTable = () => {
   const {
     paramsObject: { page = 1, size = 10, belongType, ...rest },
     addParams,
   } = useCustomSearchParams()
+
+  const navigate = useNavigate()
 
   const activeTab = (belongType as InquiryBelongType) || InquiryBelongType.HF
 
@@ -114,16 +118,27 @@ const InquiryTable = () => {
     {
       accessorKey: 'message',
       header: 'Murojaat matni',
-      cell: ({ row }) => (
-        <span title={row.original.message} className="block w-[200px] truncate">
-          {row.original.message}
-        </span>
-      ),
+      cell: ({ row }) => <span title={row.original.message}>{row.original.message}</span>,
     },
     {
       header: 'Biriktirilgan fayl',
       accessorKey: 'filePath',
       cell: ({ row }) => (row.original.filePath ? <FileLink url={row.original.filePath} /> : '-'),
+    },
+    {
+      header: 'Obyekt',
+      accessorKey: 'belongId',
+      cell: ({ row }) => (
+        <Button
+          onClick={() =>
+            navigate(
+              `/register/${row.original.belongId}/${activeTab == InquiryBelongType.HF ? 'hf' : activeTab == InquiryBelongType.EQUIPMENT ? 'equipments' : activeTab == InquiryBelongType.IRS ? 'irs' : 'xrays'}`
+            )
+          }
+        >
+          Obyektni ko‘rish
+        </Button>
+      ),
     },
   ]
 

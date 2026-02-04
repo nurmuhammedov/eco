@@ -142,18 +142,18 @@ export function DataTablePagination<T>({
           pageClassName="rounded-md"
           pageLinkClassName="flex h-9 min-w-9 w-auto px-3 items-center justify-center rounded-md border border-input bg-white text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-all"
           // Active Page
-          activeClassName="!bg-[#016b7b] !border-[#016b7b] !text-white hover:!bg-[#016b7b]/90 hover:!scale-105"
+          activeClassName="!bg-[#016b7b] !border-[#016b7b] !text-white hover:!bg-[#016b7b]/90"
           activeLinkClassName="!bg-[#016b7b] !border-[#016b7b] !text-white hover:!bg-[#016b7b]/90"
           // Navigation (Prev/Next)
           previousClassName="rounded-md"
           nextClassName="rounded-md"
           previousLinkClassName={cn(
             'flex h-9 min-w-9 w-auto px-2 items-center justify-center rounded-md border border-input bg-white text-foreground transition-all hover:bg-accent hover:text-accent-foreground',
-            pageInfo.currentPage <= 1 && 'pointer-events-none opacity-50'
+            pageInfo.currentPage <= 1 && 'pointer-events-none'
           )}
           nextLinkClassName={cn(
             'flex h-9 min-w-9 w-auto px-2 items-center justify-center rounded-md border border-input bg-white text-foreground transition-all hover:bg-accent hover:text-accent-foreground',
-            pageInfo.currentPage >= pageInfo.totalPages && 'pointer-events-none opacity-50'
+            pageInfo.currentPage >= pageInfo.totalPages && 'pointer-events-none'
           )}
           // Break (...)
           breakClassName="flex items-center justify-center"

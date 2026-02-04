@@ -5,6 +5,7 @@ import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import { getDate } from '@/shared/utils/date'
 import FileLink from '@/shared/components/common/file-link'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 
 export const DeclarationDetail = () => {
   const { id } = useParams()
@@ -34,18 +35,12 @@ export const DeclarationDetail = () => {
   return (
     <div className="mt-4">
       <DetailCardAccordion defaultValue={['customer_org', 'legal_org', 'object_info', 'declaration_info']}>
-        <DetailCardAccordion.Item value="customer_org" title="Buyurtmachi tashkilot to‘g‘risida ma’lumot">
-          <div className="flex flex-col py-1">
-            <DetailRow title="Tashkilot nomi:" value={detail?.customerName || '-'} />
-            <DetailRow title="Tashkilot STIRi:" value={detail?.customerTin || '-'} />
-          </div>
+        <DetailCardAccordion.Item value="customer_org" title="Tashkilot to‘g‘risida ma’lumot">
+          <LegalApplicantInfo tinNumber={detail?.customerTin} />
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="legal_org" title="Deklaratsiya ishlab chiquvchi tashkilot">
-          <div className="flex flex-col py-1">
-            <DetailRow title="Tashkilot nomi:" value={detail?.legalName || '-'} />
-            <DetailRow title="Tashkilot STIRi:" value={detail?.legalTin || '-'} />
-          </div>
+          <LegalApplicantInfo tinNumber={detail?.legalTin} />
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida ma’lumot">

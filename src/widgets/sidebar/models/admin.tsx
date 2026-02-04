@@ -3,10 +3,10 @@ import {
   Activity,
   AlertTriangle,
   Clipboard,
-  ListChecks,
+  Cog,
   ListTree,
   MapPin,
-  MousePointerClick,
+  Shapes,
   Users,
   Signature,
   Mail,
@@ -42,12 +42,12 @@ export default [
   {
     url: '/equipments',
     title: 'menu.sub_types',
-    icon: <MousePointerClick />,
+    icon: <Cog />,
   },
   {
     url: '/attraction-types',
     title: 'Attraksion tipi',
-    icon: <ListChecks />,
+    icon: <Shapes />,
   },
   {
     url: '/inspection-surveys',

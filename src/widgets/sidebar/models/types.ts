@@ -7,6 +7,7 @@ export type NavigationItem = {
   icon: ReactNode
   isActive?: boolean
   items?: {
+    id?: string
     url: string
     title: string
   }[]

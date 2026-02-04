@@ -81,7 +81,7 @@ export const AutoList = ({ tankersCount }: any) => {
       filterType: 'search',
     },
     {
-      accessorKey: 'expiryDate',
+      accessorKey: 'validUntil',
       header: 'Texnik ko‘rik amal qilish muddati',
       cell: (cell) => (cell.row.original.validUntil ? formatDate(cell.row.original.validUntil, 'dd.MM.yyyy') : null),
     },

@@ -129,7 +129,11 @@ const RegisterWidget = () => {
           )}
           <div className="flex flex-1 items-center justify-end gap-2">
             {tab == RegisterActiveTab.AUTO ? (
-              <>{user?.role == UserRoles.MANAGER && <AddPermitTransportModal />}</>
+              <>
+                {(user?.role == UserRoles.MANAGER ||
+                  user?.role == UserRoles.REGIONAL ||
+                  user?.role == UserRoles.INSPECTOR) && <AddPermitTransportModal />}
+              </>
             ) : (
               <div className="flex gap-2">
                 <Select

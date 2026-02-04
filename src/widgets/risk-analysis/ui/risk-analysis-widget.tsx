@@ -12,7 +12,6 @@ import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.
 import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-statistics-cards'
 import { cn } from '@/shared/lib/utils'
 import { TabsLayout } from '@/shared/layouts'
-import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
 import { getQuarter, subQuarters } from 'date-fns'
 
 interface RiskCountResponse {
@@ -136,7 +135,7 @@ const RiskAnalysisWidget = () => {
 
         return {
           id,
-          name: getRegionLabel(item.name || ''),
+          name: item.name || '',
           count: count,
         }
       }) || []
@@ -205,14 +204,15 @@ const RiskAnalysisWidget = () => {
       {regionTabs.length > 0 &&
       ![UserRoles.INSPECTOR, UserRoles.REGIONAL]?.includes(user?.role as unknown as UserRoles) ? (
         <TabsLayout
-          classNameTabList="!mb-0 w-full"
-          classNameWrapper="w-full"
-          classNameTrigger="flex-1"
+          // classNameTabList="!mb-0 min-w-full"
+          // classNameWrapper="w-full"
+          // classNameTrigger="flex-1"
           className="mb-2"
           tabs={regionTabs}
           activeTab={activeRegion}
           onTabChange={(val) => addParams({ regionId: val, page: 1 })}
           outlineInactiveCount={true}
+          showArrows={true}
         />
       ) : null}
 

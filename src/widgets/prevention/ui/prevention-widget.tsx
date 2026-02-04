@@ -111,7 +111,7 @@ const PreventionWidget = () => {
         const countItem = regionCounts.find((c) => c.regionId === item.id)
         return {
           id: item?.id?.toString(),
-          name: getRegionLabel(item.name || ''),
+          name: item.name || '',
           count: countItem?.count || 0,
         }
       }) || []
@@ -133,7 +133,7 @@ const PreventionWidget = () => {
 
   return (
     <>
-      <div className="flex w-full flex-col gap-2">
+      <div className="mb-2 flex w-full flex-col gap-2">
         <PreventionCards
           year={year}
           type={activeType}
@@ -161,13 +161,14 @@ const PreventionWidget = () => {
 
         {regionTabs.length > 0 && !isRegional && !isInspector ? (
           <TabsLayout
-            classNameTabList="!mb-0 w-full"
-            classNameWrapper="w-full"
-            classNameTrigger="flex-1"
+            // classNameTabList="!mb-0 min-w-full"
+            // classNameWrapper="w-full"
+            // classNameTrigger="flex-1"
             tabs={regionTabs}
             activeTab={activeRegion}
             onTabChange={(val) => addParams({ regionId: val, page: 1 })}
             outlineInactiveCount={true}
+            showArrows={true}
           />
         ) : null}
 
@@ -185,7 +186,6 @@ const PreventionWidget = () => {
           </Tabs>
         )}
       </div>
-
       <PreventionTable regions={data || []} />
     </>
   )

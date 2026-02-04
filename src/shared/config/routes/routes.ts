@@ -384,7 +384,7 @@ export const appRoutes = [
   {
     path: 'declarations/add',
     component: AddDeclarationPage,
-    roles: [UserRoles.LEGAL],
+    roles: [UserRoles.LEGAL, UserRoles.CHAIRMAN],
   },
   {
     path: 'declarations/detail/:id',
