@@ -47,7 +47,8 @@ const formSchema = z.object({
 type SimpleFormValues = z.infer<typeof formSchema>
 
 const STATUS_MAP: Record<string, { label: string; className: string }> = {
-  ACTIVE: { label: 'Amaldagi qurilma', className: 'bg-green-100 text-green-700 hover:bg-green-200' },
+  ACTIVE: { label: 'Reyestrdagi qurilma', className: 'bg-green-100 text-green-700 hover:bg-green-200' },
+  VALID: { label: 'Reyestrdagi qurilma', className: 'bg-green-100 text-green-700 hover:bg-green-200' },
   INACTIVE: { label: 'Reyestrdan chiqarilgan', className: 'bg-red-100 text-red-700 hover:bg-red-200' },
   EXPIRED: { label: 'Muddati o‘tgan', className: 'bg-red-100 text-red-700 hover:bg-red-200' },
   NO_DATE: { label: 'Muddati kiritilmagan', className: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' },

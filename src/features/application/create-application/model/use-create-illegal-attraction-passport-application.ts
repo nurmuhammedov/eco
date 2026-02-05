@@ -1,5 +1,4 @@
 import {
-  attractionRefinement,
   RegisterIllegalAttractionBaseSchema,
   RegisterIllegalAttractionDTO,
   RegisterIllegalAttractionSchema,
@@ -43,7 +42,7 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
-      }).superRefine(attractionRefinement)
+      })
     : RegisterIllegalAttractionSchema
 
   const form = useForm<RegisterIllegalAttractionDTO>({

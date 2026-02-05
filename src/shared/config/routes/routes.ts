@@ -61,6 +61,8 @@ const ExpertisePage = lazy(() => import('@/pages/expertise/page'))
 const AddConclusionPage = lazy(() => import('@/pages/expertise/add-conclusion-page'))
 const UserLogsPage = lazy(() => import('@/pages/admin/user-logs/page'))
 
+const DashboardPage = lazy(() => import('@/pages/dashboard').then((module) => ({ default: module.DashboardPage })))
+
 const DeclarationsPage = lazy(() => import('@/pages/declarations/page'))
 const AddDeclarationPage = lazy(() => import('@/pages/declarations/add-declaration-page'))
 const DeclarationDetailPage = lazy(() => import('@/pages/declarations/declaration-detail-page'))
@@ -79,6 +81,11 @@ const DecreeSignerPage = lazy(() =>
 const HybridMailPage = lazy(() => import('@/features/admin/hybrid-mail/ui/hybrid-mail-page'))
 
 export const appRoutes = [
+  {
+    path: 'dashboard',
+    component: DashboardPage,
+    roles: [],
+  },
   {
     path: 'applications',
     component: Applications,
@@ -375,21 +382,17 @@ export const appRoutes = [
   {
     path: 'declarations',
     component: DeclarationsPage,
-    roles: [
-      UserRoles.LEGAL,
-      UserRoles.CHAIRMAN,
-      // Add other roles if they need read access, keeping safe with requested scope
-    ],
+    roles: [],
   },
   {
     path: 'declarations/add',
     component: AddDeclarationPage,
-    roles: [UserRoles.LEGAL, UserRoles.CHAIRMAN],
+    roles: [],
   },
   {
     path: 'declarations/detail/:id',
     component: DeclarationDetailPage,
-    roles: [UserRoles.LEGAL, UserRoles.CHAIRMAN],
+    roles: [],
   },
 
   //Permits

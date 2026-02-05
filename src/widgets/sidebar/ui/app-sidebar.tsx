@@ -1,10 +1,15 @@
+import { Book } from 'lucide-react'
 import { Direction, UserRoles } from '@/entities/user'
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from '@/shared/components/ui/sidebar'
 
 import { NAVIGATIONS } from '@/widgets/sidebar/models/navigations'
@@ -73,6 +78,19 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Kutubxona">
+              <a href="https://edu.ktnu.uz/library" target="_blank" rel="noopener noreferrer">
+                <Book />
+                <span>Kutubxona</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   )
 }

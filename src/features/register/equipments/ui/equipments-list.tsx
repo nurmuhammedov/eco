@@ -37,7 +37,8 @@ export const EquipmentsList = () => {
   } = useCustomSearchParams()
 
   const { data, isLoading } = usePaginatedData<any>(`/equipments`, {
-    status: status !== 'ALL' ? status : '',
+    status: status !== 'ALL' && status !== 'ACTIVE' && status !== 'INACTIVE' ? status : '',
+    active: status == 'ACTIVE' || status == 'INACTIVE' ? status == 'ACTIVE' : '',
     type: type !== 'ALL' ? type : '',
     page,
     size,
@@ -179,7 +180,7 @@ export const EquipmentsList = () => {
           },
           {
             id: 'ACTIVE',
-            name: 'Amaldagi qurilmalar',
+            name: 'Reyestrdagi qurilmalar',
           },
           {
             id: 'INACTIVE',
