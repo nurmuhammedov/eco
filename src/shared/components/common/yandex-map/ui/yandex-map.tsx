@@ -48,8 +48,6 @@ const YandexMap: React.FC<YandexMapProps> = ({
 
   useEffect(() => {
     if (mapRef.current) {
-      // Faqat center o'zgarganda markazlashamiz.
-      // Zoomni faqat prop o'zgargandagina yangilaymiz.
       mapRef.current
         .setCenter(center, zoom, {
           duration: 300,

@@ -121,10 +121,6 @@ const Report1: React.FC = () => {
 
   const columns: ColumnDef<IAppealData>[] = [
     {
-      header: 'T/r',
-      cell: ({ row }: any) => (row.original.isSummary ? '' : row.index),
-    },
-    {
       header: 'Ariza turi',
       accessorKey: 'appealType',
       minSize: 350,

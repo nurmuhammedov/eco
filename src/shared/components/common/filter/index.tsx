@@ -44,7 +44,6 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
   const { control, handleSubmit, setValue, watch } = form
   const selectedYear = watch('year')
 
-  // Yil o'zgarganda chorakni joriy chorakka qaytarish (default holat)
   useEffect(() => {
     if (selectedYear) {
       setValue('quarter', currentQuarter)

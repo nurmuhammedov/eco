@@ -115,7 +115,7 @@ export const ExpertiseSubTypeOptions = [
   },
   {
     value: ExpertiseSubTypeEnum.SXBI,
-    label: "Sanoat xavfsizligi bo'yicha ishchi loyiha ekspertizasi",
+    label: 'Sanoat xavfsizligi bo‘yicha ishchi loyiha ekspertizasi',
     type: ExpertiseTypeEnum.LH,
   },
   {

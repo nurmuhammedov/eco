@@ -74,7 +74,7 @@ export const EquipmentsList = () => {
     {
       header: 'Roʻyxatga olish sanasi',
       maxSize: 90,
-      accessorFn: (row) => getDate(row.registrationDate),
+      accessorFn: (row: any) => getDate(row.registrationDate),
       filterKey: 'registrationDate',
       filterType: 'date-range',
     },
@@ -87,7 +87,7 @@ export const EquipmentsList = () => {
     },
     {
       header: 'Qurilma',
-      cell: (cell) => APPLICATIONS_DATA?.find((i) => i?.equipmentType == cell.row.original.type)?.name || '',
+      cell: (cell: any) => APPLICATIONS_DATA?.find((i) => i?.equipmentType == cell.row.original.type)?.name || '',
     },
     {
       header: 'Qurilmaning turi',
@@ -124,30 +124,39 @@ export const EquipmentsList = () => {
       minSize: 150,
     },
     {
-      accessorFn: (row) => (row.nextPartialCheckDate ? getDate(row.nextPartialCheckDate) : '-'),
+      accessorFn: (row: any) => (row.nextPartialCheckDate ? getDate(row.nextPartialCheckDate) : '-'),
       maxSize: 90,
       header: 'Keyingi qisman texnik koʻrik sanasi',
     },
     {
-      accessorFn: (row) => (row.nextFullCheckDate ? getDate(row.nextFullCheckDate) : '-'),
+      accessorFn: (row: any) => (row.nextFullCheckDate ? getDate(row.nextFullCheckDate) : '-'),
       header: 'Keyingi to‘liq texnik koʻrik sanasi',
       maxSize: 90,
     },
     {
       id: 'actions',
       maxSize: user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN ? 75 : 50,
-      cell: ({ row }) => (
+      cell: ({ row }: any) => (
         <DataTableRowActions
           showView
           showEdit={user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN}
           row={row}
           showDelete
-          onView={(row) => handleViewApplication(row.original.id)}
-          onEdit={(row) => handleEditApplication(row.original.id, row.original.type, row.original.ownerIdentity)}
+          onView={(row: any) => handleViewApplication(row.original?.id)}
+          onEdit={(row: any) =>
+            handleEditApplication(row.original?.id, row.original?.type, row.original?.ownerIdentity)
+          }
         />
       ),
     },
-  ]
+  ].filter((col) => {
+    if (type === 'OIL_CONTAINER') {
+      return (
+        col.header !== 'Keyingi qisman texnik koʻrik sanasi' && col.header !== 'Keyingi to‘liq texnik koʻrik sanasi'
+      )
+    }
+    return true
+  }) as unknown as any
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2">
@@ -200,7 +209,6 @@ export const EquipmentsList = () => {
         }))}
         onTabChange={(type) => addParams({ status: type }, 'page')}
       />
-
       <DataTable
         showFilters
         isLoading={isLoading}

@@ -26,7 +26,7 @@ const DecreeSignersPage = () => {
   const { page = 1, size = 10, tab = 'IRS_XRAY' } = paramsObject
 
   // Hozirda backend declaration uchun alohida tipga ega emas, shuning uchun OTHER ishlatiladi
-  // Ammo kelajakda API o'zgarsa, bu yerni to'g'irlash oson bo'ladi
+  // Ammo kelajakda API o‘zgarsa, bu yerni to‘g'irlash oson bo‘ladi
   const queryBelongType: any = tab === 'DECLARATION' ? 'OTHER' : tab
 
   const { data: signersData, isLoading } = useDecreeSigners({
@@ -84,7 +84,7 @@ const DecreeSignersPage = () => {
         <h1 className="text-2xl font-bold tracking-tight">Imzolovchi shaxslar</h1>
         <Button onClick={() => setModalOpen(true)}>
           <Plus className="mr-2 size-4" />
-          Qo'shish
+          Qo‘shish
         </Button>
       </div>
 
@@ -114,8 +114,8 @@ const DecreeSignersPage = () => {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>O'chirishni tasdiqlaysizmi?</AlertDialogTitle>
-            <AlertDialogDescription>Bu amalni ortga qaytarib bo'lmaydi.</AlertDialogDescription>
+            <AlertDialogTitle>O‘chirishni tasdiqlaysizmi?</AlertDialogTitle>
+            <AlertDialogDescription>Bu amalni ortga qaytarib bo‘lmaydi.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Bekor qilish</AlertDialogCancel>
@@ -126,7 +126,7 @@ const DecreeSignersPage = () => {
                 setDeleteId(null)
               }}
             >
-              O'chirish
+              O‘chirish
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -73,7 +73,7 @@ export const riskAnalysisData = {
     },
     {
       title:
-        "Mehnat xavfsizligi talablari va talablariga muvofiqligi uchun sertifikatlashdan o'tmagan xodimlarni sertifikatlash ",
+        'Mehnat xavfsizligi talablari va talablariga muvofiqligi uchun sertifikatlashdan o‘tmagan xodimlarni sertifikatlash ',
       point: 10,
       rejectPlaceholder: "Ma'lumot taqdim etilmagan",
     },
@@ -84,19 +84,19 @@ export const riskAnalysisData = {
       rejectPlaceholder: "Ma'lumot taqdim etilmagan",
     },
     {
-      title: "Potentsial nurlanish xavfiga ko'ra ob'ektning toifalanmaganligi",
+      title: "Potentsial nurlanish xavfiga ko‘ra ob'ektning toifalanmaganligi",
       point: 10,
       rejectPlaceholder: 'Qurilmalar pasporti mavjud emas',
     },
     {
-      title: `Buyruq asosida "A" toifaga kirgan xodimlar ro'yhati, radiasiyaviy xavfsizlik ta'minlanishini nazorat qilish, Inmlarini hisobga olish va saqlash bo'yicha, jismoniy himoya, radioaktiv chiqindini (Rach) yig'ish, saqlash va tashishni tashkil etish (agar Rach mavjud bo'lsa) bo'yicha mas'ul shaxsning tayinlanmaganligi`,
+      title: `Buyruq asosida "A" toifaga kirgan xodimlar ro‘yhati, radiasiyaviy xavfsizlik ta'minlanishini nazorat qilish, Inmlarini hisobga olish va saqlash bo‘yicha, jismoniy himoya, radioaktiv chiqindini (Rach) yig'ish, saqlash va tashishni tashkil etish (agar Rach mavjud bo‘lsa) bo‘yicha mas'ul shaxsning tayinlanmaganligi`,
       point: 5,
       rejectPlaceholder: `TYUZ kadastri pasporti mavjud emas`,
     },
     {
-      title: `Rahbarlarning, ishlab chiqarishni nazorat qilish xizmati mutaxassislarining, INM bilan ish bajaruvchi "A" toifaga mansub xodimlarning radiasiyaviy xavfsizlik bo'yicha zarur o'quv tayyorlovdan (malaka oshirishdan) o'tmaganligi va uni tasdiqlovchi hujjatlar mavjud emasligi`,
+      title: `Rahbarlarning, ishlab chiqarishni nazorat qilish xizmati mutaxassislarining, INM bilan ish bajaruvchi "A" toifaga mansub xodimlarning radiasiyaviy xavfsizlik bo‘yicha zarur o‘quv tayyorlovdan (malaka oshirishdan) o‘tmaganligi va uni tasdiqlovchi hujjatlar mavjud emasligi`,
       point: 5,
-      rejectPlaceholder: `Xodimlar attestasiyadan o'tmagan`,
+      rejectPlaceholder: `Xodimlar attestasiyadan o‘tmagan`,
     },
     {
       title: `Atom energiyasi va yadro texnologiyalari, OSI va retrograd san'ati bilan bog'liq ob'ektlar sertifikatlanmaydi va sertifikatlanmaydi`,
@@ -109,7 +109,7 @@ export const riskAnalysisData = {
       rejectPlaceholder: `12.12.2024 kuni baxtsiz xadis ray bergan`,
     },
     {
-      title: `Atom energetikasi va yadro texnologiyalari, ionlashtiruvchi nurlanish manbalari va radiatsiya ta'sirida bo'lgan ob'ektlarda takrorlagichlarda tekshiruvlar o‘tkazilmaydi.`,
+      title: `Atom energetikasi va yadro texnologiyalari, ionlashtiruvchi nurlanish manbalari va radiatsiya ta'sirida bo‘lgan ob'ektlarda takrorlagichlarda tekshiruvlar o‘tkazilmaydi.`,
       point: 5,
       rejectPlaceholder: `Hujjatlar va ma'lumotnoma taqdim etilmagan`,
     },
@@ -119,17 +119,17 @@ export const riskAnalysisData = {
       rejectPlaceholder: `Normativ hujjatlar talablari buzilgan, -son qaror, -bandi`,
     },
     {
-      title: `Inmlar va rentgen uskunalarini yillik inventarizasiyasi o‘tkazilmaganligi va vakolatli organga taqdim etilganligi to'g'risidagi ma'lumotlar mavjud emasligi`,
+      title: `Inmlar va rentgen uskunalarini yillik inventarizasiyasi o‘tkazilmaganligi va vakolatli organga taqdim etilganligi to‘g'risidagi ma'lumotlar mavjud emasligi`,
       point: 10,
       rejectPlaceholder: "Ma'lumot taqdim etilmagan",
     },
     {
-      title: `Radiasiya xavfsizligi yo'riqnomasi va Radiasiyaviy avariyalarda xodimlarni xarakatlanish yo'riqnomasi mavjud emasligi, shuningdek ushbu yo'riqnomalarni o'rnatilgan tartibda hududiy FVV va SEO va JS boshqarmalari bilan kelishilmaganligi va muassasa tomonidan tasdiqlanmaganligi`,
+      title: `Radiasiya xavfsizligi yo‘riqnomasi va Radiasiyaviy avariyalarda xodimlarni xarakatlanish yo‘riqnomasi mavjud emasligi, shuningdek ushbu yo‘riqnomalarni o'rnatilgan tartibda hududiy FVV va SEO va JS boshqarmalari bilan kelishilmaganligi va muassasa tomonidan tasdiqlanmaganligi`,
       point: 5,
       rejectPlaceholder: "Ma'lumot taqdim etilmagan",
     },
     {
-      title: `I va II toifaga ta'luqli ob'ektlarda xodimlar va aholini radiasiyaviy halokatdan himoya qilish va uning oqibatlarini bartaraf etish bo'yicha Nizom va chora-tadbirlar rejasi mavjud emasligi va o'rnatilgan tartibda hududiy FVV va SEO va JS boshqarmalari bilan kelishilmaganligi va muassasa tomonidan tasdiqlanmaganligi`,
+      title: `I va II toifaga ta'luqli ob'ektlarda xodimlar va aholini radiasiyaviy halokatdan himoya qilish va uning oqibatlarini bartaraf etish bo‘yicha Nizom va chora-tadbirlar rejasi mavjud emasligi va o'rnatilgan tartibda hududiy FVV va SEO va JS boshqarmalari bilan kelishilmaganligi va muassasa tomonidan tasdiqlanmaganligi`,
       point: 5,
       rejectPlaceholder: "Ma'lumot taqdim etilmagan",
     },
@@ -176,14 +176,14 @@ export const riskAnalysisData = {
       rejectPlaceholder: `placeholder`,
     },
     {
-      title: `Madaniyat va istirohat bog'larida, shuningdek, boshqa ko'ngilochar maskanlarda o'rnatiladigan va foydalaniladigan attraktsionlardan foydalanish bo'yicha mavsum oldidan ruxsatnomasi mavjudligi`,
+      title: `Madaniyat va istirohat bog'larida, shuningdek, boshqa ko'ngilochar maskanlarda o'rnatiladigan va foydalaniladigan attraktsionlardan foydalanish bo‘yicha mavsum oldidan ruxsatnomasi mavjudligi`,
       point: 10,
       rejectPlaceholder: `placeholder`,
     },
   ],
   elevator: [
     {
-      title: `Liftga xizmat ko'rsatish bo'yicha shartnoma tuzilganligi va shirkatda liftga xizmat ko'rsatuvchi xodim mavjudmi`,
+      title: `Liftga xizmat ko'rsatish bo‘yicha shartnoma tuzilganligi va shirkatda liftga xizmat ko'rsatuvchi xodim mavjudmi`,
       point: 15,
       rejectPlaceholder: `placeholder`,
     },

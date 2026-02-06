@@ -49,7 +49,7 @@ export const XrayList = () => {
       filterType: 'date-range',
     },
     {
-      header: "Ruxsatnoma reestri bo'yicha tartib raqami",
+      header: 'Ruxsatnoma reestri bo‘yicha tartib raqami',
       accessorFn: (row) => row?.registryNumber,
       filterKey: 'search',
       filterType: 'search',

@@ -70,7 +70,7 @@ const DocumentFormModal = ({ fieldName, url }: DocumentFormModalProps) => {
         <Button
           variant="outline"
           size="icon"
-          aria-label="Hujjat ma'lumotlarini o'zgartirish"
+          aria-label="Hujjat ma'lumotlarini o‘zgartirish"
           className="size-9 shrink-0 text-gray-500 hover:text-blue-600"
         >
           <Pencil className="size-4" />

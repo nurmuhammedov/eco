@@ -80,11 +80,6 @@ const Report3: React.FC = () => {
 
   const columns: ColumnDef<IReportData>[] = [
     {
-      header: 'T/r',
-      cell: ({ row }: any) => (row.original.isSummary ? '' : row.index),
-      size: 50,
-    },
-    {
       header: 'Hududlar',
       accessorKey: 'regionName',
       minSize: 250,
@@ -211,7 +206,7 @@ const Report3: React.FC = () => {
       ],
     },
     {
-      header: 'INM', // Ишлаб чиқариш назорати маълумотномаси
+      header: 'INM',
       columns: [
         {
           header: 'Reyestrda amalda',
@@ -263,7 +258,7 @@ const Report3: React.FC = () => {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     const today = new Date()
-    const filename = `Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, qurilmalar va IIMlarni hududlar kesimida taqsimlanishi (${format(today, 'dd.MM.yyyy')}).xlsx`
+    const filename = `Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, Qurilmalar va INMlarning hududlar kesimida taqsimlanishi (${format(today, 'dd.MM.yyyy')}).xlsx`
     a.href = url
     a.download = filename
     document.body.appendChild(a)
@@ -278,7 +273,7 @@ const Report3: React.FC = () => {
         <GoBack
           title={
             <>
-              Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, qurilmalar va IIMlarni hududlar kesimida
+              Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, Qurilmalar va INMlarning hududlar kesimida
               taqsimlanishi <span className="italic">(bugungi kun holatiga)</span>
             </>
           }
@@ -287,7 +282,7 @@ const Report3: React.FC = () => {
 
       <div className="my-2 flex items-start justify-end gap-2">
         <Button onClick={handleDownloadExel}>
-          <Download /> MS Exel
+          <Download /> Excel
         </Button>
       </div>
 

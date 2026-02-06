@@ -5,9 +5,13 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 import FileLink from '@/shared/components/common/file-link'
 
 import { useNavigate } from 'react-router-dom'
+import { Button } from '@/shared/components/ui/button'
+import { UserRoles } from '@/entities/user'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 export const DeclarationsTable = () => {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const {
     paramsObject: { page = 1, size = 10, ...rest },
   } = useCustomSearchParams()
@@ -77,6 +81,20 @@ export const DeclarationsTable = () => {
       minSize: 200,
       cell: ({ row }: any) => <div>{row.original.filePath ? <FileLink url={row.original.filePath} /> : '-'}</div>,
     },
+    ...(user?.role === UserRoles.MANAGER
+      ? [
+          {
+            id: 'approve',
+            header: 'Amallar',
+            cell: () => {
+              if (rest?.status === 'IN_PROGRESS') {
+                return <Button>Tasdiqlash</Button>
+              }
+              return null
+            },
+          },
+        ]
+      : []),
     {
       id: 'actions',
       size: 50,

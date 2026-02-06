@@ -52,40 +52,6 @@ export const MAIN_APPLICATION_BY_CATEGORY = {
   [ApplicationCategory.ILLEGAL_HF]: [],
 }
 
-export const REPORTS_DATA: ApplicationCardItem[] = [
-  {
-    id: 1,
-    title: '1-hisobot',
-    description: 'Jismoniy va yuridik shaxslardan yuborilgan arizalarni hududlar kesimida taqsimlanishi',
-    type: ApplicationTypeEnum.REPORT_1,
-    icon: 'factoryRegisterIcon',
-  },
-  {
-    id: 2,
-    title: '2-hisobot',
-    description:
-      'Jismoniy va yuridik shaxslardan yuborilgan arizalarni turlari bo‘yicha hududlar kesimida taqsimlanishi',
-    type: ApplicationTypeEnum.REPORT_2,
-    icon: 'factoryDeregisterIcon',
-  },
-  {
-    id: 3,
-    title: '3-hisobot',
-    description:
-      'Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, qurilmalar va IIMlarni hududlar kesimida taqsimlanishi',
-    type: ApplicationTypeEnum.REPORT_3,
-    icon: 'factoryUpdateIcon',
-  },
-  {
-    id: 4,
-    title: '4-hisobot',
-    description:
-      'Davlat ro‘yxatidan o‘tqazilgan amaldagi XICHO, INM, Bosim ostidagi idishlar va qurilmalar to‘g‘risida sanalar bo‘yicha maʼlumot',
-    type: ApplicationTypeEnum.REPORT_4,
-    icon: 'escalator',
-  },
-]
-
 export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 5,

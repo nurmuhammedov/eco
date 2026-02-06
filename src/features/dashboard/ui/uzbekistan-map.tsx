@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
-import uzGeoData from '@/pages/dashboard/ui/uz.json'
-import { cn } from '@/shared/lib/utils'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip'
+import uzGeoData from '@/features/dashboard/ui/uz.json'
+import { cn } from '@/shared/lib/utils.ts'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip.tsx'
 
 interface GeoJSONFeature {
   type: 'Feature'

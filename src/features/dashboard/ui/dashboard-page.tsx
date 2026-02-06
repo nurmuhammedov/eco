@@ -1,11 +1,13 @@
 import { useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
-import { StatsCards } from './StatsCards'
-import { RiskCenter } from './RiskCenter'
-import { ActionCenter } from './ActionCenter'
-import { UzbekistanMap } from '@/shared/ui/uzbekistan-map/UzbekistanMap'
+import { StatsCards } from './stats-cards'
+import { RiskCenter } from './risk-center'
+import { ActionCenter } from './action-center'
+import { UzbekistanMap } from '@/features/dashboard/ui/uzbekistan-map'
+import { DocumentsStats } from './documents-stats'
+import { InquiriesStats } from './inquiries-stats'
 import { cn } from '@/shared/lib/utils'
-import { TABS_STATS, RISK_ANALYSIS_STATS } from '../lib/mock-data'
+import { TABS_STATS, RISK_ANALYSIS_STATS } from '../model/mock-data'
 
 export const DashboardPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -62,7 +64,7 @@ export const DashboardPage = () => {
         <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-12">
           <div className="flex h-full flex-col rounded-lg border border-slate-200 bg-white p-4 lg:col-span-6">
             <div className="mb-2 flex items-center justify-between px-2">
-              <h3 className="text-lg font-semibold text-slate-800">{activeRegion || 'Respublika bo‘yicha'}</h3>
+              <h3 className="text-lg font-semibold text-slate-800">{activeRegion || 'Viloyatlar kesimida'}</h3>
               <div className="flex gap-4 text-xs text-slate-500">
                 <div className="flex items-center gap-1.5">
                   <span className="h-3 w-3 rounded bg-[#0B626B]"></span> Tanlangan
@@ -83,6 +85,9 @@ export const DashboardPage = () => {
             <RiskCenter data={RISK_ANALYSIS_STATS} />
           </div>
         </div>
+
+        <DocumentsStats />
+        <InquiriesStats />
       </div>
     </div>
   )

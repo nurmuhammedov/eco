@@ -76,11 +76,9 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     }
   }, [currentPageSize, currentOrientation, currentMargin, isEditorReady])
 
-  // Sahifani o'rnatish funksiyasi
   const applyPageFormat = (editor: any, format: string, orient: 'portrait' | 'landscape', margin: number) => {
     const { widthPx, heightPx, widthMm, heightMm } = getContentDimensions(format, orient, margin)
 
-    // Page format style qo'yish
     const doc = editor.getDoc()
     let style = doc.getElementById('mce-page-format')
 
@@ -250,18 +248,15 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
         applyPageFormat(editorRef.current, currentPageSize, currentOrientation, margin)
       },
 
-      // Page break qo'shish
       insertPageBreak: () => {
         if (!editorRef.current) return
         editorRef.current.execCommand('mcePageBreak')
       },
 
-      // Print Preview
       printPreview: () => {
         if (!editorRef.current) return
         const content = editorRef.current.getContent()
 
-        // Yangi oyna yaratish va chop etish stili bilan to'ldirish
         const printWindow = window.open('', '_blank')
         if (!printWindow) return
 
@@ -337,7 +332,6 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
       }
     }
 
-    // A4 format o'rnatish
     applyPageFormat(editor, pageSize, orientation, pageMargin)
 
     if (onInit) {
@@ -424,15 +418,9 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
         }
       `,
       skin: darkMode ? 'oxide-dark' : 'oxide',
-
-      // Print settings
       print_watermark: false,
-
-      // A4 papersize settings
       pagebreak_separator: '<div class="mce-pagebreak"></div>',
       pagebreak_split_block: true,
-
-      // Page setup sozlamalarini menyuga qo'shish
       menu: {
         file: { title: 'File', items: 'newdocument restoredraft | preview | print | pagesetup' },
         edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
@@ -466,9 +454,7 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
 
       formats: formats,
 
-      // Setup function
       setup: (editor: any) => {
-        // A4 formati sozlamalari uchun menyu qo'shish
         editor.ui.registry.addMenuItem('pagesetup', {
           text: 'Page Setup',
           icon: 'document-properties',
@@ -540,7 +526,6 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
                 const newOrientation = data.orientation as 'portrait' | 'landscape'
                 const newMargin = parseInt(data.margin, 10) || 20
 
-                // Format qo'llash
                 applyPageFormat(editor, newSize, newOrientation, newMargin)
 
                 api.close()
@@ -549,7 +534,6 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
           },
         })
 
-        // Custom buttonlarni qo'shish
         customButtons.forEach((button) => {
           editor.ui.registry.addButton(button.name, {
             text: button.text,

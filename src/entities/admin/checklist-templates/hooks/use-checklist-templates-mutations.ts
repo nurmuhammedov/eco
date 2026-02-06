@@ -13,7 +13,7 @@ export const useCreateChecklistTemplate = () => {
   return useMutation({
     mutationFn: (data: CreateChecklistTemplateDTO) => checklistTemplateAPI.create(data),
     onSuccess: async () => {
-      toast.success("Cheklist muvaffaqiyatli qo'shildi")
+      toast.success('Cheklist muvaffaqiyatli qo‘shildi')
       await queryClient.invalidateQueries({ queryKey: checklistTemplateKeys.list('checklist-templates') })
     },
     // onError: (error) => toast.error(`Xatolik: ${error.message}`),
@@ -38,7 +38,7 @@ export const useDeleteChecklistTemplate = () => {
   return useMutation({
     mutationFn: (id: number) => checklistTemplateAPI.delete(id),
     onSuccess: async () => {
-      toast.success("Cheklist o'chirildi")
+      toast.success('Cheklist o‘chirildi')
       await queryClient.invalidateQueries({ queryKey: checklistTemplateKeys.list('checklist-templates') })
     },
     // onError: (error) => toast.error(`Xatolik: ${error.message}`),

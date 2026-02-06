@@ -41,6 +41,7 @@ const ReportsDetail1 = lazy(() => import('@/features/reports/ui/report1'))
 const ReportsDetail2 = lazy(() => import('@/features/reports/ui/report2'))
 const ReportsDetail3 = lazy(() => import('@/features/reports/ui/report3'))
 const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
+const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
 const RegionsPage = lazy(() => import('@/pages/admin/regions/ui'))
 const DepartmentPage = lazy(() => import('@/pages/admin/department/ui'))
 const EquipmentPage = lazy(() => import('@/pages/admin/equipment/equipment-page'))
@@ -139,6 +140,11 @@ export const appRoutes = [
   {
     path: 'reports/REPORT_4',
     component: ReportsDetail4,
+    roles: [],
+  },
+  {
+    path: 'reports/REPORT_5',
+    component: ReportsDetail5,
     roles: [],
   },
   {

@@ -70,10 +70,6 @@ const Report1: React.FC = () => {
 
   const columns: ColumnDef<ISearchParams>[] = [
     {
-      header: 'T/r',
-      cell: ({ row }: any) => (row.original.isSummary ? '' : row.index),
-    },
-    {
       header: 'Hududiy boshqarma/bo‘limlar',
       accessorKey: 'officeName',
       cell: ({ row }: any) => (

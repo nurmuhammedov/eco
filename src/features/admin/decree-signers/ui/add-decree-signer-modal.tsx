@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query'
 
 const schema = z.object({
   userId: z.string({ required_error: 'Foydalanuvchini tanlang' }),
-  belongType: z.enum(['IRS_XRAY', 'OTHER', 'DECLARATION'], { required_error: "Bo'limni tanlang" }),
+  belongType: z.enum(['IRS_XRAY', 'OTHER', 'DECLARATION'], { required_error: 'Bo‘limni tanlang' }),
 })
 
 interface AddDecreeSignerModalProps {
@@ -41,7 +41,7 @@ export const AddDecreeSignerModal = ({ open, onOpenChange }: AddDecreeSignerModa
 
   const onSubmit = (values: z.infer<typeof schema>) => {
     const payload = { ...values }
-    // Backend hozircha DECLARATION ni qabul qilmaydi, shuning uchun OTHER ga o'giramiz
+    // Backend hozircha DECLARATION ni qabul qilmaydi, shuning uchun OTHER ga o‘giramiz
     if (payload.belongType === 'DECLARATION') {
       payload.belongType = 'OTHER'
     }
@@ -52,7 +52,7 @@ export const AddDecreeSignerModal = ({ open, onOpenChange }: AddDecreeSignerModa
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="flex h-full flex-col">
         <SheetHeader>
-          <SheetTitle>Imzolovchi shaxs qo'shish</SheetTitle>
+          <SheetTitle>Imzolovchi shaxs qo‘shish</SheetTitle>
         </SheetHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4 flex flex-1 flex-col space-y-4">

@@ -10,7 +10,7 @@ export const useCreateAttractionType = () => {
     mutationFn: attractionTypeAPI.create,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [ATTRACTION_TYPE_QUERY_KEY, 'list'] })
-      toast.success("Attraksion tipi muvaffaqiyatli qo'shildi")
+      toast.success('Attraksion tipi muvaffaqiyatli qo‘shildi')
     },
     onError: (error) => toast.error(`Xatolik: ${error.message}`),
   })
@@ -34,7 +34,7 @@ export const useDeleteAttractionType = () => {
     mutationFn: attractionTypeAPI.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [ATTRACTION_TYPE_QUERY_KEY, 'list'] })
-      toast.success("Attraksion tipi o'chirildi")
+      toast.success('Attraksion tipi o‘chirildi')
     },
     onError: (error) => toast.error(`Xatolik: ${error.message}`),
   })

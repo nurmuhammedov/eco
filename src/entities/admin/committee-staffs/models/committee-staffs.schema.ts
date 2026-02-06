@@ -3,18 +3,18 @@ import { UserRoles } from '@/entities/user'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 
 const ERROR_MESSAGES = {
-  required: "Bu maydonni to'ldirish majburiy",
+  required: 'Bu maydonni to‘ldirish majburiy',
   fio: 'FIO ni kiritish majburiy',
   position: 'Lavozimni tanlash majburiy',
-  pin: "JSHSHIR 14 ta raqamdan iborat bo'lishi kerak",
+  pin: 'JSHSHIR 14 ta raqamdan iborat bo‘lishi kerak',
   role: 'Rolni tanlash majburiy',
   direction: 'Kamida bitta yo‘nalish tanlash majburiy',
-  department: "Bo'limni tanlash majburiy",
-  phone: "Telefon raqami formati +998XXXXXXXXX bo'lishi kerak",
+  department: 'Bo‘limni tanlash majburiy',
+  phone: 'Telefon raqami formati +998XXXXXXXXX bo‘lishi kerak',
   birthDateRequired: 'Tug‘ilgan sana kiritilishi shart!', // Tug'ilgan sana uchun xabar
 } as const
 
-// Bu o'zgarmadi, `birthDate` majburiy emas
+// Bu o‘zgarmadi, `birthDate` majburiy emas
 export const committeeBaseSchema = {
   fullName: z.string({ message: ERROR_MESSAGES.fio }).min(1, ERROR_MESSAGES.required),
   position: z.string({ message: ERROR_MESSAGES.position }).min(1, ERROR_MESSAGES.required),
@@ -39,7 +39,7 @@ export const committeeBaseSchema = {
     }),
 }
 
-// ... bu qism o'zgarmadi ...
+// ... bu qism o‘zgarmadi ...
 export const committeeStaffSchema = z
   .object({
     id: z
@@ -66,7 +66,7 @@ export const committeeTableItemSchema = z.object({
   role: z.nativeEnum(UserRoles),
   directions: z.array(z.string()).default([]),
   department: z.string(),
-  birthDate: z.date({ required_error: 'Sana majburiy' }), // Jadvalda sana majburiy bo'lishi mumkin
+  birthDate: z.date({ required_error: 'Sana majburiy' }), // Jadvalda sana majburiy bo‘lishi mumkin
   departmentId: z.union([z.number().int().positive(), z.string().transform((val) => parseInt(val))]),
   position: z.string(),
   phoneNumber: z.string().regex(USER_PATTERNS.phone, { message: ERROR_MESSAGES.phone }),
@@ -95,7 +95,7 @@ export const schemas = {
     phoneNumber: committeeBaseSchema.phoneNumber.optional(),
   }),
 
-  // Filter sxemasi o'zgarmadi
+  // Filter sxemasi o‘zgarmadi
   filter: z.object({
     ...Object.fromEntries(Object.entries(committeeBaseSchema).map(([key, validator]) => [key, validator.optional()])),
     page: z.number().optional().default(1),

@@ -90,11 +90,6 @@ const Report1: React.FC = () => {
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
       {
-        header: 'T/r',
-        cell: ({ row }) => (row.original.isSummary ? <span></span> : row.index),
-        size: 50,
-      },
-      {
         header: 'Hududlar',
         accessorKey: 'regionName',
         minSize: 250,
@@ -114,7 +109,6 @@ const Report1: React.FC = () => {
         minSize: 150,
       },
 
-      // Dynamic equipment columns
       ...APPLICATIONS_DATA.filter(
         (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
       )
@@ -195,18 +189,16 @@ const Report1: React.FC = () => {
   return (
     <div className="flex h-full flex-col">
       <div className="mb-2 flex items-center justify-between">
-        <GoBack title="Davlat ro‘yxatidan o‘tqazilgan amaldagi XICHO, INM, Bosim ostidagi idishlar va qurilmalar to‘g‘risida sanalar bo‘yicha maʼlumot" />
+        <GoBack title="Davlat ro‘yxatidan o‘tkazilgan amaldagi XICHO, Qurilmalar, INM va Rentgenlar bo‘yicha maʼlumot" />
       </div>
-
       <div className="my-2 flex items-start justify-between gap-2">
         <div className="flex flex-1 justify-start">
           <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
         </div>
         <Button disabled={true} onClick={handleDownloadExel}>
-          <Download /> MS Exel
+          <Download /> Excel
         </Button>
       </div>
-
       <DataTable showNumeration={false} headerCenter={true} data={tableData} columns={columns} isLoading={isLoading} />
     </div>
   )

@@ -10,6 +10,7 @@ import {
   FileText,
   Map,
   MessageSquareText,
+  ScrollText,
   ShieldCheck,
 } from 'lucide-react'
 
@@ -60,11 +61,6 @@ export default [
         url: '/accreditations',
         title: 'Ekspertiza xulosalari',
       },
-      {
-        id: 'DECLARATION',
-        url: '/declarations',
-        title: 'Deklaratsiya',
-      },
     ],
   },
   {
@@ -72,6 +68,12 @@ export default [
     title: 'menu.attestation',
     url: '/attestations',
     icon: <BadgeCheck />,
+  },
+  {
+    id: 'DECLARATION',
+    title: 'Deklaratsiya',
+    url: '/declarations',
+    icon: <ScrollText />,
   },
   {
     id: 'ATTESTATION_REGIONAL',

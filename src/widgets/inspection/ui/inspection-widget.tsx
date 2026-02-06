@@ -235,7 +235,7 @@ export const InspectionWidget: React.FC = () => {
               </Badge>
             </TabsTrigger>
             {isChairmanOrHead && (
-              <TabsTrigger value={InspectionStatus.TEN_DAYS}>Imzolash kerak bo'lgan hujjatlar</TabsTrigger>
+              <TabsTrigger value={InspectionStatus.TEN_DAYS}>Imzolash kerak bo‘lgan hujjatlar</TabsTrigger>
             )}
           </TabsList>
         </div>

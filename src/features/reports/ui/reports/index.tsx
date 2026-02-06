@@ -22,6 +22,7 @@ interface ReportItem {
   title: string
   icon?: React.ElementType
   url: string
+  badge?: string
 }
 
 interface ReportGroup {
@@ -38,12 +39,12 @@ const REPORTS_GROUPS: ReportGroup[] = [
       {
         id: 'rep-1',
         title: 'Arizalarning hududlar kesimida taqsimlanishi',
-        icon: FileText,
+        icon: Map,
         url: `/reports/${ApplicationTypeEnum.REPORT_1}`,
       },
       {
         id: 'rep-2',
-        title: 'Arizalar turlari bo‘yicha taqsimlanish',
+        title: 'Arizalar turlari bo‘yicha taqsimlanishi',
         icon: PieChart,
         url: `/reports/${ApplicationTypeEnum.REPORT_2}`,
       },
@@ -55,15 +56,22 @@ const REPORTS_GROUPS: ReportGroup[] = [
     items: [
       {
         id: 'rep-3',
-        title: 'Ro‘yxatga olingan/chiqarilgan obyektlar',
+        title: 'Dalat ro‘yxatiga olingan/chiqarilgan obyektlar',
         icon: Database,
         url: `/reports/${ApplicationTypeEnum.REPORT_3}`,
       },
       {
         id: 'rep-4',
-        title: 'Davlat ro‘yxatidagi amaldagi obyektlar',
+        title: 'Davlat ro‘yxatidagi yangi qo‘shilgan va amaldagi obyektlar',
         icon: Activity,
         url: `/reports/${ApplicationTypeEnum.REPORT_4}`,
+      },
+      {
+        id: 'rep-5',
+        title: 'Qurilmalaring muddatlari bo‘yicha hisobot',
+        icon: Clock,
+        url: `/reports/${ApplicationTypeEnum.REPORT_5}`,
+        badge: 'Yangi',
       },
     ],
   },
@@ -79,7 +87,7 @@ const REPORTS_GROUPS: ReportGroup[] = [
     id: 'risk-analysis',
     title: 'Xavfni tahlil qilish',
     items: [
-      { id: 'risk-objects', title: "Xavf darajasi bo'yicha obyektlar", icon: AlertTriangle, url: '#' },
+      { id: 'risk-objects', title: 'Xavf darajasi bo‘yicha obyektlar', icon: AlertTriangle, url: '#' },
       { id: 'risk-trends', title: "Xavf ko'rsatkichlari dinamikasi", icon: TrendingUp, url: '#' },
     ],
   },
@@ -107,8 +115,9 @@ export const ReportsGrid: React.FC = () => {
   return (
     <Fragment>
       <div className="mb-6 flex items-center justify-between">
-        <h5 className="text-2xl font-semibold text-gray-800">
-          Hisobotlar <span className="text-red-400">(ushbu sahifa ishlab chiqish jarayonida)</span>
+        <h5 className="flex items-center gap-3 text-2xl font-semibold text-gray-800">
+          Hisobotlar{' '}
+          <span className="text-base font-normal text-amber-600 italic">(ushbu sahifa ishlab chiqish jarayonida)</span>
         </h5>
       </div>
 
@@ -129,7 +138,14 @@ export const ReportsGrid: React.FC = () => {
                       <div className="rounded-md bg-gray-50 p-2 text-gray-500 transition-colors group-hover:bg-blue-50 group-hover:text-blue-600">
                         <Icon size={18} />
                       </div>
-                      <span className="text-sm font-medium text-gray-600 group-hover:text-gray-900">{item.title}</span>
+                      <span className="flex items-center gap-2 text-sm font-medium text-gray-600 group-hover:text-gray-900">
+                        {item.title}
+                        {item.badge && (
+                          <span className="rounded bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700 uppercase">
+                            {item.badge}
+                          </span>
+                        )}
+                      </span>
                     </Link>
                   )
                 })}

@@ -11,7 +11,7 @@ export const useCreateDecreeSigner = (onSuccess?: () => void) => {
     mutationFn: (data: CreateDecreeSignerDto) => apiClient.post('/decree-signers', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: DECREE_SIGNERS_KEYS.all })
-      toast.success("Muvaffaqiyatli qo'shildi")
+      toast.success('Muvaffaqiyatli qo‘shildi')
       onSuccess?.()
     },
     onError: (error: any) => {
@@ -27,7 +27,7 @@ export const useDeleteDecreeSigner = () => {
     mutationFn: (id: string) => apiClient.delete(`/decree-signers/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: DECREE_SIGNERS_KEYS.all })
-      toast.success("Muvaffaqiyatli o'chirildi")
+      toast.success('Muvaffaqiyatli o‘chirildi')
     },
     onError: (error: any) => {
       toast.error(error.message || 'Xatolik yuz berdi')

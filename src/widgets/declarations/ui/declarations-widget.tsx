@@ -7,6 +7,9 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { useData } from '@/shared/hooks'
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
+// import { TabsLayout } from '@/shared/layouts'
+import { useCustomSearchParams } from '@/shared/hooks'
+import { DeclarationTabs } from '@/features/declarations/ui/declaration-tabs'
 
 const DeclarationsWidget = () => {
   const { user } = useAuth()
@@ -17,6 +20,9 @@ const DeclarationsWidget = () => {
   }
 
   const canAdd = user?.role === UserRoles.LEGAL
+
+  const { paramsObject, addParams } = useCustomSearchParams()
+  const { status: tabStatus = 'ALL' } = paramsObject
 
   const { data: status = 'NOT_PERMITTED' } = useData<any>('/accreditations/status', canAdd)
 
@@ -72,6 +78,8 @@ const DeclarationsWidget = () => {
           )}
         </div>
       )}
+
+      <DeclarationTabs activeTab={tabStatus} onTabChange={(id) => addParams({ status: id })} counts={{}} />
 
       <div className="flex flex-1 flex-col gap-2 overflow-hidden">
         <DeclarationsTable />

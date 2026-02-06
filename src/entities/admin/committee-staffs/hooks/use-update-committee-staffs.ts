@@ -1,6 +1,6 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-// Asosiy exportlarni eski yo'ldan qoldiramiz
+// Asosiy exportlarni eski yo‘ldan qoldiramiz
 import { committeeStaffAPI, committeeStaffKeys } from '@/entities/admin/committee-staffs'
 
 import type { UpdateCommitteeStaffDTO } from '../models/committee-staffs.schema'
@@ -61,12 +61,12 @@ export const useUpdateCommitteeStaff = () => {
     },
 
     onError: (_err, updatedData, context) => {
-      // `updatedData.id` mavjud bo'lsagina keshni eski holatiga qaytaramiz
+      // `updatedData.id` mavjud bo‘lsagina keshni eski holatiga qaytaramiz
       if (updatedData.id && context?.previousDetail) {
         queryClient.setQueryData(committeeStaffKeys.detail('committee-staff', updatedData.id), context.previousDetail)
       }
 
-      // Ro'yxatni eski holatiga qaytarishda ID kerak emas, shuning uchun bu o'zgarmaydi
+      // Ro‘yxatni eski holatiga qaytarishda ID kerak emas, shuning uchun bu o‘zgarmaydi
       if (context?.previousList) {
         queryClient.setQueryData(committeeStaffKeys.list('committee-staff'), context.previousList)
       }
