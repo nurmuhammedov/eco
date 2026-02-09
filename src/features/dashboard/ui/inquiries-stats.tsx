@@ -19,13 +19,13 @@ export const InquiriesStats = () => {
   const inquiries = DOCUMENTS_STATS.inquiries
 
   return (
-    <div className="mt-8 rounded-2xl bg-white p-6 ring-1 ring-slate-100">
+    <div className="rounded-2xl bg-white p-6 ring-1 ring-slate-100">
       <div className="mb-8">
-        <h2 className="text-xl font-bold tracking-tight text-slate-900">Murojaatlar statistikasi</h2>
+        <h2 className="text-xl font-bold tracking-tight text-slate-900">Murojaatlar</h2>
         <p className="mt-1 text-sm text-slate-500">Kelib tushgan murojaatlar bo‘yicha umumiy hisobot</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-5">
         {renderCleanCard('Jami', inquiries.total, <FileText className="h-6 w-6" />, 'text-blue-600', 'bg-blue-50')}
         {renderCleanCard('XICHO', inquiries.hf, <Factory className="h-6 w-6" />, 'text-indigo-600', 'bg-indigo-50')}
         {renderCleanCard(
@@ -47,7 +47,7 @@ export const InquiriesStats = () => {
 
       <div className="mt-8">
         <h3 className="mb-4 text-lg font-semibold text-slate-900">Viloyatlar kesimida</h3>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           {(inquiries as any).byRegion?.map((region: any, index: number) => (
             <div key={index} className="flex flex-col gap-2">
               <div className="flex items-center justify-between text-sm">

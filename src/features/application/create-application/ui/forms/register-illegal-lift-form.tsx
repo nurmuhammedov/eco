@@ -20,7 +20,7 @@ interface RegisterIllegalLiftFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalLiftFormProps) => {
+export default ({ onSubmit /*isPending = false */ }: RegisterIllegalLiftFormProps) => {
   const {
     form,
     isUpdate,
@@ -32,7 +32,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLiftFormProps) =
     ownerData,
     isLoading,
     isSearchLoading,
-    isSubmitPending,
+    // isSubmitPending,
     handleSearch,
     handleClear,
     handleSubmit,
@@ -625,7 +625,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLiftFormProps) =
           </div>
         </CardForm>
 
-        <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>
+        <Button
+          type="submit"
+          // disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}
+          disabled={true}
+        >
           {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
         </Button>
       </form>

@@ -62,32 +62,37 @@ export const DashboardPage = () => {
         </div>
 
         <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-12">
-          <div className="flex h-full flex-col rounded-lg border border-slate-200 bg-white p-4 lg:col-span-6">
-            <div className="mb-2 flex items-center justify-between px-2">
-              <h3 className="text-lg font-semibold text-slate-800">{activeRegion || 'Viloyatlar kesimida'}</h3>
-              <div className="flex gap-4 text-xs text-slate-500">
-                <div className="flex items-center gap-1.5">
-                  <span className="h-3 w-3 rounded bg-[#0B626B]"></span> Tanlangan
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="h-3 w-3 rounded bg-slate-200"></span> Hududlar
-                </div>
+          <div className="lg:col-span-12 xl:col-span-6">
+            <InquiriesStats />
+          </div>
+
+          <div className="lg:col-span-12 xl:col-span-6">
+            <RiskCenter data={RISK_ANALYSIS_STATS} />
+          </div>
+        </div>
+
+        <DocumentsStats />
+
+        <div className="mt-8 mb-8 flex flex-col rounded-lg border border-slate-200 bg-white p-4">
+          <div className="mb-2 flex items-center justify-between px-2">
+            <h3 className="text-lg font-semibold text-slate-800">{activeRegion || 'Viloyatlar kesimida'}</h3>
+            <div className="flex gap-4 text-xs text-slate-500">
+              <div className="flex items-center gap-1.5">
+                <span className="h-3 w-3 rounded bg-[#0B626B]"></span> Tanlangan
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="h-3 w-3 rounded bg-slate-200"></span> Hududlar
               </div>
             </div>
+          </div>
+          <div className="mx-auto w-full max-w-5xl">
             <UzbekistanMap
               className="w-full flex-1"
               activeRegionId={activeRegion}
               onRegionClick={(id) => setActiveRegion(id)}
             />
           </div>
-
-          <div className="lg:col-span-6">
-            <RiskCenter data={RISK_ANALYSIS_STATS} />
-          </div>
         </div>
-
-        <DocumentsStats />
-        <InquiriesStats />
       </div>
     </div>
   )

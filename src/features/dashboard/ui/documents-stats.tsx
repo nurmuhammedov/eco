@@ -142,7 +142,7 @@ export const DocumentsStats = () => {
     <div className="mt-8 rounded-2xl bg-white p-6 ring-1 ring-slate-100">
       <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-900">Hujjatlar statistikasi</h2>
+          <h2 className="text-xl font-bold tracking-tight text-slate-900">Hujjatlar</h2>
           <p className="mt-1 text-sm text-slate-500">Barcha hujjatlar holati bo‘yicha umumiy hisobot</p>
         </div>
 
