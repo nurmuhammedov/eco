@@ -200,15 +200,15 @@ const RegisterWidget = () => {
                 </Select>
               </div>
             )}
-            {!(type == 'ALL' && tab == RegisterActiveTab.EQUIPMENTS) ? (
-              <Button
-                disabled={isLoading || tab == RegisterActiveTab.AUTO}
-                loading={isLoading}
-                onClick={handleDownloadExel}
-              >
-                <Download /> Exel
-              </Button>
-            ) : null}
+            <Button
+              disabled={
+                isLoading || tab == RegisterActiveTab.AUTO || (type == 'ALL' && tab == RegisterActiveTab.EQUIPMENTS)
+              }
+              loading={isLoading}
+              onClick={handleDownloadExel}
+            >
+              <Download /> Exel
+            </Button>
           </div>
         </div>
         <TabsContent value={RegisterActiveTab.HF} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">

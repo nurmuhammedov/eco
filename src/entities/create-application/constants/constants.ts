@@ -302,9 +302,9 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   },
   {
     id: 70,
-    title: 'Atraksion ro‘yxatga olish',
+    title: 'Attraksion ro‘yxatga olish',
     name: 'Attraksion pasporti',
-    description: 'Atraksion ro‘yxatga olish',
+    description: 'Attraksion ro‘yxatga olish',
     category: ApplicationCategory.ILLEGAL_EQUIPMENTS,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION,
     icon: 'passport',

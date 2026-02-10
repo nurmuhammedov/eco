@@ -49,7 +49,7 @@ export const AttractionTypeDrawer = () => {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Atraksion turi</FormLabel>
+                    <FormLabel>Attraksion turi</FormLabel>
                     <FormControl>
                       <Select
                         {...field}

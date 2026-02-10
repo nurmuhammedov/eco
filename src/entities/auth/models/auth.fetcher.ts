@@ -3,7 +3,7 @@ import { authAPI } from '@/entities/auth/models/auth.api'
 import { LoginDTO } from '@/entities/auth/models/auth.types'
 import { UserState } from '@/entities/user'
 import { useAppDispatch } from '@/shared/hooks/use-store'
-import { getHomeRouteForLoggedInUser } from '@/shared/lib/router'
+import { routeByRole } from '@/shared/lib/router/route-by-role'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
@@ -35,8 +35,8 @@ export const useLogin = () => {
 
     onSuccess: (data: UserState) => {
       dispatch(setUser(data))
-      queryClient.setQueryData(['currentUser'], data)
-      const redirectPath = state?.from ? state?.from : getHomeRouteForLoggedInUser(data?.role)
+      queryClient.setQueryData(['me'], data)
+      const redirectPath = state?.from && state?.from !== '/' ? state?.from : routeByRole(data?.role)
       navigate(redirectPath)
     },
   })
@@ -54,8 +54,8 @@ export const useLoginOneId = () => {
     mutationFn: authAPI.loginOneId,
     onSuccess: (data: UserState) => {
       dispatch(setUser(data))
-      queryClient.setQueryData(['currentUser'], data)
-      const redirectPath = state?.from ? state?.from : getHomeRouteForLoggedInUser(data?.role)
+      queryClient.setQueryData(['me'], data)
+      const redirectPath = state?.from && state?.from !== '/' ? state?.from : routeByRole(data?.role)
       navigate(redirectPath)
     },
   })

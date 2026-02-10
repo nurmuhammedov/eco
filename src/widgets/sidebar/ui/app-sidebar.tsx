@@ -1,4 +1,4 @@
-import { Book } from 'lucide-react'
+import { Book, LucideHome } from 'lucide-react'
 import { Direction, UserRoles } from '@/entities/user'
 import {
   Sidebar,
@@ -27,36 +27,48 @@ export function AppSidebar() {
   const displayedNavigations: Navigation = useMemo(() => {
     if (!user) return []
 
+    let navigations: any[] = []
+
     if (user.role == UserRoles.ADMIN) {
-      return NAVIGATIONS[user.role]
-    }
-
-    if (user.directions.length === 0) {
+      navigations = NAVIGATIONS[user.role]
+    } else if (user.role == UserRoles.LEGAL) {
+      navigations = legalNavigation.filter((navItem) => user.directions.includes(navItem.id as Direction))
+    } else if (user.directions.length === 0) {
       const appealNav = allNavigation.find((item: any) => item.id === 'APPEAL')
-      return appealNav ? [appealNav] : []
-    }
+      navigations = appealNav ? [appealNav] : []
+    } else {
+      const baseNavigation = NAVIGATIONS[user.role] || allNavigation
 
-    if (user.role == UserRoles.LEGAL) {
-      return legalNavigation.filter((navItem) => user.directions.includes(navItem.id as Direction))
-    }
+      navigations = baseNavigation.reduce((acc: any[], navItem: any) => {
+        if (navItem.items?.length) {
+          const filteredItems = navItem.items.filter((subItem: any) =>
+            subItem.id ? user.directions.includes(subItem.id as Direction) : false
+          )
 
-    const baseNavigation = NAVIGATIONS[user.role] || allNavigation
-
-    return baseNavigation.reduce((acc: any[], navItem: any) => {
-      if (navItem.items?.length) {
-        const filteredItems = navItem.items.filter((subItem: any) =>
-          subItem.id ? user.directions.includes(subItem.id as Direction) : false
-        )
-
-        if (filteredItems.length > 0) {
-          acc.push({ ...navItem, items: filteredItems })
+          if (filteredItems.length > 0) {
+            acc.push({ ...navItem, items: filteredItems })
+          }
+        } else if (user.directions.includes(navItem.id as Direction)) {
+          acc.push(navItem)
         }
-      } else if (user.directions.includes(navItem.id as Direction)) {
-        acc.push(navItem)
-      }
 
-      return acc
-    }, [])
+        return acc
+      }, [])
+    }
+
+    if (user.role === UserRoles.REGIONAL || user.role === UserRoles.INSPECTOR || user.role === UserRoles.CHAIRMAN) {
+      // Create a new array to avoid mutating the original if it came from a constant
+      navigations = [
+        {
+          title: 'Bosh sahifa',
+          url: '/dashboard',
+          icon: <LucideHome />,
+        },
+        ...navigations,
+      ]
+    }
+
+    return navigations
   }, [user])
 
   if (!user) return null

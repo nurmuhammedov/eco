@@ -19,12 +19,12 @@ export function AttractionTypeList() {
     {
       accessorKey: 'childEquipment',
       maxSize: -10,
-      header: t('Atraksion turi'),
+      header: t('Attraksion turi'),
     },
     {
       accessorKey: 'name',
       maxSize: -10,
-      header: t('Atraksion tipi'),
+      header: t('Attraksion tipi'),
     },
     {
       id: 'actions',

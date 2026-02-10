@@ -1,19 +1,19 @@
-import { FC, lazy } from 'react'
-import { AuthGuard } from '@/features/auth'
-import { RouterProvider } from 'react-router-dom'
-import { createAppRouter } from '@/shared/lib/router'
+import { FC } from 'react'
+import { BrowserRouter } from 'react-router-dom'
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
+import { useAppRoutes } from '@/shared/hooks/use-app-routes'
 
-const AppLayout = lazy(() => import('@/shared/layouts/ui/app-layout'))
-const AuthLayout = lazy(() => import('@/shared/layouts/ui/auth-layout'))
+const AppRoutes = () => {
+  return useAppRoutes()
+}
 
 export const withRouter = (_Component: FC): FC => {
   return () => {
-    const router = createAppRouter(AppLayout, AuthLayout, AuthGuard)
-
     return (
       <NuqsAdapter>
-        <RouterProvider router={router} />
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
       </NuqsAdapter>
     )
   }

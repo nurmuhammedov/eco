@@ -139,7 +139,7 @@ export const DocumentsStats = () => {
   }
 
   return (
-    <div className="mt-8 rounded-2xl bg-white p-6 ring-1 ring-slate-100">
+    <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-slate-900">Hujjatlar</h2>
@@ -152,7 +152,7 @@ export const DocumentsStats = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabType)}
               className={cn(
-                'rounded-lg px-5 py-2 text-sm font-semibold transition-all duration-200',
+                'cursor-pointer rounded-lg px-5 py-2 text-sm font-semibold transition-all duration-200',
                 activeTab === tab.id
                   ? 'bg-white text-slate-900 shadow-sm ring-1 ring-black/5'
                   : 'text-slate-600 hover:bg-white/50 hover:text-slate-900'

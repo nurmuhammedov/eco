@@ -85,7 +85,7 @@ export const appRoutes = [
   {
     path: 'dashboard',
     component: DashboardPage,
-    roles: [],
+    roles: [UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.CHAIRMAN],
   },
   {
     path: 'applications',
@@ -416,27 +416,27 @@ export const appRoutes = [
   },
 ]
 
+import { withSuspense } from '@/shared/config/routes/utils'
+
 export const publicRoutes = [
   {
     path: '/qr/:id/equipments',
-    component: ContactPage,
+    element: withSuspense(ContactPage as any),
   },
   {
     path: '/public/risk-analysis/:id',
-    component: PublicRiskAnalysisInfo,
+    element: withSuspense(PublicRiskAnalysisInfo as any),
   },
 ]
 
 export const authRoutes = [
   {
     path: 'login',
-    component: OneIdLoginPage,
-    roles: [],
+    element: withSuspense(OneIdLoginPage),
   },
   {
     path: 'login/admin',
-    roles: [],
-    component: AdminLogin,
+    element: withSuspense(AdminLogin),
   },
 ]
 

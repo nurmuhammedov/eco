@@ -32,6 +32,7 @@ export const EquipmentsList = () => {
       address = '',
       startDate = '',
       endDate = '',
+      factoryNumber = '',
     },
     addParams,
   } = useCustomSearchParams()
@@ -54,6 +55,7 @@ export const EquipmentsList = () => {
     address,
     startDate,
     endDate,
+    factoryNumber,
   })
 
   const { data: dataForNewCount } = useData<number>(`/equipments/count`, true, {
@@ -87,7 +89,10 @@ export const EquipmentsList = () => {
     },
     {
       header: 'Qurilma',
-      cell: (cell: any) => APPLICATIONS_DATA?.find((i) => i?.equipmentType == cell.row.original.type)?.name || '',
+      cell: (cell: any) =>
+        cell.row.original.type == 'ELEVATOR'
+          ? 'Lift'
+          : APPLICATIONS_DATA?.find((i) => i?.equipmentType == cell.row.original.type)?.name || '',
     },
     {
       header: 'Qurilmaning turi',
@@ -122,6 +127,12 @@ export const EquipmentsList = () => {
       filterKey: 'address',
       filterType: 'search',
       minSize: 150,
+    },
+    {
+      accessorKey: 'factoryNumber',
+      header: 'Zavod raqami',
+      filterKey: 'factoryNumber',
+      filterType: 'search',
     },
     {
       accessorFn: (row: any) => (row.nextPartialCheckDate ? getDate(row.nextPartialCheckDate) : '-'),
@@ -167,6 +178,10 @@ export const EquipmentsList = () => {
           {
             id: 'ALL',
             name: 'Barcha qurilmalar',
+          },
+          {
+            id: 'ELEVATOR',
+            name: 'Liftlar',
           },
           ...(APPLICATIONS_DATA?.filter(
             (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
