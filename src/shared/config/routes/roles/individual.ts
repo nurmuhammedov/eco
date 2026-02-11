@@ -12,6 +12,13 @@ const RegisterAutoDetail = lazy(() => import('@/features/register/auto/ui/auto-d
 
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
 const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'))
+const AccidentList = lazy(() =>
+  import('@/features/accident/ui/accident-list').then((m) => ({ default: m.AccidentList }))
+)
+const AccidentAdd = lazy(() => import('@/features/accident/ui/accident-form').then((m) => ({ default: m.AccidentAdd })))
+const AccidentDetail = lazy(() =>
+  import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
+)
 
 export const individualRoutes = [
   // APPEAL
@@ -66,5 +73,20 @@ export const individualRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents',
+    element: withSuspense(AccidentList),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/add',
+    element: withSuspense(AccidentAdd),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/:id',
+    element: withSuspense(AccidentDetail),
   },
 ]

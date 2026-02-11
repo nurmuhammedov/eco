@@ -120,7 +120,7 @@ export const UpdateConclusion = () => {
                 name="hfId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Xavfli ishlab chiqarish obyekti</FormLabel>
+                    <FormLabel>XICHO</FormLabel>
                     <Select
                       value={field.value?.toString()}
                       onValueChange={(value) => {

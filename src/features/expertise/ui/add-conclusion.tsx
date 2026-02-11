@@ -21,6 +21,7 @@ import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { cleanParams } from '@/shared/lib'
 import { useNavigate } from 'react-router-dom'
 import { Textarea } from '@/shared/components/ui/textarea'
+import DetailRow from '@/shared/components/common/detail-row'
 
 export const AddConclusion = () => {
   const [stir, setStir] = useState('')
@@ -175,21 +176,11 @@ export const AddConclusion = () => {
               <CardTitle>Tashkilot maʼlumotlari</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 content-center items-center gap-2 rounded-lg px-2.5 py-4 odd:bg-neutral-50">
-                <h2 className="text-normal font-medium text-gray-700">Tashkilot nomi:</h2>
-                <p className="text-normal font-normal text-gray-900">{legalInfo?.legalName || '-'}</p>
-              </div>
-              <div className="grid grid-cols-2 content-center items-center gap-2 rounded-lg px-2.5 py-4 odd:bg-neutral-50">
-                <h2 className="text-normal font-medium text-gray-700">Tashkilot rahbari F.I.Sh.:</h2>
-                <p className="text-normal font-normal text-gray-900">{legalInfo?.fullName || '-'}</p>
-              </div>
-              <div className="grid grid-cols-2 content-center items-center gap-2 rounded-lg px-2.5 py-4 odd:bg-neutral-50">
-                <h2 className="text-normal font-medium text-gray-700">Manzil:</h2>
-                <p className="text-normal font-normal text-gray-900">{legalInfo?.legalAddress || '-'}</p>
-              </div>
-              <div className="grid grid-cols-2 content-center items-center gap-2 rounded-lg px-2.5 py-4 odd:bg-neutral-50">
-                <h2 className="text-normal font-medium text-gray-700">Telefon raqami:</h2>
-                <p className="text-normal font-normal text-gray-900">{legalInfo?.phoneNumber || '-'}</p>
+              <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
+                <DetailRow title="Tashkilot nomi:" value={legalInfo?.legalName || '-'} />
+                <DetailRow title="Tashkilot rahbari F.I.Sh.:" value={legalInfo?.fullName || '-'} />
+                <DetailRow title="Manzil:" value={legalInfo?.legalAddress || '-'} />
+                <DetailRow title="Telefon raqami:" value={legalInfo?.phoneNumber || '-'} />
               </div>
             </CardContent>
           </Card>
@@ -219,7 +210,7 @@ export const AddConclusion = () => {
                     name="hfId"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Xavfli ishlab chiqarish obyekti</FormLabel>
+                        <FormLabel>XICHO</FormLabel>
                         <Select
                           value={field.value?.toString()}
                           onValueChange={(value) => {

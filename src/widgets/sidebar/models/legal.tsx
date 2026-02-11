@@ -1,6 +1,7 @@
 import { Navigation } from '@/widgets/sidebar/models/types'
 import {
   AlertCircle,
+  Ambulance,
   Archive,
   Award,
   BarChart2,
@@ -98,5 +99,11 @@ export default [
     title: 'Murojaatlar',
     url: '/inquiries',
     icon: <MessageSquareText />,
+  },
+  {
+    id: 'ACCIDENT',
+    title: 'Baxtsiz hodisalar',
+    url: '/accidents',
+    icon: <Ambulance />,
   },
 ] as Navigation

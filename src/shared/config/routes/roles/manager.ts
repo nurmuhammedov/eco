@@ -33,6 +33,13 @@ const Inquiries = lazy(() => import('@/features/inquiries'))
 // Expanded Imports
 const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
+const AccidentList = lazy(() =>
+  import('@/features/accident/ui/accident-list').then((m) => ({ default: m.AccidentList }))
+)
+const AccidentAdd = lazy(() => import('@/features/accident/ui/accident-form').then((m) => ({ default: m.AccidentAdd })))
+const AccidentDetail = lazy(() =>
+  import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
+)
 
 export const managerRoutes = [
   // APPEAL
@@ -198,5 +205,20 @@ export const managerRoutes = [
     id: 'INQUIRY',
     path: 'inquiries',
     element: withSuspense(Inquiries),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents',
+    element: withSuspense(AccidentList),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/add',
+    element: withSuspense(AccidentAdd),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/:id',
+    element: withSuspense(AccidentDetail),
   },
 ]
