@@ -13,27 +13,23 @@ interface Props {
 }
 
 const List: FC<Props> = ({ data = [], isLoading = false }) => {
-  // const currentRole = useCurrentRole()
-  // const isRegional = currentRole === UserRoles.REGIONAL
-  // const { user } = useAuth()
   const navigate = useNavigate()
   const { paramsObject } = useCustomSearchParams()
-  // const activeAssignedStatus = (paramsObject.assignedStatus as AssignedStatusTab) || AssignedStatusTab.NOT_ASSIGNED
   const { t } = useTranslation('common')
   const type = paramsObject.mainTab || RiskAnalysisTab.XICHO
-  //
-  // const handleAssignedStatusChange = (status: string) => {
-  //   addParams({ assignedStatus: status, page: 1 })
-  // }
-
   const handleView = (row: RiskAnalysisItem) => {
     navigate(`/risk-analysis/detail?tin=${row.legalTin}&id=${row.belongId}&type=${type}`)
   }
 
   const columns: ExtendedColumnDef<RiskAnalysisItem, any>[] = [
     {
-      header: t('risk_analysis_columns.registryNumber'),
+      header: () => (
+        <div className="whitespace-nowrap">
+          Roʻyxatga olish <br /> raqami
+        </div>
+      ),
       accessorKey: 'registryNumber',
+      className: '!w-[1%] whitespace-nowrap',
       filterKey: 'registryNumber',
       filterType: 'search',
     },
@@ -43,16 +39,18 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
       filterKey: 'name',
       filterType: 'search',
     },
+
     {
-      header: t('risk_analysis_columns.legalName'),
+      header: 'Tashkilot nomi',
       accessorKey: 'legalName',
       filterKey: 'legalName',
       filterType: 'search',
     },
     {
-      header: t('risk_analysis_columns.legalTin'),
       accessorKey: 'legalTin',
       filterKey: 'legalTin',
+      className: '!w-[1%]',
+      header: () => <div className="whitespace-nowrap">Tashkilot STIR</div>,
       filterType: 'search',
     },
     {
@@ -64,33 +62,17 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
     {
       header: t('Ballar'),
       accessorKey: 'score',
-      cell: ({ row }: any) => row.original?.score ?? "Yo'q",
+      cell: ({ row }: any) => row.original?.score ?? 'Yo‘q',
       filterKey: 'score',
+      className: '!w-[1%]',
+
       filterType: 'search',
     },
-    // ...(activeAssignedStatus === AssignedStatusTab.NOT_ASSIGNED && user?.role == UserRoles.REGIONAL
-    //   ? [
-    //       {
-    //         id: 'assignInspector',
-    //         header: 'Inspektorni belgilash',
-    //         cell: ({ row }: any) => <AssignInspectorButton disabled={!!paramsObject?.intervalId} row={row.original} />,
-    //         meta: {
-    //           className: 'w-[200px]',
-    //         },
-    //       },
-    //     ]
-    //   : []),
     {
       id: 'actions',
-      header: 'Amallar',
       cell: ({ row }: any) => <DataTableRowActions showView onView={() => handleView(row.original)} row={row} />,
     },
   ]
-
-  // const assignedStatusTabs = [
-  //   { id: AssignedStatusTab.NOT_ASSIGNED, label: t('risk_analysis_tabs.NOT_ASSIGNED') },
-  //   { id: AssignedStatusTab.ASSIGNED, label: t('risk_analysis_tabs.ASSIGNED') },
-  // ]
 
   return <DataTable showFilters={true} isPaginated data={data || []} columns={columns} isLoading={isLoading} />
 }

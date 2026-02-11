@@ -64,15 +64,19 @@ export const InquiriesStats = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={cn(
-                'flex cursor-pointer items-center gap-2 rounded-md px-4 py-1.5 text-sm font-medium transition-all duration-200',
-                activeTab === tab.id ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'
+                'group flex cursor-pointer items-center justify-between gap-2 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200',
+                activeTab === tab.id
+                  ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200'
+                  : 'text-slate-600 hover:bg-white/60 hover:text-slate-900'
               )}
             >
               {tab.label}
               <span
                 className={cn(
-                  'rounded-full px-2 py-0.5 text-xs font-semibold',
-                  activeTab === tab.id ? 'bg-slate-100 text-slate-900' : 'bg-white text-slate-500'
+                  'ml-2 rounded-full px-2 py-0.5 text-xs font-semibold transition-colors',
+                  activeTab === tab.id
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-slate-200 text-slate-600 group-hover:bg-slate-300'
                 )}
               >
                 {tab.count}
@@ -97,7 +101,7 @@ export const InquiriesStats = () => {
       </div>
 
       <div className="mt-8">
-        <h3 className="mb-4 text-lg font-semibold text-slate-900">Viloyatlar kesimida</h3>
+        <h3 className="mb-4 text-lg font-semibold text-slate-900">Respublika bo‘yicha</h3>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           {data.byRegion?.map((region: any, index: number) => (
             <div key={index} className="flex flex-col gap-2">

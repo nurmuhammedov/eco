@@ -735,7 +735,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
           type="submit"
           disabled={!ownerData && !isUpdate}
           loading={isPending || isSubmitPending}
-          className="mt-5"
+          className="mt-0"
         >
           {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
         </Button>

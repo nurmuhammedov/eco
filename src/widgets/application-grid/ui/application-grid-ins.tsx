@@ -19,7 +19,7 @@ export const ApplicationsGridIns: React.FC = () => {
     if (!hasMainCards) {
       return (
         <div className="py-12 text-center">
-          <p className="text-slate-500">Bu toifada hozircha arizalar mavjud emas</p>
+          <p className="text-slate-500">Bu toifada hozircha arizalar mavjud emas!</p>
         </div>
       )
     }
@@ -27,7 +27,7 @@ export const ApplicationsGridIns: React.FC = () => {
     if (selectedMainCard && !hasSubCards) {
       return (
         <div className="py-12 text-center">
-          <p className="text-slate-500">Tanlangan toifaga oid arizalar mavjud emas</p>
+          <p className="text-slate-500">Tanlangan toifaga oid arizalar mavjud emas!</p>
         </div>
       )
     }
@@ -36,7 +36,7 @@ export const ApplicationsGridIns: React.FC = () => {
   }
 
   const SubApplication = React.memo(() => {
-    const gridClasses = 'grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-4'
+    const gridClasses = 'grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-4 pb-4'
 
     if (!hasSubCards) {
       return null

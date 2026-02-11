@@ -1,20 +1,4 @@
-// import { Button, buttonVariants } from '@/shared/components/ui/button.tsx'
-// import { Check, Minus } from 'lucide-react'
-// import { Textarea } from '@/shared/components/ui/textarea.tsx'
 import { FC } from 'react'
-// import { z } from 'zod'
-// import { useForm } from 'react-hook-form'
-// import { zodResolver } from '@hookform/resolvers/zod'
-// import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form.tsx'
-// import { useRejectRiskItem } from '@/features/risk-analysis/hooks/use-reject-risk-item.ts'
-// import { useAuth } from '@/shared/hooks/use-auth.ts'
-// import { UserRoles } from '@/entities/user'
-// import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
-// import { useSearchParams } from 'react-router-dom'
-// import { useUploadFiles } from '@/shared/components/common/file-upload/api/use-upload-files.ts'
-// import { useAttachFile } from '@/features/risk-analysis/hooks/use-attach-file.ts'
-// import FileLink from '@/shared/components/common/file-link.tsx'
-// import { useCancelPoints } from '@/features/risk-analysis/hooks/use-cancel-points.ts'
 import { clsx } from 'clsx'
 import { Indicator } from '../riskAnalysis'
 
@@ -24,24 +8,6 @@ interface Props {
   displayIndex: number
   info?: boolean
 }
-
-// const schema = z
-//   .object({
-//     isReject: z.boolean({ message: 'Обязательное поле' }).default(false),
-//     description: z.string().default(''),
-//   })
-//   .superRefine((data, ctx) => {
-//     if (data.isReject && data.description.trim().length < 10) {
-//       ctx.addIssue({
-//         path: ['description'],
-//         code: z.ZodIssueCode.too_small,
-//         minimum: 10,
-//         type: 'string',
-//         inclusive: true,
-//         message: 'Too short value',
-//       })
-//     }
-//   })
 
 const statusMap: Record<string, string> = {
   UPLOADED: 'Tadbirkor tomonidan ijro uchun fayl yuklangan',
@@ -53,39 +19,8 @@ const statusMap: Record<string, string> = {
   NOT_EXPIRY_DATE: 'Faylning amal qilish muddati kiritilmagan',
 }
 
-const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
-  console.log(number)
-  // const [searchParams] = useSearchParams()
-  // const currentCat = searchParams.get('type') || ''
-  // const info = (searchParams.get('info') || 'false') == 'true'
-  // const currentInervalId = searchParams.get('intervalId') || '';
-  // const paragraphName = `PARAGRAPH_${currentCat?.toUpperCase()}_${number}`
-  // const { mutate } = useRejectRiskItem()
-  // const { user } = useAuth()
-  // const isValidInterval = currentInervalId == user?.interval?.id?.toString();
-  // const isValidInterval = true
-  // const isChairman = user?.role === UserRoles.CHAIRMAN
-  // const isInspector = user?.role === UserRoles.INSPECTOR
-  // const isLegal = user?.role === UserRoles.LEGAL
-  // const { mutate: attachFile, isPending: isPendingAttachFile } = useAttachFile()
-  // const { mutateAsync: sendFiles, isPending } = useUploadFiles()
-  // const { mutate: cancelPoints } = useCancelPoints()
+const RiskAnalysisItem: FC<Props> = ({ data, displayIndex }) => {
   const isConfirmed = data?.score === 0
-
-  // const form = useForm<z.infer<typeof schema>>({
-  //   resolver: zodResolver(schema),
-  // })
-  // const isReject = form.watch('isReject')
-  // const onSubmit = (data: any) => {
-  //   mutate({
-  //     data: {
-  //       description: data.description,
-  //       indicatorType: paragraphName,
-  //     },
-  //     type: currentCat,
-  //   })
-  // }
-
   let statusText: string | null = null
 
   if (data?.status) {
@@ -125,131 +60,8 @@ const RiskAnalysisItem: FC<Props> = ({ data, number, displayIndex }) => {
       >
         <div className="flex flex-grow flex-col">
           <span>{data.text}</span>
-
           {statusText && <span className={clsx('mt-1 text-sm font-semibold italic')}>* {statusText}</span>}
         </div>
-
-        {/*{!info && (*/}
-        {/*  <Form {...form}>*/}
-        {/*    <div className="flex w-full max-w-[600px] flex-shrink-0 items-center gap-3">*/}
-        {/*      <div className="flex flex-shrink-0 gap-1">*/}
-        {/*        {isInspector && isValidInterval && (*/}
-        {/*          <>*/}
-        {/*            <Button*/}
-        {/*              onClick={() => {*/}
-        {/*                if (confirm('Cancel points?')) {*/}
-        {/*                  cancelPoints(data.id)*/}
-        {/*                }*/}
-        {/*              }}*/}
-        {/*              disabled={!isInspector || isConfirmed || !data?.filePath}*/}
-        {/*              type="button"*/}
-        {/*              className="flex-shrink-0"*/}
-        {/*              variant={isConfirmed ? 'success' : 'successOutline'}*/}
-        {/*              size="icon"*/}
-        {/*            >*/}
-        {/*              <Check />*/}
-        {/*            </Button>*/}
-        {/*            <Button*/}
-        {/*              onClick={() => {*/}
-        {/*                form.setValue('isReject', !isReject)*/}
-        {/*              }}*/}
-        {/*              disabled={!!data || !isInspector}*/}
-        {/*              type="button"*/}
-        {/*              className="flex-shrink-0"*/}
-        {/*              variant={isReject || !!data ? 'destructive' : 'destructiveOutline'}*/}
-        {/*              size="icon"*/}
-        {/*            >*/}
-        {/*              <Minus />*/}
-        {/*            </Button>*/}
-        {/*          </>*/}
-        {/*        )}*/}
-        {/*        {!isChairman && (!isInspector || !isValidInterval) && (*/}
-        {/*          <>*/}
-        {/*            {!data && (*/}
-        {/*              <Button type="button" className="flex-shrink-0" variant={'successOutline'} size="icon">*/}
-        {/*                <Check />*/}
-        {/*              </Button>*/}
-        {/*            )}*/}
-        {/*            {!!data && isConfirmed && (*/}
-        {/*              <Button*/}
-        {/*                type="button"*/}
-        {/*                className="flex-shrink-0"*/}
-        {/*                variant={isConfirmed ? 'success' : 'successOutline'}*/}
-        {/*                size="icon"*/}
-        {/*              >*/}
-        {/*                <Check />*/}
-        {/*              </Button>*/}
-        {/*            )}*/}
-        {/*            {!!data && !isConfirmed && (*/}
-        {/*              <Button type="button" className="flex-shrink-0" variant={'destructive'} size="icon">*/}
-        {/*                <Minus />*/}
-        {/*              </Button>*/}
-        {/*            )}*/}
-        {/*          </>*/}
-        {/*        )}*/}
-        {/*      </div>*/}
-        {/*      {!isChairman && (*/}
-        {/*        <div className="relative w-full">*/}
-        {/*          <FormField*/}
-        {/*            defaultValue={data?.description ? data?.description : ''}*/}
-        {/*            control={form.control}*/}
-        {/*            name="description"*/}
-        {/*            render={({ field }) => (*/}
-        {/*              <FormItem>*/}
-        {/*                <FormControl>*/}
-        {/*                  <Textarea*/}
-        {/*                    disabled={!isReject || !!data}*/}
-        {/*                    className="w-full resize-none"*/}
-        {/*                    rows={2}*/}
-        {/*                    placeholder="Boshqarma boshlig‘i rezolyutsiyasi"*/}
-        {/*                    {...field}*/}
-        {/*                  ></Textarea>*/}
-        {/*                </FormControl>*/}
-        {/*                <FormMessage />*/}
-        {/*              </FormItem>*/}
-        {/*            )}*/}
-        {/*          />*/}
-        {/*          {isReject && !data && (*/}
-        {/*            <Button*/}
-        {/*              onClick={form.handleSubmit(onSubmit)}*/}
-        {/*              className="absolute top-6 right-2 opacity-80 hover:opacity-100"*/}
-        {/*              size="sm"*/}
-        {/*              variant="outline"*/}
-        {/*            >*/}
-        {/*              Yuborish*/}
-        {/*            </Button>*/}
-        {/*          )}*/}
-        {/*        </div>*/}
-        {/*      )}*/}
-
-        {/*      {isLegal && !!data && !data?.filePath && (*/}
-        {/*        <label className={buttonVariants({ size: 'sm' })}>*/}
-        {/*          Batraf etish*/}
-        {/*          <input*/}
-        {/*            disabled={isPending || isPendingAttachFile}*/}
-        {/*            onChange={(e) => {*/}
-        {/*              const files = e.target.files*/}
-        {/*              if (files?.length) {*/}
-        {/*                // 3. XATOLIKNI TUZATAMIZ:*/}
-        {/*                sendFiles([files[0]]).then((filePath) => {*/}
-        {/*                  // `filePath` -> sendFiles dan qaytgan string (fayl manzili)*/}
-        {/*                  attachFile({*/}
-        {/*                    id: number, // Indikator ID si `number` propidan olinadi*/}
-        {/*                    path: filePath, // Fayl manzili `sendFiles` natijasidan olinadi*/}
-        {/*                  })*/}
-        {/*                })*/}
-        {/*              }*/}
-        {/*            }}*/}
-        {/*            className="hidden"*/}
-        {/*            type="file"*/}
-        {/*            accept={FileTypes.PDF}*/}
-        {/*          />*/}
-        {/*        </label>*/}
-        {/*      )}*/}
-        {/*      {!!data?.filePath && <FileLink isSmall={true} title={'Ma’lumotnoma'} url={data?.filePath} />}*/}
-        {/*    </div>*/}
-        {/*  </Form>*/}
-        {/*)}*/}
       </div>
     </div>
   )

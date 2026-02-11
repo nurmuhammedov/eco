@@ -62,11 +62,6 @@ export const RegisterEquipmentAppealList = () => {
     {
       accessorKey: 'message',
       header: 'Murojaat matni',
-      cell: ({ row }) => (
-        <span title={row.original.message}>
-          {row.original.message.length > 50 ? `${row.original.message.substring(0, 50)}...` : row.original.message}
-        </span>
-      ),
     },
     {
       header: 'Biriktirilgan fayl',
@@ -75,13 +70,14 @@ export const RegisterEquipmentAppealList = () => {
   ]
 
   return (
-    <div>
+    <>
       <div className="mb-4">
         <GoBack title="Qurilmaga yuborilgan murojaatlar" />
       </div>
 
       <TabsLayout
         activeTab={activeTab}
+        className="mb-2"
         tabs={[
           { id: 'ALL', name: 'Barchasi' },
           { id: 'APPEAL', name: 'Murojaatlar' },
@@ -92,10 +88,9 @@ export const RegisterEquipmentAppealList = () => {
           count: tab.id === activeTab ? (data?.page?.totalElements ?? 0) : undefined,
         }))}
         onTabChange={(type) => addParams({ type }, 'page')}
-      >
-        <DataTable isPaginated data={data || []} columns={columns} />
-      </TabsLayout>
-    </div>
+      />
+      <DataTable isPaginated data={data || []} columns={columns} />
+    </>
   )
 }
 

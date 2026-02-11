@@ -12,7 +12,6 @@ export const MainCardsList = React.memo(
     cardSize = 'md',
     isLoading = false,
   }: MainCardsListProps) => {
-    // Precompute grid classes based on layout type
     const gridClasses = useMemo(() => {
       const baseClasses = 'grid gap-4 mb-7 3xl:mb-8 mt-4'
 
@@ -25,7 +24,6 @@ export const MainCardsList = React.memo(
       return cn(baseClasses, layoutClasses[gridLayout], className)
     }, [gridLayout, className])
 
-    // Handle empty state
     if (cards.length === 0 && !isLoading) {
       return (
         <div className="rounded-md border border-slate-200 bg-slate-50 p-8 text-center">
@@ -34,7 +32,6 @@ export const MainCardsList = React.memo(
       )
     }
 
-    // Handle loading state
     if (isLoading) {
       return (
         <div className={gridClasses}>
@@ -51,10 +48,8 @@ export const MainCardsList = React.memo(
       )
     }
 
-    // Memoized card click handler factory
     const createCardClickHandler = useCallback(
       (cardId: string) => () => {
-        // Prevent unnecessary state updates
         if (cardId !== selectedCard) {
           onCardSelect(cardId)
         }
@@ -62,7 +57,6 @@ export const MainCardsList = React.memo(
       [selectedCard, onCardSelect]
     )
 
-    // Card size styles
     const getCardSizeClasses = (size: typeof cardSize) => {
       switch (size) {
         case 'sm':
@@ -79,7 +73,6 @@ export const MainCardsList = React.memo(
         {cards.map((card) => {
           const isSelected = selectedCard === card.id
 
-          // Performance optimization: only calculate these classes when needed
           const cardClasses = cn(
             'relative cursor-pointer transition-all duration-300 rounded-md border',
             'outline-none focus-visible:ring-2 focus-visible:ring-teal-500',
@@ -125,5 +118,4 @@ export const MainCardsList = React.memo(
   }
 )
 
-// Component display name for development and debugging
 MainCardsList.displayName = 'MainCardsList'

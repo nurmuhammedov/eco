@@ -41,37 +41,61 @@ export const RiskStatisticsCards = ({
       name: 'Barchasi',
       count: totalCount,
       icon: Layers,
-      inactiveClass: 'bg-[#016B7B]/10 border-[#016B7B]/20 text-[#016B7B]',
-      activeClass: 'bg-[#016B7B] border-[#015a67] text-white shadow-sm',
+      // Active: Light Primary bg + Border
+      activeClass: 'bg-[#0B626B]/10 border-[#0B626B] shadow-sm ring-1 ring-[#0B626B]',
+      textClass: 'text-[#0B626B]',
+      iconClass: 'bg-[#0B626B] text-white',
+      // Inactive: White bg, Gray border
+      inactiveClass: 'bg-white border-slate-200 hover:border-[#0B626B]/30 hover:bg-[#0B626B]/5',
+      inactiveTextClass: 'text-slate-600',
+      inactiveIconClass: 'bg-slate-100 text-slate-500 group-hover:bg-[#0B626B] group-hover:text-white',
     },
     {
       id: 'LOW',
       name: 'Xavfi past (0-60)',
       count: lowCount,
       icon: ShieldCheck,
-      inactiveClass: 'bg-green-50 border-green-200 text-green-700',
-      activeClass: 'bg-green-600 border-green-700 text-white shadow-sm',
+      // Active: Light Emerald bg + Border
+      activeClass: 'bg-emerald-50 border-emerald-500 shadow-sm ring-1 ring-emerald-500',
+      textClass: 'text-emerald-700',
+      iconClass: 'bg-emerald-500 text-white',
+      // Inactive
+      inactiveClass: 'bg-white border-slate-200 hover:border-emerald-200 hover:bg-emerald-50',
+      inactiveTextClass: 'text-slate-600',
+      inactiveIconClass: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white',
     },
     {
       id: 'MEDIUM',
       name: 'Xavfi o‘rta (61-80)',
       count: mediumCount,
       icon: AlertTriangle,
-      inactiveClass: 'bg-yellow-50 border-yellow-200 text-yellow-700',
-      activeClass: 'bg-yellow-600 border-yellow-700 text-white shadow-sm',
+      // Active
+      activeClass: 'bg-amber-50 border-amber-500 shadow-sm ring-1 ring-amber-500',
+      textClass: 'text-amber-700',
+      iconClass: 'bg-amber-500 text-white',
+      // Inactive
+      inactiveClass: 'bg-white border-slate-200 hover:border-amber-200 hover:bg-amber-50',
+      inactiveTextClass: 'text-slate-600',
+      inactiveIconClass: 'bg-amber-50 text-amber-600 group-hover:bg-amber-500 group-hover:text-white',
     },
     {
       id: 'HIGH',
       name: 'Xavfi yuqori (81-100)',
       count: highCount,
       icon: Flame,
-      inactiveClass: 'bg-red-50 border-red-200 text-red-700',
-      activeClass: 'bg-red-600 border-red-700 text-white shadow-sm',
+      // Active
+      activeClass: 'bg-rose-50 border-rose-500 shadow-sm ring-1 ring-rose-500',
+      textClass: 'text-rose-700',
+      iconClass: 'bg-rose-500 text-white',
+      // Inactive
+      inactiveClass: 'bg-white border-slate-200 hover:border-rose-200 hover:bg-rose-50',
+      inactiveTextClass: 'text-slate-600',
+      inactiveIconClass: 'bg-rose-50 text-rose-600 group-hover:bg-rose-500 group-hover:text-white',
     },
   ]
 
   return (
-    <div className="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => {
         const isActive = activeRiskLevel === stat.id
 
@@ -80,22 +104,27 @@ export const RiskStatisticsCards = ({
             key={stat.id}
             onClick={() => onTabChange(stat.id)}
             className={clsx(
-              'relative flex cursor-pointer items-center justify-between rounded-lg border p-4 transition-colors duration-200 select-none',
-              isActive ? stat.activeClass : `${stat.inactiveClass} hover:opacity-80`
+              'group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-xl border p-5 transition-all duration-300',
+              isActive ? stat.activeClass : stat.inactiveClass
             )}
           >
-            <div>
-              <p className="mb-1 text-sm font-medium opacity-90">{stat.name}</p>
-              <h3 className={clsx('text-2xl font-bold', isLoading && 'animate-pulse opacity-50')}>{stat.count}</h3>
+            <div className="flex flex-col gap-1">
+              <span className="text-sm font-medium text-slate-500">{stat.name}</span>
+              <span
+                className={clsx(
+                  'text-2xl font-bold transition-colors',
+                  isLoading && 'animate-pulse opacity-50',
+                  isActive ? stat.textClass : 'text-slate-900'
+                )}
+              >
+                {stat.count}
+              </span>
             </div>
 
             <div
-              className={clsx(
-                'rounded-full p-2 transition-colors',
-                isActive ? 'bg-white/20 text-white' : 'bg-white/60'
-              )}
+              className={clsx('rounded-lg p-3 transition-colors', isActive ? stat.iconClass : stat.inactiveIconClass)}
             >
-              <stat.icon size={24} className="currentColor" />
+              <stat.icon size={24} className="current-color" />
             </div>
           </div>
         )

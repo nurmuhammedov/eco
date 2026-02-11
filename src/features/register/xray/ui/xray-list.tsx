@@ -86,10 +86,6 @@ export const XrayList = () => {
     },
     {
       id: 'actions',
-      maxSize:
-        user?.role == UserRoles.MANAGER || user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN
-          ? 70
-          : 40,
       cell: ({ row }) => (
         <DataTableRowActions
           showView

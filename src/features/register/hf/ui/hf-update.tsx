@@ -533,7 +533,7 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
           </div>
         </CardForm>
 
-        <Button type="submit" loading={isPending}>
+        <Button type="submit" className="mb-4" loading={isPending}>
           Saqlash
         </Button>
       </form>

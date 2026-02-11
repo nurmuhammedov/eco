@@ -31,6 +31,7 @@ export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   filterDateStrategy?: DateDisableStrategy
   filterMaxLength?: number
   filterRangeKeys?: [string, string]
+  className?: string
 }
 
 interface DataTableProps<TData, TValue> {
@@ -143,6 +144,7 @@ export function DataTable<TData, TValue>({
                 )}
                 {headerGroup.headers.map((header) => {
                   const isActions = header.id === 'actions'
+                  const columnDef = header.column.columnDef as ExtendedColumnDef<TData, TValue>
                   return (
                     <TableHead
                       key={header.id}
@@ -151,7 +153,8 @@ export function DataTable<TData, TValue>({
                         showFilters
                           ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
                           : 'first:rounded-l-lg! last:rounded-r-lg!',
-                        isActions && 'w-[1%] whitespace-nowrap'
+                        isActions && 'w-[1%] whitespace-nowrap',
+                        columnDef.className
                       )}
                       style={{
                         ...getCommonPinningStyles({ column: header.column }),
@@ -179,7 +182,6 @@ export function DataTable<TData, TValue>({
                       <TableHead
                         key={column.id}
                         className="!h-8 border-b-2 border-neutral-200 !bg-white !p-0 even:!bg-white hover:!bg-white"
-                        // style={getCommonPinningStyles({ column })}
                       ></TableHead>
                     )
 
@@ -187,7 +189,6 @@ export function DataTable<TData, TValue>({
                     <TableHead
                       key={column.id}
                       className="!h-8 border-b-2 border-neutral-200 !bg-white !p-0 even:!bg-white hover:!bg-white"
-                      // style={getCommonPinningStyles({ column })}
                     >
                       <ColumnFilterInput column={columnDef} />
                     </TableHead>
@@ -209,10 +210,11 @@ export function DataTable<TData, TValue>({
                   )}
                   {row.getVisibleCells().map((cell) => {
                     const isActions = cell.column.id === 'actions'
+                    const columnDef = cell.column.columnDef as ExtendedColumnDef<TData, TValue>
                     return (
                       <TableCell
                         key={cell.id}
-                        className={cn(isActions && 'w-[1%] whitespace-nowrap')}
+                        className={cn(isActions && '!w-[1%] whitespace-nowrap', columnDef.className)}
                         style={{
                           width: isActions ? undefined : cell.column.getSize(),
                           ...getCommonPinningStyles({ column: cell.column }),

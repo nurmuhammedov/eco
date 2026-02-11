@@ -478,7 +478,7 @@ export default ({ onSubmit }: RegisterLiftFormProps) => {
             />
           </div>
         </CardForm>
-        <Button type="submit" className="mt-5" disabled={true}>
+        <Button type="submit" className="mt-0" disabled={true}>
           Ariza yaratish
         </Button>
       </form>

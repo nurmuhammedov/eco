@@ -39,7 +39,8 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
   const columns: ExtendedColumnDef<any, any>[] = [
     {
       accessorKey: 'tin',
-      header: 'Tashkilotning STIR (JSHSHIR)',
+      header: () => <div className="whitespace-nowrap">Tashkilot STIR</div>,
+      className: '!w-[1%]',
       filterKey: 'tin',
       filterType: 'search',
     },
@@ -51,7 +52,8 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
     },
     {
       accessorKey: 'type',
-      header: 'Turi',
+      header: () => <div className="whitespace-nowrap">Turi</div>,
+      className: '!w-[1%]',
       cell: (cell) => tabs.find((t) => t?.key?.toString() == cell.row.original.type?.toString())?.label || '',
     },
     {

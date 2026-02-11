@@ -1,4 +1,3 @@
-// ** Hooks **
 import {
   adminRoutes,
   chairmanRoutes,
@@ -44,7 +43,7 @@ export const useAppRoutes = () => {
   }
 
   const getRoleRoutes = (role: UserRoles) => {
-    let routes: any[] = []
+    let routes: any[]
     switch (role) {
       case UserRoles.ADMIN:
         routes = adminRoutes

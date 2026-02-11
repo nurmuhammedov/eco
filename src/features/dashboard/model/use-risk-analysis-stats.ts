@@ -44,12 +44,13 @@ export const useRiskAnalysisStats = ({ year, quarter, regionId }: UseRiskAnalysi
 
   const getAllCounts = (level: 'highCount' | 'mediumCount' | 'lowCount') => {
     return [
-      { name: 'XICHO', count: hfCounts?.[level] || 0 },
-      { name: 'INM', count: irsCounts?.[level] || 0 },
-      { name: 'Lift', count: elevCounts?.[level] || 0 },
-      { name: 'Attraksion', count: attrCounts?.[level] || 0 },
-      { name: 'Rentgen', count: xrayCounts?.[level] || 0 },
+      { key: 'HF', name: 'XICHO', count: hfCounts?.[level] || 0 },
+      { key: 'IRS', name: 'INM', count: irsCounts?.[level] || 0 },
+      { key: 'ELEVATOR', name: 'Lift', count: elevCounts?.[level] || 0 },
+      { key: 'ATTRACTION', name: 'Attraksion', count: attrCounts?.[level] || 0 },
+      { key: 'XRAY', name: 'Rentgen', count: xrayCounts?.[level] || 0 },
       {
+        key: 'LPG_POWERED',
         name: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma',
         count: lpgCounts?.[level] || 0,
       },

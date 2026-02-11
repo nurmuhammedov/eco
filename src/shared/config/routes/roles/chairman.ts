@@ -31,16 +31,14 @@ const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
 const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
-const EquipmentPrintPage = lazy(() => import('@/features/register/equipments/ui/equipment-print-page'))
+// const EquipmentPrintPage = lazy(() => import('@/features/register/equipments/ui/equipment-print-page'))
 
-// Expanded Imports
-const InspectorTasks = lazy(() => import('@/features/risk-analysis/ui/inspector-tasks'))
-const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
+// const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
 const RegisterHFUpdatePage = lazy(() => import('@/pages/register/hf/hf-update'))
-const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'))
-const AddConclusionPage = lazy(() => import('@/pages/expertise/add-conclusion-page'))
-const EditConclusion = lazy(() => import('@/pages/expertise/edit-conclusion-page'))
+// const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'))
+// const AddConclusionPage = lazy(() => import('@/pages/expertise/add-conclusion-page'))
+// const EditConclusion = lazy(() => import('@/pages/expertise/edit-conclusion-page'))
 
 export const chairmanRoutes = [
   {
@@ -58,16 +56,16 @@ export const chairmanRoutes = [
     path: 'applications/detail/:id',
     element: withSuspense(ApplicationDetail),
   },
-  {
-    id: 'APPEAL',
-    path: 'applications/create',
-    element: withSuspense(CreateApplicationGrids),
-  },
-  {
-    id: 'APPEAL',
-    path: 'applications/inspector/create',
-    element: withSuspense(CreateApplicationGridsIns),
-  },
+  // {
+  //   id: 'APPEAL',
+  //   path: 'applications/create',
+  //   element: withSuspense(CreateApplicationGrids),
+  // },
+  // {
+  //   id: 'APPEAL',
+  //   path: 'applications/inspector/create',
+  //   element: withSuspense(CreateApplicationGridsIns),
+  // },
   {
     id: 'APPEAL',
     path: 'applications/create/:type',
@@ -115,11 +113,11 @@ export const chairmanRoutes = [
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
   },
-  {
-    id: 'REGISTRY',
-    path: 'register/:id/qr-page',
-    element: withSuspense(EquipmentPrintPage),
-  },
+  // {
+  //   id: 'REGISTRY',
+  //   path: 'register/:id/qr-page',
+  //   element: withSuspense(EquipmentPrintPage),
+  // },
 
   // PREVENTION
   {
@@ -149,11 +147,11 @@ export const chairmanRoutes = [
     path: 'risk-analysis/info/:id',
     element: withSuspense(RiskAnalysisDetailInfoPage),
   },
-  {
-    id: 'RISK_ANALYSIS',
-    path: 'risk-analysis/my-tasks',
-    element: withSuspense(InspectorTasks),
-  },
+  // {
+  //   id: 'RISK_ANALYSIS',
+  //   path: 'risk-analysis/my-tasks',
+  //   element: withSuspense(InspectorTasks),
+  // },
 
   // INSPECTION
   {
@@ -178,21 +176,21 @@ export const chairmanRoutes = [
     path: 'accreditations',
     element: withSuspense(ExpertisePage),
   },
-  {
-    id: 'CONCLUSION',
-    path: 'accreditations/add',
-    element: withSuspense(AddConclusionPage),
-  },
+  // {
+  //   id: 'CONCLUSION',
+  //   path: 'accreditations/add',
+  //   element: withSuspense(AddConclusionPage),
+  // },
   {
     id: 'CONCLUSION',
     path: '/accreditations/detail/:id',
     element: withSuspense(ConclusionDetail),
   },
-  {
-    id: 'CONCLUSION',
-    path: '/accreditations/edit/:id',
-    element: withSuspense(EditConclusion),
-  },
+  // {
+  //   id: 'CONCLUSION',
+  //   path: '/accreditations/edit/:id',
+  //   element: withSuspense(EditConclusion),
+  // },
 
   // DECLARATION
   {

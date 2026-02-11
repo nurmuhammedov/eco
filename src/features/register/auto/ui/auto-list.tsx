@@ -87,7 +87,6 @@ export const AutoList = ({ tankersCount }: any) => {
     },
     {
       id: 'actions',
-      maxSize: 50,
       cell: ({ row }) => (
         <DataTableRowActions
           showView

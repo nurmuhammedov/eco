@@ -6,9 +6,10 @@ import { Link } from 'react-router-dom'
 interface StatsCardsProps {
   type: 'hf' | 'equipment' | 'irs' | 'xray'
   data: any
+  regionId?: string | null
 }
 
-export const StatsCards = ({ type, data }: StatsCardsProps) => {
+export const StatsCards = ({ type, data, regionId }: StatsCardsProps) => {
   const renderCard = (title: string, value: number, icon: any, colorClass: string, bgClass: string, link: string) => (
     <Card
       className={cn(
@@ -38,7 +39,11 @@ export const StatsCards = ({ type, data }: StatsCardsProps) => {
       type === 'hf' ? 'XICHOlar' : type === 'irs' ? 'INMlar' : type === 'xray' ? 'Rentgenlar' : 'Qurilmalar'
 
     const getLink = (status: 'total' | 'active' | 'inactive') => {
-      const baseUrl = `/register?tab=${type === 'xray' ? 'xrays' : type}`
+      let baseUrl = `/register?tab=${type === 'xray' ? 'xrays' : type}`
+      if (regionId) {
+        baseUrl += `&regionId=${regionId}`
+      }
+
       if (type === 'xray') return baseUrl
       if (type === 'irs') {
         if (status === 'total') return `${baseUrl}&valid=all`
@@ -84,7 +89,11 @@ export const StatsCards = ({ type, data }: StatsCardsProps) => {
   }
 
   if (type === 'equipment') {
-    const baseUrl = '/register?tab=equipments'
+    let baseUrl = '/register?tab=equipments'
+    if (regionId) {
+      baseUrl += `&regionId=${regionId}`
+    }
+
     return (
       <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-5">
         {renderCard(

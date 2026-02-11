@@ -36,7 +36,7 @@ export const CreateApplicationForm = () => {
 
   return (
     <Suspense fallback={<AppealFormSkeleton />}>
-      {FormComponent && <FormComponent onSubmit={handleFormSubmit} />}
+      <div className="pb-4">{FormComponent && <FormComponent onSubmit={handleFormSubmit} />}</div>
       <ApplicationModal
         error={error}
         isOpen={isModalOpen}

@@ -158,10 +158,6 @@ export const IrsList = () => {
     },
     {
       id: 'actions',
-      maxSize:
-        user?.role == UserRoles.MANAGER || user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN
-          ? 80
-          : 40,
       cell: ({ row }) => (
         <DataTableRowActions
           showView

@@ -12,13 +12,10 @@ export const ApplicationsGrid: React.FC = () => {
     useApplicationGrid()
   const { user } = useAuth()
 
-  // Memoize values to prevent unnecessary calculations
   const hasMainCards = useMemo(() => mainCards.length > 0, [mainCards])
   const hasSubCards = useMemo(() => displayedSubCards.length > 0, [displayedSubCards])
 
-  // Empty state rendering - extracted for clarity and reusability
   const renderEmptyState = () => {
-    // Case 1: No main application in the category
     if (!hasMainCards) {
       return (
         <div className="py-12 text-center">
@@ -27,7 +24,6 @@ export const ApplicationsGrid: React.FC = () => {
       )
     }
 
-    // Case 2: Has main application, but no sub application for selected main card
     if (selectedMainCard && !hasSubCards) {
       return (
         <div className="py-12 text-center">
@@ -39,9 +35,8 @@ export const ApplicationsGrid: React.FC = () => {
     return null
   }
 
-  // Sub application grid with memoized grid classes for better performance
   const SubApplication = React.memo(() => {
-    const gridClasses = 'grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-4'
+    const gridClasses = 'grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-4 pb-4'
 
     if (!hasSubCards) {
       return null
@@ -84,21 +79,15 @@ export const ApplicationsGrid: React.FC = () => {
       className="3xl:font-semibold font-medium"
       onTabChange={(value) => handleChangeTab(value as ApplicationCategory)}
     >
-      {/* Main applications section */}
       {activeTab && hasMainCards && (
         <MainCardsList cards={mainCards} selectedCard={selectedMainCard} onCardSelect={handleMainCardSelect} />
       )}
 
-      {/* Sub applications grid */}
       <SubApplication />
 
-      {/* Empty states */}
       {activeTab && !hasSubCards && renderEmptyState()}
     </TabsLayout>
   )
 }
 
-// Add display name for better debugging
 ApplicationsGrid.displayName = 'ApplicationsGrid'
-
-export default React.memo(ApplicationsGrid)

@@ -144,15 +144,6 @@ const RiskAnalysisWidget = () => {
 
   return (
     <>
-      <RiskStatisticsCards
-        type={currentApiType || ''}
-        activeRiskLevel={riskLevel as string}
-        onTabChange={handleCardTabChange}
-        year={year}
-        quarter={quarter}
-        regionId={activeRegion}
-      />
-
       <Tabs
         defaultValue={mainTab}
         value={mainTab}
@@ -200,6 +191,15 @@ const RiskAnalysisWidget = () => {
           </TabsList>
         </div>
       </Tabs>
+
+      <RiskStatisticsCards
+        type={currentApiType || ''}
+        activeRiskLevel={riskLevel as string}
+        onTabChange={handleCardTabChange}
+        year={year}
+        quarter={quarter}
+        regionId={activeRegion}
+      />
 
       {regionTabs.length > 0 &&
       ![UserRoles.INSPECTOR, UserRoles.REGIONAL]?.includes(user?.role as unknown as UserRoles) ? (

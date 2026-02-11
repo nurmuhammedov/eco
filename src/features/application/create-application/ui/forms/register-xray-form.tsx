@@ -694,7 +694,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
             />
           </div>
         </CardForm>
-        <Button type="submit" className="mt-5">
+        <Button type="submit" className="mt-0">
           Ariza yaratish
         </Button>
       </form>

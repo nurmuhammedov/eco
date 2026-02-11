@@ -74,16 +74,25 @@ export const EquipmentsList = () => {
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
-      header: 'Roʻyxatga olish sanasi',
-      maxSize: 90,
+      id: 'registrationDate',
+      header: () => (
+        <div className="whitespace-nowrap">
+          Roʻyxatga olish <br /> sanasi
+        </div>
+      ),
       accessorFn: (row: any) => getDate(row.registrationDate),
+      className: '!w-[1%]',
       filterKey: 'registrationDate',
       filterType: 'date-range',
     },
     {
-      header: 'Roʻyxatga olish raqami',
+      header: () => (
+        <div className="whitespace-nowrap">
+          Roʻyxatga olish <br /> raqami
+        </div>
+      ),
       accessorKey: 'registryNumber',
-      maxSize: 90,
+      className: '!w-[1%]',
       filterKey: 'registryNumber',
       filterType: 'search',
     },
@@ -111,6 +120,7 @@ export const EquipmentsList = () => {
     {
       header: 'Tashkilot STIR/JSHSHIR',
       accessorKey: 'ownerIdentity',
+      className: '!w-[1%]',
       filterKey: 'ownerIdentity',
       filterType: 'number',
       filterMaxLength: 14,
@@ -126,27 +136,46 @@ export const EquipmentsList = () => {
       header: 'Qurilma manzili',
       filterKey: 'address',
       filterType: 'search',
-      minSize: 150,
     },
     {
       accessorKey: 'factoryNumber',
-      header: 'Zavod raqami',
+      header: () => <div className="whitespace-nowrap">Zavod raqami</div>,
+      className: '!w-[1%]',
       filterKey: 'factoryNumber',
       filterType: 'search',
     },
     {
       accessorFn: (row: any) => (row.nextPartialCheckDate ? getDate(row.nextPartialCheckDate) : '-'),
-      maxSize: 90,
-      header: 'Keyingi qisman texnik koʻrik sanasi',
+      id: 'nextPartialCheckDate',
+      header: () => (
+        <div className="whitespace-nowrap">
+          Keyingi qisman <br /> texnik koʻrik <br /> sanasi
+        </div>
+      ),
+      className: '!w-[1%]',
     },
     {
+      id: 'nextFullCheckDate',
       accessorFn: (row: any) => (row.nextFullCheckDate ? getDate(row.nextFullCheckDate) : '-'),
-      header: 'Keyingi to‘liq texnik koʻrik sanasi',
-      maxSize: 90,
+      header: () => (
+        <div className="whitespace-nowrap">
+          Keyingi to‘liq <br /> texnik koʻrik <br /> sanasi
+        </div>
+      ),
+      className: '!w-[1%]',
+    },
+    {
+      id: 'expertiseExpiryDate',
+      accessorFn: (row: any) => (row.expertiseExpiryDate ? getDate(row.expertiseExpiryDate) : '-'),
+      header: () => (
+        <div className="whitespace-nowrap">
+          Ekspertiza xulosasi <br /> muddati
+        </div>
+      ),
+      className: '!w-[1%]',
     },
     {
       id: 'actions',
-      maxSize: user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN ? 75 : 50,
       cell: ({ row }: any) => (
         <DataTableRowActions
           showView
@@ -162,11 +191,10 @@ export const EquipmentsList = () => {
     },
   ].filter((col) => {
     if (type === 'OIL_CONTAINER') {
-      return (
-        col.header !== 'Keyingi qisman texnik koʻrik sanasi' && col.header !== 'Keyingi to‘liq texnik koʻrik sanasi'
-      )
+      return col.id !== 'nextPartialCheckDate' && col.id !== 'nextFullCheckDate'
+    } else {
+      return col.id !== 'expertiseExpiryDate'
     }
-    return true
   }) as unknown as any
 
   return (
@@ -181,7 +209,7 @@ export const EquipmentsList = () => {
           },
           {
             id: 'ELEVATOR',
-            name: 'Liftlar',
+            name: 'Lift',
           },
           ...(APPLICATIONS_DATA?.filter(
             (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER

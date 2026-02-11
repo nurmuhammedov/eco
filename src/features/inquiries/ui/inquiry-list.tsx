@@ -83,19 +83,22 @@ const InquiryTable = () => {
   const columns: ExtendedColumnDef<any, any>[] = [
     {
       accessorKey: 'registryNumber',
-      header: 'Murojaat raqami',
+      header: () => <div className="whitespace-nowrap">Murojaat raqami</div>,
+      className: '!w-[1%]',
       filterKey: 'registryNumber',
       filterType: 'search',
     },
     {
       accessorKey: 'createdAt',
-      header: 'Murojaat sanasi',
+      header: () => <div className="whitespace-nowrap">Murojaat sanasi</div>,
+      className: '!w-[1%] whitespace-nowrap',
       cell: ({ row }) =>
         row.original.createdAt ? formatDate(new Date(row.original.createdAt), 'dd.MM.yyyy HH:mm') : '-',
     },
     {
       accessorKey: 'type',
-      header: 'Murojaat turi',
+      header: () => <div className="whitespace-nowrap">Murojaat turi</div>,
+      className: '!w-[1%] whitespace-nowrap',
       cell: ({ row }) => appealTypeTranslations[row.original.type] || row.original.type,
       filterKey: 'type',
       filterType: 'select',
@@ -107,12 +110,14 @@ const InquiryTable = () => {
     },
     {
       accessorKey: 'fullName',
-      header: 'Yuboruvchi F.I.SH.',
+      header: () => <div className="whitespace-nowrap">Yuboruvchi F.I.SH.</div>,
+      className: '!w-[1%] whitespace-nowrap',
       cell: ({ row }) => row.original.fullName || '-',
     },
     {
       accessorKey: 'phoneNumber',
-      header: 'Telefon raqami',
+      header: () => <div className="whitespace-nowrap">Telefon raqami</div>,
+      className: '!w-[1%] whitespace-nowrap',
       cell: ({ row }) => row.original.phoneNumber || '-',
     },
     {
@@ -123,11 +128,13 @@ const InquiryTable = () => {
     {
       header: 'Biriktirilgan fayl',
       accessorKey: 'filePath',
+      className: '!w-[1%]',
       cell: ({ row }) => (row.original.filePath ? <FileLink url={row.original.filePath} /> : '-'),
     },
     {
       header: 'Obyekt',
       accessorKey: 'belongId',
+      className: '!w-[1%]',
       cell: ({ row }) => (
         <Button
           onClick={() =>

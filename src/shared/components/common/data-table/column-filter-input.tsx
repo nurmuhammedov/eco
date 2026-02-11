@@ -54,7 +54,7 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
 
   const iconStyle = 'absolute left-2 top-1/2 -translate-y-1/2 text-neutral-400 size-4 pointer-events-none'
   const clearButtonStyle =
-    'absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 cursor-pointer flex items-center justify-center bg-white'
+    'absolute right-1 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 cursor-pointer flex items-center justify-center bg-white'
   const wrapperStyle = 'relative w-full border-none bg-white transition-colors h-8'
   const triggerContentStyle =
     'w-full h-full flex items-center px-0 pl-8 pr-6 text-sm font-normal text-black bg-transparent outline-none cursor-pointer overflow-hidden'

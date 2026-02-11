@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom'
-import { useState } from 'react'
+
 import { StatsCards } from './stats-cards'
 import { RiskCenter } from './risk-center'
 import { ActionCenter } from './action-center'
@@ -10,21 +10,52 @@ import { cn } from '@/shared/lib/utils'
 import { useDashboardStats } from '../model/use-dashboard-stats'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
-import { getRegionIdByName } from '../model/constants'
+import { getRegionIdByName, getRegionNameById } from '../model/constants'
 
 export const DashboardPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { user } = useAuth()
   const currentTab = (searchParams.get('tab') as 'hf' | 'equipment' | 'irs' | 'xray') || 'hf'
-  const [activeRegion, setActiveRegion] = useState<string | null>(null)
 
-  // Convert activeRegion name to ID for API calls
-  const activeRegionId = activeRegion ? getRegionIdByName(activeRegion)?.toString() : null
+  // Get regionId from URL
+  const regionIdParam = searchParams.get('regionId')
+  const activeRegionId = regionIdParam ? parseInt(regionIdParam) : null
+  const activeRegionName = activeRegionId ? getRegionNameById(activeRegionId) : null
 
-  const stats = useDashboardStats(activeRegionId)
+  const stats = useDashboardStats(activeRegionId?.toString())
 
   const handleTabChange = (val: string) => {
-    setSearchParams({ tab: val })
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev)
+      newParams.set('tab', val)
+      return newParams
+    })
+  }
+
+  const handleRegionClick = (name: string | null) => {
+    if (!name) {
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev)
+        newParams.delete('regionId')
+        return newParams
+      })
+      return
+    }
+
+    const clickedRegionId = getRegionIdByName(name)
+
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev)
+
+      // If clicking same region, unselect (remove param)
+      if (activeRegionId === clickedRegionId) {
+        newParams.delete('regionId')
+      } else if (clickedRegionId) {
+        newParams.set('regionId', clickedRegionId.toString())
+      }
+
+      return newParams
+    })
   }
 
   const getStatsData = () => {
@@ -71,7 +102,7 @@ export const DashboardPage = () => {
           </div>
         </div>
 
-        <StatsCards type={currentTab} data={getStatsData()} />
+        <StatsCards type={currentTab} data={getStatsData()} regionId={activeRegionId?.toString()} />
 
         <div className="mb-4">
           <ActionCenter />
@@ -83,7 +114,7 @@ export const DashboardPage = () => {
           </div>
 
           <div className="lg:col-span-12 xl:col-span-6">
-            <RiskCenter regionId={activeRegionId} />
+            <RiskCenter regionId={activeRegionId?.toString()} />
           </div>
         </div>
 
@@ -92,7 +123,7 @@ export const DashboardPage = () => {
         {isChairman && (
           <div className="mt-8 mb-8 flex flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             <div className="mb-2 flex items-center justify-between px-2">
-              <h3 className="text-lg font-semibold text-slate-800">{activeRegion || 'Viloyatlar kesimida'}</h3>
+              <h3 className="text-lg font-semibold text-slate-800">{activeRegionName || 'Respublika bo‘yicha'}</h3>
               <div className="flex gap-4 text-xs text-slate-500">
                 <div className="flex items-center gap-1.5">
                   <span className="h-3 w-3 rounded bg-[#0B626B]"></span> Tanlangan
@@ -105,8 +136,8 @@ export const DashboardPage = () => {
             <div className="mx-auto w-full max-w-5xl">
               <UzbekistanMap
                 className="w-full flex-1"
-                activeRegionId={activeRegion}
-                onRegionClick={(name) => setActiveRegion((prev) => (prev === name ? null : name))}
+                activeRegionId={activeRegionName}
+                onRegionClick={handleRegionClick}
               />
             </div>
           </div>

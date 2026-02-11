@@ -1,13 +1,11 @@
-import { lazy } from 'react'
 import { withSuspense } from '@/shared/config/routes/utils'
+import { lazy } from 'react'
 
-const DashboardPage = lazy(() => import('@/pages/dashboard').then((module) => ({ default: module.DashboardPage })))
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'))
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'))
 const RegisterPage = lazy(() => import('@/pages/register'))
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'))
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'))
-const RegisterEquipmentAppealList = lazy(() => import('@/features/register/equipments/ui/equipments-appeal-list'))
 const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'))
 const RegisterXrayDetail = lazy(() => import('@/features/register/xray/ui/xray-detail'))
 const RegisterAutoDetail = lazy(() => import('@/features/register/auto/ui/auto-detail'))
@@ -18,35 +16,17 @@ const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/ri
 const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-info-by-id'))
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'))
 const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'))
-const ExpertiseOrganizations = lazy(() => import('@/pages/expertise/organizations-page'))
 const ExpertisePage = lazy(() => import('@/pages/expertise/page'))
 const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-page'))
-const DeclarationsPage = lazy(() => import('@/pages/declarations/page'))
+const AddDeclarationPage = lazy(() => import('@/pages/declarations/add-declaration-page.tsx'))
 const DeclarationDetailPage = lazy(() => import('@/pages/declarations/declaration-detail-page'))
-const ReportsPage = lazy(() => import('@/features/reports/ui/reports'))
-const ReportsDetail1 = lazy(() => import('@/features/reports/ui/report1'))
-const ReportsDetail2 = lazy(() => import('@/features/reports/ui/report2'))
-const ReportsDetail3 = lazy(() => import('@/features/reports/ui/report3'))
-const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
-const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
-const Permits = lazy(() => import('@/widgets/permits'))
-const Inquiries = lazy(() => import('@/features/inquiries'))
-const EquipmentPrintPage = lazy(() => import('@/features/register/equipments/ui/equipment-print-page'))
-
-// Expanded Imports
-const InspectorTasks = lazy(() => import('@/features/risk-analysis/ui/inspector-tasks'))
-const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
+const DeclarationsPage = lazy(() => import('@/pages/declarations/page'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
-const RegisterHFUpdatePage = lazy(() => import('@/pages/register/hf/hf-update'))
 const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'))
 const AddConclusionPage = lazy(() => import('@/pages/expertise/add-conclusion-page'))
 const EditConclusion = lazy(() => import('@/pages/expertise/edit-conclusion-page'))
 
 export const legalRoutes = [
-  {
-    path: 'dashboard',
-    element: withSuspense(DashboardPage),
-  },
   // APPEAL
   {
     id: 'APPEAL',
@@ -62,11 +42,6 @@ export const legalRoutes = [
     id: 'APPEAL',
     path: 'applications/create',
     element: withSuspense(CreateApplicationGrids),
-  },
-  {
-    id: 'APPEAL',
-    path: 'applications/inspector/create',
-    element: withSuspense(CreateApplicationGridsIns),
   },
   {
     id: 'APPEAL',
@@ -87,18 +62,8 @@ export const legalRoutes = [
   },
   {
     id: 'REGISTRY',
-    path: 'register/hf/update/:id',
-    element: withSuspense(RegisterHFUpdatePage),
-  },
-  {
-    id: 'REGISTRY',
     path: 'register/:id/equipments',
     element: withSuspense(RegisterEquipmentDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/:id/equipments/appeals',
-    element: withSuspense(RegisterEquipmentAppealList),
   },
   {
     id: 'REGISTRY',
@@ -114,11 +79,6 @@ export const legalRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/:id/qr-page',
-    element: withSuspense(EquipmentPrintPage),
   },
 
   // PREVENTION
@@ -149,11 +109,6 @@ export const legalRoutes = [
     path: 'risk-analysis/info/:id',
     element: withSuspense(RiskAnalysisDetailInfoPage),
   },
-  {
-    id: 'RISK_ANALYSIS',
-    path: 'risk-analysis/my-tasks',
-    element: withSuspense(InspectorTasks),
-  },
 
   // INSPECTION
   {
@@ -169,12 +124,7 @@ export const legalRoutes = [
 
   // ACCREDITATION / EXPERTISE
   {
-    id: 'ACCREDITATION', // Main ID
-    path: 'expertise-organizations',
-    element: withSuspense(ExpertiseOrganizations),
-  },
-  {
-    id: 'CONCLUSION', // Alternate ID for legal sidebar? Standardizing on what works.
+    id: 'CONCLUSION',
     path: 'accreditations',
     element: withSuspense(ExpertisePage),
   },
@@ -202,53 +152,12 @@ export const legalRoutes = [
   },
   {
     id: 'DECLARATION',
+    path: 'declarations/add',
+    element: withSuspense(AddDeclarationPage),
+  },
+  {
+    id: 'DECLARATION',
     path: 'declarations/detail/:id',
     element: withSuspense(DeclarationDetailPage),
-  },
-
-  // REPORT
-  {
-    id: 'REPORT',
-    path: 'reports',
-    element: withSuspense(ReportsPage),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/REPORT_1',
-    element: withSuspense(ReportsDetail1),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/REPORT_2',
-    element: withSuspense(ReportsDetail2),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/REPORT_3',
-    element: withSuspense(ReportsDetail3),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/REPORT_4',
-    element: withSuspense(ReportsDetail4),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/REPORT_5',
-    element: withSuspense(ReportsDetail5),
-  },
-
-  // PERMITS
-  {
-    id: 'PERMITS',
-    path: 'permits',
-    element: withSuspense(Permits),
-  },
-
-  // INQUIRY
-  {
-    id: 'INQUIRY',
-    path: 'inquiries',
-    element: withSuspense(Inquiries),
   },
 ]

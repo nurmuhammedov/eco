@@ -41,13 +41,15 @@ export const ApplicationTable = () => {
     return [
       {
         accessorKey: 'number',
-        header: 'Ariza raqami',
+        header: () => <div className="whitespace-nowrap">Ariza raqami</div>,
+        className: '!w-[1%] whitespace-nowrap',
         filterKey: 'search',
         filterType: 'search',
       },
       {
-        header: 'Ariza sanasi',
-        maxSize: 90,
+        id: 'date',
+        header: () => <div className="whitespace-nowrap">Ariza sanasi</div>,
+        className: '!w-[1%]',
         accessorFn: (row: any) => getDate(row.createdAt),
       },
       {
@@ -68,7 +70,8 @@ export const ApplicationTable = () => {
             },
             {
               accessorKey: 'ownerIdentity',
-              header: 'Arizachi STIR/JSHSHIR',
+              header: () => <div className="whitespace-nowrap">Arizachi STIR/JSHSHIR</div>,
+              className: '!w-[1%]',
               filterKey: 'search',
               filterType: 'number',
               filterMaxLength: 14,
@@ -90,9 +93,10 @@ export const ApplicationTable = () => {
         filterOptions: executorOptions || [],
       },
       {
-        header: 'Ijro muddati',
-        maxSize: 90,
+        id: 'deadline',
         accessorFn: (row: any) => getDate(row.deadline),
+        header: () => <div className="whitespace-nowrap">Ijro muddati</div>,
+        className: '!w-[1%]',
         filterKey: 'deadline',
         filterType: 'date-range',
       },
@@ -113,7 +117,6 @@ export const ApplicationTable = () => {
       },
       {
         id: 'actions',
-        maxSize: 40,
         cell: ({ row }: any) => (
           <DataTableRowActions
             showView

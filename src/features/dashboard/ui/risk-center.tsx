@@ -9,7 +9,7 @@ interface RiskCenterProps {
   regionId?: string | null
 }
 
-const RiskSection = ({ title, count, items, bgClass, dotClass }: any) => (
+const RiskSection = ({ title, count, items, bgClass, dotClass, onItemClick }: any) => (
   <div className="space-y-4">
     <div className={cn('flex items-center justify-between rounded-md p-3 text-white', bgClass)}>
       <span className="font-semibold">{title}</span>
@@ -19,6 +19,7 @@ const RiskSection = ({ title, count, items, bgClass, dotClass }: any) => (
       {items.map((item: any, idx: number) => (
         <div
           key={idx}
+          onClick={() => onItemClick(item)}
           className="flex cursor-pointer items-center justify-between rounded-md border border-transparent p-2 text-sm transition-colors hover:border-slate-100 hover:bg-slate-50"
         >
           <div className="flex items-center gap-3">
@@ -58,6 +59,25 @@ export const RiskCenter = ({ regionId }: RiskCenterProps) => {
     regionId,
   })
 
+  const handleItemClick = (item: any, level: string) => {
+    const params = new URLSearchParams()
+    if (item.key) params.set('mainTab', item.key)
+    params.set('riskLevel', level)
+    params.set('year', year)
+    params.set('quarter', quarter)
+    if (regionId) params.set('regionId', regionId)
+
+    navigate(`/risk-analysis?${params.toString()}`)
+  }
+
+  const handleViewAll = () => {
+    const params = new URLSearchParams()
+    params.set('year', year)
+    params.set('quarter', quarter)
+    if (regionId) params.set('regionId', regionId)
+    navigate(`/risk-analysis?${params.toString()}`)
+  }
+
   return (
     <div className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
@@ -92,43 +112,46 @@ export const RiskCenter = ({ regionId }: RiskCenterProps) => {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {/* High Risk */}
+        {/* Low Risk */}
         <div className="space-y-4">
           <RiskSection
-            title="Yuqori xavf"
-            count={stats.highRisk}
-            items={stats.highRiskList}
-            bgClass="bg-red-500"
-            dotClass="bg-red-500"
+            title="Xavfi past"
+            count={stats.lowRisk}
+            items={stats.lowRiskList}
+            bgClass="bg-emerald-50 border border-emerald-200 text-emerald-700"
+            dotClass="bg-emerald-500"
+            onItemClick={(item: any) => handleItemClick(item, 'LOW')}
           />
         </div>
 
         {/* Medium Risk */}
         <div className="space-y-4">
           <RiskSection
-            title="O‘rta xavf"
+            title="Xavfi o‘rta"
             count={stats.mediumRisk}
             items={stats.mediumRiskList}
-            bgClass="bg-yellow-400"
-            dotClass="bg-yellow-400"
+            bgClass="bg-amber-50 border border-amber-200 text-amber-700"
+            dotClass="bg-amber-500"
+            onItemClick={(item: any) => handleItemClick(item, 'MEDIUM')}
           />
         </div>
 
-        {/* Low Risk */}
+        {/* High Risk */}
         <div className="space-y-4">
           <RiskSection
-            title="Past xavf"
-            count={stats.lowRisk}
-            items={stats.lowRiskList}
-            bgClass="bg-emerald-500"
-            dotClass="bg-emerald-500"
+            title="Xavfi yuqori"
+            count={stats.highRisk}
+            items={stats.highRiskList}
+            bgClass="bg-rose-50 border border-rose-200 text-rose-700"
+            dotClass="bg-rose-500"
+            onItemClick={(item: any) => handleItemClick(item, 'HIGH')}
           />
         </div>
       </div>
 
       <div className="mt-6 border-t border-slate-100 pt-4">
         <button
-          onClick={() => navigate('/risk-analysis')}
+          onClick={handleViewAll}
           className="flex w-full cursor-pointer items-center justify-center space-x-2 rounded-md bg-slate-800 py-2.5 text-white transition-all hover:bg-slate-900"
         >
           <Search className="h-4 w-4" />

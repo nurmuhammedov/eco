@@ -24,7 +24,8 @@ export const ExpertiseTable = () => {
     },
     {
       accessorKey: 'legalTin',
-      header: 'Tashkilot STIRi',
+      header: () => <div className="whitespace-nowrap">Tashkilot STIR</div>,
+      className: '!w-[1%]',
       filterKey: 'legalTin',
       filterType: 'search',
     },
@@ -54,6 +55,7 @@ export const ExpertiseTable = () => {
     {
       accessorKey: 'status',
       header: 'Holati',
+      className: '!w-[1%]',
       cell: ({ row }) =>
         row.original.status == 'ACTIVE' ? (
           <Badge variant="success">Aktiv</Badge>

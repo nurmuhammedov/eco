@@ -67,8 +67,13 @@ const PreventionTable: FC<Props> = ({ regions }) => {
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
-      header: t('risk_analysis_columns.registryNumber'),
+      header: () => (
+        <div className="whitespace-nowrap">
+          Roʻyxatga olish <br /> raqami
+        </div>
+      ),
       accessorKey: 'registryNumber',
+      className: '!w-[1%] whitespace-nowrap',
       filterKey: 'registryNumber',
       filterType: 'search',
     },
@@ -79,15 +84,16 @@ const PreventionTable: FC<Props> = ({ regions }) => {
       filterType: 'search',
     },
     {
-      header: t('risk_analysis_columns.legalName'),
+      header: 'Tashkilot nomi',
       accessorKey: 'ownerName',
       filterKey: 'ownerName',
       filterType: 'search',
     },
     {
-      header: t('risk_analysis_columns.legalTin'),
       accessorKey: 'identity',
       filterKey: 'identity',
+      className: '!w-[1%]',
+      header: () => <div className="whitespace-nowrap">Tashkilot STIR</div>,
       filterType: 'search',
     },
     {
@@ -96,16 +102,13 @@ const PreventionTable: FC<Props> = ({ regions }) => {
       filterKey: 'address',
       filterType: 'search',
     },
-
     ...(activeAssignedStatus === 'UNASSIGNED' && canAssign
       ? [
           {
             id: 'assignInspector',
+            className: '!w-[1%]',
             header: 'Inspektorni belgilash',
             cell: ({ row }: any) => <AssignInspectorButton row={row.original} />,
-            meta: {
-              className: 'w-[200px]',
-            },
           },
         ]
       : [
@@ -125,6 +128,7 @@ const PreventionTable: FC<Props> = ({ regions }) => {
     {
       id: 'status',
       header: 'Holati',
+      className: '!w-[1%]',
       cell: ({ row }: any) =>
         row.original?.status ? (
           row.original?.status == 'CONDUCTED' ? (
@@ -141,7 +145,6 @@ const PreventionTable: FC<Props> = ({ regions }) => {
     },
     {
       id: 'actions',
-      header: 'Amallar',
       cell: ({ row }: any) => <DataTableRowActions showView onView={() => handleView(row.original)} row={row} />,
     },
   ]

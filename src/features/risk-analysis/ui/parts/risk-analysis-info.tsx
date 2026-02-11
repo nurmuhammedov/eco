@@ -40,7 +40,7 @@ const RiskAnalysisIndicator: FC<RiskAnalysisIndicatorProps> = ({ belongId }) => 
       }
     }
 
-    fetchData()
+    void fetchData()
   }, [belongId])
 
   const totalScore = analysisData?.totalScore || 0
@@ -60,24 +60,12 @@ const RiskAnalysisIndicator: FC<RiskAnalysisIndicatorProps> = ({ belongId }) => 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
       <div className="flex items-center justify-between">
-        {/*{!isInspector && (*/}
-        {/*  <TabsList className="bg-[#EDEEEE]">*/}
-        {/*    <TabsTrigger value="inspector_info">Inspektor to‘g‘risida ma’lumot</TabsTrigger>*/}
-        {/*    <TabsTrigger value="analysis_indicators">Tahlil uchun baholash ko‘rsatkichlari holati</TabsTrigger>*/}
-        {/*  </TabsList>*/}
-        {/*)}*/}
         <div className="ml-auto flex items-center gap-4">
           <Badge variant={totalScore > 80 ? 'destructive' : 'success'}>Jami ballar: {totalScore}</Badge>
-          {/* {isInspector && <ConfirmModal />} */}
         </div>
       </div>
       <RiskAnalysisInspectorInfo data={analysisData} />
       <RiskAnalysisForm data={analysisData.indicators} />
-      {/*<TabsContent value="inspector_info">*/}
-      {/* <RiskAnalysisInspectorInfo/> */}
-      {/*</TabsContent>*/}
-      {/*<TabsContent value="analysis_indicators">*/}
-      {/*</TabsContent>*/}
     </Tabs>
   )
 }

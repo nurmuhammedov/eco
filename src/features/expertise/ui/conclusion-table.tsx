@@ -34,7 +34,12 @@ export const ConclusionsTable = () => {
     },
     {
       accessorKey: 'legalTin',
-      header: 'Ekspert tashkiloti STIRi',
+      header: () => (
+        <div className="whitespace-nowrap">
+          Ekspert <br /> tashkilot STIR
+        </div>
+      ),
+      className: '!w-[1%]',
       filterKey: 'legalTin',
       filterType: 'search',
     },
@@ -46,7 +51,8 @@ export const ConclusionsTable = () => {
     },
     {
       accessorKey: 'customerTin',
-      header: 'Tashkilot STIR',
+      header: () => <div className="whitespace-nowrap">Tashkilot STIR</div>,
+      className: '!w-[1%]',
       filterKey: 'customerTin',
       filterType: 'search',
     },
@@ -59,17 +65,25 @@ export const ConclusionsTable = () => {
     {
       accessorKey: 'registryNumber',
       header: 'Reyestr raqami',
+      className: '!w-[1%] whitespace-nowrap',
       filterKey: 'registryNumber',
       filterType: 'search',
     },
     {
       accessorKey: 'createdAt',
-      header: 'Rasmiylashtirish sanasi',
+      id: 'createdAt',
+      header: () => (
+        <div className="whitespace-nowrap">
+          Rasmiylashtirish <br /> sanasi
+        </div>
+      ),
+      className: '!w-[1%]',
       cell: (cell) => (cell.row.original.createdDate ? formatDate(cell.row.original.createdDate, 'dd.MM.yyyy') : null),
     },
     {
       accessorKey: 'status',
       header: 'Holati',
+      className: '!w-[1%]',
       cell: ({ row }) =>
         row.original.processStatus == 'COMPLETED' ? (
           <Badge variant="success">Yakunlangan</Badge>
@@ -79,7 +93,13 @@ export const ConclusionsTable = () => {
     },
     {
       accessorKey: 'registrationDate',
-      header: 'Reyestrga qo‘yilgan sana',
+      id: 'registrationDate',
+      header: () => (
+        <div className="whitespace-nowrap">
+          Reyestrga <br /> qo‘yilgan sana
+        </div>
+      ),
+      className: '!w-[1%]',
       cell: (cell) =>
         cell.row.original.registrationDate ? formatDate(cell.row.original.registrationDate, 'dd.MM.yyyy') : null,
     },

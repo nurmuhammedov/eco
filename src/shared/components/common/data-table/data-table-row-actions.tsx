@@ -34,12 +34,10 @@ export interface DataTableRowActionsProps<TData> {
 }
 
 const ActionButton = memo(({ icon, className, onClick, ariaLabel, isDelete = false }: ActionButtonConfig) => {
-  // For delete button, wrap with confirmation dialog
   if (isDelete) {
     return <DeleteConfirmationDialog onConfirm={onClick} />
   }
 
-  // For non-delete buttons, render normally
   return (
     <button
       type="button"
@@ -74,16 +72,13 @@ function DataTableRowActions<TData>({
   viewClassName,
   containerClassName,
 }: DataTableRowActionsProps<TData>): React.ReactElement | null {
-  // Memoize handlers with proper typing
   const handleEdit = useCallback((): void => {
     if (onEdit) onEdit(row)
   }, [onEdit, row])
 
-  // Make sure onDelete handler returns a Promise
-  const handleDelete = useCallback(async (): Promise<void> => {
+  const handleDelete = useCallback((): void => {
     if (onDelete) {
-      // Convert the result to a Promise if it's not already
-      await Promise.resolve(onDelete(row))
+      onDelete(row)
     }
   }, [onDelete, row])
 
