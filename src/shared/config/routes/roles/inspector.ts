@@ -38,6 +38,9 @@ const AccidentList = lazy(() =>
   import('@/features/accident/ui/accident-list').then((m) => ({ default: m.AccidentList }))
 )
 const AccidentAdd = lazy(() => import('@/features/accident/ui/accident-form').then((m) => ({ default: m.AccidentAdd })))
+const AccidentEdit = lazy(() =>
+  import('@/features/accident/ui/accident-edit').then((m) => ({ default: m.AccidentEdit }))
+)
 const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
 )
@@ -218,6 +221,7 @@ export const inspectorRoutes = [
     path: 'inquiries',
     element: withSuspense(Inquiries),
   },
+
   {
     id: 'ACCIDENT',
     path: 'accidents',
@@ -232,5 +236,10 @@ export const inspectorRoutes = [
     id: 'ACCIDENT',
     path: 'accidents/:id',
     element: withSuspense(AccidentDetail),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/:id/edit',
+    element: withSuspense(AccidentEdit),
   },
 ]

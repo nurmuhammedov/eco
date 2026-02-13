@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Fragment } from 'react'
+
 import { Loader } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { Slot } from '@radix-ui/react-slot'
@@ -60,10 +60,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={props.disabled || loading}
         {...props}
       >
-        <Fragment>
-          {loading && <Loader className="size-4 animate-spin" />}
-          {children}
-        </Fragment>
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {loading && <Loader className="size-4 animate-spin" />}
+            {children}
+          </>
+        )}
       </Comp>
     )
   }

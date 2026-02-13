@@ -28,9 +28,7 @@ const withSuspense = (Component: React.ComponentType) => (
 export const useAppRoutes = () => {
   const { user, isLoading } = useAuth()
 
-  if (isLoading && !user) {
-    return <Loader isVisible />
-  }
+  // Removed early return to prevent Hook order error
 
   const filterRoutesByDirection = (routes: any[]) => {
     if (!user) return []
@@ -134,5 +132,12 @@ export const useAppRoutes = () => {
     ],
   }
 
-  return useRoutes(user ? routes.authenticated : routes.default)
+  const routeConfig = isLoading && !user ? [] : user ? routes.authenticated : routes.default
+  const element = useRoutes(routeConfig)
+
+  if (isLoading && !user) {
+    return <Loader isVisible />
+  }
+
+  return element
 }
