@@ -76,8 +76,6 @@ export const API_ENDPOINTS: Record<string, string> = {
   APPEAL_EQUIPMENT_PDF_OIL_CONTAINER: APPEALS_EQUIPMENT_GENERATE_PDF_URL + 'oil-container',
   APPEAL_EQUIPMENT_PDF_UNOFFICIAL_OIL_CONTAINER: '/appeals/equipment/unofficial/generate-pdf/oil-container',
 
-  APPEALS_EXECUTION_PROCESS_CONTROLLER: '/appeal-execution-processes',
-
   RISK_ASSESSMENT_HF: '/risk-analyses',
   RISK_ASSESSMENT_IRS: '/irs/risk-assessment',
   RISK_ASSESSMENT_ATTRACTIONS: '/equipments/attractions/risk-assessment',

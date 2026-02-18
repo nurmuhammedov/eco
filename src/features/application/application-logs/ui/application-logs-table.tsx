@@ -13,29 +13,21 @@ export const ApplicationLogsList = ({ isShow }: any) => {
   const columns: ColumnDef<ISearchParams>[] = [
     {
       accessorKey: 'executorName',
-      maxSize: -10,
       header: 'Ijrochi nomi',
     },
     {
-      accessorKey: 'executorId',
-      maxSize: -10,
-      header: 'Ijrochi ID',
-    },
-    {
       accessorKey: 'status',
-      maxSize: -10,
       header: 'Harakat',
-      cell: ({ row }) => getUserLogsTypeLabel(row.original.appealStatus),
+      cell: ({ row }) => getUserLogsTypeLabel(row.original.status),
     },
     {
-      accessorKey: 'createdAt',
-      maxSize: -10,
+      accessorKey: 'dateTime',
       header: 'Sana',
-      cell: (cell) => (cell.row.original.createdAt ? formatDate(cell.row.original.createdAt, 'dd.MM.yyyy') : null),
+      cell: (cell) =>
+        cell.row.original.createdAt ? formatDate(cell.row.original.createdAt, 'dd.MM.yyyy, HH:mm') : null,
     },
     {
       accessorKey: 'description',
-      maxSize: -10,
       header: 'Tavsifi',
     },
   ]

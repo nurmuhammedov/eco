@@ -14,13 +14,7 @@ const DecreeSignerPage = lazy(() =>
 )
 const HybridMailPage = lazy(() => import('@/features/admin/hybrid-mail/ui/hybrid-mail-page'))
 const UserLogsPage = lazy(() => import('@/pages/admin/user-logs/page'))
-const AccidentList = lazy(() =>
-  import('@/features/accident/ui/accident-list').then((m) => ({ default: m.AccidentList }))
-)
-const AccidentAdd = lazy(() => import('@/features/accident/ui/accident-form').then((m) => ({ default: m.AccidentAdd })))
-const AccidentDetail = lazy(() =>
-  import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
-)
+const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 
 export const adminRoutes = [
   {
@@ -68,18 +62,7 @@ export const adminRoutes = [
     element: withSuspense(MetricsPage),
   },
   {
-    id: 'ACCIDENT',
-    path: 'accidents',
-    element: withSuspense(AccidentList),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents/add',
-    element: withSuspense(AccidentAdd),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents/:id',
-    element: withSuspense(AccidentDetail),
+    path: 'register/change/:id/:type',
+    element: withSuspense(RegisterChangePage),
   },
 ]

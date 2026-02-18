@@ -18,7 +18,7 @@ const AttractionTypeWidget = () => {
       <div className="mb-4 flex items-center justify-between">
         <h5 className="text-xl font-semibold uppercase">Attraksion tipi</h5>
         <Button onClick={handleAdd}>
-          <PlusCircle /> Attraksion tipi qo'shish
+          <PlusCircle /> Attraksion tipi qo‘shish
         </Button>
       </div>
       <AttractionTypeList />

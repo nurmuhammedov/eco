@@ -33,13 +33,26 @@ export const EquipmentsList = () => {
       startDate = '',
       endDate = '',
       factoryNumber = '',
+      changeStatus = 'ALL',
     },
     addParams,
   } = useCustomSearchParams()
 
+  const currentStatus = String(status)
+
   const { data, isLoading } = usePaginatedData<any>(`/equipments`, {
-    status: status !== 'ALL' && status !== 'ACTIVE' && status !== 'INACTIVE' ? status : '',
-    active: status == 'ACTIVE' || status == 'INACTIVE' ? status == 'ACTIVE' : '',
+    status:
+      currentStatus !== 'ALL' &&
+      currentStatus !== 'ACTIVE' &&
+      currentStatus !== 'INACTIVE' &&
+      currentStatus !== 'CHANGED'
+        ? currentStatus
+        : currentStatus === 'CHANGED' && changeStatus !== 'ALL'
+          ? changeStatus
+          : '',
+    active: currentStatus === 'ACTIVE' ? true : currentStatus === 'INACTIVE' ? false : '',
+    changed: currentStatus === 'CHANGED' ? true : '',
+    changeStatus: currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
     type: type !== 'ALL' ? type : '',
     page,
     size,
@@ -58,6 +71,15 @@ export const EquipmentsList = () => {
     factoryNumber,
   })
 
+  const { data: changedCountData } = usePaginatedData<any>(
+    `/equipments`,
+    {
+      changed: 'true',
+      size: 1,
+    },
+    true
+  )
+
   const { data: dataForNewCount } = useData<number>(`/equipments/count`, true, {
     type: type !== 'ALL' ? type : '',
   })
@@ -65,7 +87,11 @@ export const EquipmentsList = () => {
   const { data: childEquipmentTypes } = useChildEquipmentTypes(type !== 'ALL' ? type : '')
 
   const handleViewApplication = (id: string) => {
-    navigate(`${id}/equipments`)
+    if (currentStatus === 'CHANGED') {
+      navigate(`/register/change/${id}/equipments`)
+    } else {
+      navigate(`${id}/equipments`)
+    }
   }
 
   const handleEditApplication = (id: string, type: string, tin: string) => {
@@ -224,7 +250,7 @@ export const EquipmentsList = () => {
         onTabChange={(type) => addParams({ type: type }, 'page', 'childEquipmentId')}
       />
       <TabsLayout
-        activeTab={status?.toString()}
+        activeTab={currentStatus}
         tabs={[
           {
             id: 'ALL',
@@ -246,12 +272,40 @@ export const EquipmentsList = () => {
             id: 'NO_DATE',
             name: 'Muddati kiritilmaganlar',
           },
+          {
+            id: 'CHANGED',
+            name: 'O‘zgartirish so‘rovlari',
+            count: changedCountData?.page?.totalElements || undefined,
+          },
         ]?.map((i) => ({
           ...i,
-          count: i?.id == status ? (data?.page?.totalElements ?? 0) : undefined,
+          count:
+            i.id === 'CHANGED' ? i.count : i?.id == currentStatus ? data?.page?.totalElements || undefined : undefined,
         }))}
-        onTabChange={(type) => addParams({ status: type }, 'page')}
+        onTabChange={(type) => {
+          if (type === 'CHANGED') {
+            addParams({ status: type, changeStatus: 'ALL' }, 'page')
+          } else {
+            addParams({ status: type, changeStatus: '' }, 'page')
+          }
+        }}
       />
+      {currentStatus === 'CHANGED' && (
+        <TabsLayout
+          activeTab={changeStatus?.toString()}
+          tabs={[
+            { id: 'ALL', name: 'Barchasi' },
+            { id: 'NEW', name: 'Yangi' },
+            { id: 'IN_PROCESS', name: 'Jarayonda' },
+            { id: 'IN_AGREEMENT', name: 'Kelishuvda' },
+            { id: 'IN_APPROVAL', name: 'Tasdiqlashda' },
+          ].map((s) => ({
+            ...s,
+            count: s.id === changeStatus?.toString() ? data?.page?.totalElements || undefined : undefined,
+          }))}
+          onTabChange={(s) => addParams({ changeStatus: s }, 'page')}
+        />
+      )}
       <DataTable
         showFilters
         isLoading={isLoading}

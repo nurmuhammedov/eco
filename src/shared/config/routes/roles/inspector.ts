@@ -34,12 +34,19 @@ const Inquiries = lazy(() => import('@/features/inquiries'))
 const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
 const RegisterHFUpdatePage = lazy(() => import('@/pages/register/hf/hf-update'))
-const AccidentList = lazy(() =>
-  import('@/features/accident/ui/accident-list').then((m) => ({ default: m.AccidentList }))
+const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
+const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
+const AccidentInjuryAdd = lazy(() =>
+  import('@/features/accident/ui/accident-injury-add').then((m) => ({ default: m.AccidentAdd }))
 )
-const AccidentAdd = lazy(() => import('@/features/accident/ui/accident-form').then((m) => ({ default: m.AccidentAdd })))
-const AccidentEdit = lazy(() =>
-  import('@/features/accident/ui/accident-edit').then((m) => ({ default: m.AccidentEdit }))
+const AccidentInjuryEdit = lazy(() =>
+  import('@/features/accident/ui/accident-injury-edit').then((m) => ({ default: m.AccidentEdit }))
+)
+const AccidentNonInjuryAdd = lazy(() =>
+  import('@/features/accident/ui/accident-non-injury-add').then((m) => ({ default: m.AccidentNonInjuryAdd }))
+)
+const AccidentNonInjuryEdit = lazy(() =>
+  import('@/features/accident/ui/accident-non-injury-edit').then((m) => ({ default: m.AccidentNonInjuryEdit }))
 )
 const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
@@ -89,6 +96,11 @@ export const inspectorRoutes = [
     id: 'REGISTRY',
     path: 'register/hf/update/:id',
     element: withSuspense(RegisterHFUpdatePage),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/change/:id/:type',
+    element: withSuspense(RegisterChangePage),
   },
   {
     id: 'REGISTRY',
@@ -229,8 +241,13 @@ export const inspectorRoutes = [
   },
   {
     id: 'ACCIDENT',
-    path: 'accidents/add',
-    element: withSuspense(AccidentAdd),
+    path: 'accidents/injury/add',
+    element: withSuspense(AccidentInjuryAdd),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/non-injury/add',
+    element: withSuspense(AccidentNonInjuryAdd),
   },
   {
     id: 'ACCIDENT',
@@ -239,7 +256,12 @@ export const inspectorRoutes = [
   },
   {
     id: 'ACCIDENT',
-    path: 'accidents/:id/edit',
-    element: withSuspense(AccidentEdit),
+    path: 'accidents/injury/:id/edit',
+    element: withSuspense(AccidentInjuryEdit),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/non-injury/:id/edit',
+    element: withSuspense(AccidentNonInjuryEdit),
   },
 ]

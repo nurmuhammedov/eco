@@ -51,7 +51,7 @@ export const AccidentEdit: React.FC = () => {
       n1ActPath: '',
       planSchemaPath: '',
       commissionOrderPath: '',
-      protocolPath: '',
+      othersPath: '',
       victims: [],
     },
   })
@@ -99,7 +99,7 @@ export const AccidentEdit: React.FC = () => {
       !!data.n1ActPath &&
       !!data.planSchemaPath &&
       !!data.commissionOrderPath &&
-      !!data.protocolPath
+      !!data.othersPath
 
     const currentStatus = accident?.status
     let newStatus = currentStatus
@@ -344,7 +344,7 @@ export const AccidentEdit: React.FC = () => {
                     />
                     <FormField
                       control={form.control}
-                      name="protocolPath"
+                      name="othersPath"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>

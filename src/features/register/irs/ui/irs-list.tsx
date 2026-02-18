@@ -32,12 +32,13 @@ export const IrsList = () => {
       usageType = '',
       startDate = '',
       endDate = '',
-      valid,
+      valid = 'true',
+      changeStatus = 'ALL',
     },
     addParams,
   } = useCustomSearchParams()
 
-  const activeValid = String(valid ?? 'true')
+  const currentValid = String(valid)
 
   const {
     data = [],
@@ -62,11 +63,34 @@ export const IrsList = () => {
     usageType,
     startDate,
     endDate,
-    valid: activeValid === 'all' ? undefined : activeValid === 'true' ? true : activeValid !== 'false',
+    valid:
+      currentValid === 'all'
+        ? undefined
+        : currentValid === 'true'
+          ? true
+          : currentValid === 'false'
+            ? false
+            : undefined,
+    changed: currentValid === 'CHANGED' ? true : '',
+    changeStatus: currentValid === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
+    status: currentValid === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
   })
 
+  const { data: changedCountData } = usePaginatedData<any>(
+    `/irs`,
+    {
+      changed: 'true',
+      size: 1,
+    },
+    true
+  )
+
   const handleViewApplication = (id: string) => {
-    navigate(`${id}/irs`)
+    if (currentValid === 'CHANGED') {
+      navigate(`/register/change/${id}/irs`)
+    } else {
+      navigate(`${id}/irs`)
+    }
   }
 
   const handleEditApplication = (id: string, tin: string) => {
@@ -175,43 +199,72 @@ export const IrsList = () => {
 
   return (
     <div className="flex h-full flex-col gap-2">
-      <Tabs value={activeValid} onValueChange={(val) => addParams({ valid: val, page: 1 })}>
+      <Tabs value={currentValid} onValueChange={(val) => addParams({ valid: val, page: 1, changeStatus: 'ALL' })}>
         <TabsList>
           <TabsTrigger value="all">
             Barchasi
-            {activeValid === 'all' && (
-              <Badge
-                variant="destructive"
-                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-              >
-                {totalElements || 0}
-              </Badge>
-            )}
+            <Badge
+              variant="destructive"
+              className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+            >
+              {currentValid === 'all' ? totalElements : 0}
+            </Badge>
           </TabsTrigger>
           <TabsTrigger value="true">
             Amaldagi INMlar
-            {activeValid === 'true' && (
-              <Badge
-                variant="destructive"
-                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-              >
-                {totalElements || 0}
-              </Badge>
-            )}
+            <Badge
+              variant="destructive"
+              className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+            >
+              {currentValid === 'true' ? totalElements : 0}
+            </Badge>
           </TabsTrigger>
           <TabsTrigger value="false">
             Reyestrdan chiqarilgan INMlar
-            {activeValid === 'false' && (
-              <Badge
-                variant="destructive"
-                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-              >
-                {totalElements || 0}
-              </Badge>
-            )}
+            <Badge
+              variant="destructive"
+              className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+            >
+              {currentValid === 'false' ? totalElements : 0}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger value="CHANGED">
+            O‘zgartirish so‘rovlari
+            <Badge
+              variant="destructive"
+              className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+            >
+              {changedCountData?.page?.totalElements || 0}
+            </Badge>
           </TabsTrigger>
         </TabsList>
       </Tabs>
+
+      {currentValid === 'CHANGED' && (
+        <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 })}>
+          <TabsList>
+            {[
+              { id: 'ALL', name: 'Barchasi' },
+              { id: 'NEW', name: 'Yangi' },
+              { id: 'IN_PROCESS', name: 'Jarayonda' },
+              { id: 'IN_AGREEMENT', name: 'Kelishuvda' },
+              { id: 'IN_APPROVAL', name: 'Tasdiqlashda' },
+            ].map((s) => (
+              <TabsTrigger key={s.id} value={s.id}>
+                {s.name}
+                {changeStatus === s.id && (
+                  <Badge
+                    variant="destructive"
+                    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+                  >
+                    {totalElements || 0}
+                  </Badge>
+                )}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+      )}
       <DataTable
         showFilters
         isPaginated

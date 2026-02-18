@@ -6,6 +6,9 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 
+import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import { Badge } from '@/shared/components/ui/badge'
+
 export const XrayList = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
@@ -20,8 +23,14 @@ export const XrayList = () => {
       districtId = '',
       startDate = '',
       endDate = '',
+      active = 'true',
+      changeStatus = 'ALL',
     },
+    addParams,
   } = useCustomSearchParams()
+
+  const currentActive = String(active)
+
   const { data = [], isLoading } = usePaginatedData<any>(`/xrays`, {
     page,
     size,
@@ -32,10 +41,27 @@ export const XrayList = () => {
     districtId,
     startDate,
     endDate,
+    active: currentActive === 'ALL' || currentActive === 'CHANGED' ? '' : currentActive === 'true',
+    changed: currentActive === 'CHANGED' ? true : '',
+    changeStatus: currentActive === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
+    status: currentActive === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
   })
 
+  const { data: changedCountData } = usePaginatedData<any>(
+    `/xrays`,
+    {
+      changed: 'true',
+      size: 1,
+    },
+    true
+  )
+
   const handleViewApplication = (id: string) => {
-    navigate(`${id}/xrays`)
+    if (currentActive === 'CHANGED') {
+      navigate(`/register/change/${id}/xrays`)
+    } else {
+      navigate(`${id}/xrays`)
+    }
   }
 
   const handleEditApplication = (id: string, tin: string) => {
@@ -102,13 +128,52 @@ export const XrayList = () => {
   ]
 
   return (
-    <DataTable
-      showFilters
-      isLoading={isLoading}
-      isPaginated
-      data={data || []}
-      columns={columns as unknown as any}
-      className="min-h-0 flex-1"
-    />
+    <div className="flex h-full flex-col gap-2">
+      <Tabs value={currentActive} onValueChange={(val) => addParams({ active: val, page: 1, changeStatus: 'ALL' })}>
+        <TabsList>
+          <TabsTrigger value="ALL">Barchasi</TabsTrigger>
+          <TabsTrigger value="true">Amaldagi Rentgenlar</TabsTrigger>
+          <TabsTrigger value="false">Reyestrdan chiqarilganlar</TabsTrigger>
+          <TabsTrigger value="CHANGED">
+            O‘zgartirish so‘rovlari
+            <Badge
+              variant="destructive"
+              className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+            >
+              {changedCountData?.page?.totalElements || 0}
+            </Badge>
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+
+      {currentActive === 'CHANGED' && (
+        <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 })}>
+          <TabsList>
+            {[
+              { id: 'ALL', name: 'Barchasi' },
+              { id: 'NEW', name: 'Yangi' },
+              { id: 'IN_PROCESS', name: 'Jarayonda' },
+              { id: 'IN_AGREEMENT', name: 'Kelishuvda' },
+              { id: 'IN_APPROVAL', name: 'Tasdiqlashda' },
+            ].map((s) => (
+              <TabsTrigger key={s.id} value={s.id}>
+                {s.name}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+      )}
+
+      <DataTable
+        showFilters
+        isLoading={isLoading}
+        isPaginated
+        data={data || []}
+        columns={columns as unknown as any}
+        className="min-h-0 flex-1"
+      />
+    </div>
   )
 }
+
+export default XrayList

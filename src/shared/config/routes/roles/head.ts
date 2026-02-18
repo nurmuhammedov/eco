@@ -28,13 +28,7 @@ const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
 const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
-const AccidentList = lazy(() =>
-  import('@/features/accident/ui/accident-list').then((m) => ({ default: m.AccidentList }))
-)
-const AccidentAdd = lazy(() => import('@/features/accident/ui/accident-form').then((m) => ({ default: m.AccidentAdd })))
-const AccidentDetail = lazy(() =>
-  import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
-)
+const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 
 export const headRoutes = [
   // APPEAL
@@ -79,6 +73,11 @@ export const headRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/change/:id/:type',
+    element: withSuspense(RegisterChangePage),
   },
 
   // PREVENTION
@@ -190,20 +189,5 @@ export const headRoutes = [
     id: 'INQUIRY',
     path: 'inquiries',
     element: withSuspense(Inquiries),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents',
-    element: withSuspense(AccidentList),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents/add',
-    element: withSuspense(AccidentAdd),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents/:id',
-    element: withSuspense(AccidentDetail),
   },
 ]

@@ -18,20 +18,12 @@ export const applicationDetailApi = {
     const { data: res } = await apiClient.post<any>(`/integration/iip/legal`, payload)
     return res.data
   },
-  getIndividualIipInfo: async (pin: string, birthDate: string) => {
-    const payload = {
-      pin: pin,
-      birthDate: birthDate,
-    }
-    const { data: res } = await apiClient.post<any>(`/integration/iip/individual`, payload)
-    return res.data
-  },
   getApplicationDetail: async (id: any) => {
     const { data } = await apiClient.get<any>(`/appeals/${id}`)
     return data.data
   },
   getApplicationLogs: async (id: any) => {
-    const { data } = await apiClient.get<any>(`/appeal-execution-processes/appeal/${id}`)
+    const { data } = await apiClient.get<any>(`/execution-processes/appeal/${id}`)
     return data.data
   },
   getInspectorListSelect: async (isSupervisor?: boolean) => {

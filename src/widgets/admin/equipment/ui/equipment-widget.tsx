@@ -12,7 +12,7 @@ const EquipmentWidget = () => {
       <div className="flex items-center justify-between">
         <h5 className="text-xl font-semibold uppercase">Qurilmalarning quyi turlari </h5>
         <Button onClick={onAddEquipment}>
-          <PlusCircle /> Quyi tur qo'shish
+          <PlusCircle /> Quyi tur qo‘shish
         </Button>
       </div>
       <EquipmentList />

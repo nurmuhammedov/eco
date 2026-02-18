@@ -32,7 +32,7 @@ const HfDetail = () => {
       >
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
           <DetailRow
-            title="XIChOni reyestrga kiritish uchun asos (ariza):"
+            title="XICHOni reyestrga kiritish uchun asos (ariza):"
             value={
               data?.appealId ? (
                 <Link className="text-[#0271FF]" to={'/applications/detail/' + data?.appealId}>
@@ -43,13 +43,13 @@ const HfDetail = () => {
               )
             }
           />
-          <DetailRow title="XIChOni hisobga olish sanasi:" value={getDate(data?.registrationDate)} />
-          <DetailRow title="XIChOni hisobga olish raqami:" value={data?.registryNumber} />
+          <DetailRow title="XICHOni hisobga olish sanasi:" value={getDate(data?.registrationDate)} />
+          <DetailRow title="XICHOni hisobga olish raqami:" value={data?.registryNumber} />
           {!!data?.registryFilePath && (
             <DetailRow title="Sertifikat fayli:" value={<FileLink url={data?.registryFilePath} />} />
           )}
-          <DetailRow title="XIChOni reyestrdan chiqarish sanasi:" value={getDate(data?.deregisterDate)} />
-          <DetailRow title="XIChOni reyestrdan chiqarish sababi:" value={getDate(data?.deregisterReason)} />
+          <DetailRow title="XICHOni reyestrdan chiqarish sanasi:" value={getDate(data?.deregisterDate)} />
+          <DetailRow title="XICHOni reyestrdan chiqarish sababi:" value={getDate(data?.deregisterReason)} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="applicant_info" title="Arizachi to‘g‘risida ma’lumot">
           <LegalApplicantInfo tinNumber={data?.legalTin} />

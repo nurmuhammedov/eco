@@ -28,18 +28,13 @@ const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
 const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
-// const EquipmentPrintPage = lazy(() => import('@/features/register/equipments/ui/equipment-print-page'))
-
-// Expanded Imports
 const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
-const AccidentList = lazy(() =>
-  import('@/features/accident/ui/accident-list').then((m) => ({ default: m.AccidentList }))
-)
-const AccidentAdd = lazy(() => import('@/features/accident/ui/accident-form').then((m) => ({ default: m.AccidentAdd })))
+const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
 const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
 )
+const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 
 export const managerRoutes = [
   // APPEAL
@@ -94,6 +89,11 @@ export const managerRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/change/:id/:type',
+    element: withSuspense(RegisterChangePage),
   },
 
   // PREVENTION
@@ -210,11 +210,6 @@ export const managerRoutes = [
     id: 'ACCIDENT',
     path: 'accidents',
     element: withSuspense(AccidentList),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents/add',
-    element: withSuspense(AccidentAdd),
   },
   {
     id: 'ACCIDENT',

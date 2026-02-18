@@ -26,7 +26,7 @@ import { Alert, AlertTitle } from '@/shared/components/ui/alert'
 import { TriangleAlert } from 'lucide-react'
 
 export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO) => void; isPending?: boolean }) => {
-  const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions, orgData, isLoading } =
+  const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions, orgData, detail, isLoading } =
     useUpdateHF()
 
   if (isLoading) {
@@ -38,7 +38,7 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
         <GoBack title="XICHOni maʼlumotlarini o‘zgartirish" />
         <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
-          <TriangleAlert className="size-4 !text-yellow-600" />
+          <TriangleAlert className="size-4 text-yellow-600!" />
           <AlertTitle className="text-yellow-700">
             Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
             yuboriladi!
@@ -72,6 +72,11 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
                       value={field?.value || ''}
                     />
                   </FormControl>
+                  {detail?.upperOrganization && /[\u0400-\u04FF]/.test(detail.upperOrganization) && (
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
+                      Eski qiymat: {detail.upperOrganization}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -86,6 +91,11 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="XICHO ning nomi" {...field} />
                   </FormControl>
+                  {detail?.name && /[\u0400-\u04FF]/.test(detail.name) && (
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
+                      Eski qiymat: {detail.name}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -177,6 +187,11 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Ko‘cha, uy raqami" {...field} />
                   </FormControl>
+                  {detail?.address && /[\u0400-\u04FF]/.test(detail.address) && (
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
+                      Eski qiymat: {detail.address}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -211,6 +226,11 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Sexlar, uchastkalar nomi" {...field} />
                   </FormControl>
+                  {detail?.extraArea && /[\u0400-\u04FF]/.test(detail.extraArea) && (
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
+                      Eski qiymat: {detail.extraArea}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -225,8 +245,14 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Nomi va miqdori" {...field} />
                   </FormControl>
+                  {detail?.hazardousSubstance && /[\u0400-\u04FF]/.test(detail.hazardousSubstance) ? (
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
+                      Eski qiymat: {detail.hazardousSubstance}
+                    </FormDescription>
+                  ) : (
+                    <FormDescription>VM 271-son qaroriga muvofiq</FormDescription>
+                  )}
                   <FormMessage />
-                  <FormDescription>VM 271-son qaroriga muvofiq</FormDescription>
                 </FormItem>
               )}
             />

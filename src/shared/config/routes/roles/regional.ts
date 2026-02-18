@@ -29,13 +29,11 @@ const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
 const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
-const AccidentList = lazy(() =>
-  import('@/features/accident/ui/accident-list').then((m) => ({ default: m.AccidentList }))
-)
-const AccidentAdd = lazy(() => import('@/features/accident/ui/accident-form').then((m) => ({ default: m.AccidentAdd })))
+const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
 const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
 )
+const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 
 export const regionalRoutes = [
   // DASHBOARD
@@ -87,6 +85,11 @@ export const regionalRoutes = [
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
   },
+  {
+    id: 'REGISTRY',
+    path: 'register/change/:id/:type',
+    element: withSuspense(RegisterChangePage),
+  },
 
   // PREVENTION
   {
@@ -131,7 +134,7 @@ export const regionalRoutes = [
 
   // ACCREDITATION / EXPERTISE
   {
-    id: 'CONCLUSION', // Or ACCREDITATION depending on logic, keeping standard IDs
+    id: 'CONCLUSION',
     path: 'accreditations',
     element: withSuspense(ExpertisePage),
   },
@@ -202,11 +205,6 @@ export const regionalRoutes = [
     id: 'ACCIDENT',
     path: 'accidents',
     element: withSuspense(AccidentList),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents/add',
-    element: withSuspense(AccidentAdd),
   },
   {
     id: 'ACCIDENT',

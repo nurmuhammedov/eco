@@ -31,7 +31,7 @@ const ChecklistTemplatesWidget = () => {
       <div className="mt-4 mb-3 flex items-center justify-between">
         <h5 className="text-xl font-semibold uppercase">{t('menu.checklist_templates', 'Cheklistlar')}</h5>
         <Button onClick={handleAdd}>
-          <PlusCircle /> {t('add_checklist', "Cheklist qo'shish")}
+          <PlusCircle /> {t('add_checklist', 'Cheklist qo‘shish')}
         </Button>
       </div>
 

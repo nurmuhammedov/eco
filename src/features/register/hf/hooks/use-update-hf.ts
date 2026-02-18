@@ -55,31 +55,33 @@ export const useUpdateHF = () => {
   const { data: districts } = useDistrictSelectQueries(regionId)
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
 
+  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/hf/`, id, !!id)
+  const resolvedTin = tin || detail?.legalTin
+
   const { data: orgData, isLoading: isOrgLoading } = useQuery({
-    queryKey: ['legal-entity', tin],
+    queryKey: ['legal-entity', resolvedTin],
     queryFn: async () => {
-      const res = await apiClient.get<any>('/users/legal/' + tin)
+      const res = await apiClient.get<any>('/users/legal/' + resolvedTin)
       return res.data
     },
-    enabled: !!tin && tin.length === 9,
+    enabled: !!resolvedTin && resolvedTin.length === 9,
   })
-
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/hf/`, id, !!id)
 
   useEffect(() => {
     if (detail) {
       const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
+      const getValue = (val: string) => (/[\u0400-\u04FF]/.test(val) ? '' : val)
 
       form.reset((p) => ({
         ...p,
-        name: detail.name || '',
-        upperOrganization: detail.upperOrganization || '',
+        name: getValue(detail.name || ''),
+        upperOrganization: getValue(detail.upperOrganization || ''),
         hfTypeId: detail.hfTypeId ? String(detail.hfTypeId) : 'undefined',
         regionId: detail.regionId ? String(detail.regionId) : '',
-        address: detail.address || '',
+        address: getValue(detail.address || ''),
         location: detail.location || '',
-        extraArea: detail.extraArea || '',
-        hazardousSubstance: detail.hazardousSubstance || '',
+        extraArea: getValue(detail.extraArea || ''),
+        hazardousSubstance: getValue(detail.hazardousSubstance || ''),
         managerCount: detail.managerCount?.toString() || '',
         engineerCount: detail.engineerCount?.toString() || '',
         workerCount: detail.workerCount?.toString() || '',
@@ -116,6 +118,7 @@ export const useUpdateHF = () => {
     districtOptions,
     hazardousFacilityTypeOptions,
     orgData: orgData?.data,
+    detail,
     isLoading: isOrgLoading || isDetailLoading,
   }
 }

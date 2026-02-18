@@ -109,7 +109,7 @@ export const TabsLayout = ({
 
   return (
     <Tabs defaultValue={defaultValue} value={activeTab} onValueChange={onTabChange} className={className}>
-      <div className={cn('flex items-center gap-2 p-0.5', classNameWrapper)}>
+      <div className={cn('flex items-center gap-2 p-0', classNameWrapper)}>
         {showArrows && (
           <div className="flex gap-1">
             <Button className={buttonClass} onClick={scrollToStart} aria-disabled={!canScrollLeft} type="button">
@@ -123,7 +123,7 @@ export const TabsLayout = ({
         <div
           ref={scrollRef}
           onScroll={checkScroll}
-          className={cn('scrollbar-hidden -m-1 flex min-w-0 flex-1 overflow-x-auto', classNameRootWrapper)}
+          className={cn('scrollbar-hidden flex min-w-0 flex-1 overflow-x-auto', classNameRootWrapper)}
         >
           <TabsList className={cn('w-max overflow-visible', classNameTabList)}>
             {tabs.map((tab) => {

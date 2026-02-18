@@ -73,7 +73,7 @@ export const accidentEditSchema = accidentCreateSchema.extend({
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  protocolPath: z
+  othersPath: z
     .string()
     .optional()
     .nullable()
@@ -91,6 +91,9 @@ export interface AccidentListItem {
   seriousInjuryCount: number
   fatalInjuryCount: number
   multiple: boolean
+  type: string
+  date?: string | null
+  dateTime?: string | null
 }
 
 export type Victim = z.infer<typeof victimSchema> & {
@@ -105,6 +108,71 @@ export type AccidentFormValues = z.input<typeof accidentEditSchema> & {
   status?: string
 }
 
+export const accidentNonInjuryCreateSchema = z.object({
+  hfId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  dateTime: z.date({ required_error: 'Majburiy maydon!' }),
+  shortDetail: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!').trim(),
+})
+
+export const accidentNonInjuryEditSchema = accidentNonInjuryCreateSchema.extend({
+  economicLoss: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  stoppedFrom: z.date().optional().nullable(),
+  stoppedTo: z.date().optional().nullable(),
+  guiltyEmployees: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  preventions: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  executions: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  specialActPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  commissionOrderPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  othersPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+})
+
+export type AccidentNonInjuryFormValues = z.input<typeof accidentNonInjuryEditSchema> & {
+  id?: string
+  status?: string
+}
+
+export type AccidentNonInjury = z.output<typeof accidentNonInjuryEditSchema> & {
+  id?: string
+  legalName?: string
+  legalDirectorName?: string
+  legalAddress?: string
+  legalPhone?: string
+  legalTin?: string
+  hfName?: string
+  status?: string
+  createdAt?: string
+  updatedAt?: string
+  type?: string
+}
+
 export type Accident = z.output<typeof accidentEditSchema> & {
   id?: string
   legalName?: string
@@ -117,4 +185,5 @@ export type Accident = z.output<typeof accidentEditSchema> & {
   description?: string
   createdAt?: string
   updatedAt?: string
+  type?: string
 }

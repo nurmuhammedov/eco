@@ -5,38 +5,38 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { toast } from 'sonner'
+import { format } from 'date-fns'
 
 import { Button } from '@/shared/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import DatePicker from '@/shared/components/ui/datepicker'
 import DetailRow from '@/shared/components/common/detail-row'
 import GoBack from '@/shared/components/common/go-back'
 
 import useAdd from '@/shared/hooks/api/useAdd'
 import useData from '@/shared/hooks/api/useData'
-import { accidentCreateSchema } from '@/features/accident/model/types'
+import { accidentNonInjuryCreateSchema } from '@/features/accident/model/types'
 import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api.ts'
+import DateTimePicker from '@/shared/components/ui/datetimepicker'
 
-export const AccidentAdd: React.FC = () => {
+export const AccidentNonInjuryAdd: React.FC = () => {
   const navigate = useNavigate()
-  const createMutation = useAdd<any, any, any>('/accidents/injury')
+  const createMutation = useAdd<any, any, any>('/accidents/non-injury')
 
   const [stir, setStir] = useState('')
   const [searchedStir, setSearchedStir] = useState<string | null>(null)
 
   const form = useForm<any>({
-    resolver: zodResolver(accidentCreateSchema),
+    resolver: zodResolver(accidentNonInjuryCreateSchema),
     defaultValues: {
       hfId: '',
-      date: undefined,
+      dateTime: undefined,
       shortDetail: '',
     },
   })
 
-  // Queries for Search
   const {
     data: legalInfo,
     isFetching: isLegalInfoLoading,
@@ -54,7 +54,7 @@ export const AccidentAdd: React.FC = () => {
     if (stir.length === 9) {
       setSearchedStir(stir)
     } else {
-      toast.warning('STIR 9 ta raqamdan iborat bo‘lishi kerak.')
+      toast.warning('STIR 9 ta raqamdan iborat bolishi kerak.')
     }
   }
 
@@ -65,9 +65,14 @@ export const AccidentAdd: React.FC = () => {
   }
 
   const onSubmit = (data: any) => {
-    createMutation.mutate(data, {
+    const payload = {
+      ...data,
+      dateTime: data.dateTime ? format(data.dateTime, "yyyy-MM-dd'T'HH:mm:ss") : null,
+    }
+
+    createMutation.mutate(payload, {
       onSuccess: () => {
-        navigate('/accidents')
+        navigate(-1)
       },
     })
   }
@@ -76,7 +81,7 @@ export const AccidentAdd: React.FC = () => {
 
   return (
     <div className="container mx-auto space-y-4 p-4">
-      <GoBack title="Yangi baxtsiz hodisa qo‘shish" />
+      <GoBack title="Yangi avariya qo'shish" />
 
       <Card>
         <CardHeader>
@@ -93,7 +98,7 @@ export const AccidentAdd: React.FC = () => {
             />
             {hasLegalInfo ? (
               <Button variant="destructive" onClick={handleClearSearch} className="w-40">
-                O‘chirish
+                O'chirish
               </Button>
             ) : (
               <Button
@@ -157,15 +162,14 @@ export const AccidentAdd: React.FC = () => {
 
                     <FormField
                       control={form.control}
-                      name="date"
+                      name="dateTime"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel required>Sana</FormLabel>
-                          <DatePicker
+                          <FormLabel required>Avariya yuz bergan sana va vaqt</FormLabel>
+                          <DateTimePicker
                             value={field.value}
                             onChange={field.onChange}
-                            placeholder="Sanani tanlang"
-                            disableStrategy="after"
+                            placeholder="Sana va vaqtni tanlang"
                           />
                           <FormMessage />
                         </FormItem>
@@ -177,9 +181,9 @@ export const AccidentAdd: React.FC = () => {
                       name="shortDetail"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel required>Qisqacha tafsilot</FormLabel>
+                          <FormLabel required>Avariyaning qisqacha tavsifi</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="Qisqacha tafsilot..." />
+                            <Input {...field} placeholder="Qisqacha tavsif..." />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

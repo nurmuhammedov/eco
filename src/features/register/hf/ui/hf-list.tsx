@@ -7,6 +7,9 @@ import { useHazardousFacilityTypeDictionarySelect } from '@/shared/api/dictionar
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { TabsLayout } from '@/shared/layouts'
+import { ApplicationStatus } from '@/entities/application'
+import { useTranslatedObject } from '@/shared/hooks'
+import { useMemo } from 'react'
 
 export const HfList = () => {
   const navigate = useNavigate()
@@ -30,10 +33,25 @@ export const HfList = () => {
       hfTypeId = '',
       startDate = '',
       endDate = '',
+      status = 'ALL',
     },
   } = useCustomSearchParams()
 
+  const currentActive = String(active)
+  const currentStatus = String(status)
+
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
+
+  const { data: changedCountData } = usePaginatedData<any>(`/hf`, {
+    page: 1,
+    size: 1,
+    changed: 'true',
+    regionId,
+    districtId,
+    hfTypeId,
+    startDate,
+    endDate,
+  })
 
   const { data, isLoading } = usePaginatedData<any>(`/hf`, {
     page,
@@ -46,7 +64,10 @@ export const HfList = () => {
     legalAddress,
     name,
     address,
-    active: active == 'ALL' ? '' : active,
+    status: currentActive !== 'CHANGED' || currentStatus === 'ALL' ? '' : currentStatus,
+    active: currentActive === 'ALL' || currentActive === 'CHANGED' ? '' : currentActive === 'true',
+    changed: currentActive === 'CHANGED' ? true : '',
+    changeStatus: currentActive === 'CHANGED' && currentStatus !== 'ALL' ? currentStatus : '',
     regionId,
     districtId,
     hfTypeId,
@@ -54,12 +75,24 @@ export const HfList = () => {
     endDate,
   })
 
+  const applicationStatusList = useTranslatedObject(ApplicationStatus, 'application_status', false)
+  const applicationStatus = useMemo(() => {
+    return applicationStatusList.filter((s: { id: string; name: string }) =>
+      ['ALL', 'NEW', 'IN_PROCESS', 'IN_AGREEMENT', 'IN_APPROVAL'].includes(s.id)
+    )
+  }, [applicationStatusList])
+
   const handleViewApplication = (id: string) => {
-    navigate(`${id}/hf`)
+    if (currentActive === 'CHANGED') {
+      navigate(`/register/change/${id}/hf`)
+    } else {
+      navigate(`${id}/hf`)
+    }
   }
 
   const handleEditApplication = (data: any) => {
-    navigate(`/register/hf/update/${data?.id}?tin=${data?.legalTin}`)
+    const tinQuery = user?.role === UserRoles.INSPECTOR ? `?tin=${data?.legalTin}` : ''
+    navigate(`/register/hf/update/${data?.id}${tinQuery}`)
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [
@@ -122,7 +155,7 @@ export const HfList = () => {
         <DataTableRowActions
           showView
           row={row}
-          showEdit={user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.CHAIRMAN}
+          showEdit={currentActive === 'true' && (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.LEGAL)}
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
           onEdit={(row) => handleEditApplication(row.original)}
@@ -132,10 +165,9 @@ export const HfList = () => {
   ]
 
   return (
-    <>
+    <div className="flex min-h-0 flex-1 flex-col gap-2">
       <TabsLayout
-        activeTab={active?.toString()}
-        className="mb-2"
+        activeTab={currentActive}
         tabs={[
           {
             id: 'ALL',
@@ -149,12 +181,34 @@ export const HfList = () => {
             id: 'false',
             name: 'Reyestrdan chiqarilgan XICHOlar',
           },
+          {
+            id: 'CHANGED',
+            name: 'O‘zgartirish so‘rovlari',
+            count: changedCountData?.page?.totalElements || undefined,
+          },
         ]?.map((i) => ({
           ...i,
-          count: i?.id == active?.toString() ? (data?.page?.totalElements ?? 0) : undefined,
+          count:
+            i.id === 'CHANGED' ? i.count : i?.id == currentActive ? data?.page?.totalElements || undefined : undefined,
         }))}
-        onTabChange={(type) => addParams({ active: type }, 'page')}
+        onTabChange={(type) => {
+          if (type === 'CHANGED') {
+            addParams({ active: type, status: 'ALL' }, 'page')
+          } else {
+            addParams({ active: type, status: '' }, 'page')
+          }
+        }}
       />
+      {currentActive === 'CHANGED' && (
+        <TabsLayout
+          activeTab={currentStatus}
+          tabs={applicationStatus.map((s: { id: string; name: string }) => ({
+            ...s,
+            count: s.id === currentStatus ? (data?.page?.totalElements ?? 0) : undefined,
+          }))}
+          onTabChange={(s) => addParams({ status: s }, 'page')}
+        />
+      )}
       <DataTable
         showFilters={true}
         isLoading={isLoading}
@@ -163,6 +217,6 @@ export const HfList = () => {
         columns={columns as unknown as any}
         className="min-h-0 flex-1"
       />
-    </>
+    </div>
   )
 }

@@ -25,13 +25,12 @@ const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-
 const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'))
 const AddConclusionPage = lazy(() => import('@/pages/expertise/add-conclusion-page'))
 const EditConclusion = lazy(() => import('@/pages/expertise/edit-conclusion-page'))
-const AccidentList = lazy(() =>
-  import('@/features/accident/ui/accident-list').then((m) => ({ default: m.AccidentList }))
-)
-const AccidentAdd = lazy(() => import('@/features/accident/ui/accident-form').then((m) => ({ default: m.AccidentAdd })))
+const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
 const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
 )
+const RegisterHFUpdatePage = lazy(() => import('@/pages/register/hf/hf-update'))
+const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 
 export const legalRoutes = [
   // APPEAL
@@ -87,7 +86,16 @@ export const legalRoutes = [
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
   },
-
+  {
+    id: 'REGISTRY',
+    path: 'register/hf/update/:id',
+    element: withSuspense(RegisterHFUpdatePage),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/change/:id/:type',
+    element: withSuspense(RegisterChangePage),
+  },
   // PREVENTION
   {
     id: 'PREVENTION',
@@ -171,11 +179,6 @@ export const legalRoutes = [
     id: 'ACCIDENT',
     path: 'accidents',
     element: withSuspense(AccidentList),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents/add',
-    element: withSuspense(AccidentAdd),
   },
   {
     id: 'ACCIDENT',
