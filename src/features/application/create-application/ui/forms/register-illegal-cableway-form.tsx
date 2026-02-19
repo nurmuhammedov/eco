@@ -7,12 +7,22 @@ import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
 import DetailRow from '@/shared/components/common/detail-row'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
 import { useRegisterIllegalCableway } from '@/features/application/create-application/model/use-create-illegal-cableway-application'
+import { Alert, AlertTitle } from '@/shared/components/ui/alert'
+import { TriangleAlert } from 'lucide-react'
 
 interface RegisterIllegalCablewayFormProps {
   onSubmit: (data: RegisterIllegalCablewayDTO) => void
@@ -28,6 +38,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCablewayFormProp
     regionOptions,
     hazardousFacilitiesOptions,
     ownerData,
+    detail,
     isLoading,
     isSearchLoading,
     isSubmitPending,
@@ -51,6 +62,15 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCablewayFormProp
         <GoBack
           title={isUpdate ? 'Osma yo‘l maʼlumotlarini tahrirlash' : 'Osma arqonli yuruvchi yo‘lni ro‘yxatga olish'}
         />
+        {isUpdate && (
+          <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
+            <TriangleAlert className="size-4 text-yellow-600!" />
+            <AlertTitle className="text-yellow-700">
+              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
+              yuboriladi!
+            </AlertTitle>
+          </Alert>
+        )}
         <NoteForm equipmentName="osma yo‘l" />
 
         {((isUpdate && isLegal) || !isUpdate) && (
@@ -228,6 +248,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCablewayFormProp
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Qurilmaning zavod raqami" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.factoryNumber && /[\u0400-\u04FF]/.test(detail.factoryNumber) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.factoryNumber}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -241,6 +266,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCablewayFormProp
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Ishlab chiqargan zavod nomi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.factory && /[\u0400-\u04FF]/.test(detail.factory) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.factory}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -254,6 +284,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCablewayFormProp
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Model, marka" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.model && /[\u0400-\u04FF]/.test(detail.model) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.model}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -343,6 +378,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCablewayFormProp
                   <FormControl>
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Harakat tezligi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.parameters?.speed && /[\u0400-\u04FF]/.test(detail.parameters.speed) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.parameters.speed}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -356,6 +396,13 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCablewayFormProp
                   <FormControl>
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Yo‘lovchilar soni" {...field} />
                   </FormControl>
+                  {isUpdate &&
+                    detail?.parameters?.passengerCount &&
+                    /[\u0400-\u04FF]/.test(detail.parameters.passengerCount) && (
+                      <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                        Eski qiymat: {detail.parameters.passengerCount}
+                      </FormDescription>
+                    )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -369,6 +416,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCablewayFormProp
                   <FormControl>
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Uzunligi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.parameters?.length && /[\u0400-\u04FF]/.test(detail.parameters.length) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.parameters.length}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -434,6 +486,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCablewayFormProp
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Aniq manzilni kiriting" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.address && /[\u0400-\u04FF]/.test(detail.address) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.address}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}

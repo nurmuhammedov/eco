@@ -69,7 +69,7 @@ export const XrayList = () => {
   }
 
   const handleEditApplication = (id: string, tin: string) => {
-    navigate(`/applications/create/ILLEGAL_REGISTER_XRAY?id=${id}&tin=${tin}`)
+    navigate(`/register/update/XRAY/${id}?tin=${tin}`)
   }
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -122,7 +122,12 @@ export const XrayList = () => {
           row={row}
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
-          showEdit={(user?.role === UserRoles.LEGAL || user?.role === UserRoles.INSPECTOR) && currentActive === 'true'}
+          showEdit={
+            (user?.role === UserRoles.LEGAL ||
+              user?.role === UserRoles.INSPECTOR ||
+              user?.role === UserRoles.INDIVIDUAL) &&
+            currentActive === 'true'
+          }
           onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
         />
       ),

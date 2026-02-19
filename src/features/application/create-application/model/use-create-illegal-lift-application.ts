@@ -142,15 +142,15 @@ export const useRegisterIllegalLift = (externalSubmit?: (data: RegisterIllegalLi
     mode: 'onChange',
   })
 
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/equipments/`, id, isUpdate)
+  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/equipments/`, id, !!id)
 
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/equipments/elevator/', id)
 
-  /* const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal') */
   const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
     '/integration/iip/individual'
   )
 
+  const ownerIdentity = detail?.ownerIdentity || tin
   const regionId = form.watch('regionId')
   const identity = form.watch('identity')
   const isLegal = identity?.length === 9
@@ -161,23 +161,23 @@ export const useRegisterIllegalLift = (externalSubmit?: (data: RegisterIllegalLi
   const buildingSphereTypeOptions = useTranslatedObject(BuildingSphereType, 'building_sphere_type')
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', tin],
+    queryKey: ['owner-data', ownerIdentity],
     queryFn: async () => {
-      if (!tin) return null
-      if (tin.length === 9) {
-        const res = await apiClient.get<any>('/users/legal/' + tin)
+      if (!ownerIdentity) return null
+      if (ownerIdentity.length === 9) {
+        const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
         return res.data?.data
       }
-      if (tin.length === 14 && detail?.birthDate) {
+      if (ownerIdentity.length === 14 && detail?.birthDate) {
         const res = await apiClient.post<any>('/integration/iip/individual', {
-          pin: tin,
+          pin: ownerIdentity,
           birthDate: detail.birthDate,
         })
         return res.data?.data
       }
       return null
     },
-    enabled: isUpdate && !!tin && (tin.length === 9 || (tin.length === 14 && !!detail?.birthDate)),
+    enabled: !!ownerIdentity,
   })
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
@@ -192,20 +192,22 @@ export const useRegisterIllegalLift = (externalSubmit?: (data: RegisterIllegalLi
 
   useEffect(() => {
     if (detail && isUpdate) {
+      const getValue = (val: any) => (typeof val === 'string' && /[\u0400-\u04FF]/.test(val) ? '' : val)
+
       form.reset({
         phoneNumber: detail.phoneNumber || '',
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
         birthDate: isUpdate ? '1900-01-01' : parseDate(detail.birthDate),
         hazardousFacilityId: detail.hfId,
         childEquipmentId: detail.childEquipmentId ? String(detail.childEquipmentId) : '',
-        factoryNumber: detail.factoryNumber || '',
+        factoryNumber: getValue(detail.factoryNumber || ''),
         regionId: detail.regionId ? String(detail.regionId) : '',
-        address: detail.address || '',
-        model: detail.model || '',
-        factory: detail.factory || '',
-        location: detail.location || '',
-        liftingCapacity: detail.parameters?.liftingCapacity || '',
-        stopCount: detail.parameters?.stopCount || '',
+        address: getValue(detail.address || ''),
+        model: getValue(detail.model || ''),
+        factory: getValue(detail.factory || ''),
+        location: getValue(detail.location || ''),
+        liftingCapacity: getValue(detail.parameters?.liftingCapacity || ''),
+        stopCount: getValue(detail.parameters?.stopCount || ''),
         sphere: detail?.sphere || undefined,
         manufacturedAt: parseDate(detail.manufacturedAt),
         partialCheckDate: parseDate(detail.partialCheckDate),
@@ -235,7 +237,6 @@ export const useRegisterIllegalLift = (externalSubmit?: (data: RegisterIllegalLi
 
     if (identity.length === 9) {
       setIsManualSearchLoading(true)
-      setIsManualSearchLoading(true)
       apiClient
         .post<any>('/integration/iip/legal', { tin: identity })
         .then((res) => setManualOwnerData(res.data?.data))
@@ -246,7 +247,7 @@ export const useRegisterIllegalLift = (externalSubmit?: (data: RegisterIllegalLi
         pin: identity,
         birthDate: format(birthDate as unknown as Date, 'yyyy-MM-dd'),
       })
-        .then((res) => setManualOwnerData(res.data))
+        .then((res) => setManualOwnerData(res.data?.data))
         .catch(() => setManualOwnerData(null))
     } else {
       form.trigger(['identity', 'birthDate'])
@@ -270,7 +271,7 @@ export const useRegisterIllegalLift = (externalSubmit?: (data: RegisterIllegalLi
       updateMutate(updatePayload, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
-          toast.success('Muvaffaqiyatli saqlandi!')
+          toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },
       })
@@ -299,6 +300,7 @@ export const useRegisterIllegalLift = (externalSubmit?: (data: RegisterIllegalLi
     hazardousFacilitiesOptions,
     sphereSelectOptions,
     ownerData: currentOwnerData,
+    detail,
     isLoading: isDetailLoading || isOwnerLoading,
     isSearchLoading: isIndividualPending || isManualSearchLoading,
     isSubmitPending: isUpdatePending,

@@ -3,6 +3,7 @@ import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/d
 import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
+import useAdd from '@/shared/hooks/api/useAdd'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
@@ -25,7 +26,6 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
   const queryClient = useQueryClient()
 
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
-  const [isManualSearchLoading, setIsManualSearchLoading] = useState(false)
 
   const form = useForm<RegisterIllegalIrsDTO>({
     resolver: (values, context, options) => {
@@ -82,25 +82,25 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     mode: 'onChange',
   })
 
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/irs/`, id, isUpdate)
+  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/irs/`, id, !!id)
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/irs/', id, 'put')
 
+  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
+
+  const ownerIdentity = detail?.ownerIdentity || tin
   const regionId = form.watch('regionId')
 
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', tin],
+    queryKey: ['owner-data', ownerIdentity],
     queryFn: async () => {
-      if (!tin) return null
-      if (tin.length === 9) {
-        const res = await apiClient.get<any>('/users/legal/' + tin)
-        return res.data?.data
-      }
-      return null
+      if (!ownerIdentity) return null
+      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
+      return res.data?.data
     },
-    enabled: isUpdate && !!tin && tin.length === 9,
+    enabled: !!ownerIdentity,
   })
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
@@ -108,33 +108,35 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
 
   useEffect(() => {
     if (detail && isUpdate) {
+      const getValue = (val: any) => (typeof val === 'string' && /[\u0400-\u04FF]/.test(val) ? '' : val)
+
       form.reset({
         phoneNumber: detail.phoneNumber || '',
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
-        parentOrganization: detail.parentOrganization || '',
-        supervisorName: detail.supervisorName || '',
-        supervisorPosition: detail.supervisorPosition || '',
-        supervisorStatus: detail.supervisorStatus || '',
-        supervisorEducation: detail.supervisorEducation || '',
+        parentOrganization: getValue(detail.parentOrganization || ''),
+        supervisorName: getValue(detail.supervisorName || ''),
+        supervisorPosition: getValue(detail.supervisorPosition || ''),
+        supervisorStatus: getValue(detail.supervisorStatus || ''),
+        supervisorEducation: getValue(detail.supervisorEducation || ''),
         supervisorPhoneNumber: detail?.supervisorPhoneNumber || '',
-        division: detail.division || '',
+        division: getValue(detail.division || ''),
         identifierType: detail.identifierType,
-        symbol: detail.symbol || '',
-        sphere: detail.sphere || '',
-        factoryNumber: detail.factoryNumber || '',
-        serialNumber: detail.serialNumber || '',
+        symbol: getValue(detail.symbol || ''),
+        sphere: getValue(detail.sphere || ''),
+        factoryNumber: getValue(detail.factoryNumber || ''),
+        serialNumber: getValue(detail.serialNumber || ''),
         activity: detail.activity,
-        type: detail.type || '',
+        type: getValue(detail.type || ''),
         category: detail.category,
-        country: detail.country || '',
+        country: getValue(detail.country || ''),
         manufacturedAt: parseDate(detail.manufacturedAt),
-        acceptedFrom: detail.acceptedFrom || '',
+        acceptedFrom: getValue(detail.acceptedFrom || ''),
         acceptedAt: parseDate(detail.acceptedAt),
         isValid: detail.isValid,
         usageType: detail.usageType,
-        storageLocation: detail.storageLocation || '',
+        storageLocation: getValue(detail.storageLocation || ''),
         regionId: detail.regionId ? String(detail.regionId) : '',
-        address: detail.address || '',
+        address: getValue(detail.address || ''),
         passportPath: detail.files?.passportPath?.path,
         additionalFilePath: detail.files?.additionalFilePath?.path,
       } as any)
@@ -151,15 +153,11 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     if (!identity) return
 
     if (identity.length === 9) {
-      setIsManualSearchLoading(true)
-      setIsManualSearchLoading(true)
-      apiClient
-        .post<any>('/integration/iip/legal', { tin: identity })
+      legalMutateAsync({ tin: identity })
         .then((res) => setManualOwnerData(res.data?.data))
         .catch(() => setManualOwnerData(null))
-        .finally(() => setIsManualSearchLoading(false))
     } else {
-      form.trigger(['identity'])
+      form.trigger('identity')
     }
   }
 
@@ -180,7 +178,7 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
       updateMutate(cleanedData, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
-          toast.success('Muvaffaqiyatli saqlandi!')
+          toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },
       })
@@ -242,8 +240,9 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     irsUsageTypeOptions,
     irsStatusOptions,
     ownerData: currentOwnerData,
+    detail,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isManualSearchLoading,
+    isSearchLoading: isLegalPending,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,

@@ -92,7 +92,7 @@ export const HfList = () => {
 
   const handleEditApplication = (data: any) => {
     const tinQuery = user?.role === UserRoles.INSPECTOR ? `?tin=${data?.legalTin}` : ''
-    navigate(`/register/hf/update/${data?.id}${tinQuery}`)
+    navigate(`/register/update/HF/${data?.id}${tinQuery}`)
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [
@@ -155,7 +155,12 @@ export const HfList = () => {
         <DataTableRowActions
           showView
           row={row}
-          showEdit={currentActive === 'true' && (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.LEGAL)}
+          showEdit={
+            currentActive === 'true' &&
+            (user?.role === UserRoles.INSPECTOR ||
+              user?.role === UserRoles.LEGAL ||
+              user?.role === UserRoles.INDIVIDUAL)
+          }
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
           onEdit={(row) => handleEditApplication(row.original)}

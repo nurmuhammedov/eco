@@ -6,13 +6,23 @@ import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { InputNumber } from '@/shared/components/ui/input-number'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
 import { useRegisterIllegalIrs } from '@/features/application/create-application/model/use-create-illegal-irs-application'
+import { Alert, AlertTitle } from '@/shared/components/ui/alert'
+import { TriangleAlert } from 'lucide-react'
 import { RegisterIllegalIrsDTO } from '@/entities/create-application/schemas/register-illegal-irs.schema'
 
 interface RegisterIllegalIrsFormProps {
@@ -31,6 +41,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
     irsUsageTypeOptions,
     irsStatusOptions,
     ownerData,
+    detail,
     isLoading,
     isSearchLoading,
     isSubmitPending,
@@ -48,7 +59,16 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'INM maʼlumotlarini tahrirlash' : 'INMni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'IRS maʼlumotlarini tahrirlash' : 'IRSni ro‘yxatga olish arizasi'} />
+        {isUpdate && (
+          <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
+            <TriangleAlert className="size-4 text-yellow-600!" />
+            <AlertTitle className="text-yellow-700">
+              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
+              yuboriladi!
+            </AlertTitle>
+          </Alert>
+        )}
         <NoteForm equipmentName="INM" onlyLatin={true} />
 
         <CardForm className="my-2">
@@ -281,6 +301,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Zavod raqami" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.factoryNumber && /[\u0400-\u04FF]/.test(detail.factoryNumber) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.factoryNumber}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -325,6 +350,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="INM turi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.type && /[\u0400-\u04FF]/.test(detail.type) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.type}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -477,6 +507,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Saqlash joyi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.storageLocation && /[\u0400-\u04FF]/.test(detail.storageLocation) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.storageLocation}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}

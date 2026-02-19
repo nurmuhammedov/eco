@@ -4,17 +4,30 @@ import {
   useHazardousFacilityTypeDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries'
-import useAdd from '@/shared/hooks/api/useAdd'
+import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { useDetail, useUpdate } from '@/shared/hooks'
+import useAdd from '@/shared/hooks/api/useAdd'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMemo, useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { QK_REGISTRY } from '@/shared/constants/query-keys'
+import { toast } from 'sonner'
 import {
   RegisterIllegalHfDTO,
   RegisterIllegalHfSchema,
 } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
 
-export const useRegisterIllegalHf = (externalSubmit?: (data: RegisterIllegalHfDTO) => void) => {
+export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
+  const [searchParams] = useSearchParams()
+  const id = searchParams.get('id')
+  const tin = searchParams.get('tin')
+  const isUpdate = !!id && !!tin
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
 
   const form = useForm<RegisterIllegalHfDTO>({
@@ -49,8 +62,12 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: RegisterIllegalHfDT
     mode: 'onChange',
   })
 
+  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/hazardous-facilities/`, id, !!id)
+  const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/hazardous-facilities/', id, 'put')
+
   const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
 
+  const ownerIdentity = detail?.ownerIdentity || tin
   const regionId = form.watch('regionId')
   const { spheres } = applicationFormConstants()
 
@@ -58,12 +75,62 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: RegisterIllegalHfDT
   const { data: districts } = useDistrictSelectQueries(regionId)
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
 
+  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
+    queryKey: ['owner-data', ownerIdentity],
+    queryFn: async () => {
+      if (!ownerIdentity) return null
+      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
+      return res.data?.data
+    },
+    enabled: !!ownerIdentity,
+  })
+
+  const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
+  const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
+
+  useEffect(() => {
+    if (detail && isUpdate) {
+      const getValue = (val: any) => (typeof val === 'string' && /[\u0400-\u04FF]/.test(val) ? '' : val)
+
+      form.reset({
+        identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
+        phoneNumber: detail.phoneNumber || '',
+        upperOrganization: getValue(detail.upperOrganization || ''),
+        name: getValue(detail.name || ''),
+        hfTypeId: detail.hfTypeId,
+        spheres: detail.spheres || [],
+        regionId: detail.regionId ? String(detail.regionId) : '',
+        address: getValue(detail.address || ''),
+        location: getValue(detail.location || ''),
+        extraArea: getValue(detail.extraArea || ''),
+        hazardousSubstance: getValue(detail.hazardousSubstance || ''),
+        identificationCardPath: detail.files?.identificationCardPath?.path,
+        receiptPath: detail.files?.receiptPath?.path,
+        insurancePolicyPath: detail.files?.insurancePolicyPath?.path,
+        insurancePolicyExpiryDate: parseDate(detail.files?.insurancePolicyPath?.expiryDate),
+        cadastralPassportPath: detail.files?.cadastralPassportPath?.path,
+        projectDocumentationPath: detail.files?.projectDocumentationPath?.path,
+        licensePath: detail.files?.licensePath?.path,
+        licenseExpiryDate: parseDate(detail.files?.licensePath?.expiryDate),
+        expertOpinionPath: detail.files?.expertOpinionPath?.path,
+        appointmentOrderPath: detail.files?.appointmentOrderPath?.path,
+        permitPath: detail.files?.permitPath?.path,
+        permitExpiryDate: parseDate(detail.files?.permitPath?.expiryDate),
+        industrialSafetyDeclarationPath: detail.files?.industrialSafetyDeclarationPath?.path,
+      } as any)
+
+      setTimeout(() => {
+        form.setValue('districtId', detail.districtId ? String(detail.districtId) : '')
+      }, 500)
+    }
+  }, [detail, form, isUpdate])
+
   const handleSearch = () => {
     const identity = form.getValues('identity')?.trim()
 
     if (identity && identity.length === 9) {
       legalMutateAsync({ tin: identity })
-        .then((res) => setManualOwnerData(res.data))
+        .then((res) => setManualOwnerData(res.data?.data))
         .catch(() => setManualOwnerData(null))
     } else {
       form.trigger('identity')
@@ -75,9 +142,19 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: RegisterIllegalHfDT
     form.setValue('identity', '')
   }
 
-  const handleSubmit = (data: any) => {
-    if (externalSubmit) {
-      externalSubmit({ ...data, legalTin: data?.identity })
+  const handleSubmit = (data: RegisterIllegalHfDTO) => {
+    if (isUpdate) {
+      updateMutate(data, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
+          toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
+          navigate(-1)
+        },
+      })
+    } else {
+      if (externalSubmit) {
+        externalSubmit({ ...data, legalTin: data?.identity })
+      }
     }
   }
 
@@ -90,12 +167,16 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: RegisterIllegalHfDT
 
   return {
     form,
+    isUpdate,
     spheres,
     regionOptions,
     districtOptions,
     hazardousFacilityTypeOptions,
-    ownerData: manualOwnerData,
+    ownerData: currentOwnerData,
+    detail,
+    isLoading: isDetailLoading || isOwnerLoading,
     isSearchLoading: isLegalPending,
+    isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,
     handleSubmit,

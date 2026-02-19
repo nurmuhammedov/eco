@@ -94,7 +94,7 @@ export const IrsList = () => {
   }
 
   const handleEditApplication = (id: string, tin: string) => {
-    navigate(`/applications/create/ILLEGAL_REGISTER_IRS?id=${id}&tin=${tin}`)
+    navigate(`/register/update/IRS/${id}?tin=${tin}`)
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [
@@ -188,7 +188,12 @@ export const IrsList = () => {
           row={row}
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
-          showEdit={(user?.role === UserRoles.LEGAL || user?.role === UserRoles.INSPECTOR) && currentValid === 'true'}
+          showEdit={
+            (user?.role === UserRoles.LEGAL ||
+              user?.role === UserRoles.INSPECTOR ||
+              user?.role === UserRoles.INDIVIDUAL) &&
+            currentValid === 'true'
+          }
           onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
         />
       ),

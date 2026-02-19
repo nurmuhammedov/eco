@@ -7,12 +7,22 @@ import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
 import DetailRow from '@/shared/components/common/detail-row'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
 import { useRegisterIllegalBoilerUtilizer } from '@/features/application/create-application/model/use-create-illegal-boiler-utilizer-application'
+import { Alert, AlertTitle } from '@/shared/components/ui/alert'
+import { TriangleAlert } from 'lucide-react'
 
 interface RegisterIllegalBoilerUtilizerFormProps {
   onSubmit: (data: RegisterIllegalBoilerUtilizerDTO) => void
@@ -28,6 +38,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
     regionOptions,
     hazardousFacilitiesOptions,
     ownerData,
+    detail,
     isLoading,
     isSearchLoading,
     isSubmitPending,
@@ -53,6 +64,15 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
             isUpdate ? 'Qozon utilizator maʼlumotlarini tahrirlash' : 'Qozon utilizatorlarini ro‘yxatga olish arizasi'
           }
         />
+        {isUpdate && (
+          <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
+            <TriangleAlert className="size-4 text-yellow-600!" />
+            <AlertTitle className="text-yellow-700">
+              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
+              yuboriladi!
+            </AlertTitle>
+          </Alert>
+        )}
         <NoteForm equipmentName="qozon utilizatori" />
 
         {((isUpdate && isLegal) || !isUpdate) && (
@@ -237,6 +257,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Qurilmaning zavod raqami" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.factoryNumber && /[\u0400-\u04FF]/.test(detail.factoryNumber) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.factoryNumber}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -250,6 +275,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Ishlab chiqargan zavod nomi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.factory && /[\u0400-\u04FF]/.test(detail.factory) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.factory}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -263,6 +293,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Model, marka" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.model && /[\u0400-\u04FF]/.test(detail.model) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.model}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -352,6 +387,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
                   <FormControl>
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Hajmi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.parameters?.capacity && /[\u0400-\u04FF]/.test(detail.parameters.capacity) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.parameters.capacity}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -365,6 +405,13 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
                   <FormControl>
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Muhit" {...field} />
                   </FormControl>
+                  {isUpdate &&
+                    detail?.parameters?.environment &&
+                    /[\u0400-\u04FF]/.test(detail.parameters.environment) && (
+                      <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                        Eski qiymat: {detail.parameters.environment}
+                      </FormDescription>
+                    )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -378,6 +425,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
                   <FormControl>
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Bosim,mPa" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.parameters?.pressure && /[\u0400-\u04FF]/.test(detail.parameters.pressure) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.parameters.pressure}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -391,6 +443,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
                   <FormControl>
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Zichligi, kg/m³" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.parameters?.density && /[\u0400-\u04FF]/.test(detail.parameters.density) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.parameters.density}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -404,6 +461,13 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
                   <FormControl>
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Harorat, °C" {...field} />
                   </FormControl>
+                  {isUpdate &&
+                    detail?.parameters?.temperature &&
+                    /[\u0400-\u04FF]/.test(detail.parameters.temperature) && (
+                      <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                        Eski qiymat: {detail.parameters.temperature}
+                      </FormDescription>
+                    )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -469,6 +533,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Qurilmaning joylashgan manzili" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.address && /[\u0400-\u04FF]/.test(detail.address) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.address}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}

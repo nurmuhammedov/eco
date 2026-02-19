@@ -4,6 +4,7 @@ import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/d
 import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
+import useAdd from '@/shared/hooks/api/useAdd'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
@@ -22,7 +23,6 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
   const queryClient = useQueryClient()
 
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
-  const [isManualSearchLoading, setIsManualSearchLoading] = useState(false)
 
   const form = useForm<RegisterIllegalXrayDTO>({
     resolver: (values, context, options) => {
@@ -107,21 +107,24 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
     mode: 'onChange',
   })
 
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/xrays`, id, isUpdate)
+  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/xrays`, id, !!id)
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/xrays', id)
 
+  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
+
+  const ownerIdentity = detail?.ownerIdentity || tin
   const regionId = form.watch('regionId')
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', tin],
+    queryKey: ['owner-data', ownerIdentity],
     queryFn: async () => {
-      if (!tin || tin.length !== 9) return null
-      const res = await apiClient.get<any>('/users/legal/' + tin)
+      if (!ownerIdentity) return null
+      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
       return res.data?.data
     },
-    enabled: isUpdate && !!tin && tin.length === 9,
+    enabled: !!ownerIdentity,
   })
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
@@ -129,17 +132,19 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
 
   useEffect(() => {
     if (detail && isUpdate) {
+      const getValue = (val: any) => (typeof val === 'string' && /[\u0400-\u04FF]/.test(val) ? '' : val)
+
       form.reset({
         phoneNumber: detail.phoneNumber || '',
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
-        licenseNumber: detail.licenseNumber || '',
-        licenseRegistryNumber: detail.licenseRegistryNumber || '',
+        licenseNumber: getValue(detail.licenseNumber || ''),
+        licenseRegistryNumber: getValue(detail.licenseRegistryNumber || ''),
         licenseDate: parseDate(detail.licenseDate),
         licenseExpiryDate: parseDate(detail.licenseExpiryDate),
-        serialNumber: detail.serialNumber || '',
-        model: detail.model || '',
+        serialNumber: getValue(detail.serialNumber || ''),
+        model: getValue(detail.model || ''),
         regionId: detail.regionId ? String(detail.regionId) : '',
-        address: detail.address || '',
+        address: getValue(detail.address || ''),
         manufacturedYear: detail.manufacturedYear ? String(detail.manufacturedYear) : '',
         stateService: detail.stateService ? String(detail.stateService) : '',
         file1Path: detail.files?.file1Path?.path,
@@ -175,15 +180,15 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
 
   const handleSearch = () => {
     const identity = form.getValues('identity')?.trim()
-    if (!identity || identity.length !== 9) return
+    if (!identity) return
 
-    setIsManualSearchLoading(true)
-    setIsManualSearchLoading(true)
-    apiClient
-      .post<any>('/integration/iip/legal', { tin: identity })
-      .then((res) => setManualOwnerData(res.data?.data))
-      .catch(() => setManualOwnerData(null))
-      .finally(() => setIsManualSearchLoading(false))
+    if (identity.length === 9) {
+      legalMutateAsync({ tin: identity })
+        .then((res) => setManualOwnerData(res.data?.data))
+        .catch(() => setManualOwnerData(null))
+    } else {
+      form.trigger('identity')
+    }
   }
 
   const handleClear = () => {
@@ -203,7 +208,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
       updateMutate(cleanedData, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
-          toast.success('Muvaffaqiyatli saqlandi!')
+          toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },
       })
@@ -234,8 +239,9 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
     districtOptions,
     stateServiceOptions,
     ownerData: currentOwnerData,
+    detail,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isManualSearchLoading,
+    isSearchLoading: isLegalPending,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,

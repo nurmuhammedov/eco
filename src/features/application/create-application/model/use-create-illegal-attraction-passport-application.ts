@@ -86,7 +86,7 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
     mode: 'onChange',
   })
 
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/equipments/`, id, isUpdate)
+  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/equipments/`, id, !!id)
 
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/equipments/attraction/', id)
 
@@ -94,6 +94,7 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
     '/integration/iip/individual'
   )
 
+  const ownerIdentity = detail?.ownerIdentity || tin
   const regionId = form.watch('regionId')?.toString()
   const childEquipmentId = form.watch('childEquipmentId')
 
@@ -105,23 +106,23 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
   })
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', tin],
+    queryKey: ['owner-data', ownerIdentity],
     queryFn: async () => {
-      if (!tin) return null
-      if (tin.length === 9) {
-        const res = await apiClient.get<any>('/users/legal/' + tin)
+      if (!ownerIdentity) return null
+      if (ownerIdentity.length === 9) {
+        const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
         return res.data?.data
       }
-      if (tin.length === 14 && detail?.birthDate) {
+      if (ownerIdentity.length === 14 && detail?.birthDate) {
         const res = await apiClient.post<any>('/integration/iip/individual', {
-          pin: tin,
+          pin: ownerIdentity,
           birthDate: detail.birthDate,
         })
         return res.data?.data
       }
       return null
     },
-    enabled: isUpdate && !!tin && (tin.length === 9 || (tin.length === 14 && !!detail?.birthDate)),
+    enabled: !!ownerIdentity,
   })
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
@@ -130,23 +131,24 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
 
   useEffect(() => {
     if (detail && isUpdate) {
+      const getValue = (val: any) => (typeof val === 'string' && /[\u0400-\u04FF]/.test(val) ? '' : val)
+
       form.reset({
         phoneNumber: detail.phoneNumber || '',
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
-        birthDate: parseDate(detail.birthDate),
-        attractionName: detail.attractionName || '',
+        birthDate: isUpdate ? '1900-01-01' : parseDate(detail.birthDate),
+        attractionName: getValue(detail.attractionName || ''),
         childEquipmentId: detail.childEquipmentId,
         childEquipmentSortId: detail.childEquipmentSortId,
-        factory: detail.factory || '',
+        factory: getValue(detail.factory || ''),
         manufacturedAt: parseDate(detail.manufacturedAt),
         acceptedAt: parseDate(detail.acceptedAt),
         servicePeriod: parseDate(detail.servicePeriod),
-        factoryNumber: detail.factoryNumber || '',
+        factoryNumber: getValue(detail.factoryNumber || ''),
         country: detail.country || '',
         regionId: detail.regionId ? String(detail.regionId) : '',
-        districtId: detail.districtId,
-        address: detail.address || '',
-        location: detail.location || '',
+        address: getValue(detail.address || ''),
+        location: getValue(detail.location || ''),
         riskLevel: detail.riskLevel || undefined,
 
         passportPath: detail.files?.passportPath?.path,
@@ -183,7 +185,6 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
 
     if (identity.length === 9) {
       setIsManualSearchLoading(true)
-      setIsManualSearchLoading(true)
       apiClient
         .post<any>('/integration/iip/legal', { tin: identity })
         .then((res) => setManualOwnerData(res.data?.data))
@@ -194,7 +195,7 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
         pin: identity,
         birthDate: format(birthDate as unknown as Date, 'yyyy-MM-dd'),
       })
-        .then((res) => setManualOwnerData(res.data))
+        .then((res) => setManualOwnerData(res.data?.data))
         .catch(() => setManualOwnerData(null))
     } else {
       form.trigger(['identity', 'birthDate'])
@@ -212,7 +213,7 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
       updateMutate(data, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
-          toast.success('Muvaffaqiyatli saqlandi!')
+          toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },
       })
@@ -249,6 +250,7 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
     attractionSortOptions,
     riskLevelOptions,
     ownerData: currentOwnerData,
+    detail,
     isLoading: isDetailLoading || isOwnerLoading,
     isSearchLoading: isIndividualPending || isManualSearchLoading,
     isSubmitPending: isUpdatePending,

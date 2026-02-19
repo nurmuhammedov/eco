@@ -22,6 +22,8 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/comp
 import { parseISO } from 'date-fns'
 import { RegisterIllegalHfDTO } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
 import { useRegisterIllegalHf } from '@/features/application/create-application/model/use-create-illegal-hf-applicaton'
+import { Alert, AlertTitle } from '@/shared/components/ui/alert'
+import { TriangleAlert } from 'lucide-react'
 
 interface RegisterIllegalHfFormProps {
   onSubmit: (data: RegisterIllegalHfDTO) => void
@@ -36,7 +38,10 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
     districtOptions,
     hazardousFacilityTypeOptions,
     ownerData,
+    detail,
+    isUpdate,
     isSearchLoading,
+    isSubmitPending,
     handleSearch,
     handleClear,
     handleSubmit,
@@ -47,7 +52,16 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title="XICHOni ro‘yxatga olish" />
+        <GoBack title={isUpdate ? 'XICHO maʼlumotlarini tahrirlash' : 'XICHOni ro‘yxatga olish'} />
+        {isUpdate && (
+          <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
+            <TriangleAlert className="size-4 text-yellow-600!" />
+            <AlertTitle className="text-yellow-700">
+              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
+              yuboriladi!
+            </AlertTitle>
+          </Alert>
+        )}
         <CardForm className="my-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
@@ -117,6 +131,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Yuqori tashkilotning nomi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.upperOrganization && /[\u0400-\u04FF]/.test(detail.upperOrganization) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.upperOrganization}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -130,6 +149,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="XICHO ning nomi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.name && /[\u0400-\u04FF]/.test(detail.name) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.name}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -241,6 +265,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Alisher Navoiy ko‘chasi, 1-uy" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.address && /[\u0400-\u04FF]/.test(detail.address) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.address}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -277,6 +306,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                       {...field}
                     />
                   </FormControl>
+                  {isUpdate && detail?.extraArea && /[\u0400-\u04FF]/.test(detail.extraArea) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.extraArea}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                   <FormDescription>
                     XICHO sexlari, uchastkalari, maydonchalari va boshqa <br /> ishlab chiqarish obyektlarining nomi
@@ -295,6 +329,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Xavfli moddalarning nomi va miqdori" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.hazardousSubstance && /[\u0400-\u04FF]/.test(detail.hazardousSubstance) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.hazardousSubstance}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                   <FormDescription>
                     VM ning 2008 yil 10 dekabrdagi 271-son qaroriga muvofiq
@@ -545,8 +584,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
           </div>
         </CardForm>
 
-        <Button type="submit" disabled={!ownerData} loading={isPending}>
-          Ariza yaratish
+        <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>
+          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
         </Button>
       </form>
     </Form>

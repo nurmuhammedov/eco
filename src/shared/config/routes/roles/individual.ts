@@ -11,6 +11,7 @@ const RegisterXrayDetail = lazy(() => import('@/features/register/xray/ui/xray-d
 const RegisterAutoDetail = lazy(() => import('@/features/register/auto/ui/auto-detail'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
 const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'))
+const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 
 export const individualRoutes = [
@@ -66,6 +67,11 @@ export const individualRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/update/:type/:id',
+    element: withSuspense(RegisterUpdatePage),
   },
   {
     id: 'REGISTRY',

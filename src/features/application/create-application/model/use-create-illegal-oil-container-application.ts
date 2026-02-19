@@ -31,8 +31,6 @@ export const useRegisterIllegalOilContainer = (
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
   const [isManualSearchLoading, setIsManualSearchLoading] = useState(false)
 
-  // Assuming similar refinement needs as Boiler, adapting schema if updated
-  // For now using the base schema since no specific refinement was requested/provided
   const formSchema = isUpdate
     ? IllegalOilContainerAppealDtoSchema.extend({
         // Dates
@@ -120,20 +118,11 @@ export const useRegisterIllegalOilContainer = (
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
       passportPath: undefined,
-      // Identity/BirthDate might be needed for form handling though not in base DTO
-      // if we follow the Illegal Form pattern which includes searching by TIN
     } as any,
     mode: 'onChange',
   })
 
-  // We might need to add identity/birthDate to the form schema locally if the UI needs it for searching owner
-  // But strictly following the DTO provided. However, the UI logic for illegal applications REQUIRES owner search.
-  // I will assume the DTO I created earlier was for the API payload, but the form needs more fields.
-  // For this step I will proceed with the schema I created, but note that `identity` and `birthDate` are missing from the Zod schema I created based on user request.
-  // The user request for fields was explicit. Functional requirements for "Unregistered/Illegal" usually imply searching for an owner.
-  // I'll stick to the user's explicit list for the API payload part, but the form hook might need extra state.
-
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/equipments/`, id, isUpdate)
+  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/equipments/`, id, !!id)
 
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/equipments/oil-container/', id)
 
@@ -141,8 +130,8 @@ export const useRegisterIllegalOilContainer = (
     '/integration/iip/individual'
   )
 
+  const ownerIdentity = detail?.ownerIdentity || tin
   const regionId = form.watch('regionId')
-  // @ts-ignore
   // @ts-ignore
   const identity = form.watch('identity' as any) as string // Watch identity even if not in type
   const isLegal = identity?.length === 9
@@ -151,25 +140,24 @@ export const useRegisterIllegalOilContainer = (
   const { data: districts } = useDistrictSelectQueries(regionId)
   const { data: childEquipmentTypes } = useChildEquipmentTypes('OIL_CONTAINER')
 
-  // Owner data fetching logic (Same as Boiler)
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', tin],
+    queryKey: ['owner-data', ownerIdentity],
     queryFn: async () => {
-      if (!tin) return null
-      if (tin.length === 9) {
-        const res = await apiClient.get<any>('/users/legal/' + tin)
+      if (!ownerIdentity) return null
+      if (ownerIdentity.length === 9) {
+        const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
         return res.data?.data
       }
-      if (tin.length === 14 && detail?.birthDate) {
+      if (ownerIdentity.length === 14 && detail?.birthDate) {
         const res = await apiClient.post<any>('/integration/iip/individual', {
-          pin: tin,
+          pin: ownerIdentity,
           birthDate: detail.birthDate,
         })
         return res.data?.data
       }
       return null
     },
-    enabled: isUpdate && !!tin && (tin.length === 9 || (tin.length === 14 && !!detail?.birthDate)),
+    enabled: !!ownerIdentity,
   })
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
@@ -184,6 +172,8 @@ export const useRegisterIllegalOilContainer = (
 
   useEffect(() => {
     if (detail && isUpdate) {
+      const getValue = (val: any) => (typeof val === 'string' && /[\u0400-\u04FF]/.test(val) ? '' : val)
+
       form.reset({
         phoneNumber: detail.phoneNumber || '',
         // @ts-ignore
@@ -193,9 +183,9 @@ export const useRegisterIllegalOilContainer = (
         hazardousFacilityId: detail.hfId,
         childEquipmentId: detail.childEquipmentId ? String(detail.childEquipmentId) : undefined,
         regionId: detail.regionId ? String(detail.regionId) : '',
-        address: detail.address || '',
-        location: detail.location || '',
-        capacity: detail.parameters?.capacity || '',
+        address: getValue(detail.address || ''),
+        location: getValue(detail.location || ''),
+        capacity: getValue(detail.parameters?.capacity || ''),
         nonDestructiveCheckDate: parseDate(detail.nonDestructiveCheckDate),
 
         labelPath: detail.files?.labelPath?.path,
@@ -217,7 +207,6 @@ export const useRegisterIllegalOilContainer = (
   const handleSearch = () => {
     // @ts-ignore
     const identity = form.getValues('identity')?.trim()
-    // @ts-ignore
     const birthDate = form.getValues('birthDate')
 
     if (!identity) return
@@ -234,11 +223,10 @@ export const useRegisterIllegalOilContainer = (
         pin: identity,
         birthDate: format(birthDate as unknown as Date, 'yyyy-MM-dd'),
       })
-        .then((res) => setManualOwnerData(res.data))
+        .then((res) => setManualOwnerData(res.data?.data))
         .catch(() => setManualOwnerData(null))
     } else {
-      // @ts-ignore
-      form.trigger(['identity', 'birthDate'])
+      form.trigger(['identity', 'birthDate'] as any)
     }
   }
 
@@ -269,7 +257,7 @@ export const useRegisterIllegalOilContainer = (
       updateMutate(payload, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
-          toast.success('Muvaffaqiyatli saqlandi!')
+          toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },
       })
@@ -293,6 +281,7 @@ export const useRegisterIllegalOilContainer = (
     childEquipmentOptions,
     hazardousFacilitiesOptions,
     ownerData: currentOwnerData,
+    detail,
     isLoading: isDetailLoading || isOwnerLoading,
     isSearchLoading: isIndividualPending || isManualSearchLoading,
     isSubmitPending: isUpdatePending,

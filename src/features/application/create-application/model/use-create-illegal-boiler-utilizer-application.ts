@@ -70,22 +70,17 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
-        assignmentDecreePath: z
-          .string()
-          .optional()
-          .nullable()
-          .transform((val) => (val ? val : null)),
         saleContractPath: z
           .string()
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
-        expertisePath: z
+        equipmentCertPath: z
           .string()
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
-        equipmentCertPath: z
+        expertisePath: z
           .string()
           .optional()
           .nullable()
@@ -154,20 +149,20 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
-      assignmentDecreePath: undefined,
       expertisePath: undefined,
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
       passportPath: undefined,
-      fullCheckPath: undefined,
-      nextFullCheckDate: undefined,
       partialCheckPath: undefined,
       nextPartialCheckDate: undefined,
+      fullCheckPath: undefined,
+      nextFullCheckDate: undefined,
+      assignmentDecreePath: undefined,
     },
     mode: 'onChange',
   })
 
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/equipments/`, id, isUpdate)
+  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/equipments/`, id, !!id)
 
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/equipments/boiler-utilizer/', id)
 
@@ -175,6 +170,7 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
     '/integration/iip/individual'
   )
 
+  const ownerIdentity = detail?.ownerIdentity || tin
   const regionId = form.watch('regionId')
   const identity = form.watch('identity')
   const isLegal = identity?.length === 9
@@ -184,23 +180,23 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
   const { data: childEquipmentTypes } = useChildEquipmentTypes('BOILER_UTILIZER')
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', tin],
+    queryKey: ['owner-data', ownerIdentity],
     queryFn: async () => {
-      if (!tin) return null
-      if (tin.length === 9) {
-        const res = await apiClient.get<any>('/users/legal/' + tin)
+      if (!ownerIdentity) return null
+      if (ownerIdentity.length === 9) {
+        const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
         return res.data?.data
       }
-      if (tin.length === 14 && detail?.birthDate) {
+      if (ownerIdentity.length === 14 && detail?.birthDate) {
         const res = await apiClient.post<any>('/integration/iip/individual', {
-          pin: tin,
+          pin: ownerIdentity,
           birthDate: detail.birthDate,
         })
         return res.data?.data
       }
       return null
     },
-    enabled: isUpdate && !!tin && (tin.length === 9 || (tin.length === 14 && !!detail?.birthDate)),
+    enabled: !!ownerIdentity,
   })
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
@@ -215,43 +211,43 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
 
   useEffect(() => {
     if (detail && isUpdate) {
+      const getValue = (val: any) => (typeof val === 'string' && /[\u0400-\u04FF]/.test(val) ? '' : val)
+
       form.reset({
         phoneNumber: detail.phoneNumber || '',
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
         birthDate: isUpdate ? '1900-01-01' : parseDate(detail.birthDate),
         hazardousFacilityId: detail.hfId,
         childEquipmentId: detail.childEquipmentId ? String(detail.childEquipmentId) : '',
-        factoryNumber: detail.factoryNumber || '',
+        factoryNumber: getValue(detail.factoryNumber || ''),
         regionId: detail.regionId ? String(detail.regionId) : '',
-        districtId: '',
-        address: detail.address || '',
-        model: detail.model || '',
-        factory: detail.factory || '',
-        location: detail.location || '',
+        address: getValue(detail.address || ''),
+        model: getValue(detail.model || ''),
+        factory: getValue(detail.factory || ''),
+        location: getValue(detail.location || ''),
         manufacturedAt: parseDate(detail.manufacturedAt),
         partialCheckDate: parseDate(detail.partialCheckDate),
         fullCheckDate: parseDate(detail.fullCheckDate),
         nonDestructiveCheckDate: parseDate(detail.nonDestructiveCheckDate),
 
-        capacity: detail.parameters?.capacity || '',
-        environment: detail.parameters?.environment || '',
-        pressure: detail.parameters?.pressure || '',
-        density: detail.parameters?.density || '',
-        temperature: detail.parameters?.temperature || '',
+        capacity: getValue(detail.parameters?.capacity || ''),
+        environment: getValue(detail.parameters?.environment || ''),
+        pressure: getValue(detail.parameters?.pressure || ''),
+        density: getValue(detail.parameters?.density || ''),
+        temperature: getValue(detail.parameters?.temperature || ''),
 
         labelPath: detail.files?.labelPath?.path,
         saleContractPath: detail.files?.saleContractPath?.path,
         equipmentCertPath: detail.files?.equipmentCertPath?.path,
-        assignmentDecreePath: detail.files?.assignmentDecreePath?.path,
         expertisePath: detail.files?.expertisePath?.path,
         expertiseExpiryDate: parseDate(detail.files?.expertisePath?.expiryDate),
         installationCertPath: detail.files?.installationCertPath?.path,
-
         partialCheckPath: detail.files?.partialCheckPath?.path,
         fullCheckPath: detail.files?.fullCheckPath?.path,
         passportPath: detail.files?.passportPath?.path,
         nextPartialCheckDate: parseDate(detail.files?.partialCheckPath?.expiryDate),
         nextFullCheckDate: parseDate(detail.files?.fullCheckPath?.expiryDate),
+        assignmentDecreePath: detail.files?.assignmentDecreePath?.path,
       } as any)
 
       setTimeout(() => {
@@ -268,7 +264,6 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
 
     if (identity.length === 9) {
       setIsManualSearchLoading(true)
-      setIsManualSearchLoading(true)
       apiClient
         .post<any>('/integration/iip/legal', { tin: identity })
         .then((res) => setManualOwnerData(res.data?.data))
@@ -279,7 +274,7 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
         pin: identity,
         birthDate: format(birthDate as unknown as Date, 'yyyy-MM-dd'),
       })
-        .then((res) => setManualOwnerData(res.data))
+        .then((res) => setManualOwnerData(res.data?.data))
         .catch(() => setManualOwnerData(null))
     } else {
       form.trigger(['identity', 'birthDate'])
@@ -303,7 +298,7 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
       updateMutate(updatePayload, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
-          toast.success('Muvaffaqiyatli saqlandi!')
+          toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },
       })
@@ -327,6 +322,7 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
     childEquipmentOptions,
     hazardousFacilitiesOptions,
     ownerData: currentOwnerData,
+    detail,
     isLoading: isDetailLoading || isOwnerLoading,
     isSearchLoading: isIndividualPending || isManualSearchLoading,
     isSubmitPending: isUpdatePending,

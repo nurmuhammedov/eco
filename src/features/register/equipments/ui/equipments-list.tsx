@@ -108,7 +108,7 @@ export const EquipmentsList = () => {
 
   const handleEditApplication = (id: string, type: string, tin: string) => {
     if (isTanker) return
-    navigate(`/applications/create/ILLEGAL_REGISTER_${type}?id=${id}&tin=${tin}`)
+    navigate(`/register/update/${type}/${id}?tin=${tin}`)
   }
 
   const tankerColumns: ExtendedColumnDef<any, any>[] = [
@@ -282,7 +282,9 @@ export const EquipmentsList = () => {
           showView
           showEdit={
             !isTanker &&
-            (user?.role === UserRoles.LEGAL || user?.role === UserRoles.INSPECTOR) &&
+            (user?.role === UserRoles.LEGAL ||
+              user?.role === UserRoles.INSPECTOR ||
+              user?.role === UserRoles.INDIVIDUAL) &&
             currentStatus === 'ACTIVE'
           }
           row={row}

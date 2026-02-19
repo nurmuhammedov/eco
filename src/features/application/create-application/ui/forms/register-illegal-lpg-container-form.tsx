@@ -7,12 +7,22 @@ import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
 import DetailRow from '@/shared/components/common/detail-row'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
 import { useRegisterIllegalLpgContainer } from '@/features/application/create-application/model/use-create-illegal-lpg-container-application'
+import { Alert, AlertTitle } from '@/shared/components/ui/alert'
+import { TriangleAlert } from 'lucide-react'
 
 interface RegisterIllegalLpgContainerFormProps {
   onSubmit: (data: RegisterIllegalLpgContainerDTO) => void
@@ -28,6 +38,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLpgContainerForm
     regionOptions,
     hazardousFacilitiesOptions,
     ownerData,
+    detail,
     isLoading,
     isSearchLoading,
     isSubmitPending,
@@ -48,14 +59,17 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLpgContainerForm
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack
-          title={
-            isUpdate
-              ? 'Bosim ostida ishlovchi idish (SUG) maʼlumotlarini tahrirlash'
-              : 'Bosim ostida ishlovchi idishni (SUG) ro‘yxatga olish arizasi'
-          }
-        />
-        <NoteForm equipmentName="idish (SUG)" />
+        <GoBack title={isUpdate ? 'SVT idish maʼlumotlarini tahrirlash' : 'SVT idishni ro‘yxatga olish arizasi'} />
+        {isUpdate && (
+          <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
+            <TriangleAlert className="size-4 text-yellow-600!" />
+            <AlertTitle className="text-yellow-700">
+              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
+              yuboriladi!
+            </AlertTitle>
+          </Alert>
+        )}
+        <NoteForm equipmentName="lpg-container" />
 
         {((isUpdate && isLegal) || !isUpdate) && (
           <CardForm className="my-2">
@@ -250,8 +264,13 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLpgContainerForm
                 <FormItem>
                   <FormLabel required>Idishning (SUG) egasining nomi</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Ishlab chiqargan zavod nomi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Tayyorlovchi korxona nomi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.factory && /[\u0400-\u04FF]/.test(detail.factory) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.factory}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -263,8 +282,13 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLpgContainerForm
                 <FormItem>
                   <FormLabel required>Model, marka</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Model, marka" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Zavod raqami" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.factoryNumber && /[\u0400-\u04FF]/.test(detail.factoryNumber) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.factoryNumber}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}

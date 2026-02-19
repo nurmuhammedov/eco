@@ -7,12 +7,22 @@ import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
 import DetailRow from '@/shared/components/common/detail-row'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
 import { useRegisterIllegalHoist } from '@/features/application/create-application/model/use-create-illegal-hoist-application'
+import { Alert, AlertTitle } from '@/shared/components/ui/alert'
+import { TriangleAlert } from 'lucide-react'
 
 interface RegisterIllegalHoistFormProps {
   onSubmit: (data: RegisterIllegalHoistDTO) => void
@@ -28,6 +38,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
     regionOptions,
     hazardousFacilitiesOptions,
     ownerData,
+    detail,
     isLoading,
     isSearchLoading,
     isSubmitPending,
@@ -51,6 +62,15 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
         <GoBack
           title={isUpdate ? 'Yuk ko‘targich maʼlumotlarini tahrirlash' : 'Yuk ko‘targichni ro‘yxatga olish arizasi'}
         />
+        {isUpdate && (
+          <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
+            <TriangleAlert className="size-4 text-yellow-600!" />
+            <AlertTitle className="text-yellow-700">
+              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
+              yuboriladi!
+            </AlertTitle>
+          </Alert>
+        )}
         <NoteForm equipmentName="yuk ko‘targich" />
 
         {((isUpdate && isLegal) || !isUpdate) && (
@@ -235,6 +255,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Qurilmaning zavod raqami" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.factoryNumber && /[\u0400-\u04FF]/.test(detail.factoryNumber) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.factoryNumber}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -248,6 +273,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Ishlab chiqargan zavod nomi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.factory && /[\u0400-\u04FF]/.test(detail.factory) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.factory}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -261,6 +291,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Model, marka" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.model && /[\u0400-\u04FF]/.test(detail.model) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.model}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -331,6 +366,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
                   <FormControl>
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Ko‘tarish balandligi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.parameters?.height && /[\u0400-\u04FF]/.test(detail.parameters.height) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.parameters.height}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -344,6 +384,13 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
                   <FormControl>
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Yuk ko‘tarish qobiliyati" {...field} />
                   </FormControl>
+                  {isUpdate &&
+                    detail?.parameters?.liftingCapacity &&
+                    /[\u0400-\u04FF]/.test(detail.parameters.liftingCapacity) && (
+                      <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                        Eski qiymat: {detail.parameters.liftingCapacity}
+                      </FormDescription>
+                    )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -409,6 +456,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Qurilmaning joylashgan manzili" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.address && /[\u0400-\u04FF]/.test(detail.address) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.address}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}

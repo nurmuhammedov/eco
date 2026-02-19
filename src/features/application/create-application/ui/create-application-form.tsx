@@ -5,8 +5,10 @@ import { useParams } from 'react-router-dom'
 import { getFormComponentByType, isValidApplicationType } from '../model/store'
 import { GoBack } from '@/shared/components/common'
 
-export const CreateApplicationForm = () => {
-  const { type } = useParams<{ type: ApplicationTypeEnum }>()
+export const CreateApplicationForm = ({ type: propsType }: { type?: ApplicationTypeEnum }) => {
+  const { type: paramsType } = useParams<{ type: ApplicationTypeEnum }>()
+  const type = propsType || paramsType
+
   const {
     error,
     isLoading,

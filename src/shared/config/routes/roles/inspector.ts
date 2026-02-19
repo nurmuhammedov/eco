@@ -34,6 +34,7 @@ const Inquiries = lazy(() => import('@/features/inquiries'))
 const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
 const RegisterHFUpdatePage = lazy(() => import('@/pages/register/hf/hf-update'))
+const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
 const AccidentInjuryAdd = lazy(() =>
@@ -96,6 +97,11 @@ export const inspectorRoutes = [
     id: 'REGISTRY',
     path: 'register/hf/update/:id',
     element: withSuspense(RegisterHFUpdatePage),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/update/:type/:id',
+    element: withSuspense(RegisterUpdatePage),
   },
   {
     id: 'REGISTRY',

@@ -30,6 +30,7 @@ const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
 )
 const RegisterHFUpdatePage = lazy(() => import('@/pages/register/hf/hf-update'))
+const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 
 export const legalRoutes = [
@@ -90,6 +91,11 @@ export const legalRoutes = [
     id: 'REGISTRY',
     path: 'register/hf/update/:id',
     element: withSuspense(RegisterHFUpdatePage),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/update/:type/:id',
+    element: withSuspense(RegisterUpdatePage),
   },
   {
     id: 'REGISTRY',

@@ -7,12 +7,22 @@ import { FileTypes } from '@/shared/components/common/file-upload/models/file-ty
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
 import { useRegisterIllegalOilContainer } from '@/features/application/create-application/model/use-create-illegal-oil-container-application'
+import { Alert, AlertTitle } from '@/shared/components/ui/alert'
+import { TriangleAlert } from 'lucide-react'
 
 interface RegisterIllegalOilContainerFormProps {
   onSubmit: (data: CreateIllegalOilContainerApplicationDTO) => void
@@ -28,6 +38,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
     regionOptions,
     hazardousFacilitiesOptions,
     ownerData,
+    detail,
     isLoading,
     isSearchLoading,
     isSubmitPending,
@@ -51,6 +62,15 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
         <GoBack
           title={isUpdate ? 'Maʼlumotlarni tahrirlash' : 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish arizasi'}
         />
+        {isUpdate && (
+          <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
+            <TriangleAlert className="size-4 text-yellow-600!" />
+            <AlertTitle className="text-yellow-700">
+              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
+              yuboriladi!
+            </AlertTitle>
+          </Alert>
+        )}
         <NoteForm equipmentName="idish" />
 
         {((isUpdate && isLegal) || !isUpdate) && (
@@ -227,6 +247,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Hajmi" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.capacity && /[\u0400-\u04FF]/.test(detail.capacity) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.capacity}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -310,6 +335,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Qurilma joylashgan manzil" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.address && /[\u0400-\u04FF]/.test(detail.address) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.address}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}

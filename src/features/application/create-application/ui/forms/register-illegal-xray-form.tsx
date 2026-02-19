@@ -6,12 +6,22 @@ import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
 import { useRegisterIllegalXray } from '@/features/application/create-application/model/use-create-illegal-xray-application'
+import { Alert, AlertTitle } from '@/shared/components/ui/alert'
+import { TriangleAlert } from 'lucide-react'
 
 interface RegisterIllegalXrayFormProps {
   onSubmit: (data: RegisterIllegalXrayDTO) => void
@@ -38,6 +48,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
     regionOptions,
     stateServiceOptions,
     ownerData,
+    detail,
     isLoading,
     isSearchLoading,
     isSubmitPending,
@@ -56,6 +67,15 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack title={isUpdate ? 'Rentgen maʼlumotlarini tahrirlash' : 'Rentgen uskunasini ro‘yxatga olish'} />
+        {isUpdate && (
+          <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
+            <TriangleAlert className="size-4 text-yellow-600!" />
+            <AlertTitle className="text-yellow-700">
+              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
+              yuboriladi!
+            </AlertTitle>
+          </Alert>
+        )}
         <NoteForm equipmentName="rentgen" onlyLatin={true} />
         {(isUpdate || !isUpdate) && (
           <CardForm className="my-2">
@@ -151,6 +171,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                       value={field.value || ''}
                     />
                   </FormControl>
+                  {isUpdate && detail?.licenseNumber && /[\u0400-\u04FF]/.test(detail.licenseNumber) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.licenseNumber}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -164,6 +189,13 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Reyestr raqami" {...field} />
                   </FormControl>
+                  {isUpdate &&
+                    detail?.licenseRegistryNumber &&
+                    /[\u0400-\u04FF]/.test(detail.licenseRegistryNumber) && (
+                      <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                        Eski qiymat: {detail.licenseRegistryNumber}
+                      </FormDescription>
+                    )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -177,6 +209,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Rentgen uskunasining modeli" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.model && /[\u0400-\u04FF]/.test(detail.model) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.model}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -276,6 +313,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Joylashgan manzil" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.address && /[\u0400-\u04FF]/.test(detail.address) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.address}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -289,6 +331,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Rentgen uskunasining raqami" {...field} />
                   </FormControl>
+                  {isUpdate && detail?.serialNumber && /[\u0400-\u04FF]/.test(detail.serialNumber) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.serialNumber}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -335,6 +382,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                       <SelectContent>{stateServiceOptions}</SelectContent>
                     </Select>
                   </FormControl>
+                  {isUpdate && detail?.stateService && /[\u0400-\u04FF]/.test(detail.stateService) && (
+                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      Eski qiymat: {detail.stateService}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
