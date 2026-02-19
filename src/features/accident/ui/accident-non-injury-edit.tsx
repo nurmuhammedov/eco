@@ -117,14 +117,14 @@ export const AccidentNonInjuryEdit: React.FC = () => {
 
   return (
     <div className="container mx-auto space-y-4 pb-10">
-      <GoBack title="Avariya ma'lumotlarini tahrirlash" />
+      <GoBack title="Avariya maʼlumotlarini tahrirlash" />
 
       <DetailCardAccordion defaultValue={['form_info']}>
-        <DetailCardAccordion.Item value="legal_info" title="Tashkilot to'g'risida ma'lumot">
+        <DetailCardAccordion.Item value="legal_info" title="Tashkilot to‘g‘risida maʼlumot">
           {accident.legalTin && <LegalApplicantInfo tinNumber={accident.legalTin} />}
         </DetailCardAccordion.Item>
 
-        <DetailCardAccordion.Item value="object_info" title="XICHO to'g'risida ma'lumot">
+        <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida maʼlumot">
           <AppealMainInfo data={hfoData} type="HF" address={hfoData?.address} />
         </DetailCardAccordion.Item>
 

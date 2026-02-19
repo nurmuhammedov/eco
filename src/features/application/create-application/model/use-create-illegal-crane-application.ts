@@ -182,16 +182,13 @@ export const useRegisterIllegalCrane = (externalSubmit?: (data: RegisterIllegalC
         const res = await apiClient.get<any>('/users/legal/' + tin)
         return res.data?.data
       }
-      if (tin.length === 14 && detail?.birthDate) {
-        const res = await apiClient.post<any>('/integration/iip/individual', {
-          pin: tin,
-          birthDate: detail.birthDate,
-        })
+      if (tin.length === 14) {
+        const res = await apiClient.get<any>('/users/legal/' + tin)
         return res.data?.data
       }
       return null
     },
-    enabled: isUpdate && !!tin && (tin.length === 9 || (tin.length === 14 && !!detail?.birthDate)),
+    enabled: isUpdate && !!tin && (tin.length === 9 || tin.length === 14),
   })
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData

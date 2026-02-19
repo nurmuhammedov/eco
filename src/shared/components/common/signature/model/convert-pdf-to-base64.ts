@@ -20,7 +20,7 @@ export async function convertPdfToBase64(pdfUrl: string): Promise<string | null>
       !response.data ||
       !(response.data instanceof ArrayBuffer || (typeof response.data === 'object' && 'byteLength' in response.data))
     ) {
-      console.error(`PDF ma'lumotlari noto'g'ri formatda:`, typeof response.data)
+      console.error(`PDF maʼlumotlari noto'g'ri formatda:`, typeof response.data)
       return null
     }
 

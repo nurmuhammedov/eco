@@ -31,7 +31,11 @@ export const XrayList = () => {
 
   const currentActive = String(active)
 
-  const { data = [], isLoading } = usePaginatedData<any>(`/xrays`, {
+  const {
+    data = [],
+    isLoading,
+    totalElements = 0,
+  } = usePaginatedData<any>(`/xrays`, {
     page,
     size,
     search,
@@ -118,9 +122,7 @@ export const XrayList = () => {
           row={row}
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
-          showEdit={
-            user?.role == UserRoles.MANAGER || user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN
-          }
+          showEdit={(user?.role === UserRoles.LEGAL || user?.role === UserRoles.INSPECTOR) && currentActive === 'true'}
           onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
         />
       ),
@@ -131,9 +133,39 @@ export const XrayList = () => {
     <div className="flex h-full flex-col gap-2">
       <Tabs value={currentActive} onValueChange={(val) => addParams({ active: val, page: 1, changeStatus: 'ALL' })}>
         <TabsList>
-          <TabsTrigger value="ALL">Barchasi</TabsTrigger>
-          <TabsTrigger value="true">Amaldagi Rentgenlar</TabsTrigger>
-          <TabsTrigger value="false">Reyestrdan chiqarilganlar</TabsTrigger>
+          <TabsTrigger value="ALL">
+            Barchasi
+            {currentActive === 'ALL' && (
+              <Badge
+                variant="destructive"
+                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+              >
+                {totalElements}
+              </Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="true">
+            Amaldagi Rentgenlar
+            {currentActive === 'true' && (
+              <Badge
+                variant="destructive"
+                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+              >
+                {totalElements}
+              </Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="false">
+            Reyestrdan chiqarilganlar
+            {currentActive === 'false' && (
+              <Badge
+                variant="destructive"
+                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+              >
+                {totalElements}
+              </Badge>
+            )}
+          </TabsTrigger>
           <TabsTrigger value="CHANGED">
             O‘zgartirish so‘rovlari
             <Badge
@@ -175,5 +207,3 @@ export const XrayList = () => {
     </div>
   )
 }
-
-export default XrayList

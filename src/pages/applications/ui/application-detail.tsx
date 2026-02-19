@@ -15,19 +15,14 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
   const { user } = useAuth()
 
   const isXrayAppeal = data?.appealType === ApplicationTypeEnum.REGISTER_XRAY
-  const isHidedLogs = user?.role === UserRoles.LEGAL || user?.role === UserRoles.INDIVIDUAL
 
   return (
     <div>
       <div className="flex items-center justify-between gap-2">
         <GoBack title={`Ariza raqami: ${data?.number || ''}`} />
-
-        {!isHidedLogs ? (
-          <div className={'ml-auto'}>
-            <ApplicationLogsModal />
-          </div>
-        ) : null}
-
+        <div className={'ml-auto'}>
+          <ApplicationLogsModal />
+        </div>
         <div className="flex gap-2">
           {(user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) &&
             data?.status === ApplicationStatus.NEW && (

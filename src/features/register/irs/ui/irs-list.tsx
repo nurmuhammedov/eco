@@ -188,9 +188,7 @@ export const IrsList = () => {
           row={row}
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
-          showEdit={
-            user?.role == UserRoles.MANAGER || user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN
-          }
+          showEdit={(user?.role === UserRoles.LEGAL || user?.role === UserRoles.INSPECTOR) && currentValid === 'true'}
           onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
         />
       ),
@@ -203,30 +201,36 @@ export const IrsList = () => {
         <TabsList>
           <TabsTrigger value="all">
             Barchasi
-            <Badge
-              variant="destructive"
-              className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-            >
-              {currentValid === 'all' ? totalElements : 0}
-            </Badge>
+            {currentValid === 'all' && (
+              <Badge
+                variant="destructive"
+                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+              >
+                {totalElements}
+              </Badge>
+            )}
           </TabsTrigger>
           <TabsTrigger value="true">
             Amaldagi INMlar
-            <Badge
-              variant="destructive"
-              className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-            >
-              {currentValid === 'true' ? totalElements : 0}
-            </Badge>
+            {currentValid === 'true' && (
+              <Badge
+                variant="destructive"
+                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+              >
+                {totalElements}
+              </Badge>
+            )}
           </TabsTrigger>
           <TabsTrigger value="false">
             Reyestrdan chiqarilgan INMlar
-            <Badge
-              variant="destructive"
-              className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-            >
-              {currentValid === 'false' ? totalElements : 0}
-            </Badge>
+            {currentValid === 'false' && (
+              <Badge
+                variant="destructive"
+                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+              >
+                {totalElements}
+              </Badge>
+            )}
           </TabsTrigger>
           <TabsTrigger value="CHANGED">
             O‘zgartirish so‘rovlari

@@ -303,7 +303,7 @@ export default ({ onSubmit }: RegisterOilContainerFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilmaning muvofiqlik sertifikati</FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Idishning muvofiqlik sertifikati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>

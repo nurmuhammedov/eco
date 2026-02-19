@@ -4,11 +4,14 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { TabsLayout } from '@/shared/layouts'
 import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
+import { AddPermitTransportModal } from '@/features/register/auto/ui/add-auto-modal'
 import useData from '@/shared/hooks/api/useData'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { AutoTabKey, tabs as autoTabs } from '@/features/register/auto/ui/auto-tabs'
+import { formatDate } from 'date-fns'
 
 export const EquipmentsList = () => {
   const navigate = useNavigate()
@@ -34,26 +37,33 @@ export const EquipmentsList = () => {
       endDate = '',
       factoryNumber = '',
       changeStatus = 'ALL',
+      ...rest
     },
     addParams,
+    removeParams,
   } = useCustomSearchParams()
 
   const currentStatus = String(status)
+  const isTanker = type === 'TANKERS'
 
-  const { data, isLoading } = usePaginatedData<any>(`/equipments`, {
-    status:
-      currentStatus !== 'ALL' &&
-      currentStatus !== 'ACTIVE' &&
-      currentStatus !== 'INACTIVE' &&
-      currentStatus !== 'CHANGED'
+  const { data, isLoading } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
+    ...rest,
+    status: isTanker
+      ? currentStatus !== 'ALL'
+        ? currentStatus
+        : ''
+      : currentStatus !== 'ALL' &&
+          currentStatus !== 'ACTIVE' &&
+          currentStatus !== 'INACTIVE' &&
+          currentStatus !== 'CHANGED'
         ? currentStatus
         : currentStatus === 'CHANGED' && changeStatus !== 'ALL'
           ? changeStatus
           : '',
-    active: currentStatus === 'ACTIVE' ? true : currentStatus === 'INACTIVE' ? false : '',
-    changed: currentStatus === 'CHANGED' ? true : '',
-    changeStatus: currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
-    type: type !== 'ALL' ? type : '',
+    active: isTanker ? '' : currentStatus === 'ACTIVE' ? true : currentStatus === 'INACTIVE' ? false : '',
+    changed: isTanker ? '' : currentStatus === 'CHANGED' ? true : '',
+    changeStatus: isTanker ? '' : currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
+    type: !isTanker && type !== 'ALL' ? type : '',
     page,
     size,
     search,
@@ -69,6 +79,7 @@ export const EquipmentsList = () => {
     startDate,
     endDate,
     factoryNumber,
+    activityType: isTanker && rest?.activityType !== 'ALL' ? rest?.activityType : undefined,
   })
 
   const { data: changedCountData } = usePaginatedData<any>(
@@ -80,11 +91,12 @@ export const EquipmentsList = () => {
     true
   )
 
-  const { data: dataForNewCount } = useData<number>(`/equipments/count`, true, {
-    type: type !== 'ALL' ? type : '',
+  const { data: dataForNewCount } = useData<number>(`/equipments/count`, !isTanker, {
+    type: !isTanker && type !== 'ALL' ? type : '',
   })
+  const { data: tankersCount } = useData<any>('/tankers/count', isTanker, { mode })
 
-  const { data: childEquipmentTypes } = useChildEquipmentTypes(type !== 'ALL' ? type : '')
+  const { data: childEquipmentTypes } = useChildEquipmentTypes(!isTanker && type !== 'ALL' ? type : '')
 
   const handleViewApplication = (id: string) => {
     if (currentStatus === 'CHANGED') {
@@ -95,8 +107,71 @@ export const EquipmentsList = () => {
   }
 
   const handleEditApplication = (id: string, type: string, tin: string) => {
+    if (isTanker) return
     navigate(`/applications/create/ILLEGAL_REGISTER_${type}?id=${id}&tin=${tin}`)
   }
+
+  const tankerColumns: ExtendedColumnDef<any, any>[] = [
+    {
+      header: 'Tashkilot nomi',
+      accessorKey: 'name',
+      filterKey: 'name',
+      filterType: 'search',
+    },
+    {
+      accessorKey: 'tin',
+      header: 'Tashkilot STIRi',
+      filterKey: 'tin',
+      filterType: 'search',
+    },
+    {
+      accessorKey: 'registerNumber',
+      header: 'Xulosa raqami',
+      filterKey: 'registerNumber',
+      filterType: 'search',
+    },
+    {
+      accessorKey: 'expiryDate',
+      header: 'Xulosa amal qilish muddati',
+      cell: (cell) => (cell.row.original.expiryDate ? formatDate(cell.row.original.expiryDate, 'dd.MM.yyyy') : null),
+    },
+    {
+      accessorKey: 'activityTypeName',
+      header: 'Faoliyat turi',
+      cell: (cell) =>
+        cell.row.original.activityType
+          ? autoTabs?.find((i) => i?.key == cell.row.original?.activityType)?.label || '-'
+          : null,
+    },
+    {
+      accessorKey: 'numberPlate',
+      header: 'Davlat raqam belgisi',
+      filterKey: 'numberPlate',
+      filterType: 'search',
+    },
+    {
+      accessorKey: 'model',
+      header: 'Avtotransport vositasi modeli',
+      filterKey: 'model',
+      filterType: 'search',
+    },
+    {
+      accessorKey: 'validUntil',
+      header: 'Texnik ko‘rik amal qilish muddati',
+      cell: (cell) => (cell.row.original.validUntil ? formatDate(cell.row.original.validUntil, 'dd.MM.yyyy') : null),
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => (
+        <DataTableRowActions
+          showView
+          row={row}
+          showDelete
+          onView={(row) => navigate(`${row.original.id}/auto?tin=${row.original.tin}`)}
+        />
+      ),
+    },
+  ]
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -205,7 +280,11 @@ export const EquipmentsList = () => {
       cell: ({ row }: any) => (
         <DataTableRowActions
           showView
-          showEdit={user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.CHAIRMAN}
+          showEdit={
+            !isTanker &&
+            (user?.role === UserRoles.LEGAL || user?.role === UserRoles.INSPECTOR) &&
+            currentStatus === 'ACTIVE'
+          }
           row={row}
           showDelete
           onView={(row: any) => handleViewApplication(row.original?.id)}
@@ -243,45 +322,107 @@ export const EquipmentsList = () => {
             id: i?.equipmentType?.toString() || '',
             name: i?.name?.toString() || '',
           })) || []),
+          {
+            id: 'TANKERS',
+            name: 'Harakatlanuvchi sig‘imlar',
+          },
         ]?.map((i) => ({
           ...i,
-          count: i?.id == type ? (dataForNewCount ?? 0) : undefined,
+          count: i?.id == type ? ((isTanker ? tankersCount?.allCount : dataForNewCount) ?? 0) : undefined,
         }))}
-        onTabChange={(type) => addParams({ type: type }, 'page', 'childEquipmentId')}
+        onTabChange={(type) => addParams({ type: type }, 'page', 'childEquipmentId', 'status', 'activityType')}
       />
+      {isTanker && (
+        <div className="flex items-center gap-2 overflow-hidden">
+          <div className="min-w-0 flex-1">
+            <TabsLayout
+              showArrows
+              activeTab={rest?.activityType || 'ALL'}
+              tabs={autoTabs.map((tab) => ({
+                id: tab.key,
+                name: tab.label,
+                count:
+                  tab.key === AutoTabKey.ALL
+                    ? tankersCount?.allCount
+                    : tab.key === AutoTabKey.OIL_PRODUCTS
+                      ? tankersCount?.oilCount
+                      : tab.key === AutoTabKey.LPG_TRANSPORT
+                        ? tankersCount?.lpgCount
+                        : tab.key === AutoTabKey.CHEMICALS
+                          ? tankersCount?.chemicalCount
+                          : tab.key === AutoTabKey.CRYOGENIC_GASES
+                            ? tankersCount?.cryogenicCount
+                            : tab.key === AutoTabKey.NUCLEAR_MATERIALS
+                              ? tankersCount?.radioactiveCount
+                              : undefined,
+              }))}
+              onTabChange={(val) => {
+                if (val === 'ALL') {
+                  removeParams('activityType')
+                } else {
+                  addParams({ activityType: val }, 'page')
+                }
+              }}
+            />
+          </div>
+          {(user?.role == UserRoles.MANAGER ||
+            user?.role == UserRoles.REGIONAL ||
+            user?.role == UserRoles.INSPECTOR) && (
+            <div className="shrink-0">
+              <AddPermitTransportModal />
+            </div>
+          )}
+        </div>
+      )}
       <TabsLayout
         activeTab={currentStatus}
-        tabs={[
-          {
-            id: 'ALL',
-            name: 'Barchasi',
-          },
-          {
-            id: 'ACTIVE',
-            name: 'Reyestrdagi qurilmalar',
-          },
-          {
-            id: 'INACTIVE',
-            name: 'Reyestrdan chiqarilgan qurilmalar',
-          },
-          {
-            id: 'EXPIRED',
-            name: 'Muddati o‘tgan qurilmalar',
-          },
-          {
-            id: 'NO_DATE',
-            name: 'Muddati kiritilmaganlar',
-          },
-          {
-            id: 'CHANGED',
-            name: 'O‘zgartirish so‘rovlari',
-            count: changedCountData?.page?.totalElements || undefined,
-          },
-        ]?.map((i) => ({
-          ...i,
-          count:
-            i.id === 'CHANGED' ? i.count : i?.id == currentStatus ? data?.page?.totalElements || undefined : undefined,
-        }))}
+        tabs={
+          isTanker
+            ? [
+                { id: 'ALL', name: 'Barchasi' },
+                { id: 'ACTIVE', name: 'Aktiv' },
+                { id: 'EXPIRING_SOON', name: 'Muddati yaqinlashayotganlar' },
+                { id: 'EXPIRED', name: 'Muddati o‘tganlar' },
+              ]?.map((i) => ({
+                ...i,
+                count: i.id === currentStatus ? data?.page?.totalElements || 0 : undefined,
+              }))
+            : [
+                {
+                  id: 'ALL',
+                  name: 'Barchasi',
+                },
+                {
+                  id: 'ACTIVE',
+                  name: 'Reyestrdagi qurilmalar',
+                },
+                {
+                  id: 'INACTIVE',
+                  name: 'Reyestrdan chiqarilgan qurilmalar',
+                },
+                {
+                  id: 'EXPIRED',
+                  name: 'Muddati o‘tgan qurilmalar',
+                },
+                {
+                  id: 'NO_DATE',
+                  name: 'Muddati kiritilmaganlar',
+                },
+                {
+                  id: 'CHANGED',
+                  name: 'O‘zgartirish so‘rovlari',
+                  count: changedCountData?.page?.totalElements || undefined,
+                },
+              ]?.map((i) => ({
+                ...i,
+                count:
+                  i.id === 'CHANGED'
+                    ? i.count
+                    : i?.id == currentStatus
+                      ? data?.page?.totalElements || undefined
+                      : undefined,
+              }))
+        }
         onTabChange={(type) => {
           if (type === 'CHANGED') {
             addParams({ status: type, changeStatus: 'ALL' }, 'page')
@@ -311,7 +452,7 @@ export const EquipmentsList = () => {
         isLoading={isLoading}
         isPaginated
         data={data || []}
-        columns={columns as unknown as any}
+        columns={isTanker ? tankerColumns : (columns as unknown as any)}
         className="flex-1"
       />
     </div>

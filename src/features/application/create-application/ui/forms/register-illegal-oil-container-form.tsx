@@ -284,7 +284,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               name="districtId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Qozon joylashgan tuman</FormLabel>
+                  <FormLabel required>Idish joylashgan tuman</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={(value) => field.onChange(value)}
@@ -306,7 +306,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Qozon joylashgan manzil</FormLabel>
+                  <FormLabel required>Idish joylashgan manzil</FormLabel>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Qurilma joylashgan manzil" {...field} />
                   </FormControl>
@@ -343,7 +343,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
-                      Qozonning birkasi bilan sur‘ati
+                      Idishning birkasi bilan sur‘ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -437,7 +437,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilmaning muvofiqlik sertifikati</FormLabel>
+                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Idishning muvofiqlik sertifikati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -472,7 +472,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                 <FormItem className={'mb-2'}>
                   <div className="flex items-end justify-between gap-2 xl:items-center">
                     <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
-                      Qozonning pasporti
+                      Idishning pasporti
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />

@@ -104,7 +104,7 @@ export const riskAnalysisData = {
       rejectPlaceholder: `Ishchilar kaskalar bilan ta'minlanmagan`,
     },
     {
-      title: `Atom energetikasi va yadro texnologiyalari, INM va retgen uskunasidan foylanuvchi ob'ektlar xodimlarini alohida nurlanish dozalarini hisobga olinmaganligi va karta/ma'lumotlarning mavjud emasligi`,
+      title: `Atom energetikasi va yadro texnologiyalari, INM va retgen uskunasidan foylanuvchi ob'ektlar xodimlarini alohida nurlanish dozalarini hisobga olinmaganligi va karta/maʼlumotlarning mavjud emasligi`,
       point: 5,
       rejectPlaceholder: `12.12.2024 kuni baxtsiz xadis ray bergan`,
     },
@@ -119,7 +119,7 @@ export const riskAnalysisData = {
       rejectPlaceholder: `Normativ hujjatlar talablari buzilgan, -son qaror, -bandi`,
     },
     {
-      title: `Inmlar va rentgen uskunalarini yillik inventarizasiyasi o‘tkazilmaganligi va vakolatli organga taqdim etilganligi to‘g'risidagi ma'lumotlar mavjud emasligi`,
+      title: `Inmlar va rentgen uskunalarini yillik inventarizasiyasi o‘tkazilmaganligi va vakolatli organga taqdim etilganligi to‘g'risidagi maʼlumotlar mavjud emasligi`,
       point: 10,
       rejectPlaceholder: "Ma'lumot taqdim etilmagan",
     },
@@ -161,7 +161,7 @@ export const riskAnalysisData = {
       rejectPlaceholder: `placeholder`,
     },
     {
-      title: `Attraktsionlarning mavsumga tayyorligi to'g'risidagi dalolatnomasi mavjudligi`,
+      title: `Attraktsionlarning mavsumga tayyorligi to‘g‘risidagi dalolatnomasi mavjudligi`,
       point: 15,
       rejectPlaceholder: `placeholder`,
     },

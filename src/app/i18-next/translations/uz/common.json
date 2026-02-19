@@ -921,6 +921,7 @@
     "IN_APPROVAL": "Arizani tasdiqlashga o‘tkazdi",
     "COMPLETED": "Arizani yakunladi",
     "CANCELED": "Arizani qaytardi",
-    "REJECTED": " Arizani rad etdi"
+    "REJECTED": " Arizani rad etdi",
+    "EDITED": "O‘zgartirish kiritdi"
   }
 }

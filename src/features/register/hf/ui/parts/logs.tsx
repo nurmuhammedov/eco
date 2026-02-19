@@ -4,6 +4,8 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 import { useParams } from 'react-router-dom'
 import { format } from 'date-fns'
 import FileLink from '@/shared/components/common/file-link'
+import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal'
+import { Eye } from 'lucide-react'
 
 export const Logs = ({ url = 'hf' }: any) => {
   const { id } = useParams()
@@ -23,19 +25,7 @@ export const Logs = ({ url = 'hf' }: any) => {
       accessorKey: 'fieldNameUz',
     },
     {
-      header: 'Yangi qiymati',
-      accessorKey: 'newValue',
-      cell: ({ row }) =>
-        row?.original?.isFile ? (
-          row.original?.newValue ? (
-            <FileLink url={row.original?.newValue} />
-          ) : null
-        ) : (
-          row?.original?.newValue
-        ),
-    },
-    {
-      header: 'Eski qiymati',
+      header: 'Eski qiymat',
       accessorKey: 'oldValue',
       cell: ({ row }) =>
         row?.original?.isFile ? (
@@ -43,7 +33,19 @@ export const Logs = ({ url = 'hf' }: any) => {
             <FileLink url={row.original?.oldValue} />
           ) : null
         ) : (
-          row?.original?.oldValue
+          <span className="font-medium text-red-500">{row?.original?.oldValue}</span>
+        ),
+    },
+    {
+      header: 'Yangi qiymat',
+      accessorKey: 'newValue',
+      cell: ({ row }) =>
+        row?.original?.isFile ? (
+          row.original?.newValue ? (
+            <FileLink url={row.original?.newValue} />
+          ) : null
+        ) : (
+          <span className="font-medium text-green-600">{row?.original?.newValue}</span>
         ),
     },
     {
@@ -58,6 +60,22 @@ export const Logs = ({ url = 'hf' }: any) => {
         </div>
       ),
       maxSize: 90,
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) =>
+        row.original.changeId ? (
+          <ApplicationLogsModal
+            id={row.original.changeId}
+            type="change"
+            trigger={
+              <div className="flex cursor-pointer justify-center text-blue-600 hover:text-blue-800">
+                <Eye size={20} />
+              </div>
+            }
+          />
+        ) : null,
+      maxSize: 50,
     },
   ]
 

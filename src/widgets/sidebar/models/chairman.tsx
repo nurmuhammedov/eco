@@ -108,7 +108,7 @@ export default [
   },
   {
     id: 'ACCIDENT',
-    title: 'Baxtsiz hodisalar',
+    title: 'Baxtsiz hod. va Avariyalar',
     url: '/accidents',
     icon: <Ambulance />,
   },

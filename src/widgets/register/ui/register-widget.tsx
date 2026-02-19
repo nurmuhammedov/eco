@@ -15,8 +15,6 @@ import { API_ENDPOINTS } from '@/shared/api'
 import { apiClient } from '@/shared/api/api-client'
 import { format } from 'date-fns'
 import { cn } from '@/shared/lib/utils'
-import { AutoList } from '@/features/register/auto/ui/auto-list'
-import { AddPermitTransportModal } from '@/features/register/auto/ui/add-auto-modal'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
@@ -40,7 +38,6 @@ const RegisterWidget = () => {
   const { data: equipmentsCount = 0 } = useData<number>('/equipments/count', true, { mode })
   const { data: irsCount = 0 } = useData<number>('/irs/count', user?.role != UserRoles.INDIVIDUAL, { mode })
   const { data: xrayCount = 0 } = useData<number>('/xrays/count', user?.role != UserRoles.INDIVIDUAL, { mode })
-  const { data: tankersCount } = useData<any>('/tankers/count', user?.role != UserRoles.INDIVIDUAL, { mode })
 
   const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(`${API_ENDPOINTS.REGIONS_SELECT}`)
   const { data: districts, isLoading: isDistrictsLoading } = useDistrictSelectQueries(rest?.regionId)
@@ -48,10 +45,10 @@ const RegisterWidget = () => {
   const handleDownloadExel = () => {
     setIsLoading(true)
     apiClient
-      .downloadFile<Blob>(`/${tab}/export/excel`, {
+      .downloadFile<Blob>(`/${tab === 'equipments' && type === 'TANKERS' ? 'tankers' : tab}/export/excel`, {
         mode,
         status: status === 'ALL' ? '' : status,
-        type,
+        type: type === 'TANKERS' ? '' : type,
         ...rest,
       })
       .then((res) => {
@@ -77,7 +74,18 @@ const RegisterWidget = () => {
       <Tabs
         className="flex flex-1 flex-col overflow-hidden"
         value={tab}
-        onValueChange={(tab: string) => addParams({ tab: tab.toString() }, 'page', 'type', 'status')}
+        onValueChange={(tab: string) =>
+          addParams(
+            { tab: tab.toString() },
+            'page',
+            'type',
+            'status',
+            'active',
+            'childEquipmentId',
+            'activityType',
+            'changeStatus'
+          )
+        }
       >
         <div className={'flex items-center justify-between gap-2 pt-0.5'}>
           {user?.role != UserRoles.INDIVIDUAL ? (
@@ -107,12 +115,6 @@ const RegisterWidget = () => {
                     {xrayCount}
                   </Badge>
                 </TabsTrigger>
-                <TabsTrigger value={RegisterActiveTab.AUTO}>
-                  Harakatlanuvchi sig‘imlar
-                  <Badge variant="destructive" className="ml-2">
-                    {tankersCount?.allCount || 0}
-                  </Badge>
-                </TabsTrigger>
               </TabsList>
             </div>
           ) : (
@@ -128,82 +130,72 @@ const RegisterWidget = () => {
             </div>
           )}
           <div className="flex flex-1 items-center justify-end gap-2">
-            {tab == RegisterActiveTab.AUTO ? (
-              <>
-                {(user?.role == UserRoles.MANAGER ||
-                  user?.role == UserRoles.REGIONAL ||
-                  user?.role == UserRoles.INSPECTOR) && <AddPermitTransportModal />}
-              </>
-            ) : (
-              <div className="flex gap-2">
-                <Select
-                  onValueChange={(value) => {
-                    if (value && value !== 'ALL') {
-                      addParams({ mode: value }, 'page')
-                    } else {
-                      removeParams('mode')
-                    }
-                  }}
-                  value={mode || ''}
-                >
-                  <SelectTrigger className="max-w-70">
-                    <SelectValue placeholder="Rasmiylashtirish turi" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ALL">Barchasi</SelectItem>
-                    {getSelectOptions([
-                      { id: 'OFFICIAL', name: 'Arizachilar tomonidan ro‘yxatga olingan' },
-                      {
-                        id: 'UNOFFICIAL',
-                        name: 'Qo‘mita tomonidan ro‘yxatga olingan',
-                      },
-                    ])}
-                  </SelectContent>
-                </Select>
-                <Select
-                  onValueChange={(value) => {
-                    if (value && value !== 'ALL') {
-                      addParams({ regionId: value }, 'page', 'districtId')
-                    } else {
-                      removeParams('regionId', 'districtId')
-                    }
-                  }}
-                  value={rest?.regionId?.toString() || ''}
-                  disabled={isLoadingRegions}
-                >
-                  <SelectTrigger className="max-w-60 min-w-40">
-                    <SelectValue placeholder="Hudud" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ALL">Barchasi</SelectItem>
-                    {getSelectOptions(regionOptions)}
-                  </SelectContent>
-                </Select>
-                <Select
-                  onValueChange={(value) => {
-                    if (value && value !== 'ALL') {
-                      addParams({ districtId: value }, 'page')
-                    } else {
-                      removeParams('districtId')
-                    }
-                  }}
-                  value={rest?.districtId?.toString() || ''}
-                  disabled={isDistrictsLoading}
-                >
-                  <SelectTrigger className="max-w-60 min-w-40">
-                    <SelectValue placeholder="Tuman" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ALL">Barchasi</SelectItem>
-                    {getSelectOptions(districts)}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
+            <div className="flex gap-2">
+              <Select
+                onValueChange={(value) => {
+                  if (value && value !== 'ALL') {
+                    addParams({ mode: value }, 'page')
+                  } else {
+                    removeParams('mode')
+                  }
+                }}
+                value={mode || ''}
+              >
+                <SelectTrigger className="max-w-70">
+                  <SelectValue placeholder="Rasmiylashtirish turi" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">Barchasi</SelectItem>
+                  {getSelectOptions([
+                    { id: 'OFFICIAL', name: 'Arizachilar tomonidan ro‘yxatga olingan' },
+                    {
+                      id: 'UNOFFICIAL',
+                      name: 'Qo‘mita tomonidan ro‘yxatga olingan',
+                    },
+                  ])}
+                </SelectContent>
+              </Select>
+              <Select
+                onValueChange={(value) => {
+                  if (value && value !== 'ALL') {
+                    addParams({ regionId: value }, 'page', 'districtId')
+                  } else {
+                    removeParams('regionId', 'districtId')
+                  }
+                }}
+                value={rest?.regionId?.toString() || ''}
+                disabled={isLoadingRegions}
+              >
+                <SelectTrigger className="max-w-60 min-w-40">
+                  <SelectValue placeholder="Hudud" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">Barchasi</SelectItem>
+                  {getSelectOptions(regionOptions)}
+                </SelectContent>
+              </Select>
+              <Select
+                onValueChange={(value) => {
+                  if (value && value !== 'ALL') {
+                    addParams({ districtId: value }, 'page')
+                  } else {
+                    removeParams('districtId')
+                  }
+                }}
+                value={rest?.districtId?.toString() || ''}
+                disabled={isDistrictsLoading}
+              >
+                <SelectTrigger className="max-w-60 min-w-40">
+                  <SelectValue placeholder="Tuman" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">Barchasi</SelectItem>
+                  {getSelectOptions(districts)}
+                </SelectContent>
+              </Select>
+            </div>
             <Button
-              disabled={
-                isLoading || tab == RegisterActiveTab.AUTO || (type == 'ALL' && tab == RegisterActiveTab.EQUIPMENTS)
-              }
+              disabled={isLoading || (type == 'ALL' && tab == RegisterActiveTab.EQUIPMENTS)}
               loading={isLoading}
               onClick={handleDownloadExel}
             >
@@ -222,9 +214,6 @@ const RegisterWidget = () => {
         </TabsContent>
         <TabsContent value={RegisterActiveTab.XRAY} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
           <XrayList />
-        </TabsContent>
-        <TabsContent value={RegisterActiveTab.AUTO} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
-          <AutoList tankersCount={tankersCount} />
         </TabsContent>
       </Tabs>
     </div>

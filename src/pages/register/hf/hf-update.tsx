@@ -13,7 +13,9 @@ const Update = () => {
 
   const onSubmit = (values: any) => {
     mutateAsync(values).then(() => {
-      toast.success('Muvaffaqiyatli saqlandi!', { richColors: true })
+      toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!', {
+        richColors: true,
+      })
       navigate(-1)
       queryClient.invalidateQueries({ queryKey: ['/hf'] }).catch((err) => console.error(err))
       queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] }).catch((err) => console.error(err))
