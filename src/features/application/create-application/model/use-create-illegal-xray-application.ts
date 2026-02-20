@@ -1,4 +1,10 @@
-import { RegisterIllegalXrayDTO, RegisterIllegalXraySchema } from '@/entities/create-application'
+import {
+  RegisterIllegalXrayBaseSchema,
+  RegisterIllegalXrayDTO,
+  RegisterIllegalXraySchema,
+  xrayRefinement,
+} from '@/entities/create-application'
+import { format } from 'date-fns'
 import { stateService } from '@/entities/create-application/types/enums'
 import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
@@ -9,16 +15,16 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
 export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => {
+  const { type, id } = useParams<{ type: string; id: string }>()
   const [searchParams] = useSearchParams()
-  const id = searchParams.get('id')
   const tin = searchParams.get('tin')
-  const isUpdate = !!id && !!tin
+  const isUpdate = !!type && !!id
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
@@ -27,7 +33,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
   const form = useForm<RegisterIllegalXrayDTO>({
     resolver: (values, context, options) => {
       const actualSchema = isUpdate
-        ? RegisterIllegalXraySchema.extend({
+        ? RegisterIllegalXrayBaseSchema.extend({
             file1Path: z.string().optional().nullable(),
             file1ExpiryDate: z.date().optional().nullable(),
             file2Path: z.string().optional().nullable(),
@@ -53,7 +59,12 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
             file13ExpiryDate: z.date().optional().nullable(),
             phoneNumber: z.string().optional().nullable(),
             identity: z.string().optional().nullable(),
-          })
+            birthDate: z
+              .string()
+              .optional()
+              .nullable()
+              .transform((val) => (val ? val : null)),
+          }).superRefine(xrayRefinement)
         : RegisterIllegalXraySchema
 
       if (isUpdate) {
@@ -103,6 +114,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
       file12Path: undefined,
       file13Path: undefined,
       file13ExpiryDate: undefined,
+      birthDate: undefined,
     },
     mode: 'onChange',
   })
@@ -111,8 +123,11 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/xrays', id)
 
   const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
+  const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
+    '/integration/iip/individual'
+  )
 
-  const ownerIdentity = detail?.ownerIdentity || tin
+  const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
   const regionId = form.watch('regionId')
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)
@@ -120,7 +135,6 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
     queryKey: ['owner-data', ownerIdentity],
     queryFn: async () => {
-      if (!ownerIdentity) return null
       const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
       return res.data?.data
     },
@@ -137,6 +151,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
       form.reset({
         phoneNumber: detail.phoneNumber || '',
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
+        birthDate: isUpdate ? '1900-01-01' : parseDate(detail.birthDate),
         licenseNumber: getValue(detail.licenseNumber || ''),
         licenseRegistryNumber: getValue(detail.licenseRegistryNumber || ''),
         licenseDate: parseDate(detail.licenseDate),
@@ -180,20 +195,30 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
 
   const handleSearch = () => {
     const identity = form.getValues('identity')?.trim()
+    const birthDate = form.getValues('birthDate')
+
     if (!identity) return
 
     if (identity.length === 9) {
       legalMutateAsync({ tin: identity })
-        .then((res) => setManualOwnerData(res.data?.data))
+        .then((res) => setManualOwnerData(res.data?.data || res.data))
+        .catch(() => setManualOwnerData(null))
+    } else if (identity.length === 14 && birthDate) {
+      individualMutateAsync({
+        pin: identity,
+        birthDate: format(birthDate as unknown as Date, 'yyyy-MM-dd'),
+      })
+        .then((res) => setManualOwnerData(res.data?.data || res.data))
         .catch(() => setManualOwnerData(null))
     } else {
-      form.trigger('identity')
+      form.trigger(['identity', 'birthDate'])
     }
   }
 
   const handleClear = () => {
     setManualOwnerData(null)
     form.setValue('identity', '')
+    form.setValue('birthDate', undefined as any)
   }
 
   const handleSubmit = (data: RegisterIllegalXrayDTO) => {
@@ -241,7 +266,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
     ownerData: currentOwnerData,
     detail,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isLegalPending,
+    isSearchLoading: isLegalPending || isIndividualPending,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,

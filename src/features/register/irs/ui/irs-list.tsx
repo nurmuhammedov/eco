@@ -76,14 +76,14 @@ export const IrsList = () => {
     status: currentValid === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
   })
 
-  const { data: changedCountData } = usePaginatedData<any>(
-    `/irs`,
-    {
-      changed: 'true',
-      size: 1,
-    },
-    true
-  )
+  // const { data: changedCountData } = usePaginatedData<any>(
+  //   `/irs`,
+  //   {
+  //     changed: 'true',
+  //     size: 1,
+  //   },
+  //   true
+  // )
 
   const handleViewApplication = (id: string) => {
     if (currentValid === 'CHANGED') {
@@ -237,15 +237,15 @@ export const IrsList = () => {
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="CHANGED">
-            O‘zgartirish so‘rovlari
-            <Badge
-              variant="destructive"
-              className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-            >
-              {changedCountData?.page?.totalElements || 0}
-            </Badge>
-          </TabsTrigger>
+          {/*<TabsTrigger value="CHANGED">*/}
+          {/*  O‘zgartirish so‘rovlari*/}
+          {/*  <Badge*/}
+          {/*    variant="destructive"*/}
+          {/*    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
+          {/*  >*/}
+          {/*    {changedCountData?.page?.totalElements || 0}*/}
+          {/*  </Badge>*/}
+          {/*</TabsTrigger>*/}
         </TabsList>
       </Tabs>
 

@@ -21,8 +21,6 @@ import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
 import { useRegisterIllegalLift } from '@/features/application/create-application/model/use-create-illegal-lift-application'
-import { Alert, AlertTitle } from '@/shared/components/ui/alert'
-import { TriangleAlert } from 'lucide-react'
 import { RegisterIllegalLiftDTO } from '@/entities/create-application/schemas/register-illegal-lift.schema'
 
 interface RegisterIllegalLiftFormProps {
@@ -62,118 +60,111 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLiftFormProps) =
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack title={isUpdate ? 'Lift maʼlumotlarini tahrirlash' : 'Liftni ro‘yxatga olish arizasi'} />
-        {isUpdate && (
-          <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
-            <TriangleAlert className="size-4 text-yellow-600!" />
-            <AlertTitle className="text-yellow-700">
-              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
-              yuboriladi!
-            </AlertTitle>
-          </Alert>
-        )}
         <NoteForm equipmentName="lift" />
 
-        {((isUpdate && isLegal) || !isUpdate) && (
-          <CardForm className="my-2">
-            {!isUpdate ? (
-              <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+        <CardForm className="my-2">
+          {!isUpdate ? (
+            <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="identity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>STIR yoki JSHSHIR</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={!!ownerData}
+                        className="3xl:w-sm w-full"
+                        placeholder="STIR yoki JSHSHIRni kiriting"
+                        maxLength={14}
+                        {...field}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '')
+                          e.target.value = val
+                          if (ownerData) handleClear()
+                          if (val.length !== 14) {
+                            form.setValue('birthDate', undefined as any)
+                          }
+                          field.onChange(e)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {isIndividual && (
                 <FormField
                   control={form.control}
-                  name="identity"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>STIR yoki JSHSHIR</FormLabel>
-                      <FormControl>
-                        <Input
+                  name="birthDate"
+                  render={({ field }) => {
+                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                    return (
+                      <FormItem className="3xl:w-sm w-full">
+                        <FormLabel required>Tug‘ilgan sana</FormLabel>
+                        <DatePicker
                           disabled={!!ownerData}
                           className="3xl:w-sm w-full"
-                          placeholder="STIR yoki JSHSHIRni kiriting"
-                          maxLength={14}
-                          {...field}
-                          onChange={(e) => {
-                            const val = e.target.value.replace(/\D/g, '')
-                            e.target.value = val
-                            if (ownerData) handleClear()
-                            if (val.length !== 14) {
-                              form.setValue('birthDate', undefined as any)
-                            }
-                            field.onChange(e)
-                          }}
+                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                          onChange={field.onChange}
+                          placeholder="Sanani tanlang"
+                          disableStrategy="after"
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  }}
                 />
+              )}
 
-                {isIndividual && (
-                  <FormField
-                    control={form.control}
-                    name="birthDate"
-                    render={({ field }) => {
-                      const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                      return (
-                        <FormItem className="3xl:w-sm w-full">
-                          <FormLabel required>Tug‘ilgan sana</FormLabel>
-                          <DatePicker
-                            disabled={!!ownerData}
-                            className="3xl:w-sm w-full"
-                            value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                            onChange={field.onChange}
-                            placeholder="Sanani tanlang"
-                            disableStrategy="after"
-                          />
-                          <FormMessage />
-                        </FormItem>
-                      )
-                    }}
-                  />
+              <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
+                {!ownerData ? (
+                  <Button
+                    type="button"
+                    onClick={handleSearch}
+                    disabled={isSearchLoading || !identity || (!isLegal && !(isIndividual && birthDateString))}
+                    loading={isSearchLoading}
+                  >
+                    Qidirish
+                  </Button>
+                ) : (
+                  <Button type="button" variant="destructive" onClick={handleClear}>
+                    O‘chirish
+                  </Button>
                 )}
-
-                <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
-                  {!ownerData ? (
-                    <Button
-                      type="button"
-                      onClick={handleSearch}
-                      disabled={isSearchLoading || !identity || (!isLegal && !(isIndividual && birthDateString))}
-                      loading={isSearchLoading}
-                    >
-                      Qidirish
-                    </Button>
-                  ) : (
-                    <Button type="button" variant="destructive" onClick={handleClear}>
-                      O‘chirish
-                    </Button>
-                  )}
-                </div>
               </div>
-            ) : null}
+            </div>
+          ) : null}
 
-            {ownerData && (
-              <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
-                <h3 className="mb-4 text-base font-semibold text-gray-800">
-                  {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
-                </h3>
-                <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
-                  <DetailRow
-                    title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH.:'}
-                    value={isLegal ? ownerData?.name || ownerData?.legalName || '-' : ownerData?.fullName || '-'}
-                  />
-                  {isLegal && (
-                    <>
-                      <DetailRow
-                        title="Tashkilot rahbari:"
-                        value={ownerData?.directorName || ownerData?.fullName || '-'}
-                      />
-                      <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
-                      <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
-                    </>
-                  )}
-                </div>
+          {ownerData && (
+            <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
+              <h3 className="mb-4 text-base font-semibold text-gray-800">
+                {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
+              </h3>
+              <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
+                <DetailRow
+                  title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH.:'}
+                  value={
+                    isLegal
+                      ? ownerData?.name || ownerData?.legalName || '-'
+                      : ownerData?.fullName || ownerData?.name || '-'
+                  }
+                />
+                {isLegal && (
+                  <>
+                    <DetailRow
+                      title="Tashkilot rahbari:"
+                      value={ownerData?.directorName || ownerData?.fullName || '-'}
+                    />
+                    <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
+                    <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
+                  </>
+                )}
               </div>
-            )}
-          </CardForm>
-        )}
+            </div>
+          )}
+        </CardForm>
 
         <CardForm className="mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
@@ -249,7 +240,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLiftFormProps) =
                     <Input className="3xl:w-sm w-full" placeholder="Liftning zavod raqami" {...field} />
                   </FormControl>
                   {isUpdate && detail?.factoryNumber && /[\u0400-\u04FF]/.test(detail.factoryNumber) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.factoryNumber}
                     </FormDescription>
                   )}
@@ -267,7 +258,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLiftFormProps) =
                     <Input className="3xl:w-sm w-full" placeholder="Ishlab chiqargan zavod nomi" {...field} />
                   </FormControl>
                   {isUpdate && detail?.factory && /[\u0400-\u04FF]/.test(detail.factory) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.factory}
                     </FormDescription>
                   )}
@@ -285,7 +276,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLiftFormProps) =
                     <Input className="3xl:w-sm w-full" placeholder="Model, marka" {...field} />
                   </FormControl>
                   {isUpdate && detail?.model && /[\u0400-\u04FF]/.test(detail.model) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.model}
                     </FormDescription>
                   )}
@@ -362,7 +353,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLiftFormProps) =
                   {isUpdate &&
                     detail?.parameters?.liftingCapacity &&
                     /[\u0400-\u04FF]/.test(detail.parameters.liftingCapacity) && (
-                      <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      <FormDescription className="3xl:w-sm w-full wrap-break-word">
                         Eski qiymat: {detail.parameters.liftingCapacity}
                       </FormDescription>
                     )}
@@ -380,7 +371,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLiftFormProps) =
                     <Input type="text" className="3xl:w-sm w-full" placeholder="Toʼxtashlar soni" {...field} />
                   </FormControl>
                   {isUpdate && detail?.parameters?.stopCount && /[\u0400-\u04FF]/.test(detail.parameters.stopCount) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.parameters.stopCount}
                     </FormDescription>
                   )}
@@ -475,7 +466,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLiftFormProps) =
                     <Input className="3xl:w-sm w-full" placeholder="Aniq manzilni kiriting" {...field} />
                   </FormControl>
                   {isUpdate && detail?.address && /[\u0400-\u04FF]/.test(detail.address) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.address}
                     </FormDescription>
                   )}

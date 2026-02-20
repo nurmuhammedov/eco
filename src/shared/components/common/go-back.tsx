@@ -28,7 +28,7 @@ const GoBack: React.FC<GoBackProps> = memo(({ title, fallbackPath = '/' }) => {
       >
         <ArrowLeft className="size-5" />
       </button>
-      <h1 className="text-neutral-850 truncate text-xl font-semibold">{title}</h1>
+      <h1 className="text-neutral-850 truncate text-lg font-semibold">{title}</h1>
     </div>
   )
 })

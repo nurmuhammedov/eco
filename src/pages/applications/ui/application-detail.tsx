@@ -17,8 +17,8 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
   const isXrayAppeal = data?.appealType === ApplicationTypeEnum.REGISTER_XRAY
 
   return (
-    <div>
-      <div className="flex items-center justify-between gap-2">
+    <>
+      <div className="flex items-center justify-between">
         <GoBack title={`Ariza raqami: ${data?.number || ''}`} />
         <div className={'ml-auto'}>
           <ApplicationLogsModal />
@@ -42,7 +42,7 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
         </div>
       </div>
       <ApplicationDetailFeature data={data} userRole={user?.role} showAttestationActions={showAttestationActions} />
-    </div>
+    </>
   )
 }
 export default ApplicationDetailPage

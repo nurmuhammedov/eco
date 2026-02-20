@@ -12,26 +12,54 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
 import {
   RegisterIllegalHfDTO,
   RegisterIllegalHfSchema,
 } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
+import z from 'zod'
 
 export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
+  const { type, id } = useParams<{ type: string; id: string }>()
   const [searchParams] = useSearchParams()
-  const id = searchParams.get('id')
   const tin = searchParams.get('tin')
-  const isUpdate = !!id && !!tin
+  const isUpdate = !!type && !!id
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
 
   const form = useForm<RegisterIllegalHfDTO>({
-    resolver: zodResolver(RegisterIllegalHfSchema),
+    resolver: zodResolver(
+      isUpdate
+        ? RegisterIllegalHfSchema.extend({
+            phoneNumber: z
+              .string()
+              .optional()
+              .nullable()
+              .transform((val) => (val ? val : null)),
+            identity: z
+              .string()
+              .optional()
+              .nullable()
+              .transform((val) => (val ? val : null)),
+            managerCount: z
+              .string({ required_error: 'Majburiy maydon!' })
+              .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
+              .min(1, 'Majburiy maydon!'),
+            engineerCount: z
+              .string({ required_error: 'Majburiy maydon!' })
+              .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
+              .min(1, 'Majburiy maydon!'),
+            workerCount: z
+              .string({ required_error: 'Majburiy maydon!' })
+              .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
+              .min(1, 'Majburiy maydon!'),
+          })
+        : RegisterIllegalHfSchema
+    ),
     defaultValues: {
       identity: '',
       phoneNumber: '',
@@ -62,12 +90,12 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
     mode: 'onChange',
   })
 
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/hazardous-facilities/`, id, !!id)
-  const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/hazardous-facilities/', id, 'put')
+  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/hf/`, id, !!id)
+  const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/hf/', id, 'put')
 
   const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
 
-  const ownerIdentity = detail?.ownerIdentity || tin
+  const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
   const regionId = form.watch('regionId')
   const { spheres } = applicationFormConstants()
 
@@ -97,7 +125,7 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
         phoneNumber: detail.phoneNumber || '',
         upperOrganization: getValue(detail.upperOrganization || ''),
         name: getValue(detail.name || ''),
-        hfTypeId: detail.hfTypeId,
+        hfTypeId: detail.hfTypeId ? String(detail.hfTypeId) : undefined,
         spheres: detail.spheres || [],
         regionId: detail.regionId ? String(detail.regionId) : '',
         address: getValue(detail.address || ''),
@@ -117,6 +145,9 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
         permitPath: detail.files?.permitPath?.path,
         permitExpiryDate: parseDate(detail.files?.permitPath?.expiryDate),
         industrialSafetyDeclarationPath: detail.files?.industrialSafetyDeclarationPath?.path,
+        managerCount: detail.managerCount ? detail.managerCount?.toString() : '',
+        engineerCount: detail.engineerCount ? detail.engineerCount?.toString() : '',
+        workerCount: detail.workerCount ? detail.workerCount?.toString() : '',
       } as any)
 
       setTimeout(() => {
@@ -130,7 +161,7 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
 
     if (identity && identity.length === 9) {
       legalMutateAsync({ tin: identity })
-        .then((res) => setManualOwnerData(res.data?.data))
+        .then((res) => setManualOwnerData(res.data?.data || res.data))
         .catch(() => setManualOwnerData(null))
     } else {
       form.trigger('identity')

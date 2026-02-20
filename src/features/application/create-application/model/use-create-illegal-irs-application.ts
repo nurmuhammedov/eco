@@ -4,24 +4,27 @@ import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
 import useAdd from '@/shared/hooks/api/useAdd'
+import { format } from 'date-fns'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import {
+  irsRefinement,
+  RegisterIllegalIrsBaseSchema,
   RegisterIllegalIrsDTO,
   RegisterIllegalIrsSchema,
 } from '@/entities/create-application/schemas/register-illegal-irs.schema'
 
 export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
+  const { type, id } = useParams<{ type: string; id: string }>()
   const [searchParams] = useSearchParams()
-  const id = searchParams.get('id')
   const tin = searchParams.get('tin')
-  const isUpdate = !!id && !!tin
+  const isUpdate = !!type && !!id
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
@@ -30,11 +33,16 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
   const form = useForm<RegisterIllegalIrsDTO>({
     resolver: (values, context, options) => {
       const actualSchema = isUpdate
-        ? RegisterIllegalIrsSchema.extend({
+        ? RegisterIllegalIrsBaseSchema.extend({
             passportPath: z.string().optional().nullable(),
             phoneNumber: z.string().optional().nullable(),
             identity: z.string().optional().nullable(),
-          })
+            birthDate: z
+              .string()
+              .optional()
+              .nullable()
+              .transform((val) => (val ? val : null)),
+          }).superRefine(irsRefinement)
         : RegisterIllegalIrsSchema
 
       if (isUpdate) {
@@ -78,6 +86,7 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
       regionId: '',
       districtId: '',
       address: '',
+      birthDate: undefined,
     },
     mode: 'onChange',
   })
@@ -86,8 +95,11 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/irs/', id, 'put')
 
   const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
+  const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
+    '/integration/iip/individual'
+  )
 
-  const ownerIdentity = detail?.ownerIdentity || tin
+  const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
   const regionId = form.watch('regionId')
 
   const { data: regions } = useRegionSelectQueries()
@@ -96,7 +108,6 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
     queryKey: ['owner-data', ownerIdentity],
     queryFn: async () => {
-      if (!ownerIdentity) return null
       const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
       return res.data?.data
     },
@@ -113,6 +124,7 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
       form.reset({
         phoneNumber: detail.phoneNumber || '',
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
+        birthDate: isUpdate ? '1900-01-01' : parseDate(detail.birthDate),
         parentOrganization: getValue(detail.parentOrganization || ''),
         supervisorName: getValue(detail.supervisorName || ''),
         supervisorPosition: getValue(detail.supervisorPosition || ''),
@@ -149,21 +161,30 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
 
   const handleSearch = () => {
     const identity = form.getValues('identity')?.trim()
+    const birthDate = form.getValues('birthDate')
 
     if (!identity) return
 
     if (identity.length === 9) {
       legalMutateAsync({ tin: identity })
-        .then((res) => setManualOwnerData(res.data?.data))
+        .then((res) => setManualOwnerData(res.data?.data || res.data))
+        .catch(() => setManualOwnerData(null))
+    } else if (identity.length === 14 && birthDate) {
+      individualMutateAsync({
+        pin: identity,
+        birthDate: format(birthDate as unknown as Date, 'yyyy-MM-dd'),
+      })
+        .then((res) => setManualOwnerData(res.data?.data || res.data))
         .catch(() => setManualOwnerData(null))
     } else {
-      form.trigger('identity')
+      form.trigger(['identity', 'birthDate'])
     }
   }
 
   const handleClear = () => {
     setManualOwnerData(null)
     form.setValue('identity', '')
+    form.setValue('birthDate', undefined as any)
   }
 
   const handleSubmit = (data: RegisterIllegalIrsDTO) => {
@@ -242,7 +263,7 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     ownerData: currentOwnerData,
     detail,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isLegalPending,
+    isSearchLoading: isLegalPending || isIndividualPending,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,

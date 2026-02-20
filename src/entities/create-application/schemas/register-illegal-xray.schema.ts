@@ -3,19 +3,25 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
 
-export const RegisterIllegalXraySchema = z.object({
+export const RegisterIllegalXrayBaseSchema = z.object({
   phoneNumber: z
     .string({ required_error: 'Majburiy maydon!' })
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  identity: z.string({ required_error: 'Majburiy maydon!' }).trim().length(9, "STIR 9 xonali bo'lishi kerak"),
-  licenseNumber: z
-    .string()
+  identity: z
+    .string({ required_error: 'Majburiy maydon!' })
+    .trim()
+    .regex(/^\d+$/, 'Faqat raqamlar bo‘lishi kerak')
+    .refine((val) => val.length === 9 || val.length === 14, {
+      message: 'STIR 9 yoki JSHSHIR 14 xonadan iborat bo‘lishi kerak',
+    }),
+  birthDate: z
+    .date()
     .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
+    .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+  licenseNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   model: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   licenseRegistryNumber: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   licenseDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
@@ -55,5 +61,19 @@ export const RegisterIllegalXraySchema = z.object({
   file13Path: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   file13ExpiryDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 })
+
+export const xrayRefinement = (data: any, ctx: z.RefinementCtx) => {
+  if (data.identity && data.identity.length === 14) {
+    if (!data.birthDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Majburiy maydon!',
+        path: ['birthDate'],
+      })
+    }
+  }
+}
+
+export const RegisterIllegalXraySchema = RegisterIllegalXrayBaseSchema.superRefine(xrayRefinement)
 
 export type RegisterIllegalXrayDTO = z.infer<typeof RegisterIllegalXraySchema>

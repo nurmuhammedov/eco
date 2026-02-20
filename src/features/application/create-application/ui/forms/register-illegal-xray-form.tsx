@@ -1,6 +1,7 @@
 import { CardForm, RegisterIllegalXrayDTO } from '@/entities/create-application'
 import { AppealFormSkeleton, NoteForm } from '@/features/application/create-application'
 import { GoBack } from '@/shared/components/common'
+import { parseISO } from 'date-fns'
 import DetailRow from '@/shared/components/common/detail-row'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
@@ -18,10 +19,8 @@ import {
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { parseISO } from 'date-fns'
+
 import { useRegisterIllegalXray } from '@/features/application/create-application/model/use-create-illegal-xray-application'
-import { Alert, AlertTitle } from '@/shared/components/ui/alert'
-import { TriangleAlert } from 'lucide-react'
 
 interface RegisterIllegalXrayFormProps {
   onSubmit: (data: RegisterIllegalXrayDTO) => void
@@ -58,6 +57,9 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
   } = useRegisterIllegalXray(onSubmit)
 
   const identity = form.watch('identity')
+  const isIndividual = identity?.length === 14
+  const isLegal = identity?.length === 9
+  const birthDateString = form.watch('birthDate')
 
   if (isLoading) {
     return <AppealFormSkeleton />
@@ -67,78 +69,94 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack title={isUpdate ? 'Rentgen maʼlumotlarini tahrirlash' : 'Rentgen uskunasini ro‘yxatga olish'} />
-        {isUpdate && (
-          <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
-            <TriangleAlert className="size-4 text-yellow-600!" />
-            <AlertTitle className="text-yellow-700">
-              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
-              yuboriladi!
-            </AlertTitle>
-          </Alert>
-        )}
         <NoteForm equipmentName="rentgen" onlyLatin={true} />
-        {(isUpdate || !isUpdate) && (
-          <CardForm className="my-2">
-            {!isUpdate ? (
-              <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+        <CardForm className="my-2">
+          {!isUpdate ? (
+            <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="identity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>STIR yoki JSHSHIR</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={!!ownerData}
+                        className="3xl:w-sm w-full"
+                        placeholder="STIR yoki JSHSHIRni kiriting"
+                        maxLength={14}
+                        {...field}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '')
+                          e.target.value = val
+                          if (ownerData) handleClear()
+                          if (val.length !== 14) {
+                            form.setValue('birthDate', undefined as any)
+                          }
+                          field.onChange(e)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {isIndividual && (
                 <FormField
                   control={form.control}
-                  name="identity"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>STIR</FormLabel>
-                      <FormControl>
-                        <Input
+                  name="birthDate"
+                  render={({ field }) => {
+                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                    return (
+                      <FormItem className="3xl:w-sm w-full">
+                        <FormLabel required>Tug‘ilgan sana</FormLabel>
+                        <DatePicker
                           disabled={!!ownerData}
                           className="3xl:w-sm w-full"
-                          placeholder="STIRni kiriting"
-                          maxLength={9}
-                          {...field}
-                          onChange={(e) => {
-                            const val = e.target.value.replace(/\D/g, '')
-                            e.target.value = val
-                            if (ownerData) handleClear()
-                            field.onChange(e)
-                          }}
+                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                          onChange={field.onChange}
+                          placeholder="Sanani tanlang"
+                          disableStrategy="after"
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  }}
                 />
+              )}
 
-                <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
-                  {!ownerData ? (
-                    <Button
-                      type="button"
-                      onClick={handleSearch}
-                      disabled={isSearchLoading || !identity || identity.length !== 9}
-                      loading={isSearchLoading}
-                    >
-                      Qidirish
-                    </Button>
-                  ) : (
-                    <Button type="button" variant="destructive" onClick={handleClear}>
-                      O‘chirish
-                    </Button>
-                  )}
-                </div>
+              <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
+                {!ownerData ? (
+                  <Button
+                    type="button"
+                    onClick={handleSearch}
+                    disabled={isSearchLoading || !identity || (!isLegal && !(isIndividual && birthDateString))}
+                    loading={isSearchLoading}
+                  >
+                    Qidirish
+                  </Button>
+                ) : (
+                  <Button type="button" variant="destructive" onClick={handleClear}>
+                    O‘chirish
+                  </Button>
+                )}
               </div>
-            ) : null}
+            </div>
+          ) : null}
 
-            {ownerData && (
-              <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
-                <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
-                <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
-                  <DetailRow title={'Tashkilot nomi:'} value={ownerData?.name || ownerData?.legalName || '-'} />
-                  <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || '-'} />
-                  <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
-                  <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
-                </div>
+          {ownerData && (
+            <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
+              <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
+              <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
+                <DetailRow title={'Tashkilot nomi:'} value={ownerData?.name || ownerData?.legalName || '-'} />
+                <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || '-'} />
+                <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
+                <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
               </div>
-            )}
-          </CardForm>
-        )}
+            </div>
+          )}
+        </CardForm>
 
         <CardForm className="mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
@@ -162,7 +180,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               name="licenseNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>License tizimidagi ruxsatnoma raqami</FormLabel>
+                  <FormLabel required>License tizimidagi ruxsatnoma raqami</FormLabel>
                   <FormControl>
                     <Input
                       className="3xl:w-sm w-full"
@@ -172,7 +190,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                     />
                   </FormControl>
                   {isUpdate && detail?.licenseNumber && /[\u0400-\u04FF]/.test(detail.licenseNumber) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.licenseNumber}
                     </FormDescription>
                   )}
@@ -192,7 +210,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   {isUpdate &&
                     detail?.licenseRegistryNumber &&
                     /[\u0400-\u04FF]/.test(detail.licenseRegistryNumber) && (
-                      <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                      <FormDescription className="3xl:w-sm w-full wrap-break-word">
                         Eski qiymat: {detail.licenseRegistryNumber}
                       </FormDescription>
                     )}
@@ -210,7 +228,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                     <Input className="3xl:w-sm w-full" placeholder="Rentgen uskunasining modeli" {...field} />
                   </FormControl>
                   {isUpdate && detail?.model && /[\u0400-\u04FF]/.test(detail.model) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.model}
                     </FormDescription>
                   )}
@@ -314,7 +332,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                     <Input className="3xl:w-sm w-full" placeholder="Joylashgan manzil" {...field} />
                   </FormControl>
                   {isUpdate && detail?.address && /[\u0400-\u04FF]/.test(detail.address) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.address}
                     </FormDescription>
                   )}
@@ -332,7 +350,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                     <Input className="3xl:w-sm w-full" placeholder="Rentgen uskunasining raqami" {...field} />
                   </FormControl>
                   {isUpdate && detail?.serialNumber && /[\u0400-\u04FF]/.test(detail.serialNumber) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.serialNumber}
                     </FormDescription>
                   )}
@@ -383,7 +401,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                     </Select>
                   </FormControl>
                   {isUpdate && detail?.stateService && /[\u0400-\u04FF]/.test(detail.stateService) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.stateService}
                     </FormDescription>
                   )}

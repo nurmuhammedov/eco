@@ -1,6 +1,7 @@
 import { CardForm } from '@/entities/create-application'
 import { AppealFormSkeleton, NoteForm } from '@/features/application/create-application'
 import { GoBack } from '@/shared/components/common'
+import { parseISO } from 'date-fns'
 import DetailRow from '@/shared/components/common/detail-row'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
@@ -19,10 +20,8 @@ import { Input } from '@/shared/components/ui/input'
 import { InputNumber } from '@/shared/components/ui/input-number'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { parseISO } from 'date-fns'
+
 import { useRegisterIllegalIrs } from '@/features/application/create-application/model/use-create-illegal-irs-application'
-import { Alert, AlertTitle } from '@/shared/components/ui/alert'
-import { TriangleAlert } from 'lucide-react'
 import { RegisterIllegalIrsDTO } from '@/entities/create-application/schemas/register-illegal-irs.schema'
 
 interface RegisterIllegalIrsFormProps {
@@ -51,6 +50,9 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
   } = useRegisterIllegalIrs(onSubmit)
 
   const identity = form.watch('identity')
+  const isIndividual = identity?.length === 14
+  const isLegal = identity?.length === 9
+  const birthDateString = form.watch('birthDate')
 
   if (isLoading) {
     return <AppealFormSkeleton />
@@ -59,16 +61,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'IRS maʼlumotlarini tahrirlash' : 'IRSni ro‘yxatga olish arizasi'} />
-        {isUpdate && (
-          <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
-            <TriangleAlert className="size-4 text-yellow-600!" />
-            <AlertTitle className="text-yellow-700">
-              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
-              yuboriladi!
-            </AlertTitle>
-          </Alert>
-        )}
+        <GoBack title={isUpdate ? 'INM maʼlumotlarini tahrirlash' : 'INMni ro‘yxatga olish arizasi'} />
         <NoteForm equipmentName="INM" onlyLatin={true} />
 
         <CardForm className="my-2">
@@ -79,18 +72,21 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
                 name="identity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel required>STIR</FormLabel>
+                    <FormLabel required>STIR yoki JSHSHIR</FormLabel>
                     <FormControl>
                       <Input
                         disabled={!!ownerData}
                         className="3xl:w-sm w-full"
-                        placeholder="STIRni kiriting"
-                        maxLength={9}
+                        placeholder="STIR yoki JSHSHIRni kiriting"
+                        maxLength={14}
                         {...field}
                         onChange={(e) => {
                           const val = e.target.value.replace(/\D/g, '')
                           e.target.value = val
                           if (ownerData) handleClear()
+                          if (val.length !== 14) {
+                            form.setValue('birthDate', undefined as any)
+                          }
                           field.onChange(e)
                         }}
                       />
@@ -100,12 +96,36 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
                 )}
               />
 
+              {isIndividual && (
+                <FormField
+                  control={form.control}
+                  name="birthDate"
+                  render={({ field }) => {
+                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                    return (
+                      <FormItem className="3xl:w-sm w-full">
+                        <FormLabel required>Tug‘ilgan sana</FormLabel>
+                        <DatePicker
+                          disabled={!!ownerData}
+                          className="3xl:w-sm w-full"
+                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                          onChange={field.onChange}
+                          placeholder="Sanani tanlang"
+                          disableStrategy="after"
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  }}
+                />
+              )}
+
               <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
                 {!ownerData ? (
                   <Button
                     type="button"
                     onClick={handleSearch}
-                    disabled={isSearchLoading || !identity || identity.length !== 9}
+                    disabled={isSearchLoading || !identity || (!isLegal && !(isIndividual && birthDateString))}
                     loading={isSearchLoading}
                   >
                     Qidirish
@@ -124,7 +144,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
               <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
                 <DetailRow title="Tashkilot nomi:" value={ownerData?.name || ownerData?.legalName || '-'} />
-                <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || '-'} />
+                <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || ownerData?.fullName || '-'} />
                 <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
                 <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
               </div>
@@ -302,7 +322,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
                     <Input className="3xl:w-sm w-full" placeholder="Zavod raqami" {...field} />
                   </FormControl>
                   {isUpdate && detail?.factoryNumber && /[\u0400-\u04FF]/.test(detail.factoryNumber) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.factoryNumber}
                     </FormDescription>
                   )}
@@ -351,7 +371,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
                     <Input className="3xl:w-sm w-full" placeholder="INM turi" {...field} />
                   </FormControl>
                   {isUpdate && detail?.type && /[\u0400-\u04FF]/.test(detail.type) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.type}
                     </FormDescription>
                   )}
@@ -508,7 +528,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
                     <Input className="3xl:w-sm w-full" placeholder="Saqlash joyi" {...field} />
                   </FormControl>
                   {isUpdate && detail?.storageLocation && /[\u0400-\u04FF]/.test(detail.storageLocation) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.storageLocation}
                     </FormDescription>
                   )}

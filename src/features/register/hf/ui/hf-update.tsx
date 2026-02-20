@@ -40,8 +40,7 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
         <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
           <TriangleAlert className="size-4 text-yellow-600!" />
           <AlertTitle className="text-yellow-700">
-            Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
-            yuboriladi!
+            Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida lotinga o‘zgartirilsin!
           </AlertTitle>
         </Alert>
         {orgData && (

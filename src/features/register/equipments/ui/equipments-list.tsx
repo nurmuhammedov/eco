@@ -58,7 +58,7 @@ export const EquipmentsList = () => {
           currentStatus !== 'CHANGED'
         ? currentStatus
         : currentStatus === 'CHANGED' && changeStatus !== 'ALL'
-          ? changeStatus
+          ? ''
           : '',
     active: isTanker ? '' : currentStatus === 'ACTIVE' ? true : currentStatus === 'INACTIVE' ? false : '',
     changed: isTanker ? '' : currentStatus === 'CHANGED' ? true : '',

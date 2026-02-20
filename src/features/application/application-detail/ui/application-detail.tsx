@@ -26,7 +26,7 @@ const ApplicationDetail = ({
   const isLegalApplication = data?.ownerType == 'LEGAL'
 
   return (
-    <div className="mt-4 grid grid-cols-1 gap-4">
+    <div className="mt-2 grid grid-cols-1 gap-2">
       <DetailCardAccordion
         defaultValue={[
           'general',
@@ -59,8 +59,8 @@ const ApplicationDetail = ({
         {!isLegalApplication && (
           <DetailCardAccordion.Item value="applicant_info_individual" title="Arizachi to‘g‘risida ma’lumot">
             <div className="flex flex-col py-1">
-              <DetailRow title="Arizachi JSHIR:" value={data?.ownerIdentity || '-'} />
               <DetailRow title="Arizachi F.I.SH.:" value={data?.ownerName || '-'} />
+              <DetailRow title="Arizachi JSHSHIR:" value={data?.ownerIdentity || '-'} />
               <DetailRow title="Arizachining manzili:" value={data?.address || '-'} />
               <DetailRow title="Arizachining telefon raqami:" value={data?.phoneNumber || '-'} />
             </div>

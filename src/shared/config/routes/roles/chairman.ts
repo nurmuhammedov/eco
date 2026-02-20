@@ -32,7 +32,6 @@ const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
-const RegisterHFUpdatePage = lazy(() => import('@/pages/register/hf/hf-update'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
 const AccidentDetail = lazy(() =>
@@ -71,11 +70,6 @@ export const chairmanRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/hf',
     element: withSuspense(RegisterHFDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/hf/update/:id',
-    element: withSuspense(RegisterHFUpdatePage),
   },
   {
     id: 'REGISTRY',

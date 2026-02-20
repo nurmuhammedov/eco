@@ -97,6 +97,7 @@ export default [
   },
   {
     id: 'INQUIRY',
+    url: '/inquiries',
     title: 'Murojaatlar',
     icon: <MessageSquareText />,
   },

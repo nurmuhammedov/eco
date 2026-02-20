@@ -77,6 +77,21 @@ export const RegisterIllegalHfSchema = z.object({
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
+  managerCount: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  engineerCount: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
+  workerCount: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null)),
 })
 
 export type RegisterIllegalHfDTO = z.infer<typeof RegisterIllegalHfSchema>

@@ -57,7 +57,6 @@ export function AppSidebar() {
     }
 
     if (user.role === UserRoles.REGIONAL || user.role === UserRoles.INSPECTOR || user.role === UserRoles.CHAIRMAN) {
-      // Create a new array to avoid mutating the original if it came from a constant
       navigations = [
         {
           title: 'Bosh sahifa',

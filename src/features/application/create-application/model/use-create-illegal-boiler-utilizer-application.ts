@@ -14,17 +14,17 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
 export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: RegisterIllegalBoilerUtilizerDTO) => void) => {
+  const { type, id } = useParams<{ type: string; id: string }>()
   const [searchParams] = useSearchParams()
-  const id = searchParams.get('id')
   const tin = searchParams.get('tin')
-  const isUpdate = !!id && !!tin
+  const isUpdate = !!type && !!id
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
@@ -170,7 +170,7 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
     '/integration/iip/individual'
   )
 
-  const ownerIdentity = detail?.ownerIdentity || tin
+  const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
   const regionId = form.watch('regionId')
   const identity = form.watch('identity')
   const isLegal = identity?.length === 9
@@ -182,19 +182,8 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
     queryKey: ['owner-data', ownerIdentity],
     queryFn: async () => {
-      if (!ownerIdentity) return null
-      if (ownerIdentity.length === 9) {
-        const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
-        return res.data?.data
-      }
-      if (ownerIdentity.length === 14 && detail?.birthDate) {
-        const res = await apiClient.post<any>('/integration/iip/individual', {
-          pin: ownerIdentity,
-          birthDate: detail.birthDate,
-        })
-        return res.data?.data
-      }
-      return null
+      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
+      return res.data?.data
     },
     enabled: !!ownerIdentity,
   })
@@ -274,7 +263,7 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
         pin: identity,
         birthDate: format(birthDate as unknown as Date, 'yyyy-MM-dd'),
       })
-        .then((res) => setManualOwnerData(res.data?.data))
+        .then((res) => setManualOwnerData(res.data?.data || res.data))
         .catch(() => setManualOwnerData(null))
     } else {
       form.trigger(['identity', 'birthDate'])

@@ -27,7 +27,7 @@ export function UserLogsList() {
       accessorKey: 'status',
       maxSize: -10,
       header: 'Harakat',
-      cell: ({ row }) => getUserLogsTypeLabel(row.original.status),
+      cell: ({ row }) => getUserLogsTypeLabel(row.original.status, 'appeal'),
     },
     {
       accessorKey: 'appealNumber',

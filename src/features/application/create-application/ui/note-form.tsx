@@ -1,6 +1,6 @@
 import { OctagonAlert, TriangleAlert } from 'lucide-react'
 import { Alert, AlertTitle } from '@/shared/components/ui/alert'
-import { useCustomSearchParams } from '@/shared/hooks'
+import { useParams } from 'react-router-dom'
 
 export const NoteForm = ({
   equipmentName = 'qurilma',
@@ -9,9 +9,8 @@ export const NoteForm = ({
   equipmentName: string
   onlyLatin?: boolean
 }) => {
-  const {
-    paramsObject: { tin, id },
-  } = useCustomSearchParams()
+  const { id } = useParams<{ id: string }>()
+
   return (
     <div className="mt-1 flex flex-col">
       {!onlyLatin && (
@@ -23,12 +22,11 @@ export const NoteForm = ({
           </AlertTitle>
         </Alert>
       )}
-      {!!tin && !!id ? (
+      {!!id ? (
         <Alert className="border-yellow-500/50 bg-yellow-500/15">
           <TriangleAlert className="size-4 !text-yellow-600" />
           <AlertTitle className="text-yellow-700">
-            Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
-            yuboriladi!
+            Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida lotinga o‘zgartirilsin!
           </AlertTitle>
         </Alert>
       ) : null}

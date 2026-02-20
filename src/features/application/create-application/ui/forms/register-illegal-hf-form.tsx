@@ -22,8 +22,7 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/comp
 import { parseISO } from 'date-fns'
 import { RegisterIllegalHfDTO } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
 import { useRegisterIllegalHf } from '@/features/application/create-application/model/use-create-illegal-hf-applicaton'
-import { Alert, AlertTitle } from '@/shared/components/ui/alert'
-import { TriangleAlert } from 'lucide-react'
+import { NoteForm } from '@/features/application/create-application'
 
 interface RegisterIllegalHfFormProps {
   onSubmit: (data: RegisterIllegalHfDTO) => void
@@ -52,68 +51,62 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'XICHO maʼlumotlarini tahrirlash' : 'XICHOni ro‘yxatga olish'} />
-        {isUpdate && (
-          <Alert className="mt-2 border-yellow-500/50 bg-yellow-500/15">
-            <TriangleAlert className="size-4 text-yellow-600!" />
-            <AlertTitle className="text-yellow-700">
-              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida avtomatik o‘chirib
-              yuboriladi!
-            </AlertTitle>
-          </Alert>
-        )}
+        <GoBack title={isUpdate ? `XICHO ma\u02bclumotlarini tahrirlash` : `XICHOni ro\u2019yxatga olish`} />
+        <NoteForm equipmentName="XICHO" onlyLatin={true} />
         <CardForm className="my-2">
-          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="identity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>STIR</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={!!ownerData}
-                      className="3xl:w-sm w-full"
-                      placeholder="STIRni kiriting"
-                      maxLength={9}
-                      {...field}
-                      onChange={(e) => {
-                        e.target.value = e.target.value.replace(/\D/g, '')
-                        if (ownerData) handleClear()
-                        field.onChange(e)
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          {!isUpdate && (
+            <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="identity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>STIR</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={!!ownerData}
+                        className="3xl:w-sm w-full"
+                        placeholder="STIRni kiriting"
+                        maxLength={9}
+                        {...field}
+                        onChange={(e) => {
+                          e.target.value = e.target.value.replace(/\D/g, '')
+                          if (ownerData) handleClear()
+                          field.onChange(e)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
-              {!ownerData ? (
-                <Button
-                  type="button"
-                  onClick={handleSearch}
-                  disabled={isSearchLoading || !identity || identity.length !== 9}
-                  loading={isSearchLoading}
-                >
-                  Qidirish
-                </Button>
-              ) : (
-                <Button type="button" variant="destructive" onClick={handleClear}>
-                  O‘chirish
-                </Button>
-              )}
+              <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
+                {!ownerData ? (
+                  <Button
+                    type="button"
+                    onClick={handleSearch}
+                    disabled={isSearchLoading || !identity || identity.length !== 9}
+                    loading={isSearchLoading}
+                  >
+                    Qidirish
+                  </Button>
+                ) : (
+                  <Button type="button" variant="destructive" onClick={handleClear}>
+                    O'chirish
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {ownerData && (
-            <div className="mt-4 border-t pt-4">
+            <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
               <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
                 <DetailRow title="Tashkilot nomi:" value={ownerData?.name || ownerData?.legalName || '-'} />
-                <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || '-'} />
-                <DetailRow title="Manzil:" value={ownerData?.legalAddress || '-'} />
+                <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || ownerData?.fullName || '-'} />
+                <DetailRow title="Manzil:" value={ownerData?.address || '-'} />
                 <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
               </div>
             </div>
@@ -121,7 +114,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
         </CardForm>
 
         <CardForm className="my-2">
-          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-10/10 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="upperOrganization"
@@ -132,7 +125,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                     <Input className="3xl:w-sm w-full" placeholder="Yuqori tashkilotning nomi" {...field} />
                   </FormControl>
                   {isUpdate && detail?.upperOrganization && /[\u0400-\u04FF]/.test(detail.upperOrganization) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.upperOrganization}
                     </FormDescription>
                   )}
@@ -150,7 +143,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                     <Input className="3xl:w-sm w-full" placeholder="XICHO ning nomi" {...field} />
                   </FormControl>
                   {isUpdate && detail?.name && /[\u0400-\u04FF]/.test(detail.name) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.name}
                     </FormDescription>
                   )}
@@ -266,7 +259,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                     <Input className="3xl:w-sm w-full" placeholder="Alisher Navoiy ko‘chasi, 1-uy" {...field} />
                   </FormControl>
                   {isUpdate && detail?.address && /[\u0400-\u04FF]/.test(detail.address) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.address}
                     </FormDescription>
                   )}
@@ -307,7 +300,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                     />
                   </FormControl>
                   {isUpdate && detail?.extraArea && /[\u0400-\u04FF]/.test(detail.extraArea) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.extraArea}
                     </FormDescription>
                   )}
@@ -330,7 +323,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                     <Input className="3xl:w-sm w-full" placeholder="Xavfli moddalarning nomi va miqdori" {...field} />
                   </FormControl>
                   {isUpdate && detail?.hazardousSubstance && /[\u0400-\u04FF]/.test(detail.hazardousSubstance) && (
-                    <FormDescription className="3xl:w-sm w-full font-bold wrap-break-word text-red-500">
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
                       Eski qiymat: {detail.hazardousSubstance}
                     </FormDescription>
                   )}
@@ -342,6 +335,52 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                 </FormItem>
               )}
             />
+
+            {isUpdate && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="managerCount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Rahbar xodimlar soni</FormLabel>
+                      <FormControl>
+                        <Input className="3xl:w-sm w-full" placeholder="Kiriting" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="engineerCount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Muhandis-texnik xodimlar soni</FormLabel>
+                      <FormControl>
+                        <Input className="3xl:w-sm w-full" placeholder="Kiriting" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="workerCount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Oddiy ishchi xodimlar soni</FormLabel>
+                      <FormControl>
+                        <Input className="3xl:w-sm w-full" placeholder="Kiriting" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
           </div>
         </CardForm>
 

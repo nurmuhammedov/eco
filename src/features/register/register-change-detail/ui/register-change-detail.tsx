@@ -20,7 +20,7 @@ const RegisterChangeDetail: FC = () => {
   const { id, type } = useParams<{ id: string; type: string }>()
   const { user } = useAuth()
 
-  const { detail: changeDetail } = useDetail<any>('/changes/by-belong', id, !!id)
+  const { detail: changeDetail, isLoading = false } = useDetail<any>('/changes/by-belong', id, !!id)
 
   const changeId = changeDetail?.id
   const isLegal = changeDetail?.ownerIdentity?.toString()?.length === 9
@@ -32,12 +32,14 @@ const RegisterChangeDetail: FC = () => {
     (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.MANAGER) && status === ApplicationStatus.IN_PROCESS
   const canAgree =
     (user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) && status === ApplicationStatus.IN_AGREEMENT
-  const canApproveHead =
-    (user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) && status === ApplicationStatus.IN_APPROVAL
   const canApproveManager = user?.role === UserRoles.MANAGER && status === ApplicationStatus.IN_APPROVAL
 
+  if (isLoading) {
+    return null
+  }
+
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto p-4">
+    <div className="flex flex-1 flex-col gap-2">
       <div className="flex items-center justify-between">
         <GoBack title="O‘zgartirish so‘rovi" />
         <div className="flex gap-2">
@@ -47,14 +49,6 @@ const RegisterChangeDetail: FC = () => {
               <AssignExecutorModal changeId={changeId} />
             </>
           )}
-          {/*{(user?.role === UserRoles.INSPECTOR ||*/}
-          {/*  user?.role === UserRoles.MANAGER ||*/}
-          {/*  user?.role === UserRoles.HEAD ||*/}
-          {/*  user?.role === UserRoles.REGIONAL) &&*/}
-          {/*  (status === ApplicationStatus.IN_PROCESS ||*/}
-          {/*    status === ApplicationStatus.IN_APPROVAL ||*/}
-          {/*    status === ApplicationStatus.IN_AGREEMENT) && (*/}
-          {/*  )}*/}
           {canDescribe && (
             <>
               <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
@@ -67,7 +61,7 @@ const RegisterChangeDetail: FC = () => {
               <ConfirmProcessModal changeId={changeId} title="Kelishilsinmi" buttonText="Kelishish" />
             </>
           )}
-          {(canApproveHead || canApproveManager) && (
+          {canApproveManager && (
             <>
               <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
               <ConfirmProcessModal changeId={changeId} title="Tasdiqlansinmi" buttonText="Tasdiqlash" />
@@ -88,8 +82,8 @@ const RegisterChangeDetail: FC = () => {
                 </Link>
               }
             />
-            <DetailRow title="So‘rov sanasi:" value={formatDate(changeDetail?.createdAt)} />
             <ApplicationStatusRow status={changeDetail?.status} title="So‘rov holati:" />
+            <DetailRow title="So‘rov sanasi:" value={formatDate(changeDetail?.createdAt)} />
             <DetailRow title="Ijrochi ma‘sul F.I.SH.:" value={changeDetail?.executorName || '-'} />
             <div className="grid grid-cols-2 content-center items-center gap-1 rounded-lg px-2.5 py-2 odd:bg-neutral-50">
               <h2 className="text-normal font-normal text-gray-700">Izoh:</h2>
@@ -106,9 +100,8 @@ const RegisterChangeDetail: FC = () => {
             <LegalApplicantInfo tinNumber={changeDetail?.ownerIdentity} />
           ) : (
             <div className="flex flex-col py-1">
-              <DetailRow title="Arizachi JSHIR:" value={changeDetail?.ownerIdentity || '-'} />
-              <DetailRow title="Arizachi F.I.SH.:" value={changeDetail?.directorName || '-'} />
-              <DetailRow title="Arizachining manzili:" value={changeDetail?.address || '-'} />
+              {/*<DetailRow title="Fuqaro F.I.SH.:" value={changeDetail?.directorName || '-'} />*/}
+              <DetailRow title="Fuqaro JSHSHIR:" value={changeDetail?.ownerIdentity || '-'} />
             </div>
           )}
         </DetailCardAccordion.Item>

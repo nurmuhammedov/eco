@@ -4,7 +4,7 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
 
-export const RegisterIllegalIrsSchema = z.object({
+export const RegisterIllegalIrsBaseSchema = z.object({
   phoneNumber: z
     .string({ required_error: 'Majburiy maydon!' })
     .trim()
@@ -13,8 +13,14 @@ export const RegisterIllegalIrsSchema = z.object({
     }),
   identity: z
     .string({ required_error: 'Majburiy maydon!' })
-    .length(9, 'STIR 9 xonadan iborat bo‘lishi kerak')
-    .regex(/^\d+$/, 'Faqat raqamlar bo‘lishi kerak'),
+    .regex(/^\d+$/, 'Faqat raqamlar bo‘lishi kerak')
+    .refine((val) => val.length === 9 || val.length === 14, {
+      message: 'STIR 9 yoki JSHSHIR 14 xonadan iborat bo‘lishi kerak',
+    }),
+  birthDate: z
+    .date()
+    .optional()
+    .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
 
   parentOrganization: z
     .string()
@@ -70,5 +76,19 @@ export const RegisterIllegalIrsSchema = z.object({
   districtId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
 })
+
+export const irsRefinement = (data: any, ctx: z.RefinementCtx) => {
+  if (data.identity && data.identity.length === 14) {
+    if (!data.birthDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Majburiy maydon!',
+        path: ['birthDate'],
+      })
+    }
+  }
+}
+
+export const RegisterIllegalIrsSchema = RegisterIllegalIrsBaseSchema.superRefine(irsRefinement)
 
 export type RegisterIllegalIrsDTO = z.infer<typeof RegisterIllegalIrsSchema>

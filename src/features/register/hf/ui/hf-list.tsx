@@ -46,11 +46,11 @@ export const HfList = () => {
     page: 1,
     size: 1,
     changed: 'true',
-    regionId,
-    districtId,
-    hfTypeId,
-    startDate,
-    endDate,
+    // regionId,
+    // districtId,
+    // hfTypeId,
+    // startDate,
+    // endDate,
   })
 
   const { data, isLoading } = usePaginatedData<any>(`/hf`, {
@@ -91,7 +91,7 @@ export const HfList = () => {
   }
 
   const handleEditApplication = (data: any) => {
-    const tinQuery = user?.role === UserRoles.INSPECTOR ? `?tin=${data?.legalTin}` : ''
+    const tinQuery = data?.legalTin ? `?tin=${data.legalTin}` : ''
     navigate(`/register/update/HF/${data?.id}${tinQuery}`)
   }
 

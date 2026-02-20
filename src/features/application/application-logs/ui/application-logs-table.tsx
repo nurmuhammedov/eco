@@ -21,7 +21,7 @@ export const ApplicationLogsList = ({ isShow, id: propId, type = 'appeal' }: any
     {
       accessorKey: 'status',
       header: 'Harakat',
-      cell: ({ row }) => getUserLogsTypeLabel(row.original.status),
+      cell: ({ row }) => getUserLogsTypeLabel(row.original.status, type),
     },
     {
       accessorKey: 'dateTime',

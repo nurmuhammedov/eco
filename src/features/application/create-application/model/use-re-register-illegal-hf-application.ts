@@ -119,7 +119,7 @@ export const useReRegisterIllegalHFApplication = () => {
       apiClient
         .post<any>('/integration/iip/legal', { tin: legalTin })
         .then((res) => {
-          setOrgData(res.data?.data)
+          setOrgData(res.data?.data || res.data)
           form.setValue('hazardousFacilityId', undefined as any)
         })
         .finally(() => setIsSearching(false))

@@ -915,13 +915,25 @@
     }
   },
   "user-logs": {
-    "NEW": "Ariza yaratdi",
-    "IN_PROCESS": "Arizani jarayonga o‘tkazdi",
-    "IN_AGREEMENT": "Arizani kelishishga o‘tkazdi",
-    "IN_APPROVAL": "Arizani tasdiqlashga o‘tkazdi",
-    "COMPLETED": "Arizani yakunladi",
-    "CANCELED": "Arizani qaytardi",
-    "REJECTED": " Arizani rad etdi",
-    "EDITED": "O‘zgartirish kiritdi"
+    "appeal": {
+      "NEW": "Ariza yaratdi",
+      "IN_PROCESS": "Arizani jarayonga o‘tkazdi",
+      "IN_AGREEMENT": "Arizani kelishishga o‘tkazdi",
+      "IN_APPROVAL": "Arizani tasdiqlashga o‘tkazdi",
+      "COMPLETED": "Arizani yakunladi",
+      "CANCELED": "Arizani qaytardi",
+      "REJECTED": " Arizani rad etdi",
+      "EDITED": "O‘zgartirish kiritdi"
+    },
+    "change": {
+      "NEW": "So‘rov yaratdi",
+      "IN_PROCESS": "So‘rovni jarayonga o‘tkazdi",
+      "IN_AGREEMENT": "So‘rovni kelishishga o‘tkazdi",
+      "IN_APPROVAL": "So‘rovni tasdiqlashga o‘tkazdi",
+      "COMPLETED": "So‘rovni yakunladi",
+      "CANCELED": "So‘rovni qaytardi",
+      "REJECTED": " So‘rovni rad etdi",
+      "EDITED": "O‘zgartirish kiritdi"
+    }
   }
 }

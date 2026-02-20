@@ -2,7 +2,8 @@ import { FC } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { usePaginatedData, useCustomSearchParams } from '@/shared/hooks'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table.tsx'
-import { getDate } from '@/shared/utils/date.ts'
+import { formatDate } from '@/shared/utils/date.ts'
+import FileLink from '@/shared/components/common/file-link.tsx'
 
 interface Props {
   changeId?: string
@@ -23,12 +24,26 @@ const ChangeLogTable: FC<Props> = ({ changeId }) => {
     {
       header: 'Eski qiymat',
       accessorKey: 'oldValue',
-      cell: ({ row }) => <span className="text-red-600">{row.original.oldValue || '-'}</span>,
+      cell: ({ row }) =>
+        row?.original?.isFile ? (
+          row.original?.oldValue ? (
+            <FileLink url={row.original?.oldValue} />
+          ) : null
+        ) : (
+          <span className="font-medium text-red-500">{row?.original?.oldValue}</span>
+        ),
     },
     {
       header: 'Yangi qiymat',
       accessorKey: 'newValue',
-      cell: ({ row }) => <span className="text-green-600">{row.original.newValue || '-'}</span>,
+      cell: ({ row }) =>
+        row?.original?.isFile ? (
+          row.original?.newValue ? (
+            <FileLink url={row.original?.newValue} />
+          ) : null
+        ) : (
+          <span className="font-medium text-green-600">{row?.original?.newValue}</span>
+        ),
     },
     {
       header: 'Kim tomonidan',
@@ -36,11 +51,13 @@ const ChangeLogTable: FC<Props> = ({ changeId }) => {
     },
     {
       header: 'Sana',
-      accessorFn: (row) => getDate(row.createdAt),
+      accessorFn: (row) => formatDate(row.createdAt),
     },
   ]
 
-  return <DataTable columns={columns as any} data={data || []} isLoading={isLoading} isPaginated />
+  return (
+    <DataTable className="min-h-[500px]" columns={columns as any} data={data || []} isLoading={isLoading} isPaginated />
+  )
 }
 
 export default ChangeLogTable

@@ -55,7 +55,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               name="licenseNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>License tizimidagi ruxsatnoma raqami</FormLabel>
+                  <FormLabel required>License tizimidagi ruxsatnoma raqami</FormLabel>
                   <FormControl>
                     <Input
                       className="3xl:w-sm w-full"
