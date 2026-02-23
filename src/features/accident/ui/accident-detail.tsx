@@ -36,7 +36,7 @@ export const AccidentDetail: React.FC = () => {
   const getInjuryStatusText = (status: InjuryStatus) => {
     switch (status) {
       case InjuryStatus.MINOR:
-        return 'Yengil'
+        return 'Yengil (guruhiy)'
       case InjuryStatus.SERIOUS:
         return 'O‘gir'
       case InjuryStatus.FATAL:

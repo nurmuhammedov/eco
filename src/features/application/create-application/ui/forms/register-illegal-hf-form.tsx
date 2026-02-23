@@ -151,19 +151,21 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                 </FormItem>
               )}
             />
-            <FormField
-              name="phoneNumber"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Bog‘lanish uchun telefon raqami</FormLabel>
-                  <FormControl>
-                    <PhoneInput className="3xl:w-sm w-full" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {!isUpdate && (
+              <FormField
+                name="phoneNumber"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Bog‘lanish uchun telefon raqami</FormLabel>
+                    <FormControl>
+                      <PhoneInput className="3xl:w-sm w-full" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="hfTypeId"

@@ -105,7 +105,7 @@ export const DashboardPage = () => {
         <StatsCards type={currentTab} data={getStatsData()} regionId={activeRegionId?.toString()} />
 
         <div className="mb-4">
-          <ActionCenter />
+          <ActionCenter regionId={activeRegionId?.toString()} />
         </div>
 
         <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-12">

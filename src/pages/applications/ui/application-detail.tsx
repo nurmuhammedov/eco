@@ -20,7 +20,7 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
     <>
       <div className="flex items-center justify-between">
         <GoBack title={`Ariza raqami: ${data?.number || ''}`} />
-        <div className={'ml-auto'}>
+        <div className={'mr-2 ml-auto'}>
           <ApplicationLogsModal />
         </div>
         <div className="flex gap-2">

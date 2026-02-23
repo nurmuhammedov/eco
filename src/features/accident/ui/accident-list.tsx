@@ -88,7 +88,7 @@ const AccidentList: React.FC = () => {
     ...(type === 'INJURY'
       ? [
           {
-            header: 'Yengil',
+            header: 'Yengil (guruhiy)',
             accessorKey: 'minorInjuryCount',
           },
           {

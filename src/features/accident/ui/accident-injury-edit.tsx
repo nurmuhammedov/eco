@@ -478,7 +478,7 @@ export const AccidentEdit: React.FC = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value={InjuryStatus.MINOR}>Yengil</SelectItem>
+                              <SelectItem value={InjuryStatus.MINOR}>Yengil (guruhiy)</SelectItem>
                               <SelectItem value={InjuryStatus.SERIOUS}>Og‘ir</SelectItem>
                               <SelectItem value={InjuryStatus.FATAL}>O‘lim</SelectItem>
                             </SelectContent>

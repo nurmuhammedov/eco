@@ -1,4 +1,4 @@
-import { OctagonAlert, TriangleAlert } from 'lucide-react'
+import { ArrowRight, ExternalLink, OctagonAlert, TriangleAlert } from 'lucide-react'
 import { Alert, AlertTitle } from '@/shared/components/ui/alert'
 import { useParams } from 'react-router-dom'
 
@@ -25,8 +25,19 @@ export const NoteForm = ({
       {!!id ? (
         <Alert className="border-yellow-500/50 bg-yellow-500/15">
           <TriangleAlert className="size-4 !text-yellow-600" />
-          <AlertTitle className="text-yellow-700">
-            Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida lotinga o‘zgartirilsin!
+          <AlertTitle className="flex items-center justify-between text-yellow-700">
+            <span>
+              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida lotinga
+              o‘zgartirilsin!
+            </span>
+            <a
+              href="https://matn.uz/"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1 text-sm font-semibold text-blue-600 hover:underline"
+            >
+              Kiril <ArrowRight className="size-3" /> Lotin <ExternalLink className="size-3" />
+            </a>
           </AlertTitle>
         </Alert>
       ) : null}

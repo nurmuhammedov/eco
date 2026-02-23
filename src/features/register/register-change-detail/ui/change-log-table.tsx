@@ -11,7 +11,7 @@ interface Props {
 
 const ChangeLogTable: FC<Props> = ({ changeId }) => {
   const {
-    paramsObject: { page = 1, size = 10 },
+    paramsObject: { page = 1, size = 100 },
   } = useCustomSearchParams()
 
   const { data, isLoading } = usePaginatedData<any>(`/change-logs/by-change/${changeId}`, { page, size }, !!changeId)
