@@ -7,10 +7,10 @@ export const InquiriesStats = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'new' | 'process' | 'completed'>('all')
 
   const tabs = [
-    { id: 'all', label: 'Jami', count: 124 },
-    { id: 'new', label: 'Yangi', count: 12 },
-    { id: 'process', label: 'Ko‘rib chiqilmoqda', count: 45 },
-    { id: 'closed', label: 'Ko‘rib chiqilgan', count: 67 },
+    { id: 'all', label: 'Jami', count: 0 },
+    { id: 'new', label: 'Yangi', count: 0 },
+    { id: 'process', label: 'Ko‘rib chiqilmoqda', count: 0 },
+    { id: 'closed', label: 'Ko‘rib chiqilgan', count: 0 },
   ]
 
   // Simplified card for cleaner look

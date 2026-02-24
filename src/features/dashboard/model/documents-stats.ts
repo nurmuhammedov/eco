@@ -1,37 +1,37 @@
 export const DOCUMENTS_STATS = {
   inquiries: {
     label: 'Murojaatlar',
-    total: 1250,
-    hf: 350, // XICHO
-    equipment: 650, // Qurilmalar
-    irs: 150, // INM
-    xray: 100, // Rentgen
+    total: 0,
+    hf: 0, // XICHO
+    equipment: 0, // Qurilmalar
+    irs: 0, // INM
+    xray: 0, // Rentgen
     byRegion: [
-      { name: 'Toshkent sh.', count: 450, percentage: 36 },
-      { name: 'Toshkent vil.', count: 200, percentage: 16 },
-      { name: 'Samarqand vil.', count: 150, percentage: 12 },
-      { name: 'Farg‘ona vil.', count: 120, percentage: 10 },
-      { name: 'Andijon vil.', count: 100, percentage: 8 },
-      { name: 'Namangan vil.', count: 80, percentage: 6 },
-      { name: 'Buxoro vil.', count: 60, percentage: 5 },
-      { name: 'Qashqadaryo vil.', count: 50, percentage: 4 },
-      { name: 'Boshqa hududlar', count: 40, percentage: 3 },
+      { name: 'Toshkent sh.', count: 0, percentage: 0 },
+      { name: 'Toshkent vil.', count: 0, percentage: 0 },
+      { name: 'Samarqand vil.', count: 0, percentage: 0 },
+      { name: 'Farg‘ona vil.', count: 0, percentage: 0 },
+      { name: 'Andijon vil.', count: 0, percentage: 0 },
+      { name: 'Namangan vil.', count: 0, percentage: 0 },
+      { name: 'Buxoro vil.', count: 0, percentage: 0 },
+      { name: 'Qashqadaryo vil.', count: 0, percentage: 0 },
+      { name: 'Boshqa hududlar', count: 0, percentage: 0 },
     ],
   },
   permits: {
     label: 'Ruhsatnomalar',
-    total: 1250,
-    permit: 450, // Ruxsatnoma
-    license: 300, // Litsenziya
-    conclusion: 500, // Xulosa
+    total: 0,
+    permit: 0, // Ruxsatnoma
+    license: 0, // Litsenziya
+    conclusion: 0, // Xulosa
   },
   expertises: {
     label: 'Ekspertizalar',
-    total: 3200,
-    lh: 1200, // Loyiha hujjatlari
-    tq: 800, // Texnika qurilmalari
-    bi: 600, // Binolar va inshootlar
-    xd: 400, // Sanoat xavfsizligi deklaratsiyasi
-    ix: 200, // Identifikatsiya
+    total: 0,
+    lh: 0, // Loyiha hujjatlari
+    tq: 0, // Texnika qurilmalari
+    bi: 0, // Binolar va inshootlar
+    xd: 0, // Sanoat xavfsizligi deklaratsiyasi
+    ix: 0, // Identifikatsiya
   },
 }
