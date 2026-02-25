@@ -74,7 +74,7 @@ export const useLogout = () => {
   if (apiUrl === 'test_cirns_uz') {
     redirectPath = '/auth/login/admin'
   } else {
-    redirectPath = '/auth/login'
+    redirectPath = '/home'
   }
   return useMutation({
     mutationFn: async () => authAPI.logout(),

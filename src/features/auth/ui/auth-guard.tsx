@@ -24,6 +24,8 @@ export default function AuthGuard({ children, allowedRoles }: Props) {
   if (
     isAuth ||
     pathname == '/auth/login/admin' ||
+    pathname == '/home' ||
+    pathname == '/home/' ||
     pathname == '/auth/login' ||
     pathname == '/auth/login/admin/' ||
     pathname == '/auth/login/'

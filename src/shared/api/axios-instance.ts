@@ -58,7 +58,7 @@ axiosInstance.interceptors.response.use(
 
     if (status === 401) {
       if (!isQrPath && !isLoginPath) {
-        window.location.replace('/auth/login')
+        window.location.replace('/home')
       } else {
         console.log('Redirect is ignored on QR or Login page.')
       }

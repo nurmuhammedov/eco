@@ -116,7 +116,7 @@ export const useAppRoutes = () => {
         children: [
           {
             index: true,
-            element: <Navigate to="/auth/login" replace />,
+            element: <Navigate to="/home" replace />,
           },
           ...authLayoutChildren,
         ],
@@ -127,7 +127,7 @@ export const useAppRoutes = () => {
       })),
       {
         path: '*',
-        element: <Navigate to="/auth/login" replace />,
+        element: <Navigate to="/home" replace />,
       },
     ],
   }
