@@ -75,32 +75,22 @@ export const XrayList = () => {
     {
       header: 'Ruxsatnoma berilgan sana',
       accessorFn: (row) => getDate(row.registrationDate),
-      filterKey: 'registrationDate',
-      filterType: 'date-range',
     },
     {
       header: 'Ruxsatnoma reestri bo‘yicha tartib raqami',
       accessorFn: (row) => row?.registryNumber,
-      filterKey: 'search',
-      filterType: 'search',
     },
     {
       header: 'License tizimidagi ruxsatnoma reestri  tartib raqami',
       accessorFn: (row) => row?.licenseRegistryNumber,
-      filterKey: 'search',
-      filterType: 'search',
     },
     {
       header: 'Ruxsatnomani amal qilish muddati',
       accessorFn: (row) => row?.licenseExpiryDate,
-      filterKey: 'search',
-      filterType: 'search',
     },
     {
       header: 'Tashkilot nomi',
       accessorFn: (row) => row?.legalName,
-      filterKey: 'search',
-      filterType: 'search',
     },
     {
       header: 'Tashkilot STIR',
@@ -111,8 +101,6 @@ export const XrayList = () => {
     {
       header: 'Rentgen joylashgan manzil',
       accessorFn: (row) => row?.address,
-      filterKey: 'search',
-      filterType: 'search',
     },
     {
       id: 'actions',

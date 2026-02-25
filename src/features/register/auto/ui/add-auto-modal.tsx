@@ -21,6 +21,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { SearchResultDisplay } from '@/features/permits/ui/add-permit-modal'
 import { format, parseISO } from 'date-fns'
 import DatePicker from '@/shared/components/ui/datepicker'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
 
 interface AddPermitTransportModalProps {
   trigger?: string
@@ -28,11 +30,13 @@ interface AddPermitTransportModalProps {
 
 const searchSchema = z.object({
   stir: z
-    .string({ required_error: 'Majburiy maydon!' })
+    .string()
     .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak' })
-    .refine((val) => val.length === 9 || val.length === 14, {
+    .refine((val) => val.length === 0 || val.length === 9 || val.length === 14, {
       message: 'STIR (JSHSHIR) faqat 9 yoki 14 xonali bo‘lishi kerak',
-    }),
+    })
+    .optional()
+    .or(z.literal('')),
   regNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
 })
 
@@ -54,10 +58,15 @@ const tankerFormSchema = z.object({
 type SearchFormValues = z.infer<typeof searchSchema>
 type TankerFormValues = z.infer<typeof tankerFormSchema>
 
-export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTransportModalProps) => {
+export const AddPermitTransportModal = ({
+  trigger = 'Harakatlanuvchi sig‘im qo‘shish',
+}: AddPermitTransportModalProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [searchResult, setSearchResult] = useState<PermitSearchResult | null>(null)
   const queryClient = useQueryClient()
+  const { user } = useAuth()
+
+  const isInternalRole = user?.role !== UserRoles.LEGAL && user?.role !== UserRoles.INDIVIDUAL
 
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchSchema),
@@ -98,12 +107,18 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
 
   const onSearchSubmit = (values: SearchFormValues) => {
     setSearchResult(null)
-    const searchFn = values?.stir?.length === 9 ? searchPermitLegal : searchPermit
 
-    searchFn({
-      [values.stir.length === 9 ? 'tin' : 'pin']: values.stir,
-      registerNumber: values.regNumber,
-    }).then((data) => {
+    let searchFn
+    const payload: any = { registerNumber: values.regNumber }
+
+    if (isInternalRole) {
+      searchFn = (values.stir || '').length === 9 ? searchPermitLegal : searchPermit
+      payload[(values.stir || '').length === 9 ? 'tin' : 'pin'] = values.stir
+    } else {
+      searchFn = user?.role === UserRoles.LEGAL ? searchPermitLegal : searchPermit
+    }
+
+    searchFn(payload).then((data: any) => {
       setSearchResult(data?.data)
       toast.success('Muvaffaqiyatli topildi!')
     })
@@ -117,13 +132,19 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
 
     const { tankers } = transportForm.getValues()
 
-    const payload = {
-      [searchValues.stir.length === 9 ? 'tin' : 'pin']: searchValues.stir,
+    const payload: any = {
       registerNumber: searchValues.regNumber,
       tankers,
     }
 
-    const apiFn = searchValues.stir.length === 9 ? addLegalPermit : addPermit
+    let apiFn
+
+    if (isInternalRole) {
+      apiFn = (searchValues.stir || '').length === 9 ? addLegalPermit : addPermit
+      payload[(searchValues.stir || '').length === 9 ? 'tin' : 'pin'] = searchValues.stir
+    } else {
+      apiFn = user?.role === UserRoles.LEGAL ? addLegalPermit : addPermit
+    }
 
     apiFn(payload).then(async () => {
       toast.success('Muvaffaqiyatli saqlandi!')
@@ -152,23 +173,32 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSearchSubmit)} className="space-y-4 border-b pb-4">
+          <div className="space-y-4 border-b pb-4">
             <div className="flex items-end gap-3">
-              <div className="flex-1">
-                <FormField
-                  control={form.control}
-                  name="stir"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>STIR (JSHSHIR)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="123456789" {...field} type="text" maxLength={14} pattern="\d*" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              {isInternalRole && (
+                <div className="flex-1">
+                  <FormField
+                    control={form.control}
+                    name="stir"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Tashkilot STIR/Fuqaro JSHSHIR</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="123456789"
+                            {...field}
+                            type="text"
+                            maxLength={14}
+                            pattern="\d*"
+                            disabled={!!searchResult}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
 
               <div className="flex-1">
                 <FormField
@@ -176,9 +206,9 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                   name="regNumber"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Ro‘yxatga olingan raqami</FormLabel>
+                      <FormLabel>Berilgan ruxsatnoma ro‘yxatga olish raqami</FormLabel>
                       <FormControl>
-                        <Input placeholder="RA-12345" {...field} />
+                        <Input placeholder="RA-12345" {...field} disabled={!!searchResult} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -186,11 +216,17 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                 />
               </div>
 
-              <Button type="submit" disabled={isPending || isPendingLegal}>
-                {isPending || isPendingLegal ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Qidirish'}
-              </Button>
+              {!searchResult ? (
+                <Button onClick={form.handleSubmit(onSearchSubmit)} disabled={isPending || isPendingLegal}>
+                  {isPending || isPendingLegal ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Qidirish'}
+                </Button>
+              ) : (
+                <Button variant="destructive" onClick={() => setSearchResult(null)}>
+                  O‘chirish
+                </Button>
+              )}
             </div>
-          </form>
+          </div>
         </Form>
 
         {searchResult && (
@@ -228,7 +264,18 @@ export const AddPermitTransportModal = ({ trigger = 'Qo‘shish' }: AddPermitTra
                             <FormItem>
                               <FormLabel className="text-xs">Davlat raqami belgisi</FormLabel>
                               <FormControl>
-                                <Input {...field} placeholder="01 O 001 OO" />
+                                <Input
+                                  {...field}
+                                  placeholder={
+                                    isInternalRole
+                                      ? form.getValues('stir')?.length === 9
+                                        ? '01 001 AAA'
+                                        : '01 A 001 AA'
+                                      : user?.role === UserRoles.LEGAL
+                                        ? '01 001 AAA'
+                                        : '01 A 001 AA'
+                                  }
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>

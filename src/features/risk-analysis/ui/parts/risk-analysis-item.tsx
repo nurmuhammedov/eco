@@ -12,10 +12,10 @@ interface Props {
 const statusMap: Record<string, string> = {
   UPLOADED: 'Tadbirkor tomonidan ijro uchun fayl yuklangan',
   REJECTED: 'Inspektor tomonidan rad etilgan',
-  EXISTING: 'Reestrda ushbu fayl mavjud',
+  EXISTING: 'Reyestrda ushbu fayl mavjud',
   COMPLETED: 'Inspektor tomonidan qabul qilingan',
   EXPIRED: "Faylning amal qilish muddati o'tgan",
-  NOT_EXISTING: 'Reestrda ushbu fayl mavjud emas',
+  NOT_EXISTING: 'Reyestrda ushbu fayl mavjud emas',
   NOT_EXPIRY_DATE: 'Faylning amal qilish muddati kiritilmagan',
 }
 

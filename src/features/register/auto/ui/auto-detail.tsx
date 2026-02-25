@@ -7,7 +7,7 @@ import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { formatDate } from 'date-fns'
 import { tabs } from '@/features/register/auto/ui/auto-tabs'
 
-export default function PreventionViewPage() {
+export default function AutoDetail() {
   const { id } = useParams<{ id: string }>()
   const {
     paramsObject: { tin: currentTin = '' },
@@ -21,9 +21,15 @@ export default function PreventionViewPage() {
       </div>
       <div className="mt-4">
         <DetailCardAccordion defaultValue={['main', 'auto']}>
-          <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
-            <LegalApplicantInfo tinNumber={currentTin} />
-          </DetailCardAccordion.Item>
+          {currentTin?.toString()?.length == 14 ? (
+            <DetailCardAccordion.Item value="org_info" title="Fuqaro to‘g‘risida maʼlumot">
+              <DetailRow title="Fuqaro JSHSHIR:" value={currentTin || '-'} />
+            </DetailCardAccordion.Item>
+          ) : (
+            <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
+              <LegalApplicantInfo tinNumber={currentTin} />
+            </DetailCardAccordion.Item>
+          )}
 
           <DetailCardAccordion.Item value="main" title="Xulosa">
             <DetailRow title="Xulosa raqami" value={data?.registerNumber || '-'} />

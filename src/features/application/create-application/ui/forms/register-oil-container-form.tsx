@@ -121,6 +121,26 @@ export default ({ onSubmit }: RegisterOilContainerFormProps) => {
 
             <FormField
               control={form.control}
+              name="manufacturedAt"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="3xl:w-sm w-full">
+                    <FormLabel required>Ishlab chiqarilgan sana</FormLabel>
+                    <DatePicker
+                      disableStrategy={'after'}
+                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                      onChange={field.onChange}
+                      placeholder="Sanani tanlang"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+
+            <FormField
+              control={form.control}
               name="regionId"
               render={({ field }) => (
                 <FormItem>

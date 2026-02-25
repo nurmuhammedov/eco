@@ -44,6 +44,11 @@ export const useRegisterIllegalOilContainer = (
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+        manufacturedAt: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
         // Paths
         labelPath: z
           .string()
@@ -110,6 +115,7 @@ export const useRegisterIllegalOilContainer = (
       location: '',
       capacity: '',
       nonDestructiveCheckDate: undefined,
+      manufacturedAt: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
@@ -176,7 +182,7 @@ export const useRegisterIllegalOilContainer = (
         location: getValue(detail.location || ''),
         capacity: getValue(detail.parameters?.capacity || ''),
         nonDestructiveCheckDate: parseDate(detail.nonDestructiveCheckDate),
-
+        manufacturedAt: parseDate(detail.manufacturedAt),
         labelPath: detail.files?.labelPath?.path,
         saleContractPath: detail.files?.saleContractPath?.path,
         equipmentCertPath: detail.files?.equipmentCertPath?.path,

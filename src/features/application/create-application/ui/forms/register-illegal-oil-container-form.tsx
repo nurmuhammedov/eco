@@ -214,7 +214,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                   <FormControl>
                     <Select
                       onValueChange={(value) => {
-                        if (value) field.onChange(Number(value))
+                        if (value) field.onChange(String(value))
                       }}
                       value={field.value?.toString()}
                     >
@@ -260,6 +260,26 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       // O'ZGARISH: Date obyektini stringga o'tkazamiz
+                      onChange={(date) => field.onChange(date ? date.toISOString() : undefined)}
+                      placeholder="Sanani tanlang"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+
+            <FormField
+              control={form.control}
+              name="manufacturedAt"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="3xl:w-sm w-full">
+                    <FormLabel required={!isUpdate}>Ishlab chiqarilgan sana</FormLabel>
+                    <DatePicker
+                      disableStrategy={'after'}
+                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={(date) => field.onChange(date ? date.toISOString() : undefined)}
                       placeholder="Sanani tanlang"
                     />

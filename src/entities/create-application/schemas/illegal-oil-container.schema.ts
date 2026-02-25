@@ -6,15 +6,19 @@ export const IllegalOilContainerAppealDtoSchema = z.object({
   hazardousFacilityId: z
     .string()
     .optional()
-    .or(z.literal(''))
-    .transform((v) => v || null),
-  childEquipmentId: z.number({ required_error: 'Majburiy maydon!', invalid_type_error: 'Majburiy maydon!' }),
+    .nullable()
+    .transform((v) => (v ? v : null)),
+  childEquipmentId: z.string({ required_error: 'Majburiy maydon!', invalid_type_error: 'Majburiy maydon!' }),
   regionId: z.string().min(1, { message: 'Majburiy maydon!' }),
   districtId: z.string().min(1, { message: 'Majburiy maydon!' }),
   address: z.string().min(1, { message: 'Majburiy maydon!' }),
   location: z.string().min(1, { message: 'Majburiy maydon!' }),
   capacity: z.string().min(1, { message: 'Majburiy maydon!' }),
   nonDestructiveCheckDate: z
+    .string()
+    .min(1, { message: 'Majburiy maydon' })
+    .transform((v) => format(new Date(v), 'yyyy-MM-dd')),
+  manufacturedAt: z
     .string()
     .min(1, { message: 'Majburiy maydon' })
     .transform((v) => format(new Date(v), 'yyyy-MM-dd')),

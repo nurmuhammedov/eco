@@ -120,19 +120,20 @@ export const EquipmentsList = () => {
     },
     {
       accessorKey: 'tin',
-      header: 'Tashkilot STIRi',
-      filterKey: 'tin',
+      header: 'Tashkilot STIR/Fuqaro JSHSHIR',
+      cell: (cell) =>
+        cell.row.original.tin ? cell.row.original.tin : cell.row.original.pin ? cell.row.original.pin : null,
       filterType: 'search',
     },
     {
       accessorKey: 'registerNumber',
-      header: 'Xulosa raqami',
+      header: 'Berilgan ruxsatnoma ro‘yxatga olish raqami',
       filterKey: 'registerNumber',
       filterType: 'search',
     },
     {
       accessorKey: 'expiryDate',
-      header: 'Xulosa amal qilish muddati',
+      header: 'Amal qilish muddati',
       cell: (cell) => (cell.row.original.expiryDate ? formatDate(cell.row.original.expiryDate, 'dd.MM.yyyy') : null),
     },
     {
@@ -167,7 +168,11 @@ export const EquipmentsList = () => {
           showView
           row={row}
           showDelete
-          onView={(row) => navigate(`${row.original.id}/auto?tin=${row.original.tin}`)}
+          onView={(row) =>
+            navigate(
+              `${row.original.id}/auto?tin=${row.original.tin ? row.original.tin : row.original.pin ? row.original.pin : null}`
+            )
+          }
         />
       ),
     },
@@ -369,7 +374,9 @@ export const EquipmentsList = () => {
           </div>
           {(user?.role == UserRoles.MANAGER ||
             user?.role == UserRoles.REGIONAL ||
-            user?.role == UserRoles.INSPECTOR) && (
+            user?.role == UserRoles.INSPECTOR ||
+            user?.role == UserRoles.LEGAL ||
+            user?.role == UserRoles.INDIVIDUAL) && (
             <div className="shrink-0">
               <AddPermitTransportModal />
             </div>

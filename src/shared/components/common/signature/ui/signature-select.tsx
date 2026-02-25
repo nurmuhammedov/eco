@@ -4,6 +4,8 @@ import { Button } from '@/shared/components/ui/button'
 import { SignatureKey } from '@/shared/types/signature'
 import { cn } from '@/shared/lib/utils'
 import { format } from 'date-fns'
+import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { UserRoles } from '@/entities/user'
 
 interface SignatureSelectProps {
   className?: string
@@ -21,21 +23,30 @@ export function SignatureSelect({
   const [open, setOpen] = useState(false)
   const [selectedCert, setSelectedCert] = useState<SignatureKey | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const { user } = useAuth()
 
   const isCertificateExpired = (validTo: string | Date): boolean => {
     return new Date(validTo) < new Date()
   }
 
   const sortedCertificates = useMemo(() => {
-    return [...certificates].sort((a, b) => {
-      const aExpired = isCertificateExpired(a.validTo)
-      const bExpired = isCertificateExpired(b.validTo)
+    return [...certificates]
+      .sort((a, b) => {
+        const aExpired = isCertificateExpired(a.validTo)
+        const bExpired = isCertificateExpired(b.validTo)
 
-      if (aExpired !== bExpired) {
-        return aExpired ? 1 : -1
-      }
-      return (a.CN || '').localeCompare(b.CN || '')
-    })
+        if (aExpired !== bExpired) {
+          return aExpired ? 1 : -1
+        }
+        return (a.CN || '').localeCompare(b.CN || '')
+      })
+      .filter((item) => {
+        if (user?.role !== UserRoles.LEGAL) {
+          return Number(item?.PINFL) == Number(user?.tinOrPin)
+        } else {
+          return Number(item?.TIN) == Number(user?.tinOrPin)
+        }
+      })
   }, [certificates])
 
   function handleSelectCertificate(cert: SignatureKey) {
@@ -72,13 +83,20 @@ export function SignatureSelect({
       )
     }
 
+    const isLegal = selectedCert.O && selectedCert.TIN
+
     return (
       <div className="w-full text-left">
         <div className="mb-2 flex items-start justify-between">
           <div>
-            <div className="font-medium text-blue-800">{selectedCert.CN}</div>
+            <div className="font-medium text-blue-800">{isLegal ? selectedCert.O : selectedCert.CN}</div>
+            {isLegal && (
+              <div className="mt-1 text-xs text-gray-600">
+                <span className="font-medium">Tashkilot rahbari:</span> {selectedCert.CN}
+              </div>
+            )}
             <span className="mt-1 inline-block rounded-md bg-green-100 px-2 py-1 text-xs text-green-800">
-              {selectedCert.O && selectedCert.TIN ? 'Yuridik shaxs' : 'Jismoniy shaxs'}
+              {isLegal ? 'Yuridik shaxs' : 'Jismoniy shaxs'}
             </span>
           </div>
           <ChevronDown className="ml-2 size-4 shrink-0 opacity-50" />
@@ -133,8 +151,13 @@ export function SignatureSelect({
                     <div className="mb-2 flex items-start justify-between">
                       <div>
                         <div className={cn('font-medium', isExpired ? 'text-gray-600' : 'text-blue-800')}>
-                          {cert.CN}
+                          {cert.O && cert.TIN ? cert.O : cert.CN}
                         </div>
+                        {cert.O && cert.TIN && (
+                          <div className="mt-1 text-xs text-gray-600">
+                            <span className="font-medium">Tashkilot rahbari:</span> {cert.CN}
+                          </div>
+                        )}
                         <span className="mt-1 inline-block rounded-md bg-green-100 px-2 py-1 text-xs text-green-800">
                           {cert.O && cert.TIN ? 'Yuridik shaxs' : 'Jismoniy shaxs'}
                         </span>

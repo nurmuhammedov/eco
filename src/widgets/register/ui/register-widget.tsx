@@ -195,7 +195,7 @@ const RegisterWidget = () => {
               </Select>
             </div>
             <Button
-              disabled={isLoading || (type == 'ALL' && tab == RegisterActiveTab.EQUIPMENTS)}
+              disabled={isLoading || ((type == 'ALL' || type === 'TANKERS') && tab == RegisterActiveTab.EQUIPMENTS)}
               loading={isLoading}
               onClick={handleDownloadExel}
             >

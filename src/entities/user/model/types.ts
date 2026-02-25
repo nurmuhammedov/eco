@@ -44,6 +44,7 @@ export enum Direction {
 export type UserState = {
   id: string
   name: string
+  tinOrPin: number
   role: UserRoles
   directions: Direction[]
   isSupervisor?: boolean

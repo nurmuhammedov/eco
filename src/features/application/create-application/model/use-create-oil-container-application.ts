@@ -27,6 +27,7 @@ export const useCreateOilContainerApplication = () => {
       location: '',
       capacity: '',
       nonDestructiveCheckDate: undefined,
+      manufacturedAt: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,

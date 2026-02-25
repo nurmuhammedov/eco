@@ -464,6 +464,7 @@
       "location": "Joylashuv (xaritadan joyni tanlang)",
       "labelPath": "Idishning birkasi bilan sur‘ati",
       "childEquipmentId": "Idish turi",
+      "manufacturedAt": "Ishlab chiqarilgan sana",
       "nonDestructiveCheckDate": "Oxirgi o‘tkazilgan putur yetkazmaydigan nazorat sanasi",
       "capacity": "Hajmi",
       "registryNumber": "Qurilmaning roʻyxatga olish raqami",
