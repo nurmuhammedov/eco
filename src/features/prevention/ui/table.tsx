@@ -118,6 +118,8 @@ const PreventionTable: FC<Props> = ({ regions }) => {
             cell: ({ row }: any) =>
               row?.original?.executorName ? (
                 row?.original?.executorName
+              ) : row?.original?.status === 'CANCELLED' ? (
+                '-'
               ) : canAssign ? (
                 <AssignInspectorButton row={row.original} />
               ) : (
@@ -129,16 +131,19 @@ const PreventionTable: FC<Props> = ({ regions }) => {
       id: 'status',
       header: 'Holati',
       className: '!w-[1%]',
-      cell: ({ row }: any) =>
-        row.original?.status ? (
-          row.original?.status == 'CONDUCTED' ? (
-            <Badge variant="success">Bajarilgan</Badge>
-          ) : (
-            <Badge variant="info">Yangi</Badge>
-          )
-        ) : (
-          '-'
-        ),
+      cell: ({ row }: any) => {
+        const status = row.original?.status
+        if (status === 'CONDUCTED') {
+          return <Badge variant="success">Bajarilgan</Badge>
+        }
+        if (status === 'CANCELLED') {
+          return <span className="font-medium whitespace-nowrap text-red-500">Tizim tomonidan bekor qilingan</span>
+        }
+        if (status === 'NEW') {
+          return <Badge variant="info">Yangi</Badge>
+        }
+        return '-'
+      },
       meta: {
         className: 'w-[200px]',
       },

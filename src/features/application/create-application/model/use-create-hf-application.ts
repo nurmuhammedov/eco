@@ -37,6 +37,12 @@ export const useCreateHfApplication = () => {
       permitPath: undefined,
       permitExpiryDate: undefined,
       industrialSafetyDeclarationPath: undefined,
+      regulationPath: undefined,
+      regulationExpiryDate: undefined,
+      staffAttestationPath: undefined,
+      staffAttestationExpiryDate: undefined,
+      managerAttestationPath: undefined,
+      managerAttestationExpiryDate: undefined,
     },
   })
 

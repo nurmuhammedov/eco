@@ -12,6 +12,7 @@ import { authRoutes, publicRoutes, specialComponents } from '@/shared/config/rou
 import { useAuth } from '@/shared/hooks/use-auth'
 import { routeByRole } from '@/shared/lib/router/route-by-role'
 import { Direction, UserRoles } from '@/entities/user'
+import { apiConfig } from '@/shared/api/constants'
 import React, { lazy, Suspense } from 'react'
 import { Navigate, useRoutes } from 'react-router-dom'
 import { Loader } from '@/shared/components/common'
@@ -116,7 +117,9 @@ export const useAppRoutes = () => {
         children: [
           {
             index: true,
-            element: <Navigate to="/home" replace />,
+            element: (
+              <Navigate to={apiConfig.oneIdClientId === 'test_cirns_uz' ? '/auth/login/admin' : '/home'} replace />
+            ),
           },
           ...authLayoutChildren,
         ],
@@ -127,7 +130,7 @@ export const useAppRoutes = () => {
       })),
       {
         path: '*',
-        element: <Navigate to="/home" replace />,
+        element: <Navigate to={apiConfig.oneIdClientId === 'test_cirns_uz' ? '/auth/login/admin' : '/home'} replace />,
       },
     ],
   }

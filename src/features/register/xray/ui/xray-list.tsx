@@ -111,10 +111,7 @@ export const XrayList = () => {
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
           showEdit={
-            (user?.role === UserRoles.LEGAL ||
-              user?.role === UserRoles.INSPECTOR ||
-              user?.role === UserRoles.INDIVIDUAL) &&
-            currentActive === 'true'
+            (user?.role === UserRoles.MANAGER || user?.role === UserRoles.INSPECTOR) && currentActive === 'true'
           }
           onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
         />

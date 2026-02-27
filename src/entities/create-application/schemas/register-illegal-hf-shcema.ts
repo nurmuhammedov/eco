@@ -77,6 +77,36 @@ export const RegisterIllegalHfSchema = z.object({
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
+  regulationPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((v) => (v ? v : null)),
+  regulationExpiryDate: z
+    .date()
+    .optional()
+    .nullable()
+    .transform((v) => (v ? v : null)),
+  staffAttestationPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((v) => (v ? v : null)),
+  staffAttestationExpiryDate: z
+    .date()
+    .optional()
+    .nullable()
+    .transform((v) => (v ? v : null)),
+  managerAttestationPath: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((v) => (v ? v : null)),
+  managerAttestationExpiryDate: z
+    .date()
+    .optional()
+    .nullable()
+    .transform((v) => (v ? v : null)),
   managerCount: z
     .string()
     .optional()

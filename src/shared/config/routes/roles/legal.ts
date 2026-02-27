@@ -29,7 +29,6 @@ const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').t
 const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
 )
-// const RegisterHFUpdatePage = lazy(() => import('@/pages/register/hf/hf-update'))
 const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 

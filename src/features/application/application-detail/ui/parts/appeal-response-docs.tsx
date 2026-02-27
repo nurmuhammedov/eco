@@ -105,7 +105,6 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
       cell: (cell) => <FileLink url={cell.row.original?.path} />,
     },
     {
-      accessorKey: 'actions',
       maxSize: 100,
       header: 'Tasdiqlash',
       cell: (cell) => {

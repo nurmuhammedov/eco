@@ -86,6 +86,30 @@ export const UpdateHFSchema = z.object({
     .string()
     .optional()
     .transform((v) => (v ? v : null)),
+  regulationPath: z
+    .string()
+    .optional()
+    .transform((v) => (v ? v : null)),
+  regulationExpiryDate: z
+    .date()
+    .optional()
+    .transform((v) => (v ? v : null)),
+  staffAttestationPath: z
+    .string()
+    .optional()
+    .transform((v) => (v ? v : null)),
+  staffAttestationExpiryDate: z
+    .date()
+    .optional()
+    .transform((v) => (v ? v : null)),
+  managerAttestationPath: z
+    .string()
+    .optional()
+    .transform((v) => (v ? v : null)),
+  managerAttestationExpiryDate: z
+    .date()
+    .optional()
+    .transform((v) => (v ? v : null)),
 })
 
 export type UpdateHFDTO = z.infer<typeof UpdateHFSchema>

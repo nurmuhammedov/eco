@@ -15,11 +15,14 @@ import FileLink from '@/shared/components/common/file-link'
 import ReportExecutionModal from '@/features/inspections/ui/parts/report-execution-modal'
 import { Badge } from '@/shared/components/ui/badge'
 import { Button } from '@/shared/components/ui/button'
-import { Eye } from 'lucide-react'
+import { Eye, UploadCloud } from 'lucide-react'
 import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal'
 import { getDate } from '@/shared/utils/date'
+import SignedActUploadModal from './signed-act-upload-modal'
+import { useTranslation } from 'react-i18next'
 
-const InspectionReports = ({ status, acknowledgementPath, act, resultId, specialCode }: any) => {
+const InspectionReports = ({ status, acknowledgementPath, signedActPath, act, resultId, specialCode }: any) => {
+  const { t } = useTranslation()
   const { user } = useAuth()
   const [currentTab, setCurrentTab] = useState<'questions' | 'eliminated' | 'not_eliminated'>('questions')
   const [tabulation, setTabulation] = useState<'all' | 'positive' | 'negative'>('all')
@@ -156,45 +159,39 @@ const InspectionReports = ({ status, acknowledgementPath, act, resultId, special
       <div>
         {!categories?.length ? (
           <NoData />
-        ) : currentTab == 'questions' &&
-          user?.role == UserRoles.INSPECTOR &&
-          status == InspectionStatus.ASSIGNED &&
-          categories?.length ? (
-          <InspectionChecklistFormV2
-            categories={categories}
-            resultId={resultId}
-            acknowledgementPath={acknowledgementPath}
-          />
         ) : (
           <>
-            {currentTab == 'questions' && (
+            {currentTab == 'questions' && user?.role == UserRoles.INSPECTOR && status == InspectionStatus.ASSIGNED ? (
+              <InspectionChecklistFormV2
+                categories={categories}
+                resultId={resultId}
+                acknowledgementPath={acknowledgementPath}
+              />
+            ) : (
               <>
-                {!!acknowledgementPath && (
-                  <div className="mb-4">
-                    <DetailRow
-                      title="Tilxat fayli:"
-                      boldTitle={true}
-                      value={
-                        !!acknowledgementPath ? (
-                          <div className="flex items-center gap-2">
-                            <FileLink url={acknowledgementPath} />
-                          </div>
-                        ) : (
-                          '-'
-                        )
-                      }
-                    />
-                  </div>
-                )}
-                <>
-                  {!!act && (
-                    <>
+                {currentTab == 'questions' && (
+                  <>
+                    {!!acknowledgementPath && (
                       <div className="mb-4">
                         <DetailRow
-                          title="Dalolatnoma:"
+                          title="Tilxat fayli:"
                           boldTitle={true}
                           value={
-                            !!act ? (
+                            <div className="flex items-center gap-2">
+                              <FileLink url={acknowledgementPath} />
+                            </div>
+                          }
+                        />
+                      </div>
+                    )}
+
+                    {!!act && (
+                      <>
+                        <div className="mb-4">
+                          <DetailRow
+                            title="Dalolatnoma:"
+                            boldTitle={true}
+                            value={
                               <div className="flex items-center gap-2">
                                 <span>{act?.createdAt ? getDate(act?.createdAt) : ''}</span> |{' '}
                                 <FileLink url={act?.path} /> |
@@ -207,27 +204,61 @@ const InspectionReports = ({ status, acknowledgementPath, act, resultId, special
                                   <Eye size="18" />
                                 </button>
                               </div>
-                            ) : (
-                              '-'
-                            )
+                            }
+                          />
+                        </div>
+                        <SignersModal setSigners={setSigners} signers={signers} />
+                      </>
+                    )}
+
+                    {!!signedActPath ? (
+                      <div className="mb-4">
+                        <DetailRow
+                          title={`${t('signedAct')}:`}
+                          boldTitle={true}
+                          value={
+                            <div className="flex items-center gap-2">
+                              <FileLink url={signedActPath} />
+                            </div>
                           }
                         />
                       </div>
-                      <SignersModal setSigners={setSigners} signers={signers} />
-                    </>
-                  )}
-                </>
+                    ) : (
+                      status === InspectionSubMenuStatus.COMPLETED &&
+                      user?.role === UserRoles.INSPECTOR && (
+                        <div className="mb-4">
+                          <DetailRow
+                            title={`${t('signedAct')}:`}
+                            boldTitle={true}
+                            value={
+                              <SignedActUploadModal
+                                resultId={resultId}
+                                signedActPath={signedActPath}
+                                trigger={
+                                  <Button>
+                                    <UploadCloud className="mr-2 h-4 w-4" /> Imzolangan dalolatnomani yuklash
+                                  </Button>
+                                }
+                              />
+                            }
+                          />
+                        </div>
+                      )
+                    )}
+                  </>
+                )}
+                {categories?.map((category: any) => (
+                  <div key={category.inspectionCategoryId} className="mb-4 rounded-xl border bg-white p-4">
+                    <h3 className="text-black-600 mb-4 text-lg font-semibold">{category.categoryName}</h3>
+                    <DataTable isLoading={false} columns={columns} data={category.checklists || []} />
+                  </div>
+                ))}
               </>
             )}
-            {categories?.map((category: any) => (
-              <div key={category.inspectionCategoryId} className="mb-4 rounded-xl border bg-white p-4">
-                <h3 className="text-black-600 mb-4 text-lg font-semibold">{category.categoryName}</h3>
-                <DataTable isLoading={false} columns={columns} data={category.checklists || []} />
-              </div>
-            ))}
           </>
         )}
       </div>
+
       {currentTab == 'eliminated' && status == InspectionSubMenuStatus.COMPLETED && (
         <ReportExecutionModal
           description={inspectionTitle}

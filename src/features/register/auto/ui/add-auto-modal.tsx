@@ -206,7 +206,7 @@ export const AddPermitTransportModal = ({
                   name="regNumber"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Berilgan ruxsatnoma ro‘yxatga olish raqami</FormLabel>
+                      <FormLabel>Berilgan ruxsatnomaning ro‘yxatga olish raqami</FormLabel>
                       <FormControl>
                         <Input placeholder="RA-12345" {...field} disabled={!!searchResult} />
                       </FormControl>

@@ -45,6 +45,12 @@ export const useUpdateHF = () => {
       permitPath: undefined,
       permitExpiryDate: undefined,
       industrialSafetyDeclarationPath: undefined,
+      regulationPath: undefined,
+      regulationExpiryDate: undefined,
+      staffAttestationPath: undefined,
+      staffAttestationExpiryDate: undefined,
+      managerAttestationPath: undefined,
+      managerAttestationExpiryDate: undefined,
     },
   })
 
@@ -99,6 +105,12 @@ export const useUpdateHF = () => {
         permitPath: detail.files?.permitPath?.path || '',
         permitExpiryDate: parseDate(detail.files?.permitPath?.expiryDate) as unknown as Date,
         industrialSafetyDeclarationPath: detail.files?.industrialSafetyDeclarationPath?.path || '',
+        regulationPath: detail.files?.regulationPath?.path || '',
+        regulationExpiryDate: parseDate(detail.files?.regulationPath?.expiryDate) as unknown as Date,
+        staffAttestationPath: detail.files?.staffAttestationPath?.path || '',
+        staffAttestationExpiryDate: parseDate(detail.files?.staffAttestationPath?.expiryDate) as unknown as Date,
+        managerAttestationPath: detail.files?.managerAttestationPath?.path || '',
+        managerAttestationExpiryDate: parseDate(detail.files?.managerAttestationPath?.expiryDate) as unknown as Date,
       }))
 
       setTimeout(() => {

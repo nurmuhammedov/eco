@@ -188,12 +188,7 @@ export const IrsList = () => {
           row={row}
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
-          showEdit={
-            (user?.role === UserRoles.LEGAL ||
-              user?.role === UserRoles.INSPECTOR ||
-              user?.role === UserRoles.INDIVIDUAL) &&
-            currentValid === 'true'
-          }
+          showEdit={(user?.role === UserRoles.MANAGER || user?.role === UserRoles.INSPECTOR) && currentValid === 'true'}
           onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
         />
       ),

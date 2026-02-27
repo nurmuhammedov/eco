@@ -82,10 +82,59 @@ export const EquipmentsList = () => {
     activityType: isTanker && rest?.activityType !== 'ALL' ? rest?.activityType : undefined,
   })
 
+  const { data: activeCountData } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
+    status: isTanker ? 'ACTIVE' : '',
+    active: isTanker ? '' : true,
+    type: !isTanker && type !== 'ALL' ? type : '',
+    size: 1,
+  })
+
+  const { data: expiringCountData } = usePaginatedData<any>(
+    isTanker ? `/tankers` : `/equipments`,
+    {
+      status: 'EXPIRING_SOON',
+      type: !isTanker && type !== 'ALL' ? type : '',
+      size: 1,
+    },
+    isTanker
+  )
+
+  const { data: expiredCountData } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
+    status: 'EXPIRED',
+    type: !isTanker && type !== 'ALL' ? type : '',
+    size: 1,
+  })
+
+  const { data: inactiveCountData } = usePaginatedData<any>(
+    `/equipments`,
+    {
+      active: false,
+      type: !isTanker && type !== 'ALL' ? type : '',
+      size: 1,
+    },
+    !isTanker
+  )
+
+  const { data: noDateCountData } = usePaginatedData<any>(
+    `/equipments`,
+    {
+      status: 'NO_DATE',
+      type: !isTanker && type !== 'ALL' ? type : '',
+      size: 1,
+    },
+    !isTanker
+  )
+
+  const { data: allCountData } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
+    type: !isTanker && type !== 'ALL' ? type : '',
+    size: 1,
+  })
+
   const { data: changedCountData } = usePaginatedData<any>(
     `/equipments`,
     {
       changed: 'true',
+      type: !isTanker && type !== 'ALL' ? type : '',
       size: 1,
     },
     true
@@ -127,7 +176,7 @@ export const EquipmentsList = () => {
     },
     {
       accessorKey: 'registerNumber',
-      header: 'Berilgan ruxsatnoma ro‘yxatga olish raqami',
+      header: 'Berilgan ruxsatnomaning ro‘yxatga olish raqami',
       filterKey: 'registerNumber',
       filterType: 'search',
     },
@@ -388,49 +437,47 @@ export const EquipmentsList = () => {
         tabs={
           isTanker
             ? [
-                { id: 'ALL', name: 'Barchasi' },
-                { id: 'ACTIVE', name: 'Aktiv' },
-                { id: 'EXPIRING_SOON', name: 'Muddati yaqinlashayotganlar' },
-                { id: 'EXPIRED', name: 'Muddati o‘tganlar' },
-              ]?.map((i) => ({
-                ...i,
-                count: i.id === currentStatus ? data?.page?.totalElements || 0 : undefined,
-              }))
+                { id: 'ALL', name: 'Barchasi', count: allCountData?.page?.totalElements },
+                { id: 'ACTIVE', name: 'Aktiv', count: activeCountData?.page?.totalElements },
+                {
+                  id: 'EXPIRING_SOON',
+                  name: 'Muddati yaqinlashayotganlar',
+                  count: expiringCountData?.page?.totalElements,
+                },
+                { id: 'EXPIRED', name: 'Muddati o‘tganlar', count: expiredCountData?.page?.totalElements },
+              ]
             : [
                 {
                   id: 'ALL',
                   name: 'Barchasi',
+                  count: allCountData?.page?.totalElements,
                 },
                 {
                   id: 'ACTIVE',
                   name: 'Reyestrdagi qurilmalar',
+                  count: activeCountData?.page?.totalElements,
                 },
                 {
                   id: 'INACTIVE',
                   name: 'Reyestrdan chiqarilgan qurilmalar',
+                  count: inactiveCountData?.page?.totalElements,
                 },
                 {
                   id: 'EXPIRED',
                   name: 'Muddati o‘tgan qurilmalar',
+                  count: expiredCountData?.page?.totalElements,
                 },
                 {
                   id: 'NO_DATE',
                   name: 'Muddati kiritilmaganlar',
+                  count: noDateCountData?.page?.totalElements,
                 },
                 {
                   id: 'CHANGED',
                   name: 'O‘zgartirish so‘rovlari',
                   count: changedCountData?.page?.totalElements || undefined,
                 },
-              ]?.map((i) => ({
-                ...i,
-                count:
-                  i.id === 'CHANGED'
-                    ? i.count
-                    : i?.id == currentStatus
-                      ? data?.page?.totalElements || undefined
-                      : undefined,
-              }))
+              ]
         }
         onTabChange={(type) => {
           if (type === 'CHANGED') {

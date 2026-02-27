@@ -64,6 +64,7 @@ const InspectionsInfo = () => {
                 status={item?.status}
                 specialCode={item?.specialCode}
                 acknowledgementPath={item?.acknowledgementPath}
+                signedActPath={item?.signedActPath}
                 act={item?.act}
                 resultId={item?.id}
               />

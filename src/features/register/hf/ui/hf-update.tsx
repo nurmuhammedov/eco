@@ -446,6 +446,122 @@ export default ({ onSubmit, isPending = false }: { onSubmit: (data: UpdateHFDTO)
           <div className="border-b pb-4">
             <FormField
               control={form.control}
+              name="regulationPath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2">Ishlab chiqarish nazorati nizomi</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="regulationExpiryDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="w-full">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                      <FormLabel className="text-muted-foreground text-xs">Amal qilish muddati</FormLabel>
+                      <DatePicker
+                        className={'max-w-2/3'}
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        disableStrategy={'before'}
+                        placeholder="Sanani tanlang"
+                      />
+                    </div>
+                  </FormItem>
+                )
+              }}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
+              name="staffAttestationPath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2">
+                      Xodimlarining sanoat xavfsizligi bo‘yicha attestatsiyasi
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="staffAttestationExpiryDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="w-full">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                      <FormLabel className="text-muted-foreground text-xs">Amal qilish muddati</FormLabel>
+                      <DatePicker
+                        className={'max-w-2/3'}
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        disableStrategy={'before'}
+                        placeholder="Sanani tanlang"
+                      />
+                    </div>
+                  </FormItem>
+                )
+              }}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
+              name="managerAttestationPath"
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                    <FormLabel className="max-w-1/2">Rahbar va muhandis-texnik xodimlar attestatsiyasi</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="managerAttestationExpiryDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="w-full">
+                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                      <FormLabel className="text-muted-foreground text-xs">Amal qilish muddati</FormLabel>
+                      <DatePicker
+                        className={'max-w-2/3'}
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        disableStrategy={'before'}
+                        placeholder="Sanani tanlang"
+                      />
+                    </div>
+                  </FormItem>
+                )
+              }}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              control={form.control}
               name="insurancePolicyPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>

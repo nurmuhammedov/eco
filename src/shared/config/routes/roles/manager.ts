@@ -34,6 +34,7 @@ const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').t
 const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
 )
+const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 
 export const managerRoutes = [
@@ -89,6 +90,11 @@ export const managerRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/update/:type/:id',
+    element: withSuspense(RegisterUpdatePage),
   },
   {
     id: 'REGISTRY',

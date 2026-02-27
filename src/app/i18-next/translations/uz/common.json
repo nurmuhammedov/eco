@@ -17,14 +17,16 @@
     "add_committee_staff": "Qoʻmita xodimi qoʻshish",
     "add_category_type": "Yangi tekshiruv turi qoʻshish",
     "add_checklist": "Yangi cheklist qoʻshish",
-    "add_hazardous_facility_type": "XICHO turi qoʻshish"
+    "add_hazardous_facility_type": "XICHO turi qoʻshish",
+    "uploadSignedAct": "Imzolangan dalolatnoma yuklash"
   },
   "category_types": "Tekshiruv turi",
   "checklists": "Cheklistlar",
   "errors": {
     "something_went_wrong": "Xatolik yuz berdi!",
     "view_details": "Maʼlumotlarni koʻrsatish",
-    "page_not_found": "Sahifa topilmadi"
+    "page_not_found": "Sahifa topilmadi",
+    "signedActSuccessfullySaved": "Imzolangan dalolatnoma muvaffaqiyatli saqlandi!"
   },
   "menu": {
     "inspection": "Tekshiruv savolnoma",
@@ -54,6 +56,8 @@
   "checklist_file": "Cheklist fayli",
   "checklist_name_placeholder": "Cheklist nomini kiriting",
   "upload_pdf": "PDF fayl yuklash",
+  "signedAct": "Imzolangan dalolatnoma",
+  "signedActFile": "Imzolangan dalolatnoma fayli",
   "oldRegistryNumber": "Eski ro‘yxat raqami",
   "risk_analysis_tabs": {
     "XICHO": "XICHO",
@@ -337,6 +341,9 @@
       "identity": "STIR",
       "registryNumber": "Roʻyxatga olish raqami",
       "reasons": "Sabab",
+      "regulationPath": "Ishlab chiqarish nazorati nizomi",
+      "staffAttestationPath": "Xodimlarining sanoat xavfsizligi bo‘yicha attestatsiyadan o‘tganligi",
+      "managerAttestationPath": "Rahbar va muhandis-texnik xodimlarni sanoat xavfsizligi bo‘yicha attestatsiyadan o‘tkazilganligi",
       "sign": "Belgisi",
       "description": "Roʻyxatdan chiqarish sababi",
       "justifiedDocumentPath": "XICHOni rekonstruksiya qilish yoki texnik jihatdan qayta jihozlashga loyiha hujjatlarining sanoat xavfsizligi ekspertizasi xulosasi",

@@ -57,6 +57,7 @@ import {
 } from '@/shared/config/routes/roles'
 import { routeByRole } from './route-by-role'
 import { Direction, UserRoles } from '@/entities/user'
+import { apiConfig } from '@/shared/api/constants'
 
 export const createAppRouter = (
   AppLayout: LazyExoticComponent<React.ComponentType>,
@@ -138,7 +139,9 @@ export const createAppRouter = (
           : [
               {
                 index: true,
-                element: <Navigate to="/auth/login" replace />,
+                element: (
+                  <Navigate to={apiConfig.oneIdClientId === 'test_cirns_uz' ? '/auth/login/admin' : '/home'} replace />
+                ),
               },
             ]),
         ...protectedRoutes,

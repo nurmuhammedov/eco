@@ -32,6 +32,7 @@ const PreventionDetail = () => {
   )
 
   const preventionTypeName = details?.type ? preventionTypes.find((i) => i.id === details.type)?.name : '-'
+  const isCancelled = details?.status === 'CANCELLED'
   const showExecutionModal =
     details?.status === 'NEW' &&
     ((user?.role === UserRoles.MANAGER && (details?.belongType === 'IRS' || details?.belongType === 'XRAY')) ||
@@ -43,6 +44,7 @@ const PreventionDetail = () => {
       <div className="mb-3 flex items-center justify-between gap-2">
         <GoBack title="Profilaktika tadbiri" />
         {showExecutionModal && <ExecutionInspectorModal />}
+        {isCancelled && <span className="font-medium text-red-500">Tizim tomonidan bekor qilingan</span>}
       </div>
 
       <div className="mt-4">
@@ -65,9 +67,13 @@ const PreventionDetail = () => {
               title="Holati"
               value={
                 details?.status ? (
-                  <Badge variant={details.status === 'CONDUCTED' ? 'success' : 'info'}>
-                    {details.status === 'CONDUCTED' ? 'Bajarilgan' : 'Yangi'}
-                  </Badge>
+                  details.status === 'CONDUCTED' ? (
+                    <Badge variant="success">Bajarilgan</Badge>
+                  ) : details.status === 'CANCELLED' ? (
+                    <span className="font-medium text-red-500">Tizim tomonidan bekor qilingan</span>
+                  ) : (
+                    <Badge variant="info">Yangi</Badge>
+                  )
                 ) : (
                   '-'
                 )
