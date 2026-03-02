@@ -22,7 +22,12 @@ import useUpdate from '@/shared/hooks/api/useUpdate'
 import useData from '@/shared/hooks/api/useData'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
-import { AccidentNonInjury, AccidentNonInjuryFormValues, accidentNonInjuryEditSchema } from '../model/types'
+import {
+  AccidentNonInjury,
+  AccidentNonInjuryFormValues,
+  accidentNonInjuryEditSchema,
+  AccidentProcessStatus,
+} from '../model/types'
 
 export const AccidentNonInjuryEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -34,6 +39,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
   const { data: hfoData } = useData<any>(`/hf/${accident?.hfId}`, !!accident?.hfId)
 
   const isCompleted = accident?.status === 'COMPLETED'
+  const isFieldsDisabled = accident?.status === AccidentProcessStatus.NEW
 
   const form = useForm<AccidentNonInjuryFormValues>({
     resolver: zodResolver(accidentNonInjuryEditSchema),
@@ -61,6 +67,10 @@ export const AccidentNonInjuryEdit: React.FC = () => {
         return
       }
 
+      if (accident.status === AccidentProcessStatus.NEW) {
+        // Modal will be opened by button
+      }
+
       form.reset({
         ...accident,
         dateTime: accident.dateTime ? new Date(accident.dateTime) : undefined,
@@ -82,9 +92,9 @@ export const AccidentNonInjuryEdit: React.FC = () => {
     let newStatus = currentStatus
 
     if (allFilesUploaded) {
-      newStatus = 'COMPLETED'
-    } else if (currentStatus === 'NEW') {
-      newStatus = 'IN_PROCESS'
+      newStatus = AccidentProcessStatus.COMPLETED
+    } else if (currentStatus === AccidentProcessStatus.NEW || currentStatus === AccidentProcessStatus.DECREE_UPLOADED) {
+      newStatus = AccidentProcessStatus.IN_PROCESS
     }
 
     const payload = {
@@ -98,7 +108,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
     updateMutation.mutate(payload, {
       onSuccess: () => {
         toast.success('Avariya muvaffaqiyatli saqlandi')
-        navigate(`/accidents/${id}`)
+        navigate(-1)
       },
     })
   }
@@ -117,7 +127,9 @@ export const AccidentNonInjuryEdit: React.FC = () => {
 
   return (
     <div className="container mx-auto space-y-4 pb-10">
-      <GoBack title="Avariya maʼlumotlarini tahrirlash" />
+      <div className="flex items-center justify-between">
+        <GoBack title="Avariya maʼlumotlarini tahrirlash" />
+      </div>
 
       <DetailCardAccordion defaultValue={['form_info']}>
         <DetailCardAccordion.Item value="legal_info" title="Tashkilot to‘g‘risida maʼlumot">
@@ -142,6 +154,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                         value={field.value}
                         onChange={field.onChange}
                         placeholder="Sana va vaqtni tanlang"
+                        disabled={isFieldsDisabled}
                       />
                       <FormMessage />
                     </FormItem>
@@ -155,7 +168,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                     <FormItem>
                       <FormLabel required>Avariyaning qisqacha tavsifi</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} disabled={isFieldsDisabled} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -171,7 +184,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                     <FormItem>
                       <FormLabel>Avariyadan koʻrilgan iqtisodiy zarar (soʻm)</FormLabel>
                       <FormControl>
-                        <Input {...field} type="number" value={field.value || ''} />
+                        <Input {...field} type="number" value={field.value || ''} disabled={isFieldsDisabled} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -184,7 +197,12 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Obyektdan foydalanish toʻxtatilgan vaqt</FormLabel>
-                      <DateTimePicker value={field.value} onChange={field.onChange} placeholder="Vaqtni tanlang" />
+                      <DateTimePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Vaqtni tanlang"
+                        disabled={isFieldsDisabled}
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -196,7 +214,12 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Obyektdan foydalanish qaytadan boshlangan vaqt</FormLabel>
-                      <DateTimePicker value={field.value} onChange={field.onChange} placeholder="Vaqtni tanlang" />
+                      <DateTimePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Vaqtni tanlang"
+                        disabled={isFieldsDisabled}
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -213,7 +236,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                         Avariyaning yuz berishida aybdor boʻlgan xodimlar va ularga nisbatan qoʻllanilgan intizomiy jazo
                       </FormLabel>
                       <FormControl>
-                        <Textarea {...field} rows={4} value={field.value || ''} />
+                        <Textarea {...field} rows={4} value={field.value || ''} disabled={isFieldsDisabled} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -232,7 +255,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                         chora-tadbirlar
                       </FormLabel>
                       <FormControl>
-                        <Textarea {...field} rows={5} value={field.value || ''} />
+                        <Textarea {...field} rows={5} value={field.value || ''} disabled={isFieldsDisabled} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -245,7 +268,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                     <FormItem>
                       <FormLabel>Chora-tadbirlar rejasining bajarilishi toʻgʻrisida maʼlumotlar</FormLabel>
                       <FormControl>
-                        <Textarea {...field} rows={5} value={field.value || ''} />
+                        <Textarea {...field} rows={5} value={field.value || ''} disabled={isFieldsDisabled} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -271,6 +294,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                             uploadEndpoint="/attachments/accidents"
                             accept={[FileTypes.PDF, FileTypes.IMAGE]}
                             buttonText="Fayl yuklash"
+                            disabled={isFieldsDisabled}
                             showPreview
                           />
                           <FormMessage />
@@ -289,6 +313,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                             uploadEndpoint="/attachments/accidents"
                             accept={[FileTypes.PDF, FileTypes.IMAGE]}
                             buttonText="Fayl yuklash"
+                            disabled={isFieldsDisabled}
                             showPreview
                           />
                           <FormMessage />
@@ -307,6 +332,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                             uploadEndpoint="/attachments/accidents"
                             accept={[FileTypes.PDF, FileTypes.IMAGE]}
                             buttonText="Fayl yuklash"
+                            disabled={isFieldsDisabled}
                             showPreview
                           />
                           <FormMessage />
@@ -318,7 +344,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
               </Card>
 
               <div className="flex justify-start">
-                <Button type="submit" loading={updateMutation.isPending}>
+                <Button type="submit" loading={updateMutation.isPending} disabled={isFieldsDisabled}>
                   Saqlash
                 </Button>
               </div>

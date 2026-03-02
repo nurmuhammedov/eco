@@ -11,6 +11,7 @@ interface DateTimePickerProps {
   value?: Date | null
   onChange: (date?: Date) => void
   placeholder?: string
+  disabled?: boolean
 }
 
 const generateRange = (size: number) => {
@@ -19,7 +20,7 @@ const generateRange = (size: number) => {
 const hours = generateRange(24)
 const minutes = generateRange(60)
 
-const DateTimePicker = ({ value, onChange, placeholder }: DateTimePickerProps) => {
+const DateTimePicker = ({ value, onChange, placeholder, disabled }: DateTimePickerProps) => {
   const [date, setDate] = useState<Date | undefined>(value || undefined)
   const [hour, setHour] = useState(() => (value && isValid(value) ? format(value, 'HH') : '09'))
   const [minute, setMinute] = useState(() => (value && isValid(value) ? format(value, 'mm') : '00'))
@@ -70,6 +71,7 @@ const DateTimePicker = ({ value, onChange, placeholder }: DateTimePickerProps) =
       <PopoverTrigger asChild>
         <Button
           variant={'outline'}
+          disabled={disabled}
           className={cn('w-full justify-start text-left font-normal', !date && 'text-muted-foreground')}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />

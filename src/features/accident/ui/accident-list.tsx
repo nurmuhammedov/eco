@@ -24,6 +24,10 @@ export const getStatusBadge = (status?: string | null) => {
       variant = 'info'
       label = 'Yangi'
       break
+    case 'DECREE_UPLOADED':
+      variant = 'info'
+      label = 'Hujjat yuklangan'
+      break
     case 'IN_PROCESS':
       variant = 'warning'
       label = 'Jarayonda'
@@ -119,7 +123,7 @@ const AccidentList: React.FC = () => {
           <Button variant="ghost" size="icon" onClick={() => handleView(row.original)}>
             <Eye className="h-4 w-4" />
           </Button>
-          {role === UserRoles.INSPECTOR && row.original?.status !== 'COMPLETED' && (
+          {role === UserRoles.INSPECTOR && row.original?.status !== 'COMPLETED' && row.original?.status !== 'NEW' && (
             <Button
               variant="ghost"
               size="icon"

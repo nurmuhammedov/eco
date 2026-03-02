@@ -11,11 +11,20 @@ import FilesSection from '@/features/application/application-detail/ui/parts/fil
 import { Accident, AccidentNonInjury, InjuryStatus } from '../model/types'
 import { format } from 'date-fns'
 import { getStatusBadge } from '@/features/accident/ui/accident-list.tsx'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
+import { AccidentProcessStatus } from '../model/types'
+import { Button } from '@/shared/components/ui/button'
+import { AccidentDecreeModal } from './parts/accident-decree-modal'
+import { useState } from 'react'
+import FileLink from '@/shared/components/common/file-link.tsx'
 
 export const AccidentDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()
+  const { user } = useAuth()
+  const [isDecreeModalOpen, setIsDecreeModalOpen] = useState(false)
 
-  const { detail: accident, isLoading } = useDetail<Accident | AccidentNonInjury>('/accidents', id, !!id)
+  const { detail: accident, isLoading, refetch } = useDetail<Accident | AccidentNonInjury>('/accidents', id, !!id)
   const { data: hfoData } = useData<any>(`/hf/${accident?.hfId}`, !!accident?.hfId)
 
   if (isLoading) return <div>Yuklanmoqda...</div>
@@ -50,7 +59,21 @@ export const AccidentDetail: React.FC = () => {
     <div className="container mx-auto space-y-4 pb-10">
       <div className="flex items-center justify-between">
         <GoBack title={isInjury ? 'Baxtsiz hodisa tafsilotlari' : 'Avariya tafsilotlari'} />
+        {user?.role === UserRoles.REGIONAL && accident.status === AccidentProcessStatus.NEW && (
+          <Button onClick={() => setIsDecreeModalOpen(true)}>Ijro etish</Button>
+        )}
       </div>
+
+      {id && (
+        <AccidentDecreeModal
+          accidentId={id}
+          isOpen={isDecreeModalOpen}
+          onOpenChange={setIsDecreeModalOpen}
+          onSuccess={() => {
+            refetch()
+          }}
+        />
+      )}
 
       <DetailCardAccordion defaultValue={isInjury ? ['accident_info', 'victims', 'files'] : ['accident_info', 'files']}>
         <DetailCardAccordion.Item value="legal_info" title="Tashkilot to‘g‘risida maʼlumot">
@@ -70,6 +93,18 @@ export const AccidentDetail: React.FC = () => {
               />
               <DetailRow title="Qisqacha tafsilot:" value={accident.shortDetail || '-'} />
               <DetailRow title="Holati:" value={getStatusBadge(accident.status)} />
+              {accident.mainInspector && (
+                <>
+                  <DetailRow title="Asosiy inspektor:" value={accident.mainInspector?.name || '-'} />
+                  <DetailRow
+                    title="Inspektorlar:"
+                    value={accident.inspectors?.map((i: any) => i.name).join(', ') || '-'}
+                  />
+                </>
+              )}
+              {accident.decreePath && (
+                <DetailRow title="Buyruq hujjati:" value={<FileLink url={accident.decreePath} />} />
+              )}
               <DetailRow
                 title="Baxtsiz hodisaning shart-sharoitlari:"
                 value={(accident as Accident).conditions || '-'}
@@ -107,6 +142,18 @@ export const AccidentDetail: React.FC = () => {
               />
               <DetailRow title="Avariyaning qisqacha tavsifi:" value={accident.shortDetail || '-'} />
               <DetailRow title="Holati:" value={getStatusBadge(accident.status)} />
+              {accident.mainInspector && (
+                <>
+                  <DetailRow title="Asosiy inspektor:" value={accident.mainInspector?.name || '-'} />
+                  <DetailRow
+                    title="Inspektorlar:"
+                    value={accident.inspectors?.map((i: any) => i.name).join(', ') || '-'}
+                  />
+                </>
+              )}
+              {accident.decreePath && (
+                <DetailRow title="Buyruq hujjati:" value={<FileLink url={accident.decreePath} />} />
+              )}
               <DetailRow
                 title="Avariyadan koʻrilgan iqtisodiy zarar (soʻm):"
                 value={(accident as AccidentNonInjury).economicLoss || '-'}
@@ -183,6 +230,16 @@ export const AccidentDetail: React.FC = () => {
                   fieldName: 'specialActPath',
                   data: {
                     path: (accident as Accident).specialActPath || '',
+                    number: '',
+                    uploadDate: '',
+                    expiryDate: '',
+                  },
+                },
+                {
+                  label: 'Buyruq (Qaror)',
+                  fieldName: 'accidentDecreePath',
+                  data: {
+                    path: accident.accidentDecreePath || '',
                     number: '',
                     uploadDate: '',
                     expiryDate: '',

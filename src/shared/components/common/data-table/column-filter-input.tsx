@@ -140,7 +140,7 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
 
   useEffect(() => {
     if (filterType === 'search' || filterType === 'number') {
-      // Check if value actually changed from params to avoid loop/unnecessary pushes
+      // Check i0363f value actually changed from params to avoid loop/unnecessary pushes
       if (debouncedValue !== (paramsObject[filterKey] || '')) {
         addParams({ [filterKey]: debouncedValue }, 'page', 'p')
       }

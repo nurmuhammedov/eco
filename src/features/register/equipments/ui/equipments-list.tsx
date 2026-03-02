@@ -12,6 +12,7 @@ import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { AutoTabKey, tabs as autoTabs } from '@/features/register/auto/ui/auto-tabs'
 import { formatDate } from 'date-fns'
+import { RegisterActiveTab } from '@/widgets/register/types'
 
 export const EquipmentsList = () => {
   const navigate = useNavigate()
@@ -37,11 +38,16 @@ export const EquipmentsList = () => {
       endDate = '',
       factoryNumber = '',
       changeStatus = 'ALL',
+      tab = '',
       ...rest
     },
     addParams,
     removeParams,
   } = useCustomSearchParams()
+
+  const isAutoCrane = tab === RegisterActiveTab.AUTO_CRANE
+  const equipmentType = isAutoCrane ? 'CRANE' : type
+  const actualChildEquipmentId = isAutoCrane ? '31' : childEquipmentId
 
   const currentStatus = String(status)
   const isTanker = type === 'TANKERS'
@@ -63,7 +69,7 @@ export const EquipmentsList = () => {
     active: isTanker ? '' : currentStatus === 'ACTIVE' ? true : currentStatus === 'INACTIVE' ? false : '',
     changed: isTanker ? '' : currentStatus === 'CHANGED' ? true : '',
     changeStatus: isTanker ? '' : currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
-    type: !isTanker && type !== 'ALL' ? type : '',
+    type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
     page,
     size,
     search,
@@ -71,7 +77,7 @@ export const EquipmentsList = () => {
     districtId,
     mode,
     registryNumber,
-    childEquipmentId,
+    childEquipmentId: actualChildEquipmentId,
     ownerName,
     ownerIdentity,
     hfName,
@@ -85,7 +91,8 @@ export const EquipmentsList = () => {
   const { data: activeCountData } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
     status: isTanker ? 'ACTIVE' : '',
     active: isTanker ? '' : true,
-    type: !isTanker && type !== 'ALL' ? type : '',
+    type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
+    childEquipmentId: actualChildEquipmentId,
     size: 1,
   })
 
@@ -93,7 +100,8 @@ export const EquipmentsList = () => {
     isTanker ? `/tankers` : `/equipments`,
     {
       status: 'EXPIRING_SOON',
-      type: !isTanker && type !== 'ALL' ? type : '',
+      type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
+      childEquipmentId: actualChildEquipmentId,
       size: 1,
     },
     isTanker
@@ -101,7 +109,8 @@ export const EquipmentsList = () => {
 
   const { data: expiredCountData } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
     status: 'EXPIRED',
-    type: !isTanker && type !== 'ALL' ? type : '',
+    type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
+    childEquipmentId: actualChildEquipmentId,
     size: 1,
   })
 
@@ -109,7 +118,8 @@ export const EquipmentsList = () => {
     `/equipments`,
     {
       active: false,
-      type: !isTanker && type !== 'ALL' ? type : '',
+      type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
+      childEquipmentId: actualChildEquipmentId,
       size: 1,
     },
     !isTanker
@@ -119,14 +129,16 @@ export const EquipmentsList = () => {
     `/equipments`,
     {
       status: 'NO_DATE',
-      type: !isTanker && type !== 'ALL' ? type : '',
+      type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
+      childEquipmentId: actualChildEquipmentId,
       size: 1,
     },
     !isTanker
   )
 
   const { data: allCountData } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
-    type: !isTanker && type !== 'ALL' ? type : '',
+    type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
+    childEquipmentId: actualChildEquipmentId,
     size: 1,
   })
 
@@ -134,7 +146,8 @@ export const EquipmentsList = () => {
     `/equipments`,
     {
       changed: 'true',
-      type: !isTanker && type !== 'ALL' ? type : '',
+      type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
+      childEquipmentId: actualChildEquipmentId,
       size: 1,
     },
     true
@@ -145,7 +158,9 @@ export const EquipmentsList = () => {
   })
   const { data: tankersCount } = useData<any>('/tankers/count', isTanker, { mode })
 
-  const { data: childEquipmentTypes } = useChildEquipmentTypes(!isTanker && type !== 'ALL' ? type : '')
+  const { data: childEquipmentTypes } = useChildEquipmentTypes(
+    !isTanker && equipmentType !== 'ALL' ? equipmentType : ''
+  )
 
   const handleViewApplication = (id: string) => {
     if (currentStatus === 'CHANGED') {
@@ -263,7 +278,7 @@ export const EquipmentsList = () => {
       accessorKey: 'childEquipment',
       maxSize: 150,
       filterKey: 'childEquipmentId',
-      filterType: 'select',
+      filterType: isAutoCrane ? undefined : 'select',
       filterOptions: childEquipmentTypes || [],
     },
     {
@@ -360,35 +375,37 @@ export const EquipmentsList = () => {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2">
-      <TabsLayout
-        showArrows
-        activeTab={type}
-        tabs={[
-          {
-            id: 'ALL',
-            name: 'Barcha qurilmalar',
-          },
-          {
-            id: 'ELEVATOR',
-            name: 'Lift',
-          },
-          ...(APPLICATIONS_DATA?.filter(
-            (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
-          )?.map((i) => ({
-            id: i?.equipmentType?.toString() || '',
-            name: i?.name?.toString() || '',
-          })) || []),
-          {
-            id: 'TANKERS',
-            name: 'Harakatlanuvchi sig‘imlar',
-          },
-        ]?.map((i) => ({
-          ...i,
-          count: i?.id == type ? ((isTanker ? tankersCount?.allCount : dataForNewCount) ?? 0) : undefined,
-        }))}
-        onTabChange={(type) => addParams({ type: type }, 'page', 'childEquipmentId', 'status', 'activityType')}
-      />
-      {isTanker && (
+      {!isAutoCrane && (
+        <TabsLayout
+          showArrows
+          activeTab={type}
+          tabs={[
+            {
+              id: 'ALL',
+              name: 'Barcha qurilmalar',
+            },
+            {
+              id: 'ELEVATOR',
+              name: 'Lift',
+            },
+            ...(APPLICATIONS_DATA?.filter(
+              (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
+            )?.map((i) => ({
+              id: i?.equipmentType?.toString() || '',
+              name: i?.name?.toString() || '',
+            })) || []),
+            {
+              id: 'TANKERS',
+              name: 'Harakatlanuvchi sig‘imlar',
+            },
+          ]?.map((i) => ({
+            ...i,
+            count: i?.id == type ? ((isTanker ? tankersCount?.allCount : dataForNewCount) ?? 0) : undefined,
+          }))}
+          onTabChange={(type) => addParams({ type: type }, 'page', 'childEquipmentId', 'status', 'activityType')}
+        />
+      )}
+      {!isAutoCrane && isTanker && (
         <div className="flex items-center gap-2 overflow-hidden">
           <div className="min-w-0 flex-1">
             <TabsLayout
@@ -449,32 +466,32 @@ export const EquipmentsList = () => {
             : [
                 {
                   id: 'ALL',
-                  name: 'Barchasi',
+                  name: isAutoCrane ? 'Barcha avtokranlar' : 'Barchasi',
                   count: allCountData?.page?.totalElements,
                 },
                 {
                   id: 'ACTIVE',
-                  name: 'Reyestrdagi qurilmalar',
+                  name: isAutoCrane ? 'Reyestrdagi avtokranlar' : 'Reyestrdagi qurilmalar',
                   count: activeCountData?.page?.totalElements,
                 },
                 {
                   id: 'INACTIVE',
-                  name: 'Reyestrdan chiqarilgan qurilmalar',
+                  name: isAutoCrane ? 'Reyestrdan chiqarilgan avtokranlar' : 'Reyestrdan chiqarilgan qurilmalar',
                   count: inactiveCountData?.page?.totalElements,
                 },
                 {
                   id: 'EXPIRED',
-                  name: 'Muddati o‘tgan qurilmalar',
+                  name: isAutoCrane ? 'Muddati o‘tgan avtokranlar' : 'Muddati o‘tgan qurilmalar',
                   count: expiredCountData?.page?.totalElements,
                 },
                 {
                   id: 'NO_DATE',
-                  name: 'Muddati kiritilmaganlar',
+                  name: isAutoCrane ? 'Muddati kiritilmagan avtokranlar' : 'Muddati kiritilmaganlar',
                   count: noDateCountData?.page?.totalElements,
                 },
                 {
                   id: 'CHANGED',
-                  name: 'O‘zgartirish so‘rovlari',
+                  name: isAutoCrane ? 'O‘zgartirish so‘rovlari' : 'O‘zgartirish so‘rovlari',
                   count: changedCountData?.page?.totalElements || undefined,
                 },
               ]

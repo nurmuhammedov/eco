@@ -6,6 +6,13 @@ export enum InjuryStatus {
   FATAL = 'FATAL',
 }
 
+export enum AccidentProcessStatus {
+  NEW = 'NEW',
+  DECREE_UPLOADED = 'DECREE_UPLOADED',
+  IN_PROCESS = 'IN_PROCESS',
+  COMPLETED = 'COMPLETED',
+}
+
 export const victimSchema = z.object({
   fullName: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!').trim(),
   birthDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => date.toISOString().split('T')[0]),
@@ -171,6 +178,12 @@ export type AccidentNonInjury = z.output<typeof accidentNonInjuryEditSchema> & {
   createdAt?: string
   updatedAt?: string
   type?: string
+  accidentDecreePath?: string
+  mainInspectorId?: string
+  inspectorIds?: string[]
+  mainInspector?: { inspectorId: string; name: string }
+  inspectors?: { inspectorId: string; name: string }[]
+  decreePath?: string
 }
 
 export type Accident = z.output<typeof accidentEditSchema> & {
@@ -186,4 +199,10 @@ export type Accident = z.output<typeof accidentEditSchema> & {
   createdAt?: string
   updatedAt?: string
   type?: string
+  accidentDecreePath?: string
+  mainInspectorId?: string
+  inspectorIds?: string[]
+  mainInspector?: { inspectorId: string; name: string }
+  inspectors?: { inspectorId: string; name: string }[]
+  decreePath?: string
 }

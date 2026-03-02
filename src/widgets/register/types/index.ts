@@ -4,4 +4,5 @@ export enum RegisterActiveTab {
   IRS = 'irs',
   XRAY = 'xrays',
   AUTO = 'tankers',
+  AUTO_CRANE = 'auto-cranes',
 }
