@@ -45,6 +45,7 @@ export const useCreateCablewayApplication = () => {
       installationCertPath: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })

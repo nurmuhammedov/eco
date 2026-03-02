@@ -47,6 +47,7 @@ export const useCreateLpgContainerApplication = () => {
       nextFullCheckDate: undefined,
       partialCheckPath: undefined,
       nextPartialCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })

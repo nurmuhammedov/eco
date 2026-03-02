@@ -120,6 +120,11 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
+        servicePeriod: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
       }).superRefine(lpgPoweredRefinement)
     : RegisterIllegalLpgPoweredSchema
 
@@ -155,6 +160,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
       gasSupplyProjectPath: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })
@@ -212,6 +218,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
         factory: getValue(detail.factory || ''),
         location: getValue(detail.location || ''),
         manufacturedAt: parseDate(detail.manufacturedAt),
+        servicePeriod: parseDate(detail.servicePeriod),
         partialCheckDate: parseDate(detail.partialCheckDate),
         fullCheckDate: parseDate(detail.fullCheckDate),
         nextFullCheckDate: parseDate(detail.nextFullCheckDate),

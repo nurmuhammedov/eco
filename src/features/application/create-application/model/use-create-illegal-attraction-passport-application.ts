@@ -112,6 +112,11 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
           .optional()
           .nullable()
           .transform((val) => val || null),
+        servicePeriod: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
       })
     : RegisterIllegalAttractionSchema
 

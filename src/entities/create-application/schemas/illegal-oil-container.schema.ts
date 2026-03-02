@@ -53,4 +53,5 @@ export const IllegalOilContainerAppealDtoSchema = z.object({
     .optional()
     .or(z.literal(''))
     .transform((v) => (v ? format(new Date(v), 'yyyy-MM-dd') : undefined)),
+  servicePeriod: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 })

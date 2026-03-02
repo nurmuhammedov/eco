@@ -100,6 +100,11 @@ export const useRegisterIllegalOilContainer = (
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
+        servicePeriod: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
       })
     : IllegalOilContainerAppealDtoSchema
 
@@ -124,6 +129,7 @@ export const useRegisterIllegalOilContainer = (
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
       passportPath: undefined,
+      servicePeriod: undefined,
     } as any,
     mode: 'onChange',
   })
@@ -183,6 +189,7 @@ export const useRegisterIllegalOilContainer = (
         capacity: getValue(detail.parameters?.capacity || ''),
         nonDestructiveCheckDate: parseDate(detail.nonDestructiveCheckDate),
         manufacturedAt: parseDate(detail.manufacturedAt),
+        servicePeriod: parseDate(detail.servicePeriod),
         labelPath: detail.files?.labelPath?.path,
         saleContractPath: detail.files?.saleContractPath?.path,
         equipmentCertPath: detail.files?.equipmentCertPath?.path,

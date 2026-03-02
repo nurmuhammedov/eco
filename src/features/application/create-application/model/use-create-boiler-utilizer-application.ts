@@ -49,6 +49,7 @@ export const useCreateBoilerUtilizerApplication = () => {
       nextFullCheckDate: undefined,
       partialCheckPath: undefined,
       nextPartialCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })

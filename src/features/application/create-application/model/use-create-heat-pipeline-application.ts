@@ -49,6 +49,7 @@ export const useCreateHeatPipelineApplication = () => {
       nextFullCheckDate: undefined,
       partialCheckPath: undefined,
       nextPartialCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })

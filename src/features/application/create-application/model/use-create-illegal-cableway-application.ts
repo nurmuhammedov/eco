@@ -115,6 +115,11 @@ export const useRegisterIllegalCableway = (externalSubmit?: (data: RegisterIlleg
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
+        servicePeriod: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
       }).superRefine(cablewayRefinement)
     : RegisterIllegalCablewaySchema
 
@@ -149,6 +154,7 @@ export const useRegisterIllegalCableway = (externalSubmit?: (data: RegisterIlleg
       passportPath: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })
@@ -209,6 +215,7 @@ export const useRegisterIllegalCableway = (externalSubmit?: (data: RegisterIlleg
         passengerCount: getValue(detail.parameters?.passengerCount || ''),
         length: getValue(detail.parameters?.length || ''),
         manufacturedAt: parseDate(detail.manufacturedAt),
+        servicePeriod: parseDate(detail.servicePeriod),
         partialCheckDate: parseDate(detail.partialCheckDate),
         fullCheckDate: parseDate(detail.fullCheckDate),
         nonDestructiveCheckDate: parseDate(detail.nonDestructiveCheckDate),

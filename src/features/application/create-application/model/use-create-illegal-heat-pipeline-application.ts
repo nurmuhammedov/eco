@@ -125,6 +125,11 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
+        servicePeriod: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
       }).superRefine(heatPipelineRefinement)
     : RegisterIllegalHeatPipelineSchema
 
@@ -163,6 +168,7 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
       nextFullCheckDate: undefined,
       partialCheckPath: undefined,
       nextPartialCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })
@@ -220,6 +226,7 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
         factory: getValue(detail.factory || ''),
         location: getValue(detail.location || ''),
         manufacturedAt: parseDate(detail.manufacturedAt),
+        servicePeriod: parseDate(detail.servicePeriod),
         partialCheckDate: parseDate(detail.partialCheckDate),
         fullCheckDate: parseDate(detail.fullCheckDate),
         nonDestructiveCheckDate: parseDate(detail.nonDestructiveCheckDate),

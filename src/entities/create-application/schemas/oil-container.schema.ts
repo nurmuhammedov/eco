@@ -43,4 +43,5 @@ export const OilContainerAppealDtoSchema = z.object({
     .or(z.literal(''))
     .transform((v) => v || null),
   passportPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, { message: 'Majburiy maydon!' }),
+  servicePeriod: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 })

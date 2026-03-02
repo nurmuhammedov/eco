@@ -125,6 +125,11 @@ export const useRegisterIllegalBoiler = (externalSubmit?: (data: RegisterIllegal
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
+        servicePeriod: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
       }).superRefine(boilerRefinement)
     : RegisterIllegalBoilerSchema
 
@@ -161,6 +166,7 @@ export const useRegisterIllegalBoiler = (externalSubmit?: (data: RegisterIllegal
       nextPartialCheckDate: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })
@@ -218,6 +224,7 @@ export const useRegisterIllegalBoiler = (externalSubmit?: (data: RegisterIllegal
         factory: getValue(detail.factory || ''),
         location: getValue(detail.location || ''),
         manufacturedAt: parseDate(detail.manufacturedAt),
+        servicePeriod: parseDate(detail.servicePeriod),
         partialCheckDate: parseDate(detail.partialCheckDate),
         fullCheckDate: parseDate(detail.fullCheckDate),
         nonDestructiveCheckDate: parseDate(detail.nonDestructiveCheckDate),

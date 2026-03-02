@@ -45,6 +45,7 @@ export const useCreateLpgPoweredApplication = () => {
       gasSupplyProjectPath: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })

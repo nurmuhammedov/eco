@@ -182,6 +182,25 @@ export default ({ onSubmit }: RegisterContainerFormProps) => {
             />
             <FormField
               control={form.control}
+              name="servicePeriod"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="3xl:w-sm w-full">
+                    <FormLabel required>Xizmat muddati</FormLabel>
+                    <DatePicker
+                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                      onChange={field.onChange}
+                      placeholder="Sanani tanlang"
+                      disableStrategy={'before'}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
               name="nonDestructiveCheckDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value

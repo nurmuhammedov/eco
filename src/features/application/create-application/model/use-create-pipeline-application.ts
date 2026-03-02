@@ -50,6 +50,7 @@ export const useCreatePipelineApplication = () => {
       nextPartialCheckDate: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })

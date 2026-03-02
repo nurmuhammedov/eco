@@ -55,6 +55,7 @@ export const RegisterIllegalEscalatorBaseSchema = z.object({
     .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
   fullCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   nextFullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  servicePeriod: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
 export const escalatorRefinement = (data: any, ctx: z.RefinementCtx) => {

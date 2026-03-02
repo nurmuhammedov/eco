@@ -45,6 +45,7 @@ export const useCreateEscalatorApplication = () => {
       passportPath: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })

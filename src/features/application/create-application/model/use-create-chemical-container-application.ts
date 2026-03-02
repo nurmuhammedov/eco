@@ -47,6 +47,7 @@ export const useCreateChemicalContainerApplication = () => {
       nextFullCheckDate: undefined,
       partialCheckPath: undefined,
       nextPartialCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })

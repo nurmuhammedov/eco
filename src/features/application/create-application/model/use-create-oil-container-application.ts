@@ -36,6 +36,7 @@ export const useCreateOilContainerApplication = () => {
       expertiseExpiryDate: undefined,
       installationCertPath: undefined,
       passportPath: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })

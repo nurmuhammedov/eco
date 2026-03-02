@@ -120,6 +120,11 @@ export const useRegisterIllegalCrane = (externalSubmit?: (data: RegisterIllegalC
           .optional()
           .nullable()
           .transform((val) => (val ? val : null)),
+        servicePeriod: z
+          .date()
+          .optional()
+          .nullable()
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
       }).superRefine(craneRefinement)
     : RegisterIllegalCraneSchema
 
@@ -154,6 +159,7 @@ export const useRegisterIllegalCrane = (externalSubmit?: (data: RegisterIllegalC
       nextPartialCheckDate: undefined,
       fullCheckPath: undefined,
       nextFullCheckDate: undefined,
+      servicePeriod: undefined,
     },
     mode: 'onChange',
   })
@@ -215,6 +221,7 @@ export const useRegisterIllegalCrane = (externalSubmit?: (data: RegisterIllegalC
         boomLength: getValue(detail.parameters?.boomLength || ''),
         liftingCapacity: getValue(detail.parameters?.liftingCapacity || ''),
         manufacturedAt: parseDate(detail.manufacturedAt),
+        servicePeriod: parseDate(detail.servicePeriod),
         partialCheckDate: parseDate(detail.partialCheckDate),
         fullCheckDate: parseDate(detail.fullCheckDate),
 
