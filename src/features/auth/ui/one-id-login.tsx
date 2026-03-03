@@ -1,13 +1,15 @@
 import { useLoginOneId } from '@/entities/auth/models/auth.fetcher'
 import Icon from '@/shared/components/common/icon'
 import { apiConfig } from '@/shared/api/constants'
+import { Loader } from '@/shared/components/common/global-loader/ui'
 
 export function OneIdLogin() {
   const { oneIdClientId, oneIdClientSecret, oneIdUrl } = apiConfig
-  useLoginOneId()
+  const { isPending } = useLoginOneId()
 
   return (
     <div className="flex h-full min-h-screen w-full flex-1 flex-col items-center justify-center">
+      <Loader isVisible={isPending} message="Tizimga kirilmoqda, iltimos kuting..." />
       <h3 className="mb-12 text-center text-2xl leading-6 font-medium">Axborot tizimiga kirish</h3>
       <a
         className="3xl:px-12 inline-block rounded-2xl bg-neutral-200 px-9"

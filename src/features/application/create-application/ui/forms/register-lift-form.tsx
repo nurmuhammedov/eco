@@ -197,7 +197,6 @@ export default ({ onSubmit }: RegisterLiftFormProps) => {
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
                       placeholder="Sanani tanlang"
-                      disableStrategy={'before'}
                     />
                     <FormMessage />
                   </FormItem>

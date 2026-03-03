@@ -12,7 +12,6 @@ import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { AutoTabKey, tabs as autoTabs } from '@/features/register/auto/ui/auto-tabs'
 import { formatDate } from 'date-fns'
-import { RegisterActiveTab } from '@/widgets/register/types'
 
 export const EquipmentsList = () => {
   const navigate = useNavigate()
@@ -45,7 +44,7 @@ export const EquipmentsList = () => {
     removeParams,
   } = useCustomSearchParams()
 
-  const isAutoCrane = tab === RegisterActiveTab.AUTO_CRANE
+  const isAutoCrane = type === 'AUTO_CRANE'
   const equipmentType = isAutoCrane ? 'CRANE' : type
   const actualChildEquipmentId = isAutoCrane ? '31' : childEquipmentId
 
@@ -153,7 +152,7 @@ export const EquipmentsList = () => {
     true
   )
 
-  const { data: dataForNewCount } = useData<number>(`/equipments/count`, !isTanker, {
+  const { data: dataForNewCount } = useData<number>(`/equipments/count`, !isTanker && !isAutoCrane, {
     type: !isTanker && type !== 'ALL' ? type : '',
   })
   const { data: tankersCount } = useData<any>('/tankers/count', isTanker, { mode })
@@ -375,36 +374,49 @@ export const EquipmentsList = () => {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2">
-      {!isAutoCrane && (
-        <TabsLayout
-          showArrows
-          activeTab={type}
-          tabs={[
-            {
-              id: 'ALL',
-              name: 'Barcha qurilmalar',
-            },
-            {
-              id: 'ELEVATOR',
-              name: 'Lift',
-            },
-            ...(APPLICATIONS_DATA?.filter(
-              (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
-            )?.map((i) => ({
+      <TabsLayout
+        showArrows
+        activeTab={type}
+        tabs={[
+          {
+            id: 'ALL',
+            name: 'Barcha qurilmalar',
+          },
+          {
+            id: 'ELEVATOR',
+            name: 'Lift',
+          },
+          ...(APPLICATIONS_DATA?.filter(
+            (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
+          )?.reduce((acc, i) => {
+            const item = {
               id: i?.equipmentType?.toString() || '',
               name: i?.name?.toString() || '',
-            })) || []),
-            {
-              id: 'TANKERS',
-              name: 'Harakatlanuvchi sig‘imlar',
-            },
-          ]?.map((i) => ({
-            ...i,
-            count: i?.id == type ? ((isTanker ? tankersCount?.allCount : dataForNewCount) ?? 0) : undefined,
-          }))}
-          onTabChange={(type) => addParams({ type: type }, 'page', 'childEquipmentId', 'status', 'activityType')}
-        />
-      )}
+            }
+            acc.push(item)
+            if (item.id === 'CRANE') {
+              acc.push({
+                id: 'AUTO_CRANE',
+                name: 'Avtokranlar',
+              })
+            }
+            return acc
+          }, [] as any[]) || []),
+          {
+            id: 'TANKERS',
+            name: 'Harakatlanuvchi sig‘imlar',
+          },
+        ]?.map((i) => ({
+          ...i,
+          count:
+            i?.id === type
+              ? i?.id === 'AUTO_CRANE'
+                ? allCountData?.page?.totalElements
+                : ((isTanker ? tankersCount?.allCount : dataForNewCount) ?? 0)
+              : undefined,
+        }))}
+        onTabChange={(type) => addParams({ type: type }, 'page', 'childEquipmentId', 'status', 'activityType')}
+      />
       {!isAutoCrane && isTanker && (
         <div className="flex items-center gap-2 overflow-hidden">
           <div className="min-w-0 flex-1">

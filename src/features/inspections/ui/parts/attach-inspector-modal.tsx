@@ -301,7 +301,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                             options={inspectorSelectData || []}
                             value={field.value}
                             onChange={field.onChange}
-                            placeholder="Inspektorlarni tanlang"
+                            placeholder="Komissiya aʼzolarini tanlang"
                           />
                         </FormControl>
                         <FormMessage />

@@ -95,9 +95,9 @@ export const AccidentDetail: React.FC = () => {
               <DetailRow title="Holati:" value={getStatusBadge(accident.status)} />
               {accident.mainInspector && (
                 <>
-                  <DetailRow title="Asosiy inspektor:" value={accident.mainInspector?.name || '-'} />
+                  <DetailRow title="Komissiya raisi:" value={accident.mainInspector?.name || '-'} />
                   <DetailRow
-                    title="Inspektorlar:"
+                    title="Komissiya aʼzolari:"
                     value={accident.inspectors?.map((i: any) => i.name).join(', ') || '-'}
                   />
                 </>
@@ -144,9 +144,9 @@ export const AccidentDetail: React.FC = () => {
               <DetailRow title="Holati:" value={getStatusBadge(accident.status)} />
               {accident.mainInspector && (
                 <>
-                  <DetailRow title="Asosiy inspektor:" value={accident.mainInspector?.name || '-'} />
+                  <DetailRow title="Komissiya raisi:" value={accident.mainInspector?.name || '-'} />
                   <DetailRow
-                    title="Inspektorlar:"
+                    title="Komissiya aʼzolari:"
                     value={accident.inspectors?.map((i: any) => i.name).join(', ') || '-'}
                   />
                 </>

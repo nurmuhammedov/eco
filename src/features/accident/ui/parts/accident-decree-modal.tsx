@@ -75,11 +75,11 @@ export const AccidentDecreeModal: React.FC<AccidentDecreeModalProps> = ({
               name="mainInspectorId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Asosiy inspektor</FormLabel>
+                  <FormLabel required>Komissiya raisi</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Asosiy inspektorni tanlang" />
+                        <SelectValue placeholder="Komissiya raisini tanlang" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>{getSelectOptions(inspectors || [])}</SelectContent>
@@ -94,13 +94,13 @@ export const AccidentDecreeModal: React.FC<AccidentDecreeModalProps> = ({
               name="inspectorIds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Inspektorlar</FormLabel>
+                  <FormLabel required>Komissiya aʼzolari</FormLabel>
                   <FormControl>
                     <MultiSelect
                       options={(inspectors || []).map((i: any) => ({ id: i.id, name: i.name }))}
                       value={field.value}
                       onChange={(val) => field.onChange(val as string[])}
-                      placeholder="Inspektorlarni tanlang"
+                      placeholder="Komissiya aʼzolarini tanlang"
                     />
                   </FormControl>
                   <FormMessage />

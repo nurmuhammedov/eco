@@ -49,7 +49,7 @@ export const useLoginOneId = () => {
   const queryClient = useQueryClient()
   const dispatch = useAppDispatch()
   const resolvedParams = useMemo(() => Object.fromEntries(searchParams), [searchParams])
-  const { mutate: handleLoginOneId } = useMutation({
+  const { mutate: handleLoginOneId, isPending } = useMutation({
     retry: false,
     mutationFn: authAPI.loginOneId,
     onSuccess: (data: UserState) => {
@@ -63,6 +63,8 @@ export const useLoginOneId = () => {
   useEffect(() => {
     if (resolvedParams.code) handleLoginOneId(resolvedParams.code)
   }, [resolvedParams.code])
+
+  return { isPending }
 }
 
 export const useLogout = () => {

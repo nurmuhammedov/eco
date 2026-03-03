@@ -38,11 +38,6 @@ const RegisterWidget = () => {
   const { data: equipmentsCount = 0 } = useData<number>('/equipments/count', true, { mode })
   const { data: irsCount = 0 } = useData<number>('/irs/count', user?.role != UserRoles.INDIVIDUAL, { mode })
   const { data: xrayCount = 0 } = useData<number>('/xrays/count', user?.role != UserRoles.INDIVIDUAL, { mode })
-  const { data: autoCraneCount = 0 } = useData<number>('/equipments/count', user?.role != UserRoles.INDIVIDUAL, {
-    mode,
-    type: 'CRANE',
-    childEquipmentId: 31,
-  })
 
   const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(`${API_ENDPOINTS.REGIONS_SELECT}`)
   const { data: districts, isLoading: isDistrictsLoading } = useDistrictSelectQueries(rest?.regionId)
@@ -118,12 +113,6 @@ const RegisterWidget = () => {
                   Rentgenlar
                   <Badge variant="destructive" className="ml-2">
                     {xrayCount}
-                  </Badge>
-                </TabsTrigger>
-                <TabsTrigger value={RegisterActiveTab.AUTO_CRANE}>
-                  Avtokranlar
-                  <Badge variant="destructive" className="ml-2">
-                    {autoCraneCount}
                   </Badge>
                 </TabsTrigger>
               </TabsList>
@@ -225,9 +214,6 @@ const RegisterWidget = () => {
         </TabsContent>
         <TabsContent value={RegisterActiveTab.XRAY} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
           <XrayList />
-        </TabsContent>
-        <TabsContent value={RegisterActiveTab.AUTO_CRANE} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
-          <EquipmentsList />
         </TabsContent>
       </Tabs>
     </div>
