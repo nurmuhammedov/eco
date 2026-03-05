@@ -122,50 +122,52 @@ export const XrayList = () => {
   return (
     <div className="flex h-full flex-col gap-2">
       <Tabs value={currentActive} onValueChange={(val) => addParams({ active: val, page: 1, changeStatus: 'ALL' })}>
-        <TabsList>
-          <TabsTrigger value="ALL">
-            Barchasi
-            {currentActive === 'ALL' && (
-              <Badge
-                variant="destructive"
-                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-              >
-                {totalElements}
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="true">
-            Amaldagi Rentgenlar
-            {currentActive === 'true' && (
-              <Badge
-                variant="destructive"
-                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-              >
-                {totalElements}
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="false">
-            Reyestrdan chiqarilganlar
-            {currentActive === 'false' && (
-              <Badge
-                variant="destructive"
-                className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-              >
-                {totalElements}
-              </Badge>
-            )}
-          </TabsTrigger>
-          {/*<TabsTrigger value="CHANGED">*/}
-          {/*  O‘zgartirish so‘rovlari*/}
-          {/*  <Badge*/}
-          {/*    variant="destructive"*/}
-          {/*    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
-          {/*  >*/}
-          {/*    {changedCountData?.page?.totalElements || 0}*/}
-          {/*  </Badge>*/}
-          {/*</TabsTrigger>*/}
-        </TabsList>
+        <div className="scrollbar-hidden flex overflow-x-auto">
+          <TabsList className="min-w-max">
+            <TabsTrigger value="ALL">
+              Barchasi
+              {currentActive === 'ALL' && (
+                <Badge
+                  variant="destructive"
+                  className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+                >
+                  {totalElements}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="true">
+              Amaldagi Rentgenlar
+              {currentActive === 'true' && (
+                <Badge
+                  variant="destructive"
+                  className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+                >
+                  {totalElements}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="false">
+              Reyestrdan chiqarilganlar
+              {currentActive === 'false' && (
+                <Badge
+                  variant="destructive"
+                  className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+                >
+                  {totalElements}
+                </Badge>
+              )}
+            </TabsTrigger>
+            {/*<TabsTrigger value="CHANGED">*/}
+            {/*  O‘zgartirish so‘rovlari*/}
+            {/*  <Badge*/}
+            {/*    variant="destructive"*/}
+            {/*    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
+            {/*  >*/}
+            {/*    {changedCountData?.page?.totalElements || 0}*/}
+            {/*  </Badge>*/}
+            {/*</TabsTrigger>*/}
+          </TabsList>
+        </div>
       </Tabs>
 
       {currentActive === 'CHANGED' && (

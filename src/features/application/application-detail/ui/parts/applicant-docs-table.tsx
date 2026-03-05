@@ -20,18 +20,15 @@ const ApplicantDocsTable = () => {
   const columns: ColumnDef<ISearchParams>[] = [
     {
       accessorKey: 'createdAt',
-      maxSize: 100,
       header: 'Sana',
       cell: (cell) => formatDate(cell.row.original.createdAt, 'dd.MM.yyyy'),
     },
     {
       accessorKey: 'documentType',
-      maxSize: 100,
       header: 'Hujjat nomi',
       cell: (cell) => documentTypes.get(cell.row.original.documentType),
     },
     {
-      maxSize: 100,
       accessorKey: 'isFullySigned',
       header: 'Imzo holati',
       cell: (cell: any) => {
@@ -59,7 +56,6 @@ const ApplicantDocsTable = () => {
     },
     {
       accessorKey: 'path',
-      maxSize: 100,
       header: 'Fayl',
       cell: (cell) => <FileLink url={cell.row.original?.path} />,
     },

@@ -61,19 +61,16 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
   const columns: ColumnDef<any>[] = [
     {
       accessorKey: 'createdAt',
-      maxSize: 100,
       header: 'Sana',
       cell: (cell) => formatDate(cell.row.original.createdAt, 'dd.MM.yyyy'),
     },
     {
       accessorKey: 'documentType',
-      maxSize: 100,
       header: 'Hujjat nomi',
       cell: (cell) => documentTypes.get(cell.row.original.documentType),
     },
     {
       accessorKey: 'isFullySigned',
-      maxSize: 100,
       header: 'Imzo holati',
       cell: (cell: any) => {
         const currentStatus = cell.row.original?.isFullySigned
@@ -100,12 +97,10 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
     },
     {
       accessorKey: 'path',
-      maxSize: 100,
       header: 'Fayl',
       cell: (cell) => <FileLink url={cell.row.original?.path} />,
     },
     {
-      maxSize: 100,
       header: 'Tasdiqlash',
       cell: (cell) => {
         const isAgreed = !!cell.row.original?.agreementStatus

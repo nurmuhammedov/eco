@@ -53,14 +53,15 @@ const FilesSection: FC<Props> = ({ files }) => {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-x-8">
+    <div className="grid grid-cols-1 gap-x-8 md:grid-cols-2">
       {files.map((file) => (
-        <div key={file.label} className="flex items-center justify-between border-b border-b-[#E5E7EB] px-3 py-4">
-          <p className={'pr-5'}>{file.label}</p>
+        <div
+          key={file.label}
+          className="flex flex-col items-start gap-3 border-b border-b-[#E5E7EB] px-3 py-4 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <p className={'pr-5 text-sm font-medium text-gray-700 sm:text-base'}>{file.label}</p>
           <div className="flex items-center gap-2">
             {showFileData(file)}
-            {/*{canInspectorEdit ? <FileEditModal url={url} fieldName={file.fieldName} /> : showFileData(file)}*/}
-            {/*{canEdit && <UpdateFileModal appealId={appealId} fieldName={file.fieldName} />}*/}
           </div>
         </div>
       ))}

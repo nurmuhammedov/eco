@@ -74,7 +74,7 @@ export function Header() {
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 h-4" />
         {title && (
-          <h1 className="text-foreground max-w-[150px] truncate text-base leading-none font-semibold sm:max-w-none sm:text-lg">
+          <h1 className="text-foreground hidden max-w-[150px] truncate text-base leading-none font-semibold md:block sm:max-w-none sm:text-lg">
             {title}
           </h1>
         )}

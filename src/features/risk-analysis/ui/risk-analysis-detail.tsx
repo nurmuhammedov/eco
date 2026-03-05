@@ -87,12 +87,12 @@ const RiskAnalysisDetail = () => {
 
   return (
     <>
-      <div className="mb-4 flex items-center justify-between gap-2">
+      <div className="mb-4 flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         <GoBack
           title={`Tashkilot: ${data?.legalName || data?.ownerName || ''} ${currentTin ? `(${currentTin})` : ''}`}
         />
         {tableData?.content && tableData?.content?.length > 0 && (
-          <div className="flex items-center justify-end gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center lg:justify-end">
             <div className="text-neutral-850 truncate text-base font-normal">
               Xavf tahlili natijasi: <span className="font-semibold">{tableData?.content?.[0]?.totalScore || 0}</span>
             </div>
