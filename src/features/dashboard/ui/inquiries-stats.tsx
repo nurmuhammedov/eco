@@ -52,41 +52,43 @@ export const InquiriesStats = () => {
 
   return (
     <div className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
+      <div className="mb-8 flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-slate-900">Murojaatlar</h2>
           <p className="mt-1 text-sm text-slate-500">Kelib tushgan murojaatlar bo‘yicha umumiy hisobot</p>
         </div>
 
-        <div className="inline-flex rounded-lg bg-slate-100 p-1">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={cn(
-                'group flex cursor-pointer items-center justify-between gap-2 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200',
-                activeTab === tab.id
-                  ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200'
-                  : 'text-slate-600 hover:bg-white/60 hover:text-slate-900'
-              )}
-            >
-              {tab.label}
-              <span
+        <div className="flex overflow-x-auto pb-1 sm:pb-0">
+          <div className="inline-flex min-w-max rounded-lg bg-slate-100 p-1">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
                 className={cn(
-                  'ml-2 rounded-full px-2 py-0.5 text-xs font-semibold transition-colors',
+                  'group flex cursor-pointer items-center justify-between gap-2 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200',
                   activeTab === tab.id
-                    ? 'bg-slate-900 text-white'
-                    : 'bg-slate-200 text-slate-600 group-hover:bg-slate-300'
+                    ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200'
+                    : 'text-slate-600 hover:bg-white/60 hover:text-slate-900'
                 )}
               >
-                {tab.count}
-              </span>
-            </button>
-          ))}
+                {tab.label}
+                <span
+                  className={cn(
+                    'ml-1 rounded-full px-2 py-0.5 text-[10px] font-semibold transition-colors sm:ml-2 sm:text-xs',
+                    activeTab === tab.id
+                      ? 'bg-slate-900 text-white'
+                      : 'bg-slate-200 text-slate-600 group-hover:bg-slate-300'
+                  )}
+                >
+                  {tab.count}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-5">
         {renderCleanCard('Jami', data.total, <FileText className="h-6 w-6" />, 'text-blue-600', 'bg-blue-50')}
         {renderCleanCard('XICHO', data.hf, <Factory className="h-6 w-6" />, 'text-indigo-600', 'bg-indigo-50')}
         {renderCleanCard(

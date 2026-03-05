@@ -16,7 +16,7 @@ const DetailRow: React.FC<DetailRowProps> = ({ title, value, boldTitle = false, 
   return (
     <div
       className={cn(
-        'grid grid-cols-1 gap-1 rounded-md px-2 py-1 odd:bg-neutral-50 sm:grid-cols-2 sm:items-center sm:gap-4',
+        'grid grid-cols-1 gap-1 rounded-md px-2 py-1 odd:bg-neutral-50 md:grid-cols-2 md:items-center md:gap-4',
         className
       )}
     >
