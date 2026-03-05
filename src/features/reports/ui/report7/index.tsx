@@ -4,6 +4,8 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { usePaginatedData } from '@/shared/hooks'
 import { ColumnDef } from '@tanstack/react-table'
 import { GoBack } from '@/shared/components/common'
+import { Button } from '@/shared/components/ui/button'
+import { Download } from 'lucide-react'
 
 const Report7: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
@@ -96,10 +98,17 @@ const Report7: React.FC = () => {
     },
   ]
 
+  const handleDownloadExel = async () => {
+    // API hozircha tayyor emas
+  }
+
   return (
     <div className="flex h-full flex-col">
       <div className="mb-2 flex items-center justify-between">
         <GoBack title="Avariyalar bo‘yicha umumiy hisobot" />
+        <Button onClick={handleDownloadExel}>
+          <Download /> Excel
+        </Button>
       </div>
 
       <div className="flex flex-1 flex-col overflow-hidden">

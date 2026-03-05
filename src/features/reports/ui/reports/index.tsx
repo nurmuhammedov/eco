@@ -99,33 +99,39 @@ const REPORTS_GROUPS: ReportGroup[] = [
     id: 'prevention',
     title: 'Profilaktika',
     items: [
-      { id: 'prev-stats', title: 'Profilaktika ishlari statistikasi', icon: ShieldCheck, url: '#' },
-      { id: 'prev-inspector-load', title: 'Profilaktika hududlar kesimida', icon: Map, url: '#' },
+      { id: 'prev-stats', title: 'Profilaktika ishlari statistikasi', icon: ShieldCheck, url: '#', badge: 'Jarayonda' },
+      { id: 'prev-inspector-load', title: 'Profilaktika hududlar kesimida', icon: Map, url: '#', badge: 'Jarayonda' },
     ],
   },
   {
     id: 'risk-analysis',
     title: 'Xavfni tahlil qilish',
     items: [
-      { id: 'risk-objects', title: 'Xavf darajasi bo‘yicha obyektlar', icon: AlertTriangle, url: '#' },
-      { id: 'risk-trends', title: "Xavf ko'rsatkichlari dinamikasi", icon: TrendingUp, url: '#' },
+      {
+        id: 'risk-objects',
+        title: 'Xavf darajasi bo‘yicha obyektlar',
+        icon: AlertTriangle,
+        url: '#',
+        badge: 'Jarayonda',
+      },
+      { id: 'risk-trends', title: "Xavf ko'rsatkichlari dinamikasi", icon: TrendingUp, url: '#', badge: 'Jarayonda' },
     ],
   },
   {
     id: 'inspections',
     title: 'Tekshiruvlar',
     items: [
-      { id: 'insp-types', title: 'Rejali va rejadan tashqari', icon: FileSearch, url: '#' },
-      { id: 'insp-rejected', title: '1 kunlik va 10 kunlik tekshiruvlar', icon: Clock, url: '#' },
+      { id: 'insp-types', title: 'Rejali va rejadan tashqari', icon: FileSearch, url: '#', badge: 'Jarayonda' },
+      { id: 'insp-rejected', title: '1 kunlik va 10 kunlik tekshiruvlar', icon: Clock, url: '#', badge: 'Jarayonda' },
     ],
   },
   {
     id: 'inquiries',
     title: 'Murojaatlar',
     items: [
-      { id: 'inq-content', title: 'Murojaatlar dinamikasi', icon: TrendingUp, url: '#' },
-      { id: 'inq-execution', title: 'Murojaatlar oylar kesimida', icon: BarChart, url: '#' },
-      { id: 'inq-regional', title: 'Hududiy murojaatlar', icon: Map, url: '#' },
+      { id: 'inq-content', title: 'Murojaatlar dinamikasi', icon: TrendingUp, url: '#', badge: 'Jarayonda' },
+      { id: 'inq-execution', title: 'Murojaatlar oylar kesimida', icon: BarChart, url: '#', badge: 'Jarayonda' },
+      { id: 'inq-regional', title: 'Hududiy murojaatlar', icon: Map, url: '#', badge: 'Jarayonda' },
     ],
   },
 ]
@@ -160,7 +166,11 @@ export const ReportsGrid: React.FC = () => {
                       <span className="flex items-center gap-2 text-sm font-medium text-gray-600 group-hover:text-gray-900">
                         {item.title}
                         {item.badge && (
-                          <span className="rounded bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700 uppercase">
+                          <span
+                            className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase ${
+                              item.badge === 'Jarayonda' ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'
+                            }`}
+                          >
                             {item.badge}
                           </span>
                         )}
