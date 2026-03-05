@@ -240,8 +240,8 @@ export default ({ onSubmit }: ReRegisterEquipmentFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Qurilmaning birkasi bilan surʼati
                     </FormLabel>
                     <FormControl>
@@ -259,8 +259,8 @@ export default ({ onSubmit }: ReRegisterEquipmentFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
                     </FormLabel>
                     <FormControl>
@@ -278,8 +278,8 @@ export default ({ onSubmit }: ReRegisterEquipmentFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Qurilma sertifikati
                     </FormLabel>
                     <FormControl>
@@ -297,8 +297,8 @@ export default ({ onSubmit }: ReRegisterEquipmentFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Masʼul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
                     <FormControl>
@@ -316,8 +316,8 @@ export default ({ onSubmit }: ReRegisterEquipmentFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Ekspertiza xulosasi
                     </FormLabel>
                     <FormControl>
@@ -335,8 +335,8 @@ export default ({ onSubmit }: ReRegisterEquipmentFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Montaj dalolatnomasi
                     </FormLabel>
                     <FormControl>

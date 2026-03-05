@@ -502,8 +502,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Yuk ko‘targichning birkasi bilan sur‘ati
                     </FormLabel>
                     <FormControl>
@@ -521,8 +521,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
                     <FormControl>
@@ -540,8 +540,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
                     </FormLabel>
                     <FormControl>
@@ -559,8 +559,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Ekspertiza loyihasi fayli
                     </FormLabel>
                     <FormControl>
@@ -577,7 +577,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -600,8 +600,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Yuk ko‘targich muvofiqlik sertifikati
                     </FormLabel>
                     <FormControl>
@@ -619,8 +619,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Montaj dalolatnomasi
                     </FormLabel>
                     <FormControl>
@@ -638,8 +638,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Qurilma pasporti
                     </FormLabel>
                     <FormControl>
@@ -657,8 +657,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Yuk ko‘targich to‘liq texnik ko‘rikdan o‘tkazilganligi
                     </FormLabel>
                     <FormControl>
@@ -675,7 +675,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required={!isUpdate}>Navbatdagi texnik ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}

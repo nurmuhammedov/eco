@@ -495,8 +495,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Kranning birkasi bilan surʼati
                     </FormLabel>
                     <FormControl>
@@ -514,8 +514,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Sotib olish-sotish shartnomasi
                     </FormLabel>
                     <FormControl>
@@ -533,8 +533,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekspertiza loyihasi</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ekspertiza loyihasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -549,7 +549,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -572,8 +572,10 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Montaj guvohnomasi (avtokrandan tashqari)</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
+                      Montaj guvohnomasi (avtokrandan tashqari)
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -589,8 +591,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Masʼul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
                     <FormControl>
@@ -608,8 +610,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilma sertifikati</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Qurilma sertifikati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -625,8 +627,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Kranning pasporti
                     </FormLabel>
                     <FormControl>
@@ -644,8 +646,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Kranning qisman texnik ko‘rikdan o‘tkazilganligi
                     </FormLabel>
                     <FormControl>
@@ -662,7 +664,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required={!isUpdate}>Navbatdagi qisman texnik ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -685,8 +687,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Kranning to‘liq texnik ko‘rikdan o‘tkazilganligi
                     </FormLabel>
                     <FormControl>
@@ -703,7 +705,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required={!isUpdate}>Navbatdagi to‘liq texnik ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}

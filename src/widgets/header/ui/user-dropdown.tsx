@@ -7,6 +7,8 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar'
@@ -27,20 +29,31 @@ export default function UserDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="group flex cursor-pointer items-center space-x-2">
-          <Avatar className="border-border h-10 w-10 border">
+          <Avatar className="border-border h-9 w-9 border">
             <AvatarImage src="" alt="@shadcn" />
             <AvatarFallback className="bg-neutral-100 text-neutral-900">
-              <User size={20} />
+              <User size={18} />
             </AvatarFallback>
           </Avatar>
-          <div>
+          <div className="hidden text-left sm:block">
             <p className="text-sm leading-none font-medium">{truncateString(user?.name)}</p>
-            {user?.role && <p className="text-muted-foreground text-xs">{UserRoleLabels[user?.role] || ''}</p>}
+            {user?.role && <p className="text-muted-foreground mt-1 text-[10px]">{UserRoleLabels[user?.role] || ''}</p>}
           </div>
-          <ChevronDown className="text-muted-foreground h-4 w-4 opacity-50 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+          <ChevronDown className="text-muted-foreground hidden h-4 w-4 opacity-50 transition-transform duration-200 group-data-[state=open]:rotate-180 sm:block" />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
+        <div className="sm:hidden">
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm leading-none font-medium">{user?.name}</p>
+              {user?.role && (
+                <p className="text-muted-foreground text-xs leading-none">{UserRoleLabels[user?.role] || ''}</p>
+              )}
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+        </div>
         <DropdownMenuGroup>
           <DropdownMenuItem
             disabled={isPending}

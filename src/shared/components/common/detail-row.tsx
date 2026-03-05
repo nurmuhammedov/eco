@@ -14,7 +14,12 @@ const DetailRow: React.FC<DetailRowProps> = ({ title, value, boldTitle = false, 
   }
 
   return (
-    <div className={cn('grid grid-cols-2 items-center gap-4 rounded-md px-2 py-1 odd:bg-neutral-50', className)}>
+    <div
+      className={cn(
+        'grid grid-cols-1 gap-1 rounded-md px-2 py-1 odd:bg-neutral-50 sm:grid-cols-2 sm:items-center sm:gap-4',
+        className
+      )}
+    >
       <span className={cn('text-sm', boldTitle ? 'font-semibold text-gray-800' : 'font-medium text-gray-500')}>
         {title}
       </span>

@@ -288,7 +288,24 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                 )
               }}
             />
-
+            <FormField
+              control={form.control}
+              name="servicePeriod"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="3xl:w-sm w-full">
+                    <FormLabel required>Xizmat muddati</FormLabel>
+                    <DatePicker
+                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                      onChange={field.onChange}
+                      placeholder="Sanani tanlang"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
             <FormField
               control={form.control}
               name="regionId"
@@ -382,8 +399,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Idishning birkasi bilan sur‘ati
                     </FormLabel>
                     <FormControl>
@@ -401,8 +418,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
                     <FormControl>
@@ -420,8 +437,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
                     </FormLabel>
                     <FormControl>
@@ -439,8 +456,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekspertiza xulosasi</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ekspertiza xulosasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -455,7 +472,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel>Amal qilish sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -477,8 +494,10 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Idishning muvofiqlik sertifikati</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
+                      Idishning muvofiqlik sertifikati
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -494,8 +513,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Montaj dalolatnomasi</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Montaj dalolatnomasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -511,8 +530,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required={!isUpdate} className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Idishning pasporti
                     </FormLabel>
                     <FormControl>

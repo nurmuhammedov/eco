@@ -37,6 +37,7 @@ export const EquipmentsList = () => {
       endDate = '',
       factoryNumber = '',
       changeStatus = 'ALL',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       tab = '',
       ...rest
     },

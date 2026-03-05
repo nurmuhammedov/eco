@@ -218,17 +218,21 @@ const Report1: React.FC = () => {
         onValueChange={handleTabChange}
         className="flex flex-1 flex-col overflow-hidden"
       >
-        <TabsList className="w-max">
-          <TabsTrigger value={InspectionStatus.INDIVIDUAL}>Jismoniy shaxslar</TabsTrigger>
-          <TabsTrigger value={InspectionStatus.LEGAL}>Yuridik shaxslar</TabsTrigger>
+        <TabsList className="w-full overflow-x-auto sm:w-max">
+          <TabsTrigger value={InspectionStatus.INDIVIDUAL} className="flex-1 sm:flex-none">
+            Jismoniy shaxslar
+          </TabsTrigger>
+          <TabsTrigger value={InspectionStatus.LEGAL} className="flex-1 sm:flex-none">
+            Yuridik shaxslar
+          </TabsTrigger>
         </TabsList>
 
-        <div className="my-2 flex items-start justify-between gap-2">
-          <div className="flex flex-1 justify-start">
+        <div className="my-2 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <div className="flex-1">
             <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
           </div>
-          <Button onClick={handleDownloadExel}>
-            <Download /> MS Exel
+          <Button onClick={handleDownloadExel} className="w-full sm:w-auto">
+            <Download size={18} className="mr-2" /> MS Exel
           </Button>
         </div>
 

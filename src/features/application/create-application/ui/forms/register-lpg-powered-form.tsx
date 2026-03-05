@@ -322,8 +322,8 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Qurilmaning birkasi bilan sur‘ati
                     </FormLabel>
                     <FormControl>
@@ -341,8 +341,8 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
                     <FormControl>
@@ -360,8 +360,8 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Gaz ta‘minoti loyihasi
                     </FormLabel>
                     <FormControl>
@@ -379,8 +379,8 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
                     </FormLabel>
                     <FormControl>
@@ -398,8 +398,8 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ekspertiza xulosasi</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ekspertiza xulosasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -414,7 +414,7 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel>Amal qilish sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -436,8 +436,8 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Qurilma pasporti
                     </FormLabel>
                     <FormControl>
@@ -455,8 +455,8 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qurilma muvofiqlik sertifikati</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Qurilma muvofiqlik sertifikati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -472,8 +472,8 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Montaj dalolatnomasi
                     </FormLabel>
                     <FormControl>
@@ -491,8 +491,8 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Texnik ko‘rikdan o‘tkazilganligi (sinovlar)
                     </FormLabel>
                     <FormControl>
@@ -509,7 +509,7 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required>Navbatdagi texnik ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}

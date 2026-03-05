@@ -161,9 +161,8 @@ const Report5: React.FC = () => {
         <GoBack title="Qurilmalaring muddatlari bo‘yicha hisobot" />
       </div>
 
-      <div className="my-2 flex items-start justify-between gap-2">
-        <div className="flex flex-1 justify-start"></div>
-        <Button onClick={handleDownloadExcel} disabled={true}>
+      <div className="my-2 flex flex-col justify-end gap-4 sm:flex-row sm:items-center">
+        <Button onClick={handleDownloadExcel} disabled={true} className="w-full sm:w-auto">
           <Download className="mr-2 h-4 w-4" /> Excel
         </Button>
       </div>

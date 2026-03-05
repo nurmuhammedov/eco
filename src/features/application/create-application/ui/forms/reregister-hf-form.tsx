@@ -269,8 +269,8 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Identifikatsiya varag‘i
                     </FormLabel>
                     <FormControl>
@@ -288,8 +288,8 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi
                     </FormLabel>
                     <FormControl>
@@ -307,8 +307,8 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               name="insurancePolicyPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sug‘urta polisi</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Sug‘urta polisi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -323,7 +323,7 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -345,8 +345,8 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               name="cadastralPassportPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">XICHO kadastr pasporti</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">XICHO kadastr pasporti</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -362,8 +362,8 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Loyiha hujjatlari</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Loyiha hujjatlari</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -379,8 +379,8 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               name="licensePath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Litsenziya</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Litsenziya</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -395,7 +395,7 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -417,8 +417,8 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               name="expertOpinionPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Loyiha ekspertiza xulosasi (LH)</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Loyiha ekspertiza xulosasi (LH)</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -434,8 +434,10 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               name="appointmentOrderPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Maʼsul xodim tayinlanganligi buyrug‘i</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
+                      Maʼsul xodim tayinlanganligi buyrug‘i
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -451,8 +453,8 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               name="permitPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -467,7 +469,7 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -489,8 +491,10 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
               name="industrialSafetyDeclarationPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
-                    <FormLabel className="max-w-1/2 2xl:max-w-3/7">Sanoat xavfsizligi deklaratsiyasi</FormLabel>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
+                      Sanoat xavfsizligi deklaratsiyasi
+                    </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>

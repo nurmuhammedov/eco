@@ -464,8 +464,8 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
             control={form.control}
             render={({ field }) => (
               <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel required className="max-w-1/2 2xl:max-w-3/7">
+                <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                     INM (qurilma) pasporti va sertifikati fayli
                   </FormLabel>
                   <FormControl>
@@ -480,8 +480,8 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
             control={form.control}
             render={({ field }) => (
               <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7">Qo‘shimcha ma‘lumotlar</FormLabel>
+                <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Qo‘shimcha ma‘lumotlar</FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                   </FormControl>

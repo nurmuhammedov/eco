@@ -280,9 +280,9 @@ const Report3: React.FC = () => {
         />
       </div>
 
-      <div className="my-2 flex items-start justify-end gap-2">
-        <Button onClick={handleDownloadExel}>
-          <Download /> Excel
+      <div className="my-2 flex items-center justify-start gap-2 sm:justify-end">
+        <Button onClick={handleDownloadExel} className="w-full sm:w-auto">
+          <Download size={18} className="mr-2" /> Excel
         </Button>
       </div>
 

@@ -102,8 +102,8 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
             control={form.control}
             render={({ field }) => (
               <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7" required>
+                <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7" required>
                     XICHOni rekonstruksiya qilish yoki texnik jihatdan qayta jihozlashga loyiha hujjatlarining sanoat
                     xavfsizligi ekspertizasi xulosasi
                   </FormLabel>
@@ -120,8 +120,8 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
             control={form.control}
             render={({ field }) => (
               <FormItem className="border-b pb-4">
-                <div className="flex items-end justify-between gap-2 xl:items-center">
-                  <FormLabel className="max-w-1/2 2xl:max-w-3/7" required>
+                <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7" required>
                     Identifikatsiya varaqasini o‘z ichiga olgan XICHOni sanoat xavfsizligi ekspertizasi natijalari
                     to‘g‘risidagi xulosa nusxasi
                   </FormLabel>

@@ -140,9 +140,11 @@ export const ReportsGrid: React.FC = () => {
   return (
     <Fragment>
       <div className="mb-6 flex items-center justify-between">
-        <h5 className="flex items-center gap-3 text-2xl font-semibold text-gray-800">
-          Hisobotlar{' '}
-          <span className="text-base font-normal text-amber-600 italic">(ushbu sahifa ishlab chiqish jarayonida)</span>
+        <h5 className="flex flex-wrap items-baseline gap-2 text-xl font-semibold text-gray-800 sm:text-2xl">
+          Hisobotlar
+          <span className="text-xs font-normal text-amber-600 italic sm:text-sm">
+            (ushbu sahifa ishlab chiqish jarayonida)
+          </span>
         </h5>
       </div>
 

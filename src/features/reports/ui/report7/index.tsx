@@ -104,10 +104,10 @@ const Report7: React.FC = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <GoBack title="Avariyalar bo‘yicha umumiy hisobot" />
-        <Button onClick={handleDownloadExel}>
-          <Download /> Excel
+        <Button onClick={handleDownloadExel} className="w-full sm:w-auto">
+          <Download size={18} className="mr-2" /> Excel
         </Button>
       </div>
 

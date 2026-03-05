@@ -261,7 +261,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Mehnat vazirligi tomonidan berilgan ekspertiza xulosasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -278,7 +278,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
@@ -300,7 +300,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Sanitariya-epidemiologik xulosa barcha betlari</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -317,7 +317,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
@@ -339,7 +339,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Sanitariya-epidemiologik xulosa obyekt toifasi ko‘rsatilgan qismi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -356,7 +356,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
@@ -378,7 +378,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Buyruq va “А” toifaga kirgan xodimlar ro‘yxati ilova shaklida</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -394,7 +394,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganligi to‘g‘risida sertifikat</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -411,7 +411,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
@@ -433,7 +433,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Tibbiy ko‘rik xulosasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -450,7 +450,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
@@ -472,7 +472,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Dozimetr protokoli (bayonnomasi)</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -489,7 +489,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
@@ -511,7 +511,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Davriy qiyoslov sertifikati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -528,7 +528,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
@@ -550,7 +550,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Dalolatnoma</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -567,7 +567,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
@@ -589,7 +589,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Kuzatuv xati, INM pasporti va inventarizatsiya</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -605,7 +605,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Yo‘riqnomalar</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -622,7 +622,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
@@ -644,7 +644,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Shaxsiy himoya vositalarining fotosurati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -660,7 +660,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex items-end justify-between gap-2 xl:items-center">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Dalolatnoma-ko‘rsatma va uning bajarilish maʼlumotlari</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -677,7 +677,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex items-end justify-between gap-2 xl:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                       <FormLabel required>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"

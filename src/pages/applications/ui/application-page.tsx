@@ -51,55 +51,60 @@ const ApplicationPage = () => {
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">
-      <div className="flex flex-row items-center justify-between gap-2 pt-0.5">
-        <div className="min-w-0 flex-1">
-          <TabsLayout activeTab={status} tabs={applicationStatus} onTabChange={handleChangeTab} />
+      <div className="flex flex-col gap-4 pt-1">
+        <div className="flex w-full flex-col gap-2">
+          <div className="flex w-full items-center gap-2 overflow-x-auto pb-1 sm:overflow-visible sm:pb-0">
+            <div className="flex min-w-max flex-1 items-center gap-2 sm:min-w-0">
+              <Select
+                onValueChange={(value) => {
+                  if (value && value !== 'ALL') {
+                    addParams({ mode: value }, 'page')
+                  } else {
+                    removeParams('mode')
+                  }
+                }}
+                value={mode || ''}
+              >
+                <SelectTrigger className="w-[200px] sm:w-60 lg:w-80">
+                  <SelectValue placeholder="Rasmiylashtirish turi" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">Barchasi</SelectItem>
+                  {getSelectOptions([
+                    { id: 'OFFICIAL', name: 'Arizachilar tomonidan ro‘yxatga olingan' },
+                    {
+                      id: 'UNOFFICIAL',
+                      name: 'Qo‘mita tomonidan ro‘yxatga olingan',
+                    },
+                  ])}
+                </SelectContent>
+              </Select>
+              <Select
+                onValueChange={(value) => {
+                  if (value && value !== 'ALL') {
+                    addParams({ regionId: value }, 'page', 'districtId')
+                  } else {
+                    removeParams('regionId', 'districtId')
+                  }
+                }}
+                value={rest?.regionId?.toString() || ''}
+                disabled={isLoadingRegions}
+              >
+                <SelectTrigger className="w-[150px] sm:w-40 lg:w-60">
+                  <SelectValue placeholder="Hudud" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">Barchasi</SelectItem>
+                  {getSelectOptions(regionOptions)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden sm:block">{action}</div>
+          </div>
+          <div className="block sm:hidden">{action && <div className="child:w-full w-full">{action}</div>}</div>
         </div>
-        <div className="flex flex-row items-center justify-between gap-2">
-          <Select
-            onValueChange={(value) => {
-              if (value && value !== 'ALL') {
-                addParams({ mode: value }, 'page')
-              } else {
-                removeParams('mode')
-              }
-            }}
-            value={mode || ''}
-          >
-            <SelectTrigger className="max-w-80 min-w-60">
-              <SelectValue placeholder="Rasmiylashtirish turi" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">Barchasi</SelectItem>
-              {getSelectOptions([
-                { id: 'OFFICIAL', name: 'Arizachilar tomonidan ro‘yxatga olingan' },
-                {
-                  id: 'UNOFFICIAL',
-                  name: 'Qo‘mita tomonidan ro‘yxatga olingan',
-                },
-              ])}
-            </SelectContent>
-          </Select>
-          <Select
-            onValueChange={(value) => {
-              if (value && value !== 'ALL') {
-                addParams({ regionId: value }, 'page', 'districtId')
-              } else {
-                removeParams('regionId', 'districtId')
-              }
-            }}
-            value={rest?.regionId?.toString() || ''}
-            disabled={isLoadingRegions}
-          >
-            <SelectTrigger className="max-w-60 min-w-40">
-              <SelectValue placeholder="Hudud" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">Barchasi</SelectItem>
-              {getSelectOptions(regionOptions)}
-            </SelectContent>
-          </Select>
-          {action}
+        <div className="min-w-0 overflow-x-auto">
+          <TabsLayout activeTab={status} tabs={applicationStatus} onTabChange={handleChangeTab} />
         </div>
       </div>
       <div className="flex flex-1 flex-col overflow-hidden">
