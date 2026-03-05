@@ -58,7 +58,7 @@ export const InquiriesStats = () => {
           <p className="mt-1 text-sm text-slate-500">Kelib tushgan murojaatlar bo‘yicha umumiy hisobot</p>
         </div>
 
-        <div className="flex overflow-x-auto pb-1 sm:pb-0">
+        <div className="scrollbar-hidden flex overflow-x-auto pb-1 sm:pb-0">
           <div className="inline-flex min-w-max rounded-lg bg-slate-100 p-1">
             {tabs.map((tab) => (
               <button

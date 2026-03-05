@@ -87,48 +87,7 @@ const RegisterWidget = () => {
           )
         }
       >
-        <div className={'flex flex-col gap-4 pt-1 xl:flex-row xl:items-center xl:justify-between'}>
-          {user?.role != UserRoles.INDIVIDUAL ? (
-            <div className={cn('scrollbar-hidden flex overflow-x-auto')}>
-              <TabsList className="min-w-max">
-                <TabsTrigger value={RegisterActiveTab.HF}>
-                  XICHO
-                  <Badge variant="destructive" className="ml-2">
-                    {hfCount}
-                  </Badge>
-                </TabsTrigger>
-                <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
-                  Qurilmalar
-                  <Badge variant="destructive" className="ml-2">
-                    {equipmentsCount}
-                  </Badge>
-                </TabsTrigger>
-                <TabsTrigger value={RegisterActiveTab.IRS}>
-                  INM
-                  <Badge variant="destructive" className="ml-2">
-                    {irsCount}
-                  </Badge>
-                </TabsTrigger>
-                <TabsTrigger value={RegisterActiveTab.XRAY}>
-                  Rentgenlar
-                  <Badge variant="destructive" className="ml-2">
-                    {xrayCount}
-                  </Badge>
-                </TabsTrigger>
-              </TabsList>
-            </div>
-          ) : (
-            <div className={cn('scrollbar-hidden flex overflow-x-auto overflow-y-hidden')}>
-              <TabsList>
-                <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
-                  Qurilmalar
-                  <Badge variant="destructive" className="ml-2">
-                    {equipmentsCount}
-                  </Badge>
-                </TabsTrigger>
-              </TabsList>
-            </div>
-          )}
+        <div className={'flex flex-col gap-4 pt-1 xl:flex-row-reverse xl:items-center xl:justify-between'}>
           <div className="flex flex-col gap-3 xl:flex-1 xl:flex-row xl:items-center xl:justify-end">
             <div className="scrollbar-hidden flex items-center gap-2 overflow-x-auto pb-1 xl:pb-0">
               <div className="flex min-w-max items-center gap-2 sm:w-full sm:min-w-0 sm:flex-row sm:gap-2">
@@ -200,11 +159,53 @@ const RegisterWidget = () => {
               disabled={isLoading || ((type == 'ALL' || type === 'TANKERS') && tab == RegisterActiveTab.EQUIPMENTS)}
               loading={isLoading}
               onClick={handleDownloadExel}
-              className="flex w-full items-center gap-2 xl:w-auto"
+              className="hidden items-center gap-2 xl:flex xl:w-auto"
             >
               <Download className="h-4 w-4" /> Exel
             </Button>
           </div>
+
+          {user?.role != UserRoles.INDIVIDUAL ? (
+            <div className={cn('scrollbar-hidden flex overflow-x-auto')}>
+              <TabsList className="min-w-max">
+                <TabsTrigger value={RegisterActiveTab.HF}>
+                  XICHO
+                  <Badge variant="destructive" className="ml-2">
+                    {hfCount}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
+                  Qurilmalar
+                  <Badge variant="destructive" className="ml-2">
+                    {equipmentsCount}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger value={RegisterActiveTab.IRS}>
+                  INM
+                  <Badge variant="destructive" className="ml-2">
+                    {irsCount}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger value={RegisterActiveTab.XRAY}>
+                  Rentgenlar
+                  <Badge variant="destructive" className="ml-2">
+                    {xrayCount}
+                  </Badge>
+                </TabsTrigger>
+              </TabsList>
+            </div>
+          ) : (
+            <div className={cn('scrollbar-hidden flex overflow-x-auto overflow-y-hidden')}>
+              <TabsList>
+                <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
+                  Qurilmalar
+                  <Badge variant="destructive" className="ml-2">
+                    {equipmentsCount}
+                  </Badge>
+                </TabsTrigger>
+              </TabsList>
+            </div>
+          )}
         </div>
         <TabsContent value={RegisterActiveTab.HF} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
           <HfList />
