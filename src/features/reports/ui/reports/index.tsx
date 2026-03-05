@@ -2,8 +2,9 @@ import React, { Fragment } from 'react'
 import {
   Activity,
   AlertTriangle,
+  Siren,
+  Flame,
   BarChart,
-  ClipboardCheck,
   Clock,
   Database,
   FileSearch,
@@ -71,6 +72,25 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Qurilmalaring muddatlari bo‘yicha hisobot',
         icon: Clock,
         url: `/reports/${ApplicationTypeEnum.REPORT_5}`,
+      },
+    ],
+  },
+  {
+    id: 'accidents-and-incidents',
+    title: 'Baxtsiz hodisalar va avariyalar',
+    items: [
+      {
+        id: 'rep-6',
+        title: 'Baxtsiz hodisalar bo‘yicha umumiy hisobot',
+        icon: Siren,
+        url: `/reports/${ApplicationTypeEnum.REPORT_6}`,
+        badge: 'Yangi',
+      },
+      {
+        id: 'rep-7',
+        title: 'Avariyalar bo‘yicha umumiy hisobot',
+        icon: Flame,
+        url: `/reports/${ApplicationTypeEnum.REPORT_7}`,
         badge: 'Yangi',
       },
     ],
@@ -95,7 +115,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
     id: 'inspections',
     title: 'Tekshiruvlar',
     items: [
-      { id: 'insp-results', title: 'Tekshiruvlar natijalari', icon: ClipboardCheck, url: '#' },
       { id: 'insp-types', title: 'Rejali va rejadan tashqari', icon: FileSearch, url: '#' },
       { id: 'insp-rejected', title: '1 kunlik va 10 kunlik tekshiruvlar', icon: Clock, url: '#' },
     ],

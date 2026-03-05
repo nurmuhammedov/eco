@@ -6,6 +6,7 @@ import DetailRow from '@/shared/components/common/detail-row'
 import { getDate } from '@/shared/utils/date'
 import FileLink from '@/shared/components/common/file-link'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
+import { ApplicationStatusBadge } from '@/entities/application/ui/application-status-badge'
 
 export const DeclarationDetail = () => {
   const { id } = useParams()
@@ -40,14 +41,15 @@ export const DeclarationDetail = () => {
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="legal_org" title="Deklaratsiya ishlab chiquvchi tashkilot">
-          <LegalApplicantInfo tinNumber={detail?.legalTin} />
+          <LegalApplicantInfo tinNumber={detail?.expertTin} />
         </DetailCardAccordion.Item>
 
-        <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida ma’lumot">
+        <DetailCardAccordion.Item value="object_info" title="XICHOlar to‘g‘risida ma’lumot">
           <div className="flex flex-col py-1">
-            <DetailRow title="XICHO joylashgan manzil:" value={detail?.address || '-'} />
-            <DetailRow title="XICHO nomi:" value={detail?.hfName || '-'} />
-            <DetailRow title="XICHO reyestr raqami:" value={detail?.hfRegistryNumber || '-'} />
+            <DetailRow
+              title="XICHOlar reyestr raqamlari:"
+              value={detail?.hfRegistryNumbers?.length > 0 ? detail.hfRegistryNumbers.join(', ') : '-'}
+            />
           </div>
         </DetailCardAccordion.Item>
 
@@ -56,6 +58,10 @@ export const DeclarationDetail = () => {
             <DetailRow title="Deklaratsiya ro‘yxat raqami:" value={detail?.registryNumber || '-'} />
             <DetailRow title="Ekspertiza xulosasi reyestr raqami:" value={detail?.conclusionRegistryNumber || '-'} />
             <DetailRow title="Yaratilgan sana:" value={detail?.createdAt ? getDate(detail?.createdAt) : '-'} />
+            <DetailRow
+              title="Holat:"
+              value={detail?.status ? <ApplicationStatusBadge status={detail.status} /> : '-'}
+            />
             <DetailRow
               title="Deklaratsiya fayli:"
               value={detail?.filePath ? <FileLink url={detail?.filePath} /> : '-'}

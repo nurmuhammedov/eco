@@ -128,45 +128,52 @@ export function DataTable<TData, TValue>({
       <div className={cn('relative flex-1 overflow-auto rounded-md bg-white', className)}>
         <Table className="p-2" style={fixedTableStyle}>
           <TableHeader className="p-2 font-semibold text-black">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {showNumeration && (
-                  <TableHead
-                    className={cn(
-                      'w-[1%] whitespace-nowrap',
-                      showFilters
-                        ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
-                        : 'first:rounded-l-lg! last:rounded-r-lg!'
-                    )}
-                  >
-                    T/R
-                  </TableHead>
-                )}
-                {headerGroup.headers.map((header) => {
-                  const isActions = header.id === 'actions'
-                  const columnDef = header.column.columnDef as ExtendedColumnDef<TData, TValue>
-                  return (
+            {table.getHeaderGroups().map((headerGroup, groupIdx) => {
+              const isFirstRow = groupIdx === 0
+              const isLastRow = groupIdx === table.getHeaderGroups().length - 1
+
+              return (
+                <TableRow key={headerGroup.id}>
+                  {showNumeration && (
                     <TableHead
-                      key={header.id}
-                      colSpan={header.colSpan}
                       className={cn(
-                        showFilters
-                          ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
-                          : 'first:rounded-l-lg! last:rounded-r-lg!',
-                        isActions && 'w-[1%] whitespace-nowrap',
-                        columnDef.className
+                        'w-[1%] whitespace-nowrap',
+                        isFirstRow && 'first:rounded-tl-lg! last:rounded-tr-lg!',
+                        !showFilters && isLastRow ? 'first:rounded-bl-lg! last:rounded-br-lg!' : '',
+                        !isFirstRow && (!isLastRow || showFilters) && 'first:rounded-none! last:rounded-none!',
+                        isFirstRow && !isLastRow && 'first:rounded-bl-none! last:rounded-br-none!'
                       )}
-                      style={{
-                        ...getCommonPinningStyles({ column: header.column }),
-                        ...(headerCenter ? { textAlign: 'center' } : {}),
-                      }}
                     >
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      T/R
                     </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
+                  )}
+                  {headerGroup.headers.map((header) => {
+                    const isActions = header.id === 'actions'
+                    const columnDef = header.column.columnDef as ExtendedColumnDef<TData, TValue>
+                    return (
+                      <TableHead
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        className={cn(
+                          isFirstRow && 'first:rounded-tl-lg! last:rounded-tr-lg!',
+                          !showFilters && isLastRow ? 'first:rounded-bl-lg! last:rounded-br-lg!' : '',
+                          !isFirstRow && (!isLastRow || showFilters) && 'first:rounded-none! last:rounded-none!',
+                          isFirstRow && !isLastRow && 'first:rounded-bl-none! last:rounded-br-none!',
+                          isActions && 'w-[1%] whitespace-nowrap',
+                          columnDef.className
+                        )}
+                        style={{
+                          ...getCommonPinningStyles({ column: header.column }),
+                          ...(headerCenter ? { textAlign: 'center' } : {}),
+                        }}
+                      >
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      </TableHead>
+                    )
+                  })}
+                </TableRow>
+              )
+            })}
 
             {showFilters && (
               <TableRow className="border-neutral-200 !bg-white even:!bg-white hover:!bg-white">

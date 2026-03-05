@@ -1,7 +1,7 @@
 import { Navigation } from '@/widgets/sidebar/models/types'
 import {
   Activity,
-  Ambulance,
+  Siren,
   BadgeCheck,
   BarChart2,
   Building2,
@@ -110,6 +110,6 @@ export default [
     id: 'ACCIDENT',
     title: 'Baxtsiz hod. va Avariyalar',
     url: '/accidents',
-    icon: <Ambulance />,
+    icon: <Siren />,
   },
 ] as Navigation

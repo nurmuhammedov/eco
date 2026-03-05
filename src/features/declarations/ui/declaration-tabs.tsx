@@ -5,10 +5,10 @@ import React from 'react'
 
 export enum DeclarationTabKey {
   ALL = 'ALL',
-  IN_PROGRESS = 'IN_PROGRESS',
-  RETURNED = 'RETURNED',
-  APPROVED = 'APPROVED',
+  IN_PROCESS = 'IN_PROCESS',
+  COMPLETED = 'COMPLETED',
   REJECTED = 'REJECTED',
+  CANCELED = 'CANCELED',
 }
 
 interface DeclarationTabsProps {
@@ -19,18 +19,18 @@ interface DeclarationTabsProps {
 
 const tabIcons: Record<string, React.ReactNode> = {
   [DeclarationTabKey.ALL]: <Layers className="h-5 w-5" />,
-  [DeclarationTabKey.IN_PROGRESS]: <Loader2 className="h-5 w-5" />,
-  [DeclarationTabKey.RETURNED]: <RotateCcw className="h-5 w-5" />,
-  [DeclarationTabKey.APPROVED]: <CheckCircle2 className="h-5 w-5" />,
+  [DeclarationTabKey.IN_PROCESS]: <Loader2 className="h-5 w-5" />,
+  [DeclarationTabKey.COMPLETED]: <CheckCircle2 className="h-5 w-5" />,
   [DeclarationTabKey.REJECTED]: <XCircle className="h-5 w-5" />,
+  [DeclarationTabKey.CANCELED]: <RotateCcw className="h-5 w-5" />,
 }
 
 export const tabs = [
   { key: DeclarationTabKey.ALL, label: 'Barchasi' },
-  { key: DeclarationTabKey.IN_PROGRESS, label: 'Jarayonda' },
-  { key: DeclarationTabKey.RETURNED, label: 'Qayta ishlashda' },
-  { key: DeclarationTabKey.APPROVED, label: 'Yakunlangan' },
-  { key: DeclarationTabKey.REJECTED, label: 'Bekor qilingan' },
+  { key: DeclarationTabKey.IN_PROCESS, label: 'Jarayonda' },
+  { key: DeclarationTabKey.COMPLETED, label: 'Yakunlangan' },
+  { key: DeclarationTabKey.REJECTED, label: 'Rad etilgan' },
+  { key: DeclarationTabKey.CANCELED, label: 'Bekor qilingan' },
 ]
 
 export const DeclarationTabs = ({ activeTab, onTabChange, counts = {} }: DeclarationTabsProps) => {

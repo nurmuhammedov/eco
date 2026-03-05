@@ -6,7 +6,13 @@ import { CreateDeclarationFormValues } from '../model/declaration.types'
 const BASE_URL = '/declarations'
 
 export const createDeclaration = async (data: CreateDeclarationFormValues) => {
-  const response = await apiClient.post(BASE_URL, data)
+  const payload = {
+    customerTin: data.customerTin,
+    conclusionId: data.conclusionId,
+    hfIds: data.hfIds,
+    filePath: data.filePath,
+  }
+  const response = await apiClient.post(`${BASE_URL}/by-expert`, payload)
   return response.data
 }
 

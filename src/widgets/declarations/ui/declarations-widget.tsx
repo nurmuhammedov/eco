@@ -8,8 +8,8 @@ import { useData } from '@/shared/hooks'
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
 // import { TabsLayout } from '@/shared/layouts'
-import { useCustomSearchParams } from '@/shared/hooks'
-import { DeclarationTabs } from '@/features/declarations/ui/declaration-tabs'
+import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { DeclarationTabs, DeclarationTabKey } from '@/features/declarations/ui/declaration-tabs'
 
 const DeclarationsWidget = () => {
   const { user } = useAuth()
@@ -24,7 +24,37 @@ const DeclarationsWidget = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
   const { status: tabStatus = 'ALL' } = paramsObject
 
+  const { totalElements: allCount } = usePaginatedData<any>('/declarations', { page: 1, size: 1 })
+  const { totalElements: inProcessCount } = usePaginatedData<any>('/declarations', {
+    page: 1,
+    size: 1,
+    status: 'IN_PROCESS',
+  })
+  const { totalElements: completedCount } = usePaginatedData<any>('/declarations', {
+    page: 1,
+    size: 1,
+    status: 'COMPLETED',
+  })
+  const { totalElements: rejectedCount } = usePaginatedData<any>('/declarations', {
+    page: 1,
+    size: 1,
+    status: 'REJECTED',
+  })
+  const { totalElements: canceledCount } = usePaginatedData<any>('/declarations', {
+    page: 1,
+    size: 1,
+    status: 'CANCELED',
+  })
+
   const { data: status = 'NOT_PERMITTED' } = useData<any>('/accreditations/status', canAdd)
+
+  const counts: Record<string, number> = {
+    [DeclarationTabKey.ALL]: Number(allCount) || 0,
+    [DeclarationTabKey.IN_PROCESS]: Number(inProcessCount) || 0,
+    [DeclarationTabKey.COMPLETED]: Number(completedCount) || 0,
+    [DeclarationTabKey.REJECTED]: Number(rejectedCount) || 0,
+    [DeclarationTabKey.CANCELED]: Number(canceledCount) || 0,
+  }
 
   const isStopped = status === 'STOPPED'
   const isExpired = status === 'EXPIRED'
@@ -79,7 +109,7 @@ const DeclarationsWidget = () => {
         </div>
       )}
 
-      <DeclarationTabs activeTab={tabStatus} onTabChange={(id) => addParams({ status: id })} counts={{}} />
+      <DeclarationTabs activeTab={tabStatus} onTabChange={(id) => addParams({ status: id })} counts={counts} />
 
       <div className="flex flex-1 flex-col gap-2 overflow-hidden">
         <DeclarationsTable />

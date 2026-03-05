@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/shared/components/ui/button'
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { ApplicationStatusBadge } from '@/entities/application/ui/application-status-badge'
+import { ApplicationStatus } from '@/entities/application'
 
 export const DeclarationsTable = () => {
   const navigate = useNavigate()
@@ -16,11 +18,12 @@ export const DeclarationsTable = () => {
     paramsObject: { page = 1, size = 10, ...rest },
   } = useCustomSearchParams()
 
-  const { data = [], isLoading } = usePaginatedData<any>('/declarations', {
-    page: page,
-    size: size,
-    ...rest,
-  })
+  const queryParams: Record<string, any> = { page, size, ...rest }
+  if (queryParams.status === 'ALL') {
+    delete queryParams.status
+  }
+
+  const { data = [], isLoading } = usePaginatedData<any>('/declarations', queryParams)
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -30,27 +33,25 @@ export const DeclarationsTable = () => {
       filterType: 'search',
     },
     {
-      accessorKey: 'hfName',
-      header: 'Deklaratsiya qilingan XICHOning nomi',
-      filterKey: 'hfName',
-      filterType: 'search',
-    },
-    {
-      accessorKey: 'hfRegistryNumber',
-      header: 'XICHO reyestr raqami',
+      accessorKey: 'hfRegistryNumbers',
+      header: 'XICHOlar reyestr raqamlari',
       filterKey: 'hfRegistryNumber',
       filterType: 'search',
+      cell: ({ row }: any) => {
+        const numbers = row.original.hfRegistryNumbers
+        return numbers && numbers.length > 0 ? numbers.join(', ') : '-'
+      },
     },
     {
-      accessorKey: 'address',
-      header: 'XICHO joylashgan manzil',
-      filterKey: 'address',
+      accessorKey: 'expertName',
+      header: 'Deklaratsiya ishlab chiquvchi tashkilot nomi',
+      filterKey: 'expertName',
       filterType: 'search',
     },
     {
-      accessorKey: 'legalName',
-      header: 'Deklaratsiya ishlab chiquvchi tashkilot',
-      filterKey: 'legalName',
+      accessorKey: 'expertTin',
+      header: 'Deklaratsiya ishlab chiquvchi tashkilot STIRi',
+      filterKey: 'expertTin',
       filterType: 'search',
     },
     {
@@ -75,6 +76,21 @@ export const DeclarationsTable = () => {
       accessorKey: 'createdAt',
       header: 'Ro‘yxatga olish sanasi',
       cell: (cell) => (cell.row.original.createdAt ? formatDate(cell.row.original.createdAt, 'dd.MM.yyyy') : null),
+    },
+    {
+      accessorKey: 'status',
+      header: 'Holati',
+      // filterKey: 'status',
+      // filterType: 'select',
+      // filterOptions: [
+      //   { name: 'Jarayonda', id: 'IN_PROCESS' },
+      //   { name: 'Yakunlangan', id: 'COMPLETED' },
+      //   { name: 'Rad etilgan', id: 'REJECTED' },
+      //   { name: 'Bekor qilingan', id: 'CANCELED' },
+      // ],
+      cell: ({ row }: any) => {
+        return row.original.status ? <ApplicationStatusBadge status={row.original.status as ApplicationStatus} /> : '-'
+      },
     },
     {
       header: 'Deklaratsiya fayli',

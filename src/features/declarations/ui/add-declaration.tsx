@@ -10,8 +10,8 @@ import { Button } from '@/shared/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
+import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { cleanParams } from '@/shared/lib'
 import { InputFile } from '@/shared/components/common/file-upload'
@@ -30,19 +30,11 @@ export const AddDeclaration = () => {
     defaultValues: {
       customerTin: '',
       customerPhoneNumber: '',
-      hfId: undefined,
-      hfName: '',
-      hfRegistryNumber: '',
-      regionId: undefined,
-      districtId: undefined,
-      address: '',
+      hfIds: [],
       conclusionId: undefined,
       filePath: undefined,
     },
   })
-
-  const watchedRegionId = form.watch('regionId')
-  const watchedHfId = form.watch('hfId')
 
   const {
     data: legalInfo,
@@ -69,10 +61,6 @@ export const AddDeclaration = () => {
     retry: 1,
   })
 
-  const selectedRegionId = form.watch('regionId')
-  const { data: regions, isLoading: isRegionLoading } = useRegionSelectQueries()
-  const { data: districts, isLoading: isDistrictLoading } = useDistrictSelectQueries(selectedRegionId)
-
   const { mutate, isPending: isSubmitting } = useMutation({
     mutationFn: createDeclaration,
     onSuccess: () => {
@@ -95,29 +83,6 @@ export const AddDeclaration = () => {
       )
     }
   }, [legalInfo, searchedStir, form])
-
-  const selectedHfo = hfoOptions?.find((hfo) => hfo.id === watchedHfId)
-  useEffect(() => {
-    if (watchedHfId && hfoOptions) {
-      if (selectedHfo) {
-        form.setValue('hfName', selectedHfo.name || '')
-        form.setValue('hfRegistryNumber', selectedHfo.registryNumber || '')
-        form.setValue(
-          'regionId',
-          selectedHfo.regionId
-            ? (selectedHfo.regionId?.toString() as unknown as string)
-            : (undefined as unknown as string)
-        )
-        form.setValue(
-          'districtId',
-          selectedHfo.districtId
-            ? (selectedHfo.districtId?.toString() as unknown as string)
-            : (undefined as unknown as string)
-        )
-        form.setValue('address', selectedHfo.address || '')
-      }
-    }
-  }, [watchedHfId, hfoOptions, form])
 
   const handleSearch = () => {
     if (stir.length === 9) {
@@ -243,127 +208,24 @@ export const AddDeclaration = () => {
 
                   <FormField
                     control={form.control}
-                    name="hfId"
+                    name="hfIds"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>XICHO</FormLabel>
-                        <Select
-                          value={field.value?.toString()}
-                          onValueChange={(value) => {
-                            if (value) {
-                              field.onChange(value)
-                            }
-                          }}
-                          disabled={isHfoLoading}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Obyektni tanlang..." />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {hfoOptions?.map((option) => (
-                              <SelectItem key={option.id} value={option.id}>
-                                {`${option.registryNumber || 'N/A'} - ${option.name}`}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="hfName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>XICHO nomi</FormLabel>
+                        <FormLabel>XICHOlar</FormLabel>
                         <FormControl>
-                          <Input {...field} disabled={!!selectedHfo?.name} placeholder="XICHO nomini kiriting..." />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="regionId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Viloyat</FormLabel>
-                        <Select
-                          onValueChange={(value) => {
-                            field.onChange(value)
-                            form.setValue('districtId', undefined as unknown as string)
-                          }}
-                          value={field.value}
-                          disabled={isRegionLoading || !!selectedHfo?.regionId}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Viloyatni tanlang..." />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {regions?.map((region: any) => (
-                              <SelectItem key={region.id} value={region.id?.toString()}>
-                                {region.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="districtId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Tuman/Shahar</FormLabel>
-                        <Select
-                          {...field}
-                          value={field.value}
-                          onValueChange={(value) => {
-                            if (value) {
-                              field.onChange(value)
+                          <MultiSelect
+                            options={
+                              hfoOptions?.map((opt) => ({
+                                id: opt.id,
+                                name: `${opt.registryNumber || 'N/A'} - ${opt.name}`,
+                              })) || []
                             }
-                          }}
-                          disabled={isDistrictLoading || !watchedRegionId || !!selectedHfo?.districtId}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Tumanni tanlang..." />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {districts?.map((district: any) => (
-                              <SelectItem key={district.id} value={district.id?.toString()}>
-                                {district.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="address"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          Manzil <span className="text-red-400">(viloyat va tuman kiritilmasin)</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input {...field} disabled={!!selectedHfo?.address} placeholder="Manzilni kiriting..." />
+                            value={field.value}
+                            onChange={(vals) => field.onChange(vals as string[])}
+                            disabled={isHfoLoading}
+                            placeholder="Obyektlarni tanlang..."
+                            searchPlaceholder="XICHO nomi/reyestr raqami"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

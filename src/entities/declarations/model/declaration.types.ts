@@ -6,12 +6,7 @@ export const createDeclarationSchema = z.object({
   customerPhoneNumber: z.string({ required_error: FORM_ERROR_MESSAGES.required }).min(9, {
     message: FORM_ERROR_MESSAGES.phone,
   }),
-  hfId: z.string().optional(),
-  hfName: z.string({ required_error: FORM_ERROR_MESSAGES.required }),
-  hfRegistryNumber: z.string().optional(),
-  regionId: z.string({ required_error: FORM_ERROR_MESSAGES.required }),
-  districtId: z.string({ required_error: FORM_ERROR_MESSAGES.required }),
-  address: z.string({ required_error: FORM_ERROR_MESSAGES.required }),
+  hfIds: z.array(z.string()).min(1, { message: FORM_ERROR_MESSAGES.required }),
   conclusionId: z.string({ required_error: FORM_ERROR_MESSAGES.required }),
   filePath: z.string({ required_error: FORM_ERROR_MESSAGES.required }),
 })

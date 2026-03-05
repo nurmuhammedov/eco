@@ -27,6 +27,8 @@ const ReportsDetail2 = lazy(() => import('@/features/reports/ui/report2'))
 const ReportsDetail3 = lazy(() => import('@/features/reports/ui/report3'))
 const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
 const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
+const ReportsDetail6 = lazy(() => import('@/features/reports/ui/report6'))
+const ReportsDetail7 = lazy(() => import('@/features/reports/ui/report7'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
 const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
@@ -186,6 +188,16 @@ export const regionalRoutes = [
     id: 'REPORT',
     path: 'reports/REPORT_5',
     element: withSuspense(ReportsDetail5),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/REPORT_6',
+    element: withSuspense(ReportsDetail6),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/REPORT_7',
+    element: withSuspense(ReportsDetail7),
   },
 
   // PERMITS
