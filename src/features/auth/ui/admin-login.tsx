@@ -114,7 +114,7 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
         className={cn('flex h-full min-h-screen w-full flex-1 flex-col items-center justify-center gap-6', className)}
         onSubmit={form.handleSubmit(handleLogin)}
       >
-        <div className="w-[90%] sm:w-3/5 3xl:w-2/5">
+        <div className="3xl:w-2/5 w-[90%] sm:w-3/5">
           <div className="flex flex-col items-center gap-2 text-center">
             <h1 className="text-2xl font-bold whitespace-nowrap">{t('admin_panel')}</h1>
           </div>

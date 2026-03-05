@@ -76,29 +76,26 @@ export const DashboardPage = () => {
       <div className="w-full rounded-xl border bg-white p-4 shadow-sm">
         <div className="mb-4 flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <h1 className="mb-1 flex items-center gap-3 text-2xl font-bold text-slate-900">
-              Asosiy maʼlumotlar
-              <span className="text-base font-normal text-amber-600 italic">
-                (ushbu sahifa ishlab chiqish jarayonida)
-              </span>
-            </h1>
+            <h1 className="mb-1 flex items-center gap-3 text-2xl font-bold text-slate-900">Asosiy maʼlumotlar</h1>
           </div>
 
-          <div className="inline-flex items-center rounded-lg bg-slate-100 p-1">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={cn(
-                  'cursor-pointer rounded-md px-6 py-2 text-sm font-medium transition-all duration-200',
-                  currentTab === tab.id
-                    ? 'bg-[#0B626B] text-white shadow-sm'
-                    : 'text-slate-600 hover:bg-white/50 hover:text-slate-900'
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
+          <div className="scrollbar-hidden min-w-0 overflow-x-auto">
+            <div className="inline-flex min-w-max items-center rounded-lg bg-slate-100 p-1">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabChange(tab.id)}
+                  className={cn(
+                    'cursor-pointer rounded-md px-6 py-2 text-sm font-medium transition-all duration-200',
+                    currentTab === tab.id
+                      ? 'bg-[#0B626B] text-white shadow-sm'
+                      : 'text-slate-600 hover:bg-white/50 hover:text-slate-900'
+                  )}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 

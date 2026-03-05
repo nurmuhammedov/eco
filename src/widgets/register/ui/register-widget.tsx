@@ -87,9 +87,9 @@ const RegisterWidget = () => {
           )
         }
       >
-        <div className={'flex flex-col gap-4 pt-1 xl:flex-row-reverse xl:items-center xl:justify-between'}>
+        <div className={'flex flex-col gap-2 pt-1 xl:flex-row-reverse xl:items-center xl:justify-between'}>
           <div className="flex flex-col gap-3 xl:flex-1 xl:flex-row xl:items-center xl:justify-end">
-            <div className="scrollbar-hidden flex items-center gap-2 overflow-x-auto pb-1 xl:pb-0">
+            <div className="scrollbar-hidden flex items-center gap-2 overflow-x-auto xl:pb-0">
               <div className="flex min-w-max items-center gap-2 sm:w-full sm:min-w-0 sm:flex-row sm:gap-2">
                 <Select
                   onValueChange={(value) => {

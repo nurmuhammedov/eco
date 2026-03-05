@@ -35,7 +35,7 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
         <GoBack title="XICHOga o‘zgartirish kiritish" />
 
         <CardForm className="my-2">
-          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="hazardousFacilityId"
@@ -58,7 +58,7 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
         </CardForm>
 
         <CardForm className="my-2">
-          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="upperOrganization"

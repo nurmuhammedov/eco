@@ -26,7 +26,7 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
         <GoBack title="Attraksion ro‘yxatga olish" />
 
         <CardForm className="my-2">
-          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 gap-x-4 gap-y-5 md:grid md:grid-cols-2 xl:grid-cols-3">
+          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
             <FormField
               control={form.control}
               name="phoneNumber"

@@ -60,9 +60,7 @@ const FilesSection: FC<Props> = ({ files }) => {
           className="flex flex-col items-start gap-3 border-b border-b-[#E5E7EB] px-3 py-4 sm:flex-row sm:items-center sm:justify-between"
         >
           <p className={'pr-5 text-sm font-medium text-gray-700 sm:text-base'}>{file.label}</p>
-          <div className="flex items-center gap-2">
-            {showFileData(file)}
-          </div>
+          <div className="flex items-center gap-2">{showFileData(file)}</div>
         </div>
       ))}
     </div>
