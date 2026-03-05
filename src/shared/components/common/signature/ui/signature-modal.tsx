@@ -11,13 +11,14 @@ import {
   AlertDialogTrigger,
 } from '@/shared/components/ui/alert-dialog'
 import { Button } from '@/shared/components/ui/button'
-import { useSignatureClient } from '@/shared/hooks'
 import { getSignatureKeys } from '@/shared/lib'
+import { useSignatureClient } from '@/shared/hooks'
 import { SignatureKey } from '@/shared/types/signature'
 import { Loader2, Signature, UsbIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SignatureSelect } from '../index'
 import { apiConfig } from '@/shared/api/constants'
+import { useMobileDocumentSigning } from '../model'
 
 interface SignatureModalProps {
   isLoading: boolean
@@ -40,9 +41,23 @@ export const SignatureModal = ({
   const { signatureKeys, isCKCPLuggedIn } = getSignatureKeys()
   const [open, setOpen] = useState(false)
   const [selectedCertificate, setSelectedCertificate] = useState<SignatureKey | null>(null)
+
+  // Desktop
   const { mutateAsync: signDocument, isPending } = useDocumentSigning()
 
-  const isLoadingSignature = isLoading || isPending
+  // Mobile
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+  }, [])
+  const {
+    startSigning: startMobileSigning,
+    isStarting: isMobileStarting,
+    isPolling: isMobilePolling,
+    deepLink,
+  } = useMobileDocumentSigning({ documentUrl, onSuccess: submitApplicationMetaData })
+
+  const isLoadingSignature = isLoading || isPending || isMobileStarting
 
   const handleSelectCertificate = (cert: SignatureKey) => {
     setSelectedCertificate(cert)
@@ -83,6 +98,29 @@ export const SignatureModal = ({
           <Signature className="size-4" />
           Imzolash
         </Button>
+      ) : isMobile ? (
+        <>
+          <Button
+            variant="default"
+            className="w-full md:w-auto"
+            loading={isLoadingSignature}
+            disabled={isLoadingSignature || !!error}
+            onClick={() => {
+              if (deepLink) {
+                window.location.href = deepLink
+              } else {
+                startMobileSigning()
+              }
+            }}
+          >
+            <Signature className="size-4" />
+            {isMobilePolling
+              ? 'Ilovada tasdiqlang...'
+              : deepLink
+                ? 'E-imzo ilovasini ochish'
+                : 'Mobil ilova orqali imzolash'}
+          </Button>
+        </>
       ) : (
         <>
           <Button
@@ -112,7 +150,7 @@ export const SignatureModal = ({
         </AlertDialogHeader>
 
         <div className="py-4">
-          <SignatureSelect onSelect={handleSelectCertificate} certificates={signatureKeys} />
+          {!isMobile && <SignatureSelect onSelect={handleSelectCertificate} certificates={signatureKeys} />}
           {/*{selectedCertificate && (*/}
           {/*  <div className="mt-4 rounded-md border border-green-100 bg-green-50 p-3">*/}
           {/*    <p className="text-sm text-green-800">*/}

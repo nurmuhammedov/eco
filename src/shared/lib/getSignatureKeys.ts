@@ -8,7 +8,9 @@ export function getSignatureKeys() {
   const [isCKCPLuggedIn, setIsCKCPLuggedIn] = useState<boolean>(false)
 
   useEffect(() => {
-    if (isScriptLoaded) {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+
+    if (isScriptLoaded && !isMobile) {
       Client.install()
         .then(() => {
           Client.listAllUserKeys()
@@ -20,7 +22,7 @@ export function getSignatureKeys() {
         })
         .catch(() => toast.error('Error connecting to E-IMZO'))
     }
-  }, [isScriptLoaded])
+  }, [isScriptLoaded, Client])
 
   return { signatureKeys, isCKCPLuggedIn }
 }
