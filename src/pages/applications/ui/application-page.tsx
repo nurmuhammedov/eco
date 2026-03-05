@@ -51,10 +51,10 @@ const ApplicationPage = () => {
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">
-      <div className="flex flex-col gap-4 pt-1">
-        <div className="flex w-full flex-col gap-2">
-          <div className="flex w-full items-center gap-2 overflow-x-auto pb-1 sm:overflow-visible sm:pb-0">
-            <div className="flex min-w-max flex-1 items-center gap-2 sm:min-w-0">
+      <div className="flex flex-col gap-4 pt-1 lg:flex-row-reverse lg:items-center lg:justify-between">
+        <div className="flex w-full flex-col gap-2 lg:w-auto lg:flex-row lg:items-center">
+          <div className="flex w-full items-center gap-2 overflow-x-auto pb-1 sm:overflow-visible sm:pb-0 lg:w-auto">
+            <div className="flex min-w-max flex-1 items-center gap-2 sm:min-w-0 lg:w-auto">
               <Select
                 onValueChange={(value) => {
                   if (value && value !== 'ALL') {
@@ -103,7 +103,7 @@ const ApplicationPage = () => {
           </div>
           <div className="block sm:hidden">{action && <div className="w-full [&>button]:w-full">{action}</div>}</div>
         </div>
-        <div className="min-w-0 overflow-x-auto">
+        <div className="min-w-0 overflow-x-auto lg:flex-1">
           <TabsLayout activeTab={status} tabs={applicationStatus} onTabChange={handleChangeTab} />
         </div>
       </div>
