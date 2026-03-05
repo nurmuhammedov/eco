@@ -101,7 +101,7 @@ const ApplicationPage = () => {
             </div>
             <div className="hidden sm:block">{action}</div>
           </div>
-          <div className="block sm:hidden">{action && <div className="child:w-full w-full">{action}</div>}</div>
+          <div className="block sm:hidden">{action && <div className="w-full [&>button]:w-full">{action}</div>}</div>
         </div>
         <div className="min-w-0 overflow-x-auto">
           <TabsLayout activeTab={status} tabs={applicationStatus} onTabChange={handleChangeTab} />
