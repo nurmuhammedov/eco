@@ -74,7 +74,16 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
     },
   ]
 
-  return <DataTable showFilters={true} isPaginated data={data || []} columns={columns} isLoading={isLoading} />
+  return (
+    <DataTable
+      paginationClassName="!pb-2"
+      showFilters={true}
+      isPaginated
+      data={data || []}
+      columns={columns}
+      isLoading={isLoading}
+    />
+  )
 }
 
 export default List

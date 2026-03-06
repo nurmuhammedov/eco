@@ -4,6 +4,7 @@ import svgr from 'vite-plugin-svgr'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import compression from 'vite-plugin-compression'
+import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -49,6 +50,47 @@ export default defineConfig({
       algorithm: 'brotliCompress',
       threshold: 1024,
       deleteOriginFile: false,
+    }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: 'auto',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        navigateFallbackDenylist: [/^\/api/, /^\/files/, /^\/swagger-ui/, /^\/v3\/api-docs/, /^\/metrics/, /^\/home/],
+      },
+      manifest: {
+        name: 'Ekotizim',
+        short_name: 'Ekotizim',
+        description: 'Ekotizim axborot tizimi',
+        theme_color: '#016b7b',
+        background_color: '#ffffff',
+        display: 'standalone',
+        start_url: '/',
+        scope: '/',
+        icons: [
+          {
+            src: '/brand-logo.webp',
+            sizes: '192x192',
+            type: 'image/webp',
+          },
+          {
+            src: '/brand-logo.webp',
+            sizes: '512x512',
+            type: 'image/webp',
+          },
+          {
+            src: '/brand-logo.webp',
+            sizes: '512x512',
+            type: 'image/webp',
+            purpose: 'any maskable',
+          },
+        ],
+      },
+      devOptions: {
+        enabled: true,
+        type: 'module',
+      },
     }),
   ],
   server: {

@@ -28,25 +28,29 @@ export default function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="group flex cursor-pointer items-center space-x-2">
-          <Avatar className="border-border h-9 w-9 border">
-            <AvatarImage src="" alt="@shadcn" />
-            <AvatarFallback className="bg-neutral-100 text-neutral-900">
-              <User size={18} />
+        <div className="group flex cursor-pointer items-center gap-3 transition-opacity">
+          <Avatar className="border-border h-10 w-10 border">
+            <AvatarImage src="" alt={user?.name || ''} />
+            <AvatarFallback className="bg-neutral-150 text-neutral-900">
+              <User size={20} />
             </AvatarFallback>
           </Avatar>
-          <div className="hidden text-left sm:block">
-            <p className="text-sm leading-none font-medium">{truncateString(user?.name)}</p>
-            {user?.role && <p className="text-muted-foreground mt-1 text-[10px]">{UserRoleLabels[user?.role] || ''}</p>}
+          <div className="hidden flex-col items-start text-left sm:flex">
+            <p className="text-foreground line-clamp-2 text-sm leading-tight font-medium">
+              {truncateString(user?.name, 50)}
+            </p>
+            {user?.role && (
+              <p className="text-muted-foreground max-w-[150px] truncate text-xs">{UserRoleLabels[user?.role] || ''}</p>
+            )}
           </div>
-          <ChevronDown className="text-muted-foreground hidden h-4 w-4 opacity-50 transition-transform duration-200 group-data-[state=open]:rotate-180 sm:block" />
+          <ChevronDown className="text-muted-foreground hidden h-4 !min-h-4 w-4 !min-w-4 opacity-50 transition-transform duration-200 group-data-[state=open]:rotate-180 sm:block" />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
         <div className="sm:hidden">
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm leading-none font-medium">{user?.name}</p>
+              <p className="text-sm leading-tight font-medium">{user?.name}</p>
               {user?.role && (
                 <p className="text-muted-foreground text-xs leading-none">{UserRoleLabels[user?.role] || ''}</p>
               )}

@@ -156,7 +156,15 @@ const PreventionTable: FC<Props> = ({ regions }) => {
 
   return (
     <>
-      <DataTable isPaginated showFilters data={data || []} columns={columns} isLoading={isLoading} className="flex-1" />
+      <DataTable
+        isPaginated
+        showFilters
+        data={data || []}
+        columns={columns}
+        isLoading={isLoading}
+        className="flex-1"
+        paginationClassName="!pb-2"
+      />
       <AssignInspectorModal />
     </>
   )

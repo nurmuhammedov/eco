@@ -190,7 +190,7 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="flex items-end gap-3">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-3">
               <FormField
                 control={form.control}
                 name="stir"
@@ -198,7 +198,7 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
                   <FormItem className="flex-1">
                     <FormLabel>STIR (JSHSHIR)</FormLabel>
                     <FormControl>
-                      <Input placeholder="123456789" {...field} maxLength={14} />
+                      <Input placeholder="123456789" {...field} maxLength={14} className="w-full" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -211,13 +211,13 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
                   <FormItem className="flex-1">
                     <FormLabel>Ro‘yxatga olingan raqami</FormLabel>
                     <FormControl>
-                      <Input placeholder="RA-12345" {...field} />
+                      <Input placeholder="RA-12345" {...field} className="w-full" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isAnySearchPending} className="min-w-[100px]">
+              <Button type="submit" disabled={isAnySearchPending} className="w-full sm:w-[120px]">
                 {isAnySearchPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Qidirish'}
               </Button>
             </div>
@@ -254,7 +254,7 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
               </Form>
             </div>
 
-            <DialogFooter className="mt-6 gap-2 sm:justify-end">
+            <DialogFooter className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:gap-2">
               <Button
                 onClick={() => {
                   setSearchResult(null)
@@ -262,6 +262,7 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
                 }}
                 type="button"
                 variant="outline"
+                className="w-full sm:w-auto"
               >
                 Bekor qilish
               </Button>
@@ -269,6 +270,7 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
                 type="button"
                 onClick={handleAdd}
                 disabled={isAnyAddPending || searchResult?.status === 'EXPIRED'}
+                className="w-full sm:w-auto"
               >
                 {isAnyAddPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                 Qo‘shish

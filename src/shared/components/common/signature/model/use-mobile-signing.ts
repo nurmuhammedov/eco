@@ -149,8 +149,17 @@ export function useMobileDocumentSigning({ documentUrl, onSuccess }: UseMobileDo
 
           if (statusRes.status === 1) {
             try {
+              // Priority 1: Use PKCS7 from status response if available
+              if (statusRes.pkcs7b64) {
+                const cleanPkcs7 = statusRes.pkcs7b64.replace(/\s/g, '')
+                stopPolling()
+                setIsSigning(false)
+                if (onSuccess) onSuccess(cleanPkcs7)
+                return
+              }
+
+              // Priority 2: Try to verify if status response didn't have PKCS7
               const verifyRes = await verifyMobileDocument(documentId, documentBase64)
-              console.log('Verify Mobile Document Result:', verifyRes)
 
               stopPolling()
               setIsSigning(false)
@@ -163,18 +172,26 @@ export function useMobileDocumentSigning({ documentUrl, onSuccess }: UseMobileDo
               if (finalPkcs7) {
                 finalPkcs7 = finalPkcs7.replace(/\s/g, '')
                 if (onSuccess) onSuccess(finalPkcs7)
-              } else if (onSuccess && statusRes.pkcs7b64) {
-                const cleanPkcs7 = statusRes.pkcs7b64.replace(/\s/g, '')
-                onSuccess(cleanPkcs7)
               } else {
                 console.error('Missing PKCS7 in response:', verifyRes)
-                toast.error('Imzo formati olinganida xatolik yuz berdi: ' + JSON.stringify(verifyRes))
+                toast.error(
+                  'Imzo formati olinganida xatolik yuz berdi: ' + (verifyRes?.message || JSON.stringify(verifyRes))
+                )
               }
             } catch (verifyError: any) {
               console.error('Verify document error:', verifyError)
-              stopPolling()
-              setIsSigning(false)
-              toast.error('Hujjatni imzolashda server xatoligi: ' + (verifyError.message || verifyError))
+
+              // If verify fails but we already have statusRes.pkcs7b64 (fallback just in case)
+              if (statusRes.pkcs7b64) {
+                const cleanPkcs7 = statusRes.pkcs7b64.replace(/\s/g, '')
+                stopPolling()
+                setIsSigning(false)
+                if (onSuccess) onSuccess(cleanPkcs7)
+              } else {
+                stopPolling()
+                setIsSigning(false)
+                toast.error('Hujjatni imzolashda server xatoligi: ' + (verifyError.message || verifyError))
+              }
             }
           } else if (statusRes.status !== 2) {
             stopPolling()

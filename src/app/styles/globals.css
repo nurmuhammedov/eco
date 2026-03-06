@@ -195,6 +195,12 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
+  html {
+    /* Fluid scaling: 14px dan 16px gacha silliq o'zgarish */
+    /* 320px dan 1280px gacha bo'lgan oraliqda font-size avtomatik moslashadi */
+    font-size: clamp(14px, 0.208vw + 13.333px, 16px);
+  }
+
   html,
   #root {
     height: 100%;

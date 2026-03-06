@@ -164,7 +164,7 @@ export const AddPermitTransportModal = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>{trigger}</Button>
+        <Button className="w-full md:w-auto">{trigger}</Button>
       </DialogTrigger>
 
       <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[1000px]">
@@ -174,7 +174,7 @@ export const AddPermitTransportModal = ({
 
         <Form {...form}>
           <div className="space-y-4 border-b pb-4">
-            <div className="flex items-end gap-3">
+            <div className="flex flex-col gap-3 md:flex-row md:items-end">
               {isInternalRole && (
                 <div className="flex-1">
                   <FormField
@@ -217,11 +217,15 @@ export const AddPermitTransportModal = ({
               </div>
 
               {!searchResult ? (
-                <Button onClick={form.handleSubmit(onSearchSubmit)} disabled={isPending || isPendingLegal}>
+                <Button
+                  className="w-full md:w-auto"
+                  onClick={form.handleSubmit(onSearchSubmit)}
+                  disabled={isPending || isPendingLegal}
+                >
                   {isPending || isPendingLegal ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Qidirish'}
                 </Button>
               ) : (
-                <Button variant="destructive" onClick={() => setSearchResult(null)}>
+                <Button className="w-full md:w-auto" variant="destructive" onClick={() => setSearchResult(null)}>
                   O‘chirish
                 </Button>
               )}
@@ -430,12 +434,17 @@ export const AddPermitTransportModal = ({
               </form>
             </Form>
 
-            <DialogFooter className="mt-4 gap-2 sm:justify-center">
-              <Button onClick={handleClose} type="button" variant="outline">
+            <DialogFooter className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center">
+              <Button className="w-full sm:w-auto" onClick={handleClose} type="button" variant="outline">
                 Bekor qilish
               </Button>
 
-              <Button type="button" onClick={handleSave} disabled={isAddPermitLoading || isAddLegalPermitLoading}>
+              <Button
+                className="w-full sm:w-auto"
+                type="button"
+                onClick={handleSave}
+                disabled={isAddPermitLoading || isAddLegalPermitLoading}
+              >
                 {isAddPermitLoading || isAddLegalPermitLoading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}

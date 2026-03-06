@@ -145,10 +145,9 @@ const AccidentList: React.FC = () => {
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
-      <div className="mb-0 flex justify-between gap-2">
+      <div className="mb-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <TabsLayout
           activeTab={type?.toString()}
-          className="mb-2"
           tabs={[
             {
               id: 'INJURY',
@@ -162,17 +161,21 @@ const AccidentList: React.FC = () => {
           onTabChange={(type) => addParams({ type: type }, 'page')}
         />
         {role === UserRoles.INSPECTOR && (
-          <>
+          <div className="flex w-full sm:w-auto">
             {type == 'INJURY' ? (
-              <Button onClick={() => navigate('/accidents/injury/add')} variant="default">
+              <Button onClick={() => navigate('/accidents/injury/add')} variant="default" className="w-full sm:w-auto">
                 <Plus className="mr-2 h-4 w-4" /> Baxtsiz hodisa qo‘shish
               </Button>
             ) : type == 'NON_INJURY' ? (
-              <Button onClick={() => navigate('/accidents/non-injury/add')} variant="default">
+              <Button
+                onClick={() => navigate('/accidents/non-injury/add')}
+                variant="default"
+                className="w-full sm:w-auto"
+              >
                 <Plus className="mr-2 h-4 w-4" /> Avariya qo‘shish
               </Button>
             ) : null}
-          </>
+          </div>
         )}
       </div>
       <DataTable

@@ -87,73 +87,71 @@ const RegisterWidget = () => {
           )
         }
       >
-        <div className={'flex flex-col gap-2 pt-1 xl:flex-row-reverse xl:items-center xl:justify-between'}>
-          <div className="flex flex-col gap-3 xl:flex-1 xl:flex-row xl:items-center xl:justify-end">
-            <div className="scrollbar-hidden flex items-center gap-2 overflow-x-auto xl:pb-0">
-              <div className="flex min-w-max items-center gap-2 sm:w-full sm:min-w-0 sm:flex-row sm:gap-2">
-                <Select
-                  onValueChange={(value) => {
-                    if (value && value !== 'ALL') {
-                      addParams({ mode: value }, 'page')
-                    } else {
-                      removeParams('mode')
-                    }
-                  }}
-                  value={mode || ''}
-                >
-                  <SelectTrigger className="w-56 sm:w-full xl:w-56">
-                    <SelectValue placeholder="Rasmiylashtirish turi" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ALL">Barchasi</SelectItem>
-                    {getSelectOptions([
-                      { id: 'OFFICIAL', name: 'Arizachilar tomonidan ro‘yxatga olingan' },
-                      {
-                        id: 'UNOFFICIAL',
-                        name: 'Qo‘mita tomonidan ro‘yxatga olingan',
-                      },
-                    ])}
-                  </SelectContent>
-                </Select>
-                <Select
-                  onValueChange={(value) => {
-                    if (value && value !== 'ALL') {
-                      addParams({ regionId: value }, 'page', 'districtId')
-                    } else {
-                      removeParams('regionId', 'districtId')
-                    }
-                  }}
-                  value={rest?.regionId?.toString() || ''}
-                  disabled={isLoadingRegions}
-                >
-                  <SelectTrigger className="w-40 sm:w-full xl:w-40">
-                    <SelectValue placeholder="Hudud" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ALL">Barchasi</SelectItem>
-                    {getSelectOptions(regionOptions)}
-                  </SelectContent>
-                </Select>
-                <Select
-                  onValueChange={(value) => {
-                    if (value && value !== 'ALL') {
-                      addParams({ districtId: value }, 'page')
-                    } else {
-                      removeParams('districtId')
-                    }
-                  }}
-                  value={rest?.districtId?.toString() || ''}
-                  disabled={isDistrictsLoading}
-                >
-                  <SelectTrigger className="w-40 sm:w-full xl:w-40">
-                    <SelectValue placeholder="Tuman" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ALL">Barchasi</SelectItem>
-                    {getSelectOptions(districts)}
-                  </SelectContent>
-                </Select>
-              </div>
+        <div className={'flex flex-col gap-4 xl:flex-row-reverse xl:items-center xl:justify-between'}>
+          <div className="flex flex-col gap-4 xl:flex-1 xl:flex-row xl:items-center xl:justify-end">
+            <div className="flex w-full flex-col gap-2 p-0.5 sm:flex-row sm:items-center xl:w-auto">
+              <Select
+                onValueChange={(value) => {
+                  if (value && value !== 'ALL') {
+                    addParams({ mode: value }, 'page')
+                  } else {
+                    removeParams('mode')
+                  }
+                }}
+                value={mode || ''}
+              >
+                <SelectTrigger className="w-full sm:w-fit sm:min-w-40 xl:w-fit xl:min-w-[200px]">
+                  <SelectValue placeholder="Rasmiylashtirish turi" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">Barchasi</SelectItem>
+                  {getSelectOptions([
+                    { id: 'OFFICIAL', name: 'Arizachilar tomonidan ro‘yxatga olingan' },
+                    {
+                      id: 'UNOFFICIAL',
+                      name: 'Qo‘mita tomonidan ro‘yxatga olingan',
+                    },
+                  ])}
+                </SelectContent>
+              </Select>
+              <Select
+                onValueChange={(value) => {
+                  if (value && value !== 'ALL') {
+                    addParams({ regionId: value }, 'page', 'districtId')
+                  } else {
+                    removeParams('regionId', 'districtId')
+                  }
+                }}
+                value={rest?.regionId?.toString() || ''}
+                disabled={isLoadingRegions}
+              >
+                <SelectTrigger className="w-full sm:w-fit sm:min-w-32 xl:w-fit xl:min-w-[120px]">
+                  <SelectValue placeholder="Hudud" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">Barchasi</SelectItem>
+                  {getSelectOptions(regionOptions)}
+                </SelectContent>
+              </Select>
+              <Select
+                onValueChange={(value) => {
+                  if (value && value !== 'ALL') {
+                    addParams({ districtId: value }, 'page')
+                  } else {
+                    removeParams('districtId')
+                  }
+                }}
+                value={rest?.districtId?.toString() || ''}
+                disabled={isDistrictsLoading}
+              >
+                <SelectTrigger className="w-full sm:w-fit sm:min-w-32 xl:w-fit xl:min-w-[120px]">
+                  <SelectValue placeholder="Tuman" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ALL">Barchasi</SelectItem>
+                  {getSelectOptions(districts)}
+                </SelectContent>
+              </Select>
             </div>
             <Button
               disabled={isLoading || ((type == 'ALL' || type === 'TANKERS') && tab == RegisterActiveTab.EQUIPMENTS)}

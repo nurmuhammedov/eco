@@ -44,7 +44,7 @@ export const TenDaysSignModal = ({ open, onOpenChange, data }: TenDaysSignModalP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex h-[1000px] max-h-[95vh] w-[740px] max-w-[98vw] flex-col gap-0 p-0">
+      <DialogContent className="flex h-[1000px] !max-h-[90vh] !w-[740px] !max-w-[90vw] flex-col gap-0 p-0">
         <DialogHeader className="flex-shrink-0 border-b p-6 pb-4">
           <DialogTitle className="flex items-end gap-x-2">
             <FileText className="h-5 w-5 text-yellow-600" />

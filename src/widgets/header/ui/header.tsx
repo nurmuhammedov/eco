@@ -53,19 +53,38 @@ export function Header() {
   const showQuarterFilter = showYearFilter && pathname !== '/preventions'
 
   const title = useMemo(() => {
-    if (pathname === '/register') return 'Reyestrlar'
-    if (pathname === '/applications') return 'Arizalar'
-    if (pathname === '/permits') return 'Ruxsatnomalar'
-    if (pathname === '/expertise') return 'Ekspertiza'
-    if (pathname === '/risk-analysis') return 'Xavfni tahlil qilish'
-    if (pathname === '/reports') return 'Hisobotlar'
-    if (pathname === '/declarations') return 'Deklaratsiya'
-    if (pathname === '/accreditations') return 'Ekspertiza xulosalari'
-    if (pathname === '/expertise-organizations') return 'Ekspertiza tashkilotlari'
-    if (pathname === '/inspections') return 'Tekshiruvlar'
-    if (pathname === '/preventions') return 'Profilaktika'
-    if (pathname === '/inquiries') return 'Murojaatlar'
-    return ''
+    const PATH_TITLES = [
+      { path: '/dashboard', title: 'Bosh sahifa' },
+      { path: '/register', title: 'Reyestrlar' },
+      { path: '/applications', title: 'Arizalar' },
+      { path: '/preventions', title: 'Profilaktika' },
+      { path: '/risk-analysis', title: 'Xavfni tahlil qilish' },
+      { path: '/inspections', title: 'Tekshiruvlar' },
+      { path: '/expertise-organizations', title: 'Ekspert tashkilotlar' },
+      { path: '/accreditations', title: 'Ekspertiza xulosalari' },
+      { path: '/declarations', title: 'Deklaratsiya' },
+      { path: '/attestations', title: 'Attestatsiya' },
+      { path: '/reports', title: 'Hisobotlar' },
+      { path: '/permits', title: 'Ruxsat etuvchi hujjatlar' },
+      { path: '/inquiries', title: 'Murojaatlar' },
+      { path: '/accidents', title: 'Baxtsiz hodisalar va avariyalar' },
+      { path: '/territories', title: 'Hududlar' },
+      { path: '/department', title: 'Bo‘limlar' },
+      { path: '/staffs', title: 'Xodimlar' },
+      { path: '/decree-signers', title: 'Imzolovchi shaxslar' },
+      { path: '/hazardous-facilities', title: 'Xavfli obyektlar' },
+      { path: '/equipments', title: 'Qurilma turlari' },
+      { path: '/attraction-types', title: 'Attraksion tipi' },
+      { path: '/inspection-surveys', title: 'Tekshiruv so‘rovnomalari' },
+      { path: '/user-logs', title: 'Foydalanuvchi loglari' },
+      { path: '/hybrid-mail', title: 'Gibrid pochta' },
+      { path: '/metrics', title: 'Server ko‘rsatgichlari' },
+      { path: '/expertise', title: 'Ekspertiza' },
+      { path: '/cadastre', title: 'Arxiv' },
+    ]
+
+    const match = PATH_TITLES.find((item) => pathname.startsWith(item.path))
+    return match ? match.title : ''
   }, [pathname])
 
   return (
@@ -73,11 +92,7 @@ export function Header() {
       <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 h-4" />
-        {title && (
-          <h1 className="text-foreground hidden max-w-[150px] truncate text-base leading-none font-semibold sm:max-w-none sm:text-lg md:block">
-            {title}
-          </h1>
-        )}
+        {title && <h1 className="text-foreground line-clamp-2 text-base leading-tight font-medium">{title}</h1>}
       </div>
 
       <div className="ml-auto flex items-center gap-4">

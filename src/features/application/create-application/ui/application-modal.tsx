@@ -59,11 +59,9 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="flex h-full max-h-[95vh] w-[740px] max-w-[98vw] flex-col gap-0 p-0 md:h-[1000px]">
+      <DialogContent className="flex h-full !max-h-[90vh] !w-[740px] !max-w-[90vw] flex-col gap-0 p-0 md:h-[1000px]">
         <DialogHeader className="flex-shrink-0 border-b p-4 md:p-6 md:pb-4">
-          <DialogTitle className="flex items-end gap-x-2 text-base md:text-lg">
-            <FileText className="h-5 w-5 text-yellow-600" /> {title}
-          </DialogTitle>
+          <DialogTitle className="flex items-end gap-x-2 text-base md:text-lg">{title}</DialogTitle>
         </DialogHeader>
 
         <div className="relative flex-1 overflow-hidden bg-gray-50">{renderContent()}</div>

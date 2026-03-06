@@ -74,11 +74,7 @@ export const DashboardPage = () => {
   return (
     <div className="w-full bg-slate-50/50 pb-4">
       <div className="w-full rounded-xl border bg-white p-4 shadow-sm">
-        <div className="mb-4 flex flex-col justify-between gap-4 md:flex-row md:items-center">
-          <div>
-            <h1 className="mb-1 flex items-center gap-3 text-2xl font-bold text-slate-900">Asosiy maʼlumotlar</h1>
-          </div>
-
+        <div className="mb-6 flex flex-col justify-start gap-4 md:flex-row md:items-center">
           <div className="scrollbar-hidden min-w-0 overflow-x-auto">
             <div className="inline-flex min-w-max items-center rounded-lg bg-slate-100 p-1">
               {tabs.map((tab) => (

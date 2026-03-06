@@ -36,6 +36,7 @@ export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
 
 interface DataTableProps<TData, TValue> {
   className?: string
+  paginationClassName?: string
   isLoading?: boolean
   isPaginated?: boolean
   pageQuery?: 'page' | 'p'
@@ -55,6 +56,7 @@ export function DataTable<TData, TValue>({
   data,
   columns,
   className,
+  paginationClassName,
   onPageChange,
   onPageSizeChange,
   isLoading = false,
@@ -252,6 +254,7 @@ export function DataTable<TData, TValue>({
           data={isContentData ? data : undefined}
           isLoading={isLoading}
           onPageChange={handlePageChange}
+          className={paginationClassName}
           pageSizeOptions={pageSizeOptions}
           onPageSizeChange={handlePageSizeChange}
           pageCount={propPageCount}

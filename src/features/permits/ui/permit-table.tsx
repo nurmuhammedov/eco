@@ -118,15 +118,16 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
 
   return (
     <>
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <Tabs
           value={currentTab}
           onValueChange={(val) => {
             addParams({ currentTab: val }, 'page')
           }}
+          className="w-full sm:w-auto"
         >
-          <TabsList>
-            <TabsTrigger value="ALL">
+          <TabsList className="scrollbar-hidden flex h-auto flex-row overflow-x-auto">
+            <TabsTrigger value="ALL" className="shrink-0">
               Barchasi
               {currentTab === 'ALL' && (
                 <Badge variant="destructive" className="ml-2">
@@ -134,7 +135,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
                 </Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="ACTIVE">
+            <TabsTrigger value="ACTIVE" className="shrink-0">
               Aktiv
               {currentTab === 'ACTIVE' && (
                 <Badge variant="destructive" className="ml-2">
@@ -142,7 +143,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
                 </Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="EXPIRING_SOON">
+            <TabsTrigger value="EXPIRING_SOON" className="shrink-0">
               Muddati yaqinlashayotganlar{' '}
               {currentTab === 'EXPIRING_SOON' && (
                 <Badge variant="destructive" className="ml-2">
@@ -150,7 +151,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
                 </Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="EXPIRED">
+            <TabsTrigger value="EXPIRED" className="shrink-0">
               Muddatidan o‘tganlar{' '}
               {currentTab === 'EXPIRED' && (
                 <Badge variant="destructive" className="ml-2">
@@ -161,7 +162,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
           </TabsList>
         </Tabs>
         {user?.role !== UserRoles.CHAIRMAN && user?.role !== UserRoles.INDIVIDUAL && user?.role !== UserRoles.LEGAL && (
-          <Button type="button" onClick={() => setIsModalOpen((p: boolean) => !p)}>
+          <Button type="button" onClick={() => setIsModalOpen((p: boolean) => !p)} className="w-full sm:w-auto">
             Qo‘shish
           </Button>
         )}

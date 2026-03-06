@@ -45,7 +45,7 @@ export const tabs = [
 
 export const ConclusionTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) => {
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+    <div className="scrollbar-hidden flex flex-row gap-2 overflow-x-auto pb-2">
       {tabs.map((tab) => {
         const isActive = activeTab == tab.key
 
@@ -54,17 +54,19 @@ export const ConclusionTabs = ({ activeTab, onTabChange, counts }: PermitTabsPro
             key={tab.key}
             onClick={() => onTabChange(tab.key)}
             className={cn(
-              'cursor-pointer gap-1 py-3 transition-all hover:shadow-md',
+              'flex min-w-[260px] flex-1 cursor-pointer flex-col py-3 transition-all hover:shadow-md',
               isActive ? 'bg-teal text-white shadow' : 'bg-card text-card-foreground border-border'
             )}
           >
-            <CardContent className="flex flex-row items-center justify-between space-y-0 pb-1">
-              <div className="text-2xl font-bold">{counts?.[tab.key] || 0}</div>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-0 px-4 pt-1 pb-2">
+              <CardTitle className="h-[48px] text-[15px] leading-tight font-medium">
+                <div className="line-clamp-2">{tab.label}</div>
+              </CardTitle>
               <span className={cn(!isActive && 'text-muted-foreground')}>{tabIcons[tab.key as unknown as TabKey]}</span>
-            </CardContent>
-            <CardHeader className="py-2">
-              <CardTitle className="text-sm font-medium">{tab.label}</CardTitle>
             </CardHeader>
+            <CardContent className="p-0 px-4 pt-1 pb-1">
+              <div className="text-2xl font-bold">{counts?.[tab.key] || 0}</div>
+            </CardContent>
           </Card>
         )
       })}

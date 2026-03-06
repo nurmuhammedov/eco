@@ -28,7 +28,7 @@ export const tabs = [
 
 export const PermitTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) => {
   return (
-    <div className="mb-2 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+    <div className="scrollbar-hidden flex flex-row gap-2 overflow-x-auto pb-2">
       {tabs.map((tab) => {
         const isActive = activeTab == tab.key
         const isNearingExpiry = tab.key === PermitTabKey.NEARING_EXPIRY
@@ -40,7 +40,7 @@ export const PermitTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) 
             key={tab.key}
             onClick={() => onTabChange(tab.key)}
             className={cn(
-              'cursor-pointer transition-all hover:shadow-md',
+              'flex min-w-[220px] flex-1 cursor-pointer flex-col py-3 transition-all hover:shadow-md',
 
               !isSpecial && (isActive ? 'bg-teal text-white shadow' : 'bg-card text-card-foreground border-border'),
 
@@ -55,8 +55,10 @@ export const PermitTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) 
                   : 'border-red-300 bg-red-50 text-red-900 hover:bg-red-100 dark:border-red-700 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/40')
             )}
           >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{tab.label}</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-0 px-4 pt-1 pb-2">
+              <CardTitle className="text-[15px] leading-tight font-medium">
+                <div className="line-clamp-2">{tab.label}</div>
+              </CardTitle>
               <span
                 className={cn(
                   !isSpecial && !isActive && 'text-muted-foreground',
@@ -67,7 +69,7 @@ export const PermitTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) 
                 {tabIcons[tab.key as unknown as PermitTabKey]}
               </span>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0 px-4 pt-1 pb-1">
               <div className="text-2xl font-bold">{counts[tab.key] || 0}</div>
             </CardContent>
           </Card>

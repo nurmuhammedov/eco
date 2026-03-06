@@ -51,54 +51,52 @@ const ApplicationPage = () => {
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">
-      <div className="flex flex-col gap-4 pt-1 xl:flex-row-reverse xl:items-center xl:justify-between">
-        <div className="flex w-full flex-col gap-2 xl:w-auto xl:flex-row xl:items-center">
-          <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center xl:w-auto">
-            <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:gap-2 xl:w-auto">
-              <Select
-                onValueChange={(value) => {
-                  if (value && value !== 'ALL') {
-                    addParams({ mode: value }, 'page')
-                  } else {
-                    removeParams('mode')
-                  }
-                }}
-                value={mode || ''}
-              >
-                <SelectTrigger className="w-full sm:w-56 lg:w-64">
-                  <SelectValue placeholder="Rasmiylashtirish turi" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ALL">Barchasi</SelectItem>
-                  {getSelectOptions([
-                    { id: 'OFFICIAL', name: 'Arizachilar tomonidan ro‘yxatga olingan' },
-                    {
-                      id: 'UNOFFICIAL',
-                      name: 'Qo‘mita tomonidan ro‘yxatga olingan',
-                    },
-                  ])}
-                </SelectContent>
-              </Select>
-              <Select
-                onValueChange={(value) => {
-                  if (value && value !== 'ALL') {
-                    addParams({ regionId: value }, 'page', 'districtId')
-                  } else {
-                    removeParams('regionId', 'districtId')
-                  }
-                }}
-                value={rest?.regionId?.toString() || ''}
-                disabled={isLoadingRegions}
-              >
-                <SelectTrigger className="w-full sm:w-40 lg:w-48">
-                  <SelectValue placeholder="Hudud" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ALL">Barchasi</SelectItem>
-                  {getSelectOptions(regionOptions)}
-                </SelectContent>
-              </Select>
-            </div>
+      <div className="flex flex-col gap-4 xl:flex-row-reverse xl:items-center xl:justify-between">
+        <div className="flex w-full flex-col gap-4 xl:w-auto xl:flex-row xl:items-center">
+          <div className="flex w-full flex-col gap-2 p-0.5 sm:flex-row sm:items-center xl:w-auto">
+            <Select
+              onValueChange={(value) => {
+                if (value && value !== 'ALL') {
+                  addParams({ mode: value }, 'page')
+                } else {
+                  removeParams('mode')
+                }
+              }}
+              value={mode || ''}
+            >
+              <SelectTrigger className="w-full sm:w-fit sm:min-w-56 lg:w-fit lg:min-w-64">
+                <SelectValue placeholder="Rasmiylashtirish turi" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">Barchasi</SelectItem>
+                {getSelectOptions([
+                  { id: 'OFFICIAL', name: 'Arizachilar tomonidan ro‘yxatga olingan' },
+                  {
+                    id: 'UNOFFICIAL',
+                    name: 'Qo‘mita tomonidan ro‘yxatga olingan',
+                  },
+                ])}
+              </SelectContent>
+            </Select>
+            <Select
+              onValueChange={(value) => {
+                if (value && value !== 'ALL') {
+                  addParams({ regionId: value }, 'page', 'districtId')
+                } else {
+                  removeParams('regionId', 'districtId')
+                }
+              }}
+              value={rest?.regionId?.toString() || ''}
+              disabled={isLoadingRegions}
+            >
+              <SelectTrigger className="w-full sm:w-fit sm:min-w-40 lg:w-fit lg:min-w-48">
+                <SelectValue placeholder="Hudud" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">Barchasi</SelectItem>
+                {getSelectOptions(regionOptions)}
+              </SelectContent>
+            </Select>
             <div className="hidden sm:block">{action}</div>
           </div>
           <div className="block sm:hidden">{action && <div className="w-full [&>button]:w-full">{action}</div>}</div>
