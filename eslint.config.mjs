@@ -8,7 +8,16 @@ export default tslint.config(
   js.configs.recommended,
   tslint.configs.recommendedTypeChecked,
   {
-    ignores: ['dist/**/*.ts', 'dist/**', '**/*.mjs', 'eslint.config.mjs', '**/*.js'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      '.next/**',
+      'build/**',
+      '**/*.mjs',
+      'eslint.config.mjs',
+      '**/*.js',
+      'capacitor.config.ts',
+    ],
   },
   {
     extends: [js.configs.recommended, tslint.configs.recommendedTypeChecked],

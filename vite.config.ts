@@ -70,19 +70,21 @@ export default defineConfig({
         scope: '/',
         icons: [
           {
-            src: '/brand-logo.webp',
+            src: '/pwa-icon.png',
             sizes: '192x192',
-            type: 'image/webp',
+            type: 'image/png',
+            purpose: 'any',
           },
           {
-            src: '/brand-logo.webp',
+            src: '/pwa-icon.png',
             sizes: '512x512',
-            type: 'image/webp',
+            type: 'image/png',
+            purpose: 'any',
           },
           {
-            src: '/brand-logo.webp',
-            sizes: '512x512',
-            type: 'image/webp',
+            src: '/pwa-icon.png',
+            sizes: '1024x1024',
+            type: 'image/png',
             purpose: 'any maskable',
           },
         ],

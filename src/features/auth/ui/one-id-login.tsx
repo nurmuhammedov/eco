@@ -9,7 +9,7 @@ export function OneIdLogin() {
 
   return (
     <div className="flex h-full min-h-screen w-full flex-1 flex-col items-center justify-center">
-      <Loader isVisible={isPending} message="Tizimga kirilmoqda, iltimos kuting..." />
+      <Loader isVisible={isPending} />
       <h3 className="mb-12 text-center text-2xl leading-6 font-medium">Axborot tizimiga kirish</h3>
       <a
         className="3xl:px-12 inline-block rounded-2xl bg-neutral-200 px-9"

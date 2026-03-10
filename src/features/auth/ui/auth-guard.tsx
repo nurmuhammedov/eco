@@ -14,7 +14,7 @@ export default function AuthGuard({ children, allowedRoles }: Props) {
   const { isAuth, isPending, user } = useCurrentUser()
 
   if (isPending) {
-    return <Loader isVisible={true} message="loading" />
+    return <Loader isVisible={true} />
   }
 
   if (user && allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {

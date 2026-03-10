@@ -16,6 +16,7 @@ import { apiConfig } from '@/shared/api/constants'
 import React, { lazy, Suspense } from 'react'
 import { Navigate, useRoutes } from 'react-router-dom'
 import { Loader } from '@/shared/components/common'
+import { PWAInstallPrompt } from '@/shared/components/common/pwa-install-prompt/pwa-install-prompt'
 
 const AppLayout = lazy(() => import('@/shared/layouts/ui/app-layout'))
 const AuthLayout = lazy(() => import('@/shared/layouts/ui/auth-layout'))
@@ -138,9 +139,10 @@ export const useAppRoutes = () => {
   const routeConfig = isLoading && !user ? [] : user ? routes.authenticated : routes.default
   const element = useRoutes(routeConfig)
 
-  if (isLoading && !user) {
-    return <Loader isVisible />
-  }
-
-  return element
+  return (
+    <>
+      {element}
+      <PWAInstallPrompt />
+    </>
+  )
 }
