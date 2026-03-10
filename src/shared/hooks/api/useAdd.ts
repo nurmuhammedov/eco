@@ -8,7 +8,7 @@ const useAdd = <TVariables extends object, TData, TError>(
 ) => {
   return useMutation<TData, TError, TVariables>({
     mutationFn: (data: TVariables) => CommonService.addData<TVariables, TData>(endpoint, data),
-    onSuccess: () => () => {
+    onSuccess: () => {
       if (successMessage) {
         toast.success(successMessage, {
           richColors: true,

@@ -74,28 +74,27 @@ export const DeclarationsTable = () => {
     },
     {
       accessorKey: 'createdAt',
-      header: 'Ro‘yxatga olish sanasi',
+      header: 'Sanasi',
       cell: (cell) => (cell.row.original.createdAt ? formatDate(cell.row.original.createdAt, 'dd.MM.yyyy') : null),
     },
     {
       accessorKey: 'status',
       header: 'Holati',
-      // filterKey: 'status',
-      // filterType: 'select',
-      // filterOptions: [
-      //   { name: 'Jarayonda', id: 'IN_PROCESS' },
-      //   { name: 'Yakunlangan', id: 'COMPLETED' },
-      //   { name: 'Rad etilgan', id: 'REJECTED' },
-      //   { name: 'Bekor qilingan', id: 'CANCELED' },
-      // ],
       cell: ({ row }: any) => {
         return row.original.status ? <ApplicationStatusBadge status={row.original.status as ApplicationStatus} /> : '-'
       },
     },
     {
-      header: 'Deklaratsiya fayli',
-      minSize: 200,
-      cell: ({ row }: any) => <div>{row.original.filePath ? <FileLink url={row.original.filePath} /> : '-'}</div>,
+      header: 'Deklaratsiya',
+      cell: ({ row }: any) => <FileLink url={row.original.declarationPath} />,
+    },
+    {
+      header: 'Axborotnoma',
+      cell: ({ row }: any) => <FileLink url={row.original.infoLetterPath} />,
+    },
+    {
+      header: 'Hisob-kitob tushuntirish xati',
+      cell: ({ row }: any) => <FileLink url={row.original.explanatoryNotePath} />,
     },
     ...(user?.role === UserRoles.MANAGER
       ? [

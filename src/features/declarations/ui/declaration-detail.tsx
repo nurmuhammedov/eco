@@ -8,12 +8,17 @@ import FileLink from '@/shared/components/common/file-link'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { ApplicationStatusBadge } from '@/entities/application/ui/application-status-badge'
 
-export const DeclarationDetail = () => {
+interface DeclarationDetailProps {
+  detailData?: any
+}
+
+export const DeclarationDetail = ({ detailData }: DeclarationDetailProps) => {
   const { id } = useParams()
+  const { detail: fetchedDetail, isFetching } = useDetail<any>('/declarations', id, !detailData && !!id)
 
-  const { detail, isFetching } = useDetail<any>('/declarations', id, !!id)
+  const detail = detailData || fetchedDetail
 
-  if (isFetching) {
+  if (isFetching && !detail) {
     return (
       <Card className="mt-4">
         <CardContent>
@@ -34,7 +39,7 @@ export const DeclarationDetail = () => {
   }
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 space-y-4">
       <DetailCardAccordion defaultValue={['customer_org', 'legal_org', 'object_info', 'declaration_info']}>
         <DetailCardAccordion.Item value="customer_org" title="Tashkilot to‘g‘risida ma’lumot">
           <LegalApplicantInfo tinNumber={detail?.customerTin} />
@@ -44,14 +49,14 @@ export const DeclarationDetail = () => {
           <LegalApplicantInfo tinNumber={detail?.expertTin} />
         </DetailCardAccordion.Item>
 
-        <DetailCardAccordion.Item value="object_info" title="XICHOlar to‘g‘risida ma’lumot">
-          <div className="flex flex-col py-1">
-            <DetailRow
-              title="XICHOlar reyestr raqamlari:"
-              value={detail?.hfRegistryNumbers?.length > 0 ? detail.hfRegistryNumbers.join(', ') : '-'}
-            />
-          </div>
-        </DetailCardAccordion.Item>
+        {/*<DetailCardAccordion.Item value="object_info" title="XICHOlar to‘g‘risida ma’lumot">*/}
+        {/*  <div className="flex flex-col py-1">*/}
+        {/*    <DetailRow*/}
+        {/*      title="XICHOlar reyestr raqamlari:"*/}
+        {/*      value={detail?.hfRegistryNumbers && detail.hfRegistryNumbers.length > 0 ? detail.hfRegistryNumbers.join(', ') : '-'}*/}
+        {/*    />*/}
+        {/*  </div>*/}
+        {/*</DetailCardAccordion.Item>*/}
 
         <DetailCardAccordion.Item value="declaration_info" title="Deklaratsiya to‘g‘risida ma’lumot">
           <div className="flex flex-col py-1">
@@ -64,7 +69,19 @@ export const DeclarationDetail = () => {
             />
             <DetailRow
               title="Deklaratsiya fayli:"
-              value={detail?.filePath ? <FileLink url={detail?.filePath} /> : '-'}
+              value={detail?.declarationPath ? <FileLink url={detail?.declarationPath} /> : '-'}
+            />
+            <DetailRow
+              title="Axborotnoma fayli:"
+              value={detail?.infoLetterPath ? <FileLink url={detail?.infoLetterPath} /> : '-'}
+            />
+            <DetailRow
+              title="Hisob-kitob tushuntirish xati:"
+              value={detail?.explanatoryNotePath ? <FileLink url={detail?.explanatoryNotePath} /> : '-'}
+            />
+            <DetailRow
+              title="Reyestr fayli:"
+              value={detail?.registryFilePath ? <FileLink url={detail?.registryFilePath} /> : '-'}
             />
           </div>
         </DetailCardAccordion.Item>
