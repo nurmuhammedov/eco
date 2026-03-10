@@ -66,9 +66,7 @@ export const PWAInstallPrompt = () => {
 
           <div className="flex-1 pr-6">
             <h3 className="leading-tight font-semibold">Ekotizim mobil ilovasi</h3>
-            <p className="mt-1 text-xs text-white/80">
-              Ilovani telefoningizga o‘rnating va barcha imkoniyatlardan qulay foydalaning.
-            </p>
+            <p className="mt-1 text-xs text-white/80">Ekotizimdan qulayroq foydalanish uchun ilovani o‘rnating.</p>
           </div>
         </div>
 
