@@ -57,7 +57,7 @@ const DeclarationsWidget = () => {
   const isExpired = status === 'EXPIRED'
   const isExpiringSoon = status === 'EXPIRING_SOON'
 
-  const showAddButton = status === 'ACTIVE' || isExpiringSoon
+  const showAddButton = status === 'ACTIVE' || status === 'NOT_PERMITTED' || isExpiringSoon
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">

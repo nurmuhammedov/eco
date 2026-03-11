@@ -10,7 +10,6 @@ const LegalApplicantInfo = ({ tinNumber, phoneNumber, isShowPhoneNumber = false 
       <DetailRow title="Tashkilot rahbari F.I.SH.:" value={data?.directorName || '-'} />
       <DetailRow title="Tashkilot manzili:" value={data?.address || '-'} />
       <DetailRow title="Tashkilot telefon raqami:" value={data?.phoneNumber || '-'} />
-      {isShowPhoneNumber ? <DetailRow title="Arizada ko‘rsatilgan telefon raqam:" value={phoneNumber || '-'} /> : null}
       <DetailRow
         title="Tashkilotning faoliyat yuritish holati:"
         value={
@@ -23,6 +22,7 @@ const LegalApplicantInfo = ({ tinNumber, phoneNumber, isShowPhoneNumber = false 
           )
         }
       />
+      {isShowPhoneNumber ? <DetailRow title="Arizada ko‘rsatilgan telefon raqam:" value={phoneNumber || '-'} /> : null}
     </div>
   )
 }
