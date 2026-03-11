@@ -62,14 +62,18 @@ const ApplicationDetail = ({
               <DetailRow title="Arizachi F.I.SH.:" value={data?.ownerName || '-'} />
               <DetailRow title="Arizachi JSHSHIR:" value={data?.ownerIdentity || '-'} />
               <DetailRow title="Arizachining manzili:" value={data?.address || '-'} />
-              <DetailRow title="Arizachining telefon raqami:" value={data?.phoneNumber || '-'} />
+              <DetailRow title="Arizada ko‘rsatilgan telefon raqam:" value={data?.phoneNumber || '-'} />
             </div>
           </DetailCardAccordion.Item>
         )}
 
         {isLegalApplication && (
           <DetailCardAccordion.Item value="applicant_info_legal" title="Arizachi to‘g‘risida ma’lumot">
-            <LegalApplicantInfo tinNumber={data?.ownerIdentity} />
+            <LegalApplicantInfo
+              isShowPhoneNumber={true}
+              tinNumber={data?.ownerIdentity}
+              phoneNumber={data?.phoneNumber || '-'}
+            />
           </DetailCardAccordion.Item>
         )}
 

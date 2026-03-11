@@ -1,7 +1,7 @@
 import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx'
 import DetailRow from '@/shared/components/common/detail-row.tsx'
 
-const LegalApplicantInfo = ({ tinNumber }: any) => {
+const LegalApplicantInfo = ({ tinNumber, phoneNumber, isShowPhoneNumber = false }: any) => {
   const { data } = useLegalApplicantInfo(tinNumber)
   return (
     <div className="flex flex-col py-1">
@@ -10,6 +10,7 @@ const LegalApplicantInfo = ({ tinNumber }: any) => {
       <DetailRow title="Tashkilot rahbari F.I.SH.:" value={data?.directorName || '-'} />
       <DetailRow title="Tashkilot manzili:" value={data?.address || '-'} />
       <DetailRow title="Tashkilot telefon raqami:" value={data?.phoneNumber || '-'} />
+      {isShowPhoneNumber ? <DetailRow title="Arizada ko‘rsatilgan telefon raqam:" value={phoneNumber || '-'} /> : null}
       <DetailRow
         title="Tashkilotning faoliyat yuritish holati:"
         value={

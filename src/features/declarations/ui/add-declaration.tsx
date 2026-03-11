@@ -17,6 +17,7 @@ export const AddDeclaration = () => {
 
   const isExpert =
     accreditationStatus === AccreditationStatus.ACTIVE || accreditationStatus === AccreditationStatus.EXPIRING_SOON
+  const isLegal = accreditationStatus === AccreditationStatus.NOT_PERMITTED
 
-  return isExpert ? <ExpertDeclarationForm /> : <LegalDeclarationForm />
+  return isExpert ? <ExpertDeclarationForm /> : isLegal ? <LegalDeclarationForm /> : null
 }
