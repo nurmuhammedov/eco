@@ -25,7 +25,9 @@ export const EquipmentsList = () => {
       size = 10,
       search = '',
       mode = '',
-      regionId = '',
+      regionId = (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
+        ? user.regionId.toString()
+        : 'ALL',
       districtId = '',
       registryNumber = '',
       childEquipmentId = '',
@@ -54,6 +56,7 @@ export const EquipmentsList = () => {
 
   const { data, isLoading } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
     ...rest,
+    regionId: regionId === 'ALL' ? '' : regionId,
     status: isTanker
       ? currentStatus !== 'ALL'
         ? currentStatus
@@ -73,7 +76,6 @@ export const EquipmentsList = () => {
     page,
     size,
     search,
-    regionId,
     districtId,
     mode,
     registryNumber,
@@ -166,7 +168,7 @@ export const EquipmentsList = () => {
     if (currentStatus === 'CHANGED') {
       navigate(`/register/change/${id}/equipments`)
     } else {
-      navigate(`${id}/equipments`)
+      navigate(`${id}/equipments${currentStatus === 'ACTIVE' ? '?active=true' : ''}`)
     }
   }
 
@@ -351,8 +353,8 @@ export const EquipmentsList = () => {
           showView
           showEdit={
             !isTanker &&
-            (user?.role === UserRoles.LEGAL ||
-              user?.role === UserRoles.INSPECTOR ||
+            ((user?.role === UserRoles.INSPECTOR && Number(row.original.regionId) === user?.regionId) ||
+              user?.role === UserRoles.LEGAL ||
               user?.role === UserRoles.INDIVIDUAL) &&
             currentStatus === 'ACTIVE'
           }

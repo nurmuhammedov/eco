@@ -9,7 +9,7 @@ import FileLink from '@/shared/components/common/file-link.tsx'
 import { Coordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { getDate } from '@/shared/utils/date.ts'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { QRCodeCanvas } from 'qrcode.react'
@@ -20,15 +20,22 @@ import { EquipmentStickerPdf } from '@/shared/components/common/equipment-sticke
 import { Button } from '@/shared/components/ui/button'
 import { UserRoles } from '@/entities/user'
 import { Logs } from '@/features/register/hf/ui/parts/logs'
+import { DeregisterModal } from '../../common/ui/deregister-modal'
 
 const EquipmentsDetail = () => {
-  const { isLoading, data } = useEquipmentsDetail()
+  const { isLoading, data, refetch } = useEquipmentsDetail()
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
   const { user } = useAuth()
   const { id: equipmentUuid } = useParams<{ id: string }>()
+  const [searchParams] = useSearchParams()
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('')
   const { data: legalData } = useLegalApplicantInfo(data?.ownerIdentity)
   const navigate = useNavigate()
+
+  const [isDeregisterModalOpen, setIsDeregisterModalOpen] = useState(false)
+
+  const isActive = searchParams.get('active') === 'true'
+  const canDeregister = user?.role === UserRoles.INSPECTOR && isActive
 
   useEffect(() => {
     const canvas = document.getElementById('pdf-qr-canvas') as HTMLCanvasElement
@@ -54,10 +61,24 @@ const EquipmentsDetail = () => {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
-        {user?.role === UserRoles.CHAIRMAN && (
-          <Button onClick={() => navigate(`/register/${equipmentUuid}/equipments/appeals`)}>Murojaatlar</Button>
-        )}
+        <div className="flex gap-2">
+          {canDeregister && (
+            <Button variant="destructiveOutline" onClick={() => setIsDeregisterModalOpen(true)}>
+              Reyestrdan chiqarish
+            </Button>
+          )}
+          {user?.role === UserRoles.CHAIRMAN && (
+            <Button onClick={() => navigate(`/register/${equipmentUuid}/equipments/appeals`)}>Murojaatlar</Button>
+          )}
+        </div>
       </div>
+
+      <DeregisterModal
+        isOpen={isDeregisterModalOpen}
+        onClose={() => setIsDeregisterModalOpen(false)}
+        endpoint={`/equipments/${equipmentUuid}/deregister`}
+        onSuccess={refetch}
+      />
       <DetailCardAccordion
         defaultValue={[
           'registry_info',

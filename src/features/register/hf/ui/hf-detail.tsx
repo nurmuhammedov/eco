@@ -9,14 +9,25 @@ import FileLink from '@/shared/components/common/file-link.tsx'
 import { Coordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { getDate } from '@/shared/utils/date.ts'
-import { Link } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { Logs } from '@/features/register/hf/ui/parts/logs'
+import { useState } from 'react'
+import { UserRoles } from '@/entities/user'
+import { Button } from '@/shared/components/ui/button'
+import { DeregisterModal } from '../../common/ui/deregister-modal'
 
 const HfDetail = () => {
-  const { isLoading, data } = useHfDetail()
+  const { id } = useParams()
+  const [searchParams] = useSearchParams()
+  const { isLoading, data, refetch } = useHfDetail()
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
   const { user } = useAuth()
+
+  const [isDeregisterModalOpen, setIsDeregisterModalOpen] = useState(false)
+
+  const isActive = searchParams.get('active') === 'true'
+  const canDeregister = user?.role === UserRoles.INSPECTOR && isActive
 
   if (isLoading || !data) {
     return null
@@ -26,7 +37,19 @@ const HfDetail = () => {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
+        {canDeregister && (
+          <Button variant="destructiveOutline" onClick={() => setIsDeregisterModalOpen(true)}>
+            Reyestrdan chiqarish
+          </Button>
+        )}
       </div>
+
+      <DeregisterModal
+        isOpen={isDeregisterModalOpen}
+        onClose={() => setIsDeregisterModalOpen(false)}
+        endpoint={`/hf/${id}/deregister`}
+        onSuccess={refetch}
+      />
       <DetailCardAccordion
         defaultValue={['registry_info', 'applicant_info', 'object_info', 'object_location', 'object_files']}
       >

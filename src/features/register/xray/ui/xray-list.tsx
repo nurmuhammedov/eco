@@ -19,7 +19,9 @@ export const XrayList = () => {
       search = '',
       mode = '',
       officeId = '',
-      regionId = '',
+      regionId = (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
+        ? user.regionId.toString()
+        : 'ALL',
       districtId = '',
       startDate = '',
       endDate = '',
@@ -41,7 +43,7 @@ export const XrayList = () => {
     search,
     mode,
     officeId,
-    regionId,
+    regionId: regionId === 'ALL' ? '' : regionId,
     districtId,
     startDate,
     endDate,
@@ -111,7 +113,9 @@ export const XrayList = () => {
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
           showEdit={
-            (user?.role === UserRoles.MANAGER || user?.role === UserRoles.INSPECTOR) && currentActive === 'true'
+            (user?.role === UserRoles.MANAGER ||
+              (user?.role === UserRoles.INSPECTOR && Number(row.original.regionId) === user?.regionId)) &&
+            currentActive === 'true'
           }
           onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
         />

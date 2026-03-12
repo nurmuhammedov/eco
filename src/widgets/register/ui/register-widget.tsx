@@ -28,19 +28,39 @@ const RegisterWidget = () => {
       status = 'ALL',
       tab = user?.role != UserRoles.INDIVIDUAL ? RegisterActiveTab.HF : RegisterActiveTab.EQUIPMENTS,
       type = tab == RegisterActiveTab.EQUIPMENTS ? 'ALL' : '',
+      regionId = (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
+        ? user.regionId.toString()
+        : 'ALL',
+      districtId = '',
       ...rest
     },
     addParams,
     removeParams,
   } = useCustomSearchParams()
 
-  const { data: hfCount = 0 } = useData<number>('/hf/count', user?.role != UserRoles.INDIVIDUAL, { mode })
-  const { data: equipmentsCount = 0 } = useData<number>('/equipments/count', true, { mode })
-  const { data: irsCount = 0 } = useData<number>('/irs/count', user?.role != UserRoles.INDIVIDUAL, { mode })
-  const { data: xrayCount = 0 } = useData<number>('/xrays/count', user?.role != UserRoles.INDIVIDUAL, { mode })
+  const { data: hfCount = 0 } = useData<number>('/hf/count', user?.role != UserRoles.INDIVIDUAL, {
+    mode,
+    regionId: regionId === 'ALL' ? '' : regionId,
+    districtId,
+  })
+  const { data: equipmentsCount = 0 } = useData<number>('/equipments/count', true, {
+    mode,
+    regionId: regionId === 'ALL' ? '' : regionId,
+    districtId,
+  })
+  const { data: irsCount = 0 } = useData<number>('/irs/count', user?.role != UserRoles.INDIVIDUAL, {
+    mode,
+    regionId: regionId === 'ALL' ? '' : regionId,
+    districtId,
+  })
+  const { data: xrayCount = 0 } = useData<number>('/xrays/count', user?.role != UserRoles.INDIVIDUAL, {
+    mode,
+    regionId: regionId === 'ALL' ? '' : regionId,
+    districtId,
+  })
 
   const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(`${API_ENDPOINTS.REGIONS_SELECT}`)
-  const { data: districts, isLoading: isDistrictsLoading } = useDistrictSelectQueries(rest?.regionId)
+  const { data: districts, isLoading: isDistrictsLoading } = useDistrictSelectQueries(regionId)
 
   const handleDownloadExel = () => {
     setIsLoading(true)
@@ -49,6 +69,8 @@ const RegisterWidget = () => {
         mode,
         status: status === 'ALL' ? '' : status,
         type: type === 'TANKERS' ? '' : type,
+        regionId: regionId === 'ALL' ? '' : regionId,
+        districtId,
         ...rest,
       })
       .then((res) => {
@@ -116,13 +138,13 @@ const RegisterWidget = () => {
               </Select>
               <Select
                 onValueChange={(value) => {
-                  if (value && value !== 'ALL') {
+                  if (value) {
                     addParams({ regionId: value }, 'page', 'districtId')
                   } else {
                     removeParams('regionId', 'districtId')
                   }
                 }}
-                value={rest?.regionId?.toString() || ''}
+                value={regionId}
                 disabled={isLoadingRegions}
               >
                 <SelectTrigger className="w-full sm:w-fit sm:min-w-32 xl:w-fit xl:min-w-[120px]">
@@ -141,7 +163,7 @@ const RegisterWidget = () => {
                     removeParams('districtId')
                   }
                 }}
-                value={rest?.districtId?.toString() || ''}
+                value={districtId}
                 disabled={isDistrictsLoading}
               >
                 <SelectTrigger className="w-full sm:w-fit sm:min-w-32 xl:w-fit xl:min-w-[120px]">

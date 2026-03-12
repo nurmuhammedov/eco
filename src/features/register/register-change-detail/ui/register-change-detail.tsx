@@ -15,16 +15,18 @@ import AssignExecutorModal from '@/features/register/register-change-detail/moda
 import UpdateDescriptionModal from '@/features/register/register-change-detail/modals/update-description-modal'
 import ConfirmProcessModal from '@/features/register/register-change-detail/modals/confirm-process-modal'
 import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal'
+import { Badge } from '@/shared/components/ui/badge'
 
 const RegisterChangeDetail: FC = () => {
   const { id, type } = useParams<{ id: string; type: string }>()
   const { user } = useAuth()
 
-  const { detail: changeDetail, isLoading = false } = useDetail<any>('/changes/by-belong', id, !!id)
+  const { detail: changeDetail, isLoading = true } = useDetail<any>('/changes/by-belong', id, !!id)
 
   const changeId = changeDetail?.id
   const isLegal = changeDetail?.ownerIdentity?.toString()?.length === 9
   const status = changeDetail?.status
+  const isDeregister = changeDetail?.belongType?.startsWith('DEREGISTER_')
 
   const canAssign =
     (user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) && status === ApplicationStatus.NEW
@@ -41,7 +43,9 @@ const RegisterChangeDetail: FC = () => {
   return (
     <div className="flex flex-1 flex-col gap-2">
       <div className="flex items-center justify-between">
-        <GoBack title="O‘zgartirish so‘rovi" />
+        <GoBack
+          title={isDeregister ? 'Reyestrdan chiqarish uchun so‘rov' : 'Maʼlumotlarni o‘zgartirish uchun so‘rov'}
+        />
         <div className="flex gap-2">
           {canAssign && (
             <>
@@ -75,15 +79,29 @@ const RegisterChangeDetail: FC = () => {
         <DetailCardAccordion.Item value="general" title="So‘rov va ijro to‘g‘risida ma’lumot">
           <div className="flex flex-col py-1">
             <DetailRow
-              title="Reyestr ma’lumotlari:"
+              title="Reyestrga havola:"
               value={
-                <Link className="text-[#0271FF]" to={`/register/${id}/${type}`}>
-                  Ko‘rish
+                <Link className="py-4 pr-2 text-lg text-[#0271FF]" to={`/register/${id}/${type}`}>
+                  Reyestr ma’lumotlarini ko‘rish
                 </Link>
               }
             />
             <ApplicationStatusRow status={changeDetail?.status} title="So‘rov holati:" />
             <DetailRow title="So‘rov sanasi:" value={formatDate(changeDetail?.createdAt)} />
+            <DetailRow
+              title="So‘rov turi:"
+              value={
+                isDeregister ? (
+                  <Badge variant="error" className="py-1">
+                    Reyestardan chiqarish uchun
+                  </Badge>
+                ) : (
+                  <Badge variant="info" className="py-1">
+                    Maʼlumotlarni o‘zgartirish uchun
+                  </Badge>
+                )
+              }
+            />
             <DetailRow title="Ijrochi ma‘sul F.I.SH.:" value={changeDetail?.executorName || '-'} />
             <div className="grid grid-cols-2 content-center items-center gap-1 rounded-lg px-2.5 py-2 odd:bg-neutral-50">
               <h2 className="text-normal font-normal text-gray-700">Izoh:</h2>
@@ -95,22 +113,26 @@ const RegisterChangeDetail: FC = () => {
           </div>
         </DetailCardAccordion.Item>
 
-        <DetailCardAccordion.Item value="applicant" title="Arizachi to‘g‘risida ma’lumot">
+        <DetailCardAccordion.Item
+          value="applicant"
+          title={`${isLegal ? 'Tashkilot to‘g‘risida ma’lumot' : 'Fuqaro to‘g‘risida ma’lumot'}`}
+        >
           {isLegal ? (
             <LegalApplicantInfo tinNumber={changeDetail?.ownerIdentity} />
           ) : (
             <div className="flex flex-col py-1">
-              {/*<DetailRow title="Fuqaro F.I.SH.:" value={changeDetail?.directorName || '-'} />*/}
               <DetailRow title="Fuqaro JSHSHIR:" value={changeDetail?.ownerIdentity || '-'} />
             </div>
           )}
         </DetailCardAccordion.Item>
 
-        <DetailCardAccordion.Item value="logs" title="O‘zgartirishlar ro‘yxati">
-          <div className="py-2">
-            <ChangeLogTable changeId={changeId} />
-          </div>
-        </DetailCardAccordion.Item>
+        {!isDeregister && (
+          <DetailCardAccordion.Item value="logs" title="O‘zgartirishlar ro‘yxati">
+            <div className="py-2">
+              <ChangeLogTable changeId={changeId} />
+            </div>
+          </DetailCardAccordion.Item>
+        )}
       </DetailCardAccordion>
     </div>
   )

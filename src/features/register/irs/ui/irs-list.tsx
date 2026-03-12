@@ -18,7 +18,9 @@ export const IrsList = () => {
       page = 1,
       mode = '',
       search = '',
-      regionId = '',
+      regionId = (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
+        ? user.regionId.toString()
+        : 'ALL',
       districtId = '',
       registryNumber = '',
       legalName = '',
@@ -48,7 +50,7 @@ export const IrsList = () => {
     page,
     size,
     mode,
-    regionId,
+    regionId: regionId === 'ALL' ? '' : regionId,
     districtId,
     search,
     registryNumber,
@@ -188,7 +190,11 @@ export const IrsList = () => {
           row={row}
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
-          showEdit={(user?.role === UserRoles.MANAGER || user?.role === UserRoles.INSPECTOR) && currentValid === 'true'}
+          showEdit={
+            (user?.role === UserRoles.MANAGER ||
+              (user?.role === UserRoles.INSPECTOR && Number(row.original.regionId) === user?.regionId)) &&
+            currentValid === 'true'
+          }
           onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
         />
       ),

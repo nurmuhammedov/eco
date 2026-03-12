@@ -4,7 +4,7 @@ import { districtsAPI } from '@/shared/api/dictionaries'
 
 export const useDistrictSelectQueries = (regionId?: string) => {
   return useQuery({
-    enabled: !!regionId,
+    enabled: !!regionId && regionId !== 'ALL',
     queryKey: ['district-select', regionId],
     staleTime: getTime(1, 'week'),
     queryFn: () => districtsAPI.list(regionId),
