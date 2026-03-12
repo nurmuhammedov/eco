@@ -181,6 +181,13 @@ export const legalRoutes = [
     element: withSuspense(DeclarationDetailPage),
   },
   {
+    id: 'DECLARATION',
+    path: 'declarations/edit/:id',
+    element: withSuspense(
+      lazy(() => import('@/features/declarations/ui/edit-declaration').then((m) => ({ default: m.EditDeclaration })))
+    ),
+  },
+  {
     id: 'ACCIDENT',
     path: 'accidents',
     element: withSuspense(AccidentList),

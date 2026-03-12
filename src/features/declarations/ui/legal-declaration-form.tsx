@@ -9,14 +9,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cleanParams } from '@/shared/lib'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '@/shared/hooks/use-auth'
 import useData from '@/shared/hooks/api/useData'
 import useAdd from '@/shared/hooks/api/useAdd'
+import { useUpdate } from '@/shared/hooks'
 import { CreateDeclarationFormValues, createDeclarationSchema } from '@/entities/declarations/model/declaration.types'
 
-export const LegalDeclarationForm = () => {
+interface LegalDeclarationFormProps {
+  initialData?: any
+  isEdit?: boolean
+}
+
+export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFormProps) => {
   const { user } = useAuth()
+  const { id } = useParams()
   const navigate = useNavigate()
   const userTin = user?.tinOrPin?.toString()
 
@@ -25,6 +32,7 @@ export const LegalDeclarationForm = () => {
     mode: 'onChange',
     defaultValues: {
       expertId: undefined,
+      customerTin: 'userTin',
       hfIds: [],
       conclusionId: undefined,
       declarationPath: undefined,
@@ -32,6 +40,20 @@ export const LegalDeclarationForm = () => {
       explanatoryNotePath: undefined,
     },
   })
+
+  useEffect(() => {
+    if (initialData) {
+      form.reset({
+        customerTin: initialData.customerTin?.toString() || '',
+        expertId: initialData.expertId,
+        hfIds: initialData.hfIds || [],
+        conclusionId: initialData.conclusionId,
+        declarationPath: initialData.declarationPath,
+        infoLetterPath: initialData.infoLetterPath,
+        explanatoryNotePath: initialData.explanatoryNotePath,
+      })
+    }
+  }, [initialData, form])
 
   const { data: activeExperts } = useData<any[]>('/accreditations/active')
 
@@ -46,10 +68,24 @@ export const LegalDeclarationForm = () => {
   )
 
   const {
-    mutate,
-    isPending: isSubmitting,
-    isSuccess,
+    mutate: createMutate,
+    isPending: isCreating,
+    isSuccess: isCreateSuccess,
   } = useAdd<CreateDeclarationFormValues, any, any>('/declarations/by-legal')
+
+  const {
+    mutate: updateMutate,
+    isPending: isUpdating,
+    isSuccess: isUpdateSuccess,
+  } = useUpdate<CreateDeclarationFormValues, any, any>(
+    '/declarations/by-legal',
+    id,
+    'put',
+    'Muvaffaqiyatli yangilandi!'
+  )
+
+  const isSubmitting = isCreating || isUpdating
+  const isSuccess = isCreateSuccess || isUpdateSuccess
 
   useEffect(() => {
     if (isSuccess) {
@@ -58,8 +94,14 @@ export const LegalDeclarationForm = () => {
   }, [isSuccess, navigate])
 
   const onSubmit = (data: CreateDeclarationFormValues) => {
-    mutate(cleanParams({ ...data }) as any)
+    if (isEdit) {
+      updateMutate(cleanParams({ ...data }) as any)
+    } else {
+      createMutate(cleanParams({ ...data }) as any)
+    }
   }
+
+  console.log(form.formState?.errors)
 
   return (
     <div className="mt-4 space-y-4">
@@ -101,8 +143,16 @@ export const LegalDeclarationForm = () => {
                   name="conclusionId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ekspertiza xulosasi</FormLabel>
-                      <Select value={field.value} onValueChange={field.onChange} disabled={isConclusionsLoading}>
+                      <FormLabel required={true}>Ekspertiza xulosasi</FormLabel>
+                      <Select
+                        value={field.value}
+                        onValueChange={(v) => {
+                          if (v) {
+                            field.onChange(v)
+                          }
+                        }}
+                        disabled={isConclusionsLoading}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Xulosani tanlang..." />

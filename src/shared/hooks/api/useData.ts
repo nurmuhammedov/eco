@@ -9,7 +9,7 @@ const useData = <T>(
   enabled: boolean = true,
   params?: ISearchParams,
   keys: (string | number)[] = [],
-  staleTime: number = 600000
+  staleTime: number = 0
 ) => {
   const { i18n } = useTranslation()
   const { user } = useAuth()

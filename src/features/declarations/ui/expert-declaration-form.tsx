@@ -13,27 +13,34 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cleanParams } from '@/shared/lib'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import DetailRow from '@/shared/components/common/detail-row'
 import useData from '@/shared/hooks/api/useData'
 import useAdd from '@/shared/hooks/api/useAdd'
+import { useUpdate } from '@/shared/hooks'
 import { toast } from 'sonner'
 
-export const ExpertDeclarationForm = () => {
-  const [stir, setStir] = useState('')
-  const [searchedStir, setSearchedStir] = useState<string | null>(null)
+interface ExpertDeclarationFormProps {
+  initialData?: any
+  isEdit?: boolean
+}
+
+export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclarationFormProps) => {
+  const { id } = useParams()
+  const [stir, setStir] = useState(initialData?.customerTin?.toString() || '')
+  const [searchedStir, setSearchedStir] = useState<string | null>(initialData?.customerTin?.toString() || null)
   const navigate = useNavigate()
 
   const form = useForm<CreateDeclarationFormValues>({
     resolver: zodResolver(createDeclarationSchema),
     mode: 'onChange',
     defaultValues: {
-      customerTin: '',
-      hfIds: [],
-      conclusionId: undefined,
-      declarationPath: undefined,
-      infoLetterPath: undefined,
-      explanatoryNotePath: undefined,
+      customerTin: initialData?.customerTin?.toString() || '',
+      hfIds: initialData?.hfIds || [],
+      conclusionId: initialData?.conclusionId,
+      declarationPath: initialData?.declarationPath,
+      infoLetterPath: initialData?.infoLetterPath,
+      explanatoryNotePath: initialData?.explanatoryNotePath,
     },
   })
 
@@ -59,10 +66,24 @@ export const ExpertDeclarationForm = () => {
   )
 
   const {
-    mutate,
-    isPending: isSubmitting,
-    isSuccess,
+    mutate: createMutate,
+    isPending: isCreating,
+    isSuccess: isCreateSuccess,
   } = useAdd<CreateDeclarationFormValues, any, any>('/declarations/by-expert')
+
+  const {
+    mutate: updateMutate,
+    isPending: isUpdating,
+    isSuccess: isUpdateSuccess,
+  } = useUpdate<CreateDeclarationFormValues, any, any>(
+    '/declarations/by-expert',
+    id,
+    'put',
+    'Muvaffaqiyatli yangilandi!'
+  )
+
+  const isSubmitting = isCreating || isUpdating
+  const isSuccess = isCreateSuccess || isUpdateSuccess
 
   useEffect(() => {
     if (isSuccess) {
@@ -91,43 +112,49 @@ export const ExpertDeclarationForm = () => {
   }
 
   const onSubmit = (data: CreateDeclarationFormValues) => {
-    mutate(cleanParams({ ...data }) as any)
+    if (isEdit) {
+      updateMutate(cleanParams({ ...data }) as any)
+    } else {
+      createMutate(cleanParams({ ...data }) as any)
+    }
   }
 
   const hasLegalInfo = !!legalInfo && !isLegalInfoError
 
   return (
     <div className="mt-4 space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Buyurtmachi (XICHO) tashkiloti STIRni kiriting</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-start space-x-4">
-            <Input
-              placeholder="Buyurtmachi STIRini kiriting..."
-              value={stir}
-              onChange={(e) => setStir(e.target.value)}
-              disabled={hasLegalInfo || isLegalInfoLoading}
-              maxLength={9}
-            />
-            {hasLegalInfo ? (
-              <Button variant="destructive" onClick={handleClearSearch} className="w-40">
-                O‘chirish
-              </Button>
-            ) : (
-              <Button
-                onClick={handleSearch}
-                disabled={isLegalInfoLoading}
-                loading={isLegalInfoLoading}
-                className="w-40"
-              >
-                Qidirish
-              </Button>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      {!isEdit && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Buyurtmachi tashkilot STIRini kiriting</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-start space-x-4">
+              <Input
+                placeholder="Buyurtmachi STIRini kiriting..."
+                value={stir}
+                onChange={(e) => setStir(e.target.value)}
+                disabled={hasLegalInfo || isLegalInfoLoading}
+                maxLength={9}
+              />
+              {hasLegalInfo ? (
+                <Button variant="destructive" onClick={handleClearSearch} className="w-40">
+                  O‘chirish
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleSearch}
+                  disabled={isLegalInfoLoading}
+                  loading={isLegalInfoLoading}
+                  className="w-40"
+                >
+                  Qidirish
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {hasLegalInfo && (
         <>
@@ -171,8 +198,16 @@ export const ExpertDeclarationForm = () => {
                       name="conclusionId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Ekspertiza xulosasi</FormLabel>
-                          <Select value={field.value} onValueChange={field.onChange} disabled={isConclusionsLoading}>
+                          <FormLabel required={true}>Ekspertiza xulosasi</FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={(v) => {
+                              if (v) {
+                                field.onChange(v)
+                              }
+                            }}
+                            disabled={isConclusionsLoading}
+                          >
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Xulosani tanlang..." />

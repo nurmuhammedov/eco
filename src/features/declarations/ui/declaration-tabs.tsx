@@ -28,9 +28,9 @@ const tabIcons: Record<string, React.ReactNode> = {
 export const tabs = [
   { key: DeclarationTabKey.ALL, label: 'Barchasi' },
   { key: DeclarationTabKey.IN_PROCESS, label: 'Jarayonda' },
+  { key: DeclarationTabKey.CANCELED, label: 'Qaytarilgan' },
   { key: DeclarationTabKey.COMPLETED, label: 'Yakunlangan' },
   { key: DeclarationTabKey.REJECTED, label: 'Rad etilgan' },
-  { key: DeclarationTabKey.CANCELED, label: 'Bekor qilingan' },
 ]
 
 export const DeclarationTabs = ({ activeTab, onTabChange, counts = {} }: DeclarationTabsProps) => {

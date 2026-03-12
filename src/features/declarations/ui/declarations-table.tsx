@@ -46,11 +46,13 @@ export const DeclarationsTable = () => {
       accessorKey: 'expertName',
       header: 'Deklaratsiya ishlab chiquvchi tashkilot nomi',
       filterKey: 'expertName',
+      cell: (cell) => (cell.row.original.expertName ? cell.row.original.expertName : cell.row.original.customerName),
       filterType: 'search',
     },
     {
       accessorKey: 'expertTin',
       header: 'Deklaratsiya ishlab chiquvchi tashkilot STIRi',
+      cell: (cell) => (cell.row.original.expertTin ? cell.row.original.expertTin : cell.row.original.customerTin),
       filterKey: 'expertTin',
       filterType: 'search',
     },
@@ -114,9 +116,18 @@ export const DeclarationsTable = () => {
       id: 'actions',
       size: 50,
       cell: ({ row }: any) => {
+        const canEdit =
+          user?.role === UserRoles.LEGAL && user?.id === row?.original?.createdBy && row.original.status === 'CANCELED'
+
         return (
           <div className="flex gap-2">
-            <DataTableRowActions row={row} showView onView={(row: any) => navigate(`detail/${row.original.id!}`)} />
+            <DataTableRowActions
+              row={row}
+              showView
+              onView={(row: any) => navigate(`detail/${row.original.id!}`)}
+              showEdit={canEdit}
+              onEdit={(row: any) => navigate(`edit/${row.original.id!}`)}
+            />
           </div>
         )
       },

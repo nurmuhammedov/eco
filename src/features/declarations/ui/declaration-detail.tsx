@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Card, CardContent } from '@/shared/components/ui/card'
 import useDetail from '@/shared/hooks/api/useDetail'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
@@ -46,26 +46,33 @@ export const DeclarationDetail = ({ detailData }: DeclarationDetailProps) => {
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="legal_org" title="Deklaratsiya ishlab chiquvchi tashkilot">
-          <LegalApplicantInfo tinNumber={detail?.expertTin} />
+          <LegalApplicantInfo tinNumber={detail?.expertTin || detail?.customerTin} />
         </DetailCardAccordion.Item>
-
-        {/*<DetailCardAccordion.Item value="object_info" title="XICHOlar to‘g‘risida ma’lumot">*/}
-        {/*  <div className="flex flex-col py-1">*/}
-        {/*    <DetailRow*/}
-        {/*      title="XICHOlar reyestr raqamlari:"*/}
-        {/*      value={detail?.hfRegistryNumbers && detail.hfRegistryNumbers.length > 0 ? detail.hfRegistryNumbers.join(', ') : '-'}*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*</DetailCardAccordion.Item>*/}
 
         <DetailCardAccordion.Item value="declaration_info" title="Deklaratsiya to‘g‘risida ma’lumot">
           <div className="flex flex-col py-1">
-            <DetailRow title="Deklaratsiya ro‘yxat raqami:" value={detail?.registryNumber || '-'} />
+            <DetailRow title="Deklaratsiya ro‘yxat raqami:" value={detail?.registryNumber} />
             <DetailRow title="Ekspertiza xulosasi reyestr raqami:" value={detail?.conclusionRegistryNumber || '-'} />
             <DetailRow title="Yaratilgan sana:" value={detail?.createdAt ? getDate(detail?.createdAt) : '-'} />
             <DetailRow
               title="Holat:"
               value={detail?.status ? <ApplicationStatusBadge status={detail.status} /> : '-'}
+            />
+            <DetailRow
+              title="XICHOlar:"
+              value={
+                <div className="flex flex-col gap-1">
+                  {detail?.hfIds && detail.hfIds.length > 0
+                    ? detail.hfIds.map((hfId: string, index: number) => (
+                        <div>
+                          <Link key={hfId} to={`/register/${hfId}/hf`} className="font-medium text-blue-600">
+                            XICHO {index + 1}
+                          </Link>
+                        </div>
+                      ))
+                    : '-'}
+                </div>
+              }
             />
             <DetailRow
               title="Deklaratsiya fayli:"
@@ -81,7 +88,7 @@ export const DeclarationDetail = ({ detailData }: DeclarationDetailProps) => {
             />
             <DetailRow
               title="Reyestr fayli:"
-              value={detail?.registryFilePath ? <FileLink url={detail?.registryFilePath} /> : '-'}
+              value={detail?.registryFilePath ? <FileLink url={detail?.registryFilePath} /> : null}
             />
           </div>
         </DetailCardAccordion.Item>

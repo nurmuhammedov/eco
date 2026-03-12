@@ -3,14 +3,14 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 export enum AccreditationStatus {
   ACTIVE = 'ACTIVE',
-  EXPIRED = 'EXPIRED', // Muddati o'tgan
-  EXPIRING_SOON = 'EXPIRING_SOON', // Muddati yaqinlashayotganlar
-  STOPPED = 'STOPPED', // Qo'mita tomonidan to‘xtatib qo'yilgan
-  NOT_PERMITTED = 'NOT_PERMITTED', // Ruxsat berilmgan tashkilot (Ekspert tashkiloatlaridan boshqa hamma legallar)
+  EXPIRED = 'EXPIRED',
+  EXPIRING_SOON = 'EXPIRING_SOON',
+  STOPPED = 'STOPPED',
+  NOT_PERMITTED = 'NOT_PERMITTED',
 }
 
 export const createDeclarationSchema = z.object({
-  customerTin: z.string({ required_error: FORM_ERROR_MESSAGES.required }).optional(),
+  customerTin: z.string({ required_error: FORM_ERROR_MESSAGES.required }),
   expertId: z.number({ required_error: FORM_ERROR_MESSAGES.required }).optional(),
   hfIds: z.array(z.string()).min(1, { message: FORM_ERROR_MESSAGES.required }),
   conclusionId: z.string({ required_error: FORM_ERROR_MESSAGES.required }),
