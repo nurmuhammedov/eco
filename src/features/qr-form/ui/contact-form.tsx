@@ -177,11 +177,16 @@ export const ContactForm = () => {
 
           <DetailRow label="Tashkilot nomi" value={data.ownerName} />
           <DetailRow label="Tashkilot STIR" value={data.ownerIdentity} />
-
           <DetailRow
-            label="Sertifikat fayli"
+            label="Reyestrga qo‘yilganligi to‘g‘risidagi hujjat"
             value={data.registryFilePath ? <FileLink url={data.registryFilePath} title="Yuklab olish" /> : null}
           />
+          {!!data?.deregisterFilePath && (
+            <DetailRow
+              label="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat"
+              value={data.deregisterFilePath ? <FileLink url={data.deregisterFilePath} title="Yuklab olish" /> : null}
+            />
+          )}
         </div>
       </div>
 

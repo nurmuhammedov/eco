@@ -36,7 +36,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
 
   return (
     <div className="flex flex-col py-1">
-      <DetailRow title={t(`labels.${type}.phoneNumber`)} value={data?.phoneNumber} />
+      {/*<DetailRow title={t(`labels.${type}.phoneNumber`)} value={data?.phoneNumber} />*/}
       <DetailRow title={t(`labels.${type}.identity`)} value={data?.identity} />
       <DetailRow title={t(`labels.${type}.birthDate`)} value={getDate(data?.birthDate)} />
 
@@ -155,6 +155,9 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
       <DetailRow title={t(`labels.${type}.registryNumber`)} value={data?.registryNumber} />
       <DetailRow title={t(`labels.${type}.oldRegistryNumber`)} value={data?.oldRegistryNumber} />
       <DetailRow title={t(`labels.${type}.description`)} value={data?.description} />
+      <DetailRow title={t(`labels.${type}.reasons`)} value={data?.reasons} />
+      <DetailRow title={t(`labels.${type}.deregisterReason`)} value={data?.deregisterReason} />
+      <DetailRow title={t(`labels.${type}.sign`)} value={data?.sign} />
 
       <DetailRow title={t(`Rahbar xodimlar soni`)} value={data?.managerCount || ''} />
       <DetailRow title={t(`Muhandis-texnik xodimlar soni`)} value={data?.engineerCount || ''} />

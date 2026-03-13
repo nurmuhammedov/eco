@@ -144,7 +144,7 @@ const RegisterWidget = () => {
                     removeParams('regionId', 'districtId')
                   }
                 }}
-                value={regionId}
+                value={regionId?.toString()}
                 disabled={isLoadingRegions}
               >
                 <SelectTrigger className="w-full sm:w-fit sm:min-w-32 xl:w-fit xl:min-w-[120px]">
@@ -163,7 +163,7 @@ const RegisterWidget = () => {
                     removeParams('districtId')
                   }
                 }}
-                value={districtId}
+                value={districtId?.toString()}
                 disabled={isDistrictsLoading}
               >
                 <SelectTrigger className="w-full sm:w-fit sm:min-w-32 xl:w-fit xl:min-w-[120px]">

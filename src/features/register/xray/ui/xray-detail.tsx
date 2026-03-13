@@ -44,7 +44,16 @@ const XrayDetail = () => {
           <DetailRow title="Roʻyxatga olish sanasi:" value={getDate(data?.registrationDate)} />
           <DetailRow title="Roʻyxatga olish raqami:" value={data?.registryNumber} />
           {!!data?.registryFilePath && (
-            <DetailRow title="Sertifikat fayli:" value={<FileLink url={data?.registryFilePath} />} />
+            <DetailRow
+              title="Reyestrga qo‘yilganligi to‘g‘risidagi hujjat:"
+              value={<FileLink url={data?.registryFilePath} />}
+            />
+          )}
+          {!!data?.deregisterFilePath && (
+            <DetailRow
+              title="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat"
+              value={<FileLink url={data?.deregisterFilePath} />}
+            />
           )}
           <DetailRow title="Reyestrdan chiqarish sanasi:" value={getDate(data?.deregisterDate)} />
           <DetailRow title="Reyestrdan chiqarish sababi:" value={getDate(data?.deregisterReason)} />

@@ -48,6 +48,19 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
                 </FormItem>
               )}
             />
+            {/*<FormField*/}
+            {/*  control={form.control}*/}
+            {/*  name="sign"*/}
+            {/*  render={({ field }) => (*/}
+            {/*    <FormItem>*/}
+            {/*      <FormLabel>Belgisi</FormLabel>*/}
+            {/*      <FormControl>*/}
+            {/*        <Input className="3xl:w-sm w-full" placeholder="Belgisi" {...field} />*/}
+            {/*      </FormControl>*/}
+            {/*      <FormMessage />*/}
+            {/*    </FormItem>*/}
+            {/*  )}*/}
+            {/*/>*/}
           </div>
 
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
@@ -55,39 +68,10 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
               control={form.control}
               name="reasons"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Sabab</FormLabel>
-                  <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Sabab" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="sign"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Belgisi</FormLabel>
-                  <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Belgisi" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
                 <FormItem className="col-span-12 w-full">
-                  <FormLabel required>Roʻyxatdan chiqarish sababi</FormLabel>
+                  <FormLabel required>Reyestrdan chiqarish sababi</FormLabel>
                   <FormControl>
-                    <Textarea className="w-full" rows={7} placeholder="Ariza bayoni" {...field} />
+                    <Textarea className="w-full" rows={7} placeholder="Sababni kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -104,8 +88,9 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
               <FormItem className="border-b pb-4">
                 <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                   <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7" required>
-                    XICHOni rekonstruksiya qilish yoki texnik jihatdan qayta jihozlashga loyiha hujjatlarining sanoat
-                    xavfsizligi ekspertizasi xulosasi
+                    XICHOni Reyestrdan chiqarish uchun asos bo‘luvchi hujjat nusxasi (muassisning, O‘zbekiston
+                    Respublikasi Prezidentining yoki O‘zbekiston Respublikasi Hukumatining, sudning qarori, oldi-sotdi
+                    shartnomasi)
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -116,14 +101,13 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
           />
 
           <FormField
-            name="filePath"
+            name="handoverActPath"
             control={form.control}
             render={({ field }) => (
               <FormItem className="border-b pb-4">
                 <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                   <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7" required>
-                    Identifikatsiya varaqasini o‘z ichiga olgan XICHOni sanoat xavfsizligi ekspertizasi natijalari
-                    to‘g‘risidagi xulosa nusxasi
+                    Mulkni topshirish va qabul qilish dalolatnomasining nusxasi
                   </FormLabel>
                   <FormControl>
                     <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />

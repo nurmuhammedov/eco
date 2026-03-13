@@ -62,7 +62,10 @@ const ApplicationDetail = ({
               <DetailRow title="Arizachi F.I.SH.:" value={data?.ownerName || '-'} />
               <DetailRow title="Arizachi JSHSHIR:" value={data?.ownerIdentity || '-'} />
               <DetailRow title="Arizachining manzili:" value={data?.address || '-'} />
-              <DetailRow title="Arizada ko‘rsatilgan telefon raqam:" value={data?.phoneNumber || '-'} />
+              <DetailRow
+                title="Arizada bog‘lanish uchun ko‘rsatilgan telefon raqam:"
+                value={data?.phoneNumber || '-'}
+              />
             </div>
           </DetailCardAccordion.Item>
         )}

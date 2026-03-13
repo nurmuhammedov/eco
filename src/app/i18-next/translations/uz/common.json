@@ -317,7 +317,6 @@
     "HF": {
       "upperOrganization": "Yuqori tashkilotning nomi (mavjud bo‘lsa)",
       "name": "XICHO ning nomi",
-      "phoneNumber": "Bog‘lanish uchun telefon raqami",
       "hfTypeId": "XICHO ning turi",
       "spheres": "Tarmoqlar",
       "regionId": "XICHO joylashgan viloyat",
@@ -341,14 +340,16 @@
       "industrialSafetyDeclarationPath": "Sanoat xavfsizligi deklaratsiyasi",
       "identity": "STIR",
       "registryNumber": "Roʻyxatga olish raqami",
-      "reasons": "Sabab",
+      "description": "Sababi",
       "regulationPath": "Ishlab chiqarish nazorati nizomi",
       "staffAttestationPath": "Xodimlarining sanoat xavfsizligi bo‘yicha attestatsiyadan o‘tganligi",
       "managerAttestationPath": "Rahbar va muhandis-texnik xodimlarni sanoat xavfsizligi bo‘yicha attestatsiyadan o‘tkazilganligi",
       "sign": "Belgisi",
-      "description": "Roʻyxatdan chiqarish sababi",
-      "justifiedDocumentPath": "XICHOni rekonstruksiya qilish yoki texnik jihatdan qayta jihozlashga loyiha hujjatlarining sanoat xavfsizligi ekspertizasi xulosasi",
-      "filePath": "Identifikatsiya varaqasini o‘z ichiga olgan XICHOni sanoat xavfsizligi ekspertizasi natijalari to‘g‘risidagi xulosa nusxasi"
+      "reasons": "Reyestrdan chiqarish sababi",
+      "deregisterReason": "Reyestrdan chiqarish sababi",
+      "deregisterBasisPath": "XICHOni Reyestrdan chiqarish uchun asos bo‘luvchi hujjat nusxasi (muassisning, O‘zbekiston Respublikasi Prezidentining yoki O‘zbekiston Respublikasi Hukumatining, sudning qarori, oldi-sotdi shartnomasi)",
+      "justifiedDocumentPath": "XICHOni Reyestrdan chiqarish uchun asos bo‘luvchi hujjat nusxasi (muassisning, O‘zbekiston Respublikasi Prezidentining yoki O‘zbekiston Respublikasi Hukumatining, sudning qarori, oldi-sotdi shartnomasi)",
+      "handoverActPath": "Mulkni topshirish va qabul qilish dalolatnomasining nusxasi"
     },
     "ELEVATOR": {
       "phoneNumber": "Telefon raqami",

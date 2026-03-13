@@ -22,7 +22,9 @@ const LegalApplicantInfo = ({ tinNumber, phoneNumber, isShowPhoneNumber = false 
           )
         }
       />
-      {isShowPhoneNumber ? <DetailRow title="Arizada ko‘rsatilgan telefon raqam:" value={phoneNumber || '-'} /> : null}
+      {isShowPhoneNumber ? (
+        <DetailRow title="Arizada bog‘lanish uchun ko‘rsatilgan telefon raqam:" value={phoneNumber || '-'} />
+      ) : null}
     </div>
   )
 }

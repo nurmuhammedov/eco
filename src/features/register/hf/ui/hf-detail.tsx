@@ -69,10 +69,25 @@ const HfDetail = () => {
           <DetailRow title="XICHOni hisobga olish sanasi:" value={getDate(data?.registrationDate)} />
           <DetailRow title="XICHOni hisobga olish raqami:" value={data?.registryNumber} />
           {!!data?.registryFilePath && (
-            <DetailRow title="Sertifikat fayli:" value={<FileLink url={data?.registryFilePath} />} />
+            <DetailRow
+              title="Reyestrga qo‘yilganligi to‘g‘risidagi hujjat:"
+              value={<FileLink url={data?.registryFilePath} />}
+            />
           )}
-          <DetailRow title="XICHOni reyestrdan chiqarish sanasi:" value={getDate(data?.deregisterDate)} />
-          <DetailRow title="XICHOni reyestrdan chiqarish sababi:" value={getDate(data?.deregisterReason)} />
+          {!!data?.deregisterFilePath && (
+            <DetailRow
+              title="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat"
+              value={<FileLink url={data?.deregisterFilePath} />}
+            />
+          )}
+          <DetailRow
+            title="Reyestrdan chiqarish sanasi:"
+            value={data?.deregisterDate ? getDate(data?.deregisterDate) : null}
+          />
+          <DetailRow
+            title="Reyestrdan chiqarish sababi:"
+            value={data?.deregisterReason ? getDate(data?.deregisterReason) : null}
+          />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="applicant_info" title="Arizachi to‘g‘risida ma’lumot">
           <LegalApplicantInfo tinNumber={data?.legalTin} />

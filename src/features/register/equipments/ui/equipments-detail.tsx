@@ -107,10 +107,25 @@ const EquipmentsDetail = () => {
           <DetailRow title="Roʻyxatga olish raqami:" value={data?.registryNumber} />
           <DetailRow title="Qurilmaning eski hisobga olish raqami:" value={data?.oldRegistryNumber || '-'} />
           {!!data?.registryFilePath && (
-            <DetailRow title="Sertifikat fayli:" value={<FileLink url={data?.registryFilePath} />} />
+            <DetailRow
+              title="Reyestrga qo‘yilganligi to‘g‘risidagi hujjat:"
+              value={<FileLink url={data?.registryFilePath} />}
+            />
           )}
-          <DetailRow title="Reyestrdan chiqarish sanasi:" value={getDate(data?.deregisterDate)} />
-          <DetailRow title="Reyestrdan chiqarish sababi:" value={getDate(data?.deregisterReason)} />
+          {!!data?.deregisterFilePath && (
+            <DetailRow
+              title="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat"
+              value={<FileLink url={data?.deregisterFilePath} />}
+            />
+          )}
+          <DetailRow
+            title="Reyestrdan chiqarish sanasi:"
+            value={data?.deregisterDate ? getDate(data?.deregisterDate) : null}
+          />
+          <DetailRow
+            title="Reyestrdan chiqarish sababi:"
+            value={data?.deregisterReason ? getDate(data?.deregisterReason) : null}
+          />
         </DetailCardAccordion.Item>
         {data?.ownerType != 'LEGAL' ? (
           <DetailCardAccordion.Item value="applicant_info_individual" title="Arizachi to‘g‘risida ma’lumot">

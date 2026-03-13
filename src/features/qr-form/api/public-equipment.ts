@@ -9,6 +9,7 @@ export interface PublicEquipment {
   childEquipmentSortName?: string
   registryNumber: string
   inspectorName?: string
+  deregisterFilePath?: string
   registrationDate?: string
   manufacturedAt?: string
   acceptedAt?: string

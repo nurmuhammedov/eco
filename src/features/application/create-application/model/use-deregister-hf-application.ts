@@ -8,12 +8,10 @@ export const useDeRegisterHFApplication = () => {
     defaultValues: {
       phoneNumber: '',
       registryNumber: '',
-      description: '',
-      sign: '',
+      // sign: '',
       reasons: '',
       justifiedDocumentPath: undefined,
-      filePath: undefined,
-      type: 'REPORT',
+      handoverActPath: undefined,
     },
     mode: 'onChange',
   })
