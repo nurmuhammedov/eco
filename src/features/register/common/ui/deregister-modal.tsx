@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 
 const deregisterSchema = z.object({
   deregisterReason: z.string({ message: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  deregisterFilePath: z.string({ message: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  deregisterBasisPath: z.string({ message: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
 })
 
 type DeregisterFormValues = z.infer<typeof deregisterSchema>
@@ -29,7 +29,7 @@ export const DeregisterModal = ({ isOpen, onClose, endpoint, onSuccess }: Deregi
     resolver: zodResolver(deregisterSchema),
     defaultValues: {
       deregisterReason: '',
-      deregisterFilePath: '',
+      deregisterBasisPath: '',
     },
   })
 
@@ -72,7 +72,7 @@ export const DeregisterModal = ({ isOpen, onClose, endpoint, onSuccess }: Deregi
             />
             <FormField
               control={form.control}
-              name="deregisterFilePath"
+              name="deregisterBasisPath"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>Reyestrdan chiqarish asosi</FormLabel>
