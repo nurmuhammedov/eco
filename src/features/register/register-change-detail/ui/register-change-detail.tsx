@@ -126,13 +126,11 @@ const RegisterChangeDetail: FC = () => {
           )}
         </DetailCardAccordion.Item>
 
-        {!isDeregister && (
-          <DetailCardAccordion.Item value="logs" title="O‘zgartirishlar ro‘yxati">
-            <div className="py-2">
-              <ChangeLogTable changeId={changeId} />
-            </div>
-          </DetailCardAccordion.Item>
-        )}
+        <DetailCardAccordion.Item value="logs" title="O‘zgartirishlar ro‘yxati">
+          <div className="py-2">
+            <ChangeLogTable changeId={changeId} />
+          </div>
+        </DetailCardAccordion.Item>
       </DetailCardAccordion>
     </div>
   )
