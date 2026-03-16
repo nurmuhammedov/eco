@@ -10,6 +10,7 @@ import { TabsLayout } from '@/shared/layouts'
 import { ApplicationStatus } from '@/entities/application'
 import { useTranslatedObject } from '@/shared/hooks'
 import { useMemo } from 'react'
+import { Badge } from '@/shared/components/ui/badge'
 
 export const HfList = () => {
   const navigate = useNavigate()
@@ -151,6 +152,32 @@ export const HfList = () => {
       maxSize: 80,
       filterOptions: hazardousFacilityTypes || [],
     },
+    ...(currentActive === 'CHANGED'
+      ? [
+          {
+            header: 'So‘rov turi',
+            accessorKey: 'changeBelongType',
+            cell: ({ row }: any) => {
+              const type = row.original.changeBelongType
+              if (type?.startsWith('UPDATE')) {
+                return (
+                  <Badge variant="info" className="py-1">
+                    Maʼlumotlarni o‘zgartirish uchun
+                  </Badge>
+                )
+              }
+              if (type?.startsWith('DEREGISTER')) {
+                return (
+                  <Badge variant="error" className="py-1">
+                    Reyestardan chiqarish uchun
+                  </Badge>
+                )
+              }
+              return '-'
+            },
+          },
+        ]
+      : []),
     {
       id: 'actions',
       cell: ({ row }) => (

@@ -12,6 +12,7 @@ import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { AutoTabKey, tabs as autoTabs } from '@/features/register/auto/ui/auto-tabs'
 import { formatDate } from 'date-fns'
+import { Badge } from '@/shared/components/ui/badge'
 
 export const EquipmentsList = () => {
   const navigate = useNavigate()
@@ -346,6 +347,32 @@ export const EquipmentsList = () => {
       ),
       className: '!w-[1%]',
     },
+    ...(currentStatus === 'CHANGED'
+      ? [
+          {
+            header: 'So‘rov turi',
+            accessorKey: 'changeBelongType',
+            cell: ({ row }: any) => {
+              const type = row.original.changeBelongType
+              if (type?.startsWith('UPDATE')) {
+                return (
+                  <Badge variant="info" className="py-1">
+                    Maʼlumotlarni o‘zgartirish uchun
+                  </Badge>
+                )
+              }
+              if (type?.startsWith('DEREGISTER')) {
+                return (
+                  <Badge variant="error" className="py-1">
+                    Reyestardan chiqarish uchun
+                  </Badge>
+                )
+              }
+              return '-'
+            },
+          },
+        ]
+      : []),
     {
       id: 'actions',
       cell: ({ row }: any) => (

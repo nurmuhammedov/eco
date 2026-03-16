@@ -43,9 +43,7 @@ const RegisterChangeDetail: FC = () => {
   return (
     <div className="flex flex-1 flex-col gap-2">
       <div className="flex items-center justify-between">
-        <GoBack
-          title={isDeregister ? 'Reyestrdan chiqarish uchun so‘rov' : 'Maʼlumotlarni o‘zgartirish uchun so‘rov'}
-        />
+        <GoBack title={isDeregister ? 'Reyestrdan chiqarish uchun so‘rov' : 'Yangilash uchun so‘rov'} />
         <div className="flex gap-2">
           {canAssign && (
             <>
@@ -93,11 +91,11 @@ const RegisterChangeDetail: FC = () => {
               value={
                 isDeregister ? (
                   <Badge variant="error" className="py-1">
-                    Reyestardan chiqarish uchun
+                    Reyestrdan chiqarish
                   </Badge>
                 ) : (
                   <Badge variant="info" className="py-1">
-                    Maʼlumotlarni o‘zgartirish uchun
+                    Yangilash
                   </Badge>
                 )
               }
