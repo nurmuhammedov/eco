@@ -269,7 +269,7 @@ const Report3: React.FC = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
         <GoBack
           title={
             <>
@@ -278,21 +278,22 @@ const Report3: React.FC = () => {
             </>
           }
         />
+        <div className="flex flex-wrap items-center gap-2">
+          <Button onClick={handleDownloadExel} className="h-10 w-full sm:w-auto">
+            <Download size={18} className="mr-2" /> Excel
+          </Button>
+        </div>
       </div>
 
-      <div className="my-2 flex items-center justify-start gap-2 sm:justify-end">
-        <Button onClick={handleDownloadExel} className="w-full sm:w-auto">
-          <Download size={18} className="mr-2" /> Excel
-        </Button>
+      <div className="flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm">
+        <DataTable
+          showNumeration={false}
+          headerCenter={true}
+          data={tableData}
+          columns={columns as unknown as any}
+          isLoading={isLoading}
+        />
       </div>
-
-      <DataTable
-        showNumeration={false}
-        headerCenter={true}
-        data={tableData}
-        columns={columns as unknown as any}
-        isLoading={isLoading}
-      />
     </div>
   )
 }

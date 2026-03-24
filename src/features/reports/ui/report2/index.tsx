@@ -187,8 +187,16 @@ const Report1: React.FC = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
         <GoBack title="Jismoniy va yuridik shaxslardan yuborilgan arizalarni turlari bo‘yicha hududlar kesimida taqsimlanishi" />
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="w-full sm:w-auto">
+            <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
+          </div>
+          <Button onClick={handleDownloadExel} className="h-10 w-full sm:w-auto">
+            <Download size={18} className="mr-2" /> Excel
+          </Button>
+        </div>
       </div>
 
       <Tabs
@@ -196,7 +204,7 @@ const Report1: React.FC = () => {
         onValueChange={handleTabChange}
         className="flex flex-1 flex-col overflow-hidden"
       >
-        <TabsList className="w-full overflow-x-auto sm:w-max">
+        <TabsList className="mb-4 w-full overflow-x-auto sm:w-max">
           <TabsTrigger value={InspectionStatus.INDIVIDUAL} className="flex-1 sm:flex-none">
             Jismoniy shaxslar
           </TabsTrigger>
@@ -205,15 +213,10 @@ const Report1: React.FC = () => {
           </TabsTrigger>
         </TabsList>
 
-        <div className="my-2 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div className="flex-1">
-            <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
-          </div>
-          <Button onClick={handleDownloadExel} className="w-full sm:w-auto">
-            <Download size={18} className="mr-2" /> MS Exel
-          </Button>
-        </div>
-        <TabsContent value={InspectionStatus.INDIVIDUAL} className="flex flex-1 flex-col overflow-hidden">
+        <TabsContent
+          value={InspectionStatus.INDIVIDUAL}
+          className="mt-0 flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm"
+        >
           <DataTable
             showNumeration={false}
             headerCenter={true}
@@ -222,7 +225,10 @@ const Report1: React.FC = () => {
             isLoading={isLoading}
           />
         </TabsContent>
-        <TabsContent value={InspectionStatus.LEGAL} className="flex flex-1 flex-col overflow-hidden">
+        <TabsContent
+          value={InspectionStatus.LEGAL}
+          className="mt-0 flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm"
+        >
           <DataTable
             showNumeration={false}
             headerCenter={true}

@@ -16,6 +16,7 @@ export enum InspectionStatus {
   ALL = 'ALL',
   NEW = 'NEW',
   ASSIGNED = 'ASSIGNED',
+  NOT_SIGNED = 'NOT_SIGNED',
   TEN_DAYS = 'TEN_DAYS',
 }
 
@@ -29,12 +30,14 @@ export interface CountDto {
   allCount: number
   newCount: number
   assignedCount: number
+  notSignedCount: number
   conductedCount: number
 }
 
 export const defaultCountDto: CountDto = {
   allCount: 0,
   newCount: 0,
+  notSignedCount: 0,
   assignedCount: 0,
   conductedCount: 0,
 }
@@ -124,7 +127,7 @@ export const InspectionWidget: React.FC = () => {
   const isInspector = user?.role === UserRoles.INSPECTOR
   const isLegal = user?.role === UserRoles.LEGAL
   const isRegional = user?.role === UserRoles.REGIONAL
-  const isChairmanOrHead = user?.role === UserRoles.CHAIRMAN || user?.role === UserRoles.HEAD
+  const isChairmanOrHead = user?.role === UserRoles.HEAD
 
   const activeTab = paramsObject.status
   const activeSubTab = paramsObject.subStatus
@@ -136,10 +139,10 @@ export const InspectionWidget: React.FC = () => {
     year: paramsObject?.year || new Date().getFullYear(),
     quarter: paramsObject?.quarter || getQuarter(new Date()).toString(),
     regionId: activeRegion === 'ALL' ? '' : activeRegion,
-    status:
-      paramsObject?.status === 'ALL' || paramsObject?.status === InspectionStatus.TEN_DAYS
-        ? ''
-        : paramsObject?.status || '',
+    // status:
+    //   paramsObject?.status === 'ALL' || paramsObject?.status === InspectionStatus.TEN_DAYS
+    //     ? ''
+    //     : paramsObject?.status || '',
     legalName: paramsObject?.legalName || '',
     legalTin: paramsObject?.legalTin || '',
     legalRegionId: paramsObject?.legalRegionId || '',
@@ -228,6 +231,12 @@ export const InspectionWidget: React.FC = () => {
                 {countObject.newCount || 0}
               </Badge>
             </TabsTrigger>
+            <TabsTrigger value={InspectionStatus.NOT_SIGNED}>
+              Imzolanishi kutilayotganlar (10 kunlik)
+              <Badge variant="destructive" className="ml-2">
+                {countObject.notSignedCount || 0}
+              </Badge>
+            </TabsTrigger>
             <TabsTrigger value={InspectionStatus.ASSIGNED}>
               Inspektor belgilanganlar
               <Badge variant="destructive" className="ml-2">
@@ -243,6 +252,9 @@ export const InspectionWidget: React.FC = () => {
           <InspectionList />
         </TabsContent>
         <TabsContent value={InspectionStatus.NEW} className="mt-2 flex-1 overflow-hidden">
+          <InspectionList />
+        </TabsContent>
+        <TabsContent value={InspectionStatus.NOT_SIGNED} className="mt-2 flex-1 overflow-hidden">
           <InspectionList />
         </TabsContent>
         <TabsContent value={InspectionStatus.ASSIGNED} className="mt-2 flex flex-1 flex-col overflow-hidden">

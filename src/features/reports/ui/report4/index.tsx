@@ -188,18 +188,27 @@ const Report1: React.FC = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
         <GoBack title="Davlat ro‘yxatidan o‘tkazilgan amaldagi XICHO, Qurilmalar, INM va Rentgenlar bo‘yicha maʼlumot" />
-      </div>
-      <div className="my-2 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div className="flex-1">
-          <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="w-full sm:w-auto">
+            <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
+          </div>
+          <Button disabled={true} onClick={handleDownloadExel} className="h-10 w-full sm:w-auto">
+            <Download size={18} className="mr-2" /> Excel
+          </Button>
         </div>
-        <Button disabled={true} onClick={handleDownloadExel} className="w-full sm:w-auto">
-          <Download size={18} className="mr-2" /> Excel
-        </Button>
       </div>
-      <DataTable showNumeration={false} headerCenter={true} data={tableData} columns={columns} isLoading={isLoading} />
+
+      <div className="flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm">
+        <DataTable
+          showNumeration={false}
+          headerCenter={true}
+          data={tableData}
+          columns={columns}
+          isLoading={isLoading}
+        />
+      </div>
     </div>
   )
 }

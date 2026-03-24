@@ -18,10 +18,13 @@ export const IllegalOilContainerAppealDtoSchema = z.object({
     .string()
     .min(1, { message: 'Majburiy maydon' })
     .transform((v) => format(new Date(v), 'yyyy-MM-dd')),
-  manufacturedAt: z
-    .string()
-    .min(1, { message: 'Majburiy maydon' })
-    .transform((v) => format(new Date(v), 'yyyy-MM-dd')),
+  // manufacturedAt: z
+  //   .string()
+  //   .min(1, { message: 'Majburiy maydon' })
+  //   .transform((v) => format(new Date(v), 'yyyy-MM-dd')),
+
+  // manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 
   labelPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, { message: 'Majburiy maydon!' }),
   saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, { message: 'Majburiy maydon!' }),

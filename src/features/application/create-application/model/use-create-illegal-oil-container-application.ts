@@ -44,12 +44,12 @@ export const useRegisterIllegalOilContainer = (
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-        manufacturedAt: z
-          .date()
-          .optional()
-          .nullable()
-          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-        // Paths
+        // manufacturedAt: z
+        //   .date()
+        //   .optional()
+        //   .nullable()
+        //   .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+        // // Paths
         labelPath: z
           .string()
           .optional()

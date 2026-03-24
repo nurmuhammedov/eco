@@ -10,6 +10,7 @@ import {
 import { FileText } from 'lucide-react'
 import { SignatureModal } from '@/shared/components/common/signature/ui/signature-modal'
 import useAdd from '@/shared/hooks/api/useAdd'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface TenDaysSignModalProps {
   open: boolean
@@ -21,6 +22,7 @@ interface TenDaysSignModalProps {
 }
 
 export const TenDaysSignModal = ({ open, onOpenChange, data }: TenDaysSignModalProps) => {
+  const queryClient = useQueryClient()
   const { mutate: signDecree, isPending } = useAdd(
     '/inspections/decree/ten-days/sign',
     'Hujjat muvaffaqiyatli imzolandi'
@@ -36,6 +38,7 @@ export const TenDaysSignModal = ({ open, onOpenChange, data }: TenDaysSignModalP
       },
       {
         onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['/inspections/decree/ten-days'] })
           onOpenChange(false)
         },
       }

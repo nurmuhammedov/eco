@@ -31,6 +31,7 @@ const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
 const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
 const ReportsDetail6 = lazy(() => import('@/features/reports/ui/report6'))
 const ReportsDetail7 = lazy(() => import('@/features/reports/ui/report7'))
+const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
@@ -182,38 +183,43 @@ export const chairmanRoutes = [
   },
   {
     id: 'REPORT',
-    path: 'reports/REPORT_1',
+    path: 'reports/applications-regions',
     element: withSuspense(ReportsDetail1),
   },
   {
     id: 'REPORT',
-    path: 'reports/REPORT_2',
+    path: 'reports/applications-types',
     element: withSuspense(ReportsDetail2),
   },
   {
     id: 'REPORT',
-    path: 'reports/REPORT_3',
+    path: 'reports/registers-objects',
     element: withSuspense(ReportsDetail3),
   },
   {
     id: 'REPORT',
-    path: 'reports/REPORT_4',
+    path: 'reports/registers-new-objects',
     element: withSuspense(ReportsDetail4),
   },
   {
     id: 'REPORT',
-    path: 'reports/REPORT_5',
+    path: 'reports/registers-equipment-terms',
     element: withSuspense(ReportsDetail5),
   },
   {
     id: 'REPORT',
-    path: 'reports/REPORT_6',
+    path: 'reports/accidents',
     element: withSuspense(ReportsDetail6),
   },
   {
     id: 'REPORT',
-    path: 'reports/REPORT_7',
+    path: 'reports/incidents',
     element: withSuspense(ReportsDetail7),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/prevention-stats',
+    element: withSuspense(PreventionStatsReport),
   },
 
   // PERMITS

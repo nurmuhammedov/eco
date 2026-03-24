@@ -16,7 +16,6 @@ import {
 } from 'lucide-react'
 import { Card } from '@/shared/components/ui/card'
 import { Link } from 'react-router-dom'
-import { ApplicationTypeEnum } from '@/entities/create-application/types/enums'
 
 interface ReportItem {
   id: string
@@ -41,13 +40,13 @@ const REPORTS_GROUPS: ReportGroup[] = [
         id: 'rep-1',
         title: 'Arizalarning hududlar kesimida taqsimlanishi',
         icon: Map,
-        url: `/reports/${ApplicationTypeEnum.REPORT_1}`,
+        url: '/reports/applications-regions',
       },
       {
         id: 'rep-2',
         title: 'Arizalar turlari bo‘yicha taqsimlanishi',
         icon: PieChart,
-        url: `/reports/${ApplicationTypeEnum.REPORT_2}`,
+        url: '/reports/applications-types',
       },
     ],
   },
@@ -59,19 +58,19 @@ const REPORTS_GROUPS: ReportGroup[] = [
         id: 'rep-3',
         title: 'Dalat ro‘yxatiga olingan/chiqarilgan obyektlar',
         icon: Database,
-        url: `/reports/${ApplicationTypeEnum.REPORT_3}`,
+        url: '/reports/registers-objects',
       },
       {
         id: 'rep-4',
         title: 'Davlat ro‘yxatidagi yangi qo‘shilgan va amaldagi obyektlar',
         icon: Activity,
-        url: `/reports/${ApplicationTypeEnum.REPORT_4}`,
+        url: '/reports/registers-new-objects',
       },
       {
         id: 'rep-5',
         title: 'Qurilmalaring muddatlari bo‘yicha hisobot',
         icon: Clock,
-        url: `/reports/${ApplicationTypeEnum.REPORT_5}`,
+        url: '/reports/registers-equipment-terms',
       },
     ],
   },
@@ -83,14 +82,14 @@ const REPORTS_GROUPS: ReportGroup[] = [
         id: 'rep-6',
         title: 'Baxtsiz hodisalar bo‘yicha umumiy hisobot',
         icon: Siren,
-        url: `/reports/${ApplicationTypeEnum.REPORT_6}`,
+        url: '/reports/accidents',
         badge: 'Yangi',
       },
       {
         id: 'rep-7',
         title: 'Avariyalar bo‘yicha umumiy hisobot',
         icon: Flame,
-        url: `/reports/${ApplicationTypeEnum.REPORT_7}`,
+        url: '/reports/incidents',
         badge: 'Yangi',
       },
     ],
@@ -99,7 +98,13 @@ const REPORTS_GROUPS: ReportGroup[] = [
     id: 'prevention',
     title: 'Profilaktika',
     items: [
-      { id: 'prev-stats', title: 'Profilaktika ishlari statistikasi', icon: ShieldCheck, url: '#', badge: 'Jarayonda' },
+      {
+        id: 'prev-stats',
+        title: 'Profilaktika ishlari statistikasi',
+        icon: ShieldCheck,
+        url: '/reports/prevention-stats',
+        badge: 'Yangi',
+      },
       { id: 'prev-inspector-load', title: 'Profilaktika hududlar kesimida', icon: Map, url: '#', badge: 'Jarayonda' },
     ],
   },
