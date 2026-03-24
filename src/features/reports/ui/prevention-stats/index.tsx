@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
-import { usePaginatedData } from '@/shared/hooks'
+import { useData } from '@/shared/hooks'
 import { ColumnDef } from '@tanstack/react-table'
 import { GoBack } from '@/shared/components/common'
 import { Button } from '@/shared/components/ui/button'
@@ -51,21 +51,18 @@ const PreventionStatsReport: React.FC = () => {
   const [year, setYear] = useState<string>(currentYear.toString())
   const [month, setMonth] = useState<string>(currentMonth)
 
-  const { data: preventionData, isLoading } = usePaginatedData('/reports/prevention', {
+  const { data: tableData, isLoading } = useData<any[]>('/reports/prevention', true, {
     year: Number(year),
     month,
   })
 
-  const tableData = React.useMemo(() => {
-    if (!preventionData) return []
-    return (preventionData as unknown as any[]) || []
-  }, [preventionData])
-
   const createSectionColumns = (header: string, accessorPrefix: string) => ({
     header,
+    id: accessorPrefix,
     columns: [
       {
         header: 'Inspektor belgilanmagan',
+        id: `${accessorPrefix}_unassignedCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.unassignedCount || 0,
         cell: ({ row, getValue }: any) => {
           const isRespublika =
@@ -75,6 +72,7 @@ const PreventionStatsReport: React.FC = () => {
       },
       {
         header: 'Jarayondagilar',
+        id: `${accessorPrefix}_processCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.processCount || 0,
         cell: ({ row, getValue }: any) => {
           const isRespublika =
@@ -84,6 +82,7 @@ const PreventionStatsReport: React.FC = () => {
       },
       {
         header: 'Yakunlangan',
+        id: `${accessorPrefix}_conductedCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.conductedCount || 0,
         cell: ({ row, getValue }: any) => {
           const isRespublika =
@@ -112,9 +111,7 @@ const PreventionStatsReport: React.FC = () => {
     createSectionColumns('Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma', 'lpgPowered'),
   ]
 
-  const handleDownloadExel = async () => {
-    // API hozircha tayyor emas
-  }
+  const handleDownloadExel = async () => {}
 
   return (
     <div className="flex h-full flex-col">
@@ -159,7 +156,7 @@ const PreventionStatsReport: React.FC = () => {
           <DataTable
             showNumeration={false}
             headerCenter={true}
-            data={tableData}
+            data={tableData || []}
             columns={columns as unknown as any}
             isLoading={isLoading}
           />
