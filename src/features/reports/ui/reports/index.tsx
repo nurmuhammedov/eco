@@ -56,7 +56,7 @@ const REPORTS_GROUPS: ReportGroup[] = [
     items: [
       {
         id: 'rep-3',
-        title: 'Dalat ro‘yxatiga olingan/chiqarilgan obyektlar',
+        title: 'Davlat ro‘yxatiga olingan/chiqarilgan obyektlar',
         icon: Database,
         url: '/reports/registers-objects',
       },
@@ -68,7 +68,7 @@ const REPORTS_GROUPS: ReportGroup[] = [
       },
       {
         id: 'rep-5',
-        title: 'Qurilmalaring muddatlari bo‘yicha hisobot',
+        title: 'Qurilmalarning muddatlari bo‘yicha hisobot',
         icon: Clock,
         url: '/reports/registers-equipment-terms',
       },
@@ -126,6 +126,13 @@ const REPORTS_GROUPS: ReportGroup[] = [
     id: 'inspections',
     title: 'Tekshiruvlar',
     items: [
+      {
+        id: 'insp-stats',
+        title: 'Tekshiruv holati bo‘yicha',
+        icon: FileSearch,
+        url: '/reports/inspection-stats',
+        badge: 'Yangi',
+      },
       { id: 'insp-types', title: 'Rejali va rejadan tashqari', icon: FileSearch, url: '#', badge: 'Jarayonda' },
       { id: 'insp-rejected', title: '1 kunlik va 10 kunlik tekshiruvlar', icon: Clock, url: '#', badge: 'Jarayonda' },
     ],

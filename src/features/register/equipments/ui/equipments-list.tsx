@@ -383,7 +383,7 @@ export const EquipmentsList = () => {
             ((user?.role === UserRoles.INSPECTOR && Number(row.original.regionId) === user?.regionId) ||
               user?.role === UserRoles.LEGAL ||
               user?.role === UserRoles.INDIVIDUAL) &&
-            currentStatus === 'ACTIVE'
+            ['ACTIVE', 'EXPIRED', 'NO_DATE'].includes(currentStatus)
           }
           row={row}
           showDelete

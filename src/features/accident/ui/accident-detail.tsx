@@ -237,9 +237,9 @@ export const AccidentDetail: React.FC = () => {
                 },
                 {
                   label: 'Buyruq (Qaror)',
-                  fieldName: 'accidentDecreePath',
+                  fieldName: 'decreePath',
                   data: {
-                    path: accident.accidentDecreePath || '',
+                    path: accident.decreePath || '',
                     number: '',
                     uploadDate: '',
                     expiryDate: '',

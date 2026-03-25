@@ -30,6 +30,7 @@ const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
 const ReportsDetail6 = lazy(() => import('@/features/reports/ui/report6'))
 const ReportsDetail7 = lazy(() => import('@/features/reports/ui/report7'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
+const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
 
@@ -242,6 +243,11 @@ export const inspectorRoutes = [
     id: 'REPORT',
     path: 'reports/prevention-stats',
     element: withSuspense(PreventionStatsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/inspection-stats',
+    element: withSuspense(InspectionStatsReport),
   },
 
   // PERMITS

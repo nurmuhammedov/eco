@@ -7,37 +7,16 @@ import { Button } from '@/shared/components/ui/button'
 import { Download } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 
-const MONTHS = [
-  { value: 'JANUARY', label: 'Yanvar' },
-  { value: 'FEBRUARY', label: 'Fevral' },
-  { value: 'MARCH', label: 'Mart' },
-  { value: 'APRIL', label: 'Aprel' },
-  { value: 'MAY', label: 'May' },
-  { value: 'JUNE', label: 'Iyun' },
-  { value: 'JULY', label: 'Iyul' },
-  { value: 'AUGUST', label: 'Avgust' },
-  { value: 'SEPTEMBER', label: 'Sentabr' },
-  { value: 'OCTOBER', label: 'Oktabr' },
-  { value: 'NOVEMBER', label: 'Noyabr' },
-  { value: 'DECEMBER', label: 'Dekabr' },
+const QUARTERS = [
+  { value: '1', label: '1-chorak' },
+  { value: '2', label: '2-chorak' },
+  { value: '3', label: '3-chorak' },
+  { value: '4', label: '4-chorak' },
 ]
 
 const currentYear = new Date().getFullYear()
-const currentMonthNames = [
-  'JANUARY',
-  'FEBRUARY',
-  'MARCH',
-  'APRIL',
-  'MAY',
-  'JUNE',
-  'JULY',
-  'AUGUST',
-  'SEPTEMBER',
-  'OCTOBER',
-  'NOVEMBER',
-  'DECEMBER',
-]
-const currentMonth = currentMonthNames[new Date().getMonth()]
+const currentMonth = new Date().getMonth()
+const currentQuarter = Math.floor(currentMonth / 3) + 1
 
 const generateYears = () => {
   const years = []
@@ -47,13 +26,13 @@ const generateYears = () => {
   return years
 }
 
-const PreventionStatsReport: React.FC = () => {
+const InspectionStatsReport: React.FC = () => {
   const [year, setYear] = useState<string>(currentYear.toString())
-  const [month, setMonth] = useState<string>(currentMonth)
+  const [quarter, setQuarter] = useState<string>(currentQuarter.toString())
 
-  const { data: tableData, isLoading } = useData<any[]>('/reports/prevention', true, {
+  const { data: tableData, isLoading } = useData<any[]>('/reports/inspection', true, {
     year: Number(year),
-    month,
+    quarter: Number(quarter),
   })
 
   const createSectionColumns = (header: string, accessorPrefix: string) => ({
@@ -71,9 +50,9 @@ const PreventionStatsReport: React.FC = () => {
         },
       },
       {
-        header: 'Inspektor belgilanmagan',
-        id: `${accessorPrefix}_unassignedCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.unassignedCount || 0,
+        header: 'Buyruq qilinmagan',
+        id: `${accessorPrefix}_newCount`,
+        accessorFn: (row: any) => row[accessorPrefix]?.newCount || 0,
         cell: ({ row, getValue }: any) => {
           const isRespublika =
             row.original.regionName === "Respublika bo'yicha" || row.original.regionName === 'Respublika bo‘yicha'
@@ -81,9 +60,9 @@ const PreventionStatsReport: React.FC = () => {
         },
       },
       {
-        header: 'Jarayondagilar',
-        id: `${accessorPrefix}_processCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.processCount || 0,
+        header: 'Buyruq imzolanish jarayonida',
+        id: `${accessorPrefix}_notSignedCount`,
+        accessorFn: (row: any) => row[accessorPrefix]?.notSignedCount || 0,
         cell: ({ row, getValue }: any) => {
           const isRespublika =
             row.original.regionName === "Respublika bo'yicha" || row.original.regionName === 'Respublika bo‘yicha'
@@ -91,7 +70,17 @@ const PreventionStatsReport: React.FC = () => {
         },
       },
       {
-        header: 'Yakunlangan',
+        header: 'Inspektor biriktirilgan',
+        id: `${accessorPrefix}_assignedCount`,
+        accessorFn: (row: any) => row[accessorPrefix]?.assignedCount || 0,
+        cell: ({ row, getValue }: any) => {
+          const isRespublika =
+            row.original.regionName === "Respublika bo'yicha" || row.original.regionName === 'Respublika bo‘yicha'
+          return <span className={isRespublika ? 'font-bold' : ''}>{getValue()}</span>
+        },
+      },
+      {
+        header: 'Tekshiruv o‘tkazilgan',
         id: `${accessorPrefix}_conductedCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.conductedCount || 0,
         cell: ({ row, getValue }: any) => {
@@ -126,7 +115,7 @@ const PreventionStatsReport: React.FC = () => {
   return (
     <div className="flex h-full flex-col">
       <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
-        <GoBack title="Profilaktika ishlari statistikasi" />
+        <GoBack title="Tekshiruv holati bo‘yicha" />
 
         <div className="flex flex-wrap items-center gap-2">
           <Select value={year} onValueChange={(val) => setYear(val)}>
@@ -142,14 +131,14 @@ const PreventionStatsReport: React.FC = () => {
             </SelectContent>
           </Select>
 
-          <Select value={month} onValueChange={(val) => setMonth(val)}>
+          <Select value={quarter} onValueChange={(val) => setQuarter(val)}>
             <SelectTrigger className="h-10 w-[160px] bg-white">
-              <SelectValue placeholder="Oyni tanlang" />
+              <SelectValue placeholder="Chorakni tanlang" />
             </SelectTrigger>
             <SelectContent>
-              {MONTHS.map((m) => (
-                <SelectItem key={m.value} value={m.value}>
-                  {m.label}
+              {QUARTERS.map((q) => (
+                <SelectItem key={q.value} value={q.value}>
+                  {q.label}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -176,4 +165,4 @@ const PreventionStatsReport: React.FC = () => {
   )
 }
 
-export default PreventionStatsReport
+export default InspectionStatsReport
