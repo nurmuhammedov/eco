@@ -44,12 +44,10 @@ export const RejectAppealModal: React.FC<RejectAppealModalProps> = ({ documentId
       </DialogTrigger>
       <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Ishonchingiz komilmi?</DialogTitle>
+          <DialogTitle>Arizani rad etishni tasdiqlaysizmi?</DialogTitle>
         </DialogHeader>
         <div className="py-4">
-          <p className="text-sm text-slate-500">
-            Arizani rad etganingizda ushbu qaror qabul qilinadi va tegishli o‘zgarishlar amalga oshiriladi.
-          </p>
+          <p className="text-sm text-slate-500">Bu amalni ortga qaytarib bo‘lmaydi!</p>
         </div>
         <DialogFooter>
           <DialogClose asChild>
@@ -58,7 +56,7 @@ export const RejectAppealModal: React.FC<RejectAppealModalProps> = ({ documentId
             </Button>
           </DialogClose>
           <Button type="button" variant="destructive" onClick={onConfirm} disabled={isPending}>
-            Tasdiqlash
+            Arizani rad etish
           </Button>
         </DialogFooter>
       </DialogContent>

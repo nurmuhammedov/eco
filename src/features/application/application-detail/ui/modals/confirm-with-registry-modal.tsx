@@ -50,11 +50,7 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
           <DialogTitle>{isDeregister ? 'Reyestrdan chiqarilsinmi?' : 'Reyestrga qo‘shilsinmi?'}</DialogTitle>
         </DialogHeader>
         <div className="py-4">
-          <p className="text-sm text-slate-500">
-            {isDeregister
-              ? 'Ushbu amalni tasdiqlaganingizda tasdiqlash qarori qabul qilinadi va jihoz reyestrdan chiqariladi.'
-              : 'Ushbu amalni tasdiqlaganingizda tasdiqlash qarori qabul qilinadi va jihoz reyestrga qo‘shiladi.'}
-          </p>
+          <p className="text-sm text-slate-500">Arizani haqiqatdan ham tasdiqlaysizmi?</p>
         </div>
         <DialogFooter>
           <DialogClose asChild>
