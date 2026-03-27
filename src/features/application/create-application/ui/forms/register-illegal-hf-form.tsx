@@ -106,7 +106,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
                 <DetailRow title="Tashkilot nomi:" value={ownerData?.name || ownerData?.legalName || '-'} />
                 <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || ownerData?.fullName || '-'} />
-                <DetailRow title="Manzil:" value={ownerData?.address || '-'} />
+                <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
                 <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
               </div>
             </div>

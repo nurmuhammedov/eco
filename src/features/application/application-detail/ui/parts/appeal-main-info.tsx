@@ -152,8 +152,8 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
       <DetailRow title={t(`labels.${type}.fuel`)} value={data?.parameters?.fuel} />
       <DetailRow title={t(`labels.${type}.sphere`)} value={data?.sphere} />
 
-      <DetailRow title={t(`labels.${type}.registryNumber`)} value={data?.registryNumber} />
-      <DetailRow title={t(`labels.${type}.oldRegistryNumber`)} value={data?.oldRegistryNumber} />
+      {/*<DetailRow title={t(`labels.${type}.registryNumber`)} value={data?.registryNumber} />*/}
+      {/*<DetailRow title={t(`labels.${type}.oldRegistryNumber`)} value={data?.oldRegistryNumber} />*/}
       <DetailRow title={t(`labels.${type}.description`)} value={data?.description} />
       <DetailRow title={t(`labels.${type}.reasons`)} value={data?.reasons} />
       <DetailRow title={t(`labels.${type}.deregisterReason`)} value={data?.deregisterReason} />

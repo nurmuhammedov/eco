@@ -55,7 +55,11 @@ export const EquipmentsList = () => {
   const currentStatus = String(status)
   const isTanker = type === 'TANKERS'
 
-  const { data, isLoading } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
+  const {
+    data,
+    isLoading,
+    totalElements = 0,
+  } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
     ...rest,
     regionId: regionId === 'ALL' ? '' : regionId,
     status: isTanker
@@ -91,66 +95,13 @@ export const EquipmentsList = () => {
     activityType: isTanker && rest?.activityType !== 'ALL' ? rest?.activityType : undefined,
   })
 
-  const { data: activeCountData } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
-    status: isTanker ? 'ACTIVE' : '',
-    active: isTanker ? '' : true,
-    type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
-    childEquipmentId: actualChildEquipmentId,
-    size: 1,
-  })
-
-  const { data: expiringCountData } = usePaginatedData<any>(
-    isTanker ? `/tankers` : `/equipments`,
-    {
-      status: 'EXPIRING_SOON',
-      type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
-      childEquipmentId: actualChildEquipmentId,
-      size: 1,
-    },
-    isTanker
-  )
-
-  const { data: expiredCountData } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
-    status: 'EXPIRED',
-    type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
-    childEquipmentId: actualChildEquipmentId,
-    size: 1,
-  })
-
-  const { data: inactiveCountData } = usePaginatedData<any>(
-    `/equipments`,
-    {
-      active: false,
-      type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
-      childEquipmentId: actualChildEquipmentId,
-      size: 1,
-    },
-    !isTanker
-  )
-
-  const { data: noDateCountData } = usePaginatedData<any>(
-    `/equipments`,
-    {
-      status: 'NO_DATE',
-      type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
-      childEquipmentId: actualChildEquipmentId,
-      size: 1,
-    },
-    !isTanker
-  )
-
-  const { data: allCountData } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
-    type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
-    childEquipmentId: actualChildEquipmentId,
-    size: 1,
-  })
-
   const { data: changedCountData } = usePaginatedData<any>(
     `/equipments`,
     {
       changed: 'true',
       type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
       childEquipmentId: actualChildEquipmentId,
+      regionId: regionId === 'ALL' ? '' : regionId,
       size: 1,
     },
     true
@@ -441,7 +392,7 @@ export const EquipmentsList = () => {
           count:
             i?.id === type
               ? i?.id === 'AUTO_CRANE'
-                ? allCountData?.page?.totalElements
+                ? totalElements
                 : ((isTanker ? tankersCount?.allCount : dataForNewCount) ?? 0)
               : undefined,
         }))}
@@ -497,40 +448,44 @@ export const EquipmentsList = () => {
         tabs={
           isTanker
             ? [
-                { id: 'ALL', name: 'Barchasi', count: allCountData?.page?.totalElements },
-                { id: 'ACTIVE', name: 'Aktiv', count: activeCountData?.page?.totalElements },
+                { id: 'ALL', name: 'Barchasi', count: currentStatus === 'ALL' ? totalElements : undefined },
+                { id: 'ACTIVE', name: 'Aktiv', count: currentStatus === 'ACTIVE' ? totalElements : undefined },
                 {
                   id: 'EXPIRING_SOON',
                   name: 'Muddati yaqinlashayotganlar',
-                  count: expiringCountData?.page?.totalElements,
+                  count: currentStatus === 'EXPIRING_SOON' ? totalElements : undefined,
                 },
-                { id: 'EXPIRED', name: 'Muddati o‘tganlar', count: expiredCountData?.page?.totalElements },
+                {
+                  id: 'EXPIRED',
+                  name: 'Muddati o‘tganlar',
+                  count: currentStatus === 'EXPIRED' ? totalElements : undefined,
+                },
               ]
             : [
                 {
                   id: 'ALL',
                   name: isAutoCrane ? 'Barcha avtokranlar' : 'Barchasi',
-                  count: allCountData?.page?.totalElements,
+                  count: currentStatus === 'ALL' ? totalElements : undefined,
                 },
                 {
                   id: 'ACTIVE',
                   name: isAutoCrane ? 'Reyestrdagi avtokranlar' : 'Reyestrdagi qurilmalar',
-                  count: activeCountData?.page?.totalElements,
+                  count: currentStatus === 'ACTIVE' ? totalElements : undefined,
                 },
                 {
                   id: 'INACTIVE',
                   name: isAutoCrane ? 'Reyestrdan chiqarilgan avtokranlar' : 'Reyestrdan chiqarilgan qurilmalar',
-                  count: inactiveCountData?.page?.totalElements,
+                  count: currentStatus === 'INACTIVE' ? totalElements : undefined,
                 },
                 {
                   id: 'EXPIRED',
                   name: isAutoCrane ? 'Muddati o‘tgan avtokranlar' : 'Muddati o‘tgan qurilmalar',
-                  count: expiredCountData?.page?.totalElements,
+                  count: currentStatus === 'EXPIRED' ? totalElements : undefined,
                 },
                 {
                   id: 'NO_DATE',
                   name: isAutoCrane ? 'Muddati kiritilmagan avtokranlar' : 'Muddati kiritilmaganlar',
-                  count: noDateCountData?.page?.totalElements,
+                  count: currentStatus === 'NO_DATE' ? totalElements : undefined,
                 },
                 {
                   id: 'CHANGED',

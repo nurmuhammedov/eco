@@ -49,11 +49,7 @@ export const HfList = () => {
     page: 1,
     size: 1,
     changed: 'true',
-    // regionId,
-    // districtId,
-    // hfTypeId,
-    // startDate,
-    // endDate,
+    regionId: regionId === 'ALL' ? '' : regionId,
   })
 
   const { data, isLoading } = usePaginatedData<any>(`/hf`, {

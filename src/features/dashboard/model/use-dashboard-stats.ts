@@ -25,6 +25,10 @@ export const useDashboardStats = (regionId?: string | null) => {
 
   // X-ray Stats
   const { totalElements: xrayTotal = 0 } = usePaginatedData('/xrays', { ...commonParams })
+  const { totalElements: xrayActive = 0 } = usePaginatedData('/xrays', { ...commonParams, active: true })
+  const { totalElements: xrayInactive = 0 } = usePaginatedData('/xrays', { ...commonParams, active: false })
+  const { totalElements: xrayExpired = 0 } = usePaginatedData('/xrays', { ...commonParams, status: 'EXPIRED' })
+  const { totalElements: xrayNoDate = 0 } = usePaginatedData('/xrays', { ...commonParams, status: 'NO_DATE' })
 
   return {
     hf: {
@@ -46,8 +50,10 @@ export const useDashboardStats = (regionId?: string | null) => {
     },
     xray: {
       total: xrayTotal,
-      active: xrayTotal,
-      inactive: 0,
+      active: xrayActive,
+      inactive: xrayInactive,
+      expired: xrayExpired,
+      noDate: xrayNoDate,
     },
   }
 }

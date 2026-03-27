@@ -7,7 +7,7 @@ import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
-import { Badge } from '@/shared/components/ui/badge'
+import { TabsLayout } from '@/shared/layouts'
 
 export const XrayList = () => {
   const navigate = useNavigate()
@@ -25,13 +25,18 @@ export const XrayList = () => {
       districtId = '',
       startDate = '',
       endDate = '',
-      active = 'true',
+      status = 'ACTIVE',
       changeStatus = 'ALL',
+      registryNumber = '',
+      licenseRegistryNumber = '',
+      legalName = '',
+      legalTin = '',
+      address = '',
     },
     addParams,
   } = useCustomSearchParams()
 
-  const currentActive = String(active)
+  const currentStatus = String(status)
 
   const {
     data = [],
@@ -47,26 +52,27 @@ export const XrayList = () => {
     districtId,
     startDate,
     endDate,
-    active: currentActive === 'ALL' || currentActive === 'CHANGED' ? '' : currentActive === 'true',
-    changed: currentActive === 'CHANGED' ? true : '',
-    changeStatus: currentActive === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
-    status: currentActive === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
+    registryNumber,
+    licenseRegistryNumber,
+    legalName,
+    legalTin,
+    address,
+    active: currentStatus === 'ACTIVE' ? true : currentStatus === 'INACTIVE' ? false : '',
+    changed: currentStatus === 'CHANGED' ? true : '',
+    changeStatus: currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
+    status:
+      currentStatus === 'CHANGED' && changeStatus !== 'ALL'
+        ? changeStatus
+        : currentStatus === 'EXPIRED' || currentStatus === 'NO_DATE'
+          ? currentStatus
+          : '',
   })
 
-  // const { data: changedCountData } = usePaginatedData<any>(
-  //   `/xrays`,
-  //   {
-  //     changed: 'true',
-  //     size: 1,
-  //   },
-  //   true
-  // )
-
   const handleViewApplication = (id: string) => {
-    if (currentActive === 'CHANGED') {
+    if (currentStatus === 'CHANGED') {
       navigate(`/register/change/${id}/xrays`)
     } else {
-      navigate(`${id}/xrays`)
+      navigate(`${id}/xrays${currentStatus === 'ACTIVE' ? '?active=true' : ''}`)
     }
   }
 
@@ -75,16 +81,23 @@ export const XrayList = () => {
   }
   const columns: ExtendedColumnDef<any, any>[] = [
     {
-      header: 'Ruxsatnoma berilgan sana',
+      id: 'registrationDate',
+      header: 'Roʻyxatga olish sanasi',
       accessorFn: (row) => getDate(row.registrationDate),
+      filterKey: 'registrationDate',
+      filterType: 'date-range',
     },
     {
-      header: 'Ruxsatnoma reestri bo‘yicha tartib raqami',
-      accessorFn: (row) => row?.registryNumber,
+      header: 'Roʻyxatga olish raqami',
+      accessorKey: 'registryNumber',
+      filterKey: 'registryNumber',
+      filterType: 'search',
     },
     {
       header: 'License tizimidagi ruxsatnoma reestri  tartib raqami',
-      accessorFn: (row) => row?.licenseRegistryNumber,
+      accessorKey: 'licenseRegistryNumber',
+      filterKey: 'licenseRegistryNumber',
+      filterType: 'search',
     },
     {
       header: 'Ruxsatnomani amal qilish muddati',
@@ -92,17 +105,22 @@ export const XrayList = () => {
     },
     {
       header: 'Tashkilot nomi',
-      accessorFn: (row) => row?.legalName,
-    },
-    {
-      header: 'Tashkilot STIR',
-      accessorFn: (row) => row?.legalTin,
-      filterKey: 'search',
+      accessorKey: 'legalName',
+      filterKey: 'legalName',
       filterType: 'search',
     },
     {
+      header: 'Tashkilot STIR',
+      accessorKey: 'legalTin',
+      filterKey: 'legalTin',
+      filterType: 'number',
+      filterMaxLength: 14,
+    },
+    {
       header: 'Rentgen joylashgan manzil',
-      accessorFn: (row) => row?.address,
+      accessorKey: 'address',
+      filterKey: 'address',
+      filterType: 'search',
     },
     {
       id: 'actions',
@@ -115,7 +133,7 @@ export const XrayList = () => {
           showEdit={
             (user?.role === UserRoles.MANAGER ||
               (user?.role === UserRoles.INSPECTOR && Number(row.original.regionId) === user?.regionId)) &&
-            currentActive === 'true'
+            ['ACTIVE', 'EXPIRED', 'NO_DATE'].includes(currentStatus)
           }
           onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
         />
@@ -125,56 +143,37 @@ export const XrayList = () => {
 
   return (
     <div className="flex h-full flex-col gap-2">
-      <Tabs value={currentActive} onValueChange={(val) => addParams({ active: val, page: 1, changeStatus: 'ALL' })}>
-        <div className="scrollbar-hidden flex overflow-x-auto">
-          <TabsList className="min-w-max">
-            <TabsTrigger value="ALL">
-              Barchasi
-              {currentActive === 'ALL' && (
-                <Badge
-                  variant="destructive"
-                  className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-                >
-                  {totalElements}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="true">
-              Amaldagi Rentgenlar
-              {currentActive === 'true' && (
-                <Badge
-                  variant="destructive"
-                  className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-                >
-                  {totalElements}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="false">
-              Reyestrdan chiqarilganlar
-              {currentActive === 'false' && (
-                <Badge
-                  variant="destructive"
-                  className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-                >
-                  {totalElements}
-                </Badge>
-              )}
-            </TabsTrigger>
-            {/*<TabsTrigger value="CHANGED">*/}
-            {/*  O‘zgartirish so‘rovlari*/}
-            {/*  <Badge*/}
-            {/*    variant="destructive"*/}
-            {/*    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
-            {/*  >*/}
-            {/*    {changedCountData?.page?.totalElements || 0}*/}
-            {/*  </Badge>*/}
-            {/*</TabsTrigger>*/}
-          </TabsList>
-        </div>
-      </Tabs>
+      <TabsLayout
+        activeTab={currentStatus}
+        tabs={[
+          { id: 'ALL', name: 'Barchasi', count: currentStatus === 'ALL' ? totalElements : undefined },
+          {
+            id: 'ACTIVE',
+            name: 'Reyestrdagi rentgenlar',
+            count: currentStatus === 'ACTIVE' ? totalElements : undefined,
+          },
+          {
+            id: 'INACTIVE',
+            name: 'Reyestrdan chiqarilganlar',
+            count: currentStatus === 'INACTIVE' ? totalElements : undefined,
+          },
+          { id: 'EXPIRED', name: 'Muddati o‘tganlar', count: currentStatus === 'EXPIRED' ? totalElements : undefined },
+          {
+            id: 'NO_DATE',
+            name: 'Muddati kiritilmaganlar',
+            count: currentStatus === 'NO_DATE' ? totalElements : undefined,
+          },
+        ]}
+        onTabChange={(type) => {
+          if (type === 'CHANGED') {
+            addParams({ status: type, changeStatus: 'ALL' }, 'page')
+          } else {
+            addParams({ status: type, changeStatus: '' }, 'page')
+          }
+        }}
+      />
 
-      {currentActive === 'CHANGED' && (
+      {currentStatus === 'CHANGED' && (
         <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 })}>
           <TabsList>
             {[
