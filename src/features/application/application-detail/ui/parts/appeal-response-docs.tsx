@@ -15,6 +15,7 @@ import { Eye, Info } from 'lucide-react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import ConfirmWithRegistryModal from '../modals/confirm-with-registry-modal.tsx'
+import RejectAppealModal from '../modals/reject-appeal-modal.tsx'
 import { ApplicationTypeEnum } from '@/entities/create-application'
 
 export const signStatuses = new Map([
@@ -116,6 +117,7 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
           if (isManager && isAppealForManager) {
             return (
               <div className="flex gap-4">
+                <RejectAppealModal documentId={documentId} />
                 <ConfirmWithRegistryModal documentId={documentId} />
                 <RejectDocumentModal documentId={documentId} label={'Tasdiqlanmadi'} />
               </div>
@@ -139,6 +141,7 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
             } else {
               return (
                 <div className="flex gap-4">
+                  <RejectAppealModal documentId={documentId} />
                   <ConfirmWithRegistryModal documentId={documentId} />
                   <RejectDocumentModal documentId={documentId} label={'Tasdiqlanmadi'} />
                 </div>
