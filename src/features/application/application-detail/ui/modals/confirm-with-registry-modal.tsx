@@ -10,19 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/components/ui/dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
-import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
-import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
-import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
-import { z } from 'zod'
-
-const schema = z.object({
-  shouldRegister: z.enum(['true', 'false'], {
-    required_error: 'Iltimos, variantlardan birini tanlang.',
-  }),
-})
 
 interface ConfirmWithRegistryModalProps {
   documentId: string
@@ -34,23 +23,18 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
   const { mutate: confirmDocument, isPending } = useConfirmDocument()
   const { data: applicationData } = useApplicationDetail()
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-  })
-
   const isDeregister = applicationData?.appealType?.startsWith('DEREGISTER')
 
-  const onSubmit = (data: z.infer<typeof schema>) => {
+  const onConfirm = () => {
     confirmDocument(
       {
         appealId,
         documentId,
-        shouldRegister: data.shouldRegister === 'true',
+        shouldRegister: true,
       },
       {
         onSuccess: () => {
           setIsOpen(false)
-          form.reset()
         },
       }
     )
@@ -65,49 +49,23 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
         <DialogHeader>
           <DialogTitle>{isDeregister ? 'Reyestrdan chiqarilsinmi?' : 'Reyestrga qo‘shilsinmi?'}</DialogTitle>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="shouldRegister"
-              render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-col items-start space-y-1"
-                    >
-                      <FormItem className="flex flex-row items-center space-y-0 space-x-1">
-                        <FormControl>
-                          <RadioGroupItem value="true" />
-                        </FormControl>
-                        <FormLabel className="font-normal">Ha</FormLabel>
-                      </FormItem>
-                      <FormItem className="flex flex-row items-center space-y-0 space-x-1">
-                        <FormControl>
-                          <RadioGroupItem value="false" />
-                        </FormControl>
-                        <FormLabel className="font-normal">Yo‘q</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" variant="outline" onClick={() => form.reset()}>
-                  Bekor qilish
-                </Button>
-              </DialogClose>
-              <Button type="submit" disabled={isPending}>
-                Tasdiqlash
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+        <div className="py-4">
+          <p className="text-sm text-slate-500">
+            {isDeregister
+              ? 'Ushbu amalni tasdiqlaganingizda tasdiqlash qarori qabul qilinadi va jihoz reyestrdan chiqariladi.'
+              : 'Ushbu amalni tasdiqlaganingizda tasdiqlash qarori qabul qilinadi va jihoz reyestrga qo‘shiladi.'}
+          </p>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" variant="outline" disabled={isPending}>
+              Bekor qilish
+            </Button>
+          </DialogClose>
+          <Button type="button" onClick={onConfirm} disabled={isPending}>
+            Tasdiqlash
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
