@@ -1,6 +1,7 @@
 import { UserRoles } from '@/entities/user'
 import { useConfirmDocument } from '@/features/application/application-detail/hooks/mutations/use-confirm-document.tsx'
 import { useResponseDocs } from '@/features/application/application-detail/hooks/use-response-docs.tsx'
+import { RejectAppealModal } from '@/features/application/application-detail/ui/modals/reject-appeal-modal.tsx'
 import RejectDocumentModal from '@/features/application/application-detail/ui/modals/reject-document-modal.tsx'
 import RejectMessageModal from '@/features/application/application-detail/ui/modals/reject-message-modal.tsx'
 import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx'
@@ -15,7 +16,6 @@ import { Eye, Info } from 'lucide-react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import ConfirmWithRegistryModal from '../modals/confirm-with-registry-modal.tsx'
-import RejectAppealModal from '../modals/reject-appeal-modal.tsx'
 import { ApplicationTypeEnum } from '@/entities/create-application'
 
 export const signStatuses = new Map([
@@ -125,7 +125,8 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
           } else if (isRegionalUser || isHead) {
             if (isAppealForManager) {
               return (
-                <div className="flex gap-1">
+                <div className="flex gap-4">
+                  <RejectAppealModal documentId={documentId} />
                   <Button
                     disabled={isPending}
                     onClick={() => {
