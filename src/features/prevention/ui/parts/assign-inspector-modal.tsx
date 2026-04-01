@@ -32,9 +32,14 @@ export const AssignInspectorModal: React.FC = () => {
   const { user } = useAuth()
   const isHead = user?.role === UserRoles.HEAD
   const isRegional = user?.role === UserRoles.REGIONAL
+  const isSupervisor = !!user?.isSupervisor
 
   const { data: inspectors, isLoading: inspectorsLoading } = useData<any[]>(
-    isHead ? '/users/committee-users/managers/select' : '/users/office-users/inspectors/select',
+    isSupervisor
+      ? '/users/regulator-users/controllers/select'
+      : isHead
+        ? '/users/committee-users/managers/select'
+        : '/users/office-users/inspectors/select',
     isRegional || isHead
   )
   const objectId = paramsObject.objectId

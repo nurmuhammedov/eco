@@ -25,7 +25,7 @@ const RiskAnalysisItem: FC<Props> = ({ data, displayIndex }) => {
 
   if (data?.status) {
     if (data.score > 0) {
-      statusText = statusMap[data.status]
+      statusText = data?.reason || statusMap[data.status]
     }
   }
 

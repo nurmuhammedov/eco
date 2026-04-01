@@ -17,11 +17,21 @@ export enum ApplicationStatus {
 }
 
 export enum HFSphere {
-  OIL = 'OIL',
-  GAS = 'GAS',
-  BOILER = 'BOILER',
-  CHEMISTRY = 'CHEMISTRY',
-  COAL = 'COAL',
-  GEOLOGY = 'GEOLOGY',
-  OTHERS = 'OTHERS',
+  OIL = 'OIL', // Neft
+  GAS = 'GAS', // Gaz
+  BOILER = 'BOILER', // Qozon
+  CHEMISTRY = 'CHEMISTRY', // Himiya
+  COAL = 'COAL', // Ko'mir
+  GEOLOGY = 'GEOLOGY', // Geologiya
+  GRAIN = 'GRAIN', // Don
+  RAILWAY = 'RAILWAY', // Temir yo'l
+  OKMK = 'OKMK', // OKMK
+  NKMK = 'NKMK', // NKMK
+  AGTSH = 'AGTSH', // AGTSH
+  GPZ = 'GPZ', // GPZ
+  AGNKS = 'AGNKS', // AGNKS
+  AYOQSH = 'AYOQSH', // AYOQSH
+  AGTKSH = 'AGTKSH', // AGTKSH
+  DEPARTMENT = 'DEPARTMENT', // Boshqarma
+  OTHERS = 'OTHERS', // Boshqalar
 }
