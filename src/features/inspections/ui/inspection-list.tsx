@@ -99,7 +99,7 @@ export const InspectionList: React.FC = () => {
         })) || [],
     },
     {
-      header: 'Tashkilot joylashgan manzili',
+      header: 'Tashkilotning yuridik manzili',
       accessorKey: 'legalAddress',
       filterKey: 'legalAddress',
       filterType: 'search',
