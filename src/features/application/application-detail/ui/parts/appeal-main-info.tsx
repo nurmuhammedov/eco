@@ -15,6 +15,456 @@ interface Props {
   type: any
 }
 
+const ALLOWED_FIELDS: Record<string, string[]> = {
+  XRAY: [
+    'phoneNumber',
+    'licenseNumber',
+    'licenseRegistryNumber',
+    'model',
+    'licenseDate',
+    'licenseExpiryDate',
+    'regionId',
+    'districtId',
+    'address',
+    'serialNumber',
+    'manufacturedYear',
+    'stateService',
+    'servicePeriod',
+    'registryNumber',
+  ],
+  ATTRACTION: [
+    'phoneNumber',
+    'servicePeriod',
+    'attractionName',
+    'childEquipmentId',
+    'childEquipmentSortId',
+    'factory',
+    'manufacturedAt',
+    'acceptedAt',
+    'factoryNumber',
+    'country',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'riskLevel',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'hazardousFacilityId',
+    'oldRegistryNumber',
+    'partialCheckDate',
+    'fullCheckDate',
+  ],
+  HF: [
+    'upperOrganization',
+    'name',
+    'hfTypeId',
+    'spheres',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'extraArea',
+    'hazardousSubstance',
+    'registryNumber',
+    'description',
+    'sign',
+    'reasons',
+  ],
+  ELEVATOR: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'servicePeriod',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'liftingCapacity',
+    'stopCount',
+    'sphere',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  LIFT: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'servicePeriod',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'liftingCapacity',
+    'stopCount',
+    'sphere',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  CRANE: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'servicePeriod',
+    'childEquipmentId',
+    'factoryNumber',
+    'factory',
+    'model',
+    'boomLength',
+    'liftingCapacity',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  CONTAINER: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'servicePeriod',
+    'factoryNumber',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'nonDestructiveCheckDate',
+    'capacity',
+    'environment',
+    'pressure',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  OIL_CONTAINER: [
+    'address',
+    'location',
+    'childEquipmentId',
+    'manufacturedAt',
+    'nonDestructiveCheckDate',
+    'capacity',
+    'registryNumber',
+    'servicePeriod',
+    'hazardousFacilityId',
+  ],
+  BOILER: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'nonDestructiveCheckDate',
+    'servicePeriod',
+    'capacity',
+    'environment',
+    'pressure',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  ESCALATOR: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'passengersPerMinute',
+    'length',
+    'speed',
+    'servicePeriod',
+    'height',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  PIPELINE: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'factory',
+    'servicePeriod',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'nonDestructiveCheckDate',
+    'diameter',
+    'thickness',
+    'length',
+    'pressure',
+    'environment',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  CHEMICAL_CONTAINER: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'servicePeriod',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'nonDestructiveCheckDate',
+    'capacity',
+    'environment',
+    'pressure',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  HEAT_PIPELINE: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'nonDestructiveCheckDate',
+    'servicePeriod',
+    'diameter',
+    'thickness',
+    'length',
+    'pressure',
+    'temperature',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  BOILER_UTILIZER: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'nonDestructiveCheckDate',
+    'capacity',
+    'environment',
+    'servicePeriod',
+    'pressure',
+    'density',
+    'temperature',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  LPG_CONTAINER: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'nonDestructiveCheckDate',
+    'capacity',
+    'environment',
+    'pressure',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'servicePeriod',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  LPG_POWERED: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'capacity',
+    'pressure',
+    'fuel',
+    'regionId',
+    'districtId',
+    'servicePeriod',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  HOIST: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'servicePeriod',
+    'height',
+    'liftingCapacity',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  CABLEWAY: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'servicePeriod',
+    'partialCheckDate',
+    'fullCheckDate',
+    'nonDestructiveCheckDate',
+    'speed',
+    'passengerCount',
+    'length',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
+  IRS: [
+    'phoneNumber',
+    'parentOrganization',
+    'supervisorName',
+    'supervisorPosition',
+    'servicePeriod',
+    'supervisorStatus',
+    'supervisorEducation',
+    'supervisorPhoneNumber',
+    'division',
+    'identifierType',
+    'symbol',
+    'sphere',
+    'factoryNumber',
+    'serialNumber',
+    'activity',
+    'type',
+    'category',
+    'country',
+    'manufacturedAt',
+    'acceptedFrom',
+    'acceptedAt',
+    'isValid',
+    'usageType',
+    'storageLocation',
+    'regionId',
+    'districtId',
+    'address',
+    'registryNumber',
+  ],
+}
+
 const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
   const { t } = useTranslation()
 
@@ -34,134 +484,126 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
 
   const usageTypeName = USAGE_TYPE_MAP[data?.usageType]
 
+  const allowedFields = ALLOWED_FIELDS[type] || []
+
+  const isAllowed = (field: string) => allowedFields.includes(field)
+
+  const renderRow = (labelKey: string, value: any, isDate = false) => {
+    if (!isAllowed(labelKey)) return null
+
+    const finalValue = isDate ? getDate(value) : value
+
+    return (
+      <DetailRow
+        key={labelKey}
+        title={t(`labels.${type}.${labelKey}`)}
+        value={finalValue || <span className="font-medium text-red-500">Mavjud emas</span>}
+      />
+    )
+  }
+
   return (
     <div className="flex flex-col py-1">
-      {/*<DetailRow title={t(`labels.${type}.phoneNumber`)} value={data?.phoneNumber} />*/}
-      <DetailRow title={t(`labels.${type}.identity`)} value={data?.identity} />
-      <DetailRow title={t(`labels.${type}.birthDate`)} value={getDate(data?.birthDate)} />
+      {/* Umumiy ma'lumotlar */}
+      {renderRow('phoneNumber', data?.phoneNumber)}
 
-      <DetailRow title={t(`labels.${type}.licenseNumber`)} value={data?.licenseNumber} />
-      <DetailRow title={t(`labels.${type}.licenseRegistryNumber`)} value={data?.licenseRegistryNumber} />
-      <DetailRow title={t(`labels.${type}.licenseDate`)} value={getDate(data?.licenseDate)} />
-      <DetailRow title={t(`labels.${type}.licenseExpiryDate`)} value={getDate(data?.licenseExpiryDate)} />
-      <DetailRow title={t(`labels.${type}.stateService`)} value={serviceName || data?.stateService} />
+      {/* XICHO (HF) maydonlari */}
+      {renderRow('upperOrganization', data?.upperOrganization)}
+      {renderRow('name', data?.name)}
+      {renderRow('hfTypeId', data?.hfTypeName)}
+      {isAllowed('spheres') &&
+        renderRow('spheres', data?.spheres?.map((item: string) => t('application.' + item)).join(', '))}
+      {renderRow('extraArea', data?.extraArea)}
+      {renderRow('hazardousSubstance', data?.hazardousSubstance)}
+      {renderRow('sign', data?.sign)}
+      {renderRow('reasons', data?.reasons)}
 
-      <DetailRow title={t(`labels.${type}.upperOrganization`)} value={data?.upperOrganization} />
-      <DetailRow title={t(`labels.${type}.name`)} value={data?.name} />
-      <DetailRow title={t(`labels.${type}.attractionName`)} value={data?.attractionName} />
-      <DetailRow title={t(`labels.${type}.parentOrganization`)} value={data?.parentOrganization} />
+      {/* Qurilmalar uchun umumiy maydonlar */}
+      {renderRow('hazardousFacilityId', data?.hazardousFacilityName)}
+      {renderRow('childEquipmentId', data?.childEquipmentName)}
+      {renderRow('factoryNumber', data?.factoryNumber)}
+      {renderRow('factory', data?.factory)}
+      {renderRow('model', data?.model)}
+      {renderRow('manufacturedAt', data?.manufacturedAt, true)}
+      {renderRow('partialCheckDate', data?.partialCheckDate, true)}
+      {renderRow('fullCheckDate', data?.fullCheckDate, true)}
+      {renderRow('servicePeriod', data?.servicePeriod, true)}
 
-      <DetailRow title={t(`labels.${type}.supervisorName`)} value={data?.supervisorName} />
-      <DetailRow title={t(`labels.${type}.supervisorPosition`)} value={data?.supervisorPosition} />
-      <DetailRow title={t(`labels.${type}.supervisorStatus`)} value={data?.supervisorStatus} />
-      <DetailRow title={t(`labels.${type}.supervisorEducation`)} value={data?.supervisorEducation} />
-      <DetailRow title={t(`labels.${type}.supervisorPhoneNumber`)} value={data?.supervisorPhoneNumber} />
+      {/* Rentgen (XRAY) maydonlari */}
+      {renderRow('licenseNumber', data?.licenseNumber)}
+      {renderRow('licenseRegistryNumber', data?.licenseRegistryNumber)}
+      {renderRow('licenseDate', data?.licenseDate, true)}
+      {renderRow('licenseExpiryDate', data?.licenseExpiryDate, true)}
+      {renderRow('serialNumber', data?.serialNumber)}
+      {renderRow('manufacturedYear', data?.manufacturedYear)}
+      {renderRow('stateService', serviceName || data?.stateService)}
 
-      <DetailRow title={t(`labels.${type}.division`)} value={data?.division} />
-      <DetailRow title={t(`labels.${type}.identifierType`)} value={data?.identifierType} />
-      <DetailRow title={t(`labels.${type}.symbol`)} value={data?.symbol} />
-      <DetailRow title={t(`labels.${type}.activity`)} value={data?.activity} />
-      <DetailRow title={t(`labels.${type}.category`)} value={data?.category} />
-      <DetailRow title={t(`labels.${type}.country`)} value={data?.country} />
-      <DetailRow title={t(`labels.${type}.acceptedFrom`)} value={data?.acceptedFrom} />
-      <DetailRow title={t(`labels.${type}.acceptedAt`)} value={getDate(data?.acceptedAt)} />
+      {/* INM (IRS) maydonlari */}
+      {renderRow('parentOrganization', data?.parentOrganization)}
+      {renderRow('supervisorName', data?.supervisorName)}
+      {renderRow('supervisorPosition', data?.supervisorPosition)}
+      {renderRow('supervisorStatus', data?.supervisorStatus)}
+      {renderRow('supervisorEducation', data?.supervisorEducation)}
+      {renderRow('supervisorPhoneNumber', data?.supervisorPhoneNumber)}
+      {renderRow('division', data?.division)}
+      {renderRow('identifierType', data?.identifierType)}
+      {renderRow('symbol', data?.symbol)}
+      {renderRow('activity', data?.activity)}
+      {renderRow('category', data?.category)}
+      {renderRow('country', data?.country)}
+      {renderRow('acceptedFrom', data?.acceptedFrom)}
+      {renderRow('acceptedAt', data?.acceptedAt, true)}
+      {isAllowed('isValid') &&
+        renderRow('isValid', data?.isValid !== undefined ? (data?.isValid ? 'Aktiv' : 'Aktiv emas') : null)}
+      {renderRow('usageType', usageTypeName || data?.usageType)}
+      {renderRow('storageLocation', data?.storageLocation)}
 
-      {data?.isValid !== undefined && (
-        <DetailRow
-          title={t(`labels.${type}.isValid`)}
-          value={
-            data?.isValid ? (
-              <span className="text-green-600">Aktiv</span>
-            ) : (
-              <span className="text-red-600">Aktiv emas</span>
-            )
-          }
-        />
+      {/* Maxsus parametrlar (parameters ichidagilar va top-leveldagilar) */}
+      {renderRow('boomLength', data?.parameters?.boomLength)}
+      {renderRow('liftingCapacity', data?.parameters?.liftingCapacity || data?.liftingCapacity)}
+      {renderRow('stopCount', data?.parameters?.stopCount)}
+      {renderRow('sphere', data?.sphere)}
+      {renderRow('capacity', data?.parameters?.capacity)}
+      {renderRow('pressure', data?.parameters?.pressure)}
+      {renderRow('environment', data?.parameters?.environment)}
+      {renderRow('density', data?.parameters?.density)}
+      {renderRow('temperature', data?.parameters?.temperature)}
+      {renderRow('length', data?.parameters?.length)}
+      {renderRow('diameter', data?.parameters?.diameter)}
+      {renderRow('thickness', data?.parameters?.thickness)}
+      {renderRow('speed', data?.parameters?.speed)}
+      {renderRow('passengersPerMinute', data?.parameters?.passengersPerMinute)}
+      {renderRow('passengerCount', data?.parameters?.passengerCount)}
+      {renderRow('height', data?.parameters?.height)}
+      {renderRow('fuel', data?.parameters?.fuel)}
+      {renderRow('nonDestructiveCheckDate', data?.nonDestructiveCheckDate, true)}
+
+      {/* Attraksion uchun maxsus */}
+      {renderRow('attractionName', data?.attractionName)}
+      {renderRow('childEquipmentSortId', data?.childEquipmentSortId)}
+      {renderRow('riskLevel', data?.riskLevel)}
+
+      {/* Umumiy manzil va joylashuv */}
+      {renderRow('regionId', data?.regionName || data?.regionId)}
+      {renderRow('districtId', data?.districtName || data?.districtId)}
+      {renderRow('address', address)}
+      {renderRow('location', data?.location)}
+
+      {/* Umumiy meta ma'lumotlar */}
+      {renderRow('type', type)}
+      {renderRow('registryNumber', data?.registryNumber)}
+      {renderRow('oldRegistryNumber', data?.oldRegistryNumber)}
+      {renderRow('description', data?.description)}
+      {renderRow('birthDate', data?.birthDate, true)}
+
+      {/* Xodimlar */}
+      {(data?.managerCount || data?.engineerCount || data?.workerCount) && (
+        <>
+          {isAllowed('managerCount') && renderRow('managerCount', data?.managerCount)}
+          {isAllowed('engineerCount') && renderRow('engineerCount', data?.engineerCount)}
+          {isAllowed('workerCount') && renderRow('workerCount', data?.workerCount)}
+        </>
       )}
-
-      <DetailRow title={t(`labels.${type}.usageType`)} value={usageTypeName || data?.usageType} />
-      <DetailRow title={t(`labels.${type}.storageLocation`)} value={data?.storageLocation} />
-      <DetailRow title={t(`labels.${type}.hfTypeId`)} value={data?.hfTypeName} />
-
-      {data?.spheres && (
-        <DetailRow
-          title={t(`labels.${type}.spheres`)}
-          value={data?.spheres.map((item: string) => t('application.' + item)).join(', ')}
-        />
-      )}
-
-      <DetailRow title={t(`labels.${type}.customerLegalName`)} value={data?.customerLegalName} />
-      <DetailRow title={t(`labels.${type}.customerTin`)} value={data?.customerTin} />
-      <DetailRow title={t(`labels.${type}.customerLegalForm`)} value={data?.customerLegalForm} />
-      <DetailRow title={t(`labels.${type}.customerLegalAddress`)} value={data?.customerLegalAddress} />
-      <DetailRow title={t(`labels.${type}.customerPhoneNumber`)} value={data?.customerPhoneNumber} />
-      <DetailRow title={t(`labels.${type}.customerFullName`)} value={data?.customerFullName} />
-
-      <DetailRow title={t(`labels.${type}.monitoringLetterDate`)} value={data?.monitoringLetterDate} />
-      <DetailRow title={t(`labels.${type}.monitoringLetterNumber`)} value={data?.monitoringLetterNumber} />
-      <DetailRow title={t(`labels.${type}.submissionDate`)} value={data?.submissionDate} />
-      <DetailRow title={t(`labels.${type}.objectName`)} value={data?.objectName} />
-      <DetailRow title={t(`labels.${type}.firstSymbolsGroup`)} value={data?.firstSymbolsGroup} />
-      <DetailRow title={t(`labels.${type}.secondSymbolsGroup`)} value={data?.secondSymbolsGroup} />
-      <DetailRow title={t(`labels.${type}.thirdSymbolsGroup`)} value={data?.thirdSymbolsGroup} />
-      <DetailRow title={t(`labels.${type}.expertiseConclusionNumber`)} value={data?.expertiseConclusionNumber} />
-      <DetailRow title={t(`labels.${type}.responsiblePersonName`)} value={data?.responsiblePersonName} />
-
-      <DetailRow title={t(`labels.${type}.address`)} value={address} />
-      <DetailRow title={t(`labels.${type}.location`)} value={data?.location} />
-      <DetailRow title={t(`labels.${type}.extraArea`)} value={data?.extraArea} />
-      <DetailRow title={t(`labels.${type}.hazardousSubstance`)} value={data?.hazardousSubstance} />
-
-      <DetailRow title={t(`labels.${type}.hazardousFacilityId`)} value={data?.hazardousFacilityName} />
-      <DetailRow title={t(`labels.${type}.childEquipmentId`)} value={data?.childEquipmentName} />
-      <DetailRow title={t(`labels.${type}.childEquipmentSortId`)} value={data?.childEquipmentSortId} />
-
-      <DetailRow title={t(`labels.${type}.factoryNumber`)} value={data?.factoryNumber} />
-      <DetailRow title={t(`labels.${type}.serialNumber`)} value={data?.serialNumber} />
-      <DetailRow title={t(`labels.${type}.factory`)} value={data?.factory} />
-      <DetailRow title={t(`labels.${type}.model`)} value={data?.model} />
-      <DetailRow title={t(`labels.${type}.servicePeriod`)} value={data?.servicePeriod} />
-      <DetailRow title={t(`labels.${type}.riskLevel`)} value={data?.riskLevel} />
-
-      <DetailRow title={t(`labels.${type}.manufacturedYear`)} value={data?.manufacturedYear} />
-      <DetailRow title={t(`labels.${type}.manufacturedAt`)} value={getDate(data?.manufacturedAt)} />
-
-      <DetailRow title={t(`labels.${type}.partialCheckDate`)} value={getDate(data?.partialCheckDate)} />
-      <DetailRow title={t(`labels.${type}.nextPartialCheckDate`)} value={getDate(data?.nextPartialCheckDate)} />
-
-      <DetailRow title={t(`labels.${type}.fullCheckDate`)} value={getDate(data?.fullCheckDate)} />
-      <DetailRow title={t(`labels.${type}.nextFullCheckDate`)} value={getDate(data?.nextFullCheckDate)} />
-
-      <DetailRow title={t(`labels.${type}.nonDestructiveCheckDate`)} value={getDate(data?.nonDestructiveCheckDate)} />
-
-      <DetailRow title={t(`labels.${type}.boomLength`)} value={data?.parameters?.boomLength} />
-      <DetailRow title={t(`labels.${type}.liftingCapacity`)} value={data?.parameters?.liftingCapacity} />
-      <DetailRow title={t(`labels.${type}.capacity`)} value={data?.parameters?.capacity} />
-      <DetailRow title={t(`labels.${type}.environment`)} value={data?.parameters?.environment} />
-      <DetailRow title={t(`labels.${type}.pressure`)} value={data?.parameters?.pressure} />
-      <DetailRow title={t(`labels.${type}.stopCount`)} value={data?.parameters?.stopCount} />
-      <DetailRow title={t(`labels.${type}.speed`)} value={data?.parameters?.speed} />
-      <DetailRow title={t(`labels.${type}.passengersPerMinute`)} value={data?.parameters?.passengersPerMinute} />
-      <DetailRow title={t(`labels.${type}.passengerCount`)} value={data?.parameters?.passengerCount} />
-      <DetailRow title={t(`labels.${type}.length`)} value={data?.parameters?.length} />
-      <DetailRow title={t(`labels.${type}.height`)} value={data?.parameters?.height} />
-      <DetailRow title={t(`labels.${type}.diameter`)} value={data?.parameters?.diameter} />
-      <DetailRow title={t(`labels.${type}.thickness`)} value={data?.parameters?.thickness} />
-      <DetailRow title={t(`labels.${type}.temperature`)} value={data?.parameters?.temperature} />
-      <DetailRow title={t(`labels.${type}.density`)} value={data?.parameters?.density} />
-      <DetailRow title={t(`labels.${type}.fuel`)} value={data?.parameters?.fuel} />
-      <DetailRow title={t(`labels.${type}.sphere`)} value={data?.sphere} />
-
-      {/*<DetailRow title={t(`labels.${type}.registryNumber`)} value={data?.registryNumber} />*/}
-      {/*<DetailRow title={t(`labels.${type}.oldRegistryNumber`)} value={data?.oldRegistryNumber} />*/}
-      <DetailRow title={t(`labels.${type}.description`)} value={data?.description} />
-      <DetailRow title={t(`labels.${type}.reasons`)} value={data?.reasons} />
-      <DetailRow title={t(`labels.${type}.deregisterReason`)} value={data?.deregisterReason} />
-      <DetailRow title={t(`labels.${type}.sign`)} value={data?.sign} />
-
-      <DetailRow title={t(`Rahbar xodimlar soni`)} value={data?.managerCount || ''} />
-      <DetailRow title={t(`Muhandis-texnik xodimlar soni`)} value={data?.engineerCount || ''} />
-      <DetailRow title={t(`Oddiy ishchi xodimlar soni`)} value={data?.workerCount || ''} />
     </div>
   )
 }
