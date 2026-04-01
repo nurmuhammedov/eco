@@ -590,11 +590,11 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
       {renderRow('location', data?.location)}
 
       {/* Umumiy meta ma'lumotlar */}
-      {renderRow('type', type)}
+      {renderRow('type', t(`equipment_types.${type}`) || type)}
       {renderRow('registryNumber', data?.registryNumber)}
       {renderRow('oldRegistryNumber', data?.oldRegistryNumber)}
       {renderRow('description', data?.description)}
-      {renderRow('birthDate', data?.birthDate, true)}
+      {/*{renderRow('birthDate', data?.birthDate, true)}*/}
 
       {/* Xodimlar */}
       {(data?.managerCount || data?.engineerCount || data?.workerCount) && (
