@@ -3,6 +3,7 @@ export interface Indicator {
   text: string
   maxScore: number
   score: number
+  reason: string
   description: string | null
   filePath: string | null
   status: string
