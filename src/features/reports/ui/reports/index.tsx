@@ -13,9 +13,12 @@ import {
   PieChart,
   ShieldCheck,
   TrendingUp,
+  Users,
 } from 'lucide-react'
 import { Card } from '@/shared/components/ui/card'
 import { Link } from 'react-router-dom'
+import { useCurrentRole } from '@/shared/hooks/use-current-role'
+import { UserRoles } from '@/entities/user'
 
 interface ReportItem {
   id: string
@@ -146,9 +149,31 @@ const REPORTS_GROUPS: ReportGroup[] = [
       { id: 'inq-regional', title: 'Hududiy murojaatlar', icon: Map, url: '#', badge: 'Jarayonda' },
     ],
   },
+  {
+    id: 'employees',
+    title: 'Xodimlar',
+    items: [
+      {
+        id: 'emp-turniket',
+        title: 'Xodimlarning ishga vaqtida kelishi bo‘yicha hisobot',
+        icon: Users,
+        url: '/reports/turniket-logs',
+        badge: 'Yangi',
+      },
+    ],
+  },
 ]
 
 export const ReportsGrid: React.FC = () => {
+  const role = useCurrentRole()
+
+  const filteredGroups = React.useMemo(() => {
+    if (role === UserRoles.CHAIRMAN || role === UserRoles.ADMIN) {
+      return REPORTS_GROUPS
+    }
+    return REPORTS_GROUPS.filter((group) => group.id !== 'employees')
+  }, [role])
+
   return (
     <Fragment>
       <div className="mb-6 flex items-center justify-between">
@@ -161,7 +186,7 @@ export const ReportsGrid: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {REPORTS_GROUPS.map((group) => (
+        {filteredGroups.map((group) => (
           <div key={group.id} className="flex flex-col gap-2">
             <h6 className="px-1 text-lg font-semibold text-gray-700">{group.title}</h6>
             <Card className="overflow-hidden border-none shadow-sm">

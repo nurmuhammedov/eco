@@ -33,6 +33,7 @@ const ReportsDetail6 = lazy(() => import('@/features/reports/ui/report6'))
 const ReportsDetail7 = lazy(() => import('@/features/reports/ui/report7'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
+const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
@@ -226,6 +227,11 @@ export const chairmanRoutes = [
     id: 'REPORT',
     path: 'reports/inspection-stats',
     element: withSuspense(InspectionStatsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/turniket-logs',
+    element: withSuspense(TurniketLogsReport),
   },
 
   // PERMITS

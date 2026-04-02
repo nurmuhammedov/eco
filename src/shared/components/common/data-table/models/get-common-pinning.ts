@@ -25,7 +25,6 @@ export function getCommonPinningStyles<TData>({
     right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
     opacity: 1,
     position: isPinned ? 'sticky' : 'relative',
-    background: isPinned ? 'hsl(var(--background))' : 'bg-neutral-50',
     width: `${column.getSize()}px`,
     minWidth: column.columnDef.minSize ? `${column.columnDef.minSize}px` : undefined,
     maxWidth: column.columnDef.maxSize ? `${column.columnDef.maxSize}px` : undefined,

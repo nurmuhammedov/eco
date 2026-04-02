@@ -15,6 +15,8 @@ import {
   SortingState,
   useReactTable,
   VisibilityState,
+  InitialTableState,
+  ColumnPinningState,
 } from '@tanstack/react-table'
 import * as React from 'react'
 import { Fragment } from 'react'
@@ -32,6 +34,7 @@ export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   filterMaxLength?: number
   filterRangeKeys?: [string, string]
   className?: string
+  headerClassName?: string
 }
 
 interface DataTableProps<TData, TValue> {
@@ -50,6 +53,10 @@ interface DataTableProps<TData, TValue> {
   showNumeration?: boolean
   showFilters?: boolean
   pageCount?: number
+  isHeaderSticky?: boolean
+  initialState?: InitialTableState
+  columnPinning?: ColumnPinningState
+  onColumnPinningChange?: React.Dispatch<React.SetStateAction<ColumnPinningState>>
 }
 
 export function DataTable<TData, TValue>({
@@ -66,6 +73,10 @@ export function DataTable<TData, TValue>({
   showNumeration = true,
   showFilters = false,
   pageCount: propPageCount,
+  isHeaderSticky = false,
+  initialState,
+  columnPinning: propColumnPinning,
+  onColumnPinningChange,
 }: DataTableProps<TData, TValue>) {
   const {
     paramsObject: { page = 1, size = 10 },
@@ -80,6 +91,9 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [internalColumnPinning, setInternalColumnPinning] = React.useState<ColumnPinningState>(
+    initialState?.columnPinning || {}
+  )
 
   const handlePageChange = (page: number) => {
     if (onPageChange) {
@@ -105,7 +119,9 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
       columnFilters,
+      columnPinning: propColumnPinning || internalColumnPinning,
     },
+    initialState,
     pageCount,
     enableSorting: true,
     manualPagination: isPaginated || isContentData || propPageCount !== undefined,
@@ -114,6 +130,7 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
+    onColumnPinningChange: onColumnPinningChange || setInternalColumnPinning,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -128,8 +145,10 @@ export function DataTable<TData, TValue>({
   return (
     <Fragment>
       <div className={cn('relative flex-1 overflow-auto rounded-md bg-white', className)}>
-        <Table className="p-2" style={fixedTableStyle}>
-          <TableHeader className="p-2 font-semibold text-black">
+        <Table className="border-none p-0" style={fixedTableStyle}>
+          <TableHeader
+            className={cn('p-2 font-semibold text-black', isHeaderSticky && 'sticky top-0 z-30 bg-white shadow-sm')}
+          >
             {table.getHeaderGroups().map((headerGroup, groupIdx) => {
               const isFirstRow = groupIdx === 0
               const isLastRow = groupIdx === table.getHeaderGroups().length - 1
@@ -162,6 +181,8 @@ export function DataTable<TData, TValue>({
                           !isFirstRow && (!isLastRow || showFilters) && 'first:rounded-none! last:rounded-none!',
                           isFirstRow && !isLastRow && 'first:rounded-bl-none! last:rounded-br-none!',
                           isActions && 'w-[1%] whitespace-nowrap',
+                          header.column.getIsPinned() && 'bg-neutral-100!',
+                          columnDef.headerClassName,
                           columnDef.className
                         )}
                         style={{
@@ -211,7 +232,7 @@ export function DataTable<TData, TValue>({
               <DataTableLoading isLoading={isLoading} columns={columns} showNumeration={showNumeration} />
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row, idx) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="group/row">
                   {showNumeration && (
                     <TableCell className="w-[1%] whitespace-nowrap">
                       {Number(page || 1) > 1 ? (Number(page || 1) - 1) * Number(size || 10) + idx + 1 : idx + 1}
@@ -223,7 +244,12 @@ export function DataTable<TData, TValue>({
                     return (
                       <TableCell
                         key={cell.id}
-                        className={cn(isActions && '!w-[1%] whitespace-nowrap', columnDef.className)}
+                        className={cn(
+                          isActions && '!w-[1%] whitespace-nowrap',
+                          cell.column.getIsPinned() &&
+                            '[[data-state=selected]_&]:bg-muted! bg-white! group-even/row:bg-neutral-50!',
+                          columnDef.className
+                        )}
                         style={{
                           width: isActions ? undefined : cell.column.getSize(),
                           ...getCommonPinningStyles({ column: cell.column }),
