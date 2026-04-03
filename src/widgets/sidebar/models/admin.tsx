@@ -11,6 +11,7 @@ import {
   Signature,
   Mail,
   Server,
+  Trees,
 } from 'lucide-react'
 
 export default [
@@ -63,6 +64,11 @@ export default [
     url: '/hybrid-mail',
     title: 'Gibrid pochta',
     icon: <Mail />,
+  },
+  {
+    url: '/parks',
+    title: 'Parklar',
+    icon: <Trees />,
   },
   {
     url: '/metrics/',

@@ -21,6 +21,9 @@ import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
 import { useRegisterIllegalAttraction } from '@/features/application/create-application/model/use-create-illegal-attraction-passport-application'
+import { useParkSelectQuery } from '@/entities/admin/park'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { useMemo } from 'react'
 
 interface RegisterIllegalAttractionFormProps {
   onSubmit: (data: RegisterIllegalAttractionDTO) => void
@@ -50,6 +53,10 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
   const birthDateString = form.watch('birthDate')
   const isLegal = identity?.length === 9
   const isIndividual = identity?.length === 14
+
+  const districtId = form.watch('districtId')
+  const { data: parks } = useParkSelectQuery(Number(districtId))
+  const parkOptions = useMemo(() => getSelectOptions(parks), [parks])
 
   if (isLoading) {
     return <AppealFormSkeleton />
@@ -393,6 +400,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                       onValueChange={(value) => {
                         if (value) {
                           field.onChange(value)
+                          form.setValue('parkId', null as any)
                         }
                       }}
                       value={String(field.value || '')}
@@ -402,6 +410,28 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                         <SelectValue placeholder="Tumanni tanlang" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="parkId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Park</FormLabel>
+                  <FormControl>
+                    <Select
+                      disabled={!districtId}
+                      value={field.value ? String(field.value) : undefined}
+                      onValueChange={(v) => field.onChange(Number(v))}
+                    >
+                      <SelectTrigger className="3xl:w-sm w-full">
+                        <SelectValue placeholder="Parkni tanlang (ixtiyoriy)" />
+                      </SelectTrigger>
+                      <SelectContent>{parkOptions}</SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />

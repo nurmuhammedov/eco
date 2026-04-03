@@ -192,6 +192,7 @@
     "OTHER": "Boshqa objektlar"
   },
   "regions": "Viloyatlar",
+  "add": "Qo‘shish",
   "districts": "Tumanlar",
   "region_code": "Viloyat kodi(MHOBT kodi)",
   "region_name": "Viloyat nomi",
@@ -203,6 +204,8 @@
   "select_district": "Tumanni tanlang",
   "name": "Nomi",
   "number": "Raqami",
+  "address": "Manzil",
+  "location": "Lokatsiya",
   "soato": "MHOBT",
   "loading": "Yuklanmoqda...",
   "sequence_number": "T/R",
@@ -284,6 +287,7 @@
       "country": "Attraksion ishlab chiqarilgan mamlakat",
       "regionId": "Attraksion joylashgan viloyat",
       "districtId": "Attraksion joylashgan tuman",
+      "parkName": "Park",
       "address": "Attraksion joylashgan manzil",
       "location": "Geolokatsiya (xaritadan attraksion joylashgan joyni tanlang)",
       "riskLevel": "Attraksionning biomexanik xavf darajasi",
@@ -970,5 +974,15 @@
       "REJECTED": " So‘rovni rad etdi",
       "EDITED": "O‘zgartirish kiritdi"
     }
-  }
+  },
+  "parks": "Parklar",
+  "park_name": "Park nomi",
+  "park_name_required": "Park nomi kiritilishi shart",
+  "region_required": "Viloyat tanlanishi shart",
+  "district_required": "Tuman tanlanishi shart",
+  "address_required": "Manzil kiritilishi shart",
+  "location_required": "Lokatsiya tanlanishi shart",
+  "park_updated_successfully": "Park muvaffaqiyatli yangilandi",
+  "park_created_successfully": "Park muvaffaqiyatli yaratildi",
+  "search_by_name": "Nomi bo‘yicha qidirish"
 }

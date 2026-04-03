@@ -12,6 +12,7 @@ import {
 interface Props {
   address: any
   data: any
+  isRegister?: boolean
   type: any
 }
 
@@ -29,7 +30,7 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'serialNumber',
     'manufacturedYear',
     'stateService',
-    'servicePeriod',
+    // 'servicePeriod',
     'registryNumber',
   ],
   ATTRACTION: [
@@ -45,6 +46,7 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'country',
     'regionId',
     'districtId',
+    'parkName',
     'address',
     'location',
     'riskLevel',
@@ -438,7 +440,7 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'parentOrganization',
     'supervisorName',
     'supervisorPosition',
-    'servicePeriod',
+    // 'servicePeriod',
     'supervisorStatus',
     'supervisorEducation',
     'supervisorPhoneNumber',
@@ -465,7 +467,7 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
   ],
 }
 
-const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
+const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) => {
   const { t } = useTranslation()
 
   const serviceName =
@@ -480,6 +482,13 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
     [IrsUsageType.DISPOSAL]: 'Ko‘mish uchun',
     [IrsUsageType.EXPORT]: 'Chet-elga olib chiqish uchun',
     [IrsUsageType.STORAGE]: 'Vaqtinchalik saqlash uchun',
+  }
+
+  const RISK_LEVEL_MAP: Record<string, string> = {
+    I: 'I daraja',
+    II: 'II daraja',
+    III: 'III daraja',
+    IV: 'IV daraja',
   }
 
   const usageTypeName = USAGE_TYPE_MAP[data?.usageType]
@@ -505,7 +514,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
   return (
     <div className="flex flex-col py-1">
       {/* Umumiy ma'lumotlar */}
-      {renderRow('phoneNumber', data?.phoneNumber)}
+      {/*{renderRow('phoneNumber', data?.phoneNumber)}*/}
 
       {/* XICHO (HF) maydonlari */}
       {renderRow('upperOrganization', data?.upperOrganization)}
@@ -580,21 +589,19 @@ const AppealMainInfo: FC<Props> = ({ type, data, address }) => {
 
       {/* Attraksion uchun maxsus */}
       {renderRow('attractionName', data?.attractionName)}
-      {renderRow('childEquipmentSortId', data?.childEquipmentSortId)}
-      {renderRow('riskLevel', data?.riskLevel)}
+      {renderRow('childEquipmentSortId', data?.childEquipmentSortName || data?.childEquipmentSortId)}
+      {renderRow('riskLevel', RISK_LEVEL_MAP[data?.riskLevel] || data?.riskLevel)}
 
       {/* Umumiy manzil va joylashuv */}
       {renderRow('regionId', data?.regionName || data?.regionId)}
       {renderRow('districtId', data?.districtName || data?.districtId)}
+      {renderRow('parkName', data?.parkName)}
       {renderRow('address', address)}
       {renderRow('location', data?.location)}
 
       {/* Umumiy meta ma'lumotlar */}
       {renderRow('type', t(`equipment_types.${type}`) || type)}
-      {renderRow('registryNumber', data?.registryNumber)}
-      {renderRow('oldRegistryNumber', data?.oldRegistryNumber)}
-      {renderRow('description', data?.description)}
-      {/*{renderRow('birthDate', data?.birthDate, true)}*/}
+      {isRegister ? renderRow('registryNumber', data?.registryNumber) : null}
 
       {/* Xodimlar */}
       {(data?.managerCount || data?.engineerCount || data?.workerCount) && (

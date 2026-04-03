@@ -75,7 +75,6 @@ const TurniketReport: React.FC = () => {
           params: { from, to },
         })
 
-        // Filtr: Muhammadali, Nurmuhammad va Xurshid ismlarni olib tashlash
         const filteredData = (response.data as TurniketLog[]).filter(
           (employee) => !EXCLUDED_NAMES.some((excluded) => employee.name.toLowerCase().includes(excluded.toLowerCase()))
         )

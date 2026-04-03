@@ -41,28 +41,77 @@ const IrsDetail = () => {
               )
             }
           />
-          <DetailRow title="Roʻyxatga olish sanasi:" value={getDate(data?.registrationDate)} />
-          <DetailRow title="Roʻyxatga olish raqami:" value={data?.registryNumber} />
-          {!!data?.registryFilePath && (
-            <DetailRow
-              title="Reyestrga qo‘yilganligi to‘g‘risidagi hujjat:"
-              value={<FileLink url={data?.registryFilePath} />}
-            />
-          )}
-          {!!data?.deregisterFilePath && (
-            <DetailRow
-              title="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat"
-              value={<FileLink url={data?.deregisterFilePath} />}
-            />
-          )}
+
           <DetailRow
-            title="Reyestrdan chiqarish sanasi:"
-            value={data?.deregisterDate ? getDate(data?.deregisterDate) : null}
+            title="Roʻyxatga olish sanasi:"
+            value={
+              data?.registrationDate ? (
+                getDate(data?.registrationDate)
+              ) : (
+                <span className="text-red-600">Mavjud emas</span>
+              )
+            }
           />
+
           <DetailRow
-            title="Reyestrdan chiqarish sababi:"
-            value={data?.deregisterReason ? getDate(data?.deregisterReason) : null}
+            title="Roʻyxatga olish raqami:"
+            value={data?.registryNumber ? data?.registryNumber : <span className="text-red-600">Mavjud emas</span>}
           />
+
+          {/*<DetailRow*/}
+          {/*  title="Reyestrga qo‘yilganligi to‘g‘risidagi hujjat:"*/}
+          {/*  value={*/}
+          {/*    data?.registryFilePath ? (*/}
+          {/*      <FileLink url={data?.registryFilePath} />*/}
+          {/*    ) : (*/}
+          {/*      <span className="text-red-600">Mavjud emas</span>*/}
+          {/*    )*/}
+          {/*  }*/}
+          {/*/>*/}
+
+          {!data?.isValid && (
+            <>
+              <DetailRow
+                title="Reyestrdan chiqarish sanasi:"
+                value={
+                  data?.deactivationDate ? (
+                    getDate(data?.deactivationDate)
+                  ) : (
+                    <span className="text-red-600">Mavjud emas</span>
+                  )
+                }
+              />
+
+              {/*<DetailRow*/}
+              {/*  title="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat:"*/}
+              {/*  value={*/}
+              {/*    data?.deregisterFilePath ? (*/}
+              {/*      <FileLink url={data?.deregisterFilePath} />*/}
+              {/*    ) : (*/}
+              {/*      <span className="text-red-600">Mavjud emas</span>*/}
+              {/*    )*/}
+              {/*  }*/}
+              {/*/>*/}
+
+              <DetailRow
+                title="Reyestrdan chiqarish uchun asos:"
+                value={
+                  data?.deregisterBasisPath ? (
+                    <FileLink url={data?.deregisterBasisPath} />
+                  ) : (
+                    <span className="text-red-600">Mavjud emas</span>
+                  )
+                }
+              />
+
+              <DetailRow
+                title="Reyestrdan chiqarish sababi:"
+                value={
+                  data?.deregisterReason ? data?.deregisterReason : <span className="text-red-600">Mavjud emas</span>
+                }
+              />
+            </>
+          )}
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="applicant_info" title="Arizachi to‘g‘risida ma’lumot">
           <LegalApplicantInfo tinNumber={data?.legalTin} />

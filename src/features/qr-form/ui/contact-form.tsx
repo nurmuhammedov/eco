@@ -183,7 +183,13 @@ export const ContactForm = () => {
           />
           {!!data?.deregisterFilePath && (
             <DetailRow
-              label="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat"
+              label="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat:"
+              value={data.deregisterFilePath ? <FileLink url={data.deregisterFilePath} title="Yuklab olish" /> : null}
+            />
+          )}
+          {!!data?.deregisterFilePath && (
+            <DetailRow
+              label="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat:"
               value={data.deregisterFilePath ? <FileLink url={data.deregisterFilePath} title="Yuklab olish" /> : null}
             />
           )}

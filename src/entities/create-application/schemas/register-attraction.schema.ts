@@ -21,6 +21,7 @@ export const AttractionAppealDtoSchema = z.object({
   country: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   regionId: z.coerce.number({ required_error: 'Majburiy maydon!' }),
   districtId: z.coerce.number({ required_error: 'Majburiy maydon!' }),
+  parkId: z.coerce.number().optional().nullable(),
   address: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   location: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   riskLevel: z.enum(['I', 'II', 'III', 'IV'], { required_error: 'Majburiy maydon!' }),

@@ -18,6 +18,11 @@ export const districtAPI = {
 
     return data.data
   },
+  fetchDistrictsSelect: async (regionId: number) => {
+    const { data } = await apiClient.get<ApiResponse<any>>(API_ENDPOINTS.DISTRICT_SELECT, { regionId })
+
+    return data.data
+  },
   createDistrict: async (district: CreateDistrictDTO) => {
     // if (!response.success && response.errors) {
     //   toast.error(Object.values(response.errors).join(', '), {

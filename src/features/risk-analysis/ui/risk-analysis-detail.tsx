@@ -1,13 +1,13 @@
-import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
-import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
+// import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
+// import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
 import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts'
 import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row.tsx'
 import FileLink from '@/shared/components/common/file-link.tsx'
-import { Coordinate } from '@/shared/components/common/yandex-map'
-import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
+// import { Coordinate } from '@/shared/components/common/yandex-map'
+// import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { getDate } from '@/shared/utils/date.ts'
 import { Link, useNavigate } from 'react-router-dom'
 import { ColumnDef } from '@tanstack/react-table'
@@ -19,11 +19,11 @@ const RiskAnalysisDetail = () => {
   const { data } = useObjectInfo()
   const navigate = useNavigate()
   const {
-    paramsObject: { tin, id, type: ty, ...rest },
+    paramsObject: { tin, id, /* type: ty,*/ ...rest },
   } = useCustomSearchParams()
   const currentTin = tin
   const objectId = id
-  let type = ty
+  // let type = ty
 
   const { data: tableData, isLoading: isTableDataLoading } = usePaginatedData<any>(`/risk-analyses/belongings`, {
     ...rest,
@@ -32,13 +32,13 @@ const RiskAnalysisDetail = () => {
     size: rest?.size || 10,
   })
 
-  if (type !== 'hf' && type !== 'irs') {
-    type = data?.type
-  }
+  // if (type !== 'hf' && type !== 'irs') {
+  // type = data?.type
+  // }
 
   const currentBelongId = objectId
 
-  const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
+  // const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
 
   const handleView = (row: any) => {
     navigate(`/risk-analysis/info/${row.original.id}?tin=${tin}&name=${data?.legalName || data?.ownerName || ''}`)
@@ -133,35 +133,21 @@ const RiskAnalysisDetail = () => {
               value={<FileLink url={data?.registryFilePath} />}
             />
           )}
-          {!!data?.deregisterFilePath && (
-            <DetailRow
-              title="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat"
-              value={<FileLink url={data?.deregisterFilePath} />}
-            />
-          )}
-          <DetailRow
-            title="Reyestrdan chiqarish sanasi:"
-            value={data?.deregisterDate ? getDate(data?.deregisterDate) : null}
-          />
-          <DetailRow
-            title="Reyestrdan chiqarish sababi:"
-            value={data?.deregisterReason ? getDate(data?.deregisterReason) : null}
-          />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
           <LegalApplicantInfo tinNumber={currentTin} />
         </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
-          <AppealMainInfo data={data} type={type?.toUpperCase()} address={data?.address} />
-        </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">
-          <FilesSection files={data?.files || []} />
-        </DetailCardAccordion.Item>
-        {!!currentObjLocation?.length && (
-          <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">
-            <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
-          </DetailCardAccordion.Item>
-        )}
+        {/*<DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">*/}
+        {/*  <AppealMainInfo data={data} type={type?.toUpperCase()} address={data?.address} />*/}
+        {/*</DetailCardAccordion.Item>*/}
+        {/*<DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">*/}
+        {/*  <FilesSection files={data?.files || []} />*/}
+        {/*</DetailCardAccordion.Item>*/}
+        {/*{!!currentObjLocation?.length && (*/}
+        {/*  <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">*/}
+        {/*    <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />*/}
+        {/*  </DetailCardAccordion.Item>*/}
+        {/*)}*/}
       </DetailCardAccordion>
     </>
   )

@@ -36,3 +36,12 @@ export const useRegionSelectQuery = () => {
     queryKey: districtKeys.entity('district-region-select'),
   })
 }
+
+export const useDistrictsSelectQuery = (regionId: number) => {
+  return useQuery({
+    enabled: !!regionId,
+    staleTime: getTime(1, 'week'),
+    queryFn: () => districtAPI.fetchDistrictsSelect(regionId),
+    queryKey: districtKeys.entity('district-select-' + regionId),
+  })
+}

@@ -29,6 +29,10 @@ const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
 const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
 const ReportsDetail6 = lazy(() => import('@/features/reports/ui/report6'))
 const ReportsDetail7 = lazy(() => import('@/features/reports/ui/report7'))
+const ReportsDetail8 = lazy(() => import('@/features/reports/ui/report8'))
+const ReportsDetail9 = lazy(() => import('@/features/reports/ui/report9'))
+const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
+const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
 const Permits = lazy(() => import('@/widgets/permits'))
@@ -238,6 +242,26 @@ export const inspectorRoutes = [
     id: 'REPORT',
     path: 'reports/incidents',
     element: withSuspense(ReportsDetail7),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/changes',
+    element: withSuspense(ReportsDetail8),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/registers-deregister',
+    element: withSuspense(ReportsDetail9),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/applications-execution',
+    element: withSuspense(ReportsDetail10),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/registers-register',
+    element: withSuspense(ReportsDetail11),
   },
   {
     id: 'REPORT',

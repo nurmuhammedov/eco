@@ -43,14 +43,16 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="success">Tasdiqlandi</Button>
+        <Button variant="success">Arizani tasdiqlash</Button>
       </DialogTrigger>
       <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{isDeregister ? 'Reyestrdan chiqarilsinmi?' : 'Reyestrga qo‘shilsinmi?'}</DialogTitle>
+          <DialogTitle>
+            {isDeregister ? 'Arizani haqiqatdan ham tasdiqlaysizmi?' : 'Arizani haqiqatdan ham tasdiqlaysizmi?'}
+          </DialogTitle>
         </DialogHeader>
         <div className="py-4">
-          <p className="text-sm text-slate-500">Arizani haqiqatdan ham tasdiqlaysizmi?</p>
+          <p className="text-sm text-slate-500">Bu amalni ortga qaytarib bo‘lmaydi!</p>
         </div>
         <DialogFooter>
           <DialogClose asChild>

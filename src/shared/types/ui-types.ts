@@ -19,6 +19,7 @@ export const UI_COMPONENTS = {
   CHECKLIST_TEMPLATES_DRAWER: 'checklist-templates-drawer',
   CHECKLISTS: 'checklist',
   CATEGORY_TYPES: 'category-types',
+  PARK_DRAWER: 'park-drawer',
 } as const
 
 export type UIComponentName = (typeof UI_COMPONENTS)[keyof typeof UI_COMPONENTS]
@@ -68,6 +69,9 @@ export interface UIComponentDataMap {
     id: number
   }
   [UI_COMPONENTS.CATEGORY_TYPES]: {
+    id: number
+  }
+  [UI_COMPONENTS.PARK_DRAWER]: {
     id: number
   }
 }

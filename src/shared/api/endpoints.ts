@@ -9,6 +9,7 @@ export const API_ENDPOINTS: Record<string, string> = {
   USERS: '/users',
   REGIONS: '/regions',
   DISTRICTS: '/districts',
+  PARKS: '/parks',
   INSPECTION_CATEGORY_TYPES: '/checklists/categories',
   INSPECTION_CHECKLISTS: '/checklists',
   DEPARTMENTS: '/departments',
@@ -25,6 +26,7 @@ export const API_ENDPOINTS: Record<string, string> = {
   //SELECT_DATA
   REGIONS_SELECT: '/regions/select',
   DISTRICT_SELECT: '/districts/select',
+  PARKS_SELECT: '/parks/select',
   DEPARTMENT_SELECT: '/departments/select',
   OFFICE_SELECT: '/offices/select',
   HAZARDOUS_FACILITY_SELECT: '/hf/select',

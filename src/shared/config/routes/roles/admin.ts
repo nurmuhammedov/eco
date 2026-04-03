@@ -14,6 +14,7 @@ const DecreeSignerPage = lazy(() =>
 )
 const HybridMailPage = lazy(() => import('@/features/admin/hybrid-mail/ui/hybrid-mail-page'))
 const UserLogsPage = lazy(() => import('@/pages/admin/user-logs/page'))
+const ParksPage = lazy(() => import('@/pages/admin/parks'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 
 export const adminRoutes = [
@@ -64,5 +65,9 @@ export const adminRoutes = [
   {
     path: 'register/change/:id/:type',
     element: withSuspense(RegisterChangePage),
+  },
+  {
+    path: 'parks',
+    element: withSuspense(ParksPage),
   },
 ]

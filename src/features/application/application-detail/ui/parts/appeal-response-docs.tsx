@@ -25,9 +25,9 @@ export const signStatuses = new Map([
 
 export const approveStatuses = new Map([
   ['AGREED', { label: 'Kelishildi', variant: 'success' }],
-  ['NOT_AGREED', { label: 'Kelishilmadi', variant: 'error' }],
+  ['NOT_AGREED', { label: 'Ijro noto‘g‘ri bajarilgan', variant: 'error' }],
   ['APPROVED', { label: 'Tasdiqlandi', variant: 'success' }],
-  ['NOT_APPROVED', { label: 'Tasdiqlanmadi', variant: 'error' }],
+  ['NOT_APPROVED', { label: 'Ijro noto‘g‘ri bajarilgan', variant: 'error' }],
 ] as const)
 
 export const documentTypes = new Map([
@@ -117,15 +117,16 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
           if (isManager && isAppealForManager) {
             return (
               <div className="flex gap-4">
+                <RejectDocumentModal documentId={documentId} label={'Ijro noto‘g‘ri bajarilgan'} />
                 <RejectAppealModal documentId={documentId} />
                 <ConfirmWithRegistryModal documentId={documentId} />
-                <RejectDocumentModal documentId={documentId} label={'Tasdiqlanmadi'} />
               </div>
             )
           } else if (isRegionalUser || isHead) {
             if (isAppealForManager) {
               return (
                 <div className="flex gap-4">
+                  <RejectDocumentModal documentId={documentId} label={'Ijro noto‘g‘ri bajarilgan'} />
                   <RejectAppealModal documentId={documentId} />
                   <Button
                     disabled={isPending}
@@ -136,15 +137,14 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
                   >
                     Kelishildi
                   </Button>
-                  <RejectDocumentModal documentId={documentId} label={'Kelishilmadi'} />
                 </div>
               )
             } else {
               return (
                 <div className="flex gap-4">
+                  <RejectDocumentModal documentId={documentId} label={'Ijro noto‘g‘ri bajarilgan'} />
                   <RejectAppealModal documentId={documentId} />
                   <ConfirmWithRegistryModal documentId={documentId} />
-                  <RejectDocumentModal documentId={documentId} label={'Tasdiqlanmadi'} />
                 </div>
               )
             }

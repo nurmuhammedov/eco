@@ -115,7 +115,7 @@ const DecreeSignersPage = () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>O‘chirishni tasdiqlaysizmi?</AlertDialogTitle>
-            <AlertDialogDescription>Bu amalni ortga qaytarib bo‘lmaydi.</AlertDialogDescription>
+            <AlertDialogDescription>Bu amalni ortga qaytarib bo‘lmaydi!</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Bekor qilish</AlertDialogCancel>
