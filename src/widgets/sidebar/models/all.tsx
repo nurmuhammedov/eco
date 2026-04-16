@@ -14,6 +14,7 @@ import {
   MessageSquareText,
   ScrollText,
   ShieldCheck,
+  ArrowDownUp,
 } from 'lucide-react'
 
 export default [
@@ -30,6 +31,12 @@ export default [
     icon: <Database />,
   },
   {
+    id: 'ELEVATOR',
+    title: 'menu.elevators',
+    url: '/elevators',
+    icon: <ArrowDownUp />,
+  },
+  {
     id: 'PREVENTION',
     title: 'Profilaktika',
     url: '/preventions',
@@ -44,6 +51,12 @@ export default [
   {
     id: 'INSPECTION',
     title: 'Tekshiruvlar',
+    url: '/inspections',
+    icon: <ClipboardList />,
+  },
+  {
+    id: 'INSPECTION_24_HOURS',
+    title: '24 soatlik tekshiruv',
     url: '/inspections',
     icon: <ClipboardList />,
   },

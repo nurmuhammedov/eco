@@ -62,6 +62,7 @@ export default function AutoDetail() {
               title="Texnik ko‘rik amal qilish muddati"
               value={data?.validUntil ? formatDate(data?.validUntil, 'dd.MM.yyyy') : '-'}
             />
+            <DetailRow title="Viloyat" value={data?.region?.name || data?.region?.nameUz || data?.regionName || '-'} />
           </DetailCardAccordion.Item>
         </DetailCardAccordion>
       </div>

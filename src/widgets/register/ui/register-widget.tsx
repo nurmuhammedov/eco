@@ -139,9 +139,9 @@ const RegisterWidget = () => {
               <Select
                 onValueChange={(value) => {
                   if (value) {
-                    addParams({ regionId: value }, 'page', 'districtId')
+                    addParams({ regionId: value }, 'page', 'districtId', 'parkId')
                   } else {
-                    removeParams('regionId', 'districtId')
+                    removeParams('regionId', 'districtId', 'parkId')
                   }
                 }}
                 value={regionId?.toString()}
@@ -158,9 +158,9 @@ const RegisterWidget = () => {
               <Select
                 onValueChange={(value) => {
                   if (value && value !== 'ALL') {
-                    addParams({ districtId: value }, 'page')
+                    addParams({ districtId: value }, 'page', 'parkId')
                   } else {
-                    removeParams('districtId')
+                    removeParams('districtId', 'parkId')
                   }
                 }}
                 value={districtId?.toString()}

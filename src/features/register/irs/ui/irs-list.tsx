@@ -192,7 +192,8 @@ export const IrsList = () => {
           onView={(row) => handleViewApplication(row.original.id)}
           showEdit={
             (user?.role === UserRoles.MANAGER ||
-              (user?.role === UserRoles.INSPECTOR && Number(row.original.regionId) === user?.regionId)) &&
+              (user?.role === UserRoles.INSPECTOR &&
+                (Number(row.original.regionId) === user?.regionId || user?.isController))) &&
             currentValid === 'true'
           }
           onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}

@@ -1,8 +1,29 @@
 import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx'
 import DetailRow from '@/shared/components/common/detail-row.tsx'
+import { Skeleton } from '@/shared/components/ui/skeleton.tsx'
 
 const LegalApplicantInfo = ({ tinNumber, phoneNumber, isShowPhoneNumber = false }: any) => {
-  const { data } = useLegalApplicantInfo(tinNumber)
+  const { data, isLoading } = useLegalApplicantInfo(tinNumber)
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-2 pb-4">
+        {[1, 2, 3, 4].map((item) => (
+          <div
+            key={item}
+            className="flex items-center justify-between border-b border-dashed border-gray-200 py-3 last:border-none"
+          >
+            <Skeleton className="h-5 w-32" />
+            <Skeleton className="h-5 w-64" />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (!data) {
+    return <div className="p-4 text-center text-sm font-medium text-gray-500">Tashkilot ma’lumotlari topilmadi</div>
+  }
   return (
     <div className="flex flex-col py-1">
       <DetailRow title="Tashkilot STIR:" value={data?.identity || '-'} />

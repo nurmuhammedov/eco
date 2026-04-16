@@ -30,9 +30,6 @@ export const InspectionList: React.FC = () => {
     },
   } = useCustomSearchParams()
 
-  // const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
-  // const activeRegion = regionId?.toString() || (regions && regions.length > 0 ? regions[0].id?.toString() : '')
-
   const { data: districts } = useDistrictSelectQueries(
     isInspector || isRegional ? undefined : regionId == 'ALL' ? '' : regionId
   )
@@ -45,6 +42,7 @@ export const InspectionList: React.FC = () => {
     '/inspections',
     {
       ...rest,
+      type: 'RISK_BASED',
       quarter,
       regionId: regionId == 'ALL' ? '' : regionId,
       year,
@@ -79,13 +77,6 @@ export const InspectionList: React.FC = () => {
     {
       header: 'Tashkilot joylashgan Viloyat',
       accessorKey: 'regionName',
-      // filterKey: 'legalRegionId',
-      // filterType: 'select',
-      // filterOptions:
-      //   regions?.map((i) => ({
-      //     ...i,
-      //     id: i?.id?.toString(),
-      //   })) || [],
     },
     {
       header: 'Tashkilot joylashgan Tuman',

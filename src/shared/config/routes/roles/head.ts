@@ -34,11 +34,20 @@ const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
 const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
+const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
+const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 
 export const headRoutes = [
+  // ELEVATORS
+  {
+    id: 'ELEVATOR',
+    path: 'elevators',
+    element: withSuspense(ElevatorsPage),
+  },
+
   // APPEAL
   {
     id: 'APPEAL',
@@ -223,6 +232,11 @@ export const headRoutes = [
     id: 'REPORT',
     path: 'reports/inspection-stats',
     element: withSuspense(InspectionStatsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/hf-employee-stats',
+    element: withSuspense(ReportHfEmployeeStats),
   },
 
   // PERMITS

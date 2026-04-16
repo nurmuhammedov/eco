@@ -1,98 +1,111 @@
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import React from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
-import { usePaginatedData } from '@/shared/hooks'
-import { ColumnDef } from '@tanstack/react-table'
+import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
-import { Button } from '@/shared/components/ui/button'
-import { Download } from 'lucide-react'
+import { cn } from '@/shared/lib/utils'
+import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 
 const Report6: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
-  const { data: inspections, isLoading } = usePaginatedData('/reports/registry', {
+  const { data: regionsData, isLoading: regionsLoading } = useData<any[]>('/regions/select', true, {
     ...paramsObject,
-    ownerType: 'INDIVIDUAL',
   })
 
   const tableData = React.useMemo(() => {
-    if (!inspections) return []
-    const list = (inspections as unknown as any[]) || []
+    if (!regionsData) return []
 
-    // Map to 0s for now, as requested
-    const formattedList = list.map((item) => ({
-      officeName: item.regionName,
-      total: 0,
-      new: 0,
-      orderCreated: 0,
-      inProcess: 0,
-      completed: 0,
-      victimsCount: 0,
-      light: 0,
-      heavy: 0,
-      death: 0,
-      group: 0,
-    }))
+    const mockRow = (officeName: string, isSummary = false) => {
+      const getRandom = (max: number) => Math.floor(Math.random() * max)
 
-    const summaryRow = {
-      isSummary: true,
-      officeName: 'Respublika bo‘yicha',
-      total: 0,
-      new: 0,
-      orderCreated: 0,
-      inProcess: 0,
-      completed: 0,
-      victimsCount: 0,
-      light: 0,
-      heavy: 0,
-      death: 0,
-      group: 0,
+      const victimsCount = getRandom(20)
+      const death = getRandom(victimsCount / 3)
+      const heavy = getRandom((victimsCount - death) / 2)
+      const light = victimsCount - death - heavy
+      const group = getRandom(5)
+
+      return {
+        officeName,
+        isSummary,
+        total: 20 + getRandom(50),
+        new: getRandom(10),
+        orderCreated: getRandom(15),
+        inProcess: getRandom(15),
+        completed: getRandom(20),
+        victimsCount,
+        light,
+        heavy,
+        death,
+        group,
+      }
     }
 
-    return [summaryRow, ...formattedList]
-  }, [inspections])
+    const summaryRow = mockRow('Respublika bo‘yicha', true)
+    const filteredRegions = regionsData.filter(
+      (r) => !r.nameUz?.toLowerCase().includes('respublika') && !r.name?.toLowerCase().includes('respublika')
+    )
+    const list = filteredRegions.map((r) => mockRow(r.nameUz || r.name))
 
-  const columns: ColumnDef<any>[] = [
+    return [summaryRow, ...list]
+  }, [regionsData])
+
+  const columns = [
     {
       header: 'Hududlar',
       accessorKey: 'officeName',
-      cell: ({ row }: any) => (
-        <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.officeName}</span>
-      ),
+      id: 'officeName',
+      minSize: 200,
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+      cell: ({ row }: any) => {
+        const value = row.original.officeName
+        const isRespublika = value?.toLowerCase().includes('respublika')
+        return (
+          <span className={cn(row.original.isSummary || isRespublika ? 'font-bold' : '')}>
+            {isRespublika ? 'Respublika bo‘yicha' : value}
+          </span>
+        )
+      },
     },
     {
       header: 'Holati',
       columns: [
         {
           header: 'Umumiy',
-          accessorKey: 'total',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.total}</span>
+          accessorFn: (row: any) => row.total,
+          className: 'text-center font-semibold text-slate-900',
+          cell: ({ row, getValue }: any) => (
+            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
           ),
         },
         {
           header: 'Yangi',
-          accessorKey: 'new',
-          cell: ({ row }: any) => <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.new}</span>,
+          accessorFn: (row: any) => row.new,
+          className: 'text-center',
+          cell: ({ row, getValue }: any) => (
+            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
+          ),
         },
         {
           header: 'Buyruq shakillangan',
-          accessorKey: 'orderCreated',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.orderCreated}</span>
+          accessorFn: (row: any) => row.orderCreated,
+          className: 'text-center',
+          cell: ({ row, getValue }: any) => (
+            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
           ),
         },
         {
           header: 'Jarayonda',
-          accessorKey: 'inProcess',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inProcess}</span>
+          accessorFn: (row: any) => row.inProcess,
+          className: 'text-center',
+          cell: ({ row, getValue }: any) => (
+            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
           ),
         },
         {
           header: 'Yakunlangan',
-          accessorKey: 'completed',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.completed}</span>
+          accessorFn: (row: any) => row.completed,
+          className: 'text-center',
+          cell: ({ row, getValue }: any) => (
+            <span className={row.original.isSummary ? 'font-bold font-medium' : ''}>{getValue()}</span>
           ),
         },
       ],
@@ -102,65 +115,69 @@ const Report6: React.FC = () => {
       columns: [
         {
           header: 'Jabrlanuvchilar soni',
-          accessorKey: 'victimsCount',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.victimsCount}</span>
+          accessorFn: (row: any) => row.victimsCount,
+          className: 'text-center font-bold text-slate-900',
+          cell: ({ row, getValue }: any) => (
+            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
           ),
         },
         {
           header: 'Yengil',
-          accessorKey: 'light',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.light}</span>
+          accessorFn: (row: any) => row.light,
+          className: 'text-center',
+          cell: ({ row, getValue }: any) => (
+            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
           ),
         },
         {
           header: 'Og‘ir',
-          accessorKey: 'heavy',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.heavy}</span>
+          accessorFn: (row: any) => row.heavy,
+          className: 'text-center',
+          cell: ({ row, getValue }: any) => (
+            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
           ),
         },
         {
           header: 'O‘lim',
-          accessorKey: 'death',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.death}</span>
+          accessorFn: (row: any) => row.death,
+          className: 'text-center',
+          cell: ({ row, getValue }: any) => (
+            <span className={row.original.isSummary ? 'font-bold font-medium' : ''}>{getValue()}</span>
           ),
         },
         {
           header: 'Guruhiy',
-          accessorKey: 'group',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.group}</span>
+          accessorFn: (row: any) => row.group,
+          className: 'text-center',
+          cell: ({ row, getValue }: any) => (
+            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
           ),
         },
       ],
     },
   ]
 
-  const handleDownloadExel = async () => {
-    // API hozircha tayyor emas
-  }
-
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col gap-1 overflow-hidden">
       <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
-        <GoBack title="Baxtsiz hodisalar bo‘yicha umumiy hisobot" />
-        <div className="flex flex-wrap items-center gap-2">
-          <Button onClick={handleDownloadExel} className="h-10 w-full sm:w-auto">
-            <Download size={18} className="mr-2" /> Excel
-          </Button>
-        </div>
+        <GoBack title="Avariyalar bo‘yicha umumiy hisobot" />
       </div>
 
-      <div className="flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm">
+      <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
+          columns={columns as any}
+          data={tableData}
+          isLoading={regionsLoading}
+          isPaginated={false}
           showNumeration={false}
           headerCenter={true}
-          data={tableData}
-          columns={columns as unknown as any}
-          isLoading={isLoading}
+          isHeaderSticky={true}
+          initialState={{
+            columnPinning: {
+              left: ['officeName'],
+            },
+          }}
+          className="h-full"
         />
       </div>
     </div>

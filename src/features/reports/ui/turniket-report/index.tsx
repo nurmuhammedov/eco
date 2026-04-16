@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { GoBack } from '@/shared/components/common'
-import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns'
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isWeekend } from 'date-fns'
 import { uz } from 'date-fns/locale'
 import axios from 'axios'
 import { useSearchParams } from 'react-router-dom'
@@ -20,6 +20,31 @@ interface TurniketLog {
 }
 
 const EXCLUDED_NAMES = ['Muhammadali', 'Nurmuhammad', 'Xurshid']
+const formatWorkTime = (time: string | number | undefined) => {
+  if (time === undefined || time === null) return '-'
+  const timeStr = time.toString()
+  if (timeStr.includes(':')) {
+    const [hours = '0', minutes = '00'] = timeStr.split(':')
+    return `${hours.startsWith('0') && hours.length > 1 ? hours.substring(1) : hours} s. ${minutes.padStart(2, '0')} min.`
+  }
+  const minutes = parseInt(timeStr) || 0
+  if (minutes < 60) return `0 s. ${minutes.toString().padStart(2, '0')} min.`
+  const h = Math.floor(minutes / 60)
+  const m = minutes % 60
+  return `${h} s. ${m.toString().padStart(2, '0')} min.`
+}
+
+const getTotalMinutes = (days: any[], field: string) => {
+  return days.reduce((total, log) => {
+    const value = log[field]
+    if (!value) return total
+    if (value.includes(':')) {
+      const [h = '0', m = '00'] = value.split(':')
+      return total + parseInt(h) * 60 + parseInt(m)
+    }
+    return total + (parseInt(value) || 0)
+  }, 0)
+}
 
 const TurniketReport: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -99,18 +124,43 @@ const TurniketReport: React.FC = () => {
         minSize: 250,
         className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] font-medium',
       },
+      {
+        header: 'Jami umumiy ish soati',
+        id: 'total-work',
+        size: 150,
+        className: 'text-center font-bold bg-blue-50/30 whitespace-nowrap',
+        cell: ({ row }: any) => {
+          const total = getTotalMinutes(row.original.days, 'umumiy_ishlangan')
+          return formatWorkTime(total)
+        },
+      },
+      {
+        header: 'Jami norma ish soati',
+        id: 'total-norma',
+        size: 150,
+        className: 'text-center font-bold bg-blue-50/30 whitespace-nowrap',
+        cell: ({ row }: any) => {
+          const total = getTotalMinutes(row.original.days, 'norma_ishlangan')
+          return formatWorkTime(total)
+        },
+      },
     ]
 
     daysInMonth.forEach((day) => {
       const dayStr = format(day, 'yyyy-MM-dd')
+      const isWeekendDay = isWeekend(day)
+      const weekendClass = isWeekendDay ? 'bg-red-50/50' : ''
+
       cols.push({
         id: `day-${dayStr}`,
         header: format(day, "yyyy 'yil' d MMMM", { locale: uz }),
+        className: weekendClass,
         columns: [
           {
             header: 'Kelish',
             id: `in-${dayStr}`,
             size: 80,
+            className: weekendClass,
             cell: ({ row }: any) => {
               const log = row.original.days.find((d: any) => d.sana === dayStr)
               if (!log?.kirish_vaqti) return '-'
@@ -127,6 +177,7 @@ const TurniketReport: React.FC = () => {
             header: 'Ketish',
             id: `out-${dayStr}`,
             size: 80,
+            className: weekendClass,
             cell: ({ row }: any) => {
               const log = row.original.days.find((d: any) => d.sana === dayStr)
               if (!log?.chiqish_vaqti) return '-'
@@ -140,28 +191,27 @@ const TurniketReport: React.FC = () => {
             },
           },
           {
-            header: 'Ish soati',
+            header: 'Umumiy ish soati',
             id: `work-${dayStr}`,
             size: 100,
-            className: 'font-medium whitespace-nowrap',
+            className: `font-medium whitespace-nowrap ${weekendClass}`,
             cell: ({ row }: any) => {
               const log = row.original.days.find((d: any) => d.sana === dayStr)
-              const timeStr = log?.umumiy_ishlangan
+              return formatWorkTime(log?.umumiy_ishlangan)
+            },
+          },
+          {
+            header: 'Norma ish soati',
+            id: `norma-${dayStr}`,
+            size: 100,
+            className: `font-medium whitespace-nowrap ${weekendClass}`,
+            cell: ({ row }: any) => {
+              const log = row.original.days.find((d: any) => d.sana === dayStr)
+              const timeStr = log?.norma_ishlangan
               if (!timeStr) return '-'
 
-              if (timeStr.includes(':')) {
-                const [hours = '0', minutes = '00'] = timeStr.split(':')
-                return `${hours} s. ${minutes.padStart(2, '0')} min.`
-              }
-
-              const minutes = parseInt(timeStr) || 0
-              if (minutes < 60) {
-                return `0 s. ${minutes.toString().padStart(2, '0')} min.`
-              }
-
-              const h = Math.floor(minutes / 60)
-              const m = minutes % 60
-              return `${h} s. ${m.toString().padStart(2, '0')} min.`
+              const isLow = timeStr < '08:00'
+              return <span className={isLow ? 'text-red-600' : 'text-green-600'}>{formatWorkTime(timeStr)}</span>
             },
           },
         ],

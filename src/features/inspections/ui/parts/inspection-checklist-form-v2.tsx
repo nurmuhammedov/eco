@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
-import { useForm, useFieldArray, Controller, Control } from 'react-hook-form'
+import { Control, Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { format as formatDateFn } from 'date-fns'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { AlertCircle, FileText, Pencil } from 'lucide-react'
+import { AlertCircle, FileText } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
@@ -15,6 +15,11 @@ import InspectionChecklistModal from '@/features/inspections/ui/parts/inspection
 import AcknowledgementUploadModal from '@/features/inspections/ui/parts/acknowledgement-upload-modal'
 import { useAdd, useCustomSearchParams } from '@/shared/hooks'
 import { ChecklistAnswerStatus } from '../../model/inspection-checklist.schema'
+import { Badge } from '@/shared/components/ui/badge.tsx'
+import FileLink from '@/shared/components/common/file-link.tsx'
+import { UserRoles } from '@/entities/user'
+import { useAuth } from '@/shared/hooks/use-auth.ts'
+import AddAdditionalFileModal from '@/features/inspections/ui/parts/add-additional-file-modal.tsx'
 
 const itemSchema = z
   .object({
@@ -87,15 +92,19 @@ interface Props {
   categories: CategoryProps[]
   resultId: string
   acknowledgementPath?: string | null
+  additionalFilePath?: string | null
   disabled?: boolean
 }
 
-const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementPath }: Props) => {
+const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementPath, additionalFilePath }: Props) => {
   const qc = useQueryClient()
   const { mutateAsync: postChecklists, isPending: isLoading } = useAdd('/inspection-checklists')
   const { mutateAsync: postChecklists2, isPending: isLoading2 } = useAdd('/inspection-checklists')
-  const { addParams } = useCustomSearchParams()
-
+  const {
+    addParams,
+    paramsObject: { inspectionType = 'risk_based' },
+  } = useCustomSearchParams()
+  const { user } = useAuth()
   const disabled = !acknowledgementPath
 
   const defaultValues: FormValues = useMemo(
@@ -187,7 +196,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
     }
 
     postChecklists({ dtoList, resultId }).then(() => {
-      toast?.success('Muvaffaqiyatli saqlandi!', { richColors: true })
+      // toast?.success('Muvaffaqiyatli saqlandi!', { richColors: true })
       qc.invalidateQueries({ queryKey: [`/inspection-checklists`, { resultId }] }).then((r) => console.log(r))
     })
   }
@@ -215,7 +224,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
     <Form {...form}>
       <form className="flex flex-col gap-4" onSubmit={(e) => e?.preventDefault()}>
         {disabled ? (
-          <div className="mb-2 rounded-lg border border-amber-200 bg-amber-50 p-4">
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
             <div className="flex items-start gap-3">
               <AlertCircle className="mt-0.5 h-5 w-5 text-amber-600" />
               <div className="flex-1">
@@ -243,40 +252,127 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
             </div>
           </div>
         ) : (
-          <div className="mb-2 flex items-center justify-between rounded-xl border bg-gray-50 p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
-                <FileText className="h-5 w-5 text-blue-600" />
+          <div className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+            <div>
+              <div className="mb-3 flex items-center justify-between">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50">
+                  <FileText className="h-5 w-5 text-amber-600" />
+                </div>
+                {acknowledgementPath && (
+                  <Badge variant="success" className="border-emerald-200 bg-emerald-50 text-emerald-700">
+                    Yuklangan
+                  </Badge>
+                )}
               </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500">Tilxat fayli</p>
-                <a
-                  href={acknowledgementPath}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-sm font-semibold text-blue-600 hover:underline"
-                >
-                  Faylni ko‘rish
-                </a>
-              </div>
+              <h4 className="mb-1 text-sm font-medium text-slate-800">Tilxat fayli</h4>
+              <p className="text-xs text-slate-500">Inspektor tomonidan yuklangan</p>
             </div>
-
-            <AcknowledgementUploadModal
-              resultId={resultId}
-              acknowledgementPath={acknowledgementPath}
-              trigger={
-                <Button variant="outline" size="sm" className="h-9">
-                  <Pencil className="mr-2 h-3.5 w-3.5" /> O‘zgartirish
-                </Button>
-              }
-            />
+            <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+              {acknowledgementPath ? (
+                <>
+                  <FileLink url={acknowledgementPath} title="Hujjatni ko‘rish" />
+                  {user?.role === UserRoles.INSPECTOR && (
+                    <AcknowledgementUploadModal
+                      resultId={resultId}
+                      acknowledgementPath={acknowledgementPath}
+                      trigger={
+                        <button className="cursor-pointer text-xs font-medium text-amber-600 underline underline-offset-2 hover:text-amber-700">
+                          Yangilash
+                        </button>
+                      }
+                    />
+                  )}
+                </>
+              ) : (
+                <span className="flex items-center gap-1.5 text-sm text-slate-400">
+                  <AlertCircle className="h-4 w-4" /> Yuklanmagan
+                </span>
+              )}
+            </div>
           </div>
+        )}
+
+        {inspectionType === 'other' && (
+          <>
+            {!additionalFilePath ? (
+              <div className="mt-0 rounded-lg border border-amber-200 bg-amber-50 p-4">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="mt-0.5 h-5 w-5 text-amber-600" />
+                  <div className="flex-1">
+                    <h4 className="mb-1 flex gap-3 text-sm font-medium text-amber-900">
+                      <span>Diqqat, qo‘shimcha fayl yuklanmagan!</span>
+                    </h4>
+                    <p className="mb-3 text-sm leading-relaxed text-amber-800">
+                      Qo‘shimcha faylni yuklamasdan tekshiruv ijrosini taʼminlab bo‘lmaydi!
+                    </p>
+                    <AddAdditionalFileModal
+                      resultId={resultId}
+                      additionalFilePath={additionalFilePath}
+                      trigger={
+                        <Button
+                          size="default"
+                          variant="default"
+                          className="cursor-pointer border-none bg-amber-600 text-white shadow-sm hover:bg-amber-700"
+                        >
+                          <FileText className="mr-2 h-4 w-4" /> Qo‘shimcha faylni yuklash
+                        </Button>
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+                <div>
+                  <div className="mb-3 flex items-center justify-between">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50">
+                      <FileText className="h-5 w-5 text-amber-600" />
+                    </div>
+                    {additionalFilePath && (
+                      <Badge variant="success" className="border-emerald-200 bg-emerald-50 text-emerald-700">
+                        Yuklangan
+                      </Badge>
+                    )}
+                  </div>
+                  <h4 className="mb-1 text-sm font-medium text-slate-800">Qo‘shimcha fayl</h4>
+                  <p className="text-xs text-slate-500">Inspektor tomonidan yuklangan</p>
+                </div>
+                <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                  {additionalFilePath ? (
+                    <>
+                      <FileLink url={additionalFilePath} title="Hujjatni ko‘rish" />
+                      {user?.role === UserRoles.INSPECTOR && (
+                        <AddAdditionalFileModal
+                          resultId={resultId}
+                          additionalFilePath={additionalFilePath}
+                          trigger={
+                            <button className="cursor-pointer text-xs font-medium text-amber-600 underline underline-offset-2 hover:text-amber-700">
+                              Yangilash
+                            </button>
+                          }
+                        />
+                      )}
+                    </>
+                  ) : (
+                    <span className="flex items-center gap-1.5 text-sm text-slate-400">
+                      <AlertCircle className="h-4 w-4" /> Yuklanmagan
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         {categoryFields.map((catField, catIndex) => (
           <div key={catField.id} className="mb-4 rounded-xl border bg-white p-4 shadow-sm">
             <h3 className="mb-4 text-lg font-semibold">{form.getValues(`categories.${catIndex}.categoryName`)}</h3>
-            <CategoryItemsList control={form.control} catIndex={catIndex} items={catField.items} disabled={disabled} />
+            <CategoryItemsList
+              control={form.control}
+              catIndex={catIndex}
+              items={catField.items}
+              disabled={disabled || (!additionalFilePath && inspectionType === 'other')}
+            />
           </div>
         ))}
 
@@ -414,7 +510,7 @@ const CategoryItemsList = ({
                           const dateValue = field.value ? new Date(field.value) : undefined
                           return (
                             <FormItem className="col-span-1 flex flex-col md:col-span-1">
-                              <FormLabel>Bartaraf etish muddati *</FormLabel>
+                              <FormLabel required={true}>Bartaraf etish muddati</FormLabel>
                               <FormControl>
                                 <DatePicker
                                   value={dateValue}

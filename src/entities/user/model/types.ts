@@ -39,6 +39,7 @@ export enum Direction {
   CADASTRE = 'CADASTRE',
   ATTESTATION_REGIONAL = 'ATTESTATION_REGIONAL',
   ACCIDENT = 'ACCIDENT',
+  ELEVATOR = 'ELEVATOR',
 }
 
 export type UserState = {
@@ -48,5 +49,6 @@ export type UserState = {
   role: UserRoles
   directions: Direction[]
   isSupervisor?: boolean
+  isController?: boolean
   regionId?: number
 }

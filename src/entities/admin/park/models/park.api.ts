@@ -9,8 +9,11 @@ export const parkAPI = {
     return data || []
   },
 
-  fetchParksSelect: async (districtId: number) => {
-    const { data } = await apiClient.get<ApiResponse<any>>(API_ENDPOINTS.PARKS_SELECT, { districtId })
+  fetchParksSelect: async (params: { regionId?: number | string | null; districtId?: number | string | null }) => {
+    const { data } = await apiClient.get<ApiResponse<any>>(API_ENDPOINTS.PARKS_SELECT, {
+      regionId: params.regionId || null,
+      districtId: params.districtId || null,
+    })
     return data.data
   },
 

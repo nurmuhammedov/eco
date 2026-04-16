@@ -1,34 +1,23 @@
 import { LoginDTO } from './auth.types'
 import { API_ENDPOINTS } from '@/shared/api'
 import { apiClient } from '@/shared/api/api-client'
-import { UserState, UserRoles } from '@/entities/user'
+import { UserRoles, UserState } from '@/entities/user'
 import { ApiResponse } from '@/shared/types'
 
 const normalizeUser = (data: any): UserState => {
   if (!data) return data
 
-  // Handle direct user object (like in getMe)
   if (data.role === 'SUPERVISOR') {
     data.role = UserRoles.REGIONAL
     data.isSupervisor = true
+    data.isController = false
   } else if (data.role === 'CONTROLLER') {
     data.role = UserRoles.INSPECTOR
     data.isSupervisor = false
+    data.isController = true
   } else {
     data.isSupervisor = false
-  }
-
-  // Handle object with user property (like potentially in login)
-  if (data.user && typeof data.user === 'object') {
-    if (data.user.role === 'SUPERVISOR') {
-      data.user.role = UserRoles.REGIONAL
-      data.user.isSupervisor = true
-    } else if (data.user.role === 'CONTROLLER') {
-      data.user.role = UserRoles.INSPECTOR
-      data.user.isSupervisor = false
-    } else {
-      data.user.isSupervisor = false
-    }
+    data.isController = false
   }
 
   return data as UserState

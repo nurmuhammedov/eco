@@ -9,6 +9,8 @@ const EquipmentPage = lazy(() => import('@/pages/admin/equipment/equipment-page'
 const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facility/ui'))
 const InspectionSurveys = lazy(() => import('@/pages/admin/inspection/ui'))
 const AttractionTypePage = lazy(() => import('@/pages/admin/attraction-type/page'))
+const EmployeeDeviceLoginReport = lazy(() => import('@/features/reports/ui/employee-device-login-report'))
+const EmployeesDashboard = lazy(() => import('@/features/reports/ui/employees-dashboard'))
 const DecreeSignerPage = lazy(() =>
   import('@/features/admin/decree-signers').then((module) => ({ default: module.DecreeSignersPage }))
 )
@@ -16,6 +18,7 @@ const HybridMailPage = lazy(() => import('@/features/admin/hybrid-mail/ui/hybrid
 const UserLogsPage = lazy(() => import('@/pages/admin/user-logs/page'))
 const ParksPage = lazy(() => import('@/pages/admin/parks'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
+// const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 
 export const adminRoutes = [
   {
@@ -45,6 +48,16 @@ export const adminRoutes = [
   {
     path: 'attraction-types',
     element: withSuspense(AttractionTypePage),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/employee-device-login',
+    element: withSuspense(EmployeeDeviceLoginReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/employees-dashboard',
+    element: withSuspense(EmployeesDashboard),
   },
   {
     path: 'decree-signers',

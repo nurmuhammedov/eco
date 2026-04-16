@@ -1,6 +1,6 @@
 import { useData } from '@/shared/hooks'
-import { Layers, ShieldCheck, AlertTriangle, Flame } from 'lucide-react'
-import clsx from 'clsx'
+import { ShieldCheck, AlertTriangle, Flame, Layers } from 'lucide-react'
+import { cn } from '@/shared/lib/utils'
 
 interface RiskStatisticsCardsProps {
   type: string
@@ -9,6 +9,8 @@ interface RiskStatisticsCardsProps {
   year: number | string
   quarter: string
   regionId?: string
+  showAllCard?: boolean
+  className?: string
 }
 
 interface RiskCountResponse {
@@ -23,6 +25,8 @@ export const RiskStatisticsCards = ({
   onTabChange,
   year,
   quarter,
+  showAllCard = true,
+  className,
 }: RiskStatisticsCardsProps) => {
   const { data, isLoading } = useData<RiskCountResponse>('/risk-analyses/count', true, {
     type,
@@ -95,40 +99,48 @@ export const RiskStatisticsCards = ({
   ]
 
   return (
-    <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {stats.map((stat) => {
-        const isActive = activeRiskLevel === stat.id
+    <div
+      className={cn(
+        'mb-2 grid grid-cols-1 gap-4 px-1 sm:grid-cols-2',
+        showAllCard ? 'lg:grid-cols-4' : 'lg:grid-cols-3',
+        className
+      )}
+    >
+      {stats
+        .filter((s) => (showAllCard ? true : s.id !== 'ALL'))
+        .map((stat) => {
+          const isActive = activeRiskLevel === stat.id
 
-        return (
-          <div
-            key={stat.id}
-            onClick={() => onTabChange(stat.id)}
-            className={clsx(
-              'group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-xl border p-5 transition-all duration-300',
-              isActive ? stat.activeClass : stat.inactiveClass
-            )}
-          >
-            <div className="flex flex-col gap-1">
-              <span className="text-sm font-medium text-slate-500">{stat.name}</span>
-              <span
-                className={clsx(
-                  'text-2xl font-bold transition-colors',
-                  isLoading && 'animate-pulse opacity-50',
-                  isActive ? stat.textClass : 'text-slate-900'
-                )}
-              >
-                {stat.count}
-              </span>
-            </div>
-
+          return (
             <div
-              className={clsx('rounded-lg p-3 transition-colors', isActive ? stat.iconClass : stat.inactiveIconClass)}
+              key={stat.id}
+              onClick={() => onTabChange(stat.id)}
+              className={cn(
+                'group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-xl border p-5 transition-all duration-300',
+                isActive ? stat.activeClass : stat.inactiveClass
+              )}
             >
-              <stat.icon size={24} className="current-color" />
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-medium text-slate-500">{stat.name}</span>
+                <span
+                  className={cn(
+                    'text-2xl font-bold transition-colors',
+                    isLoading && 'animate-pulse opacity-50',
+                    isActive ? stat.textClass : 'text-slate-900'
+                  )}
+                >
+                  {stat.count}
+                </span>
+              </div>
+
+              <div
+                className={cn('rounded-lg p-3 transition-colors', isActive ? stat.iconClass : stat.inactiveIconClass)}
+              >
+                <stat.icon size={24} className="current-color" />
+              </div>
             </div>
-          </div>
-        )
-      })}
+          )
+        })}
     </div>
   )
 }

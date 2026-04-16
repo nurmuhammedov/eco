@@ -20,6 +20,11 @@
     "add_hazardous_facility_type": "XICHO turi qoʻshish",
     "uploadSignedAct": "Imzolangan dalolatnoma yuklash"
   },
+  "select": "Tanlang",
+  "select_date": "Sanani tanlang",
+  "select_file": "Faylni tanlash",
+  "success_saved": "Muvaffaqiyatli saqlandi!",
+  "loading": "Yuklanmoqda...",
   "category_types": "Tekshiruv turi",
   "checklists": "Cheklistlar",
   "errors": {
@@ -49,7 +54,8 @@
     "permits_authorization_documents": "Ruxsat etuvchi hujjatlar",
     "risk_analysis": "Xavfni tahlil qilish",
     "checklist_templates": "Cheklistlar",
-    "user-logs": "Harakatlar"
+    "user-logs": "Harakatlar",
+    "elevators": "Liftlar"
   },
   "checklist_name": "Cheklist nomi",
   "categoryTypes": "Tekshiruv turlari",
@@ -118,6 +124,45 @@
     "INQUIRY": "Murojaatlar",
     "DECLARATION": "Deklaratsiya",
     "CONCLUSION": "Ekspertiza xulosalari"
+  },
+  "inspections": {
+    "tabs": {
+      "risk_based": "Xavfni tahlili asosidagi tekshiruvlar",
+      "other": "Boshqa turdagi tekshiruvlar"
+    },
+    "other": {
+      "create_btn": "Tekshiruv yaratish",
+      "tabs": {
+        "ALL": "Barchasi",
+        "ASSIGNED": "Jarayonda",
+        "CONDUCTED": "Tekshiruv o’tkazildi",
+        "CODE_ATTACHED": "Yakunlandi"
+      },
+      "columns": {
+        "date": "Sana",
+        "type": "Tekshiruv turi",
+        "legalName": "Tashkilot nomi",
+        "legalTin": "Tashkilot INN",
+        "address": "XICHO manzili",
+        "number": "Tekshiruv raqami",
+        "status": "Holati"
+      },
+      "types": {
+        "NOTIFIED": "Xabardor qilinadigan tekshiruvlar",
+        "AFTER_24_HOURS": "24 soatdan so‘ng xabardor etish"
+      },
+      "create_modal": {
+        "title": "Boshqa turdagi tekshiruv yaratish",
+        "startDate": "Boshlanish sanasi",
+        "endDate": "Tugash sanasi",
+        "noticeType": "Tekshiruv turi",
+        "hazard_facility": "Xavfli obyekt",
+        "inspectors": "Inspektorlar",
+        "checklist_categories": "Nazorat savolnomasi kategoriyalari",
+        "basis_documents": "Asos hujjatlar",
+        "program_file": "Tekshiruv dasturi"
+      }
+    }
   },
   "application": {
     "OIL": "Neft",
@@ -207,7 +252,6 @@
   "address": "Manzil",
   "location": "Lokatsiya",
   "soato": "MHOBT",
-  "loading": "Yuklanmoqda...",
   "sequence_number": "T/R",
   "previous": "Oldingi",
   "next": "Keyingi",

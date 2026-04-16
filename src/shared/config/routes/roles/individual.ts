@@ -13,8 +13,16 @@ const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-
 const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'))
 const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
+const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 
 export const individualRoutes = [
+  // ELEVATORS
+  {
+    id: 'ELEVATOR',
+    path: 'elevators',
+    element: withSuspense(ElevatorsPage),
+  },
+
   // APPEAL
   {
     id: 'APPEAL',

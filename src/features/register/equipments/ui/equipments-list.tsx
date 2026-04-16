@@ -13,6 +13,9 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { AutoTabKey, tabs as autoTabs } from '@/features/register/auto/ui/auto-tabs'
 import { formatDate } from 'date-fns'
 import { Badge } from '@/shared/components/ui/badge'
+import { useParkSelectQuery } from '@/entities/admin/park/hooks/use-park-select-query'
+import { ApplicationTypeEnum } from '@/entities/create-application/types/enums'
+import { useMemo } from 'react'
 
 export const EquipmentsList = () => {
   const navigate = useNavigate()
@@ -35,6 +38,7 @@ export const EquipmentsList = () => {
       ownerName = '',
       ownerIdentity = '',
       hfName = '',
+      parkId = '',
       address = '',
       startDate = '',
       endDate = '',
@@ -54,6 +58,9 @@ export const EquipmentsList = () => {
 
   const currentStatus = String(status)
   const isTanker = type === 'TANKERS'
+
+  const { data: parks } = useParkSelectQuery(regionId, districtId)
+  const parkOptions = useMemo(() => parks?.map((p: any) => ({ name: p.name, id: String(p.id) })) || [], [parks])
 
   const {
     data,
@@ -88,6 +95,7 @@ export const EquipmentsList = () => {
     ownerName,
     ownerIdentity,
     hfName,
+    parkId,
     address,
     startDate,
     endDate,
@@ -250,10 +258,11 @@ export const EquipmentsList = () => {
       filterMaxLength: 14,
     },
     {
-      header: 'XICHO nomi',
-      accessorKey: 'hfName',
-      filterKey: 'hfName',
-      filterType: 'search',
+      header: type === ApplicationTypeEnum.ATTRACTION ? 'Park nomi' : 'XICHO nomi',
+      accessorKey: type === ApplicationTypeEnum.ATTRACTION ? 'parkName' : 'hfName',
+      filterKey: type === ApplicationTypeEnum.ATTRACTION ? 'parkId' : 'hfName',
+      filterType: type === ApplicationTypeEnum.ATTRACTION ? 'select' : 'search',
+      filterOptions: type === ApplicationTypeEnum.ATTRACTION ? parkOptions : undefined,
     },
     {
       accessorKey: 'address',
@@ -331,7 +340,8 @@ export const EquipmentsList = () => {
           showView
           showEdit={
             !isTanker &&
-            ((user?.role === UserRoles.INSPECTOR && Number(row.original.regionId) === user?.regionId) ||
+            ((user?.role === UserRoles.INSPECTOR &&
+              (Number(row.original.regionId) === user?.regionId || user?.isController)) ||
               user?.role === UserRoles.LEGAL ||
               user?.role === UserRoles.INDIVIDUAL) &&
             ['ACTIVE', 'EXPIRED', 'NO_DATE'].includes(currentStatus)

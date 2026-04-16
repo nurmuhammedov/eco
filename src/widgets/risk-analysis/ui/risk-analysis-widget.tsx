@@ -64,10 +64,16 @@ const RiskAnalysisWidget = () => {
     },
   } = useCustomSearchParams()
 
-  const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
+  const isRestrictedRole = [UserRoles.INSPECTOR, UserRoles.REGIONAL].includes(user?.role as unknown as UserRoles)
+  const isSupervisorOrController = user?.isSupervisor || user?.isController
+  const shouldShowRegions = !isRestrictedRole || isSupervisorOrController
+
+  const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select', shouldShowRegions)
 
   // Agar regionId URL da bo'lmasa, birinchi regionni olamiz
-  const activeRegion = regionId?.toString() || (regions.length > 0 ? regions[0].id.toString() : '')
+  const activeRegion = shouldShowRegions
+    ? regionId?.toString() || (regions.length > 0 ? regions[0].id.toString() : '')
+    : undefined
 
   const currentApiType = TAB_TO_API_TYPE[mainTab as string] || 'HF'
 
@@ -90,7 +96,7 @@ const RiskAnalysisWidget = () => {
       periodId,
       status,
     },
-    !!activeRegion
+    shouldShowRegions ? !!activeRegion : true
   )
 
   const { data: irsCount = 0 } = useData<number>('/irs/count', false)
@@ -105,7 +111,7 @@ const RiskAnalysisWidget = () => {
     quarter,
   })
 
-  const { data: regionCounts = [] } = useData<RegionCountDto[]>('/risk-analyses/count/by-region', true, {
+  const { data: regionCounts = [] } = useData<RegionCountDto[]>('/risk-analyses/count/by-region', shouldShowRegions, {
     type: currentApiType,
     year,
     quarter,
@@ -201,12 +207,8 @@ const RiskAnalysisWidget = () => {
         regionId={activeRegion}
       />
 
-      {regionTabs.length > 0 &&
-      ![UserRoles.INSPECTOR, UserRoles.REGIONAL]?.includes(user?.role as unknown as UserRoles) ? (
+      {regionTabs.length > 0 && shouldShowRegions ? (
         <TabsLayout
-          // classNameTabList="!mb-0 min-w-full"
-          // classNameWrapper="w-full"
-          // classNameTrigger="flex-1"
           className="mb-2"
           tabs={regionTabs}
           activeTab={activeRegion}

@@ -8,6 +8,7 @@ import { apiClient } from '@/shared/api/api-client'
 import { format } from 'date-fns'
 import { Button } from '@/shared/components/ui/button'
 import { Download } from 'lucide-react'
+import Filter from '@/shared/components/common/filter'
 
 export enum InspectionStatus {
   LEGAL = 'LEGAL',
@@ -250,8 +251,7 @@ const Report3: React.FC = () => {
 
   const handleDownloadExel = async () => {
     const res = await apiClient.downloadFile<Blob>('/reports/registry/export-excel', {
-      ...paramsObject,
-      ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,
+      date: paramsObject.endDate || format(new Date(), 'yyyy-MM-dd'),
     })
 
     const blob = res.data
@@ -279,6 +279,9 @@ const Report3: React.FC = () => {
           }
         />
         <div className="flex flex-wrap items-center gap-2">
+          <div className="w-full sm:w-auto">
+            <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
+          </div>
           <Button onClick={handleDownloadExel} className="h-10 w-full sm:w-auto">
             <Download size={18} className="mr-2" /> Excel
           </Button>

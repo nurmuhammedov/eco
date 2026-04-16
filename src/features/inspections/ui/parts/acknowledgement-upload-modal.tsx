@@ -1,4 +1,4 @@
-import { useState, ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -29,10 +29,7 @@ interface Props {
 const AcknowledgementUploadModal = ({ resultId, acknowledgementPath, onClose, trigger }: Props) => {
   const [open, setOpen] = useState(false)
   const qc = useQueryClient()
-  const { mutateAsync: uploadAck, isPending } = useAdd(
-    '/inspection-results/acknowledgement',
-    'Tilxat muvaffaqiyatli saqlandi!'
-  )
+  const { mutateAsync: uploadAck, isPending } = useAdd('/inspection-results/acknowledgement', '')
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -81,7 +78,7 @@ const AcknowledgementUploadModal = ({ resultId, acknowledgementPath, onClose, tr
               name="acknowledgementPath"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tilxat (PDF)</FormLabel>
+                  <FormLabel>Tilxat fayli</FormLabel>
                   <InputFile
                     uploadEndpoint="/attachments/inspections"
                     form={form}

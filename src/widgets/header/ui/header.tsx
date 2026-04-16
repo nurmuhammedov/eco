@@ -79,6 +79,7 @@ export function Header() {
       { path: '/user-logs', title: 'Foydalanuvchi loglari' },
       { path: '/hybrid-mail', title: 'Gibrid pochta' },
       { path: '/metrics', title: 'Server ko‘rsatgichlari' },
+      { path: '/elevators', title: 'Liftlar' },
       { path: '/expertise', title: 'Ekspertiza' },
       { path: '/cadastre', title: 'Arxiv' },
     ]

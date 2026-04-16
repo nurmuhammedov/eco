@@ -3,7 +3,7 @@ import { inspectionsApi } from '@/features/inspections/model/inspections.model.t
 import { QK_INSPECTION } from '@/shared/constants/query-keys.ts'
 import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts'
 
-export const useObjectList = () => {
+export const useObjectList = (enabled = true) => {
   const {
     paramsObject: { inspectionId = '' },
   } = useCustomSearchParams()
@@ -11,7 +11,7 @@ export const useObjectList = () => {
   return useQuery({
     queryKey: [QK_INSPECTION, inspectionId, 'list'],
     queryFn: () => inspectionsApi.getObjectList(inspectionId),
-    enabled: !!inspectionId,
+    enabled: enabled && !!inspectionId,
   })
 }
 

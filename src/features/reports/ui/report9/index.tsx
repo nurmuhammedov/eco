@@ -1,280 +1,135 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
-import { ColumnDef } from '@tanstack/react-table'
-import Filter from '@/shared/components/common/filter'
+import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
-import { Button } from '@/shared/components/ui/button'
-import { Download } from 'lucide-react'
+import { cn } from '@/shared/lib/utils'
 
 const Report9: React.FC = () => {
-  const tableData = React.useMemo(() => {
-    return [
-      {
-        isSummary: true,
-        officeName: 'Respublika bo‘yicha',
-        x_total: 8,
-        x_not_completed: 0,
-        x_in_process: 6,
-        x_completed: 2,
-        q_total: 6,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 6,
-      },
-      {
-        officeName: 'Toshkent shahri',
-        x_total: 0,
-        x_not_completed: 0,
-        x_in_process: 0,
-        x_completed: 0,
-        q_total: 0,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 0,
-      },
-      {
-        officeName: 'Samarqand viloyati',
-        x_total: 0,
-        x_not_completed: 0,
-        x_in_process: 0,
-        x_completed: 0,
-        q_total: 0,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 0,
-      },
-      {
-        officeName: 'Navoiy viloyati',
-        x_total: 1,
-        x_not_completed: 0,
-        x_in_process: 1,
-        x_completed: 0,
-        q_total: 0,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 0,
-      },
-      {
-        officeName: 'Toshkent viloyati',
-        x_total: 0,
-        x_not_completed: 0,
-        x_in_process: 0,
-        x_completed: 0,
-        q_total: 5,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 5,
-      },
-      {
-        officeName: 'Andijon viloyati',
-        x_total: 0,
-        x_not_completed: 0,
-        x_in_process: 0,
-        x_completed: 0,
-        q_total: 0,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 0,
-      },
-      {
-        officeName: 'Namangan viloyati',
-        x_total: 0,
-        x_not_completed: 0,
-        x_in_process: 0,
-        x_completed: 0,
-        q_total: 0,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 0,
-      },
-      {
-        officeName: 'Xorazm viloyati',
-        x_total: 2,
-        x_not_completed: 0,
-        x_in_process: 0,
-        x_completed: 2,
-        q_total: 0,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 0,
-      },
-      {
-        officeName: 'Buxoro viloyati',
-        x_total: 0,
-        x_not_completed: 0,
-        x_in_process: 0,
-        x_completed: 0,
-        q_total: 0,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 0,
-      },
-      {
-        officeName: 'Farg‘ona viloyati',
-        x_total: 5,
-        x_not_completed: 0,
-        x_in_process: 5,
-        x_completed: 0,
-        q_total: 1,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 1,
-      },
-      {
-        officeName: 'Jizzax viloyati',
-        x_total: 0,
-        x_not_completed: 0,
-        x_in_process: 0,
-        x_completed: 0,
-        q_total: 0,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 0,
-      },
-      {
-        officeName: 'Qashqadaryo viloyati',
-        x_total: 0,
-        x_not_completed: 0,
-        x_in_process: 0,
-        x_completed: 0,
-        q_total: 0,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 0,
-      },
-      {
-        officeName: 'Qoraqalpog‘iston Respublikasi',
-        x_total: 0,
-        x_not_completed: 0,
-        x_in_process: 0,
-        x_completed: 0,
-        q_total: 0,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 0,
-      },
-      {
-        officeName: 'Sirdaryo viloyati',
-        x_total: 0,
-        x_not_completed: 0,
-        x_in_process: 0,
-        x_completed: 0,
-        q_total: 0,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 0,
-      },
-      {
-        officeName: 'Surxondaryo viloyati',
-        x_total: 0,
-        x_not_completed: 0,
-        x_in_process: 0,
-        x_completed: 0,
-        q_total: 0,
-        q_not_completed: 0,
-        q_in_process: 0,
-        q_completed: 0,
-      },
-    ]
-  }, [])
+  const { data: reportData, isLoading } = useData<any[]>('/reports/change/by-deregister', true)
 
-  const columns: ColumnDef<any>[] = [
+  const tableData = useMemo(() => {
+    if (!reportData || !Array.isArray(reportData)) return []
+
+    return reportData.map((item: any) => {
+      const hf = item.hf || {}
+      const equipment = item.equipment || {}
+      const irs = item.irs || {}
+      const xray = item.xray || {}
+
+      return {
+        officeName: item.regionName,
+        isSummary:
+          item.regionName?.toLowerCase().includes("bo'yicha") || item.regionName?.toLowerCase().includes('bo‘yicha'),
+        x: {
+          total: hf.allCount || 0,
+          not_completed: hf.newCount || 0,
+          in_process: hf.inProcessCount || 0,
+          completed: hf.completedCount || 0,
+        },
+        q: {
+          total: equipment.allCount || 0,
+          not_completed: equipment.newCount || 0,
+          in_process: equipment.inProcessCount || 0,
+          completed: equipment.completedCount || 0,
+        },
+        irs: {
+          total: irs.allCount || 0,
+          not_completed: irs.newCount || 0,
+          in_process: irs.inProcessCount || 0,
+          completed: irs.completedCount || 0,
+        },
+        xray: {
+          total: xray.allCount || 0,
+          not_completed: xray.newCount || 0,
+          in_process: xray.inProcessCount || 0,
+          completed: xray.completedCount || 0,
+        },
+      }
+    })
+  }, [reportData])
+
+  const createGroup = (prefix: string, header: string) => ({
+    header,
+    columns: [
+      {
+        id: `${prefix}_total`,
+        header: 'Umumiy',
+        accessorFn: (row: any) => row[prefix]?.total || 0,
+        className: 'text-center font-semibold text-slate-900',
+        cell: ({ row, getValue }: any) => (
+          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
+        ),
+      },
+      {
+        id: `${prefix}_not_completed`,
+        header: 'Amal bajarilmaganlar',
+        accessorFn: (row: any) => row[prefix]?.not_completed || 0,
+        className: 'text-center',
+        cell: ({ row, getValue }: any) => (
+          <span className={row.original.isSummary ? 'font-bold decoration-red-500/30' : ''}>{getValue()}</span>
+        ),
+      },
+      {
+        id: `${prefix}_in_process`,
+        header: 'Jarayonda',
+        accessorFn: (row: any) => row[prefix]?.in_process || 0,
+        className: 'text-center',
+        cell: ({ row, getValue }: any) => (
+          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
+        ),
+      },
+      {
+        id: `${prefix}_completed`,
+        header: 'Yakunlandi',
+        accessorFn: (row: any) => row[prefix]?.completed || 0,
+        className: 'text-center',
+        cell: ({ row, getValue }: any) => (
+          <span className={row.original.isSummary ? 'font-bold decoration-emerald-500/30' : ''}>{getValue()}</span>
+        ),
+      },
+    ],
+  })
+
+  const columns = [
     {
       header: 'Hududiy boshqarma/bo‘limlar',
       accessorKey: 'officeName',
-      cell: ({ row }: any) => (
-        <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.officeName}</span>
-      ),
+      id: 'officeName',
+      minSize: 200,
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+      cell: ({ row }: any) => {
+        const value = row.original.officeName
+        const isSummary = row.original.isSummary
+        return <span className={cn(isSummary ? 'font-bold' : '')}>{isSummary ? 'Respublika bo‘yicha' : value}</span>
+      },
     },
-    {
-      header: 'XICHO',
-      columns: [
-        {
-          header: 'Umumiy',
-          accessorKey: 'x_total',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.x_total || ''}</span>
-          ),
-        },
-        {
-          header: 'Amal bajarilmaganlar',
-          accessorKey: 'x_not_completed',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.x_not_completed || ''}</span>
-          ),
-        },
-        {
-          header: 'Jarayonda',
-          accessorKey: 'x_in_process',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.x_in_process || ''}</span>
-          ),
-        },
-        {
-          header: 'Yakunlandi',
-          accessorKey: 'x_completed',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.x_completed || ''}</span>
-          ),
-        },
-      ],
-    },
-    {
-      header: 'Qurilmalar',
-      columns: [
-        {
-          header: 'Umumiy',
-          accessorKey: 'q_total',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.q_total || ''}</span>
-          ),
-        },
-        {
-          header: 'Amal bajarilmaganlar',
-          accessorKey: 'q_not_completed',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.q_not_completed || ''}</span>
-          ),
-        },
-        {
-          header: 'Jarayonda',
-          accessorKey: 'q_in_process',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.q_in_process || ''}</span>
-          ),
-        },
-        {
-          header: 'Yakunlandi',
-          accessorKey: 'q_completed',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.q_completed || ''}</span>
-          ),
-        },
-      ],
-    },
+    createGroup('x', 'XICHO'),
+    createGroup('q', 'Qurilmalar'),
+    createGroup('irs', 'INM'),
+    createGroup('xray', 'Rentgen'),
   ]
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col gap-1 overflow-hidden">
       <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
         <GoBack title="Hududiy boshqarma tomonidan reyestrdan chiqarish bo‘yicha hisobot" />
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="w-full sm:w-auto">
-            <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
-          </div>
-          <Button className="h-10 w-full sm:w-auto">
-            <Download size={18} className="mr-2" /> Excel
-          </Button>
-        </div>
       </div>
 
-      <div className="mt-0 flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm">
+      <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
+          columns={columns as any}
+          data={tableData}
+          isLoading={isLoading}
+          isPaginated={false}
           showNumeration={false}
           headerCenter={true}
-          data={tableData}
-          columns={columns as unknown as any}
-          isLoading={false}
+          isHeaderSticky={true}
+          initialState={{
+            columnPinning: {
+              left: ['officeName'],
+            },
+          }}
+          className="h-full"
         />
       </div>
     </div>

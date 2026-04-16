@@ -22,6 +22,7 @@ import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Send } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { apiConfig } from '@/shared/api/constants.ts'
 
 const schema = z.object({
   startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
@@ -56,7 +57,6 @@ const AttachInspectorModal = ({ data = [] }: any) => {
         checklistCategoryIdList: [],
         specialCode: '',
       })),
-      // duration default qiymati olib tashlandi
     },
   })
 
@@ -96,7 +96,6 @@ const AttachInspectorModal = ({ data = [] }: any) => {
     onSuccessNavigateTo: `/inspections`,
   })
 
-  // 10 kunlik uchun alohida mutation
   const { mutate: submitTenDays, isPending: isTenDaysLoading } = useMutation({
     mutationFn: () =>
       apiClient.post('/inspections/decree/ten-days', {
@@ -121,7 +120,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
     const riskAnalysisId = currentItem?.riskAnalysisId
 
     if (!riskAnalysisId) {
-      toast.error('Risk tahlil ID topilmadi!')
+      toast.error('Xavf tahlili topilmadi!')
       return
     }
 
@@ -133,8 +132,8 @@ const AttachInspectorModal = ({ data = [] }: any) => {
         toast.error('Ushbu xavf tahlil natijasida tekshiruv yaratilmagan!')
       }
       form.setValue(`checklistDtoList.${index}.specialCode`, code)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      console.error('Kodni olishda xatolik:', e)
       form.setValue(`checklistDtoList.${index}.specialCode`, '')
     } finally {
       setIsCodeLoading(false)
@@ -170,7 +169,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="mb-4 grid grid-cols-2 gap-2">
+              <div className="mb-4 grid grid-cols-2 gap-5">
                 <FormField
                   control={form.control}
                   name="duration"
@@ -350,7 +349,11 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                             <FormItem className="flex-1">
                               <FormLabel required>Ombudsman maxsus kodi</FormLabel>
                               <FormControl>
-                                <Input {...field} placeholder="Kod kiriting" />
+                                <Input
+                                  disabled={apiConfig.oneIdClientId !== 'test_cirns_uz'}
+                                  {...field}
+                                  placeholder="Kod kiriting"
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>

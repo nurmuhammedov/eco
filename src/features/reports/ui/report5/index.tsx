@@ -1,14 +1,11 @@
 import React, { useMemo } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
-import { ColumnDef } from '@tanstack/react-table'
 import { GoBack } from '@/shared/components/common'
-import { Button } from '@/shared/components/ui/button'
-import { Download } from 'lucide-react'
-import { apiClient } from '@/shared/api/api-client'
+import { cn } from '@/shared/lib/utils'
 import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application'
 import { Report5Item } from './types'
-import { useSearchParams } from 'react-router-dom'
+import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 
 const toCamelCase = (str: string) => {
   if (!str) return ''
@@ -17,12 +14,12 @@ const toCamelCase = (str: string) => {
 }
 
 const Report5: React.FC = () => {
-  const [searchParams] = useSearchParams()
-  const paramsObject = Object.fromEntries(searchParams.entries())
-
+  const { paramsObject } = useCustomSearchParams()
   const { data: reportData, isLoading } = useData<Report5Item[]>('/reports/registry/equipment/status', true, {
     ...paramsObject,
   })
+
+  useData(`/reports/user-login?size=1000`)
 
   const tableData = useMemo(() => {
     if (!reportData) return []
@@ -66,17 +63,28 @@ const Report5: React.FC = () => {
       return row
     })
 
-    return [summaryRow, ...flattenedData]
+    const filteredData = flattenedData.filter((r) => !r.regionName?.toLowerCase().includes('respublika'))
+
+    return [summaryRow, ...filteredData]
   }, [reportData])
 
-  const columns = useMemo<ColumnDef<any>[]>(
+  const columns: any[] = useMemo(
     () => [
       {
         header: 'Hududlar',
         accessorKey: 'regionName',
-        cell: ({ row }) => (
-          <span className={row.original.isSummary ? 'text-base font-bold' : ''}>{row.original.regionName}</span>
-        ),
+        id: 'regionName',
+        minSize: 200,
+        className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+        cell: ({ row }: any) => {
+          const value = row.original.regionName
+          const isRespublika = value?.toLowerCase().includes('respublika')
+          return (
+            <span className={cn(row.original.isSummary || isRespublika ? 'font-bold' : '')}>
+              {isRespublika ? 'Respublika bo‘yicha' : value}
+            </span>
+          )
+        },
       },
       ...APPLICATIONS_DATA.filter(
         (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
@@ -87,9 +95,7 @@ const Report5: React.FC = () => {
         }))
         .map((i) => {
           let baseKey = toCamelCase(String(i.id))
-          if (baseKey === 'cableway') {
-            baseKey = 'cableWay'
-          }
+          if (baseKey === 'cableway') baseKey = 'cableWay'
 
           const validKey = `${baseKey}Valid`
           const inactiveKey = `${baseKey}Inactive`
@@ -100,29 +106,41 @@ const Report5: React.FC = () => {
             header: i?.name || '',
             columns: [
               {
-                header: 'Reyestrdagi qurilmalar',
+                header: 'Reyestrda amalda',
                 accessorKey: validKey,
+                className: 'text-center',
                 cell: ({ row }: any) => (
-                  <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[validKey]}</span>
+                  <span className={row.original.isSummary ? 'font-bold decoration-emerald-500/30' : ''}>
+                    {row.original[validKey]}
+                  </span>
                 ),
               },
               {
                 header: 'Reyestrdan chiqarilgan',
                 accessorKey: inactiveKey,
+                className: 'text-center',
                 cell: ({ row }: any) => (
                   <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[inactiveKey]}</span>
                 ),
               },
               {
-                header: 'Muddati o‘tgan',
+                header: () => (
+                  <div className="text-center">
+                    Ko‘rik va ishlatish <br /> muddati o‘tgan
+                  </div>
+                ),
                 accessorKey: expiredKey,
+                className: 'text-center',
                 cell: ({ row }: any) => (
-                  <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[expiredKey]}</span>
+                  <span className={row.original.isSummary ? 'font-bold decoration-red-500/30' : ''}>
+                    {row.original[expiredKey]}
+                  </span>
                 ),
               },
               {
-                header: 'Muddati kiritilmagan',
+                header: 'Muddati kiritilmaganlar',
                 accessorKey: noDateKey,
+                className: 'text-center',
                 cell: ({ row }: any) => (
                   <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[noDateKey]}</span>
                 ),
@@ -134,45 +152,26 @@ const Report5: React.FC = () => {
     []
   )
 
-  const handleDownloadExcel = async () => {
-    try {
-      const res = await apiClient.downloadFile<Blob>('/reports/registry/equipment/status/export-excel', {
-        ...paramsObject,
-      })
-
-      const blob = res.data
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      const filename = `Hisobot.xlsx`
-      a.href = url
-      a.download = filename
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-      URL.revokeObjectURL(url)
-    } catch (e) {
-      console.error('Download failed', e)
-    }
-  }
-
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col gap-1 overflow-hidden">
       <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
-        <GoBack title="Qurilmalaring muddatlari bo‘yicha hisobot" />
-        <div className="flex flex-wrap items-center gap-2">
-          <Button onClick={handleDownloadExcel} disabled={true} className="h-10 w-full sm:w-auto">
-            <Download className="mr-2 h-4 w-4" /> Excel
-          </Button>
-        </div>
+        <GoBack title="Qurilmalarning muddatlari bo‘yicha hisobot" />
       </div>
 
-      <div className="flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm">
+      <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
           showNumeration={false}
           headerCenter={true}
           data={tableData}
           columns={columns}
           isLoading={isLoading}
+          isHeaderSticky={true}
+          initialState={{
+            columnPinning: {
+              left: ['regionName'],
+            },
+          }}
+          className="h-full"
         />
       </div>
     </div>

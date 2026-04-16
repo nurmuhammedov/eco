@@ -25,12 +25,14 @@ export default function UserDropdown() {
     return <Loader isVisible={isPending} />
   }
 
+  const roleLabel = user?.isSupervisor ? 'Inspeksiya boshlig‘i' : user?.isController ? 'Inspeksiya inspektori' : ''
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="group flex cursor-pointer items-center gap-3 transition-opacity">
           <Avatar className="border-border h-10 w-10 border">
-            <AvatarImage src="" alt={user?.name || ''} />
+            <AvatarImage src="" alt={user?.name || '?'} />
             <AvatarFallback className="bg-neutral-150 text-neutral-900">
               <User size={20} />
             </AvatarFallback>
@@ -40,7 +42,9 @@ export default function UserDropdown() {
               {truncateString(user?.name, 50)}
             </p>
             {user?.role && (
-              <p className="text-muted-foreground max-w-[150px] truncate text-xs">{UserRoleLabels[user?.role] || ''}</p>
+              <p className="text-muted-foreground max-w-[150px] truncate text-xs">
+                {roleLabel || UserRoleLabels[user?.role] || '?'}
+              </p>
             )}
           </div>
           <ChevronDown className="text-muted-foreground hidden h-4 !min-h-4 w-4 !min-w-4 opacity-50 transition-transform duration-200 group-data-[state=open]:rotate-180 sm:block" />
@@ -52,7 +56,9 @@ export default function UserDropdown() {
             <div className="flex flex-col space-y-1">
               <p className="text-sm leading-tight font-medium">{user?.name}</p>
               {user?.role && (
-                <p className="text-muted-foreground text-xs leading-none">{UserRoleLabels[user?.role] || ''}</p>
+                <p className="text-muted-foreground text-xs leading-none">
+                  {roleLabel || UserRoleLabels[user?.role] || '?'}
+                </p>
               )}
             </div>
           </DropdownMenuLabel>

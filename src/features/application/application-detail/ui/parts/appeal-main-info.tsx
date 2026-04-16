@@ -2,6 +2,7 @@ import DetailRow from '@/shared/components/common/detail-row.tsx'
 import { getDate } from '@/shared/utils/date.ts'
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import {
   APPLICATIONS_DATA,
   IrsUsageType,
@@ -73,7 +74,7 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'registryNumber',
     'description',
     'sign',
-    'reasons',
+    // 'reasons',
   ],
   ELEVATOR: [
     'phoneNumber',
@@ -525,10 +526,26 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
       {renderRow('extraArea', data?.extraArea)}
       {renderRow('hazardousSubstance', data?.hazardousSubstance)}
       {renderRow('sign', data?.sign)}
-      {renderRow('reasons', data?.reasons)}
+      {/*{renderRow('reasons', data?.reasons)}*/}
 
       {/* Qurilmalar uchun umumiy maydonlar */}
-      {renderRow('hazardousFacilityId', data?.hazardousFacilityName)}
+      {isAllowed('hazardousFacilityId') && (
+        <DetailRow
+          title={t(`labels.${type}.hazardousFacilityId`)}
+          value={
+            data?.hfName ? (
+              <Link
+                to={`/register/${data?.hfId || data?.hazardousFacilityId}/hf`}
+                className="text-[#0271FF] hover:underline"
+              >
+                {data.hfName}
+              </Link>
+            ) : (
+              <span className="font-medium text-red-500">Mavjud emas</span>
+            )
+          }
+        />
+      )}
       {renderRow('childEquipmentId', data?.childEquipmentName)}
       {renderRow('factoryNumber', data?.factoryNumber)}
       {renderRow('factory', data?.factory)}
@@ -597,7 +614,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
       {renderRow('districtId', data?.districtName || data?.districtId)}
       {renderRow('parkName', data?.parkName)}
       {renderRow('address', address)}
-      {renderRow('location', data?.location)}
+      {/*{renderRow('location', data?.location)}*/}
 
       {/* Umumiy meta ma'lumotlar */}
       {renderRow('type', t(`equipment_types.${type}`) || type)}

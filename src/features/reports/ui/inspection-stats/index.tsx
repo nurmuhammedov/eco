@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
-import { ColumnDef } from '@tanstack/react-table'
 import { GoBack } from '@/shared/components/common'
-import { Button } from '@/shared/components/ui/button'
-import { Download } from 'lucide-react'
+import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 
 const QUARTERS = [
@@ -30,10 +28,26 @@ const InspectionStatsReport: React.FC = () => {
   const [year, setYear] = useState<string>(currentYear.toString())
   const [quarter, setQuarter] = useState<string>(currentQuarter.toString())
 
-  const { data: tableData, isLoading } = useData<any[]>('/reports/inspection', true, {
+  const { data: rawData, isLoading } = useData<any[]>('/reports/inspection', true, {
     year: Number(year),
     quarter: Number(quarter),
   })
+
+  const tableData = useMemo(() => {
+    if (!rawData) return []
+    // "Respublika" qismini o'z ichiga olgan barcha qatorlarni filtrlab tashlaymiz
+    const regions = rawData.filter((r) => !r.regionName?.toLowerCase().includes('respublika'))
+    // Backend'dan kelgan birinchi respublika qatorini topib olamiz (summary sifatida ishlash uchun)
+    const backendSummary = rawData.find((r) => r.regionName?.toLowerCase().includes('respublika'))
+
+    const summaryRow = {
+      ...(backendSummary || {}),
+      regionName: 'Respublika bo‘yicha',
+      isSummary: true,
+    }
+
+    return [summaryRow, ...regions]
+  }, [rawData])
 
   const createSectionColumns = (header: string, accessorPrefix: string) => ({
     header,
@@ -43,63 +57,65 @@ const InspectionStatsReport: React.FC = () => {
         header: 'Barchasi',
         id: `${accessorPrefix}_allCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.allCount || 0,
+        className: 'text-center text-slate-900',
         cell: ({ row, getValue }: any) => {
-          const isRespublika =
-            row.original.regionName === "Respublika bo'yicha" || row.original.regionName === 'Respublika bo‘yicha'
-          return <span className={isRespublika ? 'font-bold' : ''}>{getValue()}</span>
+          return <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
         },
       },
       {
         header: 'Buyruq qilinmagan',
         id: `${accessorPrefix}_newCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.newCount || 0,
+        className: 'text-center text-slate-700 font-medium',
         cell: ({ row, getValue }: any) => {
-          const isRespublika =
-            row.original.regionName === "Respublika bo'yicha" || row.original.regionName === 'Respublika bo‘yicha'
-          return <span className={isRespublika ? 'font-bold' : ''}>{getValue()}</span>
+          return <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
         },
       },
       {
         header: 'Buyruq imzolanish jarayonida',
         id: `${accessorPrefix}_notSignedCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.notSignedCount || 0,
+        className: 'text-center text-slate-700 font-medium',
         cell: ({ row, getValue }: any) => {
-          const isRespublika =
-            row.original.regionName === "Respublika bo'yicha" || row.original.regionName === 'Respublika bo‘yicha'
-          return <span className={isRespublika ? 'font-bold' : ''}>{getValue()}</span>
+          return <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
         },
       },
       {
         header: 'Inspektor biriktirilgan',
         id: `${accessorPrefix}_assignedCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.assignedCount || 0,
+        className: 'text-center text-slate-700 font-medium',
         cell: ({ row, getValue }: any) => {
-          const isRespublika =
-            row.original.regionName === "Respublika bo'yicha" || row.original.regionName === 'Respublika bo‘yicha'
-          return <span className={isRespublika ? 'font-bold' : ''}>{getValue()}</span>
+          return <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
         },
       },
       {
         header: 'Tekshiruv o‘tkazilgan',
         id: `${accessorPrefix}_conductedCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.conductedCount || 0,
+        className: 'text-center text-slate-700 font-medium',
         cell: ({ row, getValue }: any) => {
-          const isRespublika =
-            row.original.regionName === "Respublika bo'yicha" || row.original.regionName === 'Respublika bo‘yicha'
-          return <span className={isRespublika ? 'font-bold' : ''}>{getValue()}</span>
+          return <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
         },
       },
     ],
   })
 
-  const columns: ColumnDef<any>[] = [
+  const columns: any[] = [
     {
       header: 'Hududlar',
       accessorKey: 'regionName',
+      id: 'regionName',
+      minSize: 200,
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
       cell: ({ row }: any) => {
-        const isRespublika =
-          row.original.regionName === "Respublika bo'yicha" || row.original.regionName === 'Respublika bo‘yicha'
-        return <span className={isRespublika ? 'font-bold' : ''}>{row.original.regionName}</span>
+        const value = row.original.regionName
+        const isRespublika = value?.toLowerCase().includes('respublika')
+        return (
+          <span className={cn(row.original.isSummary || isRespublika ? 'font-bold' : '')}>
+            {isRespublika ? 'Respublika bo‘yicha' : value}
+          </span>
+        )
       },
     },
     createSectionColumns('XICHO', 'hf'),
@@ -110,16 +126,14 @@ const InspectionStatsReport: React.FC = () => {
     createSectionColumns('Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma', 'lpgPowered'),
   ]
 
-  const handleDownloadExel = async () => {}
-
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col gap-1 overflow-hidden">
       <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
         <GoBack title="Tekshiruv holati bo‘yicha" />
 
         <div className="flex flex-wrap items-center gap-2">
           <Select value={year} onValueChange={(val) => setYear(val)}>
-            <SelectTrigger className="h-10 w-[120px] bg-white">
+            <SelectTrigger className="h-10 w-[120px] bg-white text-sm">
               <SelectValue placeholder="Yilni tanlang" />
             </SelectTrigger>
             <SelectContent>
@@ -132,7 +146,7 @@ const InspectionStatsReport: React.FC = () => {
           </Select>
 
           <Select value={quarter} onValueChange={(val) => setQuarter(val)}>
-            <SelectTrigger className="h-10 w-[160px] bg-white">
+            <SelectTrigger className="h-10 w-[160px] bg-white text-sm">
               <SelectValue placeholder="Chorakni tanlang" />
             </SelectTrigger>
             <SelectContent>
@@ -143,23 +157,25 @@ const InspectionStatsReport: React.FC = () => {
               ))}
             </SelectContent>
           </Select>
-
-          <Button onClick={handleDownloadExel} className="h-10 w-full sm:w-auto" disabled>
-            <Download size={18} className="mr-2" /> Excel
-          </Button>
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <div className="flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm">
-          <DataTable
-            showNumeration={false}
-            headerCenter={true}
-            data={tableData || []}
-            columns={columns as unknown as any}
-            isLoading={isLoading}
-          />
-        </div>
+      <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
+        <DataTable
+          columns={columns as any}
+          data={tableData || []}
+          isLoading={isLoading}
+          isPaginated={false}
+          showNumeration={false}
+          headerCenter={true}
+          isHeaderSticky={true}
+          initialState={{
+            columnPinning: {
+              left: ['regionName'],
+            },
+          }}
+          className="h-full"
+        />
       </div>
     </div>
   )

@@ -1,19 +1,25 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useMemo } from 'react'
 import {
-  Activity,
   AlertTriangle,
   Siren,
   Flame,
   BarChart,
   Clock,
-  Database,
   FileSearch,
   FileText,
   Map,
+  Users,
+  Box,
+  PlusSquare,
+  CalendarClock,
+  Zap,
+  ClipboardCheck,
+  Target,
+  // Trash2,
+  LineChart,
   PieChart,
   ShieldCheck,
   TrendingUp,
-  Users,
 } from 'lucide-react'
 import { Card } from '@/shared/components/ui/card'
 import { Link } from 'react-router-dom'
@@ -56,7 +62,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Arizalarning ijro muddati bo‘yicha umumiy hisobot',
         icon: Clock,
         url: '/reports/applications-execution',
-        badge: 'Yangi',
       },
     ],
   },
@@ -67,40 +72,44 @@ const REPORTS_GROUPS: ReportGroup[] = [
       {
         id: 'rep-3',
         title: 'Davlat ro‘yxatiga olingan/chiqarilgan obyektlar',
-        icon: Database,
+        icon: Box,
         url: '/reports/registers-objects',
       },
       {
         id: 'rep-4',
         title: 'Davlat ro‘yxatidagi yangi qo‘shilgan va amaldagi obyektlar',
-        icon: Activity,
+        icon: PlusSquare,
         url: '/reports/registers-new-objects',
       },
       {
         id: 'rep-5',
         title: 'Qurilmalarning muddatlari bo‘yicha hisobot',
-        icon: Clock,
+        icon: CalendarClock,
         url: '/reports/registers-equipment-terms',
       },
       {
         id: 'rep-8',
         title: 'O‘zgarishlar bo‘yicha hisobot',
-        icon: TrendingUp,
+        icon: Zap,
         url: '/reports/changes',
-        badge: 'Yangi',
       },
-      {
-        id: 'rep-9',
-        title: 'Hududiy boshqarma tomonidan reyestrdan chiqarish bo‘yicha hisobot',
-        icon: Database,
-        url: '/reports/registers-deregister',
-        badge: 'Yangi',
-      },
+      // {
+      //   id: 'rep-9',
+      //   title: 'Hududiy boshqarma tomonidan reyestrdan chiqarish bo‘yicha hisobot',
+      //   icon: Trash2,
+      //   url: '/reports/registers-deregister',
+      // },
       {
         id: 'rep-11',
         title: 'Hududiy boshqarma tomonidan reyestrga kiritish bo‘yicha hisobot',
-        icon: Database,
+        icon: ClipboardCheck,
         url: '/reports/registers-register',
+      },
+      {
+        id: 'rep-hf-employee-stats',
+        title: 'XICHOlarda ishchi xodimlari bo‘yicha statistika',
+        icon: Users,
+        url: '/reports/hf-employee-stats',
         badge: 'Yangi',
       },
     ],
@@ -113,15 +122,19 @@ const REPORTS_GROUPS: ReportGroup[] = [
         id: 'rep-6',
         title: 'Baxtsiz hodisalar bo‘yicha umumiy hisobot',
         icon: Siren,
-        url: '/reports/accidents',
-        badge: 'Yangi',
+        // url: '/reports/accidents',
+        // badge: 'Yangi',
+        url: '#',
+        badge: 'Jarayonda',
       },
       {
         id: 'rep-7',
         title: 'Avariyalar bo‘yicha umumiy hisobot',
         icon: Flame,
-        url: '/reports/incidents',
-        badge: 'Yangi',
+        // url: '/reports/incidents',
+        // badge: 'Yangi',
+        url: '#',
+        badge: 'Jarayonda',
       },
     ],
   },
@@ -134,7 +147,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Profilaktika ishlari statistikasi',
         icon: ShieldCheck,
         url: '/reports/prevention-stats',
-        badge: 'Yangi',
       },
       { id: 'prev-inspector-load', title: 'Profilaktika hududlar kesimida', icon: Map, url: '#', badge: 'Jarayonda' },
     ],
@@ -144,13 +156,20 @@ const REPORTS_GROUPS: ReportGroup[] = [
     title: 'Xavfni tahlil qilish',
     items: [
       {
+        id: 'risk-date-comparison',
+        title: 'Xavf tahlili natijasi bo‘yicha muddatlar o‘rtasida solishtirish hisoboti',
+        icon: LineChart,
+        url: '/reports/risk-date-comparison',
+        badge: 'Yangi',
+      },
+      {
         id: 'risk-objects',
         title: 'Xavf darajasi bo‘yicha obyektlar',
         icon: AlertTriangle,
         url: '#',
         badge: 'Jarayonda',
       },
-      { id: 'risk-trends', title: "Xavf ko'rsatkichlari dinamikasi", icon: TrendingUp, url: '#', badge: 'Jarayonda' },
+      { id: 'risk-trends', title: 'Xavf ko‘rsatkichlari dinamikasi', icon: Target, url: '#', badge: 'Jarayonda' },
     ],
   },
   {
@@ -182,20 +201,36 @@ const REPORTS_GROUPS: ReportGroup[] = [
     title: 'Xodimlar',
     items: [
       {
+        id: 'emp-activity-dashboard',
+        title: 'Xodimlar faolligi doir umumiy boshqaruv paneli',
+        icon: BarChart,
+        url: '/reports/employees-dashboard',
+        badge: 'Yangi',
+      },
+      {
         id: 'emp-turniket',
         title: 'Xodimlarning ishga vaqtida kelishi bo‘yicha hisobot',
         icon: Users,
         url: '/reports/turniket-logs',
         badge: 'Yangi',
       },
+      {
+        id: 'emp-device-login',
+        title: 'Xodimlar qaysi qurilmadan kirayotgani bo‘yicha hisobot',
+        icon: FileText,
+        url: '/reports/employee-device-login',
+        badge: 'Yangi',
+      },
     ],
   },
 ]
 
+// export const currentYear = new Date().getFullYear()
+
 export const ReportsGrid: React.FC = () => {
   const role = useCurrentRole()
 
-  const filteredGroups = React.useMemo(() => {
+  const filteredGroups = useMemo(() => {
     if (role === UserRoles.CHAIRMAN || role === UserRoles.ADMIN) {
       return REPORTS_GROUPS
     }

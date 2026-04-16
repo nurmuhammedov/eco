@@ -90,7 +90,7 @@ export function AdminLoginForm({ className }: ComponentPropsWithoutRef<'form'>) 
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      const attempts = parseInt(localStorage.getItem('admin_failed_attempts') || '0') + 1
+      const attempts = parseInt(localStorage.getItem('admin_failed_attempts') || '0')
       localStorage.setItem('admin_failed_attempts', attempts.toString())
       if (attempts >= 3) {
         setIsBlocked(true)

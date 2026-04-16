@@ -12,6 +12,7 @@ import {
   Mail,
   Server,
   Trees,
+  ArrowDownUp,
 } from 'lucide-react'
 
 export default [
@@ -74,5 +75,11 @@ export default [
     url: '/metrics/',
     title: 'Server ko‘rsatgichlari',
     icon: <Server />,
+  },
+  {
+    id: 'ELEVATOR',
+    url: '/elevators',
+    title: 'menu.elevators',
+    icon: <ArrowDownUp />,
   },
 ] as Navigation

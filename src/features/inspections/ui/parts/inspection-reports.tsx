@@ -1,4 +1,3 @@
-// path: src/features/inspections/ui/parts/inspection-reports.tsx
 import { useAuth } from '@/shared/hooks/use-auth'
 import { DataTable } from '@/shared/components/common/data-table'
 import { ColumnDef } from '@tanstack/react-table'
@@ -7,21 +6,29 @@ import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import InspectionChecklistFormV2, { answerOptions } from '@/features/inspections/ui/parts/inspection-checklist-form-v2'
 import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/ui/inspection-widget'
 import { useState } from 'react'
-import { useData } from '@/shared/hooks'
+import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { UserRoles } from '@/entities/user'
 import { NoData } from '@/shared/components/common/no-data'
-import DetailRow from '@/shared/components/common/detail-row'
 import FileLink from '@/shared/components/common/file-link'
 import ReportExecutionModal from '@/features/inspections/ui/parts/report-execution-modal'
 import { Badge } from '@/shared/components/ui/badge'
 import { Button } from '@/shared/components/ui/button'
-import { Eye, UploadCloud } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Eye, FileText, ShieldCheck, UploadCloud } from 'lucide-react'
 import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal'
 import { getDate } from '@/shared/utils/date'
 import SignedActUploadModal from './signed-act-upload-modal'
 import { useTranslation } from 'react-i18next'
+import OmbudsmanCodeModal from './ombudsman-code-modal'
 
-const InspectionReports = ({ status, acknowledgementPath, signedActPath, act, resultId, specialCode }: any) => {
+const InspectionReports = ({
+  status,
+  acknowledgementPath,
+  additionalFilePath,
+  signedActPath,
+  act,
+  resultId,
+  specialCode,
+}: any) => {
   const { t } = useTranslation()
   const { user } = useAuth()
   const [currentTab, setCurrentTab] = useState<'questions' | 'eliminated' | 'not_eliminated'>('questions')
@@ -29,6 +36,9 @@ const InspectionReports = ({ status, acknowledgementPath, signedActPath, act, re
   const [id, setId] = useState<any>(null)
   const [inspectionTitle, setInspectionTitle] = useState<string>('')
   const [signers, setSigners] = useState<any[]>([])
+  const {
+    paramsObject: { inspectionType = 'risk_based' },
+  } = useCustomSearchParams()
 
   const { data: categories = [] } = useData<any[]>(
     `/inspection-checklists`,
@@ -131,17 +141,53 @@ const InspectionReports = ({ status, acknowledgementPath, signedActPath, act, re
 
   return (
     <div>
-      <DetailRow title="Ombudsman maxsus kodi" value={specialCode || '-'} />
-      <div className="flex items-center justify-between">
-        <div className="mt-2">
-          <Tabs value={currentTab} onValueChange={(val) => setCurrentTab(val as any)}>
-            <TabsList className="bg-[#EDEEEE]">
-              <TabsTrigger value="questions">Tekshiruv savolnoma</TabsTrigger>
-              <TabsTrigger value="eliminated">Kamchilik aniqlandi</TabsTrigger>
-              <TabsTrigger value="not_eliminated">Kamchilik aniqlanmadi</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
+      <div className="mt-1 flex flex-col gap-4">
+        {specialCode ? (
+          <div className="flex items-center gap-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
+              <ShieldCheck className="h-6 w-6 text-emerald-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-emerald-800">Ombudsman maxsus kodi</p>
+              <p className="text-xl font-bold tracking-wider text-emerald-700">{specialCode}</p>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-4 shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-200">
+                <ShieldCheck className="h-6 w-6 text-gray-500" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600">Ombudsman maxsus kodi</p>
+                <p className="text-sm font-semibold text-red-500">Mavjud emas</p>
+              </div>
+            </div>
+            {inspectionType === 'other' && user?.role === UserRoles.REGIONAL && (
+              <OmbudsmanCodeModal
+                resultId={resultId}
+                trigger={
+                  <Button
+                    // className="border-gray-300 text-gray-700 hover:bg-gray-100"
+                    disabled={!signedActPath}
+                  >
+                    <ShieldCheck className="mr-2 h-4 w-4" /> Kodni yuklash
+                  </Button>
+                }
+              />
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-4 flex items-center justify-between">
+        <Tabs value={currentTab} onValueChange={(val) => setCurrentTab(val as any)}>
+          <TabsList className="bg-[#EDEEEE]">
+            <TabsTrigger value="questions">Tekshiruv savolnoma</TabsTrigger>
+            <TabsTrigger value="eliminated">Kamchilik aniqlandi</TabsTrigger>
+            <TabsTrigger value="not_eliminated">Kamchilik aniqlanmadi</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
       <div className="my-3">
@@ -158,7 +204,9 @@ const InspectionReports = ({ status, acknowledgementPath, signedActPath, act, re
 
       <div>
         {!categories?.length ? (
-          <NoData />
+          <div className="pb-50">
+            <NoData />
+          </div>
         ) : (
           <>
             {currentTab == 'questions' && user?.role == UserRoles.INSPECTOR && status == InspectionStatus.ASSIGNED ? (
@@ -166,90 +214,186 @@ const InspectionReports = ({ status, acknowledgementPath, signedActPath, act, re
                 categories={categories}
                 resultId={resultId}
                 acknowledgementPath={acknowledgementPath}
+                additionalFilePath={additionalFilePath}
               />
             ) : (
               <>
                 {currentTab == 'questions' && (
-                  <>
-                    {!!acknowledgementPath && (
-                      <div className="mb-4">
-                        <DetailRow
-                          title="Tilxat fayli:"
-                          boldTitle={true}
-                          value={
-                            <div className="flex items-center gap-2">
-                              <FileLink url={acknowledgementPath} />
+                  <div
+                    className={`mb-6 grid grid-cols-1 gap-3 lg:grid-cols-2 ${inspectionType == 'other' ? 'xl:grid-cols-4' : 'xl:grid-cols-3'}`}
+                  >
+                    <div className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+                      <div>
+                        <div className="mb-3 flex items-center justify-between">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50">
+                            <FileText className="h-5 w-5 text-amber-600" />
+                          </div>
+                          {acknowledgementPath && (
+                            <Badge variant="success" className="border-emerald-200 bg-emerald-50 text-emerald-700">
+                              Yuklangan
+                            </Badge>
+                          )}
+                        </div>
+                        <h4 className="mb-1 text-sm font-medium text-slate-800">Tilxat fayli</h4>
+                        <p className="text-xs text-slate-500">
+                          {acknowledgementPath ? 'Inspektor tomonidan yuklangan!' : 'Inspektor tomonidan yuklanadi!'}
+                        </p>
+                      </div>
+                      <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                        {acknowledgementPath ? (
+                          <>
+                            <FileLink url={acknowledgementPath} title="Hujjatni ko‘rish" />
+                            {/*{user?.role === UserRoles.INSPECTOR && (*/}
+                            {/*  <AcknowledgementUploadModal*/}
+                            {/*    resultId={resultId}*/}
+                            {/*    acknowledgementPath={acknowledgementPath}*/}
+                            {/*    trigger={*/}
+                            {/*      <button className="cursor-pointer text-xs font-medium text-amber-600 underline underline-offset-2 hover:text-amber-700">*/}
+                            {/*        Yangilash*/}
+                            {/*      </button>*/}
+                            {/*    }*/}
+                            {/*  />*/}
+                            {/*)}*/}
+                          </>
+                        ) : (
+                          <span className="flex items-center gap-1.5 text-sm text-slate-400">
+                            <AlertCircle className="h-4 w-4" /> Yuklanmagan
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {inspectionType == 'other' && (
+                      <div className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+                        <div>
+                          <div className="mb-3 flex items-center justify-between">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50">
+                              <FileText className="h-5 w-5 text-amber-600" />
                             </div>
-                          }
-                        />
+                            {additionalFilePath && (
+                              <Badge variant="success" className="border-emerald-200 bg-emerald-50 text-emerald-700">
+                                Yuklangan
+                              </Badge>
+                            )}
+                          </div>
+                          <h4 className="mb-1 text-sm font-medium text-slate-800"> Qo‘shimcha fayl</h4>
+                          <p className="text-xs text-slate-500">
+                            {additionalFilePath ? 'Inspektor tomonidan yuklangan!' : 'Inspektor tomonidan yuklanadi!'}
+                          </p>
+                        </div>
+                        <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                          {additionalFilePath ? (
+                            <>
+                              <FileLink url={additionalFilePath} title="Hujjatni ko‘rish" />
+                              {/*{user?.role === UserRoles.INSPECTOR && (*/}
+                              {/*  <additionalFilePathModal*/}
+                              {/*    resultId={resultId}*/}
+                              {/*    additionalFilePath={additionalFilePath}*/}
+                              {/*    trigger={*/}
+                              {/*      <button className="cursor-pointer text-xs font-medium text-amber-600 underline underline-offset-2 hover:text-amber-700">*/}
+                              {/*        Yangilash*/}
+                              {/*      </button>*/}
+                              {/*    }*/}
+                              {/*  />*/}
+                              {/*)}*/}
+                            </>
+                          ) : (
+                            <span className="flex items-center gap-1.5 text-sm text-slate-400">
+                              <AlertCircle className="h-4 w-4" /> Yuklanmagan
+                            </span>
+                          )}
+                        </div>
                       </div>
                     )}
 
-                    {!!act && (
-                      <>
-                        <div className="mb-4">
-                          <DetailRow
-                            title="Dalolatnoma:"
-                            boldTitle={true}
-                            value={
-                              <div className="flex items-center gap-2">
-                                <span>{act?.createdAt ? getDate(act?.createdAt) : ''}</span> |{' '}
-                                <FileLink url={act?.path} /> |
-                                <button
-                                  className="cursor-pointer text-[#A6B1BB] hover:text-yellow-200"
-                                  onClick={() => {
-                                    setSigners(act?.signers)
-                                  }}
-                                >
-                                  <Eye size="18" />
-                                </button>
-                              </div>
-                            }
-                          />
+                    <div className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+                      <div>
+                        <div className="mb-3 flex items-center justify-between">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
+                            <FileText className="h-5 w-5 text-blue-600" />
+                          </div>
+                          {act && (
+                            <Badge variant="outline" className="border-blue-200 bg-blue-50/50 text-blue-700">
+                              Shakllangan
+                            </Badge>
+                          )}
                         </div>
-                        <SignersModal setSigners={setSigners} signers={signers} />
-                      </>
-                    )}
-
-                    {!!signedActPath ? (
-                      <div className="mb-4">
-                        <DetailRow
-                          title={`${t('signedAct')}:`}
-                          boldTitle={true}
-                          value={
-                            <div className="flex items-center gap-2">
-                              <FileLink url={signedActPath} />
-                            </div>
-                          }
-                        />
+                        <h4 className="mb-1 text-sm font-medium text-slate-800">Dalolatnoma</h4>
+                        <p className="text-xs text-slate-500">
+                          {act
+                            ? 'Tizim tomonidan avtomatik shakllantirilgan!'
+                            : 'Tizim tomonidan avtomatik shakllantiriladi!'}
+                        </p>
                       </div>
-                    ) : (
-                      status === InspectionSubMenuStatus.COMPLETED &&
-                      user?.role === UserRoles.INSPECTOR && (
-                        <div className="mb-4">
-                          <DetailRow
-                            title={`${t('signedAct')}:`}
-                            boldTitle={true}
-                            value={
-                              <SignedActUploadModal
-                                resultId={resultId}
-                                signedActPath={signedActPath}
-                                trigger={
-                                  <Button>
-                                    <UploadCloud className="mr-2 h-4 w-4" /> Imzolangan dalolatnomani yuklash
-                                  </Button>
-                                }
-                              />
+                      <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                        {act ? (
+                          <>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-medium text-slate-500">
+                                {act?.createdAt ? getDate(act?.createdAt) : ''}
+                              </span>
+                              <FileLink url={act?.path} title="Hujjatni ko‘rish" />
+                            </div>
+                            <button
+                              className="flex cursor-pointer items-center gap-1 text-xs font-medium text-blue-600 transition-colors hover:text-blue-700 hover:underline"
+                              onClick={() => setSigners(act?.signers)}
+                            >
+                              <Eye size="14" /> Imzolagan shaxslar
+                            </button>
+                          </>
+                        ) : (
+                          <span className="flex items-center gap-1.5 text-sm text-slate-400">
+                            <AlertCircle className="h-4 w-4" /> Shakllanmagan
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+                      <div>
+                        <div className="mb-3 flex items-center justify-between">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50">
+                            <CheckCircle2 className="h-5 w-5 text-indigo-600" />
+                          </div>
+                          {signedActPath && (
+                            <Badge variant="success" className="border-emerald-200 bg-emerald-50 text-emerald-700">
+                              Yuklangan
+                            </Badge>
+                          )}
+                        </div>
+                        <h4 className="mb-1 text-sm font-medium text-slate-800">{t('signedAct')}</h4>
+                        <p className="text-xs text-slate-500">Imzolangan dalolatnomaning skaner nusxasi!</p>
+                      </div>
+                      <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                        {signedActPath ? (
+                          <>
+                            <FileLink url={signedActPath} title="Hujjatni ko‘rish" />
+                          </>
+                        ) : status === InspectionSubMenuStatus.COMPLETED && user?.role === UserRoles.INSPECTOR ? (
+                          <SignedActUploadModal
+                            resultId={resultId}
+                            signedActPath={signedActPath}
+                            trigger={
+                              <Button variant="outline" className="w-full border-indigo-200 text-indigo-600">
+                                <UploadCloud className="mr-2 h-4 w-4" /> Yuklash
+                              </Button>
                             }
                           />
-                        </div>
-                      )
-                    )}
-                  </>
+                        ) : (
+                          <span className="flex items-center gap-1.5 text-sm text-slate-400">
+                            <AlertCircle className="h-4 w-4" /> Yuklanmagan
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 )}
+
+                {act && <SignersModal setSigners={setSigners} signers={signers} />}
+
                 {categories?.map((category: any) => (
-                  <div key={category.inspectionCategoryId} className="mb-4 rounded-xl border bg-white p-4">
-                    <h3 className="text-black-600 mb-4 text-lg font-semibold">{category.categoryName}</h3>
+                  <div key={category.inspectionCategoryId} className="mb-4 rounded-xl border bg-white p-4 shadow-sm">
+                    <h3 className="mb-4 text-lg font-semibold text-slate-800">{category.categoryName}</h3>
                     <DataTable isLoading={false} columns={columns} data={category.checklists || []} />
                   </div>
                 ))}

@@ -1,4 +1,4 @@
-import { useState, ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -80,13 +80,15 @@ const SignedActUploadModal = ({ resultId, signedActPath, onClose, trigger }: Pro
               name="signedActPath"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('signedAct')} (PDF)</FormLabel>
+                  <FormLabel className="mb-1" required={true}>
+                    {t('signedAct')}
+                  </FormLabel>
                   <InputFile
                     uploadEndpoint="/attachments/inspections"
                     form={form}
                     name={field.name}
                     accept={[FileTypes.PDF]}
-                    buttonText={field.value ? t('actions.edit') : t('actions.create')}
+                    buttonText={field.value ? 'Fayl yuklash' : 'Fayl yuklash'}
                     onUploadComplete={(url) => {
                       field.onChange(url)
                     }}

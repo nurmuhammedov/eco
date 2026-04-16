@@ -4,6 +4,7 @@ import { withSuspense } from '@/shared/config/routes/utils'
 const DashboardPage = lazy(() => import('@/pages/dashboard').then((module) => ({ default: module.DashboardPage })))
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'))
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'))
+const RiskDateComparisonReport = lazy(() => import('@/features/reports/ui/risk-date-comparison-report'))
 const RegisterPage = lazy(() => import('@/pages/register'))
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'))
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'))
@@ -35,6 +36,7 @@ const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
 const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
+const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
 const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
@@ -42,8 +44,16 @@ const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
 )
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
+const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 
 export const regionalRoutes = [
+  // ELEVATORS
+  {
+    id: 'ELEVATOR',
+    path: 'elevators',
+    element: withSuspense(ElevatorsPage),
+  },
+
   // DASHBOARD
   {
     path: 'dashboard',
@@ -234,6 +244,16 @@ export const regionalRoutes = [
     id: 'REPORT',
     path: 'reports/inspection-stats',
     element: withSuspense(InspectionStatsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/hf-employee-stats',
+    element: withSuspense(ReportHfEmployeeStats),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/risk-date-comparison',
+    element: withSuspense(RiskDateComparisonReport),
   },
 
   // PERMITS

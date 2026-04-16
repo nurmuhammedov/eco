@@ -103,4 +103,5 @@ export const API_ENDPOINTS: Record<string, string> = {
   APPEALS_CADASTRE_PASSPORT_GENERATE_PDF: '/appeals/cadastre-passport/generate-pdf',
 
   ATTESTATION: '/attestation',
+  REPORTS_USER_LOGIN: '/reports/user-login',
 }

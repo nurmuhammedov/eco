@@ -1,5 +1,5 @@
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { useCustomSearchParams, usePaginatedData, useTranslatedObject } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
@@ -8,7 +8,6 @@ import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { TabsLayout } from '@/shared/layouts'
 import { ApplicationStatus } from '@/entities/application'
-import { useTranslatedObject } from '@/shared/hooks'
 import { useMemo } from 'react'
 import { Badge } from '@/shared/components/ui/badge'
 
@@ -182,7 +181,8 @@ export const HfList = () => {
           row={row}
           showEdit={
             currentActive === 'true' &&
-            ((user?.role === UserRoles.INSPECTOR && Number(row.original.regionId) === user?.regionId) ||
+            ((user?.role === UserRoles.INSPECTOR &&
+              (Number(row.original.regionId) === user?.regionId || user?.isController)) ||
               user?.role === UserRoles.LEGAL ||
               user?.role === UserRoles.INDIVIDUAL)
           }

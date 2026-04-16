@@ -40,7 +40,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
   const {
     addParams,
     removeParams,
-    paramsObject: { modal = '' },
+    paramsObject: { modal = '', inspectionType = 'RISK_BASED' },
   } = useCustomSearchParams()
 
   const {
@@ -53,7 +53,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
     handleCreateApplication,
     submitApplicationMetaData,
   } = useEimzo({
-    pdfEndpoint: '/inspection-results/act/generate-pdf',
+    pdfEndpoint: `/inspection-results/act/generate-pdf`,
     submitEndpoint: '/inspection-results/act',
     queryKey: '/inspection-results',
     successMessage: 'Muvaffaqiyatli saqlandi!',
@@ -83,6 +83,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
       dtoList: items,
       resultId,
       penalties: data.articleList,
+      type: inspectionType == 'other' ? `OTHER` : 'RISK_BASED',
       violator: {
         position: data.punishedEmployeePosition,
         fullName: data.punishedEmployeeFullName,

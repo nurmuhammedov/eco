@@ -168,16 +168,15 @@ const Report1: React.FC = () => {
   )
 
   const handleDownloadExel = async () => {
-    const res = await apiClient.downloadFile<Blob>('/reports/appeal-status/export-excel', {
-      ...paramsObject,
-      ownerType: 'LEGAL',
+    const res = await apiClient.downloadFile<Blob>('/reports/registry/export-excel', {
+      date: paramsObject.endDate || format(new Date(), 'yyyy-MM-dd'),
     })
 
     const blob = res.data
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     const today = new Date()
-    const filename = `Hisobot (${format(today, 'dd.MM.yyyy')}).xlsx`
+    const filename = `Reyestr hisoboti (${format(today, 'dd.MM.yyyy')}).xlsx`
     a.href = url
     a.download = filename
     document.body.appendChild(a)
@@ -194,7 +193,7 @@ const Report1: React.FC = () => {
           <div className="w-full sm:w-auto">
             <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
           </div>
-          <Button disabled={true} onClick={handleDownloadExel} className="h-10 w-full sm:w-auto">
+          <Button onClick={handleDownloadExel} className="h-10 w-full sm:w-auto">
             <Download size={18} className="mr-2" /> Excel
           </Button>
         </div>

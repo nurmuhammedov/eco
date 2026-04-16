@@ -34,6 +34,11 @@ const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
 const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
+const RiskComparisonReport = lazy(() => import('@/features/reports/ui/risk-comparison-report'))
+const RiskDateComparisonReport = lazy(() => import('@/features/reports/ui/risk-date-comparison-report'))
+const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
+const EmployeeDeviceLoginReport = lazy(() => import('@/features/reports/ui/employee-device-login-report'))
+const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
 const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
@@ -44,8 +49,16 @@ const AccidentDetail = lazy(() =>
 )
 const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
+const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 
 export const managerRoutes = [
+  // ELEVATORS
+  {
+    id: 'ELEVATOR',
+    path: 'elevators',
+    element: withSuspense(ElevatorsPage),
+  },
+
   // APPEAL
   {
     id: 'APPEAL',
@@ -245,6 +258,31 @@ export const managerRoutes = [
     id: 'REPORT',
     path: 'reports/inspection-stats',
     element: withSuspense(InspectionStatsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/risk-comparison',
+    element: withSuspense(RiskComparisonReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/risk-date-comparison',
+    element: withSuspense(RiskDateComparisonReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/turniket-logs',
+    element: withSuspense(TurniketLogsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/employee-device-login',
+    element: withSuspense(EmployeeDeviceLoginReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/hf-employee-stats',
+    element: withSuspense(ReportHfEmployeeStats),
   },
 
   // PERMITS

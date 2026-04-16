@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Eye } from 'lucide-react'
 import { Badge } from '@/shared/components/ui/badge'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
+import { Skeleton } from '@/shared/components/ui/skeleton'
 
 const InspectionMainInfo = ({ inspectionData }: any) => {
   const [signers, setSigners] = useState<any[]>([])
@@ -25,18 +26,21 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
     year,
   })
 
-  console.log(programs, 'programs')
-
   if (!inspectionData) {
     return null
   }
-  console.log(data, inspectionData, 'signers')
 
   return (
-    <div>
+    <div className="flex flex-col pb-4">
       <DetailRow
         title="Tekshiruv dasturi:"
-        value={!!programs?.path ? <FileLink url={programs?.path} title={`${year} yil tekshiruv dasturi`} /> : '-'}
+        value={
+          !!programs?.path ? (
+            <FileLink url={programs?.path} title={`${year} yil tekshiruv dasturi`} />
+          ) : (
+            <span className="text-red-500">Mavjud emas</span>
+          )
+        }
       />
       <DetailRow
         title="Tekshiruv sanasi:"
@@ -45,10 +49,6 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
       {inspectionData?.inspectors?.map((item: any, idx: number) => {
         return <DetailRow key={item.id} title={`Tekshiruvchi inspektor ${idx + 1}:`} value={item?.name} />
       })}
-      {/*<DetailRow*/}
-      {/*  title="Ombudsman maxsus kodi:"*/}
-      {/*  value={<span style={{ color: 'green' }}>{inspectionData?.specialCode || '-'}</span>}*/}
-      {/*/>*/}
       <DetailRow
         title="Tekshiruv buyrug‘i:"
         value={
@@ -58,7 +58,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
               <span>{inspectionData?.decreeNumber || '-'}</span> |
               <FileLink url={inspectionData?.decree?.path} />
               <button
-                className="cursor-pointer text-[#A6B1BB] hover:text-yellow-200"
+                className="cursor-pointer text-[#A6B1BB] transition-colors hover:text-yellow-200"
                 onClick={() => {
                   setSigners(inspectionData?.decree?.signers || [])
                 }}
@@ -67,7 +67,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
               </button>
             </div>
           ) : (
-            '-'
+            <span className="text-red-500">Mavjud emas</span>
           )
         }
       />
@@ -75,20 +75,20 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
         title="Xabardor qilish xati:"
         value={
           isLoading ? (
-            <span>Maʼlumotlar yuklanmoqda...</span>
+            <Skeleton className="h-5 w-40" />
           ) : inspectionData?.notificationLetterPath ? (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <FileLink url={inspectionData?.notificationLetterPath} /> | <span>Gibrid pochta holati: </span>
               <Badge variant="info" className="text-sm">
-                {inspectionData?.notificationLetterStatus == 'RECEIVED_BY_CLIENT'
+                {inspectionData?.notificationLetterStatus === 'RECEIVED_BY_CLIENT'
                   ? 'Mijoz qabul qildi'
-                  : data == 'SENT_TO_POST'
+                  : data === 'SENT_TO_POST'
                     ? 'Pochtaga yuborildi'
-                    : data == 'INSUFFICIENT_FUNDS'
+                    : data === 'INSUFFICIENT_FUNDS'
                       ? 'Hisob yetarli emas'
-                      : data == 'SENT_TO_CLIENT'
+                      : data === 'SENT_TO_CLIENT'
                         ? 'Mijozga yuborildi'
-                        : data == 'UNKNOWN'
+                        : data === 'UNKNOWN'
                           ? 'Noaniq'
                           : 'Noaniq'}
               </Badge>{' '}
@@ -99,7 +99,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
               </span>
             </div>
           ) : (
-            '-'
+            <span className="text-red-500">Mavjud emas</span>
           )
         }
       />

@@ -23,6 +23,8 @@ import { format, parseISO } from 'date-fns'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
+import { useData } from '@/shared/hooks/api'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 
 interface AddPermitTransportModalProps {
   trigger?: string
@@ -47,6 +49,7 @@ const tankerItemSchema = z.object({
   inventoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   capacity: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   capacityUnit: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  regionId: z.string({ required_error: 'Viloyatni tanlang!' }).min(1, 'Viloyatni tanlang!'),
   checkDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
   validUntil: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 })
@@ -85,6 +88,7 @@ export const AddPermitTransportModal = ({
           inventoryNumber: '',
           capacity: '',
           capacityUnit: '',
+          regionId: '',
           checkDate: undefined,
           validUntil: undefined,
         },
@@ -96,6 +100,8 @@ export const AddPermitTransportModal = ({
     control: transportForm.control,
     name: 'tankers',
   })
+
+  const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
 
   const { mutateAsync: searchPermit, isPending } = useAdd<any, any, any>('/integration/iip/individual/license', '')
   const { mutateAsync: addPermit, isPending: isAddPermitLoading } = useAdd<any, any, any>('/tankers/individual')
@@ -358,6 +364,31 @@ export const AddPermitTransportModal = ({
 
                         <FormField
                           control={transportForm.control}
+                          name={`tankers.${index}.regionId`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-xs">Viloyat</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="w-full text-xs">
+                                    <SelectValue placeholder="Viloyatni tanlang" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {regions?.map((region) => (
+                                    <SelectItem key={region.id} value={region.id.toString()}>
+                                      {region.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={transportForm.control}
                           name={`tankers.${index}.checkDate`}
                           render={({ field }) => {
                             const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
@@ -416,6 +447,7 @@ export const AddPermitTransportModal = ({
                       inventoryNumber: '',
                       capacity: '',
                       capacityUnit: '',
+                      regionId: '',
                       checkDate: undefined as unknown as string,
                       validUntil: undefined as unknown as string,
                     })
