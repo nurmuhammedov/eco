@@ -5,6 +5,7 @@ export interface PublicEquipment {
   id: string
   type: string
   attractionName: string
+  typeName: string
   childEquipmentName?: string
   childEquipmentSortName?: string
   registryNumber: string
@@ -12,6 +13,8 @@ export interface PublicEquipment {
   deregisterFilePath?: string
   registrationDate?: string
   manufacturedAt?: string
+  files?: any
+  parameters?: any
   acceptedAt?: string
   servicePeriod?: string
   riskLevel?: string

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -55,17 +56,20 @@ const STATUS_MAP: Record<string, { label: string; className: string }> = {
   DEFAULT: { label: 'Noma’lum holat', className: 'bg-gray-100 text-gray-700 hover:bg-gray-200' },
 }
 
-const DetailRow = ({ label, value, className }: { label: string; value: React.ReactNode; className?: string }) => (
-  <div
-    className={cn(
-      'flex flex-col items-start justify-between gap-1 border-b py-3 last:border-0 sm:flex-row sm:items-center',
-      className
-    )}
-  >
-    <span className="text-muted-foreground text-sm">{label}</span>
-    <span className="text-right text-sm font-medium">{value || '-'}</span>
-  </div>
-)
+const DetailRow = ({ label, value, className }: { label: string; value: React.ReactNode; className?: string }) => {
+  if (value === null || value === undefined || value === '' || value === '-') return null
+  return (
+    <div
+      className={cn(
+        'flex flex-col items-start justify-between gap-1 border-b py-3 last:border-0 sm:flex-row sm:items-center',
+        className
+      )}
+    >
+      <span className="text-muted-foreground text-sm">{label}</span>
+      <span className="text-right text-sm font-medium">{value}</span>
+    </div>
+  )
+}
 
 const SectionHeader = ({ title }: { title: string }) => (
   <div className="border-b bg-blue-50/50 p-4">
@@ -75,6 +79,7 @@ const SectionHeader = ({ title }: { title: string }) => (
 
 export const ContactForm = () => {
   const { id } = useParams<{ id: string }>()
+  const { t } = useTranslation()
   const { data, isLoading } = usePublicEquipmentDetail(id)
   const { mutate: submitAppeal, isPending: isSubmitting } = useSubmitAppeal()
   const { mutateAsync: uploadFile, isPending: isUploading } = useUploadFile()
@@ -154,12 +159,12 @@ export const ContactForm = () => {
   const isProcessing = isUploading || isSubmitting
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-6">
+    <div className="mx-auto w-full max-w-4xl space-y-6 pb-6">
       <div className="bg-card overflow-hidden rounded-lg border shadow-sm">
         <SectionHeader title="Qurilma maʼlumotlari" />
         <div className="p-4 sm:p-6">
-          <DetailRow label="Qurilma" value={data.type} />
-          <DetailRow label="Qurilma nomi" value={data.attractionName || 'Nomi kiritilmagan'} />
+          <DetailRow label="Qurilma" value={data.typeName} />
+          <DetailRow label="Qurilma nomi" value={data.attractionName} />
           <DetailRow label="Qurilma turi" value={data.childEquipmentName} />
           <DetailRow label="Qurilma tipi" value={data.childEquipmentSortName} />
           <DetailRow label="Ro‘yxatga olingan raqam" value={data.registryNumber} />
@@ -169,6 +174,21 @@ export const ContactForm = () => {
           <DetailRow label="Foydalanishga qabul qilingan" value={getDate(data.acceptedAt)} />
           <DetailRow label="Xizmat muddati" value={getDate(data.servicePeriod)} />
           <DetailRow label="Biomexanik xavf darajasi" value={data.riskLevel} />
+
+          {/* Parameters */}
+          {data.parameters && (
+            <>
+              <DetailRow label="Strelasining uzunligi" value={data.parameters.boomLength} />
+              <DetailRow label="Yuk ko‘tara olish quvvati" value={data.parameters.liftingCapacity} />
+              <DetailRow label="Hajmi" value={data.parameters.capacity} />
+              <DetailRow label="Ruxsat etilgan bosim" value={data.parameters.pressure} />
+              <DetailRow label="Diametr" value={data.parameters.diameter} />
+              <DetailRow label="Uzunligi" value={data.parameters.length} />
+              <DetailRow label="Tezligi" value={data.parameters.speed} />
+              <DetailRow label="Balandligi" value={data.parameters.height} />
+              <DetailRow label="To‘xtashlar soni" value={data.parameters.stopCount} />
+            </>
+          )}
 
           <DetailRow
             label="Holati"
@@ -181,18 +201,33 @@ export const ContactForm = () => {
             label="Reyestrga qo‘yilganligi to‘g‘risidagi hujjat"
             value={data.registryFilePath ? <FileLink url={data.registryFilePath} title="Yuklab olish" /> : null}
           />
-          {!!data?.deregisterFilePath && (
-            <DetailRow
-              label="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat:"
-              value={data.deregisterFilePath ? <FileLink url={data.deregisterFilePath} title="Yuklab olish" /> : null}
-            />
-          )}
-          {!!data?.deregisterFilePath && (
-            <DetailRow
-              label="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat:"
-              value={data.deregisterFilePath ? <FileLink url={data.deregisterFilePath} title="Yuklab olish" /> : null}
-            />
-          )}
+          <DetailRow
+            label="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat"
+            value={data.deregisterFilePath ? <FileLink url={data.deregisterFilePath} title="Yuklab olish" /> : null}
+          />
+
+          {Object.entries(data.files).map(([key, file]: [string, any]) => {
+            if (!file || !file.expiryDate) return null
+            const equipmentType = data.type || 'CRANE'
+            const label = t(`labels.${equipmentType}.${key}`)
+            return (
+              <div key={key} className="flex flex-col border-b py-2 last:border-0 sm:flex-row sm:justify-between">
+                <span className="text-muted-foreground text-sm">{label}</span>
+                <span className="text-right text-sm font-medium">{getDate(file.expiryDate)}</span>
+              </div>
+            )
+          })}
+
+          {/*/!* Files Accordion *!/*/}
+          {/*{data.files && (*/}
+          {/*  <div className="mt-4">*/}
+          {/*    <DetailCardAccordion defaultValue={['files']}>*/}
+          {/*      <DetailCardAccordion.Item value="files" title="Qurilma hujjatlari">*/}
+          {/*        <div className="flex flex-col py-1"></div>*/}
+          {/*      </DetailCardAccordion.Item>*/}
+          {/*    </DetailCardAccordion>*/}
+          {/*  </div>*/}
+          {/*)}*/}
         </div>
       </div>
 
