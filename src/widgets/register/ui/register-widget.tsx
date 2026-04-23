@@ -19,7 +19,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
 
-const RegisterWidget = () => {
+interface RegisterWidgetProps {
+  isArchive?: boolean
+}
+
+const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { user } = useAuth()
   const {
@@ -38,25 +42,30 @@ const RegisterWidget = () => {
     removeParams,
   } = useCustomSearchParams()
 
-  const { data: hfCount = 0 } = useData<number>('/hf/count', user?.role != UserRoles.INDIVIDUAL, {
+  const { data: page } = useData<any>('/hf/count', user?.role != UserRoles.INDIVIDUAL, {
     mode,
     regionId: regionId === 'ALL' ? '' : regionId,
     districtId,
+    active: !isArchive,
   })
+
   const { data: equipmentsCount = 0 } = useData<number>('/equipments/count', true, {
     mode,
     regionId: regionId === 'ALL' ? '' : regionId,
     districtId,
+    active: !isArchive,
   })
   const { data: irsCount = 0 } = useData<number>('/irs/count', user?.role != UserRoles.INDIVIDUAL, {
     mode,
     regionId: regionId === 'ALL' ? '' : regionId,
     districtId,
+    valid: !isArchive,
   })
   const { data: xrayCount = 0 } = useData<number>('/xrays/count', user?.role != UserRoles.INDIVIDUAL, {
     mode,
     regionId: regionId === 'ALL' ? '' : regionId,
     districtId,
+    active: !isArchive,
   })
 
   const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(`${API_ENDPOINTS.REGIONS_SELECT}`)
@@ -67,10 +76,12 @@ const RegisterWidget = () => {
     apiClient
       .downloadFile<Blob>(`/${tab === 'equipments' && type === 'TANKERS' ? 'tankers' : tab}/export/excel`, {
         mode,
-        status: status === 'ALL' ? '' : status,
+        status: isArchive ? '' : status === 'ALL' || status === 'ACTIVE' ? '' : status,
         type: type === 'TANKERS' ? '' : type,
         regionId: regionId === 'ALL' ? '' : regionId,
         districtId,
+        active: !isArchive,
+        valid: tab === 'irs' ? !isArchive : undefined,
         ...rest,
       })
       .then((res) => {
@@ -78,7 +89,7 @@ const RegisterWidget = () => {
         const url = URL.createObjectURL(blob)
         const a = document.createElement('a')
         const today = new Date()
-        const filename = `Reyestrlar (${format(today, 'dd.MM.yyyy')}).xlsx`
+        const filename = `${isArchive ? 'Arxiv' : 'Reyestrlar'} (${format(today, 'dd.MM.yyyy')}).xlsx`
         a.href = url
         a.download = filename
         document.body.appendChild(a)
@@ -191,7 +202,7 @@ const RegisterWidget = () => {
                 <TabsTrigger value={RegisterActiveTab.HF}>
                   XICHO
                   <Badge variant="destructive" className="ml-2">
-                    {hfCount}
+                    {page || 0}
                   </Badge>
                 </TabsTrigger>
                 <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
@@ -228,16 +239,16 @@ const RegisterWidget = () => {
           )}
         </div>
         <TabsContent value={RegisterActiveTab.HF} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
-          <HfList />
+          <HfList isArchive={isArchive} />
         </TabsContent>
         <TabsContent value={RegisterActiveTab.EQUIPMENTS} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
-          <EquipmentsList />
+          <EquipmentsList isArchive={isArchive} />
         </TabsContent>
         <TabsContent value={RegisterActiveTab.IRS} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
-          <IrsList />
+          <IrsList isArchive={isArchive} />
         </TabsContent>
         <TabsContent value={RegisterActiveTab.XRAY} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
-          <XrayList />
+          <XrayList isArchive={isArchive} />
         </TabsContent>
       </Tabs>
     </div>

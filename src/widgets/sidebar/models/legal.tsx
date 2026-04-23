@@ -119,4 +119,10 @@ export default [
     url: '/accidents',
     icon: <Siren />,
   },
+  {
+    id: 'REGISTRY',
+    title: 'Arxiv',
+    url: '/archive',
+    icon: <Archive />,
+  },
 ] as Navigation

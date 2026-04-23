@@ -11,7 +11,11 @@ import { ApplicationStatus } from '@/entities/application'
 import { useMemo } from 'react'
 import { Badge } from '@/shared/components/ui/badge'
 
-export const HfList = () => {
+interface HfListProps {
+  isArchive?: boolean
+}
+
+export const HfList = ({ isArchive }: HfListProps) => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const {
@@ -26,7 +30,7 @@ export const HfList = () => {
       legalName = '',
       legalAddress = '',
       name = '',
-      active = 'true',
+      active = isArchive ? 'false' : 'true',
       address = '',
       regionId = (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
         ? user.regionId.toString()
@@ -48,6 +52,7 @@ export const HfList = () => {
     page: 1,
     size: 1,
     changed: 'true',
+    active: true,
     regionId: regionId === 'ALL' ? '' : regionId,
   })
 
@@ -63,7 +68,7 @@ export const HfList = () => {
     name,
     address,
     status: currentActive !== 'CHANGED' || currentStatus === 'ALL' ? '' : currentStatus,
-    active: currentActive === 'ALL' || currentActive === 'CHANGED' ? '' : currentActive === 'true',
+    active: isArchive ? false : currentActive !== 'false',
     changed: currentActive === 'CHANGED' ? true : '',
     changeStatus: currentActive === 'CHANGED' && currentStatus !== 'ALL' ? currentStatus : '',
     regionId: regionId === 'ALL' ? '' : regionId,
@@ -180,6 +185,7 @@ export const HfList = () => {
           showView
           row={row}
           showEdit={
+            !isArchive &&
             currentActive === 'true' &&
             ((user?.role === UserRoles.INSPECTOR &&
               (Number(row.original.regionId) === user?.regionId || user?.isController)) ||
@@ -196,40 +202,46 @@ export const HfList = () => {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2">
-      <TabsLayout
-        activeTab={currentActive}
-        tabs={[
-          {
-            id: 'ALL',
-            name: 'Barchasi',
-          },
-          {
-            id: 'true',
-            name: 'Amaldagi XICHOlar',
-          },
-          {
-            id: 'false',
-            name: 'Reyestrdan chiqarilgan XICHOlar',
-          },
-          {
-            id: 'CHANGED',
-            name: 'O‘zgartirish so‘rovlari',
-            count: changedCountData?.page?.totalElements || undefined,
-          },
-        ]?.map((i) => ({
-          ...i,
-          count:
-            i.id === 'CHANGED' ? i.count : i?.id == currentActive ? data?.page?.totalElements || undefined : undefined,
-        }))}
-        onTabChange={(type) => {
-          if (type === 'CHANGED') {
-            addParams({ active: type, status: 'ALL' }, 'page')
-          } else {
-            addParams({ active: type, status: '' }, 'page')
-          }
-        }}
-      />
-      {currentActive === 'CHANGED' && (
+      {!isArchive && (
+        <TabsLayout
+          activeTab={currentActive}
+          tabs={[
+            // {
+            //   id: 'ALL',
+            //   name: 'Barchasi',
+            // },
+            {
+              id: 'true',
+              name: 'Amaldagi XICHOlar',
+            },
+            // {
+            //   id: 'false',
+            //   name: 'Reyestrdan chiqarilgan XICHOlar',
+            // },
+            {
+              id: 'CHANGED',
+              name: 'O‘zgartirish so‘rovlari',
+              count: changedCountData?.page?.totalElements || undefined,
+            },
+          ]?.map((i) => ({
+            ...i,
+            count:
+              i.id === 'CHANGED'
+                ? i.count
+                : i?.id == currentActive
+                  ? data?.page?.totalElements || undefined
+                  : undefined,
+          }))}
+          onTabChange={(type) => {
+            if (type === 'CHANGED') {
+              addParams({ active: type, status: 'ALL' }, 'page')
+            } else {
+              addParams({ active: type, status: '' }, 'page')
+            }
+          }}
+        />
+      )}
+      {!isArchive && currentActive === 'CHANGED' && (
         <TabsLayout
           activeTab={currentStatus}
           tabs={applicationStatus.map((s: { id: string; name: string }) => ({

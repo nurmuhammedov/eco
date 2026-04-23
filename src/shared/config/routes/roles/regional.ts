@@ -6,6 +6,7 @@ const Applications = lazy(() => import('@/pages/applications/ui/application-page
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'))
 const RiskDateComparisonReport = lazy(() => import('@/features/reports/ui/risk-date-comparison-report'))
 const RegisterPage = lazy(() => import('@/pages/register'))
+const ArchivePage = lazy(() => import('@/pages/archive'))
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'))
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'))
 const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'))
@@ -37,6 +38,10 @@ const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
 const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
+const AppealExecutionReport = lazy(() => import('@/features/reports/ui/appeal-execution'))
+const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
+const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
+const TurniketLogsDetail = lazy(() => import('@/features/reports/ui/turniket-report-detail'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
 const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
@@ -107,6 +112,38 @@ export const regionalRoutes = [
     id: 'REGISTRY',
     path: 'register/change/:id/:type',
     element: withSuspense(RegisterChangePage),
+  },
+
+  // ARCHIVE
+  {
+    id: 'ARCHIVE',
+    path: 'archive',
+    element: withSuspense(ArchivePage),
+  },
+  {
+    id: 'ARCHIVE',
+    path: 'archive/:id/hf',
+    element: withSuspense(RegisterHFDetail),
+  },
+  {
+    id: 'ARCHIVE',
+    path: 'archive/:id/equipments',
+    element: withSuspense(RegisterEquipmentDetail),
+  },
+  {
+    id: 'ARCHIVE',
+    path: 'archive/:id/irs',
+    element: withSuspense(RegisterIrsDetail),
+  },
+  {
+    id: 'ARCHIVE',
+    path: 'archive/:id/xrays',
+    element: withSuspense(RegisterXrayDetail),
+  },
+  {
+    id: 'ARCHIVE',
+    path: 'archive/:id/auto',
+    element: withSuspense(RegisterAutoDetail),
   },
 
   // PREVENTION
@@ -237,6 +274,16 @@ export const regionalRoutes = [
   },
   {
     id: 'REPORT',
+    path: 'reports/appeal-execution',
+    element: withSuspense(AppealExecutionReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/appeal-status-duration',
+    element: withSuspense(AppealStatusDurationReport),
+  },
+  {
+    id: 'REPORT',
     path: 'reports/prevention-stats',
     element: withSuspense(PreventionStatsReport),
   },
@@ -249,6 +296,16 @@ export const regionalRoutes = [
     id: 'REPORT',
     path: 'reports/hf-employee-stats',
     element: withSuspense(ReportHfEmployeeStats),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/turniket-logs',
+    element: withSuspense(TurniketLogsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/turniket-logs/:id',
+    element: withSuspense(TurniketLogsDetail),
   },
   {
     id: 'REPORT',

@@ -9,7 +9,11 @@ import { UserRoles } from '@/entities/user'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { Badge } from '@/shared/components/ui/badge'
 
-export const IrsList = () => {
+interface IrsListProps {
+  isArchive?: boolean
+}
+
+export const IrsList = ({ isArchive }: IrsListProps) => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const {
@@ -34,7 +38,7 @@ export const IrsList = () => {
       usageType = '',
       startDate = '',
       endDate = '',
-      valid = 'true',
+      valid = isArchive ? 'false' : 'true',
       changeStatus = 'ALL',
     },
     addParams,
@@ -65,14 +69,7 @@ export const IrsList = () => {
     usageType,
     startDate,
     endDate,
-    valid:
-      currentValid === 'all'
-        ? undefined
-        : currentValid === 'true'
-          ? true
-          : currentValid === 'false'
-            ? false
-            : undefined,
+    valid: currentValid === 'CHANGED' ? undefined : isArchive ? false : currentValid !== 'false',
     changed: currentValid === 'CHANGED' ? true : '',
     changeStatus: currentValid === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
     status: currentValid === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
@@ -191,6 +188,7 @@ export const IrsList = () => {
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
           showEdit={
+            !isArchive &&
             (user?.role === UserRoles.MANAGER ||
               (user?.role === UserRoles.INSPECTOR &&
                 (Number(row.original.regionId) === user?.regionId || user?.isController))) &&
@@ -204,54 +202,56 @@ export const IrsList = () => {
 
   return (
     <div className="flex h-full flex-col gap-2">
-      <Tabs value={currentValid} onValueChange={(val) => addParams({ valid: val, page: 1, changeStatus: 'ALL' })}>
-        <div className="scrollbar-hidden flex overflow-x-auto">
-          <TabsList className="min-w-max">
-            <TabsTrigger value="all">
-              Barchasi
-              {currentValid === 'all' && (
-                <Badge
-                  variant="destructive"
-                  className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-                >
-                  {totalElements}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="true">
-              Amaldagi INMlar
-              {currentValid === 'true' && (
-                <Badge
-                  variant="destructive"
-                  className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-                >
-                  {totalElements}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="false">
-              Reyestrdan chiqarilgan INMlar
-              {currentValid === 'false' && (
-                <Badge
-                  variant="destructive"
-                  className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
-                >
-                  {totalElements}
-                </Badge>
-              )}
-            </TabsTrigger>
-            {/*<TabsTrigger value="CHANGED">*/}
-            {/*  O‘zgartirish so‘rovlari*/}
-            {/*  <Badge*/}
-            {/*    variant="destructive"*/}
-            {/*    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
-            {/*  >*/}
-            {/*    {changedCountData?.page?.totalElements || 0}*/}
-            {/*  </Badge>*/}
-            {/*</TabsTrigger>*/}
-          </TabsList>
-        </div>
-      </Tabs>
+      {!isArchive && (
+        <Tabs value={currentValid} onValueChange={(val) => addParams({ valid: val, page: 1, changeStatus: 'ALL' })}>
+          <div className="scrollbar-hidden flex overflow-x-auto">
+            <TabsList className="min-w-max">
+              {/*<TabsTrigger value="all">*/}
+              {/*  Barchasi*/}
+              {/*  {currentValid === 'all' && (*/}
+              {/*    <Badge*/}
+              {/*      variant="destructive"*/}
+              {/*      className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
+              {/*    >*/}
+              {/*      {totalElements}*/}
+              {/*    </Badge>*/}
+              {/*  )}*/}
+              {/*</TabsTrigger>*/}
+              <TabsTrigger value="true">
+                Amaldagi INMlar
+                {currentValid === 'true' && (
+                  <Badge
+                    variant="destructive"
+                    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+                  >
+                    {totalElements}
+                  </Badge>
+                )}
+              </TabsTrigger>
+              {/*<TabsTrigger value="false">*/}
+              {/*  Reyestrdan chiqarilgan INMlar*/}
+              {/*  {currentValid === 'false' && (*/}
+              {/*    <Badge*/}
+              {/*      variant="destructive"*/}
+              {/*      className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
+              {/*    >*/}
+              {/*      {totalElements}*/}
+              {/*    </Badge>*/}
+              {/*  )}*/}
+              {/*</TabsTrigger>*/}
+              {/*<TabsTrigger value="CHANGED">*/}
+              {/*  O‘zgartirish so‘rovlari*/}
+              {/*  <Badge*/}
+              {/*    variant="destructive"*/}
+              {/*    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
+              {/*  >*/}
+              {/*    {changedCountData?.page?.totalElements || 0}*/}
+              {/*  </Badge>*/}
+              {/*</TabsTrigger>*/}
+            </TabsList>
+          </div>
+        </Tabs>
+      )}
 
       {currentValid === 'CHANGED' && (
         <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 })}>

@@ -14,6 +14,7 @@ import {
   ScrollText,
   ShieldCheck,
   ArrowDownUp,
+  Archive,
 } from 'lucide-react'
 
 export default [
@@ -124,5 +125,11 @@ export default [
     title: 'Baxtsiz hod. va Avariyalar',
     url: '/accidents',
     icon: <Siren />,
+  },
+  {
+    id: 'REGISTRY',
+    title: 'Arxiv',
+    url: '/archive',
+    icon: <Archive />,
   },
 ] as Navigation

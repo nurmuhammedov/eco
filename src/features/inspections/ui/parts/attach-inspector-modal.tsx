@@ -200,92 +200,56 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                     </FormItem>
                   )}
                 />
-
-                {duration === 'ONE_DAY' && (
-                  <FormField
-                    control={form.control}
-                    name="startDate"
-                    render={({ field }) => {
-                      const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                      return (
-                        <FormItem className="col-span-2">
-                          <FormLabel required>Tekshiruv o‘tkaziladigan sana</FormLabel>
-                          <DatePicker
-                            value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                            onChange={(date) => {
-                              field.onChange(date)
-                              form.setValue('endDate', date as Date)
-                            }}
-                            placeholder="Sanani tanlang"
-                            disableStrategy="custom"
-                            customDisabledFn={(date) => {
-                              const today = new Date()
-                              today.setHours(0, 0, 0, 0)
-                              return date < today
-                            }}
-                          />
-                          <FormMessage />
-                        </FormItem>
-                      )
-                    }}
-                  />
-                )}
-
-                {duration === 'TEN_DAYS' && (
-                  <>
-                    <FormField
-                      control={form.control}
-                      name="startDate"
-                      render={({ field }) => {
-                        const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                        return (
-                          <FormItem>
-                            <FormLabel required>Tekshiruv boshlanish sanasi</FormLabel>
-                            <DatePicker
-                              value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                              onChange={field.onChange}
-                              placeholder="Boshlanish sanasini tanlang"
-                              disableStrategy="custom"
-                              customDisabledFn={(date) => {
-                                const today = new Date()
-                                today.setHours(0, 0, 0, 0)
-                                if (date < today) return true
-                                return !!(endDate && date > endDate)
-                              }}
-                            />
-                            <FormMessage />
-                          </FormItem>
-                        )
-                      }}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="endDate"
-                      render={({ field }) => {
-                        const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                        return (
-                          <FormItem>
-                            <FormLabel required>Tekshiruv tugash sanasi</FormLabel>
-                            <DatePicker
-                              value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                              onChange={field.onChange}
-                              placeholder="Tugash sanasini tanlang"
-                              disableStrategy="custom"
-                              customDisabledFn={(date) => {
-                                const today = new Date()
-                                today.setHours(0, 0, 0, 0)
-                                if (date < today) return true
-                                return !!(startDate && date < startDate)
-                              }}
-                            />
-                            <FormMessage />
-                          </FormItem>
-                        )
-                      }}
-                    />
-                  </>
-                )}
+                <FormField
+                  control={form.control}
+                  name="startDate"
+                  render={({ field }) => {
+                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                    return (
+                      <FormItem>
+                        <FormLabel required>Tekshiruv boshlanish sanasi</FormLabel>
+                        <DatePicker
+                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                          onChange={field.onChange}
+                          placeholder="Boshlanish sanasini tanlang"
+                          disableStrategy="custom"
+                          customDisabledFn={(date) => {
+                            const today = new Date()
+                            today.setHours(0, 0, 0, 0)
+                            if (date < today) return true
+                            return !!(endDate && date > endDate)
+                          }}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  }}
+                />
+                <FormField
+                  control={form.control}
+                  name="endDate"
+                  render={({ field }) => {
+                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                    return (
+                      <FormItem>
+                        <FormLabel required>Tekshiruv tugash sanasi</FormLabel>
+                        <DatePicker
+                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                          onChange={field.onChange}
+                          placeholder="Tugash sanasini tanlang"
+                          disableStrategy="custom"
+                          customDisabledFn={(date) => {
+                            const today = new Date()
+                            today.setHours(0, 0, 0, 0)
+                            if (date < today) return true
+                            return !!(startDate && date < startDate)
+                          }}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )
+                  }}
+                />
 
                 {duration && (
                   <FormField
@@ -341,7 +305,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                         )}
                       />
 
-                      <div className="flex items-end gap-2">
+                      <div className="flex items-start gap-2">
                         <FormField
                           control={form.control}
                           name={`checklistDtoList.${index}.specialCode`}
@@ -359,7 +323,12 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                             </FormItem>
                           )}
                         />
-                        <Button type="button" onClick={() => handleGetCode(index)} loading={isCodeLoading}>
+                        <Button
+                          type="button"
+                          className="mt-5"
+                          onClick={() => handleGetCode(index)}
+                          loading={isCodeLoading}
+                        >
                           Kodni olish
                         </Button>
                       </div>

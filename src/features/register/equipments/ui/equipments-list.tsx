@@ -17,13 +17,17 @@ import { useParkSelectQuery } from '@/entities/admin/park/hooks/use-park-select-
 import { ApplicationTypeEnum } from '@/entities/create-application/types/enums'
 import { useMemo } from 'react'
 
-export const EquipmentsList = () => {
+interface EquipmentsListProps {
+  isArchive?: boolean
+}
+
+export const EquipmentsList = ({ isArchive }: EquipmentsListProps) => {
   const navigate = useNavigate()
   const { user } = useAuth()
 
   const {
     paramsObject: {
-      status = 'ACTIVE',
+      status = isArchive ? 'INACTIVE' : 'ACTIVE',
       type = 'ALL',
       page = 1,
       size = 10,
@@ -81,8 +85,18 @@ export const EquipmentsList = () => {
         : currentStatus === 'CHANGED' && changeStatus !== 'ALL'
           ? ''
           : '',
-    active: isTanker ? '' : currentStatus === 'ACTIVE' ? true : currentStatus === 'INACTIVE' ? false : '',
-    changed: isTanker ? '' : currentStatus === 'CHANGED' ? true : '',
+    active: isTanker
+      ? ''
+      : isArchive
+        ? false
+        : currentStatus === 'ACTIVE'
+          ? true
+          : currentStatus === 'INACTIVE'
+            ? false
+            : currentStatus === 'CHANGED'
+              ? 'true'
+              : true,
+    changed: isTanker || isArchive ? '' : currentStatus === 'CHANGED' ? true : '',
     changeStatus: isTanker ? '' : currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
     type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
     page,
@@ -107,18 +121,22 @@ export const EquipmentsList = () => {
     `/equipments`,
     {
       changed: 'true',
+      active: 'true',
       type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
       childEquipmentId: actualChildEquipmentId,
       regionId: regionId === 'ALL' ? '' : regionId,
       size: 1,
     },
-    true
+    !isArchive
   )
 
   const { data: dataForNewCount } = useData<number>(`/equipments/count`, !isTanker && !isAutoCrane, {
     type: !isTanker && type !== 'ALL' ? type : '',
+    active: !isArchive,
+    regionId: regionId === 'ALL' ? '' : regionId,
+    districtId: districtId === 'ALL' ? '' : districtId,
   })
-  const { data: tankersCount } = useData<any>('/tankers/count', isTanker, { mode })
+  const { data: tankersCount } = useData<any>('/tankers/count', isTanker && !isArchive, { mode, regionId, districtId })
 
   const { data: childEquipmentTypes } = useChildEquipmentTypes(
     !isTanker && equipmentType !== 'ALL' ? equipmentType : ''
@@ -339,6 +357,7 @@ export const EquipmentsList = () => {
         <DataTableRowActions
           showView
           showEdit={
+            !isArchive &&
             !isTanker &&
             ((user?.role === UserRoles.INSPECTOR &&
               (Number(row.original.regionId) === user?.regionId || user?.isController)) ||
@@ -373,10 +392,14 @@ export const EquipmentsList = () => {
             id: 'ALL',
             name: 'Barcha qurilmalar',
           },
-          {
-            id: 'ELEVATOR',
-            name: 'Lift',
-          },
+          ...(isArchive
+            ? [
+                {
+                  id: 'ELEVATOR',
+                  name: 'Liftlar',
+                },
+              ]
+            : []),
           ...(APPLICATIONS_DATA?.filter(
             (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
           )?.reduce((acc, i) => {
@@ -393,10 +416,14 @@ export const EquipmentsList = () => {
             }
             return acc
           }, [] as any[]) || []),
-          {
-            id: 'TANKERS',
-            name: 'Harakatlanuvchi sig‘imlar',
-          },
+          ...(!isArchive
+            ? [
+                {
+                  id: 'TANKERS',
+                  name: 'Harakatlanuvchi sig‘imlar',
+                },
+              ]
+            : []),
         ]?.map((i) => ({
           ...i,
           count:
@@ -453,65 +480,67 @@ export const EquipmentsList = () => {
         </div>
       )}
 
-      <TabsLayout
-        activeTab={currentStatus}
-        tabs={
-          isTanker
-            ? [
-                { id: 'ALL', name: 'Barchasi', count: currentStatus === 'ALL' ? totalElements : undefined },
-                { id: 'ACTIVE', name: 'Aktiv', count: currentStatus === 'ACTIVE' ? totalElements : undefined },
-                {
-                  id: 'EXPIRING_SOON',
-                  name: 'Muddati yaqinlashayotganlar',
-                  count: currentStatus === 'EXPIRING_SOON' ? totalElements : undefined,
-                },
-                {
-                  id: 'EXPIRED',
-                  name: 'Muddati o‘tganlar',
-                  count: currentStatus === 'EXPIRED' ? totalElements : undefined,
-                },
-              ]
-            : [
-                {
-                  id: 'ALL',
-                  name: isAutoCrane ? 'Barcha avtokranlar' : 'Barchasi',
-                  count: currentStatus === 'ALL' ? totalElements : undefined,
-                },
-                {
-                  id: 'ACTIVE',
-                  name: isAutoCrane ? 'Reyestrdagi avtokranlar' : 'Reyestrdagi qurilmalar',
-                  count: currentStatus === 'ACTIVE' ? totalElements : undefined,
-                },
-                {
-                  id: 'INACTIVE',
-                  name: isAutoCrane ? 'Reyestrdan chiqarilgan avtokranlar' : 'Reyestrdan chiqarilgan qurilmalar',
-                  count: currentStatus === 'INACTIVE' ? totalElements : undefined,
-                },
-                {
-                  id: 'EXPIRED',
-                  name: isAutoCrane ? 'Muddati o‘tgan avtokranlar' : 'Muddati o‘tgan qurilmalar',
-                  count: currentStatus === 'EXPIRED' ? totalElements : undefined,
-                },
-                {
-                  id: 'NO_DATE',
-                  name: isAutoCrane ? 'Muddati kiritilmagan avtokranlar' : 'Muddati kiritilmaganlar',
-                  count: currentStatus === 'NO_DATE' ? totalElements : undefined,
-                },
-                {
-                  id: 'CHANGED',
-                  name: isAutoCrane ? 'O‘zgartirish so‘rovlari' : 'O‘zgartirish so‘rovlari',
-                  count: changedCountData?.page?.totalElements || undefined,
-                },
-              ]
-        }
-        onTabChange={(type) => {
-          if (type === 'CHANGED') {
-            addParams({ status: type, changeStatus: 'ALL' }, 'page')
-          } else {
-            addParams({ status: type, changeStatus: '' }, 'page')
+      {!isArchive && (
+        <TabsLayout
+          activeTab={currentStatus}
+          tabs={
+            isTanker
+              ? [
+                  { id: 'ALL', name: 'Barchasi', count: currentStatus === 'ALL' ? totalElements : undefined },
+                  { id: 'ACTIVE', name: 'Aktiv', count: currentStatus === 'ACTIVE' ? totalElements : undefined },
+                  {
+                    id: 'EXPIRING_SOON',
+                    name: 'Muddati yaqinlashayotganlar',
+                    count: currentStatus === 'EXPIRING_SOON' ? totalElements : undefined,
+                  },
+                  {
+                    id: 'EXPIRED',
+                    name: 'Muddati o‘tganlar',
+                    count: currentStatus === 'EXPIRED' ? totalElements : undefined,
+                  },
+                ]
+              : [
+                  // {
+                  //   id: 'ALL',
+                  //   name: isAutoCrane ? 'Barcha avtokranlar' : 'Barchasi',
+                  //   count: currentStatus === 'ALL' ? totalElements : undefined,
+                  // },
+                  {
+                    id: 'ACTIVE',
+                    name: isAutoCrane ? 'Reyestrdagi avtokranlar' : 'Reyestrdagi qurilmalar',
+                    count: currentStatus === 'ACTIVE' ? totalElements : undefined,
+                  },
+                  // {
+                  //   id: 'INACTIVE',
+                  //   name: isAutoCrane ? 'Reyestrdan chiqarilgan avtokranlar' : 'Reyestrdan chiqarilgan qurilmalar',
+                  //   count: currentStatus === 'INACTIVE' ? totalElements : undefined,
+                  // },
+                  {
+                    id: 'EXPIRED',
+                    name: isAutoCrane ? 'Muddati o‘tgan avtokranlar' : 'Muddati o‘tgan qurilmalar',
+                    count: currentStatus === 'EXPIRED' ? totalElements : undefined,
+                  },
+                  {
+                    id: 'NO_DATE',
+                    name: isAutoCrane ? 'Muddati kiritilmagan avtokranlar' : 'Muddati kiritilmaganlar',
+                    count: currentStatus === 'NO_DATE' ? totalElements : undefined,
+                  },
+                  {
+                    id: 'CHANGED',
+                    name: isAutoCrane ? 'O‘zgartirish so‘rovlari' : 'O‘zgartirish so‘rovlari',
+                    count: changedCountData?.page?.totalElements || undefined,
+                  },
+                ]
           }
-        }}
-      />
+          onTabChange={(type) => {
+            if (type === 'CHANGED') {
+              addParams({ status: type, changeStatus: 'ALL' }, 'page')
+            } else {
+              addParams({ status: type, changeStatus: '' }, 'page')
+            }
+          }}
+        />
+      )}
       {currentStatus === 'CHANGED' && (
         <TabsLayout
           activeTab={changeStatus?.toString()}

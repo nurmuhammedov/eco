@@ -5,10 +5,13 @@ import { GoBack } from '@/shared/components/common'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isWeekend } from 'date-fns'
 import { uz } from 'date-fns/locale'
 import axios from 'axios'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
+import { Eye } from 'lucide-react'
+import { Button } from '@/shared/components/ui/button'
 
 interface TurniketLog {
   name: string
+  userId?: string
   days: {
     sana: string
     kirish_vaqti: string
@@ -121,8 +124,30 @@ const TurniketReport: React.FC = () => {
         accessorKey: 'name',
         header: 'F.I.SH.',
         id: 'name',
-        minSize: 250,
+        minSize: 300,
         className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] font-medium',
+        cell: ({ row }: any) => {
+          const from = format(daysInMonth[0], 'yyyy-MM-dd')
+          const to = format(daysInMonth[daysInMonth.length - 1], 'yyyy-MM-dd')
+          const userId = row.original.userId || row.original.id // API might return id or userId
+
+          return (
+            <div className="flex items-center justify-between gap-2">
+              <span className="truncate">{row.original.name}</span>
+              {userId && (
+                <Link to={`/reports/turniket-logs/${userId}?from=${from}&to=${to}`}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
+                  >
+                    <Eye size={16} />
+                  </Button>
+                </Link>
+              )}
+            </div>
+          )
+        },
       },
       {
         header: 'Jami umumiy ish soati',

@@ -6,7 +6,6 @@ import { cn } from '@/shared/lib/utils'
 
 const Report8: React.FC = () => {
   const { data: reportData, isLoading } = useData<any[]>('/reports/change/by-update', true)
-  useData<any[]>('/reports/change/by-deregister', true)
 
   const tableData = useMemo(() => {
     if (!reportData || !Array.isArray(reportData)) return []

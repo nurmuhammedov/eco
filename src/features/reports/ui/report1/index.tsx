@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import React from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
-import { usePaginatedData } from '@/shared/hooks'
+import { useData, usePaginatedData } from '@/shared/hooks'
 import { ColumnDef } from '@tanstack/react-table'
 import { ISearchParams } from '@/shared/types'
 import Filter from '@/shared/components/common/filter'
@@ -25,6 +25,8 @@ const Report1: React.FC = () => {
     ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,
   })
 
+  useData('/reports/appeal-execution')
+  useData('/reports/appeal-status/duration')
   const handleTabChange = (value: string) => {
     addParams({ ownerType: value })
   }

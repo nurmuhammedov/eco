@@ -9,7 +9,11 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { TabsLayout } from '@/shared/layouts'
 
-export const XrayList = () => {
+interface XrayListProps {
+  isArchive?: boolean
+}
+
+export const XrayList = ({ isArchive }: XrayListProps) => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const {
@@ -25,7 +29,7 @@ export const XrayList = () => {
       districtId = '',
       startDate = '',
       endDate = '',
-      status = 'ACTIVE',
+      status = isArchive ? 'INACTIVE' : 'ACTIVE',
       changeStatus = 'ALL',
       registryNumber = '',
       licenseRegistryNumber = '',
@@ -57,7 +61,15 @@ export const XrayList = () => {
     legalName,
     legalTin,
     address,
-    active: currentStatus === 'ACTIVE' ? true : currentStatus === 'INACTIVE' ? false : '',
+    active: isArchive
+      ? false
+      : currentStatus === 'ACTIVE'
+        ? true
+        : currentStatus === 'INACTIVE'
+          ? false
+          : currentStatus === 'CHANGED'
+            ? ''
+            : true,
     changed: currentStatus === 'CHANGED' ? true : '',
     changeStatus: currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
     status:
@@ -131,6 +143,7 @@ export const XrayList = () => {
           showDelete
           onView={(row) => handleViewApplication(row.original.id)}
           showEdit={
+            !isArchive &&
             (user?.role === UserRoles.MANAGER ||
               (user?.role === UserRoles.INSPECTOR &&
                 (Number(row.original.regionId) === user?.regionId || user?.isController))) &&
@@ -144,35 +157,41 @@ export const XrayList = () => {
 
   return (
     <div className="flex h-full flex-col gap-2">
-      <TabsLayout
-        activeTab={currentStatus}
-        tabs={[
-          { id: 'ALL', name: 'Barchasi', count: currentStatus === 'ALL' ? totalElements : undefined },
-          {
-            id: 'ACTIVE',
-            name: 'Reyestrdagi rentgenlar',
-            count: currentStatus === 'ACTIVE' ? totalElements : undefined,
-          },
-          {
-            id: 'INACTIVE',
-            name: 'Reyestrdan chiqarilganlar',
-            count: currentStatus === 'INACTIVE' ? totalElements : undefined,
-          },
-          { id: 'EXPIRED', name: 'Muddati o‘tganlar', count: currentStatus === 'EXPIRED' ? totalElements : undefined },
-          {
-            id: 'NO_DATE',
-            name: 'Muddati kiritilmaganlar',
-            count: currentStatus === 'NO_DATE' ? totalElements : undefined,
-          },
-        ]}
-        onTabChange={(type) => {
-          if (type === 'CHANGED') {
-            addParams({ status: type, changeStatus: 'ALL' }, 'page')
-          } else {
-            addParams({ status: type, changeStatus: '' }, 'page')
-          }
-        }}
-      />
+      {!isArchive && (
+        <TabsLayout
+          activeTab={currentStatus}
+          tabs={[
+            // { id: 'ALL', name: 'Barchasi', count: currentStatus === 'ALL' ? totalElements : undefined },
+            {
+              id: 'ACTIVE',
+              name: 'Reyestrdagi rentgenlar',
+              count: currentStatus === 'ACTIVE' ? totalElements : undefined,
+            },
+            // {
+            //   id: 'INACTIVE',
+            //   name: 'Reyestrdan chiqarilganlar',
+            //   count: currentStatus === 'INACTIVE' ? totalElements : undefined,
+            // },
+            {
+              id: 'EXPIRED',
+              name: 'Muddati o‘tganlar',
+              count: currentStatus === 'EXPIRED' ? totalElements : undefined,
+            },
+            {
+              id: 'NO_DATE',
+              name: 'Muddati kiritilmaganlar',
+              count: currentStatus === 'NO_DATE' ? totalElements : undefined,
+            },
+          ]}
+          onTabChange={(type) => {
+            if (type === 'CHANGED') {
+              addParams({ status: type, changeStatus: 'ALL' }, 'page')
+            } else {
+              addParams({ status: type, changeStatus: '' }, 'page')
+            }
+          }}
+        />
+      )}
 
       {currentStatus === 'CHANGED' && (
         <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 })}>
