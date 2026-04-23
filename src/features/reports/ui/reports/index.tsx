@@ -97,13 +97,13 @@ const REPORTS_GROUPS: ReportGroup[] = [
       },
       {
         id: 'rep-8',
-        title: 'O‘zgarishlar bo‘yicha hisobot',
+        title: 'Reyestr maʼlumotlarini o‘zgartirish so‘rovlari bo‘yicha hisobot',
         icon: Zap,
         url: '/reports/changes',
       },
       {
         id: 'rep-9',
-        title: 'Hududiy boshqarma tomonidan reyestrdan chiqarish bo‘yicha hisobot',
+        title: 'Inspektorlar tomonidan reyestrdan chiqarish so‘rovlari bo‘yicha hisobot',
         icon: ClipboardCheck,
         url: '/reports/registers-deregister',
       },

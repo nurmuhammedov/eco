@@ -141,7 +141,7 @@ const Report8: React.FC = () => {
   return (
     <div className="flex h-full flex-col gap-1 overflow-hidden">
       <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
-        <GoBack title="O‘zgarishlar bo‘yicha hisobot" />
+        <GoBack title="Reyestr maʼlumotlarini o‘zgartirish so‘rovlari bo‘yicha hisobot" />
       </div>
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
