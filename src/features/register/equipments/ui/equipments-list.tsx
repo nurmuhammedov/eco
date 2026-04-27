@@ -136,7 +136,11 @@ export const EquipmentsList = ({ isArchive }: EquipmentsListProps) => {
     regionId: regionId === 'ALL' ? '' : regionId,
     districtId: districtId === 'ALL' ? '' : districtId,
   })
-  const { data: tankersCount } = useData<any>('/tankers/count', isTanker && !isArchive, { mode, regionId, districtId })
+  const { data: tankersCount } = useData<any>('/tankers/count', isTanker && !isArchive, {
+    mode,
+    regionId: regionId === 'ALL' ? '' : regionId,
+    districtId: districtId === 'ALL' ? '' : districtId,
+  })
 
   const { data: childEquipmentTypes } = useChildEquipmentTypes(
     !isTanker && equipmentType !== 'ALL' ? equipmentType : ''

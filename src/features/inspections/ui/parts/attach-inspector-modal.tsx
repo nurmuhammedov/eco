@@ -5,8 +5,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { formatDate, parseISO } from 'date-fns'
-import DatePicker from '@/shared/components/ui/datepicker.tsx'
 import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select.tsx'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { useMemo, useState } from 'react'
@@ -25,8 +23,6 @@ import { useNavigate } from 'react-router-dom'
 import { apiConfig } from '@/shared/api/constants.ts'
 
 const schema = z.object({
-  startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
-  endDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
   inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
   duration: z.enum(['ONE_DAY', 'TEN_DAYS'], { required_error: FORM_ERROR_MESSAGES.required }),
 
@@ -60,8 +56,6 @@ const AttachInspectorModal = ({ data = [] }: any) => {
     },
   })
 
-  const startDate = form.watch('startDate')
-  const endDate = form.watch('endDate')
   const duration = form.watch('duration')
 
   const { data: inspectorSelectData } = useInspectorSelect(isShow)
@@ -143,8 +137,6 @@ const AttachInspectorModal = ({ data = [] }: any) => {
   function onSubmit(values: z.infer<typeof schema>) {
     const data = {
       inspectionId: id,
-      startDate: formatDate(values.startDate, 'yyyy-MM-dd'),
-      endDate: formatDate(values.endDate, 'yyyy-MM-dd'),
       inspectorIdList: values.inspectorIdList,
       checklistDtoList: values.checklistDtoList,
       duration: values.duration,
@@ -199,56 +191,6 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
-                <FormField
-                  control={form.control}
-                  name="startDate"
-                  render={({ field }) => {
-                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                    return (
-                      <FormItem>
-                        <FormLabel required>Tekshiruv boshlanish sanasi</FormLabel>
-                        <DatePicker
-                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                          onChange={field.onChange}
-                          placeholder="Boshlanish sanasini tanlang"
-                          disableStrategy="custom"
-                          customDisabledFn={(date) => {
-                            const today = new Date()
-                            today.setHours(0, 0, 0, 0)
-                            if (date < today) return true
-                            return !!(endDate && date > endDate)
-                          }}
-                        />
-                        <FormMessage />
-                      </FormItem>
-                    )
-                  }}
-                />
-                <FormField
-                  control={form.control}
-                  name="endDate"
-                  render={({ field }) => {
-                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                    return (
-                      <FormItem>
-                        <FormLabel required>Tekshiruv tugash sanasi</FormLabel>
-                        <DatePicker
-                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                          onChange={field.onChange}
-                          placeholder="Tugash sanasini tanlang"
-                          disableStrategy="custom"
-                          customDisabledFn={(date) => {
-                            const today = new Date()
-                            today.setHours(0, 0, 0, 0)
-                            if (date < today) return true
-                            return !!(startDate && date < startDate)
-                          }}
-                        />
-                        <FormMessage />
-                      </FormItem>
-                    )
-                  }}
                 />
 
                 {duration && (

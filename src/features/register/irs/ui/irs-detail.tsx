@@ -114,7 +114,7 @@ const IrsDetail = () => {
           )}
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="applicant_info" title="Arizachi to‘g‘risida ma’lumot">
-          <LegalApplicantInfo tinNumber={data?.legalTin} />
+          <LegalApplicantInfo showUpdateButton={true} tinNumber={data?.legalTin} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
           <AppealMainInfo data={data} type={'IRS'} address={data?.address} />

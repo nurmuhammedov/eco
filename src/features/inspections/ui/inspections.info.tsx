@@ -1,6 +1,7 @@
 import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import AttachInspectorModal from '@/features/inspections/ui/parts/attach-inspector-modal.tsx'
+import NotifyInspectionModal from '@/features/inspections/ui/parts/notify-inspection-modal.tsx'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
 import ObjectsList from '@/features/inspections/ui/parts/objects-list.tsx'
 import { useAuth } from '@/shared/hooks/use-auth.ts'
@@ -115,9 +116,14 @@ const InspectionsInfo = () => {
           </DetailCardAccordion.Item>
         ) : (
           <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
-            {user?.role === UserRoles.REGIONAL && inspectionData?.status === InspectionStatus.NEW && (
+            {user?.role === UserRoles.REGIONAL && (
               <div className="flex justify-end py-2">
-                <AttachInspectorModal data={typesList || []} />
+                {inspectionData?.status === InspectionStatus.NEW && (
+                  <NotifyInspectionModal inspectionId={inspectionId} />
+                )}
+                {inspectionData?.status === InspectionStatus.NOTIFIED && (
+                  <AttachInspectorModal data={typesList || []} />
+                )}
               </div>
             )}
             <div className="min-h-[150px]">

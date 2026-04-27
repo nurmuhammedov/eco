@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next'
 export enum InspectionStatus {
   ALL = 'ALL',
   NEW = 'NEW',
+  NOTIFIED = 'NOTIFIED',
   ASSIGNED = 'ASSIGNED',
   NOT_SIGNED = 'NOT_SIGNED',
   TEN_DAYS = 'TEN_DAYS',

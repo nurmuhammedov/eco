@@ -38,4 +38,11 @@ export const inspectionsApi = {
     const { data } = await apiClient.get<any>(`/inspection-executions`, { checklistId: id })
     return data.data
   },
+  notify: async ({ id, startDate, endDate }: { id: any; startDate: string; endDate: string }) => {
+    const { data: res } = await apiClient.post<any>(`/inspections/${id}/notify`, {
+      startDate,
+      endDate,
+    })
+    return res.data
+  },
 }

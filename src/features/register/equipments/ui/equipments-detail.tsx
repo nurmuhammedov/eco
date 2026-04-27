@@ -184,7 +184,7 @@ const EquipmentsDetail = () => {
           </DetailCardAccordion.Item>
         ) : (
           <DetailCardAccordion.Item value="applicant_info" title="Arizachi to‘g‘risida ma’lumot">
-            <LegalApplicantInfo tinNumber={data?.ownerIdentity} />
+            <LegalApplicantInfo showUpdateButton={true} tinNumber={data?.ownerIdentity} />
           </DetailCardAccordion.Item>
         )}
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
