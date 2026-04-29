@@ -421,15 +421,15 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
               name="parkId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Park</FormLabel>
+                  <FormLabel>Park/Maskan</FormLabel>
                   <FormControl>
                     <Select
                       disabled={!districtId}
-                      value={field.value ? String(field.value) : undefined}
+                      value={field.value ? String(field.value) : ''}
                       onValueChange={(v) => field.onChange(Number(v))}
                     >
                       <SelectTrigger className="3xl:w-sm w-full">
-                        <SelectValue placeholder="Parkni tanlang (ixtiyoriy)" />
+                        <SelectValue placeholder="Park/Maskanni tanlang (ixtiyoriy)" />
                       </SelectTrigger>
                       <SelectContent>{parkOptions}</SelectContent>
                     </Select>

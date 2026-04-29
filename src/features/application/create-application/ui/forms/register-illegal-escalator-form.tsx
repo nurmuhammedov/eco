@@ -34,6 +34,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalEscalatorFormPro
     childEquipmentOptions,
     districtOptions,
     regionOptions,
+    parkOptions,
     hazardousFacilitiesOptions,
     ownerData,
     detail,
@@ -449,6 +450,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalEscalatorFormPro
                         if (value) {
                           field.onChange(value)
                           form.setValue('districtId', '')
+                          form.setValue('parkId', '')
                         }
                       }}
                       value={field.value?.toString()}
@@ -474,6 +476,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalEscalatorFormPro
                       onValueChange={(value) => {
                         if (value) {
                           field.onChange(value)
+                          form.setValue('parkId', '')
                         }
                       }}
                       value={field.value?.toString()}
@@ -483,6 +486,28 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalEscalatorFormPro
                         <SelectValue placeholder="Eskalator joylashgan tuman" />
                       </SelectTrigger>
                       <SelectContent>{districtOptions}</SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="parkId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Park/Maskan</FormLabel>
+                  <FormControl>
+                    <Select
+                      disabled={!form.watch('districtId')}
+                      value={field.value ? String(field.value) : ''}
+                      onValueChange={(v) => field.onChange(v)}
+                    >
+                      <SelectTrigger className="3xl:w-sm w-full">
+                        <SelectValue placeholder="Park/Maskanni tanlang (ixtiyoriy)" />
+                      </SelectTrigger>
+                      <SelectContent>{parkOptions}</SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />

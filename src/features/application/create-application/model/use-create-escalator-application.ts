@@ -1,4 +1,5 @@
 import { CreateEscalatorApplicationDTO, EscalatorAppealDtoSchema } from '@/entities/create-application'
+import { useParkSelectQuery } from '@/entities/admin/park'
 import { UserRoles } from '@/entities/user'
 import {
   useChildEquipmentTypes,
@@ -24,6 +25,7 @@ export const useCreateEscalatorApplication = () => {
       factoryNumber: '',
       regionId: '',
       districtId: '',
+      parkId: '',
       address: '',
       model: '',
       factory: '',
@@ -51,22 +53,26 @@ export const useCreateEscalatorApplication = () => {
   })
 
   const regionId = form.watch('regionId')
+  const districtId = form.watch('districtId')
 
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)
   const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL)
   const { data: childEquipmentTypes } = useChildEquipmentTypes('ESCALATOR')
+  const { data: parks } = useParkSelectQuery(Number(districtId))
 
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities])
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
   const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
   const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes])
+  const parkOptions = useMemo(() => getSelectOptions(parks || []), [parks])
 
   return {
     form,
     regionOptions,
     districtOptions,
     childEquipmentOptions,
+    parkOptions,
     hazardousFacilitiesOptions,
   }
 }

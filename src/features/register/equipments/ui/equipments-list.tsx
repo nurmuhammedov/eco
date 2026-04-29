@@ -19,9 +19,12 @@ import { useMemo } from 'react'
 
 interface EquipmentsListProps {
   isArchive?: boolean
+  hfId?: string
+  hideTabs?: boolean
+  isShortView?: boolean
 }
 
-export const EquipmentsList = ({ isArchive }: EquipmentsListProps) => {
+export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: EquipmentsListProps) => {
   const navigate = useNavigate()
   const { user } = useAuth()
 
@@ -48,6 +51,7 @@ export const EquipmentsList = ({ isArchive }: EquipmentsListProps) => {
       endDate = '',
       factoryNumber = '',
       changeStatus = 'ALL',
+      hfId: searchHfId = '',
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       tab = '',
       ...rest
@@ -114,6 +118,7 @@ export const EquipmentsList = ({ isArchive }: EquipmentsListProps) => {
     startDate,
     endDate,
     factoryNumber,
+    hfId: hfId || searchHfId,
     activityType: isTanker && rest?.activityType !== 'ALL' ? rest?.activityType : undefined,
   })
 
@@ -280,11 +285,17 @@ export const EquipmentsList = ({ isArchive }: EquipmentsListProps) => {
       filterMaxLength: 14,
     },
     {
-      header: type === ApplicationTypeEnum.ATTRACTION ? 'Park nomi' : 'XICHO nomi',
-      accessorKey: type === ApplicationTypeEnum.ATTRACTION ? 'parkName' : 'hfName',
-      filterKey: type === ApplicationTypeEnum.ATTRACTION ? 'parkId' : 'hfName',
-      filterType: type === ApplicationTypeEnum.ATTRACTION ? 'select' : 'search',
-      filterOptions: type === ApplicationTypeEnum.ATTRACTION ? parkOptions : undefined,
+      header: [ApplicationTypeEnum.ATTRACTION, ApplicationTypeEnum.ESCALATOR].includes(type)
+        ? 'Park/Maskan nomi'
+        : 'XICHO nomi',
+      accessorKey: [ApplicationTypeEnum.ATTRACTION, ApplicationTypeEnum.ESCALATOR].includes(type)
+        ? 'parkName'
+        : 'hfName',
+      filterKey: [ApplicationTypeEnum.ATTRACTION, ApplicationTypeEnum.ESCALATOR].includes(type) ? 'parkId' : 'hfName',
+      filterType: [ApplicationTypeEnum.ATTRACTION, ApplicationTypeEnum.ESCALATOR].includes(type) ? 'select' : 'search',
+      filterOptions: [ApplicationTypeEnum.ATTRACTION, ApplicationTypeEnum.ESCALATOR].includes(type)
+        ? parkOptions
+        : undefined,
     },
     {
       accessorKey: 'address',
@@ -361,6 +372,7 @@ export const EquipmentsList = ({ isArchive }: EquipmentsListProps) => {
         <DataTableRowActions
           showView
           showEdit={
+            !isShortView &&
             !isArchive &&
             !isTanker &&
             ((user?.role === UserRoles.INSPECTOR &&
@@ -370,7 +382,7 @@ export const EquipmentsList = ({ isArchive }: EquipmentsListProps) => {
             ['ACTIVE', 'EXPIRED', 'NO_DATE'].includes(currentStatus)
           }
           row={row}
-          showDelete
+          showDelete={!isShortView}
           onView={(row: any) => handleViewApplication(row.original?.id)}
           onEdit={(row: any) =>
             handleEditApplication(row.original?.id, row.original?.type, row.original?.ownerIdentity)
@@ -379,6 +391,9 @@ export const EquipmentsList = ({ isArchive }: EquipmentsListProps) => {
       ),
     },
   ].filter((col) => {
+    if (hfId && (col.accessorKey === 'hfName' || col.accessorKey === 'parkName')) {
+      return false
+    }
     if (type === 'OIL_CONTAINER') {
       return col.id !== 'nextPartialCheckDate' && col.id !== 'nextFullCheckDate'
     } else {
@@ -388,58 +403,60 @@ export const EquipmentsList = ({ isArchive }: EquipmentsListProps) => {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2">
-      <TabsLayout
-        showArrows
-        activeTab={type}
-        tabs={[
-          {
-            id: 'ALL',
-            name: 'Barcha qurilmalar',
-          },
-          ...(isArchive
-            ? [
-                {
-                  id: 'ELEVATOR',
-                  name: 'Liftlar',
-                },
-              ]
-            : []),
-          ...(APPLICATIONS_DATA?.filter(
-            (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
-          )?.reduce((acc, i) => {
-            const item = {
-              id: i?.equipmentType?.toString() || '',
-              name: i?.name?.toString() || '',
-            }
-            acc.push(item)
-            if (item.id === 'CRANE') {
-              acc.push({
-                id: 'AUTO_CRANE',
-                name: 'Avtokranlar',
-              })
-            }
-            return acc
-          }, [] as any[]) || []),
-          ...(!isArchive
-            ? [
-                {
-                  id: 'TANKERS',
-                  name: 'Harakatlanuvchi sig‘imlar',
-                },
-              ]
-            : []),
-        ]?.map((i) => ({
-          ...i,
-          count:
-            i?.id === type
-              ? i?.id === 'AUTO_CRANE'
-                ? totalElements
-                : ((isTanker ? tankersCount?.allCount : dataForNewCount) ?? 0)
-              : undefined,
-        }))}
-        onTabChange={(type) => addParams({ type: type }, 'page', 'childEquipmentId', 'status', 'activityType')}
-      />
-      {!isAutoCrane && isTanker && (
+      {!hideTabs && (
+        <TabsLayout
+          showArrows
+          activeTab={type}
+          tabs={[
+            {
+              id: 'ALL',
+              name: 'Barcha qurilmalar',
+            },
+            ...(isArchive
+              ? [
+                  {
+                    id: 'ELEVATOR',
+                    name: 'Liftlar',
+                  },
+                ]
+              : []),
+            ...(APPLICATIONS_DATA?.filter(
+              (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
+            )?.reduce((acc, i) => {
+              const item = {
+                id: i?.equipmentType?.toString() || '',
+                name: i?.name?.toString() || '',
+              }
+              acc.push(item)
+              if (item.id === 'CRANE') {
+                acc.push({
+                  id: 'AUTO_CRANE',
+                  name: 'Avtokranlar',
+                })
+              }
+              return acc
+            }, [] as any[]) || []),
+            ...(!isArchive
+              ? [
+                  {
+                    id: 'TANKERS',
+                    name: 'Harakatlanuvchi sig‘imlar',
+                  },
+                ]
+              : []),
+          ]?.map((i) => ({
+            ...i,
+            count:
+              i?.id === type
+                ? i?.id === 'AUTO_CRANE'
+                  ? totalElements
+                  : ((isTanker ? tankersCount?.allCount : dataForNewCount) ?? 0)
+                : undefined,
+          }))}
+          onTabChange={(type) => addParams({ type: type }, 'page', 'childEquipmentId', 'status', 'activityType')}
+        />
+      )}
+      {!hideTabs && !isAutoCrane && isTanker && (
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-2">
           <div className="min-w-0 flex-1">
             <TabsLayout
@@ -484,7 +501,7 @@ export const EquipmentsList = ({ isArchive }: EquipmentsListProps) => {
         </div>
       )}
 
-      {!isArchive && (
+      {!hideTabs && !isArchive && (
         <TabsLayout
           activeTab={currentStatus}
           tabs={
@@ -545,7 +562,7 @@ export const EquipmentsList = ({ isArchive }: EquipmentsListProps) => {
           }}
         />
       )}
-      {currentStatus === 'CHANGED' && (
+      {!hideTabs && currentStatus === 'CHANGED' && (
         <TabsLayout
           activeTab={changeStatus?.toString()}
           tabs={[

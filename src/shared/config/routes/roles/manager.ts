@@ -43,6 +43,7 @@ const EmployeeDeviceLoginReport = lazy(() => import('@/features/reports/ui/emplo
 const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
 const AppealExecutionReport = lazy(() => import('@/features/reports/ui/appeal-execution'))
 const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
+const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
 const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
@@ -334,6 +335,11 @@ export const managerRoutes = [
     id: 'REPORT',
     path: 'reports/hf-employee-stats',
     element: withSuspense(ReportHfEmployeeStats),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/top-100-organizations',
+    element: withSuspense(Top100OrganizationsReport),
   },
 
   // PERMITS

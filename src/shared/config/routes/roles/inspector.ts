@@ -34,6 +34,8 @@ const ReportsDetail8 = lazy(() => import('@/features/reports/ui/report8'))
 const ReportsDetail9 = lazy(() => import('@/features/reports/ui/report9'))
 const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
 const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
+// const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
+const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
 const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
@@ -319,6 +321,11 @@ export const inspectorRoutes = [
     id: 'REPORT',
     path: 'reports/hf-employee-stats',
     element: withSuspense(ReportHfEmployeeStats),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/top-100-organizations',
+    element: withSuspense(Top100OrganizationsReport),
   },
 
   // PERMITS

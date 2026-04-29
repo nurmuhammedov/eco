@@ -38,6 +38,7 @@ const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspectio
 const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
 const AppealExecutionReport = lazy(() => import('@/features/reports/ui/appeal-execution'))
 const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
+const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
 const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
 const TurniketLogsDetail = lazy(() => import('@/features/reports/ui/turniket-report-detail'))
 const Permits = lazy(() => import('@/widgets/permits'))
@@ -284,6 +285,11 @@ export const headRoutes = [
     id: 'REPORT',
     path: 'reports/hf-employee-stats',
     element: withSuspense(ReportHfEmployeeStats),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/top-100-organizations',
+    element: withSuspense(Top100OrganizationsReport),
   },
   {
     id: 'REPORT',

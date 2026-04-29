@@ -11,6 +11,7 @@ const InspectionSurveys = lazy(() => import('@/pages/admin/inspection/ui'))
 const AttractionTypePage = lazy(() => import('@/pages/admin/attraction-type/page'))
 const EmployeeDeviceLoginReport = lazy(() => import('@/features/reports/ui/employee-device-login-report'))
 const EmployeesDashboard = lazy(() => import('@/features/reports/ui/employees-dashboard'))
+const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
 const DecreeSignerPage = lazy(() =>
   import('@/features/admin/decree-signers').then((module) => ({ default: module.DecreeSignersPage }))
 )
@@ -58,6 +59,11 @@ export const adminRoutes = [
     id: 'REPORT',
     path: 'reports/employees-dashboard',
     element: withSuspense(EmployeesDashboard),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/top-100-organizations',
+    element: withSuspense(Top100OrganizationsReport),
   },
   {
     path: 'decree-signers',

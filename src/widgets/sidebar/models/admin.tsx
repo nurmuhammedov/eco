@@ -68,7 +68,7 @@ export default [
   },
   {
     url: '/parks',
-    title: 'Parklar',
+    title: 'Park va maskanlar',
     icon: <Trees />,
   },
   {

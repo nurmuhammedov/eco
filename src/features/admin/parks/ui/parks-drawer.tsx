@@ -8,7 +8,7 @@ import { BaseDrawer } from '@/shared/components/common/base-drawer'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { useRegionSelectQuery, useDistrictsSelectQuery } from '@/entities/admin/districts'
+import { useDistrictsSelectQuery, useRegionSelectQuery } from '@/entities/admin/districts'
 import { Park } from '@/entities/admin/park'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 
@@ -66,8 +66,8 @@ export const ParksDrawer = () => {
                     <Select
                       value={field.value ? String(field.value) : undefined}
                       onValueChange={(val) => {
-                        field.onChange(Number(val))
-                        form.setValue('districtId', undefined as any)
+                        field.onChange(val)
+                        form.setValue('districtId', '')
                       }}
                     >
                       <SelectTrigger>
@@ -90,8 +90,8 @@ export const ParksDrawer = () => {
                   <FormControl>
                     <Select
                       disabled={!regionId}
-                      value={field.value ? String(field.value) : undefined}
-                      onValueChange={(val) => field.onChange(Number(val))}
+                      value={field.value ? String(field.value) : ''}
+                      onValueChange={(val) => field.onChange(val)}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder={t('select_district')} />

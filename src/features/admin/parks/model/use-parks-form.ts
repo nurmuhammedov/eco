@@ -19,8 +19,8 @@ export const useParksForm = ({ onSuccess, initialData }: UseParksFormProps) => {
     resolver: zodResolver(parkSchema),
     defaultValues: {
       name: '',
-      regionId: 0,
-      districtId: 0,
+      regionId: '',
+      districtId: '',
       address: '',
       location: '',
     },
@@ -33,13 +33,13 @@ export const useParksForm = ({ onSuccess, initialData }: UseParksFormProps) => {
         regionId: initialData.regionId,
         districtId: initialData.districtId,
         address: initialData.address,
-        location: initialData.location,
+        location: initialData.location || '',
       })
     } else {
       form.reset({
         name: '',
-        regionId: 0,
-        districtId: 0,
+        regionId: '',
+        districtId: '',
         address: '',
         location: '',
       })
@@ -47,12 +47,19 @@ export const useParksForm = ({ onSuccess, initialData }: UseParksFormProps) => {
   }, [initialData, form])
 
   const onSubmit = async (values: ParkSchemaType) => {
+    const payload = {
+      ...values,
+      regionId: Number(values.regionId),
+      districtId: Number(values.districtId),
+      location: values.location || null,
+    }
+
     try {
       if (initialData) {
-        await updatePark.mutateAsync({ ...values, id: initialData.id })
+        await updatePark.mutateAsync({ ...payload, id: initialData.id })
         toast.success(t('park_updated_successfully'))
       } else {
-        await createPark.mutateAsync(values)
+        await createPark.mutateAsync(payload as any)
         toast.success(t('park_created_successfully'))
       }
       onSuccess()

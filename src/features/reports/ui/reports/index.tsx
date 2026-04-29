@@ -1,25 +1,24 @@
 import React, { Fragment, useMemo } from 'react'
 import {
   AlertTriangle,
-  Siren,
-  Flame,
   BarChart,
+  Box,
+  CalendarClock,
+  ClipboardCheck,
   Clock,
   FileSearch,
   FileText,
-  Map,
-  Users,
-  Box,
-  PlusSquare,
-  CalendarClock,
-  Zap,
-  ClipboardCheck,
-  Target,
-  // Trash2,
+  Flame,
   LineChart,
+  Map,
   PieChart,
+  PlusSquare,
   ShieldCheck,
+  Siren,
+  Target,
   TrendingUp,
+  Users,
+  Zap,
 } from 'lucide-react'
 import { Card } from '@/shared/components/ui/card'
 import { Link } from 'react-router-dom'
@@ -62,14 +61,12 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Arizalarning ijro muddati bo‘yicha umumiy hisobot',
         icon: Clock,
         url: '/reports/appeal-execution',
-        badge: 'Yangi',
       },
       {
         id: 'rep-appeal-status-duration',
         title: 'Arizalar holati va muddati bo‘yicha hisobot',
         icon: Clock,
         url: '/reports/appeal-status-duration',
-        badge: 'Yangi',
       },
     ],
   },
@@ -118,7 +115,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'XICHOlarda ishchi xodimlari bo‘yicha statistika',
         icon: Users,
         url: '/reports/hf-employee-stats',
-        badge: 'Yangi',
       },
     ],
   },
@@ -168,7 +164,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Xavf tahlili natijasi bo‘yicha muddatlar o‘rtasida solishtirish hisoboti',
         icon: LineChart,
         url: '/reports/risk-date-comparison',
-        badge: 'Yangi',
       },
       {
         id: 'risk-objects',
@@ -189,7 +184,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Tekshiruv holati bo‘yicha',
         icon: FileSearch,
         url: '/reports/inspection-stats',
-        badge: 'Yangi',
       },
       { id: 'insp-types', title: 'Rejali va rejadan tashqari', icon: FileSearch, url: '#', badge: 'Jarayonda' },
       { id: 'insp-rejected', title: '1 kunlik va 10 kunlik tekshiruvlar', icon: Clock, url: '#', badge: 'Jarayonda' },
@@ -209,10 +203,10 @@ const REPORTS_GROUPS: ReportGroup[] = [
     title: 'Xodimlar',
     items: [
       {
-        id: 'emp-activity-dashboard',
-        title: 'Xodimlar faolligi doir umumiy boshqaruv paneli',
-        icon: BarChart,
-        url: '/reports/employees-dashboard',
+        id: 'emp-top-100-orgs',
+        title: 'Eng ko‘p 3 toifa xodimga ega Top-100 tashkilotlar',
+        icon: Users,
+        url: '/reports/top-100-organizations',
         badge: 'Yangi',
       },
       {
@@ -220,14 +214,19 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Xodimlarning ishga vaqtida kelishi bo‘yicha hisobot',
         icon: Users,
         url: '/reports/turniket-logs',
-        badge: 'Yangi',
       },
       {
         id: 'emp-device-login',
         title: 'Xodimlar qaysi qurilmadan kirayotgani bo‘yicha hisobot',
         icon: FileText,
         url: '/reports/employee-device-login',
-        badge: 'Yangi',
+      },
+      {
+        id: 'emp-activity-dashboard',
+        title: 'Xodimlar faolligi doir umumiy boshqaruv paneli',
+        icon: BarChart,
+        url: '/reports/employees-dashboard',
+        badge: 'Jarayonda',
       },
     ],
   },
@@ -256,7 +255,7 @@ export const ReportsGrid: React.FC = () => {
         </h5>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 pb-4 md:grid-cols-2 xl:grid-cols-3">
         {filteredGroups.map((group) => (
           <div key={group.id} className="flex flex-col gap-2">
             <h6 className="px-1 text-lg font-semibold text-gray-700">{group.title}</h6>

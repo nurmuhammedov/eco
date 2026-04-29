@@ -36,6 +36,7 @@ export function ParksList() {
     {
       accessorKey: 'location',
       header: t('location'),
+      cell: ({ row }) => row.original.location || '-',
     },
     {
       id: 'actions',

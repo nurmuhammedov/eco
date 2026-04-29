@@ -4,6 +4,7 @@ import {
   RegisterIllegalEscalatorDTO,
   RegisterIllegalEscalatorSchema,
 } from '@/entities/create-application'
+import { useParkSelectQuery } from '@/entities/admin/park'
 import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
@@ -128,6 +129,7 @@ export const useRegisterIllegalEscalator = (externalSubmit?: (data: RegisterIlle
       factoryNumber: '',
       regionId: '',
       districtId: '',
+      parkId: '',
       address: '',
       model: '',
       factory: '',
@@ -164,12 +166,14 @@ export const useRegisterIllegalEscalator = (externalSubmit?: (data: RegisterIlle
 
   const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
   const regionId = form.watch('regionId')
+  const districtId = form.watch('districtId')
   const identity = form.watch('identity')
   const isLegal = identity?.length === 9
 
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)
   const { data: childEquipmentTypes } = useChildEquipmentTypes('ESCALATOR')
+  const { data: parks } = useParkSelectQuery(Number(districtId))
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
     queryKey: ['owner-data', ownerIdentity],
@@ -202,6 +206,7 @@ export const useRegisterIllegalEscalator = (externalSubmit?: (data: RegisterIlle
         childEquipmentId: detail.childEquipmentId ? String(detail.childEquipmentId) : '',
         factoryNumber: getValue(detail.factoryNumber || ''),
         regionId: detail.regionId ? String(detail.regionId) : '',
+        parkId: detail.parkId ? Number(detail.parkId) : '',
         address: getValue(detail.address || ''),
         model: getValue(detail.model || ''),
         factory: getValue(detail.factory || ''),
@@ -268,8 +273,9 @@ export const useRegisterIllegalEscalator = (externalSubmit?: (data: RegisterIlle
     if (isUpdate) {
       const updatePayload = {
         ...data,
+        parkId: data.parkId ? Number(data.parkId) : null,
         passportPath: data.passportPath,
-      }
+      } as any
 
       updateMutate(updatePayload, {
         onSuccess: () => {
@@ -280,7 +286,10 @@ export const useRegisterIllegalEscalator = (externalSubmit?: (data: RegisterIlle
       })
     } else {
       if (externalSubmit) {
-        externalSubmit(data)
+        externalSubmit({
+          ...data,
+          parkId: data.parkId ? Number(data.parkId) : null,
+        } as any)
       }
     }
   }
@@ -288,6 +297,7 @@ export const useRegisterIllegalEscalator = (externalSubmit?: (data: RegisterIlle
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
   const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
   const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes])
+  const parkOptions = useMemo(() => getSelectOptions(parks || []), [parks])
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoOptions || []), [hfoOptions])
 
   return {
@@ -295,6 +305,7 @@ export const useRegisterIllegalEscalator = (externalSubmit?: (data: RegisterIlle
     isUpdate,
     regionOptions,
     districtOptions,
+    parkOptions,
     childEquipmentOptions,
     hazardousFacilitiesOptions,
     ownerData: currentOwnerData,

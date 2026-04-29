@@ -4,7 +4,7 @@ export interface Park {
   regionId: number
   districtId: number
   address: string
-  location: string
+  location: string | null
   regionName?: string
   districtName?: string
 }
@@ -14,7 +14,7 @@ export interface CreateParkDTO {
   regionId: number
   districtId: number
   address: string
-  location: string
+  location: string | null
 }
 
 export interface UpdateParkDTO extends CreateParkDTO {

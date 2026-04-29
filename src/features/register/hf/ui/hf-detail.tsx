@@ -16,6 +16,7 @@ import { useState } from 'react'
 import { UserRoles } from '@/entities/user'
 import { Button } from '@/shared/components/ui/button'
 import { DeregisterModal } from '../../common/ui/deregister-modal'
+import { EquipmentsList } from '@/features/register/equipments/ui/equipments-list'
 
 const HfDetail = () => {
   const { id } = useParams()
@@ -51,7 +52,14 @@ const HfDetail = () => {
         onSuccess={refetch}
       />
       <DetailCardAccordion
-        defaultValue={['registry_info', 'applicant_info', 'object_info', 'object_location', 'object_files']}
+        defaultValue={[
+          'registry_info',
+          'applicant_info',
+          'object_info',
+          'object_location',
+          'object_files',
+          'attached_equipments',
+        ]}
       >
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
           <DetailRow
@@ -152,6 +160,9 @@ const HfDetail = () => {
             <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
           </DetailCardAccordion.Item>
         )}
+        <DetailCardAccordion.Item value="attached_equipments" title="Biriktirilgan qurilmalar">
+          <EquipmentsList hfId={id} hideTabs={true} isShortView={true} />
+        </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="history" title="O‘zgartirishlar tarixi">
           <Logs />
         </DetailCardAccordion.Item>

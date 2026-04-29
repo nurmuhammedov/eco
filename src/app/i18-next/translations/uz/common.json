@@ -331,7 +331,7 @@
       "country": "Attraksion ishlab chiqarilgan mamlakat",
       "regionId": "Attraksion joylashgan viloyat",
       "districtId": "Attraksion joylashgan tuman",
-      "parkName": "Park",
+      "parkName": "Park/Maskan",
       "address": "Attraksion joylashgan manzil",
       "location": "Geolokatsiya (xaritadan attraksion joylashgan joyni tanlang)",
       "riskLevel": "Attraksionning biomexanik xavf darajasi",
@@ -1019,14 +1019,14 @@
       "EDITED": "O‘zgartirish kiritdi"
     }
   },
-  "parks": "Parklar",
-  "park_name": "Park nomi",
-  "park_name_required": "Park nomi kiritilishi shart",
+  "parks": "Park va maskanlar",
+  "park_name": "Park/Maskan nomi",
+  "park_name_required": "Park/Maskan nomi kiritilishi shart",
   "region_required": "Viloyat tanlanishi shart",
   "district_required": "Tuman tanlanishi shart",
   "address_required": "Manzil kiritilishi shart",
   "location_required": "Lokatsiya tanlanishi shart",
-  "park_updated_successfully": "Park muvaffaqiyatli yangilandi",
-  "park_created_successfully": "Park muvaffaqiyatli yaratildi",
+  "park_updated_successfully": "Park/Maskan muvaffaqiyatli yangilandi",
+  "park_created_successfully": "Park/Maskan muvaffaqiyatli yaratildi",
   "search_by_name": "Nomi bo‘yicha qidirish"
 }
