@@ -88,7 +88,7 @@ export const ActionCenter = ({ regionId }: ActionCenterProps) => {
                 <span className="text-center text-xs font-medium text-slate-500">Yangi</span>
               </div>
               <div className="flex flex-col items-center justify-center rounded-lg bg-blue-50/50 p-3">
-                <span className="text-2xl font-bold text-blue-600">{action.stats.fileUploaded}</span>
+                <span className="text-2xl font-bold text-blue-600">{action.stats.decreeUploaded}</span>
                 <span className="text-center text-xs font-medium text-slate-500">Hujjat yuklangan</span>
               </div>
               <div className="flex flex-col items-center justify-center rounded-lg bg-amber-50/50 p-3">
