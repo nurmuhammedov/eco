@@ -23,6 +23,11 @@ export const useAccidentsStats = (regionId?: string | null) => {
     type: 'INJURY',
     status: 'COMPLETED',
   })
+  const { totalElements: injuryFileUploaded = 0 } = usePaginatedData('/accidents', {
+    ...commonParams,
+    type: 'INJURY',
+    status: 'FILE_UPLOADED',
+  })
 
   // Avariyalar (NON_INJURY)
   const { totalElements: nonInjuryTotal = 0 } = usePaginatedData('/accidents', { ...commonParams, type: 'NON_INJURY' })
@@ -41,6 +46,11 @@ export const useAccidentsStats = (regionId?: string | null) => {
     type: 'NON_INJURY',
     status: 'COMPLETED',
   })
+  const { totalElements: nonInjuryFileUploaded = 0 } = usePaginatedData('/accidents', {
+    ...commonParams,
+    type: 'NON_INJURY',
+    status: 'FILE_UPLOADED',
+  })
 
   return {
     injury: {
@@ -48,12 +58,14 @@ export const useAccidentsStats = (regionId?: string | null) => {
       new: injuryNew,
       process: injuryProcess,
       completed: injuryCompleted,
+      fileUploaded: injuryFileUploaded,
     },
     nonInjury: {
       total: nonInjuryTotal,
       new: nonInjuryNew,
       process: nonInjuryProcess,
       completed: nonInjuryCompleted,
+      fileUploaded: nonInjuryFileUploaded,
     },
   }
 }

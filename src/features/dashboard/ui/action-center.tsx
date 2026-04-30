@@ -82,18 +82,22 @@ export const ActionCenter = ({ regionId }: ActionCenterProps) => {
               </Link>
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               <div className="flex flex-col items-center justify-center rounded-lg bg-slate-50 p-3">
                 <span className="text-2xl font-bold text-slate-900">{action.stats.new}</span>
-                <span className="text-xs font-medium text-slate-500">Yangi</span>
+                <span className="text-center text-xs font-medium text-slate-500">Yangi</span>
+              </div>
+              <div className="flex flex-col items-center justify-center rounded-lg bg-blue-50/50 p-3">
+                <span className="text-2xl font-bold text-blue-600">{action.stats.fileUploaded}</span>
+                <span className="text-center text-xs font-medium text-slate-500">Hujjat yuklangan</span>
               </div>
               <div className="flex flex-col items-center justify-center rounded-lg bg-amber-50/50 p-3">
                 <span className="text-2xl font-bold text-amber-600">{action.stats.process}</span>
-                <span className="text-xs font-medium text-slate-500">Jarayonda</span>
+                <span className="text-center text-xs font-medium text-slate-500">Jarayonda</span>
               </div>
               <div className="flex flex-col items-center justify-center rounded-lg bg-emerald-50/50 p-3">
                 <span className="text-2xl font-bold text-emerald-600">{action.stats.completed}</span>
-                <span className="text-xs font-medium text-slate-500">Yakunlangan</span>
+                <span className="text-center text-xs font-medium text-slate-500">Yakunlangan</span>
               </div>
             </div>
 
