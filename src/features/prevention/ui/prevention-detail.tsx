@@ -44,7 +44,7 @@ const PreventionDetail = () => {
       <div className="mb-3 flex items-center justify-between gap-2">
         <GoBack title="Profilaktika tadbiri" />
         {showExecutionModal && <ExecutionInspectorModal />}
-        {isCancelled && <span className="font-medium text-red-500">Tizim tomonidan bekor qilingan</span>}
+        {isCancelled && <span className="font-medium text-red-500">Bekor qilingan</span>}
       </div>
 
       <div className="mt-4">
@@ -70,7 +70,7 @@ const PreventionDetail = () => {
                   details.status === 'CONDUCTED' ? (
                     <Badge variant="success">Bajarilgan</Badge>
                   ) : details.status === 'CANCELLED' ? (
-                    <span className="font-medium text-red-500">Tizim tomonidan bekor qilingan</span>
+                    <span className="font-medium text-red-500">Bekor qilingan</span>
                   ) : (
                     <Badge variant="info">Yangi</Badge>
                   )

@@ -137,7 +137,7 @@ const PreventionTable: FC<Props> = ({ regions }) => {
           return <Badge variant="success">Bajarilgan</Badge>
         }
         if (status === 'CANCELLED') {
-          return <span className="font-medium whitespace-nowrap text-red-500">Tizim tomonidan bekor qilingan</span>
+          return <span className="font-medium whitespace-nowrap text-red-500">Bekor qilingan</span>
         }
         if (status === 'NEW') {
           return <Badge variant="info">Yangi</Badge>
