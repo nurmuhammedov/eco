@@ -25,7 +25,8 @@ interface Props {
   edit?: boolean
 }
 
-const FilesSection: FC<Props> = ({ files }) => {
+const FilesSection: FC<Props> = ({ files = [] }) => {
+  const fileList = Array.isArray(files) ? files : []
   // const canEdit = userRole === UserRoles.INSPECTOR && applicationStatus === ApplicationStatus.IN_PROCESS && edit
   // const canInspectorEdit = userRole === UserRoles.INSPECTOR && register && !appealId
 
@@ -54,7 +55,7 @@ const FilesSection: FC<Props> = ({ files }) => {
 
   return (
     <div className="grid grid-cols-1 gap-x-8 md:grid-cols-2">
-      {files.map((file) => (
+      {fileList.map((file) => (
         <div
           key={file.label}
           className="flex flex-col items-start gap-3 border-b border-b-[#E5E7EB] px-3 py-4 sm:flex-row sm:items-center sm:justify-between"

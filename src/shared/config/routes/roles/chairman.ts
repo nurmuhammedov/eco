@@ -10,6 +10,9 @@ const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'))
 const RegisterEquipmentAppealList = lazy(() => import('@/features/register/equipments/ui/equipments-appeal-list'))
 const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'))
+const RegisterRadiationProfileDetail = lazy(
+  () => import('@/features/register/radiation-profile/ui/radiation-profile-detail')
+)
 const RegisterXrayDetail = lazy(() => import('@/features/register/xray/ui/xray-detail'))
 const RegisterAutoDetail = lazy(() => import('@/features/register/auto/ui/auto-detail'))
 const Preventions = lazy(() => import('@/widgets/prevention'))
@@ -126,6 +129,11 @@ export const chairmanRoutes = [
   },
   {
     id: 'ARCHIVE',
+    path: 'archive/radiation-profiles/:id',
+    element: withSuspense(RegisterRadiationProfileDetail),
+  },
+  {
+    id: 'ARCHIVE',
     path: 'archive/:id/xrays',
     element: withSuspense(RegisterXrayDetail),
   },
@@ -148,6 +156,11 @@ export const chairmanRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/irs',
     element: withSuspense(RegisterIrsDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/radiation-profiles/:id',
+    element: withSuspense(RegisterRadiationProfileDetail),
   },
   {
     id: 'REGISTRY',

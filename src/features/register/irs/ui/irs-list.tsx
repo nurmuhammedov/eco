@@ -11,9 +11,11 @@ import { Badge } from '@/shared/components/ui/badge'
 
 interface IrsListProps {
   isArchive?: boolean
+  radiationProfileId?: string
+  hideTabs?: boolean
 }
 
-export const IrsList = ({ isArchive }: IrsListProps) => {
+export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProps) => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const {
@@ -31,6 +33,7 @@ export const IrsList = ({ isArchive }: IrsListProps) => {
       legalAddress = '',
       legalTin = '',
       address = '',
+      directorName = '',
       category = '',
       activity = '',
       sphere = '',
@@ -46,33 +49,50 @@ export const IrsList = ({ isArchive }: IrsListProps) => {
 
   const currentValid = String(valid)
 
+  const isOrganizations = currentValid === 'ORGANIZATIONS'
+
+  const endpoint = isOrganizations ? '/radiation-profiles' : '/irs'
+
   const {
     data = [],
     isLoading,
     totalElements = 0,
-  } = usePaginatedData<any>(`/irs`, {
+  } = usePaginatedData<any>(endpoint, {
     page,
     size,
-    mode,
-    regionId: regionId === 'ALL' ? '' : regionId,
-    districtId,
-    search,
-    registryNumber,
-    legalName,
-    legalAddress,
-    legalTin,
-    address,
-    category,
-    activity,
-    sphere,
-    symbol,
-    usageType,
-    startDate,
-    endDate,
-    valid: currentValid === 'CHANGED' ? undefined : isArchive ? false : currentValid !== 'false',
-    changed: currentValid === 'CHANGED' ? true : '',
-    changeStatus: currentValid === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
-    status: currentValid === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
+    ...(isOrganizations
+      ? {
+          type: 'IRS',
+          legalName,
+          legalTin,
+          address: legalAddress || address,
+          directorName,
+          regionId: regionId === 'ALL' ? '' : regionId,
+          districtId,
+        }
+      : {
+          mode,
+          regionId: regionId === 'ALL' ? '' : regionId,
+          districtId,
+          search,
+          registryNumber,
+          legalName,
+          legalAddress,
+          legalTin,
+          address,
+          category,
+          activity,
+          sphere,
+          symbol,
+          usageType,
+          startDate,
+          endDate,
+          valid: currentValid === 'CHANGED' ? undefined : isArchive ? false : currentValid !== 'false',
+          changed: currentValid === 'CHANGED' ? true : '',
+          changeStatus: currentValid === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
+          status: currentValid === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
+          radiationProfileId,
+        }),
   })
 
   // const { data: changedCountData } = usePaginatedData<any>(
@@ -87,8 +107,11 @@ export const IrsList = ({ isArchive }: IrsListProps) => {
   const handleViewApplication = (id: string) => {
     if (currentValid === 'CHANGED') {
       navigate(`/register/change/${id}/irs`)
+    } else if (isOrganizations) {
+      navigate(`/register/radiation-profiles/${id}?type=IRS`)
     } else {
-      navigate(`${id}/irs`)
+      const basePath = isArchive ? '/archive' : '/register'
+      navigate(`${basePath}/${id}/irs`)
     }
   }
 
@@ -200,9 +223,47 @@ export const IrsList = ({ isArchive }: IrsListProps) => {
     },
   ]
 
+  const orgColumns: ExtendedColumnDef<any, any>[] = [
+    {
+      header: 'Tashkilot nomi',
+      accessorKey: 'legalName',
+      filterKey: 'legalName',
+      filterType: 'search',
+    },
+    {
+      header: 'Tashkilot STIR',
+      accessorKey: 'legalTin',
+      filterKey: 'legalTin',
+      filterType: 'number',
+      filterMaxLength: 14,
+    },
+    {
+      header: 'Tashkilot manzili',
+      accessorKey: 'legalAddress',
+      filterKey: 'address',
+      filterType: 'search',
+    },
+    {
+      header: 'Rahbar',
+      accessorKey: 'directorName',
+      filterKey: 'directorName',
+      filterType: 'search',
+    },
+    {
+      header: 'INMlar soni',
+      accessorKey: 'count',
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => (
+        <DataTableRowActions showView row={row} onView={(row) => handleViewApplication(row.original.id)} />
+      ),
+    },
+  ]
+
   return (
     <div className="flex h-full flex-col gap-2">
-      {!isArchive && (
+      {!isArchive && !hideTabs && (
         <Tabs value={currentValid} onValueChange={(val) => addParams({ valid: val, page: 1, changeStatus: 'ALL' })}>
           <div className="scrollbar-hidden flex overflow-x-auto">
             <TabsList className="min-w-max">
@@ -220,6 +281,17 @@ export const IrsList = ({ isArchive }: IrsListProps) => {
               <TabsTrigger value="true">
                 Amaldagi INMlar
                 {currentValid === 'true' && (
+                  <Badge
+                    variant="destructive"
+                    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+                  >
+                    {totalElements}
+                  </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="ORGANIZATIONS">
+                Tashkilotlar
+                {currentValid === 'ORGANIZATIONS' && (
                   <Badge
                     variant="destructive"
                     className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
@@ -253,7 +325,7 @@ export const IrsList = ({ isArchive }: IrsListProps) => {
         </Tabs>
       )}
 
-      {currentValid === 'CHANGED' && (
+      {currentValid === 'CHANGED' && !hideTabs && (
         <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 })}>
           <TabsList>
             {[
@@ -283,7 +355,7 @@ export const IrsList = ({ isArchive }: IrsListProps) => {
         isPaginated
         isLoading={isLoading}
         data={data || []}
-        columns={columns as unknown as any}
+        columns={(isOrganizations ? orgColumns : columns) as unknown as any}
         className="min-h-0 flex-1"
       />
     </div>

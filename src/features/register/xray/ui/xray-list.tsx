@@ -11,9 +11,11 @@ import { TabsLayout } from '@/shared/layouts'
 
 interface XrayListProps {
   isArchive?: boolean
+  radiationProfileId?: string
+  hideTabs?: boolean
 }
 
-export const XrayList = ({ isArchive }: XrayListProps) => {
+export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListProps) => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const {
@@ -36,55 +38,75 @@ export const XrayList = ({ isArchive }: XrayListProps) => {
       legalName = '',
       legalTin = '',
       address = '',
+      directorName = '',
     },
     addParams,
   } = useCustomSearchParams()
 
   const currentStatus = String(status)
 
+  const isOrganizations = currentStatus === 'ORGANIZATIONS'
+  const endpoint = isOrganizations ? '/radiation-profiles' : '/xrays'
+
   const {
     data = [],
     isLoading,
     totalElements = 0,
-  } = usePaginatedData<any>(`/xrays`, {
+  } = usePaginatedData<any>(endpoint, {
     page,
     size,
-    search,
-    mode,
-    officeId,
-    regionId: regionId === 'ALL' ? '' : regionId,
-    districtId,
-    startDate,
-    endDate,
-    registryNumber,
-    licenseRegistryNumber,
-    legalName,
-    legalTin,
-    address,
-    active: isArchive
-      ? false
-      : currentStatus === 'ACTIVE'
-        ? true
-        : currentStatus === 'INACTIVE'
-          ? false
-          : currentStatus === 'CHANGED'
-            ? ''
-            : true,
-    changed: currentStatus === 'CHANGED' ? true : '',
-    changeStatus: currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
-    status:
-      currentStatus === 'CHANGED' && changeStatus !== 'ALL'
-        ? changeStatus
-        : currentStatus === 'EXPIRED' || currentStatus === 'NO_DATE'
-          ? currentStatus
-          : '',
+    ...(isOrganizations
+      ? {
+          type: 'XRAY',
+          legalName,
+          legalTin,
+          address,
+          directorName,
+          regionId: regionId === 'ALL' ? '' : regionId,
+          districtId,
+        }
+      : {
+          search,
+          mode,
+          officeId,
+          regionId: regionId === 'ALL' ? '' : regionId,
+          districtId,
+          startDate,
+          endDate,
+          registryNumber,
+          licenseRegistryNumber,
+          legalName,
+          legalTin,
+          address,
+          active: isArchive
+            ? false
+            : currentStatus === 'ACTIVE'
+              ? true
+              : currentStatus === 'INACTIVE'
+                ? false
+                : currentStatus === 'CHANGED'
+                  ? ''
+                  : true,
+          changed: currentStatus === 'CHANGED' ? true : '',
+          changeStatus: currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
+          status:
+            currentStatus === 'CHANGED' && changeStatus !== 'ALL'
+              ? changeStatus
+              : currentStatus === 'EXPIRED' || currentStatus === 'NO_DATE'
+                ? currentStatus
+                : '',
+          radiationProfileId,
+        }),
   })
 
   const handleViewApplication = (id: string) => {
     if (currentStatus === 'CHANGED') {
       navigate(`/register/change/${id}/xrays`)
+    } else if (isOrganizations) {
+      navigate(`/register/radiation-profiles/${id}?type=XRAY`)
     } else {
-      navigate(`${id}/xrays${currentStatus === 'ACTIVE' ? '?active=true' : ''}`)
+      const basePath = isArchive ? '/archive' : '/register'
+      navigate(`${basePath}/${id}/xrays${currentStatus === 'ACTIVE' ? '?active=true' : ''}`)
     }
   }
 
@@ -155,9 +177,47 @@ export const XrayList = ({ isArchive }: XrayListProps) => {
     },
   ]
 
+  const orgColumns: ExtendedColumnDef<any, any>[] = [
+    {
+      header: 'Tashkilot nomi',
+      accessorKey: 'legalName',
+      filterKey: 'legalName',
+      filterType: 'search',
+    },
+    {
+      header: 'Tashkilot STIR',
+      accessorKey: 'legalTin',
+      filterKey: 'legalTin',
+      filterType: 'number',
+      filterMaxLength: 14,
+    },
+    {
+      header: 'Tashkilot manzili',
+      accessorKey: 'legalAddress',
+      filterKey: 'address',
+      filterType: 'search',
+    },
+    {
+      header: 'Rahbar',
+      accessorKey: 'directorName',
+      filterKey: 'directorName',
+      filterType: 'search',
+    },
+    {
+      header: 'Rentgenlar soni',
+      accessorKey: 'count',
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => (
+        <DataTableRowActions showView row={row} onView={(row) => handleViewApplication(row.original.id)} />
+      ),
+    },
+  ]
+
   return (
     <div className="flex h-full flex-col gap-2">
-      {!isArchive && (
+      {!isArchive && !hideTabs && (
         <TabsLayout
           activeTab={currentStatus}
           tabs={[
@@ -182,6 +242,11 @@ export const XrayList = ({ isArchive }: XrayListProps) => {
               name: 'Muddati kiritilmaganlar',
               count: currentStatus === 'NO_DATE' ? totalElements : undefined,
             },
+            {
+              id: 'ORGANIZATIONS',
+              name: 'Tashkilotlar',
+              count: currentStatus === 'ORGANIZATIONS' ? totalElements : undefined,
+            },
           ]}
           onTabChange={(type) => {
             if (type === 'CHANGED') {
@@ -193,7 +258,7 @@ export const XrayList = ({ isArchive }: XrayListProps) => {
         />
       )}
 
-      {currentStatus === 'CHANGED' && (
+      {currentStatus === 'CHANGED' && !hideTabs && (
         <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 })}>
           <TabsList>
             {[
@@ -216,7 +281,7 @@ export const XrayList = ({ isArchive }: XrayListProps) => {
         isLoading={isLoading}
         isPaginated
         data={data || []}
-        columns={columns as unknown as any}
+        columns={(isOrganizations ? orgColumns : columns) as unknown as any}
         className="min-h-0 flex-1"
       />
     </div>
