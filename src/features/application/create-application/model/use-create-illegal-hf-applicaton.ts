@@ -45,6 +45,11 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
               .optional()
               .nullable()
               .transform((val) => (val ? val : null)),
+            identificationCardPath: z
+              .string()
+              .optional()
+              .nullable()
+              .transform((val) => (val ? val : null)),
             managerCount: z
               .string({ required_error: 'Majburiy maydon!' })
               .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })

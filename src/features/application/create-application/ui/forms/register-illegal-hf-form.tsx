@@ -394,7 +394,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Identifikatsiya varag‘i
                     </FormLabel>
                     <FormControl>
