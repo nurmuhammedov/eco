@@ -25,3 +25,9 @@ export interface ApplicationFilters {
   type: string
   status: ApplicationStatus | undefined
 }
+
+export enum AppealStatusDuration {
+  UP_TO_5_DAYS = 'UP_TO_5_DAYS',
+  FROM_6_TO_15_DAYS = 'FROM_6_TO_15_DAYS',
+  OVER_15_DAYS = 'OVER_15_DAYS',
+}

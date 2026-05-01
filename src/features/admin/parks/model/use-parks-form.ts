@@ -62,6 +62,7 @@ export const useParksForm = ({ onSuccess, initialData }: UseParksFormProps) => {
         await createPark.mutateAsync(payload as any)
         toast.success(t('park_created_successfully'))
       }
+      form.reset()
       onSuccess()
     } catch (error: any) {
       toast.error(error.message || t('something_went_wrong'))

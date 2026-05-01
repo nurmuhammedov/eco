@@ -17,7 +17,6 @@ interface HfListProps {
 
 export const HfList = ({ isArchive }: HfListProps) => {
   const navigate = useNavigate()
-
   const { user } = useAuth()
   const {
     addParams,
