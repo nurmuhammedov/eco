@@ -13,7 +13,7 @@ import { useAuth } from '@/shared/hooks/use-auth.ts'
 import { ColumnDef } from '@tanstack/react-table'
 import { formatDate } from 'date-fns'
 import { Eye, Info } from 'lucide-react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import ConfirmWithRegistryModal from '../modals/confirm-with-registry-modal.tsx'
 import { ApplicationTypeEnum } from '@/entities/create-application'
@@ -38,13 +38,13 @@ export const documentTypes = new Map([
   ['REPLY_LETTER', 'Javob xati'],
 ])
 
-const managerTypes = [
-  ApplicationTypeEnum.REGISTER_CRANE,
-  ApplicationTypeEnum.DEREGISTER_CRANE,
-  ApplicationTypeEnum.RE_REGISTER_CRANE,
-  ApplicationTypeEnum.REGISTER_ELEVATOR,
-  ApplicationTypeEnum.DEREGISTER_ELEVATOR,
-  ApplicationTypeEnum.RE_REGISTER_ELEVATOR,
+const managerTypes: any = [
+  // ApplicationTypeEnum.REGISTER_CRANE,
+  // ApplicationTypeEnum.DEREGISTER_CRANE,
+  // ApplicationTypeEnum.RE_REGISTER_CRANE,
+  // ApplicationTypeEnum.REGISTER_ELEVATOR,
+  // ApplicationTypeEnum.DEREGISTER_ELEVATOR,
+  // ApplicationTypeEnum.RE_REGISTER_ELEVATOR,
 ]
 
 interface Props {
