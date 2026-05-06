@@ -14,9 +14,12 @@ import { ColumnDef } from '@tanstack/react-table'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { format, formatDate } from 'date-fns'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
 
 const RiskAnalysisDetail = () => {
   const { data } = useObjectInfo()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const {
     paramsObject: { tin, id, /* type: ty,*/ ...rest },
@@ -113,18 +116,20 @@ const RiskAnalysisDetail = () => {
           )}
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
-          <DetailRow
-            title="Reyestrga kiritish uchun asos (ariza):"
-            value={
-              data?.appealId ? (
-                <Link className="text-[#0271FF]" to={'/applications/detail/' + data?.appealId}>
-                  Arizani ko‘rish
-                </Link>
-              ) : (
-                <span className="text-red-600">Mavjud emas</span>
-              )
-            }
-          />
+          {user?.role !== UserRoles.PROCURATOR && (
+            <DetailRow
+              title="Reyestrga kiritish uchun asos (ariza):"
+              value={
+                data?.appealId ? (
+                  <Link className="text-[#0271FF]" to={'/applications/detail/' + data?.appealId}>
+                    Arizani ko‘rish
+                  </Link>
+                ) : (
+                  <span className="text-red-600">Mavjud emas</span>
+                )
+              }
+            />
+          )}
           <DetailRow title="Roʻyxatga olish sanasi:" value={getDate(data?.registrationDate)} />
           <DetailRow title="Roʻyxatga olish raqami:" value={data?.registryNumber} />
           {!!data?.registryFilePath && (

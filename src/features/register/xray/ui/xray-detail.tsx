@@ -32,18 +32,20 @@ const XrayDetail = () => {
         defaultValue={['registry_info', 'applicant_info', 'object_info', 'object_location', 'object_files']}
       >
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
-          <DetailRow
-            title="Reyestrga kiritish uchun asos (ariza):"
-            value={
-              data?.appealId ? (
-                <Link className="text-[#0271FF]" to={'/applications/detail/' + data?.appealId}>
-                  Arizani ko‘rish
-                </Link>
-              ) : (
-                <span className="text-red-600">Mavjud emas</span>
-              )
-            }
-          />
+          {user?.role !== UserRoles.PROCURATOR && (
+            <DetailRow
+              title="Reyestrga kiritish uchun asos (ariza):"
+              value={
+                data?.appealId ? (
+                  <Link className="text-[#0271FF]" to={'/applications/detail/' + data?.appealId}>
+                    Arizani ko‘rish
+                  </Link>
+                ) : (
+                  <span className="text-red-600">Mavjud emas</span>
+                )
+              }
+            />
+          )}
 
           <DetailRow
             title="Roʻyxatga olish sanasi:"
