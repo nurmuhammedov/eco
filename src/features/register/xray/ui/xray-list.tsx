@@ -217,7 +217,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
 
   return (
     <div className="flex h-full flex-col gap-2">
-      {!isArchive && !hideTabs && (
+      {!isArchive && !hideTabs && user?.role !== UserRoles.PROCURATOR && (
         <TabsLayout
           activeTab={currentStatus}
           tabs={[

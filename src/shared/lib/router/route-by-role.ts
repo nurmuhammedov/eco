@@ -11,6 +11,8 @@ export const routeByRole = (role: UserRoles | undefined | null): string => {
       return '/applications'
     case UserRoles.ADMIN:
       return '/territories'
+    case UserRoles.PROCURATOR:
+      return '/register'
     default:
       return '/applications'
   }

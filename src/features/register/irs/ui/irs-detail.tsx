@@ -11,9 +11,12 @@ import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { getDate } from '@/shared/utils/date.ts'
 import { Link } from 'react-router-dom'
 import { Logs } from '@/features/register/hf/ui/parts/logs'
+import { UserRoles } from '@/entities/user'
+import { useAuth } from '@/shared/hooks/use-auth.ts'
 
 const IrsDetail = () => {
   const { isLoading, data } = useIrsDetail()
+  const { user } = useAuth()
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
 
   if (isLoading || !data) {
@@ -114,7 +117,10 @@ const IrsDetail = () => {
           )}
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="applicant_info" title="Arizachi to‘g‘risida ma’lumot">
-          <LegalApplicantInfo showUpdateButton={true} tinNumber={data?.legalTin} />
+          <LegalApplicantInfo
+            showUpdateButton={user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL}
+            tinNumber={data?.legalTin}
+          />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
           <AppealMainInfo data={data} type={'IRS'} address={data?.address} />

@@ -202,7 +202,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2">
-      {!isArchive && (
+      {!isArchive && user?.role !== UserRoles.PROCURATOR && (
         <TabsLayout
           activeTab={currentActive}
           tabs={[

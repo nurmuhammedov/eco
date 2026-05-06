@@ -263,7 +263,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
 
   return (
     <div className="flex h-full flex-col gap-2">
-      {!isArchive && !hideTabs && (
+      {!isArchive && !hideTabs && user?.role !== UserRoles.PROCURATOR && (
         <Tabs value={currentValid} onValueChange={(val) => addParams({ valid: val, page: 1, changeStatus: 'ALL' })}>
           <div className="scrollbar-hidden flex overflow-x-auto">
             <TabsList className="min-w-max">

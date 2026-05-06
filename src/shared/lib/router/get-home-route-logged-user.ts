@@ -11,6 +11,7 @@ const roleHomeRoutes: Record<UserRoles, string> = {
   [UserRoles.HEAD]: DefaultRoute,
   [UserRoles.MANAGER]: DefaultRoute,
   [UserRoles.INDIVIDUAL]: DefaultRoute,
+  [UserRoles.PROCURATOR]: '/register',
 }
 
 export const getHomeRouteForLoggedInUser = (role: UserRoles) => roleHomeRoutes[role] || '/'

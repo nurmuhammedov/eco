@@ -4,6 +4,8 @@ import DetailRow from '@/shared/components/common/detail-row'
 import { useParams } from 'react-router-dom'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
 import { formatDate } from 'date-fns'
 import { tabs } from '@/features/register/auto/ui/auto-tabs'
 
@@ -13,6 +15,7 @@ export default function AutoDetail() {
     paramsObject: { tin: currentTin = '' },
   } = useCustomSearchParams()
   const { data } = useData<any>(`/tankers/${id}`)
+  const { user } = useAuth()
 
   return (
     <div>
@@ -27,7 +30,10 @@ export default function AutoDetail() {
             </DetailCardAccordion.Item>
           ) : (
             <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
-              <LegalApplicantInfo tinNumber={currentTin} />
+              <LegalApplicantInfo
+                showUpdateButton={user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL}
+                tinNumber={currentTin}
+              />
             </DetailCardAccordion.Item>
           )}
 

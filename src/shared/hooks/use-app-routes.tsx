@@ -7,6 +7,7 @@ import {
   legalRoutes,
   managerRoutes,
   regionalRoutes,
+  procuratorRoutes,
 } from '@/shared/config/routes/roles'
 import { authRoutes, publicRoutes, specialComponents } from '@/shared/config/routes'
 import { useAuth } from '@/shared/hooks/use-auth'
@@ -68,6 +69,9 @@ export const useAppRoutes = () => {
         break
       case UserRoles.INDIVIDUAL:
         routes = individualRoutes
+        break
+      case UserRoles.PROCURATOR:
+        routes = procuratorRoutes
         break
       default:
         routes = []

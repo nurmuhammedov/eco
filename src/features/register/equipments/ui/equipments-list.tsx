@@ -501,7 +501,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
         </div>
       )}
 
-      {!hideTabs && !isArchive && (
+      {!hideTabs && !isArchive && user?.role !== UserRoles.PROCURATOR && (
         <TabsLayout
           activeTab={currentStatus}
           tabs={

@@ -13,8 +13,9 @@ import {
 } from '@/shared/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar'
 import { useAuth } from '@/shared/hooks/use-auth.ts'
-import { UserRoleLabels } from '@/entities/user'
+import { UserRoles, UserRoleLabels } from '@/entities/user'
 import { truncateString } from '@/shared/lib'
+import { Link } from 'react-router-dom'
 
 export default function UserDropdown() {
   const { user } = useAuth()
@@ -65,6 +66,14 @@ export default function UserDropdown() {
           <DropdownMenuSeparator />
         </div>
         <DropdownMenuGroup>
+          {user?.role === UserRoles.LEGAL && (
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Link to="/profile" className="flex items-center">
+                <User className="mr-2 h-4 w-4" />
+                Profil
+              </Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             disabled={isPending}
             className="text-destructive focus:text-destructive flex cursor-pointer items-center"

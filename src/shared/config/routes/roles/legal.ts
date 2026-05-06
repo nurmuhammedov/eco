@@ -4,6 +4,7 @@ import { lazy } from 'react'
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'))
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'))
 const RegisterPage = lazy(() => import('@/pages/register'))
+const ArchivePage = lazy(() => import('@/pages/archive'))
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'))
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'))
 const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'))
@@ -35,6 +36,7 @@ const AccidentDetail = lazy(() =>
 const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
+const ProfilePage = lazy(() => import('@/pages/profile/page'))
 
 export const legalRoutes = [
   // ELEVATORS
@@ -42,6 +44,10 @@ export const legalRoutes = [
     id: 'ELEVATOR',
     path: 'elevators',
     element: withSuspense(ElevatorsPage),
+  },
+  {
+    path: 'profile',
+    element: withSuspense(ProfilePage),
   },
 
   // APPEAL
@@ -117,6 +123,44 @@ export const legalRoutes = [
     path: 'register/change/:id/:type',
     element: withSuspense(RegisterChangePage),
   },
+
+  // ARCHIVE
+  {
+    id: 'ARCHIVE',
+    path: 'archive',
+    element: withSuspense(ArchivePage),
+  },
+  {
+    id: 'ARCHIVE',
+    path: 'archive/:id/hf',
+    element: withSuspense(RegisterHFDetail),
+  },
+  {
+    id: 'ARCHIVE',
+    path: 'archive/:id/equipments',
+    element: withSuspense(RegisterEquipmentDetail),
+  },
+  {
+    id: 'ARCHIVE',
+    path: 'archive/:id/irs',
+    element: withSuspense(RegisterIrsDetail),
+  },
+  {
+    id: 'ARCHIVE',
+    path: 'archive/radiation-profiles/:id',
+    element: withSuspense(RegisterRadiationProfileDetail),
+  },
+  {
+    id: 'ARCHIVE',
+    path: 'archive/:id/xrays',
+    element: withSuspense(RegisterXrayDetail),
+  },
+  {
+    id: 'ARCHIVE',
+    path: 'archive/:id/auto',
+    element: withSuspense(RegisterAutoDetail),
+  },
+
   // PREVENTION
   {
     id: 'PREVENTION',

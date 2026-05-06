@@ -120,7 +120,7 @@ export default [
     icon: <Siren />,
   },
   {
-    id: 'REGISTRY',
+    id: 'ARCHIVE',
     title: 'Arxiv',
     url: '/archive',
     icon: <Archive />,

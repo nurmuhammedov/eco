@@ -7,6 +7,7 @@ export enum UserRoles {
   REGIONAL = 'REGIONAL', // Hududiy bo‘lim boshlig‘i
   INSPECTOR = 'INSPECTOR', // Inspektor
   INDIVIDUAL = 'INDIVIDUAL', // Jismoniy shaxs
+  PROCURATOR = 'PROCURATOR', // Prokuror
 }
 
 export const UserRoleLabels: Record<UserRoles, string> = {
@@ -18,6 +19,7 @@ export const UserRoleLabels: Record<UserRoles, string> = {
   [UserRoles.REGIONAL]: 'Hududiy bo‘lim boshlig‘i',
   [UserRoles.INSPECTOR]: 'Inspektor',
   [UserRoles.INDIVIDUAL]: 'Jismoniy shaxs',
+  [UserRoles.PROCURATOR]: 'Prokuror',
 }
 
 export enum Direction {
