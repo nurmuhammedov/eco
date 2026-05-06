@@ -66,41 +66,45 @@ const PreventionTable: FC<Props> = ({ regions }) => {
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [
-    {
-      header: () => (
-        <div className="whitespace-nowrap">
-          Roʻyxatga olish <br /> raqami
-        </div>
-      ),
-      accessorKey: 'registryNumber',
-      className: '!w-[1%] whitespace-nowrap',
-      filterKey: 'registryNumber',
-      filterType: 'search',
-    },
-    {
-      header: t('risk_analysis_columns.name'),
-      accessorKey: 'name',
-      filterKey: 'name',
-      filterType: 'search',
-    },
+    ...(belongType !== 'IRS' && belongType !== 'XRAY'
+      ? [
+          {
+            header: () => (
+              <div className="whitespace-nowrap">
+                Roʻyxatga olish <br /> raqami
+              </div>
+            ),
+            accessorKey: 'registryNumber',
+            className: '!w-[1%] whitespace-nowrap',
+            filterKey: 'registryNumber',
+            filterType: 'search' as const,
+          },
+          {
+            header: t('risk_analysis_columns.name'),
+            accessorKey: 'name',
+            filterKey: 'name',
+            filterType: 'search' as const,
+          },
+        ]
+      : []),
     {
       header: 'Tashkilot nomi',
       accessorKey: 'ownerName',
       filterKey: 'ownerName',
-      filterType: 'search',
+      filterType: 'search' as const,
     },
     {
       accessorKey: 'identity',
       filterKey: 'identity',
       className: '!w-[1%]',
       header: () => <div className="whitespace-nowrap">Tashkilot STIR</div>,
-      filterType: 'search',
+      filterType: 'search' as const,
     },
     {
-      header: t('risk_analysis_columns.address'),
+      header: belongType === 'IRS' || belongType === 'XRAY' ? 'Yuridik manzili' : t('risk_analysis_columns.address'),
       accessorKey: 'address',
       filterKey: 'address',
-      filterType: 'search',
+      filterType: 'search' as const,
     },
     ...(activeAssignedStatus === 'UNASSIGNED' && canAssign
       ? [

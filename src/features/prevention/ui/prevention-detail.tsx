@@ -10,12 +10,15 @@ import { Badge } from '@/shared/components/ui/badge'
 import { useCustomSearchParams, useData, useDetail } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
 import FileLink from '@/shared/components/common/file-link'
+import { IrsList } from '@/features/register/irs/ui/irs-list'
+import { XrayList } from '@/features/register/xray/ui/xray-list'
+import { Skeleton } from '@/shared/components/ui/skeleton'
 
 const PreventionDetail = () => {
   const { id } = useParams<{ id: string }>()
   const { user } = useAuth()
   const { paramsObject } = useCustomSearchParams()
-  const { data: details } = useDetail<any>('/preventions/', id)
+  const { data: details, isLoading } = useDetail<any>('/preventions/', id)
 
   const tin = paramsObject.tin || ''
 
@@ -28,7 +31,7 @@ const PreventionDetail = () => {
 
   const { data: objectData } = useData(
     `/${requestType.toLowerCase()}/${details?.belongId}`,
-    !!details?.belongType && !!details?.belongId
+    !!details?.belongType && !!details?.belongId && details?.belongType !== 'IRS' && details?.belongType !== 'XRAY'
   )
 
   const preventionTypeName = details?.type ? preventionTypes.find((i) => i.id === details.type)?.name : '-'
@@ -39,6 +42,22 @@ const PreventionDetail = () => {
       (user?.role === UserRoles.INSPECTOR && details?.belongType !== 'IRS' && details?.belongType !== 'XRAY'))
   const hasFiles = details?.resultPathList && details.resultPathList.length > 0
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-6 p-6">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 w-10 rounded-full" />
+          <Skeleton className="h-8 w-80" />
+        </div>
+        <div className="flex flex-col gap-4">
+          <Skeleton className="h-[200px] w-full rounded-2xl" />
+          <Skeleton className="h-[150px] w-full rounded-2xl" />
+          <Skeleton className="h-[150px] w-full rounded-2xl" />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
       <div className="mb-3 flex items-center justify-between gap-2">
@@ -48,17 +67,33 @@ const PreventionDetail = () => {
       </div>
 
       <div className="mt-4">
-        <DetailCardAccordion defaultValue={['main']}>
+        <DetailCardAccordion defaultValue={['org_info', 'main']}>
           <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
             <LegalApplicantInfo tinNumber={tin} />
           </DetailCardAccordion.Item>
 
-          <DetailCardAccordion.Item value="object_info" title="Tashkilot obyektlari va qurilmalari">
-            <AppealMainInfo data={objectData} type={details?.belongType?.toUpperCase()} address={details?.address} />
-          </DetailCardAccordion.Item>
+          {details?.belongType !== 'IRS' && details?.belongType !== 'XRAY' && (
+            <DetailCardAccordion.Item value="object_info" title="Tashkilot obyektlari va qurilmalari">
+              <AppealMainInfo data={objectData} type={details?.belongType?.toUpperCase()} address={details?.address} />
+            </DetailCardAccordion.Item>
+          )}
 
-          <DetailCardAccordion.Item value="main" title="Profilaktika maʼlumotlar va qayta ishlash">
-            <DetailRow title="Roʻyxatga olish raqami" value={details?.registryNumber} />
+          {details?.belongType === 'IRS' && (
+            <DetailCardAccordion.Item value="irs_list" title="Ionlashtiruvchi nurlanish manbalari">
+              <IrsList radiationProfileId={details?.belongId} hideTabs />
+            </DetailCardAccordion.Item>
+          )}
+
+          {details?.belongType === 'XRAY' && (
+            <DetailCardAccordion.Item value="xray_list" title="Rentgen qurilmalari">
+              <XrayList radiationProfileId={details?.belongId} hideTabs />
+            </DetailCardAccordion.Item>
+          )}
+
+          <DetailCardAccordion.Item value="main" title="Profilaktika maʼlumotlari">
+            {details?.belongType !== 'IRS' && details?.belongType !== 'XRAY' && (
+              <DetailRow title="Roʻyxatga olish raqami" value={details?.registryNumber} />
+            )}
             <DetailRow title="Hudud" value={details?.regionName} />
             <DetailRow title="Tashkilot nomi" value={details?.ownerName} />
             <DetailRow title="Tashkilot STIR" value={details?.identity} />

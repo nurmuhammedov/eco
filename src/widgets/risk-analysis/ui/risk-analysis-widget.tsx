@@ -101,7 +101,7 @@ const RiskAnalysisWidget = () => {
 
   const { data: irsCount = 0 } = useData<number>('/irs/count', false)
   const { data: xrayCount = 0 } = useData<number>('/xrays/count', false)
-  const { data: elevatorCount = 0 } = useData<number>('/equipments/count?type=ELEVATOR', false)
+  // const { data: elevatorCount = 0 } = useData<number>('/equipments/count?type=ELEVATOR', false)
   const { data: attractionCount = 0 } = useData<number>('/equipments/count?type=ATTRACTION', false)
   const { data: lpgPoweredCount = 0 } = useData<number>('/equipments/count?type=LPG_POWERED', false)
 
@@ -170,22 +170,22 @@ const RiskAnalysisWidget = () => {
                 {irsCount}
               </Badge>
             </TabsTrigger>
-            <TabsTrigger value={RiskAnalysisTab.LIFT}>
-              {t('risk_analysis_tabs.LIFT')}
+            {/*<TabsTrigger value={RiskAnalysisTab.LIFT}>*/}
+            {/*  {t('risk_analysis_tabs.LIFT')}*/}
+            {/*  <Badge variant="destructive" className="ml-2">*/}
+            {/*    {elevatorCount}*/}
+            {/*  </Badge>*/}
+            {/*</TabsTrigger>*/}
+            <TabsTrigger value={RiskAnalysisTab.XRAY}>
+              {t('risk_analysis_tabs.XRAY')}
               <Badge variant="destructive" className="ml-2">
-                {elevatorCount}
+                {xrayCount}
               </Badge>
             </TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.ATTRACTION}>
               {t('risk_analysis_tabs.ATTRACTION')}
               <Badge variant="destructive" className="ml-2">
                 {attractionCount}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value={RiskAnalysisTab.XRAY}>
-              {t('risk_analysis_tabs.XRAY')}
-              <Badge variant="destructive" className="ml-2">
-                {xrayCount}
               </Badge>
             </TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.LPG_POWERED}>

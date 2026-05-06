@@ -52,9 +52,9 @@ export const MONTHS = [
 const RISK_TYPES = [
   { value: 'HF', label: 'XICHO' },
   { value: 'IRS', label: 'INM' },
-  { value: 'ELEVATOR', label: 'Lift' },
-  { value: 'ATTRACTION', label: 'Attraksion' },
+  // { value: 'ELEVATOR', label: 'Lift' },
   { value: 'XRAY', label: 'Rentgen' },
+  { value: 'ATTRACTION', label: 'Attraksion' },
   { value: 'LPG_POWERED', label: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma' },
 ]
 

@@ -52,7 +52,7 @@ export const RadiationProfileDetail = () => {
 
         <DetailCardAccordion.Item
           value="devices"
-          title={type === 'IRS' ? 'Ioniqlashtiruvchi nurlanish manbalari' : 'Rentgen qurilmalari'}
+          title={type === 'IRS' ? 'Ionlashtiruvchi nurlanish manbalari' : 'Rentgen qurilmalari'}
         >
           {type === 'IRS' ? (
             <IrsList radiationProfileId={id} isArchive={false} hideTabs={true} />
