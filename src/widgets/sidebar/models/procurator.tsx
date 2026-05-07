@@ -1,11 +1,16 @@
 import { Navigation } from '@/widgets/sidebar/models/types'
-import { Database } from 'lucide-react'
+import { Database, Newspaper } from 'lucide-react'
 
 export default [
   {
-    id: 'REGISTRY',
     title: 'menu.register',
     url: '/register',
     icon: <Database />,
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    title: 'Xabarnoma',
+    url: '/news',
+    icon: <Newspaper />,
   },
 ] as Navigation

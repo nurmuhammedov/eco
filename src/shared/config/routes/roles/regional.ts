@@ -54,6 +54,8 @@ const AccidentDetail = lazy(() =>
 )
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
+const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
+const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 
 export const regionalRoutes = [
   // ELEVATORS
@@ -354,5 +356,15 @@ export const regionalRoutes = [
     id: 'ACCIDENT',
     path: 'accidents/:id',
     element: withSuspense(AccidentDetail),
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    path: 'news',
+    element: withSuspense(NewsListPage),
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    path: 'news/:id',
+    element: withSuspense(NewsDetailPage),
   },
 ]

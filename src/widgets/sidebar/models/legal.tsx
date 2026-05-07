@@ -1,8 +1,8 @@
 import { Navigation } from '@/widgets/sidebar/models/types'
 import {
   AlertCircle,
-  Siren,
   Archive,
+  ArrowDownUp,
   Award,
   BarChart2,
   Building2,
@@ -11,9 +11,10 @@ import {
   FileCheck,
   FileText,
   MessageSquareText,
+  Newspaper,
   ScrollText,
   ShieldCheck,
-  ArrowDownUp,
+  Siren,
 } from 'lucide-react'
 
 export default [
@@ -118,6 +119,12 @@ export default [
     title: 'Baxtsiz hod. va Avariyalar',
     url: '/accidents',
     icon: <Siren />,
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    title: 'Xabarnoma',
+    url: '/news',
+    icon: <Newspaper />,
   },
   {
     id: 'ARCHIVE',

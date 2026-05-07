@@ -18,6 +18,8 @@ const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create
 const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
+const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
+const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 
 export const individualRoutes = [
   // ELEVATORS
@@ -131,5 +133,15 @@ export const individualRoutes = [
     id: 'ARCHIVE',
     path: 'archive/:id/auto',
     element: withSuspense(RegisterAutoDetail),
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    path: 'news',
+    element: withSuspense(NewsListPage),
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    path: 'news/:id',
+    element: withSuspense(NewsDetailPage),
   },
 ]

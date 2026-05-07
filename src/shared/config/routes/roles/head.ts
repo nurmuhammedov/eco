@@ -48,6 +48,8 @@ const Permits = lazy(() => import('@/widgets/permits'))
 const Inquiries = lazy(() => import('@/features/inquiries'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
+const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
+const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 
 export const headRoutes = [
   // ELEVATORS
@@ -327,5 +329,15 @@ export const headRoutes = [
     id: 'INQUIRY',
     path: 'inquiries',
     element: withSuspense(Inquiries),
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    path: 'news',
+    element: withSuspense(NewsListPage),
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    path: 'news/:id',
+    element: withSuspense(NewsDetailPage),
   },
 ]

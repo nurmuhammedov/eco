@@ -123,7 +123,10 @@
     "REPORT": "Hisobotlar",
     "INQUIRY": "Murojaatlar",
     "DECLARATION": "Deklaratsiya",
-    "CONCLUSION": "Ekspertiza xulosalari"
+    "CONCLUSION": "Ekspertiza xulosalari",
+    "ELEVATOR": "Liftlar",
+    "ANNOUNCEMENT": "Xabarnoma",
+    "ARCHIVE": "Arxiv"
   },
   "inspections": {
     "tabs": {

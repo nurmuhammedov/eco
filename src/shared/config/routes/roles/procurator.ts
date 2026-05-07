@@ -10,6 +10,8 @@ const RegisterRadiationProfileDetail = lazy(
 )
 const RegisterXrayDetail = lazy(() => import('@/features/register/xray/ui/xray-detail'))
 const RegisterAutoDetail = lazy(() => import('@/features/register/auto/ui/auto-detail'))
+const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
+const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 
 export const procuratorRoutes = [
   // REGISTRY
@@ -47,5 +49,15 @@ export const procuratorRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    path: 'news',
+    element: withSuspense(NewsListPage),
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    path: 'news/:id',
+    element: withSuspense(NewsDetailPage),
   },
 ]

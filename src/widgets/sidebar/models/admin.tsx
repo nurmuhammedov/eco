@@ -10,9 +10,10 @@ import {
   Users,
   Signature,
   Mail,
-  Server,
+  // Server,
   Trees,
-  ArrowDownUp,
+  // ArrowDownUp,
+  Newspaper,
 } from 'lucide-react'
 
 export default [
@@ -71,15 +72,21 @@ export default [
     title: 'Park va maskanlar',
     icon: <Trees />,
   },
+  // {
+  //   url: '/metrics/',
+  //   title: 'Server ko‘rsatgichlari',
+  //   icon: <Server />,
+  // },
+  // {
+  //   id: 'ELEVATOR',
+  //   url: '/elevators',
+  //   title: 'menu.elevators',
+  //   icon: <ArrowDownUp />,
+  // },
   {
-    url: '/metrics/',
-    title: 'Server ko‘rsatgichlari',
-    icon: <Server />,
-  },
-  {
-    id: 'ELEVATOR',
-    url: '/elevators',
-    title: 'menu.elevators',
-    icon: <ArrowDownUp />,
+    id: 'ANNOUNCEMENT',
+    url: '/news',
+    title: 'Xabarnoma',
+    icon: <Newspaper />,
   },
 ] as Navigation

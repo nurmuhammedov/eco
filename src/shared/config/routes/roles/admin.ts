@@ -19,6 +19,9 @@ const HybridMailPage = lazy(() => import('@/features/admin/hybrid-mail/ui/hybrid
 const UserLogsPage = lazy(() => import('@/pages/admin/user-logs/page'))
 const ParksPage = lazy(() => import('@/pages/admin/parks'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
+const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
+const NewsFormPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsForm })))
+const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 // const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 
 export const adminRoutes = [
@@ -88,5 +91,21 @@ export const adminRoutes = [
   {
     path: 'parks',
     element: withSuspense(ParksPage),
+  },
+  {
+    path: 'news',
+    element: withSuspense(NewsListPage),
+  },
+  {
+    path: 'news/create',
+    element: withSuspense(NewsFormPage),
+  },
+  {
+    path: 'news/edit/:id',
+    element: withSuspense(NewsFormPage),
+  },
+  {
+    path: 'news/:id',
+    element: withSuspense(NewsDetailPage),
   },
 ]

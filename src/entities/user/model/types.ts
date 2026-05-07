@@ -42,6 +42,8 @@ export enum Direction {
   ATTESTATION_REGIONAL = 'ATTESTATION_REGIONAL',
   ACCIDENT = 'ACCIDENT',
   ELEVATOR = 'ELEVATOR',
+  ANNOUNCEMENT = 'ANNOUNCEMENT',
+  ARCHIVE = 'ARCHIVE',
 }
 
 export type UserState = {

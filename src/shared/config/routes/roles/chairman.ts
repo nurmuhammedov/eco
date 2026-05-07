@@ -60,6 +60,8 @@ const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
 )
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
+const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
+const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 
 export const chairmanRoutes = [
   // ELEVATORS
@@ -387,5 +389,15 @@ export const chairmanRoutes = [
     id: 'ACCIDENT',
     path: 'accidents/:id',
     element: withSuspense(AccidentDetail),
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    path: 'news',
+    element: withSuspense(NewsListPage),
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    path: 'news/:id',
+    element: withSuspense(NewsDetailPage),
   },
 ]

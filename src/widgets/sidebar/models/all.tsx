@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   ArrowDownUp,
   Archive,
+  Newspaper,
 } from 'lucide-react'
 
 export default [
@@ -120,6 +121,12 @@ export default [
     title: 'Baxtsiz hod. va Avariyalar',
     url: '/accidents',
     icon: <Siren />,
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    title: 'Xabarnoma',
+    url: '/news',
+    icon: <Newspaper />,
   },
   {
     id: 'ARCHIVE',

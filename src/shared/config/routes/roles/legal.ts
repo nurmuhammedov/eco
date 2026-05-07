@@ -37,6 +37,8 @@ const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-p
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 const ProfilePage = lazy(() => import('@/pages/profile/page'))
+const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
+const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 
 export const legalRoutes = [
   // ELEVATORS
@@ -256,5 +258,15 @@ export const legalRoutes = [
     id: 'ACCIDENT',
     path: 'accidents/:id',
     element: withSuspense(AccidentDetail),
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    path: 'news',
+    element: withSuspense(NewsListPage),
+  },
+  {
+    id: 'ANNOUNCEMENT',
+    path: 'news/:id',
+    element: withSuspense(NewsDetailPage),
   },
 ]
