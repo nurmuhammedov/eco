@@ -339,7 +339,7 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
       <div style={{ visibility: isEditorReady ? 'visible' : 'hidden', height: '100%' }}>
         <Editor
           id={editorId}
-          apiKey="i2gzr3l3xi13o8ja2ssqch7jlrlau3xokciwv3x4it8t6u56"
+          apiKey="tubsto5n41v7s78fm8eukfhvygmxpq5sue580awa4va9d383"
           licenseKey="gpl"
           onInit={handleEditorInit}
           initialValue={initialValue}
