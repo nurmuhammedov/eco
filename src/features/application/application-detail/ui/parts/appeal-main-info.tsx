@@ -609,9 +609,8 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
       {renderRow('childEquipmentSortId', data?.childEquipmentSortName || data?.childEquipmentSortId)}
       {renderRow('riskLevel', RISK_LEVEL_MAP[data?.riskLevel] || data?.riskLevel)}
 
-      {/* Umumiy manzil va joylashuv */}
-      {renderRow('regionId', data?.regionName || data?.regionId)}
-      {renderRow('districtId', data?.districtName || data?.districtId)}
+      {/*{renderRow('regionId', data?.regionName || data?.regionId)}*/}
+      {/*{renderRow('districtId', data?.districtName || data?.districtId)}*/}
       {renderRow('parkName', data?.parkName)}
       {renderRow('address', address)}
       {/*{renderRow('location', data?.location)}*/}
