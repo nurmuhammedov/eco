@@ -178,7 +178,16 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
+                      onChange={(date) => {
+                        field.onChange(date)
+                        if (date) {
+                          const nextDate = new Date(date)
+                          nextDate.setFullYear(nextDate.getFullYear() + 1)
+                          form.setValue('nextPartialCheckDate', nextDate as any, { shouldValidate: true })
+                        } else {
+                          form.setValue('nextPartialCheckDate', undefined as any, { shouldValidate: true })
+                        }
+                      }}
                       placeholder="Sanani tanlang"
                     />
                     <FormMessage />
@@ -197,7 +206,16 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
+                      onChange={(date) => {
+                        field.onChange(date)
+                        if (date) {
+                          const nextDate = new Date(date)
+                          nextDate.setFullYear(nextDate.getFullYear() + 3)
+                          form.setValue('nextFullCheckDate', nextDate as any, { shouldValidate: true })
+                        } else {
+                          form.setValue('nextFullCheckDate', undefined as any, { shouldValidate: true })
+                        }
+                      }}
                       placeholder="Sanani tanlang"
                     />
                     <FormMessage />
@@ -509,6 +527,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
+                        disabled={true}
                         placeholder="Sanani tanlang"
                       />
                     </div>
@@ -549,6 +568,7 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
+                        disabled={true}
                         placeholder="Sanani tanlang"
                       />
                     </div>
