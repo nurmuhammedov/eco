@@ -505,6 +505,25 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLpgContainerForm
         <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <div className="border-b pb-4">
             <FormField
+              name="usageRightsPath"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className={'mb-2'}>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
+                      Ruxsatnoma fayli
+                    </FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
               name="labelPath"
               control={form.control}
               render={({ field }) => (

@@ -488,7 +488,8 @@
       "additionalInfoPath": "Qurilmani yaroqsiz holga kelganligini tasdiqlovchi hujjat",
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
-      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami"
+      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
+      "usageRightsPath": "Ruxsatnoma fayli"
     },
     "CONTAINER": {
       "phoneNumber": "Telefon raqami",
@@ -530,7 +531,8 @@
       "additionalInfoPath": "Qurilmani yaroqsiz holga kelganligini tasdiqlovchi hujjat",
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
-      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami"
+      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
+      "usageRightsPath": "Ruxsatnoma fayli"
     },
     "OIL_CONTAINER": {
       "address": "Qurilma joylashgan manzil",
@@ -590,7 +592,8 @@
       "additionalInfoPath": "Qurilmani yaroqsiz holga kelganligini tasdiqlovchi hujjat",
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
-      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami"
+      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
+      "usageRightsPath": "Ruxsatnoma fayli"
     },
     "ESCALATOR": {
       "phoneNumber": "Telefon raqami",
@@ -675,7 +678,8 @@
       "additionalInfoPath": "Qurilmani yaroqsiz holga kelganligini tasdiqlovchi hujjat",
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
-      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami"
+      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
+      "usageRightsPath": "Ruxsatnoma fayli"
     },
     "CHEMICAL_CONTAINER": {
       "phoneNumber": "Telefon raqami",
@@ -717,7 +721,8 @@
       "additionalInfoPath": "Qurilmani yaroqsiz holga kelganligini tasdiqlovchi hujjat",
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
-      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami"
+      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
+      "usageRightsPath": "Ruxsatnoma fayli"
     },
     "HEAT_PIPELINE": {
       "phoneNumber": "Telefon raqami",
@@ -761,7 +766,8 @@
       "additionalInfoPath": "Qurilmani yaroqsiz holga kelganligini tasdiqlovchi hujjat",
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
-      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami"
+      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
+      "usageRightsPath": "Ruxsatnoma fayli"
     },
     "BOILER_UTILIZER": {
       "phoneNumber": "Telefon raqami",
@@ -805,7 +811,8 @@
       "additionalInfoPath": "Qurilmani yaroqsiz holga kelganligini tasdiqlovchi hujjat",
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
-      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami"
+      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
+      "usageRightsPath": "Ruxsatnoma fayli"
     },
     "LPG_CONTAINER": {
       "phoneNumber": "Telefon raqami",
@@ -847,7 +854,8 @@
       "additionalInfoPath": "Qurilmani yaroqsiz holga kelganligini tasdiqlovchi hujjat",
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
-      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami"
+      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
+      "usageRightsPath": "Ruxsatnoma fayli"
     },
     "LPG_POWERED": {
       "phoneNumber": "Telefon raqami",
@@ -887,7 +895,8 @@
       "additionalInfoPath": "Qurilmani yaroqsiz holga kelganligini tasdiqlovchi hujjat",
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
-      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami"
+      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
+      "usageRightsPath": "Ruxsatnoma fayli"
     },
     "HOIST": {
       "phoneNumber": "Telefon raqami",
@@ -965,7 +974,8 @@
       "additionalInfoPath": "Qurilmani yaroqsiz holga kelganligini tasdiqlovchi hujjat",
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
-      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami"
+      "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
+      "usageRightsPath": "Ruxsatnoma fayli"
     },
     "IRS": {
       "phoneNumber": "Ariza beruvchining telefon raqami",
