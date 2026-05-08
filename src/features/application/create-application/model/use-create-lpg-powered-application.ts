@@ -34,6 +34,7 @@ export const useCreateLpgPoweredApplication = () => {
       capacity: '',
       pressure: '',
       fuel: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,

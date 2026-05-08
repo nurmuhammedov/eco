@@ -67,6 +67,11 @@ export const useRegisterIllegalChemicalContainer = (
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
         // Paths
+        usageRightsPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
         labelPath: z
           .string()
           .optional()
@@ -156,6 +161,7 @@ export const useRegisterIllegalChemicalContainer = (
       capacity: '',
       environment: '',
       pressure: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
@@ -235,6 +241,7 @@ export const useRegisterIllegalChemicalContainer = (
         environment: getValue(detail.parameters?.environment || ''),
         pressure: getValue(detail.parameters?.pressure || ''),
 
+        usageRightsPath: detail.files?.usageRightsPath?.path,
         labelPath: detail.files?.labelPath?.path,
         saleContractPath: detail.files?.saleContractPath?.path,
         equipmentCertPath: detail.files?.equipmentCertPath?.path,

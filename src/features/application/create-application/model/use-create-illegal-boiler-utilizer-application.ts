@@ -65,6 +65,11 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
         // Paths
+        usageRightsPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
         labelPath: z
           .string()
           .optional()
@@ -151,6 +156,7 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
       pressure: '',
       density: '',
       temperature: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
@@ -232,6 +238,7 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
         density: getValue(detail.parameters?.density || ''),
         temperature: getValue(detail.parameters?.temperature || ''),
 
+        usageRightsPath: detail.files?.usageRightsPath?.path,
         labelPath: detail.files?.labelPath?.path,
         saleContractPath: detail.files?.saleContractPath?.path,
         equipmentCertPath: detail.files?.equipmentCertPath?.path,

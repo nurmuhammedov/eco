@@ -34,6 +34,7 @@ export const useCreateContainerApplication = () => {
       capacity: '',
       environment: '',
       pressure: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,

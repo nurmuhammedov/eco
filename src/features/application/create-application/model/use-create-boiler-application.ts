@@ -35,6 +35,7 @@ export const useCreateBoilerApplication = () => {
       capacity: '',
       environment: '',
       pressure: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,

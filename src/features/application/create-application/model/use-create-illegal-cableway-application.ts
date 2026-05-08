@@ -60,6 +60,11 @@ export const useRegisterIllegalCableway = (externalSubmit?: (data: RegisterIlleg
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
         // Paths
+        usageRightsPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
         labelPath: z
           .string()
           .optional()
@@ -144,6 +149,7 @@ export const useRegisterIllegalCableway = (externalSubmit?: (data: RegisterIlleg
       speed: '',
       passengerCount: '',
       length: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
@@ -219,6 +225,7 @@ export const useRegisterIllegalCableway = (externalSubmit?: (data: RegisterIlleg
         partialCheckDate: parseDate(detail.partialCheckDate),
         fullCheckDate: parseDate(detail.fullCheckDate),
         nonDestructiveCheckDate: parseDate(detail.nonDestructiveCheckDate),
+        usageRightsPath: detail.files?.usageRightsPath?.path,
         labelPath: detail.files?.labelPath?.path,
         saleContractPath: detail.files?.saleContractPath?.path,
         equipmentCertPath: detail.files?.equipmentCertPath?.path,

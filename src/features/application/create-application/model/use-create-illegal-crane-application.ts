@@ -60,6 +60,11 @@ export const useRegisterIllegalCrane = (externalSubmit?: (data: RegisterIllegalC
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
         // Paths
+        usageRightsPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
         labelPath: z
           .string()
           .optional()
@@ -147,6 +152,7 @@ export const useRegisterIllegalCrane = (externalSubmit?: (data: RegisterIllegalC
       fullCheckDate: undefined,
       boomLength: '',
       liftingCapacity: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
@@ -225,6 +231,7 @@ export const useRegisterIllegalCrane = (externalSubmit?: (data: RegisterIllegalC
         partialCheckDate: parseDate(detail.partialCheckDate),
         fullCheckDate: parseDate(detail.fullCheckDate),
 
+        usageRightsPath: detail.files?.usageRightsPath?.path,
         labelPath: detail.files?.labelPath?.path,
         saleContractPath: detail.files?.saleContractPath?.path,
         equipmentCertPath: detail.files?.equipmentCertPath?.path,

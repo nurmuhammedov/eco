@@ -65,6 +65,11 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
         // Paths
+        usageRightsPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
         labelPath: z
           .string()
           .optional()
@@ -156,6 +161,7 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
       length: '',
       pressure: '',
       temperature: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
@@ -237,6 +243,7 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
         pressure: getValue(detail.parameters?.pressure || ''),
         temperature: getValue(detail.parameters?.temperature || ''),
 
+        usageRightsPath: detail.files?.usageRightsPath?.path,
         labelPath: detail.files?.labelPath?.path,
         saleContractPath: detail.files?.saleContractPath?.path,
         equipmentCertPath: detail.files?.equipmentCertPath?.path,

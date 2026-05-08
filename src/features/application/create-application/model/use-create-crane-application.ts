@@ -33,6 +33,7 @@ export const useCreateCraneApplication = () => {
       fullCheckDate: undefined,
       boomLength: '',
       liftingCapacity: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,

@@ -70,6 +70,11 @@ export const useRegisterIllegalPipeline = (externalSubmit?: (data: RegisterIlleg
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
         // Paths
+        usageRightsPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
         labelPath: z
           .string()
           .optional()
@@ -161,6 +166,7 @@ export const useRegisterIllegalPipeline = (externalSubmit?: (data: RegisterIlleg
       length: '',
       pressure: '',
       environment: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
@@ -243,6 +249,7 @@ export const useRegisterIllegalPipeline = (externalSubmit?: (data: RegisterIlleg
         pressure: getValue(detail.parameters?.pressure || ''),
         environment: getValue(detail.parameters?.environment || ''),
 
+        usageRightsPath: detail.files?.usageRightsPath?.path,
         labelPath: detail.files?.labelPath?.path,
         saleContractPath: detail.files?.saleContractPath?.path,
         equipmentCertPath: detail.files?.equipmentCertPath?.path,

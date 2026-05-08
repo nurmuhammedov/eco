@@ -37,6 +37,7 @@ export const useCreatePipelineApplication = () => {
       length: '',
       pressure: '',
       environment: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,

@@ -35,6 +35,7 @@ export const useCreateCablewayApplication = () => {
       speed: '',
       passengerCount: '',
       length: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       assignmentDecreePath: undefined,
       passportPath: undefined,

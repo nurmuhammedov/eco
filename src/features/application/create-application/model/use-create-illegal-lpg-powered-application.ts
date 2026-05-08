@@ -60,6 +60,11 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
         // Paths
+        usageRightsPath: z
+          .string()
+          .optional()
+          .nullable()
+          .transform((val) => (val ? val : null)),
         labelPath: z
           .string()
           .optional()
@@ -148,6 +153,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
       capacity: '',
       pressure: '',
       fuel: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
@@ -227,6 +233,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
         pressure: getValue(detail.parameters?.pressure || ''),
         fuel: getValue(detail.parameters?.fuel || ''),
 
+        usageRightsPath: detail.files?.usageRightsPath?.path,
         labelPath: detail.files?.labelPath?.path,
         saleContractPath: detail.files?.saleContractPath?.path,
         equipmentCertPath: detail.files?.equipmentCertPath?.path,

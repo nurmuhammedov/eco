@@ -37,6 +37,7 @@ export const useCreateHeatPipelineApplication = () => {
       length: '',
       pressure: '',
       temperature: '',
+      usageRightsPath: undefined,
       labelPath: undefined,
       saleContractPath: undefined,
       equipmentCertPath: undefined,
