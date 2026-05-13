@@ -489,7 +489,7 @@
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
       "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
-      "usageRightsPath": "Ruxsatnoma fayli"
+      "usageRightsPath": "Ruxsatnoma"
     },
     "CONTAINER": {
       "phoneNumber": "Telefon raqami",
@@ -532,7 +532,7 @@
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
       "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
-      "usageRightsPath": "Ruxsatnoma fayli"
+      "usageRightsPath": "Ruxsatnoma"
     },
     "OIL_CONTAINER": {
       "address": "Qurilma joylashgan manzil",
@@ -593,7 +593,7 @@
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
       "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
-      "usageRightsPath": "Ruxsatnoma fayli"
+      "usageRightsPath": "Ruxsatnoma"
     },
     "ESCALATOR": {
       "phoneNumber": "Telefon raqami",
@@ -679,7 +679,7 @@
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
       "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
-      "usageRightsPath": "Ruxsatnoma fayli"
+      "usageRightsPath": "Ruxsatnoma"
     },
     "CHEMICAL_CONTAINER": {
       "phoneNumber": "Telefon raqami",
@@ -722,7 +722,7 @@
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
       "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
-      "usageRightsPath": "Ruxsatnoma fayli"
+      "usageRightsPath": "Ruxsatnoma"
     },
     "HEAT_PIPELINE": {
       "phoneNumber": "Telefon raqami",
@@ -767,7 +767,7 @@
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
       "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
-      "usageRightsPath": "Ruxsatnoma fayli"
+      "usageRightsPath": "Ruxsatnoma"
     },
     "BOILER_UTILIZER": {
       "phoneNumber": "Telefon raqami",
@@ -812,7 +812,7 @@
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
       "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
-      "usageRightsPath": "Ruxsatnoma fayli"
+      "usageRightsPath": "Ruxsatnoma"
     },
     "LPG_CONTAINER": {
       "phoneNumber": "Telefon raqami",
@@ -855,7 +855,7 @@
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
       "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
-      "usageRightsPath": "Ruxsatnoma fayli"
+      "usageRightsPath": "Ruxsatnoma"
     },
     "LPG_POWERED": {
       "phoneNumber": "Telefon raqami",
@@ -896,7 +896,7 @@
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
       "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
-      "usageRightsPath": "Ruxsatnoma fayli"
+      "usageRightsPath": "Ruxsatnoma"
     },
     "HOIST": {
       "phoneNumber": "Telefon raqami",
@@ -975,7 +975,7 @@
       "identity": "STIR yoki JSHSHIR",
       "birthDate": "Tug‘ilgan sana (JSHSHIR bo‘lsa)",
       "oldRegistryNumber": "Qurilmaning eski roʻyxatga olish raqami",
-      "usageRightsPath": "Ruxsatnoma fayli"
+      "usageRightsPath": "Ruxsatnoma"
     },
     "IRS": {
       "phoneNumber": "Ariza beruvchining telefon raqami",
