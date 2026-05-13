@@ -708,7 +708,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        disabled={!isUpdate}
+                        disabled={true}
                         placeholder="Sanani tanlang"
                       />
                     </div>
@@ -750,7 +750,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        disabled={!isUpdate}
+                        disabled={true}
                         placeholder="Sanani tanlang"
                       />
                     </div>
