@@ -422,7 +422,12 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate}>Mehnat vazirligi ekspertiza xulosasi</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file1ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -436,13 +441,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file1Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Sanani tanlang"
+                        disabled={!form.watch('file1Path')}
                       />
                     </div>
                     <FormMessage />
@@ -461,7 +467,12 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate}>Sanitariya-epidemiologik xulosa</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file2ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -475,13 +486,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file2Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Sanani tanlang"
+                        disabled={!form.watch('file2Path')}
                       />
                     </div>
                     <FormMessage />
@@ -500,7 +512,12 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate}>SES xulosa obyekt toifasi qismi</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file3ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -514,13 +531,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file3Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Sanani tanlang"
+                        disabled={!form.watch('file3Path')}
                       />
                     </div>
                     <FormMessage />
@@ -556,7 +574,12 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate}>Radiatsiyaviy xavfsizlik sertifikati</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file5ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -570,13 +593,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file5Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Sanani tanlang"
+                        disabled={!form.watch('file5Path')}
                       />
                     </div>
                     <FormMessage />
@@ -595,7 +619,12 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate}>Tibbiy ko‘rik xulosasi</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file6ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -609,13 +638,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file6Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Sanani tanlang"
+                        disabled={!form.watch('file6Path')}
                       />
                     </div>
                     <FormMessage />
@@ -634,7 +664,12 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate}>Dozimetr protokoli</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file7ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -648,13 +683,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file7Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Sanani tanlang"
+                        disabled={!form.watch('file7Path')}
                       />
                     </div>
                     <FormMessage />
@@ -673,7 +709,12 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate}>Davriy qiyoslov sertifikati</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file8ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -687,13 +728,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file8Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Sanani tanlang"
+                        disabled={!form.watch('file8Path')}
                       />
                     </div>
                     <FormMessage />
@@ -712,7 +754,12 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate}>Dalolatnoma</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file9ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -726,13 +773,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file9Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Sanani tanlang"
+                        disabled={!form.watch('file9Path')}
                       />
                     </div>
                     <FormMessage />
@@ -768,7 +816,12 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate}>Yo‘riqnomalar</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file11ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -782,13 +835,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file11Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Sanani tanlang"
+                        disabled={!form.watch('file11Path')}
                       />
                     </div>
                     <FormMessage />
@@ -824,7 +878,12 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate}>Dalolatnoma-ko‘rsatma va uning bajarilish maʼlumotlari</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file13ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -838,13 +897,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file13Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Sanani tanlang"
+                        disabled={!form.watch('file13Path')}
                       />
                     </div>
                     <FormMessage />

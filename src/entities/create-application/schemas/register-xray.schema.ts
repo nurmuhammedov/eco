@@ -1,10 +1,11 @@
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 // src/entities/create-application/schemas/register-irs.schema.ts
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
 
-export const XrayAppealDtoSchema = z.object({
+const __XrayAppealDtoSchema = z.object({
   phoneNumber: z
     .string({ required_error: 'Majburiy maydon!' })
     .trim()
@@ -50,3 +51,15 @@ export const XrayAppealDtoSchema = z.object({
   districtId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
 })
+
+export const XrayAppealDtoSchema = __XrayAppealDtoSchema
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file1Path', 'file1ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file2Path', 'file2ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file3Path', 'file3ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file6Path', 'file6ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file7Path', 'file7ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file8Path', 'file8ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file9Path', 'file9ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file11Path', 'file11ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file13Path', 'file13ExpiryDate'))

@@ -1,3 +1,4 @@
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
@@ -71,6 +72,10 @@ export const cablewayRefinement = (data: any, ctx: z.RefinementCtx) => {
   }
 }
 
-export const RegisterIllegalCablewaySchema = RegisterIllegalCablewayBaseSchema.superRefine(cablewayRefinement)
+const __RegisterIllegalCablewaySchema = RegisterIllegalCablewayBaseSchema.superRefine(cablewayRefinement)
 
 export type RegisterIllegalCablewayDTO = z.infer<typeof RegisterIllegalCablewaySchema>
+
+export const RegisterIllegalCablewaySchema = __RegisterIllegalCablewaySchema.superRefine((data: any, ctx: any) =>
+  checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
+)

@@ -635,7 +635,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                       maʼlumotlar
                     </FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() =>
+                          form.setValue('seasonalInspectionExpiryDate', undefined as any, { shouldValidate: true })
+                        }
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -649,13 +656,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('seasonalInspectionPath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('seasonalInspectionPath')}
                       />
                     </div>
                     <FormMessage />
@@ -676,7 +684,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                       Bog‘ attraksionining mavsumga tayyorligi to‘g‘risidagi dalolatnomasi
                     </FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() =>
+                          form.setValue('seasonalReadinessActExpiryDate', undefined as any, { shouldValidate: true })
+                        }
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -690,13 +705,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('seasonalReadinessActPath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('seasonalReadinessActPath')}
                       />
                     </div>
                   </FormItem>
@@ -737,7 +753,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                       maʼlumot
                     </FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() =>
+                          form.setValue('employeeSafetyKnowledgeExpiryDate', undefined as any, { shouldValidate: true })
+                        }
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -751,13 +774,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('employeeSafetyKnowledgePath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('employeeSafetyKnowledgePath')}
                       />
                     </div>
                   </FormItem>
@@ -777,7 +801,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                       Ruxsatnoma
                     </FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() =>
+                          form.setValue('usageRightsExpiryDate', undefined as any, { shouldValidate: true })
+                        }
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -791,13 +822,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('usageRightsPath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('usageRightsPath')}
                       />
                     </div>
                   </FormItem>

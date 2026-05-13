@@ -1,3 +1,4 @@
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
@@ -81,6 +82,10 @@ export const boilerRefinement = (data: any, ctx: z.RefinementCtx) => {
   }
 }
 
-export const RegisterIllegalBoilerSchema = RegisterIllegalBoilerBaseSchema.superRefine(boilerRefinement)
+const __RegisterIllegalBoilerSchema = RegisterIllegalBoilerBaseSchema.superRefine(boilerRefinement)
 
 export type RegisterIllegalBoilerDTO = z.infer<typeof RegisterIllegalBoilerSchema>
+
+export const RegisterIllegalBoilerSchema = __RegisterIllegalBoilerSchema.superRefine((data: any, ctx: any) =>
+  checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
+)

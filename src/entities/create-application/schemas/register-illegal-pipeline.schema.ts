@@ -1,3 +1,4 @@
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
@@ -90,6 +91,10 @@ export const pipelineRefinement = (data: any, ctx: z.RefinementCtx) => {
   }
 }
 
-export const RegisterIllegalPipelineSchema = RegisterIllegalPipelineBaseSchema.superRefine(pipelineRefinement)
+const __RegisterIllegalPipelineSchema = RegisterIllegalPipelineBaseSchema.superRefine(pipelineRefinement)
 
 export type RegisterIllegalPipelineDTO = z.infer<typeof RegisterIllegalPipelineSchema>
+
+export const RegisterIllegalPipelineSchema = __RegisterIllegalPipelineSchema
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'equipmentCertPath', 'equipmentCertExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate'))

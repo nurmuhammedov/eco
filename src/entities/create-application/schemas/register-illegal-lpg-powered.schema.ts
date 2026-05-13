@@ -1,3 +1,4 @@
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
@@ -80,6 +81,10 @@ export const lpgPoweredRefinement = (data: any, ctx: z.RefinementCtx) => {
   }
 }
 
-export const RegisterIllegalLpgPoweredSchema = RegisterIllegalLpgPoweredBaseSchema.superRefine(lpgPoweredRefinement)
+const __RegisterIllegalLpgPoweredSchema = RegisterIllegalLpgPoweredBaseSchema.superRefine(lpgPoweredRefinement)
 
 export type RegisterIllegalLpgPoweredDTO = z.infer<typeof RegisterIllegalLpgPoweredSchema>
+
+export const RegisterIllegalLpgPoweredSchema = __RegisterIllegalLpgPoweredSchema
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'equipmentCertPath', 'equipmentCertExpiryDate'))

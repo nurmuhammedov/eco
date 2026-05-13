@@ -1,9 +1,10 @@
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
 
-export const AttractionAppealDtoSchema = z.object({
+const __AttractionAppealDtoSchema = z.object({
   phoneNumber: z
     .string({ required_error: 'Majburiy maydon!' })
     .trim()
@@ -67,3 +68,15 @@ export const AttractionAppealDtoSchema = z.object({
     .transform((val) => (val ? val : null)),
   filesBuilt: z.boolean().default(false).optional(),
 })
+
+export const AttractionAppealDtoSchema = __AttractionAppealDtoSchema
+  .superRefine((data: any, ctx: any) =>
+    checkExpiryDate(data, ctx, 'seasonalInspectionPath', 'seasonalInspectionExpiryDate')
+  )
+  .superRefine((data: any, ctx: any) =>
+    checkExpiryDate(data, ctx, 'seasonalReadinessActPath', 'seasonalReadinessActExpiryDate')
+  )
+  .superRefine((data: any, ctx: any) =>
+    checkExpiryDate(data, ctx, 'employeeSafetyKnowledgePath', 'employeeSafetyKnowledgeExpiryDate')
+  )
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'usageRightsPath', 'usageRightsExpiryDate'))

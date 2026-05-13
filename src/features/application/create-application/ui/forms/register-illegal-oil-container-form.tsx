@@ -481,7 +481,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ekspertiza xulosasi</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() =>
+                          form.setValue('expertiseExpiryDate', undefined as any, { shouldValidate: true })
+                        }
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -495,13 +502,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel>Amal qilish sanasi</FormLabel>
+                      <FormLabel required={!!form.watch('expertisePath')}>Amal qilish sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
                         placeholder="Amal qilish sanasi"
+                        disabled={!form.watch('expertisePath')}
                       />
                     </div>
                   </FormItem>

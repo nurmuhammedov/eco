@@ -1,9 +1,10 @@
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
 
-export const EscalatorAppealDtoSchema = z.object({
+const __EscalatorAppealDtoSchema = z.object({
   phoneNumber: z
     .string({ required_error: 'Majburiy maydon!' })
     .trim()
@@ -51,3 +52,7 @@ export const EscalatorAppealDtoSchema = z.object({
   fullCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   nextFullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 })
+
+export const EscalatorAppealDtoSchema = __EscalatorAppealDtoSchema.superRefine((data: any, ctx: any) =>
+  checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
+)

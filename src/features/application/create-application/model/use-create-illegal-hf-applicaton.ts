@@ -15,11 +15,13 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import {
   RegisterIllegalHfDTO,
   RegisterIllegalHfSchema,
+  RegisterIllegalHfBaseSchema,
 } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
-import z from 'zod'
+import { z } from 'zod'
 
 export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
   const { type, id } = useParams<{ type: string; id: string }>()
@@ -30,11 +32,10 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
   const queryClient = useQueryClient()
 
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
-
   const form = useForm<RegisterIllegalHfDTO>({
     resolver: zodResolver(
       isUpdate
-        ? RegisterIllegalHfSchema.extend({
+        ? RegisterIllegalHfBaseSchema.extend({
             phoneNumber: z
               .string()
               .optional()
@@ -63,6 +64,18 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
               .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
               .min(1, 'Majburiy maydon!'),
           })
+            .superRefine((data: any, ctx: any) =>
+              checkExpiryDate(data, ctx, 'insurancePolicyPath', 'insurancePolicyExpiryDate')
+            )
+            .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'licensePath', 'licenseExpiryDate'))
+            .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'permitPath', 'permitExpiryDate'))
+            .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'regulationPath', 'regulationExpiryDate'))
+            .superRefine((data: any, ctx: any) =>
+              checkExpiryDate(data, ctx, 'staffAttestationPath', 'staffAttestationExpiryDate')
+            )
+            .superRefine((data: any, ctx: any) =>
+              checkExpiryDate(data, ctx, 'managerAttestationPath', 'managerAttestationExpiryDate')
+            )
         : RegisterIllegalHfSchema
     ),
     defaultValues: {

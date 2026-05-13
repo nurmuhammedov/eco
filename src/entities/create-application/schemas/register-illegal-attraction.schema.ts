@@ -1,3 +1,4 @@
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
@@ -87,6 +88,18 @@ export const attractionRefinement = (data: any, ctx: z.RefinementCtx) => {
   }
 }
 
-export const RegisterIllegalAttractionSchema = RegisterIllegalAttractionBaseSchema.superRefine(attractionRefinement)
+const __RegisterIllegalAttractionSchema = RegisterIllegalAttractionBaseSchema.superRefine(attractionRefinement)
 
 export type RegisterIllegalAttractionDTO = z.infer<typeof RegisterIllegalAttractionSchema>
+
+export const RegisterIllegalAttractionSchema = __RegisterIllegalAttractionSchema
+  .superRefine((data: any, ctx: any) =>
+    checkExpiryDate(data, ctx, 'seasonalInspectionPath', 'seasonalInspectionExpiryDate')
+  )
+  .superRefine((data: any, ctx: any) =>
+    checkExpiryDate(data, ctx, 'seasonalReadinessActPath', 'seasonalReadinessActExpiryDate')
+  )
+  .superRefine((data: any, ctx: any) =>
+    checkExpiryDate(data, ctx, 'employeeSafetyKnowledgePath', 'employeeSafetyKnowledgeExpiryDate')
+  )
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'usageRightsPath', 'usageRightsExpiryDate'))

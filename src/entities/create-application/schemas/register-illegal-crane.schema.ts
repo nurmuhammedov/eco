@@ -1,3 +1,4 @@
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
@@ -84,6 +85,10 @@ export const craneRefinement = (data: any, ctx: z.RefinementCtx) => {
   }
 }
 
-export const RegisterIllegalCraneSchema = RegisterIllegalCraneBaseSchema.superRefine(craneRefinement)
+const __RegisterIllegalCraneSchema = RegisterIllegalCraneBaseSchema.superRefine(craneRefinement)
 
 export type RegisterIllegalCraneDTO = z.infer<typeof RegisterIllegalCraneSchema>
+
+export const RegisterIllegalCraneSchema = __RegisterIllegalCraneSchema.superRefine((data: any, ctx: any) =>
+  checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
+)

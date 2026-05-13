@@ -13,9 +13,11 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import {
   CreateIllegalOilContainerApplicationDTO,
   IllegalOilContainerAppealDtoSchema,
+  IllegalOilContainerAppealDtoBaseSchema,
 } from '@/entities/create-application'
 
 export const useRegisterIllegalOilContainer = (
@@ -32,7 +34,7 @@ export const useRegisterIllegalOilContainer = (
   const [isManualSearchLoading, setIsManualSearchLoading] = useState(false)
 
   const formSchema = isUpdate
-    ? IllegalOilContainerAppealDtoSchema.extend({
+    ? IllegalOilContainerAppealDtoBaseSchema.extend({
         // Dates
         nonDestructiveCheckDate: z
           .date()
@@ -105,7 +107,7 @@ export const useRegisterIllegalOilContainer = (
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      })
+      }).superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate'))
     : IllegalOilContainerAppealDtoSchema
 
   const form = useForm<CreateIllegalOilContainerApplicationDTO>({

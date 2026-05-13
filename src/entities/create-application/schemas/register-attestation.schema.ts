@@ -51,7 +51,7 @@ export const AttestationAppealFormSchema = z.object({
   }),
 })
 
-export const AttestationAppealDtoSchema = AttestationAppealFormSchema.transform((data) => {
+const __AttestationAppealDtoSchema = AttestationAppealFormSchema.transform((data) => {
   return {
     ...data,
     dateOfAttestation:
@@ -62,3 +62,5 @@ export const AttestationAppealDtoSchema = AttestationAppealFormSchema.transform(
 })
 
 export type CreateAttestationDTO = z.infer<typeof AttestationAppealDtoSchema>
+
+export const AttestationAppealDtoSchema = __AttestationAppealDtoSchema

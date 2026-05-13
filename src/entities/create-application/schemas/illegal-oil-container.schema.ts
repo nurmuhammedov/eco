@@ -1,7 +1,8 @@
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { z } from 'zod'
 import { format } from 'date-fns'
 
-export const IllegalOilContainerAppealDtoSchema = z.object({
+export const IllegalOilContainerAppealDtoBaseSchema = z.object({
   phoneNumber: z.string().min(1, { message: 'Majburiy maydon!' }),
   hazardousFacilityId: z
     .string()
@@ -58,3 +59,7 @@ export const IllegalOilContainerAppealDtoSchema = z.object({
     .transform((v) => (v ? format(new Date(v), 'yyyy-MM-dd') : undefined)),
   servicePeriod: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
 })
+
+export const IllegalOilContainerAppealDtoSchema = IllegalOilContainerAppealDtoBaseSchema.superRefine(
+  (data: any, ctx: any) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
+)

@@ -1,9 +1,10 @@
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { z } from 'zod'
 import { HFSphereEnum } from '@/entities/create-application'
 
-export const RegisterIllegalHfSchema = z.object({
+export const RegisterIllegalHfBaseSchema = z.object({
   identity: z
     .string({ required_error: 'Majburiy maydon!' })
     .length(9, 'STIR 9 ta raqamdan iborat bo‘lishi kerak')
@@ -125,3 +126,16 @@ export const RegisterIllegalHfSchema = z.object({
 })
 
 export type RegisterIllegalHfDTO = z.infer<typeof RegisterIllegalHfSchema>
+
+export const RegisterIllegalHfSchema = RegisterIllegalHfBaseSchema.superRefine((data: any, ctx: any) =>
+  checkExpiryDate(data, ctx, 'insurancePolicyPath', 'insurancePolicyExpiryDate')
+)
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'licensePath', 'licenseExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'permitPath', 'permitExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'regulationPath', 'regulationExpiryDate'))
+  .superRefine((data: any, ctx: any) =>
+    checkExpiryDate(data, ctx, 'staffAttestationPath', 'staffAttestationExpiryDate')
+  )
+  .superRefine((data: any, ctx: any) =>
+    checkExpiryDate(data, ctx, 'managerAttestationPath', 'managerAttestationExpiryDate')
+  )

@@ -659,7 +659,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
                       Ekspertiza xulosasi (ishlash muddatini o‘tagan bo‘lsa majburiy)
                     </FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() =>
+                          form.setValue('expertiseExpiryDate', undefined as any, { shouldValidate: true })
+                        }
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -673,13 +680,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel>Amal qilish sanasi</FormLabel>
+                      <FormLabel required={!!form.watch('expertisePath')}>Amal qilish sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
                         placeholder="Amal qilish sanasi"
+                        disabled={!form.watch('expertisePath')}
                       />
                     </div>
                   </FormItem>

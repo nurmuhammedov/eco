@@ -310,7 +310,14 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Sug‘urta polisi</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() =>
+                          form.setValue('insurancePolicyExpiryDate', undefined as any, { shouldValidate: true })
+                        }
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -324,13 +331,14 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('insurancePolicyPath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('insurancePolicyPath')}
                       />
                     </div>
                   </FormItem>
@@ -382,7 +390,12 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Litsenziya</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('licenseExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -396,13 +409,14 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('licensePath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('licensePath')}
                       />
                     </div>
                   </FormItem>
@@ -456,7 +470,12 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('permitExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -470,13 +489,14 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('permitPath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('permitPath')}
                       />
                     </div>
                   </FormItem>

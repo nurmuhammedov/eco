@@ -30,6 +30,7 @@ export interface InputFileProps<T extends FieldValues> {
   onUploadComplete?: (urls: string) => void
   onUploadError?: (error: Error) => void
   onUploadProgress?: (progress: number) => void
+  onRemove?: () => void
 }
 
 interface FileRowProps {
@@ -133,6 +134,7 @@ function InputFileComponent<T extends FieldValues>({
   onUploadComplete,
   onUploadError,
   onUploadProgress,
+  onRemove,
 }: InputFileProps<T>) {
   const {
     setValue,
@@ -314,8 +316,9 @@ function InputFileComponent<T extends FieldValues>({
       } else {
         setValue(name, '' as unknown as PathValue<T, Path<T>>, { shouldValidate: true })
       }
+      onRemove?.()
     },
-    [setValue, name, fileList, multiple, watch]
+    [setValue, name, fileList, multiple, watch, onRemove]
   )
 
   const handleOpenFile = useCallback((fileData: FileData) => {

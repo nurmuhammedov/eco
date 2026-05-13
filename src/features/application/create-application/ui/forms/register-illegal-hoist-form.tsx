@@ -564,7 +564,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
                       Ekspertiza loyihasi fayli
                     </FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() =>
+                          form.setValue('expertiseExpiryDate', undefined as any, { shouldValidate: true })
+                        }
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -578,13 +585,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!isUpdate}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('expertisePath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('expertisePath')}
                       />
                     </div>
                     <FormMessage />

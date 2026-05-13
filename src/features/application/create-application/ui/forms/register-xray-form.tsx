@@ -264,7 +264,12 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Mehnat vazirligi tomonidan berilgan ekspertiza xulosasi</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file1ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -279,13 +284,14 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file1Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file1Path')}
                       />
                     </div>
                     <FormMessage />
@@ -303,7 +309,12 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Sanitariya-epidemiologik xulosa barcha betlari</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file2ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -318,13 +329,14 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file2Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file2Path')}
                       />
                     </div>
                     <FormMessage />
@@ -342,7 +354,12 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Sanitariya-epidemiologik xulosa obyekt toifasi ko‘rsatilgan qismi</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file3ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -357,13 +374,14 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file3Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file3Path')}
                       />
                     </div>
                     <FormMessage />
@@ -397,7 +415,12 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganligi to‘g‘risida sertifikat</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file5ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -412,13 +435,14 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file5Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file5Path')}
                       />
                     </div>
                     <FormMessage />
@@ -436,7 +460,12 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Tibbiy ko‘rik xulosasi</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file6ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -451,13 +480,14 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file6Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file6Path')}
                       />
                     </div>
                     <FormMessage />
@@ -475,7 +505,12 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Dozimetr protokoli (bayonnomasi)</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file7ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -490,13 +525,14 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file7Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file7Path')}
                       />
                     </div>
                     <FormMessage />
@@ -514,7 +550,12 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Davriy qiyoslov sertifikati</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file8ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -529,13 +570,14 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file8Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file8Path')}
                       />
                     </div>
                     <FormMessage />
@@ -553,7 +595,12 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Dalolatnoma</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file9ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -568,13 +615,14 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file9Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file9Path')}
                       />
                     </div>
                     <FormMessage />
@@ -608,7 +656,12 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Yo‘riqnomalar</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file11ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -623,13 +676,14 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file11Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file11Path')}
                       />
                     </div>
                     <FormMessage />
@@ -663,7 +717,12 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel required>Dalolatnoma-ko‘rsatma va uning bajarilish maʼlumotlari</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file13ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
@@ -678,13 +737,14 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file13Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file13Path')}
                       />
                     </div>
                     <FormMessage />
