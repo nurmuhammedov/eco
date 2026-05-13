@@ -185,6 +185,13 @@ const REPORTS_GROUPS: ReportGroup[] = [
         icon: FileSearch,
         url: '/reports/inspection-stats',
       },
+      {
+        id: 'insp-execution',
+        title: 'Tekshiruvlarning chora tadbirlari bo‘yicha hisobot',
+        icon: ClipboardCheck,
+        url: '/reports/inspection-execution',
+        badge: 'Yangi',
+      },
       { id: 'insp-types', title: 'Rejali va rejadan tashqari', icon: FileSearch, url: '#', badge: 'Jarayonda' },
       { id: 'insp-rejected', title: '1 kunlik va 10 kunlik tekshiruvlar', icon: Clock, url: '#', badge: 'Jarayonda' },
     ],

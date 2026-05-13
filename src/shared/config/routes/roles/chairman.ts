@@ -41,6 +41,7 @@ const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
 const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
+const InspectionExecutionReport = lazy(() => import('@/features/reports/ui/inspection-execution-report'))
 const RiskComparisonReport = lazy(() => import('@/features/reports/ui/risk-comparison-report'))
 const RiskDateComparisonReport = lazy(() => import('@/features/reports/ui/risk-date-comparison-report'))
 const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
@@ -325,6 +326,11 @@ export const chairmanRoutes = [
     id: 'REPORT',
     path: 'reports/inspection-stats',
     element: withSuspense(InspectionStatsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/inspection-execution',
+    element: withSuspense(InspectionExecutionReport),
   },
   {
     id: 'REPORT',

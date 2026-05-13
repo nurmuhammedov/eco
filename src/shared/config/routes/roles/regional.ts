@@ -40,6 +40,7 @@ const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
 const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
+const InspectionExecutionReport = lazy(() => import('@/features/reports/ui/inspection-execution-report'))
 const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
 const AppealExecutionReport = lazy(() => import('@/features/reports/ui/appeal-execution'))
 const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
@@ -307,6 +308,11 @@ export const regionalRoutes = [
     id: 'REPORT',
     path: 'reports/inspection-stats',
     element: withSuspense(InspectionStatsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/inspection-execution',
+    element: withSuspense(InspectionExecutionReport),
   },
   {
     id: 'REPORT',
