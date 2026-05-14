@@ -3,7 +3,6 @@ import adminNavigation from './admin'
 import allNavigation from './all'
 import legalNavigation from './legal'
 import chairmanNavigation from './chairman'
-import procuratorNavigation from './procurator'
 
 export const NAVIGATIONS = {
   [UserRoles.ADMIN]: adminNavigation,
@@ -14,5 +13,5 @@ export const NAVIGATIONS = {
   [UserRoles.INSPECTOR]: allNavigation,
   [UserRoles.MANAGER]: allNavigation,
   [UserRoles.REGIONAL]: allNavigation,
-  [UserRoles.PROCURATOR]: procuratorNavigation,
+  [UserRoles.PROCURATOR]: allNavigation,
 }

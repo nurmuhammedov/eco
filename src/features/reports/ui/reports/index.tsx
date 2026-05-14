@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from 'react'
+import React, { Fragment, useMemo, useState } from 'react'
 import {
   AlertTriangle,
   BarChart,
@@ -24,6 +24,7 @@ import { Card } from '@/shared/components/ui/card'
 import { Link } from 'react-router-dom'
 import { useCurrentRole } from '@/shared/hooks/use-current-role'
 import { UserRoles } from '@/entities/user'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 
 interface ReportItem {
   id: string
@@ -31,6 +32,7 @@ interface ReportItem {
   icon?: React.ElementType
   url: string
   badge?: string
+  reportType?: 'MONTHLY' | 'OTHERS'
 }
 
 interface ReportGroup {
@@ -49,24 +51,28 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Arizalarning hududlar kesimida taqsimlanishi',
         icon: Map,
         url: '/reports/applications-regions',
+        reportType: 'MONTHLY',
       },
       {
         id: 'rep-2',
         title: 'Arizalar turlari bo‘yicha taqsimlanishi',
         icon: PieChart,
         url: '/reports/applications-types',
+        reportType: 'MONTHLY',
       },
       {
         id: 'rep-appeal-execution',
         title: 'Arizalarning ijro muddati bo‘yicha umumiy hisobot',
         icon: Clock,
         url: '/reports/appeal-execution',
+        reportType: 'MONTHLY',
       },
       {
         id: 'rep-appeal-status-duration',
         title: 'Arizalar holati va muddati bo‘yicha hisobot',
         icon: Clock,
         url: '/reports/appeal-status-duration',
+        reportType: 'MONTHLY',
       },
     ],
   },
@@ -79,42 +85,42 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Davlat ro‘yxatiga olingan/chiqarilgan obyektlar',
         icon: Box,
         url: '/reports/registers-objects',
+        reportType: 'MONTHLY',
       },
       {
         id: 'rep-4',
         title: 'Davlat ro‘yxatidagi yangi qo‘shilgan va amaldagi obyektlar',
         icon: PlusSquare,
         url: '/reports/registers-new-objects',
+        reportType: 'MONTHLY',
       },
       {
         id: 'rep-5',
         title: 'Qurilmalarning muddatlari bo‘yicha hisobot',
         icon: CalendarClock,
         url: '/reports/registers-equipment-terms',
+        reportType: 'OTHERS',
       },
       {
         id: 'rep-8',
         title: 'Reyestr maʼlumotlarini o‘zgartirish so‘rovlari bo‘yicha hisobot',
         icon: Zap,
         url: '/reports/changes',
+        reportType: 'MONTHLY',
       },
       {
         id: 'rep-9',
         title: 'Inspektorlar tomonidan reyestrdan chiqarish so‘rovlari bo‘yicha hisobot',
         icon: ClipboardCheck,
         url: '/reports/registers-deregister',
+        reportType: 'MONTHLY',
       },
-      // {
-      //   id: 'rep-11',
-      //   title: 'Hududiy boshqarma tomonidan reyestrga kiritish bo‘yicha hisobot',
-      //   icon: ClipboardCheck,
-      //   url: '/reports/registers-register',
-      // },
       {
         id: 'rep-hf-employee-stats',
         title: 'XICHOlarda ishchi xodimlari bo‘yicha statistika',
         icon: Users,
         url: '/reports/hf-employee-stats',
+        reportType: 'OTHERS',
       },
     ],
   },
@@ -126,19 +132,17 @@ const REPORTS_GROUPS: ReportGroup[] = [
         id: 'rep-6',
         title: 'Baxtsiz hodisalar bo‘yicha umumiy hisobot',
         icon: Siren,
-        // url: '/reports/accidents',
-        // badge: 'Yangi',
         url: '#',
         badge: 'Jarayonda',
+        reportType: 'OTHERS',
       },
       {
         id: 'rep-7',
         title: 'Avariyalar bo‘yicha umumiy hisobot',
         icon: Flame,
-        // url: '/reports/incidents',
-        // badge: 'Yangi',
         url: '#',
         badge: 'Jarayonda',
+        reportType: 'OTHERS',
       },
     ],
   },
@@ -151,8 +155,16 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Profilaktika ishlari statistikasi',
         icon: ShieldCheck,
         url: '/reports/prevention-stats',
+        reportType: 'MONTHLY',
       },
-      { id: 'prev-inspector-load', title: 'Profilaktika hududlar kesimida', icon: Map, url: '#', badge: 'Jarayonda' },
+      {
+        id: 'prev-inspector-load',
+        title: 'Profilaktika hududlar kesimida',
+        icon: Map,
+        url: '#',
+        badge: 'Jarayonda',
+        reportType: 'OTHERS',
+      },
     ],
   },
   {
@@ -164,6 +176,7 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Xavf tahlili natijasi bo‘yicha muddatlar o‘rtasida solishtirish hisoboti',
         icon: LineChart,
         url: '/reports/risk-date-comparison',
+        reportType: 'MONTHLY',
       },
       {
         id: 'risk-objects',
@@ -171,8 +184,16 @@ const REPORTS_GROUPS: ReportGroup[] = [
         icon: AlertTriangle,
         url: '#',
         badge: 'Jarayonda',
+        reportType: 'OTHERS',
       },
-      { id: 'risk-trends', title: 'Xavf ko‘rsatkichlari dinamikasi', icon: Target, url: '#', badge: 'Jarayonda' },
+      {
+        id: 'risk-trends',
+        title: 'Xavf ko‘rsatkichlari dinamikasi',
+        icon: Target,
+        url: '#',
+        badge: 'Jarayonda',
+        reportType: 'OTHERS',
+      },
     ],
   },
   {
@@ -184,6 +205,7 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Tekshiruv holati bo‘yicha',
         icon: FileSearch,
         url: '/reports/inspection-stats',
+        reportType: 'MONTHLY',
       },
       {
         id: 'insp-execution',
@@ -191,18 +213,54 @@ const REPORTS_GROUPS: ReportGroup[] = [
         icon: ClipboardCheck,
         url: '/reports/inspection-execution',
         badge: 'Yangi',
+        reportType: 'MONTHLY',
       },
-      { id: 'insp-types', title: 'Rejali va rejadan tashqari', icon: FileSearch, url: '#', badge: 'Jarayonda' },
-      { id: 'insp-rejected', title: '1 kunlik va 10 kunlik tekshiruvlar', icon: Clock, url: '#', badge: 'Jarayonda' },
+      {
+        id: 'insp-types',
+        title: 'Rejali va rejadan tashqari',
+        icon: FileSearch,
+        url: '#',
+        badge: 'Jarayonda',
+        reportType: 'OTHERS',
+      },
+      {
+        id: 'insp-rejected',
+        title: '1 kunlik va 10 kunlik tekshiruvlar',
+        icon: Clock,
+        url: '#',
+        badge: 'Jarayonda',
+        reportType: 'OTHERS',
+      },
     ],
   },
   {
     id: 'inquiries',
     title: 'Murojaatlar',
     items: [
-      { id: 'inq-content', title: 'Murojaatlar dinamikasi', icon: TrendingUp, url: '#', badge: 'Jarayonda' },
-      { id: 'inq-execution', title: 'Murojaatlar oylar kesimida', icon: BarChart, url: '#', badge: 'Jarayonda' },
-      { id: 'inq-regional', title: 'Hududiy murojaatlar', icon: Map, url: '#', badge: 'Jarayonda' },
+      {
+        id: 'inq-content',
+        title: 'Murojaatlar dinamikasi',
+        icon: TrendingUp,
+        url: '#',
+        badge: 'Jarayonda',
+        reportType: 'OTHERS',
+      },
+      {
+        id: 'inq-execution',
+        title: 'Murojaatlar oylar kesimida',
+        icon: BarChart,
+        url: '#',
+        badge: 'Jarayonda',
+        reportType: 'MONTHLY',
+      },
+      {
+        id: 'inq-regional',
+        title: 'Hududiy murojaatlar',
+        icon: Map,
+        url: '#',
+        badge: 'Jarayonda',
+        reportType: 'OTHERS',
+      },
     ],
   },
   {
@@ -215,18 +273,21 @@ const REPORTS_GROUPS: ReportGroup[] = [
         icon: Users,
         url: '/reports/top-100-organizations',
         badge: 'Yangi',
+        reportType: 'OTHERS',
       },
       {
         id: 'emp-turniket',
         title: 'Xodimlarning ishga vaqtida kelishi bo‘yicha hisobot',
         icon: Users,
         url: '/reports/turniket-logs',
+        reportType: 'MONTHLY',
       },
       {
         id: 'emp-device-login',
         title: 'Xodimlar qaysi qurilmadan kirayotgani bo‘yicha hisobot',
         icon: FileText,
         url: '/reports/employee-device-login',
+        reportType: 'OTHERS',
       },
       {
         id: 'emp-activity-dashboard',
@@ -234,22 +295,34 @@ const REPORTS_GROUPS: ReportGroup[] = [
         icon: BarChart,
         url: '/reports/employees-dashboard',
         badge: 'Jarayonda',
+        reportType: 'OTHERS',
       },
     ],
   },
 ]
 
-// export const currentYear = new Date().getFullYear()
-
 export const ReportsGrid: React.FC = () => {
   const role = useCurrentRole()
+  const [filterType, setFilterType] = useState<string>('ALL')
 
   const filteredGroups = useMemo(() => {
-    if (role === UserRoles.CHAIRMAN || role === UserRoles.ADMIN) {
-      return REPORTS_GROUPS
+    let groups = REPORTS_GROUPS
+
+    if (role !== UserRoles.CHAIRMAN && role !== UserRoles.ADMIN) {
+      groups = groups.filter((group) => group.id !== 'employees')
     }
-    return REPORTS_GROUPS.filter((group) => group.id !== 'employees')
-  }, [role])
+
+    if (filterType !== 'ALL') {
+      groups = groups
+        .map((group) => ({
+          ...group,
+          items: group.items.filter((item) => item.reportType === filterType),
+        }))
+        .filter((group) => group.items.length > 0)
+    }
+
+    return groups
+  }, [role, filterType])
 
   return (
     <Fragment>
@@ -260,6 +333,18 @@ export const ReportsGrid: React.FC = () => {
             (ushbu sahifa ishlab chiqish jarayonida)
           </span>
         </h5>
+        <div className="flex items-center gap-2">
+          <Select value={filterType} onValueChange={setFilterType}>
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="Barchasi" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">Barchasi</SelectItem>
+              <SelectItem value="MONTHLY">Oylik hisobotlar</SelectItem>
+              <SelectItem value="OTHERS">Boshqa turdagi hisobotlar</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 pb-4 md:grid-cols-2 xl:grid-cols-3">

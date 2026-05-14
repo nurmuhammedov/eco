@@ -57,7 +57,7 @@ const InspectionExecutionReport: React.FC = () => {
     id: accessorPrefix,
     columns: [
       {
-        header: 'Tekshiruvlar soni',
+        header: 'Jami chora\u00A0tadbirlar',
         id: `${accessorPrefix}_allCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.allCount || 0,
         className: 'text-center text-slate-900',
@@ -66,7 +66,7 @@ const InspectionExecutionReport: React.FC = () => {
         },
       },
       {
-        header: 'Bajarilgan',
+        header: 'Yakunlanganlar',
         id: `${accessorPrefix}_acceptedCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.acceptedCount || 0,
         className: 'text-center text-slate-700 font-medium',
@@ -77,7 +77,7 @@ const InspectionExecutionReport: React.FC = () => {
         },
       },
       {
-        header: 'Bajarilmagan',
+        header: 'Jarayondagilar',
         id: `${accessorPrefix}_inProcessCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.inProcessCount || 0,
         className: 'text-center text-slate-700 font-medium',
@@ -90,7 +90,7 @@ const InspectionExecutionReport: React.FC = () => {
         },
       },
       {
-        header: 'Muddati o‘tganlar',
+        header: 'Bajarilmaganlar',
         id: `${accessorPrefix}_expiredCount`,
         accessorFn: (row: any) => row[accessorPrefix]?.expiredCount || 0,
         className: 'text-center text-slate-700 font-medium',
