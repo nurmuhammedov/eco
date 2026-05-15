@@ -960,14 +960,9 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
           </div>
         </CardForm>
 
-        <div className="mt-8 flex items-center justify-center gap-4">
-          <Button type="button" variant="outline" onClick={() => window.history.back()}>
-            Bekor qilish
-          </Button>
-          <Button type="submit" loading={isPending || isSubmitPending}>
-            {isUpdate ? 'Saqlash' : 'Yuborish'}
-          </Button>
-        </div>
+        <Button type="submit" loading={isPending || isSubmitPending}>
+          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+        </Button>
       </form>
     </Form>
   )
