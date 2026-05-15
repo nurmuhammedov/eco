@@ -760,7 +760,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required>Ruxsatnoma</FormLabel>
+                    <FormLabel>Ruxsatnoma</FormLabel>
                     <FormControl>
                       <InputFile
                         form={form}
