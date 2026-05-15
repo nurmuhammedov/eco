@@ -662,7 +662,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                         disabled={!form.watch('seasonalInspectionPath')}
                       />
                     </div>
@@ -711,7 +711,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                         disabled={!form.watch('seasonalReadinessActPath')}
                       />
                     </div>
@@ -780,7 +780,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                         disabled={!form.watch('employeeSafetyKnowledgePath')}
                       />
                     </div>
@@ -828,7 +828,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                         disabled={!form.watch('usageRightsPath')}
                       />
                     </div>

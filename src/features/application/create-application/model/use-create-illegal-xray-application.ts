@@ -30,7 +30,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
 
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
 
-  const form = useForm<RegisterIllegalXrayDTO>({
+  const form = useForm<z.input<typeof RegisterIllegalXraySchema>>({
     resolver: (values, context, options) => {
       const actualSchema = isUpdate
         ? RegisterIllegalXrayBaseSchema.extend({
@@ -57,6 +57,8 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
             file12Path: z.string().optional().nullable(),
             file13Path: z.string().optional().nullable(),
             file13ExpiryDate: z.date().optional().nullable(),
+            file14Path: z.string().optional().nullable(),
+            file14ExpiryDate: z.date().optional().nullable(),
             phoneNumber: z.string().optional().nullable(),
             identity: z.string().optional().nullable(),
             birthDate: z
@@ -114,6 +116,8 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
       file12Path: undefined,
       file13Path: undefined,
       file13ExpiryDate: undefined,
+      file14Path: undefined,
+      file14ExpiryDate: undefined,
       birthDate: undefined,
     },
     mode: 'onChange',
@@ -185,6 +189,8 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
         file12Path: detail.files?.file12Path?.path,
         file13Path: detail.files?.file13Path?.path,
         file13ExpiryDate: parseDate(detail.files?.file13Path?.expiryDate),
+        file14Path: detail.files?.file14Path?.path,
+        file14ExpiryDate: parseDate(detail.files?.file14Path?.expiryDate),
       } as any)
 
       setTimeout(() => {

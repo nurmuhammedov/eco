@@ -6,6 +6,7 @@ import {
   inspectorRoutes,
   legalRoutes,
   managerRoutes,
+  interactiveServiceRoutes,
   regionalRoutes,
 } from '@/shared/config/routes/roles'
 import { authRoutes, publicRoutes, specialComponents } from '@/shared/config/routes'
@@ -72,6 +73,9 @@ export const useAppRoutes = () => {
       case UserRoles.PROCURATOR:
         routes = chairmanRoutes
         break
+      case UserRoles.INTERACTIVE_SERVICE:
+        routes = interactiveServiceRoutes
+        break
       default:
         routes = []
     }
@@ -95,12 +99,20 @@ export const useAppRoutes = () => {
             index: true,
             element: <Navigate to={routeByRole(user?.role)} replace />,
           },
-          ...roleRoutes.map((route) => ({
-            path: route.path,
-            element: route.element,
-          })),
+          ...(user?.role === UserRoles.INTERACTIVE_SERVICE
+            ? []
+            : roleRoutes.map((route) => ({
+                path: route.path,
+                element: route.element,
+              }))),
         ],
       },
+      ...(user?.role === UserRoles.INTERACTIVE_SERVICE
+        ? roleRoutes.map((route) => ({
+            path: route.path,
+            element: route.element,
+          }))
+        : []),
       ...publicRoutes.map((route: any) => ({
         path: route.path,
         element: route.element,

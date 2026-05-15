@@ -1,14 +1,15 @@
 // src/features/application/create-application/model/use-create-irs-application.ts
-import { CreateXrayApplicationDTO, XrayAppealDtoSchema } from '@/entities/create-application'
+import { XrayAppealDtoSchema } from '@/entities/create-application'
 import { stateService } from '@/entities/create-application/types/enums'
 import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 export const useCreateXrayApplication = () => {
-  const form = useForm<CreateXrayApplicationDTO>({
+  const form = useForm<z.input<typeof XrayAppealDtoSchema>>({
     resolver: zodResolver(XrayAppealDtoSchema),
     defaultValues: {
       phoneNumber: '',
@@ -21,6 +22,7 @@ export const useCreateXrayApplication = () => {
       districtId: '',
       address: '',
       manufacturedYear: '',
+      stateService: '',
       file1Path: undefined,
       file1ExpiryDate: undefined,
       file2Path: undefined,
@@ -44,6 +46,8 @@ export const useCreateXrayApplication = () => {
       file12Path: undefined,
       file13Path: undefined,
       file13ExpiryDate: undefined,
+      file14Path: undefined,
+      file14ExpiryDate: undefined,
     },
     mode: 'onChange',
   })

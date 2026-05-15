@@ -67,7 +67,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
 
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
+      <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit as any)}>
         <GoBack title={isUpdate ? 'Rentgen maʼlumotlarini tahrirlash' : 'Rentgen uskunasini ro‘yxatga olish'} />
         <NoteForm equipmentName="rentgen" onlyLatin={true} />
         <CardForm className="my-2">
@@ -267,7 +267,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                       disableStrategy="before"
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Sanani tanlang"
+                      placeholder="Amal qilish muddati"
                     />
                     <FormMessage />
                   </FormItem>
@@ -447,7 +447,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Sanani tanlang"
+                        placeholder="Amal qilish muddati"
                         disabled={!form.watch('file1Path')}
                       />
                     </div>
@@ -492,7 +492,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Sanani tanlang"
+                        placeholder="Amal qilish muddati"
                         disabled={!form.watch('file2Path')}
                       />
                     </div>
@@ -537,7 +537,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Sanani tanlang"
+                        placeholder="Amal qilish muddati"
                         disabled={!form.watch('file3Path')}
                       />
                     </div>
@@ -599,7 +599,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Sanani tanlang"
+                        placeholder="Amal qilish muddati"
                         disabled={!form.watch('file5Path')}
                       />
                     </div>
@@ -644,7 +644,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Sanani tanlang"
+                        placeholder="Amal qilish muddati"
                         disabled={!form.watch('file6Path')}
                       />
                     </div>
@@ -689,7 +689,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Sanani tanlang"
+                        placeholder="Amal qilish muddati"
                         disabled={!form.watch('file7Path')}
                       />
                     </div>
@@ -734,7 +734,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Sanani tanlang"
+                        placeholder="Amal qilish muddati"
                         disabled={!form.watch('file8Path')}
                       />
                     </div>
@@ -779,7 +779,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Sanani tanlang"
+                        placeholder="Amal qilish muddati"
                         disabled={!form.watch('file9Path')}
                       />
                     </div>
@@ -841,7 +841,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Sanani tanlang"
+                        placeholder="Amal qilish muddati"
                         disabled={!form.watch('file11Path')}
                       />
                     </div>
@@ -859,7 +859,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Shaxsiy himoya vositalarining fotosurati</FormLabel>
+                    <FormLabel required={!isUpdate}>Kadrlar (buyruq, diplom, sertifikat va malaka oshirish)</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -876,7 +876,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Dalolatnoma-ko‘rsatma va uning bajarilish maʼlumotlari</FormLabel>
+                    <FormLabel required={!isUpdate}>Rentgen xonasining (Pasporti)</FormLabel>
                     <FormControl>
                       <InputFile
                         form={form}
@@ -903,8 +903,53 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        placeholder="Sanani tanlang"
+                        placeholder="Amal qilish muddati"
                         disabled={!form.watch('file13Path')}
+                      />
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="file14Path"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required={false}>Ruxsatnoma</FormLabel>
+                    <FormControl>
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file14ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="file14ExpiryDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="w-full">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <FormLabel required={!!form.watch('file14Path')}>Amal qilish muddati</FormLabel>
+                      <DatePicker
+                        disableStrategy="before"
+                        className={'max-w-2/3'}
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file14Path')}
                       />
                     </div>
                     <FormMessage />
@@ -915,9 +960,14 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
           </div>
         </CardForm>
 
-        <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
-        </Button>
+        <div className="mt-8 flex items-center justify-center gap-4">
+          <Button type="button" variant="outline" onClick={() => window.history.back()}>
+            Bekor qilish
+          </Button>
+          <Button type="submit" loading={isPending || isSubmitPending}>
+            {isUpdate ? 'Saqlash' : 'Yuborish'}
+          </Button>
+        </div>
       </form>
     </Form>
   )

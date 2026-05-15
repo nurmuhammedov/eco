@@ -10,9 +10,10 @@ interface UseRiskAnalysisStatsProps {
   year: number
   quarter: number
   regionId?: string | null
+  enabled?: boolean
 }
 
-export const useRiskAnalysisStats = ({ year, quarter, regionId }: UseRiskAnalysisStatsProps) => {
+export const useRiskAnalysisStats = ({ year, quarter, regionId, enabled = true }: UseRiskAnalysisStatsProps) => {
   const commonParams = {
     year,
     quarter: quarter.toString(),
@@ -23,21 +24,27 @@ export const useRiskAnalysisStats = ({ year, quarter, regionId }: UseRiskAnalysi
   // Or we could create a custom hook that accepts type and use it multiple times,
   // but the caller expects a single aggregated object.
 
-  const { data: hfCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, { ...commonParams, type: 'HF' })
-  const { data: irsCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, { ...commonParams, type: 'IRS' })
-  const { data: elevCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+  const { data: hfCounts } = useData<RiskCountResponse>('/risk-analyses/count', enabled, {
+    ...commonParams,
+    type: 'HF',
+  })
+  const { data: irsCounts } = useData<RiskCountResponse>('/risk-analyses/count', enabled, {
+    ...commonParams,
+    type: 'IRS',
+  })
+  const { data: elevCounts } = useData<RiskCountResponse>('/risk-analyses/count', enabled, {
     ...commonParams,
     type: 'ELEVATOR',
   })
-  const { data: attrCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+  const { data: attrCounts } = useData<RiskCountResponse>('/risk-analyses/count', enabled, {
     ...commonParams,
     type: 'ATTRACTION',
   })
-  const { data: xrayCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+  const { data: xrayCounts } = useData<RiskCountResponse>('/risk-analyses/count', enabled, {
     ...commonParams,
     type: 'XRAY',
   })
-  const { data: lpgCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+  const { data: lpgCounts } = useData<RiskCountResponse>('/risk-analyses/count', enabled, {
     ...commonParams,
     type: 'LPG_POWERED',
   })

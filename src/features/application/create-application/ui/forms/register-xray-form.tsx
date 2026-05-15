@@ -33,7 +33,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
 
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
+      <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit as any)}>
         <GoBack title="Rentgen uskunasini ro‘yxatga olish" />
         <CardForm className="my-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
@@ -110,7 +110,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                       disableStrategy="after"
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="License tizimi orqali ruxsatnoma berilgan sana"
+                      placeholder="Sanani tanlang"
                     />
                     <FormMessage />
                   </FormItem>
@@ -129,7 +129,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                       disableStrategy="before"
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
-                      placeholder="Ruxsatnomaning amal qilish muddati"
+                      placeholder="Amal qilish muddati"
                     />
                     <FormMessage />
                   </FormItem>
@@ -699,7 +699,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required>Shaxsiy himoya vositalarining fotosurati</FormLabel>
+                    <FormLabel required>Shaxsiy himoya vositalining fotosurati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -745,6 +745,51 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                         onChange={field.onChange}
                         placeholder="Amal qilish muddati"
                         disabled={!form.watch('file13Path')}
+                      />
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+          </div>
+          <div className="border-b pb-4">
+            <FormField
+              name="file14Path"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel required>Ruxsatnoma</FormLabel>
+                    <FormControl>
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file14ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="file14ExpiryDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="w-full">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <FormLabel required={!!form.watch('file14Path')}>Amal qilish muddati</FormLabel>
+                      <DatePicker
+                        disableStrategy="before"
+                        className={'max-w-2/3'}
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file14Path')}
                       />
                     </div>
                     <FormMessage />

@@ -621,7 +621,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLpgPoweredFormPr
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                         disabled={!form.watch('expertisePath')}
                       />
                     </div>
@@ -687,7 +687,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLpgPoweredFormPr
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         disableStrategy={'before'}
-                        placeholder="Amal qilish muddati"
+                        placeholder="Sanani tanlang"
                         disabled={!form.watch('equipmentCertPath')}
                       />
                     </div>

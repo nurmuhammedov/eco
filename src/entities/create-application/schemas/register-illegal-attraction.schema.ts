@@ -60,7 +60,7 @@ export const RegisterIllegalAttractionBaseSchema = z.object({
   employeeSafetyKnowledgeExpiryDate: z
     .date({ required_error: 'Majburiy maydon!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
-  usageRightsPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  usageRightsPath: z.string().optional(),
   usageRightsExpiryDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
   preservationActPath: z
     .string()
