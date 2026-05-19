@@ -195,11 +195,7 @@ export const InspectionWidget: React.FC = () => {
   }
 
   const handleTabChange = (value: string) => {
-    if (value === (InspectionStatus.NEW as string)) {
-      addParams({ status: value, noticeType: 'NEW', page: 1 })
-    } else {
-      addParams({ status: value, noticeType: undefined, page: 1 })
-    }
+    addParams({ status: value, noticeType: undefined, page: 1 })
   }
 
   const handleSubTabChange = (value: string) => {
@@ -325,7 +321,7 @@ export const InspectionWidget: React.FC = () => {
           </Tabs>
         ) : (
           <Tabs
-            value={activeTab || InspectionStatus.ALL}
+            value={activeTab === InspectionStatus.NOTIFIED ? InspectionStatus.NEW : activeTab || InspectionStatus.ALL}
             onValueChange={handleTabChange}
             className="flex flex-1 flex-col overflow-hidden"
           >
@@ -366,16 +362,15 @@ export const InspectionWidget: React.FC = () => {
             <TabsContent value={InspectionStatus.NEW} className="mt-2 flex flex-1 flex-col overflow-hidden">
               <div className="mb-3">
                 <Tabs
-                  defaultValue={InspectionNoticeType.NEW}
-                  value={paramsObject.noticeType || InspectionNoticeType.NEW}
+                  value={activeTab === InspectionStatus.NOTIFIED ? InspectionStatus.NOTIFIED : InspectionStatus.NEW}
                   onValueChange={(value) => {
-                    addParams({ noticeType: value, page: 1 })
+                    addParams({ status: value, page: 1 })
                   }}
                 >
                   <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
                     <TabsList>
-                      <TabsTrigger value={InspectionNoticeType.NEW}>Xabarnoma yuborilmagan</TabsTrigger>
-                      <TabsTrigger value={InspectionNoticeType.NOTIFIED}>Xabarnoma yuborilgan</TabsTrigger>
+                      <TabsTrigger value={InspectionStatus.NEW}>Xabarnoma yuborilmagan</TabsTrigger>
+                      <TabsTrigger value={InspectionStatus.NOTIFIED}>Xabarnoma yuborilgan</TabsTrigger>
                     </TabsList>
                   </div>
                 </Tabs>
