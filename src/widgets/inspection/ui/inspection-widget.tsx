@@ -190,20 +190,6 @@ export const InspectionWidget: React.FC = () => {
     type: 'OTHER',
   })
 
-  const { data: newUnnotifiedCountObj } = useData<CountDto>('/inspections/count', true, {
-    ...queryParams,
-    type: activeMainTab === InspectionTab.RISK_BASED ? 'RISK_BASED' : 'OTHER',
-    status: 'NEW',
-    noticeType: 'NEW',
-  })
-
-  const { data: newNotifiedCountObj } = useData<CountDto>('/inspections/count', true, {
-    ...queryParams,
-    type: activeMainTab === InspectionTab.RISK_BASED ? 'RISK_BASED' : 'OTHER',
-    status: 'NEW',
-    noticeType: 'NOTIFIED',
-  })
-
   const handleMainTabChange = (value: string) => {
     addParams({ tab: value, status: undefined, subStatus: undefined, noticeType: undefined, page: 1 })
   }
@@ -388,18 +374,8 @@ export const InspectionWidget: React.FC = () => {
                 >
                   <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
                     <TabsList>
-                      <TabsTrigger value={InspectionNoticeType.NEW}>
-                        Xabarnoma yuborilmagan
-                        <Badge variant="destructive" className="ml-2">
-                          {newUnnotifiedCountObj?.allCount || 0}
-                        </Badge>
-                      </TabsTrigger>
-                      <TabsTrigger value={InspectionNoticeType.NOTIFIED}>
-                        Xabarnoma yuborilgan
-                        <Badge variant="destructive" className="ml-2">
-                          {newNotifiedCountObj?.allCount || 0}
-                        </Badge>
-                      </TabsTrigger>
+                      <TabsTrigger value={InspectionNoticeType.NEW}>Xabarnoma yuborilmagan</TabsTrigger>
+                      <TabsTrigger value={InspectionNoticeType.NOTIFIED}>Xabarnoma yuborilgan</TabsTrigger>
                     </TabsList>
                   </div>
                 </Tabs>
