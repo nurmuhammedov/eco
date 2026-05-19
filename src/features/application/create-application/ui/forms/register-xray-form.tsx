@@ -699,7 +699,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required>Shaxsiy himoya vositalining fotosurati</FormLabel>
+                    <FormLabel required>Shaxsiy himoya vositalarining fotosurati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
@@ -760,7 +760,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
               render={({ field }) => (
                 <FormItem className="mb-2">
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel>Ruxsatnoma</FormLabel>
+                    <FormLabel required>Ruxsatnoma</FormLabel>
                     <FormControl>
                       <InputFile
                         form={form}

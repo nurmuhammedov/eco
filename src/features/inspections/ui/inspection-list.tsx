@@ -26,6 +26,7 @@ export const InspectionList: React.FC = () => {
       year = new Date().getFullYear(),
       regionId = 'ALL',
       quarter = getQuarter(new Date()).toString(),
+      noticeType,
       ...rest
     },
   } = useCustomSearchParams()
@@ -53,6 +54,7 @@ export const InspectionList: React.FC = () => {
           : status == InspectionStatus.ASSIGNED
             ? subStatus
             : status,
+      noticeType: status === InspectionStatus.NEW ? noticeType || 'NEW' : undefined,
     },
     status !== InspectionStatus.TEN_DAYS
   )

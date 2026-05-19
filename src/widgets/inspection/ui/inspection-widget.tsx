@@ -24,6 +24,11 @@ export enum InspectionStatus {
   TEN_DAYS = 'TEN_DAYS',
 }
 
+export enum InspectionNoticeType {
+  NEW = 'NEW',
+  NOTIFIED = 'NOTIFIED',
+}
+
 export enum InspectionSubMenuStatus {
   CONDUCTED = 'CONDUCTED',
   ASSIGNED = 'ASSIGNED',
@@ -159,24 +164,56 @@ export const InspectionWidget: React.FC = () => {
 
   const activeRegion = regionId?.toString() || 'ALL'
 
-  const { data: countObject = defaultCountDto } = useData<CountDto>('/inspections/count', true, {
+  const queryParams = {
     year: paramsObject?.year || new Date().getFullYear(),
     quarter: paramsObject?.quarter || getQuarter(new Date()).toString(),
-    type: activeMainTab === InspectionTab.RISK_BASED ? 'RISK_BASED' : 'OTHER',
     regionId: activeRegion === 'ALL' ? '' : activeRegion,
     legalName: paramsObject?.legalName || '',
     legalTin: paramsObject?.legalTin || '',
     legalRegionId: paramsObject?.legalRegionId || '',
     legalDistrictId: paramsObject?.legalDistrictId || '',
     legalAddress: paramsObject?.legalAddress || '',
+  }
+
+  const { data: countObject = defaultCountDto } = useData<CountDto>('/inspections/count', true, {
+    ...queryParams,
+    type: activeMainTab === InspectionTab.RISK_BASED ? 'RISK_BASED' : 'OTHER',
+  })
+
+  const { data: riskCountObj = defaultCountDto } = useData<CountDto>('/inspections/count', true, {
+    ...queryParams,
+    type: 'RISK_BASED',
+  })
+
+  const { data: otherCountObj = defaultCountDto } = useData<CountDto>('/inspections/count', true, {
+    ...queryParams,
+    type: 'OTHER',
+  })
+
+  const { data: newUnnotifiedCountObj } = useData<CountDto>('/inspections/count', true, {
+    ...queryParams,
+    type: activeMainTab === InspectionTab.RISK_BASED ? 'RISK_BASED' : 'OTHER',
+    status: 'NEW',
+    noticeType: 'NEW',
+  })
+
+  const { data: newNotifiedCountObj } = useData<CountDto>('/inspections/count', true, {
+    ...queryParams,
+    type: activeMainTab === InspectionTab.RISK_BASED ? 'RISK_BASED' : 'OTHER',
+    status: 'NEW',
+    noticeType: 'NOTIFIED',
   })
 
   const handleMainTabChange = (value: string) => {
-    addParams({ tab: value, status: undefined, subStatus: undefined, page: 1 })
+    addParams({ tab: value, status: undefined, subStatus: undefined, noticeType: undefined, page: 1 })
   }
 
   const handleTabChange = (value: string) => {
-    addParams({ status: value, page: 1 })
+    if (value === (InspectionStatus.NEW as string)) {
+      addParams({ status: value, noticeType: 'NEW', page: 1 })
+    } else {
+      addParams({ status: value, noticeType: undefined, page: 1 })
+    }
   }
 
   const handleSubTabChange = (value: string) => {
@@ -250,8 +287,18 @@ export const InspectionWidget: React.FC = () => {
       <div className="flex items-center justify-between">
         <Tabs value={activeMainTab} onValueChange={handleMainTabChange}>
           <TabsList>
-            <TabsTrigger value={InspectionTab.RISK_BASED}>{t('inspections.tabs.risk_based')}</TabsTrigger>
-            <TabsTrigger value={InspectionTab.OTHER}>{t('inspections.tabs.other')}</TabsTrigger>
+            <TabsTrigger value={InspectionTab.RISK_BASED}>
+              {t('inspections.tabs.risk_based')}
+              <Badge variant="destructive" className="ml-2">
+                {riskCountObj.allCount || 0}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value={InspectionTab.OTHER}>
+              {t('inspections.tabs.other')}
+              <Badge variant="destructive" className="ml-2">
+                {otherCountObj.allCount || 0}
+              </Badge>
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -330,7 +377,33 @@ export const InspectionWidget: React.FC = () => {
             <TabsContent value={InspectionStatus.ALL} className="mt-2 flex-1 overflow-hidden">
               {renderContent()}
             </TabsContent>
-            <TabsContent value={InspectionStatus.NEW} className="mt-2 flex-1 overflow-hidden">
+            <TabsContent value={InspectionStatus.NEW} className="mt-2 flex flex-1 flex-col overflow-hidden">
+              <div className="mb-3">
+                <Tabs
+                  defaultValue={InspectionNoticeType.NEW}
+                  value={paramsObject.noticeType || InspectionNoticeType.NEW}
+                  onValueChange={(value) => {
+                    addParams({ noticeType: value, page: 1 })
+                  }}
+                >
+                  <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
+                    <TabsList>
+                      <TabsTrigger value={InspectionNoticeType.NEW}>
+                        Xabarnoma yuborilmagan
+                        <Badge variant="destructive" className="ml-2">
+                          {newUnnotifiedCountObj?.allCount || 0}
+                        </Badge>
+                      </TabsTrigger>
+                      <TabsTrigger value={InspectionNoticeType.NOTIFIED}>
+                        Xabarnoma yuborilgan
+                        <Badge variant="destructive" className="ml-2">
+                          {newNotifiedCountObj?.allCount || 0}
+                        </Badge>
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+                </Tabs>
+              </div>
               {renderContent()}
             </TabsContent>
             <TabsContent value={InspectionStatus.NOT_SIGNED} className="mt-2 flex-1 overflow-hidden">

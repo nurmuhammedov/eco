@@ -22,7 +22,7 @@ export const DashboardPage = () => {
   const activeRegionId = regionIdParam ? parseInt(regionIdParam) : null
   const activeRegionName = activeRegionId ? getRegionNameById(activeRegionId) : null
 
-  const stats = useDashboardStats(activeRegionId?.toString())
+  const stats = useDashboardStats(activeRegionId?.toString(), currentTab)
 
   const handleTabChange = (val: string) => {
     setSearchParams((prev) => {

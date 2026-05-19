@@ -54,7 +54,11 @@ const __AttractionAppealDtoSchema = z.object({
     .date({ required_error: 'Majburiy maydon!' })
     .transform((date) => format(date, 'yyyy-MM-dd')),
   usageRightsPath: z.string().optional(),
-  usageRightsExpiryDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  usageRightsExpiryDate: z
+    .date()
+    .optional()
+    .nullable()
+    .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
   preservationActPath: z
     .string()
     .optional()

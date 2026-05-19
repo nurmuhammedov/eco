@@ -1007,6 +1007,10 @@
       "address": "Joylashgan manzil",
       "passportPath": "INM (qurilma) pasporti va sertifikati fayli",
       "additionalFilePath": "Qo‘shimcha ma‘lumotlar",
+      "file1Path": "Mehnat vazirligi tomonidan berilgan ekspertiza xulosasi",
+      "file5Path": "Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganligi to‘g‘risida sertifikat",
+      "file14Path": "Ruxsatnoma",
+      "file15Path": "Tibbiy ko‘rikdan o‘tkazilganligi",
       "registryNumber": "Roʻyxatga olish raqami"
     }
   },
