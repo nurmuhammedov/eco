@@ -7,7 +7,7 @@ import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import { useAuth } from '@/shared/hooks/use-auth'
 import React, { useMemo } from 'react'
 import { UserRoles } from '@/entities/user'
-import { useData } from '@/shared/hooks'
+import { useData, usePaginatedData } from '@/shared/hooks'
 import { Badge } from '@/shared/components/ui/badge'
 import clsx from 'clsx'
 import { cn } from '@/shared/lib/utils'
@@ -190,6 +190,22 @@ export const InspectionWidget: React.FC = () => {
     type: 'OTHER',
   })
 
+  const { totalElements: newUnnotifiedCount } = usePaginatedData<any>('/inspections', {
+    ...queryParams,
+    type: activeMainTab === InspectionTab.RISK_BASED ? 'RISK_BASED' : 'OTHER',
+    status: 'NEW',
+    page: 1,
+    size: 1,
+  })
+
+  const { totalElements: newNotifiedCount } = usePaginatedData<any>('/inspections', {
+    ...queryParams,
+    type: activeMainTab === InspectionTab.RISK_BASED ? 'RISK_BASED' : 'OTHER',
+    status: 'NOTIFIED',
+    page: 1,
+    size: 1,
+  })
+
   const handleMainTabChange = (value: string) => {
     addParams({ tab: value, status: undefined, subStatus: undefined, noticeType: undefined, page: 1 })
   }
@@ -336,7 +352,7 @@ export const InspectionWidget: React.FC = () => {
                 <TabsTrigger value={InspectionStatus.NEW}>
                   Inspektor belgilanmaganlar
                   <Badge variant="destructive" className="ml-2">
-                    {countObject.newCount || 0}
+                    {(newUnnotifiedCount || 0) + (newNotifiedCount || 0)}
                   </Badge>
                 </TabsTrigger>
                 <TabsTrigger value={InspectionStatus.NOT_SIGNED}>
@@ -369,8 +385,18 @@ export const InspectionWidget: React.FC = () => {
                 >
                   <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
                     <TabsList>
-                      <TabsTrigger value={InspectionStatus.NEW}>Xabarnoma yuborilmagan</TabsTrigger>
-                      <TabsTrigger value={InspectionStatus.NOTIFIED}>Xabarnoma yuborilgan</TabsTrigger>
+                      <TabsTrigger value={InspectionStatus.NEW}>
+                        Xabarnoma yuborilmagan
+                        <Badge variant="destructive" className="ml-2">
+                          {newUnnotifiedCount || 0}
+                        </Badge>
+                      </TabsTrigger>
+                      <TabsTrigger value={InspectionStatus.NOTIFIED}>
+                        Xabarnoma yuborilgan
+                        <Badge variant="destructive" className="ml-2">
+                          {newNotifiedCount || 0}
+                        </Badge>
+                      </TabsTrigger>
                     </TabsList>
                   </div>
                 </Tabs>
