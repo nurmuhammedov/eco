@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -25,30 +25,40 @@ import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection/category
 import { useHazardousFacilitySelectQuery } from '@/features/inspections/hooks/use-hf-select-query'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { ApplicationModal } from '@/features/application/create-application'
-
-const schema = z.object({
-  startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
-  endDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
-  noticeType: z.enum(['NOTIFIED', 'AFTER_24_HOURS'], { required_error: FORM_ERROR_MESSAGES.required }),
-  tin: z
-    .string({ message: FORM_ERROR_MESSAGES.required })
-    .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak' })
-    .refine((val) => val.length === 9 || val.length === 14, {
-      message: 'STIR (JSHSHIR) faqat 9 yoki 14 xonali bo‘lishi kerak',
-    }),
-  hfId: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
-  inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
-  checklistCategoryIdList: z.array(z.number()).min(1, FORM_ERROR_MESSAGES.required),
-  basisPathList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
-  programPath: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
-})
-
-type FormValues = z.infer<typeof schema>
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
+import { useOfficeSelectQueries } from '@/shared/api/dictionaries'
 
 export const CreateOtherInspectionModal = () => {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
+  const { user } = useAuth()
+  const isChairman = user?.role === UserRoles.CHAIRMAN
+
+  const schema = useMemo(() => {
+    return z.object({
+      startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
+      endDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
+      noticeType: z.enum(['NOTIFIED', 'AFTER_24_HOURS'], { required_error: FORM_ERROR_MESSAGES.required }),
+      tin: z
+        .string({ message: FORM_ERROR_MESSAGES.required })
+        .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak' })
+        .refine((val) => val.length === 9 || val.length === 14, {
+          message: 'STIR (JSHSHIR) faqat 9 yoki 14 xonali bo‘lishi kerak',
+        }),
+      hfId: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
+      inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
+      checklistCategoryIdList: z.array(z.number()).min(1, FORM_ERROR_MESSAGES.required),
+      basisPathList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
+      programPath: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
+      officeId: isChairman
+        ? z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required)
+        : z.string().optional(),
+    })
+  }, [isChairman])
+
+  type FormValues = z.infer<typeof schema>
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -58,6 +68,7 @@ export const CreateOtherInspectionModal = () => {
       basisPathList: [],
       noticeType: 'NOTIFIED',
       tin: '',
+      officeId: '',
     },
   })
 
@@ -78,8 +89,20 @@ export const CreateOtherInspectionModal = () => {
       toast.error('STIR (JSHSHIR) noto‘g‘ri kiritilgan')
     }
   }
-  const { data: inspectorOptions } = useInspectorSelect(isOpen)
+  const officeIdValue = form.watch('officeId')
+  const shouldFetchInspectors = isOpen && (!isChairman || !!officeIdValue)
+
+  const { data: inspectorOptions, isFetching: isInspectorsLoading } = useInspectorSelect(
+    shouldFetchInspectors,
+    undefined,
+    isChairman ? officeIdValue : undefined
+  )
+
+  useEffect(() => {
+    form.setValue('inspectorIdList', [])
+  }, [officeIdValue, form])
   const { data: categoryOptions } = useCategoryTypeSelectQuery(undefined, isOpen)
+  const { data: officeSelect } = useOfficeSelectQueries()
 
   const {
     error,
@@ -103,7 +126,7 @@ export const CreateOtherInspectionModal = () => {
   })
 
   const onSubmit = (values: FormValues) => {
-    const payload = {
+    const payload: any = {
       startDate: formatDate(values.startDate, 'yyyy-MM-dd'),
       endDate: formatDate(values.endDate, 'yyyy-MM-dd'),
       noticeType: values.noticeType,
@@ -112,6 +135,9 @@ export const CreateOtherInspectionModal = () => {
       checklistCategoryIdList: values.checklistCategoryIdList,
       basisPathList: values.basisPathList,
       programPath: values.programPath,
+    }
+    if (isChairman && values.officeId) {
+      payload.officeId = Number(values.officeId)
     }
     handleCreateApplication(payload)
   }
@@ -132,6 +158,33 @@ export const CreateOtherInspectionModal = () => {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
+              {isChairman && (
+                <FormField
+                  control={form.control}
+                  name="officeId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Hududiy boshqarmani tanlang</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="bg-white">
+                            <SelectValue placeholder={t('select')} />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {officeSelect?.map((item: any) => (
+                            <SelectItem key={item.id} value={item.id.toString()}>
+                              {item.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
               <div className="space-y-4 rounded-lg border bg-blue-50/30 p-4">
                 <FormField
                   control={form.control}
@@ -158,18 +211,14 @@ export const CreateOtherInspectionModal = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel required>XICHOni tanlang</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select
+                        disabled={!(hfOptions && hfOptions.length > 0)}
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger className="bg-white">
-                            <SelectValue
-                              placeholder={
-                                isHfLoading
-                                  ? t('loading')
-                                  : hfOptions && hfOptions.length > 0
-                                    ? t('select')
-                                    : t('select')
-                              }
-                            />
+                            <SelectValue placeholder={t('select')} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -265,7 +314,14 @@ export const CreateOtherInspectionModal = () => {
                         options={inspectorOptions || []}
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder={t('select')}
+                        placeholder={
+                          isInspectorsLoading
+                            ? t('loading')
+                            : isChairman && !officeIdValue
+                              ? 'Avval hududiy boshqarmani tanlang'
+                              : t('select')
+                        }
+                        disabled={isChairman ? !officeIdValue || isInspectorsLoading : false}
                       />
                     </FormControl>
                     <FormMessage />

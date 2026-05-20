@@ -30,8 +30,11 @@ export const applicationDetailApi = {
     const { data } = await apiClient.get<any>(`/execution-processes/change/${id}`)
     return data.data
   },
-  getInspectorListSelect: async (isSupervisor?: boolean) => {
-    const url = isSupervisor ? `/users/regulator-users/inspectors/select` : `/users/office-users/inspectors/select`
+  getInspectorListSelect: async (isSupervisor?: boolean, officeId?: string | number) => {
+    let url = isSupervisor ? `/users/regulator-users/inspectors/select` : `/users/office-users/inspectors/select`
+    if (officeId) {
+      url += `?officeId=${officeId}`
+    }
     const { data } = await apiClient.get<any>(url)
     return data.data
   },
