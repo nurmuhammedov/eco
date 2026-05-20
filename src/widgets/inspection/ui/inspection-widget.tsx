@@ -155,6 +155,7 @@ export const InspectionWidget: React.FC = () => {
   const isInspector = user?.role === UserRoles.INSPECTOR
   const isLegal = user?.role === UserRoles.LEGAL
   const isRegional = user?.role === UserRoles.REGIONAL
+  const isChairman = user?.role === UserRoles.CHAIRMAN
   const isChairmanOrHead = user?.role === UserRoles.HEAD
 
   const activeMainTab = paramsObject.tab || InspectionTab.RISK_BASED
@@ -300,7 +301,7 @@ export const InspectionWidget: React.FC = () => {
           </TabsList>
         </Tabs>
 
-        {activeMainTab === InspectionTab.OTHER && isRegional && <CreateOtherInspectionModal />}
+        {activeMainTab === InspectionTab.OTHER && (isRegional || isChairman) && <CreateOtherInspectionModal />}
       </div>
 
       <div className="flex flex-1 flex-col overflow-hidden">
