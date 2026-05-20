@@ -958,6 +958,23 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
               }}
             />
           </div>
+
+          <div className="border-b pb-4">
+            <FormField
+              name="file16Path"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <FormLabel>Texnik attestatsiya xulosasi</FormLabel>
+                    <FormControl>
+                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                    </FormControl>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
         </CardForm>
 
         <Button type="submit" loading={isPending || isSubmitPending}>

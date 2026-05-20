@@ -59,6 +59,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
             file13ExpiryDate: z.date().optional().nullable(),
             file14Path: z.string().optional().nullable(),
             file14ExpiryDate: z.date().optional().nullable(),
+            file16Path: z.string().optional().nullable(),
             phoneNumber: z.string().optional().nullable(),
             identity: z.string().optional().nullable(),
             birthDate: z
@@ -118,6 +119,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
       file13ExpiryDate: undefined,
       file14Path: undefined,
       file14ExpiryDate: undefined,
+      file16Path: undefined,
       birthDate: undefined,
     },
     mode: 'onChange',
@@ -191,6 +193,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
         file13ExpiryDate: parseDate(detail.files?.file13Path?.expiryDate),
         file14Path: detail.files?.file14Path?.path,
         file14ExpiryDate: parseDate(detail.files?.file14Path?.expiryDate),
+        file16Path: detail.files?.file16Path?.path,
       } as any)
 
       setTimeout(() => {

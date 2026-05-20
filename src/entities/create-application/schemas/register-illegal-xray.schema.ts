@@ -66,6 +66,7 @@ export const RegisterIllegalXrayBaseSchema = z.object({
     .date()
     .optional()
     .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+  file16Path: z.string().trim().optional(),
 })
 
 export const xrayRefinement = (data: any, ctx: z.RefinementCtx) => {

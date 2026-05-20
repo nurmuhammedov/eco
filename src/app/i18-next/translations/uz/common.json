@@ -310,7 +310,7 @@
       "file7ExpiryDate": "Amal qilish muddati",
       "file8Path": "Davriy qiyoslov sertifikati",
       "file8ExpiryDate": "Amal qilish muddati",
-      "file9Path": "Dalolatnoma",
+      "file9Path": "Yerga ulash va ventilatsiya dalolatnomasi",
       "file9ExpiryDate": "Amal qilish muddati",
       "file10Path": "Kuzatuv xati, INM pasporti va inventarizatsiya",
       "file11Path": "Yo‘riqnomalar",
@@ -320,6 +320,7 @@
       "file13ExpiryDate": "Amal qilish muddati",
       "file14Path": "Ruxsatnoma",
       "file14ExpiryDate": "Amal qilish muddati",
+      "file16Path": "Texnik attestatsiya xulosasi",
       "servicePeriod": "Xizmat muddati",
       "registryNumber": "Roʻyxatga olish raqami"
     },
@@ -1010,7 +1011,8 @@
       "passportPath": "INM (qurilma) pasporti va sertifikati fayli",
       "additionalFilePath": "Qo‘shimcha ma‘lumotlar",
       "file1Path": "Mehnat vazirligi tomonidan berilgan ekspertiza xulosasi",
-      "file5Path": "Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganligi to‘g‘risida sertifikat",
+      "file2Path": "Sanitar-epidemiologik xulosasi",
+      "file5Path": "Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat",
       "file14Path": "Ruxsatnoma",
       "file15Path": "Tibbiy ko‘rikdan o‘tkazilganligi",
       "registryNumber": "Roʻyxatga olish raqami"

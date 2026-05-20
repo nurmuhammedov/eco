@@ -8,6 +8,7 @@ import { useAuth } from '@/shared/hooks/use-auth'
 
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { TabsLayout } from '@/shared/layouts'
+import { Badge } from '@/shared/components/ui/badge'
 
 interface XrayListProps {
   isArchive?: boolean
@@ -78,26 +79,24 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
           legalName,
           legalTin,
           address,
-          active: isArchive
-            ? false
-            : currentStatus === 'ACTIVE'
-              ? true
-              : currentStatus === 'INACTIVE'
-                ? false
-                : currentStatus === 'CHANGED'
-                  ? ''
-                  : true,
+          active: isArchive ? false : currentStatus === 'INACTIVE' ? false : true,
           changed: currentStatus === 'CHANGED' ? true : '',
           changeStatus: currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
-          status:
-            currentStatus === 'CHANGED' && changeStatus !== 'ALL'
-              ? changeStatus
-              : currentStatus === 'EXPIRED' || currentStatus === 'NO_DATE'
-                ? currentStatus
-                : '',
+          status: currentStatus === 'EXPIRED' || currentStatus === 'NO_DATE' ? currentStatus : '',
           radiationProfileId,
         }),
   })
+
+  const { data: changedCountData } = usePaginatedData<any>(
+    `/xrays`,
+    {
+      changed: 'true',
+      active: 'true',
+      regionId: regionId === 'ALL' ? '' : regionId,
+      size: 1,
+    },
+    !isArchive
+  )
 
   const handleViewApplication = (id: string) => {
     if (currentStatus === 'CHANGED') {
@@ -167,6 +166,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
           showEdit={
             !isArchive &&
             (user?.role === UserRoles.MANAGER ||
+              user?.role === UserRoles.LEGAL ||
               (user?.role === UserRoles.INSPECTOR &&
                 (Number(row.original.regionId) === user?.regionId || user?.isController))) &&
             ['ACTIVE', 'EXPIRED', 'NO_DATE'].includes(currentStatus)
@@ -247,6 +247,11 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
               name: 'Tashkilotlar',
               count: currentStatus === 'ORGANIZATIONS' ? totalElements : undefined,
             },
+            {
+              id: 'CHANGED',
+              name: 'O‘zgartirish so‘rovlari',
+              count: changedCountData?.page?.totalElements || undefined,
+            },
           ]}
           onTabChange={(type) => {
             if (type === 'CHANGED') {
@@ -270,6 +275,14 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
             ].map((s) => (
               <TabsTrigger key={s.id} value={s.id}>
                 {s.name}
+                {changeStatus === s.id && (
+                  <Badge
+                    variant="destructive"
+                    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+                  >
+                    {totalElements || 0}
+                  </Badge>
+                )}
               </TabsTrigger>
             ))}
           </TabsList>

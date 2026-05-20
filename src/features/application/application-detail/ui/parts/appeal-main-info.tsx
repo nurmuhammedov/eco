@@ -73,7 +73,7 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'hazardousSubstance',
     'registryNumber',
     'description',
-    'sign',
+    // 'sign',
     // 'reasons',
   ],
   ELEVATOR: [

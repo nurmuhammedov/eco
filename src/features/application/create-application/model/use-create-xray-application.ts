@@ -48,6 +48,7 @@ export const useCreateXrayApplication = () => {
       file13ExpiryDate: undefined,
       file14Path: undefined,
       file14ExpiryDate: undefined,
+      file16Path: undefined,
     },
     mode: 'onChange',
   })

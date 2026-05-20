@@ -87,22 +87,24 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
           usageType,
           startDate,
           endDate,
-          valid: currentValid === 'CHANGED' ? undefined : isArchive ? false : currentValid !== 'false',
+          valid: currentValid === 'CHANGED' ? true : isArchive ? false : currentValid !== 'false',
           changed: currentValid === 'CHANGED' ? true : '',
           changeStatus: currentValid === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
-          status: currentValid === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
+          status: '',
           radiationProfileId,
         }),
   })
 
-  // const { data: changedCountData } = usePaginatedData<any>(
-  //   `/irs`,
-  //   {
-  //     changed: 'true',
-  //     size: 1,
-  //   },
-  //   true
-  // )
+  const { data: changedCountData } = usePaginatedData<any>(
+    `/irs`,
+    {
+      changed: 'true',
+      valid: 'true',
+      regionId: regionId === 'ALL' ? '' : regionId,
+      size: 1,
+    },
+    !isArchive
+  )
 
   const handleViewApplication = (id: string) => {
     if (currentValid === 'CHANGED') {
@@ -213,6 +215,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
           showEdit={
             !isArchive &&
             (user?.role === UserRoles.MANAGER ||
+              user?.role === UserRoles.LEGAL ||
               (user?.role === UserRoles.INSPECTOR &&
                 (Number(row.original.regionId) === user?.regionId || user?.isController))) &&
             currentValid === 'true'
@@ -311,15 +314,15 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
               {/*    </Badge>*/}
               {/*  )}*/}
               {/*</TabsTrigger>*/}
-              {/*<TabsTrigger value="CHANGED">*/}
-              {/*  O‘zgartirish so‘rovlari*/}
-              {/*  <Badge*/}
-              {/*    variant="destructive"*/}
-              {/*    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
-              {/*  >*/}
-              {/*    {changedCountData?.page?.totalElements || 0}*/}
-              {/*  </Badge>*/}
-              {/*</TabsTrigger>*/}
+              <TabsTrigger value="CHANGED">
+                O‘zgartirish so‘rovlari
+                <Badge
+                  variant="destructive"
+                  className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+                >
+                  {changedCountData?.page?.totalElements || 0}
+                </Badge>
+              </TabsTrigger>
             </TabsList>
           </div>
         </Tabs>
