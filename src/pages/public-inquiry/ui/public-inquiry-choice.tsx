@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '@/shared/components/ui/button'
-import { User, UserX, Loader2 } from 'lucide-react'
+import { Loader2, User, UserX } from 'lucide-react'
 import { apiConfig } from '@/shared/api/constants'
 import { useLoginOneId } from '@/entities/auth/models/auth.fetcher'
 
@@ -23,17 +23,14 @@ const PublicInquiryChoice = () => {
         const parsedState = JSON.parse(decodedStateStr)
 
         if (parsedState.from === '/public-inquiry-choice') {
-          // API ga zapros jonatib auth qilish
           loginOneId(code, {
             onSuccess: () => {
-              // Muvaffaqiyatli bo‘lsa qo‘shish sahifasiga
               navigate(
                 `/applications/create/inquiry?belongId=${parsedState.belongId}&belongType=${parsedState.belongType}`,
                 { replace: true }
               )
             },
             onError: () => {
-              // Xato bo'lsa codeni tozalaymiz
               navigate(`/public-inquiry-choice?belongId=${parsedState.belongId}&belongType=${parsedState.belongType}`, {
                 replace: true,
               })
@@ -49,11 +46,8 @@ const PublicInquiryChoice = () => {
   const handleSsoRedirect = () => {
     const stateObj = JSON.stringify({ belongId, belongType, from: '/public-inquiry-choice' })
     const encodedState = btoa(stateObj)
-    // SSO url
     const redirectUri = `${window.location.origin}/public-inquiry-choice`
-    const ssoUrl = `https://sso.egov.uz/sso/oauth/Authorization.do?response_type=one_code&client_id=${apiConfig.oneIdClientId}&client_secret=${apiConfig.oneIdClientSecret}&redirect_uri=${redirectUri}&state=${encodedState}`
-
-    window.location.href = ssoUrl
+    window.location.href = `https://sso.egov.uz/sso/oauth/Authorization.do?response_type=one_code&state=${encodedState}&scope=myportal&client_id=${apiConfig.oneIdClientId}&client_secret=${apiConfig.oneIdClientSecret}&redirect_uri=${redirectUri}`
   }
 
   const handleAnonymous = () => {

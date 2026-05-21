@@ -10,8 +10,8 @@ export function useApplicationFactory({ applicationType, onError }: UseApplicati
 
   const applicationCreation = useApplicationCreation({
     onError,
-    pdfEndpoint: config.pdfEndpoint,
-    submitEndpoint: config.submitEndpoint,
+    pdfEndpoint: config?.pdfEndpoint || '',
+    submitEndpoint: config?.submitEndpoint || '',
   })
 
   return { ...applicationCreation, config }
