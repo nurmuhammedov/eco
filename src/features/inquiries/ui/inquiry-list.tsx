@@ -4,11 +4,14 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 import { InquiryTabs } from './inquiry-tabs'
 import { appealTypeTranslations, InquiryBelongType } from '../model/types'
 import { formatDate } from 'date-fns'
-import FileLink from '@/shared/components/common/file-link'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/shared/components/ui/button.tsx'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
+import { Eye } from 'lucide-react'
 
 const InquiryTable = () => {
+  const { user } = useAuth()
   const {
     paramsObject: { page = 1, size = 10, belongType, ...rest },
     addParams,
@@ -16,12 +19,12 @@ const InquiryTable = () => {
 
   const navigate = useNavigate()
 
-  const activeTab = (belongType as InquiryBelongType) || InquiryBelongType.HF
+  const activeTab = (belongType as InquiryBelongType | 'ALL') || 'ALL'
 
   const { data = [], isLoading } = usePaginatedData<any>('/inquiries', {
     page,
     size,
-    belongType: activeTab,
+    belongType: activeTab === 'ALL' ? undefined : activeTab,
     ...rest,
   })
 
@@ -70,35 +73,37 @@ const InquiryTable = () => {
   )
 
   const tabCounts = {
+    ALL:
+      (hfData?.page?.totalElements ?? 0) +
+      (equipmentsData?.page?.totalElements ?? 0) +
+      (irsData?.page?.totalElements ?? 0) +
+      (xrayData?.page?.totalElements ?? 0),
     [InquiryBelongType.HF]: hfData?.page?.totalElements ?? 0,
     [InquiryBelongType.EQUIPMENT]: equipmentsData?.page?.totalElements ?? 0,
     [InquiryBelongType.IRS]: irsData?.page?.totalElements ?? 0,
     [InquiryBelongType.XRAY]: xrayData?.page?.totalElements ?? 0,
   }
 
-  const handleTabChange = (tab: InquiryBelongType) => {
-    addParams({ belongType: tab, page: 1 })
+  const handleTabChange = (tab: InquiryBelongType | 'ALL') => {
+    addParams({ belongType: tab === 'ALL' ? undefined : tab, page: 1 })
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
       accessorKey: 'registryNumber',
       header: () => <div className="whitespace-nowrap">Murojaat raqami</div>,
-      className: '!w-[1%]',
       filterKey: 'registryNumber',
       filterType: 'search',
     },
     {
       accessorKey: 'createdAt',
       header: () => <div className="whitespace-nowrap">Murojaat sanasi</div>,
-      className: '!w-[1%] whitespace-nowrap',
       cell: ({ row }) =>
         row.original.createdAt ? formatDate(new Date(row.original.createdAt), 'dd.MM.yyyy HH:mm') : '-',
     },
     {
       accessorKey: 'type',
       header: () => <div className="whitespace-nowrap">Murojaat turi</div>,
-      className: '!w-[1%] whitespace-nowrap',
       cell: ({ row }) => appealTypeTranslations[row.original.type] || row.original.type,
       filterKey: 'type',
       filterType: 'select',
@@ -111,13 +116,11 @@ const InquiryTable = () => {
     {
       accessorKey: 'fullName',
       header: () => <div className="whitespace-nowrap">Yuboruvchi F.I.SH.</div>,
-      className: '!w-[1%] whitespace-nowrap',
       cell: ({ row }) => row.original.fullName || '-',
     },
     {
       accessorKey: 'phoneNumber',
       header: () => <div className="whitespace-nowrap">Telefon raqami</div>,
-      className: '!w-[1%] whitespace-nowrap',
       cell: ({ row }) => row.original.phoneNumber || '-',
     },
     {
@@ -125,42 +128,59 @@ const InquiryTable = () => {
       header: 'Murojaat matni',
       cell: ({ row }) => <span title={row.original.message}>{row.original.message}</span>,
     },
+
     {
-      header: 'Biriktirilgan fayl',
-      accessorKey: 'filePath',
-      className: '!w-[1%]',
-      cell: ({ row }) => (row.original.filePath ? <FileLink url={row.original.filePath} /> : '-'),
-    },
-    {
-      header: 'Obyekt',
-      accessorKey: 'belongId',
-      className: '!w-[1%]',
-      cell: ({ row }) => (
-        <div className="flex gap-2">
-          <Button
-            onClick={() =>
-              navigate(
-                `/register/${row.original.belongId}/${activeTab == InquiryBelongType.HF ? 'hf' : activeTab == InquiryBelongType.EQUIPMENT ? 'equipments' : activeTab == InquiryBelongType.IRS ? 'irs' : 'xrays'}`
-              )
-            }
-          >
-            Obyektni ko‘rish
-          </Button>
-          <Button variant="outline" onClick={() => navigate(`/inquiries/detail/${row.original.id}`)}>
-            Murojaatni ko‘rish
-          </Button>
-        </div>
-      ),
+      header: 'Amallar',
+      accessorKey: 'actions',
+      cell: ({ row }) => {
+        const belongTypeStr =
+          row.original.belongType === 'HF'
+            ? 'hf'
+            : row.original.belongType === 'EQUIPMENT'
+              ? 'equipments'
+              : row.original.belongType === 'IRS'
+                ? 'irs'
+                : 'xrays'
+
+        return (
+          <div className="flex gap-2">
+            {row.original.belongId && (
+              <Button size="sm" onClick={() => navigate(`/register/${row.original.belongId}/${belongTypeStr}`)}>
+                Obyektni ko‘rish
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-slate-500 hover:text-slate-900"
+              onClick={() => navigate(`/inquiries/detail/${row.original.id}`)}
+              title="Murojaatni ko'rish"
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+          </div>
+        )
+      },
     },
   ]
 
+  const filteredColumns =
+    user?.role === UserRoles.INDIVIDUAL ? columns.filter((c: any) => c.accessorKey !== 'fullName') : columns
+
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">
-      <InquiryTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts} />
+      {user?.role === UserRoles.INDIVIDUAL && (
+        <div className="flex justify-end">
+          <Button onClick={() => navigate('/inquiries/add')} className="whitespace-nowrap">
+            Murojaat yuborish
+          </Button>
+        </div>
+      )}
+      <InquiryTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts as any} />
       <DataTable
         showNumeration={true}
         isPaginated={true}
-        columns={columns}
+        columns={filteredColumns}
         data={data}
         showFilters={true}
         isLoading={isLoading}

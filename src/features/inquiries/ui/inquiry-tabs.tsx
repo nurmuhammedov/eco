@@ -3,8 +3,8 @@ import { cn } from '@/shared/lib/utils'
 import { InquiryBelongType, inquiryTabsConfig } from '../model/types'
 
 interface InquiryTabsProps {
-  activeTab: InquiryBelongType
-  onTabChange: (tabKey: InquiryBelongType) => void
+  activeTab: InquiryBelongType | 'ALL'
+  onTabChange: (tabKey: InquiryBelongType | 'ALL') => void
   counts?: Record<string, number>
 }
 
@@ -12,12 +12,12 @@ export const InquiryTabs = ({ activeTab, onTabChange, counts = {} }: InquiryTabs
   return (
     <div className="scrollbar-hidden flex flex-row gap-2 overflow-x-auto pb-2">
       {inquiryTabsConfig.map((tab) => {
-        const isActive = activeTab === tab.key
+        const isActive = String(activeTab) === tab.key
 
         return (
           <Card
             key={tab.key}
-            onClick={() => onTabChange(tab.key)}
+            onClick={() => onTabChange(tab.key as InquiryBelongType | 'ALL')}
             className={cn(
               'flex min-w-[220px] flex-1 cursor-pointer flex-col py-3 transition-all hover:shadow-md',
               isActive ? 'bg-teal text-white shadow' : 'bg-card text-card-foreground border-border'

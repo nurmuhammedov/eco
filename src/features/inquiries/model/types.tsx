@@ -1,4 +1,4 @@
-import { Cpu, Factory, Scan, Zap } from 'lucide-react'
+import { Cpu, Factory, Scan, Zap, Layers } from 'lucide-react'
 
 export enum InquiryBelongType {
   HF = 'HF',
@@ -8,6 +8,11 @@ export enum InquiryBelongType {
 }
 
 export const inquiryTabsConfig = [
+  {
+    key: 'ALL',
+    label: 'Barchasi',
+    icon: <Layers className="h-5 w-5" />,
+  },
   {
     key: InquiryBelongType.HF,
     label: 'XICHO',

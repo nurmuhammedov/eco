@@ -42,7 +42,12 @@ export const useLogin = () => {
   })
 }
 
-export const useLoginOneId = () => {
+interface UseLoginOneIdOptions {
+  disableAutoRun?: boolean
+  customRedirect?: (data: UserState) => void
+}
+
+export const useLoginOneId = (options?: UseLoginOneIdOptions) => {
   const { state, pathname } = useLocation()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -55,8 +60,12 @@ export const useLoginOneId = () => {
     onSuccess: (data: UserState) => {
       dispatch(setUser(data))
       queryClient.setQueryData(['me'], data)
-      const redirectPath = state?.from && state?.from !== '/' ? state?.from : routeByRole(data?.role)
-      navigate(redirectPath)
+      if (options?.customRedirect) {
+        options.customRedirect(data)
+      } else {
+        const redirectPath = state?.from && state?.from !== '/' ? state?.from : routeByRole(data?.role)
+        navigate(redirectPath)
+      }
     },
     onError: () => {
       navigate(pathname, { replace: true, state })
@@ -64,8 +73,10 @@ export const useLoginOneId = () => {
   })
 
   useEffect(() => {
-    if (resolvedParams.code) handleLoginOneId(resolvedParams.code)
-  }, [resolvedParams.code])
+    if (!options?.disableAutoRun && resolvedParams.code) {
+      handleLoginOneId(resolvedParams.code)
+    }
+  }, [resolvedParams.code, options?.disableAutoRun])
 
   return { isPending, mutate: handleLoginOneId }
 }

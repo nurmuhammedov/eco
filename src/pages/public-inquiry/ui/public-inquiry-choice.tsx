@@ -13,10 +13,12 @@ const PublicInquiryChoice = () => {
   const code = searchParams.get('code')
   const stateParam = searchParams.get('state')
 
-  const { mutate: loginOneId, isPending } = useLoginOneId()
+  const { mutate: loginOneId, isPending } = useLoginOneId({
+    disableAutoRun: true,
+    customRedirect: () => {},
+  })
 
   useEffect(() => {
-    // Agar OneID dan code qaytib kelgan bo‘lsa
     if (code && stateParam) {
       try {
         const decodedStateStr = atob(stateParam)

@@ -48,7 +48,8 @@ const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-1
 const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
 const TurniketLogsDetail = lazy(() => import('@/features/reports/ui/turniket-report-detail'))
 const Permits = lazy(() => import('@/widgets/permits'))
-const Inquiries = lazy(() => import('@/features/inquiries'))
+const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
+const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
 const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
 const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
@@ -351,7 +352,12 @@ export const regionalRoutes = [
   {
     id: 'INQUIRY',
     path: 'inquiries',
-    element: withSuspense(Inquiries),
+    element: withSuspense(InquiryListPage),
+  },
+  {
+    id: 'INQUIRY',
+    path: 'inquiries/detail/:id',
+    element: withSuspense(InquiryDetailPage),
   },
   {
     id: 'ACCIDENT',

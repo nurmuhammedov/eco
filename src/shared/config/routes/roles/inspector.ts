@@ -44,7 +44,8 @@ const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspectio
 const InspectionExecutionReport = lazy(() => import('@/features/reports/ui/inspection-execution-report'))
 const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
 const Permits = lazy(() => import('@/widgets/permits'))
-const Inquiries = lazy(() => import('@/features/inquiries'))
+const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
+const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
 
 // Expanded Imports
 const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
@@ -360,7 +361,12 @@ export const inspectorRoutes = [
   {
     id: 'INQUIRY',
     path: 'inquiries',
-    element: withSuspense(Inquiries),
+    element: withSuspense(InquiryListPage),
+  },
+  {
+    id: 'INQUIRY',
+    path: 'inquiries/detail/:id',
+    element: withSuspense(InquiryDetailPage),
   },
 
   {

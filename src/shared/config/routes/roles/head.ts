@@ -46,7 +46,8 @@ const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-1
 const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
 const TurniketLogsDetail = lazy(() => import('@/features/reports/ui/turniket-report-detail'))
 const Permits = lazy(() => import('@/widgets/permits'))
-const Inquiries = lazy(() => import('@/features/inquiries'))
+const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
+const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
@@ -334,7 +335,12 @@ export const headRoutes = [
   {
     id: 'INQUIRY',
     path: 'inquiries',
-    element: withSuspense(Inquiries),
+    element: withSuspense(InquiryListPage),
+  },
+  {
+    id: 'INQUIRY',
+    path: 'inquiries/detail/:id',
+    element: withSuspense(InquiryDetailPage),
   },
   {
     id: 'ANNOUNCEMENT',

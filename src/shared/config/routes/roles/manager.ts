@@ -49,7 +49,8 @@ const AppealExecutionReport = lazy(() => import('@/features/reports/ui/appeal-ex
 const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
 const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
 const Permits = lazy(() => import('@/widgets/permits'))
-const Inquiries = lazy(() => import('@/features/inquiries'))
+const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
+const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
 const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
 const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
@@ -374,7 +375,12 @@ export const managerRoutes = [
   {
     id: 'INQUIRY',
     path: 'inquiries',
-    element: withSuspense(Inquiries),
+    element: withSuspense(InquiryListPage),
+  },
+  {
+    id: 'INQUIRY',
+    path: 'inquiries/detail/:id',
+    element: withSuspense(InquiryDetailPage),
   },
   {
     id: 'ACCIDENT',
