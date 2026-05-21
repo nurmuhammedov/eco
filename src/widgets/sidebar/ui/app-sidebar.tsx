@@ -74,11 +74,6 @@ export function AppSidebar() {
       ]
     }
 
-    const staticIds = ['REPORT', 'INQUIRY']
-    navigations = navigations.filter((nav) => !staticIds.includes(nav.id))
-    const staticNavs = allNavigation.filter((nav: any) => staticIds.includes(nav.id))
-    navigations = [...navigations, ...staticNavs]
-
     return navigations
   }, [user])
 

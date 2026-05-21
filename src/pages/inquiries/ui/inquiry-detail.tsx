@@ -1,4 +1,6 @@
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Button } from '@/shared/components/ui/button'
+import { apiConfig } from '@/shared/api/constants'
 import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
@@ -7,15 +9,24 @@ import { Coordinate } from '@/shared/components/common/yandex-map'
 import useDetail from '@/shared/hooks/api/useDetail'
 import { formatDate } from 'date-fns'
 import { appealTypeTranslations } from '@/features/inquiries/model/types'
-import FileLink from '@/shared/components/common/file-link'
 
 const InquiryDetailPage = () => {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const { data, isLoading } = useDetail<any>('/inquiries', id as string)
 
   const currentObjLocation = data?.location?.split(',').map(Number) || ([] as Coordinate[])
   const hasLocation = currentObjLocation.length === 2 && !isNaN(currentObjLocation[0])
   const files = data?.filePathList || []
+
+  const belongTypeStr =
+    data?.belongType === 'HF'
+      ? 'hf'
+      : data?.belongType === 'EQUIPMENT'
+        ? 'equipments'
+        : data?.belongType === 'IRS'
+          ? 'irs'
+          : 'xrays'
 
   if (isLoading) {
     return <div className="p-8 text-center text-slate-500">Yuklanmoqda...</div>
@@ -49,7 +60,20 @@ const InquiryDetailPage = () => {
                 value={data?.occurredAt ? formatDate(new Date(data.occurredAt), 'dd.MM.yyyy HH:mm') : '-'}
               />
               <DetailRow title="Murojaat matni:" value={data?.message || '-'} />
-              <DetailRow title="Obyekt:" value={data?.belongId || '-'} />
+              <DetailRow
+                title="Obyekt:"
+                value={
+                  data?.belongId ? (
+                    <div className="flex items-center gap-4">
+                      <Button size="sm" onClick={() => navigate(`/register/${data.belongId}/${belongTypeStr}`)}>
+                        Obyektni ko'rish
+                      </Button>
+                    </div>
+                  ) : (
+                    '-'
+                  )
+                }
+              />
               {data?.cardNumber && <DetailRow title="Plastik karta raqami:" value={data.cardNumber} />}
             </div>
           </DetailCardAccordion.Item>
@@ -65,12 +89,19 @@ const InquiryDetailPage = () => {
             <DetailCardAccordion.Item value="appeal_files" title="Murojaatga biriktirilgan fayllar">
               <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {files.map((fileUrl: string, idx: number) => (
-                  <div
+                  <a
                     key={idx}
-                    className="flex min-h-[60px] items-center justify-center overflow-hidden rounded-md border bg-slate-50 p-2"
+                    href={`${apiConfig?.baseURL}${fileUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex aspect-video cursor-pointer items-center justify-center overflow-hidden rounded-md border bg-slate-50 transition-all hover:opacity-90"
                   >
-                    <FileLink url={fileUrl} />
-                  </div>
+                    <img
+                      src={`${apiConfig?.baseURL}${fileUrl}`}
+                      alt={`Fayl ${idx + 1}`}
+                      className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  </a>
                 ))}
               </div>
             </DetailCardAccordion.Item>
