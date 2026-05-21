@@ -35,7 +35,11 @@ export function AppSidebar() {
       navigations = legalNavigation.filter((navItem) => user.directions.includes(navItem.id as Direction))
     } else if (user.directions.length === 0) {
       const appealNav = allNavigation.find((item: any) => item.id === 'APPEAL')
-      navigations = appealNav ? [appealNav] : []
+      const inquiryNav = allNavigation.find((item: any) => item.id === 'INQUIRY')
+
+      navigations = []
+      if (appealNav) navigations.push(appealNav)
+      if (inquiryNav && user.role === UserRoles.INDIVIDUAL) navigations.push(inquiryNav)
     } else {
       const baseNavigation = NAVIGATIONS[user.role] || allNavigation
 
@@ -48,7 +52,10 @@ export function AppSidebar() {
           if (filteredItems.length > 0) {
             acc.push({ ...navItem, items: filteredItems })
           }
-        } else if (user.directions.includes(navItem.id as Direction)) {
+        } else if (
+          user.directions.includes(navItem.id as Direction) ||
+          (user.role === UserRoles.INDIVIDUAL && navItem.id === 'INQUIRY')
+        ) {
           acc.push(navItem)
         }
 

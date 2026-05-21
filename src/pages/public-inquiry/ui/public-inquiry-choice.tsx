@@ -25,10 +25,9 @@ const PublicInquiryChoice = () => {
         if (parsedState.from === '/public-inquiry-choice') {
           loginOneId(code, {
             onSuccess: () => {
-              navigate(
-                `/applications/create/inquiry?belongId=${parsedState.belongId}&belongType=${parsedState.belongType}`,
-                { replace: true }
-              )
+              navigate(`/inquiries/add?belongId=${parsedState.belongId}&belongType=${parsedState.belongType}`, {
+                replace: true,
+              })
             },
             onError: () => {
               navigate(`/public-inquiry-choice?belongId=${parsedState.belongId}&belongType=${parsedState.belongType}`, {

@@ -129,61 +129,61 @@ const PublicInquiryForm = () => {
 
           <div className="p-6">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <FormField
-                    name="type"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          Murojaat turi <span className="text-destructive">*</span>
-                        </FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Tanlang" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="APPEAL">Murojaat</SelectItem>
-                            <SelectItem value="COMPLAINT">Shikoyat</SelectItem>
-                            <SelectItem value="SUGGESTION">Taklif</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+              >
+                <FormField
+                  name="type"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Murojaat turi <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Tanlang" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="APPEAL">Murojaat</SelectItem>
+                          <SelectItem value="COMPLAINT">Shikoyat</SelectItem>
+                          <SelectItem value="SUGGESTION">Taklif</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                  <FormField
-                    name="regionId"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          Hudud <span className="text-destructive">*</span>
-                        </FormLabel>
-                        <Select onValueChange={(v) => field.onChange(Number(v))} value={field.value?.toString()}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Tanlang" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {regions?.map((r: any) => (
-                              <SelectItem key={r.id} value={r.id.toString()}>
-                                {r.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
+                <FormField
+                  name="regionId"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Hudud <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <Select onValueChange={(v) => field.onChange(Number(v))} value={field.value?.toString()}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Tanlang" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {regions?.map((r: any) => (
+                            <SelectItem key={r.id} value={r.id.toString()}>
+                              {r.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   name="occurredAt"
                   control={form.control}
@@ -198,41 +198,39 @@ const PublicInquiryForm = () => {
                   )}
                 />
 
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <FormField
-                    name="fullName"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>F.I.SH. (ixtiyoriy)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Ism-sharifingiz" {...field} value={field.value || ''} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <FormField
+                  name="fullName"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>F.I.SH. (ixtiyoriy)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ism-sharifingiz" {...field} value={field.value || ''} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                  <FormField
-                    name="phoneNumber"
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Telefon raqam (ixtiyoriy)</FormLabel>
-                        <FormControl>
-                          <PhoneInput placeholder="+998 XX XXX XX XX" {...field} value={field.value || ''} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                <FormField
+                  name="phoneNumber"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Telefon raqam (ixtiyoriy)</FormLabel>
+                      <FormControl>
+                        <PhoneInput placeholder="+998 XX XXX XX XX" {...field} value={field.value || ''} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   name="location"
                   control={form.control}
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="col-span-full">
                       <FormLabel>
                         Hodisa sodir bo‘lgan joy <span className="text-destructive">*</span>
                       </FormLabel>
@@ -247,7 +245,7 @@ const PublicInquiryForm = () => {
                   )}
                 />
 
-                <div className="flex flex-col gap-2 space-y-2">
+                <div className="col-span-full flex flex-col gap-2 space-y-2">
                   <FormLabel>
                     Rasm biriktirish <span className="text-destructive">*</span>
                   </FormLabel>
@@ -265,7 +263,7 @@ const PublicInquiryForm = () => {
                   name="message"
                   control={form.control}
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="col-span-full">
                       <FormLabel>
                         Murojaat matni <span className="text-destructive">*</span>
                       </FormLabel>
@@ -281,7 +279,7 @@ const PublicInquiryForm = () => {
                   )}
                 />
 
-                <div className="flex justify-end border-t border-slate-100 pt-4">
+                <div className="col-span-full flex justify-end border-t border-slate-100 pt-4">
                   <Button
                     type="submit"
                     disabled={isProcessing}

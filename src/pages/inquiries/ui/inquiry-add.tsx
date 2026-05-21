@@ -3,8 +3,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Loader2, ArrowLeft } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { GoBack } from '@/shared/components/common'
+import { CardForm } from '@/entities/create-application'
 import { useSubmitAppeal } from '@/features/qr-form/hooks/useSubmitAppeal'
 import { AppealDto } from '@/features/qr-form/api/post-appeal'
 import useData from '@/shared/hooks/api/useData'
@@ -35,7 +37,20 @@ const formSchema = z.object({
     .refine((val) => !val || val.length <= 4 || USER_PATTERNS.phone.test(val), {
       message: "Kiritilgan ma'lumot yaroqli emas!",
     }),
-  cardNumber: z.string().optional().nullable(),
+  cardNumber: z
+    .string()
+    .optional()
+    .nullable()
+    .refine(
+      (val) => {
+        if (!val) return true
+        const digits = val.replace(/\s+/g, '').replace(/[^0-9]/g, '')
+        return digits.length === 16
+      },
+      {
+        message: "Karta raqami to'liq 16 ta raqamdan iborat bo'lishi kerak!",
+      }
+    ),
   message: z.string().min(1, 'Majburiy maydon!'),
   location: z.string().min(1, 'Majburiy maydon!'),
   occurredAt: z.date({
@@ -112,162 +127,151 @@ const InquiryAddPage = () => {
   const isProcessing = isSubmitting
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6">
-      <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4 -ml-4 text-slate-500 hover:text-slate-800">
-        <ArrowLeft className="mr-2 h-4 w-4" /> Orqaga
-      </Button>
+    <div className="w-full">
+      <GoBack title="Murojaat yuborish (Tizim orqali)" />
 
-      <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
-        <div className="border-b p-6">
-          <h2 className="text-xl font-semibold">Murojaat yuborish (Tizim orqali)</h2>
-        </div>
-
+      <CardForm className="mb-2">
         <div className="p-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid gap-6 sm:grid-cols-2">
-                <FormField
-                  name="type"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Murojaat turi <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Tanlang" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="APPEAL">Murojaat</SelectItem>
-                          <SelectItem value="COMPLAINT">Shikoyat</SelectItem>
-                          <SelectItem value="SUGGESTION">Taklif</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  name="regionId"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Hudud (Viloyat) <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <Select onValueChange={(v) => field.onChange(Number(v))} value={field.value?.toString()}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Tanlang" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {regions?.map((r: any) => (
-                            <SelectItem key={r.id} value={r.id.toString()}>
-                              {r.nameUz}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid gap-6 sm:grid-cols-2">
-                <FormField
-                  name="occurredAt"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Hodisa sodir bo‘lgan sana <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <DateTimePicker value={field.value} onChange={field.onChange} />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid gap-6 sm:grid-cols-2">
-                <FormField
-                  name="fullName"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>F.I.SH. (ixtiyoriy)</FormLabel>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+            >
+              <FormField
+                name="type"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Murojaat turi <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <Input placeholder="Ism-sharifingiz" {...field} value={field.value || ''} />
+                        <SelectTrigger>
+                          <SelectValue placeholder="Tanlang" />
+                        </SelectTrigger>
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      <SelectContent>
+                        <SelectItem value="APPEAL">Murojaat</SelectItem>
+                        <SelectItem value="COMPLAINT">Shikoyat</SelectItem>
+                        <SelectItem value="SUGGESTION">Taklif</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  name="phoneNumber"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Telefon raqam (ixtiyoriy)</FormLabel>
+              <FormField
+                name="regionId"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Hudud <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <Select onValueChange={(v) => field.onChange(Number(v))} value={field.value?.toString()}>
                       <FormControl>
-                        <PhoneInput placeholder="+998 XX XXX XX XX" {...field} value={field.value || ''} />
+                        <SelectTrigger>
+                          <SelectValue placeholder="Tanlang" />
+                        </SelectTrigger>
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                      <SelectContent>
+                        {regions?.map((r: any) => (
+                          <SelectItem key={r.id} value={r.id.toString()}>
+                            {r.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <div className="grid gap-6 sm:grid-cols-2">
-                <FormField
-                  name="location"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Hodisa sodir bo‘lgan joy <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <YandexMapModal
-                          initialCoords={field.value ? field.value.split(',').map(Number) : null}
-                          onConfirm={(coords) => field.onChange(coords)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                name="occurredAt"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Hodisa sodir bo‘lgan sana <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <DateTimePicker value={field.value} onChange={field.onChange} />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  name="cardNumber"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Plastik karta raqami (ixtiyoriy)</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="#### #### #### ####"
-                          {...field}
-                          value={field.value || ''}
-                          onChange={(e) => {
-                            handleCardInput(e)
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                name="fullName"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>F.I.SH. (ixtiyoriy)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ism-sharifingiz" {...field} value={field.value || ''} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <div className="flex flex-col gap-2 space-y-2">
+              <FormField
+                name="phoneNumber"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Telefon raqam (ixtiyoriy)</FormLabel>
+                    <FormControl>
+                      <PhoneInput placeholder="+998 XX XXX XX XX" {...field} value={field.value || ''} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name="location"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="col-span-full">
+                    <FormLabel>
+                      Hodisa sodir bo‘lgan joy <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <YandexMapModal
+                        initialCoords={field.value ? field.value.split(',').map(Number) : null}
+                        onConfirm={(coords) => field.onChange(coords)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name="cardNumber"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="col-span-full">
+                    <FormLabel>Plastik karta raqami (ixtiyoriy)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="#### #### #### ####"
+                        {...field}
+                        value={field.value || ''}
+                        onChange={(e) => {
+                          handleCardInput(e)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="col-span-full flex flex-col gap-2 space-y-2">
                 <FormLabel>
                   Rasm biriktirish <span className="text-destructive">*</span>
                 </FormLabel>
@@ -277,7 +281,7 @@ const InquiryAddPage = () => {
                   multiple={true}
                   maxFiles={5}
                   accept={[FileTypes.IMAGE]}
-                  uploadEndpoint="/api/v1/files/upload"
+                  uploadEndpoint="/public/attachments/inquiries"
                 />
               </div>
 
@@ -285,7 +289,7 @@ const InquiryAddPage = () => {
                 name="message"
                 control={form.control}
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="col-span-full">
                     <FormLabel>
                       Murojaat matni <span className="text-destructive">*</span>
                     </FormLabel>
@@ -301,7 +305,7 @@ const InquiryAddPage = () => {
                 )}
               />
 
-              <div className="flex justify-end border-t border-slate-100 pt-4">
+              <div className="col-span-full flex justify-end border-t border-slate-100 pt-4">
                 <Button type="submit" disabled={isProcessing} className="min-w-[150px]">
                   {isProcessing ? (
                     <>
@@ -316,7 +320,7 @@ const InquiryAddPage = () => {
             </form>
           </Form>
         </div>
-      </div>
+      </CardForm>
     </div>
   )
 }
