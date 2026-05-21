@@ -4,15 +4,32 @@ import { apiConfig } from '@/shared/api/constants'
 import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
+import { InquiryStatusRow } from '@/shared/components/common/inquiry-status-row'
+import FileLink from '@/shared/components/common/file-link'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { Coordinate } from '@/shared/components/common/yandex-map'
 import useDetail from '@/shared/hooks/api/useDetail'
 import { formatDate } from 'date-fns'
-import { appealTypeTranslations } from '@/features/inquiries/model/types'
+import {
+  appealTypeTranslations,
+  InquiryStatus,
+  inquiryActionLabels,
+  inquiryResultLabels,
+  inquiryBelongTypeLabels,
+} from '@/features/inquiries/model/types'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
+import SetInspectorModal from '@/features/inquiries/ui/modals/set-inspector-modal'
+import ExecuteInitialModal from '@/features/inquiries/ui/modals/execute-initial-modal'
+import ExecuteCourtModal from '@/features/inquiries/ui/modals/execute-court-modal'
+import ExecutePaymentModal from '@/features/inquiries/ui/modals/execute-payment-modal'
+
+const emptyText = <span className="font-medium text-red-500">Mavjud emas</span>
 
 const InquiryDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const { data, isLoading } = useDetail<any>('/inquiries', id as string)
 
   const currentObjLocation = data?.location?.split(',').map(Number) || ([] as Coordinate[])
@@ -39,51 +56,111 @@ const InquiryDetailPage = () => {
   return (
     <>
       <div className="flex items-center justify-between">
-        <GoBack title={`Murojaat raqami: ${data?.registryNumber || '-'}`} />
+        <GoBack title={`Murojaat raqami: ${data?.registryNumber || ''}`} />
+        <div className="flex gap-2">
+          {user?.role === UserRoles.REGIONAL && data?.status === InquiryStatus.NEW && (
+            <>
+              <SetInspectorModal />
+            </>
+          )}
+
+          {user?.role === UserRoles.INSPECTOR && data?.status === InquiryStatus.IN_PROCESS && <ExecuteInitialModal />}
+
+          {user?.role === UserRoles.INSPECTOR && data?.status === InquiryStatus.IN_COURT && <ExecuteCourtModal />}
+
+          {user?.role === UserRoles.ACCOUNTANT && data?.status === InquiryStatus.REWARD_PAYMENT && (
+            <ExecutePaymentModal />
+          )}
+        </div>
       </div>
 
       <div className="mt-2 grid grid-cols-1 gap-2">
-        <DetailCardAccordion defaultValue={['general', 'applicant_info', 'appeal_files', 'object_location']}>
-          <DetailCardAccordion.Item value="general" title="Murojaat va umumiy maʼlumotlar">
+        <DetailCardAccordion defaultValue={['general', 'applicant_info']}>
+          <DetailCardAccordion.Item value="general" title="Murojaat va ijro maʼlumotlari">
             <div className="flex flex-col py-1">
-              <DetailRow title="Murojaat raqami:" value={data?.registryNumber || '-'} />
+              <DetailRow title="Murojaat raqami:" value={data?.registryNumber || emptyText} />
               <DetailRow
                 title="Murojaat turi:"
-                value={data?.type ? appealTypeTranslations[data?.type] || data.type : '-'}
+                value={data?.type ? appealTypeTranslations[data?.type] || data.type : emptyText}
               />
+              <InquiryStatusRow status={data?.status} />
               <DetailRow
                 title="Murojaat qilingan sana:"
-                value={data?.createdAt ? formatDate(new Date(data.createdAt), 'dd.MM.yyyy HH:mm') : '-'}
+                value={data?.createdAt ? formatDate(new Date(data.createdAt), 'dd.MM.yyyy HH:mm') : emptyText}
               />
               <DetailRow
-                title="Hodisa sodir bo'lgan sana:"
-                value={data?.occurredAt ? formatDate(new Date(data.occurredAt), 'dd.MM.yyyy HH:mm') : '-'}
+                title="Hodisa sodir bo‘lgan sana:"
+                value={data?.occurredAt ? formatDate(new Date(data.occurredAt), 'dd.MM.yyyy HH:mm') : emptyText}
               />
-              <DetailRow title="Murojaat matni:" value={data?.message || '-'} />
+
+              {data?.action && (
+                <DetailRow title="Ijro harakati:" value={inquiryActionLabels[data.action] || data.action} />
+              )}
+              {data?.result && (
+                <DetailRow title="Ijro natijasi:" value={inquiryResultLabels[data.result] || data.result} />
+              )}
+              {data?.executorName && <DetailRow title="Mas’ul inspektor:" value={data.executorName} />}
+              {data?.regionName && <DetailRow title="Hudud:" value={data.regionName} />}
+              {data?.rewardAmount !== null && data?.rewardAmount !== undefined && (
+                <DetailRow title="To‘lov miqdori:" value={`${data.rewardAmount} UZS`} />
+              )}
+              {data?.executionMessage && <DetailRow title="Ijro izohi:" value={data.executionMessage} />}
+
+              {data?.initialExecutionFilePath && (
+                <DetailRow
+                  title="Boshlang‘ich ijro fayli:"
+                  value={<FileLink url={data.initialExecutionFilePath} title="Faylni ko‘rish" />}
+                />
+              )}
+              {data?.courtExecutionFilePath && (
+                <DetailRow
+                  title="Sud qarori fayli:"
+                  value={<FileLink url={data.courtExecutionFilePath} title="Faylni ko‘rish" />}
+                />
+              )}
+              {data?.paymentExecutionFilePath && (
+                <DetailRow
+                  title="To‘lov hujjati fayli:"
+                  value={<FileLink url={data.paymentExecutionFilePath} title="Faylni ko‘rish" />}
+                />
+              )}
+
+              <DetailRow title="Murojaat matni:" value={data?.message || emptyText} />
+
               <DetailRow
                 title="Obyekt:"
                 value={
                   data?.belongId ? (
                     <div className="flex items-center gap-4">
+                      <span className="text-sm font-medium">
+                        {data?.belongType ? inquiryBelongTypeLabels[data.belongType] || data.belongType : ''}
+                      </span>
                       <Button size="sm" onClick={() => navigate(`/register/${data.belongId}/${belongTypeStr}`)}>
-                        Obyektni ko'rish
+                        Obyektni ko‘rish
                       </Button>
                     </div>
                   ) : (
-                    '-'
+                    emptyText
                   )
                 }
               />
-              {data?.cardNumber && <DetailRow title="Plastik karta raqami:" value={data.cardNumber} />}
             </div>
           </DetailCardAccordion.Item>
 
           <DetailCardAccordion.Item value="applicant_info" title="Yuboruvchi to‘g‘risida ma’lumot">
             <div className="flex flex-col py-1">
-              <DetailRow title="Yuboruvchi F.I.SH.:" value={data?.fullName || '-'} />
-              <DetailRow title="Telefon raqami:" value={data?.phoneNumber || '-'} />
+              <DetailRow title="Yuboruvchi F.I.SH.:" value={data?.fullName || emptyText} />
+              {data?.ownerIdentity && <DetailRow title="Egasi PINFL/STIR:" value={data.ownerIdentity} />}
+              {data?.cardNumber && <DetailRow title="Plastik karta raqami:" value={data.cardNumber} />}
+              <DetailRow title="Telefon raqami:" value={data?.phoneNumber || emptyText} />
             </div>
           </DetailCardAccordion.Item>
+
+          {hasLocation && (
+            <DetailCardAccordion.Item value="object_location" title="Hodisa sodir bo‘lgan joy">
+              <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
+            </DetailCardAccordion.Item>
+          )}
 
           {files.length > 0 && (
             <DetailCardAccordion.Item value="appeal_files" title="Murojaatga biriktirilgan fayllar">
@@ -104,12 +181,6 @@ const InquiryDetailPage = () => {
                   </a>
                 ))}
               </div>
-            </DetailCardAccordion.Item>
-          )}
-
-          {hasLocation && (
-            <DetailCardAccordion.Item value="object_location" title="Hodisa sodir bo‘lgan joy">
-              <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
             </DetailCardAccordion.Item>
           )}
         </DetailCardAccordion>

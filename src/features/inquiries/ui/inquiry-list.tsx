@@ -2,13 +2,21 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { InquiryTabs } from './inquiry-tabs'
-import { appealTypeTranslations, InquiryBelongType } from '../model/types'
+import {
+  appealTypeTranslations,
+  InquiryBelongType,
+  InquiryStatus,
+  inquiryStatusLabels,
+  inquiryStatusBadgeVariants,
+} from '../model/types'
 import { formatDate } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/shared/components/ui/button.tsx'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
 import { Eye } from 'lucide-react'
+import { Badge } from '@/shared/components/ui/badge'
+import { cn } from '@/shared/lib/utils'
 
 const InquiryTable = () => {
   const { user } = useAuth()
@@ -128,7 +136,23 @@ const InquiryTable = () => {
       header: 'Murojaat matni',
       cell: ({ row }) => <span title={row.original.message}>{row.original.message}</span>,
     },
-
+    {
+      accessorKey: 'status',
+      header: () => <div className="whitespace-nowrap">Holat</div>,
+      cell: ({ row }) => {
+        const status = row.original.status as InquiryStatus
+        const label = inquiryStatusLabels[status] || status || '-'
+        const variantClass = inquiryStatusBadgeVariants[status] || 'bg-gray-100 text-gray-800'
+        return (
+          <Badge variant="outline" className={cn('border-none font-medium', variantClass)}>
+            {label}
+          </Badge>
+        )
+      },
+      filterKey: 'status',
+      filterType: 'select',
+      filterOptions: Object.entries(inquiryStatusLabels).map(([id, name]) => ({ id, name })),
+    },
     {
       header: 'Amallar',
       accessorKey: 'actions',

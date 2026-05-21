@@ -9,6 +9,7 @@ export enum UserRoles {
   INDIVIDUAL = 'INDIVIDUAL', // Jismoniy shaxs
   PROCURATOR = 'PROCURATOR', // Prokuratura
   INTERACTIVE_SERVICE = 'INTERACTIVE_SERVICE', // Interaktiv oyna
+  ACCOUNTANT = 'ACCOUNTANT', // Hisobchi
 }
 
 export const UserRoleLabels: Record<UserRoles, string> = {
@@ -22,6 +23,7 @@ export const UserRoleLabels: Record<UserRoles, string> = {
   [UserRoles.INDIVIDUAL]: 'Jismoniy shaxs',
   [UserRoles.PROCURATOR]: 'Prokuratura',
   [UserRoles.INTERACTIVE_SERVICE]: 'Interaktiv oyna',
+  [UserRoles.ACCOUNTANT]: 'Hisobchi',
 }
 
 export enum Direction {

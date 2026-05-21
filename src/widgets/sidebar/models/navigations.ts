@@ -15,4 +15,5 @@ export const NAVIGATIONS = {
   [UserRoles.REGIONAL]: allNavigation,
   [UserRoles.PROCURATOR]: allNavigation,
   [UserRoles.INTERACTIVE_SERVICE]: [],
+  [UserRoles.ACCOUNTANT]: allNavigation,
 }

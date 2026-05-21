@@ -15,6 +15,8 @@ export const routeByRole = (role: UserRoles | undefined | null): string => {
       return '/register'
     case UserRoles.INTERACTIVE_SERVICE:
       return '/interactive-service'
+    case UserRoles.ACCOUNTANT:
+      return '/inquiries'
     default:
       return '/applications'
   }

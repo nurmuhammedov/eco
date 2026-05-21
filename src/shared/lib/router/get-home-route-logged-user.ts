@@ -12,6 +12,7 @@ const roleHomeRoutes: Record<UserRoles, string> = {
   [UserRoles.MANAGER]: DefaultRoute,
   [UserRoles.INDIVIDUAL]: DefaultRoute,
   [UserRoles.PROCURATOR]: '/register',
+  [UserRoles.ACCOUNTANT]: '/inquiries',
   [UserRoles.INTERACTIVE_SERVICE]: '/interactive-service',
 }
 

@@ -231,6 +231,14 @@
     "REJECTED": "Rad etilgan",
     "CANCELED": "Qaytarilgan"
   },
+  "inquiry_status": {
+    "NEW": "Yangi",
+    "IN_PROCESS": "Ko‘rib chiqilmoqda",
+    "IN_COURT": "Sud jarayonida",
+    "REWARD_PAYMENT": "To‘lov kutilmoqda",
+    "COMPLETED": "Yakunlangan",
+    "REJECTED": "Rad etilgan"
+  },
   "building_sphere_type": {
     "RESIDENTIAL": "Turar joy binosi",
     "HOTEL": "Mehmonxona",

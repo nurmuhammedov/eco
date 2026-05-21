@@ -8,6 +8,7 @@ import {
   managerRoutes,
   interactiveServiceRoutes,
   regionalRoutes,
+  accountantRoutes,
 } from '@/shared/config/routes/roles'
 import { authRoutes, publicRoutes, specialComponents } from '@/shared/config/routes'
 import { useAuth } from '@/shared/hooks/use-auth'
@@ -79,6 +80,9 @@ export const useAppRoutes = () => {
         break
       case UserRoles.INDIVIDUAL:
         routes = individualRoutes
+        break
+      case UserRoles.ACCOUNTANT:
+        routes = accountantRoutes
         break
       case UserRoles.PROCURATOR:
         routes = chairmanRoutes

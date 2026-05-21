@@ -39,7 +39,8 @@ export function AppSidebar() {
 
       navigations = []
       if (appealNav) navigations.push(appealNav)
-      if (inquiryNav && user.role === UserRoles.INDIVIDUAL) navigations.push(inquiryNav)
+      if (inquiryNav && (user.role === UserRoles.INDIVIDUAL || user.role === UserRoles.ACCOUNTANT))
+        navigations.push(inquiryNav)
     } else {
       const baseNavigation = NAVIGATIONS[user.role] || allNavigation
 
@@ -54,7 +55,7 @@ export function AppSidebar() {
           }
         } else if (
           user.directions.includes(navItem.id as Direction) ||
-          (user.role === UserRoles.INDIVIDUAL && navItem.id === 'INQUIRY')
+          ((user.role === UserRoles.INDIVIDUAL || user.role === UserRoles.ACCOUNTANT) && navItem.id === 'INQUIRY')
         ) {
           acc.push(navItem)
         }
