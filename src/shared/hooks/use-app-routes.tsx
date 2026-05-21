@@ -48,6 +48,7 @@ export const useAppRoutes = () => {
 
     return routes.filter((route) => {
       if (!route.id) return true
+      if (route.id === 'INQUIRY' || route.id === 'REPORT') return true
       return user.directions.includes(route.id as Direction)
     })
   }
