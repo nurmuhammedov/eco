@@ -2,13 +2,17 @@ import { AxiosError } from 'axios'
 import { publicApi } from '@/shared/api/public'
 
 export interface AppealDto {
+  belongId?: string
   type: 'APPEAL' | 'COMPLAINT' | 'SUGGESTION'
+  belongType?: 'EQUIPMENT' | 'XRAY' | 'HF' | 'IRS' | (string & {})
+  message: string
   fullName?: string | null
   phoneNumber?: string
-  message: string
-  belongId: string
-  belongType: 'EQUIPMENT'
-  filePath?: string
+  filePathList: string[]
+  regionId: number
+  location: string
+  occurredAt: string
+  cardNumber?: string | null
 }
 
 export interface AppealApiResponse {

@@ -5,12 +5,11 @@ import { useRiskAnalysisStats } from '@/features/dashboard/model/use-risk-analys
 import { cn } from '@/shared/lib/utils'
 import { getRegionIdByName } from '@/features/dashboard/model/constants'
 import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
-// import Icon from '@/shared/components/common/icon'
+import Icon from '@/shared/components/common/icon'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { Loader2, Factory, Wrench, Radiation, ScanLine, ShieldAlert, ClipboardCheck, MessageSquare } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip'
 
-/* ──────── Bo'limlar ──────── */
 const CATEGORIES = [
   { id: 'hf', label: 'XICHOlar', icon: Factory },
   { id: 'equipment', label: 'Qurilmalar', icon: Wrench },
@@ -26,68 +25,65 @@ const HF_TIP_INFO = [
     id: 1,
     title: '1-tip XICHO',
     color: '#0B626B',
-    desc: 'Birinchi tipdagi xavfli ishlab chiqarish obyektlari — "Xavfli ishlab chiqarish obyektlarini identifikatsiyalash tartibi to‘g‘risida nizom"ga 2-ilovaning 1 va 2-jadvallarida ko‘rsatilgan miqdorda, ularning cheklangan me’yoriga teng bo‘lgan yoki undan ortiq bo‘lgan xavfli moddalar foydalaniladigan, ishlab chiqariladigan, qayta ishlanadigan, hosil qilinadigan, saqlanadigan, tashlanadigan, yo‘q qilinadigan yuqori xavflilik darajasidagi obyektlar;',
+    desc: 'Birinchi tipdagi xavfli ishlab chiqarish obyektlari — "Xavfli ishlab chiqarish obyektlarini identifikatsiyalash tartibi to\u2018g\u2018risida nizom"ga 2-ilovaning 1 va 2-jadvallarida ko\u2018rsatilgan miqdorda, ularning cheklangan me\u2018yoriga teng bo\u2018lgan yoki undan ortiq bo\u2018lgan xavfli moddalar foydalaniladigan, ishlab chiqariladigan, qayta ishlanadigan, hosil qilinadigan, saqlanadigan, tashlanadigan, yo\u2018q qilinadigan yuqori xavflilik darajasidagi obyektlar;',
   },
   {
     id: 2,
     title: '2-tip XICHO',
     color: '#2563EB',
-    desc: 'Ikkinchi tipdagi xavfli ishlab chiqarish obyektlari — birinchi tipga tegishli bo‘lmagan, "Xavfli ishlab chiqarish obyektlarini identifikatsiyalash tartibi to‘g‘risida nizom"ga 2-ilovaning 1 va 2-jadvallarida ko‘rsatilgan miqdorda, ularning cheklangan me’yoridan kam bo‘lgan xavfli moddalar foydalaniladigan, ishlab chiqariladigan, qayta ishlanadigan, saqlanadigan, tashlanadigan, yo‘q qilinadigan obyektlar;',
+    desc: 'Ikkinchi tipdagi xavfli ishlab chiqarish obyektlari — birinchi tipga tegishli bo\u2018lmagan, "Xavfli ishlab chiqarish obyektlarini identifikatsiyalash tartibi to\u2018g\u2018risida nizom"ga 2-ilovaning 1 va 2-jadvallarida ko\u2018rsatilgan miqdorda, ularning cheklangan me\u2018yoridan kam bo\u2018lgan xavfli moddalar foydalaniladigan, ishlab chiqariladigan, qayta ishlanadigan, saqlanadigan, tashlanadigan, yo\u2018q qilinadigan obyektlar;',
   },
   {
     id: 3,
     title: '3-tip XICHO',
     color: '#7C3AED',
-    desc: 'Uchinchi tipdagi xavfli ishlab chiqarish obyektlari — obyektlarning birinchi va ikkinchi tiplariga tegishli bo‘lmagan, ushbu Nizomning 6-bandi 2—5-kichik bandlarida ko‘rsatilgan xavflilik belgilariga ega bo‘lgan obyektlar.',
+    desc: 'Uchinchi tipdagi xavfli ishlab chiqarish obyektlari — obyektlarning birinchi va ikkinchi tiplariga tegishli bo\u2018lmagan, ushbu Nizomning 6-bandi 2\u20145-kichik bandlarida ko\u2018rsatilgan xavflilik belgilariga ega bo\u2018lgan obyektlar.',
   },
 ]
 
 type CategoryId = (typeof CATEGORIES)[number]['id']
 
-// const SUBTITLES: Record<CategoryId, string> = {
-//   hf: 'Xavfli ishlab chiqarish obyektlari',
-//   equipment: 'Qurilmalar',
-//   irs: 'Ionlashtiruvchi nurlanish manbalari',
-//   xray: 'Rentgen qurilmalari',
-//   risk: 'Xavf tahlili natijalari',
-//   inspection: 'Tekshiruvlar',
-//   inquiry: 'Kelib tushgan murojaatlar',
-// }
+const SUBTITLES: Record<CategoryId, string> = {
+  hf: 'Xavfli ishlab chiqarish obyektlari',
+  equipment: 'Qurilmalar',
+  irs: 'Ionlashtiruvchi nurlanish manbalari',
+  xray: 'Rentgen qurilmalari',
+  risk: 'Xavf tahlili natijalari',
+  inspection: 'Tekshiruvlar',
+  inquiry: 'Kelib tushgan murojaatlar',
+}
 
-/* ──────── O'zbekcha sana formatlash ──────── */
-// const UZ_MONTHS = [
-//   'yanvar',
-//   'fevral',
-//   'mart',
-//   'aprel',
-//   'may',
-//   'iyun',
-//   'iyul',
-//   'avgust',
-//   'sentabr',
-//   'oktabr',
-//   'noyabr',
-//   'dekabr',
-// ]
-// const UZ_WEEKDAYS = ['yakshanba', 'dushanba', 'seshanba', 'chorshanba', 'payshanba', 'juma', 'shanba']
+const UZ_MONTHS = [
+  'yanvar',
+  'fevral',
+  'mart',
+  'aprel',
+  'may',
+  'iyun',
+  'iyul',
+  'avgust',
+  'sentabr',
+  'oktabr',
+  'noyabr',
+  'dekabr',
+]
+const UZ_WEEKDAYS = ['yakshanba', 'dushanba', 'seshanba', 'chorshanba', 'payshanba', 'juma', 'shanba']
 
-// const formatUzDate = (d: Date) => {
-//   const day = d.getDate()
-//   const month = UZ_MONTHS[d.getMonth()]
-//   const year = d.getFullYear()
-//   const weekday = UZ_WEEKDAYS[d.getDay()]
-//   const capitalizedWeekday = weekday.charAt(0).toUpperCase() + weekday.slice(1)
-//   return `${day}-${month} ${year}, ${capitalizedWeekday}`
-// }
-//
-// const formatUzTime = (d: Date) => {
-//   const h = String(d.getHours()).padStart(2, '0')
-//   const m = String(d.getMinutes()).padStart(2, '0')
-//   const s = String(d.getSeconds()).padStart(2, '0')
-//   return `${h}:${m}:${s}`
-// }
+const formatUzDate = (d: Date) => {
+  const day = d.getDate()
+  const month = UZ_MONTHS[d.getMonth()]
+  const year = d.getFullYear()
+  const weekday = UZ_WEEKDAYS[d.getDay()]
+  return `${day}-${month} ${year}, ${weekday.charAt(0).toUpperCase() + weekday.slice(1)}`
+}
 
-/* ──────── Default chorak va yil (bitta chorak orqaga) ──────── */
+const formatUzTime = (d: Date) => {
+  const h = String(d.getHours()).padStart(2, '0')
+  const m = String(d.getMinutes()).padStart(2, '0')
+  const s = String(d.getSeconds()).padStart(2, '0')
+  return `${h}:${m}:${s}`
+}
+
 const getDefaultQuarter = () => {
   const now = new Date()
   const currentQ = Math.ceil((now.getMonth() + 1) / 3)
@@ -99,34 +95,27 @@ const getDefaultQuarter = () => {
 const CURRENT_YEAR = new Date().getFullYear()
 const AVAILABLE_YEARS = Array.from({ length: Math.max(1, CURRENT_YEAR - 2025 + 1) }, (_, i) => 2025 + i)
 
-/* ──────── Skeleton loader ──────── */
 const Skeleton: React.FC<{ className?: string }> = ({ className }) => (
   <div className={cn('animate-pulse rounded-lg bg-slate-200/60', className)} />
 )
 
-/* ──────── Sahifa yuklanish ekrani (skeleton) ──────── */
 const PageLoader: React.FC = () => (
   <div className="fixed inset-0 flex flex-col overflow-hidden bg-slate-50 select-none">
-    {/* Header skeleton */}
-    {/*<header className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-3 lg:px-10 lg:py-4">*/}
-    {/*  <div className="flex items-center gap-3 lg:gap-4">*/}
-    {/*    <Skeleton className="h-10 w-10 rounded-full lg:h-12 lg:w-12" />*/}
-    {/*    <div className="flex flex-col gap-2">*/}
-    {/*      <Skeleton className="h-5 w-64 lg:h-6 lg:w-80" />*/}
-    {/*      <Skeleton className="h-3 w-44 lg:h-4 lg:w-56" />*/}
-    {/*    </div>*/}
-    {/*  </div>*/}
-    {/*  <div className="flex flex-col items-end gap-1.5">*/}
-    {/*    <Skeleton className="h-7 w-28 lg:h-8 lg:w-32" />*/}
-    {/*    <Skeleton className="h-3 w-40 lg:w-48" />*/}
-    {/*  </div>*/}
-    {/*</header>*/}
-
-    {/* Content skeleton */}
-    <main className="flex flex-1 flex-col gap-4 overflow-hidden p-4 lg:gap-5 lg:p-6">
-      {/* Map skeleton with floating sidebar skeleton */}
+    <header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2 lg:px-6 lg:py-3">
+      <div className="flex items-center gap-3">
+        <Skeleton className="h-8 w-8 rounded-full lg:h-10 lg:w-10" />
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-4 w-64 lg:h-5 lg:w-80" />
+          <Skeleton className="h-3 w-44 lg:w-56" />
+        </div>
+      </div>
+      <div className="flex flex-col items-end gap-1.5">
+        <Skeleton className="h-6 w-24 lg:h-7 lg:w-28" />
+        <Skeleton className="h-3 w-36 lg:w-44" />
+      </div>
+    </header>
+    <main className="flex flex-1 flex-col gap-2 overflow-hidden p-2 lg:gap-3 lg:p-4">
       <div className="relative flex-1 overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        {/* Floating sidebar skeleton */}
         <div className="absolute top-1/2 left-4 z-20 flex -translate-y-1/2 flex-col gap-2 rounded-2xl border border-slate-100 bg-white/80 p-2 shadow-sm backdrop-blur-sm lg:gap-3 lg:p-3">
           {Array.from({ length: 7 }).map((_, i) => (
             <Skeleton key={i} className="h-10 w-10 rounded-xl lg:h-12 lg:w-12" />
@@ -143,9 +132,7 @@ const PageLoader: React.FC = () => (
           <Skeleton className="h-[75%] w-[70%] rounded-xl" />
         </div>
       </div>
-
-      {/* Stats skeleton */}
-      <div className="flex shrink-0 flex-col gap-4 sm:h-36 sm:flex-row sm:gap-5 lg:h-40">
+      <div className="flex shrink-0 flex-col gap-3 sm:h-36 sm:flex-row sm:gap-4 lg:h-40">
         <Skeleton className="h-32 rounded-2xl sm:h-full sm:w-56 lg:w-72" />
         {Array.from({ length: 3 }).map((_, i) => (
           <div
@@ -162,7 +149,6 @@ const PageLoader: React.FC = () => (
   </div>
 )
 
-/* ──────── Raqamli animatsiya komponenti ──────── */
 const AnimatedNumber: React.FC<{
   value: number
   className?: string
@@ -200,7 +186,6 @@ const AnimatedNumber: React.FC<{
   )
 }
 
-/* ──────── Progress bar ──────── */
 const ProgressBar: React.FC<{ percent: number; color: string; isLoading?: boolean }> = ({
   percent,
   color,
@@ -226,37 +211,31 @@ const ProgressBar: React.FC<{ percent: number; color: string; isLoading?: boolea
   )
 }
 
-/* ──────── Sahifa ──────── */
 export const InteractiveServicePage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<CategoryId>('hf')
   const [activeRegion, setActiveRegion] = useState<string | null>(null)
-  const [_, setTime] = useState(new Date())
+  const [time, setTime] = useState(new Date())
   const [transitionKey, setTransitionKey] = useState(0)
   const [pageReady, setPageReady] = useState(false)
 
-  // Default chorak va yil
   const defaultQuarter = useMemo(() => getDefaultQuarter(), [])
   const [filterYear, setFilterYear] = useState(defaultQuarter.year)
   const [filterQuarter, setFilterQuarter] = useState(defaultQuarter.type)
 
-  // Sahifa tayyor bo'lganda loader yashirish
   useEffect(() => {
     const timer = setTimeout(() => setPageReady(true), 600)
     return () => clearTimeout(timer)
   }, [])
 
-  // Soat
   useEffect(() => {
     const id = setInterval(() => setTime(new Date()), 1000)
     return () => clearInterval(id)
   }, [])
 
-  // Kategoriya o'zgarganda animatsiya
   useEffect(() => {
     setTransitionKey((k) => k + 1)
   }, [activeCategory])
 
-  // Xarita bosilganda
   const handleRegionClick = useCallback((name: string | null) => {
     if (!name) {
       setActiveRegion(null)
@@ -267,19 +246,10 @@ export const InteractiveServicePage: React.FC = () => {
 
   const regionIdForApi = activeRegion ? getRegionIdByName(activeRegion)?.toString() : undefined
 
-  // Ma'lumotlar
   const stats = useDashboardStats(regionIdForApi, activeCategory)
 
-  /*
-   * XICHOlar tiplari bo'yicha (hfTypeId parametri orqali)
-   * 1-tip: hfTypeId = 1 (name "1") + hfTypeId = 5 (name "3.1")
-   * 2-tip: hfTypeId = 2 (name "2") + hfTypeId = 6 (name "3.2")
-   * 3-tip: hfTypeId = 8 (name "3.4") + hfTypeId = 9 (name "3.5")
-   *       + hfTypeId = 7 (name "3.3") + hfTypeId = 10 (name "3")
-   */
   const hfCommon = { page: 1, size: 1, active: true }
 
-  // 1-tip tarkibiy qismlari
   const { totalElements: hfT1_id1 = 0, isLoading: l1 } = usePaginatedData(
     '/hf',
     { ...hfCommon, hfTypeId: 1 },
@@ -290,8 +260,6 @@ export const InteractiveServicePage: React.FC = () => {
     { ...hfCommon, hfTypeId: 5 },
     activeCategory === 'hf'
   )
-
-  // 2-tip tarkibiy qismlari
   const { totalElements: hfT2_id2 = 0, isLoading: l3 } = usePaginatedData(
     '/hf',
     { ...hfCommon, hfTypeId: 2 },
@@ -302,8 +270,6 @@ export const InteractiveServicePage: React.FC = () => {
     { ...hfCommon, hfTypeId: 6 },
     activeCategory === 'hf'
   )
-
-  // 3-tip tarkibiy qismlari
   const { totalElements: hfT3_id10 = 0, isLoading: l5 } = usePaginatedData(
     '/hf',
     { ...hfCommon, hfTypeId: 10 },
@@ -330,7 +296,6 @@ export const InteractiveServicePage: React.FC = () => {
   const hfType3 = (hfT3_id10 ?? 0) + (hfT3_id7 ?? 0) + (hfT3_id8 ?? 0) + (hfT3_id9 ?? 0)
   const hfLoading = l1 || l2 || l3 || l4 || l5 || l6 || l7 || l8
 
-  // Xavf tahlili
   const riskStats = useRiskAnalysisStats({
     year: filterYear,
     quarter: filterQuarter,
@@ -338,35 +303,20 @@ export const InteractiveServicePage: React.FC = () => {
     enabled: activeCategory === 'risk',
   })
   const riskTotal = riskStats.highRisk + riskStats.mediumRisk + riskStats.lowRisk
-  const riskLoading = false // useRiskAnalysisStats internally doesn't expose loading right now
 
-  // Tekshiruvlar (year va chorak majburiy)
   const { totalElements: inspRisk = 0, isLoading: lInsp1 } = usePaginatedData(
     '/inspections',
-    {
-      page: 1,
-      size: 1,
-      year: filterYear,
-      quarter: filterQuarter,
-      type: 'RISK_BASED',
-    },
+    { page: 1, size: 1, year: filterYear, quarter: filterQuarter, type: 'RISK_BASED' },
     activeCategory === 'inspection'
   )
   const { totalElements: inspOther = 0, isLoading: lInsp2 } = usePaginatedData(
     '/inspections/other',
-    {
-      page: 1,
-      size: 1,
-      year: filterYear,
-      quarter: filterQuarter,
-      type: 'OTHER',
-    },
+    { page: 1, size: 1, year: filterYear, quarter: filterQuarter, type: 'OTHER' },
     activeCategory === 'inspection'
   )
   const inspectionTotal = inspRisk + inspOther
   const inspLoading = lInsp1 || lInsp2
 
-  // Murojaatlar
   const inqParams = { page: 1, size: 10 }
   const { totalElements: inqHf = 0, isLoading: lInq1 } = usePaginatedData(
     '/inquiries',
@@ -391,13 +341,12 @@ export const InteractiveServicePage: React.FC = () => {
   const inquiryTotal = inqHf + inqEq + inqIrs + inqXray
   const inqLoading = lInq1 || lInq2 || lInq3 || lInq4
 
-  // Yuklanish holati
   const isDataLoading = useMemo(() => {
     switch (activeCategory) {
       case 'hf':
         return hfLoading
       case 'risk':
-        return riskLoading
+        return false
       case 'inspection':
         return inspLoading
       case 'inquiry':
@@ -405,9 +354,8 @@ export const InteractiveServicePage: React.FC = () => {
       default:
         return false
     }
-  }, [activeCategory, hfLoading, riskLoading, inspLoading, inqLoading])
+  }, [activeCategory, hfLoading, inspLoading, inqLoading])
 
-  // Statistikalar
   const currentStats = useMemo(() => {
     switch (activeCategory) {
       case 'hf':
@@ -488,14 +436,12 @@ export const InteractiveServicePage: React.FC = () => {
 
   const activeCategoryLabel = CATEGORIES.find((c) => c.id === activeCategory)?.label ?? ''
 
-  // Sahifa yuklangunga qadar loader
   if (!pageReady) {
     return <PageLoader />
   }
 
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-slate-50 select-none">
-      {/* Animatsiya uslublari */}
       <style>{`
         @keyframes is-fade-up {
           from { opacity: 0; transform: translateY(12px); }
@@ -509,45 +455,36 @@ export const InteractiveServicePage: React.FC = () => {
           from { opacity: 0; transform: scale(0.96); }
           to   { opacity: 1; transform: scale(1); }
         }
-        .is-anim-fade-up {
-          animation: is-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-        .is-anim-fade-in {
-          animation: is-fade-in 0.6s ease both;
-        }
-        .is-anim-scale-in {
-          animation: is-scale-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
+        .is-anim-fade-up { animation: is-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .is-anim-fade-in { animation: is-fade-in 0.6s ease both; }
+        .is-anim-scale-in { animation: is-scale-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
       `}</style>
 
-      {/* ── Sarlavha ── */}
-      {/*<header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2 lg:px-6 lg:py-3">*/}
-      {/*  <div className="flex items-center gap-3 lg:gap-4">*/}
-      {/*    /!* Logo *!/*/}
-      {/*    <div className="relative h-8 w-8 min-w-8 lg:h-10 lg:w-10 lg:min-w-10">*/}
-      {/*      <Icon name="logo" className="size-full object-contain" />*/}
-      {/*    </div>*/}
-      {/*    <div>*/}
-      {/*      <h1 className="text-sm font-semibold tracking-tight text-slate-700 lg:text-lg">*/}
-      {/*        Sanoat radiatsiya va yadro xavfsizligi qo&#x2018;mitasi ekotizimi*/}
-      {/*      </h1>*/}
-      {/*      <p key={`subtitle-${transitionKey}`} className="is-anim-fade-in mt-0.5 text-[10px] text-slate-400 lg:text-xs">*/}
-      {/*        {SUBTITLES[activeCategory]}*/}
-      {/*      </p>*/}
-      {/*    </div>*/}
-      {/*  </div>*/}
+      <header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2 lg:px-6 lg:py-3">
+        <div className="flex items-center gap-3 lg:gap-4">
+          <div className="relative h-8 w-8 min-w-8 lg:h-10 lg:w-10 lg:min-w-10">
+            <Icon name="logo" className="size-full object-contain" />
+          </div>
+          <div>
+            <h1 className="text-sm font-semibold tracking-tight text-slate-700 lg:text-lg">
+              Sanoat radiatsiya va yadro xavfsizligi qo&#x2018;mitasi ekotizimi
+            </h1>
+            <p
+              key={`subtitle-${transitionKey}`}
+              className="is-anim-fade-in mt-0.5 text-[10px] text-slate-400 lg:text-xs"
+            >
+              {SUBTITLES[activeCategory]}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-col items-end gap-0.5">
+          <span className="text-xl tracking-tight text-slate-600 tabular-nums lg:text-2xl">{formatUzTime(time)}</span>
+          <span className="text-[10px] text-slate-400 lg:text-xs">{formatUzDate(time)}</span>
+        </div>
+      </header>
 
-      {/*  <div className="flex flex-col items-end gap-0.5">*/}
-      {/*    <span className="text-xl tracking-tight text-slate-600 tabular-nums lg:text-2xl">{formatUzTime(time)}</span>*/}
-      {/*    <span className="text-[10px] text-slate-400 lg:text-xs">{formatUzDate(time)}</span>*/}
-      {/*  </div>*/}
-      {/*</header>*/}
-
-      {/* ── Asosiy qism ── */}
       <main className="flex flex-1 flex-col gap-2 overflow-hidden p-2 lg:gap-3 lg:p-4">
-        {/* Xarita */}
         <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white">
-          {/* Floating Sidebar (Navigatsiya) */}
           <div className="absolute top-1/2 left-4 z-30 flex -translate-y-1/2 flex-col gap-2 rounded-2xl border border-slate-100 bg-white/80 p-2 shadow-sm backdrop-blur-md lg:gap-3 lg:p-3">
             <TooltipProvider delayDuration={100}>
               {CATEGORIES.map((cat) => {
@@ -559,7 +496,7 @@ export const InteractiveServicePage: React.FC = () => {
                       <button
                         onClick={() => setActiveCategory(cat.id)}
                         className={cn(
-                          'group relative flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-300 lg:h-12 lg:w-12',
+                          'group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl transition-all duration-300 lg:h-12 lg:w-12',
                           isActive
                             ? 'bg-[#0B626B] text-white shadow-md'
                             : 'bg-white/50 text-slate-500 hover:bg-slate-100 hover:text-slate-700 hover:shadow-sm'
@@ -576,7 +513,7 @@ export const InteractiveServicePage: React.FC = () => {
                     <TooltipContent
                       side="right"
                       sideOffset={12}
-                      className="z-[110] cursor-pointer rounded-lg border border-slate-100 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 shadow-2xl transition-transform hover:scale-105 lg:px-5 lg:py-3 lg:text-base"
+                      className="z-[110] cursor-pointer rounded-lg border border-slate-100 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 shadow-2xl lg:px-5 lg:py-3 lg:text-base"
                     >
                       {cat.label}
                     </TooltipContent>
@@ -585,13 +522,14 @@ export const InteractiveServicePage: React.FC = () => {
               })}
             </TooltipProvider>
           </div>
+
           <div
             key={`region-label-${activeRegion}-${transitionKey}`}
             className="is-anim-fade-up absolute top-4 left-5 z-20 flex flex-col gap-3 lg:top-6 lg:left-8"
           >
             <div>
               <h2 className="text-lg font-semibold text-slate-700 lg:text-2xl">
-                {activeRegion || 'Respublika bo‘yicha'}
+                {activeRegion || 'Respublika bo\u2018yicha'}
               </h2>
               <p className="mt-0.5 text-[10px] text-slate-400 lg:mt-1 lg:text-xs">
                 Batafsil ma&#x2018;lumot uchun hududni tanlang
@@ -599,9 +537,7 @@ export const InteractiveServicePage: React.FC = () => {
             </div>
           </div>
 
-          {/* O'ng tomondagi UI elementlar */}
           <div className="absolute top-4 right-5 z-20 flex flex-col items-end gap-3 lg:top-6 lg:right-8">
-            {/* Faol bo'lim badge & Filters */}
             {['risk', 'inspection'].includes(activeCategory) && (
               <div className="is-anim-scale-in flex items-center gap-2">
                 <Select value={filterYear.toString()} onValueChange={(val) => setFilterYear(Number(val))}>
@@ -616,7 +552,6 @@ export const InteractiveServicePage: React.FC = () => {
                     ))}
                   </SelectContent>
                 </Select>
-
                 <Select value={filterQuarter.toString()} onValueChange={(val) => setFilterQuarter(Number(val))}>
                   <SelectTrigger className="h-8 w-[100px] border-slate-200 bg-white !text-xs text-slate-600 focus:ring-0 focus:ring-offset-0 lg:h-9 lg:w-[120px] lg:!text-sm">
                     <SelectValue />
@@ -630,19 +565,19 @@ export const InteractiveServicePage: React.FC = () => {
                 </Select>
               </div>
             )}
+
             <div className="is-anim-scale-in flex items-center gap-1.5 rounded-lg border border-[#0B626B]/10 bg-[#0B626B]/5 px-3 py-1 lg:gap-2 lg:px-4 lg:py-1.5">
               <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#0B626B]" />
               <span className="text-[10px] text-[#0B626B] lg:text-xs">{activeCategoryLabel}</span>
             </div>
 
-            {/* HF Tips - O'ng tomonga ko'chirildi */}
             {activeCategory === 'hf' && (
-              <div className="flex w-[280px] flex-col gap-3 lg:w-[350px]">
+              <div className="flex w-[280px] flex-col gap-2 lg:w-[340px]">
                 <TooltipProvider delayDuration={100}>
                   {HF_TIP_INFO.map((tip) => (
                     <Tooltip key={tip.id}>
                       <TooltipTrigger asChild>
-                        <button className="group flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-slate-200/60 bg-white/70 p-3 text-left shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-lg lg:p-4">
+                        <button className="group flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-slate-200/60 bg-white/70 p-3 text-left shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-lg">
                           <div className="flex items-center gap-2">
                             <div
                               className="h-2.5 w-2.5 rounded-full shadow-sm"
@@ -670,7 +605,6 @@ export const InteractiveServicePage: React.FC = () => {
             )}
           </div>
 
-          {/* Xarita */}
           <Suspense
             fallback={
               <div className="flex h-full w-full items-center justify-center">
@@ -687,7 +621,6 @@ export const InteractiveServicePage: React.FC = () => {
             </div>
           </Suspense>
 
-          {/* Bekor qilish */}
           {activeRegion && (
             <button
               onClick={() => setActiveRegion(null)}
@@ -698,12 +631,10 @@ export const InteractiveServicePage: React.FC = () => {
           )}
         </div>
 
-        {/* ── Statistika ── */}
         <div
           key={`stats-row-${transitionKey}`}
-          className="flex shrink-0 flex-col gap-4 sm:h-36 sm:flex-row sm:gap-5 lg:h-40"
+          className="flex shrink-0 flex-col gap-3 sm:h-36 sm:flex-row sm:gap-4 lg:h-40"
         >
-          {/* JAMI — Amaldagilar */}
           <div className="is-anim-fade-up relative flex flex-col justify-between overflow-hidden rounded-2xl bg-[#0B626B] p-5 sm:w-56 lg:w-72 lg:p-6">
             <div className="absolute -right-6 -bottom-6 h-24 w-24 rounded-full bg-white/5 lg:h-28 lg:w-28" />
             <span className="text-[10px] tracking-[0.15em] text-white/50 uppercase lg:text-[11px] lg:tracking-[0.2em]">
@@ -717,7 +648,6 @@ export const InteractiveServicePage: React.FC = () => {
             <span className="text-[9px] tracking-wider text-white/40 lg:text-[10px]">{currentStats.totalLabel}</span>
           </div>
 
-          {/* Sub-kartochkalar */}
           {currentStats.items.map((item, idx) => {
             const pct = currentStats.total > 0 ? Math.min(100, (item.value / currentStats.total) * 100) : 0
             return (

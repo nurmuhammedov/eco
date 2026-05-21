@@ -136,15 +136,20 @@ const InquiryTable = () => {
       accessorKey: 'belongId',
       className: '!w-[1%]',
       cell: ({ row }) => (
-        <Button
-          onClick={() =>
-            navigate(
-              `/register/${row.original.belongId}/${activeTab == InquiryBelongType.HF ? 'hf' : activeTab == InquiryBelongType.EQUIPMENT ? 'equipments' : activeTab == InquiryBelongType.IRS ? 'irs' : 'xrays'}`
-            )
-          }
-        >
-          Obyektni ko‘rish
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() =>
+              navigate(
+                `/register/${row.original.belongId}/${activeTab == InquiryBelongType.HF ? 'hf' : activeTab == InquiryBelongType.EQUIPMENT ? 'equipments' : activeTab == InquiryBelongType.IRS ? 'irs' : 'xrays'}`
+              )
+            }
+          >
+            Obyektni ko‘rish
+          </Button>
+          <Button variant="outline" onClick={() => navigate(`/inquiries/detail/${row.original.id}`)}>
+            Murojaatni ko‘rish
+          </Button>
+        </div>
       ),
     },
   ]

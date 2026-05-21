@@ -20,6 +20,9 @@ const RegisterChangePage = lazy(() => import('@/pages/register/register-change-p
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
+const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
+const InquiryAddPage = lazy(() => import('@/pages/inquiries/ui/inquiry-add'))
+const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
 
 export const individualRoutes = [
   // ELEVATORS
@@ -143,5 +146,20 @@ export const individualRoutes = [
     id: 'ANNOUNCEMENT',
     path: 'news/:id',
     element: withSuspense(NewsDetailPage),
+  },
+  {
+    id: 'INQUIRY',
+    path: 'inquiries',
+    element: withSuspense(InquiryListPage),
+  },
+  {
+    id: 'INQUIRY',
+    path: 'inquiries/add',
+    element: withSuspense(InquiryAddPage),
+  },
+  {
+    id: 'INQUIRY',
+    path: 'inquiries/detail/:id',
+    element: withSuspense(InquiryDetailPage),
   },
 ]

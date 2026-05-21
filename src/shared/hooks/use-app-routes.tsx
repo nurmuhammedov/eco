@@ -22,6 +22,15 @@ import { PWAInstallPrompt } from '@/shared/components/common/pwa-install-prompt/
 const AppLayout = lazy(() => import('@/shared/layouts/ui/app-layout'))
 const AuthLayout = lazy(() => import('@/shared/layouts/ui/auth-layout'))
 
+const FallbackRedirect = () => {
+  const to = apiConfig.oneIdClientId === 'test_cirns_uz' ? '/auth/login/admin' : '/home'
+  if (to === '/home') {
+    window.location.replace(to)
+    return null
+  }
+  return <Navigate to={to} replace />
+}
+
 const withSuspense = (Component: React.ComponentType) => (
   <Suspense fallback={<Loader isVisible />}>
     <Component />
@@ -133,9 +142,7 @@ export const useAppRoutes = () => {
         children: [
           {
             index: true,
-            element: (
-              <Navigate to={apiConfig.oneIdClientId === 'test_cirns_uz' ? '/auth/login/admin' : '/home'} replace />
-            ),
+            element: <FallbackRedirect />,
           },
           ...authLayoutChildren,
         ],
@@ -146,7 +153,7 @@ export const useAppRoutes = () => {
       })),
       {
         path: '*',
-        element: <Navigate to={apiConfig.oneIdClientId === 'test_cirns_uz' ? '/auth/login/admin' : '/home'} replace />,
+        element: <FallbackRedirect />,
       },
     ],
   }

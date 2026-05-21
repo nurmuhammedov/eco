@@ -43,7 +43,7 @@ export const useLogin = () => {
 }
 
 export const useLoginOneId = () => {
-  const { state } = useLocation()
+  const { state, pathname } = useLocation()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -58,13 +58,16 @@ export const useLoginOneId = () => {
       const redirectPath = state?.from && state?.from !== '/' ? state?.from : routeByRole(data?.role)
       navigate(redirectPath)
     },
+    onError: () => {
+      navigate(pathname, { replace: true, state })
+    },
   })
 
   useEffect(() => {
     if (resolvedParams.code) handleLoginOneId(resolvedParams.code)
   }, [resolvedParams.code])
 
-  return { isPending }
+  return { isPending, mutate: handleLoginOneId }
 }
 
 export const useLogout = () => {

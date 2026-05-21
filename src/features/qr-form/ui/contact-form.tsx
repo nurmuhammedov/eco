@@ -1,51 +1,15 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Loader2, X } from 'lucide-react'
-import { toast } from 'sonner'
+import { useParams, Link } from 'react-router-dom'
+import { Loader2 } from 'lucide-react'
 import { usePublicEquipmentDetail } from '../hooks/usePublicEquipmentDetail'
-import { useSubmitAppeal } from '../hooks/useSubmitAppeal'
-import { useUploadFile } from '../hooks/useUploadFile'
-import { AppealDto } from '../api/post-appeal'
-import { CameraCapture } from './camera-capture'
 import { getDate } from '@/shared/utils/date.ts'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
-import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Button } from '@/shared/components/ui/button'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
-import { Input } from '@/shared/components/ui/input'
-import { Textarea } from '@/shared/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/components/ui/badge'
-import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
-import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { Coordinate } from '@/shared/components/common/yandex-map'
 import FileLink from '@/shared/components/common/file-link'
-
-const formSchema = z.object({
-  type: z.enum(['APPEAL', 'COMPLAINT', 'SUGGESTION'], {
-    required_error: 'Murojaat turini tanlang',
-  }),
-  fullName: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  phoneNumber: z
-    .string()
-    .trim()
-    .optional()
-    .refine((val) => !val || val.length <= 4 || USER_PATTERNS.phone.test(val), {
-      message: FORM_ERROR_MESSAGES.phone,
-    }),
-  message: z.string().min(5, 'Murojaat matni juda qisqa'),
-})
-
-type SimpleFormValues = z.infer<typeof formSchema>
 
 const STATUS_MAP: Record<string, { label: string; className: string }> = {
   ACTIVE: { label: 'Reyestrdagi qurilma', className: 'bg-green-100 text-green-700 hover:bg-green-200' },
@@ -81,63 +45,12 @@ export const ContactForm = () => {
   const { id } = useParams<{ id: string }>()
   const { t } = useTranslation()
   const { data, isLoading } = usePublicEquipmentDetail(id)
-  const { mutate: submitAppeal, isPending: isSubmitting } = useSubmitAppeal()
-  const { mutateAsync: uploadFile, isPending: isUploading } = useUploadFile()
-
-  const [submittedId, setSubmittedId] = useState<string | null>(null)
-  const [capturedImage, setCapturedImage] = useState<File | null>(null)
-
-  const form = useForm<SimpleFormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: { fullName: '', phoneNumber: '', message: '' },
-  })
 
   const mapCoordinates = useMemo(() => {
     if (!data?.location) return []
     const coords = data.location.split(',')?.map(Number)
     return coords.length === 2 ? [coords] : []
   }, [data?.location])
-
-  const onSubmit = async (values: SimpleFormValues) => {
-    if (!data?.id) return
-
-    let uploadedFilePath: string | undefined = undefined
-
-    if (capturedImage) {
-      try {
-        const res = await uploadFile(capturedImage)
-        if (!res?.data) {
-          toast.error('Fayl yo‘li serverdan kelmadi')
-        }
-        uploadedFilePath = res.data
-      } catch (error) {
-        console.error(error)
-        toast.error('Rasmni yuklashda xatolik yuz berdi')
-        return
-      }
-    }
-
-    const payload: AppealDto = {
-      ...values,
-      type: values.type as unknown as 'APPEAL' | 'COMPLAINT' | 'SUGGESTION',
-      belongId: data.id,
-      belongType: 'EQUIPMENT',
-      filePath: uploadedFilePath,
-    }
-
-    submitAppeal(payload, {
-      onSuccess: (res) => {
-        setSubmittedId(res.message)
-        setCapturedImage(null)
-        form.reset()
-        toast.success('Murojaatingiz muvaffaqiyatli yuborildi!')
-        setTimeout(() => setSubmittedId(null), 10000)
-      },
-      onError: (err) => {
-        toast.error(`Xatolik: ${err.message}`)
-      },
-    })
-  }
 
   if (isLoading) {
     return (
@@ -156,7 +69,6 @@ export const ContactForm = () => {
   }
 
   const status = STATUS_MAP[data.status || ''] || STATUS_MAP.DEFAULT
-  const isProcessing = isUploading || isSubmitting
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6 pb-6">
@@ -217,155 +129,21 @@ export const ContactForm = () => {
               </div>
             )
           })}
-
-          {/*/!* Files Accordion *!/*/}
-          {/*{data.files && (*/}
-          {/*  <div className="mt-4">*/}
-          {/*    <DetailCardAccordion defaultValue={['files']}>*/}
-          {/*      <DetailCardAccordion.Item value="files" title="Qurilma hujjatlari">*/}
-          {/*        <div className="flex flex-col py-1"></div>*/}
-          {/*      </DetailCardAccordion.Item>*/}
-          {/*    </DetailCardAccordion>*/}
-          {/*  </div>*/}
-          {/*)}*/}
         </div>
       </div>
 
       <div className="bg-card overflow-hidden rounded-lg border shadow-sm">
-        <SectionHeader title="Murojaat yuborish" />
-
-        <div className="p-4 sm:p-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-              <FormField
-                name="type"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Murojaat turi <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Tanlang" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="APPEAL">Murojaat</SelectItem>
-                        <SelectItem value="COMPLAINT">Shikoyat</SelectItem>
-                        <SelectItem value="SUGGESTION">Taklif</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <FormField
-                  name="fullName"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>F.I.SH. (ixtiyoriy)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Ism-sharifingiz" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  name="phoneNumber"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Telefon raqam (ixtiyoriy)</FormLabel>
-                      <FormControl>
-                        <PhoneInput placeholder="+998 XX XXX XX XX" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2 space-y-2">
-                <FormLabel>Rasm biriktirish (ixtiyoriy)</FormLabel>
-                {!capturedImage ? (
-                  <CameraCapture onCapture={setCapturedImage} />
-                ) : (
-                  <div className="bg-muted relative mt-2 w-fit rounded-lg border p-1">
-                    <img
-                      src={URL.createObjectURL(capturedImage)}
-                      alt="Captured"
-                      className="h-auto max-h-[200px] w-auto rounded-md object-cover"
-                    />
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="icon"
-                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full shadow-sm"
-                      onClick={() => setCapturedImage(null)}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                )}
-              </div>
-
-              <FormField
-                name="message"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Murojaat matni <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Murojaatingiz mazmunini batafsil yozing..."
-                        className="min-h-[120px] resize-y"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex justify-end pt-2">
-                <Button type="submit" disabled={isProcessing} className="w-full min-w-[150px] sm:w-auto">
-                  {isProcessing ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {isUploading ? 'Yuklanmoqda...' : 'Yuborilmoqda...'}
-                    </>
-                  ) : (
-                    'Yuborish'
-                  )}
-                </Button>
-              </div>
-            </form>
-          </Form>
-
-          {submittedId && (
-            <div className="mt-6 rounded-md border border-green-200 bg-green-50 p-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
-                  <span className="text-xl text-green-600">✓</span>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-green-800">Murojaat muvaffaqiyatli yuborildi</p>
-                  <p className="text-sm text-green-700">
-                    Murojaat raqami: <strong className="font-bold">{submittedId}</strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+        <div className="flex flex-col items-center justify-center p-6 text-center md:p-10">
+          <h3 className="mb-3 text-xl font-semibold">Murojaat yuborish</h3>
+          <p className="text-muted-foreground mb-6 max-w-lg">
+            Ushbu qurilma bo‘yicha qandaydir muammo yoki taklifingiz bo‘lsa, bizning ochiq murojaat tizimimiz orqali
+            murojaat yuborishingiz mumkin.
+          </p>
+          <Link to={`/public-inquiry-choice?belongId=${data.id}&belongType=EQUIPMENT`}>
+            <Button size="lg" className="w-full sm:w-auto">
+              Murojaat yuborish sahifasiga o‘tish
+            </Button>
+          </Link>
         </div>
       </div>
 
