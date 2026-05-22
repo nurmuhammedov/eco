@@ -84,7 +84,7 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="APPEAL">Murojaat</SelectItem>
-                      <SelectItem value="RISK_APPEAL">Xavf bo‘yicha murojaat</SelectItem>
+                      <SelectItem value="RISK_APPEAL">Huquqbuzarliik xabari</SelectItem>
                       <SelectItem value="SUGGESTION">Taklif</SelectItem>
                     </SelectContent>
                   </Select>

@@ -117,7 +117,7 @@ const InquiryTable = () => {
       filterType: 'select',
       filterOptions: [
         { name: 'Murojaat', id: 'APPEAL' },
-        { name: 'Xavf bo‘yicha murojaat', id: 'RISK_APPEAL' },
+        { name: 'Huquqbuzarliik xabari', id: 'RISK_APPEAL' },
         { name: 'Taklif', id: 'SUGGESTION' },
       ],
     },

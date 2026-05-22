@@ -21,7 +21,7 @@ interface IEquipmentAppeal {
 
 const appealTypeTranslations = {
   APPEAL: 'Murojaat',
-  RISK_APPEAL: 'Xavf bo‘yicha murojaat',
+  RISK_APPEAL: 'Huquqbuzarliik xabari',
   SUGGESTION: 'Taklif',
 }
 

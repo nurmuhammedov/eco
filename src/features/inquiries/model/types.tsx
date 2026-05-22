@@ -37,7 +37,7 @@ export const inquiryTabsConfig = [
 
 export const appealTypeTranslations: Record<string, string> = {
   APPEAL: 'Murojaat',
-  RISK_APPEAL: 'Xavf bo‘yicha murojaat',
+  RISK_APPEAL: 'Huquqbuzarliik xabari',
   SUGGESTION: 'Taklif',
 }
 
