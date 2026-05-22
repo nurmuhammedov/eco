@@ -13,12 +13,26 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { useExecuteCourt } from '@/features/inquiries/hooks/use-inquiry-mutations'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { InputCurrency } from '@/shared/components/ui/input-currency'
 
-const schema = z.object({
-  isPositive: z.enum(['true', 'false'], { required_error: FORM_ERROR_MESSAGES.required }),
-  courtExecutionFilePath: z.string({ required_error: FORM_ERROR_MESSAGES.required }),
-  message: z.string().optional(),
-})
+const schema = z
+  .object({
+    isPositive: z.enum(['true', 'false'], { required_error: FORM_ERROR_MESSAGES.required }),
+    fineAmount: z.number().nullable().optional(),
+    courtExecutionFilePath: z.string({ required_error: FORM_ERROR_MESSAGES.required }),
+    message: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.isPositive === 'true') {
+      if (data.fineAmount === undefined || data.fineAmount === null) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: FORM_ERROR_MESSAGES.required,
+          path: ['fineAmount'],
+        })
+      }
+    }
+  })
 
 const ExecuteCourtModal = () => {
   const { id } = useParams()
@@ -29,6 +43,8 @@ const ExecuteCourtModal = () => {
     resolver: zodResolver(schema),
   })
 
+  const isPositive = form.watch('isPositive')
+
   function onSubmit(data: any) {
     if (!id) return
     mutateAsync({
@@ -36,6 +52,7 @@ const ExecuteCourtModal = () => {
       data: {
         ...data,
         isPositive: data.isPositive === 'true',
+        fineAmount: data.isPositive === 'true' ? data.fineAmount : null,
       },
     }).then(() => {
       setIsShow(false)
@@ -84,6 +101,22 @@ const ExecuteCourtModal = () => {
                 </FormItem>
               )}
             />
+
+            {isPositive === 'true' && (
+              <FormField
+                control={form.control}
+                name="fineAmount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Qo‘llanilgan jarima summasi (So‘m)</FormLabel>
+                    <FormControl>
+                      <InputCurrency name={field.name} control={form.control} placeholder="Summani kiriting" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <InputFile
               name="courtExecutionFilePath"

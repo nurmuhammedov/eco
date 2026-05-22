@@ -11,7 +11,7 @@ import FileLink from '@/shared/components/common/file-link'
 interface IEquipmentAppeal {
   id: string
   appealNumber: string
-  type: 'APPEAL' | 'COMPLAINT' | 'SUGGESTION'
+  type: 'APPEAL' | 'RISK_APPEAL' | 'SUGGESTION'
   message: string
   createdAt: string
   fullName?: string
@@ -21,7 +21,7 @@ interface IEquipmentAppeal {
 
 const appealTypeTranslations = {
   APPEAL: 'Murojaat',
-  COMPLAINT: 'Shikoyat',
+  RISK_APPEAL: 'Xavf bo‘yicha murojaat',
   SUGGESTION: 'Taklif',
 }
 
@@ -81,7 +81,7 @@ export const RegisterEquipmentAppealList = () => {
         tabs={[
           { id: 'ALL', name: 'Barchasi' },
           { id: 'APPEAL', name: 'Murojaatlar' },
-          { id: 'COMPLAINT', name: 'Shikoyatlar' },
+          { id: 'RISK_APPEAL', name: 'Xavf bo‘yicha' },
           { id: 'SUGGESTION', name: 'Takliflar' },
         ].map((tab) => ({
           ...tab,

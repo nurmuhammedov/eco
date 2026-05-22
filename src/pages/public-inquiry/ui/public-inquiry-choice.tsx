@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '@/shared/components/ui/button'
-import { Loader2, User, UserX } from 'lucide-react'
+import { EyeOff, Loader2, ShieldCheck } from 'lucide-react'
+import Icon from '@/shared/components/common/icon'
 import { apiConfig } from '@/shared/api/constants'
 import { useLoginOneId } from '@/entities/auth/models/auth.fetcher'
 
@@ -63,38 +64,59 @@ const PublicInquiryChoice = () => {
           <p className="text-muted-foreground text-sm">Tizimga kirilmoqda, kuting...</p>
         </div>
       ) : (
-        <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
-          <h2 className="mb-6 text-center text-2xl font-semibold text-slate-800">Murojaat yuborish turi</h2>
-          <p className="mb-8 text-center text-sm text-slate-500">
-            Iltimos, murojaat yuborish usulini tanlang. Tizim orqali yuborilganda murojaatingiz holatini kuzatib borish
-            imkoni bo‘ladi.
-          </p>
+        <div className="w-full max-w-lg rounded-2xl border border-slate-100 bg-white p-8 shadow-xl">
+          <div className="mb-6 flex flex-col items-center text-center">
+            <div className="mb-4 flex h-24 w-24 items-center justify-center">
+              <Icon name="logo" className="h-full w-full object-contain" />
+            </div>
+            <h1 className="text-xl font-bold text-slate-800">Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi</h1>
+            <p className="mt-2 text-sm text-slate-500">Murojaatlar portali</p>
+          </div>
 
-          <div className="flex flex-col space-y-4">
-            <Button
-              size="lg"
-              className="h-14 w-full bg-blue-600 text-base hover:bg-blue-700"
-              onClick={handleSsoRedirect}
-            >
-              <User className="mr-2 h-5 w-5" />
-              Tizim orqali yuborish (OneID)
-            </Button>
+          <div className="flex flex-col space-y-5">
+            <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-4 transition-colors hover:bg-blue-50">
+              <Button
+                size="lg"
+                className="mb-3 h-14 w-full bg-blue-600 text-base shadow-sm hover:bg-blue-700"
+                onClick={handleSsoRedirect}
+              >
+                <ShieldCheck className="mr-2 h-5 w-5" />
+                Ro‘yxatdan o‘tib murojaat yuborish (OneID)
+              </Button>
+              <p className="px-2 text-center text-xs leading-relaxed text-slate-600">
+                Ro‘yxatdan o‘tib yuborganingizda, o‘z profilingiz orqali murojaat holatini kuzatib borish va yakuniy
+                rasmiy javob xatini onlayn olish imkoniyatiga ega bo‘lasiz. <br />
+                <br />{' '}
+                <span className="font-semibold text-emerald-700">
+                  Shuningdek, xabar qilingan holat o‘z tasdig‘ini topsa va qoidabuzarga jarima qo‘llanilsa, ushbu jarima
+                  mablag‘lari hisobidan Sizga tegishli tartibda pul mukofoti to‘lab berilishi mumkin.
+                </span>
+              </p>
+            </div>
 
             <div className="relative flex items-center py-2">
               <div className="flex-grow border-t border-slate-200"></div>
-              <span className="mx-4 flex-shrink-0 text-sm text-slate-400">yoki</span>
+              <span className="mx-4 flex-shrink-0 text-xs font-medium tracking-wider text-slate-400 uppercase">
+                yoki
+              </span>
               <div className="flex-grow border-t border-slate-200"></div>
             </div>
 
-            <Button
-              variant="outline"
-              size="lg"
-              className="h-14 w-full border-slate-300 text-base text-slate-700 hover:bg-slate-100"
-              onClick={handleAnonymous}
-            >
-              <UserX className="mr-2 h-5 w-5 text-slate-500" />
-              Anonim tarzda yuborish
-            </Button>
+            <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 transition-colors hover:bg-slate-50">
+              <Button
+                variant="outline"
+                size="lg"
+                className="mb-3 h-14 w-full border-slate-300 text-base text-slate-700 shadow-sm hover:bg-white"
+                onClick={handleAnonymous}
+              >
+                <EyeOff className="mr-2 h-5 w-5 text-slate-500" />
+                Anonim tarzda murojaat yuborish
+              </Button>
+              <p className="px-2 text-center text-xs leading-relaxed text-slate-600">
+                Shaxsiy ma‘lumotlaringiz butunlay sir saqlanadi. Biroq, bu usulda sizga javob xati kelmaydi va murojaat
+                qanday hal etilganligini tizim orqali ko‘rib bo‘lmaydi.
+              </p>
+            </div>
           </div>
         </div>
       )}

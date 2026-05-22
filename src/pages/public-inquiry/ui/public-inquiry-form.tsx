@@ -3,7 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Loader2, ArrowLeft } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
+import { GoBack } from '@/shared/components/common'
 import { toast } from 'sonner'
 import { useSubmitAppeal } from '@/features/qr-form/hooks/useSubmitAppeal'
 import { AppealDto } from '@/features/qr-form/api/post-appeal'
@@ -22,7 +23,7 @@ import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui/yande
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 
 const formSchema = z.object({
-  type: z.enum(['APPEAL', 'COMPLAINT', 'SUGGESTION'], {
+  type: z.enum(['APPEAL', 'RISK_APPEAL', 'SUGGESTION'], {
     required_error: 'Majburiy maydon!',
   }),
   regionId: z.number({
@@ -62,6 +63,7 @@ const PublicInquiryForm = () => {
   })
 
   const [success, setSuccess] = useState(false)
+  const [registryNumber, setRegistryNumber] = useState<string>('')
 
   const form = useForm<SimpleFormValues>({
     resolver: zodResolver(formSchema),
@@ -84,9 +86,10 @@ const PublicInquiryForm = () => {
     }
 
     submitAppeal(payload, {
-      onSuccess: () => {
+      onSuccess: (res: any) => {
         form.reset()
         setSuccess(true)
+        setRegistryNumber(res?.message || res?.data?.message || '')
         toast.success('Murojaatingiz muvaffaqiyatli qabul qilindi')
       },
       onError: (err) => {
@@ -106,6 +109,12 @@ const PublicInquiryForm = () => {
           </div>
           <h2 className="mb-2 text-2xl font-semibold text-green-800">Murojaatingiz muvaffaqiyatli qabul qilindi</h2>
           <p className="mb-6 text-green-700">Murojaatingiz tez orada mutaxassislar tomonidan o‘rganib chiqiladi.</p>
+          {registryNumber && (
+            <div className="mb-6 rounded-lg border border-green-200 bg-green-100 p-4">
+              <p className="text-sm text-green-800">Murojaat raqamingiz:</p>
+              <p className="text-2xl font-bold tracking-wider text-green-900">{registryNumber}</p>
+            </div>
+          )}
           <Button className="w-full" onClick={() => navigate('/public-inquiry-choice')}>
             Orqaga qaytish
           </Button>
@@ -117,9 +126,9 @@ const PublicInquiryForm = () => {
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6">
       <div className="mx-auto w-full max-w-3xl">
-        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6 -ml-4 text-slate-500 hover:text-slate-800">
-          <ArrowLeft className="mr-2 h-4 w-4" /> Orqaga
-        </Button>
+        <div className="mb-6">
+          <GoBack title="Orqaga" />
+        </div>
 
         <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
           <div className="border-b bg-slate-50/50 p-6">
@@ -147,7 +156,7 @@ const PublicInquiryForm = () => {
                           </FormControl>
                           <SelectContent>
                             <SelectItem value="APPEAL">Murojaat</SelectItem>
-                            <SelectItem value="COMPLAINT">Shikoyat</SelectItem>
+                            <SelectItem value="RISK_APPEAL">Xavf bo‘yicha murojaat</SelectItem>
                             <SelectItem value="SUGGESTION">Taklif</SelectItem>
                           </SelectContent>
                         </Select>
@@ -249,7 +258,7 @@ const PublicInquiryForm = () => {
 
                 <div className="flex flex-col gap-2 space-y-2">
                   <FormLabel>
-                    Rasm biriktirish <span className="text-destructive">*</span>
+                    Xavf aniqlangan obyekt bo‘yicha rasm yoki video <span className="text-destructive">*</span>
                   </FormLabel>
                   <InputFile
                     name="filePathList"

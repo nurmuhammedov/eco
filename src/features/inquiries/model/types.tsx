@@ -37,7 +37,7 @@ export const inquiryTabsConfig = [
 
 export const appealTypeTranslations: Record<string, string> = {
   APPEAL: 'Murojaat',
-  COMPLAINT: 'Shikoyat',
+  RISK_APPEAL: 'Xavf bo‘yicha murojaat',
   SUGGESTION: 'Taklif',
 }
 
@@ -70,7 +70,7 @@ export const inquiryStatusLabels: Record<InquiryStatus | string, string> = {
   [InquiryStatus.NEW]: 'Yangi',
   [InquiryStatus.IN_PROCESS]: 'Ko‘rib chiqilmoqda',
   [InquiryStatus.IN_COURT]: 'Sud jarayonida',
-  [InquiryStatus.REWARD_PAYMENT]: 'To‘lov kutilmoqda',
+  [InquiryStatus.REWARD_PAYMENT]: 'Hisob jarayonida',
   [InquiryStatus.COMPLETED]: 'Yakunlangan',
   [InquiryStatus.REJECTED]: 'Rad etilgan',
 }

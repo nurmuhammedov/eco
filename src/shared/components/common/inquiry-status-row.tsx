@@ -5,10 +5,11 @@ import DetailRow from '@/shared/components/common/detail-row'
 
 interface Props {
   status: InquiryStatus | string
+  type?: string
   title?: string
 }
 
-export const InquiryStatusRow = ({ status, title = 'Holat:' }: Props) => {
+export const InquiryStatusRow = ({ status, type, title = 'Holat:' }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
   if (status === InquiryStatus.REJECTED) {
     return (
@@ -16,7 +17,7 @@ export const InquiryStatusRow = ({ status, title = 'Holat:' }: Props) => {
     )
   }
 
-  const steps = [
+  let steps = [
     InquiryStatus.NEW,
     InquiryStatus.IN_PROCESS,
     InquiryStatus.IN_COURT,
@@ -24,14 +25,16 @@ export const InquiryStatusRow = ({ status, title = 'Holat:' }: Props) => {
     InquiryStatus.COMPLETED,
   ]
 
+  if (type && type !== 'RISK_APPEAL') {
+    steps = [InquiryStatus.NEW, InquiryStatus.IN_PROCESS, InquiryStatus.COMPLETED]
+  }
+
   return (
-    <DetailRow
-      title={title}
-      value={
-        <div className="w-full py-1">
-          <Stepper size="sm" activeStep={status} steps={steps} namespace="inquiry_status" />
-        </div>
-      }
-    />
+    <div className="grid grid-cols-1 gap-2 rounded-md py-2 pr-6 pl-2 odd:bg-neutral-50 sm:grid-cols-2 sm:gap-4">
+      <span className="self-center text-sm font-medium text-gray-500">{title}</span>
+      <div className="py-2 pb-4">
+        <Stepper size="sm" activeStep={status} steps={steps} namespace="inquiry_status" />
+      </div>
+    </div>
   )
 }

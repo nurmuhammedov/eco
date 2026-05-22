@@ -35,13 +35,46 @@ export function useExecuteCourt() {
   })
 }
 
-export function useExecutePayment() {
+export function useAccountantRecoveredAmount() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: inquiryApi.executePayment,
+    mutationFn: inquiryApi.postRecoveredAmount,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
       toast.success('Muvaffaqiyatli saqlandi!')
+    },
+  })
+}
+
+export function useAccountantPaidReward() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: inquiryApi.postPaidReward,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      toast.success('Muvaffaqiyatli saqlandi!')
+    },
+  })
+}
+
+export function useAccountantMibStatus() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: inquiryApi.postMibStatus,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      toast.success('Muvaffaqiyatli saqlandi!')
+    },
+  })
+}
+
+export function useAccountantComplete() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: inquiryApi.postCompleteAccountant,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      toast.success('Yakunlandi!')
     },
   })
 }

@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react'
+import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -13,7 +13,6 @@ import { FileTypes } from '@/shared/components/common/file-upload/models/file-ty
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Button } from '@/shared/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
-import { Input } from '@/shared/components/ui/input'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import DateTimePicker from '@/shared/components/ui/datetimepicker'
@@ -21,7 +20,7 @@ import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui/yande
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 
 const formSchema = z.object({
-  type: z.enum(['APPEAL', 'COMPLAINT', 'SUGGESTION'], {
+  type: z.enum(['APPEAL', 'RISK_APPEAL', 'SUGGESTION'], {
     required_error: 'Majburiy maydon!',
   }),
   regionId: z.number({
@@ -34,20 +33,7 @@ const formSchema = z.object({
     .refine((val) => !val || val.length <= 4 || USER_PATTERNS.phone.test(val), {
       message: "Kiritilgan ma'lumot yaroqli emas!",
     }),
-  cardNumber: z
-    .string()
-    .optional()
-    .nullable()
-    .refine(
-      (val) => {
-        if (!val) return true
-        const digits = val.replace(/\s+/g, '').replace(/[^0-9]/g, '')
-        return digits.length === 16
-      },
-      {
-        message: "Karta raqami to'liq 16 ta raqamdan iborat bo'lishi kerak!",
-      }
-    ),
+
   message: z.string().min(1, 'Majburiy maydon!'),
   location: z.string().min(1, 'Majburiy maydon!'),
   occurredAt: z.date({
@@ -57,21 +43,6 @@ const formSchema = z.object({
 })
 
 type SimpleFormValues = z.infer<typeof formSchema>
-
-const formatCardNumber = (value: string) => {
-  const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
-  const matches = v.match(/\d{4,16}/g)
-  const match = (matches && matches[0]) || ''
-  const parts = []
-  for (let i = 0, len = match.length; i < len; i += 4) {
-    parts.push(match.substring(i, i + 4))
-  }
-  if (parts.length) {
-    return parts.join(' ')
-  } else {
-    return value
-  }
-}
 
 const InquiryAddPage = () => {
   const navigate = useNavigate()
@@ -85,18 +56,13 @@ const InquiryAddPage = () => {
   )
   const { data: regions } = useData<any>('/regions/select')
 
+  const [success, setSuccess] = useState(false)
+  const [registryNumber, setRegistryNumber] = useState<string>('')
+
   const form = useForm<SimpleFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { phoneNumber: '', message: '', location: '', cardNumber: '', filePathList: [] },
+    defaultValues: { phoneNumber: '', message: '', location: '', filePathList: [] },
   })
-
-  const handleCardInput = (e: ChangeEvent<HTMLInputElement>) => {
-    let formatted = formatCardNumber(e.target.value)
-    if (formatted.length > 19) {
-      formatted = formatted.slice(0, 19)
-    }
-    form.setValue('cardNumber', formatted)
-  }
 
   const onSubmit = (values: SimpleFormValues) => {
     const payload = {
@@ -109,17 +75,39 @@ const InquiryAddPage = () => {
       belongId: belongId && belongId !== 'null' ? belongId : undefined,
       belongType: belongType && belongType !== 'null' ? belongType : undefined,
       filePathList: values.filePathList,
-      cardNumber: values.cardNumber ? values.cardNumber.replace(/\s+/g, '') : null,
     }
 
     submitAppeal(payload, {
-      onSuccess: () => {
-        navigate('/inquiries', { replace: true })
+      onSuccess: (res: any) => {
+        setSuccess(true)
+        setRegistryNumber(res?.message || res?.data?.message || '')
       },
     })
   }
 
   const isProcessing = isSubmitting
+
+  if (success) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center p-4">
+        <div className="w-full max-w-md rounded-xl border border-green-200 bg-green-50 p-8 text-center shadow-sm">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+            <span className="text-3xl text-green-600">✓</span>
+          </div>
+          <h2 className="mb-2 text-2xl font-semibold text-green-800">Murojaat qabul qilindi</h2>
+          {registryNumber && (
+            <div className="mt-4 mb-6 rounded-lg border border-green-200 bg-green-100 p-4">
+              <p className="text-sm text-green-800">Murojaat raqami:</p>
+              <p className="text-2xl font-bold tracking-wider text-green-900">{registryNumber}</p>
+            </div>
+          )}
+          <Button className="mt-4 w-full" onClick={() => navigate(-1)}>
+            Mening murojaatlarim
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full">
@@ -148,7 +136,7 @@ const InquiryAddPage = () => {
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="APPEAL">Murojaat</SelectItem>
-                          <SelectItem value="COMPLAINT">Shikoyat</SelectItem>
+                          <SelectItem value="RISK_APPEAL">Xavf bo‘yicha murojaat</SelectItem>
                           <SelectItem value="SUGGESTION">Taklif</SelectItem>
                         </SelectContent>
                       </Select>
@@ -231,30 +219,9 @@ const InquiryAddPage = () => {
                   )}
                 />
 
-                <FormField
-                  name="cardNumber"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Plastik karta raqami (ixtiyoriy)</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="#### #### #### ####"
-                          {...field}
-                          value={field.value || ''}
-                          onChange={(e) => {
-                            handleCardInput(e)
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
                 <div className="space-y-2">
                   <FormLabel>
-                    Rasm biriktirish <span className="text-destructive">*</span>
+                    Xavf aniqlangan obyekt bo‘yicha rasm yoki video <span className="text-destructive">*</span>
                   </FormLabel>
                   <InputFile
                     name="filePathList"

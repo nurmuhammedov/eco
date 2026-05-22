@@ -16,6 +16,7 @@ import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 
 const schema = z.object({
+  type: z.enum(['APPEAL', 'RISK_APPEAL', 'SUGGESTION']).optional(),
   action: z.enum([InquiryAction.SEND_TO_COURT, InquiryAction.REJECT, InquiryAction.REDIRECT, InquiryAction.COMPLETE], {
     required_error: FORM_ERROR_MESSAGES.required,
   }),
@@ -23,14 +24,23 @@ const schema = z.object({
   message: z.string().optional(),
 })
 
-const ExecuteInitialModal = () => {
+interface Props {
+  inquiryType?: string
+}
+
+const ExecuteInitialModal = ({ inquiryType }: Props) => {
   const { id } = useParams()
   const [isShow, setIsShow] = useState(false)
   const { mutateAsync, isPending } = useExecuteInitial()
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      type: inquiryType as any,
+    },
   })
+
+  const typeValue = form.watch('type') || inquiryType
 
   function onSubmit(data: z.infer<typeof schema>) {
     if (!id) return
@@ -56,11 +66,44 @@ const ExecuteInitialModal = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Murojaat turi</FormLabel>
+                  <Select
+                    onValueChange={(val) => {
+                      field.onChange(val)
+                      form.setValue('action', undefined as any, { shouldValidate: true })
+                    }}
+                    value={field.value || inquiryType}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Turini tanlang" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="APPEAL">Murojaat</SelectItem>
+                      <SelectItem value="RISK_APPEAL">Xavf bo‘yicha murojaat</SelectItem>
+                      <SelectItem value="SUGGESTION">Taklif</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="action"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>Ijro harakati</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    key={`action-${typeValue}-${field.value || 'empty'}`}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Ijro harakatini tanlang" />
@@ -68,11 +111,18 @@ const ExecuteInitialModal = () => {
                     </FormControl>
 
                     <SelectContent>
-                      {Object.values(InquiryAction).map((action) => (
-                        <SelectItem key={action} value={action}>
-                          {inquiryActionLabels[action] || action}
-                        </SelectItem>
-                      ))}
+                      {Object.values(InquiryAction)
+                        .filter((action) => {
+                          if (typeValue !== 'RISK_APPEAL' && action === InquiryAction.SEND_TO_COURT) {
+                            return false
+                          }
+                          return true
+                        })
+                        .map((action) => (
+                          <SelectItem key={action} value={action}>
+                            {inquiryActionLabels[action] || action}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
