@@ -268,7 +268,7 @@ const InquiryDetailPage = () => {
                 />
 
                 <DetailRow
-                  title="Boshlang‘ich ijro fayli:"
+                  title={data?.action === 'SEND_TO_COURT' ? 'Sudga tayyorlangan hujjat:' : 'Asos hujjat:'}
                   value={
                     data?.initialExecutionFilePath ? (
                       <FileLink url={data.initialExecutionFilePath} title="Faylni ko‘rish" />

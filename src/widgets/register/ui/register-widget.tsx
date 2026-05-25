@@ -225,18 +225,7 @@ const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
                 </TabsTrigger>
               </TabsList>
             </div>
-          ) : (
-            <div className={cn('scrollbar-hidden flex overflow-x-auto overflow-y-hidden')}>
-              <TabsList>
-                <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>
-                  Qurilmalar
-                  <Badge variant="destructive" className="ml-2">
-                    {equipmentsCount}
-                  </Badge>
-                </TabsTrigger>
-              </TabsList>
-            </div>
-          )}
+          ) : null}
         </div>
         <TabsContent value={RegisterActiveTab.HF} className="mt-2 flex min-h-0 flex-1 flex-col overflow-hidden">
           <HfList isArchive={isArchive} />

@@ -19,8 +19,6 @@ const Report5: React.FC = () => {
     ...paramsObject,
   })
 
-  useData(`/reports/user-login?size=1000`)
-
   const tableData = useMemo(() => {
     if (!reportData) return []
 
@@ -63,7 +61,12 @@ const Report5: React.FC = () => {
       return row
     })
 
-    const filteredData = flattenedData.filter((r) => !r.regionName?.toLowerCase().includes('respublika'))
+    const filteredData = flattenedData.filter(
+      (r) =>
+        r.regionName !== 'Respublika' &&
+        r.regionName !== 'Respublika bo‘yicha' &&
+        r.regionName !== "Respublika bo'yicha"
+    )
 
     return [summaryRow, ...filteredData]
   }, [reportData])
@@ -78,12 +81,7 @@ const Report5: React.FC = () => {
         className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
         cell: ({ row }: any) => {
           const value = row.original.regionName
-          const isRespublika = value?.toLowerCase().includes('respublika')
-          return (
-            <span className={cn(row.original.isSummary || isRespublika ? 'font-bold' : '')}>
-              {isRespublika ? 'Respublika bo‘yicha' : value}
-            </span>
-          )
+          return <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{value}</span>
         },
       },
       ...APPLICATIONS_DATA.filter(

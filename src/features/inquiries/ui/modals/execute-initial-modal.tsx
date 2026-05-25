@@ -60,7 +60,7 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
       </DialogTrigger>
       <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[525px]">
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">Boshlang‘ich ijro</DialogTitle>
+          <DialogTitle className="text-[#4E75FF]">Ijro etish</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -130,14 +130,19 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
               )}
             />
 
-            <InputFile
-              name="initialExecutionFilePath"
-              form={form}
-              uploadEndpoint="/public/attachments/inquiries"
-              accept={[FileTypes.IMAGE, FileTypes.PDF, FileTypes.DOC]}
-              multiple={false}
-              buttonText="Ijro faylini yuklang"
-            />
+            <div className="space-y-2">
+              <FormLabel required>
+                {form.watch('action') === InquiryAction.SEND_TO_COURT ? 'Sudga tayyorlangan hujjat' : 'Asos hujjat'}
+              </FormLabel>
+              <InputFile
+                name="initialExecutionFilePath"
+                form={form}
+                uploadEndpoint="/public/attachments/inquiries"
+                accept={[FileTypes.IMAGE, FileTypes.PDF, FileTypes.DOC]}
+                multiple={false}
+                buttonText="Hujjatni yuklang"
+              />
+            </div>
 
             <FormField
               control={form.control}

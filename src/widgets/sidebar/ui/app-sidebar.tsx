@@ -21,9 +21,18 @@ import legalNavigation from '../models/legal'
 
 import { AppLogo } from './app-logo'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { usePaginatedData } from '@/shared/hooks'
 
 export function AppSidebar() {
   const { user } = useAuth()
+  const isIndividual = user?.role === UserRoles.INDIVIDUAL
+
+  const { totalElements: equipmentCount = 0 } = usePaginatedData(
+    '/equipments',
+    { page: 1, size: 1, active: true },
+    isIndividual
+  )
+
   const displayedNavigations: Navigation = useMemo(() => {
     if (!user) return []
 
@@ -36,11 +45,13 @@ export function AppSidebar() {
     } else if (user.directions.length === 0) {
       const appealNav = allNavigation.find((item: any) => item.id === 'APPEAL')
       const inquiryNav = allNavigation.find((item: any) => item.id === 'INQUIRY')
+      const registryNav = allNavigation.find((item: any) => item.id === 'REGISTRY')
 
       navigations = []
       if (appealNav) navigations.push(appealNav)
       if (inquiryNav && (user.role === UserRoles.INDIVIDUAL || user.role === UserRoles.ACCOUNTANT))
         navigations.push(inquiryNav)
+      if (registryNav && user.role === UserRoles.INDIVIDUAL && equipmentCount > 0) navigations.push(registryNav)
     } else {
       const baseNavigation = NAVIGATIONS[user.role] || allNavigation
 
@@ -53,11 +64,20 @@ export function AppSidebar() {
           if (filteredItems.length > 0) {
             acc.push({ ...navItem, items: filteredItems })
           }
-        } else if (
-          user.directions.includes(navItem.id as Direction) ||
-          ((user.role === UserRoles.INDIVIDUAL || user.role === UserRoles.ACCOUNTANT) && navItem.id === 'INQUIRY')
-        ) {
-          acc.push(navItem)
+        } else {
+          const isDirectionIncluded = user.directions.includes(navItem.id as Direction)
+          const isSpecialInquiry =
+            (user.role === UserRoles.INDIVIDUAL || user.role === UserRoles.ACCOUNTANT) && navItem.id === 'INQUIRY'
+
+          let shouldShow = isDirectionIncluded || isSpecialInquiry
+
+          if (user.role === UserRoles.INDIVIDUAL && navItem.id === 'REGISTRY') {
+            shouldShow = equipmentCount > 0
+          }
+
+          if (shouldShow) {
+            acc.push(navItem)
+          }
         }
 
         return acc
@@ -76,7 +96,7 @@ export function AppSidebar() {
     }
 
     return navigations
-  }, [user])
+  }, [user, equipmentCount])
 
   if (!user) return null
 

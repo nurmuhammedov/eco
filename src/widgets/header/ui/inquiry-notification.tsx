@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Bell, Inbox } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
-import { Button } from '@/shared/components/ui/button'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
 import { InquiryStatus } from '@/features/inquiries/model/types'
@@ -75,14 +74,14 @@ export const InquiryNotification = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative hover:bg-slate-100">
-          <Bell className="h-5 w-5 text-slate-600" />
+        <button className="border-border bg-neutral-150/50 hover:bg-neutral-150 relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border transition-colors">
+          <Bell className="h-[20px] w-[20px] text-neutral-700" />
           {totalCount > 0 && (
-            <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm ring-2 ring-white">
+            <span className="absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white shadow-sm ring-2 ring-white">
               {totalCount > 99 ? '99+' : totalCount}
             </span>
           )}
-        </Button>
+        </button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-[340px] p-0 shadow-lg">
         <div className="flex items-center justify-between border-b bg-slate-50/50 px-4 py-3">

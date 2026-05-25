@@ -24,7 +24,7 @@ import { DeregisterModal } from '../../common/ui/deregister-modal'
 
 const EquipmentsDetail = () => {
   const { isLoading, data, refetch } = useEquipmentsDetail()
-  const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
+  const currentObjLocation = data?.location?.split(',').map(Number) || ([] as Coordinate[])
   const { user } = useAuth()
   const { id: equipmentUuid } = useParams<{ id: string }>()
   const [searchParams] = useSearchParams()

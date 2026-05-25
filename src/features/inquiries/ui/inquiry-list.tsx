@@ -203,12 +203,7 @@ const InquiryTable = () => {
           </Button>
         </div>
       )}
-      <InquiryTabs
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        counts={tabCounts as any}
-        isMobileIndividual={isIndividual}
-      />
+      {!isIndividual && <InquiryTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts as any} />}
 
       {/* Mobile view for INDIVIDUAL */}
       {isIndividual && (
