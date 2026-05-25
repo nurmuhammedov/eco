@@ -1,5 +1,6 @@
 import { DataTable } from '@/shared/components/common/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { DataTablePagination } from '@/shared/components/common/data-table'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { InquiryTabs } from './inquiry-tabs'
 import {
@@ -29,7 +30,9 @@ const InquiryTable = () => {
 
   const activeTab = (belongType as InquiryBelongType | 'ALL') || 'ALL'
 
-  const { data = [], isLoading } = usePaginatedData<any>('/inquiries', {
+  const isIndividual = user?.role === UserRoles.INDIVIDUAL
+
+  const { data, isLoading } = usePaginatedData<any>('/inquiries', {
     page,
     size,
     belongType: activeTab === 'ALL' ? undefined : activeTab,
@@ -200,16 +203,72 @@ const InquiryTable = () => {
           </Button>
         </div>
       )}
-      <InquiryTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts as any} />
-      <DataTable
-        showNumeration={true}
-        isPaginated={true}
-        columns={filteredColumns}
-        data={data}
-        showFilters={true}
-        isLoading={isLoading}
-        className="flex-1"
+      <InquiryTabs
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        counts={tabCounts as any}
+        isMobileIndividual={isIndividual}
       />
+
+      {/* Mobile view for INDIVIDUAL */}
+      {isIndividual && (
+        <div className="flex flex-1 flex-col gap-2 overflow-hidden md:hidden">
+          <div className="flex flex-1 flex-col gap-2 overflow-y-auto pb-2">
+            {data?.content?.length ? (
+              data.content.map((item: any) => (
+                <div
+                  key={item.id}
+                  onClick={() => navigate(`/inquiries/detail/${item.id}`)}
+                  className="flex cursor-pointer flex-col gap-2 rounded-xl border bg-white p-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-blue-600">{item.registryNumber || 'Raqamsiz'}</span>
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        'border-none text-[10px] font-medium uppercase',
+                        inquiryStatusBadgeVariants[item.status as InquiryStatus] || 'bg-gray-100 text-gray-800'
+                      )}
+                    >
+                      {inquiryStatusLabels[item.status as InquiryStatus] || item.status || '-'}
+                    </Badge>
+                  </div>
+                  <div className="text-xs font-medium text-slate-400">
+                    {item.createdAt ? formatDate(new Date(item.createdAt), 'dd.MM.yyyy HH:mm') : '-'}
+                  </div>
+                  <div className="mt-1 line-clamp-2 text-sm text-slate-700">{item.message || '-'}</div>
+                </div>
+              ))
+            ) : (
+              <div className="flex flex-1 items-center justify-center p-4 text-sm text-slate-500">
+                Ma'lumot topilmadi
+              </div>
+            )}
+          </div>
+          <div className="rounded-lg border-t bg-white p-2">
+            <DataTablePagination
+              data={data}
+              onPageChange={(p) => addParams({ page: p })}
+              onPageSizeChange={(s) => addParams({ size: s, page: 1 })}
+              showSizeChanger={false}
+              showTotal={false}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Desktop or Default View */}
+      <div className={cn('flex-1 overflow-hidden', isIndividual && 'hidden md:flex md:flex-col')}>
+        <DataTable
+          showNumeration={true}
+          isPaginated={true}
+          columns={filteredColumns}
+          data={data as any}
+          showFilters={true}
+          isLoading={isLoading}
+          className="flex-1"
+        />
+      </div>
     </div>
   )
 }

@@ -19,7 +19,12 @@ export const DashboardPage = () => {
 
   // Get regionId from URL
   const regionIdParam = searchParams.get('regionId')
-  const activeRegionId = regionIdParam ? parseInt(regionIdParam) : null
+  let activeRegionId = regionIdParam ? parseInt(regionIdParam) : null
+
+  if (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) {
+    activeRegionId = user?.regionId || activeRegionId
+  }
+
   const activeRegionName = activeRegionId ? getRegionNameById(activeRegionId) : null
 
   const stats = useDashboardStats(activeRegionId?.toString(), currentTab)
@@ -103,7 +108,7 @@ export const DashboardPage = () => {
 
         <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-12">
           <div className="lg:col-span-12 xl:col-span-6">
-            <InquiriesStats />
+            <InquiriesStats regionId={activeRegionId?.toString()} />
           </div>
 
           <div className="lg:col-span-12 xl:col-span-6">

@@ -77,11 +77,13 @@ const PublicInquiryChoice = () => {
             <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-4 transition-colors hover:bg-blue-50">
               <Button
                 size="lg"
-                className="mb-3 h-14 w-full bg-blue-600 text-base shadow-sm hover:bg-blue-700"
+                className="mb-3 h-auto min-h-[3.5rem] w-full bg-blue-600 py-3 text-base whitespace-normal shadow-sm hover:bg-blue-700 sm:py-2"
                 onClick={handleSsoRedirect}
               >
-                <ShieldCheck className="mr-2 h-5 w-5" />
-                Ro‘yxatdan o‘tib murojaat yuborish (OneID)
+                <ShieldCheck className="mr-2 h-5 w-5 shrink-0" />
+                <span className="flex flex-col sm:inline sm:flex-none">
+                  <span>Ro‘yxatdan o‘tib</span> <span>murojaat yuborish (OneID)</span>
+                </span>
               </Button>
               <p className="px-2 text-center text-xs leading-relaxed text-slate-600">
                 Ro‘yxatdan o‘tib yuborganingizda, o‘z profilingiz orqali murojaat holatini kuzatib borish va yakuniy
@@ -106,11 +108,11 @@ const PublicInquiryChoice = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="mb-3 h-14 w-full border-slate-300 text-base text-slate-700 shadow-sm hover:bg-white"
+                className="mb-3 h-auto min-h-[3.5rem] w-full border-slate-300 py-3 text-base whitespace-normal text-slate-700 shadow-sm hover:bg-white sm:py-2"
                 onClick={handleAnonymous}
               >
-                <EyeOff className="mr-2 h-5 w-5 text-slate-500" />
-                Anonim tarzda murojaat yuborish
+                <EyeOff className="mr-2 h-5 w-5 shrink-0 text-slate-500" />
+                <span>Anonim tarzda murojaat yuborish</span>
               </Button>
               <p className="px-2 text-center text-xs leading-relaxed text-slate-600">
                 Shaxsiy ma‘lumotlaringiz butunlay sir saqlanadi. Biroq, bu usulda sizga javob xati kelmaydi va murojaat

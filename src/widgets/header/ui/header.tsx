@@ -6,6 +6,7 @@ import UserDropdown from '@/widgets/header/ui/user-dropdown'
 import { getQuarter, subQuarters } from 'date-fns'
 import { useLocation } from 'react-router-dom'
 import { useMemo } from 'react'
+import { InquiryNotification } from './inquiry-notification'
 
 const QUARTERS = [
   { id: '1', name: '1-chorak' },
@@ -128,6 +129,7 @@ export function Header() {
             )}
           </div>
         )}
+        <InquiryNotification />
         <UserDropdown />
       </div>
     </header>

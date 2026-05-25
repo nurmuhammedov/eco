@@ -1,54 +1,61 @@
-import { Factory, Settings, Ticket, Zap, FileText } from 'lucide-react'
+import { FileText, PlusCircle, Clock, Gavel, HandCoins, CheckCircle, XCircle } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
-import { DOCUMENTS_STATS } from '../model/documents-stats'
-import { useState } from 'react'
+import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
+import { InquiryStatus } from '@/features/inquiries/model/types'
 
-export const InquiriesStats = () => {
-  const [activeTab, setActiveTab] = useState<'all' | 'new' | 'process' | 'completed'>('all')
+interface InquiriesStatsProps {
+  regionId?: string | null
+}
 
-  const tabs = [
-    { id: 'all', label: 'Jami', count: 0 },
-    { id: 'new', label: 'Yangi', count: 0 },
-    { id: 'process', label: 'Ko‘rib chiqilmoqda', count: 0 },
-    { id: 'closed', label: 'Ko‘rib chiqilgan', count: 0 },
-  ]
+export const InquiriesStats = ({ regionId }: InquiriesStatsProps) => {
+  const inqParams = { page: 1, size: 1, ...(regionId ? { regionId } : {}) }
+  const { totalElements: inqNew = 0 } = usePaginatedData('/inquiries', { ...inqParams, status: InquiryStatus.NEW })
+  const { totalElements: inqProcess = 0 } = usePaginatedData('/inquiries', {
+    ...inqParams,
+    status: InquiryStatus.IN_PROCESS,
+  })
+  const { totalElements: inqCourt = 0 } = usePaginatedData('/inquiries', {
+    ...inqParams,
+    status: InquiryStatus.IN_COURT,
+  })
+  const { totalElements: inqReward = 0 } = usePaginatedData('/inquiries', {
+    ...inqParams,
+    status: InquiryStatus.REWARD_PAYMENT,
+  })
+  const { totalElements: inqCompleted = 0 } = usePaginatedData('/inquiries', {
+    ...inqParams,
+    status: InquiryStatus.COMPLETED,
+  })
+  const { totalElements: inqRejected = 0 } = usePaginatedData('/inquiries', {
+    ...inqParams,
+    status: InquiryStatus.REJECTED,
+  })
 
-  // Simplified card for cleaner look
-  const renderCleanCard = (title: string, value: number, icon: any, colorText: string, bgColor: string) => (
-    <div className="group flex flex-col rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:shadow-md">
+  const inquiryTotal = inqNew + inqProcess + inqCourt + inqReward + inqCompleted + inqRejected
+
+  const renderCleanCard = (
+    title: string,
+    value: number,
+    icon: any,
+    colorText: string,
+    bgColor: string,
+    className?: string
+  ) => (
+    <div
+      className={cn(
+        'group flex flex-col rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:shadow-md',
+        className
+      )}
+    >
       <div className="mb-4 flex items-center justify-between">
         <span className={cn('rounded-xl p-2.5', bgColor, colorText)}>{icon}</span>
       </div>
-      <div>
+      <div className="mt-auto">
         <span className="mb-1 block text-2xl font-bold text-slate-900">{value?.toLocaleString()}</span>
         <span className="text-sm font-medium text-slate-500">{title}</span>
       </div>
     </div>
   )
-
-  const inquiries = DOCUMENTS_STATS.inquiries
-
-  // Simulate data filtering based on tab
-  const getFilteredData = () => {
-    let multiplier = 1
-    if (activeTab === 'new') multiplier = 0.15
-    if (activeTab === 'process') multiplier = 0.35
-    if (activeTab === 'completed') multiplier = 0.5
-
-    return {
-      total: Math.round(inquiries.total * multiplier),
-      hf: Math.round(inquiries.hf * multiplier),
-      equipment: Math.round(inquiries.equipment * multiplier),
-      irs: Math.round(inquiries.irs * multiplier),
-      xray: Math.round(inquiries.xray * multiplier),
-      byRegion: inquiries.byRegion.map((r) => ({
-        ...r,
-        count: Math.round(r.count * multiplier),
-      })),
-    }
-  }
-
-  const data = getFilteredData()
 
   return (
     <div className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -57,71 +64,41 @@ export const InquiriesStats = () => {
           <h2 className="text-xl font-bold tracking-tight text-slate-900">Murojaatlar</h2>
           <p className="mt-1 text-sm text-slate-500">Kelib tushgan murojaatlar bo‘yicha umumiy hisobot</p>
         </div>
-
-        <div className="scrollbar-hidden min-w-0 overflow-x-auto pb-1 sm:pb-0">
-          <div className="inline-flex min-w-max rounded-lg bg-slate-100 p-1">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={cn(
-                  'group flex cursor-pointer items-center justify-between gap-2 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200',
-                  activeTab === tab.id
-                    ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200'
-                    : 'text-slate-600 hover:bg-white/60 hover:text-slate-900'
-                )}
-              >
-                {tab.label}
-                <span
-                  className={cn(
-                    'ml-1 rounded-full px-2 py-0.5 text-[10px] font-semibold transition-colors sm:ml-2 sm:text-xs',
-                    activeTab === tab.id
-                      ? 'bg-slate-900 text-white'
-                      : 'bg-slate-200 text-slate-600 group-hover:bg-slate-300'
-                  )}
-                >
-                  {tab.count}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:gap-5">
-        {renderCleanCard('Jami', data.total, <FileText className="h-6 w-6" />, 'text-blue-600', 'bg-blue-50')}
-        {renderCleanCard('XICHO', data.hf, <Factory className="h-6 w-6" />, 'text-indigo-600', 'bg-indigo-50')}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 xl:gap-5">
         {renderCleanCard(
-          'Qurilmalar',
-          data.equipment,
-          <Settings className="h-6 w-6" />,
-          'text-orange-600',
-          'bg-orange-50'
+          'Jami',
+          inquiryTotal,
+          <FileText className="h-6 w-6 md:h-8 md:w-8" />,
+          'text-blue-600',
+          'bg-blue-50',
+          'col-span-full sm:col-span-2 md:col-span-1 md:row-span-2 md:p-8'
         )}
-        {renderCleanCard('INM', data.irs, <Ticket className="h-6 w-6" />, 'text-red-600', 'bg-red-50')}
-        {renderCleanCard('Rentgenlar', data.xray, <Zap className="h-6 w-6" />, 'text-emerald-600', 'bg-emerald-50')}
-      </div>
-
-      <div className="mt-8">
-        <h3 className="mb-4 text-lg font-semibold text-slate-900">Respublika bo‘yicha</h3>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-          {data.byRegion?.map((region: any, index: number) => (
-            <div key={index} className="flex flex-col gap-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-medium text-slate-700">{region.name}</span>
-                <span className="text-slate-500">
-                  {region.count} ta ({region.percentage}%)
-                </span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
-                <div
-                  className="h-full rounded-full bg-indigo-500 transition-all duration-500"
-                  style={{ width: `${region.percentage}%` }}
-                ></div>
-              </div>
-            </div>
-          ))}
-        </div>
+        {renderCleanCard('Yangi', inqNew, <PlusCircle className="h-6 w-6" />, 'text-blue-500', 'bg-blue-50')}
+        {renderCleanCard(
+          'Ko‘rib chiqilmoqda',
+          inqProcess,
+          <Clock className="h-6 w-6" />,
+          'text-amber-600',
+          'bg-amber-50'
+        )}
+        {renderCleanCard('Sud jarayonida', inqCourt, <Gavel className="h-6 w-6" />, 'text-purple-600', 'bg-purple-50')}
+        {renderCleanCard(
+          'Hisob jarayonida',
+          inqReward,
+          <HandCoins className="h-6 w-6" />,
+          'text-indigo-600',
+          'bg-indigo-50'
+        )}
+        {renderCleanCard(
+          'Yakunlangan',
+          inqCompleted,
+          <CheckCircle className="h-6 w-6" />,
+          'text-emerald-600',
+          'bg-emerald-50'
+        )}
+        {renderCleanCard('Rad etilgan', inqRejected, <XCircle className="h-6 w-6" />, 'text-red-600', 'bg-red-50')}
       </div>
     </div>
   )

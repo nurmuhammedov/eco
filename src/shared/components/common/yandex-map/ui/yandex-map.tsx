@@ -1,7 +1,9 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { MAP_DEFAULTS } from '../model/yandex-map-config'
 import { Map, Placemark, YMaps } from '@pbe/react-yandex-maps'
 import type { Coordinate, YandexMapProps } from '../model/yandex-map-types'
+import { MapPin } from 'lucide-react'
+import { Button } from '@/shared/components/ui/button'
 
 const YandexMap: React.FC<YandexMapProps> = ({
   onMapClick,
@@ -12,6 +14,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
   center = MAP_DEFAULTS.center,
 }) => {
   const mapRef = useRef<ymaps.Map | null>(null)
+  const [isLocating, setIsLocating] = useState(false)
 
   const handleMapClick = useCallback(
     (e: ymaps.IEvent) => {
@@ -26,6 +29,35 @@ const YandexMap: React.FC<YandexMapProps> = ({
     },
     [onMapClick, zoom]
   )
+
+  const handleGetCurrentLocation = () => {
+    if ('geolocation' in navigator) {
+      setIsLocating(true)
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords
+          const newCoords: Coordinate = [latitude, longitude]
+
+          if (mapRef.current) {
+            mapRef.current.setCenter(newCoords, 16, { duration: 300 })
+          }
+
+          if (onMapClick) {
+            onMapClick([newCoords], 16)
+          }
+          setIsLocating(false)
+        },
+        (error) => {
+          console.error('Geolocation error:', error)
+          alert('Lokatsiyani aniqlash uchun ruxsat berilmagan yoki xatolik yuz berdi.')
+          setIsLocating(false)
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      )
+    } else {
+      alert('Sizning qurilmangizda geolokatsiya xizmati mavjud emas.')
+    }
+  }
 
   const handleApiLoad = (ymaps: any) => {
     ymaps.borders.load('001', { lang: 'uz', quality: 1 }).then((geojson: any) => {
@@ -57,26 +89,62 @@ const YandexMap: React.FC<YandexMapProps> = ({
   }, [center, zoom])
 
   return (
-    // @ts-ignore
-    <YMaps query={{ load: 'package.full', lang: 'uz_UZ' }}>
-      <Map
-        width={width}
-        height={height}
-        onClick={handleMapClick}
-        defaultState={{
-          center,
-          zoom,
-          controls: ['zoomControl', 'typeSelector'],
-          type: 'yandex#map',
-        }}
-        instanceRef={(ref) => (mapRef.current = ref)}
-        onLoad={handleApiLoad}
-      >
-        {coords.map((coordinate, index) => (
-          <Placemark key={index} geometry={coordinate} options={{ preset: 'islands#blueDotIcon' }} />
-        ))}
-      </Map>
-    </YMaps>
+    <div className="flex w-full flex-col gap-3" style={{ height: typeof height === 'number' ? `${height}px` : height }}>
+      <div className="relative w-full flex-1 overflow-hidden rounded-md border" style={{ width }}>
+        {/* @ts-ignore */}
+        <YMaps query={{ load: 'package.full', lang: 'uz_UZ' }}>
+          <Map
+            width="100%"
+            height="100%"
+            onClick={handleMapClick}
+            defaultState={{
+              center,
+              zoom,
+              controls: ['zoomControl', 'typeSelector'],
+              type: 'yandex#map',
+            }}
+            instanceRef={(ref) => (mapRef.current = ref)}
+            onLoad={handleApiLoad}
+          >
+            {coords.map((coordinate, index) => (
+              <Placemark key={index} geometry={coordinate} options={{ preset: 'islands#blueDotIcon' }} />
+            ))}
+          </Map>
+        </YMaps>
+
+        {onMapClick && (
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={handleGetCurrentLocation}
+            disabled={isLocating}
+            className="absolute right-4 bottom-6 z-10 bg-white shadow-md hover:bg-slate-100"
+          >
+            <MapPin className={`mr-2 h-4 w-4 ${isLocating ? 'animate-bounce text-blue-500' : ''}`} />
+            {isLocating ? 'Aniqlanmoqda...' : 'Mening joyim'}
+          </Button>
+        )}
+      </div>
+
+      {coords && coords.length > 0 && (
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-md border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-600">
+          <div className="flex items-center gap-2">
+            <MapPin className="h-4 w-4 text-red-500" />
+            <span className="font-medium text-slate-800">Tanlangan manzil:</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span>Kenglik:</span>
+            <strong className="font-semibold text-slate-900">{coords[0][0].toFixed(6)}</strong>
+          </div>
+          <div className="hidden h-4 w-px bg-slate-300 sm:block"></div>
+          <div className="flex items-center gap-2">
+            <span>Uzunlik:</span>
+            <strong className="font-semibold text-slate-900">{coords[0][1].toFixed(6)}</strong>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 

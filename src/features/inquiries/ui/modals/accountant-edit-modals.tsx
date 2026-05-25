@@ -16,20 +16,35 @@ import {
   useAccountantMibStatus,
 } from '@/features/inquiries/hooks/use-inquiry-mutations'
 
-const recoveredSchema = z.object({
-  recoveredAmount: z.number({ required_error: 'Majburiy maydon!' }).min(0, 'Manfiy bo‘lishi mumkin emas'),
-})
+const getRecoveredSchema = (maxAmount?: number) =>
+  z.object({
+    recoveredAmount: z
+      .number({ required_error: 'Majburiy maydon!' })
+      .min(0, 'Manfiy bo‘lishi mumkin emas')
+      .refine((val) => maxAmount === undefined || val <= maxAmount, {
+        message: 'Kiritilgan ma’lumot yaroqli emas',
+      }),
+  })
 
-export const RecoveredAmountModal = ({ inquiryId, defaultValue }: { inquiryId: string; defaultValue?: number }) => {
+export const RecoveredAmountModal = ({
+  inquiryId,
+  defaultValue,
+  fineAmount,
+}: {
+  inquiryId: string
+  defaultValue?: number
+  fineAmount?: number
+}) => {
   const [open, setOpen] = useState(false)
   const { mutateAsync, isPending } = useAccountantRecoveredAmount()
 
-  const form = useForm<z.infer<typeof recoveredSchema>>({
-    resolver: zodResolver(recoveredSchema),
+  const schema = getRecoveredSchema(fineAmount)
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
     defaultValues: { recoveredAmount: defaultValue || undefined },
   })
 
-  const onSubmit = async (values: z.infer<typeof recoveredSchema>) => {
+  const onSubmit = async (values: z.infer<ReturnType<typeof getRecoveredSchema>>) => {
     await mutateAsync({ id: inquiryId, data: { recoveredAmount: values.recoveredAmount } })
     setOpen(false)
   }
@@ -80,32 +95,41 @@ export const RecoveredAmountModal = ({ inquiryId, defaultValue }: { inquiryId: s
   )
 }
 
-const paidRewardSchema = z.object({
-  paidRewardAmount: z.number({ required_error: 'Majburiy maydon!' }).min(0, 'Manfiy bo‘lishi mumkin emas'),
-  paymentExecutionFilePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Fayl yuklang!'),
-})
+const getPaidRewardSchema = (maxAmount?: number) =>
+  z.object({
+    paidRewardAmount: z
+      .number({ required_error: 'Majburiy maydon!' })
+      .min(0, 'Manfiy bo‘lishi mumkin emas')
+      .refine((val) => maxAmount === undefined || val <= maxAmount, {
+        message: 'Kiritilgan ma’lumot yaroqli emas',
+      }),
+    paymentExecutionFilePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Fayl yuklang!'),
+  })
 
 export const PaidRewardModal = ({
   inquiryId,
   defaultValue,
   defaultFile,
+  rewardAmount,
 }: {
   inquiryId: string
   defaultValue?: number
   defaultFile?: string
+  rewardAmount?: number
 }) => {
   const [open, setOpen] = useState(false)
   const { mutateAsync, isPending } = useAccountantPaidReward()
 
-  const form = useForm<z.infer<typeof paidRewardSchema>>({
-    resolver: zodResolver(paidRewardSchema),
+  const schema = getPaidRewardSchema(rewardAmount)
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
     defaultValues: {
       paidRewardAmount: defaultValue || undefined,
       paymentExecutionFilePath: defaultFile || '',
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof paidRewardSchema>) => {
+  const onSubmit = async (values: z.infer<ReturnType<typeof getPaidRewardSchema>>) => {
     await mutateAsync({
       id: inquiryId,
       data: { paidRewardAmount: values.paidRewardAmount, paymentExecutionFilePath: values.paymentExecutionFilePath },

@@ -185,7 +185,7 @@ const InquiryDetailPage = () => {
                 />
                 {/*<DetailRow title="To‘lov holati:" value={data?.isPaid !== undefined && data?.isPaid !== null ? (data.isPaid ? 'To‘landi' : 'To‘lanmadi') : <span className="font-medium text-red-500">Mavjud emas</span>} />*/}
                 <DetailRow
-                  title="To‘lov miqdori:"
+                  title="Ajratilgan mukofot puli:"
                   value={
                     data?.rewardAmount !== null && data?.rewardAmount !== undefined ? (
                       `${Number(data.rewardAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
@@ -214,7 +214,11 @@ const InquiryDetailPage = () => {
                         <span className="font-medium text-red-500">Mavjud emas</span>
                       )}
                       {user?.role === UserRoles.ACCOUNTANT && data?.status === InquiryStatus.REWARD_PAYMENT && (
-                        <RecoveredAmountModal inquiryId={id!} defaultValue={data?.recoveredAmount} />
+                        <RecoveredAmountModal
+                          inquiryId={id!}
+                          defaultValue={data?.recoveredAmount}
+                          fineAmount={data?.fineAmount}
+                        />
                       )}
                     </div>
                   }
@@ -252,6 +256,7 @@ const InquiryDetailPage = () => {
                           inquiryId={id!}
                           defaultValue={data?.paidRewardAmount}
                           defaultFile={data?.paymentExecutionFilePath}
+                          rewardAmount={data?.rewardAmount}
                         />
                       )}
                     </div>
@@ -305,10 +310,6 @@ const InquiryDetailPage = () => {
               <DetailRow
                 title="Egasi PINFL/STIR:"
                 value={data?.ownerIdentity || <span className="font-medium text-red-500">Mavjud emas</span>}
-              />
-              <DetailRow
-                title="Plastik karta raqami:"
-                value={data?.cardNumber || <span className="font-medium text-red-500">Mavjud emas</span>}
               />
               <DetailRow
                 title="Telefon raqami:"

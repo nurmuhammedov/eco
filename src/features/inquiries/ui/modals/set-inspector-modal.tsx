@@ -55,7 +55,7 @@ const SetInspectorModal = () => {
   return (
     <Dialog onOpenChange={setIsShow} open={isShow}>
       <DialogTrigger asChild>
-        <Button>Ijro etish</Button>
+        <Button>{isRegional ? 'Ijroga yo‘naltirish' : 'Ijro etish'}</Button>
       </DialogTrigger>
       <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[525px]">
         <DialogHeader>

@@ -5,6 +5,7 @@ import { useRiskAnalysisStats } from '@/features/dashboard/model/use-risk-analys
 import { cn } from '@/shared/lib/utils'
 import { getRegionIdByName } from '@/features/dashboard/model/constants'
 import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
+import { InquiryStatus } from '@/features/inquiries/model/types'
 import Icon from '@/shared/components/common/icon'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { Loader2, Factory, Wrench, Radiation, ScanLine, ShieldAlert, ClipboardCheck, MessageSquare } from 'lucide-react'
@@ -318,28 +319,38 @@ export const InteractiveServicePage: React.FC = () => {
   const inspLoading = lInsp1 || lInsp2
 
   const inqParams = { page: 1, size: 10 }
-  const { totalElements: inqHf = 0, isLoading: lInq1 } = usePaginatedData(
+  const { totalElements: inqNew = 0, isLoading: lInq1 } = usePaginatedData(
     '/inquiries',
-    { ...inqParams, belongType: 'HF' },
+    { ...inqParams, status: InquiryStatus.NEW },
     activeCategory === 'inquiry'
   )
-  const { totalElements: inqEq = 0, isLoading: lInq2 } = usePaginatedData(
+  const { totalElements: inqProcess = 0, isLoading: lInq2 } = usePaginatedData(
     '/inquiries',
-    { ...inqParams, belongType: 'EQUIPMENT' },
+    { ...inqParams, status: InquiryStatus.IN_PROCESS },
     activeCategory === 'inquiry'
   )
-  const { totalElements: inqIrs = 0, isLoading: lInq3 } = usePaginatedData(
+  const { totalElements: inqCourt = 0, isLoading: lInq3 } = usePaginatedData(
     '/inquiries',
-    { ...inqParams, belongType: 'IRS' },
+    { ...inqParams, status: InquiryStatus.IN_COURT },
     activeCategory === 'inquiry'
   )
-  const { totalElements: inqXray = 0, isLoading: lInq4 } = usePaginatedData(
+  const { totalElements: inqReward = 0, isLoading: lInq4 } = usePaginatedData(
     '/inquiries',
-    { ...inqParams, belongType: 'XRAY' },
+    { ...inqParams, status: InquiryStatus.REWARD_PAYMENT },
     activeCategory === 'inquiry'
   )
-  const inquiryTotal = inqHf + inqEq + inqIrs + inqXray
-  const inqLoading = lInq1 || lInq2 || lInq3 || lInq4
+  const { totalElements: inqCompleted = 0, isLoading: lInq5 } = usePaginatedData(
+    '/inquiries',
+    { ...inqParams, status: InquiryStatus.COMPLETED },
+    activeCategory === 'inquiry'
+  )
+  const { totalElements: inqRejected = 0, isLoading: lInq6 } = usePaginatedData(
+    '/inquiries',
+    { ...inqParams, status: InquiryStatus.REJECTED },
+    activeCategory === 'inquiry'
+  )
+  const inquiryTotal = inqNew + inqProcess + inqCourt + inqReward + inqCompleted + inqRejected
+  const inqLoading = lInq1 || lInq2 || lInq3 || lInq4 || lInq5 || lInq6
 
   const isDataLoading = useMemo(() => {
     switch (activeCategory) {
@@ -423,16 +434,33 @@ export const InteractiveServicePage: React.FC = () => {
           totalLabel: 'Murojaatlar',
           total: inquiryTotal,
           items: [
-            { label: 'XICHOlar', value: inqHf, color: '#0B626B' },
-            { label: 'Qurilmalar', value: inqEq, color: '#2563EB' },
-            { label: 'INMlar', value: inqIrs, color: '#D97706' },
-            { label: 'Rentgenlar', value: inqXray, color: '#64748B' },
+            { label: 'Yangi', value: inqNew, color: '#3B82F6' },
+            { label: 'Ko\u2018rib chiqilmoqda', value: inqProcess, color: '#F59E0B' },
+            { label: 'Sud jarayonida', value: inqCourt, color: '#8B5CF6' },
+            { label: 'Hisob jarayonida', value: inqReward, color: '#6366F1' },
+            { label: 'Yakunlangan', value: inqCompleted, color: '#10B981' },
+            { label: 'Rad etilgan', value: inqRejected, color: '#EF4444' },
           ],
         }
       default:
         return { totalLabel: '', total: 0, items: [] }
     }
-  }, [activeCategory, stats, hfType1, hfType2, hfType3, riskTotal, inspectionTotal, inquiryTotal])
+  }, [
+    activeCategory,
+    stats,
+    hfType1,
+    hfType2,
+    hfType3,
+    riskTotal,
+    inspectionTotal,
+    inquiryTotal,
+    inqNew,
+    inqProcess,
+    inqCourt,
+    inqReward,
+    inqCompleted,
+    inqRejected,
+  ])
 
   const activeCategoryLabel = CATEGORIES.find((c) => c.id === activeCategory)?.label ?? ''
 
