@@ -18,17 +18,17 @@ import { InputCurrency } from '@/shared/components/ui/input-currency'
 const schema = z
   .object({
     isPositive: z.enum(['true', 'false'], { required_error: FORM_ERROR_MESSAGES.required }),
-    fineAmount: z.number().nullable().optional(),
+    imposedFineAmount: z.number().nullable().optional(),
     courtExecutionFilePath: z.string({ required_error: FORM_ERROR_MESSAGES.required }),
     message: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.isPositive === 'true') {
-      if (data.fineAmount === undefined || data.fineAmount === null) {
+      if (data.imposedFineAmount === undefined || data.imposedFineAmount === null) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: FORM_ERROR_MESSAGES.required,
-          path: ['fineAmount'],
+          path: ['imposedFineAmount'],
         })
       }
     }
@@ -52,7 +52,7 @@ const ExecuteCourtModal = () => {
       data: {
         ...data,
         isPositive: data.isPositive === 'true',
-        fineAmount: data.isPositive === 'true' ? data.fineAmount : null,
+        imposedFineAmount: data.isPositive === 'true' ? data.imposedFineAmount : null,
       },
     }).then(() => {
       setIsShow(false)
@@ -105,7 +105,7 @@ const ExecuteCourtModal = () => {
             {isPositive === 'true' && (
               <FormField
                 control={form.control}
-                name="fineAmount"
+                name="imposedFineAmount"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required>Qo‘llanilgan jarima summasi (So‘m)</FormLabel>

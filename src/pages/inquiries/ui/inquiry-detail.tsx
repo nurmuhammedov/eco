@@ -195,10 +195,30 @@ const InquiryDetailPage = () => {
                   }
                 />
                 <DetailRow
-                  title="Jarima miqdori:"
+                  title="Tashkilotga qo‘llanilgan jarima summasi:"
                   value={
-                    data?.fineAmount !== null && data?.fineAmount !== undefined ? (
-                      `${Number(data.fineAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
+                    data?.imposedFineAmount !== null && data?.imposedFineAmount !== undefined ? (
+                      `${Number(data.imposedFineAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
+                    ) : (
+                      <span className="font-medium text-red-500">Mavjud emas</span>
+                    )
+                  }
+                />
+                <DetailRow
+                  title="E-ma’muriy tomonidan ushlangan komissiya yig‘imi:"
+                  value={
+                    data?.withholdingAmount !== null && data?.withholdingAmount !== undefined ? (
+                      `${Number(data.withholdingAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
+                    ) : (
+                      <span className="font-medium text-red-500">Mavjud emas</span>
+                    )
+                  }
+                />
+                <DetailRow
+                  title="Qo‘mitaga kelib tushadigan summa:"
+                  value={
+                    data?.transferFineAmount !== null && data?.transferFineAmount !== undefined ? (
+                      `${Number(data.transferFineAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
                     ) : (
                       <span className="font-medium text-red-500">Mavjud emas</span>
                     )
@@ -217,7 +237,7 @@ const InquiryDetailPage = () => {
                         <RecoveredAmountModal
                           inquiryId={id!}
                           defaultValue={data?.recoveredAmount}
-                          fineAmount={data?.fineAmount}
+                          fineAmount={data?.imposedFineAmount}
                         />
                       )}
                     </div>
