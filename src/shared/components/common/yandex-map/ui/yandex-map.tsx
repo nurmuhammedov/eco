@@ -16,6 +16,33 @@ const YandexMap: React.FC<YandexMapProps> = ({
   const mapRef = useRef<ymaps.Map | null>(null)
   const [isLocating, setIsLocating] = useState(false)
 
+  const normalizedCoords = React.useMemo(() => {
+    if (!coords || !Array.isArray(coords)) return []
+    return coords
+      .map((c: any) => {
+        if (typeof c === 'string') {
+          const parts = c.split(',').map((v) => Number(v.trim()))
+          if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) return parts as Coordinate
+        }
+        if (Array.isArray(c) && c.length >= 2) {
+          return [Number(c[0]), Number(c[1])] as Coordinate
+        }
+        return c as Coordinate
+      })
+      .filter((c) => Array.isArray(c) && c.length >= 2 && !isNaN(c[0]) && !isNaN(c[1]))
+  }, [coords])
+
+  const normalizedCenter = React.useMemo(() => {
+    if (typeof center === 'string') {
+      const parts = (center as string).split(',').map((v) => Number(v.trim()))
+      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) return parts as Coordinate
+    }
+    if (Array.isArray(center) && center.length >= 2) {
+      return [Number(center[0]), Number(center[1])] as Coordinate
+    }
+    return MAP_DEFAULTS.center
+  }, [center])
+
   const handleMapClick = useCallback(
     (e: ymaps.IEvent) => {
       const coords = e.get('coords') as Coordinate
@@ -81,12 +108,12 @@ const YandexMap: React.FC<YandexMapProps> = ({
   useEffect(() => {
     if (mapRef.current) {
       mapRef.current
-        .setCenter(center, zoom, {
+        .setCenter(normalizedCenter, zoom, {
           duration: 300,
         })
         .catch((err) => console.error(err))
     }
-  }, [center, zoom])
+  }, [normalizedCenter, zoom])
 
   return (
     <div className="flex w-full flex-col gap-3" style={{ height: typeof height === 'number' ? `${height}px` : height }}>
@@ -98,7 +125,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
             height="100%"
             onClick={handleMapClick}
             defaultState={{
-              center,
+              center: normalizedCenter,
               zoom,
               controls: ['zoomControl', 'typeSelector'],
               type: 'yandex#map',
@@ -106,7 +133,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
             instanceRef={(ref) => (mapRef.current = ref)}
             onLoad={handleApiLoad}
           >
-            {coords.map((coordinate, index) => (
+            {normalizedCoords.map((coordinate, index) => (
               <Placemark key={index} geometry={coordinate} options={{ preset: 'islands#blueDotIcon' }} />
             ))}
           </Map>
@@ -127,7 +154,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
         )}
       </div>
 
-      {coords && coords.length > 0 && (
+      {normalizedCoords && normalizedCoords.length > 0 && (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-md border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-600">
           <div className="flex items-center gap-2">
             <MapPin className="h-4 w-4 text-red-500" />
@@ -135,12 +162,12 @@ const YandexMap: React.FC<YandexMapProps> = ({
           </div>
           <div className="flex items-center gap-2">
             <span>Kenglik:</span>
-            <strong className="font-semibold text-slate-900">{coords[0][0].toFixed(6)}</strong>
+            <strong className="font-semibold text-slate-900">{normalizedCoords[0][0].toFixed(6)}</strong>
           </div>
           <div className="hidden h-4 w-px bg-slate-300 sm:block"></div>
           <div className="flex items-center gap-2">
             <span>Uzunlik:</span>
-            <strong className="font-semibold text-slate-900">{coords[0][1].toFixed(6)}</strong>
+            <strong className="font-semibold text-slate-900">{normalizedCoords[0][1].toFixed(6)}</strong>
           </div>
         </div>
       )}
