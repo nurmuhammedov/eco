@@ -36,13 +36,13 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
             accessorKey: 'registryNumber',
             className: '!w-[1%] whitespace-nowrap',
             filterKey: 'registryNumber',
-            filterType: 'search',
+            filterType: 'search' as const,
           },
           {
             header: t('risk_analysis_columns.name'),
             accessorKey: 'name',
             filterKey: 'name',
-            filterType: 'search',
+            filterType: 'search' as const,
           },
         ]),
 
@@ -50,20 +50,20 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
       header: 'Tashkilot nomi',
       accessorKey: 'legalName',
       filterKey: 'legalName',
-      filterType: 'search',
+      filterType: 'search' as const,
     },
     {
       accessorKey: 'legalTin',
       filterKey: 'legalTin',
       className: '!w-[1%]',
       header: () => <div className="whitespace-nowrap">Tashkilot STIR</div>,
-      filterType: 'search',
+      filterType: 'search' as const,
     },
     {
       header: t('risk_analysis_columns.address'),
       accessorKey: 'address',
       filterKey: 'address',
-      filterType: 'search',
+      filterType: 'search' as const,
     },
     {
       header: t('Ballar'),
@@ -72,7 +72,7 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
       filterKey: 'score',
       className: '!w-[1%]',
 
-      filterType: 'search',
+      filterType: 'search' as const,
     },
     {
       id: 'actions',
