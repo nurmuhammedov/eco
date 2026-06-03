@@ -17,7 +17,7 @@ export const riskAnalysisData = {
       title:
         'Havfli ishlab chiqarish obyektlarini davlat reyestriga kiritilganligi, ishlab chiqarish nazorati tashkil etilganligi, texnik qurilmalar roʻyxatga olinganligi va pasporti mavjudligi',
       point: 14,
-      rejectPlaceholder: "Ma'lumot taqdim etilmagan",
+      rejectPlaceholder: 'Maʼlumot taqdim etilmagan',
     },
     {
       title:
@@ -69,19 +69,19 @@ export const riskAnalysisData = {
       title:
         "Atom energetikasi va yadro texnologiyalari, ionlashtiruvchi nurlanish manbalari (INM) va retgen uskunasidan foylanuvchi ob'ektlar lisenziyalash yoki ruxsat etish xususiyatiga ega hujjatlarni rasmiylashtirmaslik yoki muddatiga amal qilmaslik",
       point: 10,
-      rejectPlaceholder: "Ma'lumot taqdim etilmagan",
+      rejectPlaceholder: 'Maʼlumot taqdim etilmagan',
     },
     {
       title:
         'Mehnat xavfsizligi talablari va talablariga muvofiqligi uchun sertifikatlashdan o‘tmagan xodimlarni sertifikatlash ',
       point: 10,
-      rejectPlaceholder: "Ma'lumot taqdim etilmagan",
+      rejectPlaceholder: 'Maʼlumot taqdim etilmagan',
     },
     {
       title:
         "Atom energetikasi va yadro texnologiyalari, INM va rentgen uskunasidan foylanuvchi ob'ektlarda sanitariya-epidemiologiya xizmati tomonidan beriladigan xulosaning mavjud emasligi ",
       point: 10,
-      rejectPlaceholder: "Ma'lumot taqdim etilmagan",
+      rejectPlaceholder: 'Maʼlumot taqdim etilmagan',
     },
     {
       title: "Potentsial nurlanish xavfiga ko‘ra ob'ektning toifalanmaganligi",
@@ -111,7 +111,7 @@ export const riskAnalysisData = {
     {
       title: `Atom energetikasi va yadro texnologiyalari, ionlashtiruvchi nurlanish manbalari va radiatsiya ta'sirida bo‘lgan ob'ektlarda takrorlagichlarda tekshiruvlar o‘tkazilmaydi.`,
       point: 5,
-      rejectPlaceholder: `Hujjatlar va ma'lumotnoma taqdim etilmagan`,
+      rejectPlaceholder: `Hujjatlar va maʼlumotnoma taqdim etilmagan`,
     },
     {
       title: `Ventilyasiya tizimi samaradorligini va erga ulash (zazemleniya) tizimini davriy tekshirish dalolatnomasining mavjud emasligi`,
@@ -121,27 +121,27 @@ export const riskAnalysisData = {
     {
       title: `Inmlar va rentgen uskunalarini yillik inventarizasiyasi o‘tkazilmaganligi va vakolatli organga taqdim etilganligi to‘g'risidagi maʼlumotlar mavjud emasligi`,
       point: 10,
-      rejectPlaceholder: "Ma'lumot taqdim etilmagan",
+      rejectPlaceholder: 'Maʼlumot taqdim etilmagan',
     },
     {
       title: `Radiasiya xavfsizligi yo‘riqnomasi va Radiasiyaviy avariyalarda xodimlarni xarakatlanish yo‘riqnomasi mavjud emasligi, shuningdek ushbu yo‘riqnomalarni o'rnatilgan tartibda hududiy FVV va SEO va JS boshqarmalari bilan kelishilmaganligi va muassasa tomonidan tasdiqlanmaganligi`,
       point: 5,
-      rejectPlaceholder: "Ma'lumot taqdim etilmagan",
+      rejectPlaceholder: 'Maʼlumot taqdim etilmagan',
     },
     {
       title: `I va II toifaga ta'luqli ob'ektlarda xodimlar va aholini radiasiyaviy halokatdan himoya qilish va uning oqibatlarini bartaraf etish bo‘yicha Nizom va chora-tadbirlar rejasi mavjud emasligi va o'rnatilgan tartibda hududiy FVV va SEO va JS boshqarmalari bilan kelishilmaganligi va muassasa tomonidan tasdiqlanmaganligi`,
       point: 5,
-      rejectPlaceholder: "Ma'lumot taqdim etilmagan",
+      rejectPlaceholder: 'Maʼlumot taqdim etilmagan',
     },
     {
       title: `Xodimlarining maxsus kiyim bosh va shaxsiy himoya vositalari bilan ta'minlanmaganligi`,
       point: 5,
-      rejectPlaceholder: `Ma'lumot taqdim etilmagan`,
+      rejectPlaceholder: `Maʼlumot taqdim etilmagan`,
     },
     {
       title: `Maxsus organga shaxsni tasdiqlovchi hujjatlarni berish va bazharmaslik yoki uning vaqtinchalik vorisi, qisman bazharmaslik shaxsini tasdiqlash vakolati berilgan.`,
       point: 5,
-      rejectPlaceholder: `Ma'lumot taqdim etilmagan`,
+      rejectPlaceholder: `Maʼlumot taqdim etilmagan`,
     },
   ],
   attraction: [

@@ -118,7 +118,7 @@ export const StatsCards = ({ type, data, regionId }: StatsCardsProps) => {
           `${baseUrl}&status=INACTIVE`
         )}
         {renderCard(
-          'Muddati o\u2018tgan rentgenlar',
+          'Muddati o‘tgan rentgenlar',
           data.expired,
           <AlertCircle className="h-6 w-6 opacity-60" />,
           'border-red-500 text-red-900',

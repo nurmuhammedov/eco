@@ -4,7 +4,6 @@ import {
   RegisterIllegalXraySchema,
   xrayRefinement,
 } from '@/entities/create-application'
-import { format } from 'date-fns'
 import { stateService } from '@/entities/create-application/types/enums'
 import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
@@ -12,6 +11,7 @@ import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
 import useAdd from '@/shared/hooks/api/useAdd'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { format } from 'date-fns'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -19,6 +19,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
 
 export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => {
   const { type, id } = useParams<{ type: string; id: string }>()
@@ -29,6 +30,32 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
   const queryClient = useQueryClient()
 
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
+
+  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/xrays`, id, !!id)
+  const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
+  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
+    queryKey: ['owner-data', ownerIdentity],
+    queryFn: async () => {
+      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
+      return res.data?.data
+    },
+    enabled: !!ownerIdentity,
+  })
+
+  const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
+  const identityForProfile =
+    currentOwnerData?.tin || currentOwnerData?.pin || currentOwnerData?.legalTin || ownerIdentity
+
+  const { data: profileData, isLoading: isProfileLoading } = useRadiationProfileCheck(
+    (!isUpdate && currentOwnerData) || isUpdate ? identityForProfile : null,
+    'XRAY'
+  )
+
+  const isDataNull = !profileData
+  const filesSource = profileData?.files
+  const hasIncompleteOrgFiles = isUpdate
+    ? false
+    : !!filesSource && Object.values(filesSource).some((f: any) => !f?.path || !f?.expiryDate)
 
   const form = useForm<z.input<typeof RegisterIllegalXraySchema>>({
     resolver: (values, context, options) => {
@@ -60,6 +87,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
             file14Path: z.string().optional().nullable(),
             file14ExpiryDate: z.date().optional().nullable(),
             file16Path: z.string().optional().nullable(),
+            file16ExpiryDate: z.date().optional().nullable(),
             phoneNumber: z.string().optional().nullable(),
             identity: z.string().optional().nullable(),
             birthDate: z
@@ -77,9 +105,41 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
             return [k, v]
           })
         )
-        return zodResolver(actualSchema)(cleanedValues as any, context, options)
+        const dynamicSchema = (actualSchema as z.ZodTypeAny).superRefine((data: any, ctx: z.RefinementCtx) => {
+          if (isDataNull && !isUpdate) {
+            if (!data.file5Path)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+            if (!data.file5ExpiryDate)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+            if (!data.file7Path)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file7Path'] })
+            if (!data.file7ExpiryDate)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file7ExpiryDate'] })
+            if (!data.file9Path)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file9Path'] })
+            if (!data.file9ExpiryDate)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file9ExpiryDate'] })
+          }
+        })
+        return zodResolver(dynamicSchema)(cleanedValues as any, context, options)
       }
-      return zodResolver(actualSchema)(values, context, options)
+      const dynamicSchema = (actualSchema as z.ZodTypeAny).superRefine((data: any, ctx: z.RefinementCtx) => {
+        if (isDataNull) {
+          if (!data.file5Path)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+          if (!data.file5ExpiryDate)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+          if (!data.file7Path)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file7Path'] })
+          if (!data.file7ExpiryDate)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file7ExpiryDate'] })
+          if (!data.file9Path)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file9Path'] })
+          if (!data.file9ExpiryDate)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file9ExpiryDate'] })
+        }
+      })
+      return zodResolver(dynamicSchema)(values, context, options)
     },
     defaultValues: {
       phoneNumber: '',
@@ -94,29 +154,12 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
       address: '',
       manufacturedYear: '',
       stateService: '',
-      file1Path: undefined,
-      file1ExpiryDate: undefined,
-      file2Path: undefined,
-      file2ExpiryDate: undefined,
-      file3Path: undefined,
-      file3ExpiryDate: undefined,
-      file4Path: undefined,
       file5Path: undefined,
       file5ExpiryDate: undefined,
-      file6Path: undefined,
-      file6ExpiryDate: undefined,
       file7Path: undefined,
       file7ExpiryDate: undefined,
-      file8Path: undefined,
-      file8ExpiryDate: undefined,
       file9Path: undefined,
       file9ExpiryDate: undefined,
-      file10Path: undefined,
-      file11Path: undefined,
-      file11ExpiryDate: undefined,
-      file12Path: undefined,
-      file13Path: undefined,
-      file13ExpiryDate: undefined,
       file14Path: undefined,
       file14ExpiryDate: undefined,
       file16Path: undefined,
@@ -125,7 +168,6 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
     mode: 'onChange',
   })
 
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/xrays`, id, !!id)
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/xrays', id)
 
   const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
@@ -133,21 +175,10 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
     '/integration/iip/individual'
   )
 
-  const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
   const regionId = form.watch('regionId')
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)
 
-  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', ownerIdentity],
-    queryFn: async () => {
-      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
-      return res.data?.data
-    },
-    enabled: !!ownerIdentity,
-  })
-
-  const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
   const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
 
   useEffect(() => {
@@ -168,32 +199,16 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
         address: getValue(detail.address || ''),
         manufacturedYear: detail.manufacturedYear ? String(detail.manufacturedYear) : '',
         stateService: detail.stateService ? String(detail.stateService) : '',
-        file1Path: detail.files?.file1Path?.path,
-        file1ExpiryDate: parseDate(detail.files?.file1Path?.expiryDate),
-        file2Path: detail.files?.file2Path?.path,
-        file2ExpiryDate: parseDate(detail.files?.file2Path?.expiryDate),
-        file3Path: detail.files?.file3Path?.path,
-        file3ExpiryDate: parseDate(detail.files?.file3Path?.expiryDate),
-        file4Path: detail.files?.file4Path?.path,
         file5Path: detail.files?.file5Path?.path,
         file5ExpiryDate: parseDate(detail.files?.file5Path?.expiryDate),
-        file6Path: detail.files?.file6Path?.path,
-        file6ExpiryDate: parseDate(detail.files?.file6Path?.expiryDate),
         file7Path: detail.files?.file7Path?.path,
         file7ExpiryDate: parseDate(detail.files?.file7Path?.expiryDate),
-        file8Path: detail.files?.file8Path?.path,
-        file8ExpiryDate: parseDate(detail.files?.file8Path?.expiryDate),
         file9Path: detail.files?.file9Path?.path,
         file9ExpiryDate: parseDate(detail.files?.file9Path?.expiryDate),
-        file10Path: detail.files?.file10Path?.path,
-        file11Path: detail.files?.file11Path?.path,
-        file11ExpiryDate: parseDate(detail.files?.file11Path?.expiryDate),
-        file12Path: detail.files?.file12Path?.path,
-        file13Path: detail.files?.file13Path?.path,
-        file13ExpiryDate: parseDate(detail.files?.file13Path?.expiryDate),
         file14Path: detail.files?.file14Path?.path,
         file14ExpiryDate: parseDate(detail.files?.file14Path?.expiryDate),
         file16Path: detail.files?.file16Path?.path,
+        file16ExpiryDate: parseDate(detail.files?.file16Path?.expiryDate),
       } as any)
 
       setTimeout(() => {
@@ -202,6 +217,18 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
     }
   }, [detail, form, isUpdate])
 
+  useEffect(() => {
+    if (profileData && profileData.files) {
+      Object.keys(profileData.files).forEach((key) => {
+        const fileInfo = profileData.files[key]
+        if (fileInfo?.path) form.setValue(key as any, fileInfo.path, { shouldValidate: true })
+        const dateKey = key.replace('Path', 'ExpiryDate')
+        if (fileInfo?.expiryDate)
+          form.setValue(dateKey as any, new Date(fileInfo.expiryDate) as any, { shouldValidate: true })
+      })
+    }
+  }, [profileData, form, detail])
+
   const handleSearch = () => {
     const identity = form.getValues('identity')?.trim()
     const birthDate = form.getValues('birthDate')
@@ -209,12 +236,13 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
     if (!identity) return
 
     if (identity.length === 9) {
-      legalMutateAsync({ tin: identity })
+      legalMutateAsync({ tin: identity, type: 'XRAY' })
         .then((res) => setManualOwnerData(res.data?.data || res.data))
         .catch(() => setManualOwnerData(null))
     } else if (identity.length === 14 && birthDate) {
       individualMutateAsync({
         pin: identity,
+        type: 'XRAY',
         birthDate: format(birthDate as unknown as Date, 'yyyy-MM-dd'),
       })
         .then((res) => setManualOwnerData(res.data?.data || res.data))
@@ -234,6 +262,8 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
     const cleanedData = Object.fromEntries(
       Object.entries(data).map(([key, value]) => {
         if (value === '' || value === null || value === undefined || value === '+998') return [key, null]
+        if ((value as any) instanceof Date && !isNaN((value as any).getTime()))
+          return [key, format(value as any, 'yyyy-MM-dd')]
         return [key, value]
       })
     )
@@ -273,6 +303,10 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
     districtOptions,
     stateServiceOptions,
     ownerData: currentOwnerData,
+    profileData,
+    isProfileLoading,
+    isDataNull,
+    hasIncompleteOrgFiles,
     detail,
     isLoading: isDetailLoading || isOwnerLoading,
     isSearchLoading: isLegalPending || isIndividualPending,

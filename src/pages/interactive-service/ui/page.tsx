@@ -26,19 +26,19 @@ const HF_TIP_INFO = [
     id: 1,
     title: '1-tip XICHO',
     color: '#0B626B',
-    desc: 'Birinchi tipdagi xavfli ishlab chiqarish obyektlari — "Xavfli ishlab chiqarish obyektlarini identifikatsiyalash tartibi to\u2018g\u2018risida nizom"ga 2-ilovaning 1 va 2-jadvallarida ko\u2018rsatilgan miqdorda, ularning cheklangan me\u2018yoriga teng bo\u2018lgan yoki undan ortiq bo\u2018lgan xavfli moddalar foydalaniladigan, ishlab chiqariladigan, qayta ishlanadigan, hosil qilinadigan, saqlanadigan, tashlanadigan, yo\u2018q qilinadigan yuqori xavflilik darajasidagi obyektlar;',
+    desc: 'Birinchi tipdagi xavfli ishlab chiqarish obyektlari — "Xavfli ishlab chiqarish obyektlarini identifikatsiyalash tartibi to‘g‘risida nizom"ga 2-ilovaning 1 va 2-jadvallarida ko‘rsatilgan miqdorda, ularning cheklangan me‘yoriga teng bo‘lgan yoki undan ortiq bo‘lgan xavfli moddalar foydalaniladigan, ishlab chiqariladigan, qayta ishlanadigan, hosil qilinadigan, saqlanadigan, tashlanadigan, yo‘q qilinadigan yuqori xavflilik darajasidagi obyektlar;',
   },
   {
     id: 2,
     title: '2-tip XICHO',
     color: '#2563EB',
-    desc: 'Ikkinchi tipdagi xavfli ishlab chiqarish obyektlari — birinchi tipga tegishli bo\u2018lmagan, "Xavfli ishlab chiqarish obyektlarini identifikatsiyalash tartibi to\u2018g\u2018risida nizom"ga 2-ilovaning 1 va 2-jadvallarida ko\u2018rsatilgan miqdorda, ularning cheklangan me\u2018yoridan kam bo\u2018lgan xavfli moddalar foydalaniladigan, ishlab chiqariladigan, qayta ishlanadigan, saqlanadigan, tashlanadigan, yo\u2018q qilinadigan obyektlar;',
+    desc: 'Ikkinchi tipdagi xavfli ishlab chiqarish obyektlari — birinchi tipga tegishli bo‘lmagan, "Xavfli ishlab chiqarish obyektlarini identifikatsiyalash tartibi to‘g‘risida nizom"ga 2-ilovaning 1 va 2-jadvallarida ko‘rsatilgan miqdorda, ularning cheklangan me‘yoridan kam bo‘lgan xavfli moddalar foydalaniladigan, ishlab chiqariladigan, qayta ishlanadigan, saqlanadigan, tashlanadigan, yo‘q qilinadigan obyektlar;',
   },
   {
     id: 3,
     title: '3-tip XICHO',
     color: '#7C3AED',
-    desc: 'Uchinchi tipdagi xavfli ishlab chiqarish obyektlari — obyektlarning birinchi va ikkinchi tiplariga tegishli bo\u2018lmagan, ushbu Nizomning 6-bandi 2\u20145-kichik bandlarida ko\u2018rsatilgan xavflilik belgilariga ega bo\u2018lgan obyektlar.',
+    desc: 'Uchinchi tipdagi xavfli ishlab chiqarish obyektlari — obyektlarning birinchi va ikkinchi tiplariga tegishli bo‘lmagan, ushbu Nizomning 6-bandi 2\u20145-kichik bandlarida ko‘rsatilgan xavflilik belgilariga ega bo‘lgan obyektlar.',
   },
 ]
 
@@ -415,7 +415,7 @@ export const InteractiveServicePage: React.FC = () => {
           total: riskTotal,
           items: [
             { label: 'Xavfi past', value: riskStats.lowRisk, color: '#0D9488' },
-            { label: 'Xavfi o\u2018rta', value: riskStats.mediumRisk, color: '#D97706' },
+            { label: 'Xavfi o‘rta', value: riskStats.mediumRisk, color: '#D97706' },
             { label: 'Xavfi yuqori', value: riskStats.highRisk, color: '#E11D48' },
           ],
         }
@@ -435,7 +435,7 @@ export const InteractiveServicePage: React.FC = () => {
           total: inquiryTotal,
           items: [
             { label: 'Yangi', value: inqNew, color: '#3B82F6' },
-            { label: 'Ko\u2018rib chiqilmoqda', value: inqProcess, color: '#F59E0B' },
+            { label: 'Ko‘rib chiqilmoqda', value: inqProcess, color: '#F59E0B' },
             { label: 'Sud jarayonida', value: inqCourt, color: '#8B5CF6' },
             { label: 'Hisob jarayonida', value: inqReward, color: '#6366F1' },
             { label: 'Yakunlangan', value: inqCompleted, color: '#10B981' },
@@ -557,7 +557,7 @@ export const InteractiveServicePage: React.FC = () => {
           >
             <div>
               <h2 className="text-lg font-semibold text-slate-700 lg:text-2xl">
-                {activeRegion || 'Respublika bo\u2018yicha'}
+                {activeRegion || 'Respublika bo‘yicha'}
               </h2>
               <p className="mt-0.5 text-[10px] text-slate-400 lg:mt-1 lg:text-xs">
                 Batafsil ma&#x2018;lumot uchun hududni tanlang

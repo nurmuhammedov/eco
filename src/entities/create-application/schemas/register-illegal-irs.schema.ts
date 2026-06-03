@@ -1,6 +1,7 @@
 import { IrsCategory, IrsIdentifierType, IrsUsageType } from '@/entities/create-application/types/enums'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { format } from 'date-fns'
 import { z } from 'zod'
 
@@ -66,12 +67,30 @@ export const RegisterIllegalIrsBaseSchema = z.object({
     errorMap: () => ({ message: 'Majburiy maydon!' }),
   }),
   storageLocation: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  passportPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  additionalFilePath: z
-    .string()
+  file1Path: z.string().trim().optional().nullable(),
+  file1ExpiryDate: z
+    .union([z.date(), z.string()])
     .optional()
     .nullable()
-    .transform((val) => (val ? val : null)),
+    .transform((val) => (val ? format(new Date(val), 'yyyy-MM-dd') : null)),
+  file2Path: z.string().trim().optional().nullable(),
+  file2ExpiryDate: z
+    .union([z.date(), z.string()])
+    .optional()
+    .nullable()
+    .transform((val) => (val ? format(new Date(val), 'yyyy-MM-dd') : null)),
+  file5Path: z.string().trim().optional().nullable(),
+  file5ExpiryDate: z
+    .union([z.date(), z.string()])
+    .optional()
+    .nullable()
+    .transform((val) => (val ? format(new Date(val), 'yyyy-MM-dd') : null)),
+  file15Path: z.string().trim().optional().nullable(),
+  file15ExpiryDate: z
+    .union([z.date(), z.string()])
+    .optional()
+    .nullable()
+    .transform((val) => (val ? format(new Date(val), 'yyyy-MM-dd') : null)),
   regionId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   districtId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
@@ -90,5 +109,9 @@ export const irsRefinement = (data: any, ctx: z.RefinementCtx) => {
 }
 
 export const RegisterIllegalIrsSchema = RegisterIllegalIrsBaseSchema.superRefine(irsRefinement)
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file1Path', 'file1ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file2Path', 'file2ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file15Path', 'file15ExpiryDate'))
 
 export type RegisterIllegalIrsDTO = z.infer<typeof RegisterIllegalIrsSchema>

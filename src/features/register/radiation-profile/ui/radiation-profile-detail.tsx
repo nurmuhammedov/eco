@@ -35,7 +35,7 @@ export const RadiationProfileDetail = () => {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <GoBack title={`Tashkilot ma'lumotlari`} />
+        <GoBack title={`Tashkilot maʼlumotlari`} />
       </div>
 
       <DetailCardAccordion defaultValue={['applicant_info', 'object_files', 'devices']}>

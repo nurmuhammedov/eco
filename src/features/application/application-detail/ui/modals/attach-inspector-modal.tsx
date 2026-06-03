@@ -46,9 +46,9 @@ const AttachInspectorModal = () => {
 
   const selectOptions = getSelectOptions(
     isManager
-      ? managerSelectData || [] // Agar isManager rost bo'lsa, shu ma'lumotni
+      ? managerSelectData || [] // Agar isManager rost bo'lsa, shu maʼlumotni
       : isRegional
-        ? inspectorSelectData || [] // Aks holda, agar isRegional rost bo'lsa, shu ma'lumotni
+        ? inspectorSelectData || [] // Aks holda, agar isRegional rost bo'lsa, shu maʼlumotni
         : [] // Agar ikkalasi ham yolg'on bo'lsa, bo'sh massivni ol
   )
 

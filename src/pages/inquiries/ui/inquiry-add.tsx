@@ -31,7 +31,7 @@ const formSchema = z.object({
     .trim()
     .optional()
     .refine((val) => !val || val.length <= 4 || USER_PATTERNS.phone.test(val), {
-      message: "Kiritilgan ma'lumot yaroqli emas!",
+      message: 'Kiritilgan maʼlumot yaroqli emas!',
     }),
 
   message: z.string().min(1, 'Majburiy maydon!'),

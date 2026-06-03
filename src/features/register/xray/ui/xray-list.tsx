@@ -46,7 +46,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
 
   const currentStatus = String(status)
 
-  const isOrganizations = currentStatus === 'ORGANIZATIONS'
+  const isOrganizations = currentStatus === 'ORGANIZATIONS' || currentStatus === 'CHANGED_ORGANIZATIONS'
   const endpoint = isOrganizations ? '/radiation-profiles' : '/xrays'
 
   const {
@@ -65,6 +65,8 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
           directorName,
           regionId: regionId === 'ALL' ? '' : regionId,
           districtId,
+          changed: currentStatus === 'CHANGED_ORGANIZATIONS' ? true : '',
+          changeStatus: currentStatus === 'CHANGED_ORGANIZATIONS' && changeStatus !== 'ALL' ? changeStatus : '',
         }
       : {
           search,
@@ -98,9 +100,22 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
     !isArchive
   )
 
+  const { data: changedOrgCountData } = usePaginatedData<any>(
+    `/radiation-profiles`,
+    {
+      changed: 'true',
+      type: 'XRAY',
+      regionId: regionId === 'ALL' ? '' : regionId,
+      size: 1,
+    },
+    !isArchive
+  )
+
   const handleViewApplication = (id: string) => {
     if (currentStatus === 'CHANGED') {
       navigate(`/register/change/${id}/xrays`)
+    } else if (currentStatus === 'CHANGED_ORGANIZATIONS') {
+      navigate(`/register/change/${id}/radiation-profiles`)
     } else if (isOrganizations) {
       navigate(`/register/radiation-profiles/${id}?type=XRAY`)
     } else {
@@ -111,6 +126,10 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
 
   const handleEditApplication = (id: string, tin: string) => {
     navigate(`/register/update/XRAY/${id}?tin=${tin}`)
+  }
+
+  const handleEditOrganization = (id: string) => {
+    navigate(`/register/update-organization/XRAY/${id}`)
   }
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -165,10 +184,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
           onView={(row) => handleViewApplication(row.original.id)}
           showEdit={
             !isArchive &&
-            (user?.role === UserRoles.MANAGER ||
-              user?.role === UserRoles.LEGAL ||
-              (user?.role === UserRoles.INSPECTOR &&
-                (Number(row.original.regionId) === user?.regionId || user?.isController))) &&
+            (user?.role === UserRoles.MANAGER || user?.role === UserRoles.LEGAL || user?.isController) &&
             ['ACTIVE', 'EXPIRED', 'NO_DATE'].includes(currentStatus)
           }
           onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
@@ -176,6 +192,13 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
       ),
     },
   ]
+
+  const canManageOrgs =
+    user?.role === UserRoles.LEGAL ||
+    user?.role === UserRoles.MANAGER ||
+    user?.role === UserRoles.HEAD ||
+    user?.isSupervisor ||
+    user?.isController
 
   const orgColumns: ExtendedColumnDef<any, any>[] = [
     {
@@ -210,7 +233,13 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
     {
       id: 'actions',
       cell: ({ row }) => (
-        <DataTableRowActions showView row={row} onView={(row) => handleViewApplication(row.original.id)} />
+        <DataTableRowActions
+          showView
+          row={row}
+          onView={(row) => handleViewApplication(row.original.id)}
+          showEdit={!isArchive && currentStatus === 'ORGANIZATIONS' && canManageOrgs}
+          onEdit={(row) => handleEditOrganization(row.original.id)}
+        />
       ),
     },
   ]
@@ -220,41 +249,50 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
       {!isArchive && !hideTabs && user?.role !== UserRoles.PROCURATOR && (
         <TabsLayout
           activeTab={currentStatus}
-          tabs={[
-            // { id: 'ALL', name: 'Barchasi', count: currentStatus === 'ALL' ? totalElements : undefined },
-            {
-              id: 'ACTIVE',
-              name: 'Reyestrdagi rentgenlar',
-              count: currentStatus === 'ACTIVE' ? totalElements : undefined,
-            },
-            // {
-            //   id: 'INACTIVE',
-            //   name: 'Reyestrdan chiqarilganlar',
-            //   count: currentStatus === 'INACTIVE' ? totalElements : undefined,
-            // },
-            {
-              id: 'EXPIRED',
-              name: 'Muddati o‘tganlar',
-              count: currentStatus === 'EXPIRED' ? totalElements : undefined,
-            },
-            {
-              id: 'NO_DATE',
-              name: 'Muddati kiritilmaganlar',
-              count: currentStatus === 'NO_DATE' ? totalElements : undefined,
-            },
-            {
-              id: 'ORGANIZATIONS',
-              name: 'Tashkilotlar',
-              count: currentStatus === 'ORGANIZATIONS' ? totalElements : undefined,
-            },
-            {
-              id: 'CHANGED',
-              name: 'O‘zgartirish so‘rovlari',
-              count: changedCountData?.page?.totalElements || undefined,
-            },
-          ]}
+          tabs={
+            [
+              // { id: 'ALL', name: 'Barchasi', count: currentStatus === 'ALL' ? totalElements : undefined },
+              {
+                id: 'ACTIVE',
+                name: 'Reyestrdagi rentgenlar',
+                count: currentStatus === 'ACTIVE' ? totalElements : undefined,
+              },
+              // {
+              //   id: 'INACTIVE',
+              //   name: 'Reyestrdan chiqarilganlar',
+              //   count: currentStatus === 'INACTIVE' ? totalElements : undefined,
+              // },
+              {
+                id: 'EXPIRED',
+                name: 'Muddati o‘tganlar',
+                count: currentStatus === 'EXPIRED' ? totalElements : undefined,
+              },
+              {
+                id: 'NO_DATE',
+                name: 'Muddati kiritilmaganlar',
+                count: currentStatus === 'NO_DATE' ? totalElements : undefined,
+              },
+              {
+                id: 'ORGANIZATIONS',
+                name: 'Tashkilotlar',
+                count: currentStatus === 'ORGANIZATIONS' ? totalElements : undefined,
+              },
+              {
+                id: 'CHANGED',
+                name: 'Rentgenlarni o‘zgartirish so‘rovlari',
+                count: changedCountData?.page?.totalElements || 0,
+              },
+              canManageOrgs
+                ? {
+                    id: 'CHANGED_ORGANIZATIONS',
+                    name: 'Tashkilotlarni o‘zgartirish so‘rovlari',
+                    count: changedOrgCountData?.page?.totalElements || 0,
+                  }
+                : null,
+            ].filter(Boolean) as any
+          }
           onTabChange={(type) => {
-            if (type === 'CHANGED') {
+            if (type === 'CHANGED' || type === 'CHANGED_ORGANIZATIONS') {
               addParams({ status: type, changeStatus: 'ALL' }, 'page')
             } else {
               addParams({ status: type, changeStatus: '' }, 'page')
@@ -263,7 +301,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
         />
       )}
 
-      {currentStatus === 'CHANGED' && !hideTabs && (
+      {(currentStatus === 'CHANGED' || currentStatus === 'CHANGED_ORGANIZATIONS') && !hideTabs && (
         <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 })}>
           <TabsList>
             {[

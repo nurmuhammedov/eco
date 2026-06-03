@@ -49,7 +49,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
 
   const currentValid = String(valid)
 
-  const isOrganizations = currentValid === 'ORGANIZATIONS'
+  const isOrganizations = currentValid === 'ORGANIZATIONS' || currentValid === 'CHANGED_ORGANIZATIONS'
 
   const endpoint = isOrganizations ? '/radiation-profiles' : '/irs'
 
@@ -69,6 +69,8 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
           directorName,
           regionId: regionId === 'ALL' ? '' : regionId,
           districtId,
+          changed: currentValid === 'CHANGED_ORGANIZATIONS' ? true : '',
+          changeStatus: currentValid === 'CHANGED_ORGANIZATIONS' && changeStatus !== 'ALL' ? changeStatus : '',
         }
       : {
           mode,
@@ -106,9 +108,22 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
     !isArchive
   )
 
+  const { data: changedOrgCountData } = usePaginatedData<any>(
+    `/radiation-profiles`,
+    {
+      changed: 'true',
+      type: 'IRS',
+      regionId: regionId === 'ALL' ? '' : regionId,
+      size: 1,
+    },
+    !isArchive
+  )
+
   const handleViewApplication = (id: string) => {
     if (currentValid === 'CHANGED') {
       navigate(`/register/change/${id}/irs`)
+    } else if (currentValid === 'CHANGED_ORGANIZATIONS') {
+      navigate(`/register/change/${id}/radiation-profiles`)
     } else if (isOrganizations) {
       navigate(`/register/radiation-profiles/${id}?type=IRS`)
     } else {
@@ -119,6 +134,10 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
 
   const handleEditApplication = (id: string, tin: string) => {
     navigate(`/register/update/IRS/${id}?tin=${tin}`)
+  }
+
+  const handleEditOrganization = (id: string) => {
+    navigate(`/register/update-organization/IRS/${id}`)
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [
@@ -214,10 +233,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
           onView={(row) => handleViewApplication(row.original.id)}
           showEdit={
             !isArchive &&
-            (user?.role === UserRoles.MANAGER ||
-              user?.role === UserRoles.LEGAL ||
-              (user?.role === UserRoles.INSPECTOR &&
-                (Number(row.original.regionId) === user?.regionId || user?.isController))) &&
+            (user?.role === UserRoles.MANAGER || user?.role === UserRoles.LEGAL || user?.isController) &&
             currentValid === 'true'
           }
           onEdit={(row) => handleEditApplication(row.original.id, row.original.legalTin)}
@@ -225,6 +241,13 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
       ),
     },
   ]
+
+  const canManageOrgs =
+    user?.role === UserRoles.LEGAL ||
+    user?.role === UserRoles.MANAGER ||
+    user?.role === UserRoles.HEAD ||
+    user?.isSupervisor ||
+    user?.isController
 
   const orgColumns: ExtendedColumnDef<any, any>[] = [
     {
@@ -259,7 +282,13 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
     {
       id: 'actions',
       cell: ({ row }) => (
-        <DataTableRowActions showView row={row} onView={(row) => handleViewApplication(row.original.id)} />
+        <DataTableRowActions
+          showView
+          row={row}
+          onView={(row) => handleViewApplication(row.original.id)}
+          showEdit={!isArchive && currentValid === 'ORGANIZATIONS' && canManageOrgs}
+          onEdit={(row) => handleEditOrganization(row.original.id)}
+        />
       ),
     },
   ]
@@ -315,7 +344,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
               {/*  )}*/}
               {/*</TabsTrigger>*/}
               <TabsTrigger value="CHANGED">
-                O‘zgartirish so‘rovlari
+                INMlarni o‘zgartirish so‘rovlari
                 <Badge
                   variant="destructive"
                   className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
@@ -323,12 +352,23 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
                   {changedCountData?.page?.totalElements || 0}
                 </Badge>
               </TabsTrigger>
+              {canManageOrgs && (
+                <TabsTrigger value="CHANGED_ORGANIZATIONS">
+                  Tashkilotlarni o‘zgartirish so‘rovlari
+                  <Badge
+                    variant="destructive"
+                    className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"
+                  >
+                    {changedOrgCountData?.page?.totalElements || 0}
+                  </Badge>
+                </TabsTrigger>
+              )}
             </TabsList>
           </div>
         </Tabs>
       )}
 
-      {currentValid === 'CHANGED' && !hideTabs && (
+      {(currentValid === 'CHANGED' || currentValid === 'CHANGED_ORGANIZATIONS') && !hideTabs && (
         <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 })}>
           <TabsList>
             {[

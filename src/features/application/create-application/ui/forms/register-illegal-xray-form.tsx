@@ -19,6 +19,11 @@ import {
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { Alert, AlertDescription } from '@/shared/components/ui/alert'
+import { FileLink } from '@/shared/components/common/file-link'
+import { getDate } from '@/shared/utils/date'
+import { TriangleAlert } from 'lucide-react'
+import { Skeleton } from '@/shared/components/ui/skeleton'
 
 import { useRegisterIllegalXray } from '@/features/application/create-application/model/use-create-illegal-xray-application'
 
@@ -47,6 +52,10 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
     regionOptions,
     stateServiceOptions,
     ownerData,
+    profileData,
+    isProfileLoading,
+    isDataNull,
+    hasIncompleteOrgFiles,
     detail,
     isLoading,
     isSearchLoading,
@@ -55,6 +64,12 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
     handleClear,
     handleSubmit,
   } = useRegisterIllegalXray(onSubmit)
+
+  const xrayOrgFiles = [
+    { key: 'file5Path', label: 'Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat' },
+    { key: 'file7Path', label: 'Dozimetr protokoli (bayonnomasi)' },
+    { key: 'file9Path', label: 'Yerga ulash va ventilatsiya dalolatnomasi' },
+  ]
 
   const identity = form.watch('identity')
   const isIndividual = identity?.length === 14
@@ -67,7 +82,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
 
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit as any)}>
+      <form autoComplete="off" onSubmit={form.handleSubmit((d) => handleSubmit({ ...form.getValues(), ...d } as any))}>
         <GoBack title={isUpdate ? 'Rentgen maʼlumotlarini tahrirlash' : 'Rentgen uskunasini ro‘yxatga olish'} />
         <NoteForm equipmentName="rentgen" onlyLatin={true} />
         <CardForm className="my-2">
@@ -415,507 +430,6 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
         <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <div className="border-b pb-4">
             <FormField
-              name="file1Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Mehnat vazirligi ekspertiza xulosasi</FormLabel>
-                    <FormControl>
-                      <InputFile
-                        form={form}
-                        name={field.name}
-                        accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file1ExpiryDate', undefined as any, { shouldValidate: true })}
-                      />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="file1ExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!!form.watch('file1Path')}>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        disableStrategy="before"
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
-                        disabled={!form.watch('file1Path')}
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="file2Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Sanitariya-epidemiologik xulosa</FormLabel>
-                    <FormControl>
-                      <InputFile
-                        form={form}
-                        name={field.name}
-                        accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file2ExpiryDate', undefined as any, { shouldValidate: true })}
-                      />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="file2ExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!!form.watch('file2Path')}>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        disableStrategy="before"
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
-                        disabled={!form.watch('file2Path')}
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="file3Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>SES xulosa obyekt toifasi qismi</FormLabel>
-                    <FormControl>
-                      <InputFile
-                        form={form}
-                        name={field.name}
-                        accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file3ExpiryDate', undefined as any, { shouldValidate: true })}
-                      />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="file3ExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!!form.watch('file3Path')}>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        disableStrategy="before"
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
-                        disabled={!form.watch('file3Path')}
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="file4Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Buyruq va “А” toifaga kirgan xodimlar ro‘yxati</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="file5Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Radiatsiyaviy xavfsizlik sertifikati</FormLabel>
-                    <FormControl>
-                      <InputFile
-                        form={form}
-                        name={field.name}
-                        accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file5ExpiryDate', undefined as any, { shouldValidate: true })}
-                      />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="file5ExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!!form.watch('file5Path')}>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        disableStrategy="before"
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
-                        disabled={!form.watch('file5Path')}
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="file6Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Tibbiy ko‘rik xulosasi</FormLabel>
-                    <FormControl>
-                      <InputFile
-                        form={form}
-                        name={field.name}
-                        accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file6ExpiryDate', undefined as any, { shouldValidate: true })}
-                      />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="file6ExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!!form.watch('file6Path')}>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        disableStrategy="before"
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
-                        disabled={!form.watch('file6Path')}
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="file7Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Dozimetr protokoli</FormLabel>
-                    <FormControl>
-                      <InputFile
-                        form={form}
-                        name={field.name}
-                        accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file7ExpiryDate', undefined as any, { shouldValidate: true })}
-                      />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="file7ExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!!form.watch('file7Path')}>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        disableStrategy="before"
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
-                        disabled={!form.watch('file7Path')}
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="file8Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Davriy qiyoslov sertifikati</FormLabel>
-                    <FormControl>
-                      <InputFile
-                        form={form}
-                        name={field.name}
-                        accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file8ExpiryDate', undefined as any, { shouldValidate: true })}
-                      />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="file8ExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!!form.watch('file8Path')}>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        disableStrategy="before"
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
-                        disabled={!form.watch('file8Path')}
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="file9Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Dalolatnoma</FormLabel>
-                    <FormControl>
-                      <InputFile
-                        form={form}
-                        name={field.name}
-                        accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file9ExpiryDate', undefined as any, { shouldValidate: true })}
-                      />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="file9ExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!!form.watch('file9Path')}>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        disableStrategy="before"
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
-                        disabled={!form.watch('file9Path')}
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="file10Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Kuzatuv xati, INM pasporti va inventarizatsiya</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="file11Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Yo‘riqnomalar</FormLabel>
-                    <FormControl>
-                      <InputFile
-                        form={form}
-                        name={field.name}
-                        accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file11ExpiryDate', undefined as any, { shouldValidate: true })}
-                      />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="file11ExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!!form.watch('file11Path')}>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        disableStrategy="before"
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
-                        disabled={!form.watch('file11Path')}
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="file12Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Kadrlar (buyruq, diplom, sertifikat va malaka oshirish)</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="file13Path"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate}>Rentgen xonasining (Pasporti)</FormLabel>
-                    <FormControl>
-                      <InputFile
-                        form={form}
-                        name={field.name}
-                        accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file13ExpiryDate', undefined as any, { shouldValidate: true })}
-                      />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="file13ExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!!form.watch('file13Path')}>Amal qilish muddati</FormLabel>
-                      <DatePicker
-                        disableStrategy="before"
-                        className={'max-w-2/3'}
-                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                        onChange={field.onChange}
-                        placeholder="Amal qilish muddati"
-                        disabled={!form.watch('file13Path')}
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
               name="file14Path"
               control={form.control}
               render={({ field }) => (
@@ -968,16 +482,238 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                     <FormLabel>Texnik attestatsiya xulosasi</FormLabel>
                     <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                      <InputFile
+                        form={form}
+                        name={field.name}
+                        accept={[FileTypes.PDF]}
+                        onRemove={() => form.setValue('file16ExpiryDate', undefined as any, { shouldValidate: true })}
+                      />
                     </FormControl>
                   </div>
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="file16ExpiryDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem className="w-full">
+                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <FormLabel required={!!form.watch('file16Path')}>Amal qilish muddati</FormLabel>
+                      <DatePicker
+                        disableStrategy="before"
+                        className={'max-w-2/3'}
+                        value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                        onChange={field.onChange}
+                        placeholder="Amal qilish muddati"
+                        disabled={!form.watch('file16Path')}
+                      />
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
           </div>
         </CardForm>
 
-        <Button type="submit" loading={isPending || isSubmitPending}>
+        <div className="mt-4 mb-2 text-base font-semibold text-slate-800">Rentgen tashkilotiga tegishli fayllar</div>
+        {hasIncompleteOrgFiles && (
+          <Alert className="mb-4 border-amber-200 bg-amber-50 text-amber-800">
+            <TriangleAlert className="h-4 w-4 text-amber-600" />
+            <AlertDescription>
+              Tashkilotning ayrim hujjatlari to‘liq kiritilmagan. Reyestrlar bo‘limidan tashkilot ma‘lumotlarini
+              yangilash imkoniyati mavjud.{' '}
+              {isUpdate
+                ? 'Tashkilot hujjatlari to‘liq mavjud bo‘lganda tahrirlash mumkin!'
+                : ' Arizani tashkilot hujjatlari to‘liq mavjud bo‘lganda yuborish mumkin!'}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {isProfileLoading ? (
+          <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex flex-col gap-2 border-b pb-4">
+                <Skeleton className="h-8 w-2/3" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-8 w-1/2" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            ))}
+          </CardForm>
+        ) : isDataNull && !isUpdate ? (
+          <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
+            <div className="border-b pb-4">
+              <FormField
+                name="file5Path"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="mb-2">
+                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <FormLabel required>Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat</FormLabel>
+                      <FormControl>
+                        <InputFile
+                          form={form}
+                          name={field.name}
+                          accept={[FileTypes.PDF]}
+                          onRemove={() => form.setValue('file5ExpiryDate', undefined as any, { shouldValidate: true })}
+                        />
+                      </FormControl>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="file5ExpiryDate"
+                render={({ field }) => {
+                  const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                  return (
+                    <FormItem className="w-full">
+                      <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                        <FormLabel required={!!form.watch('file5Path')}>Amal qilish muddati</FormLabel>
+                        <DatePicker
+                          disableStrategy="before"
+                          className={'max-w-2/3'}
+                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                          onChange={field.onChange}
+                          placeholder="Amal qilish muddati"
+                          disabled={!form.watch('file5Path')}
+                        />
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )
+                }}
+              />
+            </div>
+
+            <div className="border-b pb-4">
+              <FormField
+                name="file7Path"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="mb-2">
+                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <FormLabel required>Dozimetr protokoli (bayonnomasi)</FormLabel>
+                      <FormControl>
+                        <InputFile
+                          form={form}
+                          name={field.name}
+                          accept={[FileTypes.PDF]}
+                          onRemove={() => form.setValue('file7ExpiryDate', undefined as any, { shouldValidate: true })}
+                        />
+                      </FormControl>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="file7ExpiryDate"
+                render={({ field }) => {
+                  const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                  return (
+                    <FormItem className="w-full">
+                      <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                        <FormLabel required={!!form.watch('file7Path')}>Amal qilish muddati</FormLabel>
+                        <DatePicker
+                          disableStrategy="before"
+                          className={'max-w-2/3'}
+                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                          onChange={field.onChange}
+                          placeholder="Amal qilish muddati"
+                          disabled={!form.watch('file7Path')}
+                        />
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )
+                }}
+              />
+            </div>
+
+            <div className="border-b pb-4">
+              <FormField
+                name="file9Path"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem className="mb-2">
+                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <FormLabel required>Yerga ulash va ventilatsiya dalolatnomasi</FormLabel>
+                      <FormControl>
+                        <InputFile
+                          form={form}
+                          name={field.name}
+                          accept={[FileTypes.PDF]}
+                          onRemove={() => form.setValue('file9ExpiryDate', undefined as any, { shouldValidate: true })}
+                        />
+                      </FormControl>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="file9ExpiryDate"
+                render={({ field }) => {
+                  const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                  return (
+                    <FormItem className="w-full">
+                      <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                        <FormLabel required={!!form.watch('file9Path')}>Amal qilish muddati</FormLabel>
+                        <DatePicker
+                          disableStrategy="before"
+                          className={'max-w-2/3'}
+                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                          onChange={field.onChange}
+                          placeholder="Amal qilish muddati"
+                          disabled={!form.watch('file9Path')}
+                        />
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )
+                }}
+              />
+            </div>
+          </CardForm>
+        ) : (
+          <CardForm className="mb-5">
+            <div className="grid grid-cols-1 gap-x-8 md:grid-cols-2">
+              {xrayOrgFiles.map((file) => {
+                const fileData = profileData?.files?.[file.key]
+                return (
+                  <div
+                    key={file.key}
+                    className="flex flex-col items-start gap-3 border-b border-b-[#E5E7EB] px-3 py-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <p className="pr-5 text-sm font-medium text-gray-700 sm:text-base">{file.label}</p>
+                    <div className="flex items-center gap-2">
+                      {fileData?.path ? (
+                        <div className="flex-col">
+                          <FileLink url={fileData.path} className="mb-1" />
+                          {fileData.expiryDate && (
+                            <div className="mr-1 mb-1 text-xs text-nowrap text-gray-400">
+                              Amal qilish muddati: {getDate(fileData.expiryDate)}
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-red-600">Mavjud emas</span>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </CardForm>
+        )}
+
+        <Button type="submit" loading={isPending || isSubmitPending} disabled={hasIncompleteOrgFiles}>
           {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
         </Button>
       </form>

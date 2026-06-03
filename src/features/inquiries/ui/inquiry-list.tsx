@@ -236,7 +236,7 @@ const InquiryTable = () => {
               ))
             ) : (
               <div className="flex flex-1 items-center justify-center p-4 text-sm text-slate-500">
-                Ma'lumot topilmadi
+                Maʼlumot topilmadi
               </div>
             )}
           </div>

@@ -33,8 +33,10 @@ const RegisterChangeDetail: FC = () => {
   const canDescribe =
     (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.MANAGER) && status === ApplicationStatus.IN_PROCESS
   const canAgree =
-    (user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) && status === ApplicationStatus.IN_AGREEMENT
-  const canApproveManager = user?.role === UserRoles.MANAGER && status === ApplicationStatus.IN_APPROVAL
+    ((user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) &&
+      status === ApplicationStatus.IN_AGREEMENT) ||
+    (status === ApplicationStatus.IN_APPROVAL && user?.role === UserRoles.HEAD)
+  // const canApproveManager = user?.role === UserRoles.MANAGER && status === ApplicationStatus.IN_APPROVAL
 
   if (isLoading) {
     return null
@@ -62,15 +64,19 @@ const RegisterChangeDetail: FC = () => {
           {canAgree && (
             <>
               <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
-              <ConfirmProcessModal changeId={changeId} title="Kelishilsinmi" buttonText="Kelishish" />
+              <ConfirmProcessModal
+                changeId={changeId}
+                title={`${ApplicationStatus.IN_APPROVAL ? 'Tasdiqlansinmi' : 'Kelishilsinmi'}`}
+                buttonText={ApplicationStatus.IN_APPROVAL ? 'Tasdiqlash' : 'Kelishish'}
+              />
             </>
           )}
-          {canApproveManager && (
-            <>
-              <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
-              <ConfirmProcessModal changeId={changeId} title="Tasdiqlansinmi" buttonText="Tasdiqlash" />
-            </>
-          )}
+          {/*{canApproveManager && (*/}
+          {/*  <>*/}
+          {/*    <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />*/}
+          {/*    <ConfirmProcessModal changeId={changeId} title="Tasdiqlansinmi" buttonText="Tasdiqlash" />*/}
+          {/*  </>*/}
+          {/*)}*/}
           <ApplicationLogsModal id={changeId} type="change" />
         </div>
       </div>
@@ -81,7 +87,10 @@ const RegisterChangeDetail: FC = () => {
             <DetailRow
               title="Reyestrga havola:"
               value={
-                <Link className="py-4 pr-2 text-lg text-[#0271FF]" to={`/register/${id}/${type}`}>
+                <Link
+                  className="py-4 pr-2 text-lg text-[#0271FF]"
+                  to={type === 'radiation-profiles' ? `/register/radiation-profiles/${id}` : `/register/${id}/${type}`}
+                >
                   Reyestr ma’lumotlarini ko‘rish
                 </Link>
               }

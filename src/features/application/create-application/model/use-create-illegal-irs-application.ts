@@ -13,12 +13,12 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { irsRefinement, RegisterIllegalIrsBaseSchema } from '@/entities/create-application'
 import {
-  irsRefinement,
-  RegisterIllegalIrsBaseSchema,
   RegisterIllegalIrsDTO,
   RegisterIllegalIrsSchema,
 } from '@/entities/create-application/schemas/register-illegal-irs.schema'
+import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
 
 export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
   const { type, id } = useParams<{ type: string; id: string }>()
@@ -29,6 +29,32 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
   const queryClient = useQueryClient()
 
   const [manualOwnerData, setManualOwnerData] = useState<any>(null)
+
+  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/irs/`, id, !!id)
+  const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
+  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
+    queryKey: ['owner-data', ownerIdentity],
+    queryFn: async () => {
+      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
+      return res.data?.data
+    },
+    enabled: !!ownerIdentity,
+  })
+
+  const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
+  const identityForProfile =
+    currentOwnerData?.tin || currentOwnerData?.pin || currentOwnerData?.legalTin || ownerIdentity
+
+  const { data: profileData, isLoading: isProfileLoading } = useRadiationProfileCheck(
+    (!isUpdate && currentOwnerData) || isUpdate ? identityForProfile : null,
+    'IRS'
+  )
+
+  const isDataNull = !profileData
+  const filesSource = profileData?.files
+  const hasIncompleteOrgFiles = isUpdate
+    ? false
+    : !!filesSource && Object.values(filesSource).some((f: any) => !f?.path || !f?.expiryDate)
 
   const form = useForm<RegisterIllegalIrsDTO>({
     resolver: (values, context, options) => {
@@ -52,9 +78,49 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
             return [k, v]
           })
         )
-        return zodResolver(actualSchema)(cleanedValues as any, context, options)
+        const dynamicSchema = (actualSchema as z.ZodTypeAny).superRefine((data: any, ctx: z.RefinementCtx) => {
+          if (isDataNull && !isUpdate) {
+            if (!data.file1Path)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1Path'] })
+            if (!data.file1ExpiryDate)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1ExpiryDate'] })
+            if (!data.file2Path)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2Path'] })
+            if (!data.file2ExpiryDate)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2ExpiryDate'] })
+            if (!data.file5Path)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+            if (!data.file5ExpiryDate)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+            if (!data.file15Path)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15Path'] })
+            if (!data.file15ExpiryDate)
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15ExpiryDate'] })
+          }
+        })
+        return zodResolver(dynamicSchema)(cleanedValues as any, context, options)
       }
-      return zodResolver(actualSchema)(values, context, options)
+      const dynamicSchema = (actualSchema as z.ZodTypeAny).superRefine((data: any, ctx: z.RefinementCtx) => {
+        if (isDataNull) {
+          if (!data.file1Path)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1Path'] })
+          if (!data.file1ExpiryDate)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1ExpiryDate'] })
+          if (!data.file2Path)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2Path'] })
+          if (!data.file2ExpiryDate)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2ExpiryDate'] })
+          if (!data.file5Path)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+          if (!data.file5ExpiryDate)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+          if (!data.file15Path)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15Path'] })
+          if (!data.file15ExpiryDate)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15ExpiryDate'] })
+        }
+      })
+      return zodResolver(dynamicSchema)(values, context, options)
     },
     defaultValues: {
       phoneNumber: '',
@@ -81,8 +147,14 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
       isValid: true,
       usageType: undefined,
       storageLocation: '',
-      passportPath: undefined,
-      additionalFilePath: undefined,
+      file1Path: undefined,
+      file1ExpiryDate: undefined,
+      file2Path: undefined,
+      file2ExpiryDate: undefined,
+      file5Path: undefined,
+      file5ExpiryDate: undefined,
+      file15Path: undefined,
+      file15ExpiryDate: undefined,
       regionId: '',
       districtId: '',
       address: '',
@@ -91,7 +163,6 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     mode: 'onChange',
   })
 
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/irs/`, id, !!id)
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/irs/', id, 'put')
 
   const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
@@ -99,22 +170,9 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     '/integration/iip/individual'
   )
 
-  const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
   const regionId = form.watch('regionId')
-
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)
-
-  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', ownerIdentity],
-    queryFn: async () => {
-      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
-      return res.data?.data
-    },
-    enabled: !!ownerIdentity,
-  })
-
-  const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
   const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
 
   useEffect(() => {
@@ -149,8 +207,14 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
         storageLocation: getValue(detail.storageLocation || ''),
         regionId: detail.regionId ? String(detail.regionId) : '',
         address: getValue(detail.address || ''),
-        passportPath: detail.files?.passportPath?.path,
-        additionalFilePath: detail.files?.additionalFilePath?.path,
+        file1Path: detail.files?.file1Path?.path,
+        file1ExpiryDate: parseDate(detail.files?.file1Path?.expiryDate),
+        file2Path: detail.files?.file2Path?.path,
+        file2ExpiryDate: parseDate(detail.files?.file2Path?.expiryDate),
+        file5Path: detail.files?.file5Path?.path,
+        file5ExpiryDate: parseDate(detail.files?.file5Path?.expiryDate),
+        file15Path: detail.files?.file15Path?.path,
+        file15ExpiryDate: parseDate(detail.files?.file15Path?.expiryDate),
       } as any)
 
       setTimeout(() => {
@@ -159,6 +223,18 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     }
   }, [detail, form, isUpdate])
 
+  useEffect(() => {
+    if (profileData && profileData.files) {
+      Object.keys(profileData.files).forEach((key) => {
+        const fileInfo = profileData.files[key]
+        if (fileInfo?.path) form.setValue(key as any, fileInfo.path, { shouldValidate: true })
+        const dateKey = key.replace('Path', 'ExpiryDate')
+        if (fileInfo?.expiryDate)
+          form.setValue(dateKey as any, new Date(fileInfo.expiryDate) as any, { shouldValidate: true })
+      })
+    }
+  }, [profileData, form, detail])
+
   const handleSearch = () => {
     const identity = form.getValues('identity')?.trim()
     const birthDate = form.getValues('birthDate')
@@ -166,12 +242,13 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     if (!identity) return
 
     if (identity.length === 9) {
-      legalMutateAsync({ tin: identity })
+      legalMutateAsync({ tin: identity, type: 'IRS' })
         .then((res) => setManualOwnerData(res.data?.data || res.data))
         .catch(() => setManualOwnerData(null))
     } else if (identity.length === 14 && birthDate) {
       individualMutateAsync({
         pin: identity,
+        type: 'IRS',
         birthDate: format(birthDate as unknown as Date, 'yyyy-MM-dd'),
       })
         .then((res) => setManualOwnerData(res.data?.data || res.data))
@@ -191,6 +268,8 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     const cleanedData = Object.fromEntries(
       Object.entries(data).map(([key, value]) => {
         if (value === '' || value === null || value === undefined || value === '+998') return [key, null]
+        if ((value as any) instanceof Date && !isNaN((value as any).getTime()))
+          return [key, format(value as any, 'yyyy-MM-dd')]
         return [key, value]
       })
     )
@@ -261,6 +340,10 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     irsUsageTypeOptions,
     irsStatusOptions,
     ownerData: currentOwnerData,
+    profileData,
+    isProfileLoading,
+    isDataNull,
+    hasIncompleteOrgFiles,
     detail,
     isLoading: isDetailLoading || isOwnerLoading,
     isSearchLoading: isLegalPending || isIndividualPending,

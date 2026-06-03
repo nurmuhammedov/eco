@@ -3,14 +3,39 @@ import { XrayAppealDtoSchema } from '@/entities/create-application'
 import { stateService } from '@/entities/create-application/types/enums'
 import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 export const useCreateXrayApplication = () => {
+  const { user } = useAuth()
+  const userTin = user?.tinOrPin?.toString()
+  const { data: profileData, isLoading: isProfileLoading } = useRadiationProfileCheck(userTin, 'XRAY')
+
   const form = useForm<z.input<typeof XrayAppealDtoSchema>>({
-    resolver: zodResolver(XrayAppealDtoSchema),
+    resolver: (values, context, options) => {
+      const isDataNull = !profileData
+      const dynamicSchema = XrayAppealDtoSchema.superRefine((data, ctx) => {
+        if (isDataNull) {
+          if (!data.file5Path)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+          if (!data.file5ExpiryDate)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+          if (!data.file7Path)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file7Path'] })
+          if (!data.file7ExpiryDate)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file7ExpiryDate'] })
+          if (!data.file9Path)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file9Path'] })
+          if (!data.file9ExpiryDate)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file9ExpiryDate'] })
+        }
+      })
+      return zodResolver(dynamicSchema)(values, context, options)
+    },
     defaultValues: {
       phoneNumber: '',
       licenseNumber: '',
@@ -23,37 +48,34 @@ export const useCreateXrayApplication = () => {
       address: '',
       manufacturedYear: '',
       stateService: '',
-      file1Path: undefined,
-      file1ExpiryDate: undefined,
-      file2Path: undefined,
-      file2ExpiryDate: undefined,
-      file3Path: undefined,
-      file3ExpiryDate: undefined,
-      file4Path: undefined,
       file5Path: undefined,
       file5ExpiryDate: undefined,
-      file6Path: undefined,
-      file6ExpiryDate: undefined,
       file7Path: undefined,
       file7ExpiryDate: undefined,
-      file8Path: undefined,
-      file8ExpiryDate: undefined,
       file9Path: undefined,
       file9ExpiryDate: undefined,
-      file10Path: undefined,
-      file11Path: undefined,
-      file11ExpiryDate: undefined,
-      file12Path: undefined,
-      file13Path: undefined,
-      file13ExpiryDate: undefined,
       file14Path: undefined,
       file14ExpiryDate: undefined,
       file16Path: undefined,
+      file16ExpiryDate: undefined,
     },
     mode: 'onChange',
   })
 
   const regionId = form.watch('regionId')
+
+  useEffect(() => {
+    if (profileData && profileData.files) {
+      Object.keys(profileData.files).forEach((key) => {
+        const fileInfo = profileData.files[key]
+        if (fileInfo?.path) form.setValue(key as any, fileInfo.path, { shouldValidate: true })
+        const dateKey = key.replace('Path', 'ExpiryDate')
+        if (fileInfo?.expiryDate)
+          form.setValue(dateKey as any, new Date(fileInfo.expiryDate) as any, { shouldValidate: true })
+      })
+    }
+  }, [profileData, form])
+
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
@@ -75,5 +97,11 @@ export const useCreateXrayApplication = () => {
     regionOptions,
     districtOptions,
     stateServiceOptions,
+    isProfileLoading,
+    profileData,
+    hasIncompleteOrgFiles:
+      !!profileData &&
+      !!profileData.files &&
+      Object.values(profileData.files).some((f: any) => !f?.path || !f?.expiryDate),
   }
 }

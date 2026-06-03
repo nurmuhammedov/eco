@@ -514,7 +514,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
 
   return (
     <div className="flex flex-col py-1">
-      {/* Umumiy ma'lumotlar */}
+      {/* Umumiy maʼlumotlar */}
       {/*{renderRow('phoneNumber', data?.phoneNumber)}*/}
 
       {/* XICHO (HF) maydonlari */}
@@ -615,8 +615,8 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
       {renderRow('address', address)}
       {/*{renderRow('location', data?.location)}*/}
 
-      {/* Umumiy meta ma'lumotlar */}
-      {renderRow('type', t(`equipment_types.${type}`) || type)}
+      {/* Umumiy meta maʼlumotlar */}
+      {type == 'IRS' ? renderRow('type', data?.type || '') : renderRow('type', t(`equipment_types.${type}`) || type)}
       {isRegister ? renderRow('registryNumber', data?.registryNumber) : null}
 
       {/* Xodimlar */}
