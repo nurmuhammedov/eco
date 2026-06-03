@@ -10,13 +10,15 @@ export const useObjectInfo = () => {
   let currentType = searchParams.get('type') || ''
   const currentId = searchParams.get('id') || ''
 
-  if (currentType !== 'HF' && currentType !== 'IRS') {
+  const isRadProfile = currentType === 'IRS' || currentType === 'XRAY'
+
+  if (currentType !== 'HF' && currentType !== 'IRS' && currentType !== 'XRAY') {
     currentType = 'equipments'
   }
 
   return useQuery({
     queryKey: [QK_RISK_ANALYSIS, 'INFO', currentId, currentType],
-    enabled: !!currentId,
+    enabled: !!currentId && !isRadProfile,
     queryFn: () => riskAnalysisDetailApi.getObjectInfo({ type: currentType?.toLowerCase(), id: currentId }),
     select: (data) => {
       const fileNamePrefix = currentType !== 'equipments' ? currentType.toUpperCase() : data.type

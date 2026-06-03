@@ -132,7 +132,7 @@ const PublicInquiryForm = () => {
 
         <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
           <div className="border-b bg-slate-50/50 p-6">
-            <h2 className="text-xl font-semibold text-slate-800">Anonim murojaat yuborish</h2>
+            <h2 className="text-xl font-semibold text-slate-800">Ro‘yxatdan o‘tmasdan murojaat yuborish</h2>
             <p className="mt-1 text-sm text-slate-500">Iltimos, hodisa haqida batafsil ma’lumot kiriting</p>
           </div>
 
@@ -156,7 +156,7 @@ const PublicInquiryForm = () => {
                           </FormControl>
                           <SelectContent>
                             <SelectItem value="APPEAL">Murojaat</SelectItem>
-                            <SelectItem value="RISK_APPEAL">Huquqbuzarliik xabari</SelectItem>
+                            {/*<SelectItem value="RISK_APPEAL">Huquqbuzarliik xabari</SelectItem>*/}
                             <SelectItem value="SUGGESTION">Taklif</SelectItem>
                           </SelectContent>
                         </Select>

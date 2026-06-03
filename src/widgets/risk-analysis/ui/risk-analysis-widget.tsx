@@ -94,22 +94,40 @@ const RiskAnalysisWidget = () => {
       identity,
       inspectorId,
       periodId,
-      status,
     },
     shouldShowRegions ? !!activeRegion : true
   )
 
-  const { data: irsCount = 0 } = useData<number>('/irs/count', false)
-  const { data: xrayCount = 0 } = useData<number>('/xrays/count', false)
-  // const { data: elevatorCount = 0 } = useData<number>('/equipments/count?type=ELEVATOR', false)
-  const { data: attractionCount = 0 } = useData<number>('/equipments/count?type=ATTRACTION', false)
-  const { data: lpgPoweredCount = 0 } = useData<number>('/equipments/count?type=LPG_POWERED', false)
-
-  const { data: hfRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
-    type: 'HF',
+  const { data: hfRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, { type: 'HF', year, quarter })
+  const { data: irsRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+    type: 'IRS',
     year,
     quarter,
   })
+  const { data: xrayRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+    type: 'XRAY',
+    year,
+    quarter,
+  })
+  const { data: attractionRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+    type: 'ATTRACTION',
+    year,
+    quarter,
+  })
+  const { data: lpgPoweredRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+    type: 'LPG_POWERED',
+    year,
+    quarter,
+  })
+
+  const getSum = (counts?: RiskCountResponse) =>
+    (counts?.lowCount || 0) + (counts?.mediumCount || 0) + (counts?.highCount || 0)
+
+  const hfTotalCount = getSum(hfRiskCounts)
+  const irsTotalCount = getSum(irsRiskCounts)
+  const xrayTotalCount = getSum(xrayRiskCounts)
+  const attractionTotalCount = getSum(attractionRiskCounts)
+  const lpgPoweredTotalCount = getSum(lpgPoweredRiskCounts)
 
   const { data: regionCounts = [] } = useData<RegionCountDto[]>('/risk-analyses/count/by-region', shouldShowRegions, {
     type: currentApiType,
@@ -125,8 +143,6 @@ const RiskAnalysisWidget = () => {
     periodId,
     status,
   })
-
-  const hfTotalCount = (hfRiskCounts?.lowCount || 0) + (hfRiskCounts?.mediumCount || 0) + (hfRiskCounts?.highCount || 0)
 
   const handleCardTabChange = (level: string) => {
     addParams({ riskLevel: level }, 'page')
@@ -167,31 +183,31 @@ const RiskAnalysisWidget = () => {
             <TabsTrigger value={RiskAnalysisTab.INM}>
               {t('risk_analysis_tabs.INM')}
               <Badge variant="destructive" className="ml-2">
-                {irsCount}
+                {irsTotalCount}
               </Badge>
             </TabsTrigger>
             {/*<TabsTrigger value={RiskAnalysisTab.LIFT}>*/}
             {/*  {t('risk_analysis_tabs.LIFT')}*/}
             {/*  <Badge variant="destructive" className="ml-2">*/}
-            {/*    {elevatorCount}*/}
+            {/*    {elevatorTotalCount}*/}
             {/*  </Badge>*/}
             {/*</TabsTrigger>*/}
             <TabsTrigger value={RiskAnalysisTab.XRAY}>
               {t('risk_analysis_tabs.XRAY')}
               <Badge variant="destructive" className="ml-2">
-                {xrayCount}
+                {xrayTotalCount}
               </Badge>
             </TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.ATTRACTION}>
               {t('risk_analysis_tabs.ATTRACTION')}
               <Badge variant="destructive" className="ml-2">
-                {attractionCount}
+                {attractionTotalCount}
               </Badge>
             </TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.LPG_POWERED}>
               {t('risk_analysis_tabs.LPG_POWERED')}
               <Badge variant="destructive" className="ml-2">
-                {lpgPoweredCount}
+                {lpgPoweredTotalCount}
               </Badge>
             </TabsTrigger>
           </TabsList>

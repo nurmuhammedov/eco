@@ -18,27 +18,33 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
   const { t } = useTranslation('common')
   const type = paramsObject.mainTab || RiskAnalysisTab.XICHO
   const handleView = (row: RiskAnalysisItem) => {
-    navigate(`/risk-analysis/detail?tin=${row.legalTin}&id=${row.belongId}&type=${type}`)
+    navigate(
+      `/risk-analysis/detail?tin=${row.legalTin}&id=${row.belongId}&type=${type}&name=${row.legalName || row.name || ''}`
+    )
   }
 
   const columns: ExtendedColumnDef<RiskAnalysisItem, any>[] = [
-    {
-      header: () => (
-        <div className="whitespace-nowrap">
-          Roʻyxatga olish <br /> raqami
-        </div>
-      ),
-      accessorKey: 'registryNumber',
-      className: '!w-[1%] whitespace-nowrap',
-      filterKey: 'registryNumber',
-      filterType: 'search',
-    },
-    {
-      header: t('risk_analysis_columns.name'),
-      accessorKey: 'name',
-      filterKey: 'name',
-      filterType: 'search',
-    },
+    ...(type === RiskAnalysisTab.INM || type === RiskAnalysisTab.XRAY
+      ? []
+      : [
+          {
+            header: () => (
+              <div className="whitespace-nowrap">
+                Roʻyxatga olish <br /> raqami
+              </div>
+            ),
+            accessorKey: 'registryNumber',
+            className: '!w-[1%] whitespace-nowrap',
+            filterKey: 'registryNumber',
+            filterType: 'search',
+          },
+          {
+            header: t('risk_analysis_columns.name'),
+            accessorKey: 'name',
+            filterKey: 'name',
+            filterType: 'search',
+          },
+        ]),
 
     {
       header: 'Tashkilot nomi',

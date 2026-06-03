@@ -112,7 +112,7 @@ const PublicInquiryChoice = () => {
                 onClick={handleAnonymous}
               >
                 <EyeOff className="mr-2 h-5 w-5 shrink-0 text-slate-500" />
-                <span>Anonim tarzda murojaat yuborish</span>
+                <span>Ro‘yxatdan o‘tmasdan murojaat yuborish</span>
               </Button>
               <p className="px-2 text-center text-xs leading-relaxed text-slate-600">
                 Shaxsiy ma‘lumotlaringiz butunlay sir saqlanadi. Biroq, bu usulda sizga javob xati kelmaydi va murojaat

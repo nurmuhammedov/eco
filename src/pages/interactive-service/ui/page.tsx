@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback, Suspense } from 'react'
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { UzbekistanMap } from '@/features/dashboard/ui/uzbekistan-map'
 import { useDashboardStats } from '@/features/dashboard/model/use-dashboard-stats'
 import { useRiskAnalysisStats } from '@/features/dashboard/model/use-risk-analysis-stats'
@@ -8,7 +8,7 @@ import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
 import { InquiryStatus } from '@/features/inquiries/model/types'
 import Icon from '@/shared/components/common/icon'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { Loader2, Factory, Wrench, Radiation, ScanLine, ShieldAlert, ClipboardCheck, MessageSquare } from 'lucide-react'
+import { ClipboardCheck, Factory, Loader2, MessageSquare, Radiation, ScanLine, ShieldAlert, Wrench } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip'
 
 const CATEGORIES = [
