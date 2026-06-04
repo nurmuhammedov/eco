@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '@/shared/components/ui/button'
-import { EyeOff, Loader2, ShieldCheck } from 'lucide-react'
+import { Loader2, ShieldCheck } from 'lucide-react'
 import Icon from '@/shared/components/common/icon'
 import { apiConfig } from '@/shared/api/constants'
 import { useLoginOneId } from '@/entities/auth/models/auth.fetcher'
@@ -52,9 +52,9 @@ const PublicInquiryChoice = () => {
     window.location.href = `https://sso.egov.uz/sso/oauth/Authorization.do?response_type=one_code&state=${encodedState}&scope=myportal&client_id=${apiConfig.oneIdClientId}&client_secret=${apiConfig.oneIdClientSecret}&redirect_uri=${redirectUri}`
   }
 
-  const handleAnonymous = () => {
-    navigate(`/public-inquiry/form?belongId=${belongId || ''}&belongType=${belongType || ''}`)
-  }
+  // const handleAnonymous = () => {
+  //   navigate(`/public-inquiry/form?belongId=${belongId || ''}&belongType=${belongType || ''}`)
+  // }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
@@ -93,30 +93,6 @@ const PublicInquiryChoice = () => {
                   Shuningdek, xabar qilingan holat o‘z tasdig‘ini topsa va qoidabuzarga jarima qo‘llanilsa, ushbu jarima
                   mablag‘lari hisobidan Sizga tegishli tartibda pul mukofoti to‘lab berilishi mumkin.
                 </span>
-              </p>
-            </div>
-
-            <div className="relative flex items-center py-2">
-              <div className="flex-grow border-t border-slate-200"></div>
-              <span className="mx-4 flex-shrink-0 text-xs font-medium tracking-wider text-slate-400 uppercase">
-                yoki
-              </span>
-              <div className="flex-grow border-t border-slate-200"></div>
-            </div>
-
-            <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 transition-colors hover:bg-slate-50">
-              <Button
-                variant="outline"
-                size="lg"
-                className="mb-3 h-auto min-h-[3.5rem] w-full border-slate-300 py-3 text-base whitespace-normal text-slate-700 shadow-sm hover:bg-white sm:py-2"
-                onClick={handleAnonymous}
-              >
-                <EyeOff className="mr-2 h-5 w-5 shrink-0 text-slate-500" />
-                <span>Ro‘yxatdan o‘tmasdan murojaat yuborish</span>
-              </Button>
-              <p className="px-2 text-center text-xs leading-relaxed text-slate-600">
-                Shaxsiy ma‘lumotlaringiz butunlay sir saqlanadi. Biroq, bu usulda sizga javob xati kelmaydi va murojaat
-                qanday hal etilganligini tizim orqali ko‘rib bo‘lmaydi.
               </p>
             </div>
           </div>
