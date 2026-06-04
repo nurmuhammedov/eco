@@ -268,6 +268,14 @@ const REPORTS_GROUPS: ReportGroup[] = [
     title: 'Xodimlar',
     items: [
       {
+        id: 'emp-kpi-regional',
+        title: 'Hududlarning KPI ko‘rsatkichi',
+        icon: Users,
+        url: '/reports/kpi-regional',
+        badge: 'Yangi',
+        reportType: 'MONTHLY',
+      },
+      {
         id: 'emp-top-100-orgs',
         title: 'Eng ko‘p 3 toifa xodimga ega Top-100 tashkilotlar',
         icon: Users,

@@ -200,17 +200,13 @@ const RiskDateComparisonReport: React.FC = () => {
           const out = row.original.currentOut
 
           let kpi = 0
-          let kpiWithoutOut = 0
           if (riskLevel === 'MEDIUM') {
             kpi = totalInitial > 0 ? ((low + out) / totalInitial) * 100 : 0
-            kpiWithoutOut = totalInitial > 0 ? (low / totalInitial) * 100 : 0
           } else if (riskLevel === 'HIGH') {
             kpi = totalInitial > 0 ? ((low + mid + out) / totalInitial) * 100 : 0
-            kpiWithoutOut = totalInitial > 0 ? ((low + mid) / totalInitial) * 100 : 0
           }
 
           const percentage = Math.round(kpi)
-          const percentageWithoutOut = Math.round(kpiWithoutOut)
 
           let colorClass = 'text-red-600'
           if (percentage >= 50) colorClass = 'text-green-600'
@@ -220,7 +216,6 @@ const RiskDateComparisonReport: React.FC = () => {
           return (
             <div className={cn('flex items-center justify-center gap-1', isSummary ? 'font-bold' : '')}>
               <span className={cn('text-sm', colorClass)}>{percentage}%</span>
-              <span className="text-sm text-slate-500">({percentageWithoutOut}%)</span>
             </div>
           )
         },

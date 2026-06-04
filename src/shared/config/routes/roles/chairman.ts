@@ -52,6 +52,7 @@ const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employ
 const AppealExecutionReport = lazy(() => import('@/features/reports/ui/appeal-execution'))
 const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
 const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
+const KpiRegionalReport = lazy(() => import('@/features/reports/ui/kpi-regional-report'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
 const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
@@ -372,6 +373,10 @@ export const chairmanRoutes = [
     id: 'REPORT',
     path: 'reports/top-100-organizations',
     element: withSuspense(Top100OrganizationsReport),
+  },
+  {
+    path: 'reports/kpi-regional',
+    element: withSuspense(KpiRegionalReport),
   },
 
   // PERMITS

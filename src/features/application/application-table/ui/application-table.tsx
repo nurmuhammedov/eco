@@ -30,6 +30,7 @@ export const ApplicationTable = () => {
     endDate,
   })
 
+  useData('/reports/kpi-regional?year=2026&quarter=1')
   const { data: officeSelect } = useData<any>(`${API_ENDPOINTS.OFFICES}/select`)
   const { data: executorOptions } = useData<any>(`${API_ENDPOINTS.USERS}/office-users/inspectors/select`)
 

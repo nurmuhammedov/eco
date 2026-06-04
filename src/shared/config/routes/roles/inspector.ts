@@ -39,6 +39,7 @@ const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
 const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
 // const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
 const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
+const KpiRegionalReport = lazy(() => import('@/features/reports/ui/kpi-regional-report'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
 const InspectionExecutionReport = lazy(() => import('@/features/reports/ui/inspection-execution-report'))
@@ -354,6 +355,10 @@ export const inspectorRoutes = [
     id: 'REPORT',
     path: 'reports/top-100-organizations',
     element: withSuspense(Top100OrganizationsReport),
+  },
+  {
+    path: 'reports/kpi-regional',
+    element: withSuspense(KpiRegionalReport),
   },
 
   // PERMITS

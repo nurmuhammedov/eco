@@ -12,6 +12,7 @@ const AttractionTypePage = lazy(() => import('@/pages/admin/attraction-type/page
 const EmployeeDeviceLoginReport = lazy(() => import('@/features/reports/ui/employee-device-login-report'))
 const EmployeesDashboard = lazy(() => import('@/features/reports/ui/employees-dashboard'))
 const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
+const KpiRegionalReport = lazy(() => import('@/features/reports/ui/kpi-regional-report'))
 const DecreeSignerPage = lazy(() =>
   import('@/features/admin/decree-signers').then((module) => ({ default: module.DecreeSignersPage }))
 )
@@ -67,6 +68,10 @@ export const adminRoutes = [
     id: 'REPORT',
     path: 'reports/top-100-organizations',
     element: withSuspense(Top100OrganizationsReport),
+  },
+  {
+    path: 'reports/kpi-regional',
+    element: withSuspense(KpiRegionalReport),
   },
   {
     path: 'decree-signers',
