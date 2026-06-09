@@ -51,6 +51,7 @@ const HfDetail = () => {
         endpoint={`/hf/${id}/deregister`}
         onSuccess={refetch}
       />
+
       <DetailCardAccordion
         defaultValue={[
           'registry_info',

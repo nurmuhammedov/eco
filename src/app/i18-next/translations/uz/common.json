@@ -316,7 +316,7 @@
       "file6ExpiryDate": "Amal qilish muddati",
       "file7Path": "Dozimetr protokoli (bayonnomasi)",
       "file7ExpiryDate": "Amal qilish muddati",
-      "file8Path": "Davriy qiyoslov sertifikati",
+      "file8Path": "Texnik attestatsiya xulosasi",
       "file8ExpiryDate": "Amal qilish muddati",
       "file9Path": "Yerga ulash va ventilatsiya dalolatnomasi",
       "file9ExpiryDate": "Amal qilish muddati",
@@ -328,7 +328,6 @@
       "file13ExpiryDate": "Amal qilish muddati",
       "file14Path": "Ruxsatnoma",
       "file14ExpiryDate": "Amal qilish muddati",
-      "file16Path": "Texnik attestatsiya xulosasi",
       "servicePeriod": "Xizmat muddati",
       "registryNumber": "Roʻyxatga olish raqami"
     },

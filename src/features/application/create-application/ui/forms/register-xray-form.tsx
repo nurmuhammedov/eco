@@ -59,7 +59,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
           const rawData = { ...form.getValues(), ...d }
           const cleanedData = Object.fromEntries(
             Object.entries(rawData).map(([key, value]) => {
-              if ((value as any) instanceof Date && !isNaN((value as any).getTime()))
+              if (value instanceof Date && !isNaN((value as any).getTime()))
                 return [key, format(value as any, 'yyyy-MM-dd')]
               return [key, value]
             })
@@ -336,7 +336,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
           </div>
           <div className="border-b pb-4">
             <FormField
-              name="file16Path"
+              name="file8Path"
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
@@ -347,7 +347,7 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file16ExpiryDate', undefined as any, { shouldValidate: true })}
+                        onRemove={() => form.setValue('file8ExpiryDate', undefined as any, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>
@@ -356,20 +356,20 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
             />
             <FormField
               control={form.control}
-              name="file16ExpiryDate"
+              name="file8ExpiryDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
                     <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required={!!form.watch('file16Path')}>Amal qilish muddati</FormLabel>
+                      <FormLabel required={!!form.watch('file8Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
                         placeholder="Amal qilish muddati"
-                        disabled={!form.watch('file16Path')}
+                        disabled={!form.watch('file8Path')}
                       />
                     </div>
                     <FormMessage />

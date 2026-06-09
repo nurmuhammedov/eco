@@ -61,8 +61,8 @@ export const RegisterIllegalXrayBaseSchema = z.object({
     .date()
     .optional()
     .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-  file16Path: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  file16ExpiryDate: z
+  file8Path: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  file8ExpiryDate: z
     .date()
     .optional()
     .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
@@ -89,4 +89,4 @@ export const RegisterIllegalXraySchema = __RegisterIllegalXraySchema
   .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file7Path', 'file7ExpiryDate'))
   .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file9Path', 'file9ExpiryDate'))
   .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file14Path', 'file14ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file16Path', 'file16ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file8Path', 'file8ExpiryDate'))
