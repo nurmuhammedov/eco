@@ -47,6 +47,7 @@ export enum Direction {
   ELEVATOR = 'ELEVATOR',
   ANNOUNCEMENT = 'ANNOUNCEMENT',
   ARCHIVE = 'ARCHIVE',
+  CADASTRE_PASSPORT = 'CADASTRE_PASSPORT',
 }
 
 export type UserState = {

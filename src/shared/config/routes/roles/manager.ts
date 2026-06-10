@@ -65,6 +65,11 @@ const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 
+// Cadastre Passport Mocks
+const CadastreList = lazy(() => import('@/features/cadastre-passport/ui/cadastre-list'))
+const CadastreAdd = lazy(() => import('@/features/cadastre-passport/ui/cadastre-add'))
+const CadastreDetail = lazy(() => import('@/features/cadastre-passport/ui/cadastre-detail'))
+
 export const managerRoutes = [
   // ELEVATORS
   {
@@ -412,5 +417,20 @@ export const managerRoutes = [
     id: 'ANNOUNCEMENT',
     path: 'news/:id',
     element: withSuspense(NewsDetailPage),
+  },
+  {
+    id: 'CADASTRE_PASSPORT',
+    path: 'cadastre-passport',
+    element: withSuspense(CadastreList),
+  },
+  {
+    id: 'CADASTRE_PASSPORT',
+    path: 'cadastre-passport/add',
+    element: withSuspense(CadastreAdd),
+  },
+  {
+    id: 'CADASTRE_PASSPORT',
+    path: 'cadastre-passport/:id',
+    element: withSuspense(CadastreDetail),
   },
 ]

@@ -460,36 +460,8 @@ const InquiryDetailPage = () => {
             </div>
           </DetailCardAccordion.Item>
 
-          {hasLocation && (
-            <DetailCardAccordion.Item value="object_location" title="Hodisa sodir bo‘lgan joy">
-              <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
-            </DetailCardAccordion.Item>
-          )}
-
-          {files.length > 0 && (
-            <DetailCardAccordion.Item value="appeal_files" title="Murojaatga biriktirilgan fayllar">
-              <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {files.map((fileUrl: string, idx: number) => (
-                  <a
-                    key={idx}
-                    href={`${apiConfig?.baseURL}${fileUrl}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex aspect-video cursor-pointer items-center justify-center overflow-hidden rounded-md border bg-slate-50 transition-all hover:opacity-90"
-                  >
-                    <img
-                      src={`${apiConfig?.baseURL}${fileUrl}`}
-                      alt={`Fayl ${idx + 1}`}
-                      className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-                    />
-                  </a>
-                ))}
-              </div>
-            </DetailCardAccordion.Item>
-          )}
-
           {user?.role === UserRoles.ACCOUNTANT && data?.type === 'VIOLATION_REPORT' && cardsList.length > 0 && (
-            <DetailCardAccordion.Item value="plastic_cards" title="Mijozning plastik kartalari">
+            <DetailCardAccordion.Item value="plastic_cards" title="Murojaatchining plastik kartalari">
               <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
                 {cardsList.map((card, idx) => {
                   const cardId = card.id || idx
@@ -520,15 +492,15 @@ const InquiryDetailPage = () => {
                         <div className="absolute inset-0 h-full w-full" style={{ backfaceVisibility: 'hidden' }}>
                           <div
                             className={cn(
-                              'relative flex h-full w-full flex-col justify-between overflow-hidden rounded-[20px] border border-white/10 p-6 text-white shadow-md',
-                              'bg-gradient-to-bl from-slate-900 via-slate-800 to-slate-950'
+                              'relative flex h-full w-full flex-col justify-between overflow-hidden rounded-[20px] border border-blue-400/50 p-6 text-white shadow-md',
+                              'bg-gradient-to-bl from-blue-400 via-blue-500 to-blue-600'
                             )}
                           >
-                            <div className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
-                            <div className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-slate-400/10 blur-3xl" />
+                            <div className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-blue-300/30 blur-3xl" />
+                            <div className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-indigo-300/30 blur-3xl" />
 
                             <div className="relative z-10 flex items-center justify-between">
-                              <div className="text-xl font-bold tracking-[0.2em] text-slate-200">
+                              <div className="text-xl font-bold tracking-[0.2em] text-white">
                                 {typeVal === 'UZCARD' ? 'UZCARD' : typeVal === 'HUMO' ? 'HUMO' : 'KARTA'}
                               </div>
                               <div className="relative flex h-9 w-12 items-center justify-center overflow-hidden rounded-[6px] border-[0.5px] border-yellow-600/50 bg-gradient-to-br from-yellow-200 via-yellow-400 to-yellow-600 shadow-sm">
@@ -539,19 +511,17 @@ const InquiryDetailPage = () => {
                             </div>
 
                             <div className="relative z-10 mt-8 flex items-center justify-between">
-                              <div className="font-mono text-[22px] tracking-[0.2em] text-slate-100 drop-shadow-sm">
+                              <div className="font-mono text-[22px] tracking-[0.2em] text-white drop-shadow-sm">
                                 {formattedNum}
                               </div>
                             </div>
 
                             <div className="relative z-10 mt-auto flex items-end justify-between">
                               <div className="flex flex-col">
-                                <span className="mb-1 text-[9px] tracking-[0.15em] text-slate-400 uppercase">
+                                <span className="mb-1 text-[9px] tracking-[0.15em] text-blue-100 uppercase">
                                   Amal qilish
                                 </span>
-                                <span className="font-mono text-base tracking-widest text-slate-200">
-                                  {formattedExp}
-                                </span>
+                                <span className="font-mono text-base tracking-widest text-white">{formattedExp}</span>
                               </div>
                             </div>
                           </div>
@@ -559,21 +529,21 @@ const InquiryDetailPage = () => {
 
                         {/* Back Side */}
                         <div
-                          className="absolute inset-0 flex h-full w-full flex-col overflow-hidden rounded-[20px] border border-slate-700/50 bg-slate-900 shadow-md"
+                          className="absolute inset-0 flex h-full w-full flex-col overflow-hidden rounded-[20px] border border-blue-200/50 bg-blue-50 shadow-md"
                           style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
                         >
-                          <div className="mt-6 h-12 w-full border-y border-slate-800 bg-slate-950 shadow-md" />
+                          <div className="mt-6 h-12 w-full border-y border-slate-300 bg-slate-800 shadow-sm" />
 
                           <div className="mt-6 flex flex-1 flex-col gap-4 px-6">
-                            <div className="flex flex-col border-b border-slate-700/50 pb-2">
-                              <span className="mb-1 text-[10px] tracking-widest text-slate-400">TRANZIT RAQAM</span>
-                              <span className="text-[17px] font-medium tracking-widest text-slate-200">
+                            <div className="flex flex-col border-b border-blue-200 pb-2">
+                              <span className="mb-1 text-[10px] tracking-widest text-slate-500">TRANZIT RAQAM</span>
+                              <span className="text-[17px] font-medium tracking-widest text-slate-700">
                                 {card.transitAccount || '-'}
                               </span>
                             </div>
-                            <div className="flex flex-col border-b border-slate-700/50 pb-2">
-                              <span className="mb-1 text-[10px] tracking-widest text-slate-400">MFO KODI</span>
-                              <span className="text-[17px] font-medium tracking-widest text-slate-200">
+                            <div className="flex flex-col border-b border-blue-200 pb-2">
+                              <span className="mb-1 text-[10px] tracking-widest text-slate-500">MFO KODI</span>
+                              <span className="text-[17px] font-medium tracking-widest text-slate-700">
                                 {card.bankInfo || '-'}
                               </span>
                             </div>
@@ -583,6 +553,34 @@ const InquiryDetailPage = () => {
                     </div>
                   )
                 })}
+              </div>
+            </DetailCardAccordion.Item>
+          )}
+
+          {hasLocation && (
+            <DetailCardAccordion.Item value="object_location" title="Hodisa sodir bo‘lgan joy">
+              <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
+            </DetailCardAccordion.Item>
+          )}
+
+          {files.length > 0 && (
+            <DetailCardAccordion.Item value="appeal_files" title="Murojaatga biriktirilgan fayllar">
+              <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {files.map((fileUrl: string, idx: number) => (
+                  <a
+                    key={idx}
+                    href={`${apiConfig?.baseURL}${fileUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex aspect-video cursor-pointer items-center justify-center overflow-hidden rounded-md border bg-slate-50 transition-all hover:opacity-90"
+                  >
+                    <img
+                      src={`${apiConfig?.baseURL}${fileUrl}`}
+                      alt={`Fayl ${idx + 1}`}
+                      className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  </a>
+                ))}
               </div>
             </DetailCardAccordion.Item>
           )}

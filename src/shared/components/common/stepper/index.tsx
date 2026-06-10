@@ -18,11 +18,17 @@ const Stepper: FC<StepperProps> = ({ steps, activeStep, namespace = 'application
   const isSmall = size === 'sm'
   const circleSize = isSmall ? 'size-6' : 'size-8'
   const iconSize = isSmall ? 12 : 16
-  const labelTop = isSmall ? 'top-7' : 'top-10'
+  const labelTop = isSmall ? 'lg:top-7' : 'lg:top-10'
   const labelTextSize = isSmall ? 'text-[10px]' : 'text-xs'
+  const lineMarginLeft = isSmall ? 'ml-[11px]' : 'ml-[15px]'
 
   return (
-    <div className={cn('flex w-full items-center justify-between', className)}>
+    <div
+      className={cn(
+        'flex w-full flex-col items-start justify-between gap-1 lg:flex-row lg:items-center lg:gap-0',
+        className
+      )}
+    >
       {steps.map((step, index) => {
         const isCompleted = index < currentIndex
         const isActive = index === currentIndex
@@ -30,10 +36,10 @@ const Stepper: FC<StepperProps> = ({ steps, activeStep, namespace = 'application
 
         return (
           <Fragment key={step}>
-            <div className="relative flex flex-col items-center">
+            <div className="relative flex w-full flex-row items-center lg:w-auto lg:flex-col">
               <div
                 className={cn(
-                  'flex items-center justify-center rounded-full border-2 transition-all duration-300',
+                  'flex shrink-0 items-center justify-center rounded-full border-2 transition-all duration-300',
                   circleSize,
                   {
                     'border-[#016B7B] bg-[#016B7B] text-white': isCompleted || isActive,
@@ -54,7 +60,7 @@ const Stepper: FC<StepperProps> = ({ steps, activeStep, namespace = 'application
 
               <span
                 className={cn(
-                  'absolute left-1/2 w-32 -translate-x-1/2 text-center font-medium transition-colors duration-300',
+                  'ml-3 text-left font-medium transition-colors duration-300 lg:absolute lg:left-1/2 lg:ml-0 lg:w-32 lg:-translate-x-1/2 lg:text-center',
                   labelTop,
                   labelTextSize,
                   {
@@ -69,10 +75,16 @@ const Stepper: FC<StepperProps> = ({ steps, activeStep, namespace = 'application
 
             {!isLast && (
               <div
-                className={cn('mx-1 h-[2px] flex-1 transition-colors duration-300', {
-                  'bg-[#016B7B]': isCompleted,
-                  'bg-gray-200': !isCompleted,
-                })}
+                className={cn(
+                  'transition-colors duration-300',
+                  'my-1 h-6 w-[2px] lg:mx-1 lg:my-0 lg:h-[2px] lg:w-auto lg:flex-1',
+                  lineMarginLeft,
+                  'lg:ml-0',
+                  {
+                    'bg-[#016B7B]': isCompleted,
+                    'bg-gray-200': !isCompleted,
+                  }
+                )}
               />
             )}
           </Fragment>

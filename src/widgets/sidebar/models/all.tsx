@@ -127,4 +127,10 @@ export default [
     url: '/archive',
     icon: <Archive />,
   },
+  {
+    id: 'CADASTRE_PASSPORT',
+    title: 'TXYZ Kadastr',
+    url: '/cadastre-passport',
+    icon: <FileCheck />,
+  },
 ] as Navigation

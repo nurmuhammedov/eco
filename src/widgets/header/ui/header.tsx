@@ -83,6 +83,7 @@ export function Header() {
       { path: '/elevators', title: 'Liftlar' },
       { path: '/expertise', title: 'Ekspertiza' },
       { path: '/archive', title: 'Arxiv' },
+      { path: '/cadastre-passport', title: 'TXYZ Kadastr' },
     ]
 
     const match = PATH_TITLES.find((item) => pathname.startsWith(item.path))

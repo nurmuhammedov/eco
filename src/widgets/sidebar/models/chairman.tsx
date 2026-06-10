@@ -15,6 +15,7 @@ import {
   ArrowDownUp,
   Archive,
   Newspaper,
+  FileCheck,
 } from 'lucide-react'
 
 export default [
@@ -131,5 +132,11 @@ export default [
     title: 'Arxiv',
     url: '/archive',
     icon: <Archive />,
+  },
+  {
+    id: 'CADASTRE_PASSPORT',
+    title: 'TXYZ Kadastr',
+    url: '/cadastre-passport',
+    icon: <FileCheck />,
   },
 ] as Navigation

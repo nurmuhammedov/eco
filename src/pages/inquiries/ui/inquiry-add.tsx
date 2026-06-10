@@ -61,7 +61,7 @@ const InquiryAddPage = () => {
 
   const form = useForm<SimpleFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { phoneNumber: '', message: '', location: '', filePathList: [] },
+    defaultValues: { phoneNumber: '', message: '', location: '', filePathList: [], occurredAt: new Date() },
   })
 
   const onSubmit = (values: SimpleFormValues) => {
@@ -90,15 +90,15 @@ const InquiryAddPage = () => {
   if (success) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center p-4">
-        <div className="w-full max-w-md rounded-xl border border-green-200 bg-green-50 p-8 text-center shadow-sm">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-            <span className="text-3xl text-green-600">✓</span>
+        <div className="w-full max-w-md rounded-xl border border-blue-200 bg-blue-50 p-8 text-center shadow-sm">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
+            <span className="text-3xl text-blue-600">✓</span>
           </div>
-          <h2 className="mb-2 text-2xl font-semibold text-green-800">Murojaat qabul qilindi</h2>
+          <h2 className="mb-2 text-2xl font-semibold text-blue-800">Murojaat qabul qilindi</h2>
           {registryNumber && (
-            <div className="mt-4 mb-6 rounded-lg border border-green-200 bg-green-100 p-4">
-              <p className="text-sm text-green-800">Murojaat raqami:</p>
-              <p className="text-2xl font-bold tracking-wider text-green-900">{registryNumber}</p>
+            <div className="mt-4 mb-6 rounded-lg border border-blue-200 bg-blue-100 p-4">
+              <p className="text-sm text-blue-800">Murojaat raqami:</p>
+              <p className="text-2xl font-bold tracking-wider text-blue-900">{registryNumber}</p>
             </div>
           )}
           <Button className="mt-4 w-full" onClick={() => navigate(-1)}>
@@ -178,7 +178,7 @@ const InquiryAddPage = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Hodisa sodir bo‘lgan sana <span className="text-destructive">*</span>
+                        Murojaat yuborilayotgan sana <span className="text-destructive">*</span>
                       </FormLabel>
                       <DateTimePicker value={field.value} onChange={field.onChange} />
                       <FormMessage />
