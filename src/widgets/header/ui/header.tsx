@@ -82,7 +82,7 @@ export function Header() {
       { path: '/metrics', title: 'Server ko‘rsatgichlari' },
       { path: '/elevators', title: 'Liftlar' },
       { path: '/expertise', title: 'Ekspertiza' },
-      { path: '/cadastre', title: 'Arxiv' },
+      { path: '/archive', title: 'Arxiv' },
     ]
 
     const match = PATH_TITLES.find((item) => pathname.startsWith(item.path))

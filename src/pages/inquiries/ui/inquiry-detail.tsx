@@ -9,7 +9,10 @@ import FileLink from '@/shared/components/common/file-link'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { Coordinate } from '@/shared/components/common/yandex-map'
 import useDetail from '@/shared/hooks/api/useDetail'
+import useData from '@/shared/hooks/api/useData'
 import { formatDate } from 'date-fns'
+import { cn } from '@/shared/lib/utils'
+import { useState } from 'react'
 import {
   appealTypeTranslations,
   InquiryStatus,
@@ -22,6 +25,7 @@ import { UserRoles } from '@/entities/user'
 import SetInspectorModal from '@/features/inquiries/ui/modals/set-inspector-modal'
 import ExecuteInitialModal from '@/features/inquiries/ui/modals/execute-initial-modal'
 import ExecuteCourtModal from '@/features/inquiries/ui/modals/execute-court-modal'
+import { CreateInquiryInspectionModal } from '@/features/inquiries/ui/modals/create-inquiry-inspection-modal'
 import {
   RecoveredAmountModal,
   PaidRewardModal,
@@ -31,11 +35,47 @@ import { AccountantCompleteModal } from '@/features/inquiries/ui/modals/accounta
 
 // emptyText removed
 
+const getCardType = (number: string): 'UZCARD' | 'HUMO' | 'UNKNOWN' => {
+  const clean = number?.replace(/\s+/g, '') || ''
+  if (clean.startsWith('8600') || clean.startsWith('5614')) return 'UZCARD'
+  if (clean.startsWith('9860')) return 'HUMO'
+  return 'UNKNOWN'
+}
+
+const formatCardNumber = (value: string) => {
+  if (!value) return ''
+  const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+  const matches = v.match(/\d{4,16}/g)
+  const match = (matches && matches[0]) || ''
+  const parts = []
+  for (let i = 0, len = match.length; i < len; i += 4) {
+    parts.push(match.substring(i, i + 4))
+  }
+  return parts.length ? parts.join(' ') : value
+}
+
 const InquiryDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { user } = useAuth()
+  const [expandedCardId, setExpandedCardId] = useState<string | number | null>(null)
+
   const { data, isLoading } = useDetail<any>('/inquiries', id as string)
+
+  const { data: inspectionByInquiry } = useDetail<any>(
+    '/inspections/by-inquiry',
+    id as string,
+    (user?.role === UserRoles.REGIONAL && data?.status === InquiryStatus.UNDER_INSPECTION) ||
+      (data?.type === 'VIOLATION_REPORT' &&
+        data?.status !== InquiryStatus.NEW &&
+        data?.status !== InquiryStatus.IN_PROCESS)
+  )
+
+  const { data: inquiryCards } = useData<any[]>(
+    `/plastic-cards/by-inquiry/${id}`,
+    user?.role === UserRoles.ACCOUNTANT && data?.type === 'VIOLATION_REPORT'
+  )
+  const cardsList = Array.isArray(inquiryCards) ? inquiryCards : []
 
   const currentObjLocation = data?.location?.split(',').map(Number) || ([] as Coordinate[])
   const hasLocation = currentObjLocation.length === 2 && !isNaN(currentObjLocation[0])
@@ -77,6 +117,10 @@ const InquiryDetailPage = () => {
             </>
           )}
 
+          {user?.role === UserRoles.REGIONAL &&
+            data?.status === InquiryStatus.UNDER_INSPECTION &&
+            !inspectionByInquiry && <CreateInquiryInspectionModal inquiry={data} />}
+
           {user?.role === UserRoles.INSPECTOR && data?.status === InquiryStatus.IN_PROCESS && (
             <ExecuteInitialModal inquiryType={data?.type} />
           )}
@@ -90,7 +134,17 @@ const InquiryDetailPage = () => {
       </div>
 
       <div className="mt-2 grid grid-cols-1 gap-2">
-        <DetailCardAccordion defaultValue={['general', 'applicant_info', 'administrative_info']}>
+        <DetailCardAccordion
+          defaultValue={[
+            'general',
+            'applicant_info',
+            'administrative_info',
+            'inspection_info',
+            'object_location',
+            'appeal_files',
+            'plastic_cards',
+          ]}
+        >
           <DetailCardAccordion.Item value="general" title="Murojaat va ijro maʼlumotlari">
             <div className="flex flex-col py-1">
               <DetailRow
@@ -169,7 +223,7 @@ const InquiryDetailPage = () => {
             </div>
           </DetailCardAccordion.Item>
 
-          {data?.type === 'RISK_APPEAL' && (
+          {data?.type === 'VIOLATION_REPORT' && (
             <DetailCardAccordion.Item value="administrative_info" title="Ma’muriy ish ma’lumotlari">
               <div className="flex flex-col py-1">
                 {/*<DetailRow title="Ijro harakati:" value={data?.action ? inquiryActionLabels[data.action] || data.action : <span className="font-medium text-red-500">Mavjud emas</span>} />*/}
@@ -321,6 +375,74 @@ const InquiryDetailPage = () => {
             </DetailCardAccordion.Item>
           )}
 
+          {data?.type === 'VIOLATION_REPORT' &&
+            data?.status !== InquiryStatus.NEW &&
+            data?.status !== InquiryStatus.IN_PROCESS &&
+            inspectionByInquiry && (
+              <DetailCardAccordion.Item value="inspection_info" title="Tekshiruv ma’lumotlari">
+                <div className="flex flex-col py-1">
+                  <DetailRow
+                    title="Tashkilot nomi:"
+                    value={
+                      inspectionByInquiry?.legalName || <span className="font-medium text-red-500">Mavjud emas</span>
+                    }
+                  />
+                  <DetailRow
+                    title="Tashkilot STIR:"
+                    value={
+                      inspectionByInquiry?.legalTin || <span className="font-medium text-red-500">Mavjud emas</span>
+                    }
+                  />
+                  <DetailRow
+                    title="Tekshiruv sanasi:"
+                    value={
+                      inspectionByInquiry?.startDate && inspectionByInquiry?.endDate ? (
+                        `${formatDate(new Date(inspectionByInquiry.startDate), 'dd.MM.yyyy')} - ${formatDate(new Date(inspectionByInquiry.endDate), 'dd.MM.yyyy')}`
+                      ) : (
+                        <span className="font-medium text-red-500">Mavjud emas</span>
+                      )
+                    }
+                  />
+                  <DetailRow
+                    title="Inspektorlar:"
+                    value={
+                      inspectionByInquiry?.inspectors?.length > 0 ? (
+                        inspectionByInquiry.inspectors.map((i: any) => i.name).join(', ')
+                      ) : (
+                        <span className="font-medium text-red-500">Mavjud emas</span>
+                      )
+                    }
+                  />
+                  <DetailRow
+                    title="Buyruq raqami:"
+                    value={
+                      inspectionByInquiry?.decreeNumber || <span className="font-medium text-red-500">Mavjud emas</span>
+                    }
+                  />
+                  <DetailRow
+                    title="Tekshiruv dasturi:"
+                    value={
+                      inspectionByInquiry?.programPath ? (
+                        <FileLink url={inspectionByInquiry.programPath} title="Faylni ko‘rish" />
+                      ) : (
+                        <span className="font-medium text-red-500">Mavjud emas</span>
+                      )
+                    }
+                  />
+                  <DetailRow
+                    title="Buyruq fayli:"
+                    value={
+                      inspectionByInquiry?.decree?.path ? (
+                        <FileLink url={inspectionByInquiry.decree.path} title="Faylni ko‘rish" />
+                      ) : (
+                        <span className="font-medium text-red-500">Mavjud emas</span>
+                      )
+                    }
+                  />
+                </div>
+              </DetailCardAccordion.Item>
+            )}
+
           <DetailCardAccordion.Item value="applicant_info" title="Yuboruvchi to‘g‘risida ma’lumot">
             <div className="flex flex-col py-1">
               <DetailRow
@@ -362,6 +484,105 @@ const InquiryDetailPage = () => {
                     />
                   </a>
                 ))}
+              </div>
+            </DetailCardAccordion.Item>
+          )}
+
+          {user?.role === UserRoles.ACCOUNTANT && data?.type === 'VIOLATION_REPORT' && cardsList.length > 0 && (
+            <DetailCardAccordion.Item value="plastic_cards" title="Mijozning plastik kartalari">
+              <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
+                {cardsList.map((card, idx) => {
+                  const cardId = card.id || idx
+                  const isExpanded = expandedCardId === cardId
+                  const typeVal = getCardType(card.cardNumber)
+                  const formattedNum = formatCardNumber(card.cardNumber) || '0000 0000 0000 0000'
+                  const exp = card.expirationDate || card.expiryDate || ''
+                  const formattedExp =
+                    exp && !exp.includes('/') && exp.length === 4
+                      ? `${exp.substring(0, 2)}/${exp.substring(2, 4)}`
+                      : exp || 'MM/YY'
+
+                  return (
+                    <div
+                      key={cardId}
+                      className="group relative h-48 w-full max-w-sm cursor-pointer"
+                      style={{ perspective: '1000px' }}
+                      onClick={() => setExpandedCardId(isExpanded ? null : cardId)}
+                    >
+                      <div
+                        className={cn(
+                          'h-full w-full transition-transform duration-700',
+                          isExpanded ? '[transform:rotateY(180deg)]' : ''
+                        )}
+                        style={{ transformStyle: 'preserve-3d' }}
+                      >
+                        {/* Front Side */}
+                        <div className="absolute inset-0 h-full w-full" style={{ backfaceVisibility: 'hidden' }}>
+                          <div
+                            className={cn(
+                              'relative flex h-full w-full flex-col justify-between overflow-hidden rounded-[20px] border border-white/10 p-6 text-white shadow-md',
+                              'bg-gradient-to-bl from-slate-900 via-slate-800 to-slate-950'
+                            )}
+                          >
+                            <div className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
+                            <div className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-slate-400/10 blur-3xl" />
+
+                            <div className="relative z-10 flex items-center justify-between">
+                              <div className="text-xl font-bold tracking-[0.2em] text-slate-200">
+                                {typeVal === 'UZCARD' ? 'UZCARD' : typeVal === 'HUMO' ? 'HUMO' : 'KARTA'}
+                              </div>
+                              <div className="relative flex h-9 w-12 items-center justify-center overflow-hidden rounded-[6px] border-[0.5px] border-yellow-600/50 bg-gradient-to-br from-yellow-200 via-yellow-400 to-yellow-600 shadow-sm">
+                                <div className="absolute top-1/2 left-0 h-[0.5px] w-full bg-yellow-700/40" />
+                                <div className="absolute top-0 left-1/2 h-full w-[0.5px] bg-yellow-700/40" />
+                                <div className="absolute h-5 w-6 rounded-sm border-[0.5px] border-yellow-700/40" />
+                              </div>
+                            </div>
+
+                            <div className="relative z-10 mt-8 flex items-center justify-between">
+                              <div className="font-mono text-[22px] tracking-[0.2em] text-slate-100 drop-shadow-sm">
+                                {formattedNum}
+                              </div>
+                            </div>
+
+                            <div className="relative z-10 mt-auto flex items-end justify-between">
+                              <div className="flex flex-col">
+                                <span className="mb-1 text-[9px] tracking-[0.15em] text-slate-400 uppercase">
+                                  Amal qilish
+                                </span>
+                                <span className="font-mono text-base tracking-widest text-slate-200">
+                                  {formattedExp}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Back Side */}
+                        <div
+                          className="absolute inset-0 flex h-full w-full flex-col overflow-hidden rounded-[20px] border border-slate-700/50 bg-slate-900 shadow-md"
+                          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+                        >
+                          <div className="mt-6 h-12 w-full border-y border-slate-800 bg-slate-950 shadow-md" />
+
+                          <div className="mt-6 flex flex-1 flex-col gap-4 px-6">
+                            <div className="flex flex-col border-b border-slate-700/50 pb-2">
+                              <span className="mb-1 text-[10px] tracking-widest text-slate-400">TRANZIT RAQAM</span>
+                              <span className="text-[17px] font-medium tracking-widest text-slate-200">
+                                {card.transitAccount || '-'}
+                              </span>
+                            </div>
+                            <div className="flex flex-col border-b border-slate-700/50 pb-2">
+                              <span className="mb-1 text-[10px] tracking-widest text-slate-400">MFO KODI</span>
+                              <span className="text-[17px] font-medium tracking-widest text-slate-200">
+                                {card.bankInfo || '-'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </DetailCardAccordion.Item>
           )}

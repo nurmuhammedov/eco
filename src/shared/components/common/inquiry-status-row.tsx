@@ -25,7 +25,16 @@ export const InquiryStatusRow = ({ status, type, title = 'Holat:' }: Props) => {
     InquiryStatus.COMPLETED,
   ]
 
-  if (type && type !== 'RISK_APPEAL') {
+  if (type === 'VIOLATION_REPORT') {
+    steps = [
+      InquiryStatus.NEW,
+      InquiryStatus.IN_PROCESS,
+      InquiryStatus.UNDER_INSPECTION,
+      InquiryStatus.IN_COURT,
+      InquiryStatus.REWARD_PAYMENT,
+      InquiryStatus.COMPLETED,
+    ]
+  } else if (type && type !== 'VIOLATION_REPORT') {
     steps = [InquiryStatus.NEW, InquiryStatus.IN_PROCESS, InquiryStatus.COMPLETED]
   }
 

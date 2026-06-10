@@ -83,12 +83,18 @@ const InquiryTable = () => {
     60000
   )
 
+  const { data: allDataCount } = usePaginatedData<any>(
+    '/inquiries',
+    {
+      page: 1,
+      size: 1,
+    },
+    true,
+    60000
+  )
+
   const tabCounts = {
-    ALL:
-      (hfData?.page?.totalElements ?? 0) +
-      (equipmentsData?.page?.totalElements ?? 0) +
-      (irsData?.page?.totalElements ?? 0) +
-      (xrayData?.page?.totalElements ?? 0),
+    ALL: allDataCount?.page?.totalElements ?? 0,
     [InquiryBelongType.HF]: hfData?.page?.totalElements ?? 0,
     [InquiryBelongType.EQUIPMENT]: equipmentsData?.page?.totalElements ?? 0,
     [InquiryBelongType.IRS]: irsData?.page?.totalElements ?? 0,
@@ -120,7 +126,7 @@ const InquiryTable = () => {
       filterType: 'select',
       filterOptions: [
         { name: 'Murojaat', id: 'APPEAL' },
-        { name: 'Huquqbuzarliik xabari', id: 'RISK_APPEAL' },
+        { name: 'Huquqbuzarliik xabari', id: 'VIOLATION_REPORT' },
         { name: 'Taklif', id: 'SUGGESTION' },
       ],
     },
@@ -253,7 +259,7 @@ const InquiryTable = () => {
       )}
 
       {/* Desktop or Default View */}
-      <div className={cn('flex-1 overflow-hidden', isIndividual && 'hidden md:flex md:flex-col')}>
+      <div className={cn('flex flex-1 flex-col overflow-hidden', isIndividual && 'hidden md:flex')}>
         <DataTable
           showNumeration={true}
           isPaginated={true}

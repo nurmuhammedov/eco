@@ -3,7 +3,7 @@ import { publicApi } from '@/shared/api/public'
 
 export interface AppealDto {
   belongId?: string
-  type: 'APPEAL' | 'RISK_APPEAL' | 'SUGGESTION'
+  type: 'APPEAL' | 'VIOLATION_REPORT' | 'SUGGESTION'
   belongType?: 'EQUIPMENT' | 'XRAY' | 'HF' | 'IRS' | (string & {})
   message: string
   fullName?: string | null

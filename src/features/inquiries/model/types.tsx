@@ -37,13 +37,14 @@ export const inquiryTabsConfig = [
 
 export const appealTypeTranslations: Record<string, string> = {
   APPEAL: 'Murojaat',
-  RISK_APPEAL: 'Huquqbuzarliik xabari',
+  VIOLATION_REPORT: 'Huquqbuzarliik xabari',
   SUGGESTION: 'Taklif',
 }
 
 export enum InquiryStatus {
   NEW = 'NEW', // Yangi
   IN_PROCESS = 'IN_PROCESS', // Ko'rib chiqilmoqda
+  UNDER_INSPECTION = 'UNDER_INSPECTION', // Tekshiruv jarayonida
   IN_COURT = 'IN_COURT', // Sud jarayonida
   REWARD_PAYMENT = 'REWARD_PAYMENT', // Pul mukofotini to'lov qilishda
   COMPLETED = 'COMPLETED', // Yakunlangan
@@ -69,6 +70,7 @@ export enum InquiryResult {
 export const inquiryStatusLabels: Record<InquiryStatus | string, string> = {
   [InquiryStatus.NEW]: 'Yangi',
   [InquiryStatus.IN_PROCESS]: 'Ko‘rib chiqilmoqda',
+  [InquiryStatus.UNDER_INSPECTION]: 'Tekshiruv jarayonida',
   [InquiryStatus.IN_COURT]: 'Sud jarayonida',
   [InquiryStatus.REWARD_PAYMENT]: 'Hisob jarayonida',
   [InquiryStatus.COMPLETED]: 'Yakunlangan',
@@ -78,6 +80,7 @@ export const inquiryStatusLabels: Record<InquiryStatus | string, string> = {
 export const inquiryStatusBadgeVariants: Record<InquiryStatus | string, string> = {
   [InquiryStatus.NEW]: 'bg-blue-100 text-blue-800 hover:bg-blue-100',
   [InquiryStatus.IN_PROCESS]: 'bg-amber-100 text-amber-800 hover:bg-amber-100',
+  [InquiryStatus.UNDER_INSPECTION]: 'bg-teal-100 text-teal-800 hover:bg-teal-100',
   [InquiryStatus.IN_COURT]: 'bg-purple-100 text-purple-800 hover:bg-purple-100',
   [InquiryStatus.REWARD_PAYMENT]: 'bg-indigo-100 text-indigo-800 hover:bg-indigo-100',
   [InquiryStatus.COMPLETED]: 'bg-emerald-100 text-emerald-800 hover:bg-emerald-100',

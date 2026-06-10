@@ -10,7 +10,6 @@ import {
   FileBadge,
   FileCheck,
   FileText,
-  Map,
   MessageSquareText,
   ScrollText,
   ShieldCheck,
@@ -91,12 +90,6 @@ export default [
     title: 'menu.attestation',
     url: '/attestations',
     icon: <BadgeCheck />,
-  },
-  {
-    id: 'CADASTRE',
-    title: 'menu.cadastre',
-    url: '/cadastre',
-    icon: <Map />,
   },
   {
     id: 'REPORT',

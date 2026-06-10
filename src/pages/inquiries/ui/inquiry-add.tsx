@@ -20,7 +20,7 @@ import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui/yande
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 
 const formSchema = z.object({
-  type: z.enum(['APPEAL', 'RISK_APPEAL', 'SUGGESTION'], {
+  type: z.enum(['APPEAL', 'VIOLATION_REPORT', 'SUGGESTION'], {
     required_error: 'Majburiy maydon!',
   }),
   regionId: z.number({
@@ -136,7 +136,7 @@ const InquiryAddPage = () => {
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="APPEAL">Murojaat</SelectItem>
-                          <SelectItem value="RISK_APPEAL">Huquqbuzarliik xabari</SelectItem>
+                          <SelectItem value="VIOLATION_REPORT">Huquqbuzarliik xabari</SelectItem>
                           <SelectItem value="SUGGESTION">Taklif</SelectItem>
                         </SelectContent>
                       </Select>

@@ -116,7 +116,7 @@ export default ({ onSubmit }: ReRegisterEquipmentFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>O‘tkazilgan qisman (CHTO) yoki toʻliq texnik koʻrik (PTO) sanasi</FormLabel>
+                    <FormLabel required>Qisman texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy="after"
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}

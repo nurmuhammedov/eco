@@ -91,12 +91,6 @@ export default [
     icon: <FileText />,
   },
   {
-    id: 'CADASTRE',
-    title: 'menu.cadastre',
-    url: '/cadastre',
-    icon: <Archive />,
-  },
-  {
     id: 'REPORT',
     title: 'Hisobotlar',
     url: '/reports',
