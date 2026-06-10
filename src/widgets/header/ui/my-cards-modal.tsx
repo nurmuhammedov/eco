@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/compo
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { Label } from '@/shared/components/ui/label'
-import { CreditCard, Plus, Info, Rss, Layers, ChevronDown } from 'lucide-react'
+import { CreditCard, Plus, Info } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
