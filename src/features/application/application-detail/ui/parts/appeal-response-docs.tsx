@@ -113,7 +113,15 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
         const message = cell.row.original?.description
         const documentId = cell.row.original?.documentId
         const isAppealForManager = managerTypes.includes(appeal_type)
-        if ((isHead && !isAgreed) || (isRegionalUser && !isAgreed) || (currentAgreement === 'AGREED' && isManager)) {
+
+        const isInmAppeal = appeal_type?.includes('IRS') || appeal_type?.includes('XRAY')
+        const isControllerOrSupervisor = user?.isController || user?.isSupervisor
+        const cannotExecute = isControllerOrSupervisor && isInmAppeal
+
+        if (
+          !cannotExecute &&
+          ((isHead && !isAgreed) || (isRegionalUser && !isAgreed) || (currentAgreement === 'AGREED' && isManager))
+        ) {
           if (isManager && isAppealForManager) {
             return (
               <div className="flex gap-4">

@@ -1,7 +1,7 @@
 import { CardForm, RegisterIllegalXrayDTO } from '@/entities/create-application'
 import { AppealFormSkeleton, NoteForm } from '@/features/application/create-application'
 import { GoBack } from '@/shared/components/common'
-import { parseISO } from 'date-fns'
+import { parseISO, addYears } from 'date-fns'
 import DetailRow from '@/shared/components/common/detail-row'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
@@ -262,7 +262,17 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                     <DatePicker
                       disableStrategy="after"
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
+                      onChange={(date) => {
+                        field.onChange(date)
+                        if (date) {
+                          const expiryDate = addYears(date, 3)
+                          form.setValue('licenseExpiryDate', expiryDate, { shouldValidate: true })
+                          form.setValue('file14ExpiryDate', expiryDate, { shouldValidate: true })
+                        } else {
+                          form.setValue('licenseExpiryDate', undefined as any, { shouldValidate: true })
+                          form.setValue('file14ExpiryDate', undefined as any, { shouldValidate: true })
+                        }
+                      }}
                       placeholder="Sanani tanlang"
                     />
                     <FormMessage />
@@ -283,6 +293,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                       onChange={field.onChange}
                       placeholder="Amal qilish muddati"
+                      disabled={!isUpdate}
                     />
                     <FormMessage />
                   </FormItem>

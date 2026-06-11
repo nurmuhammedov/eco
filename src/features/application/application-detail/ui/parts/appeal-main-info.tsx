@@ -55,10 +55,10 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'registryNumber',
     'description',
     'birthDate',
-    'hazardousFacilityId',
+    // 'hazardousFacilityId',
     'oldRegistryNumber',
-    'partialCheckDate',
-    'fullCheckDate',
+    // 'partialCheckDate',
+    // 'fullCheckDate',
   ],
   HF: [
     'upperOrganization',

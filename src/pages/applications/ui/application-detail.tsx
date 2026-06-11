@@ -16,6 +16,10 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
 
   const isXrayAppeal = data?.appealType === ApplicationTypeEnum.REGISTER_XRAY
 
+  const isInmAppeal = data?.appealType?.includes('IRS') || data?.appealType?.includes('XRAY')
+  const isControllerOrSupervisor = user?.isController || user?.isSupervisor
+  const cannotExecute = isControllerOrSupervisor && isInmAppeal
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -24,19 +28,23 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
           <ApplicationLogsModal />
         </div>
         <div className="flex gap-2">
-          {(user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) &&
-            data?.status === ApplicationStatus.NEW && (
-              <>
-                <AttachInspectorModal />
-                <RejectApplicationModal />
-              </>
-            )}
-          {user?.role === UserRoles.INSPECTOR && data?.status === ApplicationStatus.IN_PROCESS && (
-            <ReferenceCreateModal />
-          )}
-          {user?.role === UserRoles.MANAGER && data?.status === ApplicationStatus.IN_PROCESS && isXrayAppeal && (
+          {!cannotExecute && (
             <>
-              <ReferenceCreateModal />
+              {(user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) &&
+                data?.status === ApplicationStatus.NEW && (
+                  <>
+                    <AttachInspectorModal />
+                    <RejectApplicationModal />
+                  </>
+                )}
+              {user?.role === UserRoles.INSPECTOR && data?.status === ApplicationStatus.IN_PROCESS && (
+                <ReferenceCreateModal />
+              )}
+              {user?.role === UserRoles.MANAGER && data?.status === ApplicationStatus.IN_PROCESS && isXrayAppeal && (
+                <>
+                  <ReferenceCreateModal />
+                </>
+              )}
             </>
           )}
         </div>

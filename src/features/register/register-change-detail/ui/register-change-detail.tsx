@@ -42,6 +42,10 @@ const RegisterChangeDetail: FC = () => {
     return null
   }
 
+  const isInmChange = type === 'radiation-profiles' || type === 'irs' || type === 'xrays' || type === 'xray'
+  const isControllerOrSupervisor = user?.isController || user?.isSupervisor
+  const cannotExecute = isControllerOrSupervisor && isInmChange
+
   return (
     <div className="flex flex-1 flex-col gap-2">
       <div className="flex items-center justify-between">
@@ -49,34 +53,32 @@ const RegisterChangeDetail: FC = () => {
           title={isDeregister ? 'Reyestrdan chiqarish uchun so‘rov' : 'Maʼlumotlarni o‘zgartirish uchun so‘rov'}
         />
         <div className="flex gap-2">
-          {canAssign && (
+          {!cannotExecute && (
             <>
-              <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
-              <AssignExecutorModal changeId={changeId} />
+              {canAssign && (
+                <>
+                  <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
+                  <AssignExecutorModal changeId={changeId} />
+                </>
+              )}
+              {canDescribe && (
+                <>
+                  <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
+                  <ConfirmProcessModal changeId={changeId} title="Tasdiqlansinmi" buttonText="Tasdiqlash" />
+                </>
+              )}
+              {canAgree && (
+                <>
+                  <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
+                  <ConfirmProcessModal
+                    changeId={changeId}
+                    title={`${ApplicationStatus.IN_APPROVAL ? 'Tasdiqlansinmi' : 'Kelishilsinmi'}`}
+                    buttonText={ApplicationStatus.IN_APPROVAL ? 'Tasdiqlash' : 'Kelishish'}
+                  />
+                </>
+              )}
             </>
           )}
-          {canDescribe && (
-            <>
-              <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
-              <ConfirmProcessModal changeId={changeId} title="Tasdiqlansinmi" buttonText="Tasdiqlash" />
-            </>
-          )}
-          {canAgree && (
-            <>
-              <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
-              <ConfirmProcessModal
-                changeId={changeId}
-                title={`${ApplicationStatus.IN_APPROVAL ? 'Tasdiqlansinmi' : 'Kelishilsinmi'}`}
-                buttonText={ApplicationStatus.IN_APPROVAL ? 'Tasdiqlash' : 'Kelishish'}
-              />
-            </>
-          )}
-          {/*{canApproveManager && (*/}
-          {/*  <>*/}
-          {/*    <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />*/}
-          {/*    <ConfirmProcessModal changeId={changeId} title="Tasdiqlansinmi" buttonText="Tasdiqlash" />*/}
-          {/*  </>*/}
-          {/*)}*/}
           <ApplicationLogsModal id={changeId} type="change" />
         </div>
       </div>
