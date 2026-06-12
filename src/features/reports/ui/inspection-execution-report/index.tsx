@@ -3,6 +3,7 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
+import { useRegionSelectQuery } from '@/entities/admin/districts'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 
 const QUARTERS = [
@@ -16,8 +17,8 @@ const currentYear = new Date().getFullYear()
 const currentMonth = new Date().getMonth()
 const currentQuarter = Math.floor(currentMonth / 3) + 1
 
-const defaultQuarter = currentQuarter === 1 ? 4 : currentQuarter - 1
-const defaultYear = currentQuarter === 1 ? currentYear - 1 : currentYear
+const defaultQuarter = currentQuarter
+const defaultYear = currentYear
 
 const generateYears = () => {
   const years = []
@@ -30,6 +31,9 @@ const generateYears = () => {
 const InspectionExecutionReport: React.FC = () => {
   const [year, setYear] = useState<string>(defaultYear.toString())
   const [quarter, setQuarter] = useState<string>(defaultQuarter.toString())
+  const [regionName, setRegionName] = useState<string>('ALL')
+
+  const { data: regionsList } = useRegionSelectQuery()
 
   const { data: rawData, isLoading } = useData<any[]>('/reports/inspection-execution', true, {
     year: Number(year),
@@ -38,10 +42,13 @@ const InspectionExecutionReport: React.FC = () => {
 
   const tableData = useMemo(() => {
     if (!rawData) return []
-    // "Respublika" qismini o'z ichiga olgan barcha qatorlarni filtrlab tashlaymiz
-    const regions = rawData.filter((r) => !r.regionName?.toLowerCase().includes('respublika'))
-    // Backend'dan kelgan birinchi respublika qatorini topib olamiz (summary sifatida ishlash uchun)
-    const backendSummary = rawData.find((r) => r.regionName?.toLowerCase().includes('respublika'))
+    const isSummary = (name: string) => {
+      const lower = name?.toLowerCase()
+      return lower === 'respublika' || lower === 'respublika bo‘yicha' || lower === "respublika bo'yicha"
+    }
+
+    const regions = rawData.filter((r) => !isSummary(r.regionName))
+    const backendSummary = rawData.find((r) => isSummary(r.regionName))
 
     const summaryRow = {
       ...(backendSummary || {}),
@@ -49,8 +56,15 @@ const InspectionExecutionReport: React.FC = () => {
       isSummary: true,
     }
 
-    return [summaryRow, ...regions]
-  }, [rawData])
+    let filteredRegions = regions
+    if (regionName !== 'ALL' && regionName !== 'Respublika bo‘yicha') {
+      filteredRegions = regions.filter((r) => r.regionName === regionName)
+    } else if (regionName === 'Respublika bo‘yicha') {
+      filteredRegions = []
+    }
+
+    return [summaryRow, ...filteredRegions]
+  }, [rawData, regionName])
 
   const createSectionColumns = (header: string, accessorPrefix: string) => ({
     header,
@@ -112,12 +126,7 @@ const InspectionExecutionReport: React.FC = () => {
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
       cell: ({ row }: any) => {
         const value = row.original.regionName
-        const isRespublika = value?.toLowerCase().includes('respublika')
-        return (
-          <span className={cn(row.original.isSummary || isRespublika ? 'font-bold' : '')}>
-            {isRespublika ? 'Respublika bo‘yicha' : value}
-          </span>
-        )
+        return <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{value}</span>
       },
     },
     createSectionColumns('XICHO', 'hf'),
@@ -130,7 +139,7 @@ const InspectionExecutionReport: React.FC = () => {
 
   return (
     <div className="flex h-full flex-col gap-1 overflow-hidden">
-      <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
+      <div className="mb-2 flex flex-col justify-between gap-2 p-0.5 xl:flex-row xl:items-center">
         <GoBack title="Tekshiruvlarning chora tadbirlari bo‘yicha hisobot" />
 
         <div className="flex flex-wrap items-center gap-2">
@@ -155,6 +164,21 @@ const InspectionExecutionReport: React.FC = () => {
               {QUARTERS.map((q) => (
                 <SelectItem key={q.value} value={q.value}>
                   {q.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={regionName} onValueChange={(val) => setRegionName(val)}>
+            <SelectTrigger className="h-10 w-[220px] bg-white text-sm">
+              <SelectValue placeholder="Hududni tanlang" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">Barchasi</SelectItem>
+              <SelectItem value="Respublika bo‘yicha">Respublika bo‘yicha</SelectItem>
+              {regionsList?.map((region: any) => (
+                <SelectItem key={region.id} value={region.name}>
+                  {region.name}
                 </SelectItem>
               ))}
             </SelectContent>
