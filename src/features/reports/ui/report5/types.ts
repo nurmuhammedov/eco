@@ -1,5 +1,6 @@
 export interface Report5StatusItem {
-  type: string
+  type?: string
+  name?: string
   allCount: number
   activeCount: number
   inactiveCount: number
@@ -10,5 +11,6 @@ export interface Report5StatusItem {
 
 export interface Report5Item {
   regionName: string
-  types: Report5StatusItem[]
+  types?: Report5StatusItem[]
+  items?: Report5StatusItem[]
 }

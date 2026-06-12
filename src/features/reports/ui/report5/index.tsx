@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
@@ -9,7 +9,6 @@ import { Report5Item } from './types'
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import { useRegionSelectQuery } from '@/entities/admin/districts'
 import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
-import { apiClient } from '@/shared/api/api-client'
 
 const toCamelCase = (str: string) => {
   if (!str) return ''
@@ -20,17 +19,27 @@ const toCamelCase = (str: string) => {
 const getId = (s: any) => s?.id ?? s?.value
 const getName = (s: any) => s?.name ?? s?.label
 
-const fetchCount = async (filters: any) => {
-  try {
-    const { data } = await apiClient.get('/equipments', { size: 1, page: 1, ...filters })
-    return (data as any)?.page?.totalElements ?? (data as any)?.data?.page?.totalElements ?? 0
-  } catch {
-    return 0
-  }
-}
-
 const ALL_EQUIPMENTS = APPLICATIONS_DATA.filter(
   (i) => i?.category === ApplicationCategory.EQUIPMENTS && i?.parentId === MainApplicationCategory.REGISTER
+)
+
+const normalizeName = (name: string) => {
+  if (!name) return ''
+  return name
+    .toLowerCase()
+    .replace(/\s+/g, '') // remove all spaces
+    .replace(/['‘`ʼ]/g, "'") // normalize single quotes
+    .replace(/tt/g, 't') // normalize double t for Attraksion/Atraksion
+}
+
+const backendNameToEnumMap: Record<string, string> = ALL_EQUIPMENTS.reduce(
+  (acc: any, cur: any) => {
+    if (cur.name && cur.equipmentType) {
+      acc[normalizeName(cur.name)] = cur.equipmentType
+    }
+    return acc
+  },
+  {} as Record<string, string>
 )
 
 const Report5: React.FC = () => {
@@ -43,142 +52,129 @@ const Report5: React.FC = () => {
   const regionOptions = useMemo(() => regionsList || [], [regionsList])
 
   const { data: subTypesList } = useChildEquipmentTypes(equipmentTypeParam !== 'ALL' ? equipmentTypeParam : '')
+  const { regionName: _rn, equipmentType, subType, ...restParams } = paramsObject
+  const apiParams: any = { ...restParams }
+  if (equipmentType && equipmentType !== 'ALL') {
+    apiParams.equipmentType = equipmentType
+  }
+  if (subType && subType !== 'ALL') {
+    apiParams.childEquipmentId = subType
+  }
 
-  const { regionName: _rn, ...apiParams } = paramsObject
   const { data: reportData, isLoading: isReportDataLoading } = useData<Report5Item[]>(
     '/reports/registry/equipment/status',
     true,
-    {
-      ...apiParams,
-    }
+    apiParams
   )
-
-  const [dynamicTableData, setDynamicTableData] = useState<any[]>([])
-  const [isDynamicLoading, setIsDynamicLoading] = useState(false)
 
   const useDynamicData = equipmentTypeParam !== 'ALL'
 
-  // Build Dynamic Table Data
-  useEffect(() => {
-    if (!useDynamicData) return
+  // Process dynamic data directly from reportData
+  const dynamicTableData = useMemo(() => {
+    if (!useDynamicData || !subTypesList || !reportData) return []
 
-    let isMounted = true
-    setIsDynamicLoading(true)
+    // Prepare columns to know which names to look for
+    const columnsToFetch = [{ id: 'ALL_SUBTYPES', name: 'Barcha qurilmalar' }]
+    if (subTypeParam === 'ALL') {
+      columnsToFetch.push(...subTypesList)
+    } else {
+      const found = subTypesList.find((s: any) => String(s.id) === String(subTypeParam))
+      if (found) columnsToFetch.push(found)
+    }
 
-    const loadDynamicData = async () => {
-      let columnsToFetch: any[] = []
-      if (subTypeParam !== 'ALL') {
-        columnsToFetch = subTypesList?.filter((s: any) => getId(s)?.toString() === subTypeParam?.toString()) || []
+    // Prepare base rows
+    const filteredRegions = regionOptions.filter(
+      (r: any) => r.name !== 'Respublika' && r.name !== 'Respublika bo‘yicha' && r.name !== "Respublika bo'yicha"
+    )
+
+    let rows = [{ id: 'ALL', name: 'Respublika bo‘yicha' }, ...filteredRegions]
+    if (regionNameParam !== 'ALL') {
+      const summaryRow = rows[0]
+      if (regionNameParam === summaryRow.name) {
+        rows = [summaryRow]
       } else {
-        columnsToFetch = [{ id: 'ALL_SUBTYPES', name: 'Barchasi' }, ...(subTypesList || [])]
+        const found = rows.find((r) => r.name === regionNameParam)
+        rows = found ? [summaryRow, found] : [summaryRow]
+      }
+    }
+
+    return rows.map((regionRow) => {
+      const isSummary = regionRow.id === 'ALL'
+      const row: any = {
+        regionName: regionRow.name,
+        isSummary,
       }
 
-      const filteredRegions = regionOptions.filter(
-        (r: any) => r.name !== 'Respublika' && r.name !== 'Respublika bo‘yicha' && r.name !== "Respublika bo'yicha"
-      )
+      let regionData
+      if (isSummary) {
+        regionData = reportData.find(
+          (r: any) =>
+            r.regionName === 'Respublika' ||
+            r.regionName === 'Respublika bo‘yicha' ||
+            r.regionName === "Respublika bo'yicha"
+        )
+      } else {
+        regionData = reportData.find((r: any) => r.regionName === regionRow.name)
+      }
 
-      let rows = [{ id: 'ALL', name: 'Respublika bo‘yicha' }, ...filteredRegions]
-      if (regionNameParam !== 'ALL') {
-        const summaryRow = rows[0]
+      const itemsArray = regionData?.types || regionData?.items || []
 
-        if (regionNameParam === summaryRow.name) {
-          rows = [summaryRow]
+      columnsToFetch.forEach((col) => {
+        const colId = getId(col)
+        const baseKey = `col_${colId}`
+
+        let activeCount = 0,
+          expiredCount = 0,
+          noDateCount = 0,
+          inactiveCount = 0,
+          validCount = 0
+
+        if (colId === 'ALL_SUBTYPES') {
+          // Sum all items
+          itemsArray.forEach((t: any) => {
+            activeCount += t.activeCount || 0
+            expiredCount += t.expiredCount || 0
+            noDateCount += t.noDateCount || 0
+            inactiveCount += t.inactiveCount || 0
+            validCount += t.validCount || 0
+          })
         } else {
-          const found = rows.find((r) => r.name === regionNameParam && r.id !== 'ALL')
-          if (found) {
-            rows = [summaryRow, found]
-          } else {
-            rows = [summaryRow]
+          // Find specific subtype by matching name with subTypesList name
+          const matchedItem = itemsArray.find((t: any) => t.name === col.name)
+          if (matchedItem) {
+            activeCount = matchedItem.activeCount || 0
+            expiredCount = matchedItem.expiredCount || 0
+            noDateCount = matchedItem.noDateCount || 0
+            inactiveCount = matchedItem.inactiveCount || 0
+            validCount = matchedItem.validCount || 0
           }
         }
-      }
 
-      let loadedResults: any[] = []
-      setDynamicTableData([]) // Clear previous data
+        row[`${baseKey}All`] = activeCount
+        row[`${baseKey}Expired`] = expiredCount
+        row[`${baseKey}NoDate`] = noDateCount
+        row[`${baseKey}Inactive`] = inactiveCount
+        row[`${baseKey}Valid`] = validCount
+      })
 
-      for (const regionRow of rows) {
-        if (!isMounted) break
+      return row
+    })
+  }, [useDynamicData, reportData, subTypesList, regionOptions, regionNameParam, subTypeParam])
 
-        const regionId = regionRow.id === 'ALL' ? '' : regionRow.id
-        const rowData: any = {
-          regionName: regionRow.name,
-          isSummary: regionRow.id === 'ALL',
-        }
-
-        await Promise.all(
-          columnsToFetch.map(async (col) => {
-            const colId = getId(col)
-            const baseKey = `col_${colId}`
-
-            const apiParams =
-              colId === 'ALL_SUBTYPES'
-                ? { type: equipmentTypeParam, regionId }
-                : { type: equipmentTypeParam, childEquipmentId: colId, regionId }
-
-            const [allCount, expiredCount, noDateCount, inactiveCount] = await Promise.all([
-              fetchCount({ ...apiParams, active: true }),
-              fetchCount({ ...apiParams, active: true, status: 'EXPIRED' }),
-              fetchCount({ ...apiParams, active: true, status: 'NO_DATE' }),
-              fetchCount({ ...apiParams, active: false }),
-            ])
-
-            rowData[`${baseKey}All`] = allCount
-            rowData[`${baseKey}Expired`] = expiredCount
-            rowData[`${baseKey}NoDate`] = noDateCount
-            rowData[`${baseKey}Inactive`] = inactiveCount
-            rowData[`${baseKey}Valid`] = allCount - (expiredCount + noDateCount)
-          })
-        )
-
-        loadedResults = [...loadedResults, rowData]
-        if (isMounted) {
-          setDynamicTableData(loadedResults)
-        }
-      }
-
-      if (isMounted) {
-        setIsDynamicLoading(false)
-      }
-    }
-
-    if (subTypesList) {
-      loadDynamicData()
-    }
-
-    return () => {
-      isMounted = false
-    }
-  }, [useDynamicData, equipmentTypeParam, subTypeParam, subTypesList, regionOptions, regionNameParam])
+  const isDynamicLoading = isReportDataLoading
 
   // Process standard data
   const standardTableData = useMemo(() => {
     if (useDynamicData) return []
     if (!reportData) return []
 
-    const summaryRow: any = {
-      regionName: 'Respublika bo‘yicha',
-      isSummary: true,
-      allEquipmentsTotalAll: 0,
-      allEquipmentsTotalValid: 0,
-      allEquipmentsTotalInactive: 0,
-      allEquipmentsTotalExpired: 0,
-      allEquipmentsTotalNoDate: 0,
-    }
-
-    ALL_EQUIPMENTS.forEach((i) => {
-      let baseKey = toCamelCase(String(i.equipmentType || ''))
-      if (baseKey === 'cableway') baseKey = 'cableWay'
-
-      summaryRow[`${baseKey}All`] = 0
-      summaryRow[`${baseKey}Valid`] = 0
-      summaryRow[`${baseKey}Inactive`] = 0
-      summaryRow[`${baseKey}Expired`] = 0
-      summaryRow[`${baseKey}NoDate`] = 0
-    })
-
     const flattenedData = reportData.map((region) => {
       const row: any = {
         regionName: region.regionName,
+        isSummary:
+          region.regionName === 'Respublika' ||
+          region.regionName === 'Respublika bo‘yicha' ||
+          region.regionName === "Respublika bo'yicha",
         allEquipmentsTotalAll: 0,
         allEquipmentsTotalValid: 0,
         allEquipmentsTotalInactive: 0,
@@ -186,47 +182,70 @@ const Report5: React.FC = () => {
         allEquipmentsTotalNoDate: 0,
       }
 
-      region.types.forEach((typeItem) => {
-        if (typeItem.type === 'ELEVATOR') return
+      const typesArray: any[] = region.types || region.items || []
+      typesArray.forEach((typeItem) => {
+        const typeName = typeItem.type || backendNameToEnumMap[typeItem.name] || typeItem.name
+        if (typeName === 'ELEVATOR' || typeName === 'Elevator') return
 
-        let baseKey = toCamelCase(typeItem.type)
+        let baseKey = toCamelCase(typeName)
         if (baseKey === 'cableway') baseKey = 'cableWay'
 
-        row[`${baseKey}All`] = typeItem.activeCount
-        row[`${baseKey}Valid`] = typeItem.validCount
-        row[`${baseKey}Inactive`] = typeItem.inactiveCount
-        row[`${baseKey}Expired`] = typeItem.expiredCount
-        row[`${baseKey}NoDate`] = typeItem.noDateCount
+        row[`${baseKey}All`] = typeItem.activeCount || 0
+        row[`${baseKey}Valid`] = typeItem.validCount || 0
+        row[`${baseKey}Inactive`] = typeItem.inactiveCount || 0
+        row[`${baseKey}Expired`] = typeItem.expiredCount || 0
+        row[`${baseKey}NoDate`] = typeItem.noDateCount || 0
 
         row.allEquipmentsTotalAll += typeItem.activeCount || 0
         row.allEquipmentsTotalValid += typeItem.validCount || 0
         row.allEquipmentsTotalInactive += typeItem.inactiveCount || 0
         row.allEquipmentsTotalExpired += typeItem.expiredCount || 0
         row.allEquipmentsTotalNoDate += typeItem.noDateCount || 0
-
-        if (summaryRow[`${baseKey}All`] !== undefined) summaryRow[`${baseKey}All`] += typeItem.activeCount
-        if (summaryRow[`${baseKey}Valid`] !== undefined) summaryRow[`${baseKey}Valid`] += typeItem.validCount
-        if (summaryRow[`${baseKey}Inactive`] !== undefined) summaryRow[`${baseKey}Inactive`] += typeItem.inactiveCount
-        if (summaryRow[`${baseKey}Expired`] !== undefined) summaryRow[`${baseKey}Expired`] += typeItem.expiredCount
-        if (summaryRow[`${baseKey}NoDate`] !== undefined) summaryRow[`${baseKey}NoDate`] += typeItem.noDateCount
-
-        summaryRow.allEquipmentsTotalAll += typeItem.activeCount || 0
-        summaryRow.allEquipmentsTotalValid += typeItem.validCount || 0
-        summaryRow.allEquipmentsTotalInactive += typeItem.inactiveCount || 0
-        summaryRow.allEquipmentsTotalExpired += typeItem.expiredCount || 0
-        summaryRow.allEquipmentsTotalNoDate += typeItem.noDateCount || 0
       })
+
+      // Ensure all equipment types have at least 0
+      ALL_EQUIPMENTS.forEach((i) => {
+        let baseKey = toCamelCase(String(i.equipmentType || ''))
+        if (baseKey === 'cableway') baseKey = 'cableWay'
+
+        if (row[`${baseKey}All`] === undefined) row[`${baseKey}All`] = 0
+        if (row[`${baseKey}Valid`] === undefined) row[`${baseKey}Valid`] = 0
+        if (row[`${baseKey}Inactive`] === undefined) row[`${baseKey}Inactive`] = 0
+        if (row[`${baseKey}Expired`] === undefined) row[`${baseKey}Expired`] = 0
+        if (row[`${baseKey}NoDate`] === undefined) row[`${baseKey}NoDate`] = 0
+      })
+
       return row
     })
 
-    const filteredData = flattenedData.filter(
-      (r) =>
-        r.regionName !== 'Respublika' &&
-        r.regionName !== 'Respublika bo‘yicha' &&
-        r.regionName !== "Respublika bo'yicha"
-    )
+    const filteredData = flattenedData.filter((r) => !r.isSummary)
+    let backendSummary = flattenedData.find((r) => r.isSummary)
 
-    const finalData = [summaryRow, ...filteredData]
+    if (!backendSummary) {
+      // Fallback just in case backend doesn't return it
+      backendSummary = {
+        regionName: 'Respublika bo‘yicha',
+        isSummary: true,
+        allEquipmentsTotalAll: 0,
+        allEquipmentsTotalValid: 0,
+        allEquipmentsTotalInactive: 0,
+        allEquipmentsTotalExpired: 0,
+        allEquipmentsTotalNoDate: 0,
+      }
+      ALL_EQUIPMENTS.forEach((i) => {
+        let baseKey = toCamelCase(String(i.equipmentType || ''))
+        if (baseKey === 'cableway') baseKey = 'cableWay'
+        backendSummary[`${baseKey}All`] = 0
+        backendSummary[`${baseKey}Valid`] = 0
+        backendSummary[`${baseKey}Inactive`] = 0
+        backendSummary[`${baseKey}Expired`] = 0
+        backendSummary[`${baseKey}NoDate`] = 0
+      })
+    } else {
+      backendSummary.regionName = 'Respublika bo‘yicha'
+    }
+
+    const finalData = [backendSummary, ...filteredData]
     if (regionNameParam !== 'ALL') {
       return finalData.filter((r) => r.regionName === regionNameParam || r.isSummary)
     }
