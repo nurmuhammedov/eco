@@ -13,6 +13,9 @@ import { UserRoles } from '@/entities/user'
 import { TabsLayout } from '@/shared/layouts'
 import { useCustomSearchParams } from '@/shared/hooks'
 
+import { useAccidentsStats } from '@/features/dashboard/model/use-accidents-stats'
+import { AccidentStatusCards } from './parts/accident-status-cards'
+
 export const getStatusBadge = (status?: string | null) => {
   if (!status) return '-'
 
@@ -45,15 +48,23 @@ const AccidentList: React.FC = () => {
   const navigate = useNavigate()
   const {
     addParams,
-    paramsObject: { type = 'INJURY' },
+    paramsObject: { type = 'INJURY', status = 'ALL', page = 1, size = 10 },
   } = useCustomSearchParams()
+
   const {
     data: accidents,
     isLoading,
     totalPages,
   } = usePaginatedData<AccidentListItem>('/accidents', {
     type,
+    status: status === 'ALL' ? undefined : status,
+    page,
+    size,
   })
+
+  const { injury: injuryStats, nonInjury: nonInjuryStats } = useAccidentsStats()
+  const currentStats = type === 'INJURY' ? injuryStats : nonInjuryStats
+
   const role = useCurrentRole()
 
   const handleView = (row: AccidentListItem) => {
@@ -152,13 +163,15 @@ const AccidentList: React.FC = () => {
             {
               id: 'INJURY',
               name: 'Baxtsiz hodisalar',
+              count: injuryStats.total,
             },
             {
               id: 'NON_INJURY',
               name: 'Avariyalar',
+              count: nonInjuryStats.total,
             },
           ]}
-          onTabChange={(type) => addParams({ type: type }, 'page')}
+          onTabChange={(type) => addParams({ type: type, status: 'ALL' }, 'page')}
         />
         {role === UserRoles.INSPECTOR && (
           <div className="flex w-full sm:w-auto">
@@ -178,6 +191,13 @@ const AccidentList: React.FC = () => {
           </div>
         )}
       </div>
+
+      <AccidentStatusCards
+        stats={currentStats}
+        activeStatus={status as string}
+        onTabChange={(val) => addParams({ status: val }, 'page')}
+      />
+
       <DataTable
         data={accidents || []}
         columns={columns}
