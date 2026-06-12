@@ -10,36 +10,11 @@ import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import { useRegionSelectQuery } from '@/entities/admin/districts'
 import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
 
-const toCamelCase = (str: string) => {
-  if (!str) return ''
-  if (!str.includes('_')) return str.toLowerCase().replace('way', 'Way')
-  return str.toLowerCase().replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
-}
-
 const getId = (s: any) => s?.id ?? s?.value
 const getName = (s: any) => s?.name ?? s?.label
 
 const ALL_EQUIPMENTS = APPLICATIONS_DATA.filter(
   (i) => i?.category === ApplicationCategory.EQUIPMENTS && i?.parentId === MainApplicationCategory.REGISTER
-)
-
-const normalizeName = (name: string) => {
-  if (!name) return ''
-  return name
-    .toLowerCase()
-    .replace(/\s+/g, '') // remove all spaces
-    .replace(/['‘`ʼ]/g, "'") // normalize single quotes
-    .replace(/tt/g, 't') // normalize double t for Attraksion/Atraksion
-}
-
-const backendNameToEnumMap: Record<string, string> = ALL_EQUIPMENTS.reduce(
-  (acc: any, cur: any) => {
-    if (cur.name && cur.equipmentType) {
-      acc[normalizeName(cur.name)] = cur.equipmentType
-    }
-    return acc
-  },
-  {} as Record<string, string>
 )
 
 const Report5: React.FC = () => {
@@ -68,6 +43,20 @@ const Report5: React.FC = () => {
   )
 
   const useDynamicData = equipmentTypeParam !== 'ALL'
+
+  const uniqueEquipments = useMemo(() => {
+    if (!reportData) return []
+    const names = new Set<string>()
+    reportData.forEach((region: any) => {
+      const items = region.types || region.items || []
+      items.forEach((item: any) => {
+        if (item.name && item.name !== 'Elevator' && item.name !== 'ELEVATOR') {
+          names.add(item.name)
+        }
+      })
+    })
+    return Array.from(names)
+  }, [reportData])
 
   // Process dynamic data directly from reportData
   const dynamicTableData = useMemo(() => {
@@ -184,17 +173,16 @@ const Report5: React.FC = () => {
 
       const typesArray: any[] = region.types || region.items || []
       typesArray.forEach((typeItem) => {
-        const typeName = typeItem.type || backendNameToEnumMap[typeItem.name] || typeItem.name
-        if (typeName === 'ELEVATOR' || typeName === 'Elevator') return
+        const name = typeItem.name
+        if (!name || name === 'ELEVATOR' || name === 'Elevator') return
 
-        let baseKey = toCamelCase(typeName)
-        if (baseKey === 'cableway') baseKey = 'cableWay'
+        const baseKey = name
 
-        row[`${baseKey}All`] = typeItem.activeCount || 0
-        row[`${baseKey}Valid`] = typeItem.validCount || 0
-        row[`${baseKey}Inactive`] = typeItem.inactiveCount || 0
-        row[`${baseKey}Expired`] = typeItem.expiredCount || 0
-        row[`${baseKey}NoDate`] = typeItem.noDateCount || 0
+        row[`${baseKey}_All`] = typeItem.activeCount || 0
+        row[`${baseKey}_Valid`] = typeItem.validCount || 0
+        row[`${baseKey}_Inactive`] = typeItem.inactiveCount || 0
+        row[`${baseKey}_Expired`] = typeItem.expiredCount || 0
+        row[`${baseKey}_NoDate`] = typeItem.noDateCount || 0
 
         row.allEquipmentsTotalAll += typeItem.activeCount || 0
         row.allEquipmentsTotalValid += typeItem.validCount || 0
@@ -204,15 +192,14 @@ const Report5: React.FC = () => {
       })
 
       // Ensure all equipment types have at least 0
-      ALL_EQUIPMENTS.forEach((i) => {
-        let baseKey = toCamelCase(String(i.equipmentType || ''))
-        if (baseKey === 'cableway') baseKey = 'cableWay'
+      uniqueEquipments.forEach((name) => {
+        const baseKey = name
 
-        if (row[`${baseKey}All`] === undefined) row[`${baseKey}All`] = 0
-        if (row[`${baseKey}Valid`] === undefined) row[`${baseKey}Valid`] = 0
-        if (row[`${baseKey}Inactive`] === undefined) row[`${baseKey}Inactive`] = 0
-        if (row[`${baseKey}Expired`] === undefined) row[`${baseKey}Expired`] = 0
-        if (row[`${baseKey}NoDate`] === undefined) row[`${baseKey}NoDate`] = 0
+        if (row[`${baseKey}_All`] === undefined) row[`${baseKey}_All`] = 0
+        if (row[`${baseKey}_Valid`] === undefined) row[`${baseKey}_Valid`] = 0
+        if (row[`${baseKey}_Inactive`] === undefined) row[`${baseKey}_Inactive`] = 0
+        if (row[`${baseKey}_Expired`] === undefined) row[`${baseKey}_Expired`] = 0
+        if (row[`${baseKey}_NoDate`] === undefined) row[`${baseKey}_NoDate`] = 0
       })
 
       return row
@@ -232,14 +219,13 @@ const Report5: React.FC = () => {
         allEquipmentsTotalExpired: 0,
         allEquipmentsTotalNoDate: 0,
       }
-      ALL_EQUIPMENTS.forEach((i) => {
-        let baseKey = toCamelCase(String(i.equipmentType || ''))
-        if (baseKey === 'cableway') baseKey = 'cableWay'
-        backendSummary[`${baseKey}All`] = 0
-        backendSummary[`${baseKey}Valid`] = 0
-        backendSummary[`${baseKey}Inactive`] = 0
-        backendSummary[`${baseKey}Expired`] = 0
-        backendSummary[`${baseKey}NoDate`] = 0
+      uniqueEquipments.forEach((name) => {
+        const baseKey = name
+        backendSummary[`${baseKey}_All`] = 0
+        backendSummary[`${baseKey}_Valid`] = 0
+        backendSummary[`${baseKey}_Inactive`] = 0
+        backendSummary[`${baseKey}_Expired`] = 0
+        backendSummary[`${baseKey}_NoDate`] = 0
       })
     } else {
       backendSummary.regionName = 'Respublika bo‘yicha'
@@ -250,7 +236,7 @@ const Report5: React.FC = () => {
       return finalData.filter((r) => r.regionName === regionNameParam || r.isSummary)
     }
     return finalData
-  }, [reportData, useDynamicData, regionNameParam])
+  }, [reportData, useDynamicData, regionNameParam, uniqueEquipments])
 
   const tableData = useDynamicData ? dynamicTableData : standardTableData
   const isLoading = useDynamicData ? isDynamicLoading : isReportDataLoading
@@ -338,18 +324,17 @@ const Report5: React.FC = () => {
           },
         ],
       },
-      ...ALL_EQUIPMENTS.map((i) => {
-        let baseKey = toCamelCase(String(i.equipmentType || ''))
-        if (baseKey === 'cableway') baseKey = 'cableWay'
+      ...uniqueEquipments.map((name) => {
+        const baseKey = name
 
-        const allKey = `${baseKey}All`
-        const validKey = `${baseKey}Valid`
-        const inactiveKey = `${baseKey}Inactive`
-        const expiredKey = `${baseKey}Expired`
-        const noDateKey = `${baseKey}NoDate`
+        const allKey = `${baseKey}_All`
+        const validKey = `${baseKey}_Valid`
+        const inactiveKey = `${baseKey}_Inactive`
+        const expiredKey = `${baseKey}_Expired`
+        const noDateKey = `${baseKey}_NoDate`
 
         return {
-          header: i?.name || '',
+          header: name,
           columns: [
             {
               header: 'Reyestrda',
@@ -419,7 +404,7 @@ const Report5: React.FC = () => {
         }
       }),
     ],
-    []
+    [uniqueEquipments]
   )
 
   const dynamicColumns = useMemo(() => {
