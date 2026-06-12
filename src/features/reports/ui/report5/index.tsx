@@ -35,6 +35,7 @@ const Report5: React.FC = () => {
       let baseKey = toCamelCase(String(i.equipmentType || ''))
       if (baseKey === 'cableway') baseKey = 'cableWay'
 
+      summaryRow[`${baseKey}All`] = 0
       summaryRow[`${baseKey}Valid`] = 0
       summaryRow[`${baseKey}Inactive`] = 0
       summaryRow[`${baseKey}Expired`] = 0
@@ -48,11 +49,13 @@ const Report5: React.FC = () => {
         let baseKey = toCamelCase(typeItem.type)
         if (baseKey === 'cableway') baseKey = 'cableWay'
 
+        row[`${baseKey}All`] = typeItem.activeCount
         row[`${baseKey}Valid`] = typeItem.validCount
         row[`${baseKey}Inactive`] = typeItem.inactiveCount
         row[`${baseKey}Expired`] = typeItem.expiredCount
         row[`${baseKey}NoDate`] = typeItem.noDateCount
 
+        if (summaryRow[`${baseKey}All`] !== undefined) summaryRow[`${baseKey}All`] += typeItem.activeCount
         if (summaryRow[`${baseKey}Valid`] !== undefined) summaryRow[`${baseKey}Valid`] += typeItem.validCount
         if (summaryRow[`${baseKey}Inactive`] !== undefined) summaryRow[`${baseKey}Inactive`] += typeItem.inactiveCount
         if (summaryRow[`${baseKey}Expired`] !== undefined) summaryRow[`${baseKey}Expired`] += typeItem.expiredCount
@@ -95,6 +98,7 @@ const Report5: React.FC = () => {
           let baseKey = toCamelCase(String(i.id))
           if (baseKey === 'cableway') baseKey = 'cableWay'
 
+          const allKey = `${baseKey}All`
           const validKey = `${baseKey}Valid`
           const inactiveKey = `${baseKey}Inactive`
           const expiredKey = `${baseKey}Expired`
@@ -104,26 +108,35 @@ const Report5: React.FC = () => {
             header: i?.name || '',
             columns: [
               {
-                header: 'Reyestrda amalda',
+                header: 'Jami',
+                accessorKey: allKey,
+                className: 'text-center',
+                cell: ({ row }: any) => (
+                  <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[allKey]}</span>
+                ),
+              },
+              {
+                header: () => (
+                  <div className="text-center whitespace-nowrap">
+                    Reyestrda <br /> amalda
+                  </div>
+                ),
                 accessorKey: validKey,
                 className: 'text-center',
                 cell: ({ row }: any) => (
-                  <span className={row.original.isSummary ? 'font-bold decoration-emerald-500/30' : ''}>
+                  <span
+                    className={cn(
+                      'text-green-500',
+                      row.original.isSummary ? 'font-bold decoration-emerald-500/30' : ''
+                    )}
+                  >
                     {row.original[validKey]}
                   </span>
                 ),
               },
               {
-                header: 'Reyestrdan chiqarilgan',
-                accessorKey: inactiveKey,
-                className: 'text-center',
-                cell: ({ row }: any) => (
-                  <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[inactiveKey]}</span>
-                ),
-              },
-              {
                 header: () => (
-                  <div className="text-center">
+                  <div className="text-center whitespace-nowrap">
                     Ko‘rik va ishlatish <br /> muddati o‘tgan
                   </div>
                 ),
@@ -136,11 +149,29 @@ const Report5: React.FC = () => {
                 ),
               },
               {
-                header: 'Muddati kiritilmaganlar',
+                header: () => (
+                  <div className="text-center whitespace-nowrap">
+                    Muddati <br /> kiritilmaganlar
+                  </div>
+                ),
                 accessorKey: noDateKey,
                 className: 'text-center',
                 cell: ({ row }: any) => (
                   <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[noDateKey]}</span>
+                ),
+              },
+              {
+                header: () => (
+                  <div className="text-center whitespace-nowrap">
+                    Reyestrdan <br /> chiqarilgan
+                  </div>
+                ),
+                accessorKey: inactiveKey,
+                className: 'text-center',
+                cell: ({ row }: any) => (
+                  <span className={cn('text-red-500', row.original.isSummary ? 'font-bold' : '')}>
+                    {row.original[inactiveKey]}
+                  </span>
                 ),
               },
             ],
