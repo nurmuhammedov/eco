@@ -20,7 +20,11 @@ export const RegisterIllegalHfBaseSchema = z.object({
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  name: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  name: z
+    .string({ required_error: 'Majburiy maydon!' })
+    .trim()
+    .min(1, 'Majburiy maydon!')
+    .max(250, 'Kiritilgan maʼlumot yaroqli emas'),
   hfTypeId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   spheres: z.array(HFSphereEnum, { required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   regionId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),

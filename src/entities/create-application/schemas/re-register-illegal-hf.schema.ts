@@ -24,7 +24,11 @@ const __ReRegisterIllegalHFSchema = z.object({
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  name: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  name: z
+    .string({ required_error: 'Majburiy maydon!' })
+    .trim()
+    .min(1, 'Majburiy maydon!')
+    .max(250, 'Kiritilgan maʼlumot yaroqli emas'),
   extraArea: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   hazardousSubstance: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   spheres: z.array(HFSphereEnum, { required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),

@@ -25,7 +25,7 @@ export const AttestationAppealFormSchema = z.object({
   upperOrganizationName: z.string().transform((val) => (val ? val : '')),
   legalName: z.string().transform((val) => (val ? val : '')),
   legalTin: z.string().length(9, FORM_ERROR_MESSAGES.required),
-  hfName: z.string().min(1, 'XICHO nomi kiritilishi majburiy'),
+  hfName: z.string().min(1, 'XICHO nomi kiritilishi majburiy').max(250, 'Kiritilgan maʼlumot yaroqli emas'),
   address: z.string().min(1, 'XICHO manzili kiritilishi majburiy'),
   regionId: z.string().min(1, 'Viloyat tanlanishi majburiy'),
   districtId: z.string().min(1, 'Tuman tanlanishi majburiy'),
