@@ -151,7 +151,6 @@ export default function CadastreList() {
         columns={columns as unknown as any}
         isLoading={isLoading}
         pageCount={totalPages}
-        total={totalElements}
         className="flex-1"
       />
     </div>
