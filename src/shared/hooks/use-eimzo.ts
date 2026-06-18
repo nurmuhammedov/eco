@@ -9,6 +9,7 @@ export type FormData = any
 
 export interface UseApplicationCreationProps {
   pdfEndpoint: string
+  pdfMethod?: 'get' | 'post'
   submitEndpoint: string
   onSuccessNavigateTo?: string
   successMessage?: string
@@ -18,6 +19,7 @@ export interface UseApplicationCreationProps {
 
 export function useEimzo({
   pdfEndpoint,
+  pdfMethod = 'post',
   submitEndpoint,
   onSuccessNavigateTo,
   successMessage,
@@ -40,7 +42,7 @@ export function useEimzo({
   }, [])
 
   const createPdfMutation = useMutation({
-    mutationFn: (data: FormData) => createPdf(data, pdfEndpoint),
+    mutationFn: (data: FormData) => createPdf(data, pdfEndpoint, pdfMethod),
     onSuccess: (response) => {
       setIsPdfLoading(false)
       if (!response.success || !response.data || !response.data.data) {

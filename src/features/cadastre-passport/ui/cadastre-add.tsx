@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useCadastreMock } from '../model/use-cadastre-mock'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
@@ -10,6 +9,7 @@ import GoBack from '@/shared/components/common/go-back'
 import DetailRow from '@/shared/components/common/detail-row'
 import { toast } from 'sonner'
 import useData from '@/shared/hooks/api/useData'
+import useAdd from '@/shared/hooks/api/useAdd'
 
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -20,6 +20,7 @@ import { InputFile } from '@/shared/components/common/file-upload'
 const schema = z.object({
   attributeFile: z.string().min(1, 'Fayl yuklash majburiy'),
   passportFile: z.string().min(1, 'Fayl yuklash majburiy'),
+  parentRequestNumber: z.string().optional(),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -27,7 +28,8 @@ type FormValues = z.infer<typeof schema>
 export default function CadastreAdd() {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { create } = useCadastreMock()
+
+  const { mutate: createCadastre, isPending } = useAdd<any, any, any>('/cadastre-passports')
 
   const [stir, setStir] = useState('')
   const [searchedStir, setSearchedStir] = useState<string | null>(null)
@@ -43,6 +45,7 @@ export default function CadastreAdd() {
     defaultValues: {
       attributeFile: '',
       passportFile: '',
+      parentRequestNumber: '',
     },
   })
 
@@ -61,18 +64,20 @@ export default function CadastreAdd() {
   }
 
   const onSubmit = (data: FormValues) => {
-    create({
-      creatorOrgName: user?.name || 'Mening tashkilotim',
-      creatorOrgStir: String(user?.tinOrPin || ''),
-      targetOrgName: legalInfo?.name || 'Topilgan tashkilot',
-      targetOrgStir: searchedStir || '',
-      attributeFile: data.attributeFile,
-      passportFile: data.passportFile,
-      titleFile: '/files/registry-files/2025/july/22/1753177653262.pdf', // Mocked automatically
-    })
-
-    toast.success('So‘rov yuborildi')
-    navigate('/cadastre-passport')
+    createCadastre(
+      {
+        customerTin: Number(searchedStir),
+        detailFilePath: data.attributeFile,
+        passportFilePath: data.passportFile,
+        parentRequestNumber: data.parentRequestNumber?.trim() || null,
+      },
+      {
+        onSuccess: () => {
+          toast.success('So‘rov yuborildi')
+          navigate('/cadastre-passport')
+        },
+      }
+    )
   }
 
   const hasLegalInfo = !!legalInfo && !isLegalInfoError
@@ -135,7 +140,7 @@ export default function CadastreAdd() {
             <CardContent>
               <Form {...form}>
                 <form id="cadastre-add-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                     <FormField
                       control={form.control}
                       name="attributeFile"
@@ -146,7 +151,7 @@ export default function CadastreAdd() {
                             <InputFile
                               name={field.name as 'attributeFile'}
                               form={form}
-                              uploadEndpoint="/attachments/accidents"
+                              uploadEndpoint="/attachments/cadastre-passports"
                             />
                           </FormControl>
                         </FormItem>
@@ -162,8 +167,20 @@ export default function CadastreAdd() {
                             <InputFile
                               name={field.name as 'passportFile'}
                               form={form}
-                              uploadEndpoint="/attachments/accidents"
+                              uploadEndpoint="/attachments/cadastre-passports"
                             />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="parentRequestNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Avvalgi ariza raqami (mavjud bo‘lsa)</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Ariza raqamini kiriting..." {...field} />
                           </FormControl>
                         </FormItem>
                       )}

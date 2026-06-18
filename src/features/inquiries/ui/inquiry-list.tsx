@@ -18,6 +18,7 @@ import { UserRoles } from '@/entities/user'
 import { Eye } from 'lucide-react'
 import { Badge } from '@/shared/components/ui/badge'
 import { cn } from '@/shared/lib/utils'
+import { useRegionSelectQueries } from '@/shared/api/dictionaries'
 
 const InquiryTable = () => {
   const { user } = useAuth()
@@ -27,6 +28,8 @@ const InquiryTable = () => {
   } = useCustomSearchParams()
 
   const navigate = useNavigate()
+
+  const { data: regions } = useRegionSelectQueries()
 
   const activeTab = (belongType as InquiryBelongType | 'ALL') || 'ALL'
 
@@ -129,6 +132,14 @@ const InquiryTable = () => {
         { name: 'Huquqbuzarliik xabari', id: 'VIOLATION_REPORT' },
         { name: 'Taklif', id: 'SUGGESTION' },
       ],
+    },
+    {
+      accessorKey: 'regionId',
+      header: () => <div className="whitespace-nowrap">Hudud</div>,
+      cell: ({ row }) => {
+        const region = regions?.find((r: any) => r.id === row.original.regionId)
+        return region?.name || row.original.regionId || '-'
+      },
     },
     {
       accessorKey: 'fullName',

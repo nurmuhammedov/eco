@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useCadastreMock } from '../model/use-cadastre-mock'
+import { useQuery } from '@tanstack/react-query'
+import { apiClient } from '@/shared/api/api-client'
+import useData from '@/shared/hooks/api/useData'
+import { ApplicationModal } from '@/features/application/create-application'
+import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { Button } from '@/shared/components/ui/button'
 import GoBack from '@/shared/components/common/go-back'
 import { toast } from 'sonner'
@@ -39,15 +43,42 @@ export default function CadastreDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { data, getById, updateStatus, updateItem, addFvvApproval, addSesApproval, addCommitteeApproval } =
-    useCadastreMock()
+  const { data: item, isLoading } = useQuery<any>({
+    queryKey: ['cadastre-passports', id],
+    queryFn: async () => {
+      const response = await apiClient.get<any>(`/cadastre-passports/${id}`)
+      return response.data?.data || response.data
+    },
+    enabled: !!id,
+  })
 
-  const [item, setItem] = useState(getById(id || ''))
+  const { data: preparerInfo } = useData<any>(`/users/legal/${item?.preparerTin}`, !!item?.preparerTin)
+  const { data: customerInfo } = useData<any>(`/users/legal/${item?.customerTin}`, !!item?.customerTin)
+  const { data: fvvInfo } = useData<any>('/users/legal/201862006')
+  const { data: sesInfo } = useData<any>('/users/legal/200794614')
 
-  // Re-fetch on global data change (from mock hook)
-  useEffect(() => {
-    setItem(getById(id || ''))
-  }, [data, id, getById])
+  const {
+    error,
+    isLoading: isEimzoLoading,
+    documentUrl,
+    isModalOpen,
+    isPdfLoading,
+    handleCloseModal,
+    handleCreateApplication,
+    submitApplicationMetaData,
+  } = useEimzo({
+    pdfEndpoint: `/cadastre-passports/${id}/preview-pdf`,
+    pdfMethod: 'get',
+    submitEndpoint: '/cadastre-passports/test-submit',
+    successMessage: 'Kelishuvga muvaffaqiyatli yuborildi!',
+    queryKey: 'cadastre-passports',
+  })
+
+  const updateStatus = (id: string, status: string) => {}
+  const updateItem = (id: string, payload: any) => {}
+  const addFvvApproval = (id: string, payload: any) => {}
+  const addSesApproval = (id: string, payload: any) => {}
+  const addCommitteeApproval = (id: string, payload: any) => {}
 
   // Forms
   const fvvForm = useForm<FvvFormValues>({
@@ -63,6 +94,10 @@ export default function CadastreDetail() {
     defaultValues: { conclusion: '' },
   })
 
+  if (isLoading) {
+    return <div className="text-muted-foreground p-8 text-center">Yuklanmoqda...</div>
+  }
+
   if (!item) {
     return (
       <div className="text-muted-foreground p-8 text-center">
@@ -74,8 +109,8 @@ export default function CadastreDetail() {
   const isLegal = user?.role === UserRoles.LEGAL
   // Determine roles based on user tinOrPin for mock purposes
   const userTinOrPin = String(user?.tinOrPin || '')
-  const isFVV = userTinOrPin === '303058580' && user?.role === UserRoles.LEGAL
-  const isSES = userTinOrPin === '302358106' && user?.role === UserRoles.LEGAL
+  const isFVV = userTinOrPin === '201862006' && user?.role === UserRoles.LEGAL
+  const isSES = userTinOrPin === '200794614' && user?.role === UserRoles.LEGAL
   const isCommittee = [UserRoles.MANAGER, UserRoles.CHAIRMAN, UserRoles.ADMIN].includes(user?.role as UserRoles)
 
   const handleSendToApproval = () => {
@@ -91,7 +126,7 @@ export default function CadastreDetail() {
       updateItem(item.id, {
         status: 'REJECTED',
         fvvName: 'O‘zbekiston Respublikasi Favqulodda vaziyatlar vazirligi',
-        fvvStir: '303058580',
+        fvvStir: '201862006',
         fvvBoss: 'Ikramov Azizbek Israilovich',
         fvvAddress: 'Toshkent, 100084, Yunusobod tumani, Kichik xalqa yo‘li-4',
         fvvConclusion: fvvConclusion,
@@ -102,7 +137,7 @@ export default function CadastreDetail() {
     }
     addFvvApproval(item.id, {
       fvvName: 'O‘zbekiston Respublikasi Favqulodda vaziyatlar vazirligi',
-      fvvStir: '303058580',
+      fvvStir: '201862006',
       fvvBoss: 'Ikramov Azizbek Israilovich',
       fvvAddress: 'Toshkent, 100084, Yunusobod tumani, Kichik xalqa yo‘li-4',
       fvvConclusion: fvvConclusion || 'Tasdiqlandi',
@@ -119,7 +154,7 @@ export default function CadastreDetail() {
       updateItem(item.id, {
         status: 'REJECTED',
         sesName: 'Sanitariya-epidemiologik osoyishtalik va jamoat salomatligi xizmati',
-        sesStir: '302358106',
+        sesStir: '200794614',
         sesBoss: 'Yusupaliyev Baxodir Qahramonovich',
         sesAddress: 'Toshkent shahri, Chilonzor tumani, Bunyodkor ko‘chasi, 46.',
         sesConclusion: sesConclusion,
@@ -130,7 +165,7 @@ export default function CadastreDetail() {
     }
     addSesApproval(item.id, {
       sesName: 'Sanitariya-epidemiologik osoyishtalik va jamoat salomatligi xizmati',
-      sesStir: '302358106',
+      sesStir: '200794614',
       sesBoss: 'Yusupaliyev Baxodir Qahramonovich',
       sesAddress: 'Toshkent shahri, Chilonzor tumani, Bunyodkor ko‘chasi, 46.',
       sesConclusion: sesConclusion || 'Ijobiy xulosa',
@@ -164,8 +199,8 @@ export default function CadastreDetail() {
       <div className="flex items-center justify-between">
         <GoBack title={`Hujjat tafsiloti ${item.registryNumber ? `(${item.registryNumber})` : ''}`} />
         <div className="flex gap-2">
-          {(item.status === 'NEW' || item.status === 'REJECTED') && isLegal && (
-            <Button onClick={handleSendToApproval}>Kelishishga yuborish</Button>
+          {item.status === 'NEW' && String(user?.tinOrPin) === String(item.customerTin) && (
+            <Button onClick={() => handleCreateApplication({})}>Kelishishga yuborish</Button>
           )}
         </div>
       </div>
@@ -173,21 +208,38 @@ export default function CadastreDetail() {
       <Accordion type="multiple" defaultValue={['txyz', 'fvv', 'ses', 'committee']}>
         <DetailCardAccordion.Item value="txyz" title="TXYZ Kadastr ma’lumotlari">
           <DetailRow title="Holati" value={<StatusBadge status={item.status} />} />
+          <DetailRow title="Ariza raqami" value={item.requestNumber || '-'} />
+          <DetailRow title="Reyestr raqami" value={item.registryNumber || '-'} />
+          <DetailRow title="Ishlab chiqqan tashkilot nomi" value={preparerInfo?.name || item.preparerName || '-'} />
+          <DetailRow title="Ishlab chiqqan tashkilot STIR" value={item.preparerTin || '-'} />
+          <DetailRow title="Tashkilot nomi" value={customerInfo?.name || item.customerName || '-'} />
+          <DetailRow title="Tashkilot STIR" value={item.customerTin || '-'} />
+
           <DetailRow
-            title="Shakllantirish so‘rovi sanasi"
-            value={format(new Date(item.createdAt), 'dd.MM.yyyy HH:mm')}
+            title="Titul fayli"
+            value={
+              item.titlePagePath ? (
+                <FileLink url={item.titlePagePath} title="Hujjatni ko‘rish" />
+              ) : (
+                <span className="text-red-500">Mavjud emas</span>
+              )
+            }
           />
-          <DetailRow title="Ishlab chiqqan tashkilot nomi" value={item.creatorOrgName} />
-          <DetailRow title="Ishlab chiqqan tashkilot STIR" value={item.creatorOrgStir} />
-          <DetailRow title="So‘rov yuborilgan tashkilot nomi" value={item.targetOrgName} />
-          <DetailRow title="So‘rov yuborilgan tashkilot STIR" value={item.targetOrgStir} />
-          <DetailRow title="Titul fayli" value={<FileLink url={item.titleFile} title="Hujjatni ko‘rish" />} />
-          <DetailRow title="Atribut fayli" value={<FileLink url={item.attributeFile} title="Hujjatni ko‘rish" />} />
+          <DetailRow
+            title="Atribut fayli"
+            value={
+              item.detailFilePath ? (
+                <FileLink url={item.detailFilePath} title="Hujjatni ko‘rish" />
+              ) : (
+                <span className="text-red-500">Mavjud emas</span>
+              )
+            }
+          />
           <DetailRow
             title="Kadastr passporti fayli"
             value={
-              item.status === 'COMPLETED' ? (
-                <FileLink url={item.passportFile} title="Hujjatni ko‘rish" />
+              item.passportFilePath ? (
+                <FileLink url={item.passportFilePath} title="Hujjatni ko‘rish" />
               ) : (
                 <span className="text-red-500">Mavjud emas</span>
               )
@@ -198,13 +250,16 @@ export default function CadastreDetail() {
         <DetailCardAccordion.Item value="fvv" title="Favqulodda vaziyatlar vazirligi ma’lumotlari">
           <DetailRow
             title="Tashkilot nomi"
-            value={item.fvvName || 'O‘zbekiston Respublikasi Favqulodda vaziyatlar vazirligi'}
+            value={fvvInfo?.name || item.fvvName || 'O‘zbekiston Respublikasi Favqulodda vaziyatlar vazirligi'}
           />
-          <DetailRow title="Tashkilot STIR" value={item.fvvStir || '303058580'} />
-          <DetailRow title="Tashkilot rahbari F.I.SH." value={item.fvvBoss || 'Ikramov Azizbek Israilovich'} />
+          <DetailRow title="Tashkilot STIR" value={fvvInfo?.identity || item.fvvStir || '201862006'} />
+          <DetailRow
+            title="Tashkilot rahbari F.I.SH."
+            value={fvvInfo?.directorName || item.fvvBoss || 'Ikramov Azizbek Israilovich'}
+          />
           <DetailRow
             title="Tashkilot manzili"
-            value={item.fvvAddress || 'Toshkent, 100084, Yunusobod tumani, Kichik xalqa yo‘li-4'}
+            value={fvvInfo?.address || item.fvvAddress || 'Toshkent, 100084, Yunusobod tumani, Kichik xalqa yo‘li-4'}
           />
           <DetailRow
             title="Tashkilot xulosasi"
@@ -267,13 +322,18 @@ export default function CadastreDetail() {
         <DetailCardAccordion.Item value="ses" title="Sanitariya-epidemiologik osoyishtalik xizmati ma’lumotlari">
           <DetailRow
             title="Tashkilot nomi"
-            value={item.sesName || 'Sanitariya-epidemiologik osoyishtalik va jamoat salomatligi xizmati'}
+            value={
+              sesInfo?.name || item.sesName || 'Sanitariya-epidemiologik osoyishtalik va jamoat salomatligi xizmati'
+            }
           />
-          <DetailRow title="Tashkilot STIR" value={item.sesStir || '302358106'} />
-          <DetailRow title="Tashkilot rahbari F.I.SH." value={item.sesBoss || 'Yusupaliyev Baxodir Qahramonovich'} />
+          <DetailRow title="Tashkilot STIR" value={sesInfo?.identity || item.sesStir || '200794614'} />
+          <DetailRow
+            title="Tashkilot rahbari F.I.SH."
+            value={sesInfo?.directorName || item.sesBoss || 'Yusupaliyev Baxodir Qahramonovich'}
+          />
           <DetailRow
             title="Tashkilot manzili"
-            value={item.sesAddress || 'Toshkent shahri, Chilonzor tumani, Bunyodkor ko‘chasi, 46.'}
+            value={sesInfo?.address || item.sesAddress || 'Toshkent shahri, Chilonzor tumani, Bunyodkor ko‘chasi, 46.'}
           />
           <DetailRow
             title="Tashkilot xulosasi"
@@ -376,6 +436,16 @@ export default function CadastreDetail() {
           )}
         </DetailCardAccordion.Item>
       </Accordion>
+
+      <ApplicationModal
+        error={error}
+        isOpen={isModalOpen}
+        isLoading={isEimzoLoading}
+        documentUrl={documentUrl!}
+        onClose={handleCloseModal}
+        isPdfLoading={isPdfLoading}
+        submitApplicationMetaData={submitApplicationMetaData}
+      />
     </div>
   )
 }

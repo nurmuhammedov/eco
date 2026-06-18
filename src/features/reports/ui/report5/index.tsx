@@ -285,7 +285,7 @@ const Report5: React.FC = () => {
           {
             header: () => (
               <div className="text-center whitespace-nowrap">
-                Ko‘rik va ishlatish <br /> muddati o‘tgan
+                Ko‘rik/ishlatish <br /> muddati o‘tgan
               </div>
             ),
             accessorKey: 'allEquipmentsTotalExpired',
@@ -363,7 +363,7 @@ const Report5: React.FC = () => {
             {
               header: () => (
                 <div className="text-center whitespace-nowrap">
-                  Ko‘rik va ishlatish <br /> muddati o‘tgan
+                  Ko‘rik/ishlatish <br /> muddati o‘tgan
                 </div>
               ),
               accessorKey: expiredKey,
@@ -468,7 +468,7 @@ const Report5: React.FC = () => {
             {
               header: () => (
                 <div className="text-center whitespace-nowrap">
-                  Ko‘rik va ishlatish <br /> muddati o‘tgan
+                  Ko‘rik/ishlatish <br /> muddati o‘tgan
                 </div>
               ),
               accessorKey: expiredKey,
