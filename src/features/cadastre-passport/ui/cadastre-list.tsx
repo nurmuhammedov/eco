@@ -45,7 +45,7 @@ export default function CadastreList() {
     paramsObject: { page = 1, size = 10, ...rest },
   } = useCustomSearchParams()
 
-  const { data, isLoading, refetch, totalPages, totalElements } = usePaginatedData<any>('/cadastre-passports', {
+  const { data, isLoading, refetch, totalPages } = usePaginatedData<any>('/cadastre-passports', {
     page,
     size,
     ...rest,
