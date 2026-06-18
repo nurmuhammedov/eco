@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
 import useData from '@/shared/hooks/api/useData'
@@ -15,7 +16,6 @@ import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import { Textarea } from '@/shared/components/ui/textarea'
 import FileLink from '@/shared/components/common/file-link'
-import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/shared/components/ui/form'
 import { InputFile } from '@/shared/components/common/file-upload'
@@ -35,6 +35,10 @@ const committeeSchema = z.object({
   conclusion: z.string().min(1, 'Majburiy maydon!'),
 })
 
+const actionSchema = z.object({
+  conclusion: z.string().min(1, 'Majburiy maydon!'),
+})
+
 type FvvFormValues = z.infer<typeof fvvSchema>
 type SesFormValues = z.infer<typeof sesSchema>
 type CommitteeFormValues = z.infer<typeof committeeSchema>
@@ -43,6 +47,26 @@ export default function CadastreDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { user } = useAuth()
+
+  const [actionModalOpen, setActionModalOpen] = useState(false)
+  const [signAction, setSignAction] = useState<'APPROVED' | 'REJECTED'>('APPROVED')
+
+  const actionForm = useForm<z.infer<typeof actionSchema>>({
+    resolver: zodResolver(actionSchema),
+    defaultValues: { conclusion: '' },
+  })
+
+  const handleOpenActionModal = (action: 'APPROVED' | 'REJECTED') => {
+    setSignAction(action)
+    actionForm.reset({ conclusion: '' })
+    setActionModalOpen(true)
+  }
+
+  const onActionSubmit = (data: z.infer<typeof actionSchema>) => {
+    handleCreateApplication({ conclusion: data.conclusion, signAction })
+    setActionModalOpen(false)
+  }
+
   const { data: item, isLoading } = useQuery<any>({
     queryKey: ['cadastre-passports', id],
     queryFn: async () => {
@@ -69,16 +93,25 @@ export default function CadastreDetail() {
   } = useEimzo({
     pdfEndpoint: `/cadastre-passports/${id}/preview-pdf`,
     pdfMethod: 'get',
-    submitEndpoint: '/cadastre-passports/test-submit',
+    submitEndpoint: `/cadastre-passports/${id}/customer-sign`,
     successMessage: 'Kelishuvga muvaffaqiyatli yuborildi!',
     queryKey: 'cadastre-passports',
   })
 
-  const updateStatus = (id: string, status: string) => {}
-  const updateItem = (id: string, payload: any) => {}
-  const addFvvApproval = (id: string, payload: any) => {}
-  const addSesApproval = (id: string, payload: any) => {}
-  const addCommitteeApproval = (id: string, payload: any) => {}
+  // const updateStatus = (id: string, status: string) => {}
+  const updateItem = (id: string, payload: any) => {
+    console.log(id, payload)
+  }
+
+  const addFvvApproval = (id: string, payload: any) => {
+    console.log(id, payload)
+  }
+  const addSesApproval = (id: string, payload: any) => {
+    console.log(id, payload)
+  }
+  const addCommitteeApproval = (id: string, payload: any) => {
+    console.log(id, payload)
+  }
 
   // Forms
   const fvvForm = useForm<FvvFormValues>({
@@ -106,17 +139,16 @@ export default function CadastreDetail() {
     )
   }
 
-  const isLegal = user?.role === UserRoles.LEGAL
-  // Determine roles based on user tinOrPin for mock purposes
+  // const isLegal = user?.role === UserRoles.LEGAL
   const userTinOrPin = String(user?.tinOrPin || '')
   const isFVV = userTinOrPin === '201862006' && user?.role === UserRoles.LEGAL
   const isSES = userTinOrPin === '200794614' && user?.role === UserRoles.LEGAL
   const isCommittee = [UserRoles.MANAGER, UserRoles.CHAIRMAN, UserRoles.ADMIN].includes(user?.role as UserRoles)
 
-  const handleSendToApproval = () => {
-    updateStatus(item.id, 'IN_APPROVAL')
-    toast.success('Kelishuvga yuborildi')
-  }
+  // const handleSendToApproval = () => {
+  //   updateStatus(item.id, 'IN_APPROVAL')
+  //   toast.success('Kelishuvga yuborildi')
+  // }
 
   const handleFvvApprove = async (isReject = false) => {
     const isValid = await fvvForm.trigger()
@@ -200,7 +232,12 @@ export default function CadastreDetail() {
         <GoBack title={`Hujjat tafsiloti ${item.registryNumber ? `(${item.registryNumber})` : ''}`} />
         <div className="flex gap-2">
           {item.status === 'NEW' && String(user?.tinOrPin) === String(item.customerTin) && (
-            <Button onClick={() => handleCreateApplication({})}>Kelishishga yuborish</Button>
+            <>
+              <Button variant="destructive" onClick={() => handleOpenActionModal('REJECTED')}>
+                Rad etish
+              </Button>
+              <Button onClick={() => handleOpenActionModal('APPROVED')}>Tasdiqlash</Button>
+            </>
           )}
         </div>
       </div>
@@ -446,6 +483,39 @@ export default function CadastreDetail() {
         isPdfLoading={isPdfLoading}
         submitApplicationMetaData={submitApplicationMetaData}
       />
+
+      <Dialog open={actionModalOpen} onOpenChange={setActionModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{signAction === 'APPROVED' ? 'Tasdiqlash' : 'Rad etish'}</DialogTitle>
+          </DialogHeader>
+          <Form {...actionForm}>
+            <form onSubmit={actionForm.handleSubmit(onActionSubmit)} className="space-y-4">
+              <FormField
+                control={actionForm.control}
+                name="conclusion"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Xulosa</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Xulosani kiriting..." rows={5} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={() => setActionModalOpen(false)}>
+                  Bekor qilish
+                </Button>
+                <Button type="submit" variant={signAction === 'APPROVED' ? 'default' : 'destructive'}>
+                  {signAction === 'APPROVED' ? 'Tasdiqlash' : 'Rad etish'}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

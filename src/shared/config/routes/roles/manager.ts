@@ -30,6 +30,7 @@ const ReportsDetail2 = lazy(() => import('@/features/reports/ui/report2'))
 const ReportsDetail3 = lazy(() => import('@/features/reports/ui/report3'))
 const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
 const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
+const InquiriesStatusReport = lazy(() => import('@/features/reports/ui/inquiries-status'))
 const ReportsDetail6 = lazy(() => import('@/features/reports/ui/report6'))
 const ReportsDetail7 = lazy(() => import('@/features/reports/ui/report7'))
 const ReportsDetail8 = lazy(() => import('@/features/reports/ui/report8'))
@@ -284,6 +285,11 @@ export const managerRoutes = [
     id: 'REPORT',
     path: 'reports/registers-equipment-terms',
     element: withSuspense(ReportsDetail5),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/inquiries-status',
+    element: withSuspense(InquiriesStatusReport),
   },
   {
     id: 'REPORT',

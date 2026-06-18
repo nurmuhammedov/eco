@@ -238,6 +238,14 @@ const REPORTS_GROUPS: ReportGroup[] = [
     title: 'Murojaatlar',
     items: [
       {
+        id: 'inq-status',
+        title: 'Murojaatlar holati bo‘yicha hisobot',
+        icon: Map,
+        url: '/reports/inquiries-status',
+        badge: 'Yangi',
+        reportType: 'OTHERS',
+      },
+      {
         id: 'inq-content',
         title: 'Murojaatlar dinamikasi',
         icon: TrendingUp,
@@ -252,14 +260,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
         url: '#',
         badge: 'Jarayonda',
         reportType: 'MONTHLY',
-      },
-      {
-        id: 'inq-regional',
-        title: 'Hududiy murojaatlar',
-        icon: Map,
-        url: '#',
-        badge: 'Jarayonda',
-        reportType: 'OTHERS',
       },
     ],
   },

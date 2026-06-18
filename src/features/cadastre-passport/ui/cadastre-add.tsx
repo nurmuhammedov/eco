@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@/shared/hooks/use-auth'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
@@ -27,9 +26,8 @@ type FormValues = z.infer<typeof schema>
 
 export default function CadastreAdd() {
   const navigate = useNavigate()
-  const { user } = useAuth()
 
-  const { mutate: createCadastre, isPending } = useAdd<any, any, any>('/cadastre-passports')
+  const { mutate: createCadastre } = useAdd<any, any, any>('/cadastre-passports')
 
   const [stir, setStir] = useState('')
   const [searchedStir, setSearchedStir] = useState<string | null>(null)
