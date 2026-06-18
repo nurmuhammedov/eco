@@ -8,7 +8,6 @@ import { ApplicationModal } from '@/features/application/create-application'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { Button } from '@/shared/components/ui/button'
 import GoBack from '@/shared/components/common/go-back'
-import { toast } from 'sonner'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
 import { Accordion } from '@/shared/components/ui/accordion'
@@ -33,6 +32,7 @@ const sesSchema = z.object({
 })
 const committeeSchema = z.object({
   conclusion: z.string().min(1, 'Majburiy maydon!'),
+  file: z.string().min(1, 'Majburiy maydon!'),
 })
 
 const actionSchema = z.object({
@@ -50,6 +50,15 @@ export default function CadastreDetail() {
 
   const [actionModalOpen, setActionModalOpen] = useState(false)
   const [signAction, setSignAction] = useState<'APPROVED' | 'REJECTED'>('APPROVED')
+
+  const [fvvModalOpen, setFvvModalOpen] = useState(false)
+  const [fvvSignAction, setFvvSignAction] = useState<'APPROVED' | 'REJECTED'>('APPROVED')
+
+  const [sesModalOpen, setSesModalOpen] = useState(false)
+  const [sesSignAction, setSesSignAction] = useState<'APPROVED' | 'REJECTED'>('APPROVED')
+
+  const [committeeModalOpen, setCommitteeModalOpen] = useState(false)
+  const [committeeSignAction, setCommitteeSignAction] = useState<'APPROVED' | 'REJECTED'>('APPROVED')
 
   const actionForm = useForm<z.infer<typeof actionSchema>>({
     resolver: zodResolver(actionSchema),
@@ -81,6 +90,11 @@ export default function CadastreDetail() {
   const { data: fvvInfo } = useData<any>('/users/legal/201862006')
   const { data: sesInfo } = useData<any>('/users/legal/200794614')
 
+  // const customerReview = item?.reviews?.find((r: any) => r.organizationType === 'CUSTOMER')
+  const fvvReview = item?.reviews?.find((r: any) => r.organizationType === 'FVV')
+  const sesReview = item?.reviews?.find((r: any) => r.organizationType === 'SES')
+  const committeeReview = item?.reviews?.find((r: any) => r.organizationType === 'COMMITTEE')
+
   const {
     error,
     isLoading: isEimzoLoading,
@@ -96,22 +110,68 @@ export default function CadastreDetail() {
     submitEndpoint: `/cadastre-passports/${id}/customer-sign`,
     successMessage: 'Kelishuvga muvaffaqiyatli yuborildi!',
     queryKey: 'cadastre-passports',
+    transformSubmitPayload: (dto, sign, filePath) => {
+      const { signAction, ...restDto } = dto || {}
+      return { dto: restDto, signAction, sign, filePath }
+    },
+  })
+
+  const {
+    error: orgError,
+    isLoading: isOrgEimzoLoading,
+    documentUrl: orgDocumentUrl,
+    isModalOpen: isOrgModalOpen,
+    isPdfLoading: isOrgPdfLoading,
+    handleCloseModal: handleCloseOrgModal,
+    handleCreateApplication: handleCreateOrgApplication,
+    submitApplicationMetaData: submitOrgApplicationMetaData,
+  } = useEimzo({
+    pdfEndpoint: `/cadastre-passports/${id}/preview-pdf`,
+    pdfMethod: 'get',
+    submitEndpoint: `/cadastre-passports/${id}/organization-sign`,
+    successMessage: 'Tashkilot tomonidan muvaffaqiyatli imzolandi!',
+    queryKey: 'cadastre-passports',
+    transformSubmitPayload: (dto, sign, filePath) => {
+      const { signAction, ...restDto } = dto || {}
+      return { dto: restDto, signAction, sign, filePath }
+    },
+  })
+
+  const {
+    error: committeeError,
+    isLoading: isCommitteeEimzoLoading,
+    documentUrl: committeeDocumentUrl,
+    isModalOpen: isCommitteeEimzoModalOpen,
+    isPdfLoading: isCommitteePdfLoading,
+    handleCloseModal: handleCloseCommitteeModal,
+    handleCreateApplication: handleCreateCommitteeApplication,
+    submitApplicationMetaData: submitCommitteeApplicationMetaData,
+  } = useEimzo({
+    pdfEndpoint: `/cadastre-passports/${id}/preview-pdf`,
+    pdfMethod: 'get',
+    submitEndpoint: `/cadastre-passports/${id}/committee-sign`,
+    successMessage: 'Qo‘mita tomonidan muvaffaqiyatli imzolandi!',
+    queryKey: 'cadastre-passports',
+    transformSubmitPayload: (dto, sign, filePath) => {
+      const { signAction, ...restDto } = dto || {}
+      return { dto: restDto, signAction, sign, filePath }
+    },
   })
 
   // const updateStatus = (id: string, status: string) => {}
-  const updateItem = (id: string, payload: any) => {
-    console.log(id, payload)
-  }
+  // const updateItem = (id: string, payload: any) => {
+  //   console.log(id, payload)
+  // }
 
-  const addFvvApproval = (id: string, payload: any) => {
-    console.log(id, payload)
-  }
-  const addSesApproval = (id: string, payload: any) => {
-    console.log(id, payload)
-  }
-  const addCommitteeApproval = (id: string, payload: any) => {
-    console.log(id, payload)
-  }
+  // const addFvvApproval = (id: string, payload: any) => {
+  //   console.log(id, payload)
+  // }
+  // const addSesApproval = (id: string, payload: any) => {
+  //   console.log(id, payload)
+  // }
+  // const addCommitteeApproval = (id: string, payload: any) => {
+  //   console.log(id, payload)
+  // }
 
   // Forms
   const fvvForm = useForm<FvvFormValues>({
@@ -124,7 +184,7 @@ export default function CadastreDetail() {
   })
   const committeeForm = useForm<CommitteeFormValues>({
     resolver: zodResolver(committeeSchema),
-    defaultValues: { conclusion: '' },
+    defaultValues: { conclusion: '', file: '' },
   })
 
   if (isLoading) {
@@ -154,89 +214,130 @@ export default function CadastreDetail() {
     const isValid = await fvvForm.trigger()
     if (!isValid) return
     const fvvConclusion = fvvForm.watch('conclusion')
-    if (isReject) {
-      updateItem(item.id, {
-        status: 'REJECTED',
-        fvvName: 'O‘zbekiston Respublikasi Favqulodda vaziyatlar vazirligi',
-        fvvStir: '201862006',
-        fvvBoss: 'Ikramov Azizbek Israilovich',
-        fvvAddress: 'Toshkent, 100084, Yunusobod tumani, Kichik xalqa yo‘li-4',
-        fvvConclusion: fvvConclusion,
-        fvvFile: fvvForm.watch('file'),
-      })
-      toast.error('Rad etildi')
-      return
-    }
-    addFvvApproval(item.id, {
-      fvvName: 'O‘zbekiston Respublikasi Favqulodda vaziyatlar vazirligi',
-      fvvStir: '201862006',
-      fvvBoss: 'Ikramov Azizbek Israilovich',
-      fvvAddress: 'Toshkent, 100084, Yunusobod tumani, Kichik xalqa yo‘li-4',
-      fvvConclusion: fvvConclusion || 'Tasdiqlandi',
-      fvvFile: fvvForm.watch('file') || '/files/registry-files/2025/july/22/1753177653262.pdf',
+    const file = fvvForm.watch('file')
+
+    handleCreateOrgApplication({
+      conclusion: fvvConclusion,
+      conclusionFilePath: file,
+      signAction: isReject ? 'REJECTED' : 'APPROVED',
     })
-    toast.success('FVV tomonidan tasdiqlandi')
   }
 
   const handleSesApprove = async (isReject = false) => {
     const isValid = await sesForm.trigger()
     if (!isValid) return
     const sesConclusion = sesForm.watch('conclusion')
-    if (isReject) {
-      updateItem(item.id, {
-        status: 'REJECTED',
-        sesName: 'Sanitariya-epidemiologik osoyishtalik va jamoat salomatligi xizmati',
-        sesStir: '200794614',
-        sesBoss: 'Yusupaliyev Baxodir Qahramonovich',
-        sesAddress: 'Toshkent shahri, Chilonzor tumani, Bunyodkor ko‘chasi, 46.',
-        sesConclusion: sesConclusion,
-        sesFile: sesForm.watch('file'),
-      })
-      toast.error('Rad etildi')
-      return
-    }
-    addSesApproval(item.id, {
-      sesName: 'Sanitariya-epidemiologik osoyishtalik va jamoat salomatligi xizmati',
-      sesStir: '200794614',
-      sesBoss: 'Yusupaliyev Baxodir Qahramonovich',
-      sesAddress: 'Toshkent shahri, Chilonzor tumani, Bunyodkor ko‘chasi, 46.',
-      sesConclusion: sesConclusion || 'Ijobiy xulosa',
-      sesFile: sesForm.watch('file') || '/files/registry-files/2025/july/22/1753177653262.pdf',
+    const file = sesForm.watch('file')
+
+    handleCreateOrgApplication({
+      conclusion: sesConclusion,
+      conclusionFilePath: file,
+      signAction: isReject ? 'REJECTED' : 'APPROVED',
     })
-    toast.success('SES tomonidan tasdiqlandi')
   }
 
   const handleCommitteeApprove = async (isReject = false) => {
-    const isValid = await committeeForm.trigger('conclusion')
+    const isValid = await committeeForm.trigger()
     if (!isValid) return
     const committeeConclusion = committeeForm.watch('conclusion')
-    if (isReject) {
-      updateItem(item.id, {
-        status: 'REJECTED',
-        committeeBoss: user?.name || 'Qo‘mita raisi',
-        committeeConclusion: committeeConclusion,
-      })
-      toast.error('Rad etildi')
-      return
-    }
-    addCommitteeApproval(item.id, {
-      committeeBoss: user?.name || 'Qo‘mita raisi',
-      committeeConclusion: committeeConclusion || "Barcha hujjatlar to'g'ri. Tasdiqlandi.",
+    const file = committeeForm.watch('file')
+
+    handleCreateCommitteeApplication({
+      conclusion: committeeConclusion,
+      conclusionFilePath: file,
+      signAction: isReject ? 'REJECTED' : 'APPROVED',
     })
-    toast.success("Qo'mita tomonidan yakunlandi")
   }
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-4">
         <GoBack title={`Hujjat tafsiloti ${item.registryNumber ? `(${item.registryNumber})` : ''}`} />
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           {item.status === 'NEW' && String(user?.tinOrPin) === String(item.customerTin) && (
             <>
               <Button variant="destructive" onClick={() => handleOpenActionModal('REJECTED')}>
                 Rad etish
               </Button>
               <Button onClick={() => handleOpenActionModal('APPROVED')}>Tasdiqlash</Button>
+            </>
+          )}
+
+          {item.status === 'IN_REVIEW' && isFVV && (
+            <>
+              <Button
+                disabled={!!fvvReview}
+                variant="destructive"
+                onClick={() => {
+                  setFvvSignAction('REJECTED')
+                  setFvvModalOpen(true)
+                  fvvForm.reset()
+                }}
+              >
+                Rad etish
+              </Button>
+              <Button
+                disabled={!!fvvReview}
+                onClick={() => {
+                  setFvvSignAction('APPROVED')
+                  setFvvModalOpen(true)
+                  fvvForm.reset()
+                }}
+              >
+                Tasdiqlash
+              </Button>
+            </>
+          )}
+
+          {item.status === 'IN_REVIEW' && isSES && (
+            <>
+              <Button
+                disabled={!!sesReview}
+                variant="destructive"
+                onClick={() => {
+                  setSesSignAction('REJECTED')
+                  setSesModalOpen(true)
+                  sesForm.reset()
+                }}
+              >
+                Rad etish
+              </Button>
+              <Button
+                disabled={!!sesReview}
+                onClick={() => {
+                  setSesSignAction('APPROVED')
+                  setSesModalOpen(true)
+                  sesForm.reset()
+                }}
+              >
+                Tasdiqlash
+              </Button>
+            </>
+          )}
+
+          {item.status === 'IN_COMMITTEE' && isCommittee && (
+            <>
+              <Button
+                disabled={!!committeeReview}
+                variant="destructive"
+                onClick={() => {
+                  setCommitteeSignAction('REJECTED')
+                  setCommitteeModalOpen(true)
+                  committeeForm.reset()
+                }}
+              >
+                Rad etish
+              </Button>
+              <Button
+                disabled={!!committeeReview}
+                onClick={() => {
+                  setCommitteeSignAction('APPROVED')
+                  setCommitteeModalOpen(true)
+                  committeeForm.reset()
+                }}
+              >
+                Yakunlash
+              </Button>
             </>
           )}
         </div>
@@ -300,59 +401,15 @@ export default function CadastreDetail() {
           />
           <DetailRow
             title="Tashkilot xulosasi"
-            value={item.fvvConclusion || (item.fvvApproved ? '-' : <span className="text-red-500">Mavjud emas</span>)}
+            value={fvvReview?.conclusion || (fvvReview ? '-' : <span className="text-red-500">Mavjud emas</span>)}
           />
-          {item.fvvFile ? (
-            <DetailRow title="Xulosa fayli" value={<FileLink url={item.fvvFile} title="Hujjatni ko‘rish" />} />
+          {fvvReview?.conclusionFilePath ? (
+            <DetailRow
+              title="Xulosa fayli"
+              value={<FileLink url={fvvReview.conclusionFilePath} title="Hujjatni ko‘rish" />}
+            />
           ) : (
             <DetailRow title="Xulosa fayli" value={<span className="text-red-500">Mavjud emas</span>} />
-          )}
-
-          {!item.fvvApproved && item.status === 'IN_APPROVAL' && (isFVV || isCommittee) && (
-            <div className="mt-4 space-y-4 border-t py-2 pt-4">
-              <div className="space-y-2 rounded-md border p-4">
-                <h4 className="mb-4 text-sm font-medium">FVV xulosasini kiritish</h4>
-                <Form {...fvvForm}>
-                  <div className="space-y-4">
-                    <FormField
-                      control={fvvForm.control}
-                      name="conclusion"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel required>Xulosa matni</FormLabel>
-                          <FormControl>
-                            <Textarea placeholder="Xulosa matni..." {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={fvvForm.control}
-                      name="file"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel required>Xulosa fayli</FormLabel>
-                          <FormControl>
-                            <InputFile
-                              name={field.name as 'file'}
-                              form={fvvForm}
-                              uploadEndpoint="/attachments/accidents"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </Form>
-                <div className="mt-4 flex justify-end gap-2">
-                  <Button variant="destructive" onClick={() => handleFvvApprove(true)}>
-                    Rad etish
-                  </Button>
-                  <Button onClick={() => handleFvvApprove(false)}>Tasdiqlash</Button>
-                </div>
-              </div>
-            </div>
           )}
         </DetailCardAccordion.Item>
 
@@ -374,102 +431,34 @@ export default function CadastreDetail() {
           />
           <DetailRow
             title="Tashkilot xulosasi"
-            value={item.sesConclusion || (item.sesApproved ? '-' : <span className="text-red-500">Mavjud emas</span>)}
+            value={sesReview?.conclusion || (sesReview ? '-' : <span className="text-red-500">Mavjud emas</span>)}
           />
-          {item.sesFile ? (
-            <DetailRow title="Xulosa fayli" value={<FileLink url={item.sesFile} title="Hujjatni ko‘rish" />} />
+          {sesReview?.conclusionFilePath ? (
+            <DetailRow
+              title="Xulosa fayli"
+              value={<FileLink url={sesReview.conclusionFilePath} title="Hujjatni ko‘rish" />}
+            />
           ) : (
             <DetailRow title="Xulosa fayli" value={<span className="text-red-500">Mavjud emas</span>} />
-          )}
-
-          {!item.sesApproved && item.status === 'IN_APPROVAL' && (isSES || isCommittee) /* Mock bypass */ && (
-            <div className="mt-4 space-y-4 border-t py-2 pt-4">
-              <div className="space-y-2 rounded-md border p-4">
-                <h4 className="mb-4 text-sm font-medium">SES xulosasini kiritish</h4>
-                <Form {...sesForm}>
-                  <div className="space-y-4">
-                    <FormField
-                      control={sesForm.control}
-                      name="conclusion"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel required>Xulosa matni</FormLabel>
-                          <FormControl>
-                            <Textarea placeholder="Xulosa matni..." {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={sesForm.control}
-                      name="file"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel required>Xulosa fayli</FormLabel>
-                          <FormControl>
-                            <InputFile
-                              name={field.name as 'file'}
-                              form={sesForm}
-                              uploadEndpoint="/attachments/accidents"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </Form>
-                <div className="mt-4 flex justify-end gap-2">
-                  <Button variant="destructive" onClick={() => handleSesApprove(true)}>
-                    Rad etish
-                  </Button>
-                  <Button onClick={() => handleSesApprove(false)}>Tasdiqlash</Button>
-                </div>
-              </div>
-            </div>
           )}
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="committee" title="Qo‘mita ma’lumotlari">
           <DetailRow
             title="Ijrochi mas’ul F.I.SH."
-            value={item.committeeApproved ? item.committeeBoss : <span className="text-red-500">Mavjud emas</span>}
+            value={committeeReview ? item.committeeBoss : <span className="text-red-500">Mavjud emas</span>}
           />
           <DetailRow
             title="Ijrochi mas’ul xulosasi"
-            value={
-              item.committeeApproved ? item.committeeConclusion : <span className="text-red-500">Mavjud emas</span>
-            }
+            value={committeeReview ? committeeReview.conclusion : <span className="text-red-500">Mavjud emas</span>}
           />
-          {!item.committeeApproved && (
-            <div className="mt-4 space-y-4 border-t py-2 pt-4">
-              {item.status === 'COMMITTEE' && isCommittee && (
-                <div className="space-y-2 rounded-md border p-4">
-                  <h4 className="mb-4 text-sm font-medium">Qo‘mita qarori (Yakunlash)</h4>
-                  <Form {...committeeForm}>
-                    <FormField
-                      control={committeeForm.control}
-                      name="conclusion"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel required>Yakuniy xulosa</FormLabel>
-                          <FormControl>
-                            <Textarea placeholder="Yakuniy xulosa..." {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </Form>
-                  <div className="flex justify-end gap-2">
-                    <Button variant="destructive" onClick={() => handleCommitteeApprove(true)}>
-                      Rad etish
-                    </Button>
-                    <Button onClick={() => handleCommitteeApprove(false)}>Tasdiqlash (Yakunlash)</Button>
-                  </div>
-                </div>
-              )}
-            </div>
+          {committeeReview?.conclusionFilePath ? (
+            <DetailRow
+              title="Xulosa fayli"
+              value={<FileLink url={committeeReview.conclusionFilePath} title="Hujjatni ko‘rish" />}
+            />
+          ) : (
+            <DetailRow title="Xulosa fayli" value={<span className="text-red-500">Mavjud emas</span>} />
           )}
         </DetailCardAccordion.Item>
       </Accordion>
@@ -482,6 +471,26 @@ export default function CadastreDetail() {
         onClose={handleCloseModal}
         isPdfLoading={isPdfLoading}
         submitApplicationMetaData={submitApplicationMetaData}
+      />
+
+      <ApplicationModal
+        error={orgError}
+        isOpen={isOrgModalOpen}
+        isLoading={isOrgEimzoLoading}
+        documentUrl={orgDocumentUrl!}
+        onClose={handleCloseOrgModal}
+        isPdfLoading={isOrgPdfLoading}
+        submitApplicationMetaData={submitOrgApplicationMetaData}
+      />
+
+      <ApplicationModal
+        error={committeeError}
+        isOpen={isCommitteeEimzoModalOpen}
+        isLoading={isCommitteeEimzoLoading}
+        documentUrl={committeeDocumentUrl!}
+        onClose={handleCloseCommitteeModal}
+        isPdfLoading={isCommitteePdfLoading}
+        submitApplicationMetaData={submitCommitteeApplicationMetaData}
       />
 
       <Dialog open={actionModalOpen} onOpenChange={setActionModalOpen}>
@@ -510,6 +519,162 @@ export default function CadastreDetail() {
                 </Button>
                 <Button type="submit" variant={signAction === 'APPROVED' ? 'default' : 'destructive'}>
                   {signAction === 'APPROVED' ? 'Tasdiqlash' : 'Rad etish'}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={fvvModalOpen} onOpenChange={setFvvModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{fvvSignAction === 'APPROVED' ? 'Tasdiqlash' : 'Rad etish'}</DialogTitle>
+          </DialogHeader>
+          <Form {...fvvForm}>
+            <form
+              onSubmit={fvvForm.handleSubmit(() => {
+                handleFvvApprove(fvvSignAction === 'REJECTED')
+                setFvvModalOpen(false)
+              })}
+              className="space-y-4"
+            >
+              <FormField
+                control={fvvForm.control}
+                name="conclusion"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Xulosa matni</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Xulosa matni..." rows={5} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={fvvForm.control}
+                name="file"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Xulosa fayli</FormLabel>
+                    <FormControl>
+                      <InputFile name={field.name as 'file'} form={fvvForm} uploadEndpoint="/attachments/accidents" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={() => setFvvModalOpen(false)}>
+                  Bekor qilish
+                </Button>
+                <Button type="submit" variant={fvvSignAction === 'APPROVED' ? 'default' : 'destructive'}>
+                  {fvvSignAction === 'APPROVED' ? 'Tasdiqlash' : 'Rad etish'}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={sesModalOpen} onOpenChange={setSesModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{sesSignAction === 'APPROVED' ? 'Tasdiqlash' : 'Rad etish'}</DialogTitle>
+          </DialogHeader>
+          <Form {...sesForm}>
+            <form
+              onSubmit={sesForm.handleSubmit(() => {
+                handleSesApprove(sesSignAction === 'REJECTED')
+                setSesModalOpen(false)
+              })}
+              className="space-y-4"
+            >
+              <FormField
+                control={sesForm.control}
+                name="conclusion"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Xulosa matni</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Xulosa matni..." rows={5} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={sesForm.control}
+                name="file"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Xulosa fayli</FormLabel>
+                    <FormControl>
+                      <InputFile name={field.name as 'file'} form={sesForm} uploadEndpoint="/attachments/accidents" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={() => setSesModalOpen(false)}>
+                  Bekor qilish
+                </Button>
+                <Button type="submit" variant={sesSignAction === 'APPROVED' ? 'default' : 'destructive'}>
+                  {sesSignAction === 'APPROVED' ? 'Tasdiqlash' : 'Rad etish'}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={committeeModalOpen} onOpenChange={setCommitteeModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{committeeSignAction === 'APPROVED' ? 'Yakunlash' : 'Rad etish'}</DialogTitle>
+          </DialogHeader>
+          <Form {...committeeForm}>
+            <form
+              onSubmit={committeeForm.handleSubmit(() => {
+                handleCommitteeApprove(committeeSignAction === 'REJECTED')
+                setCommitteeModalOpen(false)
+              })}
+              className="space-y-4"
+            >
+              <FormField
+                control={committeeForm.control}
+                name="conclusion"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Yakuniy xulosa</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Yakuniy xulosa..." rows={5} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={committeeForm.control}
+                name="file"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>Xulosa fayli</FormLabel>
+                    <FormControl>
+                      <InputFile
+                        name={field.name as 'file'}
+                        form={committeeForm}
+                        uploadEndpoint="/attachments/accidents"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={() => setCommitteeModalOpen(false)}>
+                  Bekor qilish
+                </Button>
+                <Button type="submit" variant={committeeSignAction === 'APPROVED' ? 'default' : 'destructive'}>
+                  {committeeSignAction === 'APPROVED' ? 'Yakunlash' : 'Rad etish'}
                 </Button>
               </div>
             </form>

@@ -15,6 +15,7 @@ export interface UseApplicationCreationProps {
   successMessage?: string
   onEnd?: () => void
   queryKey: string
+  transformSubmitPayload?: (dto: any, sign: string, filePath: string | null) => any
 }
 
 export function useEimzo({
@@ -25,6 +26,7 @@ export function useEimzo({
   successMessage,
   onEnd,
   queryKey,
+  transformSubmitPayload,
 }: UseApplicationCreationProps) {
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -96,7 +98,13 @@ export function useEimzo({
   }, [resetState])
 
   const { mutate: submitApplicationMetaData, isPending: isLoadingMetaData } = useMutation({
-    mutationFn: (sign: string) => apiClient.post(submitEndpoint, { dto: formData, sign, filePath: documentUrl }),
+    mutationFn: (sign: string) => {
+      const payload = transformSubmitPayload
+        ? transformSubmitPayload(formData, sign, documentUrl)
+        : { dto: formData, sign, filePath: documentUrl }
+
+      return apiClient.post(submitEndpoint, payload)
+    },
     onSuccess: (response: any) => {
       if (response && response.success) {
         resetState()
