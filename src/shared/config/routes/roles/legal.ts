@@ -15,7 +15,8 @@ const RegisterXrayDetail = lazy(() => import('@/features/register/xray/ui/xray-d
 const RegisterAutoDetail = lazy(() => import('@/features/register/auto/ui/auto-detail'))
 const Preventions = lazy(() => import('@/widgets/prevention'))
 const PreventionDetail = lazy(() => import('@/features/prevention/ui/prevention-detail'))
-const RiskAnalysisPage = lazy(() => import('@/pages/risk-analysis'))
+const RiskAnalysisMonthlyPage = lazy(() => import('@/pages/risk-analysis/monthly'))
+const RiskAnalysisDailyPage = lazy(() => import('@/pages/risk-analysis/daily'))
 const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'))
 const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-info-by-id'))
 const InspectionsPage = lazy(() => import('@/pages/inspections/page'))
@@ -190,7 +191,17 @@ export const legalRoutes = [
   {
     id: 'RISK_ANALYSIS',
     path: 'risk-analysis',
-    element: withSuspense(RiskAnalysisPage),
+    element: withSuspense(RiskAnalysisMonthlyPage),
+  },
+  {
+    id: 'RISK_ANALYSIS',
+    path: 'risk-analysis/monthly',
+    element: withSuspense(RiskAnalysisMonthlyPage),
+  },
+  {
+    id: 'RISK_ANALYSIS',
+    path: 'risk-analysis/daily',
+    element: withSuspense(RiskAnalysisDailyPage),
   },
   {
     id: 'RISK_ANALYSIS',

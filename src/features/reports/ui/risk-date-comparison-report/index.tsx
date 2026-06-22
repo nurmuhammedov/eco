@@ -7,14 +7,22 @@ import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { RiskAnalysisTab } from '@/widgets/risk-analysis/types'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/lib/utils'
-import { getQuarter, subQuarters } from 'date-fns'
+import { subMonths, getMonth } from 'date-fns'
 import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-statistics-cards'
 
-const QUARTERS = [
-  { value: '1', label: '1-chorak' },
-  { value: '2', label: '2-chorak' },
-  { value: '3', label: '3-chorak' },
-  { value: '4', label: '4-chorak' },
+const MONTHS = [
+  { id: 'JANUARY', name: 'Yanvar' },
+  { id: 'FEBRUARY', name: 'Fevral' },
+  { id: 'MARCH', name: 'Mart' },
+  { id: 'APRIL', name: 'Aprel' },
+  { id: 'MAY', name: 'May' },
+  { id: 'JUNE', name: 'Iyun' },
+  { id: 'JULY', name: 'Iyul' },
+  { id: 'AUGUST', name: 'Avgust' },
+  { id: 'SEPTEMBER', name: 'Sentabr' },
+  { id: 'OCTOBER', name: 'Oktabr' },
+  { id: 'NOVEMBER', name: 'Noyabr' },
+  { id: 'DECEMBER', name: 'Dekabr' },
 ]
 
 const currentYear = new Date().getFullYear()
@@ -31,16 +39,16 @@ const TAB_TO_API_TYPE: Record<string, string> = {
 const RiskDateComparisonReport: React.FC = () => {
   const { t } = useTranslation('common')
 
-  const previousQuarterDate = subQuarters(new Date(), 2)
-  const defaultYear = previousQuarterDate.getFullYear().toString()
-  const defaultQuarter = getQuarter(previousQuarterDate).toString()
+  const previousMonthDate = subMonths(new Date(), 1)
+  const defaultYear = previousMonthDate.getFullYear().toString()
+  const defaultMonth = MONTHS[getMonth(previousMonthDate)].id
 
   const {
     addParams,
     paramsObject: {
       mainTab = RiskAnalysisTab.XICHO,
       year = defaultYear,
-      quarter = defaultQuarter,
+      month = defaultMonth,
       riskLevel = 'LOW',
       regionName = 'all',
     },
@@ -48,7 +56,8 @@ const RiskDateComparisonReport: React.FC = () => {
 
   const { data: dynamicsData, isLoading: dynamicsLoading } = useData<any[]>('/reports/risk-analysis/dynamic', true, {
     year: Number(year),
-    quarter: Number(quarter),
+    month: month,
+    periodType: 'MONTHLY',
     level: riskLevel,
     type: TAB_TO_API_TYPE[mainTab] || 'HF',
   })
@@ -77,14 +86,14 @@ const RiskDateComparisonReport: React.FC = () => {
     })
 
     const mapped = filteredRawList.map((item: any) => {
-      const months: any = {}
+      const monthsObj: any = {}
       const dynList: any[] = Array.isArray(item.dynamics) ? item.dynamics : []
 
       dynList.forEach((d: any) => {
         if (!d.date) return
         const key = d.date.split('-').reverse().join('.')
         dateSet.add(key)
-        months[key] = {
+        monthsObj[key] = {
           low: d.lowCount ?? 0,
           mid: d.mediumCount ?? 0,
           high: d.highCount ?? 0,
@@ -103,7 +112,7 @@ const RiskDateComparisonReport: React.FC = () => {
         currentLow: latest ? (latest.lowCount ?? 0) : 0,
         currentMid: latest ? (latest.mediumCount ?? 0) : 0,
         currentOut: latest ? (latest.deregisteredCount ?? 0) : 0,
-        months,
+        months: monthsObj,
       }
     })
 
@@ -115,14 +124,14 @@ const RiskDateComparisonReport: React.FC = () => {
       return parse(a) - parse(b)
     })
 
-    const dateColumns = sortedDates.map((date) => ({
-      header: date,
-      id: `date_${date}`,
+    const dateColumns = sortedDates.map((dStr) => ({
+      header: dStr,
+      id: `date_${dStr}`,
       columns: [
         {
           header: 'Xavfi past',
-          id: `low_${date}`,
-          accessorFn: (row: any) => row.months[date]?.low ?? 0,
+          id: `low_${dStr}`,
+          accessorFn: (row: any) => row.months[dStr]?.low ?? 0,
           className: 'whitespace-nowrap text-green-600 text-center',
           cell: ({ row, getValue }: any) => (
             <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
@@ -130,8 +139,8 @@ const RiskDateComparisonReport: React.FC = () => {
         },
         {
           header: 'Xavfi o‘rta',
-          id: `mid_${date}`,
-          accessorFn: (row: any) => row.months[date]?.mid ?? 0,
+          id: `mid_${dStr}`,
+          accessorFn: (row: any) => row.months[dStr]?.mid ?? 0,
           className: 'whitespace-nowrap text-amber-600 text-center',
           cell: ({ row, getValue }: any) => (
             <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
@@ -139,8 +148,8 @@ const RiskDateComparisonReport: React.FC = () => {
         },
         {
           header: 'Xavfi yuqori',
-          id: `high_${date}`,
-          accessorFn: (row: any) => row.months[date]?.high ?? 0,
+          id: `high_${dStr}`,
+          accessorFn: (row: any) => row.months[dStr]?.high ?? 0,
           className: 'whitespace-nowrap text-red-600 text-center',
           cell: ({ row, getValue }: any) => (
             <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
@@ -148,8 +157,8 @@ const RiskDateComparisonReport: React.FC = () => {
         },
         {
           header: 'Ro‘yxatdan chiqarilgan',
-          id: `out_${date}`,
-          accessorFn: (row: any) => row.months[date]?.out ?? 0,
+          id: `out_${dStr}`,
+          accessorFn: (row: any) => row.months[dStr]?.out ?? 0,
           className: 'whitespace-nowrap text-slate-500 text-center',
           cell: ({ row, getValue }: any) => (
             <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
@@ -174,7 +183,8 @@ const RiskDateComparisonReport: React.FC = () => {
       {
         header: () => (
           <div className="text-center whitespace-nowrap">
-            {year}-yil {quarter}-chorak yakunidagi <br /> xavf tahlili natijasi bo‘yicha soni
+            {year}-yil {MONTHS.find((m) => m.id === month)?.name || month} oyi yakunidagi <br /> xavf tahlili natijasi
+            bo‘yicha soni
           </div>
         ),
         accessorKey: 'totalCapacity',
@@ -237,7 +247,7 @@ const RiskDateComparisonReport: React.FC = () => {
     ]
 
     return { tableData: mapped, columns: groupedCols }
-  }, [rawList, regionName, riskLevel])
+  }, [rawList, regionName, riskLevel, year, month])
 
   const regionOptions = useMemo(() => {
     const names = rawList.map((item: any) => item.regionName).filter(Boolean)
@@ -284,14 +294,14 @@ const RiskDateComparisonReport: React.FC = () => {
             </SelectContent>
           </Select>
 
-          <Select value={quarter?.toString()} onValueChange={(val) => addParams({ quarter: val })}>
-            <SelectTrigger className="h-10 w-[160px] bg-white">
-              <SelectValue placeholder="Chorak" />
+          <Select value={month} onValueChange={(val) => addParams({ month: val })}>
+            <SelectTrigger className="h-10 w-[140px] bg-white">
+              <SelectValue placeholder="Oy" />
             </SelectTrigger>
             <SelectContent>
-              {QUARTERS.map((q) => (
-                <SelectItem key={q.value?.toString()} value={q.value?.toString()}>
-                  {q.label}
+              {MONTHS.map((m) => (
+                <SelectItem key={m.id} value={m.id}>
+                  {m.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -316,8 +326,9 @@ const RiskDateComparisonReport: React.FC = () => {
         type={TAB_TO_API_TYPE[mainTab] || 'HF'}
         activeRiskLevel={riskLevel}
         onTabChange={handleRiskLevelChange}
+        periodType="MONTHLY"
         year={year}
-        quarter={quarter}
+        month={month}
         showAllCard={false}
         className="mb-1"
       />

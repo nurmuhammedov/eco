@@ -3,14 +3,13 @@ import { useSearchParams } from 'react-router-dom'
 import { StatsCards } from './stats-cards'
 import { RiskCenter } from './risk-center'
 import { ActionCenter } from './action-center'
-import { UzbekistanMap } from '@/features/dashboard/ui/uzbekistan-map'
+
 import { DocumentsStats } from './documents-stats'
 import { InquiriesStats } from './inquiries-stats'
 import { cn } from '@/shared/lib/utils'
 import { useDashboardStats } from '../model/use-dashboard-stats'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
-import { getRegionIdByName, getRegionNameById } from '../model/constants'
 
 export const DashboardPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -25,40 +24,12 @@ export const DashboardPage = () => {
     activeRegionId = user?.regionId || activeRegionId
   }
 
-  const activeRegionName = activeRegionId ? getRegionNameById(activeRegionId) : null
-
   const stats = useDashboardStats(activeRegionId?.toString(), currentTab)
 
   const handleTabChange = (val: string) => {
     setSearchParams((prev) => {
       const newParams = new URLSearchParams(prev)
       newParams.set('tab', val)
-      return newParams
-    })
-  }
-
-  const handleRegionClick = (name: string | null) => {
-    if (!name) {
-      setSearchParams((prev) => {
-        const newParams = new URLSearchParams(prev)
-        newParams.delete('regionId')
-        return newParams
-      })
-      return
-    }
-
-    const clickedRegionId = getRegionIdByName(name)
-
-    setSearchParams((prev) => {
-      const newParams = new URLSearchParams(prev)
-
-      // If clicking same region, unselect (remove param)
-      if (activeRegionId === clickedRegionId) {
-        newParams.delete('regionId')
-      } else if (clickedRegionId) {
-        newParams.set('regionId', clickedRegionId.toString())
-      }
-
       return newParams
     })
   }
@@ -73,8 +44,6 @@ export const DashboardPage = () => {
     { id: 'irs', label: 'INM' },
     { id: 'xray', label: 'Rentgenlar' },
   ]
-
-  const isChairman = user?.role === UserRoles.CHAIRMAN
 
   return (
     <div className="w-full bg-slate-50/50 pb-4">
@@ -117,29 +86,6 @@ export const DashboardPage = () => {
         </div>
 
         <DocumentsStats />
-
-        {isChairman && (
-          <div className="mt-8 mb-8 flex flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="mb-2 flex items-center justify-between px-2">
-              <h3 className="text-lg font-semibold text-slate-800">{activeRegionName || 'Respublika bo‘yicha'}</h3>
-              <div className="flex gap-4 text-xs text-slate-500">
-                <div className="flex items-center gap-1.5">
-                  <span className="h-3 w-3 rounded bg-[#0B626B]"></span> Tanlangan
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="h-3 w-3 rounded bg-slate-200"></span> Hududlar
-                </div>
-              </div>
-            </div>
-            <div className="mx-auto w-full max-w-5xl">
-              <UzbekistanMap
-                className="w-full flex-1"
-                activeRegionId={activeRegionName}
-                onRegionClick={handleRegionClick}
-              />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   )

@@ -48,6 +48,18 @@ export default [
     title: 'menu.risk_analysis',
     url: '/risk-analysis',
     icon: <Activity />,
+    items: [
+      {
+        id: 'RISK_ANALYSIS',
+        url: '/risk-analysis/monthly',
+        title: 'Oylik xavf tahlili',
+      },
+      {
+        id: 'RISK_ANALYSIS',
+        url: '/risk-analysis/daily',
+        title: 'Kunlik xavf tahlili',
+      },
+    ],
   },
   {
     id: 'INSPECTION',

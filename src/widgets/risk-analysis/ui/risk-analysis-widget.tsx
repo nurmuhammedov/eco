@@ -12,7 +12,7 @@ import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.
 import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-statistics-cards'
 import { cn } from '@/shared/lib/utils'
 import { TabsLayout } from '@/shared/layouts'
-import { getQuarter, subQuarters } from 'date-fns'
+import { subMonths, subDays, getMonth, format } from 'date-fns'
 
 interface RiskCountResponse {
   lowCount: number
@@ -35,13 +35,35 @@ const TAB_TO_API_TYPE: Record<string, string> = {
   [RiskAnalysisTab.LPG_POWERED]: 'LPG_POWERED',
 }
 
-const RiskAnalysisWidget = () => {
+const MONTHS = [
+  { id: 'JANUARY', name: 'Yanvar' },
+  { id: 'FEBRUARY', name: 'Fevral' },
+  { id: 'MARCH', name: 'Mart' },
+  { id: 'APRIL', name: 'Aprel' },
+  { id: 'MAY', name: 'May' },
+  { id: 'JUNE', name: 'Iyun' },
+  { id: 'JULY', name: 'Iyul' },
+  { id: 'AUGUST', name: 'Avgust' },
+  { id: 'SEPTEMBER', name: 'Sentabr' },
+  { id: 'OCTOBER', name: 'Oktabr' },
+  { id: 'NOVEMBER', name: 'Noyabr' },
+  { id: 'DECEMBER', name: 'Dekabr' },
+]
+
+interface RiskAnalysisWidgetProps {
+  periodType: 'DAILY' | 'MONTHLY'
+}
+
+const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const { t } = useTranslation('common')
   const { user } = useAuth()
 
-  const previousQuarterDate = subQuarters(new Date(), 1)
-  const defaultYear = previousQuarterDate.getFullYear()
-  const defaultQuarter = getQuarter(previousQuarterDate).toString()
+  const previousMonthDate = subMonths(new Date(), 1)
+  const defaultYear = previousMonthDate.getFullYear().toString()
+  const defaultMonth = MONTHS[getMonth(previousMonthDate)].id
+
+  const previousDayDate = subDays(new Date(), 1)
+  const defaultDate = format(previousDayDate, 'yyyy-MM-dd')
 
   const {
     addParams,
@@ -49,10 +71,11 @@ const RiskAnalysisWidget = () => {
       mainTab = RiskAnalysisTab.XICHO,
       riskLevel = 'ALL',
       year = defaultYear,
+      month = defaultMonth,
+      date = defaultDate,
       size = 10,
       page = 1,
       regionId,
-      quarter = defaultQuarter,
       name,
       registryNumber,
       ownerName,
@@ -70,54 +93,63 @@ const RiskAnalysisWidget = () => {
 
   const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select', shouldShowRegions)
 
-  // Agar regionId URL da bo'lmasa, birinchi regionni olamiz
   const activeRegion = shouldShowRegions
     ? regionId?.toString() || (regions.length > 0 ? regions[0].id.toString() : '')
     : undefined
 
   const currentApiType = TAB_TO_API_TYPE[mainTab as string] || 'HF'
 
+  const apiParams = {
+    type: currentApiType,
+    periodType,
+    level: riskLevel == 'ALL' ? undefined : riskLevel,
+    year: periodType === 'MONTHLY' ? year : undefined,
+    month: periodType === 'MONTHLY' ? month : undefined,
+    date: periodType === 'DAILY' ? date : undefined,
+    size,
+    page,
+    regionId: activeRegion,
+    name,
+    registryNumber,
+    ownerName,
+    address,
+    identity,
+    inspectorId,
+    periodId,
+  }
+
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(
     '/risk-analyses',
-    {
-      type: currentApiType,
-      level: riskLevel == 'ALL' ? undefined : riskLevel,
-      year,
-      size,
-      page,
-      quarter,
-      regionId: activeRegion,
-      name,
-      registryNumber,
-      ownerName,
-      address,
-      identity,
-      inspectorId,
-      periodId,
-    },
+    apiParams,
     shouldShowRegions ? !!activeRegion : true
   )
 
-  const { data: hfRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, { type: 'HF', year, quarter })
+  const countsApiParams = {
+    periodType,
+    year: periodType === 'MONTHLY' ? year : undefined,
+    month: periodType === 'MONTHLY' ? month : undefined,
+    date: periodType === 'DAILY' ? date : undefined,
+  }
+
+  const { data: hfRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+    type: 'HF',
+    ...countsApiParams,
+  })
   const { data: irsRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
     type: 'IRS',
-    year,
-    quarter,
+    ...countsApiParams,
   })
   const { data: xrayRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
     type: 'XRAY',
-    year,
-    quarter,
+    ...countsApiParams,
   })
   const { data: attractionRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
     type: 'ATTRACTION',
-    year,
-    quarter,
+    ...countsApiParams,
   })
   const { data: lpgPoweredRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
     type: 'LPG_POWERED',
-    year,
-    quarter,
+    ...countsApiParams,
   })
 
   const getSum = (counts?: RiskCountResponse) =>
@@ -131,9 +163,11 @@ const RiskAnalysisWidget = () => {
 
   const { data: regionCounts = [] } = useData<RegionCountDto[]>('/risk-analyses/count/by-region', shouldShowRegions, {
     type: currentApiType,
-    year,
-    quarter,
+    periodType,
     level: riskLevel == 'ALL' ? undefined : riskLevel,
+    year: periodType === 'MONTHLY' ? year : undefined,
+    month: periodType === 'MONTHLY' ? month : undefined,
+    date: periodType === 'DAILY' ? date : undefined,
     name,
     registryNumber,
     ownerName,
@@ -218,8 +252,10 @@ const RiskAnalysisWidget = () => {
         type={currentApiType || ''}
         activeRiskLevel={riskLevel as string}
         onTabChange={handleCardTabChange}
+        periodType={periodType}
         year={year}
-        quarter={quarter}
+        month={month}
+        date={date}
         regionId={activeRegion}
       />
 

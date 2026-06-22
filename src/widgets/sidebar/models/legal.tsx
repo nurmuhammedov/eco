@@ -1,6 +1,6 @@
 import { Navigation } from '@/widgets/sidebar/models/types'
 import {
-  AlertCircle,
+  Activity,
   Archive,
   ArrowDownUp,
   Award,
@@ -46,7 +46,19 @@ export default [
     id: 'RISK_ANALYSIS',
     title: 'menu.risk_analysis',
     url: '/risk-analysis',
-    icon: <AlertCircle />,
+    icon: <Activity />,
+    items: [
+      {
+        id: 'RISK_ANALYSIS',
+        url: '/risk-analysis/monthly',
+        title: 'Oylik xavf tahlili',
+      },
+      {
+        id: 'RISK_ANALYSIS',
+        url: '/risk-analysis/daily',
+        title: 'Kunlik xavf tahlili',
+      },
+    ],
   },
   {
     id: 'INSPECTION',

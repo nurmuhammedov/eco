@@ -6,8 +6,10 @@ interface RiskStatisticsCardsProps {
   type: string
   activeRiskLevel: string
   onTabChange: (level: string) => void
-  year: number | string
-  quarter: string
+  year?: number | string
+  month?: string
+  date?: string
+  periodType: 'DAILY' | 'MONTHLY'
   regionId?: string
   showAllCard?: boolean
   className?: string
@@ -24,14 +26,18 @@ export const RiskStatisticsCards = ({
   activeRiskLevel,
   onTabChange,
   year,
-  quarter,
+  month,
+  date,
+  periodType,
   showAllCard = true,
   className,
 }: RiskStatisticsCardsProps) => {
   const { data, isLoading } = useData<RiskCountResponse>('/risk-analyses/count', true, {
     type,
-    year,
-    quarter,
+    periodType,
+    year: periodType === 'MONTHLY' ? year : undefined,
+    month: periodType === 'MONTHLY' ? month : undefined,
+    date: periodType === 'DAILY' ? date : undefined,
   })
 
   const lowCount = data?.lowCount || 0

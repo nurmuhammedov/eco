@@ -219,9 +219,24 @@ export const InteractiveServicePage: React.FC = () => {
   const [transitionKey, setTransitionKey] = useState(0)
   const [pageReady, setPageReady] = useState(false)
 
+  const MONTHS_LIST = [
+    'JANUARY',
+    'FEBRUARY',
+    'MARCH',
+    'APRIL',
+    'MAY',
+    'JUNE',
+    'JULY',
+    'AUGUST',
+    'SEPTEMBER',
+    'OCTOBER',
+    'NOVEMBER',
+    'DECEMBER',
+  ]
+  const prevMonthIndex = new Date().getMonth() === 0 ? 11 : new Date().getMonth() - 1
   const defaultQuarter = useMemo(() => getDefaultQuarter(), [])
   const [filterYear, setFilterYear] = useState(defaultQuarter.year)
-  const [filterQuarter, setFilterQuarter] = useState(defaultQuarter.type)
+  const [filterMonth, setFilterMonth] = useState(MONTHS_LIST[prevMonthIndex])
 
   useEffect(() => {
     const timer = setTimeout(() => setPageReady(true), 600)
@@ -299,7 +314,7 @@ export const InteractiveServicePage: React.FC = () => {
 
   const riskStats = useRiskAnalysisStats({
     year: filterYear,
-    quarter: filterQuarter,
+    month: filterMonth,
     regionId: regionIdForApi,
     enabled: activeCategory === 'risk',
   })
@@ -307,12 +322,12 @@ export const InteractiveServicePage: React.FC = () => {
 
   const { totalElements: inspRisk = 0, isLoading: lInsp1 } = usePaginatedData(
     '/inspections',
-    { page: 1, size: 1, year: filterYear, quarter: filterQuarter, type: 'RISK_BASED' },
+    { page: 1, size: 1, year: filterYear, month: filterMonth, type: 'RISK_BASED' },
     activeCategory === 'inspection'
   )
   const { totalElements: inspOther = 0, isLoading: lInsp2 } = usePaginatedData(
     '/inspections/other',
-    { page: 1, size: 1, year: filterYear, quarter: filterQuarter, type: 'OTHER' },
+    { page: 1, size: 1, year: filterYear, month: filterMonth, type: 'OTHER' },
     activeCategory === 'inspection'
   )
   const inspectionTotal = inspRisk + inspOther
@@ -580,15 +595,31 @@ export const InteractiveServicePage: React.FC = () => {
                     ))}
                   </SelectContent>
                 </Select>
-                <Select value={filterQuarter.toString()} onValueChange={(val) => setFilterQuarter(Number(val))}>
+                <Select value={filterMonth} onValueChange={(val) => setFilterMonth(val)}>
                   <SelectTrigger className="h-8 w-[100px] border-slate-200 bg-white !text-xs text-slate-600 focus:ring-0 focus:ring-offset-0 lg:h-9 lg:w-[120px] lg:!text-sm">
-                    <SelectValue />
+                    <SelectValue placeholder="Oy" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1">1-chorak</SelectItem>
-                    <SelectItem value="2">2-chorak</SelectItem>
-                    <SelectItem value="3">3-chorak</SelectItem>
-                    <SelectItem value="4">4-chorak</SelectItem>
+                    {MONTHS_LIST.map((m, idx) => (
+                      <SelectItem key={m} value={m}>
+                        {
+                          [
+                            'Yanvar',
+                            'Fevral',
+                            'Mart',
+                            'Aprel',
+                            'May',
+                            'Iyun',
+                            'Iyul',
+                            'Avgust',
+                            'Sentabr',
+                            'Oktabr',
+                            'Noyabr',
+                            'Dekabr',
+                          ][idx]
+                        }
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>

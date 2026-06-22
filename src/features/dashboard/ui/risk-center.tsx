@@ -33,29 +33,38 @@ const RiskSection = ({ title, count, items, bgClass, dotClass, onItemClick }: an
   </div>
 )
 
+import { subMonths, getMonth } from 'date-fns'
+
+const MONTHS = [
+  { id: 'JANUARY', name: 'Yanvar' },
+  { id: 'FEBRUARY', name: 'Fevral' },
+  { id: 'MARCH', name: 'Mart' },
+  { id: 'APRIL', name: 'Aprel' },
+  { id: 'MAY', name: 'May' },
+  { id: 'JUNE', name: 'Iyun' },
+  { id: 'JULY', name: 'Iyul' },
+  { id: 'AUGUST', name: 'Avgust' },
+  { id: 'SEPTEMBER', name: 'Sentabr' },
+  { id: 'OCTOBER', name: 'Oktabr' },
+  { id: 'NOVEMBER', name: 'Noyabr' },
+  { id: 'DECEMBER', name: 'Dekabr' },
+]
+
 export const RiskCenter = ({ regionId }: RiskCenterProps) => {
   const navigate = useNavigate()
-  const today = new Date()
-  const currentYear = today.getFullYear()
-  const currentMonth = today.getMonth() + 1
-  const currentQuarter = Math.ceil(currentMonth / 3)
 
-  let defaultYear = currentYear
-  let defaultQuarter = currentQuarter - 1
-  if (defaultQuarter === 0) {
-    defaultQuarter = 4
-    defaultYear = currentYear - 1
-  }
+  const previousMonthDate = subMonths(new Date(), 1)
+  const defaultYear = previousMonthDate.getFullYear().toString()
+  const defaultMonth = MONTHS[getMonth(previousMonthDate)].id
 
-  const [year, setYear] = useState(defaultYear.toString())
-  const [quarter, setQuarter] = useState(defaultQuarter.toString())
+  const [year, setYear] = useState(defaultYear)
+  const [month, setMonth] = useState(defaultMonth)
 
   const years = Array.from({ length: 100 }, (_, i) => 2025 + i)
-  const quarters = [1, 2, 3, 4]
 
   const stats = useRiskAnalysisStats({
     year: parseInt(year),
-    quarter: parseInt(quarter),
+    month,
     regionId,
   })
 
@@ -64,7 +73,7 @@ export const RiskCenter = ({ regionId }: RiskCenterProps) => {
     if (item.key) params.set('mainTab', item.key)
     params.set('riskLevel', level)
     params.set('year', year)
-    params.set('quarter', quarter)
+    params.set('month', month)
     if (regionId) params.set('regionId', regionId)
 
     navigate(`/risk-analysis?${params.toString()}`)
@@ -73,7 +82,7 @@ export const RiskCenter = ({ regionId }: RiskCenterProps) => {
   const handleViewAll = () => {
     const params = new URLSearchParams()
     params.set('year', year)
-    params.set('quarter', quarter)
+    params.set('month', month)
     if (regionId) params.set('regionId', regionId)
     navigate(`/risk-analysis?${params.toString()}`)
   }
@@ -96,14 +105,14 @@ export const RiskCenter = ({ regionId }: RiskCenterProps) => {
             </SelectContent>
           </Select>
 
-          <Select value={quarter} onValueChange={setQuarter}>
+          <Select value={month} onValueChange={setMonth}>
             <SelectTrigger className="h-8 w-auto border-slate-200 bg-slate-50 px-2 text-xs focus:ring-0 focus:ring-offset-0">
-              <SelectValue placeholder="Chora" />
+              <SelectValue placeholder="Oy" />
             </SelectTrigger>
             <SelectContent align="end">
-              {quarters.map((q) => (
-                <SelectItem key={q} value={q.toString()} className="text-xs">
-                  {q}-chorak
+              {MONTHS.map((m) => (
+                <SelectItem key={m.id} value={m.id} className="text-xs">
+                  {m.name}
                 </SelectItem>
               ))}
             </SelectContent>

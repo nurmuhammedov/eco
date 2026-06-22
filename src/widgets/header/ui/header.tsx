@@ -3,10 +3,11 @@ import { Separator } from '@/shared/components/ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useCustomSearchParams } from '@/shared/hooks'
 import UserDropdown from '@/widgets/header/ui/user-dropdown'
-import { getQuarter, subQuarters } from 'date-fns'
+import { getQuarter, subQuarters, subMonths, subDays, getMonth, format } from 'date-fns'
 import { useLocation } from 'react-router-dom'
 import { useMemo } from 'react'
 import { InquiryNotification } from './inquiry-notification'
+import DatePicker from '@/shared/components/ui/datepicker'
 
 const QUARTERS = [
   { id: '1', name: '1-chorak' },
@@ -15,18 +16,43 @@ const QUARTERS = [
   { id: '4', name: '4-chorak' },
 ]
 
+const MONTHS = [
+  { id: 'JANUARY', name: 'Yanvar' },
+  { id: 'FEBRUARY', name: 'Fevral' },
+  { id: 'MARCH', name: 'Mart' },
+  { id: 'APRIL', name: 'Aprel' },
+  { id: 'MAY', name: 'May' },
+  { id: 'JUNE', name: 'Iyun' },
+  { id: 'JULY', name: 'Iyul' },
+  { id: 'AUGUST', name: 'Avgust' },
+  { id: 'SEPTEMBER', name: 'Sentabr' },
+  { id: 'OCTOBER', name: 'Oktabr' },
+  { id: 'NOVEMBER', name: 'Noyabr' },
+  { id: 'DECEMBER', name: 'Dekabr' },
+]
+
 export function Header() {
   const { pathname = '' } = useLocation()
   const { paramsObject, addParams } = useCustomSearchParams()
 
-  const isRiskAnalysis = pathname === '/risk-analysis'
-  const dateBasis = isRiskAnalysis ? subQuarters(new Date(), 1) : new Date()
+  const isRiskAnalysisMonthly = pathname.startsWith('/risk-analysis/monthly') || pathname === '/risk-analysis'
+  const isRiskAnalysisDaily = pathname.startsWith('/risk-analysis/daily')
 
-  const defaultYear = dateBasis.getFullYear().toString()
-  const defaultQuarter = getQuarter(dateBasis).toString()
+  const dateBasisQuarter = subQuarters(new Date(), 1)
+  const defaultQuarter = getQuarter(dateBasisQuarter).toString()
+
+  const dateBasisMonth = subMonths(new Date(), 1)
+  const defaultYear = dateBasisMonth.getFullYear().toString()
+  const defaultMonth = MONTHS[getMonth(dateBasisMonth)].id
+
+  const dateBasisDay = subDays(new Date(), 1)
+  const defaultDate = format(dateBasisDay, 'yyyy-MM-dd')
 
   const selectedYear = paramsObject.year?.toString() || defaultYear
   const selectedQuarter = paramsObject.quarter?.toString() || defaultQuarter
+  const selectedMonth = paramsObject.month?.toString() || defaultMonth
+  const selectedDateStr = paramsObject.date?.toString() || defaultDate
+  const selectedDate = selectedDateStr ? new Date(selectedDateStr) : undefined
 
   const yearOptions = useMemo(() => {
     const startYear = 2025
@@ -50,8 +76,20 @@ export function Header() {
     addParams({ quarter }, 'page')
   }
 
-  const showYearFilter = ['/risk-analysis', '/inspections', '/preventions'].includes(pathname)
-  const showQuarterFilter = showYearFilter && pathname !== '/preventions'
+  const handleMonthChange = (month: string) => {
+    addParams({ month }, 'page')
+  }
+
+  const handleDateChange = (date: Date | undefined) => {
+    if (date) {
+      addParams({ date: format(date, 'yyyy-MM-dd') }, 'page')
+    }
+  }
+
+  const showYearFilter = ['/inspections', '/preventions'].includes(pathname) || isRiskAnalysisMonthly
+  const showQuarterFilter = showYearFilter && pathname !== '/preventions' && !isRiskAnalysisMonthly
+  const showMonthFilter = isRiskAnalysisMonthly
+  const showDailyCalendar = isRiskAnalysisDaily
 
   const title = useMemo(() => {
     const PATH_TITLES = [
@@ -99,6 +137,17 @@ export function Header() {
       </div>
 
       <div className="ml-auto flex items-center gap-4">
+        {showDailyCalendar && (
+          <div className="flex w-[200px] items-center">
+            <DatePicker
+              value={selectedDate}
+              onChange={handleDateChange}
+              disableStrategy="after"
+              placeholder="Sanani tanlang"
+              isForm={false}
+            />
+          </div>
+        )}
         {showYearFilter && (
           <div className="flex items-center gap-x-2">
             <Select value={selectedYear} onValueChange={handleYearChange}>
@@ -123,6 +172,21 @@ export function Header() {
                   {QUARTERS.map((q) => (
                     <SelectItem key={q.id} value={q.id}>
                       {q.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+
+            {showMonthFilter && (
+              <Select value={selectedMonth} onValueChange={handleMonthChange}>
+                <SelectTrigger className="w-[130px]">
+                  <SelectValue placeholder="Oy" />
+                </SelectTrigger>
+                <SelectContent>
+                  {MONTHS.map((m) => (
+                    <SelectItem key={m.id} value={m.id}>
+                      {m.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

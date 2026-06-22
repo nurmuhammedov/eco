@@ -8,15 +8,16 @@ interface RiskCountResponse {
 
 interface UseRiskAnalysisStatsProps {
   year: number
-  quarter: number
+  month: string
   regionId?: string | null
   enabled?: boolean
 }
 
-export const useRiskAnalysisStats = ({ year, quarter, regionId, enabled = true }: UseRiskAnalysisStatsProps) => {
+export const useRiskAnalysisStats = ({ year, month, regionId, enabled = true }: UseRiskAnalysisStatsProps) => {
   const commonParams = {
     year,
-    quarter: quarter.toString(),
+    month,
+    periodType: 'MONTHLY',
     regionId: regionId?.toString(),
   }
 

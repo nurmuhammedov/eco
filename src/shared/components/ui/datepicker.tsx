@@ -23,6 +23,7 @@ export type DatePickerProps = {
   buttonVariant?: 'default' | 'outline' | 'ghost'
   disabled?: boolean
   icon?: React.ReactNode
+  isForm?: boolean
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({
@@ -39,6 +40,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
   buttonVariant = 'outline',
   disabled = false,
   icon = <CalendarIcon className="ml-auto size-4 opacity-50" />,
+  isForm = true,
 }) => {
   const [isShow, setIsShow] = useState(false)
 
@@ -78,7 +80,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
               {value ? format(value, dateFormat) : null}
             </span>
           </div>
-        ) : (
+        ) : isForm ? (
           <FormControl>
             <Button
               variant={buttonVariant}
@@ -89,6 +91,15 @@ const DatePicker: React.FC<DatePickerProps> = ({
               {icon}
             </Button>
           </FormControl>
+        ) : (
+          <Button
+            variant={buttonVariant}
+            disabled={disabled}
+            className={cn('w-full pl-3 text-left font-normal', !value && 'text-neutral-350', className)}
+          >
+            {value ? format(value, dateFormat) : <span>{placeholder}</span>}
+            {icon}
+          </Button>
         )}
       </PopoverTrigger>
       <PopoverContent className="z-[60] w-auto p-0" align="start">
