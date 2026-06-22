@@ -369,9 +369,7 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Ekspertiza loyihasi fayli
-                    </FormLabel>
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ekspertiza loyihasi fayli</FormLabel>
                     <FormControl>
                       <InputFile
                         form={form}
@@ -418,7 +416,7 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Yuk ko‘targich muvofiqlik sertifikati
                     </FormLabel>
                     <FormControl>
@@ -437,9 +435,7 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                    <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Montaj dalolatnomasi
-                    </FormLabel>
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Montaj dalolatnomasi</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                     </FormControl>
