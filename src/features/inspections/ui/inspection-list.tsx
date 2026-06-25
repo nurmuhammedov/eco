@@ -9,7 +9,6 @@ import { Eye } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserRoles } from '@/entities/user'
-import { getQuarter } from 'date-fns'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table.tsx'
 import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
 
@@ -23,9 +22,11 @@ export const InspectionList: React.FC = () => {
     paramsObject: {
       status = InspectionStatus.ALL,
       subStatus = InspectionSubMenuStatus.ASSIGNED,
-      year = new Date().getFullYear(),
+      year,
       regionId = 'ALL',
-      quarter = getQuarter(new Date()).toString(),
+      month,
+      belongType = 'HF',
+      type = 'RISK_BASED',
       ...rest
     },
   } = useCustomSearchParams()
@@ -42,8 +43,9 @@ export const InspectionList: React.FC = () => {
     '/inspections',
     {
       ...rest,
-      type: 'RISK_BASED',
-      quarter,
+      type,
+      belongType,
+      month,
       regionId: regionId == 'ALL' ? '' : regionId,
       year,
       status: [UserRoles.LEGAL, UserRoles?.INSPECTOR]?.includes(user?.role as unknown as UserRoles)

@@ -66,12 +66,18 @@ export default [
     title: 'Tekshiruvlar',
     url: '/inspections',
     icon: <ClipboardList />,
-  },
-  {
-    id: 'INSPECTION_24_HOURS',
-    title: '24 soatlik tekshiruv',
-    url: '/inspections',
-    icon: <ClipboardList />,
+    items: [
+      {
+        id: 'INSPECTION',
+        title: 'Xavfni tahlili asosidagi tekshiruvlar',
+        url: '/inspections?type=RISK_BASED',
+      },
+      {
+        id: 'INSPECTION',
+        title: 'Boshqa turdagi tekshiruvlar',
+        url: '/inspections?type=OTHER',
+      },
+    ],
   },
   {
     id: 'ACCREDITATION',

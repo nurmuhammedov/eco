@@ -3,18 +3,11 @@ import { Separator } from '@/shared/components/ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useCustomSearchParams } from '@/shared/hooks'
 import UserDropdown from '@/widgets/header/ui/user-dropdown'
-import { getQuarter, subQuarters, subMonths, subDays, getMonth, format } from 'date-fns'
+import { format, getMonth, getQuarter, subDays, subMonths, subQuarters } from 'date-fns'
 import { useLocation } from 'react-router-dom'
 import { useMemo } from 'react'
 import { InquiryNotification } from './inquiry-notification'
 import DatePicker from '@/shared/components/ui/datepicker'
-
-const QUARTERS = [
-  { id: '1', name: '1-chorak' },
-  { id: '2', name: '2-chorak' },
-  { id: '3', name: '3-chorak' },
-  { id: '4', name: '4-chorak' },
-]
 
 const MONTHS = [
   { id: 'JANUARY', name: 'Yanvar' },
@@ -42,14 +35,13 @@ export function Header() {
   const defaultQuarter = getQuarter(dateBasisQuarter).toString()
 
   const dateBasisMonth = subMonths(new Date(), 1)
-  const defaultYear = dateBasisMonth.getFullYear().toString()
-  const defaultMonth = MONTHS[getMonth(dateBasisMonth)].id
+  const defaultYear = pathname?.startsWith('/inspections') ? undefined : dateBasisMonth.getFullYear().toString()
+  const defaultMonth = pathname?.startsWith('/inspections') ? undefined : MONTHS[getMonth(dateBasisMonth)].id
 
   const dateBasisDay = subDays(new Date(), 1)
   const defaultDate = format(dateBasisDay, 'yyyy-MM-dd')
 
   const selectedYear = paramsObject.year?.toString() || defaultYear
-  const selectedQuarter = paramsObject.quarter?.toString() || defaultQuarter
   const selectedMonth = paramsObject.month?.toString() || defaultMonth
   const selectedDateStr = paramsObject.date?.toString() || defaultDate
   const selectedDate = selectedDateStr ? new Date(selectedDateStr) : undefined
@@ -57,7 +49,7 @@ export function Header() {
   const yearOptions = useMemo(() => {
     const startYear = 2025
     const endYear = new Date().getFullYear()
-    return Array.from({ length: endYear - startYear + 1 }, (_, i) => (startYear + i).toString())
+    return Array.from({ length: endYear - startYear + 1 }, (_, i) => (startYear + i).toString()).reverse()
   }, [])
 
   const handleYearChange = (year: string) => {
@@ -72,10 +64,6 @@ export function Header() {
     )
   }
 
-  const handleQuarterChange = (quarter: string) => {
-    addParams({ quarter }, 'page')
-  }
-
   const handleMonthChange = (month: string) => {
     addParams({ month }, 'page')
   }
@@ -87,8 +75,7 @@ export function Header() {
   }
 
   const showYearFilter = ['/inspections', '/preventions'].includes(pathname) || isRiskAnalysisMonthly
-  const showQuarterFilter = showYearFilter && pathname !== '/preventions' && !isRiskAnalysisMonthly
-  const showMonthFilter = isRiskAnalysisMonthly
+  const showMonthFilter = isRiskAnalysisMonthly || pathname === '/inspections'
   const showDailyCalendar = isRiskAnalysisDaily
 
   const title = useMemo(() => {
@@ -162,21 +149,6 @@ export function Header() {
                 ))}
               </SelectContent>
             </Select>
-
-            {showQuarterFilter && (
-              <Select value={selectedQuarter} onValueChange={handleQuarterChange}>
-                <SelectTrigger className="w-[130px]">
-                  <SelectValue placeholder="Chorak" />
-                </SelectTrigger>
-                <SelectContent>
-                  {QUARTERS.map((q) => (
-                    <SelectItem key={q.id} value={q.id}>
-                      {q.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
 
             {showMonthFilter && (
               <Select value={selectedMonth} onValueChange={handleMonthChange}>

@@ -12,8 +12,8 @@ import { Badge } from '@/shared/components/ui/badge'
 import clsx from 'clsx'
 import { cn } from '@/shared/lib/utils'
 import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
-import { getQuarter } from 'date-fns'
 import { useTranslation } from 'react-i18next'
+import { RiskAnalysisTab } from '@/widgets/risk-analysis/types'
 
 export enum InspectionStatus {
   ALL = 'ALL',
@@ -66,12 +66,13 @@ interface RegionCountDto {
   regionId: number
 }
 
-const Cards = ({ onTabChange, regionId, year, quarter, type }: any) => {
+const Cards = ({ onTabChange, regionId, year, month, type, belongType }: any) => {
   const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
   const { data: regionCounts = [] } = useData<RegionCountDto[]>('/inspections/count/by-region', true, {
     year,
-    quarter,
+    month,
     type,
+    belongType,
   })
 
   const activeRegion = regionId?.toString() || 'ALL'
@@ -158,57 +159,72 @@ export const InspectionWidget: React.FC = () => {
   const isChairman = user?.role === UserRoles.CHAIRMAN
   const isChairmanOrHead = user?.role === UserRoles.HEAD
 
-  const activeMainTab = paramsObject.tab || InspectionTab.RISK_BASED
+  const inspectionType = paramsObject.type || 'RISK_BASED'
+  const belongType = paramsObject.belongType || RiskAnalysisTab.XICHO
+
   const activeTab = paramsObject.status
   const activeSubTab = paramsObject.subStatus
   const regionId = paramsObject.regionId
 
   const activeRegion = regionId?.toString() || 'ALL'
 
-  const queryParams = {
-    year: paramsObject?.year || new Date().getFullYear(),
-    quarter: paramsObject?.quarter || getQuarter(new Date()).toString(),
-    regionId: activeRegion === 'ALL' ? '' : activeRegion,
-    legalName: paramsObject?.legalName || '',
-    legalTin: paramsObject?.legalTin || '',
-    legalRegionId: paramsObject?.legalRegionId || '',
-    legalDistrictId: paramsObject?.legalDistrictId || '',
-    legalAddress: paramsObject?.legalAddress || '',
-  }
+  const queryParams = useMemo(
+    () => ({
+      year: paramsObject?.year,
+      month: paramsObject?.month,
+      regionId: activeRegion === 'ALL' ? '' : activeRegion,
+      legalName: paramsObject?.legalName || '',
+      legalTin: paramsObject?.legalTin || '',
+      legalRegionId: paramsObject?.legalRegionId || '',
+      legalDistrictId: paramsObject?.legalDistrictId || '',
+      legalAddress: paramsObject?.legalAddress || '',
+    }),
+    [
+      paramsObject?.year,
+      paramsObject?.month,
+      activeRegion,
+      paramsObject?.legalName,
+      paramsObject?.legalTin,
+      paramsObject?.legalRegionId,
+      paramsObject?.legalDistrictId,
+      paramsObject?.legalAddress,
+    ]
+  )
 
   const { data: countObject = defaultCountDto } = useData<CountDto>('/inspections/count', true, {
     ...queryParams,
-    type: activeMainTab === InspectionTab.RISK_BASED ? 'RISK_BASED' : 'OTHER',
+    belongType,
+    type: inspectionType,
   })
 
-  const { data: riskCountObj = defaultCountDto } = useData<CountDto>('/inspections/count', true, {
-    ...queryParams,
-    type: 'RISK_BASED',
-  })
+  const { totalElements: newUnnotifiedCount } = usePaginatedData<any>(
+    '/inspections',
+    {
+      ...queryParams,
+      type: inspectionType,
+      belongType,
+      status: 'NEW',
+      page: 1,
+      size: 1,
+    },
+    inspectionType === 'RISK_BASED' && !isInspector && !isLegal
+  )
 
-  const { data: otherCountObj = defaultCountDto } = useData<CountDto>('/inspections/count', true, {
-    ...queryParams,
-    type: 'OTHER',
-  })
-
-  const { totalElements: newUnnotifiedCount } = usePaginatedData<any>('/inspections', {
-    ...queryParams,
-    type: activeMainTab === InspectionTab.RISK_BASED ? 'RISK_BASED' : 'OTHER',
-    status: 'NEW',
-    page: 1,
-    size: 1,
-  })
-
-  const { totalElements: newNotifiedCount } = usePaginatedData<any>('/inspections', {
-    ...queryParams,
-    type: activeMainTab === InspectionTab.RISK_BASED ? 'RISK_BASED' : 'OTHER',
-    status: 'NOTIFIED',
-    page: 1,
-    size: 1,
-  })
+  const { totalElements: newNotifiedCount } = usePaginatedData<any>(
+    '/inspections',
+    {
+      ...queryParams,
+      type: inspectionType,
+      belongType,
+      status: 'NOTIFIED',
+      page: 1,
+      size: 1,
+    },
+    inspectionType === 'RISK_BASED' && !isInspector && !isLegal
+  )
 
   const handleMainTabChange = (value: string) => {
-    addParams({ tab: value, status: undefined, subStatus: undefined, noticeType: undefined, page: 1 })
+    addParams({ belongType: value, status: undefined, subStatus: undefined, noticeType: undefined, page: 1 })
   }
 
   const handleTabChange = (value: string) => {
@@ -220,7 +236,7 @@ export const InspectionWidget: React.FC = () => {
   }
 
   const renderContent = () => {
-    return activeMainTab === InspectionTab.RISK_BASED ? <InspectionList /> : <OtherInspectionList />
+    return inspectionType === 'RISK_BASED' ? <InspectionList /> : <OtherInspectionList />
   }
 
   const renderOtherTabs = () => {
@@ -275,37 +291,33 @@ export const InspectionWidget: React.FC = () => {
     <div className="flex h-full flex-col gap-2 overflow-hidden">
       {!isInspector && !isRegional && (
         <Cards
-          year={paramsObject?.year ? paramsObject?.year : new Date().getFullYear()}
-          quarter={paramsObject?.quarter ? paramsObject?.quarter : getQuarter(new Date()).toString()}
-          type={activeMainTab === InspectionTab.RISK_BASED ? 'RISK_BASED' : 'OTHER'}
+          year={paramsObject?.year}
+          month={paramsObject?.month}
+          type={inspectionType}
+          belongType={belongType}
           regionId={regionId}
           onTabChange={(val: string) => addParams({ regionId: val }, 'page', 'legalDistrictId')}
         />
       )}
 
       <div className="flex items-center justify-between">
-        <Tabs value={activeMainTab} onValueChange={handleMainTabChange}>
-          <TabsList>
-            <TabsTrigger value={InspectionTab.RISK_BASED}>
-              {t('inspections.tabs.risk_based')}
-              <Badge variant="destructive" className="ml-2">
-                {riskCountObj.allCount || 0}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value={InspectionTab.OTHER}>
-              {t('inspections.tabs.other')}
-              <Badge variant="destructive" className="ml-2">
-                {otherCountObj.allCount || 0}
-              </Badge>
-            </TabsTrigger>
-          </TabsList>
+        <Tabs value={belongType} onValueChange={handleMainTabChange}>
+          <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
+            <TabsList>
+              <TabsTrigger value={RiskAnalysisTab.XICHO}>{t('risk_analysis_tabs.XICHO')}</TabsTrigger>
+              <TabsTrigger value={RiskAnalysisTab.INM}>{t('risk_analysis_tabs.INM')}</TabsTrigger>
+              <TabsTrigger value={RiskAnalysisTab.XRAY}>{t('risk_analysis_tabs.XRAY')}</TabsTrigger>
+              <TabsTrigger value={RiskAnalysisTab.ATTRACTION}>{t('risk_analysis_tabs.ATTRACTION')}</TabsTrigger>
+              <TabsTrigger value={RiskAnalysisTab.LPG_POWERED}>{t('risk_analysis_tabs.LPG_POWERED')}</TabsTrigger>
+            </TabsList>
+          </div>
         </Tabs>
 
-        {activeMainTab === InspectionTab.OTHER && (isRegional || isChairman) && <CreateOtherInspectionModal />}
+        {inspectionType === 'OTHER' && (isRegional || isChairman) && <CreateOtherInspectionModal />}
       </div>
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        {activeMainTab === InspectionTab.OTHER ? (
+        {inspectionType === 'OTHER' ? (
           renderOtherTabs()
         ) : isInspector || isLegal ? (
           <Tabs

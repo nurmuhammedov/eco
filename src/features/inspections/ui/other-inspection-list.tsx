@@ -7,7 +7,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table.tsx'
 import { useTranslation } from 'react-i18next'
-import { format, getQuarter } from 'date-fns'
+import { format } from 'date-fns'
 import { Badge } from '@/shared/components/ui/badge'
 import { OtherInspectionTabStatus } from '@/widgets/inspection/ui/inspection-widget'
 
@@ -15,7 +15,7 @@ export const OtherInspectionList: React.FC = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { paramsObject } = useCustomSearchParams()
-  const { year = new Date().getFullYear(), quarter = getQuarter(new Date()).toString(), status } = paramsObject
+  const { year, month, status } = paramsObject
 
   const {
     data: inspections,
@@ -26,8 +26,9 @@ export const OtherInspectionList: React.FC = () => {
     tab: undefined,
     regionId: paramsObject.regionId === 'ALL' ? '' : paramsObject.regionId,
     type: 'OTHER',
+    belongType: paramsObject.belongType || 'HF',
     year,
-    quarter,
+    month,
     status: status === OtherInspectionTabStatus.ALL ? undefined : status,
   })
 

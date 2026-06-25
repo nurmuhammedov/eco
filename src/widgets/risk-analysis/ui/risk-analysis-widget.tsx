@@ -13,7 +13,11 @@ import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-stati
 import { cn } from '@/shared/lib/utils'
 import { TabsLayout } from '@/shared/layouts'
 import { subMonths, subDays, getMonth, format } from 'date-fns'
-
+import { Button } from '@/shared/components/ui/button'
+import { Loader2 } from 'lucide-react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { apiClient } from '@/shared/api/api-client'
+import { toast } from 'sonner'
 interface RiskCountResponse {
   lowCount: number
   mediumCount: number
@@ -57,6 +61,32 @@ interface RiskAnalysisWidgetProps {
 const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const { t } = useTranslation('common')
   const { user } = useAuth()
+  const queryClient = useQueryClient()
+
+  const isChairman = user?.role === UserRoles.CHAIRMAN
+  const isDaily = periodType === 'DAILY'
+
+  const { data: switchData } = useData<boolean>('/risk-analysis-switch', isChairman && isDaily)
+
+  const { mutate: runDaily, isPending: isRunningDaily } = useMutation({
+    mutationFn: async () => {
+      const response = await apiClient.post<any>('/risk-analyses/run-daily')
+      return response
+    },
+    onSuccess: (res: any) => {
+      const message = res?.message || res?.data?.message || 'Kunlik tahlil muvaffaqiyatli ishga tushirildi!'
+      toast.success(message, { richColors: true })
+      queryClient.invalidateQueries({ queryKey: ['/risk-analysis-switch'] })
+    },
+    onError: (error: any) => {
+      const message = error?.response?.data?.message || error?.message || 'Xatolik yuz berdi'
+      toast.error(message, { richColors: true })
+    },
+  })
+
+  const handleRunDaily = () => {
+    runDaily()
+  }
 
   const previousMonthDate = subMonths(new Date(), 1)
   const defaultYear = previousMonthDate.getFullYear().toString()
@@ -245,6 +275,12 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
               </Badge>
             </TabsTrigger>
           </TabsList>
+          {isChairman && isDaily && (
+            <Button variant="default" onClick={handleRunDaily} disabled={switchData === false || isRunningDaily}>
+              {isRunningDaily ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {t('Kunlik tahlilni ishga tushirish')}
+            </Button>
+          )}
         </div>
       </Tabs>
 

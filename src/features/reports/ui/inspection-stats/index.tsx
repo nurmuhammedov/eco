@@ -6,16 +6,25 @@ import { cn } from '@/shared/lib/utils'
 import { useRegionSelectQuery } from '@/entities/admin/districts'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 
-const QUARTERS = [
-  { value: '1', label: '1-chorak' },
-  { value: '2', label: '2-chorak' },
-  { value: '3', label: '3-chorak' },
-  { value: '4', label: '4-chorak' },
+const MONTHS = [
+  { value: 'JANUARY', label: 'Yanvar' },
+  { value: 'FEBRUARY', label: 'Fevral' },
+  { value: 'MARCH', label: 'Mart' },
+  { value: 'APRIL', label: 'Aprel' },
+  { value: 'MAY', label: 'May' },
+  { value: 'JUNE', label: 'Iyun' },
+  { value: 'JULY', label: 'Iyul' },
+  { value: 'AUGUST', label: 'Avgust' },
+  { value: 'SEPTEMBER', label: 'Sentabr' },
+  { value: 'OCTOBER', label: 'Oktabr' },
+  { value: 'NOVEMBER', label: 'Noyabr' },
+  { value: 'DECEMBER', label: 'Dekabr' },
 ]
 
 const currentYear = new Date().getFullYear()
-const currentMonth = new Date().getMonth()
-const currentQuarter = Math.floor(currentMonth / 3) + 1
+const currentMonthNumber = new Date().getMonth() + 1
+const defaultMonthValue = currentMonthNumber === 1 ? 'DECEMBER' : MONTHS[currentMonthNumber - 2].value
+const defaultYearValue = currentMonthNumber === 1 ? (currentYear - 1).toString() : currentYear.toString()
 
 const generateYears = () => {
   const years = []
@@ -26,15 +35,15 @@ const generateYears = () => {
 }
 
 const InspectionStatsReport: React.FC = () => {
-  const [year, setYear] = useState<string>(currentYear.toString())
-  const [quarter, setQuarter] = useState<string>(currentQuarter.toString())
+  const [year, setYear] = useState<string>(defaultYearValue)
+  const [month, setMonth] = useState<string>(defaultMonthValue)
   const [regionName, setRegionName] = useState<string>('ALL')
 
   const { data: regionsList } = useRegionSelectQuery()
 
   const { data: rawData, isLoading } = useData<any[]>('/reports/inspection', true, {
     year: Number(year),
-    quarter: Number(quarter),
+    month,
   })
 
   const tableData = useMemo(() => {
@@ -154,14 +163,14 @@ const InspectionStatsReport: React.FC = () => {
             </SelectContent>
           </Select>
 
-          <Select value={quarter} onValueChange={(val) => setQuarter(val)}>
-            <SelectTrigger className="h-10 w-[160px] bg-white text-sm">
-              <SelectValue placeholder="Chorakni tanlang" />
+          <Select value={month} onValueChange={setMonth}>
+            <SelectTrigger className="w-full bg-white md:w-[200px]">
+              <SelectValue placeholder="Oyni tanlang" />
             </SelectTrigger>
             <SelectContent>
-              {QUARTERS.map((q) => (
-                <SelectItem key={q.value} value={q.value}>
-                  {q.label}
+              {MONTHS.map((m) => (
+                <SelectItem key={m.value} value={m.value}>
+                  {m.label}
                 </SelectItem>
               ))}
             </SelectContent>
