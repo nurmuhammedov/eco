@@ -66,6 +66,33 @@ interface RegionCountDto {
   regionId: number
 }
 
+const BelongTypeTabsTrigger = ({
+  value,
+  label,
+  queryParams,
+  type,
+}: {
+  value: string
+  label: string
+  queryParams: any
+  type: string
+}) => {
+  const { data: countObject = defaultCountDto } = useData<CountDto>('/inspections/count', true, {
+    ...queryParams,
+    belongType: value,
+    type,
+  })
+
+  return (
+    <TabsTrigger value={value}>
+      {label}
+      <Badge variant="destructive" className="ml-2">
+        {countObject.allCount || 0}
+      </Badge>
+    </TabsTrigger>
+  )
+}
+
 const Cards = ({ onTabChange, regionId, year, month, type, belongType }: any) => {
   const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
   const { data: regionCounts = [] } = useData<RegionCountDto[]>('/inspections/count/by-region', true, {
@@ -299,11 +326,30 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
         <Tabs value={belongType} onValueChange={handleMainTabChange}>
           <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
             <TabsList>
-              <TabsTrigger value={RiskAnalysisTab.XICHO}>{t('risk_analysis_tabs.XICHO')}</TabsTrigger>
-              <TabsTrigger value={RiskAnalysisTab.INM}>{t('risk_analysis_tabs.INM')}</TabsTrigger>
-              <TabsTrigger value={RiskAnalysisTab.XRAY}>{t('risk_analysis_tabs.XRAY')}</TabsTrigger>
-              <TabsTrigger value={RiskAnalysisTab.ATTRACTION}>{t('risk_analysis_tabs.ATTRACTION')}</TabsTrigger>
-              <TabsTrigger value={RiskAnalysisTab.LPG_POWERED}>{t('risk_analysis_tabs.LPG_POWERED')}</TabsTrigger>
+              <BelongTypeTabsTrigger
+                value={RiskAnalysisTab.XICHO}
+                label={t('risk_analysis_tabs.XICHO')}
+                queryParams={queryParams}
+                type={inspectionType}
+              />
+              <BelongTypeTabsTrigger
+                value={RiskAnalysisTab.INM}
+                label={t('risk_analysis_tabs.INM')}
+                queryParams={queryParams}
+                type={inspectionType}
+              />
+              <BelongTypeTabsTrigger
+                value={RiskAnalysisTab.XRAY}
+                label={t('risk_analysis_tabs.XRAY')}
+                queryParams={queryParams}
+                type={inspectionType}
+              />
+              <BelongTypeTabsTrigger
+                value={RiskAnalysisTab.ATTRACTION}
+                label={t('risk_analysis_tabs.ATTRACTION')}
+                queryParams={queryParams}
+                type={inspectionType}
+              />
             </TabsList>
           </div>
         </Tabs>

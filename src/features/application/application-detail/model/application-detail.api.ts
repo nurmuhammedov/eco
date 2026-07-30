@@ -31,7 +31,7 @@ export const applicationDetailApi = {
     return data.data
   },
   getInspectorListSelect: async (isSupervisor?: boolean, officeId?: string | number) => {
-    let url = isSupervisor ? `/users/regulator-users/inspectors/select` : `/users/office-users/inspectors/select`
+    let url = isSupervisor ? `/users/regulator-users/controllers/select` : `/users/office-users/inspectors/select`
     if (officeId) {
       url += `?officeId=${officeId}`
     }

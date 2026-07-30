@@ -17,7 +17,8 @@ import {
 export function NavMain({ item }: { item: NavigationItem }) {
   const { pathname } = useLocation()
   const { t } = useTranslation(['common'])
-  const isActive = pathname.startsWith(item.url)
+  const baseItemUrl = item.url.split('?')[0]
+  const isActive = pathname.startsWith(baseItemUrl)
 
   return (
     <SidebarMenu>
@@ -43,15 +44,18 @@ export function NavMain({ item }: { item: NavigationItem }) {
           {item.items?.length ? (
             <CollapsibleContent>
               <SidebarMenuSub>
-                {item.items.map((subItem) => (
-                  <SidebarMenuSubItem key={subItem.title}>
-                    <SidebarMenuSubButton asChild isActive={pathname === subItem.url}>
-                      <Link to={subItem.url}>
-                        <span>{t(subItem.title)}</span>
-                      </Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                ))}
+                {item.items.map((subItem) => {
+                  const baseSubUrl = subItem.url.split('?')[0]
+                  return (
+                    <SidebarMenuSubItem key={subItem.title}>
+                      <SidebarMenuSubButton asChild isActive={pathname === baseSubUrl}>
+                        <Link to={subItem.url}>
+                          <span>{t(subItem.title)}</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  )
+                })}
               </SidebarMenuSub>
             </CollapsibleContent>
           ) : null}

@@ -21,6 +21,9 @@ import { InputFile } from '@/shared/components/common/file-upload'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StatusBadge } from './cadastre-list'
+import { CadastreEditModal } from './components/cadastre-edit-modal'
+import { Edit2 } from 'lucide-react'
+import { format } from 'date-fns'
 
 const fvvSchema = z.object({
   conclusion: z.string().min(1, 'Majburiy maydon!'),
@@ -59,6 +62,8 @@ export default function CadastreDetail() {
 
   const [committeeModalOpen, setCommitteeModalOpen] = useState(false)
   const [committeeSignAction, setCommitteeSignAction] = useState<'APPROVED' | 'REJECTED'>('APPROVED')
+
+  const [editModalOpen, setEditModalOpen] = useState(false)
 
   const actionForm = useForm<z.infer<typeof actionSchema>>({
     resolver: zodResolver(actionSchema),
@@ -343,7 +348,7 @@ export default function CadastreDetail() {
         </div>
       </div>
 
-      <Accordion type="multiple" defaultValue={['txyz', 'fvv', 'ses', 'committee']}>
+      <Accordion type="multiple" defaultValue={['txyz', 'cadastre-data', 'fvv', 'ses', 'committee']}>
         <DetailCardAccordion.Item value="txyz" title="TXYZ Kadastr ma’lumotlari">
           <DetailRow title="Holati" value={<StatusBadge status={item.status} />} />
           <DetailRow title="Ariza raqami" value={item.requestNumber || '-'} />
@@ -383,6 +388,60 @@ export default function CadastreDetail() {
               )
             }
           />
+        </DetailCardAccordion.Item>
+
+        <DetailCardAccordion.Item value="cadastre-data" title="TXYZ Kadastr atributiv (tavsiflovchi) ma’lumotlari">
+          <div className="mb-4 flex justify-end">
+            {item.status === 'NEW' && String(user?.tinOrPin) === String(item.customerTin) && (
+              <Button variant="outline" size="sm" onClick={() => setEditModalOpen(true)}>
+                <Edit2 className="mr-2 h-4 w-4" /> Tahrirlash
+              </Button>
+            )}
+          </div>
+          {item ? (
+            <>
+              <DetailRow title="Obyekt nomi" value={item.name || '-'} />
+              <DetailRow title="Idoraviy mansubligi" value={item.organizationalBelonging || '-'} />
+              <DetailRow title="Manzil" value={item.address || '-'} />
+              <DetailRow title="Koordinatasi (X)" value={item.latitude || '-'} />
+              <DetailRow title="Koordinatasi (Y)" value={item.longitude || '-'} />
+              <DetailRow title="Yer uchastkasi kadastr raqami" value={item.landCadastreNumber || '-'} />
+              <DetailRow
+                title="Kadastr ro'yxatidan o'tkazilgan sana"
+                value={
+                  item.cadastreRegistrationDate ? format(new Date(item.cadastreRegistrationDate), 'dd.MM.yyyy') : '-'
+                }
+              />
+              <DetailRow
+                title="Kadastr ro'yxatidan o'tkazilgan raqami"
+                value={item.cadastreRegistrationNumber || '-'}
+              />
+              <DetailRow title="Umumiy maydoni (gektar)" value={item.landArea || '-'} />
+              <DetailRow title="Vazifalari" value={item.purpose || '-'} />
+              <DetailRow title="Moddaning nomi" value={item.substance || '-'} />
+              <DetailRow title="Hozirgi kundagi holati" value={item.status || '-'} />
+              <DetailRow
+                title="Ekspluatatsiyaga tushirilgan sanasi"
+                value={item.exploitationDate ? format(new Date(item.exploitationDate), 'dd.MM.yyyy') : '-'}
+              />
+              <DetailRow title="Sanitariya himoyasi masofasi" value={item.protectionDistance || '-'} />
+              <DetailRow title="Xodimlarning umumiy soni" value={item.employeeCount || '-'} />
+              <DetailRow title="Ishlash vaqti (soat)" value={item.workingHour || '-'} />
+              <DetailRow title="Aholi yashash punktigacha masofa (km)" value={item.distanceToResidence || '-'} />
+              <DetailRow title="Eng yaqin obyektlar (metr)" value={item.distanceToNearestObject || '-'} />
+              <DetailRow
+                title="Yong'in xavfsizligi bo'limigacha masofa (km)"
+                value={item.distanceToFireDepartment || '-'}
+              />
+              <DetailRow title="Yong'in o'chirish texnikasi" value={item.firefightingEquipment || '-'} />
+              <DetailRow title="Zararlanish maydoni (metr kv)" value={item.damageArea || '-'} />
+              <DetailRow title="Texnogen xavf turi" value={item.dominantHazardType || '-'} />
+              <DetailRow title="Umumiy bahosi (so'm)" value={item.estimatedValue || '-'} />
+              <DetailRow title="Salbiy ta'sir ko'rsatuvchi omillar" value={item.healthRiskFactor || '-'} />
+            </>
+          ) : (
+            <div className="text-muted-foreground p-4 text-center">Ma'lumotlar mavjud emas</div>
+          )}
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="fvv" title="Favqulodda vaziyatlar vazirligi ma’lumotlari">
@@ -681,6 +740,15 @@ export default function CadastreDetail() {
           </Form>
         </DialogContent>
       </Dialog>
+
+      {editModalOpen && (
+        <CadastreEditModal
+          isOpen={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          cadastreId={id!}
+          defaultValues={item}
+        />
+      )}
     </div>
   )
 }

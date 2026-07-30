@@ -10,7 +10,7 @@ import {
 } from '@/entities/expertise/api/expertise.api'
 import { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
 import { addExpertiseSchema } from '@/entities/expertise/model/expertise.schema'
-import { ExpertiseTypeOptions } from '@/entities/expertise/model/constants'
+import { ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/model/constants'
 import { Button } from '@/shared/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
@@ -22,6 +22,8 @@ import { cleanParams } from '@/shared/lib'
 import { useNavigate } from 'react-router-dom'
 import { Textarea } from '@/shared/components/ui/textarea'
 import DetailRow from '@/shared/components/common/detail-row'
+import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 
 export const AddConclusion = () => {
   const [stir, setStir] = useState('')
@@ -45,6 +47,7 @@ export const AddConclusion = () => {
 
   const watchedRegionId = form.watch('regionId')
   const watchedHfId = form.watch('hfId')
+  const watchedType = form.watch('type')
 
   const {
     data: legalInfo,
@@ -379,6 +382,31 @@ export const AddConclusion = () => {
                       </FormItem>
                     )}
                   />
+
+                  {watchedType === ExpertiseTypeEnum.XD && (
+                    <FormField
+                      control={form.control}
+                      name="declarationFilePath"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col !gap-1">
+                          <FormLabel required>Deklaratsiya fayli</FormLabel>
+                          <FormControl>
+                            <InputFile
+                              name={field.name}
+                              form={form}
+                              uploadEndpoint="/attachments/declarations"
+                              accept={[FileTypes.PDF]}
+                              buttonText="Faylni biriktirish"
+                              maxSize={20}
+                              showPreview
+                              showDownload
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
 
                   {/*<FormField*/}
                   {/*  control={form.control}*/}

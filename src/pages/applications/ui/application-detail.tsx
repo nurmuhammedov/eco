@@ -14,7 +14,7 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
   const { data } = useApplicationDetail()
   const { user } = useAuth()
 
-  const isXrayAppeal = data?.appealType === ApplicationTypeEnum.REGISTER_XRAY
+  const isXrayAppeal = data?.appealType === ApplicationTypeEnum.REGISTER_IRS
 
   const isInmAppeal = data?.appealType?.includes('IRS') || data?.appealType?.includes('XRAY')
   const isControllerOrSupervisor = user?.isController || user?.isSupervisor
@@ -40,11 +40,13 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
               {user?.role === UserRoles.INSPECTOR && data?.status === ApplicationStatus.IN_PROCESS && (
                 <ReferenceCreateModal />
               )}
-              {user?.role === UserRoles.MANAGER && data?.status === ApplicationStatus.IN_PROCESS && isXrayAppeal && (
-                <>
-                  <ReferenceCreateModal />
-                </>
-              )}
+              {user?.role === UserRoles.MANAGER &&
+                data?.status === ApplicationStatus.IN_PROCESS &&
+                (isXrayAppeal || isInmAppeal) && (
+                  <>
+                    <ReferenceCreateModal />
+                  </>
+                )}
             </>
           )}
         </div>

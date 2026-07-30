@@ -1,5 +1,5 @@
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
-import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
+
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
 import { useIrsDetail } from '@/features/register/irs/hooks/use-irs-detail.tsx'
 import { GoBack } from '@/shared/components/common'
@@ -28,9 +28,7 @@ const IrsDetail = () => {
       <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
       </div>
-      <DetailCardAccordion
-        defaultValue={['registry_info', 'applicant_info', 'object_info', 'object_location', 'object_files']}
-      >
+      <DetailCardAccordion defaultValue={['registry_info', 'applicant_info', 'object_info', 'object_location']}>
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
           {user?.role !== UserRoles.PROCURATOR && (
             <DetailRow
@@ -126,9 +124,6 @@ const IrsDetail = () => {
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
           <AppealMainInfo data={data} type={'IRS'} address={data?.address} />
-        </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">
-          <FilesSection files={data?.files || []} />
         </DetailCardAccordion.Item>
         {!!currentObjLocation?.length && (
           <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">

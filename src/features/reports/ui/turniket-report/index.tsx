@@ -8,7 +8,6 @@ import axios from 'axios'
 import { useSearchParams, Link } from 'react-router-dom'
 import { Eye } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
-import { useData } from '@/shared/hooks'
 
 interface TurniketLog {
   name: string
@@ -118,8 +117,6 @@ const TurniketReport: React.FC = () => {
 
     fetchData()
   }, [year, month, daysInMonth])
-
-  useData('/reports/top-100-organizations')
 
   const columns = useMemo(() => {
     const cols: any[] = [

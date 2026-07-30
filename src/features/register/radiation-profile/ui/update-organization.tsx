@@ -26,8 +26,6 @@ const fileDateSchema = z
 
 const updateSchema = z
   .object({
-    file1Path: z.string().optional().nullable(),
-    file1ExpiryDate: fileDateSchema,
     file2Path: z.string().optional().nullable(),
     file2ExpiryDate: fileDateSchema,
     file5Path: z.string().optional().nullable(),
@@ -38,13 +36,16 @@ const updateSchema = z
     file9ExpiryDate: fileDateSchema,
     file15Path: z.string().optional().nullable(),
     file15ExpiryDate: fileDateSchema,
+    file17Path: z.string().optional().nullable(),
+    file18Path: z.string().optional().nullable(),
+    file18ExpiryDate: fileDateSchema,
   })
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file1Path', 'file1ExpiryDate'))
   .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file2Path', 'file2ExpiryDate'))
   .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
   .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file7Path', 'file7ExpiryDate'))
   .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file9Path', 'file9ExpiryDate'))
   .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file15Path', 'file15ExpiryDate'))
+  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file18Path', 'file18ExpiryDate'))
 
 export const UpdateOrganization: FC = () => {
   const { id, type } = useParams<{ id: string; type: string }>()
@@ -56,8 +57,6 @@ export const UpdateOrganization: FC = () => {
   const form = useForm<z.infer<typeof updateSchema>>({
     resolver: zodResolver(updateSchema),
     defaultValues: {
-      file1Path: '',
-      file1ExpiryDate: undefined,
       file2Path: '',
       file2ExpiryDate: undefined,
       file5Path: '',
@@ -68,6 +67,9 @@ export const UpdateOrganization: FC = () => {
       file9ExpiryDate: undefined,
       file15Path: '',
       file15ExpiryDate: undefined,
+      file17Path: '',
+      file18Path: '',
+      file18ExpiryDate: undefined,
     },
   })
 
@@ -76,8 +78,6 @@ export const UpdateOrganization: FC = () => {
   useEffect(() => {
     if (data?.files) {
       form.reset({
-        file1Path: data.files.file1Path?.path || '',
-        file1ExpiryDate: data.files.file1Path?.expiryDate || undefined,
         file2Path: data.files.file2Path?.path || '',
         file2ExpiryDate: data.files.file2Path?.expiryDate || undefined,
         file5Path: data.files.file5Path?.path || '',
@@ -88,6 +88,9 @@ export const UpdateOrganization: FC = () => {
         file9ExpiryDate: data.files.file9Path?.expiryDate || undefined,
         file15Path: data.files.file15Path?.path || '',
         file15ExpiryDate: data.files.file15Path?.expiryDate || undefined,
+        file17Path: data.files.file17Path?.path || '',
+        file18Path: data.files.file18Path?.path || '',
+        file18ExpiryDate: data.files.file18Path?.expiryDate || undefined,
       })
     }
   }, [data, form])
@@ -102,8 +105,9 @@ export const UpdateOrganization: FC = () => {
 
     if (isIrs) {
       payload = {
-        file1Path: formatValue(values.file1Path),
-        file1ExpiryDate: formatValue(values.file1ExpiryDate),
+        file17Path: formatValue(values.file17Path),
+        file18Path: formatValue(values.file18Path),
+        file18ExpiryDate: formatValue(values.file18ExpiryDate),
         file2Path: formatValue(values.file2Path),
         file2ExpiryDate: formatValue(values.file2ExpiryDate),
         file5Path: formatValue(values.file5Path),
@@ -162,19 +166,36 @@ export const UpdateOrganization: FC = () => {
                 <>
                   <div className="border-b pb-4">
                     <FormField
-                      name="file1Path"
+                      name="file17Path"
                       control={form.control}
                       render={({ field }) => (
                         <FormItem className="mb-2">
                           <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                            <FormLabel>Mehnat vazirligi tomonidan berilgan ekspertiza xulosasi</FormLabel>
+                            <FormLabel>Mutaxassislar mavjudligi</FormLabel>
+                            <FormControl>
+                              <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
+                            </FormControl>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="border-b pb-4">
+                    <FormField
+                      name="file18Path"
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem className="mb-2">
+                          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                            <FormLabel>INMlar bo‘yicha davriy hisobot</FormLabel>
                             <FormControl>
                               <InputFile
                                 form={form}
                                 name={field.name}
                                 accept={[FileTypes.PDF]}
                                 onRemove={() =>
-                                  form.setValue('file1ExpiryDate', undefined as any, { shouldValidate: true })
+                                  form.setValue('file18ExpiryDate', undefined as any, { shouldValidate: true })
                                 }
                               />
                             </FormControl>
@@ -184,20 +205,20 @@ export const UpdateOrganization: FC = () => {
                     />
                     <FormField
                       control={form.control}
-                      name="file1ExpiryDate"
+                      name="file18ExpiryDate"
                       render={({ field }) => {
                         const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                         return (
                           <FormItem className="w-full">
                             <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                              <FormLabel required={!!form.watch('file1Path')}>Amal qilish muddati</FormLabel>
+                              <FormLabel required={!!form.watch('file18Path')}>Amal qilish muddati</FormLabel>
                               <DatePicker
                                 disableStrategy="before"
                                 className={'w-full sm:max-w-[65%]'}
                                 value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                                 onChange={field.onChange}
                                 placeholder="Amal qilish muddati"
-                                disabled={!form.watch('file1Path')}
+                                disabled={!form.watch('file18Path')}
                               />
                             </div>
                             <FormMessage />
@@ -312,7 +333,7 @@ export const UpdateOrganization: FC = () => {
                       render={({ field }) => (
                         <FormItem className="mb-2">
                           <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                            <FormLabel>Dozimetr protokoli (bayonnomasi)</FormLabel>
+                            <FormLabel>Individual dozimetrlar va ularning karta ma‘lumotlari</FormLabel>
                             <FormControl>
                               <InputFile
                                 form={form}

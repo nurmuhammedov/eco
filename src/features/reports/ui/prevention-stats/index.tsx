@@ -56,8 +56,14 @@ const PreventionStatsReport: React.FC = () => {
 
   const tableData = useMemo(() => {
     if (!rawData) return []
-    const regions = rawData.filter((r) => !r.regionName?.toLowerCase().includes('respublika'))
-    const backendSummary = rawData.find((r) => r.regionName?.toLowerCase().includes('respublika'))
+    const isSummaryItem = (r: any) =>
+      r.regionId === null ||
+      r.regionName?.toLowerCase() === 'respublika bo‘yicha' ||
+      r.regionName?.toLowerCase() === "o'zbekiston respublikasi" ||
+      r.regionName?.toLowerCase().startsWith('respublika b')
+
+    const regions = rawData.filter((r) => !isSummaryItem(r))
+    const backendSummary = rawData.find((r) => isSummaryItem(r))
 
     const summaryRow = {
       ...(backendSummary || {}),
@@ -119,21 +125,13 @@ const PreventionStatsReport: React.FC = () => {
       minSize: 200,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
       cell: ({ row }: any) => {
-        const value = row.original.regionName
-        const isRespublika = value?.toLowerCase().includes('respublika')
-        return (
-          <span className={cn(row.original.isSummary || isRespublika ? 'font-bold' : '')}>
-            {isRespublika ? 'Respublika bo‘yicha' : value}
-          </span>
-        )
+        return <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{row.original.regionName}</span>
       },
     },
     createSectionColumns('XICHO', 'hf'),
     createSectionColumns('INM', 'irs'),
-    createSectionColumns('Lift', 'elevator'),
     createSectionColumns('Attraksion', 'attraction'),
     createSectionColumns('Rentgen', 'xray'),
-    createSectionColumns('Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma', 'lpgPowered'),
   ]
 
   return (

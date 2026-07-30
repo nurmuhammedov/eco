@@ -7,6 +7,7 @@ import { format, getMonth, getQuarter, subDays, subMonths, subQuarters } from 'd
 import { useLocation } from 'react-router-dom'
 import { useMemo } from 'react'
 import { InquiryNotification } from './inquiry-notification'
+import { DelegatedTasksNotification } from './delegated-tasks-notification'
 import DatePicker from '@/shared/components/ui/datepicker'
 
 const MONTHS = [
@@ -109,7 +110,12 @@ export function Header() {
       { path: '/elevators', title: 'Liftlar' },
       { path: '/expertise', title: 'Ekspertiza' },
       { path: '/archive', title: 'Arxiv' },
-      { path: '/cadastre-passport', title: 'TXYZ Kadastr' },
+      { path: '/cadastre-passport', title: 'TXYZ kadastr' },
+      { path: '/user-delegation', title: 'Vazifalarni yuklash' },
+      { path: '/kpi/departments', title: 'Boshqarma va bo‘limlar' },
+      { path: '/kpi/tasks', title: 'KPI vazifalar' },
+      { path: '/kpi/my-tasks', title: 'Mening KPIlarim' },
+      { path: '/kpi/report', title: 'KPI hisoboti' },
     ]
 
     const match = PATH_TITLES.find((item) => pathname.startsWith(item.path))
@@ -167,6 +173,7 @@ export function Header() {
             )}
           </div>
         )}
+        <DelegatedTasksNotification />
         <InquiryNotification />
         <UserDropdown />
       </div>

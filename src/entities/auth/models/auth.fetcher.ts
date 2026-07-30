@@ -20,6 +20,7 @@ export const useCurrentUser = () => {
     queryFn: async () => authAPI.getMe(),
     retry: 0,
     staleTime: Infinity,
+    refetchOnMount: false,
   })
 
   return { user, error, isPending, isSuccess, isAuth: user && !error }
@@ -98,6 +99,24 @@ export const useLogout = () => {
       queryClient.removeQueries({ queryKey: ['me'] })
       queryClient.removeQueries({ queryKey: ['currentUser'] })
       navigate(redirectPath)
+    },
+  })
+}
+
+export const useSwitchOtherRole = () => {
+  return useMutation({
+    mutationFn: async (delegatorId: string) => authAPI.switchOther(delegatorId),
+    onSuccess: () => {
+      window.location.href = '/'
+    },
+  })
+}
+
+export const useSwitchBackRole = () => {
+  return useMutation({
+    mutationFn: async () => authAPI.switchBack(),
+    onSuccess: () => {
+      window.location.href = '/'
     },
   })
 }

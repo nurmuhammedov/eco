@@ -16,9 +16,10 @@ import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/st
 export const ChecklistDrawer = () => {
   const { isOpen, onClose, mode, isCreate } = useChecklistDrawer()
   const modeLabel = useUIActionLabel(mode)
-  const { form, checklistData, onSubmit, isPending, isFetching, categoryTypes } = useChecklistForm()
+  const { form, checklistData, onSubmit, isPending, isFetching, categoryTypes, drawerData } = useChecklistForm()
   const categoryTypeOptions = useMemo(() => getSelectOptions(categoryTypes), [categoryTypes])
   const options = useMemo(() => getSelectOptions(inspectionCategoryOptions), [inspectionCategoryOptions])
+  const isPrefilled = !!drawerData?.category
 
   return (
     <BaseDrawer
@@ -39,60 +40,64 @@ export const ChecklistDrawer = () => {
               <FormSkeleton length={4} />
             ) : (
               <Fragment>
-                <FormField
-                  name="category"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Kategoriya</FormLabel>
-                      <FormControl>
-                        <Select
-                          {...field}
-                          onValueChange={(value) => {
-                            if (value) {
-                              field.onChange(value)
-                              form.setValue('categoryTypeId', '')
-                            }
-                          }}
-                          value={field.value}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Tanlang" />
-                          </SelectTrigger>
-                          <SelectContent>{options}</SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {!isPrefilled && (
+                  <FormField
+                    name="category"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Kategoriya</FormLabel>
+                        <FormControl>
+                          <Select
+                            {...field}
+                            onValueChange={(value) => {
+                              if (value) {
+                                field.onChange(value)
+                                form.setValue('categoryTypeId', '')
+                              }
+                            }}
+                            value={field.value}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Tanlang" />
+                            </SelectTrigger>
+                            <SelectContent>{options}</SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
 
-                <FormField
-                  name="categoryTypeId"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tekshiruv turi</FormLabel>
-                      <FormControl>
-                        <Select
-                          {...field}
-                          value={field.value}
-                          onValueChange={(value) => {
-                            if (value) {
-                              field.onChange(value)
-                            }
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Tekshiruv turini tanlang" />
-                          </SelectTrigger>
-                          <SelectContent>{categoryTypeOptions}</SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {!isPrefilled && (
+                  <FormField
+                    name="categoryTypeId"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Tekshiruv turi</FormLabel>
+                        <FormControl>
+                          <Select
+                            {...field}
+                            value={field.value}
+                            onValueChange={(value) => {
+                              if (value) {
+                                field.onChange(value)
+                              }
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Tekshiruv turini tanlang" />
+                            </SelectTrigger>
+                            <SelectContent>{categoryTypeOptions}</SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
 
                 <FormField
                   name="orderNumber"

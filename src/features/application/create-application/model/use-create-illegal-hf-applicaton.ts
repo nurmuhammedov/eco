@@ -2,6 +2,7 @@ import { applicationFormConstants } from '@/entities/create-application'
 import {
   useDistrictSelectQueries,
   useHazardousFacilityTypeDictionarySelect,
+  useHazardousFacilityCategoryDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
@@ -83,6 +84,7 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
       phoneNumber: '',
       upperOrganization: '',
       name: '',
+      categoryId: undefined,
       hfTypeId: undefined,
       spheres: [],
       regionId: '',
@@ -126,6 +128,7 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
+  const { data: hazardousFacilityCategories } = useHazardousFacilityCategoryDictionarySelect()
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
     queryKey: ['owner-data', ownerIdentity],
@@ -149,6 +152,7 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
         phoneNumber: detail.phoneNumber || '',
         upperOrganization: getValue(detail.upperOrganization || ''),
         name: getValue(detail.name || ''),
+        categoryId: detail.categoryId ? String(detail.categoryId) : undefined,
         hfTypeId: detail.hfTypeId ? String(detail.hfTypeId) : undefined,
         spheres: detail.spheres || [],
         regionId: detail.regionId ? String(detail.regionId) : '',
@@ -225,6 +229,10 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
     () => getSelectOptions(hazardousFacilityTypes || []),
     [hazardousFacilityTypes]
   )
+  const hazardousFacilityCategoryOptions = useMemo(
+    () => getSelectOptions(hazardousFacilityCategories || []),
+    [hazardousFacilityCategories]
+  )
 
   return {
     form,
@@ -233,6 +241,7 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
     regionOptions,
     districtOptions,
     hazardousFacilityTypeOptions,
+    hazardousFacilityCategoryOptions,
     ownerData: currentOwnerData,
     detail,
     isLoading: isDetailLoading || isOwnerLoading,

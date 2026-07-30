@@ -38,7 +38,7 @@ export function AppSidebar() {
 
     let navigations: any[] = []
 
-    if (user.role == UserRoles.ADMIN) {
+    if (user.role == UserRoles.ADMIN || user.role == UserRoles.HR) {
       navigations = NAVIGATIONS[user.role]
     } else if (user.role == UserRoles.LEGAL) {
       navigations = legalNavigation.filter((navItem) => user.directions.includes(navItem.id as Direction))
@@ -57,9 +57,18 @@ export function AppSidebar() {
 
       navigations = baseNavigation.reduce((acc: any[], navItem: any) => {
         if (navItem.items?.length) {
-          const filteredItems = navItem.items.filter((subItem: any) =>
-            subItem.id ? user.directions.includes(subItem.id as Direction) : false
-          )
+          const filteredItems = navItem.items.filter((subItem: any) => {
+            if (
+              (subItem.id === 'ATTESTATION_DIRECTIONS' || subItem.id === 'ATTESTATION_QUESTIONS') &&
+              user.role === UserRoles.HEAD
+            ) {
+              return true
+            }
+            if (user.role === UserRoles.CHAIRMAN && subItem.id?.startsWith('KPI_')) {
+              return true
+            }
+            return subItem.id ? user.directions.includes(subItem.id as Direction) : false
+          })
 
           if (filteredItems.length > 0) {
             acc.push({ ...navItem, items: filteredItems })
@@ -73,6 +82,10 @@ export function AppSidebar() {
 
           if (user.role === UserRoles.INDIVIDUAL && navItem.id === 'REGISTRY') {
             shouldShow = equipmentCount > 0
+          }
+
+          if (navItem.id === 'ORGANIZATIONS' && (user.role === UserRoles.HEAD || user.role === UserRoles.REGIONAL)) {
+            shouldShow = true
           }
 
           if (shouldShow) {

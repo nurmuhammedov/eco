@@ -10,6 +10,7 @@ import {
   Users,
   Signature,
   Mail,
+  Building2,
   // Server,
   Trees,
   // ArrowDownUp,
@@ -21,6 +22,12 @@ export default [
     url: '/territories',
     title: 'menu.territories',
     icon: <MapPin />,
+  },
+  {
+    id: 'ORGANIZATIONS',
+    title: 'Tashkilotlar',
+    url: '/organizations',
+    icon: <Building2 />,
   },
   {
     url: '/department',

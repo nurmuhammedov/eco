@@ -62,6 +62,7 @@ const RegisterChangePage = lazy(() => import('@/pages/register/register-change-p
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
+const OrganizationsPage = lazy(() => import('@/pages/organizations'))
 
 export const regionalRoutes = [
   // ELEVATORS
@@ -406,5 +407,9 @@ export const regionalRoutes = [
     id: 'ANNOUNCEMENT',
     path: 'news/:id',
     element: withSuspense(NewsDetailPage),
+  },
+  {
+    path: 'organizations',
+    element: withSuspense(OrganizationsPage),
   },
 ]

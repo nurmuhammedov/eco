@@ -18,6 +18,7 @@
     "add_category_type": "Yangi tekshiruv turi qoʻshish",
     "add_checklist": "Yangi cheklist qoʻshish",
     "add_hazardous_facility_type": "XICHO turi qoʻshish",
+    "add_hazardous_facility_category": "XICHO kategoriyasi qoʻshish",
     "uploadSignedAct": "Imzolangan dalolatnoma yuklash"
   },
   "select": "Tanlang",
@@ -286,6 +287,8 @@
   "hazardous_facility_type": "XICHO turi",
   "hazardous_facility_type_description": "XICHO turi tavsifi",
   "hazardous_facilities_type": "XICHO turlari",
+  "hazardous_facilities_category": "XICHO kategoriyalari",
+  "hazardous_facilities_category_description": "XICHO kategoriyasi tavsifi",
   "description": "Tavsif",
   "accreditation": "Akkreditatsiya",
   "labels": {
@@ -313,7 +316,7 @@
       "file5ExpiryDate": "Amal qilish muddati",
       "file6Path": "Tibbiy ko‘rik xulosasi",
       "file6ExpiryDate": "Amal qilish muddati",
-      "file7Path": "Dozimetr protokoli (bayonnomasi)",
+      "file7Path": "Individual dozimetrlar va ularning karta ma‘lumotlari",
       "file7ExpiryDate": "Amal qilish muddati",
       "file8Path": "Texnik attestatsiya xulosasi",
       "file8ExpiryDate": "Amal qilish muddati",
@@ -387,6 +390,7 @@
     "HF": {
       "upperOrganization": "Yuqori tashkilotning nomi (mavjud bo‘lsa)",
       "name": "XICHO ning nomi",
+      "categoryId": "XICHO toifasi",
       "hfTypeId": "XICHO ning turi",
       "spheres": "Tarmoqlar",
       "regionId": "XICHO joylashgan viloyat",
@@ -1016,11 +1020,13 @@
       "address": "Joylashgan manzil",
       "passportPath": "INM (qurilma) pasporti va sertifikati fayli",
       "additionalFilePath": "Qo‘shimcha ma‘lumotlar",
-      "file1Path": "Mehnat vazirligi tomonidan berilgan ekspertiza xulosasi",
       "file2Path": "Sanitar-epidemiologik xulosasi",
       "file5Path": "Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat",
       "file14Path": "Ruxsatnoma",
       "file15Path": "Tibbiy ko‘rikdan o‘tkazilganligi",
+      "file17Path": "Mutaxassislar mavjudligi",
+      "file18Path": "INMlar bo‘yicha davriy hisobot",
+      "file18ExpiryDate": "Amal qilish muddati",
       "registryNumber": "Roʻyxatga olish raqami"
     }
   },

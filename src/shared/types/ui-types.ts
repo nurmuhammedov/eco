@@ -15,6 +15,7 @@ export const UI_COMPONENTS = {
   COMMITTEE_STAFFS_DRAWER: 'committee-staffs',
   TERRITORIAL_STAFFS_DRAWER: 'territorial-staffs',
   HAZARDOUS_FACILITY_TYPE_DRAWER: 'hazardous-facility-type',
+  HAZARDOUS_FACILITY_CATEGORY_DRAWER: 'hazardous-facility-category',
   ATTRACTION_TYPE_DRAWER: 'attraction-type-drawer',
   CHECKLIST_TEMPLATES_DRAWER: 'checklist-templates-drawer',
   CHECKLISTS: 'checklist',
@@ -53,6 +54,9 @@ export interface UIComponentDataMap {
   [UI_COMPONENTS.HAZARDOUS_FACILITY_TYPE_DRAWER]: {
     id: number
   }
+  [UI_COMPONENTS.HAZARDOUS_FACILITY_CATEGORY_DRAWER]: {
+    id: number
+  }
   [UI_COMPONENTS.TEMPLATE_DRAWER]: {
     id: number
   }
@@ -66,7 +70,10 @@ export interface UIComponentDataMap {
     id: number
   }
   [UI_COMPONENTS.CHECKLISTS]: {
-    id: number
+    id?: number
+    category?: string
+    categoryTypeId?: number
+    orderNumber?: string
   }
   [UI_COMPONENTS.CATEGORY_TYPES]: {
     id: number

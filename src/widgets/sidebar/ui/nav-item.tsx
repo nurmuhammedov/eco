@@ -16,7 +16,8 @@ import { Link, useLocation } from 'react-router-dom'
 export function NavItem({ item }: { item: NavigationItem }) {
   const { pathname } = useLocation()
   const { t } = useTranslation(['common'])
-  const isActive = pathname.startsWith(item.url)
+  const baseItemUrl = item.url.split('?')[0]
+  const isActive = pathname.startsWith(baseItemUrl)
 
   return (
     <SidebarMenu>

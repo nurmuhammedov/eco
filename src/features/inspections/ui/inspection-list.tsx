@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import { UserRoles } from '@/entities/user'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table.tsx'
 import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
+import { format } from 'date-fns'
 
 export const InspectionList: React.FC = () => {
   const navigate = useNavigate()
@@ -97,6 +98,21 @@ export const InspectionList: React.FC = () => {
       accessorKey: 'legalAddress',
       filterKey: 'legalAddress',
       filterType: 'search',
+    },
+    {
+      header: 'Yakunlangan sana',
+      accessorKey: 'actDate',
+      filterKey: 'actDate',
+      filterType: 'date',
+      cell: ({ row }) => {
+        const val = row.original.actDate
+        if (!val) return '-'
+        try {
+          return format(new Date(val), 'dd.MM.yyyy')
+        } catch {
+          return val
+        }
+      },
     },
     {
       id: 'actions',

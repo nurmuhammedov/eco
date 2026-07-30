@@ -21,6 +21,7 @@ import { Button } from '@/shared/components/ui/button'
 import { UserRoles } from '@/entities/user'
 import { Logs } from '@/features/register/hf/ui/parts/logs'
 import { DeregisterModal } from '../../common/ui/deregister-modal'
+import { ChangeStatusModal } from '../../common/ui/change-status-modal'
 
 const EquipmentsDetail = () => {
   const { isLoading, data, refetch } = useEquipmentsDetail()
@@ -33,8 +34,11 @@ const EquipmentsDetail = () => {
   const navigate = useNavigate()
 
   const [isDeregisterModalOpen, setIsDeregisterModalOpen] = useState(false)
+  const [isChangeStatusModalOpen, setIsChangeStatusModalOpen] = useState(false)
 
-  const isActive = searchParams.get('active') === 'true'
+  const statusParam = searchParams.get('status')
+  const currentStatus = data?.status || statusParam
+  const isActive = searchParams.get('active') === 'true' || currentStatus === 'INVALID' || currentStatus === 'ACTIVE'
   const canDeregister = user?.role === UserRoles.INSPECTOR && isActive
 
   useEffect(() => {
@@ -63,9 +67,14 @@ const EquipmentsDetail = () => {
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
         <div className="flex gap-2">
           {canDeregister && (
-            <Button variant="destructiveOutline" onClick={() => setIsDeregisterModalOpen(true)}>
-              Reyestrdan chiqarish
-            </Button>
+            <>
+              <Button variant="warning" onClick={() => setIsChangeStatusModalOpen(true)}>
+                {currentStatus === 'INVALID' ? 'Soz holatga qaytarish' : 'Vaqtinchalik nosoz'}
+              </Button>
+              <Button variant="destructiveOutline" onClick={() => setIsDeregisterModalOpen(true)}>
+                Reyestrdan chiqarish
+              </Button>
+            </>
           )}
           {user?.role === UserRoles.CHAIRMAN && (
             <Button onClick={() => navigate(`/register/${equipmentUuid}/equipments/appeals`)}>Murojaatlar</Button>
@@ -78,6 +87,13 @@ const EquipmentsDetail = () => {
         onClose={() => setIsDeregisterModalOpen(false)}
         endpoint={`/equipments/${equipmentUuid}/deregister`}
         onSuccess={refetch}
+      />
+      <ChangeStatusModal
+        isOpen={isChangeStatusModalOpen}
+        onClose={() => setIsChangeStatusModalOpen(false)}
+        endpoint={`/equipments/${equipmentUuid}/change-status`}
+        onSuccess={refetch}
+        targetStatus={currentStatus === 'INVALID' ? 'VALID' : 'INVALID'}
       />
       <DetailCardAccordion
         defaultValue={[

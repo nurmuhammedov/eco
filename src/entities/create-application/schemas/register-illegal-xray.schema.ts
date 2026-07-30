@@ -26,7 +26,10 @@ export const RegisterIllegalXrayBaseSchema = z.object({
   model: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   licenseRegistryNumber: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   licenseDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  licenseExpiryDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  licenseExpiryDate: z
+    .date({ required_error: 'Majburiy maydon!' })
+    .transform((date) => format(date, 'yyyy-MM-dd'))
+    .optional(),
   serialNumber: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   manufacturedYear: z
     .string({ required_error: 'Majburiy maydon!' })

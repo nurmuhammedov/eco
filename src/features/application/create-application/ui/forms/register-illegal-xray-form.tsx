@@ -67,7 +67,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
 
   const xrayOrgFiles = [
     { key: 'file5Path', label: 'Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat' },
-    { key: 'file7Path', label: 'Dozimetr protokoli (bayonnomasi)' },
+    { key: 'file7Path', label: 'Individual dozimetrlar va ularning karta ma‘lumotlari' },
     { key: 'file9Path', label: 'Yerga ulash va ventilatsiya dalolatnomasi' },
   ]
 
@@ -266,10 +266,8 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                         field.onChange(date)
                         if (date) {
                           const expiryDate = addYears(date, 3)
-                          form.setValue('licenseExpiryDate', expiryDate, { shouldValidate: true })
                           form.setValue('file14ExpiryDate', expiryDate, { shouldValidate: true })
                         } else {
-                          form.setValue('licenseExpiryDate', undefined as any, { shouldValidate: true })
                           form.setValue('file14ExpiryDate', undefined as any, { shouldValidate: true })
                         }
                       }}
@@ -280,26 +278,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 )
               }}
             />
-            <FormField
-              control={form.control}
-              name="licenseExpiryDate"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Ruxsatnomaning amal qilish muddati</FormLabel>
-                    <DatePicker
-                      disableStrategy="before"
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Amal qilish muddati"
-                      disabled={!isUpdate}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
+
             <FormField
               control={form.control}
               name="regionId"
@@ -609,7 +588,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required>Dozimetr protokoli (bayonnomasi)</FormLabel>
+                      <FormLabel required>Individual dozimetrlar va ularning karta ma‘lumotlari</FormLabel>
                       <FormControl>
                         <InputFile
                           form={form}

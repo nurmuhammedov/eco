@@ -37,10 +37,11 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
   const isDataNull = !profileData
 
   const irsOrgFiles = [
-    { key: 'file1Path', label: 'Mehnat vazirligi tomonidan berilgan ekspertiza xulosasi' },
+    { key: 'file17Path', label: 'Mutaxassislar mavjudligi' },
     { key: 'file2Path', label: 'Sanitariya-epidemiologik xulosasi' },
     { key: 'file5Path', label: 'Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat' },
     { key: 'file15Path', label: 'Tibbiy ko‘rikdan o‘tkazilganligi' },
+    { key: 'file18Path', label: 'INMlar bo‘yicha davriy hisobot' },
   ]
 
   return (
@@ -512,46 +513,18 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
           <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
             <div className="border-b pb-4">
               <FormField
-                name="file1Path"
+                name="file17Path"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                      <FormLabel required>Mehnat vazirligi tomonidan berilgan ekspertiza xulosasi</FormLabel>
+                      <FormLabel required>Mutaxassislar mavjudligi</FormLabel>
                       <FormControl>
-                        <InputFile
-                          form={form}
-                          name={field.name}
-                          accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file1ExpiryDate', undefined as any, { shouldValidate: true })}
-                        />
+                        <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                       </FormControl>
                     </div>
                   </FormItem>
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="file1ExpiryDate"
-                render={({ field }) => {
-                  const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                  return (
-                    <FormItem className="w-full">
-                      <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                        <FormLabel required={!!form.watch('file1Path')}>Amal qilish muddati</FormLabel>
-                        <DatePicker
-                          disableStrategy="before"
-                          className={'w-full sm:max-w-[65%]'}
-                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                          onChange={field.onChange}
-                          placeholder="Amal qilish muddati"
-                          disabled={!form.watch('file1Path')}
-                        />
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )
-                }}
               />
             </div>
             <div className="border-b pb-4">

@@ -7,6 +7,9 @@ export const API_ENDPOINTS: Record<string, string> = {
   LOGOUT: '/auth/logout',
   USER_ME: '/users/me',
   USERS: '/users',
+  USER_DELEGATION_ME: '/user-delegation/me',
+  SWITCH_OTHER: '/auth/switch-other',
+  SWITCH_BACK: '/auth/switch-back',
   REGIONS: '/regions',
   DISTRICTS: '/districts',
   PARKS: '/parks',
@@ -17,6 +20,7 @@ export const API_ENDPOINTS: Record<string, string> = {
   OFFICE_USERS: '/users/office-users',
   COMMITTEE_USERS: '/users/committee-users',
   HAZARDOUS_FACILITY_TYPES: '/hf-types',
+  HAZARDOUS_FACILITY_CATEGORIES: '/hf-categories',
   APPEAL_HF: '/appeals/hf',
   TEMPLATES: '/templates',
   UPDATE_TEMPLATE_CONTENT: '/templates/content',
@@ -33,6 +37,7 @@ export const API_ENDPOINTS: Record<string, string> = {
   EMPLOYEES_SELECT: '/employee/select/by-hf/',
   HF_SELECT: '/hf/select',
   HAZARDOUS_FACILITY_TYPES_SELECT: '/hf-types/select',
+  HAZARDOUS_FACILITY_CATEGORIES_SELECT: '/hf-categories/select',
   CHILD_EQUIPMENTS_SELECT: '/child-equipments/select',
 
   APPEALS_ATTESTATION: '/appeals/attestation',
@@ -102,4 +107,15 @@ export const API_ENDPOINTS: Record<string, string> = {
 
   ATTESTATION: '/attestation',
   REPORTS_USER_LOGIN: '/reports/user-login',
+  PROFILES_LEGALS: '/api/v1/profiles/legals',
+  PROFILES_INFO: '/api/v1/profiles/info',
+}
+
+export const SERVICES_API_ENDPOINTS = {
+  // Directions (Yo'nalishlar)
+  DIRECTIONS: '/attestation/directions',
+  DIRECTION_BY_ID: (id: string) => `/attestation/directions/${id}`,
+  // Questions (Savollar)
+  QUESTIONS: '/attestation/questions',
+  QUESTION_BY_ID: (id: string) => `/attestation/questions/${id}`,
 }

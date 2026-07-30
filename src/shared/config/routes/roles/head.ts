@@ -56,6 +56,10 @@ const RegisterChangePage = lazy(() => import('@/pages/register/register-change-p
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
+const MyKpiPage = lazy(() => import('@/pages/kpi/my-kpi-page'))
+const AttestationDirectionsPage = lazy(() => import('@/pages/attestation-directions/ui/page'))
+const AttestationQuestionsPage = lazy(() => import('@/pages/attestation-questions/ui/page'))
+const OrganizationsPage = lazy(() => import('@/pages/organizations'))
 
 export const headRoutes = [
   // ELEVATORS
@@ -379,5 +383,22 @@ export const headRoutes = [
     id: 'ANNOUNCEMENT',
     path: 'news/:id',
     element: withSuspense(NewsDetailPage),
+  },
+  // KPI — Mening KPIlarim (HEAD va KPI_RESPONSIBLE)
+  {
+    path: 'kpi/my-tasks',
+    element: withSuspense(MyKpiPage),
+  },
+  {
+    path: 'attestation-directions',
+    element: withSuspense(AttestationDirectionsPage),
+  },
+  {
+    path: 'attestation-questions',
+    element: withSuspense(AttestationQuestionsPage),
+  },
+  {
+    path: 'organizations',
+    element: withSuspense(OrganizationsPage),
   },
 ]

@@ -10,6 +10,7 @@ interface ApplicationModalProps {
   isLoading: boolean
   onClose: () => void
   documentUrl: string
+  hashCode?: string | null
   error: string | null
   isPdfLoading: boolean
   submitApplicationMetaData: (sign: string) => void
@@ -24,6 +25,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
   onClose,
   isLoading,
   documentUrl,
+  hashCode,
   isPdfLoading,
   submitApplicationMetaData,
   title = 'Hujjatni shakklantirish',
@@ -84,6 +86,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
                 error={error}
                 isLoading={isLoading}
                 documentUrl={documentUrl}
+                hashCode={hashCode}
                 submitApplicationMetaData={submitApplicationMetaData}
               />
             )}

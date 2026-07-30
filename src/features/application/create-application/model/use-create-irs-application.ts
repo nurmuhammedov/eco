@@ -20,10 +20,8 @@ export const useCreateIrsApplication = () => {
       const isDataNull = !profileData
       const dynamicSchema = IrsAppealDtoSchema.superRefine((data: any, ctx: any) => {
         if (isDataNull) {
-          if (!data.file1Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1Path'] })
-          if (!data.file1ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1ExpiryDate'] })
+          if (!data.file17Path)
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file17Path'] })
           if (!data.file2Path)
             ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2Path'] })
           if (!data.file2ExpiryDate)
@@ -64,8 +62,9 @@ export const useCreateIrsApplication = () => {
       isValid: true, // Boolean
       usageType: undefined, // Enum
       storageLocation: '',
-      file1Path: undefined,
-      file1ExpiryDate: undefined,
+      file17Path: undefined,
+      file18Path: undefined,
+      file18ExpiryDate: undefined,
       file2Path: undefined,
       file2ExpiryDate: undefined,
       file5Path: undefined,
@@ -150,6 +149,12 @@ export const useCreateIrsApplication = () => {
     hasIncompleteOrgFiles:
       !!profileData &&
       !!profileData.files &&
-      Object.values(profileData.files).some((f: any) => !f?.path || !f?.expiryDate),
+      (!profileData.files.file17Path?.path ||
+        !profileData.files.file2Path?.path ||
+        !profileData.files.file2Path?.expiryDate ||
+        !profileData.files.file5Path?.path ||
+        !profileData.files.file5Path?.expiryDate ||
+        !profileData.files.file15Path?.path ||
+        !profileData.files.file15Path?.expiryDate),
   }
 }

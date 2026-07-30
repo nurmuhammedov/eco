@@ -5,7 +5,12 @@ import { Button } from '@/shared/components/ui/button'
 import { HazardousFacilityActiveTab, HazardousFacilityActiveTabActionButtonProps } from '../types'
 
 export const HazardousFacilityActionButton = memo(
-  ({ title, activeTab, onAddHazardousFacilityType }: HazardousFacilityActiveTabActionButtonProps) => {
+  ({
+    title,
+    activeTab,
+    onAddHazardousFacilityType,
+    onAddHazardousFacilityCategory,
+  }: HazardousFacilityActiveTabActionButtonProps) => {
     const { t } = useTranslation('common')
     return (
       <div className="flex justify-between">
@@ -14,6 +19,11 @@ export const HazardousFacilityActionButton = memo(
           <Button onClick={onAddHazardousFacilityType}>
             <PlusCircle />
             {t('actions.add_hazardous_facility_type')}
+          </Button>
+        ) : activeTab === HazardousFacilityActiveTab.HAZARDOUS_FACILITY_CATEGORY ? (
+          <Button onClick={onAddHazardousFacilityCategory}>
+            <PlusCircle />
+            {t('actions.add_hazardous_facility_category')}
           </Button>
         ) : (
           <Button onClick={() => {}}>

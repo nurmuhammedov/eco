@@ -155,7 +155,8 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
   const selectedOptionLabel = useMemo(() => {
     if (!filterOptions || !value) return ''
     const option = filterOptions?.find((opt) => opt.id.toString() === value.toString())
-    return option ? option?.name : value
+    const label = option ? option?.name : value
+    return label.length > 70 ? `${label.slice(0, 70)}...` : label
   }, [filterOptions, value])
 
   if (filterType === 'select') {
@@ -170,7 +171,7 @@ export const ColumnFilterInput = <TData, TValue>({ column }: ColumnFilterInputPr
             </div>
           </PopoverTrigger>
 
-          <PopoverContent className="w-[200px] p-0" align="start">
+          <PopoverContent className="w-[400px] p-0" align="start">
             <Command>
               <CommandInput hideIcon placeholder="Qidirish..." className="h-9 pl-2" />
               <CommandList>

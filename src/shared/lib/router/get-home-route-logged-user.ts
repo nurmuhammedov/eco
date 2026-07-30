@@ -14,6 +14,7 @@ const roleHomeRoutes: Record<UserRoles, string> = {
   [UserRoles.PROCURATOR]: '/register',
   [UserRoles.ACCOUNTANT]: '/inquiries',
   [UserRoles.INTERACTIVE_SERVICE]: '/interactive-service',
+  [UserRoles.HR]: '/kpi/departments',
 }
 
 export const getHomeRouteForLoggedInUser = (role: UserRoles) => roleHomeRoutes[role] || '/'

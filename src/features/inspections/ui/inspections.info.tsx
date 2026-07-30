@@ -66,6 +66,10 @@ const InspectionsInfo = () => {
 
   const isPageLoading = isInspectionLoading || (isOther && isOtherDetailLoading)
 
+  const belongTypeFromResult = accordions?.[0]?.belongType
+  const isHeadRoleTypes = belongTypeFromResult === 'XRAY' || belongTypeFromResult === 'IRS'
+  const canManageInspection = isHeadRoleTypes ? user?.role === UserRoles.HEAD : user?.role === UserRoles.REGIONAL
+
   if (isPageLoading) {
     return (
       <div className="flex flex-col gap-6 p-6">
@@ -116,7 +120,7 @@ const InspectionsInfo = () => {
           </DetailCardAccordion.Item>
         ) : (
           <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
-            {user?.role === UserRoles.REGIONAL && (
+            {canManageInspection && (
               <div className="flex justify-end py-2">
                 {inspectionData?.status === InspectionStatus.NEW && (
                   <NotifyInspectionModal inspectionId={inspectionId} />

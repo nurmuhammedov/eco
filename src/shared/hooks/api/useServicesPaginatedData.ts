@@ -1,0 +1,45 @@
+import { servicesApiClient } from '@/shared/api/services-api-client'
+import { ISearchParams, ResponseData } from '@/shared/types'
+import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+import { useAuth } from '@/shared/hooks/use-auth'
+
+const useServicesPaginatedData = <T>(
+  endpoint: string,
+  params?: ISearchParams,
+  enabled: boolean = true,
+  staleTime: number = 0
+) => {
+  const { i18n } = useTranslation()
+  const { user } = useAuth()
+
+  const queryMethods = useQuery<ResponseData<T>, Error>({
+    queryKey: ['services', endpoint, params, i18n.language, user?.role],
+    queryFn: async () => {
+      const res = await servicesApiClient.getWithPagination<T>(endpoint, params)
+      return res.data
+    },
+    enabled,
+    staleTime,
+  })
+
+  const responseData: any = queryMethods.data || {}
+  const page = responseData.page
+
+  const size = page?.size || params?.size || 10
+
+  const totalElements = page?.totalElements ?? responseData.totalElements ?? responseData.total ?? responseData.count
+
+  const computedTotalPages = totalElements ? Math.ceil(Number(totalElements) / Number(size)) : 0
+
+  const totalPages = page?.totalPages ?? responseData.totalPages ?? computedTotalPages
+
+  return {
+    ...queryMethods,
+    data: queryMethods.data,
+    totalPages,
+    totalElements,
+  }
+}
+
+export default useServicesPaginatedData
