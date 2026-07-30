@@ -18,6 +18,8 @@ import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 
 export const UpdateConclusion = () => {
   const { id } = useParams()
@@ -48,6 +50,8 @@ export const UpdateConclusion = () => {
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(selectedRegionId)
 
+  const watchedType = form.watch('type')
+
   useEffect(() => {
     if (conclusion) {
       form.reset({
@@ -57,6 +61,7 @@ export const UpdateConclusion = () => {
         expertiseName: conclusion?.expertiseName,
         regionId: conclusion?.regionId?.toString(),
         districtId: conclusion?.districtId?.toString(),
+        declarationFilePath: conclusion?.declarationFilePath,
       })
     }
   }, [conclusion])
@@ -283,6 +288,31 @@ export const UpdateConclusion = () => {
                   </FormItem>
                 )}
               />
+
+              {watchedType === ExpertiseTypeEnum.XD && (
+                <FormField
+                  control={form.control}
+                  name="declarationFilePath"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col !gap-1">
+                      <FormLabel required>Deklaratsiya fayli</FormLabel>
+                      <FormControl>
+                        <InputFile
+                          name={field.name}
+                          form={form}
+                          uploadEndpoint="/attachments/declarations"
+                          accept={[FileTypes.PDF]}
+                          buttonText="Faylni biriktirish"
+                          maxSize={20}
+                          showPreview
+                          showDownload
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
 
               {/*<FormField*/}
               {/*  control={form.control}*/}

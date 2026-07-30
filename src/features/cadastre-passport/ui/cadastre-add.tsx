@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/shared/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { Search } from 'lucide-react'
@@ -15,11 +15,14 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/shared/components/ui/form'
 import { InputFile } from '@/shared/components/common/file-upload'
+import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { cadastreDataSchema, CadastreDataFields } from './components/cadastre-data-fields'
 
 const schema = z.object({
   attributeFile: z.string().min(1, 'Fayl yuklash majburiy'),
   passportFile: z.string().min(1, 'Fayl yuklash majburiy'),
   parentRequestNumber: z.string().optional(),
+  cadastreData: cadastreDataSchema,
 })
 
 type FormValues = z.infer<typeof schema>
@@ -44,6 +47,7 @@ export default function CadastreAdd() {
       attributeFile: '',
       passportFile: '',
       parentRequestNumber: '',
+      cadastreData: {} as any,
     },
   })
 
@@ -68,6 +72,7 @@ export default function CadastreAdd() {
         detailFilePath: data.attributeFile,
         passportFilePath: data.passportFile,
         parentRequestNumber: data.parentRequestNumber?.trim() || null,
+        ...data.cadastreData,
       },
       {
         onSuccess: () => {
@@ -116,87 +121,92 @@ export default function CadastreAdd() {
       </Card>
 
       {hasLegalInfo && (
-        <>
-          <Card>
-            <CardHeader>
-              <CardTitle>Tashkilot maʼlumotlari</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
-                <DetailRow title="Tashkilot nomi:" value={legalInfo?.name || '-'} />
-                <DetailRow title="Tashkilot rahbari F.I.Sh.:" value={legalInfo?.directorName || '-'} />
-                <DetailRow title="Manzil:" value={legalInfo?.address || '-'} />
-                <DetailRow title="Telefon raqami:" value={legalInfo?.phoneNumber || '-'} />
-              </div>
-            </CardContent>
-          </Card>
+        <Form {...form}>
+          <form id="cadastre-add-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Tashkilot maʼlumotlari</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
+                  <DetailRow title="Tashkilot nomi:" value={legalInfo?.name || '-'} />
+                  <DetailRow title="Tashkilot rahbari F.I.Sh.:" value={legalInfo?.directorName || '-'} />
+                  <DetailRow title="Manzil:" value={legalInfo?.address || '-'} />
+                  <DetailRow title="Telefon raqami:" value={legalInfo?.phoneNumber || '-'} />
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Kerakli hujjatlarni yuklash</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Form {...form}>
-                <form id="cadastre-add-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <FormField
-                      control={form.control}
-                      name="attributeFile"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel required>Atribut fayli</FormLabel>
-                          <FormControl>
-                            <InputFile
-                              name={field.name as 'attributeFile'}
-                              form={form}
-                              uploadEndpoint="/attachments/cadastre-passports"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="passportFile"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel required>Kadastr passport fayli</FormLabel>
-                          <FormControl>
-                            <InputFile
-                              name={field.name as 'passportFile'}
-                              form={form}
-                              uploadEndpoint="/attachments/cadastre-passports"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="parentRequestNumber"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Avvalgi ariza raqami (mavjud bo‘lsa)</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Ariza raqamini kiriting..." {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </form>
-              </Form>
-            </CardContent>
-            <CardFooter className="justify-end gap-2">
-              <Button variant="outline" onClick={() => navigate('/cadastre-passport')}>
+            <Card>
+              <CardHeader>
+                <CardTitle>Kerakli hujjatlarni yuklash</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                  <FormField
+                    control={form.control}
+                    name="attributeFile"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>Atribut fayli</FormLabel>
+                        <FormControl>
+                          <InputFile
+                            name={field.name as 'attributeFile'}
+                            form={form}
+                            uploadEndpoint="/attachments/cadastre-passports"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="passportFile"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>Kadastr passport fayli</FormLabel>
+                        <FormControl>
+                          <InputFile
+                            name={field.name as 'passportFile'}
+                            form={form}
+                            uploadEndpoint="/attachments/cadastre-passports"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="parentRequestNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Avvalgi ariza raqami (mavjud bo‘lsa)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Ariza raqamini kiriting..." {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <DetailCardAccordion defaultValue={['cadastre-data']}>
+              <DetailCardAccordion.Item value="cadastre-data" title="TXYZ kadastr atributiv (tavsiflovchi) ma’lumotlar">
+                <div className="pt-2">
+                  <CadastreDataFields control={form.control} prefix="cadastreData." />
+                </div>
+              </DetailCardAccordion.Item>
+            </DetailCardAccordion>
+
+            <div className="mt-4 flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={() => navigate('/cadastre-passport')}>
                 Bekor qilish
               </Button>
-              <Button type="submit" form="cadastre-add-form">
-                Saqlash
-              </Button>
-            </CardFooter>
-          </Card>
-        </>
+              <Button type="submit">Saqlash</Button>
+            </div>
+          </form>
+        </Form>
       )}
     </div>
   )

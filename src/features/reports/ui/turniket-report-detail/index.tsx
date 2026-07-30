@@ -64,6 +64,7 @@ const TurniketReportDetail: React.FC = () => {
     try {
       const date = parseISO(from)
       return format(date, 'MMMM yyyy', { locale: uz })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       return ''
     }
@@ -78,6 +79,7 @@ const TurniketReportDetail: React.FC = () => {
         if (!val) return '-'
         try {
           return format(parseISO(val), 'dd.MM.yyyy')
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           return val
         }

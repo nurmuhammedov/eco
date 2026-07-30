@@ -1,5 +1,5 @@
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
-import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { useCustomSearchParams, useData, usePaginatedData } from '@/shared/hooks'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { formatDate } from 'date-fns'
 import { PermitDetailModal } from '@/features/permits/ui/permit-detail-modal'
@@ -12,6 +12,7 @@ import { Badge } from '@/shared/components/ui/badge'
 
 export const PermitTable = ({ setIsModalOpen }: any) => {
   const { user } = useAuth()
+
   const {
     addParams,
     paramsObject: {
@@ -25,6 +26,18 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
       documentName = '',
     },
   } = useCustomSearchParams()
+
+  // const { data: documentNamesResponse } = useQuery({
+  //   queryKey: ['permit-document-names', tab],
+  //   queryFn: () =>
+  //     apiClient.get<any>('/permits/document-names', {
+  //       type: tab === 'ALL' ? undefined : tab,
+  //     }),
+  // })
+
+  const { data: names } = useData<any>('/permits/document-names', true, {
+    type: tab === 'ALL' ? undefined : tab,
+  })
   const { data, isLoading } = usePaginatedData<any>('/permits', {
     page: page,
     size: size,
@@ -60,8 +73,14 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
       accessorKey: 'documentName',
       header: 'Hujjat nomi',
       minSize: 300,
+      headerClassName: 'max-w-[300px]',
+      className: 'max-w-[300px]',
       filterKey: 'documentName',
-      filterType: 'search',
+      filterType: 'select',
+      filterOptions: names?.map((name: string) => ({
+        id: name,
+        name: name,
+      })),
     },
     {
       accessorKey: 'registerNumber',

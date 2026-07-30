@@ -2,8 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { UIModeEnum } from '@/shared/types/ui-types'
 import { HazardousFacilityActiveTab } from '../types'
 import { filterParsers, useFilters } from '@/shared/hooks/use-filters'
-import { useHazardousFacilityTypeDrawer } from '@/shared/hooks/entity-hooks'
-
+import { useHazardousFacilityTypeDrawer, useHazardousFacilityCategoryDrawer } from '@/shared/hooks/entity-hooks'
 export const useHazardousFacility = () => {
   const { filters, setFilters } = useFilters({
     'active-tab': filterParsers.string(HazardousFacilityActiveTab.HAZARDOUS_FACILITY_TYPE),
@@ -11,6 +10,8 @@ export const useHazardousFacility = () => {
 
   const { onOpen: openHazardousFacilityTypeDrawer, isOpen: isOpenHazardousFacilityType } =
     useHazardousFacilityTypeDrawer()
+  const { onOpen: openHazardousFacilityCategoryDrawer, isOpen: isOpenHazardousFacilityCategory } =
+    useHazardousFacilityCategoryDrawer()
 
   const activeTab = useMemo<HazardousFacilityActiveTab>(
     () => filters['active-tab'] as HazardousFacilityActiveTab,
@@ -26,11 +27,17 @@ export const useHazardousFacility = () => {
     openHazardousFacilityTypeDrawer(UIModeEnum.CREATE)
   }, [openHazardousFacilityTypeDrawer])
 
+  const onAddHazardousFacilityCategory = useCallback(() => {
+    openHazardousFacilityCategoryDrawer(UIModeEnum.CREATE)
+  }, [openHazardousFacilityCategoryDrawer])
+
   return {
     filters,
     activeTab,
     handleChangeTab,
     onAddHazardousFacilityType,
     isOpenHazardousFacilityType,
+    onAddHazardousFacilityCategory,
+    isOpenHazardousFacilityCategory,
   }
 }

@@ -24,7 +24,6 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'licenseRegistryNumber',
     'model',
     'licenseDate',
-    'licenseExpiryDate',
     'regionId',
     'districtId',
     'address',
@@ -63,6 +62,7 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
   HF: [
     'upperOrganization',
     'name',
+    'categoryId',
     'hfTypeId',
     'spheres',
     'regionId',
@@ -520,6 +520,8 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
       {/* XICHO (HF) maydonlari */}
       {renderRow('upperOrganization', data?.upperOrganization)}
       {renderRow('name', data?.name)}
+      {isAllowed('categoryId') &&
+        renderRow('categoryId', data?.categoryName || <span className="font-medium text-red-500">Tanlanmagan</span>)}
       {renderRow('hfTypeId', data?.hfTypeName)}
       {isAllowed('spheres') &&
         renderRow('spheres', data?.spheres?.map((item: string) => t('application.' + item)).join(', '))}

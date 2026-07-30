@@ -23,6 +23,7 @@ import { useMobileDocumentSigning } from '../model'
 interface SignatureModalProps {
   isLoading: boolean
   documentUrl: string
+  hashCode?: string | null
   error: any
   onCancel?: () => void
   submitApplicationMetaData: (sign: string) => void
@@ -35,6 +36,7 @@ export const SignatureModal = ({
   error,
   isLoading,
   documentUrl,
+  hashCode,
   submitApplicationMetaData,
 }: SignatureModalProps) => {
   const { Client } = useSignatureClient()
@@ -74,6 +76,7 @@ export const SignatureModal = ({
       await signDocument({
         Client,
         documentUrl,
+        hashCode,
         signature: ckc ? 'ckc' : selectedCertificate,
         onSuccess: (result) => submitApplicationMetaData(result),
       })

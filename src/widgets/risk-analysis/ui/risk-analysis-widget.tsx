@@ -36,7 +36,6 @@ const TAB_TO_API_TYPE: Record<string, string> = {
   [RiskAnalysisTab.LIFT]: 'ELEVATOR',
   [RiskAnalysisTab.ATTRACTION]: 'ATTRACTION',
   [RiskAnalysisTab.XRAY]: 'XRAY',
-  [RiskAnalysisTab.LPG_POWERED]: 'LPG_POWERED',
 }
 
 const MONTHS = [
@@ -177,10 +176,6 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     type: 'ATTRACTION',
     ...countsApiParams,
   })
-  const { data: lpgPoweredRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
-    type: 'LPG_POWERED',
-    ...countsApiParams,
-  })
 
   const getSum = (counts?: RiskCountResponse) =>
     (counts?.lowCount || 0) + (counts?.mediumCount || 0) + (counts?.highCount || 0)
@@ -189,7 +184,6 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const irsTotalCount = getSum(irsRiskCounts)
   const xrayTotalCount = getSum(xrayRiskCounts)
   const attractionTotalCount = getSum(attractionRiskCounts)
-  const lpgPoweredTotalCount = getSum(lpgPoweredRiskCounts)
 
   const { data: regionCounts = [] } = useData<RegionCountDto[]>('/risk-analyses/count/by-region', shouldShowRegions, {
     type: currentApiType,
@@ -266,12 +260,6 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
               {t('risk_analysis_tabs.ATTRACTION')}
               <Badge variant="destructive" className="ml-2">
                 {attractionTotalCount}
-              </Badge>
-            </TabsTrigger>
-            <TabsTrigger value={RiskAnalysisTab.LPG_POWERED}>
-              {t('risk_analysis_tabs.LPG_POWERED')}
-              <Badge variant="destructive" className="ml-2">
-                {lpgPoweredTotalCount}
               </Badge>
             </TabsTrigger>
           </TabsList>

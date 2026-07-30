@@ -102,6 +102,11 @@ export const useCreateXrayApplication = () => {
     hasIncompleteOrgFiles:
       !!profileData &&
       !!profileData.files &&
-      Object.values(profileData.files).some((f: any) => !f?.path || !f?.expiryDate),
+      (!profileData.files.file5Path?.path ||
+        !profileData.files.file5Path?.expiryDate ||
+        !profileData.files.file7Path?.path ||
+        !profileData.files.file7Path?.expiryDate ||
+        !profileData.files.file9Path?.path ||
+        !profileData.files.file9Path?.expiryDate),
   }
 }

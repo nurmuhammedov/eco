@@ -15,6 +15,7 @@ const __HFAppealDtoSchema = z.object({
     }),
   address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   location: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  categoryId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   hfTypeId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   regionId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   districtId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),

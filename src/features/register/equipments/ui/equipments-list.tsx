@@ -52,6 +52,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       factoryNumber = '',
       changeStatus = 'ALL',
       hfId: searchHfId = '',
+      tin = '',
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       tab = '',
       ...rest
@@ -76,6 +77,8 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     totalElements = 0,
   } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
     ...rest,
+    tin: isTanker && tin ? (String(tin).length === 14 ? undefined : tin) : undefined,
+    pin: isTanker && tin ? (String(tin).length === 14 ? tin : undefined) : undefined,
     regionId: regionId === 'ALL' ? '' : regionId,
     status: isTanker
       ? currentStatus !== 'ALL'
@@ -155,7 +158,8 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     if (currentStatus === 'CHANGED') {
       navigate(`/register/change/${id}/equipments`)
     } else {
-      navigate(`${id}/equipments${currentStatus === 'ACTIVE' ? '?active=true' : ''}`)
+      const query = ['ACTIVE', 'INVALID'].includes(currentStatus) ? `?active=true&status=${currentStatus}` : ''
+      navigate(`${id}/equipments${query}`)
     }
   }
 
@@ -176,7 +180,9 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       header: 'Tashkilot STIR/Fuqaro JSHSHIR',
       cell: (cell) =>
         cell.row.original.tin ? cell.row.original.tin : cell.row.original.pin ? cell.row.original.pin : null,
-      filterType: 'search',
+      filterKey: 'tin',
+      filterType: 'number',
+      filterMaxLength: 14,
     },
     {
       accessorKey: 'registerNumber',
@@ -358,6 +364,13 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
                 return (
                   <Badge variant="error" className="py-1">
                     Reyestardan chiqarish uchun
+                  </Badge>
+                )
+              }
+              if (type?.startsWith('CHANGE_EQP_STATUS')) {
+                return (
+                  <Badge variant="warning" className="py-1">
+                    Holatini o'zgartirish
                   </Badge>
                 )
               }
@@ -545,6 +558,11 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
                     id: 'NO_DATE',
                     name: isAutoCrane ? 'Muddati kiritilmagan avtokranlar' : 'Muddati kiritilmaganlar',
                     count: currentStatus === 'NO_DATE' ? totalElements : undefined,
+                  },
+                  {
+                    id: 'INVALID',
+                    name: 'Vaqtinchalik nosozlar',
+                    count: currentStatus === 'INVALID' ? totalElements : undefined,
                   },
                   {
                     id: 'CHANGED',

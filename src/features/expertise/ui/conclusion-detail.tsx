@@ -121,6 +121,12 @@ export const DetailConclusion = () => {
               title="Ekspertiza xulosasi:"
               value={detail?.filePath ? <FileLink url={detail?.filePath} /> : '-'}
             />
+            {detail?.type === 'XD' && (
+              <DetailRow
+                title="Deklaratsiya fayli:"
+                value={detail?.declarationFilePath ? <FileLink url={detail?.declarationFilePath} /> : 'Mavjud emas'}
+              />
+            )}
 
             <DetailRow
               title="Ekspertiza xulosasining bekor qilinganligi asosi"

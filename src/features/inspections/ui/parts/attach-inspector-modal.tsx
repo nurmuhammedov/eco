@@ -21,6 +21,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Send } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { apiConfig } from '@/shared/api/constants.ts'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/entities/user'
 
 const schema = z.object({
   inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
@@ -44,10 +46,13 @@ const AttachInspectorModal = ({ data = [] }: any) => {
   } = useCustomSearchParams()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { user } = useAuth()
+  const isHead = user?.role === UserRoles.HEAD
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
+      duration: isHead ? 'ONE_DAY' : undefined,
       checklistDtoList: data.map((item: any) => ({
         resultIdForObject: item.id,
         checklistCategoryIdList: [],
@@ -58,7 +63,8 @@ const AttachInspectorModal = ({ data = [] }: any) => {
 
   const duration = form.watch('duration')
 
-  const { data: inspectorSelectData } = useInspectorSelect(isShow)
+  const isHeadTypes = data?.[0]?.belongType === 'XRAY' || data?.[0]?.belongType === 'IRS'
+  const { data: inspectorSelectData } = useInspectorSelect(isShow, undefined, undefined, isHeadTypes)
   const { data: categoryTypes } = useCategoryTypeSelectQuery(undefined, isShow)
 
   const filteredCategoryTypes = useMemo(() => {
@@ -180,12 +186,14 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                             </FormControl>
                             <FormLabel className="font-normal">1 kunlik tekshiruv</FormLabel>
                           </FormItem>
-                          <FormItem className="flex flex-row items-center space-y-0 space-x-3">
-                            <FormControl>
-                              <RadioGroupItem value="TEN_DAYS" />
-                            </FormControl>
-                            <FormLabel className="font-normal">10 kunlik tekshiruv</FormLabel>
-                          </FormItem>
+                          {!isHead && (
+                            <FormItem className="flex flex-row items-center space-y-0 space-x-3">
+                              <FormControl>
+                                <RadioGroupItem value="TEN_DAYS" />
+                              </FormControl>
+                              <FormLabel className="font-normal">10 kunlik tekshiruv</FormLabel>
+                            </FormItem>
+                          )}
                         </RadioGroup>
                       </FormControl>
                       <FormMessage />

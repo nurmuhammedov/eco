@@ -11,6 +11,7 @@ import {
   useUpdateChecklist,
 } from '@/entities/admin/inspection'
 import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection/category-types/hooks/use-category-type-select-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 const DEFAULT_VALUES: CreateChecklistDTO = {
   category: '',
@@ -31,6 +32,8 @@ export function useChecklistForm() {
     mode: 'onBlur',
   })
 
+  const queryClient = useQueryClient()
+
   const { data: categoryTypes } = useCategoryTypeSelectQuery(form?.watch('category'))
   const { mutateAsync: createItem, isPending: isCreating } = useCreateChecklist()
   const { mutateAsync: updateItem, isPending: isUpdating } = useUpdateChecklist()
@@ -46,8 +49,15 @@ export function useChecklistForm() {
         question: checklistData.question,
         category: checklistData.category?.toString(),
       })
+    } else if (isCreate && data) {
+      form.reset({
+        ...DEFAULT_VALUES,
+        category: data.category?.toString() || '',
+        categoryTypeId: data.categoryTypeId?.toString() || '',
+        orderNumber: data.orderNumber?.toString() || '',
+      })
     }
-  }, [checklistData, isCreate, form])
+  }, [checklistData, isCreate, form, data])
 
   const handleClose = useCallback(() => {
     form.reset(DEFAULT_VALUES)
@@ -57,12 +67,20 @@ export function useChecklistForm() {
   const handleSubmit = useCallback(
     async (formData: CreateChecklistDTO): Promise<boolean> => {
       try {
+        const payload = {
+          ...formData,
+          categoryId: Number(formData?.categoryTypeId) || undefined,
+        }
+
         const response = isCreate
-          ? await createItem({ categoryId: formData?.category, ...formData } as CreateChecklistDTO)
-          : await updateItem({ id: checklistId, categoryId: formData?.category, ...formData } as UpdateChecklistDTO)
+          ? await createItem(payload as CreateChecklistDTO)
+          : await updateItem({ id: checklistId, ...payload } as UpdateChecklistDTO)
 
         if (response.success) {
           handleClose()
+          if (payload.categoryId) {
+            queryClient.invalidateQueries({ queryKey: [`/checklists/by-category/${payload.categoryId}`] })
+          }
           return true
         }
         return false
@@ -82,5 +100,6 @@ export function useChecklistForm() {
     onSubmit: handleSubmit,
     isFetching: isLoading,
     isPending: isCreating || isUpdating,
+    drawerData: data,
   }
 }

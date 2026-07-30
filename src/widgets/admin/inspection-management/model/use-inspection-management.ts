@@ -6,7 +6,7 @@ import { useCategoryTypeDrawer, useChecklistDrawer } from '@/shared/hooks/entity
 
 export const useInspectionManagement = () => {
   const { filters, setFilters } = useFilters({
-    'active-tab': filterParsers.string('checklists'),
+    'active-tab': filterParsers.string('categoryType'),
   })
 
   const { onOpen: openCategoryTypeDrawer, isOpen: isOpenCategoryType } = useCategoryTypeDrawer()

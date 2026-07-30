@@ -33,9 +33,7 @@ export const OtherInspectionList: React.FC = () => {
   })
 
   const handleView = (row: any) => {
-    navigate(
-      `/inspections/info?inspectionId=${row.id}&tin=${row.legalTin}&name=${row.legalName}&year=${year}&inspectionType=other`
-    )
+    navigate(`/inspections/info?inspectionId=${row.id}&tin=${row.legalTin}&name=${row.legalName}&inspectionType=other`)
   }
 
   const statusConfig: Record<
@@ -105,6 +103,21 @@ export const OtherInspectionList: React.FC = () => {
         const cfg = statusConfig[s]
         if (!cfg) return <Badge variant="default">{s}</Badge>
         return <Badge variant={cfg.variant}>{t(cfg.key)}</Badge>
+      },
+    },
+    {
+      header: 'Yakunlangan sana',
+      accessorKey: 'actDate',
+      filterKey: 'actDate',
+      filterType: 'date',
+      cell: ({ row }) => {
+        const val = row.original.actDate
+        if (!val) return '-'
+        try {
+          return format(new Date(val), 'dd.MM.yyyy')
+        } catch {
+          return val
+        }
       },
     },
     {

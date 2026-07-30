@@ -12,7 +12,7 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
 import { ApplicationStatus } from '@/entities/application'
 import AssignExecutorModal from '@/features/register/register-change-detail/modals/assign-executor-modal'
-import UpdateDescriptionModal from '@/features/register/register-change-detail/modals/update-description-modal'
+import ReturnChangeModal from '@/features/register/register-change-detail/modals/return-change-modal'
 import ConfirmProcessModal from '@/features/register/register-change-detail/modals/confirm-process-modal'
 import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal'
 import { Badge } from '@/shared/components/ui/badge'
@@ -26,7 +26,8 @@ const RegisterChangeDetail: FC = () => {
   const changeId = changeDetail?.id
   const isLegal = changeDetail?.ownerIdentity?.toString()?.length === 9
   const status = changeDetail?.status
-  const isDeregister = changeDetail?.belongType?.startsWith('DEREGISTER_')
+  const isDeregister = changeDetail?.belongType?.startsWith('DEREGISTER')
+  const isStatusChange = changeDetail?.belongType?.startsWith('CHANGE_EQP_STATUS')
 
   const canAssign =
     (user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) && status === ApplicationStatus.NEW
@@ -37,6 +38,12 @@ const RegisterChangeDetail: FC = () => {
       status === ApplicationStatus.IN_AGREEMENT) ||
     (status === ApplicationStatus.IN_APPROVAL && user?.role === UserRoles.HEAD)
   // const canApproveManager = user?.role === UserRoles.MANAGER && status === ApplicationStatus.IN_APPROVAL
+
+  const canReturn =
+    (user?.role === UserRoles.HEAD || user?.role === UserRoles.REGIONAL || user?.isSupervisor) &&
+    status !== ApplicationStatus.COMPLETED &&
+    status !== ApplicationStatus.REJECTED &&
+    status !== ApplicationStatus.CANCELED
 
   if (isLoading) {
     return null
@@ -50,26 +57,30 @@ const RegisterChangeDetail: FC = () => {
     <div className="flex flex-1 flex-col gap-2">
       <div className="flex items-center justify-between">
         <GoBack
-          title={isDeregister ? 'Reyestrdan chiqarish uchun so‘rov' : 'Maʼlumotlarni o‘zgartirish uchun so‘rov'}
+          title={
+            isDeregister
+              ? 'Reyestrdan chiqarish uchun so‘rov'
+              : isStatusChange
+                ? 'Holatini o‘zgartirish uchun so‘rov'
+                : 'Maʼlumotlarni o‘zgartirish uchun so‘rov'
+          }
         />
         <div className="flex gap-2">
           {!cannotExecute && (
             <>
+              {canReturn && <ReturnChangeModal changeId={changeId} />}
               {canAssign && (
                 <>
-                  <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
                   <AssignExecutorModal changeId={changeId} />
                 </>
               )}
               {canDescribe && (
                 <>
-                  <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
                   <ConfirmProcessModal changeId={changeId} title="Tasdiqlansinmi" buttonText="Tasdiqlash" />
                 </>
               )}
               {canAgree && (
                 <>
-                  <UpdateDescriptionModal desc={changeDetail?.description || '-'} changeId={changeId} />
                   <ConfirmProcessModal
                     changeId={changeId}
                     title={`${ApplicationStatus.IN_APPROVAL ? 'Tasdiqlansinmi' : 'Kelishilsinmi'}`}
@@ -106,6 +117,10 @@ const RegisterChangeDetail: FC = () => {
                   <Badge variant="error" className="py-1">
                     Reyestardan chiqarish uchun
                   </Badge>
+                ) : isStatusChange ? (
+                  <Badge variant="warning" className="py-1">
+                    Holatini o'zgartirish
+                  </Badge>
                 ) : (
                   <Badge variant="info" className="py-1">
                     Maʼlumotlarni o‘zgartirish uchun
@@ -115,7 +130,7 @@ const RegisterChangeDetail: FC = () => {
             />
             <DetailRow title="Ijrochi ma‘sul F.I.SH.:" value={changeDetail?.executorName || '-'} />
             <div className="grid grid-cols-2 content-center items-center gap-1 rounded-lg px-2.5 py-2 odd:bg-neutral-50">
-              <h2 className="text-normal font-normal text-gray-700">Izoh:</h2>
+              <h2 className="text-normal font-normal text-gray-700">Qaytarish sababi:</h2>
               <p
                 className="text-normal font-normal whitespace-pre-wrap text-gray-900"
                 dangerouslySetInnerHTML={{ __html: changeDetail?.description || '-' }}

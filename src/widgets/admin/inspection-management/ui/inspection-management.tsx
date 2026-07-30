@@ -1,49 +1,33 @@
 import { Fragment } from 'react'
-import { ActionButton } from './action-button'
+import { CategoryTypeList } from '@/features/admin/inspection/category-types/ui/category-type-list'
+import { CategoryTypeDrawer } from '@/features/admin/inspection/category-types/ui/category-type-drawer'
+import { PlusCircle } from 'lucide-react'
+import { Button } from '@/shared/components/ui/button'
 import { useTranslation } from 'react-i18next'
-// import { CategoryTypeDrawer, CategoryTypeList } from '@/features/admin/inspection/category-types';
 // import { ChecklistDrawer, ChecklistList } from '@/features/admin/inspection/cheklists';
 import { useInspectionManagement } from '../model/use-inspection-management'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
-import { CategoryTypeList } from '@/features/admin/inspection/category-types/ui/category-type-list'
-import { ChecklistList } from '@/features/admin/inspection/cheklists/ui/checklist-list'
-import { CategoryTypeDrawer } from '@/features/admin/inspection/category-types/ui/category-type-drawer'
+
 import { ChecklistDrawer } from '@/features/admin/inspection/cheklists/ui/checklist-drawer'
 
 const InspectionManagement = () => {
   const { t } = useTranslation('common')
-  const {
-    activeTab,
-    isOpenCategoryType,
-    isOpenChecklist,
-    handleChangeTab,
-    openAddCategoryTypeDrawer,
-    openAddChecklistDrawer,
-  } = useInspectionManagement()
+  const { isOpenCategoryType, isOpenChecklist, openAddCategoryTypeDrawer } = useInspectionManagement()
 
   return (
     <Fragment>
-      <ActionButton
-        activeTab={activeTab}
-        title={t('menu.inspection')}
-        onAddCategoryType={openAddCategoryTypeDrawer}
-        onAddChecklist={openAddChecklistDrawer}
-      />
+      <div className="mt-4 flex justify-between">
+        <h5 className="text-2xl font-semibold uppercase">{t('menu.inspection')}</h5>
+        <div className="flex gap-2">
+          <Button onClick={openAddCategoryTypeDrawer}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            {t('actions.add_category_type')}
+          </Button>
+        </div>
+      </div>
 
-      <Tabs className="mt-3" defaultValue={activeTab} onValueChange={(value: any) => handleChangeTab(value)}>
-        <TabsList>
-          <TabsTrigger value="checklists">{t('checklists')}</TabsTrigger>
-          <TabsTrigger value="categoryType">{t('categoryTypes')}</TabsTrigger>
-        </TabsList>
-
-        <TabsContent className="mt-4" value="categoryType">
-          <CategoryTypeList />
-        </TabsContent>
-
-        <TabsContent className="mt-4" value="checklists">
-          <ChecklistList />
-        </TabsContent>
-      </Tabs>
+      <div className="mt-4">
+        <CategoryTypeList />
+      </div>
 
       {isOpenCategoryType && <CategoryTypeDrawer />}
       {isOpenChecklist && <ChecklistDrawer />}

@@ -16,6 +16,7 @@ import {
   Archive,
   Newspaper,
   FileCheck,
+  PieChart,
 } from 'lucide-react'
 
 export default [
@@ -156,5 +157,33 @@ export default [
     title: 'TXYZ Kadastr',
     url: '/cadastre-passport',
     icon: <FileCheck />,
+  },
+  {
+    id: 'KPI',
+    title: 'KPI',
+    url: '/kpi',
+    icon: <PieChart />,
+    items: [
+      {
+        id: 'KPI_DEPARTMENTS',
+        title: "Boshqarma va bo'limlar",
+        url: '/kpi/departments',
+      },
+      {
+        id: 'KPI_TASKS',
+        title: 'KPI Vazifalar',
+        url: '/kpi/tasks',
+      },
+      {
+        id: 'KPI_MY_TASKS',
+        title: 'Mening KPIlarim',
+        url: '/kpi/my-tasks',
+      },
+      {
+        id: 'KPI_REPORT',
+        title: 'KPI Hisoboti',
+        url: '/kpi/report',
+      },
+    ],
   },
 ] as Navigation

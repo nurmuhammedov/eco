@@ -16,6 +16,7 @@ import {
   ArrowDownUp,
   Archive,
   Newspaper,
+  PieChart,
 } from 'lucide-react'
 
 export default [
@@ -86,6 +87,12 @@ export default [
     icon: <Building2 />,
   },
   {
+    id: 'ORGANIZATIONS',
+    title: 'Tashkilotlar',
+    url: '/organizations',
+    icon: <Building2 />,
+  },
+  {
     id: 'CONCLUSION',
     title: 'Ekspertiza xulosalari',
     url: '/accreditations',
@@ -150,5 +157,40 @@ export default [
     title: 'TXYZ Kadastr',
     url: '/cadastre-passport',
     icon: <FileCheck />,
+  },
+  // KPI — HEAD va KPI_RESPONSIBLE foydalanuvchilar uchun
+  {
+    title: 'KPI',
+    url: '/kpi',
+    icon: <PieChart />,
+    items: [
+      {
+        id: 'KPI_MY_TASKS',
+        title: 'Mening KPIlarim',
+        url: '/kpi/my-tasks',
+      },
+      {
+        id: 'KPI_REPORT',
+        title: 'KPI Hisoboti',
+        url: '/kpi/report',
+      },
+    ],
+  },
+  {
+    title: 'Attestatsiya',
+    url: '/attestation',
+    icon: <BadgeCheck />,
+    items: [
+      {
+        id: 'ATTESTATION_DIRECTIONS',
+        title: "Yo'nalishlar",
+        url: '/attestation-directions',
+      },
+      {
+        id: 'ATTESTATION_QUESTIONS',
+        title: 'Imtihon savollari',
+        url: '/attestation-questions',
+      },
+    ],
   },
 ] as Navigation

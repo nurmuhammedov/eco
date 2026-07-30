@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Control, Controller, useFieldArray, useForm } from 'react-hook-form'
+import { Control, Controller, UseFormReturn, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { format as formatDateFn } from 'date-fns'
@@ -20,7 +20,8 @@ import FileLink from '@/shared/components/common/file-link.tsx'
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth.ts'
 import AddAdditionalFileModal from '@/features/inspections/ui/parts/add-additional-file-modal.tsx'
-
+import { InputFile } from '@/shared/components/common/file-upload'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 const itemSchema = z
   .object({
     id: z.string(),
@@ -29,7 +30,19 @@ const itemSchema = z
     answer: z.nativeEnum(ChecklistAnswerStatus, {
       errorMap: () => ({ message: 'Javob tanlanishi shart' }),
     }),
+    corrective: z
+      .string()
+      .optional()
+      .nullable()
+      .transform((val) => (val ? val : null))
+      .nullable(),
     description: z
+      .string()
+      .optional()
+      .nullable()
+      .transform((val) => (val ? val : null))
+      .nullable(),
+    basisPath: z
       .string()
       .optional()
       .nullable()
@@ -39,11 +52,11 @@ const itemSchema = z
   })
   .superRefine((data, ctx) => {
     if (data.answer === ChecklistAnswerStatus.NEGATIVE) {
-      if (!data.description || data.description.trim() === '') {
+      if (!data.corrective || data.corrective.trim() === '') {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Chora-tadbir matni kiritilishi shart',
-          path: ['description'],
+          path: ['corrective'],
         })
       }
       if (!data.deadline) {
@@ -51,6 +64,21 @@ const itemSchema = z
           code: z.ZodIssueCode.custom,
           message: 'Muddat belgilanilishi shart',
           path: ['deadline'],
+        })
+      }
+    } else if (data.answer === ChecklistAnswerStatus.POSITIVE) {
+      if (!data.description || data.description.trim() === '') {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Izoh kiritilishi shart',
+          path: ['description'],
+        })
+      }
+      if (!data.basisPath) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Fayl yuklanishi shart',
+          path: ['basisPath'],
         })
       }
     }
@@ -85,6 +113,8 @@ type CategoryProps = {
     corrective?: string | null
     deadline?: string | null
     inspectionCategoryId?: string
+    basisPath?: string | null
+    description?: string | null
   }[]
 }
 
@@ -117,7 +147,12 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
           question: it.question,
           orderNumber: it.orderNumber,
           answer: (it.answer as ChecklistAnswerStatus) ?? undefined,
-          description: it.corrective ?? '',
+          corrective:
+            it.corrective ||
+            (it.answer !== 'POSITIVE' ? it.description || `Chora tadbir bandi - ${it.question}` : '') ||
+            '',
+          description: it.answer === 'POSITIVE' ? (it.description ?? '') : '',
+          basisPath: it.basisPath ?? null,
           deadline: it.deadline ?? undefined,
         })),
       })),
@@ -144,13 +179,15 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
           dtoList.push({
             inspectionChecklistId: it.id,
             answer: it.answer,
-            corrective: it.answer === ChecklistAnswerStatus.NEGATIVE ? it.description || null : null,
+            corrective: it.answer === ChecklistAnswerStatus.NEGATIVE ? it.corrective || null : null,
             deadline:
               it.answer === ChecklistAnswerStatus.NEGATIVE && it.deadline
                 ? typeof it.deadline === 'string'
                   ? it.deadline
                   : formatDateFn(it.deadline, 'yyyy-MM-dd')
                 : null,
+            basisPath: it.answer === ChecklistAnswerStatus.POSITIVE ? it.basisPath || null : null,
+            description: it.answer === ChecklistAnswerStatus.POSITIVE ? it.description || null : null,
           })
         }
       })
@@ -166,8 +203,8 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
     values.categories.forEach((cat, catIndex) => {
       cat.items.forEach((item, itemIndex) => {
         if (item.answer === ChecklistAnswerStatus.NEGATIVE) {
-          if (!item.description || item.description.trim() === '') {
-            const fieldName = `categories.${catIndex}.items.${itemIndex}.description` as const
+          if (!item.corrective || item.corrective.trim() === '') {
+            const fieldName = `categories.${catIndex}.items.${itemIndex}.corrective` as const
             form.setError(fieldName, { type: 'manual', message: '' })
             if (!firstErrorPath) firstErrorPath = fieldName
             hasChecklistError = true
@@ -179,13 +216,29 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
             if (!firstErrorPath) firstErrorPath = fieldName
             hasChecklistError = true
           }
+        } else if (item.answer === ChecklistAnswerStatus.POSITIVE) {
+          if (!item.description || item.description.trim() === '') {
+            const fieldName = `categories.${catIndex}.items.${itemIndex}.description` as const
+            form.setError(fieldName, { type: 'manual', message: '' })
+            if (!firstErrorPath) firstErrorPath = fieldName
+            hasChecklistError = true
+          }
+
+          if (!item.basisPath) {
+            const fieldName = `categories.${catIndex}.items.${itemIndex}.basisPath` as const
+            form.setError(fieldName, { type: 'manual', message: '' })
+            if (!firstErrorPath) firstErrorPath = fieldName
+            hasChecklistError = true
+          }
         }
       })
     })
 
     if (hasChecklistError) {
       if (firstErrorPath) form.setFocus(firstErrorPath)
-      toast.error('Bajarilmagan deb belgilangan bandlar to‘liq to‘ldirilishi shart!', { richColors: true })
+      toast.error('Bajarilgan va bajarilmagan deb belgilangan bandlar to‘liq to‘ldirilishi shart!', {
+        richColors: true,
+      })
       return
     }
 
@@ -271,7 +324,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
               {acknowledgementPath ? (
                 <>
                   <FileLink url={acknowledgementPath} title="Hujjatni ko‘rish" />
-                  {user?.role === UserRoles.INSPECTOR && (
+                  {(user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.MANAGER) && (
                     <AcknowledgementUploadModal
                       resultId={resultId}
                       acknowledgementPath={acknowledgementPath}
@@ -341,7 +394,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
                   {additionalFilePath ? (
                     <>
                       <FileLink url={additionalFilePath} title="Hujjatni ko‘rish" />
-                      {user?.role === UserRoles.INSPECTOR && (
+                      {(user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.MANAGER) && (
                         <AddAdditionalFileModal
                           resultId={resultId}
                           additionalFilePath={additionalFilePath}
@@ -369,6 +422,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
             <h3 className="mb-4 text-lg font-semibold">{form.getValues(`categories.${catIndex}.categoryName`)}</h3>
             <CategoryItemsList
               control={form.control}
+              form={form as any}
               catIndex={catIndex}
               items={catField.items}
               disabled={disabled || (!additionalFilePath && inspectionType === 'other')}
@@ -382,13 +436,15 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
             c.items.map((it) => ({
               answer: it.answer,
               inspectionChecklistId: it.id,
-              corrective: it.answer === ChecklistAnswerStatus.NEGATIVE ? it.description || null : null,
+              corrective: it.answer === ChecklistAnswerStatus.NEGATIVE ? it.corrective || null : null,
               deadline:
                 it.answer === ChecklistAnswerStatus.NEGATIVE && it.deadline
                   ? typeof it.deadline === 'string'
                     ? it.deadline
                     : formatDateFn(it.deadline, 'yyyy-MM-dd')
                   : null,
+              basisPath: it.answer === ChecklistAnswerStatus.POSITIVE ? it.basisPath || null : null,
+              description: it.answer === ChecklistAnswerStatus.POSITIVE ? it.description || null : null,
             }))
           )}
         />
@@ -420,11 +476,13 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
 
 const CategoryItemsList = ({
   control,
+  form,
   catIndex,
   items,
   disabled,
 }: {
   control: Control<FormValues>
+  form: UseFormReturn<FormValues>
   catIndex: number
   items: FormValues['categories'][0]['items']
   disabled?: boolean
@@ -463,7 +521,9 @@ const CategoryItemsList = ({
                               name={field.name}
                               value={option.value}
                               checked={field.value === option.value}
-                              onChange={(e) => field.onChange(e.target.value)}
+                              onChange={(e) => {
+                                field.onChange(e.target.value)
+                              }}
                               disabled={disabled}
                             />
                             <span className="text-sm font-medium">{option.labelKey}</span>
@@ -480,51 +540,103 @@ const CategoryItemsList = ({
                 control={control}
                 name={`${prefix}.answer`}
                 render={({ field: ansField }) => {
-                  if (ansField.value !== ChecklistAnswerStatus.NEGATIVE) return <></>
+                  if (ansField.value === ChecklistAnswerStatus.UNRELATED || !ansField.value) return <></>
+                  const isNegative = ansField.value === ChecklistAnswerStatus.NEGATIVE
+                  const isPositive = ansField.value === ChecklistAnswerStatus.POSITIVE
+
                   return (
                     <div className="animate-in fade-in slide-in-from-top-2 mt-2 grid grid-cols-1 gap-4 border-t border-dashed pt-2 duration-300 md:grid-cols-4">
-                      <FormField
-                        control={control}
-                        name={`${prefix}.description`}
-                        render={({ field }) => (
-                          <FormItem className="col-span-1 md:col-span-3">
-                            <FormLabel>Chora-tadbir matni *</FormLabel>
-                            <FormControl>
-                              <Textarea
-                                placeholder="Chora-tadbir matnini kiriting..."
-                                className="min-h-[80px]"
-                                {...field}
-                                value={field.value || ''}
-                                disabled={disabled}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={control}
-                        name={`${prefix}.deadline`}
-                        render={({ field }) => {
-                          const dateValue = field.value ? new Date(field.value) : undefined
-                          return (
-                            <FormItem className="col-span-1 flex flex-col md:col-span-1">
-                              <FormLabel required={true}>Bartaraf etish muddati</FormLabel>
+                      {isPositive && (
+                        <FormField
+                          control={control}
+                          name={`${prefix}.basisPath`}
+                          render={({ field }) => (
+                            <FormItem className="col-span-1 md:col-span-1">
+                              <FormLabel required>Asoslovchi hujjat (PDF/Rasm)</FormLabel>
                               <FormControl>
-                                <DatePicker
-                                  value={dateValue}
-                                  disableStrategy="before"
-                                  onChange={field.onChange}
+                                <InputFile
+                                  form={form as any}
+                                  name={field.name as any}
+                                  accept={[FileTypes.PDF, FileTypes.IMAGE]}
+                                  uploadEndpoint="/attachments/inspection-answers"
+                                  showPreview
                                   disabled={disabled}
-                                  placeholder="Muddatni tanlang"
                                 />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
-                          )
-                        }}
-                      />
+                          )}
+                        />
+                      )}
+
+                      {isPositive && (
+                        <FormField
+                          control={control}
+                          name={`${prefix}.description`}
+                          render={({ field }) => (
+                            <FormItem className="col-span-1 md:col-span-3">
+                              <FormLabel>Izoh *</FormLabel>
+                              <FormControl>
+                                <Textarea
+                                  placeholder="Izoh kiriting..."
+                                  className="min-h-[80px]"
+                                  {...field}
+                                  value={field.value || ''}
+                                  disabled={disabled}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+
+                      {isNegative && (
+                        <FormField
+                          control={control}
+                          name={`${prefix}.corrective`}
+                          render={({ field }) => (
+                            <FormItem className="col-span-1 md:col-span-3">
+                              <FormLabel>Chora-tadbir matni *</FormLabel>
+                              <FormControl>
+                                <Textarea
+                                  placeholder="Chora-tadbir matnini kiriting..."
+                                  className="min-h-[80px]"
+                                  {...field}
+                                  value={field.value || ''}
+                                  disabled={disabled}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+
+                      {isNegative && (
+                        <FormField
+                          control={control}
+                          name={`${prefix}.deadline`}
+                          render={({ field }) => {
+                            const dateValue = field.value ? new Date(field.value) : undefined
+                            return (
+                              <FormItem className="col-span-1 flex flex-col md:col-span-1">
+                                <FormLabel required={true}>Bartaraf etish muddati</FormLabel>
+                                <FormControl>
+                                  <DatePicker
+                                    value={dateValue}
+                                    disableStrategy="before"
+                                    onChange={field.onChange}
+                                    disabled={disabled}
+                                    placeholder="Muddatni tanlang"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )
+                          }}
+                        />
+                      )}
                     </div>
                   )
                 }}

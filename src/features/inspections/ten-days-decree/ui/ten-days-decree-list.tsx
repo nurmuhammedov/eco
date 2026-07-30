@@ -23,7 +23,7 @@ interface TenDayDecree {
 export const TenDaysDecreeList = () => {
   const navigate = useNavigate()
   const { paramsObject } = useCustomSearchParams()
-  const { page = 1, size = 10, year = new Date().getFullYear() } = paramsObject
+  const { page = 1, size = 10 } = paramsObject
 
   const { data, isLoading, totalPages } = usePaginatedData<TenDayDecree>('/inspections/decree/ten-days', {
     page: Number(page),
@@ -87,9 +87,7 @@ export const TenDaysDecreeList = () => {
               variant="ghost"
               size="icon"
               onClick={() => {
-                navigate(
-                  `/inspections/info?inspectionId=${decree.id}&tin=${decree.tin}&name=${decree.legalName}&year=${year}`
-                )
+                navigate(`/inspections/info?inspectionId=${decree.id}&tin=${decree.tin}&name=${decree.legalName}`)
               }}
             >
               <Eye className="h-4 w-4" />

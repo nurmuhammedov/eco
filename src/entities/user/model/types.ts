@@ -10,6 +10,7 @@ export enum UserRoles {
   PROCURATOR = 'PROCURATOR', // Prokuratura
   INTERACTIVE_SERVICE = 'INTERACTIVE_SERVICE', // Interaktiv oyna
   ACCOUNTANT = 'ACCOUNTANT', // Hisobchi
+  HR = 'HR', // HR
 }
 
 export const UserRoleLabels: Record<UserRoles, string> = {
@@ -24,6 +25,7 @@ export const UserRoleLabels: Record<UserRoles, string> = {
   [UserRoles.PROCURATOR]: 'Prokuratura',
   [UserRoles.INTERACTIVE_SERVICE]: 'Interaktiv oyna',
   [UserRoles.ACCOUNTANT]: 'Hisobchi',
+  [UserRoles.HR]: 'HR',
 }
 
 export enum Direction {
@@ -59,4 +61,6 @@ export type UserState = {
   isSupervisor?: boolean
   isController?: boolean
   regionId?: number
+  delegated?: boolean
+  delegatorId?: string | null
 }

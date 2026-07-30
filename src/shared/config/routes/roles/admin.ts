@@ -8,6 +8,7 @@ const DepartmentPage = lazy(() => import('@/pages/admin/department/ui'))
 const EquipmentPage = lazy(() => import('@/pages/admin/equipment/equipment-page'))
 const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facility/ui'))
 const InspectionSurveys = lazy(() => import('@/pages/admin/inspection/ui'))
+const CategoryTypeViewPage = lazy(() => import('@/pages/admin/inspection/category-type-view-page'))
 const AttractionTypePage = lazy(() => import('@/pages/admin/attraction-type/page'))
 const EmployeeDeviceLoginReport = lazy(() => import('@/features/reports/ui/employee-device-login-report'))
 const EmployeesDashboard = lazy(() => import('@/features/reports/ui/employees-dashboard'))
@@ -23,6 +24,7 @@ const RegisterChangePage = lazy(() => import('@/pages/register/register-change-p
 const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
 const NewsFormPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsForm })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
+const OrganizationsPage = lazy(() => import('@/pages/organizations'))
 // const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 
 export const adminRoutes = [
@@ -37,6 +39,10 @@ export const adminRoutes = [
   {
     path: 'inspection-surveys',
     element: withSuspense(InspectionSurveys),
+  },
+  {
+    path: 'inspection-surveys/:id',
+    element: withSuspense(CategoryTypeViewPage),
   },
   {
     path: 'staffs',
@@ -112,5 +118,9 @@ export const adminRoutes = [
   {
     path: 'news/:id',
     element: withSuspense(NewsDetailPage),
+  },
+  {
+    path: 'organizations',
+    element: withSuspense(OrganizationsPage),
   },
 ]

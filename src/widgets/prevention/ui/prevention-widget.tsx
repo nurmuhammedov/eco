@@ -55,7 +55,6 @@ const RISK_TYPES = [
   // { value: 'ELEVATOR', label: 'Lift' },
   { value: 'XRAY', label: 'Rentgen' },
   { value: 'ATTRACTION', label: 'Attraksion' },
-  { value: 'LPG_POWERED', label: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma' },
 ]
 
 const ASSIGNMENT_STATUSES = [
@@ -123,10 +122,7 @@ const PreventionWidget = () => {
       RISK_TYPES?.map((item) => ({
         value: item?.value,
         label: item.label,
-        count:
-          item.value == 'LPG_POWERED'
-            ? counts?.lpgPoweredCount || 0
-            : counts?.[`${item.value?.toString()?.toLowerCase()}Count`] || 0,
+        count: counts?.[`${item.value?.toString()?.toLowerCase()}Count`] || 0,
       })) || []
     )
   }, [counts])

@@ -36,6 +36,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
     regionOptions,
     districtOptions,
     hazardousFacilityTypeOptions,
+    hazardousFacilityCategoryOptions,
     ownerData,
     detail,
     isUpdate,
@@ -166,6 +167,24 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                 )}
               />
             )}
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>XICHO toifasi</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={(val) => val && field.onChange(val)} value={field.value}>
+                      <SelectTrigger className="3xl:w-sm w-full">
+                        <SelectValue placeholder="XICHO toifasini tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>{hazardousFacilityCategoryOptions}</SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="hfTypeId"

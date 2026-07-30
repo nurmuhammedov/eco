@@ -5,6 +5,7 @@ import { UIModeEnum } from '@/shared/types/ui-types'
 import { useCategoryTypesQuery, useDeleteCategoryType, CategoryType } from '@/entities/admin/inspection'
 import { useCustomSearchParams } from '@/shared/hooks'
 import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options'
+import { useNavigate } from 'react-router-dom'
 
 export function CategoryTypeList() {
   const { onOpen } = useCategoryTypeDrawer()
@@ -14,10 +15,11 @@ export function CategoryTypeList() {
     size: paramsObject?.size || 10,
   })
   const deleteItem = useDeleteCategoryType()
+  const navigate = useNavigate()
 
   const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id })
   const onDelete = (id: number) => deleteItem.mutate(id)
-  const onView = (id: number) => onOpen(UIModeEnum.VIEW, { id })
+  const onView = (id: number) => navigate(`/inspection-surveys/${id}`)
 
   const columns: ColumnDef<CategoryType>[] = [
     {

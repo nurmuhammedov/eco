@@ -317,7 +317,6 @@ const RiskDateComparisonReport: React.FC = () => {
             <TabsTrigger value={RiskAnalysisTab.LIFT}>{t('risk_analysis_tabs.LIFT')}</TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.ATTRACTION}>{t('risk_analysis_tabs.ATTRACTION')}</TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.XRAY}>{t('risk_analysis_tabs.XRAY')}</TabsTrigger>
-            <TabsTrigger value={RiskAnalysisTab.LPG_POWERED}>{t('risk_analysis_tabs.LPG_POWERED')}</TabsTrigger>
           </TabsList>
         </div>
       </Tabs>

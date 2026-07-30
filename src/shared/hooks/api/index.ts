@@ -1,4 +1,5 @@
 export { default as usePaginatedData } from './usePaginatedData'
+export { default as useServicesPaginatedData } from './useServicesPaginatedData'
 export { default as useCustomSearchParams } from './useSearchParams'
 export { default as useDetail } from './useDetail'
 export { default as useUpdate } from './useUpdate'

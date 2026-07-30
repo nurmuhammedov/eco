@@ -209,7 +209,9 @@ const InspectionReports = ({
           </div>
         ) : (
           <>
-            {currentTab == 'questions' && user?.role == UserRoles.INSPECTOR && status == InspectionStatus.ASSIGNED ? (
+            {currentTab == 'questions' &&
+            (user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.MANAGER) &&
+            status == InspectionStatus.ASSIGNED ? (
               <InspectionChecklistFormV2
                 categories={categories}
                 resultId={resultId}
@@ -369,7 +371,8 @@ const InspectionReports = ({
                           <>
                             <FileLink url={signedActPath} title="Hujjatni ko‘rish" />
                           </>
-                        ) : status === InspectionSubMenuStatus.COMPLETED && user?.role === UserRoles.INSPECTOR ? (
+                        ) : status === InspectionSubMenuStatus.COMPLETED &&
+                          (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.MANAGER) ? (
                           <SignedActUploadModal
                             resultId={resultId}
                             signedActPath={signedActPath}

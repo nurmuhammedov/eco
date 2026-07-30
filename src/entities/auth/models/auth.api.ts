@@ -59,4 +59,22 @@ export const authAPI = {
 
     return normalizeUser(response.data.data)
   },
+  switchOther: async (delegatorId: string) => {
+    const response = await apiClient.post(`${API_ENDPOINTS.SWITCH_OTHER}?delegatorId=${delegatorId}`)
+
+    if (!response.success) {
+      throw new Error(response.message)
+    }
+
+    return response.data
+  },
+  switchBack: async () => {
+    const response = await apiClient.post(API_ENDPOINTS.SWITCH_BACK)
+
+    if (!response.success) {
+      throw new Error(response.message)
+    }
+
+    return response.data
+  },
 }

@@ -25,6 +25,7 @@ export const RegisterIllegalHfBaseSchema = z.object({
     .trim()
     .min(1, 'Majburiy maydon!')
     .max(250, 'Kiritilgan maʼlumot yaroqli emas'),
+  categoryId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   hfTypeId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   spheres: z.array(HFSphereEnum, { required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   regionId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),

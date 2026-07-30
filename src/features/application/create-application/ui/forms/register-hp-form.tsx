@@ -22,7 +22,14 @@ import DatePicker from '@/shared/components/ui/datepicker.tsx'
 import { parseISO } from 'date-fns'
 
 export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
-  const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } = useCreateHfApplication()
+  const {
+    form,
+    spheres,
+    regionOptions,
+    districtOptions,
+    hazardousFacilityTypeOptions,
+    hazardousFacilityCategoryOptions,
+  } = useCreateHfApplication()
 
   return (
     <Form {...form}>
@@ -64,6 +71,24 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
                   <FormLabel required>Bog‘lanish uchun telefon raqami</FormLabel>
                   <FormControl>
                     <PhoneInput className="3xl:w-sm w-full" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>XICHO toifasi</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="3xl:w-sm w-full">
+                        <SelectValue placeholder="XICHO toifasini tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>{hazardousFacilityCategoryOptions}</SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

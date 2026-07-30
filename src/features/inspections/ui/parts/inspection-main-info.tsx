@@ -5,15 +5,13 @@ import SignersModal from '@/features/application/application-detail/ui/modals/si
 import { useState } from 'react'
 import { Eye } from 'lucide-react'
 import { Badge } from '@/shared/components/ui/badge'
-import { useCustomSearchParams, useData } from '@/shared/hooks'
+import { useData } from '@/shared/hooks'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 
 const InspectionMainInfo = ({ inspectionData }: any) => {
   const [signers, setSigners] = useState<any[]>([])
-  const {
-    paramsObject: { year = new Date().getFullYear() },
-  } = useCustomSearchParams()
-
+  const startDate = inspectionData?.startDate
+  const year = startDate ? new Date(startDate).getFullYear() : new Date().getFullYear()
   const { data, isLoading } = useData<any>(
     `/integration/postal-mail/${inspectionData?.notificationLetterId}`,
     !!inspectionData &&

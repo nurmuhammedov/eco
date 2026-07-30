@@ -1,9 +1,8 @@
 import { CommonService } from '@/shared/api/dictionaries/queries/comon.api'
 import { ISearchParams } from '@/shared/types'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { useAuth } from '@/shared/hooks/use-auth'
 
 const useDetail = <T>(
   endpoint: string,
@@ -13,7 +12,8 @@ const useDetail = <T>(
   staleTime: number = 0
 ) => {
   const { i18n } = useTranslation()
-  const { user } = useAuth()
+  const queryClient = useQueryClient()
+  const user = queryClient.getQueryData<any>(['me'])
 
   const queryMethods = useQuery<T, Error>({
     queryKey: [endpoint, id, params, i18n.language, user?.role],

@@ -2,6 +2,7 @@ import { applicationFormConstants, type CreateHFApplicationDTO, HFAppealDtoSchem
 import {
   useDistrictSelectQueries,
   useHazardousFacilityTypeDictionarySelect,
+  useHazardousFacilityCategoryDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
@@ -16,6 +17,7 @@ export const useCreateHfApplication = () => {
       phoneNumber: '',
       upperOrganization: '',
       name: '',
+      categoryId: undefined,
       hfTypeId: undefined,
       spheres: [],
       regionId: '',
@@ -55,11 +57,25 @@ export const useCreateHfApplication = () => {
 
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
 
+  const { data: hazardousFacilityCategories } = useHazardousFacilityCategoryDictionarySelect()
+
   const districtOptions = useMemo(() => getSelectOptions(districts), [districts])
 
   const regionOptions = useMemo(() => getSelectOptions(regions), [regions, regionId])
 
   const hazardousFacilityTypeOptions = useMemo(() => getSelectOptions(hazardousFacilityTypes), [hazardousFacilityTypes])
 
-  return { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions }
+  const hazardousFacilityCategoryOptions = useMemo(
+    () => getSelectOptions(hazardousFacilityCategories),
+    [hazardousFacilityCategories]
+  )
+
+  return {
+    form,
+    spheres,
+    regionOptions,
+    districtOptions,
+    hazardousFacilityTypeOptions,
+    hazardousFacilityCategoryOptions,
+  }
 }

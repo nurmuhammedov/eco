@@ -14,7 +14,7 @@ export interface UseApplicationCreationProps {
   onSuccessNavigateTo?: string
   successMessage?: string
   onEnd?: () => void
-  queryKey: string
+  queryKey: string | any[]
   transformSubmitPayload?: (dto: any, sign: string, filePath: string | null) => any
 }
 
@@ -33,6 +33,7 @@ export function useEimzo({
   const [error, setError] = useState<string | null>(null)
 
   const [documentUrl, setDocumentUrl] = useState<string | null>(null)
+  const [hashCode, setHashCode] = useState<string | null>(null)
   const [formData, setFormData] = useState<FormData>(null)
 
   const [isPdfLoading, setIsPdfLoading] = useState(false)
@@ -47,12 +48,38 @@ export function useEimzo({
     mutationFn: (data: FormData) => createPdf(data, pdfEndpoint, pdfMethod),
     onSuccess: (response) => {
       setIsPdfLoading(false)
-      if (!response.success || !response.data || !response.data.data) {
-        handleError(response.message || 'PDF yaratishda xatolik!')
+      const findKey = (obj: any, keys: string[]): any => {
+        if (typeof obj !== 'object' || obj === null) return null
+        for (const key of keys) {
+          if (key in obj && obj[key]) return obj[key]
+        }
+        for (const k in obj) {
+          const val = findKey(obj[k], keys)
+          if (val) return val
+        }
+        return null
+      }
+
+      let url = findKey(response.data, ['filePath', 'url', 'documentUrl'])
+      if (!url && typeof response.data === 'string') url = response.data
+      if (!url && typeof response.data?.data === 'string') url = response.data.data
+
+      // Ba'zi endpointlar (masalan, notification) URL manzilini message ichida qaytaradi
+      if (
+        !url &&
+        typeof response.data?.message === 'string' &&
+        (response.data.message.includes('/') || response.data.message.endsWith('.pdf'))
+      ) {
+        url = response.data.message
+      }
+
+      if (!response.success || !response.data || !url) {
+        handleError(response.message || response.data?.message || 'PDF yaratishda xatolik!')
         return
       }
       try {
-        setDocumentUrl(response.data.data)
+        setDocumentUrl(url)
+        setHashCode(findKey(response.data, ['hashCode']))
       } catch (_error) {
         handleError('Hujjat URL ini olishda xatolik!')
       }
@@ -88,6 +115,7 @@ export function useEimzo({
   const resetState = useCallback(() => {
     setIsModalOpen(false)
     setDocumentUrl(null)
+    setHashCode(null)
     setFormData(null)
     setError(null)
     setIsPdfLoading(false)
@@ -113,7 +141,9 @@ export function useEimzo({
         }
         toast.success(successMessage || 'Muvaffaqiyatli saqlandi!')
         onEnd?.()
-        queryClient.invalidateQueries({ queryKey: [queryKey] }).then((r) => console.log(r))
+        queryClient
+          .invalidateQueries({ queryKey: Array.isArray(queryKey) ? queryKey : [queryKey] })
+          .then((r) => console.log(r))
       }
     },
     mutationKey: ['submit-application'],
@@ -126,6 +156,7 @@ export function useEimzo({
     isLoading,
     resetState,
     documentUrl,
+    hashCode,
     isModalOpen,
     isPdfLoading,
     handleCloseModal,

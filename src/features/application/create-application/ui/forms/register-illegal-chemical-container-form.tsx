@@ -734,7 +734,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalChemicalContaine
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        disableStrategy={'before'}
+                        disableStrategy={isUpdate ? undefined : 'before'}
                         placeholder="Sanani tanlang"
                       />
                     </div>
@@ -775,7 +775,7 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalChemicalContaine
                         className={'max-w-2/3'}
                         value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                         onChange={field.onChange}
-                        disableStrategy={'before'}
+                        disableStrategy={isUpdate ? undefined : 'before'}
                         placeholder="Sanani tanlang"
                       />
                     </div>

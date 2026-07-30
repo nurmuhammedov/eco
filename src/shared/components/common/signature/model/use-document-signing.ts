@@ -7,6 +7,7 @@ import { getTimeStamp } from '@/shared/components/common/signature/api/get-time-
 
 interface SignDocumentParams {
   documentUrl: string
+  hashCode?: string | null
   Client: SignatureClient
   signature: SignatureKey | string | null
   onSuccess?: (result: any) => void
@@ -26,7 +27,12 @@ export function useDocumentSigning() {
   })
 }
 
-export const signDocumentWithMetadata = async ({ Client, signature, documentUrl = '' }: SignDocumentParams) => {
+export const signDocumentWithMetadata = async ({
+  Client,
+  signature,
+  documentUrl = '',
+  hashCode,
+}: SignDocumentParams) => {
   try {
     if (!signature) {
       toast.error('Imzolash kaliti topilmadi!')
@@ -48,10 +54,17 @@ export const signDocumentWithMetadata = async ({ Client, signature, documentUrl 
       return false
     }
 
-    const documentBase64 = await convertPdfToBase64(documentUrl)
-    if (!documentBase64) {
-      toast.error('Hujjat ustida ishlashda xatolik!')
-      return false
+    let documentBase64: string
+
+    if (hashCode) {
+      documentBase64 = btoa(unescape(encodeURIComponent(hashCode)))
+    } else {
+      const b64 = await convertPdfToBase64(documentUrl)
+      if (!b64) {
+        toast.error('Hujjat ustida ishlashda xatolik!')
+        return false
+      }
+      documentBase64 = b64
     }
 
     const pkcs7Signature = await Client.createPkcs7(keyId, documentBase64)
