@@ -9,14 +9,20 @@ import FileLink from '@/shared/components/common/file-link.tsx'
 import { Coordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { getDate } from '@/shared/utils/date.ts'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Logs } from '@/features/register/hf/ui/parts/logs'
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { useState } from 'react'
+import { Button } from '@/shared/components/ui/button'
+import { DeregisterModal } from '../../common/ui/deregister-modal'
 
 const IrsDetail = () => {
-  const { isLoading, data } = useIrsDetail()
+  const { id } = useParams()
+  const { isLoading, data, refetch } = useIrsDetail()
   const { user } = useAuth()
+  const [isDeregisterModalOpen, setIsDeregisterModalOpen] = useState(false)
+  const canDeregister = user?.role === UserRoles.MANAGER && data?.isValid
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
 
   if (isLoading || !data) {
@@ -27,7 +33,19 @@ const IrsDetail = () => {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
+        {canDeregister && (
+          <Button variant="destructiveOutline" onClick={() => setIsDeregisterModalOpen(true)}>
+            Reyestrdan chiqarish
+          </Button>
+        )}
       </div>
+
+      <DeregisterModal
+        isOpen={isDeregisterModalOpen}
+        onClose={() => setIsDeregisterModalOpen(false)}
+        endpoint={`/irs/${id}/deregister`}
+        onSuccess={refetch}
+      />
       <DetailCardAccordion defaultValue={['registry_info', 'applicant_info', 'object_info', 'object_location']}>
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
           {user?.role !== UserRoles.PROCURATOR && (

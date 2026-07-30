@@ -119,11 +119,11 @@ const RegisterChangeDetail: FC = () => {
                   </Badge>
                 ) : isStatusChange ? (
                   <Badge variant="warning" className="py-1">
-                    Holatini o'zgartirish
+                    Holatini o‘zgartirish
                   </Badge>
                 ) : (
                   <Badge variant="info" className="py-1">
-                    Maʼlumotlarni o‘zgartirish uchun
+                    Maʼlumotlarni o‘zgartirish
                   </Badge>
                 )
               }

@@ -161,8 +161,8 @@ export const HfList = ({ isArchive }: HfListProps) => {
               const type = row.original.changeBelongType
               if (type?.startsWith('UPDATE')) {
                 return (
-                  <Badge variant="info" className="py-1">
-                    Maʼlumotlarni o‘zgartirish uchun
+                  <Badge variant="warning" className="py-1">
+                    Maʼlumotlarni o‘zgartirish
                   </Badge>
                 )
               }

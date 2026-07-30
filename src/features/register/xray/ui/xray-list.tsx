@@ -81,7 +81,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
           legalName,
           legalTin,
           address,
-          active: isArchive ? false : currentStatus === 'INACTIVE' ? false : true,
+          active: isArchive ? false : currentStatus !== 'INACTIVE',
           changed: currentStatus === 'CHANGED' ? true : '',
           changeStatus: currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
           status: currentStatus === 'EXPIRED' || currentStatus === 'NO_DATE' ? currentStatus : '',
@@ -174,6 +174,32 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
       filterKey: 'address',
       filterType: 'search',
     },
+    ...(currentStatus === 'CHANGED'
+      ? [
+          {
+            header: 'So‘rov turi',
+            accessorKey: 'changeBelongType',
+            cell: ({ row }: any) => {
+              const type = row.original.changeBelongType
+              if (type?.startsWith('UPDATE')) {
+                return (
+                  <Badge variant="warning" className="py-1">
+                    Maʼlumotlarni o‘zgartirish
+                  </Badge>
+                )
+              }
+              if (type?.startsWith('DEREGISTER')) {
+                return (
+                  <Badge variant="destructive" className="py-1">
+                    Reyestrdan chiqarish
+                  </Badge>
+                )
+              }
+              return null
+            },
+          },
+        ]
+      : []),
     {
       id: 'actions',
       cell: ({ row }) => (

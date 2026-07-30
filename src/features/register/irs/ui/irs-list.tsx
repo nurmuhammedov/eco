@@ -223,6 +223,32 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
         { id: IrsUsageType.STORAGE, name: 'Vaqtinchalik saqlash uchun' },
       ],
     },
+    ...(currentValid === 'CHANGED'
+      ? [
+          {
+            header: 'So‘rov turi',
+            accessorKey: 'changeBelongType',
+            cell: ({ row }: any) => {
+              const type = row.original.changeBelongType
+              if (type?.startsWith('UPDATE')) {
+                return (
+                  <Badge variant="warning" className="py-1">
+                    Maʼlumotlarni o‘zgartirish
+                  </Badge>
+                )
+              }
+              if (type?.startsWith('DEREGISTER')) {
+                return (
+                  <Badge variant="destructive" className="py-1">
+                    Reyestrdan chiqarish
+                  </Badge>
+                )
+              }
+              return null
+            },
+          },
+        ]
+      : []),
     {
       id: 'actions',
       cell: ({ row }) => (

@@ -356,7 +356,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
               if (type?.startsWith('UPDATE')) {
                 return (
                   <Badge variant="info" className="py-1">
-                    Maʼlumotlarni o‘zgartirish uchun
+                    Maʼlumotlarni o‘zgartirish
                   </Badge>
                 )
               }
