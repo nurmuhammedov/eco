@@ -5,7 +5,7 @@ import { CreateOtherInspectionModal } from '@/features/inspections/ui/parts/crea
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import { useAuth } from '@/shared/hooks/use-auth'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { UserRoles } from '@/entities/user'
 import { useData, usePaginatedData } from '@/shared/hooks'
 import { Badge } from '@/shared/components/ui/badge'
@@ -143,12 +143,7 @@ const Cards = ({ onTabChange, regionId, year, month, type, belongType }: any) =>
   )
 }
 
-export enum InspectionTab {
-  RISK_BASED = 'risk_based',
-  OTHER = 'other',
-}
-
-export const InspectionWidget: React.FC = () => {
+export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) => {
   const { user } = useAuth()
   const { paramsObject, addParams } = useCustomSearchParams()
   const { t } = useTranslation()
@@ -159,7 +154,7 @@ export const InspectionWidget: React.FC = () => {
   const isChairman = user?.role === UserRoles.CHAIRMAN
   const isChairmanOrHead = user?.role === UserRoles.HEAD
 
-  const inspectionType = paramsObject.type || 'RISK_BASED'
+  const inspectionType = type || paramsObject.type || 'RISK_BASED'
   const belongType = paramsObject.belongType || RiskAnalysisTab.XICHO
 
   const activeTab = paramsObject.status

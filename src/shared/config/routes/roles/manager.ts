@@ -19,7 +19,8 @@ const RiskAnalysisMonthlyPage = lazy(() => import('@/pages/risk-analysis/monthly
 const RiskAnalysisDailyPage = lazy(() => import('@/pages/risk-analysis/daily'))
 const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'))
 const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-info-by-id'))
-const InspectionsPage = lazy(() => import('@/pages/inspections/page'))
+const InspectionsRiskBasedPage = lazy(() => import('@/pages/inspections/risk-based/page'))
+const InspectionsOtherPage = lazy(() => import('@/pages/inspections/other/page'))
 const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'))
 const ExpertisePage = lazy(() => import('@/pages/expertise/page'))
 const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-page'))
@@ -233,8 +234,13 @@ export const managerRoutes = [
   // INSPECTION
   {
     id: 'INSPECTION',
-    path: 'inspections',
-    element: withSuspense(InspectionsPage),
+    path: 'inspections/risk-based',
+    element: withSuspense(InspectionsRiskBasedPage),
+  },
+  {
+    id: 'INSPECTION',
+    path: 'inspections/other',
+    element: withSuspense(InspectionsOtherPage),
   },
   {
     id: 'INSPECTION',

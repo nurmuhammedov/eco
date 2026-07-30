@@ -74,8 +74,9 @@ export function Header() {
     }
   }
 
-  const showYearFilter = ['/inspections', '/preventions'].includes(pathname) || isRiskAnalysisMonthly
-  const showMonthFilter = isRiskAnalysisMonthly || pathname === '/inspections'
+  const showYearFilter =
+    ['/inspections/risk-based', '/inspections/other', '/preventions'].includes(pathname) || isRiskAnalysisMonthly
+  const showMonthFilter = isRiskAnalysisMonthly || ['/inspections/risk-based', '/inspections/other'].includes(pathname)
   const showDailyCalendar = isRiskAnalysisDaily
 
   const title = useMemo(() => {

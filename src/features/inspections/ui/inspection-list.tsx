@@ -59,8 +59,9 @@ export const InspectionList: React.FC = () => {
     status !== InspectionStatus.TEN_DAYS
   )
 
-  const handleView = (row: Inspection) => {
-    navigate(`/inspections/info?inspectionId=${row.id}&tin=${row.tin}&name=${row.legalName}&year=${year}`)
+  const handleView = (row: any) => {
+    const targetYear = row.year || year || new Date().getFullYear()
+    navigate(`/inspections/info?inspectionId=${row.id}&tin=${row.tin}&name=${row.legalName}&year=${targetYear}`)
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [

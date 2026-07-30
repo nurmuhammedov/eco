@@ -69,12 +69,12 @@ export default [
       {
         id: 'INSPECTION',
         title: 'Xavfni tahlili asosidagi tekshiruvlar',
-        url: '/inspections?type=RISK_BASED',
+        url: '/inspections/risk-based',
       },
       {
         id: 'INSPECTION',
         title: 'Boshqa turdagi tekshiruvlar',
-        url: '/inspections?type=OTHER',
+        url: '/inspections/other',
       },
     ],
   },

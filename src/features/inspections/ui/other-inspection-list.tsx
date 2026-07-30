@@ -33,8 +33,9 @@ export const OtherInspectionList: React.FC = () => {
   })
 
   const handleView = (row: any) => {
+    const targetYear = row.year || year || new Date().getFullYear()
     navigate(
-      `/inspections/info?inspectionId=${row.id}&tin=${row.legalTin}&name=${row.legalName}&year=${year}&inspectionType=other`
+      `/inspections/info?inspectionId=${row.id}&tin=${row.legalTin}&name=${row.legalName}&year=${targetYear}&inspectionType=other`
     )
   }
 
