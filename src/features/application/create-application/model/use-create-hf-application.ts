@@ -5,7 +5,7 @@ import {
   useHazardousFacilityCategoryDictionarySelect,
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries'
-import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { getSelectOptions, getHazardousFacilityTypeOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
@@ -63,7 +63,10 @@ export const useCreateHfApplication = () => {
 
   const regionOptions = useMemo(() => getSelectOptions(regions), [regions, regionId])
 
-  const hazardousFacilityTypeOptions = useMemo(() => getSelectOptions(hazardousFacilityTypes), [hazardousFacilityTypes])
+  const hazardousFacilityTypeOptions = useMemo(
+    () => getHazardousFacilityTypeOptions(hazardousFacilityTypes),
+    [hazardousFacilityTypes]
+  )
 
   const hazardousFacilityCategoryOptions = useMemo(
     () => getSelectOptions(hazardousFacilityCategories),

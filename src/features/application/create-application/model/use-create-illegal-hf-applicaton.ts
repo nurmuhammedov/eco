@@ -6,7 +6,7 @@ import {
   useRegionSelectQueries,
 } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
-import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { getSelectOptions, getHazardousFacilityTypeOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
 import useAdd from '@/shared/hooks/api/useAdd'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -153,7 +153,12 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
         upperOrganization: getValue(detail.upperOrganization || ''),
         name: getValue(detail.name || ''),
         categoryId: detail.categoryId ? String(detail.categoryId) : undefined,
-        hfTypeId: detail.hfTypeId ? String(detail.hfTypeId) : undefined,
+        hfTypeId:
+          detail.hfTypeName && ['3.1', '3.2', '3.3'].includes(detail.hfTypeName)
+            ? detail.hfTypeId
+              ? String(detail.hfTypeId)
+              : undefined
+            : undefined,
         spheres: detail.spheres || [],
         regionId: detail.regionId ? String(detail.regionId) : '',
         address: getValue(detail.address || ''),
@@ -226,7 +231,7 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
   const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
   const hazardousFacilityTypeOptions = useMemo(
-    () => getSelectOptions(hazardousFacilityTypes || []),
+    () => getHazardousFacilityTypeOptions(hazardousFacilityTypes || []),
     [hazardousFacilityTypes]
   )
   const hazardousFacilityCategoryOptions = useMemo(

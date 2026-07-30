@@ -47,3 +47,26 @@ export function getSelectOptionsByType<T>(list: OptionItem<T>[]): JSX.Element[] 
     )
     .filter(Boolean) as JSX.Element[]
 }
+
+export function getHazardousFacilityTypeOptions(list: any[]): JSX.Element[] {
+  if (!Array.isArray(list) || list.length === 0) {
+    return [
+      <SelectItem value="notSelected" key="no-options" disabled={true}>
+        Mavjud emas
+      </SelectItem>,
+    ]
+  }
+
+  return list
+    .filter((option) => ['3.1', '3.2', '3.3'].includes(option.name))
+    .map((option) => (
+      <SelectItem value={String(option.id)} key={String(option.id)}>
+        <span
+          className="block py-1 leading-tight break-words whitespace-normal"
+          title={`${option.name} - ${option.description}`}
+        >
+          <strong>{option.name}</strong> - {option.description}
+        </span>
+      </SelectItem>
+    ))
+}

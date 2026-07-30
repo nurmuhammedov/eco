@@ -199,6 +199,11 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
                       <SelectContent>{hazardousFacilityTypeOptions}</SelectContent>
                     </Select>
                   </FormControl>
+                  {isUpdate && detail?.hfTypeName && !['3.1', '3.2', '3.3'].includes(detail.hfTypeName) && (
+                    <FormDescription className="3xl:w-sm w-full wrap-break-word">
+                      Eski qiymat: {detail.hfTypeName}
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
