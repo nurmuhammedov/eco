@@ -384,7 +384,6 @@ export const headRoutes = [
     path: 'news/:id',
     element: withSuspense(NewsDetailPage),
   },
-  // KPI — Mening KPIlarim (HEAD va KPI_RESPONSIBLE)
   {
     path: 'kpi/my-tasks',
     element: withSuspense(MyKpiPage),

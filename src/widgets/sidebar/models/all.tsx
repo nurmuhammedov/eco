@@ -158,7 +158,6 @@ export default [
     url: '/cadastre-passport',
     icon: <FileCheck />,
   },
-  // KPI — HEAD va KPI_RESPONSIBLE foydalanuvchilar uchun
   {
     title: 'KPI',
     url: '/kpi',
