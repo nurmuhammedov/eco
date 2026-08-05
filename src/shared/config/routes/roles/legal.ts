@@ -42,6 +42,7 @@ const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 const ProfilePage = lazy(() => import('@/pages/profile/page'))
 const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
+const ExpertiseOrganizations = lazy(() => import('@/pages/expertise/organizations-page'))
 
 // Cadastre Passport Mocks
 const CadastreList = lazy(() => import('@/features/cadastre-passport/ui/cadastre-list'))
@@ -232,7 +233,14 @@ export const legalRoutes = [
     element: withSuspense(InspectionsInfoPage),
   },
 
-  // ACCREDITATION / EXPERTISE
+  // ACCREDITATION
+  {
+    id: 'ACCREDITATION',
+    path: 'expertise-organizations',
+    element: withSuspense(ExpertiseOrganizations),
+  },
+
+  // CONCLUSION
   {
     id: 'CONCLUSION',
     path: 'accreditations',
