@@ -10,12 +10,17 @@ import { useTranslation } from 'react-i18next'
 import { format } from 'date-fns'
 import { Badge } from '@/shared/components/ui/badge'
 import { OtherInspectionTabStatus } from '@/widgets/inspection/ui/inspection-widget'
+import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
 
 export const OtherInspectionList: React.FC = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { paramsObject } = useCustomSearchParams()
-  const { year, month, status } = paramsObject
+  const {
+    year = getDefaultYearAndMonthForInspections().year,
+    month = getDefaultYearAndMonthForInspections().month,
+    status,
+  } = paramsObject
 
   const {
     data: inspections,

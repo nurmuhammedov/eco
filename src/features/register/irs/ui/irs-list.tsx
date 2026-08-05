@@ -232,7 +232,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
               const type = row.original.changeBelongType
               if (type?.startsWith('UPDATE')) {
                 return (
-                  <Badge variant="warning" className="py-1">
+                  <Badge variant="info" className="py-1">
                     Maʼlumotlarni o‘zgartirish
                   </Badge>
                 )
@@ -241,6 +241,13 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
                 return (
                   <Badge variant="destructive" className="py-1">
                     Reyestrdan chiqarish
+                  </Badge>
+                )
+              }
+              if (type?.startsWith('CHANGE_IRS_STATUS')) {
+                return (
+                  <Badge variant="warning" className="py-1">
+                    Holatini o‘zgartirish
                   </Badge>
                 )
               }

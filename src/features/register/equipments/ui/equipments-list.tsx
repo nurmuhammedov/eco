@@ -84,14 +84,9 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       ? currentStatus !== 'ALL'
         ? currentStatus
         : ''
-      : currentStatus !== 'ALL' &&
-          currentStatus !== 'ACTIVE' &&
-          currentStatus !== 'INACTIVE' &&
-          currentStatus !== 'CHANGED'
+      : ['VALID', 'INVALID', 'EXPIRED', 'NO_DATE'].includes(currentStatus)
         ? currentStatus
-        : currentStatus === 'CHANGED' && changeStatus !== 'ALL'
-          ? ''
-          : '',
+        : '',
     active: isTanker
       ? ''
       : isArchive
@@ -158,7 +153,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     if (currentStatus === 'CHANGED') {
       navigate(`/register/change/${id}/equipments`)
     } else {
-      const query = ['ACTIVE', 'INVALID'].includes(currentStatus) ? `?active=true&status=${currentStatus}` : ''
+      const query = ['ACTIVE', 'VALID', 'INVALID'].includes(currentStatus) ? `?active=true&status=${currentStatus}` : ''
       navigate(`${id}/equipments${query}`)
     }
   }
@@ -362,15 +357,15 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
               }
               if (type?.startsWith('DEREGISTER')) {
                 return (
-                  <Badge variant="error" className="py-1">
-                    Reyestardan chiqarish uchun
+                  <Badge variant="destructive" className="py-1">
+                    Reyestrdan chiqarish
                   </Badge>
                 )
               }
               if (type?.startsWith('CHANGE_EQP_STATUS')) {
                 return (
                   <Badge variant="warning" className="py-1">
-                    Holatini o'zgartirish
+                    Holatini o‘zgartirish
                   </Badge>
                 )
               }
@@ -544,11 +539,16 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
                     name: isAutoCrane ? 'Reyestrdagi avtokranlar' : 'Reyestrdagi qurilmalar',
                     count: currentStatus === 'ACTIVE' ? totalElements : undefined,
                   },
-                  // {
-                  //   id: 'INACTIVE',
-                  //   name: isAutoCrane ? 'Reyestrdan chiqarilgan avtokranlar' : 'Reyestrdan chiqarilgan qurilmalar',
-                  //   count: currentStatus === 'INACTIVE' ? totalElements : undefined,
-                  // },
+                  {
+                    id: 'VALID',
+                    name: isAutoCrane ? 'Soz holatdagi avtokranlar' : 'Soz holatdagi qurilmalar',
+                    count: currentStatus === 'VALID' ? totalElements : undefined,
+                  },
+                  {
+                    id: 'INVALID',
+                    name: isAutoCrane ? 'Nosoz holatdagi avtokranlar' : 'Nosoz holatdagi qurilmalar',
+                    count: currentStatus === 'INVALID' ? totalElements : undefined,
+                  },
                   {
                     id: 'EXPIRED',
                     name: isAutoCrane ? 'Muddati o‘tgan avtokranlar' : 'Muddati o‘tgan qurilmalar',
@@ -558,11 +558,6 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
                     id: 'NO_DATE',
                     name: isAutoCrane ? 'Muddati kiritilmagan avtokranlar' : 'Muddati kiritilmaganlar',
                     count: currentStatus === 'NO_DATE' ? totalElements : undefined,
-                  },
-                  {
-                    id: 'INVALID',
-                    name: 'Vaqtinchalik nosozlar',
-                    count: currentStatus === 'INVALID' ? totalElements : undefined,
                   },
                   {
                     id: 'CHANGED',

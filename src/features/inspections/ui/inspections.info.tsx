@@ -158,6 +158,9 @@ const InspectionsInfo = () => {
                 acknowledgementPath={item?.acknowledgementPath}
                 additionalFilePath={item?.additionalFilePath}
                 signedActPath={item?.signedActPath}
+                explanationLetterPath={item?.explanationLetterPath}
+                reportPath={item?.reportPath}
+                familiarizationReportPath={item?.familiarizationReportPath}
                 act={item?.act}
                 resultId={item?.id}
               />

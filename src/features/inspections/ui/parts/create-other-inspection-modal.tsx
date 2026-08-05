@@ -102,7 +102,7 @@ export const CreateOtherInspectionModal = () => {
     form.setValue('inspectorIdList', [])
   }, [officeIdValue, form])
   const { data: categoryOptions } = useCategoryTypeSelectQuery(undefined, isOpen)
-  const { data: officeSelect } = useOfficeSelectQueries()
+  const { data: officeSelect } = useOfficeSelectQueries(isChairman && isOpen)
 
   const {
     error,

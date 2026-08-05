@@ -9,9 +9,9 @@ import { Eye } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserRoles } from '@/entities/user'
-import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table.tsx'
 import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
 import { format } from 'date-fns'
+import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
 
 export const InspectionList: React.FC = () => {
   const navigate = useNavigate()
@@ -23,9 +23,9 @@ export const InspectionList: React.FC = () => {
     paramsObject: {
       status = InspectionStatus.ALL,
       subStatus = InspectionSubMenuStatus.ASSIGNED,
-      year,
+      year = getDefaultYearAndMonthForInspections().year,
       regionId = 'ALL',
-      month,
+      month = getDefaultYearAndMonthForInspections().month,
       belongType = 'HF',
       type = 'RISK_BASED',
       ...rest

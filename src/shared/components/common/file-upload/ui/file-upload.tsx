@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
 import { AxiosProgressEvent } from 'axios'
-import { Paperclip } from 'lucide-react'
+import { Camera, Paperclip } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { Input } from '@/shared/components/ui/input'
 import { FileIcon } from './file-icon'
@@ -21,6 +21,7 @@ export interface InputFileProps<T extends FieldValues> {
   showPreview?: boolean
   showFileSize?: boolean
   showDownload?: boolean
+  showCameraOption?: boolean
   uploadEndpoint?: string
   multiple?: boolean
   maxFiles?: number
@@ -124,6 +125,7 @@ function InputFileComponent<T extends FieldValues>({
   showPreview = false,
   showFileSize = false,
   showDownload = false,
+  showCameraOption = false,
   accept = [FileTypes.PDF],
   uploadEndpoint,
   multiple = false,
@@ -201,6 +203,7 @@ function InputFileComponent<T extends FieldValues>({
   })
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const cameraInputRef = useRef<HTMLInputElement | null>(null)
 
   const openFileDialog = useCallback(() => {
     if (!disabled && !isPending) {
@@ -208,6 +211,17 @@ function InputFileComponent<T extends FieldValues>({
       fileInputRef.current?.click()
     }
   }, [disabled, isPending, multiple, fileList.length, maxFiles])
+
+  const openCameraDialog = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      if (!disabled && !isPending) {
+        if (multiple && fileList.length >= maxFiles) return
+        cameraInputRef.current?.click()
+      }
+    },
+    [disabled, isPending, multiple, fileList.length, maxFiles]
+  )
 
   const validateFile = useCallback(
     (file: File): boolean => {
@@ -337,27 +351,52 @@ function InputFileComponent<T extends FieldValues>({
   return (
     <div className={cn('file-upload-wrapper', className)}>
       {(multiple || fileList.length === 0) && (
-        <div
-          onClick={openFileDialog}
-          className={cn(
-            'mb-2 flex w-full items-center',
-            'overflow-hidden rounded border border-dashed bg-white',
-            'cursor-pointer transition-all duration-150 ease-in-out',
-            hasError ? 'border-red-300' : 'border-blue-300 hover:border-blue-500 hover:bg-blue-50',
-            isPending && 'cursor-not-allowed opacity-50'
-          )}
-        >
-          <div className="flex h-9 items-center justify-center border-r border-transparent px-2.5">
-            {isPending ? (
-              <div className="size-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent" />
-            ) : (
-              <Paperclip className="size-4 text-blue-400" />
+        <div className="mb-2 flex w-full gap-2">
+          <div
+            onClick={openFileDialog}
+            className={cn(
+              'flex flex-1 items-center',
+              'overflow-hidden rounded border border-dashed bg-white',
+              'cursor-pointer transition-all duration-150 ease-in-out',
+              hasError ? 'border-red-300' : 'border-blue-300 hover:border-blue-500 hover:bg-blue-50',
+              isPending && 'cursor-not-allowed opacity-50'
             )}
+          >
+            <div className="flex h-9 items-center justify-center border-r border-transparent px-2.5">
+              {isPending ? (
+                <div className="size-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent" />
+              ) : (
+                <Paperclip className="size-4 text-blue-400" />
+              )}
+            </div>
+            {/* O‘zgartirish: whitespace-nowrap va truncate qo‘shildi */}
+            <div className="flex-grow truncate px-3 py-2 text-sm font-medium whitespace-nowrap text-blue-400">
+              {isPending ? `Yuklanmoqda... (${uploadProgress}%)` : buttonText}
+            </div>
           </div>
-          {/* O‘zgartirish: whitespace-nowrap va truncate qo‘shildi */}
-          <div className="flex-grow truncate px-3 py-2 text-sm font-medium whitespace-nowrap text-blue-400">
-            {isPending ? `Yuklanmoqda... (${uploadProgress}%)` : buttonText}
-          </div>
+
+          {showCameraOption && (
+            <div
+              onClick={openCameraDialog}
+              className={cn(
+                'flex items-center justify-center px-4',
+                'overflow-hidden rounded border border-dashed bg-white',
+                'cursor-pointer transition-all duration-150 ease-in-out',
+                hasError ? 'border-red-300' : 'border-emerald-300 hover:border-emerald-500 hover:bg-emerald-50',
+                isPending && 'cursor-not-allowed opacity-50'
+              )}
+              title="Rasmga olish"
+            >
+              {isPending ? (
+                <div className="size-4 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
+              ) : (
+                <>
+                  <Camera className="mr-2 size-4 text-emerald-600" />
+                  <span className="text-sm font-medium whitespace-nowrap text-emerald-600">Rasmga olish</span>
+                </>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -386,6 +425,19 @@ function InputFileComponent<T extends FieldValues>({
         disabled={disabled || isPending}
         onChange={handleFileChange}
       />
+
+      {showCameraOption && (
+        <Input
+          ref={cameraInputRef}
+          hidden
+          allowCyrillic={true}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          disabled={disabled || isPending}
+          onChange={handleFileChange}
+        />
+      )}
 
       {hasError && errors[name]?.message && (
         <p className="mt-1 text-xs text-red-500">{errors[name]?.message as string}</p>

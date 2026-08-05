@@ -67,8 +67,18 @@ export const HfList = ({ isArchive }: HfListProps) => {
     legalAddress,
     name,
     address,
-    status: currentActive !== 'CHANGED' || currentStatus === 'ALL' ? '' : currentStatus,
-    active: isArchive ? false : currentActive !== 'false',
+    status:
+      currentActive === 'CHANGED'
+        ? ''
+        : currentActive === 'INVALID'
+          ? 'INVALID'
+          : currentActive === 'VALID'
+            ? 'VALID'
+            : currentStatus === 'ALL'
+              ? ''
+              : currentStatus,
+    active:
+      currentActive === 'INVALID' || currentActive === 'VALID' ? true : isArchive ? false : currentActive !== 'false',
     changed: currentActive === 'CHANGED' ? true : '',
     changeStatus: currentActive === 'CHANGED' && currentStatus !== 'ALL' ? currentStatus : '',
     regionId: regionId === 'ALL' ? '' : regionId,
@@ -89,7 +99,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
     if (currentActive === 'CHANGED') {
       navigate(`/register/change/${id}/hf`)
     } else {
-      navigate(`${id}/hf${currentActive === 'true' ? '?active=true' : ''}`)
+      navigate(`${id}/hf${['true', 'VALID', 'INVALID'].includes(currentActive) ? '?active=true' : ''}`)
     }
   }
 
@@ -161,15 +171,22 @@ export const HfList = ({ isArchive }: HfListProps) => {
               const type = row.original.changeBelongType
               if (type?.startsWith('UPDATE')) {
                 return (
-                  <Badge variant="warning" className="py-1">
+                  <Badge variant="info" className="py-1">
                     Maʼlumotlarni o‘zgartirish
                   </Badge>
                 )
               }
               if (type?.startsWith('DEREGISTER')) {
                 return (
-                  <Badge variant="error" className="py-1">
-                    Reyestardan chiqarish uchun
+                  <Badge variant="destructive" className="py-1">
+                    Reyestrdan chiqarish
+                  </Badge>
+                )
+              }
+              if (type?.startsWith('CHANGE_HF_STATUS')) {
+                return (
+                  <Badge variant="warning" className="py-1">
+                    Holatini o‘zgartirish
                   </Badge>
                 )
               }
@@ -212,12 +229,16 @@ export const HfList = ({ isArchive }: HfListProps) => {
             // },
             {
               id: 'true',
-              name: 'Amaldagi XICHOlar',
+              name: 'Reyestrdagi XICHOlar',
             },
-            // {
-            //   id: 'false',
-            //   name: 'Reyestrdan chiqarilgan XICHOlar',
-            // },
+            {
+              id: 'VALID',
+              name: 'Faol XICHOlar',
+            },
+            {
+              id: 'INVALID',
+              name: 'Nofaol XICHOlar',
+            },
             {
               id: 'CHANGED',
               name: 'O‘zgartirish so‘rovlari',

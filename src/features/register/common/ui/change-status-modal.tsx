@@ -22,9 +22,17 @@ interface ChangeStatusModalProps {
   endpoint: string
   onSuccess?: () => void
   targetStatus: 'VALID' | 'INVALID'
+  type?: 'EQUIPMENT' | 'HF'
 }
 
-export const ChangeStatusModal = ({ isOpen, onClose, endpoint, onSuccess, targetStatus }: ChangeStatusModalProps) => {
+export const ChangeStatusModal = ({
+  isOpen,
+  onClose,
+  endpoint,
+  onSuccess,
+  targetStatus,
+  type = 'EQUIPMENT',
+}: ChangeStatusModalProps) => {
   const navigate = useNavigate()
   const form = useForm<ChangeStatusFormValues>({
     resolver: zodResolver(changeStatusSchema),
@@ -55,11 +63,18 @@ export const ChangeStatusModal = ({ isOpen, onClose, endpoint, onSuccess, target
 
   const isRestoring = targetStatus === 'VALID'
 
+  const getTitle = () => {
+    if (type === 'HF') {
+      return isRestoring ? 'Faol holatga qaytarish' : 'Vaqtinchalik nofaol'
+    }
+    return isRestoring ? 'Soz holatga qaytarish' : 'Vaqtinchalik nosoz'
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{isRestoring ? 'Soz holatga qaytarish' : 'Vaqtinchalik nosoz'}</DialogTitle>
+          <DialogTitle>{getTitle()}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -68,9 +83,7 @@ export const ChangeStatusModal = ({ isOpen, onClose, endpoint, onSuccess, target
               name="reason"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>
-                    {isRestoring ? 'Soz holatga qaytarish sababi' : 'Vaqtinchalik nosoz sababi'}
-                  </FormLabel>
+                  <FormLabel required>{getTitle()} sababi</FormLabel>
                   <FormControl>
                     <Textarea rows={7} placeholder="Sababni kiriting..." {...field} />
                   </FormControl>
@@ -83,9 +96,7 @@ export const ChangeStatusModal = ({ isOpen, onClose, endpoint, onSuccess, target
               name="basisFilePath"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>
-                    {isRestoring ? 'Soz holatga qaytarish asosi' : 'Vaqtinchalik nosoz asosi'}
-                  </FormLabel>
+                  <FormLabel required>{getTitle()} asosi</FormLabel>
                   <FormControl>
                     <InputFile name={field.name} form={form} />
                   </FormControl>

@@ -10,20 +10,11 @@ import { InquiryNotification } from './inquiry-notification'
 import { DelegatedTasksNotification } from './delegated-tasks-notification'
 import DatePicker from '@/shared/components/ui/datepicker'
 
-const MONTHS = [
-  { id: 'JANUARY', name: 'Yanvar' },
-  { id: 'FEBRUARY', name: 'Fevral' },
-  { id: 'MARCH', name: 'Mart' },
-  { id: 'APRIL', name: 'Aprel' },
-  { id: 'MAY', name: 'May' },
-  { id: 'JUNE', name: 'Iyun' },
-  { id: 'JULY', name: 'Iyul' },
-  { id: 'AUGUST', name: 'Avgust' },
-  { id: 'SEPTEMBER', name: 'Sentabr' },
-  { id: 'OCTOBER', name: 'Oktabr' },
-  { id: 'NOVEMBER', name: 'Noyabr' },
-  { id: 'DECEMBER', name: 'Dekabr' },
-]
+import {
+  MONTHS,
+  getDefaultYearAndMonthForInspections,
+  getDefaultYearAndMonthForRiskAnalysis,
+} from '@/shared/utils/date'
 
 export function Header() {
   const { pathname = '' } = useLocation()
@@ -35,9 +26,13 @@ export function Header() {
   const dateBasisQuarter = subQuarters(new Date(), 1)
   const defaultQuarter = getQuarter(dateBasisQuarter).toString()
 
-  const dateBasisMonth = subMonths(new Date(), 1)
-  const defaultYear = pathname?.startsWith('/inspections') ? undefined : dateBasisMonth.getFullYear().toString()
-  const defaultMonth = pathname?.startsWith('/inspections') ? undefined : MONTHS[getMonth(dateBasisMonth)].id
+  const defaultYear = pathname?.startsWith('/inspections')
+    ? getDefaultYearAndMonthForInspections().year
+    : getDefaultYearAndMonthForRiskAnalysis().year
+
+  const defaultMonth = pathname?.startsWith('/inspections')
+    ? getDefaultYearAndMonthForInspections().month
+    : getDefaultYearAndMonthForRiskAnalysis().month
 
   const dateBasisDay = subDays(new Date(), 1)
   const defaultDate = format(dateBasisDay, 'yyyy-MM-dd')

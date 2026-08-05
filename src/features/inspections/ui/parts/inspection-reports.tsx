@@ -17,6 +17,9 @@ import { AlertCircle, CheckCircle2, Eye, FileText, ShieldCheck, UploadCloud } fr
 import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal'
 import { getDate } from '@/shared/utils/date'
 import SignedActUploadModal from './signed-act-upload-modal'
+import ExplanationLetterUploadModal from './explanation-letter-upload-modal'
+import ReportUploadModal from './report-upload-modal'
+import FamiliarizationReportUploadModal from './familiarization-report-upload-modal'
 import { useTranslation } from 'react-i18next'
 import OmbudsmanCodeModal from './ombudsman-code-modal'
 
@@ -25,6 +28,9 @@ const InspectionReports = ({
   acknowledgementPath,
   additionalFilePath,
   signedActPath,
+  explanationLetterPath,
+  reportPath,
+  familiarizationReportPath,
   act,
   resultId,
   specialCode,
@@ -378,6 +384,123 @@ const InspectionReports = ({
                             signedActPath={signedActPath}
                             trigger={
                               <Button variant="outline" className="w-full border-indigo-200 text-indigo-600">
+                                <UploadCloud className="mr-2 h-4 w-4" /> Yuklash
+                              </Button>
+                            }
+                          />
+                        ) : (
+                          <span className="flex items-center gap-1.5 text-sm text-slate-400">
+                            <AlertCircle className="h-4 w-4" /> Yuklanmagan
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+                      <div>
+                        <div className="mb-3 flex items-center justify-between">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50">
+                            <FileText className="h-5 w-5 text-emerald-600" />
+                          </div>
+                          {explanationLetterPath && (
+                            <Badge variant="success" className="border-emerald-200 bg-emerald-50 text-emerald-700">
+                              Yuklangan
+                            </Badge>
+                          )}
+                        </div>
+                        <h4 className="mb-1 text-sm font-medium text-slate-800">Tushuntirish xati</h4>
+                        <p className="text-xs text-slate-500">Tushuntirish xatining skaner yoki rasm nusxasi!</p>
+                      </div>
+                      <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                        {explanationLetterPath ? (
+                          <>
+                            <FileLink url={explanationLetterPath} title="Hujjatni ko‘rish" />
+                          </>
+                        ) : status === InspectionSubMenuStatus.COMPLETED &&
+                          (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.MANAGER) ? (
+                          <ExplanationLetterUploadModal
+                            resultId={resultId}
+                            explanationLetterPath={explanationLetterPath}
+                            trigger={
+                              <Button variant="outline" className="w-full border-emerald-200 text-emerald-600">
+                                <UploadCloud className="mr-2 h-4 w-4" /> Yuklash
+                              </Button>
+                            }
+                          />
+                        ) : (
+                          <span className="flex items-center gap-1.5 text-sm text-slate-400">
+                            <AlertCircle className="h-4 w-4" /> Yuklanmagan
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+                      <div>
+                        <div className="mb-3 flex items-center justify-between">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50">
+                            <FileText className="h-5 w-5 text-teal-600" />
+                          </div>
+                          {reportPath && (
+                            <Badge variant="success" className="border-emerald-200 bg-emerald-50 text-emerald-700">
+                              Yuklangan
+                            </Badge>
+                          )}
+                        </div>
+                        <h4 className="mb-1 text-sm font-medium text-slate-800">Bayonnoma</h4>
+                        <p className="text-xs text-slate-500">Bayonnomaning skaner yoki rasm nusxasi!</p>
+                      </div>
+                      <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                        {reportPath ? (
+                          <>
+                            <FileLink url={reportPath} title="Hujjatni ko‘rish" />
+                          </>
+                        ) : status === InspectionSubMenuStatus.COMPLETED &&
+                          (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.MANAGER) ? (
+                          <ReportUploadModal
+                            resultId={resultId}
+                            reportPath={reportPath}
+                            trigger={
+                              <Button variant="outline" className="w-full border-teal-200 text-teal-600">
+                                <UploadCloud className="mr-2 h-4 w-4" /> Yuklash
+                              </Button>
+                            }
+                          />
+                        ) : (
+                          <span className="flex items-center gap-1.5 text-sm text-slate-400">
+                            <AlertCircle className="h-4 w-4" /> Yuklanmagan
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+                      <div>
+                        <div className="mb-3 flex items-center justify-between">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-50">
+                            <FileText className="h-5 w-5 text-cyan-600" />
+                          </div>
+                          {familiarizationReportPath && (
+                            <Badge variant="success" className="border-emerald-200 bg-emerald-50 text-emerald-700">
+                              Yuklangan
+                            </Badge>
+                          )}
+                        </div>
+                        <h4 className="mb-1 text-sm font-medium text-slate-800">Tushuntirish bayonnomasi</h4>
+                        <p className="text-xs text-slate-500">Tushuntirish bayonnomasining skaner yoki rasm nusxasi!</p>
+                      </div>
+                      <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                        {familiarizationReportPath ? (
+                          <>
+                            <FileLink url={familiarizationReportPath} title="Hujjatni ko‘rish" />
+                          </>
+                        ) : status === InspectionSubMenuStatus.COMPLETED &&
+                          (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.MANAGER) ? (
+                          <FamiliarizationReportUploadModal
+                            resultId={resultId}
+                            familiarizationReportPath={familiarizationReportPath}
+                            trigger={
+                              <Button variant="outline" className="w-full border-cyan-200 text-cyan-600">
                                 <UploadCloud className="mr-2 h-4 w-4" /> Yuklash
                               </Button>
                             }

@@ -27,7 +27,9 @@ const RegisterChangeDetail: FC = () => {
   const isLegal = changeDetail?.ownerIdentity?.toString()?.length === 9
   const status = changeDetail?.status
   const isDeregister = changeDetail?.belongType?.startsWith('DEREGISTER')
-  const isStatusChange = changeDetail?.belongType?.startsWith('CHANGE_EQP_STATUS')
+  const isStatusChange =
+    changeDetail?.belongType?.startsWith('CHANGE_EQP_STATUS') ||
+    changeDetail?.belongType?.startsWith('CHANGE_HF_STATUS')
 
   const canAssign =
     (user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) && status === ApplicationStatus.NEW

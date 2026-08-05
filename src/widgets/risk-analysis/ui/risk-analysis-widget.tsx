@@ -38,20 +38,7 @@ const TAB_TO_API_TYPE: Record<string, string> = {
   [RiskAnalysisTab.XRAY]: 'XRAY',
 }
 
-const MONTHS = [
-  { id: 'JANUARY', name: 'Yanvar' },
-  { id: 'FEBRUARY', name: 'Fevral' },
-  { id: 'MARCH', name: 'Mart' },
-  { id: 'APRIL', name: 'Aprel' },
-  { id: 'MAY', name: 'May' },
-  { id: 'JUNE', name: 'Iyun' },
-  { id: 'JULY', name: 'Iyul' },
-  { id: 'AUGUST', name: 'Avgust' },
-  { id: 'SEPTEMBER', name: 'Sentabr' },
-  { id: 'OCTOBER', name: 'Oktabr' },
-  { id: 'NOVEMBER', name: 'Noyabr' },
-  { id: 'DECEMBER', name: 'Dekabr' },
-]
+import { MONTHS, getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
 
 interface RiskAnalysisWidgetProps {
   periodType: 'DAILY' | 'MONTHLY'
@@ -87,9 +74,9 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     runDaily()
   }
 
-  const previousMonthDate = subMonths(new Date(), 1)
-  const defaultYear = previousMonthDate.getFullYear().toString()
-  const defaultMonth = MONTHS[getMonth(previousMonthDate)].id
+  const defaultDateValues = getDefaultYearAndMonthForRiskAnalysis()
+  const defaultYear = defaultDateValues.year
+  const defaultMonth = defaultDateValues.month
 
   const previousDayDate = subDays(new Date(), 1)
   const defaultDate = format(previousDayDate, 'yyyy-MM-dd')

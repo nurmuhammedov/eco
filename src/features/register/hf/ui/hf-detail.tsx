@@ -16,6 +16,7 @@ import { useState } from 'react'
 import { UserRoles } from '@/entities/user'
 import { Button } from '@/shared/components/ui/button'
 import { DeregisterModal } from '../../common/ui/deregister-modal'
+import { ChangeStatusModal } from '../../common/ui/change-status-modal'
 import { EquipmentsList } from '@/features/register/equipments/ui/equipments-list'
 
 const HfDetail = () => {
@@ -26,8 +27,11 @@ const HfDetail = () => {
   const { user } = useAuth()
 
   const [isDeregisterModalOpen, setIsDeregisterModalOpen] = useState(false)
+  const [isChangeStatusModalOpen, setIsChangeStatusModalOpen] = useState(false)
 
-  const isActive = searchParams.get('active') === 'true'
+  const statusParam = searchParams.get('status')
+  const currentStatus = data?.status || statusParam
+  const isActive = searchParams.get('active') === 'true' || currentStatus === 'INVALID' || currentStatus === 'ACTIVE'
   const canDeregister = user?.role === UserRoles.INSPECTOR && isActive
 
   if (isLoading || !data) {
@@ -38,11 +42,18 @@ const HfDetail = () => {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
-        {canDeregister && (
-          <Button variant="destructiveOutline" onClick={() => setIsDeregisterModalOpen(true)}>
-            Reyestrdan chiqarish
-          </Button>
-        )}
+        <div className="flex gap-2">
+          {canDeregister && (
+            <>
+              <Button variant="warning" onClick={() => setIsChangeStatusModalOpen(true)}>
+                {currentStatus === 'INVALID' ? 'Faol holatga qaytarish' : 'Vaqtinchalik nofaol'}
+              </Button>
+              <Button variant="destructiveOutline" onClick={() => setIsDeregisterModalOpen(true)}>
+                Reyestrdan chiqarish
+              </Button>
+            </>
+          )}
+        </div>
       </div>
 
       <DeregisterModal
@@ -50,6 +61,14 @@ const HfDetail = () => {
         onClose={() => setIsDeregisterModalOpen(false)}
         endpoint={`/hf/${id}/deregister`}
         onSuccess={refetch}
+      />
+      <ChangeStatusModal
+        isOpen={isChangeStatusModalOpen}
+        onClose={() => setIsChangeStatusModalOpen(false)}
+        endpoint={`/hf/${id}/change-status`}
+        onSuccess={refetch}
+        targetStatus={currentStatus === 'INVALID' ? 'VALID' : 'INVALID'}
+        type="HF"
       />
 
       <DetailCardAccordion

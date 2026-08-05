@@ -14,6 +14,7 @@ import { cn } from '@/shared/lib/utils'
 import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
 import { useTranslation } from 'react-i18next'
 import { RiskAnalysisTab } from '@/widgets/risk-analysis/types'
+import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
 
 export enum InspectionStatus {
   ALL = 'ALL',
@@ -192,8 +193,8 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
 
   const queryParams = useMemo(
     () => ({
-      year: paramsObject?.year,
-      month: paramsObject?.month,
+      year: paramsObject?.year || getDefaultYearAndMonthForInspections().year,
+      month: paramsObject?.month || getDefaultYearAndMonthForInspections().month,
       regionId: activeRegion === 'ALL' ? '' : activeRegion,
       legalName: paramsObject?.legalName || '',
       legalTin: paramsObject?.legalTin || '',
@@ -311,10 +312,10 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">
-      {!isInspector && !isRegional && (
+      {!isInspector && !isRegional && !isLegal && (
         <Cards
-          year={paramsObject?.year}
-          month={paramsObject?.month}
+          year={paramsObject?.year || getDefaultYearAndMonthForInspections().year}
+          month={paramsObject?.month || getDefaultYearAndMonthForInspections().month}
           type={inspectionType}
           belongType={belongType}
           regionId={regionId}
