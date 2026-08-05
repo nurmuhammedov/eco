@@ -87,7 +87,7 @@ const ReportUploadModal = ({ resultId, reportPath, onClose, trigger }: Props) =>
                     uploadEndpoint="/attachments/inspections"
                     form={form}
                     name={field.name}
-                    accept={[FileTypes.PDF, FileTypes.IMAGE, FileTypes.JPEG, FileTypes.PNG]}
+                    accept={[FileTypes.PDF, FileTypes.IMAGE]}
                     showCameraOption={true}
                     buttonText={field.value ? 'Fayl yuklash' : 'Fayl yuklash'}
                     onUploadComplete={(url) => {

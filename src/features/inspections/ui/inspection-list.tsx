@@ -12,6 +12,7 @@ import { UserRoles } from '@/entities/user'
 import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
 import { format } from 'date-fns'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 
 export const InspectionList: React.FC = () => {
   const navigate = useNavigate()
