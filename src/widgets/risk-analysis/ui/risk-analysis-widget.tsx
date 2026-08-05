@@ -12,7 +12,7 @@ import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.
 import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-statistics-cards'
 import { cn } from '@/shared/lib/utils'
 import { TabsLayout } from '@/shared/layouts'
-import { subMonths, subDays, getMonth, format } from 'date-fns'
+import { subDays, format } from 'date-fns'
 import { Button } from '@/shared/components/ui/button'
 import { Loader2 } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -38,7 +38,7 @@ const TAB_TO_API_TYPE: Record<string, string> = {
   [RiskAnalysisTab.XRAY]: 'XRAY',
 }
 
-import { MONTHS, getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
+import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
 
 interface RiskAnalysisWidgetProps {
   periodType: 'DAILY' | 'MONTHLY'
