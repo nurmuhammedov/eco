@@ -65,9 +65,9 @@ export const ChangeStatusModal = ({
 
   const getTitle = () => {
     if (type === 'HF') {
-      return isRestoring ? 'Faol holatga qaytarish' : 'Vaqtinchalik nofaol'
+      return isRestoring ? 'Faolga o‘tkazish' : 'Vaqtinchalik nofaolga o‘tkazish'
     }
-    return isRestoring ? 'Soz holatga qaytarish' : 'Vaqtinchalik nosoz'
+    return isRestoring ? 'Sozga o‘tkazish' : 'Vaqtinchalik nosozga o‘tkazish'
   }
 
   return (

@@ -22,8 +22,25 @@ import { UserRoles } from '@/entities/user'
 import { Logs } from '@/features/register/hf/ui/parts/logs'
 import { DeregisterModal } from '../../common/ui/deregister-modal'
 import { ChangeStatusModal } from '../../common/ui/change-status-modal'
-
+import { Badge } from '@/shared/components/ui/badge'
 const EquipmentsDetail = () => {
+  const renderStatus = (status: string | null | undefined) => {
+    switch (status) {
+      case 'VALID':
+      case 'ACTIVE':
+        return <Badge variant="success">Soz</Badge>
+      case 'INVALID':
+        return <Badge variant="error">Vaqtinchalik nosoz</Badge>
+      case 'INACTIVE':
+        return <Badge variant="error">Reyestrdan chiqarilgan</Badge>
+      case 'EXPIRED':
+        return <Badge variant="warning">Muddati o‘tgan</Badge>
+      case 'NO_DATE':
+        return <Badge variant="warning">Muddati kiritilmagan</Badge>
+      default:
+        return <span>{status || 'Mavjud emas'}</span>
+    }
+  }
   const { isLoading, data, refetch } = useEquipmentsDetail()
   const currentObjLocation = data?.location?.split(',').map(Number) || ([] as Coordinate[])
   const { user } = useAuth()
@@ -38,8 +55,8 @@ const EquipmentsDetail = () => {
 
   const statusParam = searchParams.get('status')
   const currentStatus = data?.status || statusParam
-  const isActive = searchParams.get('active') === 'true' || currentStatus === 'INVALID' || currentStatus === 'ACTIVE'
-  const canDeregister = user?.role === UserRoles.INSPECTOR && isActive
+  const isRegistryActive = data?.isActive ?? searchParams.get('active') === 'true'
+  const canAction = user?.role === UserRoles.INSPECTOR && isRegistryActive
 
   useEffect(() => {
     const canvas = document.getElementById('pdf-qr-canvas') as HTMLCanvasElement
@@ -66,10 +83,10 @@ const EquipmentsDetail = () => {
       <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
         <div className="flex gap-2">
-          {canDeregister && (
+          {canAction && (
             <>
               <Button variant="warning" onClick={() => setIsChangeStatusModalOpen(true)}>
-                {currentStatus === 'INVALID' ? 'Soz holatga qaytarish' : 'Vaqtinchalik nosoz'}
+                {currentStatus === 'INVALID' ? 'Sozga o‘tkazish' : 'Vaqtinchalik nosozga o‘tkazish'}
               </Button>
               <Button variant="destructiveOutline" onClick={() => setIsDeregisterModalOpen(true)}>
                 Reyestrdan chiqarish
@@ -121,6 +138,8 @@ const EquipmentsDetail = () => {
               }
             />
           )}
+
+          <DetailRow title="Holati:" value={renderStatus(currentStatus)} />
 
           <DetailRow
             title="Roʻyxatga olish sanasi:"

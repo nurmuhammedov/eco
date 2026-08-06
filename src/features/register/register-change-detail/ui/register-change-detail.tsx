@@ -16,6 +16,7 @@ import ReturnChangeModal from '@/features/register/register-change-detail/modals
 import ConfirmProcessModal from '@/features/register/register-change-detail/modals/confirm-process-modal'
 import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal'
 import { Badge } from '@/shared/components/ui/badge'
+import { cn } from '@/shared/lib/utils.ts'
 
 const RegisterChangeDetail: FC = () => {
   const { id, type } = useParams<{ id: string; type: string }>()
@@ -39,13 +40,10 @@ const RegisterChangeDetail: FC = () => {
     ((user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) &&
       status === ApplicationStatus.IN_AGREEMENT) ||
     (status === ApplicationStatus.IN_APPROVAL && user?.role === UserRoles.HEAD)
-  // const canApproveManager = user?.role === UserRoles.MANAGER && status === ApplicationStatus.IN_APPROVAL
-
   const canReturn =
-    (user?.role === UserRoles.HEAD || user?.role === UserRoles.REGIONAL || user?.isSupervisor) &&
-    status !== ApplicationStatus.COMPLETED &&
-    status !== ApplicationStatus.REJECTED &&
-    status !== ApplicationStatus.CANCELED
+    (user?.role === UserRoles.REGIONAL && status === ApplicationStatus.IN_AGREEMENT) ||
+    (user?.role === UserRoles.HEAD && status === ApplicationStatus.IN_APPROVAL) ||
+    (user?.isSupervisor && (status === ApplicationStatus.IN_AGREEMENT || status === ApplicationStatus.IN_APPROVAL))
 
   if (isLoading) {
     return null
@@ -131,13 +129,21 @@ const RegisterChangeDetail: FC = () => {
               }
             />
             <DetailRow title="Ijrochi ma‘sul F.I.SH.:" value={changeDetail?.executorName || '-'} />
-            <div className="grid grid-cols-2 content-center items-center gap-1 rounded-lg px-2.5 py-2 odd:bg-neutral-50">
-              <h2 className="text-normal font-normal text-gray-700">Qaytarish sababi:</h2>
-              <p
-                className="text-normal font-normal whitespace-pre-wrap text-gray-900"
-                dangerouslySetInnerHTML={{ __html: changeDetail?.description || '-' }}
-              />
-            </div>
+
+            {changeDetail?.description && (
+              <div
+                className={cn(
+                  'grid grid-cols-1 gap-1 rounded-md px-2 py-1 odd:bg-neutral-50 md:grid-cols-2 md:items-center md:gap-4'
+                )}
+              >
+                <span className={cn('text-sm font-medium text-gray-500')}>Qaytarish sababi:</span>
+
+                <div
+                  className="text-sm font-medium break-words text-gray-900"
+                  dangerouslySetInnerHTML={{ __html: changeDetail?.description || '-' }}
+                ></div>
+              </div>
+            )}
           </div>
         </DetailCardAccordion.Item>
 

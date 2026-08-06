@@ -17,9 +17,23 @@ import { UserRoles } from '@/entities/user'
 import { Button } from '@/shared/components/ui/button'
 import { DeregisterModal } from '../../common/ui/deregister-modal'
 import { ChangeStatusModal } from '../../common/ui/change-status-modal'
+import { Badge } from '@/shared/components/ui/badge'
 import { EquipmentsList } from '@/features/register/equipments/ui/equipments-list'
 
 const HfDetail = () => {
+  const renderStatus = (status: string | null | undefined) => {
+    switch (status) {
+      case 'VALID':
+      case 'ACTIVE':
+        return <Badge variant="success">Faol</Badge>
+      case 'INVALID':
+        return <Badge variant="error">Vaqtinchalik nofaol</Badge>
+      case 'INACTIVE':
+        return <Badge variant="error">Reyestrdan chiqarilgan</Badge>
+      default:
+        return <span>{status || 'Mavjud emas'}</span>
+    }
+  }
   const { id } = useParams()
   const [searchParams] = useSearchParams()
   const { isLoading, data, refetch } = useHfDetail()
@@ -31,8 +45,8 @@ const HfDetail = () => {
 
   const statusParam = searchParams.get('status')
   const currentStatus = data?.status || statusParam
-  const isActive = searchParams.get('active') === 'true' || currentStatus === 'INVALID' || currentStatus === 'ACTIVE'
-  const canDeregister = user?.role === UserRoles.INSPECTOR && isActive
+  const isRegistryActive = data?.active ?? searchParams.get('active') === 'true'
+  const canAction = user?.role === UserRoles.INSPECTOR && isRegistryActive
 
   if (isLoading || !data) {
     return null
@@ -43,10 +57,10 @@ const HfDetail = () => {
       <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Reyestr raqami: ${data?.registryNumber || ''}`} />
         <div className="flex gap-2">
-          {canDeregister && (
+          {canAction && (
             <>
               <Button variant="warning" onClick={() => setIsChangeStatusModalOpen(true)}>
-                {currentStatus === 'INVALID' ? 'Faol holatga qaytarish' : 'Vaqtinchalik nofaol'}
+                {currentStatus === 'INVALID' ? 'Faolga o‘tkazish' : 'Vaqtinchalik nofaolga o‘tkazish'}
               </Button>
               <Button variant="destructiveOutline" onClick={() => setIsDeregisterModalOpen(true)}>
                 Reyestrdan chiqarish
@@ -96,6 +110,8 @@ const HfDetail = () => {
               }
             />
           )}
+
+          <DetailRow title="Holati:" value={renderStatus(currentStatus)} />
 
           <DetailRow
             title="Roʻyxatga olish sanasi:"
