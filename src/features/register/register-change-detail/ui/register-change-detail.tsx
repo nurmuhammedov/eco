@@ -32,26 +32,39 @@ const RegisterChangeDetail: FC = () => {
     changeDetail?.belongType?.startsWith('CHANGE_EQP_STATUS') ||
     changeDetail?.belongType?.startsWith('CHANGE_HF_STATUS')
 
+  const isHfType = type === 'equipments' || type === 'hf'
+  const isIrsType = type === 'radiation-profiles' || type === 'irs' || type === 'xrays' || type === 'xray'
+
   const canAssign =
-    (user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) && status === ApplicationStatus.NEW
+    status === ApplicationStatus.NEW &&
+    ((isHfType && (user?.role === UserRoles.REGIONAL || user?.isSupervisor)) ||
+      (isIrsType && user?.role === UserRoles.HEAD))
+
   const canDescribe =
-    (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.MANAGER) && status === ApplicationStatus.IN_PROCESS
+    status === ApplicationStatus.IN_PROCESS &&
+    ((isHfType && (user?.role === UserRoles.INSPECTOR || user?.isController)) ||
+      (isIrsType && user?.role === UserRoles.MANAGER))
+
   const canAgree =
-    ((user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) &&
-      status === ApplicationStatus.IN_AGREEMENT) ||
-    (status === ApplicationStatus.IN_APPROVAL && user?.role === UserRoles.HEAD)
+    (status === ApplicationStatus.IN_AGREEMENT &&
+      isHfType &&
+      (user?.role === UserRoles.REGIONAL || user?.isSupervisor)) ||
+    (status === ApplicationStatus.IN_APPROVAL &&
+      ((isIrsType && user?.role === UserRoles.HEAD) || (isHfType && user?.role === UserRoles.MANAGER)))
+
   const canReturn =
-    (user?.role === UserRoles.REGIONAL && status === ApplicationStatus.IN_AGREEMENT) ||
-    (user?.role === UserRoles.HEAD && status === ApplicationStatus.IN_APPROVAL) ||
-    (user?.isSupervisor && (status === ApplicationStatus.IN_AGREEMENT || status === ApplicationStatus.IN_APPROVAL))
+    (status === ApplicationStatus.IN_AGREEMENT &&
+      isHfType &&
+      (user?.role === UserRoles.REGIONAL || user?.isSupervisor)) ||
+    (status === ApplicationStatus.IN_APPROVAL &&
+      ((isIrsType && user?.role === UserRoles.HEAD) || (isHfType && user?.role === UserRoles.MANAGER)))
 
   if (isLoading) {
     return null
   }
 
-  const isInmChange = type === 'radiation-profiles' || type === 'irs' || type === 'xrays' || type === 'xray'
   const isControllerOrSupervisor = user?.isController || user?.isSupervisor
-  const cannotExecute = isControllerOrSupervisor && isInmChange
+  const cannotExecute = isControllerOrSupervisor && !isHfType
 
   return (
     <div className="flex flex-1 flex-col gap-2">
