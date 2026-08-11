@@ -48,7 +48,7 @@ export function KpiTasksList() {
   const columns: ColumnDef<KpiTask>[] = [
     {
       accessorKey: 'department_name',
-      header: "Bo'lim",
+      header: 'Bo‘lim',
     },
     {
       accessorKey: 'indicator_count',
@@ -106,9 +106,10 @@ export function KpiTasksList() {
             )}
             {!hasResults && task.status_text !== 'Tasdiqlangan' && (
               <DeleteConfirmationDialog
+                variant="outline"
                 onConfirm={() => deleteMutation.mutate(task.id)}
-                title="KPI Vazifani o'chirish"
-                description={`"${task.department_name}" bo'limining ${quarter}-kvartal KPI vazifasini o'chirmoqchimisiz?`}
+                title="KPI Vazifani o‘chirish"
+                description={`"${task.department_name}" bo‘limining ${quarter}-chorak KPI vazifasini o‘chirmoqchimisiz?`}
               />
             )}
           </div>
@@ -118,12 +119,15 @@ export function KpiTasksList() {
   ]
 
   return (
-    <div className="space-y-4">
+    <div className="flex h-full flex-col overflow-hidden">
       {/* Header & Filters */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 rounded-lg border bg-white p-2.5 shadow-sm">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
+        <Button onClick={handleAdd}>
+          <Plus className="mr-2 h-4 w-4" /> Vazifa qo‘shish
+        </Button>
+        <div className="flex items-center gap-3">
           <Select value={String(year)} onValueChange={(v) => setYear(Number(v))}>
-            <SelectTrigger className="h-8 w-28 text-sm">
+            <SelectTrigger className="h-9 w-28 text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -136,28 +140,22 @@ export function KpiTasksList() {
           </Select>
 
           <Select value={String(quarter)} onValueChange={(v) => setQuarter(Number(v))}>
-            <SelectTrigger className="h-8 w-32 text-sm">
+            <SelectTrigger className="h-9 w-32 text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {[1, 2, 3, 4].map((q) => (
                 <SelectItem key={q} value={String(q)}>
-                  {q}-kvartal
+                  {q}-chorak
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-
-        <Button onClick={handleAdd}>
-          <Plus className="mr-2 h-4 w-4" /> Vazifa qo'shish
-        </Button>
       </div>
 
       {/* Table */}
-      <div className="rounded-md border bg-white">
-        <DataTable data={data} columns={columns} isLoading={isLoading} />
-      </div>
+      <DataTable data={data} columns={columns} isLoading={isLoading} className="flex-1" />
 
       {/* Create/Edit Modal */}
       <KpiTaskModal

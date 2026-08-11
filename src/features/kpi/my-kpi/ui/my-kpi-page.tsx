@@ -153,7 +153,7 @@ function ResultModal({ indicator, year, quarter, onClose }: ResultModalProps) {
                             </div>
                             <Progress value={computed_percent} className="h-1.5" />
                             <div className="flex justify-between border-t pt-1 text-sm">
-                              <span className="text-muted-foreground">Vazn bo'yicha sizning KPIingiz:</span>
+                              <span className="text-muted-foreground">Vazn bo‘yicha KPI ko‘rsatkichi:</span>
                               <span className="text-primary font-bold">
                                 {kpi_weight_score.toFixed(1)}% / {indicator.weight}%
                               </span>
@@ -175,7 +175,7 @@ function ResultModal({ indicator, year, quarter, onClose }: ResultModalProps) {
                   <FormItem>
                     <FormLabel>Izoh (ixtiyoriy)</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Qo'shimcha ma'lumot..." rows={3} {...field} />
+                      <Textarea placeholder="Qo‘shimcha ma’lumot..." rows={3} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -271,11 +271,11 @@ export function MyKpiPage() {
   return (
     <div className="container mx-auto space-y-4">
       {/* Header */}
-      <div className="flex flex-col items-start justify-start gap-4 sm:flex-row sm:items-center">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
         {/* Filter */}
-        <div className="flex items-center gap-3 rounded-lg border bg-white p-2.5 shadow-sm">
+        <div className="flex items-center gap-3">
           <Select value={String(year)} onValueChange={(v) => setYear(Number(v))}>
-            <SelectTrigger className="h-8 w-28 text-sm">
+            <SelectTrigger className="h-9 w-28 text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -288,13 +288,13 @@ export function MyKpiPage() {
           </Select>
 
           <Select value={String(quarter)} onValueChange={(v) => setQuarter(Number(v))}>
-            <SelectTrigger className="h-8 w-32 text-sm">
+            <SelectTrigger className="h-9 w-32 text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {[1, 2, 3, 4].map((q) => (
                 <SelectItem key={q} value={String(q)}>
-                  {q}-kvartal
+                  {q}-chorak
                 </SelectItem>
               ))}
             </SelectContent>
@@ -315,7 +315,7 @@ export function MyKpiPage() {
           <AlertCircle className="text-muted-foreground mb-3 h-10 w-10" />
           <p className="text-muted-foreground text-lg font-medium">Bu chorak uchun KPI vazifa topilmadi</p>
           <p className="text-muted-foreground mt-1 text-sm">
-            {year}-yil {quarter}-kvartal uchun HR tomonidan vazifa belgilanmagan.
+            {year}-yil {quarter}-chorak uchun HR tomonidan vazifa belgilanmagan.
           </p>
         </div>
       )}
@@ -327,12 +327,12 @@ export function MyKpiPage() {
           <div className="rounded-xl border bg-white p-5 shadow-sm">
             <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
               <div>
-                <p className="text-muted-foreground mb-1 text-xs tracking-wide uppercase">Bo&apos;lim</p>
+                <p className="text-muted-foreground mb-1 text-xs tracking-wide uppercase">Bo‘lim</p>
                 <p className="text-lg font-semibold">{task.department_name}</p>
               </div>
               <div className="flex items-center gap-3">
                 <Badge className="border border-blue-200 bg-blue-50 px-3 py-1 text-sm text-blue-700">
-                  {year}-yil {quarter}-kvartal
+                  {year}-yil {quarter}-chorak
                 </Badge>
                 <Badge
                   className={cn(
@@ -488,7 +488,7 @@ export function MyKpiPage() {
                     >
                       {!hasResult && 'Natija kiritish'}
                       {hasResult && canEditResult && 'Tahrirlash'}
-                      {hasResult && !canEditResult && "Tahrirlab bo'lmaydi"}
+                      {hasResult && !canEditResult && 'Tahrirlab bo‘lmaydi'}
                     </Button>
                   </div>
                 </div>

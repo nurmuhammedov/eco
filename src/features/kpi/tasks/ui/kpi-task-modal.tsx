@@ -15,7 +15,7 @@ import { cn } from '@/shared/lib/utils'
 
 // ─── Enums ───────────────────────────────────────────────────────────────────
 export const CALC_TYPE_OPTIONS = [
-  { value: 'PLAN', label: "Reja bo'yicha" },
+  { value: 'PLAN', label: 'Reja bo‘yicha' },
   { value: 'PENALTY', label: 'Xatolik (Jarima)' },
 ] as const
 
@@ -26,7 +26,7 @@ const indicatorSchema = z
   .object({
     name: z.string().min(1, 'Nomi kiritilishi shart'),
     calculation_type: z.enum(['PLAN', 'PENALTY'], { required_error: 'Tur tanlanishi shart' }),
-    target: z.coerce.number().min(0, "Maqsad 0 dan katta bo'lishi kerak"),
+    target: z.coerce.number().min(0, 'Maqsad 0 dan katta bo‘lishi kerak'),
     penalty_per_unit: z.coerce.number().min(0).max(100).optional().nullable(),
     weight: z.coerce.number().min(1).max(100),
   })
@@ -55,8 +55,8 @@ const indicatorSchema = z
 const taskSchema = z.object({
   year: z.coerce.number().min(2020).max(2100),
   quarter: z.coerce.number().min(1).max(4),
-  kpi_department_id: z.string().min(1, "Bo'lim tanlanishi shart"),
-  indicators: z.array(indicatorSchema).min(1, "Kamida 1 ta indikator bo'lishi kerak"),
+  kpi_department_id: z.string().min(1, 'Bo‘lim tanlanishi shart'),
+  indicators: z.array(indicatorSchema).min(1, 'Kamida 1 ta indikator bo‘lishi kerak'),
 })
 
 type TaskFormValues = z.infer<typeof taskSchema>
@@ -187,7 +187,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
                 name="quarter"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Kvartal *</FormLabel>
+                    <FormLabel>Chorak *</FormLabel>
                     <Select
                       value={String(field.value)}
                       onValueChange={(v) => field.onChange(Number(v))}
@@ -201,7 +201,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
                       <SelectContent>
                         {[1, 2, 3, 4].map((q) => (
                           <SelectItem key={q} value={String(q)}>
-                            {q}-kvartal
+                            {q}-chorak
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -216,11 +216,11 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
                 name="kpi_department_id"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Bo'lim *</FormLabel>
+                    <FormLabel>Bo‘lim *</FormLabel>
                     <Select value={field.value} onValueChange={field.onChange} disabled={isEditing}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Bo'lim tanlang" />
+                          <SelectValue placeholder="Bo‘lim tanlang" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -255,7 +255,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
                 <div className="flex items-center gap-2 rounded-md border border-amber-200 bg-amber-50 p-2.5 text-sm text-amber-700">
                   <AlertCircle className="h-4 w-4 flex-shrink-0" />
                   <span>
-                    Barcha indikatorlar vazni yig'indisi aniq <strong>100%</strong> bo'lishi shart!
+                    Barcha indikatorlar vazni yig‘indisi aniq <strong>100%</strong> bo‘lishi shart!
                   </span>
                 </div>
               )}
@@ -395,9 +395,9 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
                     {/* Remove */}
                     <Button
                       type="button"
-                      variant="ghost"
+                      variant="outline"
                       size="icon"
-                      className="h-9 w-9 text-red-400 hover:bg-red-50 hover:text-red-600"
+                      className="h-9 w-9 border-red-200 text-red-500 hover:border-red-300 hover:bg-red-50 hover:text-red-600"
                       onClick={() => remove(index)}
                       disabled={fields.length === 1}
                     >
@@ -417,7 +417,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
                 }
               >
                 <Plus className="mr-2 h-4 w-4" />
-                Indikator qo'shish
+                Indikator qo‘shish
               </Button>
             </div>
 
@@ -425,7 +425,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
             <div className="flex gap-6 border-t pt-3 text-xs text-gray-400">
               <span className="flex items-center gap-1.5">
                 <span className="inline-block h-3 w-3 rounded-full bg-blue-400" />
-                <strong className="text-gray-600">PLAN</strong> — Reja bo'yicha bajariladi
+                <strong className="text-gray-600">PLAN</strong> — Reja bo‘yicha bajariladi
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="inline-block h-3 w-3 rounded-full bg-red-400" />

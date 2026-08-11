@@ -16,12 +16,12 @@ import { useEffect } from 'react'
 import { UserRoleLabels, UserRoles } from '@/entities/user'
 
 export const DelegationReasonLabels: Record<string, string> = {
-  ANNUAL_LEAVE: "Mehnat ta'tili",
+  ANNUAL_LEAVE: 'Mehnat ta’tili',
   SICK_LEAVE: 'Kasallik varaqasi',
   ACCIDENT: 'Baxtsiz hodisa',
-  EMPLOYMENT_TERMINATION: "Ishdan bo'shash",
+  EMPLOYMENT_TERMINATION: 'Ishdan bo‘shash',
   BUSINESS_TRIP: 'Xizmat safari',
-  MATERNITY_LEAVE: "Dekret ta'tili",
+  MATERNITY_LEAVE: 'Dekret ta’tili',
   URGENT_ASSIGNMENT: 'Tezkor topshiriq',
   OTHER: 'Boshqa',
 }
@@ -136,7 +136,7 @@ export const AddDelegationModal = ({ isOpen, onClose }: AddDelegationModalProps)
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Vazifa yuklash qo'shish</DialogTitle>
+          <DialogTitle>Vazifa yuklash qo‘shish</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form id="add-delegation-form" onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-4">
@@ -153,8 +153,8 @@ export const AddDelegationModal = ({ isOpen, onClose }: AddDelegationModalProps)
                           <SelectValue placeholder="Tanlang" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="committee">Qo'mita xodimlari</SelectItem>
-                          <SelectItem value="office">Hududiy bo'lim xodimlari</SelectItem>
+                          <SelectItem value="committee">Qo‘mita xodimlari</SelectItem>
+                          <SelectItem value="office">Hududiy bo‘lim xodimlari</SelectItem>
                           <SelectItem value="regulator">Inspeksiya xodimlari</SelectItem>
                         </SelectContent>
                       </Select>

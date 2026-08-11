@@ -27,7 +27,7 @@ const DeactivateButton = ({ row }: { row: any }) => {
   return (
     <DeleteConfirmationDialog
       title="Bekor qilish"
-      description={`${row.delegatorFullName} tomonidan ${row.delegateeFullName} ga vazifa yuklatilishini haqiqatdan bekor qilmochimisiz?`}
+      description={`${row.delegatorFullName} tomonidan ${row.delegateeFullName}ga vazifa yuklatilishini haqiqatan ham bekor qilmoqchimisiz?`}
       confirmText="Tasdiqlash"
       onConfirm={() => {
         deactivate(
@@ -137,7 +137,7 @@ export function UserDelegationList() {
         const isActive = row.original.active
         return (
           <Badge variant={isActive ? 'default' : 'destructive'} className={isActive ? 'bg-green-500' : ''}>
-            {isActive ? 'Faol' : "Muddati o'tgan"}
+            {isActive ? 'Faol' : 'Muddati o‘tgan'}
           </Badge>
         )
       },
@@ -171,11 +171,11 @@ export function UserDelegationList() {
         tabs={[
           { id: 'ALL', name: 'Barchasi' },
           { id: 'true', name: 'Aktiv' },
-          { id: 'false', name: "Muddati o'tganlar (Bekor qilinganlar)" },
+          { id: 'false', name: 'Muddati o‘tganlar (Bekor qilinganlar)' },
         ]}
         action={
           <Button onClick={() => setIsModalOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" /> Qo'shish
+            <Plus className="mr-2 h-4 w-4" /> Qo‘shish
           </Button>
         }
       />

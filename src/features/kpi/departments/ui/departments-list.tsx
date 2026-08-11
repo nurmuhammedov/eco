@@ -34,7 +34,7 @@ export function DepartmentsList() {
     },
     {
       accessorKey: 'responsible_name',
-      header: "Mas'ul xodim",
+      header: 'Mas’ul xodim',
       cell: ({ row }) => {
         const name = row.original.responsible_name
         if (!name) {
@@ -78,9 +78,10 @@ export function DepartmentsList() {
               <Edit2 className="h-4 w-4" />
             </Button>
             <DeleteConfirmationDialog
+              variant="outline"
               onConfirm={() => deleteMutation.mutate(dept.id)}
-              title="Bo'limni o'chirish"
-              description={`Haqiqatan ham "${dept.name}" bo'limini o'chirmoqchimisiz?`}
+              title="Bo‘limni o‘chirish"
+              description={`Haqiqatan ham "${dept.name}" bo‘limini o‘chirmoqchimisiz?`}
             />
           </div>
         )
@@ -89,16 +90,14 @@ export function DepartmentsList() {
   ]
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-end">
+    <div className="flex h-full flex-col gap-4 overflow-hidden">
+      <div className="mb-2 flex items-center justify-end">
         <Button onClick={handleAdd}>
-          <Plus className="mr-2 h-4 w-4" /> Qo'shish
+          <Plus className="mr-2 h-4 w-4" /> Qo‘shish
         </Button>
       </div>
 
-      <div className="rounded-md border bg-white">
-        <DataTable data={data || []} columns={columns} isLoading={isLoading} />
-      </div>
+      <DataTable data={data || []} columns={columns} isLoading={isLoading} className="flex-1" />
 
       <DepartmentModal
         isOpen={isModalOpen}

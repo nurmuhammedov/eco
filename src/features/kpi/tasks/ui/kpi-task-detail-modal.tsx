@@ -82,7 +82,7 @@ function ResultCell({ indicatorId, result }: { indicatorId: string; result: Resu
           rel="noreferrer"
           className="flex items-center gap-0.5 text-xs text-blue-500 hover:underline"
         >
-          <ExternalLink className="h-3 w-3" /> Faylni ko'rish
+          <ExternalLink className="h-3 w-3" /> Faylni ko‘rish
         </a>
       )}
 
@@ -191,7 +191,7 @@ export function KpiTaskDetailModal({ taskId, onClose }: Props) {
             {/* Summary */}
             <div className="grid grid-cols-4 gap-4 rounded-md bg-gray-50 p-3 text-sm">
               <div>
-                <p className="text-gray-500">Bo&apos;lim</p>
+                <p className="text-gray-500">Bo‘lim</p>
                 <p className="font-semibold">{data.department_name}</p>
               </div>
               <div>
@@ -199,8 +199,8 @@ export function KpiTaskDetailModal({ taskId, onClose }: Props) {
                 <p className="font-semibold">{data.year}</p>
               </div>
               <div>
-                <p className="text-gray-500">Kvartal</p>
-                <p className="font-semibold">{data.quarter}-kvartal</p>
+                <p className="text-gray-500">Chorak</p>
+                <p className="font-semibold">{data.quarter}-chorak</p>
               </div>
               <div>
                 <p className="text-gray-500">KPI natijasi</p>
@@ -246,7 +246,7 @@ export function KpiTaskDetailModal({ taskId, onClose }: Props) {
                             </span>
                           ) : (
                             <span className="rounded border border-blue-100 bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-600">
-                              Reja bo&apos;yicha
+                              Reja bo‘yicha
                             </span>
                           )}
                         </td>

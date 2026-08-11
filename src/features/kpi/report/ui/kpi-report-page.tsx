@@ -23,11 +23,11 @@ export function KpiReportPage() {
   const columns: ColumnDef<KpiReportItem>[] = [
     {
       accessorKey: 'department_name',
-      header: "Bo'limlar",
+      header: 'Bo‘limlar',
     },
     {
       id: 'responsible_employee',
-      header: "Mas'ul xodim",
+      header: 'Mas’ul xodim',
       cell: ({ row }) => (
         <span>{row.original.responsible_name || <span className="text-gray-400">Kiritilmagan</span>}</span>
       ),
@@ -67,12 +67,12 @@ export function KpiReportPage() {
   ]
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-start">
+    <div className="flex h-full flex-col overflow-hidden">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
         {/* Filter */}
-        <div className="flex items-center gap-3 rounded-lg border bg-white p-2.5 shadow-sm">
+        <div className="flex items-center gap-3">
           <Select value={year} onValueChange={setYear}>
-            <SelectTrigger className="h-8 w-28 text-sm">
+            <SelectTrigger className="h-9 w-28 text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -85,13 +85,13 @@ export function KpiReportPage() {
           </Select>
 
           <Select value={quarter} onValueChange={setQuarter}>
-            <SelectTrigger className="h-8 w-32 text-sm">
+            <SelectTrigger className="h-9 w-32 text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {[1, 2, 3, 4].map((q) => (
                 <SelectItem key={q} value={String(q)}>
-                  {q}-kvartal
+                  {q}-chorak
                 </SelectItem>
               ))}
             </SelectContent>
@@ -99,27 +99,25 @@ export function KpiReportPage() {
         </div>
       </div>
 
-      <div className="rounded-md border bg-white">
-        <DataTable data={data} columns={columns} isLoading={isLoading} />
-      </div>
+      <DataTable data={data} columns={columns} isLoading={isLoading} className="flex-1" />
 
       <Dialog open={!!selectedReport} onOpenChange={() => setSelectedReport(null)}>
         <DialogContent className="max-h-[85vh] max-w-4xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>KPI Natijalar tafsilotlari</DialogTitle>
+            <DialogTitle>KPI natijalari tafsiloti</DialogTitle>
           </DialogHeader>
 
           {selectedReport && (
             <div className="space-y-4">
               <div className="grid grid-cols-4 gap-4 rounded-md bg-gray-50 p-3 text-sm">
                 <div>
-                  <p className="text-gray-500">Bo&apos;lim</p>
+                  <p className="text-gray-500">Bo‘lim</p>
                   <p className="font-semibold">{selectedReport.department_name}</p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Kvartal</p>
+                  <p className="text-gray-500">Chorak</p>
                   <p className="font-semibold">
-                    {selectedReport.year}-yil, {selectedReport.quarter}-kvartal
+                    {selectedReport.year}-yil, {selectedReport.quarter}-chorak
                   </p>
                 </div>
                 <div>
@@ -194,7 +192,7 @@ export function KpiReportPage() {
                               </span>
                             ) : (
                               <span className="rounded border border-blue-100 bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-600">
-                                Reja bo&apos;yicha
+                                Reja bo‘yicha
                               </span>
                             )}
                           </td>
