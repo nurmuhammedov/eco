@@ -1,4 +1,4 @@
-import { Fragment, memo } from 'react'
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDepartment } from '../model/use-department'
 import { DepartmentActionButton } from './action-button'
@@ -19,28 +19,41 @@ const DepartmentWidget = () => {
   } = useDepartment()
 
   return (
-    <Fragment>
-      <DepartmentActionButton
-        activeTab={activeTab}
-        onAddApparatus={onAddApparatus}
-        onAddDepartment={onAddDepartment}
-        title={t('menu.departments')}
-      />
-      <Tabs className="mt-3" defaultValue={activeTab} onValueChange={(value: any) => handleChangeTab(value)}>
-        <TabsList>
-          <TabsTrigger value={DepartmentActiveTab.CENTRAL_APPARATUS}>{t('central_apparatus')}</TabsTrigger>
-          <TabsTrigger value={DepartmentActiveTab.TERRITORIAL_DEPARTMENTS}>{t('territorial_departments')}</TabsTrigger>
-        </TabsList>
-        <TabsContent className="mt-4" value={DepartmentActiveTab.CENTRAL_APPARATUS}>
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      <Tabs
+        className="flex flex-1 flex-col overflow-hidden"
+        defaultValue={activeTab}
+        onValueChange={(value: any) => handleChangeTab(value)}
+      >
+        <div className="flex items-center justify-between">
+          <TabsList className="w-max">
+            <TabsTrigger value={DepartmentActiveTab.CENTRAL_APPARATUS}>{t('central_apparatus')}</TabsTrigger>
+            <TabsTrigger value={DepartmentActiveTab.TERRITORIAL_DEPARTMENTS}>
+              {t('territorial_departments')}
+            </TabsTrigger>
+          </TabsList>
+          <DepartmentActionButton
+            activeTab={activeTab}
+            onAddApparatus={onAddApparatus}
+            onAddDepartment={onAddDepartment}
+          />
+        </div>
+        <TabsContent
+          className="mt-2 flex flex-1 flex-col overflow-hidden"
+          value={DepartmentActiveTab.CENTRAL_APPARATUS}
+        >
           <CentralApparatusList />
         </TabsContent>
-        <TabsContent className="mt-4" value={DepartmentActiveTab.TERRITORIAL_DEPARTMENTS}>
+        <TabsContent
+          className="mt-2 flex flex-1 flex-col overflow-hidden"
+          value={DepartmentActiveTab.TERRITORIAL_DEPARTMENTS}
+        >
           <TerritorialDepartmentsList />
         </TabsContent>
       </Tabs>
       {isOpenCentralApparatus && <CentralApparatusDrawer />}
       {isOpenTerritorialDepartments && <TerritorialDepartmentsDrawer />}
-    </Fragment>
+    </div>
   )
 }
 export default memo(DepartmentWidget)

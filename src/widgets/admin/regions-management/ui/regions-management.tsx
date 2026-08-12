@@ -12,21 +12,18 @@ const RegionsManagement = () => {
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">
-      <ActionButton
-        activeTab={activeTab}
-        title={t('menu.territories')}
-        onAddRegion={openAddRegionDrawer}
-        onAddDistrict={openAddDistrictDrawer}
-      />
       <Tabs
-        className="mt-3 flex flex-1 flex-col overflow-hidden"
+        className="flex flex-1 flex-col overflow-hidden"
         defaultValue={activeTab}
         onValueChange={(value: any) => handleChangeTab(value)}
       >
-        <TabsList className="w-max">
-          <TabsTrigger value="regions">{t('regions')}</TabsTrigger>
-          <TabsTrigger value="districts">{t('districts')}</TabsTrigger>
-        </TabsList>
+        <div className="flex items-center justify-between">
+          <TabsList className="w-max">
+            <TabsTrigger value="regions">{t('regions')}</TabsTrigger>
+            <TabsTrigger value="districts">{t('districts')}</TabsTrigger>
+          </TabsList>
+          <ActionButton activeTab={activeTab} onAddRegion={openAddRegionDrawer} onAddDistrict={openAddDistrictDrawer} />
+        </div>
         <TabsContent className="mt-2 flex flex-1 flex-col overflow-hidden" value="regions">
           <RegionList />
         </TabsContent>

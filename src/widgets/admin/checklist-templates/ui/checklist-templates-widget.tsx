@@ -7,7 +7,7 @@ import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import { useChecklistTemplateDrawer } from '@/shared/hooks/entity-hooks'
 import { UIModeEnum } from '@/shared/types'
 import { PlusCircle } from 'lucide-react'
-import { Fragment, memo } from 'react'
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const ChecklistTemplatesWidget = () => {
@@ -27,26 +27,24 @@ const ChecklistTemplatesWidget = () => {
   }
 
   return (
-    <Fragment>
-      <div className="mt-4 mb-3 flex items-center justify-between">
-        <h5 className="text-xl font-semibold uppercase">{t('menu.checklist_templates', 'Cheklistlar')}</h5>
-        <Button onClick={handleAdd}>
-          <PlusCircle /> {t('add_checklist', 'Cheklist qo‘shish')}
-        </Button>
-      </div>
-
-      <Tabs value={active?.toString()} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="grid w-full max-w-sm grid-cols-2">
-          <TabsTrigger value="true">{t('status.active', 'Aktiv')}</TabsTrigger>
-          <TabsTrigger value="false">{t('status.inactive', 'Aktiv emas')}</TabsTrigger>
-        </TabsList>
-        <TabsContent value={active?.toString()}>
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      <Tabs value={active?.toString()} onValueChange={handleTabChange} className="flex flex-1 flex-col overflow-hidden">
+        <div className="flex items-center justify-between">
+          <TabsList className="grid w-max grid-cols-2">
+            <TabsTrigger value="true">{t('status.active', 'Aktiv')}</TabsTrigger>
+            <TabsTrigger value="false">{t('status.inactive', 'Aktiv emas')}</TabsTrigger>
+          </TabsList>
+          <Button onClick={handleAdd}>
+            <PlusCircle /> {t('add_checklist', 'Cheklist qo‘shish')}
+          </Button>
+        </div>
+        <TabsContent className="mt-2 flex flex-1 flex-col overflow-hidden" value={active?.toString() || 'true'}>
           <ChecklistTemplatesList />
         </TabsContent>
       </Tabs>
 
       {isOpen && <ChecklistTemplatesDrawer />}
-    </Fragment>
+    </div>
   )
 }
 

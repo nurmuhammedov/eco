@@ -1,15 +1,12 @@
 import { UserLogsList } from '@/features/admin/user-logs/ui/user-logs-list'
 
-import { Fragment, memo } from 'react'
+import { memo } from 'react'
 
 const AttractionTypeWidget = () => {
   return (
-    <Fragment>
-      <div className="mt-4 mb-3 flex items-center justify-between">
-        <h5 className="text-xl font-semibold uppercase">Foydalanuvchilar harakatlari</h5>
-      </div>
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
       <UserLogsList />
-    </Fragment>
+    </div>
   )
 }
 export default memo(AttractionTypeWidget)

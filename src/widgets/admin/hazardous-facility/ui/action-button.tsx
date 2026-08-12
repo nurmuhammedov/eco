@@ -6,15 +6,13 @@ import { HazardousFacilityActiveTab, HazardousFacilityActiveTabActionButtonProps
 
 export const HazardousFacilityActionButton = memo(
   ({
-    title,
     activeTab,
     onAddHazardousFacilityType,
     onAddHazardousFacilityCategory,
   }: HazardousFacilityActiveTabActionButtonProps) => {
     const { t } = useTranslation('common')
     return (
-      <div className="flex justify-between">
-        <h5 className="text-2xl font-semibold uppercase">{title}</h5>
+      <>
         {activeTab === HazardousFacilityActiveTab.HAZARDOUS_FACILITY_TYPE ? (
           <Button onClick={onAddHazardousFacilityType}>
             <PlusCircle />
@@ -30,7 +28,7 @@ export const HazardousFacilityActionButton = memo(
             <PlusCircle /> {t('actions.add_territorial_staff')}
           </Button>
         )}
-      </div>
+      </>
     )
   }
 )

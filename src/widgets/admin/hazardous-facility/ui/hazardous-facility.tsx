@@ -1,4 +1,4 @@
-import { Fragment, memo } from 'react'
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HazardousFacilityActiveTab } from '../types'
 import { HazardousFacilityActionButton } from './action-button'
@@ -22,32 +22,43 @@ const HazardousFacilityWidget = () => {
   } = useHazardousFacility()
 
   return (
-    <Fragment>
-      <HazardousFacilityActionButton
-        activeTab={activeTab}
-        title={t('menu.hazardous_facilities')}
-        onAddHazardousFacilityType={onAddHazardousFacilityType}
-        onAddHazardousFacilityCategory={onAddHazardousFacilityCategory}
-      />
-      <Tabs className="mt-3" defaultValue={activeTab} onValueChange={(value: any) => handleChangeTab(value)}>
-        <TabsList>
-          <TabsTrigger value={HazardousFacilityActiveTab.HAZARDOUS_FACILITY_TYPE}>
-            {t('hazardous_facilities_type')}
-          </TabsTrigger>
-          <TabsTrigger value={HazardousFacilityActiveTab.HAZARDOUS_FACILITY_CATEGORY}>
-            {t('hazardous_facilities_category')}
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent className="mt-4" value={HazardousFacilityActiveTab.HAZARDOUS_FACILITY_TYPE}>
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      <Tabs
+        className="flex flex-1 flex-col overflow-hidden"
+        defaultValue={activeTab}
+        onValueChange={(value: any) => handleChangeTab(value)}
+      >
+        <div className="flex items-center justify-between">
+          <TabsList className="w-max">
+            <TabsTrigger value={HazardousFacilityActiveTab.HAZARDOUS_FACILITY_TYPE}>
+              {t('hazardous_facilities_type')}
+            </TabsTrigger>
+            <TabsTrigger value={HazardousFacilityActiveTab.HAZARDOUS_FACILITY_CATEGORY}>
+              {t('hazardous_facilities_category')}
+            </TabsTrigger>
+          </TabsList>
+          <HazardousFacilityActionButton
+            activeTab={activeTab}
+            onAddHazardousFacilityType={onAddHazardousFacilityType}
+            onAddHazardousFacilityCategory={onAddHazardousFacilityCategory}
+          />
+        </div>
+        <TabsContent
+          className="mt-2 flex flex-1 flex-col overflow-hidden"
+          value={HazardousFacilityActiveTab.HAZARDOUS_FACILITY_TYPE}
+        >
           <HazardousFacilityTypeList />
         </TabsContent>
-        <TabsContent className="mt-4" value={HazardousFacilityActiveTab.HAZARDOUS_FACILITY_CATEGORY}>
+        <TabsContent
+          className="mt-2 flex flex-1 flex-col overflow-hidden"
+          value={HazardousFacilityActiveTab.HAZARDOUS_FACILITY_CATEGORY}
+        >
           <HazardousFacilityCategoryList />
         </TabsContent>
       </Tabs>
       {isOpenHazardousFacilityType && <HazardousFacilityTypeDrawer />}
       {isOpenHazardousFacilityCategory && <HazardousFacilityCategoryDrawer />}
-    </Fragment>
+    </div>
   )
 }
 export default memo(HazardousFacilityWidget)

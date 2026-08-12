@@ -9,8 +9,7 @@ const EquipmentWidget = () => {
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">
-      <div className="flex items-center justify-between">
-        <h5 className="text-xl font-semibold uppercase">Qurilmalarning quyi turlari </h5>
+      <div className="flex justify-end">
         <Button onClick={onAddEquipment}>
           <PlusCircle /> Quyi tur qo‘shish
         </Button>

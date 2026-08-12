@@ -5,11 +5,10 @@ import { Button } from '@/shared/components/ui/button'
 import { StaffsActiveTab, StaffsActiveTabActionButtonProps } from '../types'
 
 export const StaffsActionButton = memo(
-  ({ title, activeTab, onAddCommitteeStaffs, onAddTerritorialStaffs }: StaffsActiveTabActionButtonProps) => {
+  ({ activeTab, onAddCommitteeStaffs, onAddTerritorialStaffs }: StaffsActiveTabActionButtonProps) => {
     const { t } = useTranslation('common')
     return (
-      <div className="flex justify-between">
-        <h5 className="text-2xl font-semibold uppercase">{title}</h5>
+      <>
         {activeTab === StaffsActiveTab.COMMITTEE_STAFFS ? (
           <Button onClick={onAddCommitteeStaffs}>
             <PlusCircle />
@@ -20,7 +19,7 @@ export const StaffsActionButton = memo(
             <PlusCircle /> {t('actions.add_territorial_staff')}
           </Button>
         )}
-      </div>
+      </>
     )
   }
 )

@@ -79,32 +79,30 @@ const DecreeSignersPage = () => {
   ]
 
   return (
-    <div className="flex h-full flex-col space-y-4 overflow-hidden">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Imzolovchi shaxslar</h1>
-        <Button onClick={() => setModalOpen(true)}>
-          <Plus className="mr-2 size-4" />
-          Qo‘shish
-        </Button>
-      </div>
-
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
       <Tabs
         value={tab as string}
         onValueChange={(val) => addParams({ tab: val })}
-        className="flex w-full flex-1 flex-col"
+        className="flex w-full flex-1 flex-col overflow-hidden"
       >
-        <TabsList className="w-max">
-          <TabsTrigger value="IRS_XRAY">INM va Rentgen tekshiruvlar</TabsTrigger>
-          <TabsTrigger value="OTHER">XICHO va Boshqa tekshiruvlar</TabsTrigger>
-          <TabsTrigger value="DECLARATION">Deklaratsiya tasdiqlash</TabsTrigger>
-        </TabsList>
-        <TabsContent value="IRS_XRAY" className="mt-4 flex flex-1 flex-col overflow-hidden">
+        <div className="flex items-center justify-between">
+          <TabsList className="w-max">
+            <TabsTrigger value="IRS_XRAY">INM va Rentgen tekshiruvlar</TabsTrigger>
+            <TabsTrigger value="OTHER">XICHO va Boshqa tekshiruvlar</TabsTrigger>
+            <TabsTrigger value="DECLARATION">Deklaratsiya tasdiqlash</TabsTrigger>
+          </TabsList>
+          <Button onClick={() => setModalOpen(true)}>
+            <Plus className="mr-2 size-4" />
+            Qo‘shish
+          </Button>
+        </div>
+        <TabsContent value="IRS_XRAY" className="mt-2 flex flex-1 flex-col overflow-hidden">
           <DataTable columns={columns} data={signersData || []} isLoading={isLoading} />
         </TabsContent>
-        <TabsContent value="OTHER" className="mt-4 flex flex-1 flex-col overflow-hidden">
+        <TabsContent value="OTHER" className="mt-2 flex flex-1 flex-col overflow-hidden">
           <DataTable columns={columns} data={signersData || []} isLoading={isLoading} />
         </TabsContent>
-        <TabsContent value="DECLARATION" className="mt-4 flex flex-1 flex-col overflow-hidden">
+        <TabsContent value="DECLARATION" className="mt-2 flex flex-1 flex-col overflow-hidden">
           <DataTable columns={columns} data={signersData || []} isLoading={isLoading} />
         </TabsContent>
       </Tabs>

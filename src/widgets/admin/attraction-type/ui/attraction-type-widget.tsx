@@ -4,7 +4,7 @@ import { Button } from '@/shared/components/ui/button'
 import { useAttractionTypeDrawer } from '@/shared/hooks/entity-hooks'
 import { UIModeEnum } from '@/shared/types'
 import { PlusCircle } from 'lucide-react'
-import { Fragment, memo } from 'react'
+import { memo } from 'react'
 
 const AttractionTypeWidget = () => {
   const { isOpen, onOpen } = useAttractionTypeDrawer()
@@ -14,16 +14,15 @@ const AttractionTypeWidget = () => {
   }
 
   return (
-    <Fragment>
-      <div className="mb-4 flex items-center justify-between">
-        <h5 className="text-xl font-semibold uppercase">Attraksion tipi</h5>
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      <div className="flex justify-end">
         <Button onClick={handleAdd}>
           <PlusCircle /> Attraksion tipi qo‘shish
         </Button>
       </div>
       <AttractionTypeList />
       {isOpen && <AttractionTypeDrawer />}
-    </Fragment>
+    </div>
   )
 }
 export default memo(AttractionTypeWidget)
