@@ -4,7 +4,7 @@ export enum DepartmentActiveTab {
 }
 
 export type DepartmentActionButtonProps = {
-  title: string
+  title?: string
   onAddApparatus: () => void
   onAddDepartment: () => void
   activeTab: DepartmentActiveTab

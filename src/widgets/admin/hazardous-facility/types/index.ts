@@ -5,7 +5,7 @@ export enum HazardousFacilityActiveTab {
 }
 
 export type HazardousFacilityActiveTabActionButtonProps = {
-  title: string
+  title?: string
   activeTab: HazardousFacilityActiveTab
   onAddHazardousFacilityType: () => void
   onAddHazardousFacilityCategory: () => void

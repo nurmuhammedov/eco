@@ -1,7 +1,7 @@
 export type ActiveTab = 'regions' | 'districts'
 
 export type ActionButtonProps = {
-  title: string
+  title?: string
   activeTab: ActiveTab
   onAddRegion: () => void
   onAddDistrict: () => void
