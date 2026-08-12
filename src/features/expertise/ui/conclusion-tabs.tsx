@@ -32,20 +32,20 @@ export const tabs = [
   {
     key: TabKey.LH,
     label:
-      'Xavfli ishlab chiqarish obyektini qurish, kengaytirish, qayta qurish, texnik jihatdan qayta jihozlash, konservatsiyalash va tugatishga doir loyiha hujjatlari (LH)',
+      'LH - Xavfli ishlab chiqarish obyektini qurish, kengaytirish, qayta qurish, texnik jihatdan qayta jihozlash, konservatsiyalash va tugatishga doir loyiha hujjatlari',
   },
   {
     key: TabKey.TQ,
-    label: 'Xavfli ishlab chiqarish obyektida qo‘llaniladigan texnika qurilmalari (TQ)',
+    label: 'TQ - Xavfli ishlab chiqarish obyektida qo‘llaniladigan texnika qurilmalari',
   },
-  { key: TabKey.BI, label: 'Xavfli ishlab chiqarish obyektidagi binolar va inshootlar (BI)' },
-  { key: TabKey.XD, label: 'Sanoat xavfsizligi deklaratsiyasi (XD)' },
-  { key: TabKey.IX, label: 'Xavfli ishlab chiqarish obyektlarini identifikatsiyalash (IX)' },
+  { key: TabKey.BI, label: 'BI - Xavfli ishlab chiqarish obyektidagi binolar va inshootlar' },
+  { key: TabKey.XD, label: 'XD - Sanoat xavfsizligi deklaratsiyasi' },
+  { key: TabKey.IX, label: 'IX - Xavfli ishlab chiqarish obyektlarini identifikatsiyalash' },
 ]
 
 export const ConclusionTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) => {
   return (
-    <div className="scrollbar-hidden flex flex-row gap-2 overflow-x-auto pb-2">
+    <div className="scrollbar-hidden flex flex-row gap-2 overflow-x-auto">
       {tabs.map((tab) => {
         const isActive = activeTab == tab.key
 
@@ -60,7 +60,16 @@ export const ConclusionTabs = ({ activeTab, onTabChange, counts }: PermitTabsPro
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-0 px-4 pt-1 pb-2">
               <CardTitle className="h-[48px] text-[15px] leading-tight font-medium">
-                <div className="line-clamp-2">{tab.label}</div>
+                <div className="line-clamp-2">
+                  {tab.label.includes(' - ') ? (
+                    <>
+                      <strong>{tab.label.substring(0, tab.label.indexOf(' - '))}</strong>
+                      {tab.label.substring(tab.label.indexOf(' - '))}
+                    </>
+                  ) : (
+                    tab.label
+                  )}
+                </div>
               </CardTitle>
               <span className={cn(!isActive && 'text-muted-foreground')}>{tabIcons[tab.key as unknown as TabKey]}</span>
             </CardHeader>

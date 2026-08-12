@@ -32,6 +32,7 @@ const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspect
 const ExpertiseOrganizations = lazy(() => import('@/pages/expertise/organizations-page'))
 const ExpertisePage = lazy(() => import('@/pages/expertise/page'))
 const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-page'))
+const OldConclusionDetailPage = lazy(() => import('@/pages/expertise/old-conclusion-detail-page'))
 const DeclarationsPage = lazy(() => import('@/pages/declarations/page'))
 const DeclarationDetailPage = lazy(() => import('@/pages/declarations/declaration-detail-page'))
 const ReportsPage = lazy(() => import('@/features/reports/ui/reports'))
@@ -262,6 +263,11 @@ export const chairmanRoutes = [
     id: 'CONCLUSION',
     path: '/accreditations/detail/:id',
     element: withSuspense(ConclusionDetail),
+  },
+  {
+    id: 'CONCLUSION',
+    path: '/accreditations/old/detail/:id',
+    element: withSuspense(OldConclusionDetailPage),
   },
 
   // DECLARATION

@@ -67,7 +67,7 @@ const FileUploadModal: FC<Props> = ({ id, closeModal, title = 'Xulosa faylini yu
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Fayl</FormLabel>
+                  <FormLabel>Xulosa fayli</FormLabel>
                   <FormControl>
                     <InputFile
                       buttonText="Faylni tanlang"
@@ -92,19 +92,19 @@ const FileUploadModal: FC<Props> = ({ id, closeModal, title = 'Xulosa faylini yu
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      className="flex flex-col space-y-1"
+                      className="mt-2 flex flex-col space-y-2"
                     >
-                      <FormItem className="flex items-center space-y-0 space-x-3">
+                      <FormItem className="flex flex-row items-center space-y-0 space-x-3">
                         <FormControl>
                           <RadioGroupItem value="true" />
                         </FormControl>
-                        <FormLabel className="cursor-pointer font-normal">Ijobiy</FormLabel>
+                        <FormLabel className="mt-0 cursor-pointer font-normal">Ijobiy</FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-y-0 space-x-3">
+                      <FormItem className="flex flex-row items-center space-y-0 space-x-3">
                         <FormControl>
                           <RadioGroupItem value="false" />
                         </FormControl>
-                        <FormLabel className="cursor-pointer font-normal">Salbiy</FormLabel>
+                        <FormLabel className="mt-0 cursor-pointer font-normal">Salbiy</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>

@@ -7,10 +7,11 @@ import { useNavigate } from 'react-router-dom'
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
+import { TabsLayout } from '@/shared/layouts'
 
 const ExpertiseWidget = () => {
   const {
-    paramsObject: { tab = TabKey.ALL },
+    paramsObject: { tab = TabKey.ALL, periodType = 'CURRENT' },
     addParams,
   } = useCustomSearchParams()
   const { user } = useAuth()
@@ -81,15 +82,36 @@ const ExpertiseWidget = () => {
           )}
 
           {showAddButton && (
-            <Button onClick={handle}>
-              <PlusCircle className="mr-2 h-4 w-4" /> Qo‘shish
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={handle}>
+                <PlusCircle className="mr-2 h-4 w-4" /> Qo‘shish
+              </Button>
+              {(tab === TabKey.ALL || tab === TabKey.XD) && (
+                <Button
+                  onClick={() => navigate('/accreditations/old/add')}
+                  variant="outline"
+                  className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white"
+                >
+                  <PlusCircle className="mr-2 h-4 w-4" /> Eski deklaratsiyani qo‘shish
+                </Button>
+              )}
+            </div>
           )}
         </div>
       )}
 
       <div className="flex flex-1 flex-col gap-2 overflow-hidden">
         <ConclusionTabs activeTab={tab} onTabChange={handleTabChange} counts={tabCounts} />
+        {tab === TabKey.XD && (
+          <TabsLayout
+            activeTab={periodType === 'OLD' ? 'OLD' : 'CURRENT'}
+            tabs={[
+              { id: 'CURRENT', name: 'Joriy sanoat xavfsizligi deklaratsiyasi' },
+              { id: 'OLD', name: 'Eski sanoat xavfsizligi deklaratsiyalari' },
+            ]}
+            onTabChange={(val) => addParams({ periodType: val }, 'page')}
+          />
+        )}
         <ConclusionsTable />
       </div>
     </div>

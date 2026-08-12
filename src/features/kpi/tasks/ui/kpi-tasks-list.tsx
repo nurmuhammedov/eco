@@ -121,37 +121,35 @@ export function KpiTasksList() {
   return (
     <div className="flex h-full flex-col overflow-hidden">
       {/* Header & Filters */}
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
+      <div className="mb-4 flex flex-col gap-2 pt-0.5 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
         <Button onClick={handleAdd}>
           <Plus className="mr-2 h-4 w-4" /> Vazifa qo‘shish
         </Button>
-        <div className="flex items-center gap-3">
-          <Select value={String(year)} onValueChange={(v) => setYear(Number(v))}>
-            <SelectTrigger className="h-9 w-28 text-sm">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {years.map((y) => (
-                <SelectItem key={y} value={String(y)}>
-                  {y}-yil
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <Select value={String(year)} onValueChange={(v) => setYear(Number(v))}>
+          <SelectTrigger className="h-9 w-28 text-sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {years.map((y) => (
+              <SelectItem key={y} value={String(y)}>
+                {y}-yil
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-          <Select value={String(quarter)} onValueChange={(v) => setQuarter(Number(v))}>
-            <SelectTrigger className="h-9 w-32 text-sm">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {[1, 2, 3, 4].map((q) => (
-                <SelectItem key={q} value={String(q)}>
-                  {q}-chorak
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <Select value={String(quarter)} onValueChange={(v) => setQuarter(Number(v))}>
+          <SelectTrigger className="h-9 w-32 text-sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {[1, 2, 3, 4].map((q) => (
+              <SelectItem key={q} value={String(q)}>
+                {q}-chorak
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Table */}

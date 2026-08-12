@@ -6,10 +6,11 @@ import { toast } from 'sonner'
 import {
   getHfoByTinSelect,
   getLegalInfoByTin,
-  createExpertiseApplication,
+  createOldExpertiseApplication,
 } from '@/entities/expertise/api/expertise.api'
-import { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
-import { addExpertiseSchema } from '@/entities/expertise/model/expertise.schema'
+import { AddOldExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
+import { addOldExpertiseSchema } from '@/entities/expertise/model/expertise.schema'
+import DatePicker from '@/shared/components/ui/datepicker'
 import { ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/model/constants'
 import { Button } from '@/shared/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
@@ -25,26 +26,31 @@ import DetailRow from '@/shared/components/common/detail-row'
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 
-export const AddConclusion = () => {
+export const AddOldConclusion = () => {
   const [stir, setStir] = useState('')
   const [searchedStir, setSearchedStir] = useState<string | null>(null)
   const navigate = useNavigate()
-  const form = useForm<AddExpertiseFormValues>({
-    resolver: zodResolver(addExpertiseSchema),
+  const form = useForm<AddOldExpertiseFormValues>({
+    resolver: zodResolver(addOldExpertiseSchema),
     mode: 'onChange',
     defaultValues: {
       customerTin: '',
       customerPhoneNumber: '',
       hfId: undefined,
-      type: undefined,
+      type: ExpertiseTypeEnum.XD,
       objectName: '',
       regionId: undefined,
       districtId: undefined,
       address: '',
       expertiseName: '',
+      conclusionFilePath: '',
       declarationFilePath: '',
       calculationLetterPath: '',
       informationNotePath: '',
+      conclusionRegistryNumber: '',
+      declarationRegistryNumber: '',
+      conclusionRegistrationDate: undefined,
+      declarationRegistrationDate: undefined,
     },
   })
 
@@ -75,7 +81,7 @@ export const AddConclusion = () => {
   const { data: districts, isLoading: isDistrictLoading } = useDistrictSelectQueries(selectedRegionId)
 
   const { mutate, isPending: isSubmitting } = useMutation({
-    mutationFn: createExpertiseApplication,
+    mutationFn: createOldExpertiseApplication,
     onSuccess: () => {
       toast.success('Muvaffaqiyatli saqlandi!', { richColors: true })
       navigate(-1)
@@ -136,18 +142,12 @@ export const AddConclusion = () => {
   }
 
   // Formani yuborish
-  const onSubmit = (data: AddExpertiseFormValues) => {
+  const onSubmit = (data: AddOldExpertiseFormValues) => {
     const payload: any = {
       ...data,
       customerTin: data.customerTin ? Number(data.customerTin) : undefined,
       regionId: data.regionId ? Number(data.regionId) : undefined,
       districtId: data.districtId ? Number(data.districtId) : undefined,
-    }
-
-    if (payload.type !== ExpertiseTypeEnum.XD) {
-      delete payload.declarationFilePath
-      delete payload.calculationLetterPath
-      delete payload.informationNotePath
     }
 
     mutate(cleanParams(payload))
@@ -211,7 +211,7 @@ export const AddConclusion = () => {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+                  className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                 >
                   <FormField
                     control={form.control}
@@ -376,19 +376,7 @@ export const AddConclusion = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel required>Ekspertiza turi</FormLabel>
-                        <Select
-                          value={field.value}
-                          onValueChange={(value) => {
-                            if (value) {
-                              field.onChange(value)
-                              if ((value as unknown as ExpertiseTypeEnum) !== ExpertiseTypeEnum.XD) {
-                                form.setValue('declarationFilePath', undefined as unknown as string)
-                                form.setValue('calculationLetterPath', undefined as unknown as string)
-                                form.setValue('informationNotePath', undefined as unknown as string)
-                              }
-                            }
-                          }}
-                        >
+                        <Select value={field.value} disabled>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Tanlang..." />
@@ -409,6 +397,79 @@ export const AddConclusion = () => {
 
                   {watchedType === ExpertiseTypeEnum.XD && (
                     <>
+                      <FormField
+                        control={form.control}
+                        name="conclusionRegistryNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel required>Ekspertiza xulosasi ro‘yxat raqami</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="Kiriting..." />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="conclusionRegistrationDate"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col">
+                            <FormLabel required>Ekspertiza xulosasi ro‘yxatga olingan sana</FormLabel>
+                            <FormControl>
+                              <DatePicker value={field.value} onChange={field.onChange} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="declarationRegistryNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel required>Deklaratsiya ro‘yxat raqami</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="Kiriting..." />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="declarationRegistrationDate"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col">
+                            <FormLabel required>Deklaratsiya ro‘yxatga olingan sana</FormLabel>
+                            <FormControl>
+                              <DatePicker value={field.value} onChange={field.onChange} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="conclusionFilePath"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col !gap-1">
+                            <FormLabel required>Ekspertiza xulosasi fayli</FormLabel>
+                            <FormControl>
+                              <InputFile
+                                name={field.name}
+                                form={form}
+                                uploadEndpoint="/attachments/conclusions"
+                                accept={[FileTypes.PDF]}
+                                buttonText="Faylni biriktirish"
+                                maxSize={20}
+                                showPreview
+                                showDownload
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
                       <FormField
                         control={form.control}
                         name="declarationFilePath"

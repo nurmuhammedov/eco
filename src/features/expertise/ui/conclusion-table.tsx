@@ -10,10 +10,11 @@ import ExpertiseFileUploadModal from '@/features/expertise/ui/parts/expertise-fi
 import FileLink from '@/shared/components/common/file-link'
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { UploadCloud } from 'lucide-react'
 
 export const ConclusionsTable = () => {
   const {
-    paramsObject: { page = 1, size = 10, tab = 'ALL', ...rest },
+    paramsObject: { page = 1, size = 10, tab = 'ALL', periodType = 'CURRENT', ...rest },
   } = useCustomSearchParams()
   const { user } = useAuth()
   const [id, setId] = useState<any>(null)
@@ -22,6 +23,7 @@ export const ConclusionsTable = () => {
     page: page,
     size: size,
     type: tab == 'ALL' ? null : tab,
+    periodType: tab === 'XD' ? periodType : 'CURRENT',
     ...rest,
   })
 
@@ -116,8 +118,11 @@ export const ConclusionsTable = () => {
               onClick={() => {
                 setId(row.original?.id)
               }}
-              variant="info"
+              variant="outline"
+              size="sm"
+              className="border-blue-500 text-blue-500 transition-colors hover:bg-blue-50 hover:text-blue-600"
             >
+              <UploadCloud className="mr-2 h-4 w-4" />
               Fayl yuklash
             </Button>
           ) : null}
@@ -128,14 +133,17 @@ export const ConclusionsTable = () => {
       id: 'actions',
       size: 50,
       cell: ({ row }: any) => {
+        const isOld = tab === 'XD' && periodType === 'OLD'
         return (
           <div className="flex gap-2">
             <DataTableRowActions
-              showEdit={row.original?.processStatus != 'COMPLETED' && user?.role == UserRoles.LEGAL}
+              showEdit={row.original?.processStatus != 'COMPLETED' && user?.role == UserRoles.LEGAL && !isOld}
               row={row}
               showView
-              onEdit={(row: any) => navigate(`edit/${row.original.id!}`)}
-              onView={(row: any) => navigate(`detail/${row.original.id!}`)}
+              onEdit={(row: any) => !isOld && navigate(`edit/${row.original.id!}`)}
+              onView={(row: any) =>
+                isOld ? navigate(`old/detail/${row.original.id!}`) : navigate(`detail/${row.original.id!}`)
+              }
             />
           </div>
         )

@@ -31,6 +31,8 @@ const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-
 const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'))
 const AddConclusionPage = lazy(() => import('@/pages/expertise/add-conclusion-page'))
 const EditConclusion = lazy(() => import('@/pages/expertise/edit-conclusion-page'))
+const AddOldConclusionPage = lazy(() => import('@/pages/expertise/add-old-conclusion-page'))
+const OldConclusionDetailPage = lazy(() => import('@/pages/expertise/old-conclusion-detail-page'))
 const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
 const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
@@ -258,8 +260,18 @@ export const legalRoutes = [
   },
   {
     id: 'CONCLUSION',
-    path: '/accreditations/edit/:id',
+    path: 'accreditations/edit/:id',
     element: withSuspense(EditConclusion),
+  },
+  {
+    id: 'CONCLUSION',
+    path: 'accreditations/old/add',
+    element: withSuspense(AddOldConclusionPage),
+  },
+  {
+    id: 'CONCLUSION',
+    path: 'accreditations/old/detail/:id',
+    element: withSuspense(OldConclusionDetailPage),
   },
 
   // DECLARATION

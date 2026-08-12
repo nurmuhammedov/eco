@@ -30,6 +30,11 @@ export const UpdateConclusion = () => {
   const form = useForm<AddExpertiseFormValues>({
     resolver: zodResolver(addExpertiseSchema),
     mode: 'onChange',
+    defaultValues: {
+      declarationFilePath: '',
+      calculationLetterPath: '',
+      informationNotePath: '',
+    },
   })
 
   const { mutateAsync, isPending } = useUpdate<AddExpertiseFormValues, any, any>(
@@ -61,13 +66,28 @@ export const UpdateConclusion = () => {
         expertiseName: conclusion?.expertiseName,
         regionId: conclusion?.regionId?.toString(),
         districtId: conclusion?.districtId?.toString(),
-        declarationFilePath: conclusion?.declarationFilePath,
+        declarationFilePath: conclusion?.declarationFilePath || '',
+        calculationLetterPath: conclusion?.calculationLetterPath || '',
+        informationNotePath: conclusion?.informationNotePath || '',
       })
     }
   }, [conclusion])
 
   const onSubmit = (data: AddExpertiseFormValues) => {
-    mutateAsync(data).then(() => navigate(-1))
+    const payload: any = {
+      ...data,
+      customerTin: data.customerTin ? Number(data.customerTin) : undefined,
+      regionId: data.regionId ? Number(data.regionId) : undefined,
+      districtId: data.districtId ? Number(data.districtId) : undefined,
+    }
+
+    if (payload.type !== ExpertiseTypeEnum.XD) {
+      delete payload.declarationFilePath
+      delete payload.calculationLetterPath
+      delete payload.informationNotePath
+    }
+
+    mutateAsync(payload).then(() => navigate(-1))
   }
 
   if (isFetching) {
@@ -99,13 +119,16 @@ export const UpdateConclusion = () => {
 
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+            >
               <FormField
                 control={form.control}
                 name="customerTin"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>STIR</FormLabel>
+                    <FormLabel required>STIR</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -157,7 +180,7 @@ export const UpdateConclusion = () => {
                 name="objectName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Obyekt nomi</FormLabel>
+                    <FormLabel required>Obyekt nomi</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -170,7 +193,7 @@ export const UpdateConclusion = () => {
                 name="regionId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Viloyat</FormLabel>
+                    <FormLabel required>Viloyat</FormLabel>
                     <Select
                       onValueChange={(value) => {
                         if (value) {
@@ -202,7 +225,7 @@ export const UpdateConclusion = () => {
                 name="districtId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tuman/Shahar</FormLabel>
+                    <FormLabel required>Tuman/Shahar</FormLabel>
                     <Select
                       {...field}
                       value={field.value?.toString()}
@@ -235,7 +258,7 @@ export const UpdateConclusion = () => {
                 name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Manzil</FormLabel>
+                    <FormLabel required>Manzil</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -248,7 +271,7 @@ export const UpdateConclusion = () => {
                 name="customerPhoneNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Telefon raqami</FormLabel>
+                    <FormLabel required>Telefon raqami</FormLabel>
                     <FormControl>
                       <PhoneInput {...field} />
                     </FormControl>
@@ -262,13 +285,18 @@ export const UpdateConclusion = () => {
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ekspertiza turi</FormLabel>
+                    <FormLabel required>Ekspertiza turi</FormLabel>
                     <Select
                       {...field}
                       value={field.value}
                       onValueChange={(value) => {
                         if (value) {
                           field.onChange(value)
+                          if ((value as unknown as ExpertiseTypeEnum) !== ExpertiseTypeEnum.XD) {
+                            form.setValue('declarationFilePath', undefined as unknown as string)
+                            form.setValue('calculationLetterPath', undefined as unknown as string)
+                            form.setValue('informationNotePath', undefined as unknown as string)
+                          }
                         }
                       }}
                     >
@@ -290,28 +318,71 @@ export const UpdateConclusion = () => {
               />
 
               {watchedType === ExpertiseTypeEnum.XD && (
-                <FormField
-                  control={form.control}
-                  name="declarationFilePath"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col !gap-1">
-                      <FormLabel required>Deklaratsiya fayli</FormLabel>
-                      <FormControl>
-                        <InputFile
-                          name={field.name}
-                          form={form}
-                          uploadEndpoint="/attachments/declarations"
-                          accept={[FileTypes.PDF]}
-                          buttonText="Faylni biriktirish"
-                          maxSize={20}
-                          showPreview
-                          showDownload
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <>
+                  <FormField
+                    control={form.control}
+                    name="declarationFilePath"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col !gap-1">
+                        <FormLabel required>Deklaratsiya fayli</FormLabel>
+                        <FormControl>
+                          <InputFile
+                            name={field.name}
+                            form={form}
+                            uploadEndpoint="/attachments/declarations"
+                            accept={[FileTypes.PDF]}
+                            buttonText="Faylni biriktirish"
+                            maxSize={20}
+                            showPreview
+                            showDownload
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="calculationLetterPath"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col !gap-1">
+                        <FormLabel required>Hisob-kitob tushuntirish xati</FormLabel>
+                        <FormControl>
+                          <InputFile
+                            name={field.name}
+                            form={form}
+                            uploadEndpoint="/attachments/declarations"
+                            accept={[FileTypes.PDF]}
+                            buttonText="Faylni biriktirish"
+                            maxSize={20}
+                            showPreview
+                            showDownload
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="informationNotePath"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col !gap-1">
+                        <FormLabel required>Axborotnoma</FormLabel>
+                        <FormControl>
+                          <InputFile
+                            name={field.name}
+                            form={form}
+                            uploadEndpoint="/attachments/declarations"
+                            accept={[FileTypes.PDF]}
+                            buttonText="Faylni biriktirish"
+                            maxSize={20}
+                            showPreview
+                            showDownload
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </>
               )}
 
               {/*<FormField*/}
@@ -352,7 +423,7 @@ export const UpdateConclusion = () => {
                 name="expertiseName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ekspertiza obyekti nomi</FormLabel>
+                    <FormLabel required>Ekspertiza obyekti nomi</FormLabel>
                     <FormControl>
                       <Textarea className="resize-none" rows={7} placeholder="Obyekt nomini kiriting..." {...field} />
                     </FormControl>
@@ -362,7 +433,7 @@ export const UpdateConclusion = () => {
               />
 
               {conclusion?.processStatus != 'COMPLETED' && user?.role == UserRoles.LEGAL && (
-                <div className="flex justify-end md:col-span-4">
+                <div className="col-span-full mt-4 flex justify-end">
                   <Button type="submit" disabled={isPending} loading={isPending}>
                     Yangilash
                   </Button>

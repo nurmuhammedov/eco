@@ -8,7 +8,7 @@ import { getDate } from '@/shared/utils/date'
 import { Badge } from '@/shared/components/ui/badge'
 import FileLink from '@/shared/components/common/file-link'
 
-export const DetailConclusion = () => {
+export const OldConclusionDetail = () => {
   const { id } = useParams()
 
   const { detail, isFetching } = useDetail<any>('/conclusions', id, !!id)
@@ -123,6 +123,23 @@ export const DetailConclusion = () => {
             />
             {detail?.type === 'XD' && (
               <>
+                <DetailRow
+                  title="Ekspertiza xulosasi ro‘yxat raqami:"
+                  value={detail?.conclusionRegistryNumber || '-'}
+                />
+                <DetailRow
+                  title="Ekspertiza xulosasi ro‘yxatga olingan sana:"
+                  value={detail?.conclusionRegistrationDate ? getDate(detail?.conclusionRegistrationDate) : '-'}
+                />
+                <DetailRow title="Deklaratsiya ro‘yxat raqami:" value={detail?.declarationRegistryNumber || '-'} />
+                <DetailRow
+                  title="Deklaratsiya ro‘yxatga olingan sana:"
+                  value={detail?.declarationRegistrationDate ? getDate(detail?.declarationRegistrationDate) : '-'}
+                />
+                <DetailRow
+                  title="Ekspertiza xulosasi fayli:"
+                  value={detail?.conclusionFilePath ? <FileLink url={detail?.conclusionFilePath} /> : 'Mavjud emas'}
+                />
                 <DetailRow
                   title="Deklaratsiya fayli:"
                   value={detail?.declarationFilePath ? <FileLink url={detail?.declarationFilePath} /> : 'Mavjud emas'}

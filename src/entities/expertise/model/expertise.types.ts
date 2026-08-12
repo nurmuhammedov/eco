@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { addExpertiseSchema } from './expertise.schema'
+import { addExpertiseSchema, addOldExpertiseSchema } from './expertise.schema'
 
 export interface LegalInfo {
   legalName: string
@@ -18,3 +18,4 @@ export interface HfoSelectOption {
 }
 
 export type AddExpertiseFormValues = z.infer<typeof addExpertiseSchema>
+export type AddOldExpertiseFormValues = z.infer<typeof addOldExpertiseSchema>
