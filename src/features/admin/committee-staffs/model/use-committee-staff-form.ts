@@ -37,11 +37,12 @@ const PERMISSIONS = {
   PERMITS: 'PERMITS',
   REPORT: 'REPORT',
   INQUIRY: 'INQUIRY',
-  ATTESTATION_COMMITTEE: 'ATTESTATION_COMMITTEE',
+  ATTESTATION: 'ATTESTATION',
   ACCIDENT: 'ACCIDENT',
   ELEVATOR: 'ELEVATOR',
   ANNOUNCEMENT: 'ANNOUNCEMENT',
   ARCHIVE: 'ARCHIVE',
+  KPI: 'KPI',
 }
 
 const DEFAULT_FORM_VALUES: Partial<CreateCommitteeStaffDTO> = {
@@ -123,9 +124,7 @@ export function useCommitteeStaffForm() {
           const formattedBirthDate =
             updateData.birthDate instanceof Date ? format(updateData.birthDate, 'yyyy-MM-dd') : undefined
 
-          const directions = Array.isArray(updateData.directions)
-            ? updateData.directions.filter((i: string) => i !== 'ATTESTATION')
-            : []
+          const directions = Array.isArray(updateData.directions) ? updateData.directions : []
 
           const dataToSend = {
             ...updateData,

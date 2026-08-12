@@ -64,9 +64,6 @@ export function AppSidebar() {
             ) {
               return true
             }
-            if (user.role === UserRoles.CHAIRMAN && subItem.id?.startsWith('KPI_')) {
-              return true
-            }
             return subItem.id ? user.directions.includes(subItem.id as Direction) : false
           })
 

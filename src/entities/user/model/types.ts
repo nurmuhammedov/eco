@@ -25,7 +25,7 @@ export const UserRoleLabels: Record<UserRoles, string> = {
   [UserRoles.PROCURATOR]: 'Prokuratura',
   [UserRoles.INTERACTIVE_SERVICE]: 'Interaktiv oyna',
   [UserRoles.ACCOUNTANT]: 'Hisobchi',
-  [UserRoles.HR]: 'HR',
+  [UserRoles.HR]: 'Xodimlar bo‘yicha menejer',
 }
 
 export enum Direction {
@@ -44,12 +44,13 @@ export enum Direction {
   PERMITS = 'PERMITS',
   REPORT = 'REPORT',
   INQUIRY = 'INQUIRY',
-  ATTESTATION_REGIONAL = 'ATTESTATION_REGIONAL',
+  ATTESTATION = 'ATTESTATION',
   ACCIDENT = 'ACCIDENT',
   ELEVATOR = 'ELEVATOR',
   ANNOUNCEMENT = 'ANNOUNCEMENT',
   ARCHIVE = 'ARCHIVE',
   CADASTRE_PASSPORT = 'CADASTRE_PASSPORT',
+  KPI = 'KPI',
 }
 
 export type UserState = {

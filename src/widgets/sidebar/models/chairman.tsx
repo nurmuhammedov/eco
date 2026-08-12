@@ -2,7 +2,6 @@ import { Navigation } from '@/widgets/sidebar/models/types'
 import {
   Activity,
   Siren,
-  BadgeCheck,
   BarChart2,
   Building2,
   ClipboardList,
@@ -99,22 +98,10 @@ export default [
     ],
   },
   {
-    id: 'ATTESTATION_COMMITTEE',
-    title: 'menu.attestation',
-    url: '/attestations',
-    icon: <BadgeCheck />,
-  },
-  {
     id: 'DECLARATION',
     title: 'Deklaratsiya',
     url: '/declarations',
     icon: <ScrollText />,
-  },
-  {
-    id: 'ATTESTATION_REGIONAL',
-    title: 'menu.attestation',
-    url: '/attestations',
-    icon: <BadgeCheck />,
   },
   {
     id: 'REPORT',
@@ -165,24 +152,14 @@ export default [
     icon: <PieChart />,
     items: [
       {
-        id: 'KPI_DEPARTMENTS',
+        id: 'KPI',
         title: 'Boshqarma va bo‘limlar',
         url: '/kpi/departments',
       },
       {
-        id: 'KPI_TASKS',
+        id: 'KPI',
         title: 'KPI vazifalar',
         url: '/kpi/tasks',
-      },
-      {
-        id: 'KPI_MY_TASKS',
-        title: 'Mening KPIlarim',
-        url: '/kpi/my-tasks',
-      },
-      {
-        id: 'KPI_REPORT',
-        title: 'KPI hisoboti',
-        url: '/kpi/report',
       },
     ],
   },

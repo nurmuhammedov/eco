@@ -10,10 +10,7 @@ import {
   Users,
   Signature,
   Mail,
-  Building2,
-  // Server,
   Trees,
-  // ArrowDownUp,
   Newspaper,
 } from 'lucide-react'
 
@@ -22,12 +19,6 @@ export default [
     url: '/territories',
     title: 'menu.territories',
     icon: <MapPin />,
-  },
-  {
-    id: 'ORGANIZATIONS',
-    title: 'Tashkilotlar',
-    url: '/organizations',
-    icon: <Building2 />,
   },
   {
     url: '/department',
@@ -79,17 +70,6 @@ export default [
     title: 'Park va maskanlar',
     icon: <Trees />,
   },
-  // {
-  //   url: '/metrics/',
-  //   title: 'Server ko‘rsatgichlari',
-  //   icon: <Server />,
-  // },
-  // {
-  //   id: 'ELEVATOR',
-  //   url: '/elevators',
-  //   title: 'menu.elevators',
-  //   icon: <ArrowDownUp />,
-  // },
   {
     id: 'ANNOUNCEMENT',
     url: '/news',

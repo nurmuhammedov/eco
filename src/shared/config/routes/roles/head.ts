@@ -410,15 +410,22 @@ export const headRoutes = [
     path: 'accidents/:id',
     element: withSuspense(AccidentDetail),
   },
+
+  // KPI
   {
+    id: 'KPI',
     path: 'kpi/my-tasks',
     element: withSuspense(MyKpiPage),
   },
+
+  // ATTESTATION
   {
+    id: 'ATTESTATION',
     path: 'attestation-directions',
     element: withSuspense(AttestationDirectionsPage),
   },
   {
+    id: 'ATTESTATION',
     path: 'attestation-questions',
     element: withSuspense(AttestationQuestionsPage),
   },

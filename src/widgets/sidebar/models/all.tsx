@@ -105,18 +105,6 @@ export default [
     icon: <ScrollText />,
   },
   {
-    id: 'ATTESTATION_COMMITTEE',
-    title: 'menu.attestation',
-    url: '/attestations',
-    icon: <BadgeCheck />,
-  },
-  {
-    id: 'ATTESTATION_REGIONAL',
-    title: 'menu.attestation',
-    url: '/attestations',
-    icon: <BadgeCheck />,
-  },
-  {
     id: 'REPORT',
     title: 'Hisobotlar',
     url: '/reports',
@@ -159,34 +147,31 @@ export default [
     icon: <FileCheck />,
   },
   {
+    id: 'KPI',
     title: 'KPI',
     url: '/kpi',
     icon: <PieChart />,
     items: [
       {
-        id: 'KPI_MY_TASKS',
+        id: 'KPI',
         title: 'Mening KPIlarim',
         url: '/kpi/my-tasks',
-      },
-      {
-        id: 'KPI_REPORT',
-        title: 'KPI Hisoboti',
-        url: '/kpi/report',
       },
     ],
   },
   {
+    id: 'ATTESTATION',
     title: 'Attestatsiya',
     url: '/attestation',
     icon: <BadgeCheck />,
     items: [
       {
-        id: 'ATTESTATION_DIRECTIONS',
-        title: "Yo'nalishlar",
+        id: 'ATTESTATION',
+        title: 'Hisobot',
         url: '/attestation-directions',
       },
       {
-        id: 'ATTESTATION_QUESTIONS',
+        id: 'ATTESTATION',
         title: 'Imtihon savollari',
         url: '/attestation-questions',
       },

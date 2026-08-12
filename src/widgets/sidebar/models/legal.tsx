@@ -4,6 +4,7 @@ import {
   Archive,
   ArrowDownUp,
   Award,
+  BadgeCheck,
   BarChart2,
   Building2,
   ClipboardList,
@@ -97,18 +98,6 @@ export default [
     icon: <ScrollText />,
   },
   {
-    id: 'ATTESTATION_COMMITTEE',
-    title: 'menu.attestation',
-    url: '/attestations',
-    icon: <FileText />,
-  },
-  {
-    id: 'ATTESTATION_REGIONAL',
-    title: 'menu.attestation',
-    url: '/attestations',
-    icon: <FileText />,
-  },
-  {
     id: 'REPORT',
     title: 'Hisobotlar',
     url: '/reports',
@@ -149,5 +138,23 @@ export default [
     title: 'TXYZ Kadastr',
     url: '/cadastre-passport',
     icon: <FileCheck />,
+  },
+  {
+    id: 'ATTESTATION',
+    title: 'Attestatsiya',
+    url: '/attestation',
+    icon: <BadgeCheck />,
+    items: [
+      {
+        id: 'ATTESTATION',
+        title: 'Hisobot',
+        url: '/attestation-directions',
+      },
+      {
+        id: 'ATTESTATION',
+        title: 'Imtihon savollari',
+        url: '/attestation-questions',
+      },
+    ],
   },
 ] as Navigation

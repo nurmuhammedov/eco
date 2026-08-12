@@ -13,24 +13,19 @@ export default [
     icon: <PieChart />,
     items: [
       {
-        id: 'KPI_DEPARTMENTS',
+        id: 'KPI',
         title: 'Boshqarma va bo‘limlar',
         url: '/kpi/departments',
       },
       {
-        id: 'KPI_TASKS',
+        id: 'KPI',
         title: 'KPI vazifalar',
         url: '/kpi/tasks',
       },
       {
-        id: 'KPI_MY_TASKS',
+        id: 'KPI',
         title: 'Mening KPIlarim',
         url: '/kpi/my-tasks',
-      },
-      {
-        id: 'KPI_REPORT',
-        title: 'KPI hisoboti',
-        url: '/kpi/report',
       },
     ],
   },

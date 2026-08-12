@@ -114,8 +114,7 @@
     "PREVENTION": "Profilaktika",
     "RISK_ANALYSIS": "Xavf tahlil qilish",
     "INSPECTION": "Tekshiruvlar",
-    "ATTESTATION_COMMITTEE": "Attestatsiya",
-    "ATTESTATION_REGIONAL": "Attestatsiya",
+    "ATTESTATION": "Attestatsiya",
     "ACCREDITATION": "Ekspert tashkilotlar",
     "PERMITS": "Ruxsat etuvchi hujjatlar",
     "ACCIDENT": "Baxtsiz hodisalar",
@@ -125,7 +124,15 @@
     "CONCLUSION": "Ekspertiza xulosalari",
     "ELEVATOR": "Liftlar",
     "ANNOUNCEMENT": "Xabarnoma",
-    "ARCHIVE": "Arxiv"
+    "ARCHIVE": "Arxiv",
+    "CADASTRE_PASSPORT": "Kadastr pasporti",
+    "KPI": "KPI",
+    "KPI_DEPARTMENTS": "KPI Bo‘limlar",
+    "KPI_TASKS": "KPI Vazifalar",
+    "KPI_MY_TASKS": "Mening KPIlarim",
+    "KPI_REPORT": "KPI Hisobotlari",
+    "ATTESTATION_DIRECTIONS": "Attestatsiya yo‘nalishlari",
+    "ATTESTATION_QUESTIONS": "Attestatsiya savollari"
   },
   "inspections": {
     "tabs": {

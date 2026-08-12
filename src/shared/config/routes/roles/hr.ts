@@ -21,10 +21,6 @@ export const hrRoutes = [
     element: withSuspense(MyKpiPage),
   },
   {
-    path: 'kpi/report',
-    element: withSuspense(lazy(() => import('@/pages/kpi/kpi-report-page'))),
-  },
-  {
     path: 'user-delegation',
     element: withSuspense(lazy(() => import('@/pages/hr/user-delegation-page'))),
   },
