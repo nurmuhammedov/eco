@@ -23,6 +23,7 @@ const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/u
 const InspectionsRiskBasedPage = lazy(() => import('@/pages/inspections/risk-based/page'))
 const InspectionsOtherPage = lazy(() => import('@/pages/inspections/other/page'))
 const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'))
+const ExpertiseOrganizations = lazy(() => import('@/pages/expertise/organizations-page'))
 const ExpertisePage = lazy(() => import('@/pages/expertise/page'))
 const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-page'))
 const OldConclusionDetailPage = lazy(() => import('@/pages/expertise/old-conclusion-detail-page'))
@@ -266,6 +267,11 @@ export const inspectorRoutes = [
   },
 
   // ACCREDITATION / EXPERTISE
+  {
+    id: 'ACCREDITATION',
+    path: 'expertise-organizations',
+    element: withSuspense(ExpertiseOrganizations),
+  },
   {
     id: 'CONCLUSION',
     path: 'accreditations',

@@ -22,6 +22,7 @@ const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/u
 const InspectionsRiskBasedPage = lazy(() => import('@/pages/inspections/risk-based/page'))
 const InspectionsOtherPage = lazy(() => import('@/pages/inspections/other/page'))
 const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'))
+const ExpertiseOrganizations = lazy(() => import('@/pages/expertise/organizations-page'))
 const ExpertisePage = lazy(() => import('@/pages/expertise/page'))
 const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-page'))
 const OldConclusionDetailPage = lazy(() => import('@/pages/expertise/old-conclusion-detail-page'))
@@ -61,6 +62,10 @@ const MyKpiPage = lazy(() => import('@/pages/kpi/my-kpi-page'))
 const AttestationDirectionsPage = lazy(() => import('@/pages/attestation-directions/ui/page'))
 const AttestationQuestionsPage = lazy(() => import('@/pages/attestation-questions/ui/page'))
 const OrganizationsPage = lazy(() => import('@/pages/organizations'))
+const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
+const AccidentDetail = lazy(() =>
+  import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
+)
 
 export const headRoutes = [
   // ELEVATORS
@@ -218,6 +223,11 @@ export const headRoutes = [
   },
 
   // ACCREDITATION / EXPERTISE
+  {
+    id: 'ACCREDITATION',
+    path: 'expertise-organizations',
+    element: withSuspense(ExpertiseOrganizations),
+  },
   {
     id: 'CONCLUSION',
     path: 'accreditations',
@@ -389,6 +399,16 @@ export const headRoutes = [
     id: 'ANNOUNCEMENT',
     path: 'news/:id',
     element: withSuspense(NewsDetailPage),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents',
+    element: withSuspense(AccidentList),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/:id',
+    element: withSuspense(AccidentDetail),
   },
   {
     path: 'kpi/my-tasks',
