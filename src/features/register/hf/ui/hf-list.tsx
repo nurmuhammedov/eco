@@ -10,6 +10,8 @@ import { TabsLayout } from '@/shared/layouts'
 import { ApplicationStatus } from '@/entities/application'
 import { useMemo } from 'react'
 import { Badge } from '@/shared/components/ui/badge'
+import { buildRegisterQuery } from '@/features/register/model/build-register-query'
+import { RegisterActiveTab } from '@/widgets/register/types'
 
 interface HfListProps {
   isArchive?: boolean
@@ -18,33 +20,30 @@ interface HfListProps {
 export const HfList = ({ isArchive }: HfListProps) => {
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { addParams, paramsObject } = useCustomSearchParams()
+
+  const defaultRegionId =
+    (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
+      ? user.regionId.toString()
+      : 'ALL'
+
   const {
-    addParams,
-    paramsObject: {
-      page = 1,
-      size = 10,
-      search = '',
-      mode = '',
-      registryNumber = '',
-      legalTin = '',
-      legalName = '',
-      legalAddress = '',
-      name = '',
-      active = isArchive ? 'false' : 'true',
-      address = '',
-      regionId = (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
-        ? user.regionId.toString()
-        : 'ALL',
-      districtId = '',
-      hfTypeId = '',
-      startDate = '',
-      endDate = '',
-      status = 'ALL',
-    },
-  } = useCustomSearchParams()
+    page = 1,
+    size = 10,
+    active = isArchive ? 'false' : 'true',
+    regionId = defaultRegionId,
+    status = 'ALL',
+  } = paramsObject
 
   const currentActive = String(active)
   const currentStatus = String(status)
+
+  const { endpoint, params } = buildRegisterQuery({
+    tab: RegisterActiveTab.HF,
+    paramsObject,
+    isArchive,
+    defaultRegionId,
+  })
 
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
 
@@ -56,37 +55,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
     regionId: regionId === 'ALL' ? '' : regionId,
   })
 
-  const { data, isLoading } = usePaginatedData<any>(`/hf`, {
-    page,
-    size,
-    search,
-    mode,
-    registryNumber,
-    legalTin,
-    legalName,
-    legalAddress,
-    name,
-    address,
-    status:
-      currentActive === 'CHANGED'
-        ? ''
-        : currentActive === 'INVALID'
-          ? 'INVALID'
-          : currentActive === 'VALID'
-            ? 'VALID'
-            : currentStatus === 'ALL'
-              ? ''
-              : currentStatus,
-    active:
-      currentActive === 'INVALID' || currentActive === 'VALID' ? true : isArchive ? false : currentActive !== 'false',
-    changed: currentActive === 'CHANGED' ? true : '',
-    changeStatus: currentActive === 'CHANGED' && currentStatus !== 'ALL' ? currentStatus : '',
-    regionId: regionId === 'ALL' ? '' : regionId,
-    districtId,
-    hfTypeId,
-    startDate,
-    endDate,
-  })
+  const { data, isLoading } = usePaginatedData<any>(endpoint, { page, size, ...params })
 
   const applicationStatusList = useTranslatedObject(ApplicationStatus, 'application_status', false)
   const applicationStatus = useMemo(() => {

@@ -3,7 +3,11 @@ import { MainCardsList } from './main-card-application'
 import TabsLayout from '@/shared/layouts/ui/tabs-layout'
 import { useApplicationGrid } from '@/widgets/application-grid'
 import ApplicationCard from '@/entities/create-application/ui/application-card'
-import { APPLICATION_CATEGORIES, ApplicationCategory } from '@/entities/create-application'
+import {
+  ACCREDITATION_APPLICATION_CATEGORY,
+  APPLICATION_CATEGORIES,
+  ApplicationCategory,
+} from '@/entities/create-application'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
 
@@ -73,7 +77,9 @@ export const ApplicationsGrid: React.FC = () => {
                   name: 'XICHO',
                 },
               ]
-            : APPLICATION_CATEGORIES
+            : user?.role == UserRoles.LEGAL
+              ? [...APPLICATION_CATEGORIES, ACCREDITATION_APPLICATION_CATEGORY]
+              : APPLICATION_CATEGORIES
       }
       classNameTrigger="text-base mx-0.5"
       className="3xl:font-semibold font-medium"

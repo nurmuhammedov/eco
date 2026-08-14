@@ -9,6 +9,7 @@ import {
   MAIN_APPLICATION_BY_CATEGORY,
   stateService,
 } from '@/entities/create-application'
+import { ACCREDITATION_SPHERE_LABELS } from '@/shared/constants/accreditation-spheres'
 
 interface Props {
   address: any
@@ -16,6 +17,10 @@ interface Props {
   isRegister?: boolean
   type: any
 }
+
+const ACCREDITATION_FIELDS = ['phoneNumber', 'email', 'spheres', 'address']
+
+const ACCREDITATION_TYPES = ['ACCREDIT_EXPERT', 'EXPEND_ACCREDITATION_SCOPE']
 
 const ALLOWED_FIELDS: Record<string, string[]> = {
   XRAY: [
@@ -466,6 +471,8 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'address',
     'registryNumber',
   ],
+  ACCREDIT_EXPERT: ACCREDITATION_FIELDS,
+  EXPEND_ACCREDITATION_SCOPE: ACCREDITATION_FIELDS,
 }
 
 const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) => {
@@ -493,6 +500,8 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
   }
 
   const usageTypeName = USAGE_TYPE_MAP[data?.usageType]
+
+  const isAccreditation = ACCREDITATION_TYPES.includes(type)
 
   const allowedFields = ALLOWED_FIELDS[type] || []
 
@@ -524,7 +533,20 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
         renderRow('categoryId', data?.categoryName || <span className="font-medium text-red-500">Tanlanmagan</span>)}
       {renderRow('hfTypeId', data?.hfTypeName)}
       {isAllowed('spheres') &&
+        !isAccreditation &&
         renderRow('spheres', data?.spheres?.map((item: string) => t('application.' + item)).join(', '))}
+
+      {isAccreditation && (
+        <>
+          {renderRow('phoneNumber', data?.phoneNumber)}
+          {renderRow('email', data?.email)}
+          {!!data?.spheres?.length &&
+            renderRow(
+              'spheres',
+              data.spheres.map((item: string) => ACCREDITATION_SPHERE_LABELS[item] || item).join('; ')
+            )}
+        </>
+      )}
       {renderRow('extraArea', data?.extraArea)}
       {renderRow('hazardousSubstance', data?.hazardousSubstance)}
       {renderRow('sign', data?.sign)}

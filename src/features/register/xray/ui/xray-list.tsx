@@ -9,6 +9,8 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { TabsLayout } from '@/shared/layouts'
 import { Badge } from '@/shared/components/ui/badge'
+import { buildRegisterQuery } from '@/features/register/model/build-register-query'
+import { RegisterActiveTab } from '@/widgets/register/types'
 
 interface XrayListProps {
   isArchive?: boolean
@@ -19,75 +21,34 @@ interface XrayListProps {
 export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListProps) => {
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { paramsObject, addParams } = useCustomSearchParams()
+
+  const defaultRegionId =
+    (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
+      ? user.regionId.toString()
+      : 'ALL'
+
   const {
-    paramsObject: {
-      page = 1,
-      size = 10,
-      search = '',
-      mode = '',
-      officeId = '',
-      regionId = (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
-        ? user.regionId.toString()
-        : 'ALL',
-      districtId = '',
-      startDate = '',
-      endDate = '',
-      status = isArchive ? 'INACTIVE' : 'ACTIVE',
-      changeStatus = 'ALL',
-      registryNumber = '',
-      licenseRegistryNumber = '',
-      legalName = '',
-      legalTin = '',
-      address = '',
-      directorName = '',
-    },
-    addParams,
-  } = useCustomSearchParams()
+    page = 1,
+    size = 10,
+    regionId = defaultRegionId,
+    status = isArchive ? 'INACTIVE' : 'ACTIVE',
+    changeStatus = 'ALL',
+  } = paramsObject
 
   const currentStatus = String(status)
 
   const isOrganizations = currentStatus === 'ORGANIZATIONS' || currentStatus === 'CHANGED_ORGANIZATIONS'
-  const endpoint = isOrganizations ? '/radiation-profiles' : '/xrays'
 
-  const {
-    data = [],
-    isLoading,
-    totalElements = 0,
-  } = usePaginatedData<any>(endpoint, {
-    page,
-    size,
-    ...(isOrganizations
-      ? {
-          type: 'XRAY',
-          legalName,
-          legalTin,
-          address,
-          directorName,
-          regionId: regionId === 'ALL' ? '' : regionId,
-          districtId,
-          changed: currentStatus === 'CHANGED_ORGANIZATIONS' ? true : '',
-          changeStatus: currentStatus === 'CHANGED_ORGANIZATIONS' && changeStatus !== 'ALL' ? changeStatus : '',
-        }
-      : {
-          search,
-          mode,
-          officeId,
-          regionId: regionId === 'ALL' ? '' : regionId,
-          districtId,
-          startDate,
-          endDate,
-          registryNumber,
-          licenseRegistryNumber,
-          legalName,
-          legalTin,
-          address,
-          active: isArchive ? false : currentStatus !== 'INACTIVE',
-          changed: currentStatus === 'CHANGED' ? true : '',
-          changeStatus: currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
-          status: currentStatus === 'EXPIRED' || currentStatus === 'NO_DATE' ? currentStatus : '',
-          radiationProfileId,
-        }),
+  const { endpoint, params } = buildRegisterQuery({
+    tab: RegisterActiveTab.XRAY,
+    paramsObject,
+    isArchive,
+    defaultRegionId,
+    radiationProfileId,
   })
+
+  const { data = [], isLoading, totalElements = 0 } = usePaginatedData<any>(endpoint, { page, size, ...params })
 
   const { data: changedCountData } = usePaginatedData<any>(
     `/xrays`,

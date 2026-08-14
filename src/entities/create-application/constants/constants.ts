@@ -25,6 +25,11 @@ export const APPLICATION_CATEGORIES = [
   },
 ]
 
+export const ACCREDITATION_APPLICATION_CATEGORY = {
+  id: ApplicationCategory.ACCREDITATION,
+  name: 'Akkreditatsiya',
+}
+
 export const MAIN_APPLICATION_BY_CATEGORY = {
   [ApplicationCategory.HF]: [],
   [ApplicationCategory.EQUIPMENTS]: [
@@ -50,6 +55,7 @@ export const MAIN_APPLICATION_BY_CATEGORY = {
   [ApplicationCategory.IRS]: [],
   [ApplicationCategory.XRAY]: [],
   [ApplicationCategory.ILLEGAL_HF]: [],
+  [ApplicationCategory.ACCREDITATION]: [],
 }
 
 export const APPLICATIONS_DATA: ApplicationCardItem[] = [
@@ -429,6 +435,34 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     category: ApplicationCategory.ILLEGAL_IRS,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_IRS,
     icon: 'radiationReceiveIcon',
+  },
+
+  {
+    id: 140,
+    title: 'Akkreditatsiyadan o‘tkazish',
+    name: 'Akkreditatsiya',
+    description: 'Ekspert tashkilotini akkreditatsiyadan o‘tkazish ariza shakli',
+    category: ApplicationCategory.ACCREDITATION,
+    type: ApplicationTypeEnum.ACCREDIT_EXPERT,
+    icon: 'expertOrgAccreditationIcon',
+  },
+  {
+    id: 141,
+    title: 'Qayta akkreditatsiyadan o‘tkazish',
+    name: 'Akkreditatsiya',
+    description: 'Ekspert tashkilotini qayta akkreditatsiyadan o‘tkazish ariza shakli',
+    category: ApplicationCategory.ACCREDITATION,
+    type: ApplicationTypeEnum.RE_ACCREDIT_EXPERT,
+    icon: 'expertOrgAccreditationIcon',
+  },
+  {
+    id: 142,
+    title: 'Akkreditatsiya sohasini kengaytirish va qisqartirish',
+    name: 'Akkreditatsiya',
+    description: 'Ekspert tashkilotining akkreditatsiya sohasini kengaytirish va qisqartirish ariza shakli',
+    category: ApplicationCategory.ACCREDITATION,
+    type: ApplicationTypeEnum.EXPEND_ACCREDITATION_SCOPE,
+    icon: 'expertOrgAccreditationIcon',
   },
 ]
 

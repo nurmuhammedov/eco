@@ -106,17 +106,17 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: '/appeals/irs/unofficial',
     pdfEndpoint: '/appeals/irs/unofficial/generate-pdf',
   },
-  [ApplicationTypeEnum.REGISTER_ACCREDITATION]: {
+  [ApplicationTypeEnum.ACCREDIT_EXPERT]: {
     submitEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION,
     pdfEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_GENERATE_PDF,
   },
-  [ApplicationTypeEnum.RE_REGISTER_ACCREDITATION]: {
-    submitEndpoint: API_ENDPOINTS.APPEALS_RE_ACCREDITATION,
-    pdfEndpoint: API_ENDPOINTS.APPEALS_RE_ACCREDITATION_GENERATE_PDF,
+  [ApplicationTypeEnum.RE_ACCREDIT_EXPERT]: {
+    submitEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION,
+    pdfEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_GENERATE_PDF,
   },
-  [ApplicationTypeEnum.EXPAND_ACCREDITATION]: {
-    submitEndpoint: API_ENDPOINTS.APPEALS_EXPEND_ACCREDITATION,
-    pdfEndpoint: API_ENDPOINTS.APPEALS_EXPEND_ACCREDITATION_GENERATE_PDF,
+  [ApplicationTypeEnum.EXPEND_ACCREDITATION_SCOPE]: {
+    submitEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION,
+    pdfEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_GENERATE_PDF,
   },
   [ApplicationTypeEnum.REGISTER_EXPERTISE_CONCLUSION]: {
     submitEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_CONCLUSION,

@@ -18,6 +18,7 @@ import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
+import { buildRegisterExportQuery } from '@/features/register/model/build-register-query'
 
 interface RegisterWidgetProps {
   isArchive?: boolean
@@ -26,21 +27,19 @@ interface RegisterWidgetProps {
 const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { user } = useAuth()
+  const { paramsObject, addParams, removeParams } = useCustomSearchParams()
+
+  const defaultRegionId =
+    (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
+      ? user.regionId.toString()
+      : 'ALL'
+
   const {
-    paramsObject: {
-      mode = '',
-      status = 'ALL',
-      tab = user?.role != UserRoles.INDIVIDUAL ? RegisterActiveTab.HF : RegisterActiveTab.EQUIPMENTS,
-      type = tab == RegisterActiveTab.EQUIPMENTS ? 'ALL' : '',
-      regionId = (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
-        ? user.regionId.toString()
-        : 'ALL',
-      districtId = '',
-      ...rest
-    },
-    addParams,
-    removeParams,
-  } = useCustomSearchParams()
+    mode = '',
+    tab = user?.role != UserRoles.INDIVIDUAL ? RegisterActiveTab.HF : RegisterActiveTab.EQUIPMENTS,
+    regionId = defaultRegionId,
+    districtId = '',
+  } = paramsObject
 
   const { data: page } = useData<any>('/hf/count', user?.role != UserRoles.INDIVIDUAL, {
     mode,
@@ -71,19 +70,14 @@ const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
   const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(`${API_ENDPOINTS.REGIONS_SELECT}`)
   const { data: districts, isLoading: isDistrictsLoading } = useDistrictSelectQueries(regionId)
 
+  const exportQuery = buildRegisterExportQuery({ tab, paramsObject, isArchive, defaultRegionId })
+
   const handleDownloadExel = () => {
+    if (!exportQuery) return
+
     setIsLoading(true)
     apiClient
-      .downloadFile<Blob>(`/${tab === 'equipments' && type === 'TANKERS' ? 'tankers' : tab}/export/excel`, {
-        mode,
-        status: isArchive ? '' : status === 'ALL' || status === 'ACTIVE' ? '' : status,
-        type: type === 'TANKERS' ? '' : type,
-        regionId: regionId === 'ALL' ? '' : regionId,
-        districtId,
-        active: !isArchive,
-        valid: tab === 'irs' ? !isArchive : undefined,
-        ...rest,
-      })
+      .downloadFile<Blob>(`${exportQuery.endpoint}/export/excel`, exportQuery.params)
       .then((res) => {
         const blob = res.data
         const url = URL.createObjectURL(blob)
@@ -187,7 +181,7 @@ const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
               </Select>
             </div>
             <Button
-              disabled={isLoading || ((type == 'ALL' || type === 'TANKERS') && tab == RegisterActiveTab.EQUIPMENTS)}
+              disabled={isLoading || !exportQuery}
               loading={isLoading}
               onClick={handleDownloadExel}
               className="hidden items-center gap-2 xl:flex xl:w-auto"

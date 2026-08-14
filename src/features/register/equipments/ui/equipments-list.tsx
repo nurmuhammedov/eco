@@ -16,6 +16,8 @@ import { Badge } from '@/shared/components/ui/badge'
 import { useParkSelectQuery } from '@/entities/admin/park/hooks/use-park-select-query'
 import { ApplicationTypeEnum } from '@/entities/create-application/types/enums'
 import { useMemo } from 'react'
+import { buildRegisterQuery } from '@/features/register/model/build-register-query'
+import { RegisterActiveTab } from '@/widgets/register/types'
 
 interface EquipmentsListProps {
   isArchive?: boolean
@@ -28,38 +30,25 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
   const navigate = useNavigate()
   const { user } = useAuth()
 
+  const { paramsObject, addParams, removeParams } = useCustomSearchParams()
+
+  const defaultRegionId =
+    (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
+      ? user.regionId.toString()
+      : 'ALL'
+
   const {
-    paramsObject: {
-      status = isArchive ? 'INACTIVE' : 'ACTIVE',
-      type = 'ALL',
-      page = 1,
-      size = 10,
-      search = '',
-      mode = '',
-      regionId = (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
-        ? user.regionId.toString()
-        : 'ALL',
-      districtId = '',
-      registryNumber = '',
-      childEquipmentId = '',
-      ownerName = '',
-      ownerIdentity = '',
-      hfName = '',
-      parkId = '',
-      address = '',
-      startDate = '',
-      endDate = '',
-      factoryNumber = '',
-      changeStatus = 'ALL',
-      hfId: searchHfId = '',
-      tin = '',
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      tab = '',
-      ...rest
-    },
-    addParams,
-    removeParams,
-  } = useCustomSearchParams()
+    status = isArchive ? 'INACTIVE' : 'ACTIVE',
+    type = 'ALL',
+    page = 1,
+    size = 10,
+    regionId = defaultRegionId,
+    districtId = '',
+    childEquipmentId = '',
+    changeStatus = 'ALL',
+    mode = '',
+    activityType = '',
+  } = paramsObject
 
   const isAutoCrane = type === 'AUTO_CRANE'
   const equipmentType = isAutoCrane ? 'CRANE' : type
@@ -71,54 +60,15 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
   const { data: parks } = useParkSelectQuery(regionId, districtId)
   const parkOptions = useMemo(() => parks?.map((p: any) => ({ name: p.name, id: String(p.id) })) || [], [parks])
 
-  const {
-    data,
-    isLoading,
-    totalElements = 0,
-  } = usePaginatedData<any>(isTanker ? `/tankers` : `/equipments`, {
-    ...rest,
-    tin: isTanker && tin ? (String(tin).length === 14 ? undefined : tin) : undefined,
-    pin: isTanker && tin ? (String(tin).length === 14 ? tin : undefined) : undefined,
-    regionId: regionId === 'ALL' ? '' : regionId,
-    status: isTanker
-      ? currentStatus !== 'ALL'
-        ? currentStatus
-        : ''
-      : ['VALID', 'INVALID', 'EXPIRED', 'NO_DATE'].includes(currentStatus)
-        ? currentStatus
-        : '',
-    active: isTanker
-      ? ''
-      : isArchive
-        ? false
-        : currentStatus === 'ACTIVE'
-          ? true
-          : currentStatus === 'INACTIVE'
-            ? false
-            : currentStatus === 'CHANGED'
-              ? 'true'
-              : true,
-    changed: isTanker || isArchive ? '' : currentStatus === 'CHANGED' ? true : '',
-    changeStatus: isTanker ? '' : currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
-    type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
-    page,
-    size,
-    search,
-    districtId,
-    mode,
-    registryNumber,
-    childEquipmentId: actualChildEquipmentId,
-    ownerName,
-    ownerIdentity,
-    hfName,
-    parkId,
-    address,
-    startDate,
-    endDate,
-    factoryNumber,
-    hfId: hfId || searchHfId,
-    activityType: isTanker && rest?.activityType !== 'ALL' ? rest?.activityType : undefined,
+  const { endpoint, params } = buildRegisterQuery({
+    tab: RegisterActiveTab.EQUIPMENTS,
+    paramsObject,
+    isArchive,
+    defaultRegionId,
+    hfId,
   })
+
+  const { data, isLoading, totalElements = 0 } = usePaginatedData<any>(endpoint, { page, size, ...params })
 
   const { data: changedCountData } = usePaginatedData<any>(
     `/equipments`,
@@ -469,7 +419,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
           <div className="min-w-0 flex-1">
             <TabsLayout
               showArrows
-              activeTab={rest?.activityType || 'ALL'}
+              activeTab={activityType || 'ALL'}
               tabs={autoTabs.map((tab) => ({
                 id: tab.key,
                 name: tab.label,

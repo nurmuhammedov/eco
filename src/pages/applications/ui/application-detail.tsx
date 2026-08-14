@@ -9,6 +9,13 @@ import { GoBack } from '@/shared/components/common'
 import { useAuth } from '@/shared/hooks/use-auth.ts'
 import AttachInspectorModal from '@/features/application/application-detail/ui/modals/attach-inspector-modal.tsx'
 import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal.tsx'
+import { AccreditationAppealActions } from '@/features/application/application-detail/ui/parts/accreditation-appeal-actions.tsx'
+
+const ACCREDITATION_APPEAL_TYPES: string[] = [
+  ApplicationTypeEnum.ACCREDIT_EXPERT,
+  ApplicationTypeEnum.RE_ACCREDIT_EXPERT,
+  ApplicationTypeEnum.EXPEND_ACCREDITATION_SCOPE,
+]
 
 const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActions?: boolean }) => {
   const { data } = useApplicationDetail()
@@ -20,6 +27,8 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
   const isControllerOrSupervisor = user?.isController || user?.isSupervisor
   const cannotExecute = isControllerOrSupervisor && isInmAppeal
 
+  const isAccreditationAppeal = ACCREDITATION_APPEAL_TYPES.includes(data?.appealType)
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -28,6 +37,9 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
           <ApplicationLogsModal />
         </div>
         <div className="flex gap-2">
+          {user?.role === UserRoles.MANAGER && isAccreditationAppeal && (
+            <AccreditationAppealActions appealId={data?.id} status={data?.status} />
+          )}
           {!cannotExecute && (
             <>
               {(user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) &&

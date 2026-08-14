@@ -8,6 +8,8 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { Badge } from '@/shared/components/ui/badge'
+import { buildRegisterQuery } from '@/features/register/model/build-register-query'
+import { RegisterActiveTab } from '@/widgets/register/types'
 
 interface IrsListProps {
   isArchive?: boolean
@@ -18,84 +20,34 @@ interface IrsListProps {
 export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProps) => {
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { paramsObject, addParams } = useCustomSearchParams()
+
+  const defaultRegionId =
+    (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
+      ? user.regionId.toString()
+      : 'ALL'
+
   const {
-    paramsObject: {
-      size = 10,
-      page = 1,
-      mode = '',
-      search = '',
-      regionId = (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
-        ? user.regionId.toString()
-        : 'ALL',
-      districtId = '',
-      registryNumber = '',
-      legalName = '',
-      legalAddress = '',
-      legalTin = '',
-      address = '',
-      directorName = '',
-      category = '',
-      activity = '',
-      factoryNumber = '',
-      symbol = '',
-      usageType = '',
-      startDate = '',
-      endDate = '',
-      valid = isArchive ? 'false' : 'true',
-      changeStatus = 'ALL',
-    },
-    addParams,
-  } = useCustomSearchParams()
+    size = 10,
+    page = 1,
+    regionId = defaultRegionId,
+    valid = isArchive ? 'false' : 'true',
+    changeStatus = 'ALL',
+  } = paramsObject
 
   const currentValid = String(valid)
 
   const isOrganizations = currentValid === 'ORGANIZATIONS' || currentValid === 'CHANGED_ORGANIZATIONS'
 
-  const endpoint = isOrganizations ? '/radiation-profiles' : '/irs'
-
-  const {
-    data = [],
-    isLoading,
-    totalElements = 0,
-  } = usePaginatedData<any>(endpoint, {
-    page,
-    size,
-    ...(isOrganizations
-      ? {
-          type: 'IRS',
-          legalName,
-          legalTin,
-          address: legalAddress || address,
-          directorName,
-          regionId: regionId === 'ALL' ? '' : regionId,
-          districtId,
-          changed: currentValid === 'CHANGED_ORGANIZATIONS' ? true : '',
-          changeStatus: currentValid === 'CHANGED_ORGANIZATIONS' && changeStatus !== 'ALL' ? changeStatus : '',
-        }
-      : {
-          mode,
-          regionId: regionId === 'ALL' ? '' : regionId,
-          districtId,
-          search,
-          registryNumber,
-          legalName,
-          legalAddress,
-          legalTin,
-          address,
-          category,
-          activity,
-          factoryNumber,
-          symbol,
-          usageType,
-          startDate,
-          endDate,
-          valid: currentValid === 'CHANGED' ? true : isArchive ? false : currentValid !== 'false',
-          changed: currentValid === 'CHANGED' ? true : '',
-          changeStatus: currentValid === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
-          status: '',
-          radiationProfileId,
-        }),
+  const { endpoint, params } = buildRegisterQuery({
+    tab: RegisterActiveTab.IRS,
+    paramsObject,
+    isArchive,
+    defaultRegionId,
+    radiationProfileId,
   })
+
+  const { data = [], isLoading, totalElements = 0 } = usePaginatedData<any>(endpoint, { page, size, ...params })
 
   const { data: changedCountData } = usePaginatedData<any>(
     `/irs`,
@@ -332,17 +284,6 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
         <Tabs value={currentValid} onValueChange={(val) => addParams({ valid: val, page: 1, changeStatus: 'ALL' })}>
           <div className="scrollbar-hidden flex overflow-x-auto">
             <TabsList className="min-w-max">
-              {/*<TabsTrigger value="all">*/}
-              {/*  Barchasi*/}
-              {/*  {currentValid === 'all' && (*/}
-              {/*    <Badge*/}
-              {/*      variant="destructive"*/}
-              {/*      className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
-              {/*    >*/}
-              {/*      {totalElements}*/}
-              {/*    </Badge>*/}
-              {/*  )}*/}
-              {/*</TabsTrigger>*/}
               <TabsTrigger value="true">
                 Amaldagi INMlar
                 {currentValid === 'true' && (
