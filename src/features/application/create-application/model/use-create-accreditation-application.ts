@@ -13,6 +13,7 @@ export const ACCREDITATION_APPEAL_TITLES: Partial<Record<ApplicationTypeEnum, st
   [ApplicationTypeEnum.ACCREDIT_EXPERT]: 'Akkreditatsiyadan o‘tkazish',
   [ApplicationTypeEnum.RE_ACCREDIT_EXPERT]: 'Qayta akkreditatsiyadan o‘tkazish',
   [ApplicationTypeEnum.EXPEND_ACCREDITATION_SCOPE]: 'Akkreditatsiya sohasini kengaytirish va qisqartirish',
+  [ApplicationTypeEnum.RE_ISSUE_ACCREDITATION_CERT]: 'Akkreditatsiya attestatini qayta rasmiylashtirish',
 }
 
 export const useCreateAccreditationApplication = (appealType: ApplicationTypeEnum) => {

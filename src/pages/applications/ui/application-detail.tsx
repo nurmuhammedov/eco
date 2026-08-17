@@ -1,6 +1,5 @@
-import { ApplicationStatus } from '@/entities/application'
-import { ApplicationTypeEnum } from '@/entities/create-application'
 import { UserRoles } from '@/entities/user'
+import { getAppealPermissions } from '@/features/application/application-detail/model/appeal-permissions'
 import { ApplicationDetail as ApplicationDetailFeature } from '@/features/application/application-detail'
 import { useApplicationDetail } from '@/features/application/application-detail/hooks/use-application-detail.tsx'
 import ReferenceCreateModal from '@/features/application/application-detail/ui/modals/reference-create-modal'
@@ -11,56 +10,28 @@ import AttachInspectorModal from '@/features/application/application-detail/ui/m
 import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal.tsx'
 import { AccreditationAppealActions } from '@/features/application/application-detail/ui/parts/accreditation-appeal-actions.tsx'
 
-const ACCREDITATION_APPEAL_TYPES: string[] = [
-  ApplicationTypeEnum.ACCREDIT_EXPERT,
-  ApplicationTypeEnum.RE_ACCREDIT_EXPERT,
-  ApplicationTypeEnum.EXPEND_ACCREDITATION_SCOPE,
-]
-
 const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActions?: boolean }) => {
   const { data } = useApplicationDetail()
   const { user } = useAuth()
 
-  const isXrayAppeal = data?.appealType === ApplicationTypeEnum.REGISTER_IRS
-
-  const isInmAppeal = data?.appealType?.includes('IRS') || data?.appealType?.includes('XRAY')
-  const isControllerOrSupervisor = user?.isController || user?.isSupervisor
-  const cannotExecute = isControllerOrSupervisor && isInmAppeal
-
-  const isAccreditationAppeal = ACCREDITATION_APPEAL_TYPES.includes(data?.appealType)
+  const { isAccreditation, canAssign, canReject, canExecute } = getAppealPermissions(
+    user?.role,
+    data?.appealType,
+    data?.status
+  )
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <GoBack title={`Ariza raqami: ${data?.number || ''}`} />
-        <div className={'mr-2 ml-auto'}>
-          <ApplicationLogsModal />
-        </div>
-        <div className="flex gap-2">
-          {user?.role === UserRoles.MANAGER && isAccreditationAppeal && (
+        <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
+          {isAccreditation && user?.role === UserRoles.MANAGER && (
             <AccreditationAppealActions appealId={data?.id} status={data?.status} />
           )}
-          {!cannotExecute && (
-            <>
-              {(user?.role === UserRoles.REGIONAL || user?.role === UserRoles.HEAD) &&
-                data?.status === ApplicationStatus.NEW && (
-                  <>
-                    <AttachInspectorModal />
-                    <RejectApplicationModal />
-                  </>
-                )}
-              {user?.role === UserRoles.INSPECTOR && data?.status === ApplicationStatus.IN_PROCESS && (
-                <ReferenceCreateModal />
-              )}
-              {user?.role === UserRoles.MANAGER &&
-                data?.status === ApplicationStatus.IN_PROCESS &&
-                (isXrayAppeal || isInmAppeal) && (
-                  <>
-                    <ReferenceCreateModal />
-                  </>
-                )}
-            </>
-          )}
+          {canAssign && <AttachInspectorModal />}
+          {canReject && <RejectApplicationModal />}
+          {canExecute && <ReferenceCreateModal />}
+          <ApplicationLogsModal />
         </div>
       </div>
       <ApplicationDetailFeature data={data} userRole={user?.role} showAttestationActions={showAttestationActions} />

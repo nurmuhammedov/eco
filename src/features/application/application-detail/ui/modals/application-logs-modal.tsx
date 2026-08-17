@@ -25,7 +25,15 @@ const ApplicationLogsModal = ({
   return (
     <>
       <Dialog onOpenChange={setIsShow} open={isShow}>
-        <DialogTrigger asChild>{trigger ? trigger : <Button type="button">Amaliyotlar tarixi</Button>}</DialogTrigger>
+        <DialogTrigger asChild>
+          {trigger ? (
+            trigger
+          ) : (
+            <Button type="button" variant="primaryOutline">
+              Amaliyotlar tarixi
+            </Button>
+          )}
+        </DialogTrigger>
         <DialogContent hideCloseIcon className="max-h-[95vh] overflow-y-auto sm:max-w-[1124px]">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Amaliyotlar tarixi</DialogTitle>
@@ -33,7 +41,9 @@ const ApplicationLogsModal = ({
           <ApplicationLogsList id={id} type={type} isShow={isShow} />
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="button">Yopish</Button>
+              <Button type="button" variant="outline">
+                Yopish
+              </Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>

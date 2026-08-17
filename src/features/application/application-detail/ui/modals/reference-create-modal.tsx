@@ -49,7 +49,7 @@ const ReferenceCreateModal = () => {
     <>
       <Dialog onOpenChange={setIsShow} open={isShow}>
         <DialogTrigger asChild>
-          <Button> Ijro etish</Button>
+          <Button variant="success">Ijro etish</Button>
         </DialogTrigger>
         <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[725px]">
           <DialogHeader>
@@ -79,7 +79,9 @@ const ReferenceCreateModal = () => {
                 <DialogClose asChild>
                   <Button variant="outline">Bekor qilish</Button>
                 </DialogClose>
-                <Button type="submit">Ma’lumotnoma/dalolatnoma tuzish</Button>
+                <Button variant="success" type="submit">
+                  Ma’lumotnoma/dalolatnoma tuzish
+                </Button>
               </div>
             </form>
           </Form>

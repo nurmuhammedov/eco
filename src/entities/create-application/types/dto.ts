@@ -11,7 +11,6 @@ import {
   HFAppealDtoSchema,
   HoistAppealDtoSchema,
   IrsAppealDtoSchema,
-  LifAppealDtoSchema,
   LpgContainerAppealDtoSchema,
   LpgPoweredAppealDtoSchema,
   PipelineAppealDtoSchema,
@@ -33,7 +32,6 @@ export type ReRegisterIllegalHFApplicationDTO = z.infer<typeof ReRegisterIllegal
 export type CreateOilContainerApplicationDTO = z.infer<typeof OilContainerAppealDtoSchema>
 export type CreateIllegalOilContainerApplicationDTO = z.infer<typeof IllegalOilContainerAppealDtoSchema>
 export type CreateCraneApplicationDTO = z.infer<typeof CraneAppealDtoSchema>
-export type CreateLiftApplicationDTO = z.infer<typeof LifAppealDtoSchema>
 export type CreateContainerApplicationDTO = z.infer<typeof ContainerAppealDtoSchema>
 export type CreateBoilerApplicationDTO = z.infer<typeof BoilerAppealDtoSchema>
 export type CreateEscalatorApplicationDTO = z.infer<typeof EscalatorAppealDtoSchema>

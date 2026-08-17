@@ -8,7 +8,6 @@ export * from './constants/constants'
 //schemas
 export * from './schemas/register-hf.schema'
 export * from './schemas/register-crane.schema'
-export * from './schemas/register-lift.schema'
 export * from './schemas/register-container.schema'
 export * from './schemas/register-boiler.schema'
 export * from './schemas/register-escalator.schema'
@@ -55,8 +54,4 @@ export { createApplicationsAPI } from './models/create-application.api'
 
 //mutations
 export { useApplicationFactory } from './hooks/use-application-factory'
-export {
-  useCreateHPOApplicationMutations,
-  useCreateCraneApplicationMutations,
-  useCreateLiftApplicationMutations,
-} from './hooks/use-application.mutations'
+export { useCreateHPOApplicationMutations, useCreateCraneApplicationMutations } from './hooks/use-application.mutations'

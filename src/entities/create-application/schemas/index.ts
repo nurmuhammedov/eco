@@ -1,7 +1,6 @@
 // src/entities/create-application/schemas/index.ts
 export * from './register-hf.schema'
 export * from './register-crane.schema'
-export * from './register-lift.schema'
 export * from './register-container.schema'
 export * from './register-boiler.schema'
 export * from './register-escalator.schema'

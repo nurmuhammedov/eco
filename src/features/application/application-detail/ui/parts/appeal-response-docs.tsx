@@ -1,5 +1,4 @@
-import { UserRoles } from '@/entities/user'
-import { useConfirmDocument } from '@/features/application/application-detail/hooks/mutations/use-confirm-document.tsx'
+import { ApplicationTypeEnum } from '@/entities/create-application'
 import { useResponseDocs } from '@/features/application/application-detail/hooks/use-response-docs.tsx'
 import { RejectAppealModal } from '@/features/application/application-detail/ui/modals/reject-appeal-modal.tsx'
 import RejectDocumentModal from '@/features/application/application-detail/ui/modals/reject-document-modal.tsx'
@@ -8,15 +7,13 @@ import SignersModal from '@/features/application/application-detail/ui/modals/si
 import { DataTable } from '@/shared/components/common/data-table'
 import FileLink from '@/shared/components/common/file-link.tsx'
 import { Badge } from '@/shared/components/ui/badge.tsx'
-import { Button } from '@/shared/components/ui/button.tsx'
 import { useAuth } from '@/shared/hooks/use-auth.ts'
 import { ColumnDef } from '@tanstack/react-table'
 import { formatDate } from 'date-fns'
 import { Eye, Info } from 'lucide-react'
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
 import ConfirmWithRegistryModal from '../modals/confirm-with-registry-modal.tsx'
-import { ApplicationTypeEnum } from '@/entities/create-application'
+import { getAppealPermissions } from '@/features/application/application-detail/model/appeal-permissions'
 
 export const signStatuses = new Map([
   [true, { label: 'Imzolangan', variant: 'info' }],
@@ -38,15 +35,6 @@ export const documentTypes = new Map([
   ['REPLY_LETTER', 'Javob xati'],
 ])
 
-const managerTypes: any = [
-  // ApplicationTypeEnum.REGISTER_CRANE,
-  // ApplicationTypeEnum.DEREGISTER_CRANE,
-  // ApplicationTypeEnum.RE_REGISTER_CRANE,
-  // ApplicationTypeEnum.REGISTER_ELEVATOR,
-  // ApplicationTypeEnum.DEREGISTER_ELEVATOR,
-  // ApplicationTypeEnum.RE_REGISTER_ELEVATOR,
-]
-
 interface Props {
   appeal_type: (typeof ApplicationTypeEnum)[keyof typeof ApplicationTypeEnum]
 }
@@ -55,9 +43,7 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
   const [rejectMessage, setRejectMessage] = useState<string>('')
   const [signers, setSigners] = useState<any[]>([])
   const { data } = useResponseDocs()
-  const { mutate: confirmDocument, isPending } = useConfirmDocument()
   const { user } = useAuth()
-  const { id: appealId } = useParams()
 
   const columns: ColumnDef<any>[] = [
     {
@@ -105,58 +91,21 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
       header: 'Tasdiqlash',
       cell: (cell) => {
         const isAgreed = !!cell.row.original?.agreementStatus
-        const isRegionalUser = user?.role === UserRoles.REGIONAL
-        const isManager = user?.role === UserRoles.MANAGER
-        const isHead = user?.role === UserRoles.HEAD
         const currentAgreement = cell.row.original?.agreementStatus
         const currentBadge = approveStatuses.get(currentAgreement)
         const message = cell.row.original?.description
         const documentId = cell.row.original?.documentId
-        const isAppealForManager = managerTypes.includes(appeal_type)
 
-        const isInmAppeal = appeal_type?.includes('IRS') || appeal_type?.includes('XRAY')
-        const isControllerOrSupervisor = user?.isController || user?.isSupervisor
-        const cannotExecute = isControllerOrSupervisor && isInmAppeal
+        const { canAgree } = getAppealPermissions(user?.role, appeal_type, undefined)
 
-        if (
-          !cannotExecute &&
-          ((isHead && !isAgreed) || (isRegionalUser && !isAgreed) || (currentAgreement === 'AGREED' && isManager))
-        ) {
-          if (isManager && isAppealForManager) {
-            return (
-              <div className="flex gap-4">
-                <RejectDocumentModal documentId={documentId} label={'Ijro noto‘g‘ri bajarilgan'} />
-                <RejectAppealModal documentId={documentId} />
-                <ConfirmWithRegistryModal documentId={documentId} />
-              </div>
-            )
-          } else if (isRegionalUser || isHead) {
-            if (isAppealForManager) {
-              return (
-                <div className="flex gap-4">
-                  <RejectDocumentModal documentId={documentId} label={'Ijro noto‘g‘ri bajarilgan'} />
-                  <RejectAppealModal documentId={documentId} />
-                  <Button
-                    disabled={isPending}
-                    onClick={() => {
-                      confirmDocument({ appealId, documentId })
-                    }}
-                    variant="success"
-                  >
-                    Kelishildi
-                  </Button>
-                </div>
-              )
-            } else {
-              return (
-                <div className="flex gap-4">
-                  <RejectDocumentModal documentId={documentId} label={'Ijro noto‘g‘ri bajarilgan'} />
-                  <RejectAppealModal documentId={documentId} />
-                  <ConfirmWithRegistryModal documentId={documentId} />
-                </div>
-              )
-            }
-          }
+        if (canAgree && !isAgreed) {
+          return (
+            <div className="flex flex-wrap items-center gap-2">
+              <RejectDocumentModal documentId={documentId} label={'Ijro noto‘g‘ri bajarilgan'} />
+              <RejectAppealModal documentId={documentId} />
+              <ConfirmWithRegistryModal documentId={documentId} />
+            </div>
+          )
         }
         if (currentBadge) {
           return (

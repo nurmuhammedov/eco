@@ -30,10 +30,6 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_BOILER,
     pdfEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_BOILER,
   },
-  [ApplicationTypeEnum.REGISTER_ELEVATOR]: {
-    submitEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_ELEVATOR,
-    pdfEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_ELEVATOR,
-  },
   [ApplicationTypeEnum.REGISTER_ESCALATOR]: {
     submitEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_ESCALATOR,
     pdfEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_ESCALATOR,
@@ -73,10 +69,6 @@ export const applicationConfigs: Record<string, any> = {
   [ApplicationTypeEnum.REGISTER_ATTRACTION_PASSPORT]: {
     submitEndpoint: API_ENDPOINTS.APPEAL_ATTRACTION_PASSPORT,
     pdfEndpoint: API_ENDPOINTS.APPEAL_EQUIPMENT_PDF_ATTRACTION_PASSPORT,
-  },
-  [ApplicationTypeEnum.REGISTER_ATTESTATION]: {
-    submitEndpoint: API_ENDPOINTS.APPEALS_ATTESTATION,
-    pdfEndpoint: API_ENDPOINTS.APPEALS_ATTESTATION_GENERATE_PDF,
   },
   [ApplicationTypeEnum.REGISTER_ATTRACTION]: {
     submitEndpoint: API_ENDPOINTS.APPEAL_ATTRACTION,
@@ -118,14 +110,6 @@ export const applicationConfigs: Record<string, any> = {
     submitEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION,
     pdfEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_GENERATE_PDF,
   },
-  [ApplicationTypeEnum.REGISTER_EXPERTISE_CONCLUSION]: {
-    submitEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_CONCLUSION,
-    pdfEndpoint: API_ENDPOINTS.APPEALS_ACCREDITATION_CONCLUSION_GENERATE_PDF,
-  },
-  [ApplicationTypeEnum.REGISTER_DECLARATION]: {
-    submitEndpoint: API_ENDPOINTS.APPEALS_REGISTER_DECLARATION,
-    pdfEndpoint: API_ENDPOINTS.APPEALS_REGISTER_DECLARATION_GENERATE_PDF,
-  },
   [ApplicationTypeEnum.DEREGISTER_EQUIPMENT]: {
     submitEndpoint: '/appeals/equipment/deregister',
     pdfEndpoint: '/appeals/equipment/deregister-pdf',
@@ -149,10 +133,6 @@ export const applicationConfigs: Record<string, any> = {
   [ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER]: {
     submitEndpoint: '/appeals/equipment/unofficial/boiler',
     pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/boiler',
-  },
-  [ApplicationTypeEnum.ILLEGAL_REGISTER_ELEVATOR]: {
-    submitEndpoint: '/appeals/equipment/unofficial/elevator',
-    pdfEndpoint: '/appeals/equipment/unofficial/generate-pdf/elevator',
   },
   [ApplicationTypeEnum.ILLEGAL_REGISTER_ESCALATOR]: {
     submitEndpoint: '/appeals/equipment/unofficial/escalator',

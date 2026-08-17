@@ -20,7 +20,7 @@ interface Props {
 
 const ACCREDITATION_FIELDS = ['phoneNumber', 'email', 'spheres', 'address']
 
-const ACCREDITATION_TYPES = ['ACCREDIT_EXPERT', 'EXPEND_ACCREDITATION_SCOPE']
+const ACCREDITATION_TYPES = ['ACCREDIT_EXPERT', 'EXPEND_ACCREDITATION_SCOPE', 'ISSUE_ACCREDITATION_CERT']
 
 const ALLOWED_FIELDS: Record<string, string[]> = {
   XRAY: [
@@ -80,54 +80,6 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'description',
     // 'sign',
     // 'reasons',
-  ],
-  ELEVATOR: [
-    'phoneNumber',
-    'hazardousFacilityId',
-    'childEquipmentId',
-    'factoryNumber',
-    'servicePeriod',
-    'factory',
-    'model',
-    'manufacturedAt',
-    'partialCheckDate',
-    'fullCheckDate',
-    'liftingCapacity',
-    'stopCount',
-    'sphere',
-    'regionId',
-    'districtId',
-    'address',
-    'location',
-    'type',
-    'registryNumber',
-    'description',
-    'birthDate',
-    'oldRegistryNumber',
-  ],
-  LIFT: [
-    'phoneNumber',
-    'hazardousFacilityId',
-    'childEquipmentId',
-    'factoryNumber',
-    'servicePeriod',
-    'factory',
-    'model',
-    'manufacturedAt',
-    'partialCheckDate',
-    'fullCheckDate',
-    'liftingCapacity',
-    'stopCount',
-    'sphere',
-    'regionId',
-    'districtId',
-    'address',
-    'location',
-    'type',
-    'registryNumber',
-    'description',
-    'birthDate',
-    'oldRegistryNumber',
   ],
   CRANE: [
     'phoneNumber',
@@ -473,6 +425,7 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
   ],
   ACCREDIT_EXPERT: ACCREDITATION_FIELDS,
   EXPEND_ACCREDITATION_SCOPE: ACCREDITATION_FIELDS,
+  ISSUE_ACCREDITATION_CERT: ACCREDITATION_FIELDS,
 }
 
 const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) => {
@@ -611,7 +564,6 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
       {/* Maxsus parametrlar (parameters ichidagilar va top-leveldagilar) */}
       {renderRow('boomLength', data?.parameters?.boomLength)}
       {renderRow('liftingCapacity', data?.parameters?.liftingCapacity || data?.liftingCapacity)}
-      {renderRow('stopCount', data?.parameters?.stopCount)}
       {renderRow('sphere', data?.sphere)}
       {renderRow('capacity', data?.parameters?.capacity)}
       {renderRow('pressure', data?.parameters?.pressure)}

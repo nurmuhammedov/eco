@@ -112,17 +112,6 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     parentId: MainApplicationCategory.REGISTER,
     icon: 'boiler',
   },
-  // {
-  //   id: 40,
-  //   title: 'Liftni ro‘yxatga olish',
-  //   name: 'Lift',
-  //   description: 'Liftni ro‘yxatga olish ariza shakli',
-  //   category: ApplicationCategory.EQUIPMENTS,
-  //   type: ApplicationTypeEnum.REGISTER_ELEVATOR,
-  //   equipmentType: ApplicationTypeEnum.ELEVATOR,
-  //   parentId: MainApplicationCategory.REGISTER,
-  //   icon: 'elevator',
-  // },
   {
     id: 41,
     title: 'Eskalatorni ro‘yxatga olish',
@@ -288,15 +277,6 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER,
     icon: 'boiler',
   },
-  // {
-  //   id: 68,
-  //   title: 'Liftni ro‘yxatga olish',
-  //   name: 'Lift',
-  //   description: 'Liftni ro‘yxatga olish',
-  //   category: ApplicationCategory.ILLEGAL_EQUIPMENTS,
-  //   type: ApplicationTypeEnum.ILLEGAL_REGISTER_ELEVATOR,
-  //   icon: 'elevator',
-  // },
   {
     id: 69,
     title: 'Eskalatorni ro‘yxatga olish',
@@ -464,6 +444,14 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     type: ApplicationTypeEnum.EXPEND_ACCREDITATION_SCOPE,
     icon: 'expertOrgAccreditationIcon',
   },
+  {
+    id: 143,
+    title: 'Akkreditatsiya attestatini qayta rasmiylashtirish',
+    name: 'Akkreditatsiya',
+    description: 'Akkreditatsiya attestatini qayta rasmiylashtirish ariza shakli',
+    type: ApplicationTypeEnum.RE_ISSUE_ACCREDITATION_CERT,
+    icon: 'expertOrgAccreditationIcon',
+  },
 ]
 
 export const applicationsList = [
@@ -529,23 +517,6 @@ export const applicationsList = [
     id: 106,
     title: 'Bug‘ qozonni qayta ro‘yxatga olish',
     type: ApplicationTypeEnum.REREGISTER_BOILER,
-  },
-
-  // Elevator
-  {
-    id: 40,
-    title: 'Liftni ro‘yxatga olish',
-    type: ApplicationTypeEnum.REGISTER_ELEVATOR,
-  },
-  {
-    id: 107,
-    title: 'Liftni ro‘yxatdan chiqarish',
-    type: ApplicationTypeEnum.DEREGISTER_ELEVATOR,
-  },
-  {
-    id: 108,
-    title: 'Liftni qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_ELEVATOR,
   },
 
   // Escalator
@@ -732,5 +703,27 @@ export const applicationsList = [
     id: 54,
     title: 'Rentgenni ro‘yxatga olish',
     type: ApplicationTypeEnum.REGISTER_XRAY,
+  },
+
+  // ACCREDITATION
+  {
+    id: 140,
+    title: 'Akkreditatsiyadan o‘tkazish',
+    type: ApplicationTypeEnum.ACCREDIT_EXPERT,
+  },
+  {
+    id: 141,
+    title: 'Qayta akkreditatsiyadan o‘tkazish',
+    type: ApplicationTypeEnum.RE_ACCREDIT_EXPERT,
+  },
+  {
+    id: 142,
+    title: 'Akkreditatsiya sohasini kengaytirish va qisqartirish',
+    type: ApplicationTypeEnum.EXPEND_ACCREDITATION_SCOPE,
+  },
+  {
+    id: 143,
+    title: 'Akkreditatsiya attestatini qayta rasmiylashtirish',
+    type: ApplicationTypeEnum.RE_ISSUE_ACCREDITATION_CERT,
   },
 ]

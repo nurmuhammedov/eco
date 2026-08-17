@@ -41,7 +41,7 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
   return (
     <Dialog onOpenChange={setIsShow} open={isShow}>
       <DialogTrigger asChild>
-        <Button variant={'destructive'}> {label}</Button>
+        <Button variant="warning">{label}</Button>
       </DialogTrigger>
       <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[525px]">
         <DialogHeader>
@@ -68,7 +68,7 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
                   Bekor qilish
                 </Button>
               </DialogClose>
-              <Button disabled={isPending} type="submit">
+              <Button disabled={isPending} variant="warning" type="submit">
                 Saqlash
               </Button>
             </div>

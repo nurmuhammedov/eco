@@ -111,10 +111,8 @@ export const AccreditationAppealActions = ({ appealId, status }: AccreditationAp
     <div className="flex gap-2">
       {isNew && (
         <>
-          <Button variant="success" onClick={() => setIsProcessOpen(true)}>
-            Ijroga olish
-          </Button>
-          <Button variant="destructiveOutline" onClick={() => setIsCancelOpen(true)}>
+          <Button onClick={() => setIsProcessOpen(true)}>Ijroga olish</Button>
+          <Button variant="warning" onClick={() => setIsCancelOpen(true)}>
             Qaytarib yuborish
           </Button>
         </>
@@ -135,7 +133,7 @@ export const AccreditationAppealActions = ({ appealId, status }: AccreditationAp
             <Button variant="outline" onClick={() => setIsProcessOpen(false)}>
               Bekor qilish
             </Button>
-            <Button variant="success" onClick={() => process({})} disabled={isProcessing} loading={isProcessing}>
+            <Button onClick={() => process({})} disabled={isProcessing} loading={isProcessing}>
               Ijroga olish
             </Button>
           </DialogFooter>
@@ -154,7 +152,7 @@ export const AccreditationAppealActions = ({ appealId, status }: AccreditationAp
               Bekor qilish
             </Button>
             <Button
-              variant="destructiveOutline"
+              variant="warning"
               onClick={() => cancel({ reason })}
               disabled={isCanceling || !reason.trim()}
               loading={isCanceling}

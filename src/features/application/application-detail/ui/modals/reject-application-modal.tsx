@@ -49,7 +49,7 @@ const RejectApplicationModal = () => {
     <>
       <Dialog onOpenChange={setIsShow} open={isShow}>
         <DialogTrigger asChild>
-          <Button variant="destructive">Arizani qaytarish</Button>
+          <Button variant="warning">Arizani qaytarish</Button>
         </DialogTrigger>
         <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[725px]">
           <DialogHeader>
@@ -74,7 +74,7 @@ const RejectApplicationModal = () => {
                 <DialogClose asChild>
                   <Button variant="outline">Bekor qilish</Button>
                 </DialogClose>
-                <Button variant="destructive" type="submit">
+                <Button variant="warning" type="submit">
                   Arizani qaytarish
                 </Button>
               </div>

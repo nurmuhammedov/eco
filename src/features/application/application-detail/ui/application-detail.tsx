@@ -13,6 +13,14 @@ import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx'
 import { getDate } from '@/shared/utils/date'
 import { ApplicationStatusRow } from '@/shared/components/common/application-status-row'
+import { ApplicationStatus } from '@/entities/application'
+
+function getDefaultDocsTab(status?: ApplicationStatus) {
+  if (status === ApplicationStatus.NEW) return 'info'
+  if (status === ApplicationStatus.IN_PROCESS) return 'applicant_docs'
+  if (!status) return 'info'
+  return 'response_docs'
+}
 
 const ApplicationDetail = ({
   data,
@@ -24,6 +32,7 @@ const ApplicationDetail = ({
 }) => {
   const currentObjLocation = data?.data?.location?.split(',') || ([] as Coordinate[])
   const isLegalApplication = data?.ownerType == 'LEGAL'
+  const defaultDocsTab = getDefaultDocsTab(data?.status)
 
   return (
     <div className="mt-2 grid grid-cols-1 gap-2">
@@ -81,7 +90,7 @@ const ApplicationDetail = ({
         )}
 
         <DetailCardAccordion.Item value="appeal_docs" title="Ariza bo‘yicha batafsil ma’lumotlar va hujjatlar">
-          <Tabs defaultValue="info">
+          <Tabs key={defaultDocsTab} defaultValue={defaultDocsTab}>
             <TabsList className="bg-[#EDEEEE]">
               <TabsTrigger value="info">Ma’lumotlar</TabsTrigger>
               <TabsTrigger value="applicant_docs">Arizachi hujjatlari</TabsTrigger>

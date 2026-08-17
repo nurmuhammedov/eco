@@ -1063,6 +1063,20 @@
       "qmsCertificatePath": "Talabgorning sifatni boshqarish tizimining muvofiqlik sertifikati",
       "basisPath": "Ijro asos fayli",
       "receiptPath": "Davlat xizmatini koʻrsatish uchun yigʻim toʻlangani (toʻlov kvitansiyasi)"
+    },
+    "ISSUE_ACCREDITATION_CERT": {
+      "phoneNumber": "Telefon raqami",
+      "email": "Elektron pochta manzili",
+      "spheres": "Akkreditatsiya sohalari",
+      "address": "Faoliyat manzili",
+      "accreditationScopePath": "Talabgor faoliyat yuritmoqchi bo‘lgan akkreditatsiya sohasi hamda akkreditatsiya sohasi bo‘yicha ishlarni bajarish uchun sanoat xavfsizligi sohasidagi ekspertlar bilan ta’minlangani to‘g‘risida ma’lumotlar",
+      "organizationCharterPath": "Ekspert tashkiloti Nizomi",
+      "complianceDeclarationPath": "Talabgorning akkreditatsiya mezonlariga muvofiqligini tavsiflovchi deklaratsiya",
+      "expertStaffListPath": "Talabgorning shtatida bo‘lgan sanoat xavfsizligi sohasidagi ekspertlar va xodimlar ro‘yxati",
+      "equipmentAndConditionsPath": "Akkreditatsiya sohasidagi ishlarni bajarish uchun mavjud sharoitlar, jihozlar, dasturlar va asbob-uskunalar haqidagi ma’lumotlar",
+      "qmsCertificatePath": "Talabgorning sifatni boshqarish tizimining muvofiqlik sertifikati",
+      "basisPath": "Ijro asos fayli",
+      "receiptPath": "Davlat xizmatini koʻrsatish uchun yigʻim toʻlangani (toʻlov kvitansiyasi)"
     }
   },
   "user-logs": {
