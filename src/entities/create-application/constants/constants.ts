@@ -445,6 +445,30 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     icon: 'expertOrgAccreditationIcon',
   },
   {
+    id: 40,
+    title: 'Liftni ro‘yxatga olish',
+    name: 'Lift',
+    description: 'Liftni ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.REGISTER_ELEVATOR,
+    icon: 'elevator',
+  },
+  {
+    id: 107,
+    title: 'Liftni ro‘yxatdan chiqarish',
+    name: 'Lift',
+    description: 'Liftni ro‘yxatdan chiqarish ariza shakli',
+    type: ApplicationTypeEnum.DEREGISTER_ELEVATOR,
+    icon: 'elevator',
+  },
+  {
+    id: 108,
+    title: 'Liftni qayta ro‘yxatga olish',
+    name: 'Lift',
+    description: 'Liftni qayta ro‘yxatga olish ariza shakli',
+    type: ApplicationTypeEnum.RE_REGISTER_ELEVATOR,
+    icon: 'elevator',
+  },
+  {
     id: 143,
     title: 'Akkreditatsiya attestatini qayta rasmiylashtirish',
     name: 'Akkreditatsiya',
@@ -703,6 +727,23 @@ export const applicationsList = [
     id: 54,
     title: 'Rentgenni ro‘yxatga olish',
     type: ApplicationTypeEnum.REGISTER_XRAY,
+  },
+
+  // ELEVATOR (eski arizalar — yangi ariza yaratilmaydi)
+  {
+    id: 40,
+    title: 'Liftni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_ELEVATOR,
+  },
+  {
+    id: 107,
+    title: 'Liftni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_ELEVATOR,
+  },
+  {
+    id: 108,
+    title: 'Liftni qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.RE_REGISTER_ELEVATOR,
   },
 
   // ACCREDITATION

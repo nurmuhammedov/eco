@@ -18,6 +18,7 @@ const ACCREDITATION_TYPES: string[] = [
 
 const EQUIPMENT_KEYWORDS = [
   'EQUIPMENT',
+  'ELEVATOR',
   'CRANE',
   'CONTAINER',
   'BOILER',

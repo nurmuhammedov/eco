@@ -81,6 +81,30 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     // 'sign',
     // 'reasons',
   ],
+  ELEVATOR: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'factoryNumber',
+    'servicePeriod',
+    'factory',
+    'model',
+    'manufacturedAt',
+    'partialCheckDate',
+    'fullCheckDate',
+    'liftingCapacity',
+    'stopCount',
+    'sphere',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
   CRANE: [
     'phoneNumber',
     'hazardousFacilityId',
@@ -564,6 +588,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
       {/* Maxsus parametrlar (parameters ichidagilar va top-leveldagilar) */}
       {renderRow('boomLength', data?.parameters?.boomLength)}
       {renderRow('liftingCapacity', data?.parameters?.liftingCapacity || data?.liftingCapacity)}
+      {renderRow('stopCount', data?.parameters?.stopCount)}
       {renderRow('sphere', data?.sphere)}
       {renderRow('capacity', data?.parameters?.capacity)}
       {renderRow('pressure', data?.parameters?.pressure)}
