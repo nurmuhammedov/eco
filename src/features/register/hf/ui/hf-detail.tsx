@@ -1,5 +1,6 @@
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
+import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button.tsx'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
 import { useHfDetail } from '@/features/register/hf/hooks/use-hf-detail.tsx'
 import { GoBack } from '@/shared/components/common'
@@ -86,15 +87,19 @@ const HfDetail = () => {
       />
 
       <DetailCardAccordion
-        defaultValue={[
-          'registry_info',
-          'applicant_info',
-          'object_info',
-          'object_location',
-          'object_files',
-          'attached_equipments',
-        ]}
+        defaultValue={['registry_info', 'object_info', 'object_location', 'object_files', 'attached_equipments']}
       >
+        <DetailCardAccordion.Item
+          value="applicant_info"
+          title="Arizachi to‘g‘risida ma’lumot"
+          action={
+            user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL ? (
+              <RefreshLegalInfoButton tinNumber={data?.legalTin} />
+            ) : null
+          }
+        >
+          <LegalApplicantInfo tinNumber={data?.legalTin} />
+        </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
           {user?.role !== UserRoles.PROCURATOR && (
             <DetailRow
@@ -183,12 +188,6 @@ const HfDetail = () => {
               />
             </>
           )}
-        </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="applicant_info" title="Arizachi to‘g‘risida ma’lumot">
-          <LegalApplicantInfo
-            showUpdateButton={user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL}
-            tinNumber={data?.legalTin}
-          />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
           <AppealMainInfo data={data} type={'HF'} address={data?.address} />

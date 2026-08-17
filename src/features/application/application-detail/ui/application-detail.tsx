@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui
 import { getDate } from '@/shared/utils/date'
 import { ApplicationStatusRow } from '@/shared/components/common/application-status-row'
 import { ApplicationStatus } from '@/entities/application'
+import { EmptyValue } from '@/features/application/application-detail/ui/parts/empty-value.tsx'
 
 function getDefaultDocsTab(status?: ApplicationStatus) {
   if (status === ApplicationStatus.NEW) return 'info'
@@ -37,43 +38,17 @@ const ApplicationDetail = ({
   return (
     <div className="mt-2 grid grid-cols-1 gap-2">
       <DetailCardAccordion
-        defaultValue={[
-          'general',
-          'applicant_info_individual',
-          'applicant_info_legal',
-          'appeal_docs',
-          'employee_list',
-          'appeal_files',
-          'appeal_location',
-        ]}
+        defaultValue={['general', 'appeal_docs', 'employee_list', 'appeal_files', 'appeal_location']}
       >
-        <DetailCardAccordion.Item value="general" title="Ariza va ijro to‘g‘risida maʼlumot">
-          <div className="flex flex-col py-1">
-            <DetailRow title="Ariza sanasi:" value={getDate(data?.createdAt)} />
-            <DetailRow
-              title="Ariza turi:"
-              value={APPLICATIONS_DATA?.find((i) => i?.type == data?.appealType)?.title || ''}
-            />
-            <ApplicationStatusRow status={data?.status} />
-            <DetailRow title="Ijro muddati:" value={getDate(data?.deadline)} />
-            <DetailRow title="Ijrochi Qo‘mita masʼul bo‘limi:" value={'-'} />
-            <DetailRow title="Ijrochi Hududiy boshqarma nomi:" value={data?.officeName || '-'} />
-            <DetailRow title="Hududiy boshqarma boshlig‘i F.I.SH.:" value={data?.approverName || '-'} />
-            <DetailRow title="Hududiy boshqarma boshlig‘i rezolyutsiyasi:" value={data?.resolution || '-'} />
-            <DetailRow title="Ijrochi ma‘sul F.I.SH.:" value={data?.executorName || '-'} />
-            <DetailRow title="Ijrochi ma‘sul xulosasi:" value={data?.conclusion || '-'} />
-          </div>
-        </DetailCardAccordion.Item>
-
         {!isLegalApplication && (
           <DetailCardAccordion.Item value="applicant_info_individual" title="Arizachi to‘g‘risida ma’lumot">
             <div className="flex flex-col py-1">
-              <DetailRow title="Arizachi F.I.SH.:" value={data?.ownerName || '-'} />
-              <DetailRow title="Arizachi JSHSHIR:" value={data?.ownerIdentity || '-'} />
-              <DetailRow title="Arizachining manzili:" value={data?.address || '-'} />
+              <DetailRow title="Arizachi F.I.SH.:" value={data?.ownerName || <EmptyValue />} />
+              <DetailRow title="Arizachi JSHSHIR:" value={data?.ownerIdentity || <EmptyValue />} />
+              <DetailRow title="Arizachining manzili:" value={data?.address || <EmptyValue />} />
               <DetailRow
                 title="Arizada bog‘lanish uchun ko‘rsatilgan telefon raqam:"
-                value={data?.phoneNumber || '-'}
+                value={data?.phoneNumber || <EmptyValue />}
               />
             </div>
           </DetailCardAccordion.Item>
@@ -84,10 +59,28 @@ const ApplicationDetail = ({
             <LegalApplicantInfo
               isShowPhoneNumber={true}
               tinNumber={data?.ownerIdentity}
-              phoneNumber={data?.phoneNumber || '-'}
+              phoneNumber={data?.phoneNumber}
             />
           </DetailCardAccordion.Item>
         )}
+
+        <DetailCardAccordion.Item value="general" title="Ariza va ijro to‘g‘risida maʼlumot">
+          <div className="flex flex-col py-1">
+            <DetailRow title="Ariza sanasi:" value={getDate(data?.createdAt)} />
+            <DetailRow
+              title="Ariza turi:"
+              value={APPLICATIONS_DATA?.find((i) => i?.type == data?.appealType)?.title || ''}
+            />
+            <ApplicationStatusRow status={data?.status} />
+            <DetailRow title="Ijro muddati:" value={getDate(data?.deadline)} />
+            <DetailRow title="Ijrochi qo‘mita masʼul bo‘limi:" value={data?.departmentName || <EmptyValue />} />
+            <DetailRow title="Ijrochi hududiy boshqarma nomi:" value={data?.officeName || <EmptyValue />} />
+            <DetailRow title="Hududiy boshqarma boshlig‘i F.I.SH.:" value={data?.approverName || <EmptyValue />} />
+            <DetailRow title="Hududiy boshqarma boshlig‘i rezolyutsiyasi:" value={data?.resolution || <EmptyValue />} />
+            <DetailRow title="Ijrochi ma‘sul F.I.SH.:" value={data?.executorName || <EmptyValue />} />
+            <DetailRow title="Ijrochi ma‘sul xulosasi:" value={data?.conclusion || <EmptyValue />} />
+          </div>
+        </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="appeal_docs" title="Ariza bo‘yicha batafsil ma’lumotlar va hujjatlar">
           <Tabs key={defaultDocsTab} defaultValue={defaultDocsTab}>

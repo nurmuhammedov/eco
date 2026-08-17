@@ -154,7 +154,7 @@ export const UpdateOrganization: FC = () => {
 
       <DetailCardAccordion defaultValue={['applicant_info']}>
         <DetailCardAccordion.Item value="applicant_info" title="Tashkilot to‘g‘risida ma’lumot">
-          <LegalApplicantInfo showUpdateButton={false} tinNumber={data?.legalTin} />
+          <LegalApplicantInfo tinNumber={data?.legalTin} />
         </DetailCardAccordion.Item>
       </DetailCardAccordion>
 

@@ -15,15 +15,30 @@ export const DetailCardAccordion: FC<DetailCardAccordionProps> & {
   )
 }
 
-DetailCardAccordion.Item = ({ value, title, children, className, icon = 'word' }) => {
+DetailCardAccordion.Item = ({ value, title, children, className, action, icon = 'word' }) => {
   return (
     <AccordionItem value={value} className={cn('mb-3 rounded-lg bg-blue-200', className)}>
-      <AccordionTrigger className="3xl:py-2.5 px-4 py-2 text-blue-400">
-        <div className="3xl:text-base flex items-center gap-2 font-semibold text-blue-400">
-          {icon && <Icon name={icon} className="3xl:size-5 size-5" />}
-          {title}
+      {action ? (
+        <div className="flex items-center gap-2 pr-4">
+          <div className="min-w-0 flex-1">
+            <AccordionTrigger collapsible={false} className="3xl:py-2.5 px-4 py-2 text-blue-400">
+              <div className="3xl:text-base flex items-center gap-2 font-semibold text-blue-400">
+                {icon && <Icon name={icon} className="3xl:size-5 size-5" />}
+                {title}
+              </div>
+            </AccordionTrigger>
+          </div>
+          <div className="shrink-0">{action}</div>
+          <AccordionTrigger className="3xl:py-2.5 flex-none py-2 text-blue-400" />
         </div>
-      </AccordionTrigger>
+      ) : (
+        <AccordionTrigger className="3xl:py-2.5 px-4 py-2 text-blue-400">
+          <div className="3xl:text-base flex items-center gap-2 font-semibold text-blue-400">
+            {icon && <Icon name={icon} className="3xl:size-5 size-5" />}
+            {title}
+          </div>
+        </AccordionTrigger>
+      )}
       <AccordionContent className="rounded-b-lg bg-white px-4 py-2">{children}</AccordionContent>
     </AccordionItem>
   )

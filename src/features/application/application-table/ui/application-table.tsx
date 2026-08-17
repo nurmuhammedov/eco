@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FileWarning } from 'lucide-react'
 import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application'
+import { AppealReturnedMark } from '@/entities/application/ui/appeal-returned-mark'
 import { applicationsList } from '@/entities/create-application'
 import { useApplicationList } from '@/features/application/application-table/hooks'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
@@ -103,15 +103,9 @@ export const ApplicationTable = () => {
       {
         header: 'Ariza holati',
         cell: (cell: any) => (
-          <div className="flex items-center gap-2">
-            {ApplicationStatusBadge({
-              status: cell.row.original.status,
-            })}
-            {cell.row.original.isRejected && (
-              <span title="Rad etilgan fayl mavjud">
-                <FileWarning size={18} className="text-yellow-200" />
-              </span>
-            )}
+          <div className="flex items-center gap-1.5">
+            <ApplicationStatusBadge status={cell.row.original.status} />
+            {cell.row.original.isRejected && <AppealReturnedMark />}
           </div>
         ),
       },

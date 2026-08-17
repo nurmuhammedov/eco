@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { withProviders } from '@/app/providers'
 import '@/app/styles/globals.css'
+import '@/shared/validation/zod-setup'
 
 const App = () => null
 const AppWithProviders = withProviders(App)

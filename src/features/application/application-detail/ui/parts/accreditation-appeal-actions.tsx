@@ -112,14 +112,14 @@ export const AccreditationAppealActions = ({ appealId, status }: AccreditationAp
       {isNew && (
         <>
           <Button onClick={() => setIsProcessOpen(true)}>Ijroga olish</Button>
-          <Button variant="warning" onClick={() => setIsCancelOpen(true)}>
+          <Button variant="destructive" onClick={() => setIsCancelOpen(true)}>
             Qaytarib yuborish
           </Button>
         </>
       )}
       {isInProcess && (
         <Button variant="success" onClick={() => setIsReplyOpen(true)}>
-          Ijroni bajarish
+          Ijro etish
         </Button>
       )}
 
@@ -144,15 +144,19 @@ export const AccreditationAppealActions = ({ appealId, status }: AccreditationAp
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Qaytarib yuborish sababini kiriting</DialogTitle>
-            <DialogDescription>Ariza arizachiga tahrirlash uchun qaytariladi.</DialogDescription>
           </DialogHeader>
-          <Textarea placeholder="Sababni yozing..." value={reason} onChange={(e) => setReason(e.target.value)} />
+          <Textarea
+            rows={7}
+            placeholder="Sababni yozing..."
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+          />
           <DialogFooter className="gap-2">
             <Button variant="outline" onClick={() => setIsCancelOpen(false)}>
               Bekor qilish
             </Button>
             <Button
-              variant="warning"
+              variant="destructive"
               onClick={() => cancel({ reason })}
               disabled={isCanceling || !reason.trim()}
               loading={isCanceling}

@@ -6,39 +6,53 @@ import { Switch } from '@/shared/components/ui/switch'
 import { Button } from '@/shared/components/ui/button'
 import { OrganizationInfoModal } from './organization-info-modal'
 import { useCustomSearchParams } from '@/shared/hooks'
-import { useFilters } from '@/shared/hooks/use-filters'
 import { TabsLayout } from '@/shared/layouts'
-import useData from '@/shared/hooks/api/useData'
-import { API_ENDPOINTS } from '@/shared/api'
 import {
   Organization,
   FilterOrganizationDTO,
+  LegalOwnershipType,
   useOrganizationsQuery,
   useOrganizationCounts,
   useUpdateOwnershipType,
 } from '@/entities/organizations'
 
 export function OrganizationList() {
-  const { filters } = useFilters({}, { defaultSize: 20 })
-  const {
-    paramsObject: { ownershipType = 'ALL' },
-    addParams,
-    removeParams,
-  } = useCustomSearchParams()
+  const { paramsObject, addParams, removeParams } = useCustomSearchParams()
 
-  const queryParams = { ...filters } as FilterOrganizationDTO
-  if (ownershipType !== 'ALL') {
-    queryParams.ownershipType = ownershipType as 'STATE' | 'NON_STATE'
+  const {
+    page = 1,
+    size = 20,
+    identity = '',
+    name = '',
+    address = '',
+    regionId = '',
+    legalForm = '',
+    legalOwnership = '',
+    legalOwnershipType = 'ALL',
+  } = paramsObject
+
+  const baseParams: FilterOrganizationDTO = {
+    page: Number(page),
+    size: Number(size),
+    identity: identity || undefined,
+    name: name || undefined,
+    address: address || undefined,
+    regionId: regionId ? Number(regionId) : undefined,
+    legalForm: legalForm || undefined,
+    legalOwnership: legalOwnership || undefined,
+  }
+
+  const queryParams: FilterOrganizationDTO = {
+    ...baseParams,
+    legalOwnershipType: legalOwnershipType !== 'ALL' ? (legalOwnershipType as LegalOwnershipType) : undefined,
   }
 
   const { data, isLoading } = useOrganizationsQuery(queryParams)
-  const { data: counts } = useOrganizationCounts(filters as FilterOrganizationDTO)
+  const { data: counts } = useOrganizationCounts(baseParams)
   const updateOwnershipType = useUpdateOwnershipType()
   const [selectedTin, setSelectedTin] = useState<string | null>(null)
 
-  const { data: regionOptions } = useData<any>(`${API_ENDPOINTS.REGIONS_SELECT}`)
-
-  const handleToggleOwnership = (id: string, currentOwnership: string | undefined) => {
+  const handleToggleOwnership = (id: string, currentOwnership: LegalOwnershipType | null) => {
     const newType = currentOwnership === 'STATE' ? 'NON_STATE' : 'STATE'
     updateOwnershipType.mutate({ id, ownershipType: newType })
   }
@@ -62,23 +76,23 @@ export function OrganizationList() {
         accessorKey: 'identity',
         header: 'STIR',
         maxSize: 150,
-        cell: ({ row }) => row.original.tin || row.original.identity || '-',
+        cell: ({ row }) => row.original.identity || '-',
         filterKey: 'identity',
         filterType: 'search',
       },
       {
         accessorKey: 'address',
-        header: 'Hudud',
+        header: 'Manzil',
         maxSize: 300,
-        cell: ({ row }) => row.original.region?.name || row.original.address || '-',
-        filterKey: 'regionId',
-        filterType: 'select',
-        filterOptions: regionOptions || [],
+        cell: ({ row }) => row.original.address || '-',
+        filterKey: 'address',
+        filterType: 'search',
       },
       {
         accessorKey: 'legalForm',
         header: 'Tashkiliy-huquqiy shakli',
         maxSize: 200,
+        cell: ({ row }) => row.original.legalForm || '-',
         filterKey: 'legalForm',
         filterType: 'search',
       },
@@ -86,6 +100,7 @@ export function OrganizationList() {
         accessorKey: 'legalOwnership',
         header: 'Mulkchilik shakli',
         maxSize: 200,
+        cell: ({ row }) => row.original.legalOwnership || '-',
         filterKey: 'legalOwnership',
         filterType: 'search',
       },
@@ -100,7 +115,7 @@ export function OrganizationList() {
                 checked={isState}
                 onChange={() => handleToggleOwnership(row.original.id, row.original.legalOwnershipType)}
               />
-              <span className="text-sm">{isState ? 'Ha' : "Yo'q"}</span>
+              <span className="text-sm">{isState ? 'Ha' : 'Yo‘q'}</span>
             </div>
           )
         },
@@ -113,7 +128,7 @@ export function OrganizationList() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setSelectedTin(row.original.tin || row.original.identity || null)}
+            onClick={() => setSelectedTin(row.original.identity ? String(row.original.identity) : null)}
           >
             <Eye className="h-4 w-4" />
           </Button>
@@ -121,7 +136,7 @@ export function OrganizationList() {
         maxSize: 80,
       },
     ],
-    [regionOptions]
+    []
   )
 
   return (
@@ -129,13 +144,13 @@ export function OrganizationList() {
       <div className="flex flex-col gap-4 xl:flex-row-reverse xl:items-center xl:justify-between">
         <div className="min-w-0 overflow-x-auto xl:flex-1">
           <TabsLayout
-            activeTab={ownershipType as string}
+            activeTab={legalOwnershipType as string}
             tabs={tabs}
             onTabChange={(value) => {
               if (value === 'ALL') {
-                removeParams('ownershipType')
+                removeParams('legalOwnershipType')
               } else {
-                addParams({ ownershipType: value }, 'page')
+                addParams({ legalOwnershipType: value }, 'page')
               }
             }}
           />

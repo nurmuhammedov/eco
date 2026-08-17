@@ -1,4 +1,5 @@
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
+import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button.tsx'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
 import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts'
 import { GoBack } from '@/shared/components/common'
@@ -117,9 +118,7 @@ const RiskAnalysisDetail = () => {
           </div>
         )}
       </div>
-      <DetailCardAccordion
-        defaultValue={['risk_anlalysis_info', 'registry_info', 'org_info', 'applicant_info', 'object_files', 'devices']}
-      >
+      <DetailCardAccordion defaultValue={['risk_anlalysis_info', 'registry_info', 'object_files', 'devices']}>
         <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
           {currentBelongId ? (
             <>
@@ -131,11 +130,16 @@ const RiskAnalysisDetail = () => {
         </DetailCardAccordion.Item>
         {isRadProfile ? (
           <>
-            <DetailCardAccordion.Item value="applicant_info" title="Tashkilot to‘g‘risida ma’lumot">
-              <LegalApplicantInfo
-                showUpdateButton={user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL}
-                tinNumber={currentTin || radData?.legalTin}
-              />
+            <DetailCardAccordion.Item
+              value="applicant_info"
+              title="Tashkilot to‘g‘risida ma’lumot"
+              action={
+                user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL ? (
+                  <RefreshLegalInfoButton tinNumber={currentTin || radData?.legalTin} />
+                ) : null
+              }
+            >
+              <LegalApplicantInfo tinNumber={currentTin || radData?.legalTin} />
             </DetailCardAccordion.Item>
 
             <DetailCardAccordion.Item value="object_files" title="Tashkilotga biriktirilgan fayllar">
@@ -155,6 +159,9 @@ const RiskAnalysisDetail = () => {
           </>
         ) : (
           <>
+            <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
+              <LegalApplicantInfo tinNumber={currentTin} />
+            </DetailCardAccordion.Item>
             <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
               {user?.role !== UserRoles.PROCURATOR && (
                 <DetailRow
@@ -178,9 +185,6 @@ const RiskAnalysisDetail = () => {
                   value={<FileLink url={data?.registryFilePath} />}
                 />
               )}
-            </DetailCardAccordion.Item>
-            <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
-              <LegalApplicantInfo tinNumber={currentTin} />
             </DetailCardAccordion.Item>
           </>
         )}

@@ -2,6 +2,7 @@ import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import { useParams } from 'react-router-dom'
+import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button.tsx'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
@@ -29,11 +30,16 @@ export default function AutoDetail() {
               <DetailRow title="Fuqaro JSHSHIR:" value={currentTin || '-'} />
             </DetailCardAccordion.Item>
           ) : (
-            <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
-              <LegalApplicantInfo
-                showUpdateButton={user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL}
-                tinNumber={currentTin}
-              />
+            <DetailCardAccordion.Item
+              value="org_info"
+              title="Tashkilot to‘g‘risida maʼlumot"
+              action={
+                user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL ? (
+                  <RefreshLegalInfoButton tinNumber={currentTin} />
+                ) : null
+              }
+            >
+              <LegalApplicantInfo tinNumber={currentTin} />
             </DetailCardAccordion.Item>
           )}
 

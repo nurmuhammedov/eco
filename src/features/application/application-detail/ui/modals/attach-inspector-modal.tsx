@@ -65,7 +65,7 @@ const AttachInspectorModal = () => {
   return (
     <Dialog onOpenChange={setIsShow} open={isShow}>
       <DialogTrigger asChild>
-        <Button> Ijro etish</Button>
+        <Button>Ijrochi biriktirish</Button>
       </DialogTrigger>
       <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[525px]">
         <DialogHeader>

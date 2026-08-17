@@ -1,52 +1,60 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { useOrganizationInfoQuery } from '@/entities/organizations'
-import { Loader2 } from 'lucide-react'
+import { Skeleton } from '@/shared/components/ui/skeleton'
+import { ReactNode } from 'react'
 
 interface OrganizationInfoModalProps {
   tin: string | null
   onClose: () => void
 }
 
+const EmptyValue = () => <span className="font-medium text-red-500">Mavjud emas</span>
+
+const InfoRow = ({ title, value }: { title: string; value: ReactNode }) => (
+  <div className="grid grid-cols-1 gap-1 rounded-md px-3 py-2 odd:bg-neutral-50 md:grid-cols-2 md:items-center md:gap-4">
+    <span className="text-sm font-medium text-gray-500">{title}</span>
+    <div className="text-sm font-medium break-words text-gray-900">{value || <EmptyValue />}</div>
+  </div>
+)
+
 export function OrganizationInfoModal({ tin, onClose }: OrganizationInfoModalProps) {
   const { data, isLoading } = useOrganizationInfoQuery(tin)
 
+  const rows: { title: string; value: ReactNode }[] = [
+    { title: 'Tashkilot nomi:', value: data?.legalName },
+    { title: 'Rahbar F.I.SH.:', value: data?.fullName },
+    ...(data?.pin ? [{ title: 'JSHSHIR:', value: data.pin }] : [{ title: 'STIR:', value: data?.tin }]),
+    { title: 'Telefon raqami:', value: data?.phoneNumber },
+    { title: 'Viloyat:', value: data?.regionName },
+    { title: 'Tuman/shahar:', value: data?.districtName },
+    { title: 'Yuridik manzil:', value: data?.legalAddress },
+  ]
+
   return (
     <Dialog open={!!tin} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Tashkilot ma'lumotlari</DialogTitle>
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-[680px]">
+        <DialogHeader className="mb-2">
+          <DialogTitle>Tashkilot ma’lumotlari</DialogTitle>
         </DialogHeader>
-        <div className="py-4">
-          {isLoading ? (
-            <div className="flex justify-center p-4">
-              <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
-            </div>
-          ) : !data ? (
-            <div className="text-center text-gray-500">Ma'lumot topilmadi</div>
-          ) : (
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="font-semibold">Nomi:</div>
-              <div>{data.name || '-'}</div>
 
-              <div className="font-semibold">STIR:</div>
-              <div>{data.tin || data.identity || '-'}</div>
-
-              <div className="font-semibold">Manzil:</div>
-              <div>{data.address || '-'}</div>
-
-              {Object.entries(data).map(([key, value]) => {
-                if (['name', 'tin', 'identity', 'address'].includes(key)) return null
-                if (typeof value === 'object') return null
-                return (
-                  <div key={key} className="contents">
-                    <div className="font-semibold capitalize">{key}:</div>
-                    <div>{String(value || '-')}</div>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </div>
+        {isLoading ? (
+          <div className="flex flex-col gap-1">
+            {[...Array(7)].map((_, index) => (
+              <div key={index} className="grid grid-cols-2 items-center gap-4 rounded-md px-3 py-2 odd:bg-neutral-50">
+                <Skeleton className="h-4 w-40" />
+                <Skeleton className="h-4 w-56" />
+              </div>
+            ))}
+          </div>
+        ) : !data ? (
+          <div className="py-6 text-center text-sm font-medium text-gray-500">Ma’lumot topilmadi</div>
+        ) : (
+          <div className="flex flex-col">
+            {rows.map((row) => (
+              <InfoRow key={row.title} title={row.title} value={row.value} />
+            ))}
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   )

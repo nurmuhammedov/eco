@@ -9,9 +9,10 @@ import { useAuth } from '@/shared/hooks/use-auth.ts'
 import AttachInspectorModal from '@/features/application/application-detail/ui/modals/attach-inspector-modal.tsx'
 import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal.tsx'
 import { AccreditationAppealActions } from '@/features/application/application-detail/ui/parts/accreditation-appeal-actions.tsx'
+import { AppealDetailSkeleton } from '@/features/application/application-detail/ui/parts/appeal-detail-skeleton.tsx'
 
 const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActions?: boolean }) => {
-  const { data } = useApplicationDetail()
+  const { data, isLoading } = useApplicationDetail()
   const { user } = useAuth()
 
   const { isAccreditation, canAssign, canReject, canExecute } = getAppealPermissions(
@@ -19,6 +20,8 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
     data?.appealType,
     data?.status
   )
+
+  if (isLoading) return <AppealDetailSkeleton />
 
   return (
     <>

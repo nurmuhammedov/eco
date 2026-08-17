@@ -18,5 +18,6 @@ export interface DetailCardAccordionItemProps {
   title: string
   icon?: IconName
   className?: string
+  action?: ReactNode
   children: ReactNode
 }

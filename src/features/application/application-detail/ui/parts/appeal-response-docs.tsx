@@ -11,6 +11,8 @@ import { useAuth } from '@/shared/hooks/use-auth.ts'
 import { ColumnDef } from '@tanstack/react-table'
 import { formatDate } from 'date-fns'
 import { Eye, Info } from 'lucide-react'
+import { cn } from '@/shared/lib/utils'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip'
 import React, { useState } from 'react'
 import ConfirmWithRegistryModal from '../modals/confirm-with-registry-modal.tsx'
 import { getAppealPermissions } from '@/features/application/application-detail/model/appeal-permissions'
@@ -20,12 +22,20 @@ export const signStatuses = new Map([
   [false, { label: 'Imzolanmagan', variant: 'warning' }],
 ] as const)
 
-export const approveStatuses = new Map([
-  ['AGREED', { label: 'Kelishildi', variant: 'success' }],
-  ['NOT_AGREED', { label: 'Ijro noto‘g‘ri bajarilgan', variant: 'error' }],
-  ['APPROVED', { label: 'Tasdiqlandi', variant: 'success' }],
-  ['NOT_APPROVED', { label: 'Ijro noto‘g‘ri bajarilgan', variant: 'error' }],
-] as const)
+const APPROVE_STATUSES: Record<string, { label: string; pill: string; dot: string }> = {
+  AGREED: { label: 'Kelishildi', pill: 'border-sky-200 bg-sky-50 text-sky-700', dot: 'bg-sky-500' },
+  APPROVED: { label: 'Tasdiqlandi', pill: 'border-emerald-200 bg-emerald-50 text-emerald-700', dot: 'bg-emerald-500' },
+  NOT_AGREED: {
+    label: 'Ijro noto‘g‘ri bajarilgan',
+    pill: 'border-rose-200 bg-rose-50 text-rose-700',
+    dot: 'bg-rose-500',
+  },
+  NOT_APPROVED: {
+    label: 'Ijro noto‘g‘ri bajarilgan',
+    pill: 'border-rose-200 bg-rose-50 text-rose-700',
+    dot: 'bg-rose-500',
+  },
+}
 
 export const documentTypes = new Map([
   ['REPORT', 'Maʼlumotnoma'],
@@ -92,7 +102,7 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
       cell: (cell) => {
         const isAgreed = !!cell.row.original?.agreementStatus
         const currentAgreement = cell.row.original?.agreementStatus
-        const currentBadge = approveStatuses.get(currentAgreement)
+        const currentBadge = APPROVE_STATUSES[currentAgreement]
         const message = cell.row.original?.description
         const documentId = cell.row.original?.documentId
 
@@ -109,17 +119,31 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
         }
         if (currentBadge) {
           return (
-            <div className="flex items-center gap-2">
-              <Badge variant={currentBadge.variant}>{currentBadge.label}</Badge>
+            <div className="flex items-center gap-1.5">
+              <span
+                className={cn(
+                  'inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs leading-none font-medium whitespace-nowrap',
+                  currentBadge.pill
+                )}
+              >
+                <span className={cn('size-1.5 shrink-0 rounded-full', currentBadge.dot)} />
+                {currentBadge.label}
+              </span>
               {message && (
-                <button
-                  className="cursor-pointer hover:text-yellow-200"
-                  onClick={() => {
-                    setRejectMessage(message)
-                  }}
-                >
-                  <Info />
-                </button>
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={() => setRejectMessage(message)}
+                        className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md border border-neutral-200 bg-white text-neutral-500 transition-colors hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
+                      >
+                        <Info size={13} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>Sababini ko‘rish</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
             </div>
           )
