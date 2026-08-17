@@ -32,7 +32,7 @@ export const CategoryTypeView = ({ data, checklistsData = [], isChecklistsLoadin
       headerClassName: 'text-center',
     } as any,
     { accessorKey: 'question', header: 'Savol' },
-    { accessorKey: 'negative', header: "Yo'q belgilanganda matn" },
+    { accessorKey: 'negative', header: 'Yo‘q belgilanganda matn' },
     { accessorKey: 'corrective', header: 'Chora-tadbir matni' },
     {
       id: 'actions',
