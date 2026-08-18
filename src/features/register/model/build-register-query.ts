@@ -98,6 +98,11 @@ function buildEquipmentsQuery({
     hfId: searchHfId = '',
     activityType = '',
     tin = '',
+    name = '',
+    registerNumber = '',
+    numberPlate = '',
+    model = '',
+    createdBy = '',
   } = paramsObject
 
   const currentStatus = String(status)
@@ -107,17 +112,16 @@ function buildEquipmentsQuery({
     return {
       endpoint: '/tankers',
       params: {
+        activityType: activityType && activityType !== 'ALL' ? activityType : undefined,
+        status: currentStatus !== 'ALL' ? currentStatus : '',
+        name,
         tin: tin && !isPin ? tin : undefined,
         pin: tin && isPin ? tin : undefined,
-        mode,
+        registerNumber,
+        numberPlate,
+        model,
+        createdBy: createdBy || undefined,
         regionId: normalizeRegionId(regionId),
-        districtId,
-        registryNumber,
-        address,
-        startDate,
-        endDate,
-        status: currentStatus !== 'ALL' ? currentStatus : '',
-        activityType: activityType !== 'ALL' ? activityType : undefined,
       },
     }
   }
