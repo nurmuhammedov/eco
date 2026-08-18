@@ -1,12 +1,33 @@
-import { useAuth } from '@/shared/hooks/use-auth'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
-import { User, Phone, Building2, CreditCard, MapPin, Activity, RefreshCcw } from 'lucide-react'
-import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info'
-import { Skeleton } from '@/shared/components/ui/skeleton'
-import { Button } from '@/shared/components/ui/button'
+import { Activity, Building2, CreditCard, MapPin, Phone, RefreshCcw, User } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { Card, CardContent } from '@/shared/components/ui/card'
+import { Badge } from '@/shared/components/ui/badge'
+import { Button } from '@/shared/components/ui/button'
+import { Skeleton } from '@/shared/components/ui/skeleton'
 import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
 import useUpdate from '@/shared/hooks/api/useUpdate'
+import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info'
+
+interface InfoItemProps {
+  icon: React.ElementType
+  label: string
+  children: React.ReactNode
+}
+
+const InfoItem = ({ icon: Icon, label, children }: InfoItemProps) => (
+  <div className="flex items-start gap-2.5">
+    <span className="bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-lg">
+      <Icon className="size-4" />
+    </span>
+    <div className="min-w-0 flex-1">
+      <p className="text-muted-foreground text-xs">{label}</p>
+      <div className="text-sm font-medium break-words">{children}</div>
+    </div>
+  </div>
+)
+
+const EmptyValue = () => <span className="text-muted-foreground font-normal">Mavjud emas</span>
 
 export default function ProfilePage() {
   const { user } = useAuth()
@@ -17,7 +38,7 @@ export default function ProfilePage() {
     '/users/legal',
     user?.tinOrPin,
     'put',
-    'Ma’lumotlarni muvaffaqiyatli yangilandi!'
+    'Ma’lumotlar muvaffaqiyatli yangilandi!'
   )
 
   const handleUpdate = () => {
@@ -33,99 +54,70 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="h-full w-full p-6">
-        <Skeleton className="h-full w-full rounded-xl" />
+      <div className="flex flex-col gap-3">
+        <Skeleton className="h-28 w-full rounded-xl" />
+        <Skeleton className="h-72 w-full rounded-xl" />
       </div>
     )
   }
 
+  const organizationName = data?.name || user?.name
+
   return (
-    <div className="flex h-full w-full flex-col p-2">
-      <Card className="flex h-full flex-col overflow-hidden rounded-xl border-none bg-white shadow-sm ring-1 ring-gray-100">
-        <CardHeader className="flex shrink-0 flex-row items-center justify-between border-b border-gray-100 bg-gray-50/50 px-6 py-3">
-          <div>
-            <CardTitle className="text-xl font-semibold text-gray-800">Profil</CardTitle>
-            <p className="text-sm text-gray-500">Tashkilot ma’lumotlari</p>
+    <div className="flex flex-col gap-3">
+      <Card>
+        <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+          <span className="bg-primary/10 text-primary flex size-12 shrink-0 items-center justify-center rounded-xl">
+            <Building2 className="size-6" />
+          </span>
+
+          <div className="min-w-0 flex-1">
+            <h2 className="truncate text-lg font-semibold">{organizationName || 'Tashkilot nomi aniqlanmadi'}</h2>
+            <p className="text-muted-foreground mt-0.5 text-sm">STIR: {data?.identity || user?.tinOrPin || '—'}</p>
           </div>
-          <Button size="sm" className="gap-2" onClick={handleUpdate} disabled={isPending}>
-            <RefreshCcw className={`h-4 w-4 ${isPending ? 'animate-spin' : ''}`} />
-            Ma’lumotlarni yangilash
-          </Button>
-        </CardHeader>
-        <CardContent className="flex-1 overflow-auto p-6">
-          <div className="grid grid-cols-1 gap-x-12 gap-y-8 md:grid-cols-2">
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                <CreditCard size={24} />
-              </div>
-              <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium text-gray-500">Tashkilot STIR</p>
-                <p className="text-lg font-semibold text-gray-900">
-                  {data?.identity || user?.tinOrPin || 'Mavjud emas'}
-                </p>
-              </div>
-            </div>
 
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                <Building2 size={24} />
-              </div>
-              <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium text-gray-500">Tashkilot nomi</p>
-                <p className="text-lg font-semibold text-gray-900">{data?.name || 'Mavjud emas'}</p>
-              </div>
-            </div>
+          <div className="flex items-center gap-3">
+            {data?.isActive !== undefined && (
+              <Badge variant={data.isActive ? 'success' : 'error'}>{data.isActive ? 'Faol' : 'Faol emas'}</Badge>
+            )}
 
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                <User size={24} />
-              </div>
-              <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium text-gray-500">Tashkilot rahbari F.I.SH.</p>
-                <p className="text-lg font-semibold text-gray-900">
-                  {data?.directorName || user?.name || 'Mavjud emas'}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                <MapPin size={24} />
-              </div>
-              <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium text-gray-500">Tashkilot manzili</p>
-                <p className="text-lg font-semibold text-gray-900">{data?.address || 'Mavjud emas'}</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                <Phone size={24} />
-              </div>
-              <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium text-gray-500">Telefon raqami</p>
-                <p className="text-lg font-semibold text-gray-900">{data?.phoneNumber || 'Mavjud emas'}</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                <Activity size={24} />
-              </div>
-              <div className="flex-1 space-y-1">
-                <p className="text-sm font-medium text-gray-500">Tashkilotning faoliyat yuritish holati</p>
-                <p className="text-lg font-semibold">
-                  {data?.isActive === true ? (
-                    <span className="text-green-600">Faol</span>
-                  ) : data?.isActive === false ? (
-                    <span className="text-red-600">Faol emas</span>
-                  ) : (
-                    <span className="text-gray-400">Mavjud emas</span>
-                  )}
-                </p>
-              </div>
-            </div>
+            <Button variant="outline" size="sm" className="gap-2" onClick={handleUpdate} disabled={isPending}>
+              <RefreshCcw className={`size-4 ${isPending ? 'animate-spin' : ''}`} />
+              Yangilash
+            </Button>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="grid gap-x-8 gap-y-4 p-4 md:grid-cols-2">
+          <InfoItem icon={CreditCard} label="Tashkilot STIR">
+            {data?.identity || user?.tinOrPin || <EmptyValue />}
+          </InfoItem>
+
+          <InfoItem icon={Building2} label="Tashkilot nomi">
+            {organizationName || <EmptyValue />}
+          </InfoItem>
+
+          <InfoItem icon={User} label="Tashkilot rahbari F.I.Sh.">
+            {data?.directorName || <EmptyValue />}
+          </InfoItem>
+
+          <InfoItem icon={Phone} label="Telefon raqami">
+            {data?.phoneNumber || <EmptyValue />}
+          </InfoItem>
+
+          <InfoItem icon={MapPin} label="Tashkilot manzili">
+            {data?.address || <EmptyValue />}
+          </InfoItem>
+
+          <InfoItem icon={Activity} label="Faoliyat yuritish holati">
+            {data?.isActive === undefined ? (
+              <EmptyValue />
+            ) : (
+              <Badge variant={data.isActive ? 'success' : 'error'}>{data.isActive ? 'Faol' : 'Faol emas'}</Badge>
+            )}
+          </InfoItem>
         </CardContent>
       </Card>
     </div>

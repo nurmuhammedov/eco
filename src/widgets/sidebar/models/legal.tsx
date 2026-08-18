@@ -1,10 +1,10 @@
 import { Navigation } from '@/widgets/sidebar/models/types'
 import {
+  BadgeCheck,
   Activity,
   Archive,
   ArrowDownUp,
   Award,
-  BadgeCheck,
   BarChart2,
   Building2,
   ClipboardList,
@@ -142,19 +142,7 @@ export default [
   {
     id: 'ATTESTATION',
     title: 'Attestatsiya',
-    url: '/attestation',
+    url: '/attestation-applications',
     icon: <BadgeCheck />,
-    items: [
-      {
-        id: 'ATTESTATION',
-        title: 'Hisobot',
-        url: '/attestation-directions',
-      },
-      {
-        id: 'ATTESTATION',
-        title: 'Imtihon savollari',
-        url: '/attestation-questions',
-      },
-    ],
   },
 ] as Navigation

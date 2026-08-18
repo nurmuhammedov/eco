@@ -111,6 +111,11 @@ export function Header() {
       { path: '/kpi/tasks', title: 'KPI vazifalar' },
       { path: '/kpi/my-tasks', title: 'Mening KPIlarim' },
       { path: '/kpi/report', title: 'KPI hisoboti' },
+      { path: '/attestation-questions', title: 'Imtihon savollari' },
+      { path: '/attestation-calendars', title: 'Qabul vaqtlari' },
+      { path: '/attestation-applications', title: 'Attestatsiya arizalari' },
+      { path: '/attestation-calendars/', title: 'Arizachilar' },
+      { path: '/profile', title: 'Profil' },
     ]
 
     const match = PATH_TITLES.find((item) => pathname.startsWith(item.path))

@@ -51,7 +51,14 @@ const CadastreList = lazy(() => import('@/features/cadastre-passport/ui/cadastre
 const CadastreAdd = lazy(() => import('@/features/cadastre-passport/ui/cadastre-add'))
 const CadastreDetail = lazy(() => import('@/features/cadastre-passport/ui/cadastre-detail'))
 
+const AttestationMyApplicationsPage = lazy(() => import('@/pages/attestation-my-applications/ui/page'))
+
 export const legalRoutes = [
+  {
+    id: 'ATTESTATION',
+    path: 'attestation-applications',
+    element: withSuspense(AttestationMyApplicationsPage),
+  },
   // ELEVATORS
   {
     id: 'ELEVATOR',

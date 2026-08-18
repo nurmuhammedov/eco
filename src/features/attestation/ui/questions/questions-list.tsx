@@ -1,64 +1,39 @@
 import { useState } from 'react'
-import { DataTable } from '@/shared/components/common/data-table/data-table'
+import { format } from 'date-fns'
+import { Edit2, Plus } from 'lucide-react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { DataTable, ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { Button } from '@/shared/components/ui/button'
-import { Edit2, Plus, Trash2 } from 'lucide-react'
+import { Badge } from '@/shared/components/ui/badge'
+import DeleteConfirmationDialog from '@/shared/components/common/delete-confirm-dialog'
 import { useServicesPaginatedData, useCustomSearchParams } from '@/shared/hooks/api'
 import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
-import { AttestationDirection, AttestationQuestion } from '@/entities/attestation/model/types'
+import { deleteQuestion } from '@/entities/attestation/api/attestation.api'
+import { DIRECTION, DIRECTION_OPTIONS, EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
+import type { AttestationQuestion } from '@/entities/attestation/model/types'
 import { AddQuestionModal } from './add-question-modal'
 import { EditQuestionModal } from './edit-question-modal'
-import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
-import { Badge } from '@/shared/components/ui/badge'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { deleteQuestion } from '@/entities/attestation/api/attestation.api'
-import { toast } from 'sonner'
-import { format } from 'date-fns'
-import { servicesApiClient } from '@/shared/api/services-api-client'
 
 export const QuestionsList = () => {
   const queryClient = useQueryClient()
   const { paramsObject } = useCustomSearchParams()
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [editingQuestion, setEditingQuestion] = useState<AttestationQuestion | null>(null)
 
-  const { data: directionsRes } = useQuery({
-    queryKey: ['directions-list-filters'],
-    queryFn: () =>
-      servicesApiClient.getWithPagination<AttestationDirection>(SERVICES_API_ENDPOINTS.DIRECTIONS, { size: 100 }),
-  })
-
-  const directions: AttestationDirection[] = Array.isArray(directionsRes?.data)
-    ? directionsRes.data
-    : (directionsRes?.data as any)?.content || (directionsRes?.data as any)?.items || []
-
-  const directionOptions = directions.map((d) => ({
-    id: d.id,
-    name: d.name,
-  }))
-
   const { data, isLoading, totalPages } = useServicesPaginatedData<AttestationQuestion>(
     SERVICES_API_ENDPOINTS.QUESTIONS,
-    {
-      ...paramsObject,
-    }
+    { ...paramsObject }
   )
 
   const { mutate: remove } = useMutation({
     mutationFn: deleteQuestion,
     onSuccess: () => {
-      toast.success("O'chirildi")
+      toast.success('Savol o‘chirildi')
       queryClient.invalidateQueries({ queryKey: ['services', SERVICES_API_ENDPOINTS.QUESTIONS] })
     },
-    onError: () => {
-      toast.error("O'chirishda xatolik")
-    },
   })
-
-  const handleDelete = (id: string) => {
-    if (confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
-      remove(id)
-    }
-  }
 
   const columns: ExtendedColumnDef<AttestationQuestion, unknown>[] = [
     {
@@ -66,17 +41,15 @@ export const QuestionsList = () => {
       accessorKey: 'question_text',
       filterKey: 'search',
       filterType: 'search',
+      cell: ({ row }) => <span className="line-clamp-2">{row.original.question_text}</span>,
     },
     {
-      header: "Yo'nalish",
-      accessorKey: 'attestation_direction_id',
-      filterKey: 'direction_id',
+      header: 'Yo‘nalish',
+      accessorKey: 'direction',
+      filterKey: 'direction',
       filterType: 'select',
-      filterOptions: directionOptions,
-      cell: ({ row }) => {
-        const dir = directions.find((d) => d.id === row.original.attestation_direction_id)
-        return dir ? dir.name : row.original.attestation_direction_id
-      },
+      filterOptions: DIRECTION_OPTIONS.map((option) => ({ id: option.value, name: option.label })),
+      cell: ({ row }) => DIRECTION[row.original.direction] ?? row.original.direction,
     },
     {
       header: 'Xodim turi',
@@ -84,64 +57,76 @@ export const QuestionsList = () => {
       filterKey: 'employee_type',
       filterType: 'select',
       filterOptions: [
-        { id: 'LEADER', name: 'LEADER' },
-        { id: 'ENGINEER', name: 'ENGINEER' },
+        { id: 'LEADER', name: EMPLOYEE_TYPE.LEADER.label },
+        { id: 'ENGINEER', name: EMPLOYEE_TYPE.ENGINEER.label },
       ],
+      cell: ({ row }) => {
+        const type = EMPLOYEE_TYPE[row.original.employee_type]
+
+        return (
+          <Badge variant="outline" className={type.className}>
+            {type.label}
+          </Badge>
+        )
+      },
     },
     {
       header: 'Holati',
       accessorKey: 'is_active',
       cell: ({ row }) => (
         <Badge variant={row.original.is_active ? 'success' : 'secondary'}>
-          {row.original.is_active ? 'Aktiv' : 'Nofaol'}
+          {row.original.is_active ? 'Faol' : 'Nofaol'}
         </Badge>
       ),
     },
     {
-      header: 'Yaratilgan sana',
+      header: 'Qo‘shilgan sana',
       accessorKey: 'created_at',
-      cell: ({ row }) => {
-        const val = row.original.created_at
-        if (!val) return '-'
-        return format(new Date(val), 'dd.MM.yyyy HH:mm')
-      },
+      cell: ({ row }) => (row.original.created_at ? format(new Date(row.original.created_at), 'dd.MM.yyyy') : '-'),
     },
     {
       id: 'actions',
       header: 'Amallar',
       cell: ({ row }) => (
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={() => setEditingQuestion(row.original)}>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-orange-500"
+            title="Tahrirlash"
+            onClick={() => setEditingQuestion(row.original)}
+          >
             <Edit2 className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => handleDelete(row.original.id)}>
-            <Trash2 className="h-4 w-4 text-red-500" />
-          </Button>
+
+          <DeleteConfirmationDialog
+            title="Savolni o‘chirish"
+            description="Ushbu savolni o‘chirmoqchimisiz?"
+            onConfirm={() => remove(row.original.id)}
+          />
         </div>
       ),
     },
   ]
 
   return (
-    <div className="flex h-full flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold">Imtihon savollarini boshqarish</h2>
+    <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
+      <div className="mb-2 flex justify-end">
         <Button onClick={() => setIsAddModalOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
-          Yangi qo'shish
+          Yangi qo‘shish
         </Button>
       </div>
 
-      <div className="flex-1 overflow-hidden">
-        <DataTable
-          columns={columns}
-          data={data || []}
-          isLoading={isLoading}
-          isPaginated
-          pageCount={totalPages}
-          showFilters={true}
-        />
-      </div>
+      <DataTable
+        columns={columns}
+        data={data || []}
+        isLoading={isLoading}
+        isPaginated
+        pageCount={totalPages}
+        showFilters
+        className="flex-1"
+      />
 
       <AddQuestionModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
 

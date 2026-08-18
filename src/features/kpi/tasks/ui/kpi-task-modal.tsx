@@ -23,10 +23,10 @@ export type CalcType = 'PLAN' | 'PENALTY'
 // ─── Schema ──────────────────────────────────────────────────────────────────
 const indicatorSchema = z
   .object({
-    name: z.string().min(1, 'Nomi kiritilishi shart'),
-    calculation_type: z.enum(['PLAN', 'PENALTY'], { required_error: 'Tur tanlanishi shart' }),
-    target: z.coerce.number().min(0, 'Maqsad 0 dan katta bo‘lishi kerak'),
-    penalty_per_unit: z.coerce.number().min(0.01, 'Noldan katta bo‘lishi kerak').max(100).optional().nullable(),
+    name: z.string().min(1, 'Majburiy maydon!'),
+    calculation_type: z.enum(['PLAN', 'PENALTY'], { required_error: 'Majburiy maydon!' }),
+    target: z.coerce.number().min(0, 'Kiritilgan ma’lumot yaroqli emas!'),
+    penalty_per_unit: z.coerce.number().min(0.01, 'Kiritilgan ma’lumot yaroqli emas!').max(100).optional().nullable(),
     weight: z.coerce.number().min(1).max(100),
   })
   .superRefine((data, ctx) => {
@@ -35,7 +35,7 @@ const indicatorSchema = z
       if (v === undefined || v === null || isNaN(Number(v))) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Kiritilishi shart',
+          message: 'Majburiy maydon!',
           path: ['penalty_per_unit'],
         })
       } else if (Number(v) > 100) {
@@ -44,7 +44,7 @@ const indicatorSchema = z
           maximum: 100,
           type: 'number',
           inclusive: true,
-          message: '100% dan oshmasligi kerak',
+          message: 'Kiritilgan ma’lumot yaroqli emas!',
           path: ['penalty_per_unit'],
         })
       }
@@ -54,8 +54,8 @@ const indicatorSchema = z
 const taskSchema = z.object({
   year: z.coerce.number().min(2020).max(2100),
   quarter: z.coerce.number().min(1).max(4),
-  kpi_department_id: z.string().min(1, 'Bo‘lim tanlanishi shart'),
-  indicators: z.array(indicatorSchema).min(1, 'Kamida 1 ta indikator bo‘lishi kerak'),
+  kpi_department_id: z.string().min(1, 'Majburiy maydon!'),
+  indicators: z.array(indicatorSchema).min(1, 'Majburiy maydon!'),
 })
 
 type TaskFormValues = z.infer<typeof taskSchema>

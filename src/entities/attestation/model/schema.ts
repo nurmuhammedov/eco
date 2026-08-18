@@ -1,13 +1,10 @@
 import { z } from 'zod'
 
-export const directionSchema = z.object({
-  name: z.string().min(1, 'Majburiy maydon!'),
-  is_active: z.boolean().default(true),
-})
-
 export const questionSchema = z.object({
-  attestation_direction_id: z.string().min(1, "Yo'nalishni tanlang!"),
-  employee_type: z.enum(['LEADER', 'ENGINEER'], { required_error: 'Xodim turini tanlang!' }),
-  question_text: z.string().min(1, 'Savolni kiriting!'),
+  direction: z.enum(['INDUSTRIAL_SAFETY', 'RADIATION_SAFETY', 'NUCLEAR_SAFETY'], {
+    required_error: 'Majburiy maydon!',
+  }),
+  employee_type: z.enum(['LEADER', 'ENGINEER'], { required_error: 'Majburiy maydon!' }),
+  question_text: z.string().min(1, 'Majburiy maydon!').max(2000, 'Kiritilgan ma’lumot yaroqli emas!'),
   is_active: z.boolean().default(true),
 })

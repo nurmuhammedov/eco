@@ -50,11 +50,11 @@ const previewPercent = (indicator: KpiIndicator, achieved: number): number => {
 const resultSchema = z.object({
   achieved_value: z
     .union([z.number(), z.string()])
-    .refine((v) => v !== '' && v !== null && v !== undefined, 'Qiymat kiritilishi shart')
-    .refine((v) => !isNaN(Number(v)), 'Raqam kiriting')
-    .refine((v) => Number(v) >= 0, 'Manfiy bo‘lishi mumkin emas')
+    .refine((v) => v !== '' && v !== null && v !== undefined, 'Majburiy maydon!')
+    .refine((v) => !isNaN(Number(v)), 'Kiritilgan ma’lumot yaroqli emas!')
+    .refine((v) => Number(v) >= 0, 'Kiritilgan ma’lumot yaroqli emas!')
     .transform(Number),
-  note: z.string().max(2000, 'Izoh 2000 belgidan oshmasligi kerak').optional(),
+  note: z.string().max(2000, 'Kiritilgan ma’lumot yaroqli emas!').optional(),
   file_url: z.string().max(500).nullable().optional(),
 })
 

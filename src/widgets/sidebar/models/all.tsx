@@ -167,13 +167,13 @@ export default [
     items: [
       {
         id: 'ATTESTATION',
-        title: 'Hisobot',
-        url: '/attestation-directions',
+        title: 'Imtihon savollari',
+        url: '/attestation-questions',
       },
       {
         id: 'ATTESTATION',
-        title: 'Imtihon savollari',
-        url: '/attestation-questions',
+        title: 'Qabul vaqtlari',
+        url: '/attestation-calendars',
       },
     ],
   },

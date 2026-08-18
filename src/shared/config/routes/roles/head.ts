@@ -59,8 +59,10 @@ const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 const MyKpiPage = lazy(() => import('@/pages/kpi/my-kpi-page'))
-const AttestationDirectionsPage = lazy(() => import('@/pages/attestation-directions/ui/page'))
 const AttestationQuestionsPage = lazy(() => import('@/pages/attestation-questions/ui/page'))
+const AttestationCalendarsPage = lazy(() => import('@/pages/attestation-calendars/ui/page'))
+const AttestationApplicantsPage = lazy(() => import('@/pages/attestation-applicants/ui/page'))
+const AttestationApplicationDetailPage = lazy(() => import('@/pages/attestation-application-detail/ui/page'))
 const OrganizationsPage = lazy(() => import('@/pages/organizations'))
 const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
 const AccidentDetail = lazy(() =>
@@ -421,13 +423,23 @@ export const headRoutes = [
   // ATTESTATION
   {
     id: 'ATTESTATION',
-    path: 'attestation-directions',
-    element: withSuspense(AttestationDirectionsPage),
+    path: 'attestation-questions',
+    element: withSuspense(AttestationQuestionsPage),
   },
   {
     id: 'ATTESTATION',
-    path: 'attestation-questions',
-    element: withSuspense(AttestationQuestionsPage),
+    path: 'attestation-calendars',
+    element: withSuspense(AttestationCalendarsPage),
+  },
+  {
+    id: 'ATTESTATION',
+    path: 'attestation-calendars/:calendarId/applicants',
+    element: withSuspense(AttestationApplicantsPage),
+  },
+  {
+    id: 'ATTESTATION',
+    path: 'attestation-applications/:id',
+    element: withSuspense(AttestationApplicationDetailPage),
   },
   {
     path: 'organizations',

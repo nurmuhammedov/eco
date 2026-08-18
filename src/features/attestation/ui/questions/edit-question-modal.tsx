@@ -1,19 +1,20 @@
 import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { Loader2 } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { Switch } from '@/shared/components/ui/switch'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
 import { updateQuestion } from '@/entities/attestation/api/attestation.api'
 import { questionSchema } from '@/entities/attestation/model/schema'
-import { AttestationDirection, AttestationQuestion, UpdateQuestionPayload } from '@/entities/attestation/model/types'
-import { toast } from 'sonner'
-import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
-import { servicesApiClient } from '@/shared/api/services-api-client'
+import { DIRECTION_OPTIONS, EMPLOYEE_TYPE_OPTIONS } from '@/entities/attestation/model/labels'
+import type { AttestationQuestion, QuestionPayload } from '@/entities/attestation/model/types'
 
 interface EditQuestionModalProps {
   isOpen: boolean
@@ -23,10 +24,11 @@ interface EditQuestionModalProps {
 
 export const EditQuestionModal: FC<EditQuestionModalProps> = ({ isOpen, onClose, question }) => {
   const queryClient = useQueryClient()
-  const form = useForm<UpdateQuestionPayload>({
+
+  const form = useForm<QuestionPayload>({
     resolver: zodResolver(questionSchema),
     defaultValues: {
-      attestation_direction_id: '',
+      direction: undefined,
       employee_type: undefined,
       question_text: '',
       is_active: true,
@@ -34,43 +36,25 @@ export const EditQuestionModal: FC<EditQuestionModalProps> = ({ isOpen, onClose,
   })
 
   useEffect(() => {
-    if (question) {
+    if (isOpen && question) {
       form.reset({
-        attestation_direction_id: question.attestation_direction_id,
+        direction: question.direction,
         employee_type: question.employee_type,
         question_text: question.question_text,
         is_active: question.is_active,
       })
     }
-  }, [question, form])
-
-  const { data: directionsRes, isFetching: isLoadingDirections } = useQuery({
-    queryKey: ['directions-list'],
-    queryFn: () =>
-      servicesApiClient.getWithPagination<AttestationDirection>(SERVICES_API_ENDPOINTS.DIRECTIONS, { size: 100 }),
-    enabled: isOpen,
-  })
-
-  const directions: AttestationDirection[] = Array.isArray(directionsRes?.data)
-    ? directionsRes.data
-    : (directionsRes?.data as any)?.content || (directionsRes?.data as any)?.items || []
+  }, [isOpen, question])
 
   const { mutate, isPending } = useMutation({
-    mutationFn: updateQuestion,
+    mutationFn: (data: QuestionPayload) => updateQuestion({ id: question!.id, data }),
     onSuccess: () => {
-      toast.success('Muvaffaqiyatli yangilandi')
+      toast.success('Savol yangilandi')
       queryClient.invalidateQueries({ queryKey: ['services', SERVICES_API_ENDPOINTS.QUESTIONS] })
+      form.reset()
       onClose()
     },
-    onError: () => {
-      toast.error('Xatolik yuz berdi')
-    },
   })
-
-  const onSubmit = (data: UpdateQuestionPayload) => {
-    if (!question) return
-    mutate({ id: question.id, data })
-  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -78,24 +62,25 @@ export const EditQuestionModal: FC<EditQuestionModalProps> = ({ isOpen, onClose,
         <DialogHeader>
           <DialogTitle>Savolni tahrirlash</DialogTitle>
         </DialogHeader>
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit((data) => mutate(data))} className="space-y-4">
             <FormField
               control={form.control}
-              name="attestation_direction_id"
+              name="direction"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Yo'nalish</FormLabel>
-                  <Select disabled={isLoadingDirections} value={field.value} onValueChange={field.onChange}>
+                  <FormLabel required>Yo‘nalish</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Yo'nalishni tanlang" />
+                        <SelectValue placeholder="Yo‘nalishni tanlang" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {directions.map((d) => (
-                        <SelectItem key={d.id} value={d.id}>
-                          {d.name}
+                      {DIRECTION_OPTIONS.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -114,12 +99,15 @@ export const EditQuestionModal: FC<EditQuestionModalProps> = ({ isOpen, onClose,
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Turini tanlang" />
+                        <SelectValue placeholder="Xodim turini tanlang" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="LEADER">LEADER</SelectItem>
-                      <SelectItem value="ENGINEER">ENGINEER</SelectItem>
+                      {EMPLOYEE_TYPE_OPTIONS.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -134,7 +122,7 @@ export const EditQuestionModal: FC<EditQuestionModalProps> = ({ isOpen, onClose,
                 <FormItem>
                   <FormLabel required>Savol matni</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Savolni kiriting..." rows={4} {...field} />
+                    <Textarea rows={4} placeholder="Savol matnini kiriting" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -145,23 +133,21 @@ export const EditQuestionModal: FC<EditQuestionModalProps> = ({ isOpen, onClose,
               control={form.control}
               name="is_active"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Holati</FormLabel>
-                    <div className="text-muted-foreground text-sm">{field.value ? 'Aktiv' : 'Nofaol'}</div>
-                  </div>
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                  <FormLabel>Faol</FormLabel>
                   <FormControl>
-                    <Switch checked={field.value} onChange={(e) => field.onChange(e.target.checked)} />
+                    <Switch checked={field.value} onChange={field.onChange} />
                   </FormControl>
                 </FormItem>
               )}
             />
 
-            <div className="flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={onClose}>
+            <div className="flex justify-end gap-3 pt-2">
+              <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
                 Bekor qilish
               </Button>
-              <Button type="submit" loading={isPending} disabled={isPending}>
+              <Button type="submit" disabled={isPending}>
+                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Saqlash
               </Button>
             </div>
