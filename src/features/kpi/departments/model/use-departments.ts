@@ -41,7 +41,7 @@ export const useCreateDepartment = () => {
   return useMutation({
     mutationFn: (data: CreateDepartmentDTO) => departmentsAPI.create(data),
     onSuccess: () => {
-      toast.success("Bo'lim muvaffaqiyatli qo'shildi")
+      toast.success('Bo‘lim qo‘shildi')
       queryClient.invalidateQueries({ queryKey: DEPARTMENTS_KEYS.all })
     },
   })
@@ -53,7 +53,7 @@ export const useUpdateDepartment = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateDepartmentDTO }) => departmentsAPI.update(id, data),
     onSuccess: () => {
-      toast.success("Bo'lim muvaffaqiyatli yangilandi")
+      toast.success('Bo‘lim yangilandi')
       queryClient.invalidateQueries({ queryKey: DEPARTMENTS_KEYS.all })
     },
   })
@@ -65,14 +65,14 @@ export const useDeleteDepartment = () => {
   return useMutation({
     mutationFn: (id: string) => departmentsAPI.delete(id),
     onSuccess: () => {
-      toast.success("Bo'lim muvaffaqiyatli o'chirildi")
+      toast.success('Bo‘lim o‘chirildi')
       queryClient.invalidateQueries({ queryKey: DEPARTMENTS_KEYS.all })
     },
     onError: (error: any) => {
       if (error?.status === 422) {
-        toast.error("Bu bo'limga biriktirilgan vazifalar bor. Avval vazifalarni o'chiring.")
+        toast.error('Bu bo‘limga biriktirilgan vazifalar bor. Avval vazifalarni o‘chiring.')
       } else {
-        toast.error(error?.message || "Bo'limni o'chirishda xatolik yuz berdi")
+        toast.error(error?.message || 'Bo‘limni o‘chirishda xatolik yuz berdi')
       }
     },
   })

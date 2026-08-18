@@ -61,7 +61,7 @@ export function DepartmentModal({ isOpen, onClose, data }: Props) {
 
   const isPending = createMutation.isPending || updateMutation.isPending
 
-  // Xodim tanlaganda 3 ta maydonni birdan to'ldirish
+  // Selecting a user fills the three denormalized fields at once
   const handleResponsibleChange = (userId: string) => {
     if (userId === '__clear__') {
       form.setValue('responsible_id', null)
@@ -102,31 +102,29 @@ export function DepartmentModal({ isOpen, onClose, data }: Props) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{isEditing ? "Bo'limni tahrirlash" : "Yangi bo'lim qo'shish"}</DialogTitle>
+          <DialogTitle>{isEditing ? 'Bo‘limni tahrirlash' : 'Yangi bo‘lim qo‘shish'}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* Bo'lim nomi */}
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bo&apos;lim nomi *</FormLabel>
+                  <FormLabel required>Bo‘lim nomi</FormLabel>
                   <FormControl>
-                    <Input placeholder="Masalan: Kadrlar bo'limi" {...field} />
+                    <Input placeholder="Masalan: Kadrlar bo‘limi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* Mas'ul xodim */}
             <FormItem>
               <FormLabel className="flex items-center gap-1.5">
                 <UserCheck className="h-4 w-4" />
-                Mas'ul xodim
+                Mas’ul xodim
               </FormLabel>
               <Select
                 value={currentResponsibleId ?? ''}
@@ -134,7 +132,7 @@ export function DepartmentModal({ isOpen, onClose, data }: Props) {
                 disabled={isLoadingUsers}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder={isLoadingUsers ? 'Yuklanmoqda...' : "Mas'ul xodimni tanlang"} />
+                  <SelectValue placeholder={isLoadingUsers ? 'Yuklanmoqda...' : 'Mas’ul xodimni tanlang'} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="__clear__">
@@ -148,13 +146,12 @@ export function DepartmentModal({ isOpen, onClose, data }: Props) {
                   ))}
                 </SelectContent>
               </Select>
-              {/* Tanlangan xodim ismi ko'rsatiladi (hidden fields) */}
+              {/* Kept in sync by handleResponsibleChange */}
               <input type="hidden" {...form.register('responsible_id')} />
               <input type="hidden" {...form.register('responsible_username')} />
               <input type="hidden" {...form.register('responsible_name')} />
             </FormItem>
 
-            {/* Aktiv holati — faqat tahrirlashda */}
             {isEditing && (
               <FormField
                 control={form.control}

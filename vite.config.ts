@@ -57,7 +57,15 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
-        navigateFallbackDenylist: [/^\/api/, /^\/files/, /^\/swagger-ui/, /^\/v3\/api-docs/, /^\/metrics/, /^\/home/],
+        navigateFallbackDenylist: [
+          /^\/api/,
+          /^\/services/,
+          /^\/files/,
+          /^\/swagger-ui/,
+          /^\/v3\/api-docs/,
+          /^\/metrics/,
+          /^\/home/,
+        ],
       },
       manifest: {
         name: 'Ekotizim',

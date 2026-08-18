@@ -22,11 +22,6 @@ export default [
         title: 'KPI vazifalar',
         url: '/kpi/tasks',
       },
-      {
-        id: 'KPI',
-        title: 'Mening KPIlarim',
-        url: '/kpi/my-tasks',
-      },
     ],
   },
   {

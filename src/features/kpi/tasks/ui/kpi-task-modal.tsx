@@ -10,13 +10,12 @@ import { Button } from '@/shared/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useCreateKpiTask, useUpdateKpiTask } from '../model/use-kpi-tasks'
 import { useGetDepartments } from '@/features/kpi/departments/model/use-departments'
-import { KpiTaskDetail } from '../api/kpi-tasks.api'
+import { KPI_CALCULATION_TYPE, type KpiIndicator, type KpiTaskDetail } from '@/entities/kpi'
 import { cn } from '@/shared/lib/utils'
 
-// ─── Enums ───────────────────────────────────────────────────────────────────
 export const CALC_TYPE_OPTIONS = [
-  { value: 'PLAN', label: 'Reja bo‘yicha' },
-  { value: 'PENALTY', label: 'Xatolik (Jarima)' },
+  { value: 'PLAN', label: KPI_CALCULATION_TYPE.PLAN.label },
+  { value: 'PENALTY', label: KPI_CALCULATION_TYPE.PENALTY.label },
 ] as const
 
 export type CalcType = 'PLAN' | 'PENALTY'
@@ -27,7 +26,7 @@ const indicatorSchema = z
     name: z.string().min(1, 'Nomi kiritilishi shart'),
     calculation_type: z.enum(['PLAN', 'PENALTY'], { required_error: 'Tur tanlanishi shart' }),
     target: z.coerce.number().min(0, 'Maqsad 0 dan katta bo‘lishi kerak'),
-    penalty_per_unit: z.coerce.number().min(0).max(100).optional().nullable(),
+    penalty_per_unit: z.coerce.number().min(0.01, 'Noldan katta bo‘lishi kerak').max(100).optional().nullable(),
     weight: z.coerce.number().min(1).max(100),
   })
   .superRefine((data, ctx) => {
@@ -101,7 +100,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
           year: editData.year,
           quarter: editData.quarter,
           kpi_department_id: editData.kpi_department_id,
-          indicators: editData.indicators.map((ind) => ({
+          indicators: editData.indicators.map((ind: KpiIndicator) => ({
             name: ind.name,
             calculation_type: (ind.calculation_type as CalcType) ?? 'PLAN',
             target: ind.target,
@@ -122,12 +121,13 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
 
   const indicators = form.watch('indicators')
   const totalWeight = indicators.reduce((sum, ind) => sum + (Number(ind.weight) || 0), 0)
-  const isWeightValid = totalWeight === 100
+  // Strict equality breaks on fractional weights; the backend uses the same tolerance.
+  const isWeightValid = Math.abs(totalWeight - 100) < 0.01
 
   const onSubmit = (values: TaskFormValues) => {
     if (!isWeightValid) return
 
-    // Clean: PLAN bo'lsa penalty_per_unit ni null qilib yuborish
+    // PLAN indicators must not carry a penalty value
     const cleanedIndicators = values.indicators.map((ind) => ({
       ...ind,
       penalty_per_unit: ind.calculation_type === 'PENALTY' ? ind.penalty_per_unit : null,
@@ -158,7 +158,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
                 name="year"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Yil *</FormLabel>
+                    <FormLabel required>Yil</FormLabel>
                     <Select
                       value={String(field.value)}
                       onValueChange={(v) => field.onChange(Number(v))}
@@ -187,7 +187,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
                 name="quarter"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Chorak *</FormLabel>
+                    <FormLabel required>Chorak</FormLabel>
                     <Select
                       value={String(field.value)}
                       onValueChange={(v) => field.onChange(Number(v))}
@@ -216,7 +216,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
                 name="kpi_department_id"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Bo‘lim *</FormLabel>
+                    <FormLabel required>Bo‘lim</FormLabel>
                     <Select value={field.value} onValueChange={field.onChange} disabled={isEditing}>
                       <FormControl>
                         <SelectTrigger>
@@ -224,11 +224,13 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {departments.map((dept: any) => (
-                          <SelectItem key={dept.id} value={dept.id}>
-                            {dept.name}
-                          </SelectItem>
-                        ))}
+                        {departments
+                          .filter((dept: any) => dept.is_active !== false)
+                          .map((dept: any) => (
+                            <SelectItem key={dept.id} value={dept.id}>
+                              {dept.name}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -422,15 +424,16 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
             </div>
 
             {/* Legend */}
-            <div className="flex gap-6 border-t pt-3 text-xs text-gray-400">
+            <div className="text-muted-foreground flex flex-wrap gap-x-6 gap-y-2 border-t pt-3 text-xs">
               <span className="flex items-center gap-1.5">
                 <span className="inline-block h-3 w-3 rounded-full bg-blue-400" />
-                <strong className="text-gray-600">PLAN</strong> — Reja bo‘yicha bajariladi
+                <strong className="text-foreground font-medium">{KPI_CALCULATION_TYPE.PLAN.label}</strong> — natija
+                rejaga nisbatan foizda hisoblanadi
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="inline-block h-3 w-3 rounded-full bg-red-400" />
-                <strong className="text-gray-600">PENALTY</strong> — Har bir xatolik uchun <em>penalty_per_unit</em>%
-                jarima (maks 100%)
+                <strong className="text-foreground font-medium">{KPI_CALCULATION_TYPE.PENALTY.label}</strong> — har bir
+                xatolik uchun belgilangan foiz ayiriladi (ko‘pi bilan 100%)
               </span>
             </div>
 

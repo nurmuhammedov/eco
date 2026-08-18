@@ -1,68 +1,60 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { myKpiAPI, CreateResultDTO, UpdateResultDTO } from '../api/my-kpi.api'
 import { toast } from 'sonner'
+import { myKpiAPI, SaveResultDTO } from '../api/my-kpi.api'
+import type { KpiTaskDetail } from '@/entities/kpi'
 
 export const MY_KPI_KEYS = {
   task: (year: number, quarter: number) => ['my-kpi-task', year, quarter] as const,
 }
 
-// ─── Hooks ────────────────────────────────────────────────────────────────────
-
+// The API returns `data: null` when no task is set for the quarter.
 export const useGetMyKpiTask = (year: number, quarter: number) => {
   return useQuery({
     queryKey: MY_KPI_KEYS.task(year, quarter),
-    queryFn: async () => {
+    queryFn: async (): Promise<KpiTaskDetail | null> => {
       const response = await myKpiAPI.getMyTask({ year, quarter })
       const payload = response.data as any
-      // Backend: { success: true, data: { id, year, ... } }
-      return (payload?.data ?? payload) as import('../api/my-kpi.api').MyKpiTask | null
+
+      return (payload?.data ?? null) as KpiTaskDetail | null
     },
     enabled: !!year && !!quarter,
+    retry: false,
   })
 }
 
-export const useCreateResult = (year: number, quarter: number) => {
+const useResultMutation = <TVariables>(
+  mutationFn: (variables: TVariables) => Promise<unknown>,
+  successMessage: string,
+  year: number,
+  quarter: number
+) => {
   const queryClient = useQueryClient()
+
   return useMutation({
-    mutationFn: (dto: CreateResultDTO) => myKpiAPI.createResult(dto),
+    mutationFn,
     onSuccess: () => {
-      toast.success('Natija muvaffaqiyatli saqlandi')
+      toast.success(successMessage)
       queryClient.invalidateQueries({ queryKey: MY_KPI_KEYS.task(year, quarter) })
     },
-    onError: (error: any) => {
-      toast.error(error?.message || 'Natijani saqlashda xatolik yuz berdi')
-    },
+    // Errors are already surfaced by the services axios interceptor
   })
 }
 
-export const useUpdateResult = (year: number, quarter: number) => {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: ({ resultId, dto }: { resultId: string; dto: UpdateResultDTO }) => myKpiAPI.updateResult(resultId, dto),
-    onSuccess: () => {
-      toast.success('Natija muvaffaqiyatli yangilandi')
-      queryClient.invalidateQueries({ queryKey: MY_KPI_KEYS.task(year, quarter) })
-    },
-    onError: (error: any) => {
-      toast.error(error?.message || 'Natijani yangilashda xatolik yuz berdi')
-    },
-  })
-}
+export const useCreateResult = (year: number, quarter: number) =>
+  useResultMutation<{ indicatorId: string; dto: SaveResultDTO }>(
+    ({ indicatorId, dto }) => myKpiAPI.createResult(indicatorId, dto),
+    'Natija saqlandi',
+    year,
+    quarter
+  )
 
-export const useSubmitKpiTask = (year: number, quarter: number) => {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: (taskId: string) => myKpiAPI.submitTask(taskId),
-    onSuccess: () => {
-      toast.success('KPI natijalari HR ga yuborildi!')
-      queryClient.invalidateQueries({ queryKey: MY_KPI_KEYS.task(year, quarter) })
-    },
-    onError: (error: any) => {
-      if (error?.status === 422) {
-        toast.error('Barcha indikatorlarga natija kiritilishi shart!')
-      } else {
-        toast.error(error?.message || 'Yuborishda xatolik yuz berdi')
-      }
-    },
-  })
-}
+export const useUpdateResult = (year: number, quarter: number) =>
+  useResultMutation<{ resultId: string; dto: SaveResultDTO }>(
+    ({ resultId, dto }) => myKpiAPI.updateResult(resultId, dto),
+    'Natija yangilandi',
+    year,
+    quarter
+  )
+
+export const useSubmitKpiTask = (year: number, quarter: number) =>
+  useResultMutation<string>((taskId) => myKpiAPI.submitTask(taskId), 'Natijalar tasdiqlashga yuborildi', year, quarter)
