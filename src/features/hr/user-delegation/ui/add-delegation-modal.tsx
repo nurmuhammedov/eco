@@ -271,7 +271,6 @@ export const AddDelegationModal = ({ isOpen, onClose }: AddDelegationModalProps)
                         disabled={!employeeType}
                       />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
