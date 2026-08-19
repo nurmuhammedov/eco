@@ -17,9 +17,11 @@ import { ApplicationStatus } from '@/entities/application'
 import { EmptyValue } from '@/features/application/application-detail/ui/parts/empty-value.tsx'
 
 function getDefaultDocsTab(status?: ApplicationStatus) {
+  if (!status) return 'info'
   if (status === ApplicationStatus.NEW) return 'info'
   if (status === ApplicationStatus.IN_PROCESS) return 'applicant_docs'
-  if (!status) return 'info'
+  // A canceled or rejected appeal has no reply documents, so the data is shown
+  if (status === ApplicationStatus.CANCELED || status === ApplicationStatus.REJECTED) return 'info'
   return 'response_docs'
 }
 
