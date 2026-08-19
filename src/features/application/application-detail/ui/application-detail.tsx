@@ -1,5 +1,5 @@
 // src/features/application/application-detail/ui/application-detail.tsx
-import { APPLICATIONS_DATA } from '@/entities/create-application'
+import { getApplicationTitle } from '@/entities/create-application'
 import { UserRoles } from '@/entities/user'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
 import AppealResponseDocs from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx'
@@ -67,10 +67,7 @@ const ApplicationDetail = ({
         <DetailCardAccordion.Item value="general" title="Ariza va ijro to‘g‘risida maʼlumot">
           <div className="flex flex-col py-1">
             <DetailRow title="Ariza sanasi:" value={getDate(data?.createdAt)} />
-            <DetailRow
-              title="Ariza turi:"
-              value={APPLICATIONS_DATA?.find((i) => i?.type == data?.appealType)?.title || ''}
-            />
+            <DetailRow title="Ariza turi:" value={getApplicationTitle(data?.appealType)} />
             <ApplicationStatusRow status={data?.status} />
             <DetailRow title="Ijro muddati:" value={getDate(data?.deadline)} />
             <DetailRow title="Ijrochi qo‘mita masʼul bo‘limi:" value={data?.departmentName || <EmptyValue />} />

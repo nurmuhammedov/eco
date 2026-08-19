@@ -508,7 +508,7 @@ export const applicationsList = [
   {
     id: 102,
     title: 'Kranni qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_CRANE,
+    type: ApplicationTypeEnum.RE_REGISTER_CRANE,
   },
 
   // Container
@@ -525,7 +525,7 @@ export const applicationsList = [
   {
     id: 104,
     title: 'Bosim ostida ishlovchi idishni qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_CONTAINER,
+    type: ApplicationTypeEnum.RE_REGISTER_CONTAINER,
   },
 
   // Boiler
@@ -542,7 +542,7 @@ export const applicationsList = [
   {
     id: 106,
     title: 'Bug‘ qozonni qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_BOILER,
+    type: ApplicationTypeEnum.RE_REGISTER_BOILER,
   },
 
   // Escalator
@@ -559,7 +559,7 @@ export const applicationsList = [
   {
     id: 110,
     title: 'Eskalatorni qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_ESCALATOR,
+    type: ApplicationTypeEnum.RE_REGISTER_ESCALATOR,
   },
 
   // Attraction
@@ -576,7 +576,7 @@ export const applicationsList = [
   {
     id: 112,
     title: 'Attraksionni qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_ATTRACTION,
+    type: ApplicationTypeEnum.RE_REGISTER_ATTRACTION,
   },
 
   // Pipeline
@@ -593,7 +593,7 @@ export const applicationsList = [
   {
     id: 114,
     title: 'Quvurni qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_PIPELINE,
+    type: ApplicationTypeEnum.RE_REGISTER_PIPELINE,
   },
 
   // Chemical Container
@@ -610,7 +610,7 @@ export const applicationsList = [
   {
     id: 116,
     title: 'Bosim ostida ishlovchi idishni (kimyo) qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_CHEMICAL_CONTAINER,
+    type: ApplicationTypeEnum.RE_REGISTER_CHEMICAL_CONTAINER,
   },
 
   // Heat Pipeline
@@ -627,7 +627,7 @@ export const applicationsList = [
   {
     id: 118,
     title: 'Bug‘ va issiq suv quvurini qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_HEAT_PIPELINE,
+    type: ApplicationTypeEnum.RE_REGISTER_HEAT_PIPELINE,
   },
   // Boiler Utilizer
   {
@@ -643,7 +643,7 @@ export const applicationsList = [
   {
     id: 120,
     title: 'Qozon utilizatorini qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_BOILER_UTILIZER,
+    type: ApplicationTypeEnum.RE_REGISTER_BOILER_UTILIZER,
   },
   // LPG Container
   {
@@ -659,7 +659,7 @@ export const applicationsList = [
   {
     id: 122,
     title: 'Bosim ostida ishlovchi idishni (SUG) qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_LPG_CONTAINER,
+    type: ApplicationTypeEnum.RE_REGISTER_LPG_CONTAINER,
   },
   // LPG Powered
   {
@@ -675,7 +675,7 @@ export const applicationsList = [
   {
     id: 124,
     title: 'Tabiiy gazdan foydalanuvchi qurilmani qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_LPG_POWERED,
+    type: ApplicationTypeEnum.RE_REGISTER_LPG_POWERED,
   },
   // Hoist
   {
@@ -691,7 +691,7 @@ export const applicationsList = [
   {
     id: 126,
     title: 'Yuk ko‘targichni qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_HOIST,
+    type: ApplicationTypeEnum.RE_REGISTER_HOIST,
   },
   // Cableway
   {
@@ -707,7 +707,7 @@ export const applicationsList = [
   {
     id: 128,
     title: 'Osma arqonli yuruvchi yo‘lni qayta ro‘yxatga olish',
-    type: ApplicationTypeEnum.REREGISTER_CABLEWAY,
+    type: ApplicationTypeEnum.RE_REGISTER_CABLEWAY,
   },
 
   // IRS
@@ -768,5 +768,56 @@ export const applicationsList = [
     id: 143,
     title: 'Akkreditatsiya attestatini qayta rasmiylashtirish',
     type: ApplicationTypeEnum.RE_ISSUE_ACCREDITATION_CERT,
+  },
+  // Java yuboradigan, lekin ariza yaratish kartochkasi bo'lmagan turlar
+  {
+    id: 200,
+    title: 'XICHO ma’lumotlarini o‘zgartirish',
+    type: ApplicationTypeEnum.MODIFY_HF,
+  },
+  {
+    id: 201,
+    title: 'Neft mahsulotlari idishini ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_OIL_CONTAINER,
+  },
+  {
+    id: 202,
+    title: 'Neft mahsulotlari idishini qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.RE_REGISTER_OIL_CONTAINER,
+  },
+  {
+    id: 203,
+    title: 'Ekspertiza xulosasini ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_EXPERTISE_CONCLUSION,
+  },
+  {
+    id: 204,
+    title: 'Kadastr pasportini ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_CADASTRE_PASSPORT,
+  },
+  {
+    id: 205,
+    title: 'INMni qabul qilish',
+    type: ApplicationTypeEnum.ACCEPT_IRS,
+  },
+  {
+    id: 206,
+    title: 'INMni o‘tkazish',
+    type: ApplicationTypeEnum.TRANSFER_IRS,
+  },
+  {
+    id: 207,
+    title: 'Attestatsiya (qo‘mita)',
+    type: ApplicationTypeEnum.ATTESTATION_COMMITTEE,
+  },
+  {
+    id: 208,
+    title: 'Attestatsiya (hududiy boshqarma)',
+    type: ApplicationTypeEnum.ATTESTATION_REGIONAL,
+  },
+  {
+    id: 209,
+    title: 'Deklaratsiyani ko‘rib chiqish',
+    type: ApplicationTypeEnum.CHECK_DECLARATION,
   },
 ]
