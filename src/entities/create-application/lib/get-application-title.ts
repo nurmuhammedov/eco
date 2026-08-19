@@ -30,3 +30,7 @@ export const getAppealTypeFilterOptions = (): { id: string; name: string }[] =>
   applicationsList
     .filter((item) => item.filterable !== false)
     .map((item) => ({ id: String(item.type), name: item.title }))
+
+/** Whether the backend still knows this appeal type */
+export const isKnownAppealType = (type?: string | null): boolean =>
+  !!type && applicationsList.some((item) => String(item.type) === String(type))

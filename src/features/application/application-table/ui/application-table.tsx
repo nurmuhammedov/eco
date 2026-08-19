@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application'
 import { AppealReturnedMark } from '@/entities/application/ui/appeal-returned-mark'
-import { getAppealTypeFilterOptions, getApplicationTitle } from '@/entities/create-application'
+import { getAppealTypeFilterOptions, getApplicationTitle, isKnownAppealType } from '@/entities/create-application'
 import { useApplicationList } from '@/features/application/application-table/hooks'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
@@ -21,8 +21,14 @@ export const ApplicationTable = () => {
     paramsObject: { status = ApplicationStatus.ALL, mode, search = '', startDate = '', endDate = '', ...rest },
   } = useCustomSearchParams()
 
+  // An old link may carry a type the backend no longer accepts, and it would
+  // fail the whole request, so unknown values are dropped
+  const { appealType, ...restParams } = rest as Record<string, unknown>
+  const safeAppealType = isKnownAppealType(appealType as string) ? appealType : undefined
+
   const { data: applications = [], isLoading } = useApplicationList({
-    ...rest,
+    ...restParams,
+    appealType: safeAppealType,
     status: status !== ApplicationStatus.ALL ? status : '',
     search,
     mode,
