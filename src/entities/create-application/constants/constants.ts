@@ -769,55 +769,66 @@ export const applicationsList = [
     title: 'Akkreditatsiya attestatini qayta rasmiylashtirish',
     type: ApplicationTypeEnum.RE_ISSUE_ACCREDITATION_CERT,
   },
-  // Java yuboradigan, lekin ariza yaratish kartochkasi bo'lmagan turlar
+  // Java shu turlarni ham yuborishi mumkin, lekin ular arizalar ro'yxatida
+  // uchramaydi: nomi kerak, filtrda esa ortiqcha
   {
     id: 200,
     title: 'XICHO ma’lumotlarini o‘zgartirish',
+    filterable: false,
     type: ApplicationTypeEnum.MODIFY_HF,
   },
   {
     id: 201,
     title: 'Neft mahsulotlari idishini ro‘yxatdan chiqarish',
+    filterable: false,
     type: ApplicationTypeEnum.DEREGISTER_OIL_CONTAINER,
   },
   {
     id: 202,
     title: 'Neft mahsulotlari idishini qayta ro‘yxatga olish',
+    filterable: false,
     type: ApplicationTypeEnum.RE_REGISTER_OIL_CONTAINER,
   },
   {
     id: 203,
     title: 'Ekspertiza xulosasini ro‘yxatga olish',
+    filterable: false,
     type: ApplicationTypeEnum.REGISTER_EXPERTISE_CONCLUSION,
   },
   {
     id: 204,
     title: 'Kadastr pasportini ro‘yxatga olish',
+    filterable: false,
     type: ApplicationTypeEnum.REGISTER_CADASTRE_PASSPORT,
   },
   {
     id: 205,
     title: 'INMni qabul qilish',
+    filterable: false,
     type: ApplicationTypeEnum.ACCEPT_IRS,
   },
   {
     id: 206,
     title: 'INMni o‘tkazish',
+    filterable: false,
     type: ApplicationTypeEnum.TRANSFER_IRS,
   },
   {
     id: 207,
     title: 'Attestatsiya (qo‘mita)',
+    filterable: false,
     type: ApplicationTypeEnum.ATTESTATION_COMMITTEE,
   },
   {
     id: 208,
     title: 'Attestatsiya (hududiy boshqarma)',
+    filterable: false,
     type: ApplicationTypeEnum.ATTESTATION_REGIONAL,
   },
   {
     id: 209,
     title: 'Deklaratsiyani ko‘rib chiqish',
+    filterable: false,
     type: ApplicationTypeEnum.CHECK_DECLARATION,
   },
 ]

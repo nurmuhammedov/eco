@@ -19,3 +19,14 @@ export const getApplicationTitle = (type?: ApplicationTypeEnum | string | null):
     ''
   )
 }
+
+/**
+ * Options for the appeal type filter.
+ *
+ * The backend takes a single type per request, so this is a flat list. Types
+ * that never appear in the appeals table are left out to keep it short.
+ */
+export const getAppealTypeFilterOptions = (): { id: string; name: string }[] =>
+  applicationsList
+    .filter((item) => item.filterable !== false)
+    .map((item) => ({ id: String(item.type), name: item.title }))

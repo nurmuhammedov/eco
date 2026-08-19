@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application'
 import { AppealReturnedMark } from '@/entities/application/ui/appeal-returned-mark'
-import { applicationsList, getApplicationTitle } from '@/entities/create-application'
+import { getAppealTypeFilterOptions, getApplicationTitle } from '@/entities/create-application'
 import { useApplicationList } from '@/features/application/application-table/hooks'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
@@ -57,7 +57,7 @@ export const ApplicationTable = () => {
         accessorKey: 'appealType',
         filterKey: 'appealType',
         filterType: 'select',
-        filterOptions: applicationsList?.map((i) => ({ id: i?.type, name: i?.title })),
+        filterOptions: getAppealTypeFilterOptions(),
         cell: (cell: any) => getApplicationTitle(cell.row.original.appealType),
       },
       ...((user?.role !== UserRoles.LEGAL && user?.role !== UserRoles.INDIVIDUAL
