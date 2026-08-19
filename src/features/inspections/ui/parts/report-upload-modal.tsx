@@ -53,7 +53,7 @@ const ReportUploadModal = ({ resultId, reportPath, onClose, trigger }: Props) =>
     uploadAct({
       reportPath: values.reportPath,
     }).then(() => {
-      qc.invalidateQueries({ queryKey: ['/inspection-results'] }).then((r) => console.log(r))
+      qc.invalidateQueries({ queryKey: ['/inspection-results'] })
       setOpen(false)
       onClose?.()
     })

@@ -55,7 +55,7 @@ const AddAdditionalFileModal = ({ resultId, additionalFilePath, onClose, trigger
       additionalFilePath: values.additionalFilePath,
     }).then(() => {
       // toast.success('Qo‘shimcha fayl muvaffaqiyatli saqlandi!', { richColors: true })
-      qc.invalidateQueries({ queryKey: ['/inspection-results'] }).then((r) => console.log(r))
+      qc.invalidateQueries({ queryKey: ['/inspection-results'] })
       setOpen(false)
       onClose?.()
     })

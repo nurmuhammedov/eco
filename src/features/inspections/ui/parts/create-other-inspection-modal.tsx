@@ -76,7 +76,6 @@ export const CreateOtherInspectionModal = () => {
   const tinValue = form.watch('tin')
   const { data: hfOptions, isLoading: isHfLoading } = useHazardousFacilitySelectQuery(searchTin, isOpen)
 
-  console.log(hfOptions)
   useEffect(() => {
     form.setValue('hfId', '')
     setSearchTin('') // UI refinement: if STIR changes, search result is also cleared from hook state
@@ -151,246 +150,248 @@ export const CreateOtherInspectionModal = () => {
             {t('inspections.other.create_btn')}
           </Button>
         </DialogTrigger>
-        <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[700px]">
-          <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">{t('inspections.other.create_modal.title')}</DialogTitle>
+        <DialogContent className="flex max-h-[95dvh] w-[calc(100vw-1rem)]! max-w-[calc(100vw-1rem)]! flex-col gap-0 overflow-hidden rounded-xl! p-0 sm:w-[95vw]! sm:max-w-[700px]!">
+          <DialogHeader className="shrink-0 border-b px-4 py-4 sm:px-6">
+            <DialogTitle className="pr-8 text-[#4E75FF]">{t('inspections.other.create_modal.title')}</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
-              {isChairman && (
-                <FormField
-                  control={form.control}
-                  name="officeId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>Hududiy boshqarmani tanlang</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="bg-white">
-                            <SelectValue placeholder={t('select')} />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {officeSelect?.map((item: any) => (
-                            <SelectItem key={item.id} value={item.id.toString()}>
-                              {item.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col">
+              <div className="flex-1 space-y-4 overflow-y-auto px-4 py-4 sm:px-6">
+                {isChairman && (
+                  <FormField
+                    control={form.control}
+                    name="officeId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>Hududiy boshqarmani tanlang</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="bg-white">
+                              <SelectValue placeholder={t('select')} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {officeSelect?.map((item: any) => (
+                              <SelectItem key={item.id} value={item.id.toString()}>
+                                {item.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
 
-              <div className="space-y-4 rounded-lg border bg-blue-50/30 p-4">
-                <FormField
-                  control={form.control}
-                  name="tin"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>Tashkilot STIR</FormLabel>
-                      <div className="flex gap-2">
-                        <FormControl>
-                          <Input placeholder="STIR kiriting" {...field} maxLength={14} className="bg-white" />
-                        </FormControl>
-                        <Button type="button" onClick={handleSearchHf} disabled={isHfLoading}>
-                          {isHfLoading ? 'Qidirish' : 'Qidirish'}
-                        </Button>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="hfId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>XICHOni tanlang</FormLabel>
-                      <Select
-                        disabled={!(hfOptions && hfOptions.length > 0)}
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-white">
-                            <SelectValue placeholder={t('select')} />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {hfOptions?.map((item: any) => (
-                            <SelectItem key={item.id} value={item.id}>
-                              {item.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="startDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>{t('inspections.other.create_modal.startDate')}</FormLabel>
-                      <DatePicker
-                        value={field.value}
-                        onChange={field.onChange}
-                        placeholder={t('select_date')}
-                        disableStrategy="before"
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="endDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel required>{t('inspections.other.create_modal.endDate')}</FormLabel>
-                      <DatePicker
-                        value={field.value}
-                        onChange={field.onChange}
-                        placeholder={t('select_date')}
-                        disableStrategy="before"
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="noticeType"
-                render={({ field }) => (
-                  <FormItem className="space-y-4">
-                    <FormLabel required className="text-sm font-semibold text-slate-700">
-                      {t('inspections.other.create_modal.noticeType')}
-                    </FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex flex-col gap-3"
-                      >
-                        <div className="flex items-center space-x-3">
-                          <RadioGroupItem value="NOTIFIED" id="r1" />
-                          <FormLabel htmlFor="r1" className="cursor-pointer font-normal">
-                            {t('inspections.other.types.NOTIFIED')}
-                          </FormLabel>
+                <div className="space-y-4 rounded-lg border bg-blue-50/30 p-4">
+                  <FormField
+                    control={form.control}
+                    name="tin"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>Tashkilot STIR</FormLabel>
+                        <div className="flex gap-2">
+                          <FormControl>
+                            <Input placeholder="STIR kiriting" {...field} maxLength={14} className="bg-white" />
+                          </FormControl>
+                          <Button type="button" onClick={handleSearchHf} disabled={isHfLoading}>
+                            {isHfLoading ? 'Qidirish' : 'Qidirish'}
+                          </Button>
                         </div>
-                        <div className="flex items-center space-x-3">
-                          <RadioGroupItem value="AFTER_24_HOURS" id="r2" />
-                          <FormLabel htmlFor="r2" className="cursor-pointer font-normal">
-                            {t('inspections.other.types.AFTER_24_HOURS')}
-                          </FormLabel>
-                        </div>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <FormField
-                control={form.control}
-                name="inspectorIdList"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>{t('inspections.other.create_modal.inspectors')}</FormLabel>
-                    <FormControl>
-                      <MultiSelect
-                        options={inspectorOptions || []}
-                        value={field.value}
-                        onChange={field.onChange}
-                        placeholder={
-                          isInspectorsLoading
-                            ? t('loading')
-                            : isChairman && !officeIdValue
-                              ? 'Avval hududiy boshqarmani tanlang'
-                              : t('select')
-                        }
-                        disabled={isChairman ? !officeIdValue || isInspectorsLoading : false}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <FormField
+                    control={form.control}
+                    name="hfId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>XICHOni tanlang</FormLabel>
+                        <Select
+                          disabled={!(hfOptions && hfOptions.length > 0)}
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="bg-white">
+                              <SelectValue placeholder={t('select')} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {hfOptions?.map((item: any) => (
+                              <SelectItem key={item.id} value={item.id}>
+                                {item.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-              <FormField
-                control={form.control}
-                name="checklistCategoryIdList"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Kategoriya tanlang</FormLabel>
-                    <FormControl>
-                      <MultiSelect
-                        options={(categoryOptions || []).map((c: any) => ({ id: c.id, name: c.name }))}
-                        value={field.value}
-                        onChange={field.onChange}
-                        placeholder={t('select')}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="startDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>{t('inspections.other.create_modal.startDate')}</FormLabel>
+                        <DatePicker
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder={t('select_date')}
+                          disableStrategy="before"
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="endDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel required>{t('inspections.other.create_modal.endDate')}</FormLabel>
+                        <DatePicker
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder={t('select_date')}
+                          disableStrategy="before"
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-              <div className="grid grid-cols-1 gap-4">
                 <FormField
                   control={form.control}
-                  name="basisPathList"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel required>{t('inspections.other.create_modal.basis_documents')}</FormLabel>
+                  name="noticeType"
+                  render={({ field }) => (
+                    <FormItem className="space-y-4">
+                      <FormLabel required className="text-sm font-semibold text-slate-700">
+                        {t('inspections.other.create_modal.noticeType')}
+                      </FormLabel>
                       <FormControl>
-                        <InputFile
-                          multiple
-                          maxFiles={5}
-                          uploadEndpoint="/attachments/inspections"
-                          form={form}
-                          name="basisPathList"
-                          accept={[FileTypes.PDF, FileTypes.IMAGE]}
-                          buttonText={t('select_file')}
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex flex-col gap-3"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <RadioGroupItem value="NOTIFIED" id="r1" />
+                            <FormLabel htmlFor="r1" className="cursor-pointer font-normal">
+                              {t('inspections.other.types.NOTIFIED')}
+                            </FormLabel>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <RadioGroupItem value="AFTER_24_HOURS" id="r2" />
+                            <FormLabel htmlFor="r2" className="cursor-pointer font-normal">
+                              {t('inspections.other.types.AFTER_24_HOURS')}
+                            </FormLabel>
+                          </div>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="inspectorIdList"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>{t('inspections.other.create_modal.inspectors')}</FormLabel>
+                      <FormControl>
+                        <MultiSelect
+                          options={inspectorOptions || []}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder={
+                            isInspectorsLoading
+                              ? t('loading')
+                              : isChairman && !officeIdValue
+                                ? 'Avval hududiy boshqarmani tanlang'
+                                : t('select')
+                          }
+                          disabled={isChairman ? !officeIdValue || isInspectorsLoading : false}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
                 <FormField
                   control={form.control}
-                  name="programPath"
-                  render={() => (
+                  name="checklistCategoryIdList"
+                  render={({ field }) => (
                     <FormItem>
-                      <FormLabel required>{t('inspections.other.create_modal.program_file')}</FormLabel>
+                      <FormLabel required>Kategoriya tanlang</FormLabel>
                       <FormControl>
-                        <InputFile
-                          uploadEndpoint="/attachments/inspections"
-                          form={form}
-                          name="programPath"
-                          accept={[FileTypes.PDF]}
-                          buttonText={t('select_file')}
+                        <MultiSelect
+                          options={(categoryOptions || []).map((c: any) => ({ id: c.id, name: c.name }))}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder={t('select')}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                <div className="grid grid-cols-1 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="basisPathList"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel required>{t('inspections.other.create_modal.basis_documents')}</FormLabel>
+                        <FormControl>
+                          <InputFile
+                            multiple
+                            maxFiles={5}
+                            uploadEndpoint="/attachments/inspections"
+                            form={form}
+                            name="basisPathList"
+                            accept={[FileTypes.PDF, FileTypes.IMAGE]}
+                            buttonText={t('select_file')}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="programPath"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel required>{t('inspections.other.create_modal.program_file')}</FormLabel>
+                        <FormControl>
+                          <InputFile
+                            uploadEndpoint="/attachments/inspections"
+                            form={form}
+                            name="programPath"
+                            accept={[FileTypes.PDF]}
+                            buttonText={t('select_file')}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-6">
+              <div className="flex shrink-0 justify-end gap-3 border-t px-4 py-4 sm:px-6">
                 <Button variant="outline" type="button" onClick={() => setIsOpen(false)}>
                   {t('actions.cancel')}
                 </Button>

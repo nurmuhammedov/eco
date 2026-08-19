@@ -1,3 +1,6 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Trash2 } from 'lucide-react'
+import { cn } from '@/shared/lib/utils'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -9,7 +12,13 @@ import { Input } from '@/shared/components/ui/input'
 import { MultiSelect } from '@/shared/components/ui/multi-select.tsx'
 import { useCustomSearchParams } from '@/shared/hooks'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
-import { ApplicationModal } from '@/features/application/create-application'
+import {
+  ActParticipant,
+  areAllParticipantsSigned,
+  getSignaturesKey,
+  toParticipantsPayload,
+} from '@/features/inspections/model/act-participants'
+import { InspectionActModal } from './inspection-act-modal'
 
 const articleOptions = [
   { id: 'ARTICLE_55', name: 'O‘zbekiston Respublikasi MJtKning 55-modda' },
@@ -25,6 +34,7 @@ const schema = z
   .object({
     isAdministrativePenalty: z.boolean().default(false),
     isFinancialPenalty: z.boolean().default(false),
+    noViolation: z.boolean().default(false),
     violators: z
       .array(
         z.object({
@@ -42,18 +52,26 @@ const schema = z
           position: z.string({ required_error: 'Majburiy maydon' }).min(1, 'Majburiy maydon'),
         })
       )
-      .min(1, 'Kamida bitta foydalanuvchi qo‘shilishi kerak'),
+      .default([]),
   })
   .superRefine((data, ctx) => {
-    if (!data.isAdministrativePenalty && !data.isFinancialPenalty) {
+    if (!data.isAdministrativePenalty && !data.isFinancialPenalty && !data.noViolation) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Kamida bitta chora turini tanlang',
+        message: 'Kamida bitta variantni tanlang',
         path: ['isAdministrativePenalty'],
       })
     }
 
     if (data.isAdministrativePenalty) {
+      if (data.users.length === 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Kamida bitta qatnashuvchi qo‘shilishi kerak',
+          path: ['users'],
+        })
+      }
+
       if (data.violators.length === 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -96,6 +114,18 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
     paramsObject: { modal = '', inspectionType = 'RISK_BASED' },
   } = useCustomSearchParams()
 
+  const [participants, setParticipants] = useState<ActParticipant[]>([])
+  const [basePayload, setBasePayload] = useState<Record<string, unknown> | null>(null)
+  const [generatedKey, setGeneratedKey] = useState<string | null>(null)
+  const requestedKeyRef = useRef<string | null>(null)
+
+  const resetActState = useCallback(() => {
+    setParticipants([])
+    setBasePayload(null)
+    setGeneratedKey(null)
+    requestedKeyRef.current = null
+  }, [])
+
   const {
     error,
     isLoading,
@@ -112,6 +142,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
     successMessage: 'Muvaffaqiyatli saqlandi!',
     onEnd: () => {
       removeParams('modal')
+      resetActState()
       form.reset()
     },
   })
@@ -121,6 +152,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
     defaultValues: {
       isAdministrativePenalty: false,
       isFinancialPenalty: false,
+      noViolation: false,
       violators: [
         {
           articleList: [],
@@ -128,14 +160,49 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
           position: '',
         },
       ],
-      users: [{ fullName: '', position: '' }],
+      users: [],
     },
   })
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control: form.control,
     name: 'users',
   })
+
+  const changeMeasure = useCallback(
+    (patch: Partial<Pick<FormValues, 'isAdministrativePenalty' | 'isFinancialPenalty' | 'noViolation'>>) => {
+      const next = {
+        isAdministrativePenalty: form.getValues('isAdministrativePenalty'),
+        isFinancialPenalty: form.getValues('isFinancialPenalty'),
+        noViolation: form.getValues('noViolation'),
+        ...patch,
+      }
+
+      if (patch.noViolation) {
+        next.isAdministrativePenalty = false
+        next.isFinancialPenalty = false
+      }
+      if (patch.isAdministrativePenalty || patch.isFinancialPenalty) {
+        next.noViolation = false
+      }
+
+      form.setValue('isAdministrativePenalty', next.isAdministrativePenalty, { shouldDirty: true })
+      form.setValue('isFinancialPenalty', next.isFinancialPenalty, { shouldDirty: true })
+      form.setValue('noViolation', next.noViolation, { shouldDirty: true })
+
+      const current = form.getValues('users')
+      const filled = current.filter((user) => user.fullName.trim() !== '' || user.position.trim() !== '')
+
+      if (next.isAdministrativePenalty && filled.length === 0) {
+        replace([{ fullName: '', position: '' }])
+      } else if (filled.length !== current.length) {
+        replace(filled)
+      }
+
+      if (form.formState.isSubmitted) void form.trigger()
+    },
+    [form, replace]
+  )
 
   const {
     fields: violatorFields,
@@ -146,28 +213,68 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
     name: 'violators',
   })
 
+  const noViolation = form.watch('noViolation')
+  const usersError = form.formState.errors.users
+  const usersMessage = usersError?.message ?? usersError?.root?.message
+
   const onSubmit = (data: FormValues) => {
-    handleCreateApplication({
+    const nextParticipants: ActParticipant[] = data.users.map((user) => ({
+      fullName: user.fullName,
+      position: user.position,
+      signBase64: null,
+    }))
+
+    const payload: Record<string, unknown> = {
       dtoList: items,
       resultId,
       type: inspectionType === 'other' ? 'OTHER' : 'RISK_BASED',
-      isFinancialPenalty: data.isFinancialPenalty,
-      violators: data.isAdministrativePenalty
-        ? data.violators.map((v) => ({
-            fullName: v.fullName,
-            position: v.position,
-            penalties: v.articleList,
+    }
+
+    if (!data.noViolation) {
+      payload.isFinancialPenalty = data.isFinancialPenalty
+      payload.violators = data.isAdministrativePenalty
+        ? data.violators.map((violator) => ({
+            fullName: violator.fullName,
+            position: violator.position,
+            penalties: violator.articleList,
           }))
-        : [],
-      participants: data.users,
-    })
+        : []
+    }
+
+    const key = getSignaturesKey(nextParticipants)
+    requestedKeyRef.current = key
+    setGeneratedKey(key)
+    setParticipants(nextParticipants)
+    setBasePayload(payload)
+
+    handleCreateApplication({ ...payload, participants: toParticipantsPayload(nextParticipants) })
   }
+
+  const handleSignatureChange = useCallback((index: number, signBase64: string) => {
+    setParticipants((current) =>
+      current.map((participant, currentIndex) =>
+        currentIndex === index ? { ...participant, signBase64 } : participant
+      )
+    )
+  }, [])
+
+  useEffect(() => {
+    if (!basePayload || !areAllParticipantsSigned(participants)) return
+
+    const key = getSignaturesKey(participants)
+    if (requestedKeyRef.current === key) return
+
+    requestedKeyRef.current = key
+    setGeneratedKey(key)
+    handleCreateApplication({ ...basePayload, participants: toParticipantsPayload(participants) })
+  }, [basePayload, participants, handleCreateApplication])
 
   return (
     <>
       <Dialog
         onOpenChange={(val) => {
           form.reset()
+          resetActState()
           if (val) {
             addParams({ modal: 'addUsers' })
           } else {
@@ -176,171 +283,252 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
         }}
         open={modal === 'addUsers'}
       >
-        <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[800px]">
-          <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Maʼlumotlarni to‘ldiring</DialogTitle>
+        <DialogContent className="flex max-h-[95dvh] w-[calc(100vw-1rem)]! max-w-[calc(100vw-1rem)]! flex-col gap-0 overflow-hidden rounded-xl! p-0 sm:w-[95vw]! sm:max-w-[800px]!">
+          <DialogHeader className="shrink-0 border-b px-4 py-4 sm:px-6">
+            <DialogTitle className="pr-8 text-[#4E75FF]">Maʼlumotlarni to‘ldiring</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="font-semibold">Ko‘rilgan choralar</h3>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col">
+              <div className="flex-1 space-y-6 overflow-y-auto px-4 py-4 sm:px-6">
+                <div className="space-y-4">
+                  <h3 className="font-semibold">Ko‘rilgan choralar</h3>
 
-                <div className="flex flex-col gap-3">
-                  <FormField
-                    control={form.control}
-                    name="isAdministrativePenalty"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-start space-y-0 space-x-3">
-                        <FormControl>
-                          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                        </FormControl>
-                        <div className="space-y-1 leading-none">
-                          <FormLabel>Ma’muriy tartibda chora ko‘rish</FormLabel>
-                        </div>
-                      </FormItem>
+                  <div className="flex flex-col gap-3">
+                    <FormField
+                      control={form.control}
+                      name="isAdministrativePenalty"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center space-y-0 space-x-3">
+                          <FormControl>
+                            <Checkbox
+                              id="measure-administrative"
+                              checked={field.value}
+                              disabled={noViolation}
+                              onCheckedChange={(checked) =>
+                                changeMeasure({ isAdministrativePenalty: checked === true })
+                              }
+                            />
+                          </FormControl>
+                          <FormLabel htmlFor="measure-administrative" className="cursor-pointer">
+                            Ma’muriy tartibda chora ko‘rish
+                          </FormLabel>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="isFinancialPenalty"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center space-y-0 space-x-3">
+                          <FormControl>
+                            <Checkbox
+                              id="measure-financial"
+                              checked={field.value}
+                              disabled={noViolation}
+                              onCheckedChange={(checked) => changeMeasure({ isFinancialPenalty: checked === true })}
+                            />
+                          </FormControl>
+                          <FormLabel htmlFor="measure-financial" className="cursor-pointer">
+                            Moliyaviy jarima
+                          </FormLabel>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="noViolation"
+                      render={({ field }) => (
+                        <FormItem className="mt-1 flex flex-row items-center space-y-0 space-x-3 border-t pt-3">
+                          <FormControl>
+                            <Checkbox
+                              id="measure-none"
+                              checked={field.value}
+                              onCheckedChange={(checked) => changeMeasure({ noViolation: checked === true })}
+                            />
+                          </FormControl>
+                          <FormLabel htmlFor="measure-none" className="cursor-pointer">
+                            Huquqbuzarlik aniqlanmadi
+                          </FormLabel>
+                        </FormItem>
+                      )}
+                    />
+
+                    {form.formState.errors.isAdministrativePenalty && (
+                      <p className="text-destructive text-sm font-medium">
+                        {form.formState.errors.isAdministrativePenalty.message}
+                      </p>
                     )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="isFinancialPenalty"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-start space-y-0 space-x-3">
-                        <FormControl>
-                          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                        </FormControl>
-                        <div className="space-y-1 leading-none">
-                          <FormLabel>Moliyaviy jarima</FormLabel>
+                  </div>
+
+                  {form.watch('isAdministrativePenalty') && (
+                    <div className="space-y-4 pt-2">
+                      {violatorFields.map((field, index) => (
+                        <div
+                          key={field.id}
+                          className="space-y-4 rounded-xl border border-slate-200 bg-slate-50/70 p-4 transition-colors hover:border-slate-300"
+                        >
+                          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                            <div className="flex items-center gap-2">
+                              <span className="flex size-6 items-center justify-center rounded-full bg-[#DCE4FF] text-xs font-semibold text-[#4E75FF]">
+                                {index + 1}
+                              </span>
+                              <span className="text-sm font-medium text-slate-700">Huquqbuzar</span>
+                            </div>
+                            {violatorFields.length > 1 && (
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                aria-label={`${index + 1}-huquqbuzarni o‘chirish`}
+                                className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive size-8"
+                                onClick={() => removeViolator(index)}
+                              >
+                                <Trash2 />
+                              </Button>
+                            )}
+                          </div>
+                          <FormField
+                            control={form.control}
+                            name={`violators.${index}.articleList`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel required>Moddani tanlang</FormLabel>
+                                <FormControl>
+                                  <MultiSelect
+                                    {...field}
+                                    options={articleOptions}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="Moddalarni tanlang"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <div className="grid grid-cols-1 items-start gap-3 sm:grid-cols-2">
+                            <FormField
+                              control={form.control}
+                              name={`violators.${index}.fullName`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel required>Xodim F.I.SH.</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="Ismini kiriting..." {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <FormField
+                              control={form.control}
+                              name={`violators.${index}.position`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel required>Xodimning lavozimi</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="Lavozimini kiriting..." {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
                         </div>
-                      </FormItem>
-                    )}
-                  />
-                  {form.formState.errors.isAdministrativePenalty && (
-                    <p className="text-destructive text-sm font-medium">
-                      {form.formState.errors.isAdministrativePenalty.message}
-                    </p>
+                      ))}
+                      <div className="flex justify-start">
+                        <Button
+                          type="button"
+                          onClick={() => appendViolator({ articleList: [], fullName: '', position: '' })}
+                        >
+                          + Qo‘shish
+                        </Button>
+                      </div>
+                    </div>
                   )}
                 </div>
-
-                {form.watch('isAdministrativePenalty') && (
-                  <div className="space-y-4 pt-2">
-                    {violatorFields.map((field, index) => (
-                      <div key={field.id} className="relative space-y-4 rounded-xl border bg-slate-50 p-4">
-                        {violatorFields.length > 1 && (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="text-destructive hover:bg-destructive/10 hover:text-destructive absolute top-2 right-2 h-8 w-8"
-                            onClick={() => removeViolator(index)}
-                          >
-                            <span className="text-xl">&times;</span>
-                          </Button>
-                        )}
+                <div className="space-y-3">
+                  <h3 className="font-semibold">
+                    Qatnashuvchilar{' '}
+                    <span className="text-muted-foreground font-normal">
+                      (shakllantirgan inspektor va tashkilot rahbaridan tashqari)
+                    </span>
+                  </h3>
+                  {fields.map((field, index) => (
+                    <div
+                      key={field.id}
+                      className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 transition-colors hover:border-slate-300"
+                    >
+                      <div className="mb-4 flex items-center justify-between border-b border-slate-200 pb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="flex size-6 items-center justify-center rounded-full bg-[#DCE4FF] text-xs font-semibold text-[#4E75FF]">
+                            {index + 1}
+                          </span>
+                          <span className="text-sm font-medium text-slate-700">Qatnashuvchi</span>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          aria-label={`${index + 1}-qatnashuvchini o‘chirish`}
+                          className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive size-8"
+                          onClick={() => remove(index)}
+                        >
+                          <Trash2 />
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-1 items-start gap-3 sm:grid-cols-2">
                         <FormField
                           control={form.control}
-                          name={`violators.${index}.articleList`}
+                          name={`users.${index}.fullName`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel required>Moddani tanlang</FormLabel>
+                              <FormLabel required>Qatnashuvchi F.I.SH.</FormLabel>
                               <FormControl>
-                                <MultiSelect
-                                  {...field}
-                                  options={articleOptions}
-                                  value={field.value}
-                                  onChange={field.onChange}
-                                  placeholder="Moddalarni tanlang"
-                                />
+                                <Input placeholder="F.I.SH. kiriting..." {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
-
-                        <div className="grid grid-cols-2 gap-3">
-                          <FormField
-                            control={form.control}
-                            name={`violators.${index}.fullName`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel required>Xodimning ismi</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Ismini kiriting..." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <FormField
-                            control={form.control}
-                            name={`violators.${index}.position`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel required>Xodimning lavozimi</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Lavozimini kiriting..." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
+                        <FormField
+                          control={form.control}
+                          name={`users.${index}.position`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel required>Qatnashuvchi lavozimi</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Lavozimini kiriting..." {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       </div>
-                    ))}
-                    <div className="flex justify-start">
-                      <Button
-                        type="button"
-                        onClick={() => appendViolator({ articleList: [], fullName: '', position: '' })}
-                      >
-                        + Qo‘shish
-                      </Button>
                     </div>
-                  </div>
-                )}
-              </div>
-              <div className="space-y-3">
-                <h3 className="font-semibold">Qatnashuvchilar</h3>
-                {fields.map((field, index) => (
-                  <div key={field.id} className="flex items-end gap-2">
-                    <FormField
-                      control={form.control}
-                      name={`users.${index}.fullName`}
-                      render={({ field }) => (
-                        <FormItem className="flex-1">
-                          <FormLabel required>Ismi</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Ismini kiriting..." {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
+                  ))}
+                  {fields.length === 0 ? (
+                    <div
+                      className={cn(
+                        'rounded-xl border border-dashed p-4 text-center text-sm',
+                        usersMessage ? 'border-destructive text-destructive' : 'text-muted-foreground border-slate-300'
                       )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`users.${index}.position`}
-                      render={({ field }) => (
-                        <FormItem className="flex-1">
-                          <FormLabel required>Lavozimi</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Lavozimini kiriting..." {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {fields.length > 1 && (
-                      <Button type="button" variant="destructive" onClick={() => remove(index)}>
-                        O‘chirish
-                      </Button>
-                    )}
-                  </div>
-                ))}
-                <Button type="button" onClick={() => append({ fullName: '', position: '' })}>
-                  + Qatnashuvchi qo‘shish
-                </Button>
+                    >
+                      {usersMessage ?? 'Hozircha qatnashuvchi qo‘shilmagan'}
+                    </div>
+                  ) : (
+                    usersMessage && <p className="text-destructive text-sm font-medium">{usersMessage}</p>
+                  )}
+                  <Button type="button" onClick={() => append({ fullName: '', position: '' })}>
+                    + Qatnashuvchi qo‘shish
+                  </Button>
+                </div>
               </div>
-              <div className="flex justify-end gap-2 pt-4">
+              <div className="flex shrink-0 justify-end gap-2 border-t px-4 py-4 sm:px-6">
                 <Button
                   type="button"
                   variant="outline"
@@ -359,12 +547,15 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
           </Form>
         </DialogContent>
       </Dialog>
-      <ApplicationModal
+      <InspectionActModal
         error={error}
         isOpen={isModalOpen}
         isLoading={isLoading}
         documentUrl={documentUrl || ''}
         isPdfLoading={isPdfLoading}
+        participants={participants}
+        onSignatureChange={handleSignatureChange}
+        isFinalPdfReady={generatedKey === getSignaturesKey(participants)}
         onClose={() => {
           handleCloseModal()
         }}

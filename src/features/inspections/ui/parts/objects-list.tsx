@@ -12,8 +12,6 @@ const ObjectsList = () => {
   const { data, isLoading } = useObjectListByPagination()
   const navigate = useNavigate()
 
-  console.log(data)
-
   const columns: ColumnDef<any>[] = [
     {
       header: 'Xavf tahlil davri',

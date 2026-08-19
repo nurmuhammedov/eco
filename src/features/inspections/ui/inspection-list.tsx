@@ -62,8 +62,13 @@ export const InspectionList: React.FC = () => {
   )
 
   const handleView = (row: any) => {
-    const targetYear = row.year || year || new Date().getFullYear()
-    navigate(`/inspections/info?inspectionId=${row.id}&tin=${row.tin}&name=${row.legalName}&year=${targetYear}`)
+    const params = new URLSearchParams({
+      inspectionId: String(row.id ?? ''),
+      tin: String(row.tin ?? ''),
+      name: String(row.legalName ?? ''),
+      year: String(row.year || year || new Date().getFullYear()),
+    })
+    navigate(`/inspections/info?${params.toString()}`)
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [
