@@ -294,6 +294,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     category: ApplicationCategory.ILLEGAL_EQUIPMENTS,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION,
     icon: 'passport',
+    disabled: true,
   },
   {
     id: 71,
@@ -383,6 +384,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     category: ApplicationCategory.ILLEGAL_HF,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_HF,
     icon: 'factoryRegisterIcon',
+    disabled: true,
   },
   {
     id: 54,

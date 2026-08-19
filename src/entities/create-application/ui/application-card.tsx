@@ -1,6 +1,7 @@
 import { ApplicationCardItem, ApplicationIcons, ApplicationTypeEnum } from '@/entities/create-application'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { cn } from '@/shared/lib/utils'
 
 interface ApplicationCardProps {
   application: ApplicationCardItem
@@ -25,15 +26,29 @@ const AnimatedButton = ({
   type,
   url = 'applications',
   btnTitle = 'Ariza yuborish',
+  disabled = false,
 }: {
   type: ApplicationTypeEnum
   url?: string
   btnTitle?: string
+  disabled?: boolean
 }) => {
   const navigate = useNavigate()
 
   const handleNavigate = () => {
     navigate(`/${url}/create/${type}`)
+  }
+
+  if (disabled) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="flex h-10 w-full cursor-not-allowed items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-400"
+      >
+        Vaqtincha mavjud emas
+      </button>
+    )
   }
 
   return (
@@ -52,8 +67,15 @@ const AnimatedButton = ({
 }
 
 function ApplicationCard({ application, url, btnTitle }: ApplicationCardProps) {
+  const isDisabled = !!application.disabled
+
   return (
-    <div className="group relative flex flex-col justify-between overflow-hidden rounded-md border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-md">
+    <div
+      className={cn(
+        'group relative flex flex-col justify-between overflow-hidden rounded-md border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300',
+        isDisabled ? 'opacity-60' : 'hover:shadow-md'
+      )}
+    >
       <div className="mb-5 flex items-center">
         <div className="group-hover:bg-teal flex size-12 items-center justify-center rounded-full bg-[#E2E8F0] transition-all duration-300 group-hover:scale-110">
           <div className="text-teal size-6 group-hover:text-white">
@@ -66,7 +88,7 @@ function ApplicationCard({ application, url, btnTitle }: ApplicationCardProps) {
       <h3 className="line-clamp-2 text-base leading-5 font-medium text-slate-800">{application.title}</h3>
 
       <p className="mt-2 mb-6 line-clamp-2 text-sm font-normal text-gray-500">{application.description}</p>
-      <AnimatedButton url={url} type={application.type} btnTitle={btnTitle} />
+      <AnimatedButton url={url} type={application.type} btnTitle={btnTitle} disabled={isDisabled} />
     </div>
   )
 }
