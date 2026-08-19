@@ -669,12 +669,12 @@ export const applicationsList = [
   },
   {
     id: 123,
-    title: 'Tabiiy gazdan foydalanuvchi qurilmani ro‘yxatdan chiqarish',
+    title: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmani ro‘yxatdan chiqarish',
     type: ApplicationTypeEnum.DEREGISTER_LPG_POWERED,
   },
   {
     id: 124,
-    title: 'Tabiiy gazdan foydalanuvchi qurilmani qayta ro‘yxatga olish',
+    title: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmani qayta ro‘yxatga olish',
     type: ApplicationTypeEnum.RE_REGISTER_LPG_POWERED,
   },
   // Hoist
@@ -722,6 +722,16 @@ export const applicationsList = [
     id: 132,
     title: 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish',
     type: ApplicationTypeEnum.REGISTER_OIL_CONTAINER,
+  },
+  {
+    id: 133,
+    title: 'Neft mahsulotlar saqlovchi idishni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_OIL_CONTAINER,
+  },
+  {
+    id: 134,
+    title: 'Neft mahsulotlar saqlovchi idishni qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.RE_REGISTER_OIL_CONTAINER,
   },
 
   // XRAY
@@ -776,18 +786,6 @@ export const applicationsList = [
     title: 'XICHO ma’lumotlarini o‘zgartirish',
     filterable: false,
     type: ApplicationTypeEnum.MODIFY_HF,
-  },
-  {
-    id: 201,
-    title: 'Neft mahsulotlari idishini ro‘yxatdan chiqarish',
-    filterable: false,
-    type: ApplicationTypeEnum.DEREGISTER_OIL_CONTAINER,
-  },
-  {
-    id: 202,
-    title: 'Neft mahsulotlari idishini qayta ro‘yxatga olish',
-    filterable: false,
-    type: ApplicationTypeEnum.RE_REGISTER_OIL_CONTAINER,
   },
   {
     id: 203,
