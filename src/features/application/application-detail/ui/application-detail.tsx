@@ -16,13 +16,14 @@ import { ApplicationStatusRow } from '@/shared/components/common/application-sta
 import { ApplicationStatus } from '@/entities/application'
 import { EmptyValue } from '@/features/application/application-detail/ui/parts/empty-value.tsx'
 
+/** Reply documents only matter while the appeal is being agreed or approved */
+const RESPONSE_DOCS_STATUSES = [ApplicationStatus.IN_AGREEMENT, ApplicationStatus.IN_APPROVAL]
+
 function getDefaultDocsTab(status?: ApplicationStatus) {
-  if (!status) return 'info'
-  if (status === ApplicationStatus.NEW) return 'info'
   if (status === ApplicationStatus.IN_PROCESS) return 'applicant_docs'
-  // A canceled or rejected appeal has no reply documents, so the data is shown
-  if (status === ApplicationStatus.CANCELED || status === ApplicationStatus.REJECTED) return 'info'
-  return 'response_docs'
+  if (status && RESPONSE_DOCS_STATUSES.includes(status)) return 'response_docs'
+
+  return 'info'
 }
 
 const ApplicationDetail = ({
