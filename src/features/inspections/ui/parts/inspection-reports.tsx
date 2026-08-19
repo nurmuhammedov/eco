@@ -563,31 +563,6 @@ const InspectionReports = ({
 
                 {act && <SignersModal setSigners={setSigners} signers={signers} />}
 
-                {act && isLegal && (
-                  <InspectionActModal
-                    error={null}
-                    participants={[]}
-                    isPdfLoading={false}
-                    isFinalPdfReady={true}
-                    isOpen={isActSignOpen}
-                    documentUrl={act?.path || ''}
-                    isLoading={legalSign.isPending}
-                    onSignatureChange={() => {}}
-                    onClose={() => setIsActSignOpen(false)}
-                    title="Dalolatnomani imzolash"
-                    description="Dalolatnoma mazmuni bilan tanishib chiqing va elektron raqamli imzo bilan tasdiqlang."
-                    secondaryLabel="Yopish"
-                    submitApplicationMetaData={(sign) =>
-                      legalSign.mutate({
-                        resultId,
-                        sign,
-                        filePath: act?.path,
-                        documentId: act?.documentId,
-                      })
-                    }
-                  />
-                )}
-
                 {categories?.map((category: any) => (
                   <div key={category.inspectionCategoryId} className="mb-4 rounded-xl border bg-white p-4 shadow-sm">
                     <h3 className="mb-4 text-lg font-semibold text-slate-800">{category.categoryName}</h3>
@@ -608,6 +583,31 @@ const InspectionReports = ({
             setId(null)
             setInspectionTitle('')
           }}
+        />
+      )}
+
+      {act && isLegal && (
+        <InspectionActModal
+          error={null}
+          participants={[]}
+          isPdfLoading={false}
+          isFinalPdfReady={true}
+          isOpen={isActSignOpen}
+          documentUrl={act?.path || ''}
+          isLoading={legalSign.isPending}
+          onSignatureChange={() => {}}
+          onClose={() => setIsActSignOpen(false)}
+          title="Dalolatnomani imzolash"
+          description="Dalolatnoma mazmuni bilan tanishib chiqing va elektron raqamli imzo bilan tasdiqlang."
+          secondaryLabel="Yopish"
+          submitApplicationMetaData={(sign) =>
+            legalSign.mutate({
+              resultId,
+              sign,
+              filePath: act?.path,
+              documentId: act?.documentId,
+            })
+          }
         />
       )}
     </div>

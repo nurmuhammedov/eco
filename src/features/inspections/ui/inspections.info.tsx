@@ -17,6 +17,7 @@ import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
 import { Skeleton } from '@/shared/components/ui/skeleton'
+import { useEffect, useState } from 'react'
 
 const InspectionsInfo = () => {
   const {
@@ -64,6 +65,23 @@ const InspectionsInfo = () => {
     ...(data && data?.LPG_POWERED && Array.isArray(data?.LPG_POWERED) ? data.LPG_POWERED : []),
   ]
 
+  const [openSections, setOpenSections] = useState<string[]>([
+    'org_info',
+    'belong_info',
+    'risk_anlalysis_info',
+    'inspection_info',
+  ])
+
+  useEffect(() => {
+    if (!accordions?.length) return
+    setOpenSections((current) => {
+      const missing = accordions
+        .map((item: any) => `inspection_results-${item?.id}`)
+        .filter((section: string) => !current.includes(section))
+      return missing.length > 0 ? [...current, ...missing] : current
+    })
+  }, [accordions])
+
   const isPageLoading = isInspectionLoading || (isOther && isOtherDetailLoading)
 
   const belongTypeFromResult = accordions?.[0]?.belongType
@@ -92,15 +110,7 @@ const InspectionsInfo = () => {
         <GoBack title={`Tashkilot: ${name} (${currentTin})`} />
       </div>
 
-      <DetailCardAccordion
-        defaultValue={[
-          'org_info',
-          'belong_info',
-          'risk_anlalysis_info',
-          'inspection_info',
-          ...(accordions?.length > 0 ? accordions.map((item: any) => `inspection_results-${item?.id}`) : []),
-        ]}
-      >
+      <DetailCardAccordion value={openSections} onValueChange={setOpenSections}>
         <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida ma’lumot">
           <LegalApplicantInfo tinNumber={currentTin} />
         </DetailCardAccordion.Item>

@@ -39,8 +39,8 @@ const schema = z
       .array(
         z.object({
           articleList: z.array(z.string()).default([]),
-          fullName: z.string().default(''),
-          position: z.string().default(''),
+          fullName: z.string().trim().default(''),
+          position: z.string().trim().default(''),
         })
       )
       .default([]),
@@ -48,8 +48,8 @@ const schema = z
     users: z
       .array(
         z.object({
-          fullName: z.string({ required_error: 'Majburiy maydon' }).min(1, 'Majburiy maydon'),
-          position: z.string({ required_error: 'Majburiy maydon' }).min(1, 'Majburiy maydon'),
+          fullName: z.string({ required_error: 'Majburiy maydon' }).trim().min(1, 'Majburiy maydon'),
+          position: z.string({ required_error: 'Majburiy maydon' }).trim().min(1, 'Majburiy maydon'),
         })
       )
       .default([]),
@@ -417,7 +417,11 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
                                 <FormItem>
                                   <FormLabel required>Xodim F.I.SH.</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="Ismini kiriting..." {...field} />
+                                    <Input
+                                      placeholder="F.I.SH. kiriting..."
+                                      {...field}
+                                      onChange={(event) => field.onChange(event.target.value.toUpperCase())}
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -489,7 +493,11 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
                             <FormItem>
                               <FormLabel required>Qatnashuvchi F.I.SH.</FormLabel>
                               <FormControl>
-                                <Input placeholder="F.I.SH. kiriting..." {...field} />
+                                <Input
+                                  placeholder="F.I.SH. kiriting..."
+                                  {...field}
+                                  onChange={(event) => field.onChange(event.target.value.toUpperCase())}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>

@@ -9,9 +9,14 @@ import { Button } from '@/shared/components/ui/button'
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { Badge } from '@/shared/components/ui/badge'
+import { useState } from 'react'
+import { Download } from 'lucide-react'
+import { toast } from 'sonner'
+import { apiClient } from '@/shared/api/api-client'
 
 export const PermitTable = ({ setIsModalOpen }: any) => {
   const { user } = useAuth()
+  const [isExporting, setIsExporting] = useState(false)
 
   const {
     addParams,
@@ -48,6 +53,31 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
     type: tab == 'ALL' ? null : tab,
     status: currentTab == 'ALL' ? null : currentTab,
   })
+
+  const handleExportExcel = () => {
+    setIsExporting(true)
+    apiClient
+      .downloadFile<Blob>('/permits/export/excel', {
+        tin: tin || undefined,
+        name: name || undefined,
+        registerNumber: registerNumber || undefined,
+        documentName: documentName || undefined,
+        type: tab === 'ALL' ? undefined : tab,
+        status: currentTab === 'ALL' ? undefined : currentTab,
+      })
+      .then((response) => {
+        const url = URL.createObjectURL(response.data)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `Ruxsat etuvchi hujjatlar (${formatDate(new Date(), 'dd.MM.yyyy')}).xlsx`
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+        URL.revokeObjectURL(url)
+      })
+      .catch((error: any) => toast.error(error?.message || 'Faylni yuklab olishda xatolik', { richColors: true }))
+      .finally(() => setIsExporting(false))
+  }
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -180,11 +210,26 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
             </TabsTrigger>
           </TabsList>
         </Tabs>
-        {user?.role !== UserRoles.CHAIRMAN && user?.role !== UserRoles.INDIVIDUAL && user?.role !== UserRoles.LEGAL && (
-          <Button type="button" onClick={() => setIsModalOpen((p: boolean) => !p)} className="w-full sm:w-auto">
-            Qo‘shish
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+          <Button
+            type="button"
+            variant="successOutline"
+            loading={isExporting}
+            disabled={isExporting}
+            onClick={handleExportExcel}
+            className="w-full sm:w-auto"
+          >
+            <Download className="size-4" />
+            Excelga yuklash
           </Button>
-        )}
+          {user?.role !== UserRoles.CHAIRMAN &&
+            user?.role !== UserRoles.INDIVIDUAL &&
+            user?.role !== UserRoles.LEGAL && (
+              <Button type="button" onClick={() => setIsModalOpen((p: boolean) => !p)} className="w-full sm:w-auto">
+                Qo‘shish
+              </Button>
+            )}
+        </div>
       </div>
       <DataTable
         showNumeration={true}

@@ -11,6 +11,8 @@ export interface DetailCardAccordionProps {
   multiple?: boolean
   children: ReactNode
   defaultValue?: string[]
+  value?: string[]
+  onValueChange?: (value: string[]) => void
 }
 
 export interface DetailCardAccordionItemProps {
