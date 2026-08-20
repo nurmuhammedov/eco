@@ -119,6 +119,6 @@ export const servicesApiClient = {
     onUploadProgress?: ProgressCallback
   ): Promise<ApiResponse<T>> => servicesApiRequest<T>('patch', url, body, headers, onUploadProgress),
 
-  delete: <T>(url: string, params?: RequestParams, headers?: RequestHeaders, body?: any): Promise<ApiResponse<T>> =>
-    servicesApiRequest<T>('delete', url, params, headers, body),
+  delete: <T>(url: string, params?: RequestParams, headers?: RequestHeaders): Promise<ApiResponse<T>> =>
+    servicesApiRequest<T>('delete', url, params, headers),
 }

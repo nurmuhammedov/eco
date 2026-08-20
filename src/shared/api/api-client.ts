@@ -118,6 +118,6 @@ export const apiClient = {
     onUploadProgress?: ProgressCallback
   ): Promise<ApiResponse<T>> => apiRequest<T>('patch', url, body, headers, onUploadProgress),
 
-  delete: <T>(url: string, params?: RequestParams, headers?: RequestHeaders, body?: any): Promise<ApiResponse<T>> =>
-    apiRequest<T>('delete', url, params, headers, body),
+  delete: <T>(url: string, params?: RequestParams, headers?: RequestHeaders): Promise<ApiResponse<T>> =>
+    apiRequest<T>('delete', url, params, headers),
 }
