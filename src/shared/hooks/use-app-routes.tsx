@@ -1,174 +1,104 @@
+import { lazy, useMemo } from 'react'
+import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
 import {
+  accountantRoutes,
   adminRoutes,
   chairmanRoutes,
   headRoutes,
+  hrRoutes,
   individualRoutes,
   inspectorRoutes,
+  interactiveServiceRoutes,
   legalRoutes,
   managerRoutes,
-  interactiveServiceRoutes,
   regionalRoutes,
-  accountantRoutes,
-  hrRoutes,
 } from '@/shared/config/routes/roles'
 import { authRoutes, publicRoutes, specialComponents } from '@/shared/config/routes'
+import { withFullPageSuspense } from '@/shared/config/routes/utils'
+import { GUEST_LANDING_PATH, IS_STATIC_LANDING } from '@/shared/config/navigation'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { routeByRole } from '@/shared/lib/router/route-by-role'
 import { Direction, UserRoles } from '@/entities/user'
-import { apiConfig } from '@/shared/api/constants'
-import React, { lazy, Suspense } from 'react'
-import { Navigate, useRoutes } from 'react-router-dom'
-import { Loader } from '@/shared/components/common'
+import { BootScreen } from '@/shared/components/common'
 import { PWAInstallPrompt } from '@/shared/components/common/pwa-install-prompt/pwa-install-prompt'
 
 const AppLayout = lazy(() => import('@/shared/layouts/ui/app-layout'))
 const AuthLayout = lazy(() => import('@/shared/layouts/ui/auth-layout'))
 
-const FallbackRedirect = () => {
-  const to = apiConfig.oneIdClientId === 'test_cirns_uz' ? '/auth/login/admin' : '/home'
-  if (to === '/home') {
-    window.location.replace(to)
-    return null
-  }
-  return <Navigate to={to} replace />
+const ROUTES_BY_ROLE: Record<UserRoles, RouteObject[]> = {
+  [UserRoles.ADMIN]: adminRoutes,
+  [UserRoles.LEGAL]: legalRoutes,
+  [UserRoles.REGIONAL]: regionalRoutes,
+  [UserRoles.INSPECTOR]: inspectorRoutes,
+  [UserRoles.CHAIRMAN]: chairmanRoutes,
+  [UserRoles.MANAGER]: managerRoutes,
+  [UserRoles.HEAD]: headRoutes,
+  [UserRoles.INDIVIDUAL]: individualRoutes,
+  [UserRoles.ACCOUNTANT]: accountantRoutes,
+  [UserRoles.PROCURATOR]: chairmanRoutes,
+  [UserRoles.INTERACTIVE_SERVICE]: interactiveServiceRoutes,
+  [UserRoles.HR]: hrRoutes,
 }
 
-const withSuspense = (Component: React.ComponentType) => (
-  <Suspense fallback={<Loader isVisible />}>
-    <Component />
-  </Suspense>
-)
+/** Directions gate which modules a user can reach; these two are available to everyone. */
+const ALWAYS_ALLOWED_ROUTE_IDS = new Set(['INQUIRY', 'REPORT'])
+
+const GuestRedirect = () => {
+  if (IS_STATIC_LANDING) {
+    window.location.replace(GUEST_LANDING_PATH)
+    return <BootScreen />
+  }
+
+  return <Navigate to={GUEST_LANDING_PATH} replace />
+}
+
+const toRouteObject = ({ path, element }: RouteObject): RouteObject => ({ path, element })
 
 export const useAppRoutes = () => {
   const { user, isLoading } = useAuth()
 
-  // Removed early return to prevent Hook order error
-
-  const filterRoutesByDirection = (routes: any[]) => {
-    if (!user) return []
-    if (user.role === UserRoles.ADMIN) return routes
-
-    return routes.filter((route) => {
-      if (!route.id) return true
-      if (route.id === 'INQUIRY' || route.id === 'REPORT') return true
-      return user.directions.includes(route.id as Direction)
-    })
-  }
-
-  const getRoleRoutes = (role: UserRoles) => {
-    let routes: any[]
-    switch (role) {
-      case UserRoles.ADMIN:
-        routes = adminRoutes
-        break
-      case UserRoles.LEGAL:
-        routes = legalRoutes
-        break
-      case UserRoles.REGIONAL:
-        routes = regionalRoutes
-        break
-      case UserRoles.INSPECTOR:
-        routes = inspectorRoutes
-        break
-      case UserRoles.CHAIRMAN:
-        routes = chairmanRoutes
-        break
-      case UserRoles.MANAGER:
-        routes = managerRoutes
-        break
-      case UserRoles.HEAD:
-        routes = headRoutes
-        break
-      case UserRoles.INDIVIDUAL:
-        routes = individualRoutes
-        break
-      case UserRoles.ACCOUNTANT:
-        routes = accountantRoutes
-        break
-      case UserRoles.PROCURATOR:
-        routes = chairmanRoutes
-        break
-      case UserRoles.INTERACTIVE_SERVICE:
-        routes = interactiveServiceRoutes
-        break
-      case UserRoles.HR:
-        routes = hrRoutes
-        break
-      default:
-        routes = []
+  const routeConfig = useMemo<RouteObject[]>(() => {
+    if (!user) {
+      return [
+        {
+          path: 'auth',
+          element: withFullPageSuspense(AuthLayout),
+          children: [{ index: true, element: <GuestRedirect /> }, ...authRoutes.map(toRouteObject)],
+        },
+        ...publicRoutes.map(toRouteObject),
+        { path: '*', element: <GuestRedirect /> },
+      ]
     }
-    return filterRoutesByDirection(routes)
-  }
 
-  const roleRoutes = user ? getRoleRoutes(user.role) : []
+    const allRoleRoutes = ROUTES_BY_ROLE[user.role] ?? []
+    const roleRoutes = allRoleRoutes.filter(({ id }) => {
+      if (!id || user.role === UserRoles.ADMIN) return true
+      return ALWAYS_ALLOWED_ROUTE_IDS.has(id) || user.directions.includes(id as Direction)
+    })
 
-  const authLayoutChildren = authRoutes.map((route: any) => ({
-    path: route.path,
-    element: route.element,
-  }))
+    // The interactive service role has no sidebar or header, so its pages render outside the app layout.
+    const isStandalone = user.role === UserRoles.INTERACTIVE_SERVICE
+    const startPath = routeByRole(user.role)
 
-  const routes = {
-    authenticated: [
+    return [
       {
         path: '/',
-        element: withSuspense(AppLayout as any),
+        element: withFullPageSuspense(AppLayout),
         children: [
-          {
-            index: true,
-            element: <Navigate to={routeByRole(user?.role)} replace />,
-          },
-          ...(user?.role === UserRoles.INTERACTIVE_SERVICE
-            ? []
-            : roleRoutes.map((route) => ({
-                path: route.path,
-                element: route.element,
-              }))),
+          { index: true, element: <Navigate to={startPath} replace /> },
+          ...(isStandalone ? [] : roleRoutes.map(toRouteObject)),
         ],
       },
-      ...(user?.role === UserRoles.INTERACTIVE_SERVICE
-        ? roleRoutes.map((route) => ({
-            path: route.path,
-            element: route.element,
-          }))
-        : []),
-      ...publicRoutes.map((route: any) => ({
-        path: route.path,
-        element: route.element,
-      })),
-      {
-        path: 'auth/*',
-        element: <Navigate to="/" replace />,
-      },
-      {
-        path: '*',
-        element: withSuspense(specialComponents.notFound),
-      },
-    ],
-    default: [
-      {
-        path: 'auth',
-        element: withSuspense(AuthLayout as any),
-        children: [
-          {
-            index: true,
-            element: <FallbackRedirect />,
-          },
-          ...authLayoutChildren,
-        ],
-      },
-      ...publicRoutes.map((route: any) => ({
-        path: route.path,
-        element: route.element,
-      })),
-      {
-        path: '*',
-        element: <FallbackRedirect />,
-      },
-    ],
-  }
+      ...(isStandalone ? roleRoutes.map(toRouteObject) : []),
+      ...publicRoutes.map(toRouteObject),
+      { path: 'auth/*', element: <Navigate to={startPath} replace /> },
+      { path: '*', element: withFullPageSuspense(specialComponents.notFound) },
+    ]
+  }, [user])
 
-  const routeConfig = isLoading && !user ? [] : user ? routes.authenticated : routes.default
   const element = useRoutes(routeConfig)
+
+  if (isLoading && !user) return <BootScreen />
 
   return (
     <>

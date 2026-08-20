@@ -2,6 +2,7 @@ import axios from 'axios'
 import { apiConfig } from '@/shared/api/constants'
 import { cleanParams } from '@/shared/lib'
 import { toast } from 'sonner'
+import { goToGuestLanding } from '@/shared/config/navigation'
 
 export const servicesAxiosInstance = axios.create({
   withCredentials: true,
@@ -57,12 +58,8 @@ servicesAxiosInstance.interceptors.response.use(
       }
     }
 
-    if (status === 401) {
-      if (!isQrPath && !isLoginPath) {
-        window.location.replace(apiConfig.oneIdClientId === 'test_cirns_uz' ? '/auth/login/admin' : '/home')
-      } else {
-        console.log('Redirect is ignored on QR or Login page.')
-      }
+    if (status === 401 && !isQrPath && !isLoginPath) {
+      goToGuestLanding()
     }
 
     return Promise.reject(error)

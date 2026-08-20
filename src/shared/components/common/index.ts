@@ -1,4 +1,7 @@
 export { StatusBadge } from './status-badge'
 export { default as GoBack } from './go-back'
+export { BrandLogo } from './brand-logo'
+export { BootScreen } from './boot-screen'
+export { RouteFallback } from './route-fallback'
 export { default as Loader } from './global-loader/ui'
 export { YandexMap, YandexMarker } from './yandex-map'

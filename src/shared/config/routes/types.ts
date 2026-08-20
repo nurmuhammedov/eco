@@ -1,4 +1,4 @@
-import React, { ComponentType, PropsWithChildren } from 'react'
+import React, { ComponentType } from 'react'
 import { UserRoles } from '@/entities/user'
 
 export interface RouteConfig {
@@ -8,8 +8,4 @@ export interface RouteConfig {
   children?: RouteConfig[]
   component?: ComponentType<any>
   element?: React.ReactNode
-}
-
-export interface AuthGuardProps extends PropsWithChildren {
-  allowedRoles?: UserRoles[]
 }

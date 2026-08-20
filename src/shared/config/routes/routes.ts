@@ -9,35 +9,35 @@ const PublicRiskAnalysisInfo = lazy(() => import('@/features/risk-analysis/ui/pu
 const PublicInquiryChoice = lazy(() => import('@/pages/public-inquiry/ui/public-inquiry-choice'))
 // const PublicInquiryForm = lazy(() => import('@/pages/public-inquiry/ui/public-inquiry-form'))
 
-import { withSuspense } from '@/shared/config/routes/utils'
+import { withFullPageSuspense } from '@/shared/config/routes/utils'
 
 export const publicRoutes = [
   {
     path: '/qr/:id/equipments',
-    element: withSuspense(ContactPage as any),
+    element: withFullPageSuspense(ContactPage as any),
   },
   {
     path: '/public/risk-analysis/:id',
-    element: withSuspense(PublicRiskAnalysisInfo as any),
+    element: withFullPageSuspense(PublicRiskAnalysisInfo as any),
   },
   {
     path: '/public-inquiry-choice',
-    element: withSuspense(PublicInquiryChoice as any),
+    element: withFullPageSuspense(PublicInquiryChoice as any),
   },
   // {
   //   path: '/public-inquiry/form',
-  //   element: withSuspense(PublicInquiryForm as any),
+  //   element: withFullPageSuspense(PublicInquiryForm as any),
   // },
 ]
 
 export const authRoutes = [
   {
     path: 'login',
-    element: withSuspense(OneIdLoginPage),
+    element: withFullPageSuspense(OneIdLoginPage),
   },
   {
     path: 'login/admin',
-    element: withSuspense(AdminLogin),
+    element: withFullPageSuspense(AdminLogin),
   },
 ]
 

@@ -24,17 +24,14 @@ export default defineConfig({
       treeshake: true,
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('@pbe/react-yandex-maps') || id.includes('yandex-maps')) {
-              return 'maps-vendor'
-            }
+          if (!id.includes('node_modules')) return
 
-            if (id.includes('tinymce') || id.includes('@tinymce')) {
-              return 'editor-vendor'
-            }
+          if (id.includes('@pbe/react-yandex-maps') || id.includes('yandex-maps')) return 'maps-vendor'
+          if (id.includes('tinymce')) return 'editor-vendor'
+          if (id.includes('@react-pdf') || id.includes('react-to-print')) return 'pdf-vendor'
+          if (id.includes('recharts') || id.includes('d3-') || id.includes('victory-vendor')) return 'charts-vendor'
 
-            return 'vendor'
-          }
+          return 'vendor'
         },
       },
     },
@@ -46,8 +43,10 @@ export default defineConfig({
       include: '**/*.svg',
       esbuildOptions: { loader: 'tsx' },
     }),
+    // nginx has no brotli module, so precompress with gzip for `gzip_static on`.
     compression({
-      algorithm: 'brotliCompress',
+      algorithm: 'gzip',
+      ext: '.gz',
       threshold: 1024,
       deleteOriginFile: false,
     }),
@@ -55,9 +54,13 @@ export default defineConfig({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['index.html', 'manifest.webmanifest', 'brand-logo.webp', 'favicon*.png', 'assets/*.{js,css}'],
+        globIgnores: ['home.html', '**/*.mp4', 'android-chrome-*.png', 'pwa-icon.png', 'apple-touch-icon.png'],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        cleanupOutdatedCaches: true,
+        // `/` is the nginx-served landing page, not the SPA shell.
         navigateFallbackDenylist: [
+          /^\/$/,
           /^\/api/,
           /^\/services/,
           /^\/files/,
@@ -65,6 +68,8 @@ export default defineConfig({
           /^\/v3\/api-docs/,
           /^\/metrics/,
           /^\/home/,
+          /^\/robots\.txt$/,
+          /^\/sitemap\.xml$/,
         ],
       },
       manifest: {
@@ -74,7 +79,7 @@ export default defineConfig({
         theme_color: '#016b7b',
         background_color: '#ffffff',
         display: 'standalone',
-        start_url: '/',
+        start_url: '/auth/login',
         scope: '/',
         icons: [
           {

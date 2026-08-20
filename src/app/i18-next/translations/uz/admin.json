@@ -3,5 +3,7 @@
   "sign_out": "Chiqish",
   "admin_panel": "Maʼmur paneli",
   "username": "Login",
-  "password": "Parol"
+  "password": "Parol",
+  "show_password": "Parolni ko‘rsatish",
+  "hide_password": "Parolni yashirish"
 }

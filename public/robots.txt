@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /$
+Allow: /brand-logo.webp
+Disallow: /api/
+Disallow: /files/
+Disallow: /services/
+Disallow: /swagger-ui/
+Disallow: /v3/api-docs
+Disallow: /metrics/
+Disallow: /auth/
+Disallow: /qr/
+Disallow: /public/
+Disallow: /public-inquiry-choice
+
+Sitemap: https://ekotizim.cirns.uz/sitemap.xml

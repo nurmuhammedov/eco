@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '@/shared/components/ui/button'
 import { Loader2, ShieldCheck } from 'lucide-react'
-import Icon from '@/shared/components/common/icon'
+import { BrandLogo } from '@/shared/components/common'
 import { apiConfig } from '@/shared/api/constants'
 import { useLoginOneId } from '@/entities/auth/models/auth.fetcher'
 
@@ -67,7 +67,7 @@ const PublicInquiryChoice = () => {
         <div className="w-full max-w-lg rounded-2xl border border-slate-100 bg-white p-8 shadow-xl">
           <div className="mb-6 flex flex-col items-center text-center">
             <div className="mb-4 flex h-24 w-24 items-center justify-center">
-              <Icon name="logo" className="h-full w-full object-contain" />
+              <BrandLogo className="h-full w-full" />
             </div>
             <h1 className="text-xl font-bold text-slate-800">Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi</h1>
             <p className="mt-2 text-sm text-slate-500">Murojaatlar portali</p>

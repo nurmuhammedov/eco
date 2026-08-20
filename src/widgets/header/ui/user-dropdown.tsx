@@ -1,7 +1,6 @@
 import { useLogout } from '@/entities/auth/models/auth.fetcher'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, LogOut, User, CreditCard } from 'lucide-react'
-import { Loader } from '@/shared/components/common'
+import { ChevronDown, CreditCard, Loader2, LogOut, User } from 'lucide-react'
 import { useState } from 'react'
 import { MyCardsModal } from './my-cards-modal'
 import {
@@ -22,12 +21,8 @@ import { Link } from 'react-router-dom'
 export default function UserDropdown() {
   const { user } = useAuth()
   const { t } = useTranslation('auth')
-  const { mutateAsync, isPending } = useLogout()
+  const { mutate: logout, isPending } = useLogout()
   const [isCardsModalOpen, setIsCardsModalOpen] = useState(false)
-
-  if (isPending) {
-    return <Loader isVisible={isPending} />
-  }
 
   const roleLabel = user?.isSupervisor ? 'Inspeksiya boshlig‘i' : user?.isController ? 'Inspeksiya inspektori' : ''
 
@@ -87,9 +82,12 @@ export default function UserDropdown() {
             <DropdownMenuItem
               disabled={isPending}
               className="text-destructive focus:text-destructive flex cursor-pointer items-center"
-              onClick={() => mutateAsync()}
+              onSelect={(event) => {
+                event.preventDefault()
+                logout()
+              }}
             >
-              <LogOut className="mr-2 h-4 w-4" />
+              {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LogOut className="mr-2 h-4 w-4" />}
               {t('logout')}
             </DropdownMenuItem>
           </DropdownMenuGroup>

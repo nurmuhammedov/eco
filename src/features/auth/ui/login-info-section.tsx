@@ -1,5 +1,5 @@
 import { Mail, Phone, Send } from 'lucide-react'
-import Icon from '@/shared/components/common/icon'
+import { BrandLogo } from '@/shared/components/common'
 
 export const LoginInfoSection = () => {
   return (
@@ -8,7 +8,7 @@ export const LoginInfoSection = () => {
         <h4 className="3xl:font-bold 3xl:text-2xl mb-8 max-w-lg text-center text-xl font-semibold text-white">
           O‘zbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi
         </h4>
-        <Icon name="logo" className="3xl:size-60 size-44 max-w-full text-white" />
+        <BrandLogo className="3xl:size-60 size-44 max-w-full" />
         <div className="mt-16 max-w-full text-center text-white">
           <p className="3xl:text-3xl my-2 text-2xl font-bold tracking-wide">
             &laquo;Sanoat xavfsizligi ekotizimi&raquo;

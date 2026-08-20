@@ -1,7 +1,7 @@
 import { cn } from '@/shared/lib/utils'
 import { useTranslation } from 'react-i18next'
 import { useSidebar } from '@/shared/components/ui/sidebar'
-import Icon from '@/shared/components/common/icon'
+import { BrandLogo } from '@/shared/components/common'
 
 export function AppLogo() {
   const { state } = useSidebar()
@@ -12,7 +12,7 @@ export function AppLogo() {
   return (
     <div className="flex flex-row items-center gap-x-3 overflow-hidden py-2">
       <div className="relative size-8 min-w-8">
-        <Icon name="logo" className="size-full object-contain" />
+        <BrandLogo className="size-full" />
       </div>
       <div
         className={cn('flex flex-col opacity-100 transition-opacity duration-300', {

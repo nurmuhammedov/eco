@@ -6,7 +6,7 @@ import { cn } from '@/shared/lib/utils'
 import { getRegionIdByName } from '@/features/dashboard/model/constants'
 import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
 import { InquiryStatus } from '@/features/inquiries/model/types'
-import Icon from '@/shared/components/common/icon'
+import { BrandLogo } from '@/shared/components/common'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { ClipboardCheck, Factory, Loader2, MessageSquare, Radiation, ScanLine, ShieldAlert, Wrench } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip'
@@ -506,7 +506,7 @@ export const InteractiveServicePage: React.FC = () => {
       <header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2 lg:px-6 lg:py-3">
         <div className="flex items-center gap-3 lg:gap-4">
           <div className="relative h-8 w-8 min-w-8 lg:h-10 lg:w-10 lg:min-w-10">
-            <Icon name="logo" className="size-full object-contain" />
+            <BrandLogo className="size-full" />
           </div>
           <div>
             <h1 className="text-sm font-semibold tracking-tight text-slate-700 lg:text-lg">

@@ -1,13 +1,13 @@
-import { setUser } from '@/app/store/auth-slice'
 import { authAPI } from '@/entities/auth/models/auth.api'
 import { LoginDTO } from '@/entities/auth/models/auth.types'
 import { UserState } from '@/entities/user'
-import { useAppDispatch } from '@/shared/hooks/use-store'
+import { goToGuestLanding } from '@/shared/config/navigation'
 import { routeByRole } from '@/shared/lib/router/route-by-role'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
-import { apiConfig } from '@/shared/api/constants'
+
+export const CURRENT_USER_QUERY_KEY = ['me'] as const
 
 export const useCurrentUser = () => {
   const {
@@ -16,29 +16,29 @@ export const useCurrentUser = () => {
     isSuccess,
     error,
   } = useQuery({
-    queryKey: ['me'],
-    queryFn: async () => authAPI.getMe(),
+    queryKey: CURRENT_USER_QUERY_KEY,
+    queryFn: authAPI.getMe,
     retry: 0,
     staleTime: Infinity,
     refetchOnMount: false,
   })
 
-  return { user, error, isPending, isSuccess, isAuth: user && !error }
+  return { user, error, isPending, isSuccess, isAuth: Boolean(user) && !error }
 }
+
+const resolveRedirectPath = (from: string | undefined, user: UserState) =>
+  from && from !== '/' ? from : routeByRole(user?.role)
 
 export const useLogin = () => {
   const queryClient = useQueryClient()
   const { state } = useLocation()
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
-  return useMutation({
-    mutationFn: async (data: LoginDTO) => authAPI.login(data),
 
-    onSuccess: (data: UserState) => {
-      dispatch(setUser(data))
-      queryClient.setQueryData(['me'], data)
-      const redirectPath = state?.from && state?.from !== '/' ? state?.from : routeByRole(data?.role)
-      navigate(redirectPath)
+  return useMutation({
+    mutationFn: (data: LoginDTO) => authAPI.login(data),
+    onSuccess: (user: UserState) => {
+      queryClient.setQueryData(CURRENT_USER_QUERY_KEY, user)
+      navigate(resolveRedirectPath(state?.from, user), { replace: true })
     },
   })
 }
@@ -53,70 +53,72 @@ export const useLoginOneId = (options?: UseLoginOneIdOptions) => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const dispatch = useAppDispatch()
-  const resolvedParams = useMemo(() => Object.fromEntries(searchParams), [searchParams])
+
+  const code = useMemo(() => searchParams.get('code') ?? undefined, [searchParams])
+
+  // OneID codes are single-use, so remember the one already sent: StrictMode runs the effect twice.
+  const processedCode = useRef<string | null>(null)
+
   const { mutate: handleLoginOneId, isPending } = useMutation({
     retry: false,
     mutationFn: authAPI.loginOneId,
-    onSuccess: (data: UserState) => {
-      dispatch(setUser(data))
-      queryClient.setQueryData(['me'], data)
+    onSuccess: (user: UserState) => {
+      queryClient.setQueryData(CURRENT_USER_QUERY_KEY, user)
+
       if (options?.customRedirect) {
-        options.customRedirect(data)
-      } else {
-        const redirectPath = state?.from && state?.from !== '/' ? state?.from : routeByRole(data?.role)
-        navigate(redirectPath)
+        options.customRedirect(user)
+        return
       }
+
+      navigate(resolveRedirectPath(state?.from, user), { replace: true })
     },
-    onError: () => {
-      navigate(pathname, { replace: true, state })
-    },
+    // Drop the code from the URL so a page refresh does not replay a failed exchange.
+    onError: () => navigate(pathname, { replace: true, state }),
   })
 
   useEffect(() => {
-    if (!options?.disableAutoRun && resolvedParams.code) {
-      handleLoginOneId(resolvedParams.code)
-    }
-  }, [resolvedParams.code, options?.disableAutoRun])
+    if (options?.disableAutoRun || !code || processedCode.current === code) return
+
+    processedCode.current = code
+    handleLoginOneId(code)
+  }, [code, options?.disableAutoRun, handleLoginOneId])
 
   return { isPending, mutate: handleLoginOneId }
 }
 
 export const useLogout = () => {
   const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: authAPI.logout,
+    // Sign the user out even if the request fails; a full navigation clears in-memory state.
+    onSettled: () => {
+      queryClient.clear()
+      goToGuestLanding()
+    },
+  })
+}
+
+// Re-reads the new role, lands on its start page and drops data cached under the previous role.
+const useRoleSwitch = <TVariables>(mutationFn: (variables: TVariables) => Promise<unknown>) => {
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const apiUrl = apiConfig.oneIdClientId
 
-  let redirectPath
-  if (apiUrl === 'test_cirns_uz') {
-    redirectPath = '/auth/login/admin'
-  } else {
-    redirectPath = '/home'
-  }
   return useMutation({
-    mutationFn: async () => authAPI.logout(),
-    onSuccess: () => {
-      queryClient.removeQueries({ queryKey: ['me'] })
-      queryClient.removeQueries({ queryKey: ['currentUser'] })
-      navigate(redirectPath)
+    mutationFn,
+    onSuccess: async () => {
+      const user = await queryClient.fetchQuery({
+        queryKey: CURRENT_USER_QUERY_KEY,
+        queryFn: authAPI.getMe,
+        staleTime: 0,
+      })
+
+      navigate(routeByRole(user?.role), { replace: true })
+      await queryClient.invalidateQueries({ predicate: ({ queryKey }) => queryKey[0] !== 'me' })
     },
   })
 }
 
-export const useSwitchOtherRole = () => {
-  return useMutation({
-    mutationFn: async (delegatorId: string) => authAPI.switchOther(delegatorId),
-    onSuccess: () => {
-      window.location.href = '/'
-    },
-  })
-}
+export const useSwitchOtherRole = () => useRoleSwitch<string>(authAPI.switchOther)
 
-export const useSwitchBackRole = () => {
-  return useMutation({
-    mutationFn: async () => authAPI.switchBack(),
-    onSuccess: () => {
-      window.location.href = '/'
-    },
-  })
-}
+export const useSwitchBackRole = () => useRoleSwitch<void>(authAPI.switchBack)
