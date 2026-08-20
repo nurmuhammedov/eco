@@ -3,13 +3,14 @@ import { ISearchParams } from '@/shared/types'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { DEFAULT_STALE_TIME } from '@/shared/lib/query/stale-time'
 
 const useData = <T>(
   endpoint: string,
   enabled: boolean = true,
   params?: ISearchParams,
   keys: (string | number)[] = [],
-  staleTime: number = 0
+  staleTime: number = DEFAULT_STALE_TIME
 ) => {
   const { i18n } = useTranslation()
   const { user } = useAuth()

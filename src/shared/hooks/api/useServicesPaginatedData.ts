@@ -3,12 +3,13 @@ import { ISearchParams, ResponseData } from '@/shared/types'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { DEFAULT_STALE_TIME } from '@/shared/lib/query/stale-time'
 
 const useServicesPaginatedData = <T>(
   endpoint: string,
   params?: ISearchParams,
   enabled: boolean = true,
-  staleTime: number = 0
+  staleTime: number = DEFAULT_STALE_TIME
 ) => {
   const { i18n } = useTranslation()
   const { user } = useAuth()

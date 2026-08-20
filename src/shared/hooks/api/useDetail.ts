@@ -3,13 +3,14 @@ import { ISearchParams } from '@/shared/types'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { DEFAULT_STALE_TIME } from '@/shared/lib/query/stale-time'
 
 const useDetail = <T>(
   endpoint: string,
   id?: string | number | boolean | null,
   enabled: boolean = true,
   params?: ISearchParams,
-  staleTime: number = 0
+  staleTime: number = DEFAULT_STALE_TIME
 ) => {
   const { i18n } = useTranslation()
   const queryClient = useQueryClient()
