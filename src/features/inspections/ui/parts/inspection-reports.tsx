@@ -5,7 +5,7 @@ import { format, formatDate } from 'date-fns'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import InspectionChecklistFormV2, { answerOptions } from '@/features/inspections/ui/parts/inspection-checklist-form-v2'
 import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/ui/inspection-widget'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { UserRoles } from '@/entities/user'
 import { NoData } from '@/shared/components/common/no-data'
@@ -13,7 +13,9 @@ import FileLink from '@/shared/components/common/file-link'
 import ReportExecutionModal from '@/features/inspections/ui/parts/report-execution-modal'
 import { Badge } from '@/shared/components/ui/badge'
 import { Button } from '@/shared/components/ui/button'
-import { AlertCircle, CheckCircle2, Eye, FileText, ShieldCheck, UploadCloud } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Eye, FileText, Send, ShieldCheck, Signature, UploadCloud } from 'lucide-react'
+import { buildActSignUrl, useLegalSignAct, useNotifyLegalToSignAct } from '@/features/inspections/hooks/use-act-signing'
+import { InspectionActModal } from './inspection-act-modal'
 import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal'
 import { getDate } from '@/shared/utils/date'
 import SignedActUploadModal from './signed-act-upload-modal'
@@ -42,9 +44,25 @@ const InspectionReports = ({
   const [id, setId] = useState<any>(null)
   const [inspectionTitle, setInspectionTitle] = useState<string>('')
   const [signers, setSigners] = useState<any[]>([])
+  const [isActSignOpen, setIsActSignOpen] = useState(false)
   const {
-    paramsObject: { inspectionType = 'risk_based' },
+    paramsObject: { inspectionType = 'risk_based', signResultId = '' },
   } = useCustomSearchParams()
+
+  const isLegal = user?.role === UserRoles.LEGAL
+  const canNotifyLegal =
+    (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.MANAGER) &&
+    status === InspectionSubMenuStatus.COMPLETED
+  const isSignedByMe = Boolean(act?.signers?.some((signer: any) => signer?.signerUserId === user?.id))
+
+  const notifyLegal = useNotifyLegalToSignAct()
+  const legalSign = useLegalSignAct(() => setIsActSignOpen(false))
+
+  useEffect(() => {
+    if (isLegal && act && !isSignedByMe && signResultId && signResultId === resultId) {
+      setIsActSignOpen(true)
+    }
+  }, [isLegal, act, isSignedByMe, signResultId, resultId])
 
   const { data: categories = [] } = useData<any[]>(
     `/inspection-checklists`,
@@ -333,17 +351,17 @@ const InspectionReports = ({
                             : 'Tizim tomonidan avtomatik shakllantiriladi!'}
                         </p>
                       </div>
-                      <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                      <div className="mt-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-t border-slate-100 pt-4">
                         {act ? (
                           <>
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs font-medium text-slate-500">
+                            <div className="flex min-w-0 items-center gap-2">
+                              <span className="text-xs font-medium whitespace-nowrap text-slate-500">
                                 {act?.createdAt ? getDate(act?.createdAt) : ''}
                               </span>
                               <FileLink url={act?.path} title="Hujjatni ko‘rish" />
                             </div>
                             <button
-                              className="flex cursor-pointer items-center gap-1 text-xs font-medium text-blue-600 transition-colors hover:text-blue-700 hover:underline"
+                              className="flex shrink-0 cursor-pointer items-center gap-1 text-xs font-medium whitespace-nowrap text-blue-600 transition-colors hover:text-blue-700 hover:underline"
                               onClick={() => setSigners(act?.signers)}
                             >
                               <Eye size="14" /> Imzolagan shaxslar
@@ -355,6 +373,34 @@ const InspectionReports = ({
                           </span>
                         )}
                       </div>
+
+                      {act && canNotifyLegal && (
+                        <Button
+                          variant="primaryOutline"
+                          size="sm"
+                          className="mt-3 w-full"
+                          loading={notifyLegal.isPending}
+                          disabled={notifyLegal.isPending}
+                          onClick={() => notifyLegal.mutate({ resultId, url: buildActSignUrl(resultId) })}
+                        >
+                          <Send className="size-4" />
+                          Yuridik shaxsga imzolash uchun yuborish
+                        </Button>
+                      )}
+
+                      {act && isLegal && !isSignedByMe && (
+                        <Button size="sm" className="mt-3 w-full" onClick={() => setIsActSignOpen(true)}>
+                          <Signature className="size-4" />
+                          Dalolatnomani imzolash
+                        </Button>
+                      )}
+
+                      {act && isLegal && isSignedByMe && (
+                        <p className="mt-3 flex items-center justify-center gap-1.5 rounded-md bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700">
+                          <CheckCircle2 className="size-4" />
+                          Siz imzoladingiz
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
@@ -537,6 +583,31 @@ const InspectionReports = ({
             setId(null)
             setInspectionTitle('')
           }}
+        />
+      )}
+
+      {act && isLegal && (
+        <InspectionActModal
+          error={null}
+          participants={[]}
+          isPdfLoading={false}
+          isFinalPdfReady={true}
+          isOpen={isActSignOpen}
+          documentUrl={act?.path || ''}
+          isLoading={legalSign.isPending}
+          onSignatureChange={() => {}}
+          onClose={() => setIsActSignOpen(false)}
+          title="Dalolatnomani imzolash"
+          description="Dalolatnoma mazmuni bilan tanishib chiqing va elektron raqamli imzo bilan tasdiqlang."
+          secondaryLabel="Yopish"
+          submitApplicationMetaData={(sign) =>
+            legalSign.mutate({
+              resultId,
+              sign,
+              filePath: act?.path,
+              documentId: act?.documentId,
+            })
+          }
         />
       )}
     </div>

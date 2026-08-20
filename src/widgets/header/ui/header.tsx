@@ -6,8 +6,8 @@ import UserDropdown from '@/widgets/header/ui/user-dropdown'
 import { format, getQuarter, subDays, subQuarters } from 'date-fns'
 import { useLocation } from 'react-router-dom'
 import { useMemo } from 'react'
-import { InquiryNotification } from './inquiry-notification'
 import { DelegatedTasksNotification } from './delegated-tasks-notification'
+import { NotificationsMenu } from './notifications-menu'
 import DatePicker from '@/shared/components/ui/datepicker'
 
 import {
@@ -77,20 +77,35 @@ export function Header() {
 
   const title = useMemo(() => {
     const PATH_TITLES = [
+      { path: '/inspections/risk-based', title: 'Xavfni tahlili asosidagi tekshiruvlar' },
+      { path: '/inspections/other', title: 'Boshqa turdagi tekshiruvlar' },
+      { path: '/inspections/info', title: 'Tekshiruv ma’lumotlari' },
+      { path: '/inspections', title: 'Tekshiruvlar' },
+      { path: '/risk-analysis/monthly', title: 'Oylik xavf tahlili' },
+      { path: '/risk-analysis/daily', title: 'Kunlik xavf tahlili' },
+      { path: '/risk-analysis', title: 'Xavfni tahlil qilish' },
+      { path: '/kpi/departments', title: 'Boshqarma va bo‘limlar' },
+      { path: '/kpi/my-tasks', title: 'Mening KPIlarim' },
+      { path: '/kpi/tasks', title: 'KPI vazifalar' },
+      { path: '/kpi/report', title: 'KPI hisoboti' },
+      { path: '/attestation-calendars/', title: 'Arizachilar' },
+      { path: '/attestation-calendars', title: 'Qabul vaqtlari' },
+      { path: '/attestation-questions', title: 'Imtihon savollari' },
+      { path: '/attestation-applications', title: 'Attestatsiya arizalari' },
+      { path: '/attestations', title: 'Attestatsiya' },
       { path: '/dashboard', title: 'Bosh sahifa' },
       { path: '/register', title: 'Reyestrlar' },
       { path: '/applications', title: 'Arizalar' },
       { path: '/preventions', title: 'Profilaktika' },
-      { path: '/risk-analysis', title: 'Xavfni tahlil qilish' },
-      { path: '/inspections', title: 'Tekshiruvlar' },
       { path: '/expertise-organizations', title: 'Ekspert tashkilotlar' },
+      { path: '/organizations', title: 'Tashkilotlar' },
       { path: '/accreditations', title: 'Ekspertiza xulosalari' },
       { path: '/declarations', title: 'Deklaratsiya' },
-      { path: '/attestations', title: 'Attestatsiya' },
       { path: '/reports', title: 'Hisobotlar' },
       { path: '/permits', title: 'Ruxsat etuvchi hujjatlar' },
       { path: '/inquiries', title: 'Murojaatlar' },
-      { path: '/accidents', title: 'Baxtsiz hodisalar va avariyalar' },
+      { path: '/accidents', title: 'Baxtsiz hod. va Avariyalar' },
+      { path: '/news', title: 'Xabarnoma' },
       { path: '/territories', title: 'Hududlar' },
       { path: '/department', title: 'Bo‘limlar' },
       { path: '/staffs', title: 'Xodimlar' },
@@ -105,16 +120,8 @@ export function Header() {
       { path: '/elevators', title: 'Liftlar' },
       { path: '/expertise', title: 'Ekspertiza' },
       { path: '/archive', title: 'Arxiv' },
-      { path: '/cadastre-passport', title: 'TXYZ kadastr' },
+      { path: '/cadastre-passport', title: 'TXYZ Kadastr' },
       { path: '/user-delegation', title: 'Vazifalarni yuklash' },
-      { path: '/kpi/departments', title: 'Boshqarma va bo‘limlar' },
-      { path: '/kpi/tasks', title: 'KPI vazifalar' },
-      { path: '/kpi/my-tasks', title: 'Mening KPIlarim' },
-      { path: '/kpi/report', title: 'KPI hisoboti' },
-      { path: '/attestation-questions', title: 'Imtihon savollari' },
-      { path: '/attestation-calendars', title: 'Qabul vaqtlari' },
-      { path: '/attestation-applications', title: 'Attestatsiya arizalari' },
-      { path: '/attestation-calendars/', title: 'Arizachilar' },
       { path: '/profile', title: 'Profil' },
     ]
 
@@ -174,7 +181,7 @@ export function Header() {
           </div>
         )}
         <DelegatedTasksNotification />
-        <InquiryNotification />
+        <NotificationsMenu />
         <UserDropdown />
       </div>
     </header>

@@ -6,10 +6,9 @@ import type { DetailCardAccordionItemProps, DetailCardAccordionProps } from '../
 
 export const DetailCardAccordion: FC<DetailCardAccordionProps> & {
   Item: FC<DetailCardAccordionItemProps>
-} = ({ children, defaultValue = [] }) => {
-  // const type = multiple ? 'multiple' : 'single';
+} = ({ children, defaultValue = [], value, onValueChange }) => {
   return (
-    <Accordion type={'multiple'} defaultValue={defaultValue} className="w-full rounded-lg">
+    <Accordion type="multiple" className="w-full rounded-lg" {...(value ? { value, onValueChange } : { defaultValue })}>
       {children}
     </Accordion>
   )

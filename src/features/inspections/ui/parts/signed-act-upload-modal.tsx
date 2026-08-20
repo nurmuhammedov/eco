@@ -53,7 +53,7 @@ const SignedActUploadModal = ({ resultId, signedActPath, onClose, trigger }: Pro
     uploadAct({
       signedActPath: values.signedActPath,
     }).then(() => {
-      qc.invalidateQueries({ queryKey: ['/inspection-results'] }).then((r) => console.log(r))
+      qc.invalidateQueries({ queryKey: ['/inspection-results'] })
       setOpen(false)
       onClose?.()
     })

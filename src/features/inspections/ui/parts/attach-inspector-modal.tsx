@@ -160,134 +160,136 @@ const AttachInspectorModal = ({ data = [] }: any) => {
           <Button size="sm">Inspektorni(larni) belgilash</Button>
         </DialogTrigger>
 
-        <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[750px]">
-          <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Inspektorni(larni) belgilash</DialogTitle>
+        <DialogContent className="flex max-h-[95dvh] w-[calc(100vw-1rem)]! max-w-[calc(100vw-1rem)]! flex-col gap-0 overflow-hidden rounded-xl! p-0 sm:w-[95vw]! sm:max-w-[750px]!">
+          <DialogHeader className="shrink-0 border-b px-4 py-4 sm:px-6">
+            <DialogTitle className="pr-8 text-[#4E75FF]">Inspektorni(larni) belgilash</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="mb-4 grid grid-cols-2 gap-5">
-                <FormField
-                  control={form.control}
-                  name="duration"
-                  render={({ field }) => (
-                    <FormItem className="col-span-2 space-y-3">
-                      <FormLabel required>Tekshiruv muddati</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="flex flex-col space-y-1"
-                        >
-                          <FormItem className="flex flex-row items-center space-y-0 space-x-3">
-                            <FormControl>
-                              <RadioGroupItem value="ONE_DAY" />
-                            </FormControl>
-                            <FormLabel className="font-normal">1 kunlik tekshiruv</FormLabel>
-                          </FormItem>
-                          {!isHead && (
-                            <FormItem className="flex flex-row items-center space-y-0 space-x-3">
-                              <FormControl>
-                                <RadioGroupItem value="TEN_DAYS" />
-                              </FormControl>
-                              <FormLabel className="font-normal">10 kunlik tekshiruv</FormLabel>
-                            </FormItem>
-                          )}
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {duration && (
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col">
+              <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+                <div className="mb-4 grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <FormField
                     control={form.control}
-                    name="inspectorIdList"
+                    name="duration"
                     render={({ field }) => (
-                      <FormItem className="col-span-2">
-                        <FormLabel required>Inspektor(lar)ni tanlang</FormLabel>
+                      <FormItem className="col-span-2 space-y-3">
+                        <FormLabel required>Tekshiruv muddati</FormLabel>
                         <FormControl>
-                          <MultiSelect
-                            {...field}
-                            options={inspectorSelectData || []}
-                            value={field.value}
-                            onChange={field.onChange}
-                            placeholder="Komissiya aʼzolarini tanlang"
-                          />
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            className="flex flex-col space-y-1"
+                          >
+                            <FormItem className="flex flex-row items-center space-y-0 space-x-3">
+                              <FormControl>
+                                <RadioGroupItem value="ONE_DAY" />
+                              </FormControl>
+                              <FormLabel className="font-normal">1 kunlik tekshiruv</FormLabel>
+                            </FormItem>
+                            {!isHead && (
+                              <FormItem className="flex flex-row items-center space-y-0 space-x-3">
+                                <FormControl>
+                                  <RadioGroupItem value="TEN_DAYS" />
+                                </FormControl>
+                                <FormLabel className="font-normal">10 kunlik tekshiruv</FormLabel>
+                              </FormItem>
+                            )}
+                          </RadioGroup>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                )}
-              </div>
 
-              <div className="mt-6">
-                {form.watch('checklistDtoList').map((block, index) => (
-                  <div key={block.resultIdForObject} className="mb-4 rounded-xl border bg-slate-50 p-4">
-                    <div className="mb-2 text-sm font-semibold text-slate-700">
-                      {data[index].belongName} | {data[index].belongRegistryNumber}
-                    </div>
+                  {duration && (
+                    <FormField
+                      control={form.control}
+                      name="inspectorIdList"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          <FormLabel required>Inspektor(lar)ni tanlang</FormLabel>
+                          <FormControl>
+                            <MultiSelect
+                              {...field}
+                              options={inspectorSelectData || []}
+                              value={field.value}
+                              onChange={field.onChange}
+                              placeholder="Komissiya aʼzolarini tanlang"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
 
-                    <div className="flex flex-col gap-2">
-                      <FormField
-                        control={form.control}
-                        name={`checklistDtoList.${index}.checklistCategoryIdList`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel required>Kategoriya tanlang</FormLabel>
-                            <FormControl>
-                              <MultiSelect
-                                {...field}
-                                options={(filteredCategoryTypes[data[index].id] || []).map((ct: any) => ({
-                                  name: ct.name,
-                                  id: ct.id,
-                                }))}
-                                value={field.value}
-                                onChange={field.onChange}
-                                placeholder="Kategoriyalarni tanlang"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                <div className="mt-6">
+                  {form.watch('checklistDtoList').map((block, index) => (
+                    <div key={block.resultIdForObject} className="mb-4 rounded-xl border bg-slate-50 p-4">
+                      <div className="mb-2 text-sm font-semibold text-slate-700">
+                        {data[index].belongName} | {data[index].belongRegistryNumber}
+                      </div>
 
-                      <div className="flex items-start gap-2">
+                      <div className="flex flex-col gap-2">
                         <FormField
                           control={form.control}
-                          name={`checklistDtoList.${index}.specialCode`}
+                          name={`checklistDtoList.${index}.checklistCategoryIdList`}
                           render={({ field }) => (
-                            <FormItem className="flex-1">
-                              <FormLabel required>Ombudsman maxsus kodi</FormLabel>
+                            <FormItem>
+                              <FormLabel required>Kategoriya tanlang</FormLabel>
                               <FormControl>
-                                <Input
-                                  disabled={apiConfig.oneIdClientId !== 'test_cirns_uz'}
+                                <MultiSelect
                                   {...field}
-                                  placeholder="Kod kiriting"
+                                  options={(filteredCategoryTypes[data[index].id] || []).map((ct: any) => ({
+                                    name: ct.name,
+                                    id: ct.id,
+                                  }))}
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                  placeholder="Kategoriyalarni tanlang"
                                 />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
                           )}
                         />
-                        <Button
-                          type="button"
-                          className="mt-5"
-                          onClick={() => handleGetCode(index)}
-                          loading={isCodeLoading}
-                        >
-                          Kodni olish
-                        </Button>
+
+                        <div className="flex items-start gap-2">
+                          <FormField
+                            control={form.control}
+                            name={`checklistDtoList.${index}.specialCode`}
+                            render={({ field }) => (
+                              <FormItem className="flex-1">
+                                <FormLabel required>Ombudsman maxsus kodi</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    disabled={apiConfig.oneIdClientId !== 'test_cirns_uz'}
+                                    {...field}
+                                    placeholder="Kod kiriting"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button
+                            type="button"
+                            className="mt-5"
+                            onClick={() => handleGetCode(index)}
+                            loading={isCodeLoading}
+                          >
+                            Kodni olish
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
 
-              <div className="mt-8 grid grid-cols-2 gap-3">
+              <div className="grid shrink-0 grid-cols-2 gap-3 border-t px-4 py-4 sm:px-6">
                 <DialogClose asChild>
                   <Button disabled={isLoading} variant="outline">
                     Bekor qilish

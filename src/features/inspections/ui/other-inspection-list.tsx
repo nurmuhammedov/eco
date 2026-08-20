@@ -38,10 +38,14 @@ export const OtherInspectionList: React.FC = () => {
   })
 
   const handleView = (row: any) => {
-    const targetYear = row.year || year || new Date().getFullYear()
-    navigate(
-      `/inspections/info?inspectionId=${row.id}&tin=${row.legalTin}&name=${row.legalName}&year=${targetYear}&inspectionType=other`
-    )
+    const params = new URLSearchParams({
+      inspectionId: String(row.id ?? ''),
+      tin: String(row.legalTin ?? ''),
+      name: String(row.legalName ?? ''),
+      year: String(row.year || year || new Date().getFullYear()),
+      inspectionType: 'other',
+    })
+    navigate(`/inspections/info?${params.toString()}`)
   }
 
   const statusConfig: Record<

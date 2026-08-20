@@ -141,9 +141,7 @@ export function useEimzo({
         }
         toast.success(successMessage || 'Muvaffaqiyatli saqlandi!')
         onEnd?.()
-        queryClient
-          .invalidateQueries({ queryKey: Array.isArray(queryKey) ? queryKey : [queryKey] })
-          .then((r) => console.log(r))
+        queryClient.invalidateQueries({ queryKey: Array.isArray(queryKey) ? queryKey : [queryKey] })
       }
     },
     mutationKey: ['submit-application'],

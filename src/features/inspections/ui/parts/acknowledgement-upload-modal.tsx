@@ -51,7 +51,7 @@ const AcknowledgementUploadModal = ({ resultId, acknowledgementPath, onClose, tr
       acknowledgementPath: values.acknowledgementPath,
     }).then(() => {
       toast.success('Tilxat muvaffaqiyatli saqlandi!', { richColors: true })
-      qc.invalidateQueries({ queryKey: ['/inspection-results'] }).then((r) => console.log(r))
+      qc.invalidateQueries({ queryKey: ['/inspection-results'] })
       setOpen(false)
       onClose?.()
     })
