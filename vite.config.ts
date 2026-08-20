@@ -116,9 +116,9 @@ export default defineConfig({
           },
         ],
       },
+      // The dev service worker only gets in the way of hot reloads.
       devOptions: {
-        enabled: true,
-        type: 'module',
+        enabled: false,
       },
     }),
   ],

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useRef } from 'react'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/components/ui/button'
 import { useTranslation } from 'react-i18next'
@@ -45,43 +45,34 @@ export function DataTablePagination<T>({
     number: apiPage,
   } = data?.page ?? {}
 
-  const totalPages = apiTotalPages ?? manualPageCount ?? 0
   const totalElements = apiTotalElements ?? 0
+  const isEmpty = totalElements === 0
 
-  const shouldRender = totalElements > 0 || totalPages > 0
+  // Kept visible on an empty result so the page size and page 1 stay reachable.
+  const totalPages = Math.max(apiTotalPages ?? manualPageCount ?? 0, 1)
+  const pageSize = apiSize ?? manualPageSize ?? 10
+  const resolvedPage = apiPage !== undefined ? apiPage + 1 : (manualCurrentPage ?? 1)
+  const currentPage = isEmpty ? 1 : Math.min(Math.max(resolvedPage, 1), totalPages)
 
-  const pageInfo = useMemo(() => {
-    if (!shouldRender)
-      return {
-        currentPage: 1,
-        totalPages: 0,
-        pageSize: 0,
-        totalElements: 0,
-        startItem: 0,
-        endItem: 0,
-      }
+  const pageInfo = { currentPage, totalPages, pageSize, totalElements }
 
-    const pageSize = apiSize ?? manualPageSize ?? 10
-    const currentPage = apiPage !== undefined ? apiPage + 1 : (manualCurrentPage ?? 1)
+  const onPageChangeRef = useRef(onPageChange)
 
-    const startItem = (currentPage - 1) * pageSize + 1
-    const endItem = Math.min(startItem + pageSize - 1, totalElements || currentPage * pageSize)
+  useEffect(() => {
+    onPageChangeRef.current = onPageChange
+  })
 
-    return { currentPage, totalPages, pageSize, totalElements, startItem, endItem }
-  }, [totalPages, totalElements, apiSize, apiPage, manualPageSize, manualCurrentPage, shouldRender])
+  // A filter can empty a list the user was paging through; send them back to the start.
+  useEffect(() => {
+    if (!isLoading && isEmpty && resolvedPage > 1) onPageChangeRef.current(1)
+  }, [isLoading, isEmpty, resolvedPage])
 
-  // Handle page click from ReactPaginate (zero-indexed)
   const handlePageClick = (event: { selected: number }) => {
     onPageChange(event.selected + 1)
   }
 
-  // Handle manual page change (1-indexed)
   const handlePageChange = (page: number) => {
     onPageChange(page)
-  }
-
-  if (!shouldRender) {
-    return null
   }
 
   return (
