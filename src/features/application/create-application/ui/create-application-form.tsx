@@ -6,13 +6,19 @@ import { getFormComponentByType, isValidApplicationType } from '../model/store'
 import { GoBack } from '@/shared/components/common'
 import { useAuth } from '@/shared/hooks/use-auth'
 
-export const CreateApplicationForm = ({ type: propsType }: { type?: ApplicationTypeEnum }) => {
+export const CreateApplicationForm = ({
+  type: propsType,
+  isUpdate = false,
+}: {
+  type?: ApplicationTypeEnum
+  isUpdate?: boolean
+}) => {
   const { type: paramsType } = useParams<{ type: ApplicationTypeEnum }>()
   const type = propsType || paramsType
   const { user } = useAuth()
 
   // The type comes from the URL, so the role is checked here as well
-  const access = getApplicationAccess(type!, user?.role)
+  const access = getApplicationAccess(type!, user?.role, { isUpdate })
 
   const {
     error,

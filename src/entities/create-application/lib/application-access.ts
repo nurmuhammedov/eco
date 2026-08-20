@@ -28,8 +28,17 @@ export const isApplicationDisabled = (type: ApplicationTypeEnum): boolean =>
 
 export type ApplicationAccess = 'allowed' | 'disabled' | 'forbidden'
 
-export const getApplicationAccess = (type: ApplicationTypeEnum, role?: UserRoles): ApplicationAccess => {
-  if (isApplicationDisabled(type)) return 'disabled'
+/**
+ * `isUpdate` marks an edit of a record that already exists in the register.
+ * A disabled type only stops new submissions - records created before the type
+ * was switched off must stay editable, so the role check still runs.
+ */
+export const getApplicationAccess = (
+  type: ApplicationTypeEnum,
+  role?: UserRoles,
+  { isUpdate = false }: { isUpdate?: boolean } = {}
+): ApplicationAccess => {
+  if (!isUpdate && isApplicationDisabled(type)) return 'disabled'
 
   const allowedCategories = role ? CATEGORIES_BY_ROLE[role] : undefined
 

@@ -12,7 +12,7 @@ const RegisterUpdatePage = () => {
 
   const mappedType = `ILLEGAL_REGISTER_${type.toUpperCase()}` as ApplicationTypeEnum
 
-  return <CreateApplicationForm type={mappedType} />
+  return <CreateApplicationForm type={mappedType} isUpdate />
 }
 
 export default RegisterUpdatePage
