@@ -1,14 +1,4 @@
-import { createPortal } from 'react-dom'
 import { Skeleton } from '@/shared/components/ui/skeleton'
-
-// Pure CSS animation: no timers, no re-renders.
-const TopProgressBar = () =>
-  createPortal(
-    <div role="progressbar" aria-label="Sahifa yuklanmoqda" className="fixed inset-x-0 top-0 z-[100] h-0.5">
-      <div className="bg-teal animate-route-progress h-full origin-left" />
-    </div>,
-    document.body
-  )
 
 const PageSkeleton = () => (
   <div className="flex w-full flex-1 flex-col gap-4" aria-busy="true" aria-live="polite">
@@ -32,11 +22,6 @@ const PageSkeleton = () => (
 )
 
 // Suspense fallback for lazy routes: the sidebar and header stay put, only the content area swaps.
-export const RouteFallback = () => (
-  <>
-    <TopProgressBar />
-    <PageSkeleton />
-  </>
-)
+export const RouteFallback = PageSkeleton
 
 export default RouteFallback

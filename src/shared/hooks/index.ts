@@ -1,4 +1,5 @@
 export * from './use-permission'
+export { useDebounce } from './use-debounce'
 export * from './api'
 export { useSignatureClient } from './use-signature-client'
 export { useCurrentRole } from './use-current-role'

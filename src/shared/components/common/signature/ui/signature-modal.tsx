@@ -11,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from '@/shared/components/ui/alert-dialog'
 import { Button } from '@/shared/components/ui/button'
-import { getSignatureKeys } from '@/shared/lib'
+import { useSignatureKeys } from '@/shared/lib'
 import { useSignatureClient } from '@/shared/hooks'
 import { SignatureKey } from '@/shared/types/signature'
 import { Loader2, Signature, UsbIcon } from 'lucide-react'
@@ -40,7 +40,7 @@ export const SignatureModal = ({
   submitApplicationMetaData,
 }: SignatureModalProps) => {
   const { Client } = useSignatureClient()
-  const { signatureKeys, isCKCPLuggedIn } = getSignatureKeys()
+  const { signatureKeys, isCKCPLuggedIn } = useSignatureKeys()
   const [open, setOpen] = useState(false)
   const [selectedCertificate, setSelectedCertificate] = useState<SignatureKey | null>(null)
 

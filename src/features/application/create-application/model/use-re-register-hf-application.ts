@@ -1,4 +1,4 @@
-import { applicationFormConstants, ReRegisterHFApplicationDTO } from '@/entities/create-application'
+import { useApplicationFormConstants, ReRegisterHFApplicationDTO } from '@/entities/create-application'
 import { ReRegisterHFSchema } from '@/entities/create-application/schemas/re-register-hf.schema'
 import {
   useDistrictSelectQueries,
@@ -44,7 +44,7 @@ export const useReRegisterHFApplication = () => {
     },
   })
 
-  const { spheres } = applicationFormConstants()
+  const { spheres } = useApplicationFormConstants()
   const regionId = form.watch('regionId')
   const hazardousFacilityId = form.watch('hazardousFacilityId')
 

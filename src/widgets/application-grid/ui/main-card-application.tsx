@@ -24,10 +24,19 @@ export const MainCardsList = React.memo(
       return cn(baseClasses, layoutClasses[gridLayout], className)
     }, [gridLayout, className])
 
+    const createCardClickHandler = useCallback(
+      (cardId: string) => () => {
+        if (cardId !== selectedCard) {
+          onCardSelect(cardId)
+        }
+      },
+      [selectedCard, onCardSelect]
+    )
+
     if (cards.length === 0 && !isLoading) {
       return (
         <div className="rounded-md border border-slate-200 bg-slate-50 p-8 text-center">
-          <p className="text-slate-500">No cards available</p>
+          <p className="text-slate-500">Ma’lumot topilmadi</p>
         </div>
       )
     }
@@ -47,15 +56,6 @@ export const MainCardsList = React.memo(
         </div>
       )
     }
-
-    const createCardClickHandler = useCallback(
-      (cardId: string) => () => {
-        if (cardId !== selectedCard) {
-          onCardSelect(cardId)
-        }
-      },
-      [selectedCard, onCardSelect]
-    )
 
     const getCardSizeClasses = (size: typeof cardSize) => {
       switch (size) {

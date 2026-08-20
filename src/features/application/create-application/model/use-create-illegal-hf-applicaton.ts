@@ -1,4 +1,4 @@
-import { applicationFormConstants } from '@/entities/create-application'
+import { useApplicationFormConstants } from '@/entities/create-application'
 import {
   useDistrictSelectQueries,
   useHazardousFacilityTypeDictionarySelect,
@@ -123,7 +123,7 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
 
   const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
   const regionId = form.watch('regionId')
-  const { spheres } = applicationFormConstants()
+  const { spheres } = useApplicationFormConstants()
 
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)

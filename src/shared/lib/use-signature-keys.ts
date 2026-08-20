@@ -2,7 +2,7 @@ import { toast } from 'sonner'
 import { useEffect, useState } from 'react'
 import { useSignatureClient } from '@/shared/hooks'
 
-export function getSignatureKeys() {
+export function useSignatureKeys() {
   const { Client, isScriptLoaded } = useSignatureClient()
   const [signatureKeys, setSignatureKeys] = useState([])
   const [isCKCPLuggedIn, setIsCKCPLuggedIn] = useState<boolean>(false)

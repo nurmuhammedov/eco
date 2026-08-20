@@ -1,4 +1,8 @@
-import { applicationFormConstants, type CreateHFApplicationDTO, HFAppealDtoSchema } from '@/entities/create-application'
+import {
+  useApplicationFormConstants,
+  type CreateHFApplicationDTO,
+  HFAppealDtoSchema,
+} from '@/entities/create-application'
 import {
   useDistrictSelectQueries,
   useHazardousFacilityTypeDictionarySelect,
@@ -48,7 +52,7 @@ export const useCreateHfApplication = () => {
     },
   })
 
-  const { spheres } = applicationFormConstants()
+  const { spheres } = useApplicationFormConstants()
   const regionId = form.watch('regionId')
 
   const { data: regions } = useRegionSelectQueries()

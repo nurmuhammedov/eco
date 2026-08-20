@@ -2,6 +2,7 @@ import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 import { NavigationItem } from '@/widgets/sidebar/models/types'
+import { useNavigationProgress } from '@/shared/components/common'
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/shared/components/ui/collapsible'
 import {
@@ -17,6 +18,7 @@ import {
 export function NavMain({ item }: { item: NavigationItem }) {
   const { pathname } = useLocation()
   const { t } = useTranslation(['common'])
+  const { startNavigation } = useNavigationProgress()
   const baseItemUrl = item.url.split('?')[0]
   const isActive = pathname.startsWith(baseItemUrl)
 
@@ -33,7 +35,7 @@ export function NavMain({ item }: { item: NavigationItem }) {
               </SidebarMenuButton>
             ) : (
               <SidebarMenuButton asChild isActive={isActive} tooltip={t(item.title)}>
-                <Link to={item.url}>
+                <Link to={item.url} onClick={() => startNavigation(item.url)}>
                   {item.icon}
                   <span>{t(item.title)}</span>
                 </Link>
@@ -49,7 +51,7 @@ export function NavMain({ item }: { item: NavigationItem }) {
                   return (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild isActive={pathname === baseSubUrl}>
-                        <Link to={subItem.url}>
+                        <Link to={subItem.url} onClick={() => startNavigation(subItem.url)}>
                           <span>{t(subItem.title)}</span>
                         </Link>
                       </SidebarMenuSubButton>

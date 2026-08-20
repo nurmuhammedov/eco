@@ -51,13 +51,27 @@ export default defineConfig({
       deleteOriginFile: false,
     }),
     VitePWA({
-      registerType: 'autoUpdate',
-      injectRegister: 'auto',
+      registerType: 'prompt',
+      injectRegister: null,
       workbox: {
-        globPatterns: ['index.html', 'manifest.webmanifest', 'brand-logo.webp', 'favicon*.png', 'assets/*.{js,css}'],
+        // Only the shell is precached; hashed chunks are cached on demand instead
+        // of pushing several megabytes at every first visit.
+        globPatterns: ['index.html', 'manifest.webmanifest', 'brand-logo.webp', 'favicon*.png'],
         globIgnores: ['home.html', '**/*.mp4', 'android-chrome-*.png', 'pwa-icon.png', 'apple-touch-icon.png'],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         cleanupOutdatedCaches: true,
+        runtimeCaching: [
+          {
+            // Asset names carry a content hash, so a cache hit can never be stale.
+            urlPattern: ({ url, sameOrigin }) => sameOrigin && url.pathname.startsWith('/assets/'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'ekotizim-assets',
+              expiration: { maxEntries: 500, maxAgeSeconds: 60 * 60 * 24 * 60 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
         // `/` is the nginx-served landing page, not the SPA shell.
         navigateFallbackDenylist: [
           /^\/$/,

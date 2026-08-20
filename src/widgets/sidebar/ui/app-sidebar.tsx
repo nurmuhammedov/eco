@@ -1,5 +1,4 @@
-import { Book, LucideHome } from 'lucide-react'
-import { Direction, UserRoles } from '@/entities/user'
+import { Book } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -12,101 +11,14 @@ import {
   SidebarMenuItem,
 } from '@/shared/components/ui/sidebar'
 
-import { NAVIGATIONS } from '@/widgets/sidebar/models/navigations'
-import { Navigation } from '@/widgets/sidebar/models/types'
+import { useUserNavigation } from '@/widgets/sidebar/models/use-user-navigation'
 import { NavMain } from '@/widgets/sidebar/ui/nav-main'
-import { useMemo } from 'react'
-import allNavigation from '../models/all'
-import legalNavigation from '../models/legal'
-
-import { AppLogo } from './app-logo'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { usePaginatedData } from '@/shared/hooks'
+import { AppLogo } from './app-logo'
 
 export function AppSidebar() {
   const { user } = useAuth()
-  const isIndividual = user?.role === UserRoles.INDIVIDUAL
-
-  const { totalElements: equipmentCount = 0 } = usePaginatedData(
-    '/equipments',
-    { page: 1, size: 1, active: true },
-    isIndividual
-  )
-
-  const displayedNavigations: Navigation = useMemo(() => {
-    if (!user) return []
-
-    let navigations: any[] = []
-
-    if (user.role == UserRoles.ADMIN || user.role == UserRoles.HR) {
-      navigations = NAVIGATIONS[user.role]
-    } else if (user.role == UserRoles.LEGAL) {
-      navigations = legalNavigation.filter((navItem) => user.directions.includes(navItem.id as Direction))
-    } else if (user.directions.length === 0) {
-      const appealNav = allNavigation.find((item: any) => item.id === 'APPEAL')
-      const inquiryNav = allNavigation.find((item: any) => item.id === 'INQUIRY')
-      const registryNav = allNavigation.find((item: any) => item.id === 'REGISTRY')
-
-      navigations = []
-      if (appealNav) navigations.push(appealNav)
-      if (inquiryNav && (user.role === UserRoles.INDIVIDUAL || user.role === UserRoles.ACCOUNTANT))
-        navigations.push(inquiryNav)
-      if (registryNav && user.role === UserRoles.INDIVIDUAL && equipmentCount > 0) navigations.push(registryNav)
-    } else {
-      const baseNavigation = NAVIGATIONS[user.role] || allNavigation
-
-      navigations = baseNavigation.reduce((acc: any[], navItem: any) => {
-        if (navItem.items?.length) {
-          const filteredItems = navItem.items.filter((subItem: any) => {
-            if (
-              (subItem.id === 'ATTESTATION_DIRECTIONS' || subItem.id === 'ATTESTATION_QUESTIONS') &&
-              user.role === UserRoles.HEAD
-            ) {
-              return true
-            }
-            return subItem.id ? user.directions.includes(subItem.id as Direction) : false
-          })
-
-          if (filteredItems.length > 0) {
-            acc.push({ ...navItem, items: filteredItems })
-          }
-        } else {
-          const isDirectionIncluded = user.directions.includes(navItem.id as Direction)
-          const isSpecialInquiry =
-            (user.role === UserRoles.INDIVIDUAL || user.role === UserRoles.ACCOUNTANT) && navItem.id === 'INQUIRY'
-
-          let shouldShow = isDirectionIncluded || isSpecialInquiry
-
-          if (user.role === UserRoles.INDIVIDUAL && navItem.id === 'REGISTRY') {
-            shouldShow = equipmentCount > 0
-          }
-
-          if (navItem.id === 'ORGANIZATIONS' && (user.role === UserRoles.HEAD || user.role === UserRoles.REGIONAL)) {
-            shouldShow = true
-          }
-
-          if (shouldShow) {
-            acc.push(navItem)
-          }
-        }
-
-        return acc
-      }, [])
-    }
-
-    if (user.role === UserRoles.REGIONAL || user.role === UserRoles.INSPECTOR || user.role === UserRoles.CHAIRMAN) {
-      navigations = [
-        {
-          title: 'Bosh sahifa',
-          url: '/dashboard',
-          icon: <LucideHome />,
-        },
-        ...navigations,
-      ]
-    }
-
-    return navigations
-  }, [user, equipmentCount])
+  const navigations = useUserNavigation()
 
   if (!user) return null
 
@@ -121,7 +33,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent className="space-y-1">
-            {displayedNavigations.map((item) => (
+            {navigations.map((item) => (
               <NavMain key={item.title} item={item} />
             ))}
           </SidebarGroupContent>

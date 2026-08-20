@@ -40,7 +40,7 @@ function useSidebar() {
   return context
 }
 
-function getSidebarWidth() {
+function useSidebarWidth() {
   const { deviceType } = useWindowSize()
 
   switch (deviceType) {
@@ -120,7 +120,7 @@ const SidebarProvider = React.forwardRef<
         <div
           style={
             {
-              '--sidebar-width': getSidebarWidth(),
+              '--sidebar-width': useSidebarWidth(),
               '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
               ...style,
             } as React.CSSProperties

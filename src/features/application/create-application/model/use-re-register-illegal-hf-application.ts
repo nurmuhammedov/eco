@@ -1,4 +1,4 @@
-import { applicationFormConstants, ReRegisterIllegalHFApplicationDTO } from '@/entities/create-application'
+import { useApplicationFormConstants, ReRegisterIllegalHFApplicationDTO } from '@/entities/create-application'
 import { ReRegisterIllegalHFSchema } from '@/entities/create-application/schemas/re-register-illegal-hf.schema'
 import {
   useDistrictSelectQueries,
@@ -54,7 +54,7 @@ export const useReRegisterIllegalHFApplication = () => {
   const legalTin = form.watch('legalTin')
   const hazardousFacilityId = form.watch('hazardousFacilityId')
 
-  const { spheres } = applicationFormConstants()
+  const { spheres } = useApplicationFormConstants()
 
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)
