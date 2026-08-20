@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import CRC32 from 'crc-32'
 import { ozdst1106 } from './ozdst1106'
@@ -10,6 +10,53 @@ interface UseMobileDocumentSigningProps {
   onSuccess?: (result: any) => void
 }
 
+const POLL_INTERVAL_MS = 5000
+const POLL_LIMIT = 24
+
+const STATUS_SIGNED = 1
+const STATUS_PENDING = 2
+
+const bytesToHex = (bytes: Uint8Array) =>
+  Array.from(bytes)
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('')
+    .toUpperCase()
+
+const hexToBytes = (hex: string) => {
+  const bytes = new Uint8Array(hex.length / 2)
+
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16)
+  }
+
+  return bytes
+}
+
+const base64ToBytes = (base64: string) => {
+  const binary = window.atob(base64)
+  const bytes = new Uint8Array(binary.length)
+
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i)
+  }
+
+  return bytes
+}
+
+const buildQrCode = (siteId: string, documentId: string, documentBase64: string) => {
+  const hash = bytesToHex(ozdst1106(base64ToBytes(documentBase64)))
+  const body = (siteId + documentId + hash).toUpperCase()
+  const crc = (CRC32.buf(hexToBytes(body)) >>> 0).toString(16).toUpperCase().padStart(8, '0')
+
+  return body + crc
+}
+
+const extractPkcs7 = (payload: any): string | undefined => {
+  const value = payload?.pkcs7Attached || payload?.pkcs7b64 || payload?.pkcs7 || payload?.pkcs7Info?.documentBase64
+
+  return typeof value === 'string' ? value.replace(/\s/g, '') : undefined
+}
+
 export function useMobileDocumentSigning({ documentUrl, onSuccess }: UseMobileDocumentSigningProps) {
   const [isStarting, setIsStarting] = useState(false)
   const [isSigning, setIsSigning] = useState(false)
@@ -18,49 +65,73 @@ export function useMobileDocumentSigning({ documentUrl, onSuccess }: UseMobileDo
   const [didRedirect, setDidRedirect] = useState(false)
   const [isPolling, setIsPolling] = useState(false)
 
-  // Polling management
-  const pollingRef = useRef<NodeJS.Timeout | null>(null)
-  const isPollingRunningRef = useRef<boolean>(false)
+  const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const pollRef = useRef<(() => Promise<void>) | null>(null)
+  /**
+   * The signed document is handed out once and then dropped by the E-IMZO server.
+   * This guard makes sure only one poll cycle ever reaches the verify call.
+   */
+  const isSettledRef = useRef(false)
 
   const stopPolling = useCallback(() => {
-    if (pollingRef.current) {
-      clearInterval(pollingRef.current)
-      pollingRef.current = null
+    if (pollTimerRef.current) {
+      clearTimeout(pollTimerRef.current)
+      pollTimerRef.current = null
     }
-    isPollingRunningRef.current = false
+
     setIsPolling(false)
   }, [])
 
-  // To cleanup when the component unmounts
-  useEffect(() => {
-    return () => {
-      stopPolling()
-    }
-  }, [stopPolling])
+  useEffect(() => stopPolling, [stopPolling])
 
-  // Auto-redirect when deepLink is ready
+  // Coming back from the E-IMZO app should show the result at once, not after the next tick.
+  useEffect(() => {
+    const checkOnReturn = () => {
+      if (document.visibilityState !== 'visible' || !pollRef.current || isSettledRef.current) return
+
+      if (pollTimerRef.current) clearTimeout(pollTimerRef.current)
+      void pollRef.current()
+    }
+
+    document.addEventListener('visibilitychange', checkOnReturn)
+
+    return () => document.removeEventListener('visibilitychange', checkOnReturn)
+  }, [])
+
   useEffect(() => {
     if (deepLink && !didRedirect) {
-      console.log('Auto-redirecting to:', deepLink)
       window.location.href = deepLink
       setDidRedirect(true)
     }
   }, [deepLink, didRedirect])
 
-  const zeroPad = (s: string, count: number) => {
-    if (s.length >= count) return s
-    return '0'.repeat(count - s.length) + s
-  }
+  const settle = useCallback(
+    (pkcs7?: string, errorMessage?: string) => {
+      if (isSettledRef.current) return
+
+      isSettledRef.current = true
+      pollRef.current = null
+      stopPolling()
+      setIsSigning(false)
+
+      if (pkcs7) onSuccess?.(pkcs7)
+      else if (errorMessage) toast.error(errorMessage)
+    },
+    [onSuccess, stopPolling]
+  )
 
   const startSigning = useCallback(async () => {
+    if (isSigning || isStarting) return
+
     try {
+      isSettledRef.current = false
       setDidRedirect(false)
       setIsStarting(true)
       setIsSigning(true)
       setIsPolling(false)
 
-      // 1. Convert PDF to base64
       const documentBase64 = await convertPdfToBase64(documentUrl)
+
       if (!documentBase64) {
         toast.error('Hujjatni qayta ishlashda xatolik yuz berdi')
         setIsStarting(false)
@@ -68,12 +139,7 @@ export function useMobileDocumentSigning({ documentUrl, onSuccess }: UseMobileDo
         return
       }
 
-      // 2. Start Document Sign session
-      const signRes = await getMobileSign()
-
-      // Note: The /sign endpoint returns siteId and documentId.
-      // The hash should be calculated using the document data, not an auth challenge.
-      const { documentId, siteId } = signRes
+      const { documentId, siteId } = await getMobileSign()
 
       if (!documentId || !siteId) {
         toast.error('Imzolash seansini boshlashda xatolik yuz berdi')
@@ -82,133 +148,78 @@ export function useMobileDocumentSigning({ documentUrl, onSuccess }: UseMobileDo
         return
       }
 
-      // 3. Calculate Hash for QR (from document data)
-      // We must hash the actual binary bytes of the PDF, not the base64 string itself
-      const base64ToBytes = (base64: string) => {
-        const binString = window.atob(base64)
-        const len = binString.length
-        const bytes = new Uint8Array(len)
-        for (let i = 0; i < len; i++) {
-          bytes[i] = binString.charCodeAt(i)
-        }
-        return bytes
-      }
+      const qrCode = buildQrCode(siteId, documentId, documentBase64)
 
-      const documentBytes = base64ToBytes(documentBase64)
-      const hashBytes = ozdst1106(documentBytes)
-      const hashString = Array.from(hashBytes)
-        .map((b) => b.toString(16).padStart(2, '0'))
-        .join('')
-        .toUpperCase()
-
-      // 4. Generate QR Body and CRC32
-      const qrBody = (siteId + documentId + hashString).toUpperCase()
-
-      console.log('Generating QR for:', { siteId, documentId, hashString, qrBody })
-
-      // Standard CRC32 on BINARY bytes (Hex decoded qrBody)
-      const hexToBytes = (hex: string) => {
-        const bytes = new Uint8Array(hex.length / 2)
-        for (let i = 0; i < hex.length; i += 2) {
-          bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16)
-        }
-        return bytes
-      }
-
-      const qrBytes = hexToBytes(qrBody)
-      const crcValue = CRC32.buf(qrBytes)
-      const crcHex = (crcValue >>> 0).toString(16).toUpperCase()
-
-      const crc32Str = zeroPad(crcHex, 8).toUpperCase()
-      const qrCode = (qrBody + crc32Str).toUpperCase()
-
-      console.log('Final QR Code:', qrCode)
-      console.log('QR Code Length:', qrCode.length)
       setQrCodeData(qrCode)
       setDeepLink(`eimzo://sign?qc=${qrCode}`)
       setIsStarting(false)
       setIsPolling(true)
 
-      let checkCount = 0
-      const STATUS_CHECK_LIMIT = 24
+      let attempts = 0
 
-      isPollingRunningRef.current = true
-      pollingRef.current = setInterval(async () => {
-        if (!isPollingRunningRef.current) return
+      // Self-scheduling instead of setInterval: a slow request can never overlap the next tick.
+      const poll = async () => {
+        if (isSettledRef.current) return
 
-        checkCount++
-        if (checkCount > STATUS_CHECK_LIMIT) {
-          stopPolling()
-          toast.error('Kutish vaqti tugadi. Qaytadan urinib ko‘ring')
-          setIsSigning(false)
+        attempts++
+
+        if (attempts > POLL_LIMIT) {
+          settle(undefined, 'Kutish vaqti tugadi. Qaytadan urinib ko‘ring')
           return
         }
 
+        let status: number | undefined
+
         try {
-          const statusRes = await getMobileStatus(documentId)
-
-          if (statusRes.status === 1) {
-            try {
-              // Priority 1: Use PKCS7 from status response if available
-              if (statusRes.pkcs7b64) {
-                const cleanPkcs7 = statusRes.pkcs7b64.replace(/\s/g, '')
-                stopPolling()
-                setIsSigning(false)
-                if (onSuccess) onSuccess(cleanPkcs7)
-                return
-              }
-
-              // Priority 2: Try to verify if status response didn't have PKCS7
-              const verifyRes = await verifyMobileDocument(documentId, documentBase64)
-
-              stopPolling()
-              setIsSigning(false)
-
-              // verifyMobileDocument now returns the unwrapped data payload
-              const payload = verifyRes
-              let finalPkcs7 =
-                payload?.pkcs7Attached || payload?.pkcs7b64 || payload?.pkcs7 || payload?.pkcs7Info?.documentBase64
-
-              if (finalPkcs7) {
-                finalPkcs7 = finalPkcs7.replace(/\s/g, '')
-                if (onSuccess) onSuccess(finalPkcs7)
-              } else {
-                console.error('Missing PKCS7 in response:', verifyRes)
-                toast.error(
-                  'Imzo formati olinganida xatolik yuz berdi: ' + (verifyRes?.message || JSON.stringify(verifyRes))
-                )
-              }
-            } catch (verifyError: any) {
-              console.error('Verify document error:', verifyError)
-
-              // If verify fails but we already have statusRes.pkcs7b64 (fallback just in case)
-              if (statusRes.pkcs7b64) {
-                const cleanPkcs7 = statusRes.pkcs7b64.replace(/\s/g, '')
-                stopPolling()
-                setIsSigning(false)
-                if (onSuccess) onSuccess(cleanPkcs7)
-              } else {
-                stopPolling()
-                setIsSigning(false)
-                toast.error('Hujjatni imzolashda server xatoligi: ' + (verifyError.message || verifyError))
-              }
-            }
-          } else if (statusRes.status !== 2) {
-            stopPolling()
-            toast.error('Imzolash jarayoni bekor qilindi yoki xatolik (' + statusRes.status + ')')
-            setIsSigning(false)
-          }
-        } catch (err) {
-          console.error('Status check error', err)
+          status = (await getMobileStatus(documentId))?.status
+        } catch {
+          // A single failed status check is not fatal; the next tick retries.
         }
-      }, 5000)
+
+        if (isSettledRef.current) return
+
+        if (status === STATUS_SIGNED) {
+          // Claim the result before awaiting, so no second request can be issued.
+          isSettledRef.current = true
+          stopPolling()
+
+          try {
+            const pkcs7 = extractPkcs7(await verifyMobileDocument(documentId, documentBase64))
+
+            setIsSigning(false)
+
+            if (pkcs7) onSuccess?.(pkcs7)
+            else toast.error('Imzo olinmadi. Iltimos, qaytadan urinib ko‘ring')
+          } catch (error: any) {
+            const message: string = error?.message || ''
+
+            setIsSigning(false)
+            toast.error(
+              /not found/i.test(message)
+                ? 'Imzolash seansi muddati tugagan. Iltimos, qaytadan urinib ko‘ring'
+                : message || 'Hujjatni imzolashda server xatoligi'
+            )
+          }
+
+          return
+        }
+
+        if (status !== undefined && status !== STATUS_PENDING) {
+          settle(undefined, 'Imzolash bekor qilindi yoki xatolik yuz berdi')
+          return
+        }
+
+        pollTimerRef.current = setTimeout(() => void poll(), POLL_INTERVAL_MS)
+      }
+
+      pollRef.current = poll
+      pollTimerRef.current = setTimeout(() => void poll(), POLL_INTERVAL_MS)
     } catch (error: any) {
-      console.error('Mobil imzolashda xatolik:', error)
       toast.error(error?.message || 'Mobil imzolashda xatolik yuz berdi')
       setIsStarting(false)
       setIsSigning(false)
     }
-  }, [documentUrl, onSuccess, stopPolling])
+  }, [documentUrl, isSigning, isStarting, onSuccess, settle, stopPolling])
 
   return {
     startSigning,
