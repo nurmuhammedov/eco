@@ -1,3 +1,4 @@
+import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
   RegisterIllegalAttractionBaseSchema,
   RegisterIllegalAttractionDTO,
@@ -15,7 +16,6 @@ import { format } from 'date-fns'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -276,7 +276,7 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
     if (isUpdate) {
       updateMutate(data, {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
+          invalidateRegistryQueries(queryClient)
           toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },

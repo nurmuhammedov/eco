@@ -1,3 +1,4 @@
+import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import { z } from 'zod'
 import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
@@ -11,7 +12,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
-import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
 import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import {
@@ -260,7 +260,7 @@ export const useRegisterIllegalOilContainer = (
     if (isUpdate) {
       updateMutate(payload, {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
+          invalidateRegistryQueries(queryClient)
           toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },

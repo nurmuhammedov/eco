@@ -1,3 +1,4 @@
+import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
   lpgPoweredRefinement,
   RegisterIllegalLpgPoweredBaseSchema,
@@ -16,7 +17,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
-import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -294,7 +294,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
 
       updateMutate(updatePayload, {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
+          invalidateRegistryQueries(queryClient)
           toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },

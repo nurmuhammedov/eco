@@ -1,3 +1,4 @@
+import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import { IrsCategory, IrsIdentifierType, IrsUsageType } from '@/entities/create-application/types/enums'
 import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
@@ -10,7 +11,6 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { irsRefinement, RegisterIllegalIrsBaseSchema } from '@/entities/create-application'
@@ -277,7 +277,7 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
     if (isUpdate) {
       updateMutate(cleanedData, {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: [QK_REGISTRY] })
+          invalidateRegistryQueries(queryClient)
           toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },
