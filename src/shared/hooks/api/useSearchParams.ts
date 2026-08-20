@@ -1,44 +1,67 @@
+import { useCallback, useMemo } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { cleanParams, convertParamsToObject, isObject } from '@/shared/lib'
 import { ISearchParams } from '@/shared/types'
-import { useSearchParams } from 'react-router-dom'
+
+const toSearchParamsInit = (params: ISearchParams): Record<string, string> => {
+  const init: Record<string, string> = {}
+
+  for (const [key, value] of Object.entries(cleanParams(params))) {
+    init[key] = String(value)
+  }
+
+  return init
+}
 
 function useCustomSearchParams() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const paramsObj: ISearchParams = convertParamsToObject(searchParams)
-  const paramsStr: string = searchParams.toString()
+  const paramsString = searchParams.toString()
 
-  function addParams(paramKeyOrObj: ISearchParams, ...removeKeys: string[]): void {
-    if (!paramKeyOrObj) return
+  // Rebuilding this every render would invalidate every dependency array that reads it.
+  const paramsObject = useMemo<ISearchParams>(
+    () => convertParamsToObject(new URLSearchParams(paramsString)),
+    [paramsString]
+  )
 
-    let newParams: ISearchParams = { ...paramsObj }
+  /**
+   * Updates are computed from the previous params rather than from a captured
+   * render, so two calls in the same tick cannot overwrite each other.
+   */
+  const addParams = useCallback(
+    (paramKeyOrObj: ISearchParams, ...removeKeys: string[]): void => {
+      if (!paramKeyOrObj) return
 
-    if (removeKeys && removeKeys.length > 0) {
-      removeKeys.forEach((key) => {
-        delete newParams[key]
-      })
-    }
+      setSearchParams(
+        (previous) => {
+          const next = convertParamsToObject(previous)
 
-    if (isObject(paramKeyOrObj)) {
-      newParams = { ...newParams, ...paramKeyOrObj }
-    }
+          removeKeys.forEach((key) => delete next[key])
 
-    setSearchParams(cleanParams(newParams) as unknown as URLSearchParams, { replace: true })
-  }
+          return toSearchParamsInit(isObject(paramKeyOrObj) ? { ...next, ...paramKeyOrObj } : next)
+        },
+        { replace: true }
+      )
+    },
+    [setSearchParams]
+  )
 
-  function removeParams(...paramKeys: string[]): void {
-    const paramsCopy: ISearchParams = { ...paramsObj }
-    paramKeys.forEach((pk) => {
-      delete paramsCopy[pk]
-    })
-    setSearchParams(paramsCopy as unknown as URLSearchParams, { replace: true })
-  }
+  const removeParams = useCallback(
+    (...paramKeys: string[]): void => {
+      setSearchParams(
+        (previous) => {
+          const next = convertParamsToObject(previous)
 
-  return {
-    paramsObject: paramsObj,
-    paramsString: paramsStr,
-    addParams,
-    removeParams,
-  }
+          paramKeys.forEach((key) => delete next[key])
+
+          return toSearchParamsInit(next)
+        },
+        { replace: true }
+      )
+    },
+    [setSearchParams]
+  )
+
+  return { paramsObject, paramsString, addParams, removeParams }
 }
 
 export default useCustomSearchParams

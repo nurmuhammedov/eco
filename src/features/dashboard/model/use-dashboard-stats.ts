@@ -1,104 +1,64 @@
-import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
+import { useData } from '@/shared/hooks/api'
+import { ISearchParams } from '@/shared/types'
 
-const PAGE_SIZE_ONE = { page: 1, size: 1 }
+/** Registry totals move slowly, so a tab switch should not refetch them. */
+export const DASHBOARD_STALE_TIME = 5 * 60 * 1000
+
+const useCount = (endpoint: string, params: ISearchParams, enabled: boolean) => {
+  const { data, isFetching } = useData<number>(endpoint, enabled, params, [], DASHBOARD_STALE_TIME)
+
+  return { count: data ?? 0, isFetching: enabled && isFetching }
+}
 
 export const useDashboardStats = (regionId?: string | null, activeCategory?: string) => {
-  const regionParam = regionId ? { regionId } : {}
-  const commonParams = { ...PAGE_SIZE_ONE, ...regionParam }
+  const base: ISearchParams = regionId ? { regionId } : {}
 
-  // HF Stats
   const hfEnabled = activeCategory === 'hf'
-  const { totalElements: hfTotal = 0 } = usePaginatedData('/hf', { ...commonParams, active: true }, hfEnabled)
-  const { totalElements: hfActive = 0 } = usePaginatedData('/hf', { ...commonParams, active: true }, hfEnabled)
-  const { totalElements: hfInactive = 0 } = usePaginatedData('/hf', { ...commonParams, active: false }, hfEnabled)
+  const hfActive = useCount('/hf/count', { ...base, active: true }, hfEnabled)
+  const hfInactive = useCount('/hf/count', { ...base, active: false }, hfEnabled)
 
-  // Equipment Stats
   const eqEnabled = activeCategory === 'equipment'
-  const { totalElements: eqTotal = 0 } = usePaginatedData('/equipments', { ...commonParams, active: true }, eqEnabled)
-  const { totalElements: eqActive = 0 } = usePaginatedData('/equipments', { ...commonParams, active: true }, eqEnabled)
-  const { totalElements: eqInactive = 0 } = usePaginatedData(
-    '/equipments',
-    { ...commonParams, active: false },
-    eqEnabled
-  )
-  const { totalElements: eqExpired = 0 } = usePaginatedData(
-    '/equipments',
-    {
-      ...commonParams,
-      status: 'EXPIRED',
-      active: true,
-    },
-    eqEnabled
-  )
-  const { totalElements: eqNoDate = 0 } = usePaginatedData(
-    '/equipments',
-    {
-      ...commonParams,
-      status: 'NO_DATE',
-      active: true,
-    },
-    eqEnabled
-  )
+  const eqActive = useCount('/equipments/count', { ...base, active: true }, eqEnabled)
+  const eqInactive = useCount('/equipments/count', { ...base, active: false }, eqEnabled)
+  const eqExpired = useCount('/equipments/count', { ...base, active: true, status: 'EXPIRED' }, eqEnabled)
+  const eqNoDate = useCount('/equipments/count', { ...base, active: true, status: 'NO_DATE' }, eqEnabled)
 
-  // IRS Stats
+  // `/irs` has no active/inactive filter, so only the overall total is available.
   const irsEnabled = activeCategory === 'irs'
-  const { totalElements: irsTotal = 0 } = usePaginatedData('/irs', { ...commonParams, valid: true }, irsEnabled)
-  const { totalElements: irsActive = 0 } = usePaginatedData('/irs', { ...commonParams, valid: true }, irsEnabled)
-  const { totalElements: irsInactive = 0 } = usePaginatedData('/irs', { ...commonParams, valid: false }, irsEnabled)
+  const irsTotal = useCount('/irs/count', base, irsEnabled)
 
-  // X-ray Stats
   const xrayEnabled = activeCategory === 'xray'
-  const { totalElements: xrayTotal = 0 } = usePaginatedData('/xrays', { ...commonParams, active: true }, xrayEnabled)
-  const { totalElements: xrayActive = 0 } = usePaginatedData('/xrays', { ...commonParams, active: true }, xrayEnabled)
-  const { totalElements: xrayInactive = 0 } = usePaginatedData(
-    '/xrays',
-    { ...commonParams, active: false },
-    xrayEnabled
-  )
-  const { totalElements: xrayExpired = 0 } = usePaginatedData(
-    '/xrays',
-    {
-      ...commonParams,
-      status: 'EXPIRED',
-      active: true,
-    },
-    xrayEnabled
-  )
-
-  const { totalElements: xrayNoDate = 0 } = usePaginatedData(
-    '/xrays',
-    {
-      ...commonParams,
-      status: 'NO_DATE',
-      active: true,
-    },
-    xrayEnabled
-  )
+  const xrayActive = useCount('/xrays/count', { ...base, active: true }, xrayEnabled)
+  const xrayInactive = useCount('/xrays/count', { ...base, active: false }, xrayEnabled)
+  const xrayExpired = useCount('/xrays/count', { ...base, active: true, status: 'EXPIRED' }, xrayEnabled)
+  const xrayNoDate = useCount('/xrays/count', { ...base, active: true, status: 'NO_DATE' }, xrayEnabled)
 
   return {
     hf: {
-      total: hfTotal,
-      active: hfActive,
-      inactive: hfInactive,
+      total: hfActive.count + hfInactive.count,
+      active: hfActive.count,
+      inactive: hfInactive.count,
+      isLoading: hfActive.isFetching || hfInactive.isFetching,
     },
     equipment: {
-      total: eqTotal,
-      active: eqActive,
-      inactive: eqInactive,
-      expired: eqExpired,
-      noDate: eqNoDate,
+      total: eqActive.count + eqInactive.count,
+      active: eqActive.count,
+      inactive: eqInactive.count,
+      expired: eqExpired.count,
+      noDate: eqNoDate.count,
+      isLoading: eqActive.isFetching || eqInactive.isFetching || eqExpired.isFetching || eqNoDate.isFetching,
     },
     irs: {
-      total: irsTotal,
-      active: irsActive,
-      inactive: irsInactive,
+      total: irsTotal.count,
+      isLoading: irsTotal.isFetching,
     },
     xray: {
-      total: xrayTotal,
-      active: xrayActive,
-      inactive: xrayInactive,
-      expired: xrayExpired,
-      noDate: xrayNoDate,
+      total: xrayActive.count + xrayInactive.count,
+      active: xrayActive.count,
+      inactive: xrayInactive.count,
+      expired: xrayExpired.count,
+      noDate: xrayNoDate.count,
+      isLoading: xrayActive.isFetching || xrayInactive.isFetching || xrayExpired.isFetching || xrayNoDate.isFetching,
     },
   }
 }

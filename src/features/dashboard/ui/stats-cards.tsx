@@ -34,52 +34,52 @@ export const StatsCards = ({ type, data, regionId }: StatsCardsProps) => {
     </Card>
   )
 
-  if (type === 'hf' || type === 'irs') {
-    const typeName = type === 'hf' ? 'XICHOlar' : 'INMlar'
-
-    const getLink = (status: 'total' | 'active' | 'inactive') => {
-      let baseUrl = `/register?tab=${type}`
-      if (regionId) {
-        baseUrl += `&regionId=${regionId}`
-      }
-
-      if (type === 'irs') {
-        if (status === 'total') return `${baseUrl}&valid=all`
-        if (status === 'active') return `${baseUrl}&valid=true`
-        if (status === 'inactive') return `${baseUrl}&valid=false`
-      } else {
-        if (status === 'total') return `${baseUrl}&active=ALL`
-        if (status === 'active') return `${baseUrl}&active=true`
-        if (status === 'inactive') return `${baseUrl}&active=false`
-      }
-      return baseUrl
-    }
+  if (type === 'irs') {
+    // `/irs` exposes no active/inactive filter, so only the overall total is shown.
+    const baseUrl = regionId ? `/register?tab=irs&regionId=${regionId}` : '/register?tab=irs'
 
     return (
       <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {renderCard(
-          `Barcha ${typeName}`,
+          'Barcha INMlar',
           data.total,
           <Layers className="h-6 w-6 opacity-60" />,
           'border-blue-500 text-blue-900',
           'bg-blue-50',
-          getLink('total')
+          baseUrl
+        )}
+      </div>
+    )
+  }
+
+  if (type === 'hf') {
+    const baseUrl = regionId ? `/register?tab=hf&regionId=${regionId}` : '/register?tab=hf'
+
+    return (
+      <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {renderCard(
+          'Barcha XICHOlar',
+          data.total,
+          <Layers className="h-6 w-6 opacity-60" />,
+          'border-blue-500 text-blue-900',
+          'bg-blue-50',
+          `${baseUrl}&active=ALL`
         )}
         {renderCard(
-          `Amaldagi ${typeName}`,
+          'Amaldagi XICHOlar',
           data.active,
           <CheckCircle2 className="h-6 w-6 opacity-60" />,
           'border-emerald-500 text-emerald-900',
           'bg-emerald-50',
-          getLink('active')
+          `${baseUrl}&active=true`
         )}
         {renderCard(
-          `Reyestrdan chiqarilgan ${typeName}`,
+          'Reyestrdan chiqarilgan XICHOlar',
           data.inactive,
           <XCircle className="h-6 w-6 opacity-60" />,
           'border-slate-400 text-slate-800',
           'bg-slate-50',
-          getLink('inactive')
+          `${baseUrl}&active=false`
         )}
       </div>
     )

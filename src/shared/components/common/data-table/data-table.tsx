@@ -229,7 +229,12 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <DataTableLoading isLoading={isLoading} columns={columns} showNumeration={showNumeration} />
+              <DataTableLoading
+                isLoading={isLoading}
+                columns={columns}
+                rowCount={Number(size) || 10}
+                showNumeration={showNumeration}
+              />
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row, idx) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="group/row">

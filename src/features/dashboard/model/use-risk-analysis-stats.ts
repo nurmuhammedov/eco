@@ -1,4 +1,5 @@
 import { useData } from '@/shared/hooks/api'
+import { DASHBOARD_STALE_TIME } from './use-dashboard-stats'
 
 interface RiskCountResponse {
   lowCount: number
@@ -21,34 +22,48 @@ export const useRiskAnalysisStats = ({ year, month, regionId, enabled = true }: 
     regionId: regionId?.toString(),
   }
 
-  // Since we can't use loops for hooks, we have to call them individually
-  // Or we could create a custom hook that accepts type and use it multiple times,
-  // but the caller expects a single aggregated object.
-
-  const { data: hfCounts } = useData<RiskCountResponse>('/risk-analyses/count', enabled, {
-    ...commonParams,
-    type: 'HF',
-  })
-  const { data: irsCounts } = useData<RiskCountResponse>('/risk-analyses/count', enabled, {
-    ...commonParams,
-    type: 'IRS',
-  })
-  const { data: elevCounts } = useData<RiskCountResponse>('/risk-analyses/count', enabled, {
-    ...commonParams,
-    type: 'ELEVATOR',
-  })
-  const { data: attrCounts } = useData<RiskCountResponse>('/risk-analyses/count', enabled, {
-    ...commonParams,
-    type: 'ATTRACTION',
-  })
-  const { data: xrayCounts } = useData<RiskCountResponse>('/risk-analyses/count', enabled, {
-    ...commonParams,
-    type: 'XRAY',
-  })
-  const { data: lpgCounts } = useData<RiskCountResponse>('/risk-analyses/count', enabled, {
-    ...commonParams,
-    type: 'LPG_POWERED',
-  })
+  const { data: hfCounts } = useData<RiskCountResponse>(
+    '/risk-analyses/count',
+    enabled,
+    { ...commonParams, type: 'HF' },
+    [],
+    DASHBOARD_STALE_TIME
+  )
+  const { data: irsCounts } = useData<RiskCountResponse>(
+    '/risk-analyses/count',
+    enabled,
+    { ...commonParams, type: 'IRS' },
+    [],
+    DASHBOARD_STALE_TIME
+  )
+  const { data: elevCounts } = useData<RiskCountResponse>(
+    '/risk-analyses/count',
+    enabled,
+    { ...commonParams, type: 'ELEVATOR' },
+    [],
+    DASHBOARD_STALE_TIME
+  )
+  const { data: attrCounts } = useData<RiskCountResponse>(
+    '/risk-analyses/count',
+    enabled,
+    { ...commonParams, type: 'ATTRACTION' },
+    [],
+    DASHBOARD_STALE_TIME
+  )
+  const { data: xrayCounts } = useData<RiskCountResponse>(
+    '/risk-analyses/count',
+    enabled,
+    { ...commonParams, type: 'XRAY' },
+    [],
+    DASHBOARD_STALE_TIME
+  )
+  const { data: lpgCounts } = useData<RiskCountResponse>(
+    '/risk-analyses/count',
+    enabled,
+    { ...commonParams, type: 'LPG_POWERED' },
+    [],
+    DASHBOARD_STALE_TIME
+  )
 
   const getAllCounts = (level: 'highCount' | 'mediumCount' | 'lowCount') => {
     return [

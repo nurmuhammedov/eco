@@ -2,6 +2,7 @@ import { FileText, PlusCircle, Clock, Gavel, HandCoins, CheckCircle, XCircle } f
 import { cn } from '@/shared/lib/utils'
 import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
 import { InquiryStatus } from '@/features/inquiries/model/types'
+import { DASHBOARD_STALE_TIME } from '../model/use-dashboard-stats'
 
 interface InquiriesStatsProps {
   regionId?: string | null
@@ -9,27 +10,42 @@ interface InquiriesStatsProps {
 
 export const InquiriesStats = ({ regionId }: InquiriesStatsProps) => {
   const inqParams = { page: 1, size: 1, ...(regionId ? { regionId } : {}) }
-  const { totalElements: inqNew = 0 } = usePaginatedData('/inquiries', { ...inqParams, status: InquiryStatus.NEW })
-  const { totalElements: inqProcess = 0 } = usePaginatedData('/inquiries', {
-    ...inqParams,
-    status: InquiryStatus.IN_PROCESS,
-  })
-  const { totalElements: inqCourt = 0 } = usePaginatedData('/inquiries', {
-    ...inqParams,
-    status: InquiryStatus.IN_COURT,
-  })
-  const { totalElements: inqReward = 0 } = usePaginatedData('/inquiries', {
-    ...inqParams,
-    status: InquiryStatus.REWARD_PAYMENT,
-  })
-  const { totalElements: inqCompleted = 0 } = usePaginatedData('/inquiries', {
-    ...inqParams,
-    status: InquiryStatus.COMPLETED,
-  })
-  const { totalElements: inqRejected = 0 } = usePaginatedData('/inquiries', {
-    ...inqParams,
-    status: InquiryStatus.REJECTED,
-  })
+  const { totalElements: inqNew = 0 } = usePaginatedData(
+    '/inquiries',
+    { ...inqParams, status: InquiryStatus.NEW },
+    true,
+    DASHBOARD_STALE_TIME
+  )
+  const { totalElements: inqProcess = 0 } = usePaginatedData(
+    '/inquiries',
+    { ...inqParams, status: InquiryStatus.IN_PROCESS },
+    true,
+    DASHBOARD_STALE_TIME
+  )
+  const { totalElements: inqCourt = 0 } = usePaginatedData(
+    '/inquiries',
+    { ...inqParams, status: InquiryStatus.IN_COURT },
+    true,
+    DASHBOARD_STALE_TIME
+  )
+  const { totalElements: inqReward = 0 } = usePaginatedData(
+    '/inquiries',
+    { ...inqParams, status: InquiryStatus.REWARD_PAYMENT },
+    true,
+    DASHBOARD_STALE_TIME
+  )
+  const { totalElements: inqCompleted = 0 } = usePaginatedData(
+    '/inquiries',
+    { ...inqParams, status: InquiryStatus.COMPLETED },
+    true,
+    DASHBOARD_STALE_TIME
+  )
+  const { totalElements: inqRejected = 0 } = usePaginatedData(
+    '/inquiries',
+    { ...inqParams, status: InquiryStatus.REJECTED },
+    true,
+    DASHBOARD_STALE_TIME
+  )
 
   const inquiryTotal = inqNew + inqProcess + inqCourt + inqReward + inqCompleted + inqRejected
 

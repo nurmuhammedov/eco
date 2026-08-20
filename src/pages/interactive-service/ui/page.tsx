@@ -406,13 +406,9 @@ export const InteractiveServicePage: React.FC = () => {
         }
       case 'irs':
         return {
-          totalLabel: 'Amaldagi INMlar',
-          total: stats.irs.active,
-          items: [
-            { label: 'Yaroqli', value: stats.irs.active, color: '#0D9488' },
-            { label: 'Yaroqsiz', value: stats.irs.inactive, color: '#E11D48' },
-            { label: 'Umumiy', value: stats.irs.total, color: '#2563EB' },
-          ],
+          totalLabel: 'Barcha INMlar',
+          total: stats.irs.total,
+          items: [{ label: 'Umumiy', value: stats.irs.total, color: '#2563EB' }],
         }
       case 'xray':
         return {
