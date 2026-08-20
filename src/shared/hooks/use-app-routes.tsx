@@ -1,4 +1,4 @@
-import { lazy, useMemo } from 'react'
+import { lazy, useEffect, useMemo } from 'react'
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
 import {
   accountantRoutes,
@@ -44,10 +44,11 @@ const ROUTES_BY_ROLE: Record<UserRoles, RouteObject[]> = {
 const ALWAYS_ALLOWED_ROUTE_IDS = new Set(['INQUIRY', 'REPORT'])
 
 const GuestRedirect = () => {
-  if (IS_STATIC_LANDING) {
-    window.location.replace(GUEST_LANDING_PATH)
-    return <BootScreen />
-  }
+  useEffect(() => {
+    if (IS_STATIC_LANDING) window.location.replace(GUEST_LANDING_PATH)
+  }, [])
+
+  if (IS_STATIC_LANDING) return <BootScreen />
 
   return <Navigate to={GUEST_LANDING_PATH} replace />
 }
