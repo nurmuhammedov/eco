@@ -41,52 +41,36 @@ export const StatsCards = ({ type, data, regionId }: StatsCardsProps) => {
     </Card>
   )
 
-  if (type === 'irs') {
-    // `/irs` exposes no active/inactive filter, so only the overall total is shown.
-    const baseUrl = regionId ? `/register?tab=irs&regionId=${regionId}` : '/register?tab=irs'
+  if (type === 'hf' || type === 'irs') {
+    const typeName = type === 'hf' ? 'XICHOlar' : 'INMlar'
+    const statusKey = type === 'hf' ? 'active' : 'valid'
+    const baseUrl = `/register?tab=${type}${regionId ? `&regionId=${regionId}` : ''}`
 
     return (
       <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {renderCard(
-          'Barcha INMlar',
+          `Barcha ${typeName}`,
           data.total,
           <Layers className="h-6 w-6 opacity-60" />,
           'border-blue-500 text-blue-900',
           'bg-blue-50',
-          baseUrl
-        )}
-      </div>
-    )
-  }
-
-  if (type === 'hf') {
-    const baseUrl = regionId ? `/register?tab=hf&regionId=${regionId}` : '/register?tab=hf'
-
-    return (
-      <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {renderCard(
-          'Barcha XICHOlar',
-          data.total,
-          <Layers className="h-6 w-6 opacity-60" />,
-          'border-blue-500 text-blue-900',
-          'bg-blue-50',
-          `${baseUrl}&active=ALL`
+          `${baseUrl}&${statusKey}=${type === 'hf' ? 'ALL' : 'all'}`
         )}
         {renderCard(
-          'Amaldagi XICHOlar',
+          `Amaldagi ${typeName}`,
           data.active,
           <CheckCircle2 className="h-6 w-6 opacity-60" />,
           'border-emerald-500 text-emerald-900',
           'bg-emerald-50',
-          `${baseUrl}&active=true`
+          `${baseUrl}&${statusKey}=true`
         )}
         {renderCard(
-          'Reyestrdan chiqarilgan XICHOlar',
+          `Reyestrdan chiqarilgan ${typeName}`,
           data.inactive,
           <XCircle className="h-6 w-6 opacity-60" />,
           'border-slate-400 text-slate-800',
           'bg-slate-50',
-          `${baseUrl}&active=false`
+          `${baseUrl}&${statusKey}=false`
         )}
       </div>
     )

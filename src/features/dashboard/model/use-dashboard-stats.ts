@@ -23,9 +23,10 @@ export const useDashboardStats = (regionId?: string | null, activeCategory?: str
   const eqExpired = useCount('/equipments/count', { ...base, active: true, status: 'EXPIRED' }, eqEnabled)
   const eqNoDate = useCount('/equipments/count', { ...base, active: true, status: 'NO_DATE' }, eqEnabled)
 
-  // `/irs` has no active/inactive filter, so only the overall total is available.
+  // IrsParamsDto marks `valid` as @NotNull, so it must be sent on every call.
   const irsEnabled = activeCategory === 'irs'
-  const irsTotal = useCount('/irs/count', base, irsEnabled)
+  const irsActive = useCount('/irs/count', { ...base, valid: true }, irsEnabled)
+  const irsInactive = useCount('/irs/count', { ...base, valid: false }, irsEnabled)
 
   const xrayEnabled = activeCategory === 'xray'
   const xrayActive = useCount('/xrays/count', { ...base, active: true }, xrayEnabled)
@@ -49,8 +50,10 @@ export const useDashboardStats = (regionId?: string | null, activeCategory?: str
       isLoading: eqActive.isFetching || eqInactive.isFetching || eqExpired.isFetching || eqNoDate.isFetching,
     },
     irs: {
-      total: irsTotal.count,
-      isLoading: irsTotal.isFetching,
+      total: irsActive.count + irsInactive.count,
+      active: irsActive.count,
+      inactive: irsInactive.count,
+      isLoading: irsActive.isFetching || irsInactive.isFetching,
     },
     xray: {
       total: xrayActive.count + xrayInactive.count,
