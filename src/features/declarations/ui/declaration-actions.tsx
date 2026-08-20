@@ -26,8 +26,7 @@ export const DeclarationActions = ({ id, status }: DeclarationActionsProps) => {
   const [description, setDescription] = useState('')
 
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ['declarations'] })
-    queryClient.invalidateQueries({ queryKey: ['/declarations', id] })
+    queryClient.invalidateQueries({ queryKey: ['/declarations'] })
   }
 
   const {

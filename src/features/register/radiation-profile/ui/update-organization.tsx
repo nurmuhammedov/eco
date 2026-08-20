@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useData, useUpdate } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
+import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import { toast } from 'sonner'
 import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
@@ -131,8 +132,7 @@ export const UpdateOrganization: FC = () => {
     mutate(payload, {
       onSuccess: () => {
         toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
-        queryClient.invalidateQueries({ queryKey: ['radiation-profiles'] })
-        queryClient.invalidateQueries({ queryKey: [`/radiation-profiles/${id}`] })
+        invalidateRegistryQueries(queryClient)
         navigate(-1)
       },
       onError: () => {

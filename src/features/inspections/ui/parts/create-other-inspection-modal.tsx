@@ -115,7 +115,7 @@ export const CreateOtherInspectionModal = () => {
   } = useEimzo({
     pdfEndpoint: '/inspections/decree/other/generate-pdf',
     submitEndpoint: '/inspections/decree/other',
-    queryKey: 'inspections-other-list',
+    queryKey: '/inspections/other',
     successMessage: t('success_saved'),
     onEnd: () => {
       setIsOpen(false)

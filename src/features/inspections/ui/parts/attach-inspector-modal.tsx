@@ -91,7 +91,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
   } = useEimzo({
     pdfEndpoint: '/inspections/decree/generate-pdf',
     submitEndpoint: '/inspections/decree/one-day',
-    queryKey: 'inspections-attach-inspectors',
+    queryKey: '/inspections',
     successMessage: 'Muvaffaqiyatli saqlandi!',
     onSuccessNavigateTo: `/inspections`,
   })
@@ -107,7 +107,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
         handleCloseModal()
         toast.success('Muvaffaqiyatli yuborildi!')
         navigate('/inspections')
-        queryClient.invalidateQueries({ queryKey: ['inspections-attach-inspectors'] })
+        queryClient.invalidateQueries({ queryKey: ['/inspections'] })
       }
     },
     onError: (e: any) => {
