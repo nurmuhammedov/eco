@@ -142,10 +142,22 @@ export function DataTable<TData, TValue>({
     width: '100%',
   }
 
+  // Keep already loaded rows on screen while refetching; only a cold load blanks the table.
+  const hasRows = tableData.length > 0
+  const isRefreshing = isLoading && hasRows
+
   return (
     <Fragment>
       <div className={cn('relative flex-1 overflow-auto rounded-md bg-white', className)}>
-        <Table className="border-none p-0" style={fixedTableStyle}>
+        {isRefreshing && (
+          <div role="progressbar" aria-label="Yangilanmoqda" className="absolute inset-x-0 top-0 z-40 h-0.5">
+            <div className="bg-teal animate-route-progress h-full origin-left" />
+          </div>
+        )}
+        <Table
+          className={cn('border-none p-0 transition-opacity', isRefreshing && 'opacity-60')}
+          style={fixedTableStyle}
+        >
           <TableHeader
             className={cn('p-2 font-semibold text-black', isHeaderSticky && 'sticky top-0 z-30 bg-white shadow-sm')}
           >
@@ -228,13 +240,8 @@ export function DataTable<TData, TValue>({
             )}
           </TableHeader>
           <TableBody>
-            {isLoading ? (
-              <DataTableLoading
-                isLoading={isLoading}
-                columns={columns}
-                rowCount={Number(size) || 10}
-                showNumeration={showNumeration}
-              />
+            {isLoading && !hasRows ? (
+              <DataTableLoading columns={columns} showNumeration={showNumeration} />
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row, idx) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="group/row">
