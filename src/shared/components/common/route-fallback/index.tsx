@@ -1,5 +1,9 @@
 import { Skeleton } from '@/shared/components/ui/skeleton'
 
+/**
+ * Layout-neutral placeholder: a heading, a toolbar row and one content panel.
+ * Pages with a distinct shape should pass their own fallback instead of this one.
+ */
 const PageSkeleton = () => (
   <div className="flex w-full flex-1 flex-col gap-4" aria-busy="true" aria-live="polite">
     <div className="flex flex-wrap items-center justify-between gap-3">
@@ -13,15 +17,13 @@ const PageSkeleton = () => (
       <Skeleton className="h-9 w-40" />
     </div>
 
-    <div className="flex flex-col gap-2 rounded-lg bg-white p-4">
-      {Array.from({ length: 8 }).map((_, index) => (
-        <Skeleton key={index} className="h-11 w-full" />
-      ))}
+    <div className="flex flex-1 flex-col gap-3 rounded-xl bg-white p-4">
+      <Skeleton className="h-9 w-full" />
+      <Skeleton className="h-64 w-full" />
     </div>
   </div>
 )
 
-// Suspense fallback for lazy routes: the sidebar and header stay put, only the content area swaps.
 export const RouteFallback = PageSkeleton
 
 export default RouteFallback

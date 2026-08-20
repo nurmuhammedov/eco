@@ -1,5 +1,6 @@
 import { lazy } from 'react'
 import { withSuspense } from '@/shared/config/routes/utils'
+import { DashboardSkeleton } from '@/features/dashboard/ui/dashboard-skeleton'
 
 const DashboardPage = lazy(() => import('@/pages/dashboard').then((module) => ({ default: module.DashboardPage })))
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'))
@@ -77,7 +78,7 @@ export const regionalRoutes = [
   // DASHBOARD
   {
     path: 'dashboard',
-    element: withSuspense(DashboardPage),
+    element: withSuspense(DashboardPage, DashboardSkeleton),
   },
 
   // APPEAL

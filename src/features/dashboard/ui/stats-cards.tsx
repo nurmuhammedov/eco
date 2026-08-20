@@ -1,4 +1,5 @@
 import { Card } from '@/shared/components/ui/card'
+import { Skeleton } from '@/shared/components/ui/skeleton'
 import { cn } from '@/shared/lib/utils'
 import { CheckCircle2, XCircle, AlertCircle, FileQuestion, Layers } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -10,6 +11,8 @@ interface StatsCardsProps {
 }
 
 export const StatsCards = ({ type, data, regionId }: StatsCardsProps) => {
+  const isLoading = Boolean(data?.isLoading)
+
   const renderCard = (title: string, value: number, icon: any, colorClass: string, bgClass: string, link: string) => (
     <Card
       className={cn(
@@ -23,7 +26,11 @@ export const StatsCards = ({ type, data, regionId }: StatsCardsProps) => {
         {icon}
       </div>
       <div className="mt-2 flex items-end justify-between">
-        <span className="text-3xl font-bold">{value?.toLocaleString() || 0}</span>
+        {isLoading ? (
+          <Skeleton className="my-1 h-7 w-24 bg-current/10" />
+        ) : (
+          <span className="text-3xl font-bold">{value?.toLocaleString() || 0}</span>
+        )}
         <Link
           to={link}
           className="rounded-md border border-transparent bg-white px-4 py-1.5 text-sm font-medium shadow-sm transition-all hover:border-slate-200 hover:bg-slate-50"

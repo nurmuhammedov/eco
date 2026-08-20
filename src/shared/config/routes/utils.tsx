@@ -1,9 +1,12 @@
 import { ComponentType, Suspense } from 'react'
 import { BootScreen, RouteFallback } from '@/shared/components/common'
 
-/** For pages rendered inside the app layout: only the content area is replaced. */
-export const withSuspense = (Component: ComponentType) => (
-  <Suspense fallback={<RouteFallback />}>
+/**
+ * For pages rendered inside the app layout: only the content area is replaced.
+ * Pass `Fallback` when the page shape differs from the generic list layout.
+ */
+export const withSuspense = (Component: ComponentType, Fallback: ComponentType = RouteFallback) => (
+  <Suspense fallback={<Fallback />}>
     <Component />
   </Suspense>
 )

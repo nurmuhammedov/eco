@@ -1,5 +1,6 @@
 import { lazy } from 'react'
 import { withSuspense } from '@/shared/config/routes/utils'
+import { DashboardSkeleton } from '@/features/dashboard/ui/dashboard-skeleton'
 
 const DepartmentsPage = lazy(() => import('@/pages/kpi/departments-page'))
 const KpiTasksPage = lazy(() => import('@/pages/kpi/kpi-tasks-page'))
@@ -87,7 +88,7 @@ export const chairmanRoutes = [
   },
   {
     path: 'dashboard',
-    element: withSuspense(DashboardPage),
+    element: withSuspense(DashboardPage, DashboardSkeleton),
   },
   // APPEAL
   {
