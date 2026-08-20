@@ -57,7 +57,7 @@ export default defineConfig({
         // Only the shell is precached; hashed chunks are cached on demand instead
         // of pushing several megabytes at every first visit.
         globPatterns: ['index.html', 'manifest.webmanifest', 'brand-logo.webp', 'favicon*.png'],
-        globIgnores: ['home.html', '**/*.mp4', 'android-chrome-*.png', 'pwa-icon.png', 'apple-touch-icon.png'],
+        globIgnores: ['home.html', '**/*.mp4', 'android-chrome-*.png', 'apple-touch-icon.png'],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         cleanupOutdatedCaches: true,
         runtimeCaching: [
@@ -87,32 +87,29 @@ export default defineConfig({
         ],
       },
       manifest: {
-        name: 'Ekotizim',
+        name: 'Sanoat xavfsizligi ekotizimi',
         short_name: 'Ekotizim',
-        description: 'Ekotizim axborot tizimi',
+        description: 'Xavfli ishlab chiqarish obyektlarini ro‘yxatga olish va nazorat qilish axborot tizimi',
+        lang: 'uz',
+        dir: 'ltr',
         theme_color: '#016b7b',
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '/auth/login',
         scope: '/',
+        // Sizes must match the real files; a mismatch makes the browser reject the icon.
         icons: [
           {
-            src: '/pwa-icon.png',
+            src: '/android-chrome-192x192.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any',
           },
           {
-            src: '/pwa-icon.png',
+            src: '/android-chrome-512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any',
-          },
-          {
-            src: '/pwa-icon.png',
-            sizes: '1024x1024',
-            type: 'image/png',
-            purpose: 'any maskable',
           },
         ],
       },
