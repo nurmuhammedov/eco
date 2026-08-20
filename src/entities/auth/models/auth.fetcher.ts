@@ -59,7 +59,12 @@ export const useLoginOneId = (options?: UseLoginOneIdOptions) => {
   // OneID codes are single-use, so remember the one already sent: StrictMode runs the effect twice.
   const processedCode = useRef<string | null>(null)
 
-  const { mutate: handleLoginOneId, isPending } = useMutation({
+  const {
+    mutate: handleLoginOneId,
+    isPending,
+    isError,
+    reset,
+  } = useMutation({
     retry: false,
     mutationFn: authAPI.loginOneId,
     onSuccess: (user: UserState) => {
@@ -83,7 +88,7 @@ export const useLoginOneId = (options?: UseLoginOneIdOptions) => {
     handleLoginOneId(code)
   }, [code, options?.disableAutoRun, handleLoginOneId])
 
-  return { isPending, mutate: handleLoginOneId }
+  return { isPending, isError, reset, mutate: handleLoginOneId }
 }
 
 export const useLogout = () => {
