@@ -15,7 +15,7 @@ import {
 } from '@/shared/config/routes/roles'
 import { authRoutes, publicRoutes, specialComponents } from '@/shared/config/routes'
 import { withFullPageSuspense } from '@/shared/config/routes/utils'
-import { GUEST_LANDING_PATH, IS_STATIC_LANDING } from '@/shared/config/navigation'
+import { GUEST_LANDING_PATH, IS_STATIC_LANDING, goToGuestLanding } from '@/shared/config/navigation'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { Direction, UserRoles } from '@/entities/user'
 import { BootScreen } from '@/shared/components/common'
@@ -45,7 +45,7 @@ const ALWAYS_ALLOWED_ROUTE_IDS = new Set(['INQUIRY', 'REPORT'])
 
 const GuestRedirect = () => {
   useEffect(() => {
-    if (IS_STATIC_LANDING) window.location.replace(GUEST_LANDING_PATH)
+    if (IS_STATIC_LANDING) goToGuestLanding()
   }, [])
 
   if (IS_STATIC_LANDING) return <BootScreen />

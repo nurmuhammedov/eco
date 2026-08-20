@@ -33,6 +33,18 @@ export const setupServiceWorker = () => {
           label: 'Yangilash',
           onClick: () => void updateServiceWorker(true),
         },
+        style: { flexDirection: 'column', alignItems: 'stretch' },
+        actionButtonStyle: {
+          backgroundColor: '#2563eb',
+          color: '#fff',
+          border: 'none',
+          padding: '8px 16px',
+          borderRadius: '6px',
+          fontWeight: 600,
+          marginTop: '8px',
+          flex: '1 0 100%',
+          cursor: 'pointer',
+        },
       })
     },
   })
