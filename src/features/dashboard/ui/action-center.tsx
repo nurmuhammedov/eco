@@ -2,13 +2,14 @@
 import { AlertTriangle, Activity } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAccidentsStats } from '../model/use-accidents-stats'
+import { StatValue } from './stat-value'
 
 interface ActionCenterProps {
   regionId?: string | null
 }
 
 export const ActionCenter = ({ regionId }: ActionCenterProps) => {
-  const { injury, nonInjury } = useAccidentsStats(regionId)
+  const { injury, nonInjury, isLoading } = useAccidentsStats(regionId)
 
   // const actions = [
   //   { label: 'Arizalarni ko‘rish', icon: FileText, path: '/applications' },
@@ -84,26 +85,51 @@ export const ActionCenter = ({ regionId }: ActionCenterProps) => {
 
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               <div className="flex flex-col items-center justify-center rounded-lg bg-slate-50 p-3">
-                <span className="text-2xl font-bold text-slate-900">{action.stats.new}</span>
+                <StatValue
+                  value={action.stats.new}
+                  isLoading={isLoading}
+                  className="text-2xl font-bold text-slate-900"
+                  skeletonClassName="h-8 w-10"
+                />
                 <span className="text-center text-xs font-medium text-slate-500">Yangi</span>
               </div>
               <div className="flex flex-col items-center justify-center rounded-lg bg-blue-50/50 p-3">
-                <span className="text-2xl font-bold text-blue-600">{action.stats.decreeUploaded}</span>
+                <StatValue
+                  value={action.stats.decreeUploaded}
+                  isLoading={isLoading}
+                  className="text-2xl font-bold text-blue-600"
+                  skeletonClassName="h-8 w-10"
+                />
                 <span className="text-center text-xs font-medium text-slate-500">Hujjat yuklangan</span>
               </div>
               <div className="flex flex-col items-center justify-center rounded-lg bg-amber-50/50 p-3">
-                <span className="text-2xl font-bold text-amber-600">{action.stats.process}</span>
+                <StatValue
+                  value={action.stats.process}
+                  isLoading={isLoading}
+                  className="text-2xl font-bold text-amber-600"
+                  skeletonClassName="h-8 w-10"
+                />
                 <span className="text-center text-xs font-medium text-slate-500">Jarayonda</span>
               </div>
               <div className="flex flex-col items-center justify-center rounded-lg bg-emerald-50/50 p-3">
-                <span className="text-2xl font-bold text-emerald-600">{action.stats.completed}</span>
+                <StatValue
+                  value={action.stats.completed}
+                  isLoading={isLoading}
+                  className="text-2xl font-bold text-emerald-600"
+                  skeletonClassName="h-8 w-10"
+                />
                 <span className="text-center text-xs font-medium text-slate-500">Yakunlangan</span>
               </div>
             </div>
 
             <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
               <span className="text-sm font-medium text-slate-500">Umumiy soni</span>
-              <span className="text-lg font-bold text-slate-900">{action.stats.total}</span>
+              <StatValue
+                value={action.stats.total}
+                isLoading={isLoading}
+                className="text-lg font-bold text-slate-900"
+                skeletonClassName="h-6 w-10"
+              />
             </div>
           </div>
         ))}

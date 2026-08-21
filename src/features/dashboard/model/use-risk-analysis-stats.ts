@@ -14,6 +14,17 @@ interface UseRiskAnalysisStatsProps {
   enabled?: boolean
 }
 
+type RiskLevelKey = 'lowCount' | 'mediumCount' | 'highCount'
+
+const OBJECT_LABELS: Record<string, string> = {
+  HF: 'XICHO',
+  IRS: 'INM',
+  ELEVATOR: 'Lift',
+  ATTRACTION: 'Attraksion',
+  XRAY: 'Rentgen',
+  LPG_POWERED: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma',
+}
+
 export const useRiskAnalysisStats = ({ year, month, regionId, enabled = true }: UseRiskAnalysisStatsProps) => {
   const commonParams = {
     year,
@@ -22,78 +33,41 @@ export const useRiskAnalysisStats = ({ year, month, regionId, enabled = true }: 
     regionId: regionId?.toString(),
   }
 
-  const { data: hfCounts } = useData<RiskCountResponse>(
-    '/risk-analyses/count',
-    enabled,
-    { ...commonParams, type: 'HF' },
-    [],
-    DASHBOARD_STALE_TIME
-  )
-  const { data: irsCounts } = useData<RiskCountResponse>(
-    '/risk-analyses/count',
-    enabled,
-    { ...commonParams, type: 'IRS' },
-    [],
-    DASHBOARD_STALE_TIME
-  )
-  const { data: elevCounts } = useData<RiskCountResponse>(
-    '/risk-analyses/count',
-    enabled,
-    { ...commonParams, type: 'ELEVATOR' },
-    [],
-    DASHBOARD_STALE_TIME
-  )
-  const { data: attrCounts } = useData<RiskCountResponse>(
-    '/risk-analyses/count',
-    enabled,
-    { ...commonParams, type: 'ATTRACTION' },
-    [],
-    DASHBOARD_STALE_TIME
-  )
-  const { data: xrayCounts } = useData<RiskCountResponse>(
-    '/risk-analyses/count',
-    enabled,
-    { ...commonParams, type: 'XRAY' },
-    [],
-    DASHBOARD_STALE_TIME
-  )
-  const { data: lpgCounts } = useData<RiskCountResponse>(
-    '/risk-analyses/count',
-    enabled,
-    { ...commonParams, type: 'LPG_POWERED' },
-    [],
-    DASHBOARD_STALE_TIME
-  )
+  // Called individually rather than in a loop so the hook order stays fixed.
+  const hf = useData<RiskCountResponse>('/risk-analyses/count', enabled, { ...commonParams, type: 'HF' }, [], DASHBOARD_STALE_TIME) // prettier-ignore
+  const irs = useData<RiskCountResponse>('/risk-analyses/count', enabled, { ...commonParams, type: 'IRS' }, [], DASHBOARD_STALE_TIME) // prettier-ignore
+  const elevator = useData<RiskCountResponse>('/risk-analyses/count', enabled, { ...commonParams, type: 'ELEVATOR' }, [], DASHBOARD_STALE_TIME) // prettier-ignore
+  const attraction = useData<RiskCountResponse>('/risk-analyses/count', enabled, { ...commonParams, type: 'ATTRACTION' }, [], DASHBOARD_STALE_TIME) // prettier-ignore
+  const xray = useData<RiskCountResponse>('/risk-analyses/count', enabled, { ...commonParams, type: 'XRAY' }, [], DASHBOARD_STALE_TIME) // prettier-ignore
+  const lpg = useData<RiskCountResponse>('/risk-analyses/count', enabled, { ...commonParams, type: 'LPG_POWERED' }, [], DASHBOARD_STALE_TIME) // prettier-ignore
 
-  const getAllCounts = (level: 'highCount' | 'mediumCount' | 'lowCount') => {
-    return [
-      { key: 'HF', name: 'XICHO', count: hfCounts?.[level] || 0 },
-      { key: 'IRS', name: 'INM', count: irsCounts?.[level] || 0 },
-      { key: 'ELEVATOR', name: 'Lift', count: elevCounts?.[level] || 0 },
-      { key: 'ATTRACTION', name: 'Attraksion', count: attrCounts?.[level] || 0 },
-      { key: 'XRAY', name: 'Rentgen', count: xrayCounts?.[level] || 0 },
-      {
-        key: 'LPG_POWERED',
-        name: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma',
-        count: lpgCounts?.[level] || 0,
-      },
-    ]
-  }
+  const byType: [string, RiskCountResponse | undefined][] = [
+    ['HF', hf.data],
+    ['IRS', irs.data],
+    ['ELEVATOR', elevator.data],
+    ['ATTRACTION', attraction.data],
+    ['XRAY', xray.data],
+    ['LPG_POWERED', lpg.data],
+  ]
 
-  const highRiskList = getAllCounts('highCount')
-  const mediumRiskList = getAllCounts('mediumCount')
-  const lowRiskList = getAllCounts('lowCount')
+  const listFor = (level: RiskLevelKey) =>
+    byType.map(([key, counts]) => ({ key, name: OBJECT_LABELS[key], count: counts?.[level] ?? 0 }))
 
-  const highRiskTotal = highRiskList.reduce((acc, item) => acc + item.count, 0)
-  const mediumRiskTotal = mediumRiskList.reduce((acc, item) => acc + item.count, 0)
-  const lowRiskTotal = lowRiskList.reduce((acc, item) => acc + item.count, 0)
+  const highRiskList = listFor('highCount')
+  const mediumRiskList = listFor('mediumCount')
+  const lowRiskList = listFor('lowCount')
+
+  const sum = (items: { count: number }[]) => items.reduce((total, item) => total + item.count, 0)
 
   return {
-    highRisk: highRiskTotal,
-    mediumRisk: mediumRiskTotal,
-    lowRisk: lowRiskTotal,
+    highRisk: sum(highRiskList),
+    mediumRisk: sum(mediumRiskList),
+    lowRisk: sum(lowRiskList),
     highRiskList,
     mediumRiskList,
     lowRiskList,
+    isLoading:
+      enabled &&
+      [hf, irs, elevator, attraction, xray, lpg].some((query) => query.isFetching && query.data === undefined),
   }
 }

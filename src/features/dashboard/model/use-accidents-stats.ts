@@ -1,122 +1,57 @@
 import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
+import { ISearchParams } from '@/shared/types'
 import { DASHBOARD_STALE_TIME } from './use-dashboard-stats'
 
-const PAGE_SIZE_ONE = { page: 1, size: 1 }
+/** Only the count is needed, so a single row is requested. */
+const COUNT_ONLY = { page: 1, size: 1 }
+
+const useAccidentCount = (params: ISearchParams) => usePaginatedData('/accidents', params, true, DASHBOARD_STALE_TIME)
 
 export const useAccidentsStats = (regionId?: string | null) => {
-  const regionParam = regionId ? { regionId } : {}
-  const commonParams = { ...PAGE_SIZE_ONE, ...regionParam }
+  const base: ISearchParams = { ...COUNT_ONLY, ...(regionId ? { regionId } : {}) }
 
-  // Baxtsiz hodisalar (INJURY)
-  const { totalElements: injuryTotal = 0 } = usePaginatedData(
-    '/accidents',
-    { ...commonParams, type: 'INJURY' },
-    true,
-    DASHBOARD_STALE_TIME
-  )
-  const { totalElements: injuryNew = 0 } = usePaginatedData(
-    '/accidents',
-    {
-      ...commonParams,
-      type: 'INJURY',
-      status: 'NEW',
-    },
-    true,
-    DASHBOARD_STALE_TIME
-  )
-  const { totalElements: injuryProcess = 0 } = usePaginatedData(
-    '/accidents',
-    {
-      ...commonParams,
-      type: 'INJURY',
-      status: 'IN_PROCESS',
-    },
-    true,
-    DASHBOARD_STALE_TIME
-  )
-  const { totalElements: injuryCompleted = 0 } = usePaginatedData(
-    '/accidents',
-    {
-      ...commonParams,
-      type: 'INJURY',
-      status: 'COMPLETED',
-    },
-    true,
-    DASHBOARD_STALE_TIME
-  )
-  const { totalElements: injuryDecreeUploaded = 0 } = usePaginatedData(
-    '/accidents',
-    {
-      ...commonParams,
-      type: 'INJURY',
-      status: 'DECREE_UPLOADED',
-    },
-    true,
-    DASHBOARD_STALE_TIME
-  )
+  // Called individually rather than in a loop so the hook order stays fixed.
+  const injuryTotal = useAccidentCount({ ...base, type: 'INJURY' })
+  const injuryNew = useAccidentCount({ ...base, type: 'INJURY', status: 'NEW' })
+  const injuryProcess = useAccidentCount({ ...base, type: 'INJURY', status: 'IN_PROCESS' })
+  const injuryCompleted = useAccidentCount({ ...base, type: 'INJURY', status: 'COMPLETED' })
+  const injuryDecree = useAccidentCount({ ...base, type: 'INJURY', status: 'DECREE_UPLOADED' })
 
-  // Avariyalar (NON_INJURY)
-  const { totalElements: nonInjuryTotal = 0 } = usePaginatedData(
-    '/accidents',
-    { ...commonParams, type: 'NON_INJURY' },
-    true,
-    DASHBOARD_STALE_TIME
-  )
-  const { totalElements: nonInjuryNew = 0 } = usePaginatedData(
-    '/accidents',
-    {
-      ...commonParams,
-      type: 'NON_INJURY',
-      status: 'NEW',
-    },
-    true,
-    DASHBOARD_STALE_TIME
-  )
-  const { totalElements: nonInjuryProcess = 0 } = usePaginatedData(
-    '/accidents',
-    {
-      ...commonParams,
-      type: 'NON_INJURY',
-      status: 'IN_PROCESS',
-    },
-    true,
-    DASHBOARD_STALE_TIME
-  )
-  const { totalElements: nonInjuryCompleted = 0 } = usePaginatedData(
-    '/accidents',
-    {
-      ...commonParams,
-      type: 'NON_INJURY',
-      status: 'COMPLETED',
-    },
-    true,
-    DASHBOARD_STALE_TIME
-  )
-  const { totalElements: nonInjuryDecreeUploaded = 0 } = usePaginatedData(
-    '/accidents',
-    {
-      ...commonParams,
-      type: 'NON_INJURY',
-      status: 'DECREE_UPLOADED',
-    },
-    true,
-    DASHBOARD_STALE_TIME
-  )
+  const nonInjuryTotal = useAccidentCount({ ...base, type: 'NON_INJURY' })
+  const nonInjuryNew = useAccidentCount({ ...base, type: 'NON_INJURY', status: 'NEW' })
+  const nonInjuryProcess = useAccidentCount({ ...base, type: 'NON_INJURY', status: 'IN_PROCESS' })
+  const nonInjuryCompleted = useAccidentCount({ ...base, type: 'NON_INJURY', status: 'COMPLETED' })
+  const nonInjuryDecree = useAccidentCount({ ...base, type: 'NON_INJURY', status: 'DECREE_UPLOADED' })
+
+  const queries = [
+    injuryTotal,
+    injuryNew,
+    injuryProcess,
+    injuryCompleted,
+    injuryDecree,
+    nonInjuryTotal,
+    nonInjuryNew,
+    nonInjuryProcess,
+    nonInjuryCompleted,
+    nonInjuryDecree,
+  ]
 
   return {
     injury: {
-      total: injuryTotal,
-      new: injuryNew,
-      process: injuryProcess,
-      completed: injuryCompleted,
-      decreeUploaded: injuryDecreeUploaded,
+      total: injuryTotal.totalElements ?? 0,
+      new: injuryNew.totalElements ?? 0,
+      process: injuryProcess.totalElements ?? 0,
+      completed: injuryCompleted.totalElements ?? 0,
+      decreeUploaded: injuryDecree.totalElements ?? 0,
     },
     nonInjury: {
-      total: nonInjuryTotal,
-      new: nonInjuryNew,
-      process: nonInjuryProcess,
-      completed: nonInjuryCompleted,
-      decreeUploaded: nonInjuryDecreeUploaded,
+      total: nonInjuryTotal.totalElements ?? 0,
+      new: nonInjuryNew.totalElements ?? 0,
+      process: nonInjuryProcess.totalElements ?? 0,
+      completed: nonInjuryCompleted.totalElements ?? 0,
+      decreeUploaded: nonInjuryDecree.totalElements ?? 0,
     },
+    // A real zero and a not-yet-loaded zero must not look the same on a safety dashboard.
+    isLoading: queries.some((query) => query.isFetching && query.data === undefined),
   }
 }
