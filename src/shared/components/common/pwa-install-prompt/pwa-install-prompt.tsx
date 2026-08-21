@@ -1,88 +1,133 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Download, X } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
-import { cn } from '@/shared/lib/utils'
+import { getTime } from '@/shared/lib/get-time'
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
+
+const SNOOZE_KEY = 'pwa-prompt-snoozed-until'
+/** Dismissing means "not now", so the offer comes back after a fortnight. */
+const SNOOZE_DURATION = getTime(2, 'week')
+/** Chrome fires the event during the first paint; offering an install that early is intrusive. */
+const APPEAR_DELAY = getTime(20, 'second')
+
+const isSnoozed = (): boolean => {
+  try {
+    const until = Number(localStorage.getItem(SNOOZE_KEY))
+
+    return Number.isFinite(until) && until > Date.now()
+  } catch {
+    return false
+  }
+}
+
+const snooze = (): void => {
+  try {
+    localStorage.setItem(SNOOZE_KEY, String(Date.now() + SNOOZE_DURATION))
+  } catch {
+    // Private mode: the prompt may reappear next session.
+  }
+}
 
 export const PWAInstallPrompt = () => {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+  const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null)
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    const handler = (e: any) => {
-      e.preventDefault()
-      setDeferredPrompt(e)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
 
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-      const isDismissed = localStorage.getItem('pwa-prompt-dismissed') === 'true'
+    if (isStandalone || isSnoozed()) return
 
-      if (!isStandalone && !isDismissed) {
-        setIsVisible(true)
-      }
+    let appearTimer: ReturnType<typeof setTimeout>
+
+    const onBeforeInstallPrompt = (event: Event) => {
+      // Keeping the event lets the app decide when to show the browser dialog.
+      event.preventDefault()
+      setInstallEvent(event as BeforeInstallPromptEvent)
+      appearTimer = setTimeout(() => setIsVisible(true), APPEAR_DELAY)
     }
 
-    window.addEventListener('beforeinstallprompt', handler)
+    const onInstalled = () => {
+      setIsVisible(false)
+      setInstallEvent(null)
+    }
 
-    return () => window.removeEventListener('beforeinstallprompt', handler)
+    window.addEventListener('beforeinstallprompt', onBeforeInstallPrompt)
+    window.addEventListener('appinstalled', onInstalled)
+
+    return () => {
+      clearTimeout(appearTimer)
+      window.removeEventListener('beforeinstallprompt', onBeforeInstallPrompt)
+      window.removeEventListener('appinstalled', onInstalled)
+    }
   }, [])
 
-  const handleInstall = async () => {
-    if (!deferredPrompt) return
-
-    deferredPrompt.prompt()
-    const { outcome } = await deferredPrompt.userChoice
-
-    if (outcome === 'accepted') {
-      setIsVisible(false)
-    }
-    setDeferredPrompt(null)
-  }
-
-  const handleDismiss = () => {
+  const dismiss = useCallback(() => {
     setIsVisible(false)
-    localStorage.setItem('pwa-prompt-dismissed', 'true')
-  }
+    snooze()
+  }, [])
+
+  const install = useCallback(async () => {
+    if (!installEvent) {
+      dismiss()
+      return
+    }
+
+    // The captured event is single use, so hide the banner either way.
+    setIsVisible(false)
+    setInstallEvent(null)
+
+    await installEvent.prompt()
+
+    const { outcome } = await installEvent.userChoice
+
+    if (outcome === 'dismissed') snooze()
+  }, [dismiss, installEvent])
 
   if (!isVisible) return null
 
   return (
-    <div
-      className={cn(
-        'animate-in fade-in slide-in-from-bottom-4 fixed right-4 bottom-4 left-4 z-[9999] duration-500',
-        'md:right-6 md:left-auto md:w-[400px]'
-      )}
+    <section
+      aria-labelledby="pwa-install-title"
+      className="animate-in fade-in slide-in-from-bottom-4 fixed inset-x-4 bottom-4 z-50 duration-300 md:left-auto md:w-[380px]"
     >
-      <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-[#016b7b]/90 p-4 text-white shadow-2xl backdrop-blur-xl">
+      <div className="bg-teal relative overflow-hidden rounded-2xl p-4 text-white shadow-xl">
         <button
-          onClick={handleDismiss}
-          className="absolute top-2 right-2 rounded-full p-1 transition-colors hover:bg-white/10"
+          type="button"
+          onClick={dismiss}
+          aria-label="Taklifni yopish"
+          className="absolute top-2 right-2 rounded-full p-1.5 transition-colors hover:bg-white/15"
         >
-          <X className="h-4 w-4" />
+          <X className="size-4" aria-hidden="true" />
         </button>
 
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10">
-            <Download className="h-6 w-6" />
-          </div>
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/10">
+            <Download className="size-6" aria-hidden="true" />
+          </span>
 
           <div className="flex-1 pr-6">
-            <h3 className="leading-tight font-semibold">Ekotizim mobil ilovasi</h3>
-            <p className="mt-1 text-xs text-white/80">Ekotizimdan qulayroq foydalanish uchun ilovani o‘rnating.</p>
+            <h2 id="pwa-install-title" className="leading-tight font-semibold">
+              Ekotizim mobil ilovasi
+            </h2>
+            <p className="mt-1 text-xs text-white/80">
+              Tezroq ochilishi va bosh ekrandan kirish uchun ilovani o‘rnating.
+            </p>
           </div>
         </div>
 
         <div className="mt-4 flex gap-2">
-          <Button onClick={handleInstall} className="h-9 flex-1 bg-white text-[#016b7b] hover:bg-white/90">
+          <Button onClick={() => void install()} className="text-teal h-9 flex-1 bg-white hover:bg-white/90">
             O‘rnatish
           </Button>
-          <Button
-            variant="ghost"
-            onClick={handleDismiss}
-            className="h-9 px-3 text-white hover:bg-white/10 hover:text-white"
-          >
+          <Button variant="ghost" onClick={dismiss} className="h-9 px-3 text-white hover:bg-white/10 hover:text-white">
             Keyinroq
           </Button>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
