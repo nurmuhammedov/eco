@@ -6,8 +6,8 @@ export const BrandLogo: FC<{ className?: string }> = ({ className }) => (
   <img
     src="/brand-logo.webp"
     alt="Sanoat, radiatsiya va yadro xavfsizligi qo'mitasi gerbi"
-    width={280}
-    height={280}
+    width={480}
+    height={478}
     loading="eager"
     decoding="async"
     draggable={false}

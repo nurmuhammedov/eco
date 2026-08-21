@@ -1,0 +1,31 @@
+# Sanoat xavfsizligi ekotizimi
+
+> O‘zbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasining yagona axborot tizimi. Xavfli ishlab chiqarish obyektlari, texnik qurilmalar, ionlashtiruvchi nurlanish manbalari va rentgen qurilmalarini davlat ro‘yxatiga olish, ariza topshirish hamda xavf tahliliga asoslangan nazoratni yuritish uchun mo‘ljallangan.
+
+Tizim Vazirlar Mahkamasining 2020-yil 19-maydagi 291-sonli qarori asosida yuritiladi. Foydalanuvchilar tizimga OneID (Yagona identifikatsiya tizimi) orqali kiradi, shu sababli shaxsiy kabinet sahifalari ochiq indekslash uchun mo‘ljallanmagan.
+
+## Asosiy sahifalar
+
+- [Bosh sahifa](https://ekotizim.cirns.uz/): tizim haqida umumiy ma’lumot, statistika, me’yoriy hujjatlar, ko‘p beriladigan savollar va hududiy boshqarmalar aloqa ma’lumotlari.
+
+## Qamrab olinadigan yo‘nalishlar
+
+- Xavfli ishlab chiqarish obyektlarini ro‘yxatga olish va XICHO pasportini shakllantirish
+- Texnik qurilmalar: kranlar, liftlar, eskalatorlar, quvurlar, bosim ostidagi idishlar, attraksionlar
+- Ionlashtiruvchi nurlanish manbalari va rentgen qurilmalari hisobi
+- Ruxsat etuvchi hujjatlar, litsenziyalar va ekspertiza xulosalari
+- Xavf tahliliga asoslangan tekshiruvlar va profilaktika tadbirlari
+- Baxtsiz hodisa va avariyalar bo‘yicha xabar berish
+
+## Tashkilot
+
+- Nomi: O‘zbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi
+- Manzil: Toshkent shahri, Shayxontohur tumani, Markaz Xadra, S-14, 27-uy
+- Telefon: +998 71 203-02-39
+- Elektron pochta: info@cirns.uz
+- Telegram: https://t.me/ekotizim_cirns
+
+## Eslatmalar
+
+- Tizimning `/auth/`, `/qr/`, `/public/` va shaxsiy kabinet yo‘llari autentifikatsiya talab qiladi va `robots.txt` da indekslash uchun yopilgan.
+- Ochiq ma’lumot faqat bosh sahifada joylashgan.
