@@ -2,7 +2,14 @@ import { getStorage } from '@/shared/utils'
 import { Language } from '@/shared/types/language'
 import { SIDEBAR_COOKIE_NAME } from '@/shared/components/ui/sidebar'
 
-export const SIDEBAR_OPEN = getStorage(SIDEBAR_COOKIE_NAME) === 'true'
+/**
+ * Open unless the user has collapsed it before. Comparing the raw value against
+ * 'true' treated "never chosen" the same as "chosen closed", so every first
+ * visit started with the navigation hidden.
+ */
+const storedSidebarState = getStorage(SIDEBAR_COOKIE_NAME)
+
+export const SIDEBAR_OPEN = storedSidebarState === null || storedSidebarState === 'true'
 
 export const SUPPORTED_TRANSLATION_LANGUAGES: Language[] = [Language.UZ]
 
