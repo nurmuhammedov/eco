@@ -62,10 +62,21 @@ const TurniketReport: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if (!searchParams.get('year') || !searchParams.get('month')) {
-      setSearchParams({ year, month }, { replace: true })
-    }
-  }, [])
+    if (searchParams.get('year') && searchParams.get('month')) return
+
+    // Building on the previous params keeps any unrelated filter in the URL,
+    // which passing a plain object would drop.
+    setSearchParams(
+      (previous) => {
+        const next = new URLSearchParams(previous)
+        if (!next.get('year')) next.set('year', currentYear)
+        if (!next.get('month')) next.set('month', currentMonth)
+
+        return next
+      },
+      { replace: true }
+    )
+  }, [searchParams, setSearchParams, currentYear, currentMonth])
 
   const years = useMemo(() => {
     const currentYear = new Date().getFullYear()

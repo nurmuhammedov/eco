@@ -70,11 +70,6 @@ export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }:
     [createPdfMutation]
   )
 
-  const handleCloseModal = useCallback(() => {
-    resetState()
-    setIsModalOpen(false)
-  }, [])
-
   const resetState = useCallback(() => {
     setIsModalOpen(false)
     setDocumentUrl(null)
@@ -103,7 +98,7 @@ export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }:
     documentUrl,
     isModalOpen,
     isPdfLoading,
-    handleCloseModal,
+    handleCloseModal: resetState,
     handleCreateApplication,
     submitApplicationMetaData,
   }

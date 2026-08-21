@@ -47,7 +47,7 @@ export function SignatureSelect({
           return Number(item?.TIN) == Number(user?.tinOrPin)
         }
       })
-  }, [certificates])
+  }, [certificates, user?.role, user?.tinOrPin])
 
   function handleSelectCertificate(cert: SignatureKey) {
     if (isCertificateExpired(cert.validTo)) return

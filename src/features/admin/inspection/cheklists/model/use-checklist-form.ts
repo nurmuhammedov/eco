@@ -89,7 +89,7 @@ export function useChecklistForm() {
         return false
       }
     },
-    [isCreate, checklistId, createItem, updateItem, handleClose]
+    [isCreate, checklistId, createItem, updateItem, handleClose, queryClient]
   )
 
   return {

@@ -91,7 +91,7 @@ export const AccreditationAppealActions = ({ appealId, status }: AccreditationAp
       replyForm.reset()
       queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] })
     }
-  }, [isProcessSuccess, isCancelSuccess, isReplySuccess])
+  }, [isProcessSuccess, isCancelSuccess, isReplySuccess, replyForm, queryClient])
 
   const handleReply = (values: ReplyFormValues) => {
     reply({

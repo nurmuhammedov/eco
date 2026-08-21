@@ -10,7 +10,6 @@ export interface TinyMCEEditorProps {
   onFocus?: (event: any, editor: any) => void
   onSave?: (content: string, editor: any) => void
   height?: number
-  readOnly?: boolean
   disabled?: boolean
   placeholder?: string
   className?: string

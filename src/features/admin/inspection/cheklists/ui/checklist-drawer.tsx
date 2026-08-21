@@ -13,12 +13,13 @@ import { ChecklistView } from '@/features/admin/inspection/cheklists/ui/checklis
 import { UIModeEnum } from '@/shared/types'
 import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options'
 
+const options = getSelectOptions(inspectionCategoryOptions)
+
 export const ChecklistDrawer = () => {
   const { isOpen, onClose, mode, isCreate } = useChecklistDrawer()
   const modeLabel = useUIActionLabel(mode)
   const { form, checklistData, onSubmit, isPending, isFetching, categoryTypes, drawerData } = useChecklistForm()
   const categoryTypeOptions = useMemo(() => getSelectOptions(categoryTypes), [categoryTypes])
-  const options = useMemo(() => getSelectOptions(inspectionCategoryOptions), [inspectionCategoryOptions])
   const isPrefilled = !!drawerData?.category
 
   return (

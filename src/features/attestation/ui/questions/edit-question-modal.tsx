@@ -44,7 +44,7 @@ export const EditQuestionModal: FC<EditQuestionModalProps> = ({ isOpen, onClose,
         is_active: question.is_active,
       })
     }
-  }, [isOpen, question])
+  }, [isOpen, question, form])
 
   const { mutate, isPending } = useMutation({
     mutationFn: (data: QuestionPayload) => updateQuestion({ id: question!.id, data }),

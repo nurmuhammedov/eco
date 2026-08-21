@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { Eye } from 'lucide-react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
@@ -49,13 +49,15 @@ export function OrganizationList() {
 
   const { data, isLoading } = useOrganizationsQuery(queryParams)
   const { data: counts } = useOrganizationCounts(baseParams)
-  const updateOwnershipType = useUpdateOwnershipType()
+  const { mutate: updateOwnershipType } = useUpdateOwnershipType()
   const [selectedTin, setSelectedTin] = useState<string | null>(null)
 
-  const handleToggleOwnership = (id: string, currentOwnership: LegalOwnershipType | null) => {
-    const newType = currentOwnership === 'STATE' ? 'NON_STATE' : 'STATE'
-    updateOwnershipType.mutate({ id, ownershipType: newType })
-  }
+  const handleToggleOwnership = useCallback(
+    (id: string, currentOwnership: LegalOwnershipType | null) => {
+      updateOwnershipType({ id, ownershipType: currentOwnership === 'STATE' ? 'NON_STATE' : 'STATE' })
+    },
+    [updateOwnershipType]
+  )
 
   const tabs = [
     { id: 'ALL', name: 'Barchasi', count: counts?.ALL || 0 },
@@ -136,7 +138,7 @@ export function OrganizationList() {
         maxSize: 80,
       },
     ],
-    []
+    [handleToggleOwnership]
   )
 
   return (

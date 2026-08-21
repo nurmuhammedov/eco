@@ -41,7 +41,7 @@ export function useDistrictForm() {
     if (districtData && !isCreate) {
       form.reset({ ...districtData, regionId: String(districtData.regionId) })
     }
-  }, [districtData, form])
+  }, [districtData, isCreate, form])
 
   const handleClose = useCallback(() => {
     onClose()

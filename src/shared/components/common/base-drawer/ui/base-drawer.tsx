@@ -75,7 +75,7 @@ export const BaseDrawer = memo(function BaseDrawer({
         )}
       </DrawerFooter>
     )
-  }, [footer, loading, handleClose, disabled, handleSubmit, showCancelButton, showSubmitButton])
+  }, [footer, mode, loading, handleClose, disabled, handleSubmit, showCancelButton, showSubmitButton])
 
   const contentElement = useMemo(() => <div className="flex-1 overflow-auto p-4">{children}</div>, [children])
 

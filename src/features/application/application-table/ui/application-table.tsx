@@ -39,10 +39,6 @@ export const ApplicationTable = () => {
   const { data: officeSelect } = useData<any>(`${API_ENDPOINTS.OFFICES}/select`)
   const { data: executorOptions } = useData<any>(`${API_ENDPOINTS.USERS}/office-users/inspectors/select`)
 
-  const handleViewApplication = (id: any) => {
-    navigate(`/applications/detail/${id}`)
-  }
-
   const columns: ExtendedColumnDef<any, any>[] = useMemo(() => {
     return [
       {
@@ -122,12 +118,12 @@ export const ApplicationTable = () => {
             showView
             showDelete
             row={row}
-            onView={(row: any) => handleViewApplication(row?.original?.id)}
+            onView={(row: any) => navigate(`/applications/detail/${row?.original?.id}`)}
           />
         ),
       },
     ]
-  }, [user, officeSelect, executorOptions])
+  }, [user, officeSelect, executorOptions, navigate])
 
   return <DataTable showFilters isLoading={isLoading} isPaginated data={applications} columns={columns || []} />
 }

@@ -117,7 +117,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
         })
       }
     }
-  }, [isOpen, editData])
+  }, [isOpen, editData, defaultYear, defaultQuarter, currentYear, form])
 
   const indicators = form.watch('indicators')
   const totalWeight = indicators.reduce((sum, ind) => sum + (Number(ind.weight) || 0), 0)

@@ -71,7 +71,7 @@ export const UpdateConclusion = () => {
         informationNotePath: conclusion?.informationNotePath || '',
       })
     }
-  }, [conclusion])
+  }, [conclusion, form])
 
   const onSubmit = (data: AddExpertiseFormValues) => {
     const payload: any = {

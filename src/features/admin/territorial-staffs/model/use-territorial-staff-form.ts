@@ -111,7 +111,7 @@ export function useTerritorialStaffForm() {
         return false
       }
     },
-    [isCreate, territorialStaffId, createTerritorialStaff, updateTerritorialStaff, handleClose, fetchByIdData]
+    [isCreate, territorialStaffId, createTerritorialStaff, updateTerritorialStaff, handleClose]
   )
 
   const isPending = isCreating || isUpdating

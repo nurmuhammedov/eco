@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { UIModeEnum } from '@/shared/types'
 import { useTranslation } from 'react-i18next'
 import { Input } from '@/shared/components/ui/input'
@@ -36,7 +36,7 @@ export const CommitteeStaffDrawer = () => {
     userPermissionOptions,
   } = useCommitteeStaffForm()
 
-  const roleOptions = useMemo(() => getSelectOptions(userRoleOptions), [])
+  const roleOptions = getSelectOptions(userRoleOptions)
 
   const pin = form.getValues('pin')
   const birthDate = form.getValues('birthDate')

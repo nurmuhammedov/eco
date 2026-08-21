@@ -87,7 +87,7 @@ export function CalendarModal({ isOpen, onClose, editData, defaultDate }: Props)
         capacity: 1,
       })
     }
-  }, [isOpen, editData, defaultDate])
+  }, [isOpen, editData, defaultDate, form])
 
   const takenSeats = editData ? editData.capacity - editData.remaining_capacity : 0
 

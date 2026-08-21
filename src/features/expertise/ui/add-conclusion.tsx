@@ -99,25 +99,21 @@ export const AddConclusion = () => {
 
   const selectedHfo = hfoOptions?.find((hfo) => hfo.id === watchedHfId)
   useEffect(() => {
-    if (watchedHfId && hfoOptions) {
-      if (selectedHfo) {
-        form.setValue('objectName', selectedHfo.name || '')
-        form.setValue(
-          'regionId',
-          selectedHfo.regionId
-            ? (selectedHfo.regionId?.toString() as unknown as string)
-            : (undefined as unknown as string)
-        )
-        form.setValue(
-          'districtId',
-          selectedHfo.districtId
-            ? (selectedHfo.districtId?.toString() as unknown as string)
-            : (undefined as unknown as string)
-        )
-        form.setValue('address', selectedHfo.address || '')
-      }
-    }
-  }, [watchedHfId, hfoOptions, form])
+    if (!selectedHfo) return
+
+    form.setValue('objectName', selectedHfo.name || '')
+    form.setValue(
+      'regionId',
+      selectedHfo.regionId ? (selectedHfo.regionId.toString() as unknown as string) : (undefined as unknown as string)
+    )
+    form.setValue(
+      'districtId',
+      selectedHfo.districtId
+        ? (selectedHfo.districtId.toString() as unknown as string)
+        : (undefined as unknown as string)
+    )
+    form.setValue('address', selectedHfo.address || '')
+  }, [selectedHfo, form])
 
   // Qidirish
   const handleSearch = () => {

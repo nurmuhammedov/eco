@@ -25,10 +25,6 @@ export const DeclarationActions = ({ id, status }: DeclarationActionsProps) => {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false)
   const [description, setDescription] = useState('')
 
-  const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ['/declarations'] })
-  }
-
   const {
     mutate: confirm,
     isPending: isConfirming,
@@ -53,9 +49,9 @@ export const DeclarationActions = ({ id, status }: DeclarationActionsProps) => {
       setIsRejectModalOpen(false)
       setIsCancelModalOpen(false)
       setDescription('')
-      invalidate()
+      queryClient.invalidateQueries({ queryKey: ['/declarations'] })
     }
-  }, [isConfirmSuccess, isRejectSuccess, isCancelSuccess])
+  }, [isConfirmSuccess, isRejectSuccess, isCancelSuccess, queryClient])
 
   if (status !== 'IN_PROCESS') return null
 

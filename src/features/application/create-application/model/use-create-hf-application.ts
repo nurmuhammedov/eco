@@ -65,7 +65,7 @@ export const useCreateHfApplication = () => {
 
   const districtOptions = useMemo(() => getSelectOptions(districts), [districts])
 
-  const regionOptions = useMemo(() => getSelectOptions(regions), [regions, regionId])
+  const regionOptions = useMemo(() => getSelectOptions(regions), [regions])
 
   const hazardousFacilityTypeOptions = useMemo(
     () => getHazardousFacilityTypeOptions(hazardousFacilityTypes),

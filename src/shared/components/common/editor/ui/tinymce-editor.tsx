@@ -17,7 +17,6 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
     onFocus,
     onSave,
     height,
-    readOnly = false,
     disabled = false,
     placeholder,
     className = '',
@@ -157,7 +156,7 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
       },
       exportPDF: () => console.log('Implement PDF export'),
     }),
-    [editorRef, isEditorReady, currentPageSize, currentOrientation, currentMargin]
+    [editorRef, currentPageSize, currentOrientation, currentMargin]
   )
 
   const handleEditorInit = (_evt: any, editor: any) => {
@@ -276,7 +275,6 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
       automatic_uploads: true,
     }),
     [
-      editorId,
       mergedPlugins,
       toolbar,
       defaultToolbar,
@@ -286,8 +284,6 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
       placeholder,
       browserSpellcheck,
       inline,
-      readOnly,
-      disabled,
       darkMode,
       contentCss,
       contentStyle,

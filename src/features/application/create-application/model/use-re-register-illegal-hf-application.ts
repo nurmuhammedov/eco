@@ -134,7 +134,7 @@ export const useReRegisterIllegalHFApplication = () => {
   }
 
   const districtOptions = useMemo(() => getSelectOptions(districts), [districts])
-  const regionOptions = useMemo(() => getSelectOptions(regions), [regions, regionId])
+  const regionOptions = useMemo(() => getSelectOptions(regions), [regions])
   const hazardousFacilityTypeOptions = useMemo(() => getSelectOptions(hazardousFacilityTypes), [hazardousFacilityTypes])
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoList || []), [hfoList])
 

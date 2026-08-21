@@ -43,7 +43,7 @@ export function useEquipmentForm() {
     if (districtData && !isCreate) {
       form.reset({ ...districtData, equipmentType: districtData.equipmentType })
     }
-  }, [districtData, form])
+  }, [districtData, isCreate, form])
 
   const handleClose = useCallback(() => {
     onClose()

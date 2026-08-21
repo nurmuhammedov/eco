@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from 'react'
+import { Fragment } from 'react'
 import { Input } from '@/shared/components/ui/input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useUIActionLabel } from '@/shared/hooks'
@@ -12,11 +12,12 @@ import { UIModeEnum } from '@/shared/types'
 import { CategoryTypeView } from '@/features/admin/inspection/category-types/ui/category-type-view'
 import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options'
 
+const options = getSelectOptions(inspectionCategoryOptions)
+
 export const CategoryTypeDrawer = () => {
   const { isOpen, onClose, mode, isCreate } = useCategoryTypeDrawer()
   const modeLabel = useUIActionLabel(mode)
   const { form, onSubmit, isPending, isFetching, categoryTypeData } = useCategoryTypeForm()
-  const options = useMemo(() => getSelectOptions(inspectionCategoryOptions), [inspectionCategoryOptions])
 
   return (
     <BaseDrawer

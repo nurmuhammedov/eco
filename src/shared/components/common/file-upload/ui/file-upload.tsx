@@ -151,39 +151,52 @@ function InputFileComponent<T extends FieldValues>({
 
   const formValue = watch(name)
 
+  /**
+   * The effects below run on form changes and on unmount, so neither of them
+   * can read `fileList` from its own closure without going stale: the sync
+   * effect would lose blob URLs added since the last form change, and the
+   * unmount cleanup would only ever see the empty list captured at mount.
+   */
+  const fileListRef = useRef<FileData[]>(fileList)
+
+  useEffect(() => {
+    fileListRef.current = fileList
+  }, [fileList])
+
   useEffect(() => {
     const currentUrls = Array.isArray(formValue) ? formValue : formValue ? [formValue] : []
+    const previous = fileListRef.current
 
     if (currentUrls.length === 0) {
-      if (fileList.length > 0) {
-        fileList.forEach((f) => f.blobUrl && URL.revokeObjectURL(f.blobUrl))
-        setFileList([])
-      }
+      if (previous.length === 0) return
+      previous.forEach((file) => file.blobUrl && URL.revokeObjectURL(file.blobUrl))
+      setFileList([])
+
       return
     }
 
-    const newFileList = currentUrls.map((url: any) => {
-      const existing = fileList.find((f) => f.url === url)
-      if (existing) return existing
+    const next = currentUrls.map(
+      (url: any) =>
+        previous.find((file) => file.url === url) ??
+        ({
+          url,
+          originalName: typeof url === 'string' ? url.split('/').pop() || 'Nomsiz fayl' : 'Fayl',
+        } as FileData)
+    )
 
-      return {
-        url,
-        originalName: typeof url === 'string' ? url.split('/').pop() || 'Nomsiz fayl' : 'Fayl',
-      } as FileData
-    })
-
-    if (JSON.stringify(newFileList.map((f) => f.url)) !== JSON.stringify(fileList.map((f) => f.url))) {
-      setFileList(newFileList)
+    if (next.length !== previous.length || next.some((file, index) => file.url !== previous[index].url)) {
+      setFileList(next)
     }
   }, [formValue])
 
-  useEffect(() => {
-    return () => {
-      fileList.forEach((file) => {
+  useEffect(
+    () => () => {
+      fileListRef.current.forEach((file) => {
         if (file.blobUrl) URL.revokeObjectURL(file.blobUrl)
       })
-    }
-  }, [])
+    },
+    []
+  )
 
   const hasError = !!errors[name]
   const acceptTypes = useMemo(() => accept.join(','), [accept])
