@@ -290,6 +290,7 @@ const Report3: React.FC = () => {
 
       <div className="flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
+          isPaginated={false}
           showNumeration={false}
           headerCenter={true}
           data={tableData}

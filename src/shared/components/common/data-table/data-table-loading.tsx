@@ -1,18 +1,14 @@
 import { TableCell, TableRow } from '@/shared/components/ui/table'
-import { ColumnDef } from '@tanstack/react-table'
 
-interface DataTableLoadingProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  showNumeration?: boolean
+interface DataTableLoadingProps {
+  /** Must be the rendered leaf column count; grouped headers make the definition count too small. */
+  colSpan: number
 }
 
-export function DataTableLoading<TData, TValue>({
-  columns,
-  showNumeration = true,
-}: DataTableLoadingProps<TData, TValue>) {
+export function DataTableLoading({ colSpan }: DataTableLoadingProps) {
   return (
     <TableRow className="hover:bg-transparent" disableZebra>
-      <TableCell colSpan={columns.length + (showNumeration ? 1 : 0)} className="p-0">
+      <TableCell colSpan={colSpan} className="p-0">
         <div className="flex h-80 w-full flex-col items-center justify-center gap-4" role="status" aria-live="polite">
           <span className="relative flex size-14 items-center justify-center">
             <span className="absolute inset-0 rounded-full bg-blue-500/10" />

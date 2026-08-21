@@ -142,6 +142,10 @@ export function DataTable<TData, TValue>({
     width: '100%',
   }
 
+  // Grouped headers mean the column definitions do not match what is actually rendered,
+  // so full-width cells have to span the visible leaf columns instead.
+  const fullRowSpan = table.getVisibleLeafColumns().length + (showNumeration ? 1 : 0)
+
   // Keep already loaded rows on screen while refetching; only a cold load blanks the table.
   const hasRows = tableData.length > 0
   const isRefreshing = isLoading && hasRows
@@ -241,7 +245,7 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {isLoading && !hasRows ? (
-              <DataTableLoading columns={columns} showNumeration={showNumeration} />
+              <DataTableLoading colSpan={fullRowSpan} />
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row, idx) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="group/row">
@@ -275,7 +279,7 @@ export function DataTable<TData, TValue>({
               ))
             ) : (
               <TableRow className="hover:bg-white">
-                <TableCell colSpan={columns?.length + (showNumeration ? 1 : 0)} className="text-center">
+                <TableCell colSpan={fullRowSpan} className="text-center">
                   <div className="flex h-80 w-full flex-col items-center justify-center gap-4">
                     <Icon name="no-data" size={160} />
                     <p className="font-medium">Hech qanday maʼlumot topilmadi!</p>
