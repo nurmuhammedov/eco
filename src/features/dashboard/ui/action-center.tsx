@@ -52,12 +52,12 @@ export const ActionCenter = ({ regionId }: ActionCenterProps) => {
             <Link
               key={idx}
               to={action.path}
-              className="group flex cursor-pointer flex-col items-center justify-center space-y-3 rounded-xl border border-transparent bg-slate-50 p-4 text-slate-700 transition-all duration-200 hover:border-[#0B626B]/20 hover:bg-[#0B626B]/5 hover:shadow-md"
+              className="group flex cursor-pointer flex-col items-center justify-center space-y-3 rounded-xl border border-transparent bg-slate-50 p-4 text-slate-700 transition-all duration-200 hover:border-teal/20 hover:bg-teal/5 hover:shadow-md"
             >
-              <div className="rounded-full bg-white p-3 text-slate-600 shadow-sm transition-all duration-200 group-hover:scale-110 group-hover:text-[#0B626B]">
+              <div className="rounded-full bg-white p-3 text-slate-600 shadow-sm transition-all duration-200 group-hover:scale-110 group-hover:text-teal">
                 <action.icon className="h-6 w-6" />
               </div>
-              <span className="text-center text-sm font-medium transition-colors group-hover:text-[#0B626B]">
+              <span className="text-center text-sm font-medium transition-colors group-hover:text-teal">
                 {action.label}
               </span>
             </Link>
@@ -81,7 +81,7 @@ export const ActionCenter = ({ regionId }: ActionCenterProps) => {
               <Link
                 to={action.path}
                 aria-label={`${action.label} — barchasini ko‘rish`}
-                className="text-sm font-medium text-[#0B626B] underline-offset-4 hover:underline"
+                className="text-teal text-sm font-medium underline-offset-4 hover:underline"
               >
                 Barchasini ko‘rish
               </Link>
@@ -97,7 +97,7 @@ export const ActionCenter = ({ regionId }: ActionCenterProps) => {
                 />
                 <span className="text-center text-xs font-medium text-slate-500">Yangi</span>
               </div>
-              <div className="flex flex-col items-center justify-center rounded-lg bg-blue-50/50 p-3">
+              <div className="flex flex-col items-center justify-center rounded-lg bg-slate-50 p-3">
                 <StatValue
                   value={action.stats.decreeUploaded}
                   isLoading={isLoading}
@@ -106,7 +106,7 @@ export const ActionCenter = ({ regionId }: ActionCenterProps) => {
                 />
                 <span className="text-center text-xs font-medium text-slate-500">Hujjat yuklangan</span>
               </div>
-              <div className="flex flex-col items-center justify-center rounded-lg bg-amber-50/50 p-3">
+              <div className="flex flex-col items-center justify-center rounded-lg bg-slate-50 p-3">
                 <StatValue
                   value={action.stats.process}
                   isLoading={isLoading}
@@ -115,7 +115,7 @@ export const ActionCenter = ({ regionId }: ActionCenterProps) => {
                 />
                 <span className="text-center text-xs font-medium text-slate-500">Jarayonda</span>
               </div>
-              <div className="flex flex-col items-center justify-center rounded-lg bg-emerald-50/50 p-3">
+              <div className="flex flex-col items-center justify-center rounded-lg bg-slate-50 p-3">
                 <StatValue
                   value={action.stats.completed}
                   isLoading={isLoading}

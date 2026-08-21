@@ -45,44 +45,39 @@ export const DashboardPage = () => {
     { id: 'xray', label: 'Rentgenlar' },
   ]
 
+  const regionParam = activeRegionId?.toString()
+
   return (
-    <div className="w-full bg-slate-50/50 pb-4">
-      <div className="w-full rounded-xl border bg-white p-4 shadow-sm">
-        <div className="mb-6 flex flex-col justify-start gap-4 md:flex-row md:items-center">
-          <div className="scrollbar-hidden min-w-0 overflow-x-auto">
-            <div className="inline-flex min-w-max items-center rounded-lg bg-slate-100 p-1">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => handleTabChange(tab.id)}
-                  className={cn(
-                    'cursor-pointer rounded-md px-6 py-2 text-sm font-medium transition-all duration-200',
-                    currentTab === tab.id
-                      ? 'bg-[#0B626B] text-white shadow-sm'
-                      : 'text-slate-600 hover:bg-white/50 hover:text-slate-900'
-                  )}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+    <div className="w-full pb-4">
+      <div className="w-full space-y-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        {/* Horizontal scroll keeps all four tabs reachable on a narrow screen. */}
+        <div className="scrollbar-hidden -mx-1 min-w-0 overflow-x-auto px-1">
+          <div className="inline-flex min-w-max items-center rounded-lg bg-slate-100 p-1">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => handleTabChange(tab.id)}
+                className={cn(
+                  'focus-visible:ring-teal cursor-pointer rounded-md px-6 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-hidden',
+                  currentTab === tab.id
+                    ? 'bg-teal text-white shadow-sm'
+                    : 'text-slate-600 hover:bg-white hover:text-slate-900'
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
         </div>
 
-        <StatsCards type={currentTab} data={getStatsData()} regionId={activeRegionId?.toString()} />
+        <StatsCards type={currentTab} data={getStatsData()} regionId={regionParam} />
 
-        <div className="mb-4">
-          <ActionCenter regionId={activeRegionId?.toString()} />
-        </div>
+        <ActionCenter regionId={regionParam} />
 
-        <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-12">
-          <div className="lg:col-span-12 xl:col-span-6">
-            <InquiriesStats regionId={activeRegionId?.toString()} />
-          </div>
-
-          <div className="lg:col-span-12 xl:col-span-6">
-            <RiskCenter regionId={activeRegionId?.toString()} />
-          </div>
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <InquiriesStats regionId={regionParam} />
+          <RiskCenter regionId={regionParam} />
         </div>
 
         <DocumentsStats />

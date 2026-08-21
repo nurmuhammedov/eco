@@ -27,7 +27,7 @@ export const DocumentsStats = () => {
   ) => (
     <Link
       to={link}
-      className="group flex flex-col rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:shadow-md"
+      className="group flex flex-col rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:shadow-md"
     >
       <div className="mb-4 flex items-center justify-between">
         <span aria-hidden="true" className={cn('rounded-xl p-2.5', bgColor, colorText)}>

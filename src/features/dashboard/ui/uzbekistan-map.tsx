@@ -155,10 +155,10 @@ export const UzbekistanMap = ({ onRegionClick, className, activeRegionId }: Uzbe
                       className={cn(
                         'cursor-pointer stroke-white transition-colors duration-200 ease-in-out',
                         isActive
-                          ? 'z-10 fill-[#0B626B] drop-shadow-md'
+                          ? 'fill-teal z-10 drop-shadow-md'
                           : !activeRegionId
-                            ? 'fill-[#0B626B]/70 hover:fill-[#0B626B]'
-                            : 'fill-slate-200 hover:fill-[#0B626B]'
+                            ? 'fill-teal/70 hover:fill-teal'
+                            : 'hover:fill-teal fill-slate-200'
                       )}
                       onClick={(e) => {
                         e.stopPropagation()

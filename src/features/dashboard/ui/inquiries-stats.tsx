@@ -72,7 +72,7 @@ export const InquiriesStats = ({ regionId }: InquiriesStatsProps) => {
   ) => (
     <div
       className={cn(
-        'group flex flex-col rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:shadow-md',
+        'group flex flex-col rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:shadow-md',
         className
       )}
     >
