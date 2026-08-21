@@ -68,7 +68,7 @@ export function DataTable<TData, TValue>({
   onPageSizeChange,
   isLoading = false,
   headerCenter = false,
-  isPaginated = true,
+  isPaginated,
   pageSizeOptions,
   showNumeration = true,
   showFilters = false,
@@ -124,7 +124,7 @@ export function DataTable<TData, TValue>({
     initialState,
     pageCount,
     enableSorting: true,
-    manualPagination: isPaginated || isContentData || propPageCount !== undefined,
+    manualPagination: isPaginated !== false || isContentData || propPageCount !== undefined,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -141,6 +141,13 @@ export function DataTable<TData, TValue>({
   const fixedTableStyle: React.CSSProperties = {
     width: '100%',
   }
+
+  /**
+   * A plain array means the endpoint returns everything at once, so a page-size
+   * selector would be misleading. During a cold load the shape is not known yet,
+   * so the footer is kept to stop it popping in once data arrives.
+   */
+  const showPagination = isPaginated ?? (isContentData || propPageCount !== undefined || isLoading)
 
   // Grouped headers mean the column definitions do not match what is actually rendered,
   // so full-width cells have to span the visible leaf columns instead.
@@ -291,8 +298,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {/* Rendered even while loading or empty so the table footer keeps its place. */}
-      {isPaginated && (
+      {showPagination && (
         <DataTablePagination
           data={isContentData ? data : undefined}
           isLoading={isLoading}

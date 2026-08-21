@@ -569,6 +569,7 @@ const Report5: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
+          isPaginated={false}
           showNumeration={false}
           headerCenter={true}
           data={tableData}

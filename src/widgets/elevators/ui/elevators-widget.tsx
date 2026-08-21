@@ -62,7 +62,7 @@ const ElevatorsWidget = () => {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <DataTable data={elevators} columns={columns} isLoading={false} className="flex-1" />
+      <DataTable isPaginated data={elevators} columns={columns} isLoading={false} className="flex-1" />
     </div>
   )
 }
