@@ -15,7 +15,7 @@ import {
 } from '@/shared/config/routes/roles'
 import { authRoutes, publicRoutes, specialComponents } from '@/shared/config/routes'
 import { withFullPageSuspense } from '@/shared/config/routes/utils'
-import { GUEST_LANDING_PATH, IS_STATIC_LANDING, goToGuestLanding } from '@/shared/config/navigation'
+import { GUEST_LANDING_PATH, IS_STATIC_LANDING, goToGuestLanding, isAtGuestLanding } from '@/shared/config/navigation'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { Direction, UserRoles } from '@/entities/user'
 import { BootScreen } from '@/shared/components/common'
@@ -44,13 +44,21 @@ const ROUTES_BY_ROLE: Record<UserRoles, RouteObject[]> = {
 const ALWAYS_ALLOWED_ROUTE_IDS = new Set(['INQUIRY', 'REPORT'])
 
 const GuestRedirect = () => {
+  /**
+   * Reaching this while already on the landing path means the static landing
+   * document was not served — a stale cache or an old service worker answered
+   * with the SPA shell instead. Navigating again would loop, so fall through to
+   * the login page and let the visitor carry on.
+   */
+  const shouldLeaveApp = IS_STATIC_LANDING && !isAtGuestLanding()
+
   useEffect(() => {
-    if (IS_STATIC_LANDING) goToGuestLanding()
-  }, [])
+    if (shouldLeaveApp) goToGuestLanding()
+  }, [shouldLeaveApp])
 
-  if (IS_STATIC_LANDING) return <BootScreen />
+  if (shouldLeaveApp) return <BootScreen />
 
-  return <Navigate to={GUEST_LANDING_PATH} replace />
+  return <Navigate to={IS_STATIC_LANDING ? '/auth/login' : GUEST_LANDING_PATH} replace />
 }
 
 const toRouteObject = ({ path, element }: RouteObject): RouteObject => ({ path, element })

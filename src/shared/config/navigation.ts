@@ -15,6 +15,8 @@ const SW_CLEANUP_TIMEOUT_MS = 1500
 
 let isNavigatingAway = false
 
+export const isAtGuestLanding = (): boolean => window.location.pathname === GUEST_LANDING_PATH
+
 const readMigrationFlag = (): boolean => {
   try {
     return localStorage.getItem(SW_MIGRATION_KEY) === '1'
@@ -55,16 +57,13 @@ const clearOutdatedServiceWorkers = (): Promise<void> => {
 }
 
 export const goToGuestLanding = (): void => {
-  if (isNavigatingAway) return
+  // Reloading while the app is already sitting on the landing path would just
+  // restart this same code, so leaving is the only thing this function may do.
+  if (isNavigatingAway || isAtGuestLanding()) return
+
   isNavigatingAway = true
 
-  const navigate = () => {
-    if (window.location.pathname === GUEST_LANDING_PATH) {
-      window.location.reload()
-    } else {
-      window.location.replace(GUEST_LANDING_PATH)
-    }
-  }
+  const leave = () => window.location.replace(GUEST_LANDING_PATH)
 
-  void clearOutdatedServiceWorkers().then(navigate, navigate)
+  void clearOutdatedServiceWorkers().then(leave, leave)
 }
