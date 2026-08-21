@@ -30,7 +30,9 @@ export const DocumentsStats = () => {
       className="group flex flex-col rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:shadow-md"
     >
       <div className="mb-4 flex items-center justify-between">
-        <span className={cn('rounded-xl p-2.5', bgColor, colorText)}>{icon}</span>
+        <span aria-hidden="true" className={cn('rounded-xl p-2.5', bgColor, colorText)}>
+          {icon}
+        </span>
         {/* Badge logic can be added here if needed */}
       </div>
       <div>

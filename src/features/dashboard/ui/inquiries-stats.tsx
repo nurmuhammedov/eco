@@ -3,6 +3,7 @@ import { cn } from '@/shared/lib/utils'
 import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
 import { InquiryStatus } from '@/features/inquiries/model/types'
 import { DASHBOARD_STALE_TIME } from '../model/use-dashboard-stats'
+import { StatValue } from './stat-value'
 
 interface InquiriesStatsProps {
   regionId?: string | null
@@ -10,42 +11,54 @@ interface InquiriesStatsProps {
 
 export const InquiriesStats = ({ regionId }: InquiriesStatsProps) => {
   const inqParams = { page: 1, size: 1, ...(regionId ? { regionId } : {}) }
-  const { totalElements: inqNew = 0 } = usePaginatedData(
+  const inqNewQuery = usePaginatedData(
     '/inquiries',
     { ...inqParams, status: InquiryStatus.NEW },
     true,
     DASHBOARD_STALE_TIME
   )
-  const { totalElements: inqProcess = 0 } = usePaginatedData(
+  const inqProcessQuery = usePaginatedData(
     '/inquiries',
     { ...inqParams, status: InquiryStatus.IN_PROCESS },
     true,
     DASHBOARD_STALE_TIME
   )
-  const { totalElements: inqCourt = 0 } = usePaginatedData(
+  const inqCourtQuery = usePaginatedData(
     '/inquiries',
     { ...inqParams, status: InquiryStatus.IN_COURT },
     true,
     DASHBOARD_STALE_TIME
   )
-  const { totalElements: inqReward = 0 } = usePaginatedData(
+  const inqRewardQuery = usePaginatedData(
     '/inquiries',
     { ...inqParams, status: InquiryStatus.REWARD_PAYMENT },
     true,
     DASHBOARD_STALE_TIME
   )
-  const { totalElements: inqCompleted = 0 } = usePaginatedData(
+  const inqCompletedQuery = usePaginatedData(
     '/inquiries',
     { ...inqParams, status: InquiryStatus.COMPLETED },
     true,
     DASHBOARD_STALE_TIME
   )
-  const { totalElements: inqRejected = 0 } = usePaginatedData(
+  const inqRejectedQuery = usePaginatedData(
     '/inquiries',
     { ...inqParams, status: InquiryStatus.REJECTED },
     true,
     DASHBOARD_STALE_TIME
   )
+
+  const queries = [inqNewQuery, inqProcessQuery, inqCourtQuery, inqRewardQuery, inqCompletedQuery, inqRejectedQuery]
+
+  // A real zero and a not-yet-loaded zero must not look the same.
+  const isLoading = queries.some((query) => query.isFetching && query.data === undefined)
+
+  const inqNew = inqNewQuery.totalElements ?? 0
+  const inqProcess = inqProcessQuery.totalElements ?? 0
+  const inqCourt = inqCourtQuery.totalElements ?? 0
+  const inqReward = inqRewardQuery.totalElements ?? 0
+  const inqCompleted = inqCompletedQuery.totalElements ?? 0
+  const inqRejected = inqRejectedQuery.totalElements ?? 0
 
   const inquiryTotal = inqNew + inqProcess + inqCourt + inqReward + inqCompleted + inqRejected
 
@@ -64,10 +77,17 @@ export const InquiriesStats = ({ regionId }: InquiriesStatsProps) => {
       )}
     >
       <div className="mb-4 flex items-center justify-between">
-        <span className={cn('rounded-xl p-2.5', bgColor, colorText)}>{icon}</span>
+        <span aria-hidden="true" className={cn('rounded-xl p-2.5', bgColor, colorText)}>
+          {icon}
+        </span>
       </div>
       <div className="mt-auto">
-        <span className="mb-1 block text-2xl font-bold text-slate-900">{value?.toLocaleString()}</span>
+        <StatValue
+          value={value}
+          isLoading={isLoading}
+          className="mb-1 block text-2xl font-bold text-slate-900"
+          skeletonClassName="mb-1 h-8 w-16"
+        />
         <span className="text-sm font-medium text-slate-500">{title}</span>
       </div>
     </div>

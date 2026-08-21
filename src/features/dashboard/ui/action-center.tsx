@@ -74,11 +74,15 @@ export const ActionCenter = ({ regionId }: ActionCenterProps) => {
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className={`rounded-xl ${action.bgColor} p-2.5 ${action.color}`}>
-                  <action.icon className="h-6 w-6" />
+                  <action.icon className="h-6 w-6" aria-hidden="true" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800">{action.label}</h3>
+                <h2 className="text-lg font-bold text-slate-800">{action.label}</h2>
               </div>
-              <Link to={action.path} className="text-sm font-medium text-[#0B626B] underline-offset-4 hover:underline">
+              <Link
+                to={action.path}
+                aria-label={`${action.label} — barchasini ko‘rish`}
+                className="text-sm font-medium text-[#0B626B] underline-offset-4 hover:underline"
+              >
                 Barchasini ko‘rish
               </Link>
             </div>
