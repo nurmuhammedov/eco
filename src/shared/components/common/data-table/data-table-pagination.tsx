@@ -20,6 +20,8 @@ interface PaginationProps<T = any> {
   pageCount?: number
   currentPage?: number
   pageSize?: number
+  /** Used when the table is fed a plain array instead of a paged response. */
+  totalElements?: number
 }
 
 export function DataTablePagination<T>({
@@ -35,6 +37,7 @@ export function DataTablePagination<T>({
   pageCount: manualPageCount,
   currentPage: manualCurrentPage,
   pageSize: manualPageSize,
+  totalElements: manualTotalElements,
 }: PaginationProps<T>) {
   const { t } = useTranslation('common')
 
@@ -45,8 +48,10 @@ export function DataTablePagination<T>({
     number: apiPage,
   } = data?.page ?? {}
 
-  const totalElements = apiTotalElements ?? 0
+  const totalElements = apiTotalElements ?? manualTotalElements ?? 0
   const isEmpty = totalElements === 0
+  // A cold load has no count yet; showing "0" would be wrong rather than merely empty.
+  const isCountUnknown = isLoading && apiTotalElements === undefined && manualTotalElements === undefined
 
   // Kept visible on an empty result so the page size and page 1 stay reachable.
   const totalPages = Math.max(apiTotalPages ?? manualPageCount ?? 0, 1)
@@ -64,8 +69,8 @@ export function DataTablePagination<T>({
 
   // A filter can empty a list the user was paging through; send them back to the start.
   useEffect(() => {
-    if (!isLoading && isEmpty && resolvedPage > 1) onPageChangeRef.current(1)
-  }, [isLoading, isEmpty, resolvedPage])
+    if (!isLoading && !isCountUnknown && isEmpty && resolvedPage > 1) onPageChangeRef.current(1)
+  }, [isLoading, isCountUnknown, isEmpty, resolvedPage])
 
   const handlePageClick = (event: { selected: number }) => {
     onPageChange(event.selected + 1)
@@ -96,7 +101,7 @@ export function DataTablePagination<T>({
             </SelectContent>
           </Select>
         )}
-        {showTotal && (
+        {showTotal && !isCountUnknown && (
           <span className="text-muted-foreground text-sm whitespace-nowrap">
             {t('total_elements', { count: pageInfo.totalElements })}
           </span>

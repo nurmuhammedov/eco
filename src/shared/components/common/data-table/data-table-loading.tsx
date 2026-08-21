@@ -15,8 +15,8 @@ export function DataTableLoading<TData, TValue>({
       <TableCell colSpan={columns.length + (showNumeration ? 1 : 0)} className="p-0">
         <div className="flex h-80 w-full flex-col items-center justify-center gap-4" role="status" aria-live="polite">
           <span className="relative flex size-14 items-center justify-center">
-            <span className="bg-teal/10 absolute inset-0 rounded-full" />
-            <span className="border-teal/20 border-t-teal absolute inset-0 animate-spin rounded-full border-[3px]" />
+            <span className="absolute inset-0 rounded-full bg-blue-500/10" />
+            <span className="absolute inset-0 animate-spin rounded-full border-[3px] border-blue-500/20 border-t-blue-500" />
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -25,7 +25,7 @@ export function DataTableLoading<TData, TValue>({
               strokeLinecap="round"
               strokeLinejoin="round"
               aria-hidden="true"
-              className="text-teal relative size-6"
+              className="relative size-6 text-blue-500"
             >
               <ellipse cx="12" cy="5" rx="8" ry="3" />
               <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />

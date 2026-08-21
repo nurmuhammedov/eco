@@ -151,7 +151,7 @@ export function DataTable<TData, TValue>({
       <div className={cn('relative flex-1 overflow-auto rounded-md bg-white', className)}>
         {isRefreshing && (
           <div role="progressbar" aria-label="Yangilanmoqda" className="absolute inset-x-0 top-0 z-40 h-0.5">
-            <div className="bg-teal animate-route-progress h-full origin-left" />
+            <div className="animate-route-progress h-full origin-left bg-blue-500" />
           </div>
         )}
         <Table
@@ -287,7 +287,8 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {isPaginated && (isContentData || propPageCount !== undefined) && (
+      {/* Rendered even while loading or empty so the table footer keeps its place. */}
+      {isPaginated && (
         <DataTablePagination
           data={isContentData ? data : undefined}
           isLoading={isLoading}
@@ -296,6 +297,7 @@ export function DataTable<TData, TValue>({
           pageSizeOptions={pageSizeOptions}
           onPageSizeChange={handlePageSizeChange}
           pageCount={propPageCount}
+          totalElements={isContentData || isLoading ? undefined : tableData.length}
           currentPage={Number(page)}
           pageSize={Number(size)}
         />

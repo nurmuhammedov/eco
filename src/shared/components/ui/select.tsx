@@ -17,7 +17,9 @@ const SelectTrigger = React.forwardRef<
     className={cn(
       'mb-0 flex h-9 w-full items-center justify-between rounded border border-neutral-300 bg-white px-3 py-1 text-base shadow-xs transition-colors',
       'md:text-sm',
-      'focus:ring-teal focus:ring-1 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50',
+      'focus:ring-teal focus:ring-1 focus:outline-hidden',
+      // Fading the whole control also fades its border away; mute the surface instead.
+      'disabled:text-neutral-450 disabled:cursor-not-allowed disabled:bg-neutral-100',
       'data-[placeholder]:text-neutral-350',
       className
     )}
