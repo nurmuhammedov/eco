@@ -20,6 +20,9 @@ const useServicesPaginatedData = <T>(
     },
     enabled,
     staleTime,
+    // Turning a page or a filter changes the key, which would otherwise drop
+    // the rows and blank the table on every step.
+    placeholderData: (previous) => previous,
   })
 
   const responseData: any = queryMethods.data || {}
@@ -36,6 +39,12 @@ const useServicesPaginatedData = <T>(
   return {
     ...queryMethods,
     data: queryMethods.data,
+    /**
+     * Holding on to the previous page makes the query report success while the
+     * new one is still in flight. Callers pass this straight to a busy state,
+     * so it has to stay true until the real rows arrive.
+     */
+    isLoading: queryMethods.isLoading || queryMethods.isPlaceholderData,
     totalPages,
     totalElements,
   }
