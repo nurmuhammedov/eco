@@ -4,8 +4,6 @@ import { cleanParams } from '@/shared/lib'
 import { toast } from 'sonner'
 import { goToGuestLanding } from '@/shared/config/navigation'
 
-let isRedirectingToLanding = false
-
 export const servicesAxiosInstance = axios.create({
   withCredentials: true,
   baseURL: apiConfig.servicesURL,
@@ -60,8 +58,7 @@ servicesAxiosInstance.interceptors.response.use(
       }
     }
 
-    if (status === 401 && !isQrPath && !isLoginPath && !isRedirectingToLanding) {
-      isRedirectingToLanding = true
+    if (status === 401 && !isQrPath && !isLoginPath) {
       goToGuestLanding()
     }
 

@@ -121,6 +121,7 @@
         --white: #ffffff;
         --border-color: #e0e0e0;
         --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        --header-height: 80px;
       }
 
       * {
@@ -167,7 +168,7 @@
         width: 100%;
         top: 0;
         z-index: 1000;
-        height: 80px;
+        height: var(--header-height);
       }
 
       .navbar {
@@ -187,6 +188,7 @@
       .logo img {
         height: 50px;
         width: auto;
+        border-radius: 50%;
       }
 
       .logo-text {
@@ -288,13 +290,15 @@
       }
 
       #bosh-sahifa {
-        margin-top: 80px;
+        margin-top: var(--header-height);
         background: linear-gradient(rgba(1, 107, 123, 0.85), rgba(1, 107, 123, 0.7)),
           url('https://static.tildacdn.com/tild3338-6236-4261-b336-356563373232/opo-npz.jpg');
         background-size: cover;
         background-position: center;
-        min-height: 85vh;
-        height: fit-content;
+        /* Header plus hero fills exactly one screen; dvh keeps mobile browser
+           chrome from cutting the section short. */
+        min-height: calc(100vh - var(--header-height));
+        min-height: calc(100dvh - var(--header-height));
         display: flex;
         align-items: center;
         justify-content: center;
@@ -696,8 +700,9 @@
       .footer-logo img {
         height: 100px;
         width: auto;
-        padding: 5px;
-        border-radius: 5px;
+        /* The emblem is round but the file has an opaque white square behind it,
+           so the corners have to be clipped away. */
+        border-radius: 50%;
         margin-bottom: 20px;
       }
 
@@ -997,7 +1002,7 @@
               </svg>
             </div>
             <div class="stat-number count" data-target="15420">9 500 +</div>
-            <div class="stat-label">Xavfli obyektlar (XICHO)</div>
+            <div class="stat-label">Xavfli ishlab chiqarish obyektlari</div>
           </div>
 
           <div class="stat-card">

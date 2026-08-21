@@ -28,7 +28,8 @@ export const setupServiceWorker = () => {
       toast.info('Tizimning yangi versiyasi mavjud', {
         description: 'Oxirgi o‘zgarishlarni ko‘rish uchun sahifani yangilang.',
         duration: Infinity,
-        closeButton: true,
+        // No dismiss control: the only way out is applying the update.
+        closeButton: false,
         action: {
           label: 'Yangilash',
           onClick: () => void updateServiceWorker(true),
