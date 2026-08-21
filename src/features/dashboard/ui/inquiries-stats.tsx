@@ -95,14 +95,14 @@ export const InquiriesStats = ({ regionId }: InquiriesStatsProps) => {
 
   return (
     <div className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="mb-8 flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+      <div className="mb-6 flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-900">Murojaatlar</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Murojaatlar</h2>
           <p className="mt-1 text-sm text-slate-500">Kelib tushgan murojaatlar bo‘yicha umumiy hisobot</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 xl:gap-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         {renderCleanCard(
           'Jami',
           inquiryTotal,

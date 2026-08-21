@@ -133,7 +133,7 @@ export const RiskCenter = ({ regionId }: RiskCenterProps) => {
   return (
     <div className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <h2 className="text-lg font-semibold text-slate-800">Xavf tahlil natijasi</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Xavf tahlil natijasi</h2>
 
         <div className="flex items-center gap-2">
           <Select value={year} onValueChange={setYear}>

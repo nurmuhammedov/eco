@@ -49,7 +49,7 @@ export const DocumentsStats = () => {
       conclusion: permitsData?.conclusionCount || 0,
     }
     return (
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         {renderCleanCard(
           'Barchasi',
           permits.total,
@@ -96,7 +96,7 @@ export const DocumentsStats = () => {
       ix: conclusionsData?.ixcount || 0,
     }
     return (
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-6">
         {renderCleanCard(
           'Jami',
           expertises.total,
@@ -150,11 +150,11 @@ export const DocumentsStats = () => {
   }
 
   return (
-    <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as TabType)}>
-        <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
+        <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <h2 className="text-xl font-bold tracking-tight text-slate-900">Hujjatlar</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Hujjatlar</h2>
             <p className="mt-1 text-sm text-slate-500">Barcha hujjatlar holati bo‘yicha umumiy hisobot</p>
           </div>
 

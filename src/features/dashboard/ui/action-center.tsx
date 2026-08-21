@@ -39,14 +39,14 @@ export const ActionCenter = ({ regionId }: ActionCenterProps) => {
         {statsActions.map((action, idx) => (
           <div
             key={idx}
-            className={`flex flex-col rounded-xl border border-l-4 border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 ${action.borderColor} ${action.hoverBorder} hover:shadow-md`}
+            className={`flex flex-col rounded-xl border border-l-4 border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 ${action.borderColor} ${action.hoverBorder} hover:shadow-md`}
           >
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className={`rounded-xl ${action.bgColor} p-2.5 ${action.color}`}>
                   <action.icon className="h-6 w-6" aria-hidden="true" />
                 </div>
-                <h2 className="text-lg font-bold text-slate-800">{action.label}</h2>
+                <h2 className="text-lg font-semibold text-slate-900">{action.label}</h2>
               </div>
               <Link
                 to={action.path}
