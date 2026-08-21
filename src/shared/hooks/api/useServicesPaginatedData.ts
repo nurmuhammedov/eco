@@ -1,7 +1,6 @@
 import { servicesApiClient } from '@/shared/api/services-api-client'
 import { ISearchParams, ResponseData } from '@/shared/types'
 import { useQuery } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { DEFAULT_STALE_TIME } from '@/shared/lib/query/stale-time'
 
@@ -11,11 +10,10 @@ const useServicesPaginatedData = <T>(
   enabled: boolean = true,
   staleTime: number = DEFAULT_STALE_TIME
 ) => {
-  const { i18n } = useTranslation()
   const { user } = useAuth()
 
   const queryMethods = useQuery<ResponseData<T>, Error>({
-    queryKey: ['services', endpoint, params, i18n.language, user?.role],
+    queryKey: ['services', endpoint, params, user?.role],
     queryFn: async () => {
       const res = await servicesApiClient.getWithPagination<T>(endpoint, params)
       return res.data
