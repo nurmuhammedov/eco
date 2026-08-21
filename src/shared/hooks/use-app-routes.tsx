@@ -1,4 +1,4 @@
-import { lazy, useEffect, useMemo } from 'react'
+import { lazy, useEffect, useMemo, useState } from 'react'
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
 import {
   accountantRoutes,
@@ -15,7 +15,13 @@ import {
 } from '@/shared/config/routes/roles'
 import { authRoutes, publicRoutes, specialComponents } from '@/shared/config/routes'
 import { withFullPageSuspense } from '@/shared/config/routes/utils'
-import { GUEST_LANDING_PATH, IS_STATIC_LANDING, goToGuestLanding, isAtGuestLanding } from '@/shared/config/navigation'
+import {
+  GUEST_LANDING_PATH,
+  IS_STATIC_LANDING,
+  escapeStrandedLanding,
+  goToGuestLanding,
+  isAtGuestLanding,
+} from '@/shared/config/navigation'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { Direction, UserRoles } from '@/entities/user'
 import { BootScreen } from '@/shared/components/common'
@@ -44,21 +50,24 @@ const ROUTES_BY_ROLE: Record<UserRoles, RouteObject[]> = {
 const ALWAYS_ALLOWED_ROUTE_IDS = new Set(['INQUIRY', 'REPORT'])
 
 const GuestRedirect = () => {
-  /**
-   * Reaching this while already on the landing path means the static landing
-   * document was not served — a stale cache or an old service worker answered
-   * with the SPA shell instead. Navigating again would loop, so fall through to
-   * the login page and let the visitor carry on.
-   */
-  const shouldLeaveApp = IS_STATIC_LANDING && !isAtGuestLanding()
+  const stranded = IS_STATIC_LANDING && isAtGuestLanding()
+  const [isEscaping, setIsEscaping] = useState(false)
 
   useEffect(() => {
-    if (shouldLeaveApp) goToGuestLanding()
-  }, [shouldLeaveApp])
+    if (!IS_STATIC_LANDING) return
 
-  if (shouldLeaveApp) return <BootScreen />
+    // Running inside the app on the landing path means a cached shell answered
+    // instead of the server; reloading without it lands on the real landing page.
+    if (stranded) setIsEscaping(escapeStrandedLanding())
+    else goToGuestLanding()
+  }, [stranded])
 
-  return <Navigate to={IS_STATIC_LANDING ? '/auth/login' : GUEST_LANDING_PATH} replace />
+  if (!IS_STATIC_LANDING) return <Navigate to={GUEST_LANDING_PATH} replace />
+
+  // Only reached when the escape above has already been tried in this tab.
+  if (stranded && !isEscaping) return <Navigate to="/auth/login" replace />
+
+  return <BootScreen />
 }
 
 const toRouteObject = ({ path, element }: RouteObject): RouteObject => ({ path, element })

@@ -60,6 +60,11 @@ export default defineConfig({
         globIgnores: ['home.html', '**/*.mp4', 'android-chrome-*.png', 'apple-touch-icon.png'],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         cleanupOutdatedCaches: true,
+        // Workbox defaults this to 'index.html', which makes the precache answer `/`
+        // with the SPA shell. `/` is the nginx-served landing page, so that alias has
+        // to be off; navigateFallbackDenylist cannot help because the precache route
+        // matches before the navigation route ever runs.
+        directoryIndex: null,
         runtimeCaching: [
           {
             // Asset names carry a content hash, so a cache hit can never be stale.
