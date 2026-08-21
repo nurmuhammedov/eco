@@ -1,4 +1,4 @@
-export const REGION_MAPPING = [
+const REGION_MAPPING = [
   { name: 'Jizzax viloyati', id: 14 },
   { name: 'Buxoro viloyati', id: 12 },
   { name: 'Namangan viloyati', id: 6 },
@@ -18,9 +18,4 @@ export const REGION_MAPPING = [
 export const getRegionIdByName = (name: string): number | null => {
   const region = REGION_MAPPING.find((r) => r.name === name)
   return region ? region.id : null
-}
-
-export const getRegionNameById = (id: number): string => {
-  const region = REGION_MAPPING.find((r) => r.id === id)
-  return region ? region.name : ''
 }

@@ -1,4 +1,3 @@
-// import { FileText, Search, BarChart2, ShieldCheck, ClipboardCheck, AlertTriangle, Activity } from 'lucide-react'
 import { AlertTriangle, Activity } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAccidentsStats } from '../model/use-accidents-stats'
@@ -10,14 +9,6 @@ interface ActionCenterProps {
 
 export const ActionCenter = ({ regionId }: ActionCenterProps) => {
   const { injury, nonInjury, isLoading } = useAccidentsStats(regionId)
-
-  // const actions = [
-  //   { label: 'Arizalarni ko‘rish', icon: FileText, path: '/applications' },
-  //   { label: 'Reyestrdan qidirish', icon: Search, path: '/register' },
-  //   { label: 'Profilaktika', icon: ShieldCheck, path: '/preventions' },
-  //   { label: 'Tekshiruv o‘tkazish', icon: ClipboardCheck, path: '/inspections' },
-  //   { label: 'Hisobotlar', icon: BarChart2, path: '/reports' },
-  // ]
 
   const statsActions = [
     {
@@ -44,27 +35,6 @@ export const ActionCenter = ({ regionId }: ActionCenterProps) => {
 
   return (
     <div className="flex flex-col space-y-4">
-      {/* Tezkor amallar bo'limi vaqtincha yashirildi */}
-      {/* <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h3 className="mb-3 text-lg font-semibold text-slate-800">Tezkor amallar</h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
-          {actions.map((action, idx) => (
-            <Link
-              key={idx}
-              to={action.path}
-              className="group flex cursor-pointer flex-col items-center justify-center space-y-3 rounded-xl border border-transparent bg-slate-50 p-4 text-slate-700 transition-all duration-200 hover:border-teal/20 hover:bg-teal/5 hover:shadow-md"
-            >
-              <div className="rounded-full bg-white p-3 text-slate-600 shadow-sm transition-all duration-200 group-hover:scale-110 group-hover:text-teal">
-                <action.icon className="h-6 w-6" />
-              </div>
-              <span className="text-center text-sm font-medium transition-colors group-hover:text-teal">
-                {action.label}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </div> */}
-
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {statsActions.map((action, idx) => (
           <div

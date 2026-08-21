@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import uzGeoData from '@/features/dashboard/ui/uz.json'
+import uzGeoData from './uz.json'
 import { cn } from '@/shared/lib/utils.ts'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip.tsx'
 
