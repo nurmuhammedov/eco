@@ -32,11 +32,18 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 const DialogContent = React.forwardRef<
   React.ComponentRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { hideCloseIcon?: boolean }
->(({ className, children, hideCloseIcon = false, ...props }, ref) => (
+>(({ className, children, hideCloseIcon = false, 'aria-describedby': describedBy, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
+      /**
+       * Radix points this at a DialogDescription it assumes exists. Only three
+       * of the sixty-three dialogs here render one, so the rest advertised an
+       * element that is not on the page. Passing the prop through - undefined
+       * when nobody set it - overrides that default.
+       */
+      aria-describedby={describedBy}
       className={cn(
         'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] fixed top-[50%] left-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg duration-200 sm:w-full sm:rounded-lg',
         className
@@ -47,7 +54,7 @@ const DialogContent = React.forwardRef<
       {!hideCloseIcon && (
         <DialogPrimitive.Close className="ring-offset-background data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-5 right-5 cursor-pointer rounded-full p-2 text-gray-900/80 transition-all hover:bg-gray-900/10 hover:text-gray-900 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
           <X className="h-4 w-4 stroke-[2.5]" />
-          <span className="sr-only">Close</span>
+          <span className="sr-only">Yopish</span>
         </DialogPrimitive.Close>
       )}
     </DialogPrimitive.Content>
