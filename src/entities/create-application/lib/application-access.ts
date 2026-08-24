@@ -1,4 +1,4 @@
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/entities/user/model/types'
 import { APPLICATIONS_DATA } from '../constants/constants'
 import { ApplicationCategory, ApplicationTypeEnum } from '../types/enums'
 
@@ -30,15 +30,23 @@ export type ApplicationAccess = 'allowed' | 'disabled' | 'forbidden'
 
 /**
  * `isUpdate` marks an edit of a record that already exists in the register.
- * A disabled type only stops new submissions - records created before the type
- * was switched off must stay editable, so the role check still runs.
+ *
+ * Neither gate below applies to an edit. Both answer "may this role submit a
+ * new application of this type", while /register/update/:type/:id names an
+ * ILLEGAL_REGISTER_* form for every record, whoever registered the object -
+ * that segment picks the form, it does not claim who may act. Judging an edit
+ * by it locked LEGAL and INDIVIDUAL out of their own records entirely, since
+ * no ILLEGAL_* category is on either list. Who may edit record 123 depends on
+ * owning it, which only the backend can answer.
  */
 export const getApplicationAccess = (
   type: ApplicationTypeEnum,
   role?: UserRoles,
   { isUpdate = false }: { isUpdate?: boolean } = {}
 ): ApplicationAccess => {
-  if (!isUpdate && isApplicationDisabled(type)) return 'disabled'
+  if (isUpdate) return 'allowed'
+
+  if (isApplicationDisabled(type)) return 'disabled'
 
   const allowedCategories = role ? CATEGORIES_BY_ROLE[role] : undefined
 
