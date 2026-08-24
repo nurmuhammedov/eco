@@ -59,6 +59,10 @@ const DialogContent = React.forwardRef<
     size?: keyof typeof DIALOG_SIZES
   }
 >(({ className, children, size = 'md', 'aria-describedby': describedBy, ...props }, ref) => {
+  // A modal that zeroes the padding is laying itself out: it brings its own
+  // scrolling body. Wrapping that in another one nests two scroll containers
+  // and pads the content twice.
+  const selfLaidOut = /(?:^|\s)p-0(?:\s|$)/.test(className ?? '')
   const items = React.Children.toArray(children)
   const header = items.find((item) => isSlot(item, DialogHeader))
   const footer = items.find((item) => isSlot(item, DialogFooter))
@@ -89,7 +93,7 @@ const DialogContent = React.forwardRef<
         {React.isValidElement(header)
           ? React.cloneElement(header as React.ReactElement<any>, { 'data-pinned': '' })
           : header}
-        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">{body}</div>
+        <div className={cn('flex min-h-0 flex-1 flex-col', !selfLaidOut && 'overflow-y-auto px-6 py-4')}>{body}</div>
         {footer && React.isValidElement(footer)
           ? React.cloneElement(footer as React.ReactElement<any>, { 'data-pinned': '' })
           : footer}
