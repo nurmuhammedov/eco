@@ -86,7 +86,9 @@ const DialogContent = React.forwardRef<
         )}
         {...props}
       >
-        {header}
+        {React.isValidElement(header)
+          ? React.cloneElement(header as React.ReactElement<any>, { 'data-pinned': '' })
+          : header}
         <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">{body}</div>
         {footer && React.isValidElement(footer)
           ? React.cloneElement(footer as React.ReactElement<any>, { 'data-pinned': '' })
@@ -107,6 +109,15 @@ const DialogHeader = ({
     className={cn(
       // pr-14 keeps a long title clear of the close button.
       'bg-background relative flex shrink-0 flex-col space-y-1.5 border-b py-4 pr-14 pl-6 text-left',
+      /**
+       * A header nested in the dialog's <form> is not a direct child, so it
+       * rides inside the scrolling body. The offsets cancel that body's
+       * padding, which otherwise leaves a band above it for content to scroll
+       * through.
+       */
+      'sticky -top-4 z-20 -mx-6 -mt-4',
+      // Rendered in the pinned slot instead, it needs none of that.
+      'data-[pinned]:static data-[pinned]:m-0',
       className
     )}
     {...props}
