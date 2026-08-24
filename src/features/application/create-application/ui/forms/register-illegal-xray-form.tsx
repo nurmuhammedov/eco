@@ -26,6 +26,7 @@ import { TriangleAlert } from 'lucide-react'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 
 import { useRegisterIllegalXray } from '@/features/application/create-application/model/use-create-illegal-xray-application'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 interface RegisterIllegalXrayFormProps {
   onSubmit: (data: RegisterIllegalXrayDTO) => void
@@ -693,7 +694,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                           )}
                         </div>
                       ) : (
-                        <span className="text-red-600">Mavjud emas</span>
+                        <EmptyValue />
                       )}
                     </div>
                   </div>

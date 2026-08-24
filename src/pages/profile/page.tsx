@@ -8,6 +8,7 @@ import { Skeleton } from '@/shared/components/ui/skeleton'
 import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
 import useUpdate from '@/shared/hooks/api/useUpdate'
 import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 interface InfoItemProps {
   icon: React.ElementType
@@ -26,8 +27,6 @@ const InfoItem = ({ icon: Icon, label, children }: InfoItemProps) => (
     </div>
   </div>
 )
-
-const EmptyValue = () => <span className="text-muted-foreground font-normal">Mavjud emas</span>
 
 export default function ProfilePage() {
   const { user } = useAuth()

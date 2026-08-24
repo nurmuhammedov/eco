@@ -7,6 +7,7 @@ import { Eye } from 'lucide-react'
 import { Badge } from '@/shared/components/ui/badge'
 import { useData } from '@/shared/hooks'
 import { Skeleton } from '@/shared/components/ui/skeleton'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 const InspectionMainInfo = ({ inspectionData }: any) => {
   const [signers, setSigners] = useState<any[]>([])
@@ -33,11 +34,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
       <DetailRow
         title="Tekshiruv dasturi:"
         value={
-          !!programs?.path ? (
-            <FileLink url={programs?.path} title={`${year} yil tekshiruv dasturi`} />
-          ) : (
-            <span className="text-red-500">Mavjud emas</span>
-          )
+          !!programs?.path ? <FileLink url={programs?.path} title={`${year} yil tekshiruv dasturi`} /> : <EmptyValue />
         }
       />
       <DetailRow
@@ -66,7 +63,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
               </button>
             </div>
           ) : (
-            <span className="text-red-500">Mavjud emas</span>
+            <EmptyValue />
           )
         }
       />
@@ -98,7 +95,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
               </span>
             </div>
           ) : (
-            <span className="text-red-500">Mavjud emas</span>
+            <EmptyValue />
           )
         }
       />

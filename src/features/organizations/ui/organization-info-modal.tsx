@@ -2,13 +2,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/compo
 import { useOrganizationInfoQuery } from '@/entities/organizations'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { ReactNode } from 'react'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 interface OrganizationInfoModalProps {
   tin: string | null
   onClose: () => void
 }
-
-const EmptyValue = () => <span className="font-medium text-red-500">Mavjud emas</span>
 
 const InfoRow = ({ title, value }: { title: string; value: ReactNode }) => (
   <div className="grid grid-cols-1 gap-1 rounded-md px-3 py-2 odd:bg-neutral-50 md:grid-cols-2 md:items-center md:gap-4">

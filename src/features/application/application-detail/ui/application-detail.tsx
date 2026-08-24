@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui
 import { getDate } from '@/shared/utils/date'
 import { ApplicationStatusRow } from '@/shared/components/common/application-status-row'
 import { ApplicationStatus } from '@/entities/application'
-import { EmptyValue } from '@/features/application/application-detail/ui/parts/empty-value.tsx'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 /** Reply documents only matter while the appeal is being agreed or approved */
 const RESPONSE_DOCS_STATUSES = [ApplicationStatus.IN_AGREEMENT, ApplicationStatus.IN_APPROVAL]

@@ -16,6 +16,7 @@ import { getDate } from '@/shared/utils/date'
 import { parseISO, format } from 'date-fns'
 import { TriangleAlert } from 'lucide-react'
 import { Skeleton } from '@/shared/components/ui/skeleton'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 interface RegisterIrsFormProps {
   onSubmit: (data: CreateIrsApplicationDTO) => void
@@ -682,7 +683,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
                           )}
                         </div>
                       ) : (
-                        <span className="text-red-600">Mavjud emas</span>
+                        <EmptyValue />
                       )}
                     </div>
                   </div>

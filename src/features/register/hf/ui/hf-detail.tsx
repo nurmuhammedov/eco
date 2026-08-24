@@ -20,6 +20,7 @@ import { DeregisterModal } from '../../common/ui/deregister-modal'
 import { ChangeStatusModal } from '../../common/ui/change-status-modal'
 import { Badge } from '@/shared/components/ui/badge'
 import { EquipmentsList } from '@/features/register/equipments/ui/equipments-list'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 const HfDetail = () => {
   const renderStatus = (status: string | null | undefined) => {
@@ -110,7 +111,7 @@ const HfDetail = () => {
                     Arizani ko‘rish
                   </Link>
                 ) : (
-                  <span className="text-red-600">Mavjud emas</span>
+                  <EmptyValue />
                 )
               }
             />
@@ -120,71 +121,39 @@ const HfDetail = () => {
 
           <DetailRow
             title="Roʻyxatga olish sanasi:"
-            value={
-              data?.registrationDate ? (
-                getDate(data?.registrationDate)
-              ) : (
-                <span className="text-red-600">Mavjud emas</span>
-              )
-            }
+            value={data?.registrationDate ? getDate(data?.registrationDate) : <EmptyValue />}
           />
 
           <DetailRow
             title="Roʻyxatga olish raqami:"
-            value={data?.registryNumber ? data?.registryNumber : <span className="text-red-600">Mavjud emas</span>}
+            value={data?.registryNumber ? data?.registryNumber : <EmptyValue />}
           />
 
           <DetailRow
             title="Reyestrga qo‘yilganligi to‘g‘risidagi hujjat:"
-            value={
-              data?.registryFilePath ? (
-                <FileLink url={data?.registryFilePath} />
-              ) : (
-                <span className="text-red-600">Mavjud emas</span>
-              )
-            }
+            value={data?.registryFilePath ? <FileLink url={data?.registryFilePath} /> : <EmptyValue />}
           />
 
           {!data?.active && (
             <>
               <DetailRow
                 title="Reyestrdan chiqarish sanasi:"
-                value={
-                  data?.deactivationDate ? (
-                    getDate(data?.deactivationDate)
-                  ) : (
-                    <span className="text-red-600">Mavjud emas</span>
-                  )
-                }
+                value={data?.deactivationDate ? getDate(data?.deactivationDate) : <EmptyValue />}
               />
 
               <DetailRow
                 title="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat:"
-                value={
-                  data?.deregisterFilePath ? (
-                    <FileLink url={data?.deregisterFilePath} />
-                  ) : (
-                    <span className="text-red-600">Mavjud emas</span>
-                  )
-                }
+                value={data?.deregisterFilePath ? <FileLink url={data?.deregisterFilePath} /> : <EmptyValue />}
               />
 
               <DetailRow
                 title="Reyestrdan chiqarish uchun asos:"
-                value={
-                  data?.deregisterBasisPath ? (
-                    <FileLink url={data?.deregisterBasisPath} />
-                  ) : (
-                    <span className="text-red-600">Mavjud emas</span>
-                  )
-                }
+                value={data?.deregisterBasisPath ? <FileLink url={data?.deregisterBasisPath} /> : <EmptyValue />}
               />
 
               <DetailRow
                 title="Reyestrdan chiqarish sababi:"
-                value={
-                  data?.deregisterReason ? data?.deregisterReason : <span className="text-red-600">Mavjud emas</span>
-                }
+                value={data?.deregisterReason ? data?.deregisterReason : <EmptyValue />}
               />
             </>
           )}

@@ -10,6 +10,7 @@ import {
   stateService,
 } from '@/entities/create-application'
 import { ACCREDITATION_SPHERE_LABELS } from '@/shared/constants/accreditation-spheres'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 interface Props {
   address: any
@@ -489,13 +490,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
 
     const finalValue = isDate ? getDate(value) : value
 
-    return (
-      <DetailRow
-        key={labelKey}
-        title={t(`labels.${type}.${labelKey}`)}
-        value={finalValue || <span className="font-medium text-red-500">Mavjud emas</span>}
-      />
-    )
+    return <DetailRow key={labelKey} title={t(`labels.${type}.${labelKey}`)} value={finalValue || <EmptyValue />} />
   }
 
   return (
@@ -540,7 +535,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
                 {data.hfName}
               </Link>
             ) : (
-              <span className="font-medium text-red-500">Mavjud emas</span>
+              <EmptyValue />
             )
           }
         />

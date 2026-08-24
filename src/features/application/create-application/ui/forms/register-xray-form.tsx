@@ -15,6 +15,7 @@ import { parseISO, format, addYears } from 'date-fns'
 import { TriangleAlert } from 'lucide-react'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { useCreateXrayApplication } from '../../model/use-create-xray-application'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 interface RegisterXrayFormProps {
   onSubmit: (data: CreateXrayApplicationDTO) => void
@@ -545,7 +546,7 @@ const RegisterXrayForm = ({ onSubmit }: RegisterXrayFormProps) => {
                           )}
                         </div>
                       ) : (
-                        <span className="text-red-600">Mavjud emas</span>
+                        <EmptyValue />
                       )}
                     </div>
                   </div>

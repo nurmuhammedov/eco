@@ -184,7 +184,7 @@ const InspectionReports = ({
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-600">Ombudsman maxsus kodi</p>
-                <p className="text-sm font-semibold text-red-500">Mavjud emas</p>
+                <p className="text-neutral-450 text-sm font-medium">Mavjud emas</p>
               </div>
             </div>
             {inspectionType === 'other' && user?.role === UserRoles.REGIONAL && (

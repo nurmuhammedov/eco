@@ -33,6 +33,7 @@ import {
   MibStatusModal,
 } from '@/features/inquiries/ui/modals/accountant-edit-modals'
 import { AccountantCompleteModal } from '@/features/inquiries/ui/modals/accountant-complete-modal'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 // emptyText removed
 
@@ -148,59 +149,26 @@ const InquiryDetailPage = () => {
         >
           <DetailCardAccordion.Item value="general" title="Murojaat va ijro maʼlumotlari">
             <div className="flex flex-col py-1">
-              <DetailRow
-                title="Murojaat raqami:"
-                value={data?.registryNumber || <span className="font-medium text-red-500">Mavjud emas</span>}
-              />
+              <DetailRow title="Murojaat raqami:" value={data?.registryNumber || <EmptyValue />} />
               <DetailRow
                 title="Murojaat turi:"
-                value={
-                  data?.type ? (
-                    appealTypeTranslations[data.type] || data.type
-                  ) : (
-                    <span className="font-medium text-red-500">Mavjud emas</span>
-                  )
-                }
+                value={data?.type ? appealTypeTranslations[data.type] || data.type : <EmptyValue />}
               />
               <InquiryStatusRow status={data?.status} type={data?.type} />
               <DetailRow
                 title="Murojaat qilingan sana:"
-                value={
-                  data?.createdAt ? (
-                    formatDate(new Date(data.createdAt), 'dd.MM.yyyy HH:mm')
-                  ) : (
-                    <span className="font-medium text-red-500">Mavjud emas</span>
-                  )
-                }
+                value={data?.createdAt ? formatDate(new Date(data.createdAt), 'dd.MM.yyyy HH:mm') : <EmptyValue />}
               />
               <DetailRow
                 title="Hodisa sodir bo‘lgan sana:"
-                value={
-                  data?.occurredAt ? (
-                    formatDate(new Date(data.occurredAt), 'dd.MM.yyyy HH:mm')
-                  ) : (
-                    <span className="font-medium text-red-500">Mavjud emas</span>
-                  )
-                }
+                value={data?.occurredAt ? formatDate(new Date(data.occurredAt), 'dd.MM.yyyy HH:mm') : <EmptyValue />}
               />
 
-              <DetailRow
-                title="Mas’ul inspektor:"
-                value={data?.executorName || <span className="font-medium text-red-500">Mavjud emas</span>}
-              />
-              <DetailRow
-                title="Hudud:"
-                value={data?.regionName || <span className="font-medium text-red-500">Mavjud emas</span>}
-              />
+              <DetailRow title="Mas’ul inspektor:" value={data?.executorName || <EmptyValue />} />
+              <DetailRow title="Hudud:" value={data?.regionName || <EmptyValue />} />
 
-              <DetailRow
-                title="Murojaat matni:"
-                value={data?.message || <span className="font-medium text-red-500">Mavjud emas</span>}
-              />
-              <DetailRow
-                title="Ijro izohi:"
-                value={data?.executionMessage || <span className="font-medium text-red-500">Mavjud emas</span>}
-              />
+              <DetailRow title="Murojaat matni:" value={data?.message || <EmptyValue />} />
+              <DetailRow title="Ijro izohi:" value={data?.executionMessage || <EmptyValue />} />
 
               {user?.role !== UserRoles.ACCOUNTANT && (
                 <DetailRow
@@ -216,7 +184,7 @@ const InquiryDetailPage = () => {
                         </Button>
                       </div>
                     ) : (
-                      <span className="font-medium text-red-500">Mavjud emas</span>
+                      <EmptyValue />
                     )
                   }
                 />
@@ -229,13 +197,7 @@ const InquiryDetailPage = () => {
               <div className="flex flex-col py-1">
                 <DetailRow
                   title="Ijro natijasi:"
-                  value={
-                    data?.result ? (
-                      inquiryResultLabels[data.result] || data.result
-                    ) : (
-                      <span className="font-medium text-red-500">Mavjud emas</span>
-                    )
-                  }
+                  value={data?.result ? inquiryResultLabels[data.result] || data.result : <EmptyValue />}
                 />
                 <DetailRow
                   title="Ajratilgan mukofot puli:"
@@ -243,7 +205,7 @@ const InquiryDetailPage = () => {
                     data?.rewardAmount !== null && data?.rewardAmount !== undefined ? (
                       `${Number(data.rewardAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
                     ) : (
-                      <span className="font-medium text-red-500">Mavjud emas</span>
+                      <EmptyValue />
                     )
                   }
                 />
@@ -253,7 +215,7 @@ const InquiryDetailPage = () => {
                     data?.imposedFineAmount !== null && data?.imposedFineAmount !== undefined ? (
                       `${Number(data.imposedFineAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
                     ) : (
-                      <span className="font-medium text-red-500">Mavjud emas</span>
+                      <EmptyValue />
                     )
                   }
                 />
@@ -263,7 +225,7 @@ const InquiryDetailPage = () => {
                     data?.withholdingAmount !== null && data?.withholdingAmount !== undefined ? (
                       `${Number(data.withholdingAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
                     ) : (
-                      <span className="font-medium text-red-500">Mavjud emas</span>
+                      <EmptyValue />
                     )
                   }
                 />
@@ -273,7 +235,7 @@ const InquiryDetailPage = () => {
                     data?.transferFineAmount !== null && data?.transferFineAmount !== undefined ? (
                       `${Number(data.transferFineAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
                     ) : (
-                      <span className="font-medium text-red-500">Mavjud emas</span>
+                      <EmptyValue />
                     )
                   }
                 />
@@ -284,7 +246,7 @@ const InquiryDetailPage = () => {
                       {data?.recoveredAmount !== null && data?.recoveredAmount !== undefined ? (
                         `${Number(data.recoveredAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
                       ) : (
-                        <span className="font-medium text-red-500">Mavjud emas</span>
+                        <EmptyValue />
                       )}
                       {user?.role === UserRoles.ACCOUNTANT && data?.status === InquiryStatus.REWARD_PAYMENT && (
                         <RecoveredAmountModal
@@ -307,7 +269,7 @@ const InquiryDetailPage = () => {
                           <span className="font-medium text-green-500">MIBga oshirilmadi</span>
                         )
                       ) : (
-                        <span className="font-medium text-red-500">Mavjud emas</span>
+                        <EmptyValue />
                       )}
                       {user?.role === UserRoles.ACCOUNTANT && data?.status === InquiryStatus.REWARD_PAYMENT && (
                         <MibStatusModal inquiryId={id!} defaultValue={data?.isMib} />
@@ -322,7 +284,7 @@ const InquiryDetailPage = () => {
                       {data?.paidRewardAmount !== null && data?.paidRewardAmount !== undefined ? (
                         `${Number(data.paidRewardAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
                       ) : (
-                        <span className="font-medium text-red-500">Mavjud emas</span>
+                        <EmptyValue />
                       )}
                       {user?.role === UserRoles.ACCOUNTANT && data?.status === InquiryStatus.REWARD_PAYMENT && (
                         <PaidRewardModal
@@ -335,10 +297,7 @@ const InquiryDetailPage = () => {
                     </div>
                   }
                 />
-                <DetailRow
-                  title="To‘lanmaslik sababi:"
-                  value={data?.rejectReason || <span className="font-medium text-red-500">Mavjud emas</span>}
-                />
+                <DetailRow title="To‘lanmaslik sababi:" value={data?.rejectReason || <EmptyValue />} />
 
                 <DetailRow
                   title={data?.action === 'SEND_TO_COURT' ? 'Sudga tayyorlangan hujjat:' : 'Asos hujjat:'}
@@ -346,7 +305,7 @@ const InquiryDetailPage = () => {
                     data?.initialExecutionFilePath ? (
                       <FileLink url={data.initialExecutionFilePath} title="Faylni ko‘rish" />
                     ) : (
-                      <span className="font-medium text-red-500">Mavjud emas</span>
+                      <EmptyValue />
                     )
                   }
                 />
@@ -356,7 +315,7 @@ const InquiryDetailPage = () => {
                     data?.courtExecutionFilePath ? (
                       <FileLink url={data.courtExecutionFilePath} title="Faylni ko‘rish" />
                     ) : (
-                      <span className="font-medium text-red-500">Mavjud emas</span>
+                      <EmptyValue />
                     )
                   }
                 />
@@ -366,7 +325,7 @@ const InquiryDetailPage = () => {
                     data?.paymentExecutionFilePath ? (
                       <FileLink url={data.paymentExecutionFilePath} title="Faylni ko‘rish" />
                     ) : (
-                      <span className="font-medium text-red-500">Mavjud emas</span>
+                      <EmptyValue />
                     )
                   }
                 />
@@ -380,25 +339,15 @@ const InquiryDetailPage = () => {
             inspectionByInquiry && (
               <DetailCardAccordion.Item value="inspection_info" title="Tekshiruv ma’lumotlari">
                 <div className="flex flex-col py-1">
-                  <DetailRow
-                    title="Tashkilot nomi:"
-                    value={
-                      inspectionByInquiry?.legalName || <span className="font-medium text-red-500">Mavjud emas</span>
-                    }
-                  />
-                  <DetailRow
-                    title="Tashkilot STIR:"
-                    value={
-                      inspectionByInquiry?.legalTin || <span className="font-medium text-red-500">Mavjud emas</span>
-                    }
-                  />
+                  <DetailRow title="Tashkilot nomi:" value={inspectionByInquiry?.legalName || <EmptyValue />} />
+                  <DetailRow title="Tashkilot STIR:" value={inspectionByInquiry?.legalTin || <EmptyValue />} />
                   <DetailRow
                     title="Tekshiruv sanasi:"
                     value={
                       inspectionByInquiry?.startDate && inspectionByInquiry?.endDate ? (
                         `${formatDate(new Date(inspectionByInquiry.startDate), 'dd.MM.yyyy')} - ${formatDate(new Date(inspectionByInquiry.endDate), 'dd.MM.yyyy')}`
                       ) : (
-                        <span className="font-medium text-red-500">Mavjud emas</span>
+                        <EmptyValue />
                       )
                     }
                   />
@@ -408,23 +357,18 @@ const InquiryDetailPage = () => {
                       inspectionByInquiry?.inspectors?.length > 0 ? (
                         inspectionByInquiry.inspectors.map((i: any) => i.name).join(', ')
                       ) : (
-                        <span className="font-medium text-red-500">Mavjud emas</span>
+                        <EmptyValue />
                       )
                     }
                   />
-                  <DetailRow
-                    title="Buyruq raqami:"
-                    value={
-                      inspectionByInquiry?.decreeNumber || <span className="font-medium text-red-500">Mavjud emas</span>
-                    }
-                  />
+                  <DetailRow title="Buyruq raqami:" value={inspectionByInquiry?.decreeNumber || <EmptyValue />} />
                   <DetailRow
                     title="Tekshiruv dasturi:"
                     value={
                       inspectionByInquiry?.programPath ? (
                         <FileLink url={inspectionByInquiry.programPath} title="Faylni ko‘rish" />
                       ) : (
-                        <span className="font-medium text-red-500">Mavjud emas</span>
+                        <EmptyValue />
                       )
                     }
                   />
@@ -434,7 +378,7 @@ const InquiryDetailPage = () => {
                       inspectionByInquiry?.decree?.path ? (
                         <FileLink url={inspectionByInquiry.decree.path} title="Faylni ko‘rish" />
                       ) : (
-                        <span className="font-medium text-red-500">Mavjud emas</span>
+                        <EmptyValue />
                       )
                     }
                   />
@@ -444,18 +388,9 @@ const InquiryDetailPage = () => {
 
           <DetailCardAccordion.Item value="applicant_info" title="Yuboruvchi to‘g‘risida ma’lumot">
             <div className="flex flex-col py-1">
-              <DetailRow
-                title="Yuboruvchi F.I.SH.:"
-                value={data?.fullName || <span className="font-medium text-red-500">Mavjud emas</span>}
-              />
-              <DetailRow
-                title="Egasi PINFL/STIR:"
-                value={data?.ownerIdentity || <span className="font-medium text-red-500">Mavjud emas</span>}
-              />
-              <DetailRow
-                title="Telefon raqami:"
-                value={data?.phoneNumber || <span className="font-medium text-red-500">Mavjud emas</span>}
-              />
+              <DetailRow title="Yuboruvchi F.I.SH.:" value={data?.fullName || <EmptyValue />} />
+              <DetailRow title="Egasi PINFL/STIR:" value={data?.ownerIdentity || <EmptyValue />} />
+              <DetailRow title="Telefon raqami:" value={data?.phoneNumber || <EmptyValue />} />
             </div>
           </DetailCardAccordion.Item>
 

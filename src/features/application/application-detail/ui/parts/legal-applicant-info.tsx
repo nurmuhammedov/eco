@@ -1,7 +1,7 @@
 import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx'
 import DetailRow from '@/shared/components/common/detail-row.tsx'
 import { Skeleton } from '@/shared/components/ui/skeleton.tsx'
-import { EmptyValue } from '@/features/application/application-detail/ui/parts/empty-value.tsx'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 const LegalApplicantInfo = ({ tinNumber, phoneNumber, isShowPhoneNumber = false }: any) => {
   const { data, isLoading } = useLegalApplicantInfo(tinNumber)

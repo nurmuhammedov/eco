@@ -17,6 +17,7 @@ import { UserRoles } from '@/entities/user'
 import { IrsList } from '@/features/register/irs/ui/irs-list'
 import { XrayList } from '@/features/register/xray/ui/xray-list'
 import { useTranslation } from 'react-i18next'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 const RiskAnalysisDetail = () => {
   const { data: objectData } = useObjectInfo()
@@ -172,7 +173,7 @@ const RiskAnalysisDetail = () => {
                         Arizani ko‘rish
                       </Link>
                     ) : (
-                      <span className="text-red-600">Mavjud emas</span>
+                      <EmptyValue />
                     )
                   }
                 />

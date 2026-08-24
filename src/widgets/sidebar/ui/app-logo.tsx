@@ -19,7 +19,7 @@ export function AppLogo() {
           'hidden w-0 opacity-0': !sidebarOpen,
         })}
       >
-        <h6 className="text-sidebar-foreground text-xs leading-tight font-medium">{t('app.name')}</h6>
+        <span className="text-sidebar-foreground text-xs leading-tight font-medium">{t('app.name')}</span>
       </div>
     </div>
   )

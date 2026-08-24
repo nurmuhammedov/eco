@@ -28,6 +28,7 @@ import { Skeleton } from '@/shared/components/ui/skeleton'
 
 import { useRegisterIllegalIrs } from '@/features/application/create-application/model/use-create-illegal-irs-application'
 import { RegisterIllegalIrsDTO } from '@/entities/create-application/schemas/register-illegal-irs.schema'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 interface RegisterIllegalIrsFormProps {
   onSubmit: (data: RegisterIllegalIrsDTO) => void
@@ -845,7 +846,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                           )}
                         </div>
                       ) : (
-                        <span className="text-red-600">Mavjud emas</span>
+                        <EmptyValue />
                       )}
                     </div>
                   </div>

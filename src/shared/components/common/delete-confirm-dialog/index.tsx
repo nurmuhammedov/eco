@@ -102,7 +102,7 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
         ) : (
           <button
             type="button"
-            aria-label="Delete"
+            aria-label="O‘chirish"
             className={cn(
               'flex items-center justify-center rounded p-1 transition-colors focus:outline-none',
               variant === 'outline'

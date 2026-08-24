@@ -3,6 +3,7 @@ import { UserRoles } from '@/entities/user'
 import FileLink from '@/shared/components/common/file-link.tsx'
 import { FC } from 'react'
 import { getDate } from '@/shared/utils/date'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 type FileType = {
   label: string
@@ -30,7 +31,7 @@ const FilesSection: FC<Props> = ({ files = [] }) => {
 
   const showFileData = (file: FileType) => {
     if (!file.data.path && !file.data.number && !file.data.uploadDate && !file.data.expiryDate) {
-      return <span className="text-red-600">Mavjud emas</span>
+      return <EmptyValue />
     } else {
       return (
         <div className={'flex-col'}>

@@ -17,6 +17,7 @@ import { useAuth } from '@/shared/hooks/use-auth.ts'
 import { useState } from 'react'
 import { Button } from '@/shared/components/ui/button'
 import { DeregisterModal } from '../../common/ui/deregister-modal'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 const XrayDetail = () => {
   const { id } = useParams()
@@ -68,7 +69,7 @@ const XrayDetail = () => {
                     Arizani ko‘rish
                   </Link>
                 ) : (
-                  <span className="text-red-600">Mavjud emas</span>
+                  <EmptyValue />
                 )
               }
             />
@@ -76,49 +77,29 @@ const XrayDetail = () => {
 
           <DetailRow
             title="Roʻyxatga olish sanasi:"
-            value={
-              data?.registrationDate ? (
-                getDate(data?.registrationDate)
-              ) : (
-                <span className="text-red-600">Mavjud emas</span>
-              )
-            }
+            value={data?.registrationDate ? getDate(data?.registrationDate) : <EmptyValue />}
           />
 
           <DetailRow
             title="Roʻyxatga olish raqami:"
-            value={data?.registryNumber ? data?.registryNumber : <span className="text-red-600">Mavjud emas</span>}
+            value={data?.registryNumber ? data?.registryNumber : <EmptyValue />}
           />
 
           {!data?.isActive && (
             <>
               <DetailRow
                 title="Reyestrdan chiqarish sanasi:"
-                value={
-                  data?.deactivationDate ? (
-                    getDate(data?.deactivationDate)
-                  ) : (
-                    <span className="text-red-600">Mavjud emas</span>
-                  )
-                }
+                value={data?.deactivationDate ? getDate(data?.deactivationDate) : <EmptyValue />}
               />
 
               <DetailRow
                 title="Reyestrdan chiqarish uchun asos:"
-                value={
-                  data?.deregisterBasisPath ? (
-                    <FileLink url={data?.deregisterBasisPath} />
-                  ) : (
-                    <span className="text-red-600">Mavjud emas</span>
-                  )
-                }
+                value={data?.deregisterBasisPath ? <FileLink url={data?.deregisterBasisPath} /> : <EmptyValue />}
               />
 
               <DetailRow
                 title="Reyestrdan chiqarish sababi:"
-                value={
-                  data?.deregisterReason ? data?.deregisterReason : <span className="text-red-600">Mavjud emas</span>
-                }
+                value={data?.deregisterReason ? data?.deregisterReason : <EmptyValue />}
               />
             </>
           )}

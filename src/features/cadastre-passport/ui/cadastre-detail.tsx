@@ -24,6 +24,7 @@ import { StatusBadge } from './cadastre-list'
 import { CadastreEditModal } from './components/cadastre-edit-modal'
 import { Edit2 } from 'lucide-react'
 import { format } from 'date-fns'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 
 const fvvSchema = z.object({
   conclusion: z.string().min(1, 'Majburiy maydon!'),
@@ -338,32 +339,18 @@ export default function CadastreDetail() {
 
           <DetailRow
             title="Titul fayli"
-            value={
-              item.titlePagePath ? (
-                <FileLink url={item.titlePagePath} title="Hujjatni ko‘rish" />
-              ) : (
-                <span className="text-red-500">Mavjud emas</span>
-              )
-            }
+            value={item.titlePagePath ? <FileLink url={item.titlePagePath} title="Hujjatni ko‘rish" /> : <EmptyValue />}
           />
           <DetailRow
             title="Atribut fayli"
             value={
-              item.detailFilePath ? (
-                <FileLink url={item.detailFilePath} title="Hujjatni ko‘rish" />
-              ) : (
-                <span className="text-red-500">Mavjud emas</span>
-              )
+              item.detailFilePath ? <FileLink url={item.detailFilePath} title="Hujjatni ko‘rish" /> : <EmptyValue />
             }
           />
           <DetailRow
             title="Kadastr passporti fayli"
             value={
-              item.passportFilePath ? (
-                <FileLink url={item.passportFilePath} title="Hujjatni ko‘rish" />
-              ) : (
-                <span className="text-red-500">Mavjud emas</span>
-              )
+              item.passportFilePath ? <FileLink url={item.passportFilePath} title="Hujjatni ko‘rish" /> : <EmptyValue />
             }
           />
         </DetailCardAccordion.Item>
@@ -436,17 +423,14 @@ export default function CadastreDetail() {
             title="Tashkilot manzili"
             value={fvvInfo?.address || item.fvvAddress || 'Toshkent, 100084, Yunusobod tumani, Kichik xalqa yo‘li-4'}
           />
-          <DetailRow
-            title="Tashkilot xulosasi"
-            value={fvvReview?.conclusion || (fvvReview ? '-' : <span className="text-red-500">Mavjud emas</span>)}
-          />
+          <DetailRow title="Tashkilot xulosasi" value={fvvReview?.conclusion || (fvvReview ? '-' : <EmptyValue />)} />
           {fvvReview?.conclusionFilePath ? (
             <DetailRow
               title="Xulosa fayli"
               value={<FileLink url={fvvReview.conclusionFilePath} title="Hujjatni ko‘rish" />}
             />
           ) : (
-            <DetailRow title="Xulosa fayli" value={<span className="text-red-500">Mavjud emas</span>} />
+            <DetailRow title="Xulosa fayli" value={<EmptyValue />} />
           )}
         </DetailCardAccordion.Item>
 
@@ -466,28 +450,22 @@ export default function CadastreDetail() {
             title="Tashkilot manzili"
             value={sesInfo?.address || item.sesAddress || 'Toshkent shahri, Chilonzor tumani, Bunyodkor ko‘chasi, 46.'}
           />
-          <DetailRow
-            title="Tashkilot xulosasi"
-            value={sesReview?.conclusion || (sesReview ? '-' : <span className="text-red-500">Mavjud emas</span>)}
-          />
+          <DetailRow title="Tashkilot xulosasi" value={sesReview?.conclusion || (sesReview ? '-' : <EmptyValue />)} />
           {sesReview?.conclusionFilePath ? (
             <DetailRow
               title="Xulosa fayli"
               value={<FileLink url={sesReview.conclusionFilePath} title="Hujjatni ko‘rish" />}
             />
           ) : (
-            <DetailRow title="Xulosa fayli" value={<span className="text-red-500">Mavjud emas</span>} />
+            <DetailRow title="Xulosa fayli" value={<EmptyValue />} />
           )}
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="committee" title="Qo‘mita ma’lumotlari">
-          <DetailRow
-            title="Ijrochi mas’ul F.I.SH."
-            value={committeeReview ? item.committeeBoss : <span className="text-red-500">Mavjud emas</span>}
-          />
+          <DetailRow title="Ijrochi mas’ul F.I.SH." value={committeeReview ? item.committeeBoss : <EmptyValue />} />
           <DetailRow
             title="Ijrochi mas’ul xulosasi"
-            value={committeeReview ? committeeReview.conclusion : <span className="text-red-500">Mavjud emas</span>}
+            value={committeeReview ? committeeReview.conclusion : <EmptyValue />}
           />
           {committeeReview?.conclusionFilePath ? (
             <DetailRow
@@ -495,7 +473,7 @@ export default function CadastreDetail() {
               value={<FileLink url={committeeReview.conclusionFilePath} title="Hujjatni ko‘rish" />}
             />
           ) : (
-            <DetailRow title="Xulosa fayli" value={<span className="text-red-500">Mavjud emas</span>} />
+            <DetailRow title="Xulosa fayli" value={<EmptyValue />} />
           )}
         </DetailCardAccordion.Item>
       </Accordion>

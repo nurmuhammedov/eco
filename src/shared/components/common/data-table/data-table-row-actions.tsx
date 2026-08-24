@@ -94,7 +94,7 @@ function DataTableRowActions<TData>({
     ...(showView && onView
       ? [
           {
-            ariaLabel: 'View',
+            ariaLabel: 'Ko‘rish',
             onClick: handleView,
             className: cn(viewClassName),
             icon: <Eye className="size-4" />,
@@ -104,7 +104,7 @@ function DataTableRowActions<TData>({
     ...(showQr && onQr
       ? [
           {
-            ariaLabel: 'Qr',
+            ariaLabel: 'QR kod',
             onClick: handleQr,
             className: cn(qrClassName),
             icon: <QrCode className="size-4" />,
@@ -114,7 +114,7 @@ function DataTableRowActions<TData>({
     ...(showEdit && onEdit
       ? [
           {
-            ariaLabel: 'Edit',
+            ariaLabel: 'Tahrirlash',
             onClick: handleEdit,
             className: cn(editClassName),
             icon: <Pencil className="size-4" />,
@@ -124,7 +124,7 @@ function DataTableRowActions<TData>({
     ...(showDelete && onDelete
       ? [
           {
-            ariaLabel: 'Delete',
+            ariaLabel: 'O‘chirish',
             onClick: handleDelete,
             className: cn(deleteClassName),
             icon: <Trash2 className="size-4" />,
@@ -139,7 +139,7 @@ function DataTableRowActions<TData>({
   }
 
   return (
-    <div role="group" aria-label="Row actions" className={cn('flex gap-1', containerClassName)}>
+    <div role="group" aria-label="Qator amallari" className={cn('flex gap-1', containerClassName)}>
       {buttons.map((button, index) => (
         <ActionButton
           key={index}
