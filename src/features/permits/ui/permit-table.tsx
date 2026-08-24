@@ -28,14 +28,6 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
     },
   } = useCustomSearchParams()
 
-  // const { data: documentNamesResponse } = useQuery({
-  //   queryKey: ['permit-document-names', tab],
-  //   queryFn: () =>
-  //     apiClient.get<any>('/permits/document-names', {
-  //       type: tab === 'ALL' ? undefined : tab,
-  //     }),
-  // })
-
   const { data: names } = useData<any>('/permits/document-names', true, {
     type: tab === 'ALL' ? undefined : tab,
   })

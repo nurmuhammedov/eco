@@ -479,11 +479,6 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
                   },
                 ]
               : [
-                  // {
-                  //   id: 'ALL',
-                  //   name: isAutoCrane ? 'Barcha avtokranlar' : 'Barchasi',
-                  //   count: currentStatus === 'ALL' ? totalElements : undefined,
-                  // },
                   {
                     id: 'ACTIVE',
                     name: isAutoCrane ? 'Reyestrdagi avtokranlar' : 'Reyestrdagi qurilmalar',

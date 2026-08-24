@@ -43,7 +43,6 @@ const ReportsDetail8 = lazy(() => import('@/features/reports/ui/report8'))
 const ReportsDetail9 = lazy(() => import('@/features/reports/ui/report9'))
 const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
 const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
-// const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
 const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
 const KpiRegionalReport = lazy(() => import('@/features/reports/ui/kpi-regional-report'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
@@ -57,7 +56,6 @@ const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail
 // Expanded Imports
 const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
-// const RegisterHFUpdatePage = lazy(() => import('@/pages/register/hf/hf-update'))
 const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 const UpdateOrganizationPage = lazy(() => import('@/pages/register/update-organization-page'))
@@ -128,11 +126,6 @@ export const inspectorRoutes = [
     path: 'register/:id/hf',
     element: withSuspense(RegisterHFDetail),
   },
-  // {
-  //   id: 'REGISTRY',
-  //   path: 'register/hf/update/:id',
-  //   element: withSuspense(RegisterHFUpdatePage),
-  // },
   {
     id: 'REGISTRY',
     path: 'register/update/:type/:id',

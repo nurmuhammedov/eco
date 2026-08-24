@@ -188,17 +188,6 @@ const RiskAnalysisDetail = () => {
             </DetailCardAccordion.Item>
           </>
         )}
-        {/*<DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">*/}
-        {/*  <AppealMainInfo data={data} type={type?.toUpperCase()} address={data?.address} />*/}
-        {/*</DetailCardAccordion.Item>*/}
-        {/*<DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">*/}
-        {/*  <FilesSection files={data?.files || []} />*/}
-        {/*</DetailCardAccordion.Item>*/}
-        {/*{!!currentObjLocation?.length && (*/}
-        {/*  <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">*/}
-        {/*    <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />*/}
-        {/*  </DetailCardAccordion.Item>*/}
-        {/*)}*/}
       </DetailCardAccordion>
     </>
   )

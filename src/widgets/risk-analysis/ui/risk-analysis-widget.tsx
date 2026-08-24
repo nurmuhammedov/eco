@@ -231,12 +231,6 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
                 {irsTotalCount}
               </Badge>
             </TabsTrigger>
-            {/*<TabsTrigger value={RiskAnalysisTab.LIFT}>*/}
-            {/*  {t('risk_analysis_tabs.LIFT')}*/}
-            {/*  <Badge variant="destructive" className="ml-2">*/}
-            {/*    {elevatorTotalCount}*/}
-            {/*  </Badge>*/}
-            {/*</TabsTrigger>*/}
             <TabsTrigger value={RiskAnalysisTab.XRAY}>
               {t('risk_analysis_tabs.XRAY')}
               <Badge variant="destructive" className="ml-2">

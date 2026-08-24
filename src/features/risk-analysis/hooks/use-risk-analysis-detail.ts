@@ -9,11 +9,7 @@ export const useRiskAnalysisDetail = () => {
   const id = searchParams.get('id')
   const type = searchParams.get('type')
   const intervalId = searchParams.get('intervalId')
-  // const navigate = useNavigate();
 
-  // if (!intervalId || !id || !tin) {
-  //   navigate('/risk-analysis', { replace: true });
-  // }
   return useQuery({
     queryKey: [QK_RISK_ANALYSIS, intervalId, id, tin, type],
     queryFn: () =>

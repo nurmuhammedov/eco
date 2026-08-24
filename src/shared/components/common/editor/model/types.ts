@@ -95,7 +95,6 @@ export interface TinyMCEEditorRef {
   insertPageBreak?: () => void
   printPreview: () => void
   print?: () => void
-  exportPDF: () => void
   exportDOCX?: () => void
   addHeader?: (content: string) => void
   addFooter?: (content: string) => void

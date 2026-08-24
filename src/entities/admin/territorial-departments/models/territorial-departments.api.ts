@@ -19,12 +19,6 @@ export const territorialDepartmentsAPI = {
     return data.data
   },
   create: async (data: CreateTerritorialDepartmentsDTO) => {
-    // if (!response.success && response.errors) {
-    //   toast.error(Object.values(response.errors).join(', '), {
-    //     richColors: true,
-    //   });
-    // }
-
     return await apiClient.post<TerritorialDepartmentResponse, CreateTerritorialDepartmentsDTO>(
       API_ENDPOINTS.OFFICES,
       data

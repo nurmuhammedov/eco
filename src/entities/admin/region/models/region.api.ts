@@ -14,12 +14,6 @@ export const regionAPI = {
     return data.data
   },
   createRegion: async (district: CreateRegionDTO) => {
-    // if (!response.success && response.errors) {
-    //   toast.error(Object.values(response.errors).join(', '), {
-    //     richColors: true,
-    //   });
-    // }
-
     return await apiClient.post<RegionResponse, CreateRegionDTO>(API_ENDPOINTS.REGIONS, district)
   },
   updateRegion: async (district: UpdateRegionDTO) => {

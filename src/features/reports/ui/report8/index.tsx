@@ -10,13 +10,9 @@ const Report8: React.FC = () => {
   const tableData = useMemo(() => {
     if (!reportData || !Array.isArray(reportData)) return []
 
-    console.log(reportData, 'reportData')
-
     return reportData.map((item: any) => {
       const hf = item.hf || {}
       const equipment = item.equipment || {}
-      // const irs = item.irs || {}
-      // const xray = item.xray || {}
 
       return {
         officeName: item.regionName,
@@ -38,22 +34,6 @@ const Report8: React.FC = () => {
           in_process: equipment.inProcessCount || 0,
           completed: equipment.completedCount || 0,
         },
-        // irs: {
-        //   total: irs.allCount || 0,
-        //   entrepreneur: irs.legalCount || 0,
-        //   inspector: irs.inspectorCount || 0,
-        //   not_completed: irs.newCount || 0,
-        //   in_process: irs.inProcessCount || 0,
-        //   completed: irs.completedCount || 0,
-        // },
-        // xray: {
-        //   total: xray.allCount || 0,
-        //   entrepreneur: xray.legalCount || 0,
-        //   inspector: xray.inspectorCount || 0,
-        //   not_completed: xray.newCount || 0,
-        //   in_process: xray.inProcessCount || 0,
-        //   completed: xray.completedCount || 0,
-        // },
       }
     })
   }, [reportData])
@@ -133,8 +113,6 @@ const Report8: React.FC = () => {
     },
     createGroup('x', 'XICHO'),
     createGroup('q', 'Qurilmalar'),
-    // createGroup('irs', 'INMlar'),
-    // createGroup('xray', 'Rentgenlar'),
   ]
 
   useData('/reports/hf-employee')

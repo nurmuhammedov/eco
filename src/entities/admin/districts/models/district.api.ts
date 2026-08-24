@@ -24,12 +24,6 @@ export const districtAPI = {
     return data.data
   },
   createDistrict: async (district: CreateDistrictDTO) => {
-    // if (!response.success && response.errors) {
-    //   toast.error(Object.values(response.errors).join(', '), {
-    //     richColors: true,
-    //   });
-    // }
-
     return await apiClient.post<DistrictResponse, CreateDistrictDTO>(API_ENDPOINTS.DISTRICTS, district)
   },
   updateDistrict: async (district: UpdateDistrictDTO) => {

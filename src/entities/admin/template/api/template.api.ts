@@ -13,12 +13,6 @@ export const templateAPI = {
     return data.data
   },
   create: async (data: TemplateFormDTO) => {
-    // if (!response.success && response.errors) {
-    //   toast.error(Object.values(response.errors).join(', '), {
-    //     richColors: true,
-    //   });
-    // }
-
     return await apiClient.post<Template, TemplateFormDTO>(API_ENDPOINTS.TEMPLATES, data)
   },
   updateData: async (id: number, templateData: Partial<TemplateFormDTO>) => {

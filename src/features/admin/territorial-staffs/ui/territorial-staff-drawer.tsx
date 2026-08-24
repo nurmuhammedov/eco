@@ -140,19 +140,6 @@ export const TerritorialStaffDrawer = () => {
                     </FormItem>
                   )}
                 />
-                {/*<FormField*/}
-                {/*  name="pin"*/}
-                {/*  control={form.control}*/}
-                {/*  render={({ field }) => (*/}
-                {/*    <FormItem>*/}
-                {/*      <FormLabel required>{t('short.pin')}</FormLabel>*/}
-                {/*      <FormControl>*/}
-                {/*        <InputNumber maxLength={14} placeholder="142536945201203" {...field} />*/}
-                {/*      </FormControl>*/}
-                {/*      <FormMessage />*/}
-                {/*    </FormItem>*/}
-                {/*  )}*/}
-                {/*/>*/}
                 <FormField
                   name="position"
                   control={form.control}

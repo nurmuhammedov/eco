@@ -3,7 +3,6 @@ import { CategoryTypeDrawer } from '@/features/admin/inspection/category-types/u
 import { PlusCircle } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
 import { useTranslation } from 'react-i18next'
-// import { ChecklistDrawer, ChecklistList } from '@/features/admin/inspection/cheklists';
 import { useInspectionManagement } from '../model/use-inspection-management'
 
 import { ChecklistDrawer } from '@/features/admin/inspection/cheklists/ui/checklist-drawer'

@@ -192,10 +192,6 @@ export const HfList = ({ isArchive }: HfListProps) => {
         <TabsLayout
           activeTab={currentActive}
           tabs={[
-            // {
-            //   id: 'ALL',
-            //   name: 'Barchasi',
-            // },
             {
               id: 'true',
               name: 'Reyestrdagi XICHOlar',

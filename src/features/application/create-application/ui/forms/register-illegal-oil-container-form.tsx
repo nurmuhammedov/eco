@@ -54,7 +54,6 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
     return <AppealFormSkeleton />
   }
 
-  console.log(form.formState?.errors, 'errors')
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
@@ -269,26 +268,6 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
                 )
               }}
             />
-
-            {/*<FormField*/}
-            {/*  control={form.control}*/}
-            {/*  name="manufacturedAt"*/}
-            {/*  render={({ field }) => {*/}
-            {/*    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value*/}
-            {/*    return (*/}
-            {/*      <FormItem className="3xl:w-sm w-full">*/}
-            {/*        <FormLabel required={!isUpdate}>Ishlab chiqarilgan sana</FormLabel>*/}
-            {/*        <DatePicker*/}
-            {/*          disableStrategy={'after'}*/}
-            {/*          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}*/}
-            {/*          onChange={(date) => field.onChange(date ? date.toISOString() : undefined)}*/}
-            {/*          placeholder="Sanani tanlang"*/}
-            {/*        />*/}
-            {/*        <FormMessage />*/}
-            {/*      </FormItem>*/}
-            {/*    )*/}
-            {/*  }}*/}
-            {/*/>*/}
 
             <FormField
               control={form.control}

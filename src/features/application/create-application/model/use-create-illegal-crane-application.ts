@@ -183,8 +183,6 @@ export const useRegisterIllegalCrane = (externalSubmit?: (data: RegisterIllegalC
   const identity = form.watch('identity')
   const isLegal = identity?.length === 9
 
-  console.log(isLegal)
-
   const { data: regions } = useRegionSelectQueries()
   const { data: districts } = useDistrictSelectQueries(regionId)
   const { data: childEquipmentTypes } = useChildEquipmentTypes('CRANE')

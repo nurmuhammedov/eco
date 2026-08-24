@@ -306,17 +306,6 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
                   </Badge>
                 )}
               </TabsTrigger>
-              {/*<TabsTrigger value="false">*/}
-              {/*  Reyestrdan chiqarilgan INMlar*/}
-              {/*  {currentValid === 'false' && (*/}
-              {/*    <Badge*/}
-              {/*      variant="destructive"*/}
-              {/*      className="group-data-[state=active]:bg-primary/10 group-data-[state=active]:text-primary ml-2"*/}
-              {/*    >*/}
-              {/*      {totalElements}*/}
-              {/*    </Badge>*/}
-              {/*  )}*/}
-              {/*</TabsTrigger>*/}
               <TabsTrigger value="CHANGED">
                 INMlarni o‘zgartirish so‘rovlari
                 <Badge

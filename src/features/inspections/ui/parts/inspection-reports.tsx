@@ -269,17 +269,6 @@ const InspectionReports = ({
                         {acknowledgementPath ? (
                           <>
                             <FileLink url={acknowledgementPath} title="Hujjatni ko‘rish" />
-                            {/*{user?.role === UserRoles.INSPECTOR && (*/}
-                            {/*  <AcknowledgementUploadModal*/}
-                            {/*    resultId={resultId}*/}
-                            {/*    acknowledgementPath={acknowledgementPath}*/}
-                            {/*    trigger={*/}
-                            {/*      <button className="cursor-pointer text-xs font-medium text-amber-600 underline underline-offset-2 hover:text-amber-700">*/}
-                            {/*        Yangilash*/}
-                            {/*      </button>*/}
-                            {/*    }*/}
-                            {/*  />*/}
-                            {/*)}*/}
                           </>
                         ) : (
                           <span className="flex items-center gap-1.5 text-sm text-slate-400">
@@ -311,17 +300,6 @@ const InspectionReports = ({
                           {additionalFilePath ? (
                             <>
                               <FileLink url={additionalFilePath} title="Hujjatni ko‘rish" />
-                              {/*{user?.role === UserRoles.INSPECTOR && (*/}
-                              {/*  <additionalFilePathModal*/}
-                              {/*    resultId={resultId}*/}
-                              {/*    additionalFilePath={additionalFilePath}*/}
-                              {/*    trigger={*/}
-                              {/*      <button className="cursor-pointer text-xs font-medium text-amber-600 underline underline-offset-2 hover:text-amber-700">*/}
-                              {/*        Yangilash*/}
-                              {/*      </button>*/}
-                              {/*    }*/}
-                              {/*  />*/}
-                              {/*)}*/}
                             </>
                           ) : (
                             <span className="flex items-center gap-1.5 text-sm text-slate-400">

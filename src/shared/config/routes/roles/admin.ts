@@ -25,7 +25,6 @@ const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default
 const NewsFormPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsForm })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 const OrganizationsPage = lazy(() => import('@/pages/organizations'))
-// const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 
 export const adminRoutes = [
   {

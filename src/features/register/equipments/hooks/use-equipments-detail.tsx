@@ -16,7 +16,6 @@ export const useEquipmentsDetail = () => {
         .filter(([label]) => label.includes('Path'))
         .map(([key, value]) => {
           const label = `labels.${data.type || 'HF'}.${key || 'file'}`
-          // return { label: t(label), data: file[1] };
           return { label: t(label), data: value as string, fieldName: key }
         })
       return {

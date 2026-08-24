@@ -244,11 +244,6 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
                 name: 'Reyestrdagi rentgenlar',
                 count: currentStatus === 'ACTIVE' ? totalElements : undefined,
               },
-              // {
-              //   id: 'INACTIVE',
-              //   name: 'Reyestrdan chiqarilganlar',
-              //   count: currentStatus === 'INACTIVE' ? totalElements : undefined,
-              // },
               {
                 id: 'EXPIRED',
                 name: 'Muddati o‘tganlar',

@@ -24,12 +24,6 @@ export const equipmentAPI = {
     return data.data
   },
   create: async (district: CreateEquipmentDTO) => {
-    // if (!response.success && response.errors) {
-    //   toast.error(Object.values(response.errors).join(', '), {
-    //     richColors: true,
-    //   });
-    // }
-
     return await apiClient.post<EquipmentResponse, CreateEquipmentDTO>(API_ENDPOINTS.CHILD_EQUIPMENTS, district)
   },
   update: async (district: UpdateEquipmentDTO) => {

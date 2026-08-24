@@ -18,9 +18,6 @@ export const checklistTemplateAPI = {
   },
 
   create: async (data: CreateChecklistTemplateDTO) => {
-    // if (!response.success && response.errors) {
-    //   toast.error(Object.values(response.errors).join(', '), { richColors: true });
-    // }
     return await apiClient.post<ChecklistTemplate, CreateChecklistTemplateDTO>(API_ENDPOINTS.CHECKLIST_TEMPLATES, data)
   },
 

@@ -7,11 +7,7 @@ export const useCreateHPOApplicationMutations = () => {
   return useMutation({
     mutationFn: createApplicationsAPI.createHPOApplication,
     onSuccess: (createdData) => {
-      queryClient
-        .invalidateQueries({
-          queryKey: ['create-hpo-application'],
-        })
-        .catch((err) => console.log(err))
+      void queryClient.invalidateQueries({ queryKey: ['create-hpo-application'] })
       queryClient.setQueryData(['create-hpo-application'], createdData)
     },
   })
@@ -23,11 +19,7 @@ export const useCreateCraneApplicationMutations = () => {
   return useMutation({
     mutationFn: createApplicationsAPI.createCraneApplication,
     onSuccess: (createdData) => {
-      queryClient
-        .invalidateQueries({
-          queryKey: ['create-crane-application'],
-        })
-        .catch((err) => console.log(err))
+      void queryClient.invalidateQueries({ queryKey: ['create-crane-application'] })
 
       queryClient.setQueryData(['create-crane-application'], createdData)
     },

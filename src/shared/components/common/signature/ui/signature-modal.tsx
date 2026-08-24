@@ -154,13 +154,6 @@ export const SignatureModal = ({
 
         <div className="py-4">
           {!isMobile && <SignatureSelect onSelect={handleSelectCertificate} certificates={signatureKeys} />}
-          {/*{selectedCertificate && (*/}
-          {/*  <div className="mt-4 rounded-md border border-green-100 bg-green-50 p-3">*/}
-          {/*    <p className="text-sm text-green-800">*/}
-          {/*      <span className="font-medium">Tanlangan kalit:</span> {selectedCertificate.CN}*/}
-          {/*    </p>*/}
-          {/*  </div>*/}
-          {/*)}*/}
         </div>
 
         <AlertDialogFooter>

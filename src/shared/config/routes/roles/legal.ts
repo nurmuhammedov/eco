@@ -128,11 +128,6 @@ export const legalRoutes = [
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
   },
-  // {
-  //   id: 'REGISTRY',
-  //   path: 'register/hf/update/:id',
-  //   element: withSuspense(RegisterHFUpdatePage),
-  // },
   {
     id: 'REGISTRY',
     path: 'register/update/:type/:id',

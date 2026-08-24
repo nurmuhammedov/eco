@@ -24,12 +24,6 @@ export const hazardousFacilityCategoryAPI = {
     return data.data
   },
   create: async (data: CreateHazardousFacilityCategoryDTO) => {
-    // if (!response.success && response.errors) {
-    //   toast.error(Object.values(response.errors).join(', '), {
-    //     richColors: true,
-    //   });
-    // }
-
     return await apiClient.post<HazardousFacilityCategoryResponse, CreateHazardousFacilityCategoryDTO>(
       API_ENDPOINTS.HAZARDOUS_FACILITY_CATEGORIES,
       data

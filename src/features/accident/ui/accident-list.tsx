@@ -86,11 +86,6 @@ const AccidentList: React.FC = () => {
       header: 'XICHO',
       accessorKey: 'hfName',
     },
-    // {
-    //   header: 'Turi',
-    //   accessorKey: 'type',
-    //   cell: ({ row }) => getTypeBadge(row.original.type),
-    // },
     {
       header: type === 'INJURY' ? 'Sana' : 'Sana va vaqt',
       accessorKey: type === 'INJURY' ? 'date' : 'dateTime',

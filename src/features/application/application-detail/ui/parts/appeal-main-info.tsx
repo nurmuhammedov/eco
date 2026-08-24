@@ -501,7 +501,6 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
   return (
     <div className="flex flex-col py-1">
       {/* Umumiy maʼlumotlar */}
-      {/*{renderRow('phoneNumber', data?.phoneNumber)}*/}
 
       {/* XICHO (HF) maydonlari */}
       {renderRow('upperOrganization', data?.upperOrganization)}
@@ -527,7 +526,6 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
       {renderRow('extraArea', data?.extraArea)}
       {renderRow('hazardousSubstance', data?.hazardousSubstance)}
       {renderRow('sign', data?.sign)}
-      {/*{renderRow('reasons', data?.reasons)}*/}
 
       {/* Qurilmalar uchun umumiy maydonlar */}
       {isAllowed('hazardousFacilityId') && (
@@ -610,11 +608,8 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
       {renderRow('childEquipmentSortId', data?.childEquipmentSortName || data?.childEquipmentSortId)}
       {renderRow('riskLevel', RISK_LEVEL_MAP[data?.riskLevel] || data?.riskLevel)}
 
-      {/*{renderRow('regionId', data?.regionName || data?.regionId)}*/}
-      {/*{renderRow('districtId', data?.districtName || data?.districtId)}*/}
       {renderRow('parkName', data?.parkName)}
       {renderRow('address', address)}
-      {/*{renderRow('location', data?.location)}*/}
 
       {/* Umumiy meta maʼlumotlar */}
       {type == 'IRS' ? renderRow('type', data?.type || '') : renderRow('type', t(`equipment_types.${type}`) || type)}

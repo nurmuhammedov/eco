@@ -226,7 +226,6 @@ const InquiryDetailPage = () => {
           {data?.type === 'VIOLATION_REPORT' && (
             <DetailCardAccordion.Item value="administrative_info" title="Ma’muriy ish ma’lumotlari">
               <div className="flex flex-col py-1">
-                {/*<DetailRow title="Ijro harakati:" value={data?.action ? inquiryActionLabels[data.action] || data.action : <span className="font-medium text-red-500">Mavjud emas</span>} />*/}
                 <DetailRow
                   title="Ijro natijasi:"
                   value={
@@ -237,7 +236,6 @@ const InquiryDetailPage = () => {
                     )
                   }
                 />
-                {/*<DetailRow title="To‘lov holati:" value={data?.isPaid !== undefined && data?.isPaid !== null ? (data.isPaid ? 'To‘landi' : 'To‘lanmadi') : <span className="font-medium text-red-500">Mavjud emas</span>} />*/}
                 <DetailRow
                   title="Ajratilgan mukofot puli:"
                   value={

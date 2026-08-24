@@ -52,10 +52,6 @@ const PublicInquiryChoice = () => {
     window.location.href = `https://sso.egov.uz/sso/oauth/Authorization.do?response_type=one_code&state=${encodedState}&scope=myportal&client_id=${apiConfig.oneIdClientId}&client_secret=${apiConfig.oneIdClientSecret}&redirect_uri=${redirectUri}`
   }
 
-  // const handleAnonymous = () => {
-  //   navigate(`/public-inquiry/form?belongId=${belongId || ''}&belongType=${belongType || ''}`)
-  // }
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
       {isPending ? (

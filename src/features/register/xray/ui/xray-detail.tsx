@@ -90,17 +90,6 @@ const XrayDetail = () => {
             value={data?.registryNumber ? data?.registryNumber : <span className="text-red-600">Mavjud emas</span>}
           />
 
-          {/*<DetailRow*/}
-          {/*  title="Reyestrga qo‘yilganligi to‘g‘risidagi hujjat:"*/}
-          {/*  value={*/}
-          {/*    data?.registryFilePath ? (*/}
-          {/*      <FileLink url={data?.registryFilePath} />*/}
-          {/*    ) : (*/}
-          {/*      <span className="text-red-600">Mavjud emas</span>*/}
-          {/*    )*/}
-          {/*  }*/}
-          {/*/>*/}
-
           {!data?.isActive && (
             <>
               <DetailRow
@@ -113,17 +102,6 @@ const XrayDetail = () => {
                   )
                 }
               />
-
-              {/*<DetailRow*/}
-              {/*  title="Reyestrdan chiqarilganligi to‘g‘risidagi hujjat:"*/}
-              {/*  value={*/}
-              {/*    data?.deregisterFilePath ? (*/}
-              {/*      <FileLink url={data?.deregisterFilePath} />*/}
-              {/*    ) : (*/}
-              {/*      <span className="text-red-600">Mavjud emas</span>*/}
-              {/*    )*/}
-              {/*  }*/}
-              {/*/>*/}
 
               <DetailRow
                 title="Reyestrdan chiqarish uchun asos:"

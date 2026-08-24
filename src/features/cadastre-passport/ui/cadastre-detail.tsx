@@ -95,7 +95,6 @@ export default function CadastreDetail() {
   const { data: fvvInfo } = useData<any>('/users/legal/201862006')
   const { data: sesInfo } = useData<any>('/users/legal/200794614')
 
-  // const customerReview = item?.reviews?.find((r: any) => r.organizationType === 'CUSTOMER')
   const fvvReview = item?.reviews?.find((r: any) => r.organizationType === 'FVV')
   const sesReview = item?.reviews?.find((r: any) => r.organizationType === 'SES')
   const committeeReview = item?.reviews?.find((r: any) => r.organizationType === 'COMMITTEE')
@@ -163,21 +162,6 @@ export default function CadastreDetail() {
     },
   })
 
-  // const updateStatus = (id: string, status: string) => {}
-  // const updateItem = (id: string, payload: any) => {
-  //   console.log(id, payload)
-  // }
-
-  // const addFvvApproval = (id: string, payload: any) => {
-  //   console.log(id, payload)
-  // }
-  // const addSesApproval = (id: string, payload: any) => {
-  //   console.log(id, payload)
-  // }
-  // const addCommitteeApproval = (id: string, payload: any) => {
-  //   console.log(id, payload)
-  // }
-
   // Forms
   const fvvForm = useForm<FvvFormValues>({
     resolver: zodResolver(fvvSchema),
@@ -204,16 +188,10 @@ export default function CadastreDetail() {
     )
   }
 
-  // const isLegal = user?.role === UserRoles.LEGAL
   const userTinOrPin = String(user?.tinOrPin || '')
   const isFVV = userTinOrPin === '201862006' && user?.role === UserRoles.LEGAL
   const isSES = userTinOrPin === '200794614' && user?.role === UserRoles.LEGAL
   const isCommittee = [UserRoles.MANAGER, UserRoles.CHAIRMAN, UserRoles.ADMIN].includes(user?.role as UserRoles)
-
-  // const handleSendToApproval = () => {
-  //   updateStatus(item.id, 'IN_APPROVAL')
-  //   toast.success('Kelishuvga yuborildi')
-  // }
 
   const handleFvvApprove = async (isReject = false) => {
     const isValid = await fvvForm.trigger()

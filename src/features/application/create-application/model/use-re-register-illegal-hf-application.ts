@@ -124,7 +124,7 @@ export const useReRegisterIllegalHFApplication = () => {
         })
         .finally(() => setIsSearching(false))
     } else {
-      form.trigger('legalTin').catch((err) => console.log(err))
+      void form.trigger('legalTin')
     }
   }
 

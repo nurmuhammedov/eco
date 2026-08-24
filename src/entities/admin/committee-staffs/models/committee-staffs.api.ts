@@ -16,12 +16,6 @@ export const committeeStaffAPI = {
     return data.data
   },
   create: async (district: CreateCommitteeStaffDTO) => {
-    // if (!response.success && response.errors) {
-    //   toast.error(Object.values(response.errors).join(', '), {
-    //     richColors: true,
-    //   });
-    // }
-
     return await apiClient.post<CommitteeStaffResponse, CreateCommitteeStaffDTO>(
       API_ENDPOINTS.COMMITTEE_USERS,
       district

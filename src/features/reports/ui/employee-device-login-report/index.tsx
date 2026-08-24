@@ -131,16 +131,6 @@ const EmployeeDeviceLoginReport: React.FC = () => {
         </div>
       </div>
 
-      {/*<DataTable*/}
-      {/*  columns={columns}*/}
-      {/*  data={data || []}*/}
-      {/*  isLoading={isLoading}*/}
-      {/*  pageCount={totalPages}*/}
-      {/*  isPaginated={true}*/}
-      {/*  showNumeration={true}*/}
-      {/*  className="h-full"*/}
-      {/*/>*/}
-
       <DataTable
         showNumeration={true}
         isPaginated={true}

@@ -154,7 +154,6 @@ const TinyMCEEditor = forwardRef<TinyMCEEditorRef, TinyMCEEditorProps>((props, r
         `)
         printWindow.document.close()
       },
-      exportPDF: () => console.log('Implement PDF export'),
     }),
     [editorRef, currentPageSize, currentOrientation, currentMargin]
   )

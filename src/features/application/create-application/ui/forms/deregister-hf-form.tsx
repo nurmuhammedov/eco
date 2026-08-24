@@ -48,19 +48,6 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
                 </FormItem>
               )}
             />
-            {/*<FormField*/}
-            {/*  control={form.control}*/}
-            {/*  name="sign"*/}
-            {/*  render={({ field }) => (*/}
-            {/*    <FormItem>*/}
-            {/*      <FormLabel>Belgisi</FormLabel>*/}
-            {/*      <FormControl>*/}
-            {/*        <Input className="3xl:w-sm w-full" placeholder="Belgisi" {...field} />*/}
-            {/*      </FormControl>*/}
-            {/*      <FormMessage />*/}
-            {/*    </FormItem>*/}
-            {/*  )}*/}
-            {/*/>*/}
           </div>
 
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">

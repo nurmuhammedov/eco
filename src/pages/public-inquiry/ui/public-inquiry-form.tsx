@@ -156,7 +156,6 @@ const PublicInquiryForm = () => {
                           </FormControl>
                           <SelectContent>
                             <SelectItem value="APPEAL">Murojaat</SelectItem>
-                            {/*<SelectItem value="VIOLATION_REPORT">Huquqbuzarliik xabari</SelectItem>*/}
                             <SelectItem value="SUGGESTION">Taklif</SelectItem>
                           </SelectContent>
                         </Select>

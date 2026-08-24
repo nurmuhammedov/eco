@@ -532,38 +532,6 @@ export const AddOldConclusion = () => {
                     </>
                   )}
 
-                  {/*<FormField*/}
-                  {/*  control={form.control}*/}
-                  {/*  name="subType"*/}
-                  {/*  render={({ field }) => (*/}
-                  {/*    <FormItem>*/}
-                  {/*      <FormLabel>Ekspertiza obyekti turi</FormLabel>*/}
-                  {/*      <Select*/}
-                  {/*        value={field.value}*/}
-                  {/*        onValueChange={(value) => {*/}
-                  {/*          if (value) {*/}
-                  {/*            field.onChange(value);*/}
-                  {/*          }*/}
-                  {/*        }}*/}
-                  {/*      >*/}
-                  {/*        <FormControl>*/}
-                  {/*          <SelectTrigger>*/}
-                  {/*            <SelectValue placeholder="Tanlang..." />*/}
-                  {/*          </SelectTrigger>*/}
-                  {/*        </FormControl>*/}
-                  {/*        <SelectContent>*/}
-                  {/*          {ExpertiseSubTypeOptions.filter((i) => i?.type == form.watch('type')).map((option) => (*/}
-                  {/*            <SelectItem key={option.value} value={option.value}>*/}
-                  {/*              {option.label}*/}
-                  {/*            </SelectItem>*/}
-                  {/*          ))}*/}
-                  {/*        </SelectContent>*/}
-                  {/*      </Select>*/}
-                  {/*      <FormMessage />*/}
-                  {/*    </FormItem>*/}
-                  {/*  )}*/}
-                  {/*/>*/}
-
                   <FormField
                     control={form.control}
                     name="expertiseName"

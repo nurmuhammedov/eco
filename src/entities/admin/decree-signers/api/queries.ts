@@ -12,7 +12,6 @@ export const useDecreeSigners = (params: DecreeSignersParams) => {
   return useQuery({
     queryKey: DECREE_SIGNERS_KEYS.list(params),
     queryFn: async () => {
-      console.log('useDecreeSigners params:', params)
       const response = await apiClient.get<any>('/decree-signers', params as any)
       const data = response.data?.data
       return {

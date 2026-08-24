@@ -19,12 +19,6 @@ export const territorialStaffAPI = {
     return data.data
   },
   create: async (data: CreateTerritorialStaffDTO) => {
-    // if (!response.success && response.errors) {
-    //   toast.error(Object.values(response.errors).join(', '), {
-    //     richColors: true,
-    //   });
-    // }
-
     return await apiClient.post<TerritorialStaffResponse, CreateTerritorialStaffDTO>(API_ENDPOINTS.OFFICE_USERS, data)
   },
   update: async (data: UpdateTerritorialStaffDTO) => {

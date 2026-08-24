@@ -27,8 +27,6 @@ interface Props {
 
 const FilesSection: FC<Props> = ({ files = [] }) => {
   const fileList = Array.isArray(files) ? files : []
-  // const canEdit = userRole === UserRoles.INSPECTOR && applicationStatus === ApplicationStatus.IN_PROCESS && edit
-  // const canInspectorEdit = userRole === UserRoles.INSPECTOR && register && !appealId
 
   const showFileData = (file: FileType) => {
     if (!file.data.path && !file.data.number && !file.data.uploadDate && !file.data.expiryDate) {

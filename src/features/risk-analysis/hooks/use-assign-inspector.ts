@@ -54,7 +54,7 @@ export const useAssignInspector = () => {
     },
     onSuccess: () => {
       toast.success('Inspektor muvaffaqiyatli biriktirildi!')
-      queryClient.invalidateQueries({ queryKey: [getEndpoint(type)?.id] }).then((r) => console.log(r))
+      void queryClient.invalidateQueries({ queryKey: [getEndpoint(type)?.id] })
     },
   })
 }

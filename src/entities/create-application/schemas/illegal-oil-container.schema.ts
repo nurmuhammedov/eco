@@ -19,10 +19,6 @@ export const IllegalOilContainerAppealDtoBaseSchema = z.object({
     .string()
     .min(1, { message: 'Majburiy maydon' })
     .transform((v) => format(new Date(v), 'yyyy-MM-dd')),
-  // manufacturedAt: z
-  //   .string()
-  //   .min(1, { message: 'Majburiy maydon' })
-  //   .transform((v) => format(new Date(v), 'yyyy-MM-dd')),
 
   // manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
   manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),

@@ -7,7 +7,6 @@ const NotFound = lazy(() => import('@/pages/error/ui/page-not-found'))
 const ContactPage = lazy(() => import('@/pages/qr-form'))
 const PublicRiskAnalysisInfo = lazy(() => import('@/features/risk-analysis/ui/public-risk-analysis-info.tsx'))
 const PublicInquiryChoice = lazy(() => import('@/pages/public-inquiry/ui/public-inquiry-choice'))
-// const PublicInquiryForm = lazy(() => import('@/pages/public-inquiry/ui/public-inquiry-form'))
 
 import { withFullPageSuspense } from '@/shared/config/routes/utils'
 
@@ -24,10 +23,6 @@ export const publicRoutes = [
     path: '/public-inquiry-choice',
     element: withFullPageSuspense(PublicInquiryChoice as any),
   },
-  // {
-  //   path: '/public-inquiry/form',
-  //   element: withFullPageSuspense(PublicInquiryForm as any),
-  // },
 ]
 
 export const authRoutes = [
