@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { format, parseISO } from 'date-fns'
 import { AlertCircle, Loader2 } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
 import { Checkbox } from '@/shared/components/ui/checkbox'
@@ -261,7 +261,7 @@ export function CreateApplicationModal({ isOpen, onClose }: Props) {
             </div>
           )}
 
-          <div className="flex justify-end gap-3 border-t pt-3">
+          <DialogFooter>
             <Button variant="outline" onClick={onClose} disabled={createMutation.isPending}>
               Bekor qilish
             </Button>
@@ -269,7 +269,7 @@ export function CreateApplicationModal({ isOpen, onClose }: Props) {
               {createMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Arizani yuborish
             </Button>
-          </div>
+          </DialogFooter>
         </div>
       </DialogContent>
     </Dialog>

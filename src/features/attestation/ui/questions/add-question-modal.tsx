@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
@@ -130,7 +130,7 @@ export const AddQuestionModal: FC<AddQuestionModalProps> = ({ isOpen, onClose })
               )}
             />
 
-            <div className="flex justify-end gap-3 pt-2">
+            <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
                 Bekor qilish
               </Button>
@@ -138,7 +138,7 @@ export const AddQuestionModal: FC<AddQuestionModalProps> = ({ isOpen, onClose })
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Saqlash
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

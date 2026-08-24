@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { AlertCircle, Loader2, Send } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { Textarea } from '@/shared/components/ui/textarea'
@@ -198,7 +198,7 @@ function ResultModal({ indicator, year, quarter, onClose }: ResultModalProps) {
                 />
               </FormItem>
 
-              <div className="flex justify-end gap-3 pt-2">
+              <DialogFooter>
                 <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
                   Bekor qilish
                 </Button>
@@ -206,7 +206,7 @@ function ResultModal({ indicator, year, quarter, onClose }: ResultModalProps) {
                   {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Saqlash
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
           </Form>
         ) : (

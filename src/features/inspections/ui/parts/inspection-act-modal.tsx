@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { PDFViewer } from '@/features/view-pdf'
 import { SignatureModal } from '@/shared/components/common/signature'
 import { Button } from '@/shared/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { apiConfig } from '@/shared/api/constants'
 import { cn } from '@/shared/lib/utils'
 import { ActParticipant, areAllParticipantsSigned } from '@/features/inspections/model/act-participants'
@@ -151,7 +151,7 @@ export const InspectionActModal = ({
             </p>
           )}
 
-          <div className="flex flex-col-reverse gap-2 md:flex-row md:items-center md:justify-between">
+          <DialogFooter>
             <div className="flex flex-col gap-2 sm:flex-row">
               {isMobile && documentUrl && (
                 <Button
@@ -181,7 +181,7 @@ export const InspectionActModal = ({
                 <Button disabled>Imzolash</Button>
               )}
             </div>
-          </div>
+          </DialogFooter>
         </div>
       </DialogContent>
     </Dialog>

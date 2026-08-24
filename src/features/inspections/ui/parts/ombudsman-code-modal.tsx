@@ -5,7 +5,14 @@ import { z } from 'zod'
 import { useQueryClient } from '@tanstack/react-query'
 import { Loader2, ShieldCheck } from 'lucide-react'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
@@ -80,7 +87,7 @@ const OmbudsmanCodeModal = ({ resultId, onClose, trigger }: Props) => {
               )}
             />
 
-            <div className="flex justify-end gap-2 pt-2">
+            <DialogFooter>
               <Button type="button" variant="secondary" onClick={() => setOpen(false)} disabled={isPending}>
                 Bekor qilish
               </Button>
@@ -88,7 +95,7 @@ const OmbudsmanCodeModal = ({ resultId, onClose, trigger }: Props) => {
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Saqlash
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

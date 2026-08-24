@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
 import useData from '@/shared/hooks/api/useData'
@@ -528,14 +528,14 @@ export default function CadastreDetail() {
                   </FormItem>
                 )}
               />
-              <div className="flex justify-end gap-2">
+              <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setActionModalOpen(false)}>
                   Bekor qilish
                 </Button>
                 <Button type="submit" variant={signAction === 'APPROVED' ? 'default' : 'destructive'}>
                   {signAction === 'APPROVED' ? 'Tasdiqlash' : 'Rad etish'}
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
           </Form>
         </DialogContent>
@@ -578,14 +578,14 @@ export default function CadastreDetail() {
                   </FormItem>
                 )}
               />
-              <div className="flex justify-end gap-2">
+              <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setFvvModalOpen(false)}>
                   Bekor qilish
                 </Button>
                 <Button type="submit" variant={fvvSignAction === 'APPROVED' ? 'default' : 'destructive'}>
                   {fvvSignAction === 'APPROVED' ? 'Tasdiqlash' : 'Rad etish'}
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
           </Form>
         </DialogContent>
@@ -629,14 +629,14 @@ export default function CadastreDetail() {
                   </FormItem>
                 )}
               />
-              <div className="flex justify-end gap-2">
+              <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setSesModalOpen(false)}>
                   Bekor qilish
                 </Button>
                 <Button type="submit" variant={sesSignAction === 'APPROVED' ? 'default' : 'destructive'}>
                   {sesSignAction === 'APPROVED' ? 'Tasdiqlash' : 'Rad etish'}
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
           </Form>
         </DialogContent>
@@ -684,14 +684,14 @@ export default function CadastreDetail() {
                   </FormItem>
                 )}
               />
-              <div className="flex justify-end gap-2">
+              <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setCommitteeModalOpen(false)}>
                   Bekor qilish
                 </Button>
                 <Button type="submit" variant={committeeSignAction === 'APPROVED' ? 'default' : 'destructive'}>
                   {committeeSignAction === 'APPROVED' ? 'Yakunlash' : 'Rad etish'}
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
           </Form>
         </DialogContent>

@@ -3,7 +3,14 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Loader2, Edit2 } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Button } from '@/shared/components/ui/button'
 import { InputCurrency } from '@/shared/components/ui/input-currency'
@@ -79,7 +86,7 @@ export const RecoveredAmountModal = ({
                 </FormItem>
               )}
             />
-            <div className="flex justify-end gap-2">
+            <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Bekor qilish
               </Button>
@@ -87,7 +94,7 @@ export const RecoveredAmountModal = ({
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Saqlash
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>
@@ -175,7 +182,7 @@ export const PaidRewardModal = ({
               multiple={false}
               buttonText="To‘lov hujjati faylini yuklang"
             />
-            <div className="flex justify-end gap-2">
+            <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Bekor qilish
               </Button>
@@ -183,7 +190,7 @@ export const PaidRewardModal = ({
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Saqlash
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>
@@ -252,7 +259,7 @@ export const MibStatusModal = ({ inquiryId, defaultValue }: { inquiryId: string;
                 </FormItem>
               )}
             />
-            <div className="flex justify-end gap-2">
+            <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Bekor qilish
               </Button>
@@ -260,7 +267,7 @@ export const MibStatusModal = ({ inquiryId, defaultValue }: { inquiryId: string;
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Saqlash
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

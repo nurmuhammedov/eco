@@ -6,7 +6,14 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Loader2, UploadCloud } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
 import { Form, FormField, FormItem, FormLabel } from '@/shared/components/ui/form'
 import { InputFile } from '@/shared/components/common/file-upload'
@@ -97,7 +104,7 @@ const SignedActUploadModal = ({ resultId, signedActPath, onClose, trigger }: Pro
               )}
             />
 
-            <div className="flex justify-end gap-2 pt-2">
+            <DialogFooter>
               <Button type="button" variant="secondary" onClick={() => setOpen(false)} disabled={isPending}>
                 {t('actions.cancel')}
               </Button>
@@ -105,7 +112,7 @@ const SignedActUploadModal = ({ resultId, signedActPath, onClose, trigger }: Pro
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t('actions.save')}
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

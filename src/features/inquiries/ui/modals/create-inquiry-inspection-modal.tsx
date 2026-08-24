@@ -7,7 +7,14 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import DatePicker from '@/shared/components/ui/datepicker'
@@ -191,14 +198,14 @@ export const CreateInquiryInspectionModal = ({ inquiry }: { inquiry: any }) => {
                 )}
               />
 
-              <div className="flex justify-end gap-3 pt-6">
+              <DialogFooter>
                 <Button variant="outline" type="button" onClick={() => setIsOpen(false)}>
                   {t('actions.cancel')}
                 </Button>
                 <Button type="submit" disabled={isLoading}>
                   {t('actions.save')}
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
           </Form>
         </DialogContent>

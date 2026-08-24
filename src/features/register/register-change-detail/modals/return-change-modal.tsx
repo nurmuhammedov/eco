@@ -1,4 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog.tsx'
 import { Button } from '@/shared/components/ui/button.tsx'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
@@ -73,7 +80,7 @@ const ReturnChangeModal = ({ changeId }: Props) => {
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-2 gap-3">
+            <DialogFooter>
               <DialogClose asChild>
                 <Button disabled={isPending} variant="outline" type="button">
                   Bekor qilish
@@ -82,7 +89,7 @@ const ReturnChangeModal = ({ changeId }: Props) => {
               <Button disabled={isPending} type="submit" variant="destructive">
                 Tasdiqlash
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

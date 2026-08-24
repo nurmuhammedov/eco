@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/shared/components/ui/form.tsx'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -79,11 +79,11 @@ const DeclarationFileUploadModal: FC<Props> = ({ id, closeModal, title = 'Deklar
               )}
             />
 
-            <div className="flex justify-end pt-2">
+            <DialogFooter>
               <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
                 {isPending ? 'Yuklanmoqda...' : 'Yuborish'}
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

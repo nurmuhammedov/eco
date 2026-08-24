@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { Button } from '@/shared/components/ui/button.tsx'
 import { Checkbox } from '@/shared/components/ui/checkbox.tsx'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx'
 import { Input } from '@/shared/components/ui/input'
 import { MultiSelect } from '@/shared/components/ui/multi-select.tsx'
 import { useCustomSearchParams } from '@/shared/hooks'
@@ -536,7 +536,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
                   </Button>
                 </div>
               </div>
-              <div className="flex shrink-0 justify-end gap-2 border-t px-4 py-4 sm:px-6">
+              <DialogFooter>
                 <Button
                   type="button"
                   variant="outline"
@@ -550,7 +550,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
                 <Button type="submit" disabled={isLoading}>
                   Saqlash
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
           </Form>
         </DialogContent>

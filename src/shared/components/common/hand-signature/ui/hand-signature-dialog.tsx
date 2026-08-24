@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Eraser, PenLine, RotateCcw } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { useSignatureCanvas } from '../model/use-signature-canvas'
 
 interface HandSignatureDialogProps {
@@ -79,7 +79,7 @@ export const HandSignatureDialog = ({
             <div className="pointer-events-none absolute right-8 bottom-10 left-8 border-b border-neutral-200" />
           </div>
 
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+          <DialogFooter>
             <p className="text-muted-foreground text-xs">
               Imzo qo‘yish orqali dalolatnoma mazmuni bilan tanishganingizni tasdiqlaysiz.
             </p>
@@ -93,17 +93,17 @@ export const HandSignatureDialog = ({
                 Tozalash
               </Button>
             </div>
-          </div>
+          </DialogFooter>
         </div>
 
-        <div className="flex flex-shrink-0 flex-col-reverse gap-2 border-t p-4 sm:flex-row sm:justify-end md:p-6 md:pt-4">
+        <DialogFooter>
           <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={() => onOpenChange(false)}>
             Bekor qilish
           </Button>
           <Button type="button" className="w-full sm:w-auto" onClick={handleSave} disabled={isEmpty}>
             Imzoni saqlash
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

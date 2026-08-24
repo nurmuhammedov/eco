@@ -1,6 +1,13 @@
 import { ApplicationModal } from '@/features/application/create-application'
 import { Button } from '@/shared/components/ui/button.tsx'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog.tsx'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
 import { Textarea } from '@/shared/components/ui/textarea.tsx'
 import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts'
@@ -70,14 +77,14 @@ const RejectApplicationModal = () => {
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-2 gap-3">
+              <DialogFooter>
                 <DialogClose asChild>
                   <Button variant="outline">Bekor qilish</Button>
                 </DialogClose>
                 <Button variant="destructive" type="submit">
                   Arizani qaytarish
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
           </Form>
         </DialogContent>

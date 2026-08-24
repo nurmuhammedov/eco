@@ -3,7 +3,7 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Plus, Trash2, AlertCircle } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { Button } from '@/shared/components/ui/button'
@@ -437,14 +437,14 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
               </span>
             </div>
 
-            <div className="flex justify-end gap-3">
+            <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
                 Bekor qilish
               </Button>
               <Button type="submit" disabled={isPending || !isWeightValid}>
                 {isPending ? 'Saqlanmoqda...' : 'Saqlash'}
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

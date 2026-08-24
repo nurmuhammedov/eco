@@ -1,4 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog.tsx'
 import { Button } from '@/shared/components/ui/button.tsx'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
@@ -62,7 +69,7 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-2 gap-3">
+            <DialogFooter>
               <DialogClose asChild>
                 <Button disabled={isPending} variant="outline">
                   Bekor qilish
@@ -71,7 +78,7 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
               <Button disabled={isPending} variant="warning" type="submit">
                 Saqlash
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

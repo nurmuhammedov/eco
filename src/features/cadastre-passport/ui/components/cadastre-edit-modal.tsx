@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Form } from '@/shared/components/ui/form'
 import { Button } from '@/shared/components/ui/button'
 import { CadastreDataFields, cadastreDataSchema } from './cadastre-data-fields'
@@ -66,14 +66,14 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
         <Form {...form}>
           <form id="cadastre-edit-form" onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-6">
             <CadastreDataFields control={form.control} prefix="" />
-            <div className="bg-background sticky bottom-0 flex justify-end gap-2 pt-4">
+            <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
                 Bekor qilish
               </Button>
               <Button type="submit" loading={isPending}>
                 Saqlash
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

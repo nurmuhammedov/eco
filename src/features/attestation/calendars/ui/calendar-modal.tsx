@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { format, isToday, parseISO } from 'date-fns'
 import { Loader2 } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { Button } from '@/shared/components/ui/button'
@@ -213,7 +213,7 @@ export function CalendarModal({ isOpen, onClose, editData, defaultDate }: Props)
               Saqlangach ushbu vaqt uchun Zoom havolasi avtomatik yaratiladi.
             </p>
 
-            <div className="flex justify-end gap-3 pt-2">
+            <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
                 Bekor qilish
               </Button>
@@ -221,7 +221,7 @@ export function CalendarModal({ isOpen, onClose, editData, defaultDate }: Props)
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Saqlash
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

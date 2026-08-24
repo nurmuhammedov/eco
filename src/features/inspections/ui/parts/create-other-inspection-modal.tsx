@@ -8,7 +8,14 @@ import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import DatePicker from '@/shared/components/ui/datepicker'
@@ -391,14 +398,14 @@ export const CreateOtherInspectionModal = () => {
                 </div>
               </div>
 
-              <div className="flex shrink-0 justify-end gap-3 border-t px-4 py-4 sm:px-6">
+              <DialogFooter>
                 <Button variant="outline" type="button" onClick={() => setIsOpen(false)}>
                   {t('actions.cancel')}
                 </Button>
                 <Button type="submit" disabled={isLoading}>
                   {t('actions.save')}
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
           </Form>
         </DialogContent>

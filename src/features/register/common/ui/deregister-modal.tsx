@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/shared/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
@@ -82,14 +82,14 @@ export const DeregisterModal = ({ isOpen, onClose, endpoint, onSuccess }: Deregi
                 </FormItem>
               )}
             />
-            <div className="flex justify-end gap-2">
+            <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose}>
                 Bekor qilish
               </Button>
               <Button type="submit" loading={isPending}>
                 Yuborish
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

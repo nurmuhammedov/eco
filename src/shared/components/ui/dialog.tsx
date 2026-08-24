@@ -88,7 +88,9 @@ const DialogContent = React.forwardRef<
       >
         {header}
         <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">{body}</div>
-        {footer}
+        {footer && React.isValidElement(footer)
+          ? React.cloneElement(footer as React.ReactElement<any>, { 'data-pinned': '' })
+          : footer}
       </DialogPrimitive.Content>
     </DialogPortal>
   )
@@ -124,6 +126,15 @@ const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
   <div
     className={cn(
       'bg-background flex shrink-0 flex-col-reverse gap-2 border-t px-6 py-4 sm:flex-row sm:justify-end',
+      /**
+       * A footer nested in the dialog's <form> is not a direct child, so it
+       * rides inside the scrolling body. The offsets cancel that body's
+       * padding - without them it floats an inch above the true bottom and
+       * content shows through the gap underneath.
+       */
+      'sticky -bottom-4 z-10 -mx-6 -mb-4',
+      // Rendered in the pinned slot instead, it needs none of that.
+      'data-[pinned]:static data-[pinned]:m-0',
       className
     )}
     {...props}
