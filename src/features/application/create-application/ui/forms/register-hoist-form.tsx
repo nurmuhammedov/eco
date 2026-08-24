@@ -18,7 +18,7 @@ interface RegisterHoistFormProps {
   onSubmit: (data: CreateHoistApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterHoistFormProps) => {
+const RegisterHoistForm = ({ onSubmit }: RegisterHoistFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateHoistApplication()
   const { user } = useAuth()
@@ -512,3 +512,5 @@ export default ({ onSubmit }: RegisterHoistFormProps) => {
     </Form>
   )
 }
+
+export default RegisterHoistForm

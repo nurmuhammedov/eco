@@ -13,9 +13,11 @@ const queryClient = new QueryClient({
 })
 
 export const withQuery = (Component: FC<PropsWithChildren>): FC<PropsWithChildren> => {
-  return (props) => (
+  const WithQuery: FC<PropsWithChildren> = (props) => (
     <QueryClientProvider client={queryClient}>
       <Component {...props} />
     </QueryClientProvider>
   )
+
+  return WithQuery
 }

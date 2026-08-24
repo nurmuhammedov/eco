@@ -34,7 +34,7 @@ interface RegisterIllegalIrsFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) => {
+const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) => {
   const {
     form,
     isUpdate,
@@ -862,3 +862,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalIrsFormProps) =>
     </Form>
   )
 }
+
+export default RegisterIllegalIrsForm

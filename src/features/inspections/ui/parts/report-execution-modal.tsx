@@ -119,7 +119,10 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
                 const currentBadge = executionReportStatuses.get(item?.status || 'UPLOADED')
 
                 return (
-                  <div className="grid grid-cols-4 items-center gap-2 rounded p-2.5 odd:bg-neutral-50">
+                  <div
+                    key={item?.id ?? item?.filePath}
+                    className="grid grid-cols-4 items-center gap-2 rounded p-2.5 odd:bg-neutral-50"
+                  >
                     <div>
                       <FileLink title="Hujjat" isSmall={true} url={item?.filePath} />
                     </div>

@@ -64,8 +64,8 @@ export const DeclarationDetail = ({ detailData }: DeclarationDetailProps) => {
                 <div className="flex flex-col gap-1">
                   {detail?.hfIds && detail.hfIds.length > 0
                     ? detail.hfIds.map((hfId: string, index: number) => (
-                        <div>
-                          <Link key={hfId} to={`/register/${hfId}/hf`} className="font-medium text-blue-600">
+                        <div key={hfId}>
+                          <Link to={`/register/${hfId}/hf`} className="font-medium text-blue-600">
                             XICHO {index + 1}
                           </Link>
                         </div>

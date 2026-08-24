@@ -27,7 +27,7 @@ interface RegisterIllegalPipelineFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalPipelineFormProps) => {
+const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIllegalPipelineFormProps) => {
   const {
     form,
     isUpdate,
@@ -854,3 +854,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalPipelineFormProp
     </Form>
   )
 }
+
+export default RegisterIllegalPipelineForm

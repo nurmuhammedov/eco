@@ -79,11 +79,13 @@ export const AccidentStatusCards = ({ stats, activeStatus, onTabChange, classNam
         const isActive = (activeStatus || 'ALL') === stat.id
 
         return (
-          <div
+          <button
             key={stat.id}
+            type="button"
+            aria-pressed={isActive}
             onClick={() => onTabChange(stat.id)}
             className={cn(
-              'group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-xl border p-5 transition-all duration-300',
+              'group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-xl border p-5 text-left transition-all duration-300',
               isActive ? stat.activeClass : stat.inactiveClass
             )}
           >
@@ -99,7 +101,7 @@ export const AccidentStatusCards = ({ stats, activeStatus, onTabChange, classNam
             <div className={cn('rounded-lg p-3 transition-colors', isActive ? stat.iconClass : stat.inactiveIconClass)}>
               <stat.icon size={24} className="current-color" />
             </div>
-          </div>
+          </button>
         )
       })}
     </div>

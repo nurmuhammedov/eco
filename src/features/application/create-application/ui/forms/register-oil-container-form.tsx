@@ -19,7 +19,7 @@ interface RegisterOilContainerFormProps {
   onSubmit: (data: CreateOilContainerApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterOilContainerFormProps) => {
+const RegisterOilContainerForm = ({ onSubmit }: RegisterOilContainerFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateOilContainerApplication()
   const { user } = useAuth()
@@ -404,3 +404,5 @@ export default ({ onSubmit }: RegisterOilContainerFormProps) => {
     </Form>
   )
 }
+
+export default RegisterOilContainerForm

@@ -23,7 +23,7 @@ interface ReRegisterEquipmentFormProps {
   onSubmit: (data: ReRegisterEquipmentDTO) => void
 }
 
-export default ({ onSubmit }: ReRegisterEquipmentFormProps) => {
+const ReregisterEquipmentForm = ({ onSubmit }: ReRegisterEquipmentFormProps) => {
   const { form, regionOptions, districtOptions, hazardousFacilitiesOptions } = useReRegisterEquipment()
 
   return (
@@ -356,3 +356,5 @@ export default ({ onSubmit }: ReRegisterEquipmentFormProps) => {
     </Form>
   )
 }
+
+export default ReregisterEquipmentForm

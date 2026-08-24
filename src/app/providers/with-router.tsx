@@ -8,7 +8,7 @@ const AppRoutes = () => {
 }
 
 export const withRouter = (_Component: FC): FC => {
-  return () => {
+  const WithRouter: FC = () => {
     return (
       <NuqsAdapter>
         <BrowserRouter>
@@ -17,4 +17,6 @@ export const withRouter = (_Component: FC): FC => {
       </NuqsAdapter>
     )
   }
+
+  return WithRouter
 }

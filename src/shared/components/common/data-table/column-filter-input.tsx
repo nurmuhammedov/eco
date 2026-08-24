@@ -92,7 +92,9 @@ const DateRangeFilter = <TData, TValue>({ column }: ColumnFilterInputProps<TData
         </PopoverContent>
       </Popover>
       {date && (
-        <div
+        <button
+          type="button"
+          aria-label="Sanani tozalash"
           onClick={(event) => {
             event.stopPropagation()
             setDate(undefined)
@@ -101,7 +103,7 @@ const DateRangeFilter = <TData, TValue>({ column }: ColumnFilterInputProps<TData
           className={CLEAR_BUTTON_STYLE}
         >
           <X size={14} />
-        </div>
+        </button>
       )}
     </div>
   )
@@ -186,7 +188,9 @@ const ValueFilter = <TData, TValue>({ column, filterKey }: ValueFilterProps<TDat
         </Popover>
 
         {value && (
-          <div
+          <button
+            type="button"
+            aria-label="Filtrni tozalash"
             onClick={(event) => {
               event.stopPropagation()
               handleImmediateChange(null)
@@ -194,7 +198,7 @@ const ValueFilter = <TData, TValue>({ column, filterKey }: ValueFilterProps<TDat
             className={CLEAR_BUTTON_STYLE}
           >
             <X size={14} />
-          </div>
+          </button>
         )}
       </div>
     )

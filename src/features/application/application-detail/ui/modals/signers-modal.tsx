@@ -27,7 +27,10 @@ const SignersModal: FC<Props> = ({ signers, setSigners }) => {
             const currentLabel = signStatuses.get(signer.isSigned)
 
             return (
-              <div className="flex items-center justify-between gap-4 rounded p-2.5 text-sm odd:bg-neutral-50">
+              <div
+                key={signer?.id ?? signer?.signedBy}
+                className="flex items-center justify-between gap-4 rounded p-2.5 text-sm odd:bg-neutral-50"
+              >
                 <p>{signer?.signedBy}</p>
                 <p className="flex-shrink-0 text-xs text-slate-400">
                   {format(signer?.createdAt, 'dd.MM.yyyy, HH:mm:ss')}

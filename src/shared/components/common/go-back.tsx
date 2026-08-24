@@ -7,7 +7,7 @@ interface GoBackProps {
   fallbackPath?: string
 }
 
-const GoBack: React.FC<GoBackProps> = memo(({ title, fallbackPath = '/' }) => {
+const GoBack: React.FC<GoBackProps> = memo(function GoBack({ title, fallbackPath = '/' }) {
   const navigate = useNavigate()
 
   const handleGoBack = () => {

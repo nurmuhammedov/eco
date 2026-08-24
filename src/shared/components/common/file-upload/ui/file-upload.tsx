@@ -1,3 +1,4 @@
+import { onActivate } from '@/shared/lib/on-activate'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
 import { AxiosProgressEvent } from 'axios'
@@ -81,9 +82,11 @@ const FileRow = memo(
           )}
         </div>
 
-        <div
-          className="flex flex-grow items-center justify-between px-3 py-2 text-sm font-medium"
-          onClick={!isLoading ? onPreview : undefined}
+        <button
+          type="button"
+          disabled={isLoading}
+          onClick={onPreview}
+          className="flex flex-grow items-center justify-between px-3 py-2 text-left text-sm font-medium"
         >
           {isLoading ? (
             <span className="text-gray-400">{`Yuklanmoqda (${progress}%)`}</span>
@@ -97,7 +100,7 @@ const FileRow = memo(
               )}
             </>
           )}
-        </div>
+        </button>
 
         {!isLoading && (
           <FileControls
@@ -226,8 +229,8 @@ function InputFileComponent<T extends FieldValues>({
   }, [disabled, isPending, multiple, fileList.length, maxFiles])
 
   const openCameraDialog = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation()
+    (e?: React.MouseEvent) => {
+      e?.stopPropagation()
       if (!disabled && !isPending) {
         if (multiple && fileList.length >= maxFiles) return
         cameraInputRef.current?.click()
@@ -367,6 +370,9 @@ function InputFileComponent<T extends FieldValues>({
         <div className="mb-2 flex w-full gap-2">
           <div
             onClick={openFileDialog}
+            role="button"
+            tabIndex={0}
+            onKeyDown={onActivate(openFileDialog)}
             className={cn(
               'flex flex-1 items-center',
               'overflow-hidden rounded border border-dashed bg-white',
@@ -391,6 +397,9 @@ function InputFileComponent<T extends FieldValues>({
           {showCameraOption && (
             <div
               onClick={openCameraDialog}
+              role="button"
+              tabIndex={0}
+              onKeyDown={onActivate(openCameraDialog)}
               className={cn(
                 'flex items-center justify-center px-4',
                 'overflow-hidden rounded border border-dashed bg-white',

@@ -130,6 +130,7 @@ function ResultCell({ indicator }: { indicator: KpiIndicator }) {
             className="bg-card min-h-[60px] resize-none text-xs"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
+            // eslint-disable-next-line jsx-a11y/no-autofocus -- the dialog opens for this field alone
             autoFocus
           />
           <div className="flex justify-end gap-2">

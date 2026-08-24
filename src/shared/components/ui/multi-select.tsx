@@ -1,3 +1,4 @@
+import { onActivate } from '@/shared/lib/on-activate'
 import * as React from 'react'
 import { Check, ChevronDown, X } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
@@ -52,8 +53,8 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       onChange(newValue)
     }
 
-    const handleRemove = (e: React.MouseEvent, optionId: string | number) => {
-      e.stopPropagation()
+    const handleRemove = (e: React.MouseEvent | undefined, optionId: string | number) => {
+      e?.stopPropagation()
       if (!onChange) return
       onChange(value.filter((id) => id !== optionId))
     }
@@ -67,7 +68,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
             type="button"
             ref={ref}
             disabled={disabled}
-            role="combobox"
+            aria-haspopup="listbox"
             aria-expanded={open}
             className={cn(
               'flex h-auto min-h-9 w-full items-center justify-between rounded border border-neutral-300 bg-white px-3 py-1 text-base shadow-xs transition-colors',
@@ -88,7 +89,9 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
                       <div
                         role="button"
                         tabIndex={0}
+                        aria-label={`${option.name} ni olib tashlash`}
                         onClick={(e) => handleRemove(e, option.id)}
+                        onKeyDown={onActivate(() => handleRemove(undefined, option.id))}
                         className="ml-0.5 cursor-pointer rounded-sm text-neutral-500 hover:text-red-500"
                       >
                         <X className="h-3 w-3" />

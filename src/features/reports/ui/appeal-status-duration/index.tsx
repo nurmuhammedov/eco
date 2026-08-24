@@ -1,3 +1,4 @@
+import { onActivate } from '@/shared/lib/on-activate'
 import React, { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ExternalLink } from 'lucide-react'
@@ -65,6 +66,9 @@ const AppealStatusDurationReport: React.FC = () => {
                 row.original.isSummary ? 'font-bold' : ''
               )}
               onClick={() => value > 0 && handleNavigate(row.original, prefix, 'upTo5Days')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={onActivate(() => value > 0 && handleNavigate(row.original, prefix, 'upTo5Days'))}
             >
               {value}
               {value > 0 && <ExternalLink size={12} className="opacity-0 transition-opacity group-hover:opacity-100" />}
@@ -87,6 +91,9 @@ const AppealStatusDurationReport: React.FC = () => {
                 row.original.isSummary ? 'font-bold' : ''
               )}
               onClick={() => value > 0 && handleNavigate(row.original, prefix, 'from6To15Days')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={onActivate(() => value > 0 && handleNavigate(row.original, prefix, 'from6To15Days'))}
             >
               {value}
               {value > 0 && <ExternalLink size={12} className="opacity-0 transition-opacity group-hover:opacity-100" />}
@@ -109,6 +116,9 @@ const AppealStatusDurationReport: React.FC = () => {
                 row.original.isSummary ? 'font-bold text-red-600' : 'text-red-500'
               )}
               onClick={() => value > 0 && handleNavigate(row.original, prefix, 'over15Days')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={onActivate(() => value > 0 && handleNavigate(row.original, prefix, 'over15Days'))}
             >
               {value}
               {value > 0 && <ExternalLink size={12} className="opacity-0 transition-opacity group-hover:opacity-100" />}
@@ -131,6 +141,9 @@ const AppealStatusDurationReport: React.FC = () => {
                 row.original.isSummary ? 'font-bold' : ''
               )}
               onClick={() => value > 0 && handleNavigate(row.original, prefix)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={onActivate(() => value > 0 && handleNavigate(row.original, prefix))}
             >
               {value}
               {value > 0 && <ExternalLink size={12} className="opacity-0 transition-opacity group-hover:opacity-100" />}

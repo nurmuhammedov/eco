@@ -13,7 +13,7 @@ interface DeRegisterHFFormProps {
   onSubmit: (data: DeRegisterHFDTO) => void
 }
 
-export default ({ onSubmit }: DeRegisterHFFormProps) => {
+const DeregisterHfForm = ({ onSubmit }: DeRegisterHFFormProps) => {
   const { form } = useDeRegisterHFApplication()
 
   return (
@@ -111,3 +111,5 @@ export default ({ onSubmit }: DeRegisterHFFormProps) => {
     </Form>
   )
 }
+
+export default DeregisterHfForm

@@ -22,7 +22,7 @@ import DatePicker from '@/shared/components/ui/datepicker.tsx'
 import { parseISO } from 'date-fns'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 
-export default ({ onSubmit }: { onSubmit: (data: ReRegisterIllegalHFApplicationDTO) => void }) => {
+const ReregisterIllegalHfForm = ({ onSubmit }: { onSubmit: (data: ReRegisterIllegalHFApplicationDTO) => void }) => {
   const {
     form,
     spheres,
@@ -584,3 +584,5 @@ export default ({ onSubmit }: { onSubmit: (data: ReRegisterIllegalHFApplicationD
     </Form>
   )
 }
+
+export default ReregisterIllegalHfForm

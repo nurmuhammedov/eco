@@ -1,4 +1,3 @@
-// src/features/application/application-detail/ui/application-detail.tsx
 import { getApplicationTitle } from '@/entities/create-application'
 import { UserRoles } from '@/entities/user'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'

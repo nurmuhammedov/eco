@@ -11,7 +11,7 @@ import {
   inquiryStatusBadgeVariants,
 } from '../model/types'
 import { formatDate } from 'date-fns'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/shared/components/ui/button.tsx'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
@@ -228,9 +228,9 @@ const InquiryTable = () => {
           <div className="flex flex-1 flex-col gap-2 overflow-y-auto pb-2">
             {data?.content?.length ? (
               data.content.map((item: any) => (
-                <div
+                <Link
                   key={item.id}
-                  onClick={() => navigate(`/inquiries/detail/${item.id}`)}
+                  to={`/inquiries/detail/${item.id}`}
                   className="flex cursor-pointer flex-col gap-2 rounded-xl border bg-white p-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
                 >
                   <div className="flex items-center justify-between">
@@ -249,7 +249,7 @@ const InquiryTable = () => {
                     {item.createdAt ? formatDate(new Date(item.createdAt), 'dd.MM.yyyy HH:mm') : '-'}
                   </div>
                   <div className="mt-1 line-clamp-2 text-sm text-slate-700">{item.message || '-'}</div>
-                </div>
+                </Link>
               ))
             ) : (
               <div className="flex flex-1 items-center justify-center p-4 text-sm text-slate-500">

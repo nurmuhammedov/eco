@@ -1,3 +1,4 @@
+import { onActivate } from '@/shared/lib/on-activate'
 import { useMemo } from 'react'
 import uzGeoData from './uz.json'
 import { cn } from '@/shared/lib/utils.ts'
@@ -129,6 +130,9 @@ export const UzbekistanMap = ({ onRegionClick, className, activeRegionId }: Uzbe
     <div
       className={cn('relative flex h-full w-full items-center justify-center overflow-hidden p-12', className)}
       onClick={() => onRegionClick?.(null)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={onActivate(() => onRegionClick?.(null))}
     >
       <svg
         viewBox={`0 0 ${VIEW_BOX_WIDTH} ${VIEW_BOX_HEIGHT}`}

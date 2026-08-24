@@ -47,7 +47,7 @@ export function Combobox({
         <button
           type="button"
           disabled={disabled}
-          role="combobox"
+          aria-haspopup="listbox"
           aria-expanded={open}
           className={cn(
             'flex h-9 w-full items-center justify-between rounded border border-neutral-300 bg-white px-3 py-1 text-base shadow-xs transition-colors',

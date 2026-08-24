@@ -27,7 +27,7 @@ interface RegisterIllegalContainerFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalContainerFormProps) => {
+const RegisterIllegalContainerForm = ({ onSubmit, isPending = false }: RegisterIllegalContainerFormProps) => {
   const {
     form,
     isUpdate,
@@ -793,3 +793,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalContainerFormPro
     </Form>
   )
 }
+
+export default RegisterIllegalContainerForm

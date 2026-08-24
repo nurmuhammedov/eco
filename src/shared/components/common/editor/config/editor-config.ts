@@ -1,5 +1,3 @@
-// src/features/editor/config/editorConfig.ts
-
 /**
  * Default plugins for TinyMCE 6 with @tinymce/tinymce-react 6.1.0
  *

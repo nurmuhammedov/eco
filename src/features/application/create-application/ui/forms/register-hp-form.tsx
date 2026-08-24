@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/comp
 import DatePicker from '@/shared/components/ui/datepicker.tsx'
 import { parseISO } from 'date-fns'
 
-export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
+const RegisterHpForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => {
   const {
     form,
     spheres,
@@ -660,3 +660,5 @@ export default ({ onSubmit }: { onSubmit: (data: any) => void }) => {
     </Form>
   )
 }
+
+export default RegisterHpForm

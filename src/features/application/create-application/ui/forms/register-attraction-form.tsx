@@ -19,7 +19,7 @@ interface RegisterAttractionFormProps {
   onSubmit: (data: CreateAttractionApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterAttractionFormProps) => {
+const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
   const { form, regionOptions, districtOptions, attractionNameOptions, attractionSortOptions, riskLevelOptions } =
     useCreateAttractionApplication()
 
@@ -717,3 +717,5 @@ export default ({ onSubmit }: RegisterAttractionFormProps) => {
     </Form>
   )
 }
+
+export default RegisterAttractionForm

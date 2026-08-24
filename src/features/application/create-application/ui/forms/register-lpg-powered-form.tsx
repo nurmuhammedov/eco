@@ -18,7 +18,7 @@ interface RegisterLpgPoweredFormProps {
   onSubmit: (data: CreateLpgPoweredApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
+const RegisterLpgPoweredForm = ({ onSubmit }: RegisterLpgPoweredFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateLpgPoweredApplication()
   const { user } = useAuth()
@@ -557,3 +557,5 @@ export default ({ onSubmit }: RegisterLpgPoweredFormProps) => {
     </Form>
   )
 }
+
+export default RegisterLpgPoweredForm

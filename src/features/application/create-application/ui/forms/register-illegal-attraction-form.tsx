@@ -30,7 +30,7 @@ interface RegisterIllegalAttractionFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormProps) => {
+const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormProps) => {
   const {
     form,
     isUpdate,
@@ -901,3 +901,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalAttractionFormPr
     </Form>
   )
 }
+
+export default RegisterIllegalAttractionForm

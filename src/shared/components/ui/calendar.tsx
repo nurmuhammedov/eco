@@ -80,7 +80,11 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
                 }}
               >
                 {options.map((option) => (
-                  <option value={option.props.value?.toString() ?? ''} className="text-foreground bg-background">
+                  <option
+                    key={option.props.value?.toString() ?? ''}
+                    value={option.props.value?.toString() ?? ''}
+                    className="text-foreground bg-background"
+                  >
                     {option.props.children}
                   </option>
                 ))}

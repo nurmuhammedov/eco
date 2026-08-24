@@ -1,3 +1,4 @@
+import { onActivate } from '@/shared/lib/on-activate'
 import { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
@@ -192,6 +193,9 @@ export function MyCardsModal({ open, onOpenChange }: Props) {
                     className="group relative h-48 w-full cursor-pointer"
                     style={{ perspective: '1000px' }}
                     onClick={() => setExpandedCardId(isExpanded ? null : id)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={onActivate(() => setExpandedCardId(isExpanded ? null : id))}
                   >
                     <div
                       className={cn(

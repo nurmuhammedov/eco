@@ -1,4 +1,3 @@
-// src/features/application/create-application/ui/forms/register-xray-form.tsx
 import { CardForm, CreateXrayApplicationDTO } from '@/entities/create-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
@@ -33,7 +32,7 @@ const generateYearOptions = () => {
 
 const yearOptions = generateYearOptions()
 
-export default ({ onSubmit }: RegisterXrayFormProps) => {
+const RegisterXrayForm = ({ onSubmit }: RegisterXrayFormProps) => {
   const {
     form,
     regionOptions,
@@ -562,3 +561,5 @@ export default ({ onSubmit }: RegisterXrayFormProps) => {
     </Form>
   )
 }
+
+export default RegisterXrayForm

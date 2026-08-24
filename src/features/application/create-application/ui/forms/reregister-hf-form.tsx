@@ -25,7 +25,7 @@ interface ReRegisterHFFormProps {
   onSubmit: (data: ReRegisterHFApplicationDTO) => void
 }
 
-export default ({ onSubmit }: ReRegisterHFFormProps) => {
+const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
   const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions, hazardousFacilitiesOptions } =
     useReRegisterHFApplication()
 
@@ -530,3 +530,5 @@ export default ({ onSubmit }: ReRegisterHFFormProps) => {
     </Form>
   )
 }
+
+export default ReregisterHfForm

@@ -1,4 +1,3 @@
-// src/widgets/admin/checklist-templates/ui/checklist-templates-widget.tsx
 import { ChecklistTemplatesDrawer } from '@/features/admin/checklist-templates/ui/checklist-templates-drawer'
 import { ChecklistTemplatesList } from '@/features/admin/checklist-templates/ui/checklist-templates-list'
 import { Button } from '@/shared/components/ui/button'

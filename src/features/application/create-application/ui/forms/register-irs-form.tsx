@@ -21,7 +21,7 @@ interface RegisterIrsFormProps {
   onSubmit: (data: CreateIrsApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterIrsFormProps) => {
+const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
   const {
     form,
     regionOptions,
@@ -698,3 +698,5 @@ export default ({ onSubmit }: RegisterIrsFormProps) => {
     </Form>
   )
 }
+
+export default RegisterIrsForm

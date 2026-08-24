@@ -18,7 +18,7 @@ interface RegisterCraneFormProps {
   onSubmit: (data: CreateCraneApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterCraneFormProps) => {
+const RegisterCraneForm = ({ onSubmit }: RegisterCraneFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateCraneApplication()
   const { user } = useAuth()
@@ -591,3 +591,5 @@ export default ({ onSubmit }: RegisterCraneFormProps) => {
     </Form>
   )
 }
+
+export default RegisterCraneForm

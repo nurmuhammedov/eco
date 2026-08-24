@@ -1,5 +1,3 @@
-// src/features/editor/lib/controls/formattingControls.ts
-
 /**
  * Registers controls for text formatting and styles
  */

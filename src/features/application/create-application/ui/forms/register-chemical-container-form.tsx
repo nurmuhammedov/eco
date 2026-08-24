@@ -18,7 +18,7 @@ interface RegisterChemicalContainerFormProps {
   onSubmit: (data: CreateChemicalContainerApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterChemicalContainerFormProps) => {
+const RegisterChemicalContainerForm = ({ onSubmit }: RegisterChemicalContainerFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateChemicalContainerApplication()
   const { user } = useAuth()
@@ -604,3 +604,5 @@ export default ({ onSubmit }: RegisterChemicalContainerFormProps) => {
     </Form>
   )
 }
+
+export default RegisterChemicalContainerForm

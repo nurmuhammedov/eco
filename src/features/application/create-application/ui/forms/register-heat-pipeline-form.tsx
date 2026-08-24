@@ -18,7 +18,7 @@ interface RegisterHeatPipelineFormProps {
   onSubmit: (data: CreateHeatPipelineApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
+const RegisterHeatPipelineForm = ({ onSubmit }: RegisterHeatPipelineFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateHeatPipelineApplication()
   const { user } = useAuth()
@@ -625,3 +625,5 @@ export default ({ onSubmit }: RegisterHeatPipelineFormProps) => {
     </Form>
   )
 }
+
+export default RegisterHeatPipelineForm

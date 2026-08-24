@@ -1,3 +1,4 @@
+import { onActivate } from '@/shared/lib/on-activate'
 import { AlertCircle, ChevronDown } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '@/shared/components/ui/button'
@@ -143,6 +144,9 @@ export function SignatureSelect({
                   <div
                     key={cert.serialNumber || index}
                     onClick={() => handleSelectCertificate(cert)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={onActivate(() => handleSelectCertificate(cert))}
                     className={cn(
                       'relative p-4 transition-colors',
                       isExpired ? 'cursor-not-allowed bg-gray-50 opacity-60' : 'cursor-pointer hover:bg-gray-50'

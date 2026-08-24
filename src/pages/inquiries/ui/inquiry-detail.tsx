@@ -1,3 +1,4 @@
+import { onActivate } from '@/shared/lib/on-activate'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/shared/components/ui/button'
 import { apiConfig } from '@/shared/api/constants'
@@ -478,6 +479,9 @@ const InquiryDetailPage = () => {
                       className="group relative h-48 w-full max-w-sm cursor-pointer"
                       style={{ perspective: '1000px' }}
                       onClick={() => setExpandedCardId(isExpanded ? null : cardId)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={onActivate(() => setExpandedCardId(isExpanded ? null : cardId))}
                     >
                       <div
                         className={cn(

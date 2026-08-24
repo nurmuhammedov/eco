@@ -1,4 +1,3 @@
-// src/features/application/create-application/model/use-create-irs-application.ts
 import { XrayAppealDtoSchema } from '@/entities/create-application'
 import { stateService } from '@/entities/create-application/types/enums'
 import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'

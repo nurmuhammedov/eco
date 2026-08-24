@@ -27,7 +27,7 @@ interface RegisterIllegalCraneFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) => {
+const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) => {
   const {
     form,
     isUpdate,
@@ -775,3 +775,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCraneFormProps) 
     </Form>
   )
 }
+
+export default RegisterIllegalCraneForm

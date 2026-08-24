@@ -27,7 +27,7 @@ interface RegisterIllegalCablewayFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalCablewayFormProps) => {
+const RegisterIllegalCablewayForm = ({ onSubmit, isPending = false }: RegisterIllegalCablewayFormProps) => {
   const {
     form,
     isUpdate,
@@ -755,3 +755,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalCablewayFormProp
     </Form>
   )
 }
+
+export default RegisterIllegalCablewayForm

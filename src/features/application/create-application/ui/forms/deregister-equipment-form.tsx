@@ -33,7 +33,7 @@ const fileFields = [
   },
 ] as const
 
-export default ({ onSubmit }: DeRegisterEquipmentFormProps) => {
+const DeregisterEquipmentForm = ({ onSubmit }: DeRegisterEquipmentFormProps) => {
   const { form, equipmentOptions } = useDeRegisterEquipmentApplication()
 
   return (
@@ -140,3 +140,5 @@ export default ({ onSubmit }: DeRegisterEquipmentFormProps) => {
     </Form>
   )
 }
+
+export default DeregisterEquipmentForm

@@ -1,4 +1,3 @@
-// src/features/application/application-detail/ui/modals/update-file-modal.tsx
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'

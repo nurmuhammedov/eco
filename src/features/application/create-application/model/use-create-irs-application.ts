@@ -1,4 +1,3 @@
-// src/features/application/create-application/model/use-create-irs-application.ts
 import { CreateIrsApplicationDTO, IrsAppealDtoSchema } from '@/entities/create-application'
 import { IrsCategory, IrsIdentifierType, IrsUsageType } from '@/entities/create-application/types/enums'
 import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'

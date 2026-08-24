@@ -1,4 +1,3 @@
-// src/entities/admin/checklist-templates/models/checklist-templates.types.tsx
 import { z } from 'zod'
 import { schemas } from './checklist-templates.schema'
 

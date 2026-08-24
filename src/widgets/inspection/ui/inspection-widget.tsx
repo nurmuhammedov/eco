@@ -1,3 +1,4 @@
+import { onActivate } from '@/shared/lib/on-activate'
 import { InspectionList } from '@/features/inspections/ui/inspection-list'
 import { OtherInspectionList } from '@/features/inspections/ui/other-inspection-list'
 import { TenDaysDecreeList } from '@/features/inspections/ten-days-decree/ui/ten-days-decree-list'
@@ -153,6 +154,9 @@ const Cards = ({ onTabChange, regionId, year, month, type, belongType }: any) =>
           <div
             key={stat.id}
             onClick={() => onTabChange(stat.id)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={onActivate(() => onTabChange(stat.id))}
             className={clsx(
               'relative flex min-w-fit flex-1 shrink grow cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors duration-200 select-none',
               isActive ? stat.activeClass : `${stat.inactiveClass} hover:opacity-80`

@@ -33,10 +33,13 @@ const HybridMailPage = () => {
         <CardContent className="pt-4">
           <div className="flex items-center justify-between rounded-lg border p-4 shadow-sm">
             <div className="space-y-0.5">
-              <label className="text-base font-medium">Holati</label>
+              <label htmlFor="hybrid-mail-status" className="text-base font-medium">
+                Holati
+              </label>
               <p className="text-sm text-neutral-500">{data?.status ? 'Xizmat yoqilgan' : 'Xizmat o‘chirilgan'}</p>
             </div>
             <Switch
+              id="hybrid-mail-status"
               checked={data?.status || false}
               onChange={(e) => handleToggle(e.target.checked)}
               disabled={isLoading || isPending}

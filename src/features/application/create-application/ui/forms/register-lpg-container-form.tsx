@@ -18,7 +18,7 @@ interface RegisterLpgContainerFormProps {
   onSubmit: (data: CreateLpgContainerApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
+const RegisterLpgContainerForm = ({ onSubmit }: RegisterLpgContainerFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateLpgContainerApplication()
   const { user } = useAuth()
@@ -599,3 +599,5 @@ export default ({ onSubmit }: RegisterLpgContainerFormProps) => {
     </Form>
   )
 }
+
+export default RegisterLpgContainerForm

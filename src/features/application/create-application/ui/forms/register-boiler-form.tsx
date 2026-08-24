@@ -18,7 +18,7 @@ interface RegisterBoilerFormProps {
   onSubmit: (data: CreateBoilerApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterBoilerFormProps) => {
+const RegisterBoilerForm = ({ onSubmit }: RegisterBoilerFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateBoilerApplication()
   const { user } = useAuth()
@@ -604,3 +604,5 @@ export default ({ onSubmit }: RegisterBoilerFormProps) => {
     </Form>
   )
 }
+
+export default RegisterBoilerForm

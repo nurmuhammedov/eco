@@ -1,4 +1,3 @@
-// src/features/admin/checklist-templates/model/use-checklist-template-form.ts
 import {
   CreateChecklistTemplateDTO,
   schemas,

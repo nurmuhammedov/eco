@@ -14,7 +14,14 @@ export const DetailCardAccordion: FC<DetailCardAccordionProps> & {
   )
 }
 
-DetailCardAccordion.Item = ({ value, title, children, className, action, icon = 'word' }) => {
+DetailCardAccordion.Item = function DetailCardAccordionItem({
+  value,
+  title,
+  children,
+  className,
+  action,
+  icon = 'word',
+}) {
   return (
     <AccordionItem value={value} className={cn('mb-3 rounded-lg bg-blue-200', className)}>
       {action ? (

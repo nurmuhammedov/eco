@@ -44,7 +44,7 @@ const generateYearOptions = () => {
 
 const yearOptions = generateYearOptions()
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) => {
+const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) => {
   const {
     form,
     isUpdate,
@@ -710,3 +710,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalXrayFormProps) =
     </Form>
   )
 }
+
+export default RegisterIllegalXrayForm

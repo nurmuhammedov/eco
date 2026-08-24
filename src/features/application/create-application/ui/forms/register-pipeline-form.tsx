@@ -18,7 +18,7 @@ interface RegisterPipelineFormProps {
   onSubmit: (data: CreatePipelineApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterPipelineFormProps) => {
+const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreatePipelineApplication()
   const { user } = useAuth()
@@ -655,3 +655,5 @@ export default ({ onSubmit }: RegisterPipelineFormProps) => {
     </Form>
   )
 }
+
+export default RegisterPipelineForm

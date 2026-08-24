@@ -1,4 +1,3 @@
-// src/features/admin/checklist-templates/ui/checklist-templates-list.tsx
 import {
   ChecklistTemplate,
   useChecklistTemplateList,

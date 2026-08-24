@@ -1,4 +1,3 @@
-// src/entities/admin/checklist-templates/models/checklist-templates.api.ts
 import { API_ENDPOINTS } from '@/shared/api'
 import {
   ChecklistTemplate,

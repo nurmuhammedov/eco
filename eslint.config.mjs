@@ -1,7 +1,9 @@
 import js from '@eslint/js'
 import tslint from 'typescript-eslint'
+import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import jsxA11y from 'eslint-plugin-jsx-a11y'
 import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default tslint.config(
@@ -18,11 +20,22 @@ export default tslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    settings: { react: { version: 'detect' } },
     plugins: {
+      react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      'jsx-a11y': jsxA11y,
     },
     rules: {
+      ...react.configs.flat.recommended.rules,
+      ...jsxA11y.flatConfigs.recommended.rules,
+      // The new JSX transform means React is not in scope by design.
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
+      // Unescaped apostrophes read fine and the Uzbek text is full of them.
+      'react/no-unescaped-entities': 'off',
+
       // Conditional or nested hook calls break React's hook order at runtime.
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',

@@ -27,7 +27,7 @@ interface RegisterIllegalOilContainerFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerFormProps) => {
+const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: RegisterIllegalOilContainerFormProps) => {
   const {
     form,
     isUpdate,
@@ -560,3 +560,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalOilContainerForm
     </Form>
   )
 }
+
+export default RegisterIllegalOilContainerForm

@@ -1,4 +1,3 @@
-// src/features/admin/checklist-templates/ui/checklist-templates-drawer.tsx
 import { BaseDrawer } from '@/shared/components/common/base-drawer'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'

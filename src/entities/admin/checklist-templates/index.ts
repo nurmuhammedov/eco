@@ -1,4 +1,3 @@
-// src/entities/admin/checklist-templates/index.ts
 export * from './models/checklist-templates.api'
 export * from './models/checklist-templates.types'
 export * from './models/checklist-templates.schema'

@@ -27,7 +27,7 @@ interface RegisterIllegalEscalatorFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalEscalatorFormProps) => {
+const RegisterIllegalEscalatorForm = ({ onSubmit, isPending = false }: RegisterIllegalEscalatorFormProps) => {
   const {
     form,
     isUpdate,
@@ -761,3 +761,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalEscalatorFormPro
     </Form>
   )
 }
+
+export default RegisterIllegalEscalatorForm

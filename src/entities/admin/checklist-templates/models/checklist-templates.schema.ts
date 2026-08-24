@@ -1,4 +1,3 @@
-// src/entities/admin/checklist-templates/models/checklist-templates.schema.ts
 import { z } from 'zod'
 
 const ERROR_MESSAGES = {

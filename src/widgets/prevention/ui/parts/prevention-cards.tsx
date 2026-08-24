@@ -34,11 +34,13 @@ export const PreventionCards = ({ activeRiskLevel, onTabChange, year, type }: IP
         const isActive = activeRiskLevel === item.id
 
         return (
-          <div
+          <button
             key={item.id}
+            type="button"
+            aria-pressed={isActive}
             onClick={() => onTabChange(item.id)}
             className={clsx(
-              'relative flex flex-1 cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors duration-200 select-none',
+              'relative flex flex-1 cursor-pointer items-center justify-between rounded-lg border p-3 text-left transition-colors duration-200 select-none',
               isActive ? item.activeClass : `${item.inactiveClass} hover:opacity-80`
             )}
           >
@@ -49,7 +51,7 @@ export const PreventionCards = ({ activeRiskLevel, onTabChange, year, type }: IP
               </div>
               <h3 className={clsx('text-2xl font-bold')}>{item.count}</h3>
             </div>
-          </div>
+          </button>
         )
       })}
     </div>

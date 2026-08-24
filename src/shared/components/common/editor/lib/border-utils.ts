@@ -1,4 +1,3 @@
-// src/features/editor/lib/borderUtils.ts
 import { BorderStyleType } from '../model/types'
 
 /**

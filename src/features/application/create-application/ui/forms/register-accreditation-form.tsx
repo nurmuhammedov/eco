@@ -49,7 +49,7 @@ const ATTACHMENTS: { name: keyof RegisterAccreditationDTO; label: string }[] = [
   },
 ]
 
-export default ({ onSubmit }: RegisterAccreditationFormProps) => {
+const RegisterAccreditationForm = ({ onSubmit }: RegisterAccreditationFormProps) => {
   const { type } = useParams<{ type: ApplicationTypeEnum }>()
   const appealType = type as ApplicationTypeEnum
 
@@ -199,3 +199,5 @@ export default ({ onSubmit }: RegisterAccreditationFormProps) => {
     </Form>
   )
 }
+
+export default RegisterAccreditationForm

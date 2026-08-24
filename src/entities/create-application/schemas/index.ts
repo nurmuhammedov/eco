@@ -1,4 +1,3 @@
-// src/entities/create-application/schemas/index.ts
 export * from './register-hf.schema'
 export * from './register-crane.schema'
 export * from './register-container.schema'

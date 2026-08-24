@@ -18,7 +18,7 @@ interface RegisterContainerFormProps {
   onSubmit: (data: CreateContainerApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterContainerFormProps) => {
+const RegisterContainerForm = ({ onSubmit }: RegisterContainerFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateContainerApplication()
   const { user } = useAuth()
@@ -605,3 +605,5 @@ export default ({ onSubmit }: RegisterContainerFormProps) => {
     </Form>
   )
 }
+
+export default RegisterContainerForm

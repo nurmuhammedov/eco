@@ -18,7 +18,7 @@ interface RegisterEscalatorFormProps {
   onSubmit: (data: CreateEscalatorApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterEscalatorFormProps) => {
+const RegisterEscalatorForm = ({ onSubmit }: RegisterEscalatorFormProps) => {
   const { form, regionOptions, districtOptions, parkOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateEscalatorApplication()
   const { user } = useAuth()
@@ -570,3 +570,5 @@ export default ({ onSubmit }: RegisterEscalatorFormProps) => {
     </Form>
   )
 }
+
+export default RegisterEscalatorForm

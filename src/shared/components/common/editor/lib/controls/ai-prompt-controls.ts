@@ -1,5 +1,3 @@
-// src/features/editor/lib/controls/aiPromptControls.ts
-
 /**
  * Registers AI prompt assistant functionality
  */

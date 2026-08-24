@@ -27,7 +27,7 @@ interface RegisterIllegalBoilerUtilizerFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFormProps) => {
+const RegisterIllegalBoilerUtilizerForm = ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFormProps) => {
   const {
     form,
     isUpdate,
@@ -846,3 +846,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalBoilerUtilizerFo
     </Form>
   )
 }
+
+export default RegisterIllegalBoilerUtilizerForm

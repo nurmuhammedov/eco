@@ -27,7 +27,7 @@ interface RegisterIllegalHoistFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) => {
+const RegisterIllegalHoistForm = ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) => {
   const {
     form,
     isUpdate,
@@ -708,3 +708,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHoistFormProps) 
     </Form>
   )
 }
+
+export default RegisterIllegalHoistForm

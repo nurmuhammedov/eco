@@ -1,4 +1,3 @@
-// src/features/editor/lib/styleUtils.ts
 import { CSSProperties, useMemo } from 'react'
 
 /**

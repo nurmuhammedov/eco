@@ -18,7 +18,7 @@ interface RegisterCablewayFormProps {
   onSubmit: (data: CreateCablewayApplicationDTO) => void
 }
 
-export default ({ onSubmit }: RegisterCablewayFormProps) => {
+const RegisterCablewayForm = ({ onSubmit }: RegisterCablewayFormProps) => {
   const { form, regionOptions, districtOptions, childEquipmentOptions, hazardousFacilitiesOptions } =
     useCreateCablewayApplication()
   const { user } = useAuth()
@@ -565,3 +565,5 @@ export default ({ onSubmit }: RegisterCablewayFormProps) => {
     </Form>
   )
 }
+
+export default RegisterCablewayForm

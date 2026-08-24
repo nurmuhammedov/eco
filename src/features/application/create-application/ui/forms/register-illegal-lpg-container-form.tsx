@@ -27,7 +27,7 @@ interface RegisterIllegalLpgContainerFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalLpgContainerFormProps) => {
+const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: RegisterIllegalLpgContainerFormProps) => {
   const {
     form,
     isUpdate,
@@ -772,3 +772,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalLpgContainerForm
     </Form>
   )
 }
+
+export default RegisterIllegalLpgContainerForm

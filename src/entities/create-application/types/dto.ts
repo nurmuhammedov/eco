@@ -1,4 +1,3 @@
-// src/entities/create-application/types/dto.ts
 import {
   BoilerAppealDtoSchema,
   BoilerUtilizerAppealDtoSchema,

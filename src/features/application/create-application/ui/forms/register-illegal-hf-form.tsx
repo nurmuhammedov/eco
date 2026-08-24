@@ -29,7 +29,7 @@ interface RegisterIllegalHfFormProps {
   isPending?: boolean
 }
 
-export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => {
+const RegisterIllegalHfForm = ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => {
   const {
     form,
     spheres,
@@ -824,3 +824,5 @@ export default ({ onSubmit, isPending = false }: RegisterIllegalHfFormProps) => 
     </Form>
   )
 }
+
+export default RegisterIllegalHfForm
