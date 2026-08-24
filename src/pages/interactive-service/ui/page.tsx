@@ -542,6 +542,7 @@ export const InteractiveServicePage: React.FC = () => {
                   <Tooltip key={cat.id}>
                     <TooltipTrigger asChild>
                       <button
+                        type="button"
                         onClick={() => setActiveCategory(cat.id)}
                         className={cn(
                           'group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl transition-all duration-300 lg:h-12 lg:w-12',
@@ -641,7 +642,10 @@ export const InteractiveServicePage: React.FC = () => {
                   {HF_TIP_INFO.map((tip) => (
                     <Tooltip key={tip.id}>
                       <TooltipTrigger asChild>
-                        <button className="group flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-slate-200/60 bg-white/70 p-3 text-left shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-lg">
+                        <button
+                          type="button"
+                          className="group flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-slate-200/60 bg-white/70 p-3 text-left shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-lg"
+                        >
                           <div className="flex items-center gap-2">
                             <div
                               className="h-2.5 w-2.5 rounded-full shadow-sm"
@@ -687,6 +691,7 @@ export const InteractiveServicePage: React.FC = () => {
 
           {activeRegion && (
             <button
+              type="button"
               onClick={() => setActiveRegion(null)}
               className="is-anim-scale-in absolute right-5 bottom-4 z-20 rounded-lg border border-slate-200 bg-white px-3 py-1 text-[10px] text-slate-500 shadow-sm transition-colors hover:bg-slate-50 lg:right-8 lg:bottom-5 lg:px-4 lg:py-1.5 lg:text-xs"
             >

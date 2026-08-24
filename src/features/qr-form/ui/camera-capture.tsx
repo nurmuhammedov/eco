@@ -103,6 +103,7 @@ export const CameraCapture = ({ onCapture }: CameraCaptureProps) => {
             Kamera
           </h3>
           <button
+            type="button"
             onClick={stopCamera}
             className="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white"
           >

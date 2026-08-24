@@ -41,6 +41,7 @@ const ApplicantDocsTable = () => {
               <Badge variant={currentLabel.variant}>{currentLabel.label}</Badge>
               {!!signersList.length && (
                 <button
+                  type="button"
                   className="cursor-pointer text-[#A6B1BB] hover:text-yellow-200"
                   onClick={() => {
                     setSigners(signersList)

@@ -64,6 +64,7 @@ export const NotificationsMenu = () => {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
+          type="button"
           aria-label="Bildirishnomalar"
           className="border-border bg-neutral-150/50 hover:bg-neutral-150 relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border transition-colors"
         >
@@ -87,6 +88,7 @@ export const NotificationsMenu = () => {
           </div>
           {unreadCount > 0 && (
             <button
+              type="button"
               onClick={() => markAllAsRead.mutate()}
               disabled={markAllAsRead.isPending}
               className="flex cursor-pointer items-center gap-1 text-xs font-medium text-blue-600 transition-colors hover:text-blue-700 hover:underline disabled:opacity-50"
@@ -117,6 +119,7 @@ export const NotificationsMenu = () => {
                   <GroupLabel>Tizim bildirishnomalari</GroupLabel>
                   {items.map((item) => (
                     <button
+                      type="button"
                       key={item.id}
                       onClick={() => handleSelect(item)}
                       className={cn(
@@ -144,6 +147,7 @@ export const NotificationsMenu = () => {
                   <GroupLabel>Murojaatlar</GroupLabel>
                   {inquiries.map((inquiry) => (
                     <button
+                      type="button"
                       key={inquiry.id}
                       onClick={() => handleInquirySelect(inquiry.id)}
                       className="flex w-full cursor-pointer flex-col gap-1 border-b px-4 py-3 text-left transition-colors last:border-0 hover:bg-slate-50"

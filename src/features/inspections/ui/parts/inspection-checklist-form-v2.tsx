@@ -329,7 +329,10 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
                       resultId={resultId}
                       acknowledgementPath={acknowledgementPath}
                       trigger={
-                        <button className="cursor-pointer text-xs font-medium text-amber-600 underline underline-offset-2 hover:text-amber-700">
+                        <button
+                          type="button"
+                          className="cursor-pointer text-xs font-medium text-amber-600 underline underline-offset-2 hover:text-amber-700"
+                        >
                           Yangilash
                         </button>
                       }
@@ -399,7 +402,10 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
                           resultId={resultId}
                           additionalFilePath={additionalFilePath}
                           trigger={
-                            <button className="cursor-pointer text-xs font-medium text-amber-600 underline underline-offset-2 hover:text-amber-700">
+                            <button
+                              type="button"
+                              className="cursor-pointer text-xs font-medium text-amber-600 underline underline-offset-2 hover:text-amber-700"
+                            >
                               Yangilash
                             </button>
                           }

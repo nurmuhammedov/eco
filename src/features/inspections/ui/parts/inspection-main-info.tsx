@@ -56,6 +56,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
               <span>{inspectionData?.decreeNumber || '-'}</span> |
               <FileLink url={inspectionData?.decree?.path} />
               <button
+                type="button"
                 className="cursor-pointer text-[#A6B1BB] transition-colors hover:text-yellow-200"
                 onClick={() => {
                   setSigners(inspectionData?.decree?.signers || [])

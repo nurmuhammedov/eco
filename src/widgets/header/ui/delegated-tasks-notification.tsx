@@ -44,7 +44,10 @@ export const DelegatedTasksNotification = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="border-border bg-neutral-150/50 hover:bg-neutral-150 relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border transition-colors">
+        <button
+          type="button"
+          className="border-border bg-neutral-150/50 hover:bg-neutral-150 relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border transition-colors"
+        >
           <ArrowLeftRight className="h-[20px] w-[20px] text-neutral-700" />
           <span className="absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-blue-500 px-1 text-[10px] font-bold text-white shadow-sm ring-2 ring-white">
             {displayCount > 99 ? '99+' : displayCount}
@@ -68,6 +71,7 @@ export const DelegatedTasksNotification = () => {
                 const isSelected = item.delegatorId === user?.delegatorId
                 return (
                   <button
+                    type="button"
                     key={item.delegatorId}
                     disabled={isPending || isSelected}
                     onClick={() => switchOtherRole(item.delegatorId)}
@@ -103,6 +107,7 @@ export const DelegatedTasksNotification = () => {
           {isDelegated && (
             <div className="border-t bg-slate-50 p-2">
               <button
+                type="button"
                 disabled={isSwitchingBack}
                 onClick={() => switchBackRole()}
                 className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-200 disabled:opacity-50"

@@ -339,6 +339,7 @@ const InspectionReports = ({
                               <FileLink url={act?.path} title="Hujjatni ko‘rish" />
                             </div>
                             <button
+                              type="button"
                               className="flex shrink-0 cursor-pointer items-center gap-1 text-xs font-medium whitespace-nowrap text-blue-600 transition-colors hover:text-blue-700 hover:underline"
                               onClick={() => setSigners(act?.signers)}
                             >

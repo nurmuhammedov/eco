@@ -64,6 +64,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       <Popover modal={true} open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <button
+            type="button"
             ref={ref}
             disabled={disabled}
             role="combobox"

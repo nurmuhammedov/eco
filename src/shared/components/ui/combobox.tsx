@@ -45,6 +45,7 @@ export function Combobox({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
+          type="button"
           disabled={disabled}
           role="combobox"
           aria-expanded={open}
