@@ -158,9 +158,13 @@ export const DocumentsStats = () => {
             <p className="mt-1 text-sm text-slate-500">Barcha hujjatlar holati bo‘yicha umumiy hisobot</p>
           </div>
 
-          <TabsList className="h-auto rounded-lg bg-slate-100 p-1">
+          <TabsList className="h-auto w-full flex-wrap rounded-lg bg-slate-100 p-1 md:w-fit">
             {TABS.map((tab) => (
-              <TabsTrigger key={tab.id} value={tab.id} className="rounded-md px-5 py-2 font-medium text-slate-600">
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                className="flex-1 rounded-md px-5 py-2 font-medium text-slate-600 md:flex-none"
+              >
                 {tab.label}
               </TabsTrigger>
             ))}

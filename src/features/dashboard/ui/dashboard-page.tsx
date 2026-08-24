@@ -56,9 +56,13 @@ export const DashboardPage = () => {
           activationMode="manual"
           className="space-y-4"
         >
-          <TabsList className="h-auto w-full justify-start gap-1 rounded-lg bg-slate-100 p-1 md:w-fit">
+          <TabsList className="h-auto w-full flex-wrap justify-start gap-1 rounded-lg bg-slate-100 p-1 md:w-fit">
             {TABS.map((tab) => (
-              <TabsTrigger key={tab.id} value={tab.id} className="rounded-md px-6 py-2 font-medium text-slate-600">
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                className="flex-1 rounded-md px-6 py-2 font-medium text-slate-600 md:flex-none"
+              >
                 {tab.label}
               </TabsTrigger>
             ))}

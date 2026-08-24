@@ -109,7 +109,7 @@ export const InquiriesStats = ({ regionId }: InquiriesStatsProps) => {
           <FileText className="h-6 w-6 md:h-8 md:w-8" />,
           'text-blue-600',
           'bg-blue-50',
-          'col-span-full sm:col-span-2 md:col-span-1 md:row-span-2 md:p-8'
+          'col-span-full sm:col-span-2 md:col-span-1'
         )}
         {renderCleanCard('Yangi', inqNew, <PlusCircle className="h-6 w-6" />, 'text-blue-500', 'bg-blue-50')}
         {renderCleanCard(

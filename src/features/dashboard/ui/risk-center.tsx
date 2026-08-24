@@ -62,7 +62,12 @@ const RiskSection = ({ title, count, items, headerClass, dotClass, isLoading, bu
           >
             <span className="flex items-center gap-3">
               <span aria-hidden="true" className={cn('h-2.5 w-2.5 min-w-[10px] rounded-full', dotClass)} />
-              <span className="leading-tight font-medium text-slate-700">{item.objectName || item.name}</span>
+              <span
+                title={item.objectName || item.name}
+                className="line-clamp-2 leading-tight font-medium text-slate-700"
+              >
+                {item.objectName || item.name}
+              </span>
             </span>
             <StatValue
               value={item.count}
