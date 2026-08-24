@@ -1,4 +1,11 @@
-import { Dialog, DialogContent } from '@/shared/components/ui/dialog.tsx'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/shared/components/ui/dialog.tsx'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/shared/components/ui/form.tsx'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -105,11 +112,10 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
   return (
     <Dialog onOpenChange={handleModal} open={!!id}>
       <DialogContent size="xl">
-        <div>
-          <h2 className="mb-1 font-medium">Aniqlangan kamchilik</h2>
-          <p className="text-sm">{description}</p>
-        </div>
-        <hr className="border-neutral-50" />
+        <DialogHeader>
+          <DialogTitle>Aniqlangan kamchilik</DialogTitle>
+          <DialogDescription className="text-sm">{description}</DialogDescription>
+        </DialogHeader>
         {isLoading ? (
           <div className="my-6 text-center font-medium">Yuklanmoqda...</div>
         ) : (
@@ -188,11 +194,11 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
                           )}
                         />
                       </div>
-                      <div className="pt-[25px]">
+                      <DialogFooter>
                         <Button disabled={isPending} size="icon">
                           <SendHorizontal />
                         </Button>
-                      </div>
+                      </DialogFooter>
                     </div>
                   </form>
                 </Form>

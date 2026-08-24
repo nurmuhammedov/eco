@@ -1,4 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog.tsx'
 import { Button } from '@/shared/components/ui/button.tsx'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
@@ -127,7 +134,7 @@ const NotifyInspectionModal = ({ inspectionId }: { inspectionId: string }) => {
                 />
               </div>
 
-              <div className="mt-8 grid grid-cols-2 gap-3">
+              <DialogFooter>
                 <DialogClose asChild>
                   <Button disabled={isLoading} variant="outline">
                     Bekor qilish
@@ -136,7 +143,7 @@ const NotifyInspectionModal = ({ inspectionId }: { inspectionId: string }) => {
                 <Button loading={isLoading} type="submit">
                   Shakllantirish
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
           </Form>
         </DialogContent>

@@ -1,6 +1,6 @@
 import { onActivate } from '@/shared/lib/on-activate'
 import { useState, useEffect } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { Label } from '@/shared/components/ui/label'
@@ -310,7 +310,7 @@ export function MyCardsModal({ open, onOpenChange }: Props) {
               </p>
             </div>
 
-            <div className="flex items-center gap-3 pt-2">
+            <DialogFooter>
               <Button
                 variant="outline"
                 className="flex-1"
@@ -337,7 +337,7 @@ export function MyCardsModal({ open, onOpenChange }: Props) {
               >
                 Saqlash
               </Button>
-            </div>
+            </DialogFooter>
           </div>
         )}
       </DialogContent>

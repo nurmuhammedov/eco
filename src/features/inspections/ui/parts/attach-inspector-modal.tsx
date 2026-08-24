@@ -1,4 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog.tsx'
 import { Button } from '@/shared/components/ui/button.tsx'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
@@ -289,7 +296,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                 </div>
               </div>
 
-              <div className="grid shrink-0 grid-cols-2 gap-3 border-t px-4 py-4 sm:px-6">
+              <DialogFooter>
                 <DialogClose asChild>
                   <Button disabled={isLoading} variant="outline">
                     Bekor qilish
@@ -298,7 +305,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                 <Button disabled={isLoading} type="submit">
                   Saqlash
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
           </Form>
         </DialogContent>

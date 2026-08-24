@@ -3,7 +3,14 @@ import { useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
@@ -147,7 +154,7 @@ const ExecuteCourtModal = () => {
               )}
             />
 
-            <div className="grid grid-cols-2 gap-3 pt-2">
+            <DialogFooter>
               <DialogClose asChild>
                 <Button disabled={isPending} variant="outline" type="button">
                   Bekor qilish
@@ -156,7 +163,7 @@ const ExecuteCourtModal = () => {
               <Button disabled={isPending} type="submit" loading={isPending}>
                 Saqlash
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

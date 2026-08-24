@@ -1,4 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog.tsx'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog.tsx'
 import { Button } from '@/shared/components/ui/button.tsx'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
@@ -81,7 +88,7 @@ const AssignExecutorModal = ({ changeId }: Props) => {
               )}
             />
 
-            <div className="grid grid-cols-2 gap-3 pt-2">
+            <DialogFooter>
               <DialogClose asChild>
                 <Button disabled={isPending} variant="outline">
                   Bekor qilish
@@ -90,7 +97,7 @@ const AssignExecutorModal = ({ changeId }: Props) => {
               <Button disabled={isPending} type="submit">
                 Saqlash
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>
