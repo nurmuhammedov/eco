@@ -117,143 +117,139 @@ const InquiryAddPage = () => {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <CardForm>
-            <div className="p-4 sm:p-5">
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                <FormField
-                  name="type"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Murojaat turi <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Tanlang" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="APPEAL">Murojaat</SelectItem>
-                          <SelectItem value="VIOLATION_REPORT">Huquqbuzarliik xabari</SelectItem>
-                          <SelectItem value="SUGGESTION">Taklif</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  name="regionId"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Hudud <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <Select onValueChange={(v) => field.onChange(Number(v))} value={field.value?.toString()}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Tanlang" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {regions?.map((r: any) => (
-                            <SelectItem key={r.id} value={r.id.toString()}>
-                              {r.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  name="occurredAt"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Murojaat yuborilayotgan sana <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <DateTimePicker value={field.value} onChange={field.onChange} />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  name="phoneNumber"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Telefon raqam (ixtiyoriy)</FormLabel>
-                      <FormControl>
-                        <PhoneInput placeholder="+998 XX XXX XX XX" {...field} value={field.value || ''} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  name="location"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Hodisa sodir bo‘lgan joy <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <YandexMapModal
-                          initialCoords={field.value ? field.value.split(',').map(Number) : null}
-                          onConfirm={(coords) => field.onChange(coords)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="space-y-1">
+          <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
+            <FormField
+              name="type"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
                   <FormLabel>
-                    Xavf aniqlangan obyekt bo‘yicha rasm yoki video <span className="text-destructive">*</span>
+                    Murojaat turi <span className="text-destructive">*</span>
                   </FormLabel>
-                  <InputFile
-                    name="filePathList"
-                    form={form}
-                    multiple={true}
-                    maxFiles={5}
-                    accept={[FileTypes.IMAGE]}
-                    uploadEndpoint="/public/attachments/inquiries"
-                  />
-                </div>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Tanlang" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="APPEAL">Murojaat</SelectItem>
+                      <SelectItem value="VIOLATION_REPORT">Huquqbuzarliik xabari</SelectItem>
+                      <SelectItem value="SUGGESTION">Taklif</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                <FormField
-                  name="message"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem className="col-span-full">
-                      <FormLabel>
-                        Murojaat matni <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Murojaatingiz mazmunini batafsil yozing..."
-                          className="min-h-[120px] resize-y"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+            <FormField
+              name="regionId"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Hudud <span className="text-destructive">*</span>
+                  </FormLabel>
+                  <Select onValueChange={(v) => field.onChange(Number(v))} value={field.value?.toString()}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Tanlang" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {regions?.map((r: any) => (
+                        <SelectItem key={r.id} value={r.id.toString()}>
+                          {r.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="occurredAt"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Murojaat yuborilayotgan sana <span className="text-destructive">*</span>
+                  </FormLabel>
+                  <DateTimePicker value={field.value} onChange={field.onChange} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="phoneNumber"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Telefon raqam (ixtiyoriy)</FormLabel>
+                  <FormControl>
+                    <PhoneInput placeholder="+998 XX XXX XX XX" {...field} value={field.value || ''} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="location"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Hodisa sodir bo‘lgan joy <span className="text-destructive">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <YandexMapModal
+                      initialCoords={field.value ? field.value.split(',').map(Number) : null}
+                      onConfirm={(coords) => field.onChange(coords)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="space-y-1">
+              <FormLabel>
+                Xavf aniqlangan obyekt bo‘yicha rasm yoki video <span className="text-destructive">*</span>
+              </FormLabel>
+              <InputFile
+                name="filePathList"
+                form={form}
+                multiple={true}
+                maxFiles={5}
+                accept={[FileTypes.IMAGE]}
+                uploadEndpoint="/public/attachments/inquiries"
+              />
             </div>
+
+            <FormField
+              name="message"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="col-span-full">
+                  <FormLabel>
+                    Murojaat matni <span className="text-destructive">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Murojaatingiz mazmunini batafsil yozing..."
+                      className="min-h-[120px] resize-y"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </CardForm>
 
           <div className="flex justify-end pt-2">
