@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -149,7 +150,6 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({
   const handleConfirm = useCallback(() => {
     const validation = validateInput(inputValue)
     if (validation.isValid) {
-      // Return normalized string "lat, lng"
       onConfirm(`${validation.lat}, ${validation.lng}`)
       setOpen(false)
     } else {
@@ -178,12 +178,16 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({
         </Button>
       </DialogTrigger>
 
-      <DialogContent size="xl" className="flex flex-col p-6">
-        <DialogHeader className="mb-4 shrink-0">
+      <DialogContent size="xl">
+        <DialogHeader>
           <DialogTitle>Joylashuvni belgilang</DialogTitle>
+          {/* Save stays disabled until a point is set, and nothing said how to set one. */}
+          <DialogDescription>
+            Xaritadan joyni bosing yoki koordinatalarni kiriting — shundan so‘ng saqlash mumkin bo‘ladi.
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-2">
+        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden">
           <div className="grid shrink-0 grid-cols-1 items-start gap-4 md:grid-cols-[1fr_auto]">
             <div className="grid gap-2">
               <Label htmlFor="coords">Koordinatalar</Label>
@@ -194,8 +198,6 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({
                 onChange={(e) => {
                   setInputValue(e.target.value)
                   setIsValid(false) // Re-validate on change or just reset valid state
-                  // Real-time validation could be annoying, so waiting for 'Joyni belgilash' or blur is better usually,
-                  // but let's clear error on type to avoid stale error
                   if (error) setError(null)
                 }}
                 className={cn(error ? 'border-red-500' : '')}
