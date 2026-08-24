@@ -52,7 +52,7 @@ const DeclarationFileUploadModal: FC<Props> = ({ id, closeModal, title = 'Deklar
 
   return (
     <Dialog onOpenChange={handleModalChange} open={!!id}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>

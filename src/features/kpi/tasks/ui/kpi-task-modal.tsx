@@ -142,7 +142,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[92vh] max-w-5xl overflow-y-auto">
+      <DialogContent size="xl">
         <DialogHeader>
           <DialogTitle className="text-lg">
             {isEditing ? 'KPI Vazifani tahrirlash' : 'Yangi KPI Vazifa yaratish'}

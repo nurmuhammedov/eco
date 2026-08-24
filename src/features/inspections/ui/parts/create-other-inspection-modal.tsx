@@ -150,7 +150,7 @@ export const CreateOtherInspectionModal = () => {
             {t('inspections.other.create_btn')}
           </Button>
         </DialogTrigger>
-        <DialogContent className="flex max-h-[95dvh] w-[calc(100vw-1rem)]! max-w-[calc(100vw-1rem)]! flex-col gap-0 overflow-hidden rounded-xl! p-0 sm:w-[95vw]! sm:max-w-[700px]!">
+        <DialogContent size="lg" className="flex flex-col gap-0 overflow-hidden rounded-xl! p-0">
           <DialogHeader className="shrink-0 border-b px-4 py-4 sm:px-6">
             <DialogTitle className="pr-8 text-[#4E75FF]">{t('inspections.other.create_modal.title')}</DialogTitle>
           </DialogHeader>

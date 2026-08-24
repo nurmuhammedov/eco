@@ -45,7 +45,7 @@ const ConfirmWithRegistryModal: React.FC<ConfirmWithRegistryModalProps> = ({ doc
       <DialogTrigger asChild>
         <Button variant="success">Arizani tasdiqlash</Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[425px]">
+      <DialogContent size="sm">
         <DialogHeader>
           <DialogTitle>
             {isDeregister ? 'Arizani haqiqatdan ham tasdiqlaysizmi?' : 'Arizani haqiqatdan ham tasdiqlaysizmi?'}

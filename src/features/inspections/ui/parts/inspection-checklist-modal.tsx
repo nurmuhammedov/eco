@@ -283,7 +283,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
         }}
         open={modal === 'addUsers'}
       >
-        <DialogContent className="flex max-h-[95dvh] w-[calc(100vw-1rem)]! max-w-[calc(100vw-1rem)]! flex-col gap-0 overflow-hidden rounded-xl! p-0 sm:w-[95vw]! sm:max-w-[800px]!">
+        <DialogContent size="xl" className="flex flex-col gap-0 overflow-hidden rounded-xl! p-0">
           <DialogHeader className="shrink-0 border-b px-4 py-4 sm:px-6">
             <DialogTitle className="pr-8 text-[#4E75FF]">Maʼlumotlarni to‘ldiring</DialogTitle>
           </DialogHeader>

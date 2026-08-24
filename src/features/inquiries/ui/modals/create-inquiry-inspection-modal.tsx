@@ -91,7 +91,7 @@ export const CreateInquiryInspectionModal = ({ inquiry }: { inquiry: any }) => {
             Tekshiruv yaratish
           </Button>
         </DialogTrigger>
-        <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[700px]">
+        <DialogContent size="lg">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Tekshiruv yaratish</DialogTitle>
           </DialogHeader>

@@ -59,7 +59,7 @@ const OmbudsmanCodeModal = ({ resultId, onClose, trigger }: Props) => {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[400px]">
+      <DialogContent size="sm">
         <DialogHeader>
           <DialogTitle>Ombudsman maxsus kodi</DialogTitle>
         </DialogHeader>

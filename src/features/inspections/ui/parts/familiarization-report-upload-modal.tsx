@@ -68,7 +68,7 @@ const FamiliarizationReportUploadModal = ({ resultId, familiarizationReportPath,
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[500px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Tushuntirish bayonnomasi yuklash</DialogTitle>
         </DialogHeader>

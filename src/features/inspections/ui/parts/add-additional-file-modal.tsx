@@ -69,7 +69,7 @@ const AddAdditionalFileModal = ({ resultId, additionalFilePath, onClose, trigger
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[500px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Qo‘shimcha faylni yuklash</DialogTitle>
         </DialogHeader>

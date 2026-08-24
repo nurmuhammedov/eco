@@ -46,7 +46,7 @@ export const AddQuestionModal: FC<AddQuestionModalProps> = ({ isOpen, onClose })
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl">
+      <DialogContent size="lg">
         <DialogHeader>
           <DialogTitle>Yangi savol</DialogTitle>
         </DialogHeader>

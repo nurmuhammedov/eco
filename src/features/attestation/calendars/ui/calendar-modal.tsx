@@ -116,7 +116,7 @@ export function CalendarModal({ isOpen, onClose, editData, defaultDate }: Props)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{isEditing ? 'Qabul vaqtini tahrirlash' : 'Yangi qabul vaqti'}</DialogTitle>
         </DialogHeader>

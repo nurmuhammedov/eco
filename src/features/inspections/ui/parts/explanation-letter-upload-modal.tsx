@@ -68,7 +68,7 @@ const ExplanationLetterUploadModal = ({ resultId, explanationLetterPath, onClose
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[500px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Tushuntirish xati yuklash</DialogTitle>
         </DialogHeader>

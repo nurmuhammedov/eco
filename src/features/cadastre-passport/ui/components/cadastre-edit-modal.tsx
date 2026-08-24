@@ -59,7 +59,7 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-h-[90vh] max-w-5xl overflow-y-auto">
+      <DialogContent size="xl">
         <DialogHeader>
           <DialogTitle>TXYZ kadastr atributiv ma'lumotlarini tahrirlash</DialogTitle>
         </DialogHeader>

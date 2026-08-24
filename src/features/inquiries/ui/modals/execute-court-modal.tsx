@@ -65,7 +65,7 @@ const ExecuteCourtModal = () => {
       <DialogTrigger asChild>
         <Button>Ijro etish</Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[525px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-[#4E75FF]">Sud ijrosini kiritish</DialogTitle>
         </DialogHeader>

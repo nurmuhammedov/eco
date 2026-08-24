@@ -16,7 +16,7 @@ const RejectMessageModal: FC<Props> = ({ message, setMessage }) => {
   }
   return (
     <Dialog onOpenChange={handleModal} open={!!message}>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[525px]">
+      <DialogContent>
         <DialogHeader>
           <div className="flex items-start gap-3">
             <span className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-rose-200 bg-rose-50 text-rose-600">

@@ -58,7 +58,7 @@ export const EditQuestionModal: FC<EditQuestionModalProps> = ({ isOpen, onClose,
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl">
+      <DialogContent size="lg">
         <DialogHeader>
           <DialogTitle>Savolni tahrirlash</DialogTitle>
         </DialogHeader>

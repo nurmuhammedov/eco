@@ -40,7 +40,7 @@ const ConfirmProcessModal: React.FC<Props> = ({ changeId, title, buttonText }) =
       <DialogTrigger asChild>
         <Button variant="success">{buttonText}</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent size="sm">
         <DialogHeader>
           <DialogTitle>{title}?</DialogTitle>
         </DialogHeader>

@@ -42,7 +42,7 @@ export const RejectAppealModal: React.FC<RejectAppealModalProps> = ({ documentId
       <DialogTrigger asChild>
         <Button variant="destructive">{label}</Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[425px]">
+      <DialogContent size="sm">
         <DialogHeader>
           <DialogTitle>Arizani rad etishni tasdiqlaysizmi?</DialogTitle>
         </DialogHeader>

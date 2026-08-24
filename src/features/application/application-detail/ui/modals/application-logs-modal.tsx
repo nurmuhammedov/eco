@@ -34,7 +34,7 @@ const ApplicationLogsModal = ({
             </Button>
           )}
         </DialogTrigger>
-        <DialogContent hideCloseIcon className="max-h-[95vh] overflow-y-auto sm:max-w-[1124px]">
+        <DialogContent size="xl">
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Amaliyotlar tarixi</DialogTitle>
           </DialogHeader>

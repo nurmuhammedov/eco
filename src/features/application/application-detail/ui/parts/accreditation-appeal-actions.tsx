@@ -168,7 +168,7 @@ export const AccreditationAppealActions = ({ appealId, status }: AccreditationAp
       </Dialog>
 
       <Dialog open={isReplyOpen} onOpenChange={setIsReplyOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+        <DialogContent size="lg">
           <DialogHeader>
             <DialogTitle>Ariza ijrosini bajarish</DialogTitle>
           </DialogHeader>

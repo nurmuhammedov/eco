@@ -172,7 +172,7 @@ export function KpiTaskDetailModal({ taskId, onClose }: Props) {
 
   return (
     <Dialog open={!!taskId} onOpenChange={onClose}>
-      <DialogContent className="max-h-[85vh] max-w-4xl overflow-y-auto">
+      <DialogContent size="xl">
         <DialogHeader>
           <DialogTitle>KPI vazifa tafsilotlari</DialogTitle>
         </DialogHeader>

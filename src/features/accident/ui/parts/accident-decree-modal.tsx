@@ -64,7 +64,7 @@ export const AccidentDecreeModal: React.FC<AccidentDecreeModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Ijro etish</DialogTitle>
         </DialogHeader>

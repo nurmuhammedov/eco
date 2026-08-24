@@ -106,7 +106,7 @@ export const ExecutionInspectorModal: React.FC = () => {
       <DialogTrigger asChild>
         <Button>Ijro etish</Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] w-[95vw] overflow-x-hidden overflow-y-auto">
+      <DialogContent className="overflow-x-hidden">
         <DialogHeader>
           <DialogTitle>Profilaktika ijrosini taʼminlash</DialogTitle>
         </DialogHeader>

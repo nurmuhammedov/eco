@@ -82,7 +82,7 @@ export const InspectionActModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="flex h-[95dvh]! w-[calc(100vw-1rem)]! max-w-[calc(100vw-1rem)]! flex-col gap-0 overflow-hidden rounded-xl! p-0 sm:h-[92dvh]! sm:w-[95vw]! sm:max-w-[95vw]! xl:w-[1180px]!">
+      <DialogContent className="flex flex-col gap-0 overflow-hidden rounded-xl! p-0 sm:h-[92dvh]! xl:w-[1180px]!">
         <DialogHeader className="flex-shrink-0 border-b p-4 md:px-6 md:py-4">
           <DialogTitle className="pr-8 text-base md:text-lg">{title}</DialogTitle>
           <p className="text-muted-foreground hidden text-left text-sm sm:block">{description}</p>

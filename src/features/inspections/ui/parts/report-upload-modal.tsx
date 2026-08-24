@@ -68,7 +68,7 @@ const ReportUploadModal = ({ resultId, reportPath, onClose, trigger }: Props) =>
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[500px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Bayonnoma yuklash</DialogTitle>
         </DialogHeader>

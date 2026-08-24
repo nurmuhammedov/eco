@@ -43,7 +43,7 @@ export const HandSignatureDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[95dvh]! w-[calc(100vw-1rem)]! max-w-[calc(100vw-1rem)]! flex-col gap-0 overflow-hidden rounded-xl! p-0 sm:w-[95vw]! sm:max-w-[95vw]! lg:w-[900px]!">
+      <DialogContent className="flex flex-col gap-0 overflow-hidden rounded-xl! p-0 lg:w-[900px]!">
         <DialogHeader className="flex-shrink-0 border-b p-4 md:p-6 md:pb-4">
           <DialogTitle className="flex items-center gap-2 text-base md:text-lg">
             <PenLine className="size-5 text-[#4E75FF]" />

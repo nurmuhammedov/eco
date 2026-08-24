@@ -104,7 +104,7 @@ function ResultModal({ indicator, year, quarter, onClose }: ResultModalProps) {
 
   return (
     <Dialog open={!!indicator} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-base leading-snug">Natija kiritish</DialogTitle>
           <p className="text-muted-foreground mt-1 text-sm font-medium">{indicator.name}</p>

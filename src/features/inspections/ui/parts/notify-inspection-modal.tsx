@@ -67,7 +67,7 @@ const NotifyInspectionModal = ({ inspectionId }: { inspectionId: string }) => {
           <Button size="sm">Xabardor qilish</Button>
         </DialogTrigger>
 
-        <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[500px]">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle className="text-[#4E75FF]">Xabardor qilish xatini yuborish</DialogTitle>
           </DialogHeader>

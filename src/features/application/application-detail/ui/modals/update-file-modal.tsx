@@ -73,7 +73,7 @@ export const UpdateFileModal: React.FC<UpdateFileModalProps> = ({ appealId, fiel
           <Pencil className="size-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent size="sm">
         <DialogHeader>
           <DialogTitle>Faylni yangilash</DialogTitle>
         </DialogHeader>

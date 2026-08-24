@@ -104,7 +104,7 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
     user?.role === UserRoles.LEGAL
   return (
     <Dialog onOpenChange={handleModal} open={!!id}>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[800px]">
+      <DialogContent size="xl">
         <div>
           <h2 className="mb-1 font-medium">Aniqlangan kamchilik</h2>
           <p className="text-sm">{description}</p>

@@ -114,7 +114,7 @@ export function CreateApplicationModal({ isOpen, onClose }: Props) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
+      <DialogContent size="xl">
         <DialogHeader>
           <DialogTitle>Attestatsiyaga ariza berish</DialogTitle>
         </DialogHeader>

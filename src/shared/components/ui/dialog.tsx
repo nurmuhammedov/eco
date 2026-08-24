@@ -43,64 +43,87 @@ const DIALOG_SIZES = {
   full: 'sm:max-w-[95vw]',
 } as const
 
+const isSlot = (node: React.ReactNode, slot: React.ElementType) => React.isValidElement(node) && node.type === slot
+
+/**
+ * The dialog splits itself into a header, a scrolling body and a footer.
+ *
+ * Sixty-three modals drop their content straight into DialogContent, so there
+ * is no body wrapper to key off - the children are sorted here instead. That
+ * keeps the title and the actions pinned while only the middle moves, without
+ * touching a single one of those files.
+ */
 const DialogContent = React.forwardRef<
   React.ComponentRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
-    hideCloseIcon?: boolean
     size?: keyof typeof DIALOG_SIZES
   }
->(({ className, children, hideCloseIcon = false, size = 'md', 'aria-describedby': describedBy, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay />
-    <DialogPrimitive.Content
-      ref={ref}
-      /**
-       * Radix points this at a DialogDescription it assumes exists. Only three
-       * of the sixty-three dialogs here render one, so the rest advertised an
-       * element that is not on the page. Passing the prop through - undefined
-       * when nobody set it - overrides that default.
-       */
-      aria-describedby={describedBy}
-      className={cn(
-        'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] fixed top-[50%] left-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg duration-200 sm:w-full sm:rounded-lg',
-        // The dialog never grows past the viewport, and only its middle scrolls
-        // - the header and footer below pin themselves to the edges.
-        'max-h-[85dvh] overflow-y-auto',
-        DIALOG_SIZES[size],
-        className
-      )}
-      {...props}
-    >
-      {children}
-      {!hideCloseIcon && (
-        <DialogPrimitive.Close className="ring-offset-background data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-5 right-5 cursor-pointer rounded-full p-2 text-gray-900/80 transition-all hover:bg-gray-900/10 hover:text-gray-900 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
-          <X className="h-4 w-4 stroke-[2.5]" />
-          <span className="sr-only">Yopish</span>
-        </DialogPrimitive.Close>
-      )}
-    </DialogPrimitive.Content>
-  </DialogPortal>
-))
+>(({ className, children, size = 'md', 'aria-describedby': describedBy, ...props }, ref) => {
+  const items = React.Children.toArray(children)
+  const header = items.find((item) => isSlot(item, DialogHeader))
+  const footer = items.find((item) => isSlot(item, DialogFooter))
+  const body = items.filter((item) => item !== header && item !== footer)
+
+  return (
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogPrimitive.Content
+        ref={ref}
+        /**
+         * Radix points this at a DialogDescription it assumes exists. Only three
+         * of the dialogs here render one, so the rest advertised an element that
+         * is not on the page. Passing the prop through - undefined when nobody
+         * set it - overrides that default.
+         */
+        aria-describedby={describedBy}
+        className={cn(
+          'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border shadow-lg duration-200 sm:rounded-lg',
+          // Always short of the screen edges, so the dialog reads as a layer over
+          // the page rather than a second page.
+          'flex max-h-[calc(100dvh-4rem)] w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden p-0',
+          DIALOG_SIZES[size],
+          className
+        )}
+        {...props}
+      >
+        {header}
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">{body}</div>
+        {footer}
+      </DialogPrimitive.Content>
+    </DialogPortal>
+  )
+})
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
-const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const DialogHeader = ({
+  className,
+  hideClose = false,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { hideClose?: boolean }) => (
   <div
     className={cn(
-      // Sticky rather than fixed: the dialog body is the scroll container, so
-      // the title stays put while the content moves under it. The negative
-      // margins let the bar span the dialog's padding.
-      'bg-background sticky top-0 z-40 -mx-6 -mt-6 flex flex-col space-y-1.5 border-b px-6 pt-6 pb-4 text-center sm:text-left',
+      // pr-14 keeps a long title clear of the close button.
+      'bg-background relative flex shrink-0 flex-col space-y-1.5 border-b py-4 pr-14 pl-6 text-left',
       className
     )}
     {...props}
-  />
+  >
+    {children}
+    {!hideClose && (
+      <DialogPrimitive.Close className="ring-offset-background absolute top-3.5 right-4 flex size-8 cursor-pointer items-center justify-center rounded-full text-gray-900/80 transition-colors hover:bg-gray-900/10 hover:text-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:outline-hidden">
+        <X className="h-4 w-4 stroke-[2.5]" />
+        <span className="sr-only">Yopish</span>
+      </DialogPrimitive.Close>
+    )}
+  </div>
 )
 DialogHeader.displayName = 'DialogHeader'
 
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'bg-background sticky bottom-0 z-40 -mx-6 -mb-6 flex flex-col-reverse border-t px-6 pt-4 pb-6 sm:flex-row sm:justify-end sm:space-x-2',
+      'bg-background flex shrink-0 flex-col-reverse gap-2 border-t px-6 py-4 sm:flex-row sm:justify-end',
       className
     )}
     {...props}

@@ -19,7 +19,7 @@ export const PermitDetailModal = () => {
         }
       }}
     >
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[800px]">
+      <DialogContent size="xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-1.5">
             <a

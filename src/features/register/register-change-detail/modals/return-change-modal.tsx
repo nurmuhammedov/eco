@@ -49,7 +49,7 @@ const ReturnChangeModal = ({ changeId }: Props) => {
       <DialogTrigger asChild>
         <Button variant="destructive">Qaytarish</Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[625px]">
+      <DialogContent size="lg">
         <DialogHeader>
           <DialogTitle>O'zgartrishga so'rovni qaytarmoqchimisiz?</DialogTitle>
         </DialogHeader>

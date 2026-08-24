@@ -31,7 +31,7 @@ export function OrganizationInfoModal({ tin, onClose }: OrganizationInfoModalPro
 
   return (
     <Dialog open={!!tin} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-[680px]">
+      <DialogContent size="lg">
         <DialogHeader className="mb-2">
           <DialogTitle>Tashkilot ma’lumotlari</DialogTitle>
         </DialogHeader>

@@ -43,7 +43,7 @@ const UpdateDescriptionModal = ({ changeId, desc = '' }: Props) => {
       <DialogTrigger asChild>
         <Button>Izoh yozish</Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[625px]">
+      <DialogContent size="lg">
         <DialogHeader>
           <DialogTitle className="text-[#4E75FF]">Ijro natijasi bo‘yicha izoh</DialogTitle>
         </DialogHeader>

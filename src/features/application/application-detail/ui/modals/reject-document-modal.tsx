@@ -43,7 +43,7 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
       <DialogTrigger asChild>
         <Button variant="warning">{label}</Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[525px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-[#4E75FF]">Izoh</DialogTitle>
         </DialogHeader>

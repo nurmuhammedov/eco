@@ -173,7 +173,7 @@ export const AddPermitTransportModal = ({
         <Button className="w-full md:w-auto">{trigger}</Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-w-[1000px]">
+      <DialogContent size="xl">
         <DialogHeader>
           <DialogTitle>Transport qo‘shish</DialogTitle>
         </DialogHeader>

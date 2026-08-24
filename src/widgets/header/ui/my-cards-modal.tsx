@@ -161,7 +161,7 @@ export function MyCardsModal({ open, onOpenChange }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[450px]">
+      <DialogContent size="sm">
         <DialogHeader>
           <DialogTitle className="text-[#4E75FF]">Karta ma’lumotlarim</DialogTitle>
         </DialogHeader>

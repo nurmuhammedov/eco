@@ -178,7 +178,7 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="flex max-h-[95vh] w-full max-w-5xl flex-col p-6">
+      <DialogContent size="xl" className="flex flex-col p-6">
         <DialogHeader className="mb-4 shrink-0">
           <DialogTitle>Joylashuvni belgilang</DialogTitle>
         </DialogHeader>
