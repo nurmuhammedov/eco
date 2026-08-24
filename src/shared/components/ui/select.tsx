@@ -4,32 +4,69 @@ import { Check, ChevronDown, ChevronUp } from 'lucide-react'
 
 import { cn } from '@/shared/lib/utils'
 
-const Select = SelectPrimitive.Root
+/**
+ * Every form here writes `<FormControl><Select>...`, and FormControl hands its
+ * id and aria attributes to its child. Radix's Root renders no DOM, so they
+ * were dropped and the label's htmlFor pointed at nothing - across roughly
+ * forty forms, no select had an accessible name. The Root now carries them
+ * down to the trigger, which is the element that actually takes focus.
+ */
+type SelectFieldProps = {
+  id?: string
+  'aria-describedby'?: string
+  'aria-invalid'?: boolean
+}
+
+const SelectFieldContext = React.createContext<SelectFieldProps>({})
+
+const Select = ({
+  id,
+  'aria-describedby': describedBy,
+  'aria-invalid': invalid,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root> & SelectFieldProps) => {
+  const field = React.useMemo(
+    () => ({ id, 'aria-describedby': describedBy, 'aria-invalid': invalid }),
+    [id, describedBy, invalid]
+  )
+
+  return (
+    <SelectFieldContext.Provider value={field}>
+      <SelectPrimitive.Root {...props} />
+    </SelectFieldContext.Provider>
+  )
+}
+
 const SelectValue = SelectPrimitive.Value
 
 const SelectTrigger = React.forwardRef<
   React.ComponentRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
-  <SelectPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      'mb-0 flex h-9 w-full items-center justify-between rounded border border-neutral-300 bg-white px-3 py-1 text-base shadow-xs transition-colors',
-      'md:text-sm',
-      'focus:ring-teal focus:ring-1 focus:outline-hidden focus:ring-inset',
-      // Fading the whole control also fades its border away; mute the surface instead.
-      'disabled:text-neutral-450 disabled:cursor-not-allowed disabled:bg-neutral-100',
-      'data-[placeholder]:text-neutral-350',
-      className
-    )}
-    {...props}
-  >
-    <span className="mr-2 line-clamp-1 flex-1 text-left">{children}</span>
-    <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 flex-shrink-0 opacity-50" />
-    </SelectPrimitive.Icon>
-  </SelectPrimitive.Trigger>
-))
+>(({ className, children, ...props }, ref) => {
+  const field = React.useContext(SelectFieldContext)
+
+  return (
+    <SelectPrimitive.Trigger
+      ref={ref}
+      {...field}
+      className={cn(
+        'mb-0 flex h-9 w-full items-center justify-between rounded border border-neutral-300 bg-white px-3 py-1 text-base shadow-xs transition-colors',
+        'md:text-sm',
+        'focus:ring-teal focus:ring-1 focus:outline-hidden focus:ring-inset',
+        // Fading the whole control also fades its border away; mute the surface instead.
+        'disabled:text-neutral-450 disabled:cursor-not-allowed disabled:bg-neutral-100',
+        'data-[placeholder]:text-neutral-350',
+        className
+      )}
+      {...props}
+    >
+      <span className="mr-2 line-clamp-1 flex-1 text-left">{children}</span>
+      <SelectPrimitive.Icon asChild>
+        <ChevronDown className="h-4 w-4 flex-shrink-0 opacity-50" />
+      </SelectPrimitive.Icon>
+    </SelectPrimitive.Trigger>
+  )
+})
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
 
 const SelectScrollUpButton = React.forwardRef<

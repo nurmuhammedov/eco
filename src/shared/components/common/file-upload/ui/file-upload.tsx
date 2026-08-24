@@ -27,6 +27,8 @@ export interface InputFileProps<T extends FieldValues> {
   multiple?: boolean
   maxFiles?: number
   buttonText?: string
+  /** Supplied by FormControl so the field label can target the visible control */
+  id?: string
   maxFilenameLength?: number
   onUploadStart?: () => void
   onUploadComplete?: (urls: string) => void
@@ -134,6 +136,7 @@ function InputFileComponent<T extends FieldValues>({
   multiple = false,
   maxFiles = 10,
   buttonText = 'Fayl biriktirish',
+  id,
   maxFilenameLength = 20,
   onUploadStart,
   onUploadComplete,
@@ -369,6 +372,7 @@ function InputFileComponent<T extends FieldValues>({
       {(multiple || fileList.length === 0) && (
         <div className="mb-2 flex w-full gap-2">
           <div
+            id={id}
             onClick={openFileDialog}
             role="button"
             tabIndex={0}
@@ -388,7 +392,6 @@ function InputFileComponent<T extends FieldValues>({
                 <Paperclip className="size-4 text-blue-400" />
               )}
             </div>
-            {/* O‘zgartirish: whitespace-nowrap va truncate qo‘shildi */}
             <div className="flex-grow truncate px-3 py-2 text-sm font-medium whitespace-nowrap text-blue-400">
               {isPending ? `Yuklanmoqda... (${uploadProgress}%)` : buttonText}
             </div>

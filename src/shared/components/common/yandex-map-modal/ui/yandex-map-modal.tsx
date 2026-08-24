@@ -36,11 +36,18 @@ const coordinateSchema = z.object({
 
 interface YandexMapModalProps {
   label?: string
+  /** Supplied by FormControl so the field label can target the trigger */
+  id?: string
   initialCoords?: number[] | null
   onConfirm: (coords: string) => void
 }
 
-const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belgilash', onConfirm, initialCoords }) => {
+const YandexMapModal: React.FC<YandexMapModalProps> = ({
+  label = 'Xaritadan belgilash',
+  onConfirm,
+  initialCoords,
+  id,
+}) => {
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -154,6 +161,7 @@ const YandexMapModal: React.FC<YandexMapModalProps> = ({ label = 'Xaritadan belg
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
+          id={id}
           type="button"
           variant="outline"
           className={cn('w-full justify-between', {

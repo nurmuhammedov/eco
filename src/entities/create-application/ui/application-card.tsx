@@ -87,7 +87,12 @@ function ApplicationCard({ application, url, btnTitle }: ApplicationCardProps) {
       </div>
       <h3 className="line-clamp-2 text-base leading-5 font-medium text-slate-800">{application.title}</h3>
 
-      <p className="mt-2 mb-6 line-clamp-2 text-sm font-normal text-gray-500">{application.description}</p>
+      {/* Thirteen of the cards repeat their title verbatim, which fills the line without saying anything. */}
+      {application.description && application.description.trim() !== application.title.trim() ? (
+        <p className="mt-2 mb-6 line-clamp-2 text-sm font-normal text-gray-500">{application.description}</p>
+      ) : (
+        <div className="mb-6" />
+      )}
       <AnimatedButton url={url} type={application.type} btnTitle={btnTitle} disabled={isDisabled} />
     </div>
   )
