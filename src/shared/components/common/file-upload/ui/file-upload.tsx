@@ -404,7 +404,7 @@ function InputFileComponent<T extends FieldValues>({
               tabIndex={0}
               onKeyDown={onActivate(openCameraDialog)}
               className={cn(
-                'flex items-center justify-center px-4',
+                'flex h-9 items-center justify-center px-4',
                 'overflow-hidden rounded border border-dashed bg-white',
                 'cursor-pointer transition-all duration-150 ease-in-out',
                 hasError ? 'border-red-300' : 'border-emerald-300 hover:border-emerald-500 hover:bg-emerald-50',

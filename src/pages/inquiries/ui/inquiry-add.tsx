@@ -219,7 +219,7 @@ const InquiryAddPage = () => {
                   )}
                 />
 
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <FormLabel>
                     Xavf aniqlangan obyekt bo‘yicha rasm yoki video <span className="text-destructive">*</span>
                   </FormLabel>

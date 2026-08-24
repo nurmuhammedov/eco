@@ -252,7 +252,7 @@ export function MyCardsModal({ open, onOpenChange }: Props) {
 
             {/* Inputs */}
             <div className="flex flex-col gap-4">
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <Label>Karta raqami</Label>
                 <Input
                   placeholder="0000 0000 0000 0000"
@@ -262,7 +262,7 @@ export function MyCardsModal({ open, onOpenChange }: Props) {
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label>Amal qilish muddati</Label>
                   <Input
                     placeholder="MM/YY"
@@ -271,7 +271,7 @@ export function MyCardsModal({ open, onOpenChange }: Props) {
                     maxLength={5}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label>MFO</Label>
                   <Input
                     placeholder="MFO kiriting"

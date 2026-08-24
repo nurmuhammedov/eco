@@ -324,7 +324,7 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
                     )}
                   />
 
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <FormLabel required>
                       {form.watch('action') === InquiryAction.SEND_TO_COURT
                         ? 'Sudga tayyorlangan hujjat'

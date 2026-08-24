@@ -158,7 +158,7 @@ export function CreateApplicationModal({ isOpen, onClose }: Props) {
           )}
 
           <div>
-            <Label className="mb-2 block">Xodimlar</Label>
+            <Label className="mb-1 block">Xodimlar</Label>
 
             {isLoadingEmployees && (
               <div className="flex justify-center py-10">

@@ -511,7 +511,7 @@ const CategoryItemsList = ({
                 name={`${prefix}.answer`}
                 render={({ field }) => (
                   <FormItem className="space-y-2">
-                    <FormLabel className="mb-2 text-base font-medium text-black">Javob:</FormLabel>
+                    <FormLabel className="mb-1 text-base font-medium text-black">Javob:</FormLabel>
                     <FormControl>
                       <div className="flex flex-row flex-wrap items-center gap-x-6 gap-y-2">
                         {answerOptions.map((option) => (
