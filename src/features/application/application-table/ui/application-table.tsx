@@ -60,7 +60,10 @@ export const ApplicationTable = () => {
         filterKey: 'appealType',
         filterType: 'select',
         filterOptions: getAppealTypeFilterOptions(),
-        cell: (cell: any) => getApplicationTitle(cell.row.original.appealType),
+        // Auto layout shrinks a wrapping column to its longest word, so the
+        // longest text in the table was living in the narrowest column and
+        // stretching every row to five lines.
+        cell: (cell: any) => <div className="min-w-[165px]">{getApplicationTitle(cell.row.original.appealType)}</div>,
       },
       ...((user?.role !== UserRoles.LEGAL && user?.role !== UserRoles.INDIVIDUAL
         ? [
@@ -72,7 +75,7 @@ export const ApplicationTable = () => {
             },
             {
               accessorKey: 'ownerIdentity',
-              header: () => <div className="whitespace-nowrap">Arizachi STIR/JSHSHIR</div>,
+              header: 'Arizachi STIR/JSHSHIR',
               className: '!w-[1%]',
               filterKey: 'search',
               filterType: 'number',
