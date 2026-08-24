@@ -29,10 +29,27 @@ const DialogOverlay = React.forwardRef<
 ))
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
+/**
+ * One scale instead of the seven ad-hoc widths this codebase had grown
+ * (425, 500, 525, 625, 725, 800, 5xl). Pick by what the dialog holds, not by
+ * eye: a confirmation is sm, a short form md, a full form lg, a table or a map
+ * xl.
+ */
+const DIALOG_SIZES = {
+  sm: 'sm:max-w-md',
+  md: 'sm:max-w-lg',
+  lg: 'sm:max-w-2xl',
+  xl: 'sm:max-w-4xl',
+  full: 'sm:max-w-[95vw]',
+} as const
+
 const DialogContent = React.forwardRef<
   React.ComponentRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { hideCloseIcon?: boolean }
->(({ className, children, hideCloseIcon = false, 'aria-describedby': describedBy, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+    hideCloseIcon?: boolean
+    size?: keyof typeof DIALOG_SIZES
+  }
+>(({ className, children, hideCloseIcon = false, size = 'md', 'aria-describedby': describedBy, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
@@ -45,7 +62,11 @@ const DialogContent = React.forwardRef<
        */
       aria-describedby={describedBy}
       className={cn(
-        'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] fixed top-[50%] left-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg duration-200 sm:w-full sm:rounded-lg',
+        'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] fixed top-[50%] left-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg duration-200 sm:w-full sm:rounded-lg',
+        // The dialog never grows past the viewport, and only its middle scrolls
+        // - the header and footer below pin themselves to the edges.
+        'max-h-[85dvh] overflow-y-auto',
+        DIALOG_SIZES[size],
         className
       )}
       {...props}
@@ -63,12 +84,27 @@ const DialogContent = React.forwardRef<
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex flex-col space-y-1.5 text-center sm:text-left', className)} {...props} />
+  <div
+    className={cn(
+      // Sticky rather than fixed: the dialog body is the scroll container, so
+      // the title stays put while the content moves under it. The negative
+      // margins let the bar span the dialog's padding.
+      'bg-background sticky top-0 z-40 -mx-6 -mt-6 flex flex-col space-y-1.5 border-b px-6 pt-6 pb-4 text-center sm:text-left',
+      className
+    )}
+    {...props}
+  />
 )
 DialogHeader.displayName = 'DialogHeader'
 
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)} {...props} />
+  <div
+    className={cn(
+      'bg-background sticky bottom-0 z-40 -mx-6 -mb-6 flex flex-col-reverse border-t px-6 pt-4 pb-6 sm:flex-row sm:justify-end sm:space-x-2',
+      className
+    )}
+    {...props}
+  />
 )
 DialogFooter.displayName = 'DialogFooter'
 
