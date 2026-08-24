@@ -52,7 +52,7 @@ interface Props {
 const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
   const [rejectMessage, setRejectMessage] = useState<string>('')
   const [signers, setSigners] = useState<any[]>([])
-  const { data } = useResponseDocs()
+  const { data, isLoading } = useResponseDocs()
   const { user } = useAuth()
 
   const columns: ColumnDef<any>[] = [
@@ -155,7 +155,13 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
 
   return (
     <>
-      <DataTable showNumeration={false} isPaginated data={data || []} columns={columns as unknown as any} />
+      <DataTable
+        showNumeration={false}
+        isPaginated
+        isLoading={isLoading}
+        data={data || []}
+        columns={columns as unknown as any}
+      />
       <RejectMessageModal setMessage={setRejectMessage} message={rejectMessage} />
       <SignersModal setSigners={setSigners} signers={signers} />
     </>

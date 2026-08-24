@@ -14,7 +14,7 @@ export const Logs = ({ url = 'hf' }: any) => {
     paramsObject: { page = 1, size = 10 },
   } = useCustomSearchParams()
 
-  const { data = [] } = usePaginatedData<any>(`/${url}/${id}/logs`, {
+  const { data = [], isLoading } = usePaginatedData<any>(`/${url}/${id}/logs`, {
     page,
     size,
   })
@@ -79,5 +79,13 @@ export const Logs = ({ url = 'hf' }: any) => {
     },
   ]
 
-  return <DataTable showFilters={true} isPaginated data={data || []} columns={columns as unknown as any} />
+  return (
+    <DataTable
+      showFilters={true}
+      isPaginated
+      isLoading={isLoading}
+      data={data || []}
+      columns={columns as unknown as any}
+    />
+  )
 }

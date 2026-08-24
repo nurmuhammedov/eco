@@ -14,7 +14,7 @@ import { useState } from 'react'
 import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx'
 
 const ApplicantDocsTable = () => {
-  const { data } = useApplicantDocs()
+  const { data, isLoading } = useApplicantDocs()
   const [signers, setSigners] = useState<any[]>([])
 
   const columns: ColumnDef<ISearchParams>[] = [
@@ -64,7 +64,13 @@ const ApplicantDocsTable = () => {
 
   return (
     <>
-      <DataTable showNumeration={false} isPaginated data={data || []} columns={columns as unknown as any} />
+      <DataTable
+        showNumeration={false}
+        isPaginated
+        isLoading={isLoading}
+        data={data || []}
+        columns={columns as unknown as any}
+      />
       <SignersModal setSigners={setSigners} signers={signers} />
     </>
   )

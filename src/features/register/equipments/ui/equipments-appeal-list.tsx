@@ -30,7 +30,7 @@ export const RegisterEquipmentAppealList = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
   const activeTab = paramsObject.type || 'ALL'
 
-  const { data } = usePaginatedData<IEquipmentAppeal>('/inquiries', {
+  const { data, isLoading } = usePaginatedData<IEquipmentAppeal>('/inquiries', {
     ...paramsObject,
     belongId: equipmentId,
     type: activeTab !== 'ALL' ? activeTab : '',
@@ -89,7 +89,7 @@ export const RegisterEquipmentAppealList = () => {
         }))}
         onTabChange={(type) => addParams({ type }, 'page')}
       />
-      <DataTable isPaginated data={data || []} columns={columns} />
+      <DataTable isPaginated isLoading={isLoading} data={data || []} columns={columns} />
     </>
   )
 }
