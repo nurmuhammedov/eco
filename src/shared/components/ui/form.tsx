@@ -84,7 +84,7 @@ const FormLabel = React.forwardRef<
     <Label
       ref={ref}
       className={cn(
-        'inline-block leading-4 text-neutral-700',
+        'block leading-4 text-neutral-700',
         required && "after:ml-0.5 after:text-red-500 after:content-['*']",
         error && 'text-destructive',
         className
