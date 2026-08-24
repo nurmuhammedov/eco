@@ -3,11 +3,8 @@ import React from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { usePaginatedData } from '@/shared/hooks'
 import { ColumnDef } from '@tanstack/react-table'
-import { GoBack } from '@/shared/components/common'
-import { apiClient } from '@/shared/api/api-client'
+import { ExportExcelButton, GoBack } from '@/shared/components/common'
 import { format } from 'date-fns'
-import { Button } from '@/shared/components/ui/button'
-import { Download } from 'lucide-react'
 import Filter from '@/shared/components/common/filter'
 
 export enum InspectionStatus {
@@ -249,24 +246,6 @@ const Report3: React.FC = () => {
     },
   ]
 
-  const handleDownloadExel = async () => {
-    const res = await apiClient.downloadFile<Blob>('/reports/registry/export-excel', {
-      date: paramsObject.endDate || format(new Date(), 'yyyy-MM-dd'),
-    })
-
-    const blob = res.data
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    const today = new Date()
-    const filename = `Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, Qurilmalar va INMlarning hududlar kesimida taqsimlanishi (${format(today, 'dd.MM.yyyy')}).xlsx`
-    a.href = url
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    URL.revokeObjectURL(url)
-  }
-
   return (
     <div className="flex h-full flex-col">
       <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
@@ -282,9 +261,13 @@ const Report3: React.FC = () => {
           <div className="w-full sm:w-auto">
             <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
           </div>
-          <Button onClick={handleDownloadExel} className="h-10 w-full sm:w-auto">
-            <Download size={18} className="mr-2" /> Excel
-          </Button>
+          <ExportExcelButton
+            endpoint={'/reports/registry/export-excel'}
+            params={{ date: paramsObject.endDate || format(new Date(), 'yyyy-MM-dd') }}
+            fileName={
+              'Davlat ro‘yxatiga kiritilgan va ro‘yxatdan chiqarilgan XICHO, Qurilmalar va INMlarning hududlar kesimida taqsimlanishi'
+            }
+          />
         </div>
       </div>
 

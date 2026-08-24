@@ -5,11 +5,7 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { usePaginatedData } from '@/shared/hooks'
 import { ColumnDef } from '@tanstack/react-table'
 import Filter from '@/shared/components/common/filter'
-import { GoBack } from '@/shared/components/common'
-import { apiClient } from '@/shared/api/api-client'
-import { format } from 'date-fns'
-import { Button } from '@/shared/components/ui/button'
-import { Download } from 'lucide-react'
+import { ExportExcelButton, GoBack } from '@/shared/components/common'
 
 export enum InspectionStatus {
   LEGAL = 'LEGAL',
@@ -166,25 +162,6 @@ const Report1: React.FC = () => {
     })),
   ]
 
-  const handleDownloadExel = async () => {
-    const res = await apiClient.downloadFile<Blob>('/reports/appeal-type/export-excel', {
-      ...paramsObject,
-      ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,
-    })
-
-    const blob = res.data
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    const today = new Date()
-    const filename = `Jismoniy va yuridik shaxslardan yuborilgan arizalarni turlari bo‘yicha hududlar kesimida taqsimlanishi (${format(today, 'dd.MM.yyyy')}).xlsx`
-    a.href = url
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    URL.revokeObjectURL(url)
-  }
-
   return (
     <div className="flex h-full flex-col">
       <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
@@ -193,9 +170,13 @@ const Report1: React.FC = () => {
           <div className="w-full sm:w-auto">
             <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
           </div>
-          <Button onClick={handleDownloadExel} className="h-10 w-full sm:w-auto">
-            <Download size={18} className="mr-2" /> Excel
-          </Button>
+          <ExportExcelButton
+            endpoint={'/reports/appeal-type/export-excel'}
+            params={{ ...paramsObject, ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL }}
+            fileName={
+              'Jismoniy va yuridik shaxslardan yuborilgan arizalarni turlari bo‘yicha hududlar kesimida taqsimlanishi'
+            }
+          />
         </div>
       </div>
 

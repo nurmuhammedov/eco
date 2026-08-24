@@ -1,4 +1,5 @@
 import { UserRoles } from '@/entities/user'
+import { ExportExcelButton } from '@/shared/components/common'
 import { EquipmentsList } from '@/features/register/equipments/ui/equipments-list'
 import { HfList } from '@/features/register/hf/ui/hf-list'
 import { IrsList } from '@/features/register/irs/ui/irs-list'
@@ -6,14 +7,10 @@ import { XrayList } from '@/features/register/xray/ui/xray-list'
 import { Badge } from '@/shared/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { useAuth } from '@/shared/hooks/use-auth'
-import React, { useState } from 'react'
+import React from 'react'
 import { RegisterActiveTab } from '../types'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
-import { Button } from '@/shared/components/ui/button'
-import { Download } from 'lucide-react'
 import { API_ENDPOINTS } from '@/shared/api'
-import { apiClient } from '@/shared/api/api-client'
-import { format } from 'date-fns'
 import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
@@ -25,7 +22,6 @@ interface RegisterWidgetProps {
 }
 
 const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { user } = useAuth()
   const { paramsObject, addParams, removeParams } = useCustomSearchParams()
 
@@ -71,30 +67,6 @@ const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
   const { data: districts, isLoading: isDistrictsLoading } = useDistrictSelectQueries(regionId)
 
   const exportQuery = buildRegisterExportQuery({ tab, paramsObject, isArchive, defaultRegionId })
-
-  const handleDownloadExel = () => {
-    if (!exportQuery) return
-
-    setIsLoading(true)
-    apiClient
-      .downloadFile<Blob>(`${exportQuery.endpoint}/export/excel`, exportQuery.params)
-      .then((res) => {
-        const blob = res.data
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        const today = new Date()
-        const filename = `${isArchive ? 'Arxiv' : 'Reyestrlar'} (${format(today, 'dd.MM.yyyy')}).xlsx`
-        a.href = url
-        a.download = filename
-        document.body.appendChild(a)
-        a.click()
-        a.remove()
-        URL.revokeObjectURL(url)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }
 
   return (
     <div className="flex h-full flex-col">
@@ -180,14 +152,13 @@ const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
                 </SelectContent>
               </Select>
             </div>
-            <Button
-              disabled={isLoading || !exportQuery}
-              loading={isLoading}
-              onClick={handleDownloadExel}
-              className="hidden items-center gap-2 xl:flex xl:w-auto"
-            >
-              <Download className="h-4 w-4" /> Exel
-            </Button>
+            <ExportExcelButton
+              endpoint={exportQuery ? `${exportQuery.endpoint}/export/excel` : ''}
+              params={exportQuery?.params}
+              fileName={isArchive ? 'Arxiv' : 'Reyestrlar'}
+              disabled={!exportQuery}
+              className="hidden xl:flex"
+            />
           </div>
 
           {user?.role != UserRoles.INDIVIDUAL ? (

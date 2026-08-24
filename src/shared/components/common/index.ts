@@ -1,4 +1,5 @@
 export { StatusBadge } from './status-badge'
+export { ExportExcelButton } from './export-excel-button'
 export { default as GoBack } from './go-back'
 export { BrandLogo } from './brand-logo'
 export { BootScreen } from './boot-screen'
