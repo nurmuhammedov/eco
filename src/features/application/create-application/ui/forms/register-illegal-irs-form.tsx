@@ -650,7 +650,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                 control={form.control}
                 render={({ field }) => (
                   <FormItem className="mb-2">
-                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required>Mehnat vazirligi tomonidan berilgan ekspertiza xulosasi</FormLabel>
                       <FormControl>
                         <InputFile
@@ -671,7 +671,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                   const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                   return (
                     <FormItem className="w-full">
-                      <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                         <FormLabel required={!!form.watch('file1Path')}>Amal qilish muddati</FormLabel>
                         <DatePicker
                           disableStrategy="before"
@@ -695,7 +695,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                 control={form.control}
                 render={({ field }) => (
                   <FormItem className="mb-2">
-                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required>Sanitariya-epidemiologik xulosasi</FormLabel>
                       <FormControl>
                         <InputFile
@@ -716,7 +716,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                   const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                   return (
                     <FormItem className="w-full">
-                      <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                         <FormLabel required={!!form.watch('file2Path')}>Amal qilish muddati</FormLabel>
                         <DatePicker
                           disableStrategy="before"
@@ -740,7 +740,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                 control={form.control}
                 render={({ field }) => (
                   <FormItem className="mb-2">
-                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required>Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat</FormLabel>
                       <FormControl>
                         <InputFile
@@ -761,7 +761,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                   const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                   return (
                     <FormItem className="w-full">
-                      <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                         <FormLabel required={!!form.watch('file5Path')}>Amal qilish muddati</FormLabel>
                         <DatePicker
                           disableStrategy="before"
@@ -785,7 +785,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                 control={form.control}
                 render={({ field }) => (
                   <FormItem className="mb-2">
-                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required>Tibbiy ko‘rikdan o‘tkazilganligi</FormLabel>
                       <FormControl>
                         <InputFile
@@ -806,7 +806,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                   const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                   return (
                     <FormItem className="w-full">
-                      <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                         <FormLabel required={!!form.watch('file15Path')}>Amal qilish muddati</FormLabel>
                         <DatePicker
                           disableStrategy="before"

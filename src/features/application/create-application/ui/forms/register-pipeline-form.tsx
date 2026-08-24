@@ -369,7 +369,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -386,7 +386,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Quvurning birkasi bilan sur‘ati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -403,7 +403,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
                     </FormLabel>
@@ -422,7 +422,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Quvur sertifikati fayli</FormLabel>
                     <FormControl>
                       <InputFile
@@ -445,7 +445,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('equipmentCertPath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -468,7 +468,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
@@ -487,7 +487,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Ekspertiza xulosasi (ishlash muddatini o'tagan bo'lsa majburiy)
                     </FormLabel>
@@ -512,7 +512,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('expertisePath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -535,7 +535,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Montaj dalolatnomasi
                     </FormLabel>
@@ -554,7 +554,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Quvur pasporti
                     </FormLabel>
@@ -573,7 +573,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Quvurning tashqi ko‘rikdan o‘tkazilganligi
                     </FormLabel>
@@ -591,7 +591,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required>Navbatdagi tashqi ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -613,7 +613,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Quvurning gidravlik sinovdan o‘tkazilganligi
                     </FormLabel>
@@ -631,7 +631,7 @@ const RegisterPipelineForm = ({ onSubmit }: RegisterPipelineFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required>Navbatdagi gidravlik sinov sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}

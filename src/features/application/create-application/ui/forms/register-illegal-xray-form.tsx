@@ -425,7 +425,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel>Ruxsatnoma</FormLabel>
                     <FormControl>
                       <InputFile
@@ -446,7 +446,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('file14Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
@@ -470,7 +470,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel>Texnik attestatsiya xulosasi</FormLabel>
                     <FormControl>
                       <InputFile
@@ -491,7 +491,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('file8Path')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         disableStrategy="before"
@@ -543,7 +543,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                 control={form.control}
                 render={({ field }) => (
                   <FormItem className="mb-2">
-                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required>Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat</FormLabel>
                       <FormControl>
                         <InputFile
@@ -564,7 +564,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                   const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                   return (
                     <FormItem className="w-full">
-                      <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                         <FormLabel required={!!form.watch('file5Path')}>Amal qilish muddati</FormLabel>
                         <DatePicker
                           disableStrategy="before"
@@ -588,7 +588,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                 control={form.control}
                 render={({ field }) => (
                   <FormItem className="mb-2">
-                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required>Individual dozimetrlar va ularning karta ma‘lumotlari</FormLabel>
                       <FormControl>
                         <InputFile
@@ -609,7 +609,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                   const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                   return (
                     <FormItem className="w-full">
-                      <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                         <FormLabel required={!!form.watch('file7Path')}>Amal qilish muddati</FormLabel>
                         <DatePicker
                           disableStrategy="before"
@@ -633,7 +633,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                 control={form.control}
                 render={({ field }) => (
                   <FormItem className="mb-2">
-                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required>Yerga ulash va ventilatsiya dalolatnomasi</FormLabel>
                       <FormControl>
                         <InputFile
@@ -654,7 +654,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                   const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                   return (
                     <FormItem className="w-full">
-                      <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                         <FormLabel required={!!form.watch('file9Path')}>Amal qilish muddati</FormLabel>
                         <DatePicker
                           disableStrategy="before"

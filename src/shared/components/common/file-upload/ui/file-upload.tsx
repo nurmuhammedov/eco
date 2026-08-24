@@ -370,7 +370,7 @@ function InputFileComponent<T extends FieldValues>({
   return (
     <div className={cn('file-upload-wrapper', className)}>
       {(multiple || fileList.length === 0) && (
-        <div className="mb-2 flex w-full gap-2">
+        <div className="flex w-full gap-2">
           <div
             id={id}
             onClick={openFileDialog}
@@ -378,7 +378,7 @@ function InputFileComponent<T extends FieldValues>({
             tabIndex={0}
             onKeyDown={onActivate(openFileDialog)}
             className={cn(
-              'flex flex-1 items-center',
+              'flex h-9 flex-1 items-center',
               'overflow-hidden rounded border border-dashed bg-white',
               'cursor-pointer transition-all duration-150 ease-in-out',
               hasError ? 'border-red-300' : 'border-blue-300 hover:border-blue-500 hover:bg-blue-50',

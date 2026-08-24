@@ -176,7 +176,7 @@ const RegisterAccreditationForm = ({ onSubmit }: RegisterAccreditationFormProps)
                 control={form.control}
                 render={({ field }) => (
                   <FormItem className="border-b pb-4">
-                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7" required>
                         {attachment.label}
                       </FormLabel>

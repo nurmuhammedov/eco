@@ -323,7 +323,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Attraksionning surʼati
                     </FormLabel>
@@ -342,7 +342,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Attraksion ishlab chiqaruvchisi tomonidan va (yoki) ixtisoslashtirilgan tashkilot tomonidan
                       tayyorlangan attraksion pasporti
@@ -362,7 +362,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Muvofiqlik sertifikati yoki muvofiqlik to‘g‘risidagi deklaratsiyaning nusxasi (2023 yil 28 maydan
                       so‘ng muomalaga kiritilgan attraksionlar uchun - majburiy, qolgan attraksionlar uchun - mavjud
@@ -383,7 +383,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Kundalik texnik xizmat ko‘rsatish attraksion ishlari boshlanishidan oldin olib boriladi. Natijalar
                       bo‘yicha attraksionlardan xavfsiz foydalanishga javobgar shaxs attraksionni kundalik foydalanishga
@@ -404,7 +404,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Attraksionlarga davriy texnik xizmat ko‘rsatish attraksion egasi yoki attraksionni ijaraga olgan
                       shaxs tomonidan tasdiqlangan reja-jadvali
@@ -424,7 +424,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Texnik shahodat sinovlari attraksiondan foydalanish qo‘llanmasi va mazkur Qoidalar talablariga
                       muvofiq attraksionlarni soz holatda saqlash va xavfsiz foydalanish uchun masʼul bo‘lgan mutaxassis
@@ -445,7 +445,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Mavsumiy foydalaniladigan attraksionlar to‘liq texnik shahodat sinovlaridan o‘tganligi to‘g‘risida
                       maʼlumotlar
@@ -471,7 +471,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('seasonalInspectionPath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -495,7 +495,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Bog‘ attraksionining mavsumga tayyorligi to‘g‘risidagi dalolatnomasi
                     </FormLabel>
@@ -520,7 +520,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('seasonalReadinessActPath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -543,7 +543,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Attraksionlarning texnik tayyorligi dalolatnomasi (yangi o‘rnatilgan 2023 yil 28 maydan so‘ng
                       muomalaga kiritilgan attraksionlar uchun - majburiy, qolgan attraksionlar uchun - mavjud bo‘lsa)
@@ -563,7 +563,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Bog‘ xodimlarning mehnatni muhofaza qilish bo‘yicha bilimlarini sinovdan o‘tganligi to‘g‘risida
                       maʼlumot
@@ -589,7 +589,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('employeeSafetyKnowledgePath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -612,7 +612,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
                     <FormControl>
                       <InputFile
@@ -635,7 +635,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('usageRightsPath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -658,7 +658,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Attraksionni saqlashga qo’yish dalolatnomasi
                     </FormLabel>
@@ -677,7 +677,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Video kuzatuv moslamasi o’rnatilganligi surʼati
                     </FormLabel>
@@ -696,7 +696,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Attraksionga QR kod axborot taxtachasiga o’rnatilganligi surʼati
                     </FormLabel>

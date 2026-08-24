@@ -509,7 +509,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -526,7 +526,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Idishning (SUG) birkasi bilan surʼati
                     </FormLabel>
@@ -545,7 +545,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Qurilmaning oldi sotdi shartnomasi
                     </FormLabel>
@@ -564,7 +564,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Idish (SUG) sertifikati fayli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -581,7 +581,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq fayli
                     </FormLabel>
@@ -600,7 +600,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ekspertiza loyihasi fayli</FormLabel>
                     <FormControl>
                       <InputFile
@@ -623,7 +623,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('expertisePath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -647,7 +647,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Montaj guvohnomasi fayli</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -664,7 +664,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Bosim ostida ishlovchi idish pasporti
                     </FormLabel>
@@ -683,7 +683,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Idishning tashqi va ichki ko‘rikdan o‘tkazilganligi
                     </FormLabel>
@@ -701,7 +701,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!isUpdate}>Navbatdagi tashqi va ichki ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -724,7 +724,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Idishning gidravlik sinovdan o‘tkazilganligi
                     </FormLabel>
@@ -742,7 +742,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!isUpdate}>Navbatdagi gidravlik sinov sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}

@@ -269,7 +269,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Identifikatsiya varag‘i
                     </FormLabel>
@@ -288,7 +288,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi
                     </FormLabel>
@@ -307,7 +307,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
               name="insurancePolicyPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Sug‘urta polisi</FormLabel>
                     <FormControl>
                       <InputFile
@@ -330,7 +330,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('insurancePolicyPath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -353,7 +353,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
               name="cadastralPassportPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">XICHO kadastr pasporti</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -370,7 +370,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Loyiha hujjatlari</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -387,7 +387,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
               name="licensePath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Litsenziya</FormLabel>
                     <FormControl>
                       <InputFile
@@ -408,7 +408,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('licensePath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -431,7 +431,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
               name="expertOpinionPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Loyiha ekspertiza xulosasi (LH)</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -448,7 +448,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
               name="appointmentOrderPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Maʼsul xodim tayinlanganligi buyrug‘i
                     </FormLabel>
@@ -467,7 +467,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
               name="permitPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
                     <FormControl>
                       <InputFile
@@ -488,7 +488,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('permitPath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -511,7 +511,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
               name="industrialSafetyDeclarationPath"
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Sanoat xavfsizligi deklaratsiyasi
                     </FormLabel>

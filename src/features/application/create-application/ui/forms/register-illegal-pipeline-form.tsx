@@ -561,7 +561,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -578,7 +578,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Quvurning birkasi bilan sur‘ati
                     </FormLabel>
@@ -597,7 +597,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
@@ -616,7 +616,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
                     </FormLabel>
@@ -635,7 +635,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Quvur sertifikati fayli</FormLabel>
                     <FormControl>
                       <InputFile
@@ -658,7 +658,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('equipmentCertPath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -681,7 +681,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ekspertiza xulosasi</FormLabel>
                     <FormControl>
                       <InputFile
@@ -704,7 +704,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!!form.watch('expertisePath')}>Amal qilish muddati</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -727,7 +727,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Montaj dalolatnomasi
                     </FormLabel>
@@ -746,7 +746,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Quvur pasporti
                     </FormLabel>
@@ -765,7 +765,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Quvurning tashqi ko‘rikdan o‘tkazilganligi
                     </FormLabel>
@@ -783,7 +783,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!isUpdate}>Navbatdagi tashqi ko‘rik sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}
@@ -806,7 +806,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
               control={form.control}
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Quvurning gidravlik sinovdan o‘tkazilganligi
                     </FormLabel>
@@ -824,7 +824,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="w-full">
-                    <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                       <FormLabel required={!isUpdate}>Navbatdagi gidravlik sinov sanasi</FormLabel>
                       <DatePicker
                         className={'max-w-2/3'}

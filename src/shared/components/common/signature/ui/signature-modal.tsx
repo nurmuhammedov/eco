@@ -143,7 +143,7 @@ export const SignatureModal = ({
           </AlertDialogTrigger>
         </>
       )}
-      <AlertDialogContent className="w-auto! max-w-[95vw]!">
+      <AlertDialogContent className="sm:max-w-2xl">
         <AlertDialogHeader>
           <AlertDialogTitle>Elektron kalitni tanlang</AlertDialogTitle>
           <AlertDialogDescription>
@@ -152,9 +152,7 @@ export const SignatureModal = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <div className="py-4">
-          {!isMobile && <SignatureSelect onSelect={handleSelectCertificate} certificates={signatureKeys} />}
-        </div>
+        <div>{!isMobile && <SignatureSelect onSelect={handleSelectCertificate} certificates={signatureKeys} />}</div>
 
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel}>Bekor qilish</AlertDialogCancel>

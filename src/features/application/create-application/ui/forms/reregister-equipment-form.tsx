@@ -240,7 +240,7 @@ const ReregisterEquipmentForm = ({ onSubmit }: ReRegisterEquipmentFormProps) => 
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Qurilmaning birkasi bilan surʼati
                     </FormLabel>
@@ -259,7 +259,7 @@ const ReregisterEquipmentForm = ({ onSubmit }: ReRegisterEquipmentFormProps) => 
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
                     </FormLabel>
@@ -278,7 +278,7 @@ const ReregisterEquipmentForm = ({ onSubmit }: ReRegisterEquipmentFormProps) => 
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Qurilma sertifikati
                     </FormLabel>
@@ -297,7 +297,7 @@ const ReregisterEquipmentForm = ({ onSubmit }: ReRegisterEquipmentFormProps) => 
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Masʼul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
@@ -316,7 +316,7 @@ const ReregisterEquipmentForm = ({ onSubmit }: ReRegisterEquipmentFormProps) => 
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Ekspertiza xulosasi
                     </FormLabel>
@@ -335,7 +335,7 @@ const ReregisterEquipmentForm = ({ onSubmit }: ReRegisterEquipmentFormProps) => 
               control={form.control}
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Montaj dalolatnomasi
                     </FormLabel>

@@ -170,7 +170,7 @@ export const UpdateOrganization: FC = () => {
                       control={form.control}
                       render={({ field }) => (
                         <FormItem className="mb-2">
-                          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                          <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                             <FormLabel>Mutaxassislar mavjudligi</FormLabel>
                             <FormControl>
                               <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -187,7 +187,7 @@ export const UpdateOrganization: FC = () => {
                       control={form.control}
                       render={({ field }) => (
                         <FormItem className="mb-2">
-                          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                          <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                             <FormLabel>INMlar bo‘yicha davriy hisobot</FormLabel>
                             <FormControl>
                               <InputFile
@@ -210,7 +210,7 @@ export const UpdateOrganization: FC = () => {
                         const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                         return (
                           <FormItem className="w-full">
-                            <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                            <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                               <FormLabel required={!!form.watch('file18Path')}>Amal qilish muddati</FormLabel>
                               <DatePicker
                                 disableStrategy="before"
@@ -234,7 +234,7 @@ export const UpdateOrganization: FC = () => {
                       control={form.control}
                       render={({ field }) => (
                         <FormItem className="mb-2">
-                          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                          <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                             <FormLabel>Sanitariya-epidemiologik xulosasi</FormLabel>
                             <FormControl>
                               <InputFile
@@ -257,7 +257,7 @@ export const UpdateOrganization: FC = () => {
                         const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                         return (
                           <FormItem className="w-full">
-                            <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                            <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                               <FormLabel required={!!form.watch('file2Path')}>Amal qilish muddati</FormLabel>
                               <DatePicker
                                 disableStrategy="before"
@@ -283,7 +283,7 @@ export const UpdateOrganization: FC = () => {
                   control={form.control}
                   render={({ field }) => (
                     <FormItem className="mb-2">
-                      <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                      <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                         <FormLabel>Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat</FormLabel>
                         <FormControl>
                           <InputFile
@@ -306,7 +306,7 @@ export const UpdateOrganization: FC = () => {
                     const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                     return (
                       <FormItem className="w-full">
-                        <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                        <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                           <FormLabel required={!!form.watch('file5Path')}>Amal qilish muddati</FormLabel>
                           <DatePicker
                             disableStrategy="before"
@@ -332,7 +332,7 @@ export const UpdateOrganization: FC = () => {
                       control={form.control}
                       render={({ field }) => (
                         <FormItem className="mb-2">
-                          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                          <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                             <FormLabel>Individual dozimetrlar va ularning karta ma‘lumotlari</FormLabel>
                             <FormControl>
                               <InputFile
@@ -355,7 +355,7 @@ export const UpdateOrganization: FC = () => {
                         const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                         return (
                           <FormItem className="w-full">
-                            <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                            <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                               <FormLabel required={!!form.watch('file7Path')}>Amal qilish muddati</FormLabel>
                               <DatePicker
                                 disableStrategy="before"
@@ -379,7 +379,7 @@ export const UpdateOrganization: FC = () => {
                       control={form.control}
                       render={({ field }) => (
                         <FormItem className="mb-2">
-                          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                          <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                             <FormLabel>Yerga ulash va ventilatsiya dalolatnomasi</FormLabel>
                             <FormControl>
                               <InputFile
@@ -402,7 +402,7 @@ export const UpdateOrganization: FC = () => {
                         const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                         return (
                           <FormItem className="w-full">
-                            <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                            <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                               <FormLabel required={!!form.watch('file9Path')}>Amal qilish muddati</FormLabel>
                               <DatePicker
                                 disableStrategy="before"
@@ -429,7 +429,7 @@ export const UpdateOrganization: FC = () => {
                     control={form.control}
                     render={({ field }) => (
                       <FormItem className="mb-2">
-                        <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                        <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                           <FormLabel>Tibbiy ko‘rikdan o‘tkazilganligi</FormLabel>
                           <FormControl>
                             <InputFile
@@ -452,7 +452,7 @@ export const UpdateOrganization: FC = () => {
                       const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                       return (
                         <FormItem className="w-full">
-                          <div className="mb-2 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                          <div className="mb-2 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                             <FormLabel required={!!form.watch('file15Path')}>Amal qilish muddati</FormLabel>
                             <DatePicker
                               disableStrategy="before"
