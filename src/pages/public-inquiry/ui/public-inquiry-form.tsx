@@ -255,7 +255,7 @@ const PublicInquiryForm = () => {
                   )}
                 />
 
-                <div className="flex flex-col gap-2 space-y-2">
+                <div className="flex flex-col gap-1">
                   <FormLabel>
                     Xavf aniqlangan obyekt bo‘yicha rasm yoki video <span className="text-destructive">*</span>
                   </FormLabel>
