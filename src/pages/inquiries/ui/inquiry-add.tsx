@@ -117,7 +117,7 @@ const InquiryAddPage = () => {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
+          <CardForm className="3xl:grid-cols-4 4xl:grid-cols-5 mb-5 grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
             <FormField
               name="type"
               control={form.control}
