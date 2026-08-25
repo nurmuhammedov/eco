@@ -1,4 +1,4 @@
-import { ComponentProps, useCallback, useMemo, useRef } from 'react'
+import { ComponentProps, useMemo } from 'react'
 import { Map, ObjectManager, YMaps } from '@pbe/react-yandex-maps'
 import { useData } from '@/shared/hooks'
 import { Skeleton } from '@/shared/components/ui/skeleton'
@@ -49,18 +49,7 @@ const STATUS_LABELS: Record<HfStatus, string> = {
  * The library's types predate uz_UZ, which the Yandex API itself accepts - the
  * cast is narrowed to this one value rather than silencing the whole element.
  */
-/**
- * The country outline comes from Yandex's borders service, which answers
- * "BASE_URL is not set" unless the API is loaded with a key. Without one the
- * map still works; it just draws no border, so the key stays optional.
- */
-const API_KEY = import.meta.env.VITE_YANDEX_MAPS_API_KEY as string | undefined
-
-const MAP_QUERY = {
-  load: API_KEY ? 'package.full,borders' : 'package.full',
-  lang: 'uz_UZ',
-  ...(API_KEY ? { apikey: API_KEY } : {}),
-} as unknown as ComponentProps<typeof YMaps>['query']
+const MAP_QUERY = { load: 'package.full', lang: 'uz_UZ' } as unknown as ComponentProps<typeof YMaps>['query']
 
 /** Uzbekistan, wide enough to hold every region at once. */
 const COUNTRY_CENTER = [41.75, 64.0]
@@ -95,30 +84,6 @@ const buildBalloon = (facility: FacilityLocation) => {
 
 export const FacilitiesMap = () => {
   const { data, isLoading } = useData<FacilityLocation[]>('/hf/locations')
-  const mapRef = useRef<any>(null)
-
-  const drawBorders = useCallback((ymaps: any) => {
-    if (!API_KEY || !ymaps?.borders) return
-
-    ymaps.borders
-      .load('UZ', { lang: 'uz', quality: 2 })
-      .then((geo: { features: unknown[] }) => {
-        const outline = new ymaps.GeoObjectCollection(null, {
-          fill: false,
-          strokeColor: '#0b626b',
-          strokeWidth: 1.2,
-          strokeOpacity: 0.5,
-          // The outline must never swallow a click meant for a marker.
-          interactivityModel: 'default#transparent',
-        })
-
-        geo.features.forEach((feature) => outline.add(new ymaps.GeoObject(feature)))
-        mapRef.current?.geoObjects.add(outline)
-      })
-      .catch((error: unknown) => {
-        console.warn('[FacilitiesMap] chegara yuklanmadi', error)
-      })
-  }, [])
 
   /**
    * Six thousand placemarks as React children lock the tab - clustering does
@@ -176,9 +141,6 @@ export const FacilitiesMap = () => {
               width="100%"
               height="100%"
               options={{ suppressMapOpenBlock: true }}
-              modules={['borders', 'GeoObjectCollection', 'GeoObject']}
-              instanceRef={mapRef}
-              onLoad={drawBorders}
             >
               <ObjectManager
                 features={features}
