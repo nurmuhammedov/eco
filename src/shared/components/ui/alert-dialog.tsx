@@ -3,6 +3,7 @@ import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
 
 import { cn } from '@/shared/lib/utils'
 import { buttonVariants } from '@/shared/components/ui/button'
+import { DIALOG_SIZES } from '@/shared/components/ui/dialog'
 
 function AlertDialog({ ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
@@ -29,11 +30,18 @@ function AlertDialogOverlay({ className, ...props }: React.ComponentProps<typeof
   )
 }
 
+/**
+ * Same frame as DialogContent - pinned header and footer, only the middle
+ * scrolls - so the two kinds of modal are laid out by one rule. The padding
+ * lives on those three slots, not here: a padded content box would inset the
+ * header and footer borders instead of letting them meet the modal edges.
+ */
 function AlertDialogContent({
   className,
   children,
+  size = 'md',
   ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Content>) {
+}: React.ComponentProps<typeof AlertDialogPrimitive.Content> & { size?: keyof typeof DIALOG_SIZES }) {
   const items = React.Children.toArray(children)
   const header = items.find((item) => React.isValidElement(item) && item.type === AlertDialogHeader)
   const footer = items.find((item) => React.isValidElement(item) && item.type === AlertDialogFooter)
@@ -45,7 +53,9 @@ function AlertDialogContent({
       <AlertDialogPrimitive.Content
         data-slot="alert-dialog-content"
         className={cn(
-          'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 flex grid max-h-[calc(100dvh-4rem)] w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] flex-col gap-4 overflow-hidden rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg',
+          'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border shadow-lg duration-200 sm:rounded-lg',
+          'flex max-h-[calc(100dvh-4rem)] w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden p-0',
+          DIALOG_SIZES[size],
           className
         )}
         {...props}

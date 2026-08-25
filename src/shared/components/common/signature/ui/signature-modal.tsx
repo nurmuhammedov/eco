@@ -1,20 +1,18 @@
 import { useDocumentSigning } from '@/shared/components/common/signature/model'
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/shared/components/ui/alert-dialog'
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
 import { useSignatureKeys } from '@/shared/lib'
 import { useSignatureClient } from '@/shared/hooks'
 import { SignatureKey } from '@/shared/types/signature'
-import { Loader2, Signature, UsbIcon } from 'lucide-react'
+import { Signature, UsbIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { SignatureSelect } from '../index'
 import { apiConfig } from '@/shared/api/constants'
@@ -95,7 +93,7 @@ export const SignatureModal = ({
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
       {apiConfig.oneIdClientId == 'test_cirns_uz' ? (
         <Button loading={isLoading} onClick={() => handleConfirm()} disabled={isLoading || !!error}>
           <Signature className="size-4" />
@@ -135,37 +133,39 @@ export const SignatureModal = ({
             <UsbIcon className="size-4" />
             USB token orqali imzolash
           </Button>
-          <AlertDialogTrigger asChild>
+          <DialogTrigger asChild>
             <Button loading={isLoading} disabled={isLoadingSignature || !!error}>
               <Signature className="size-4" />
               Imzolash
             </Button>
-          </AlertDialogTrigger>
+          </DialogTrigger>
         </>
       )}
-      <AlertDialogContent className="sm:max-w-2xl">
-        <AlertDialogHeader>
-          <AlertDialogTitle>Elektron kalitni tanlang</AlertDialogTitle>
-          <AlertDialogDescription>
-            Imzolash uchun ERI kalitingizni tanlang! <br /> Bu amal orqali hujjat elektron tarzda imzolanadi va yuridik
-            kuchga ega bo'ladi!
-          </AlertDialogDescription>
-        </AlertDialogHeader>
+      <DialogContent size="lg">
+        <DialogHeader>
+          <DialogTitle>Elektron kalitni tanlang</DialogTitle>
+          <DialogDescription>
+            Imzolash uchun ERI kalitingizni tanlang. Bu amal orqali hujjat elektron tarzda imzolanadi va yuridik kuchga
+            ega bo‘ladi.
+          </DialogDescription>
+        </DialogHeader>
 
-        <div>{!isMobile && <SignatureSelect onSelect={handleSelectCertificate} certificates={signatureKeys} />}</div>
+        <SignatureSelect
+          certificates={signatureKeys}
+          value={selectedCertificate}
+          onSelect={handleSelectCertificate}
+          disabled={isPending}
+        />
 
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleCancel}>Bekor qilish</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={() => handleConfirm()}
-            disabled={!selectedCertificate || !!error}
-            className={!selectedCertificate ? 'cursor-not-allowed opacity-50' : ''}
-          >
-            {isPending && <Loader2 className="size-4 animate-spin" />}
+        <DialogFooter>
+          <Button variant="outline" onClick={handleCancel} disabled={isPending}>
+            Bekor qilish
+          </Button>
+          <Button onClick={() => handleConfirm()} disabled={!selectedCertificate || !!error} loading={isPending}>
             Tasdiqlash
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

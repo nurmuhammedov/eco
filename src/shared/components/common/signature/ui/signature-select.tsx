@@ -1,200 +1,141 @@
-import { onActivate } from '@/shared/lib/on-activate'
-import { AlertCircle, ChevronDown } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { Button } from '@/shared/components/ui/button'
+import { useMemo } from 'react'
+import { AlertCircle, KeyRound } from 'lucide-react'
+import { format } from 'date-fns'
 import { SignatureKey } from '@/shared/types/signature'
 import { cn } from '@/shared/lib/utils'
-import { format } from 'date-fns'
 import { useAuth } from '@/shared/hooks/use-auth.ts'
 import { UserRoles } from '@/entities/user'
 
 interface SignatureSelectProps {
   className?: string
   certificates?: SignatureKey[]
+  value?: SignatureKey | null
   onSelect?: (certificate: SignatureKey) => void
   disabled?: boolean
 }
 
+const isExpired = (validTo: string | Date) => new Date(validTo) < new Date()
+
+const Field = ({ label, value, align = 'left' }: { label: string; value: string; align?: 'left' | 'right' }) => (
+  <div className={cn('min-w-0', align === 'right' && 'text-right')}>
+    <div className="text-[11px] tracking-wide text-neutral-500 uppercase">{label}</div>
+    <div className="mt-0.5 truncate text-sm font-medium text-neutral-800">{value}</div>
+  </div>
+)
+
+/**
+ * The list is inline rather than a dropdown. An absolutely positioned menu
+ * inside a scrolling modal body is clipped by it, which left the options
+ * unreachable behind a scrollbar. Native radios also give arrow-key movement
+ * and a real selected state for free.
+ */
 export function SignatureSelect({
   onSelect,
   certificates = [],
+  value = null,
   className = '',
   disabled = false,
 }: SignatureSelectProps) {
-  const [open, setOpen] = useState(false)
-  const [selectedCert, setSelectedCert] = useState<SignatureKey | null>(null)
-  const dropdownRef = useRef<HTMLDivElement>(null)
   const { user } = useAuth()
 
-  const isCertificateExpired = (validTo: string | Date): boolean => {
-    return new Date(validTo) < new Date()
-  }
+  const sorted = useMemo(
+    () =>
+      [...certificates]
+        .filter((item) =>
+          user?.role !== UserRoles.LEGAL
+            ? Number(item?.PINFL) === Number(user?.tinOrPin)
+            : Number(item?.TIN) === Number(user?.tinOrPin)
+        )
+        .sort((a, b) => {
+          if (isExpired(a.validTo) !== isExpired(b.validTo)) return isExpired(a.validTo) ? 1 : -1
 
-  const sortedCertificates = useMemo(() => {
-    return [...certificates]
-      .sort((a, b) => {
-        const aExpired = isCertificateExpired(a.validTo)
-        const bExpired = isCertificateExpired(b.validTo)
+          return (a.CN || '').localeCompare(b.CN || '')
+        }),
+    [certificates, user?.role, user?.tinOrPin]
+  )
 
-        if (aExpired !== bExpired) {
-          return aExpired ? 1 : -1
-        }
-        return (a.CN || '').localeCompare(b.CN || '')
-      })
-      .filter((item) => {
-        if (user?.role !== UserRoles.LEGAL) {
-          return Number(item?.PINFL) == Number(user?.tinOrPin)
-        } else {
-          return Number(item?.TIN) == Number(user?.tinOrPin)
-        }
-      })
-  }, [certificates, user?.role, user?.tinOrPin])
-
-  function handleSelectCertificate(cert: SignatureKey) {
-    if (isCertificateExpired(cert.validTo)) return
-
-    setSelectedCert(cert)
-    setOpen(false)
-    onSelect?.(cert)
-  }
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setOpen(false)
-      }
-    }
-
-    if (open) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [open])
-
-  const renderSelectedContent = () => {
-    if (!selectedCert) {
-      return (
-        <div className="flex w-full items-center justify-between">
-          <span className="text-gray-700">ERI ni tanlang</span>
-          <ChevronDown className="ml-2 size-4 opacity-50" />
-        </div>
-      )
-    }
-
-    const isLegal = selectedCert.O && selectedCert.TIN
-
+  if (sorted.length === 0) {
     return (
-      <div className="w-full text-left">
-        <div className="mb-2 flex items-start justify-between">
-          <div>
-            <div className="font-medium text-blue-800">{isLegal ? selectedCert.O : selectedCert.CN}</div>
-            {isLegal && (
-              <div className="mt-1 text-xs text-gray-600">
-                <span className="font-medium">Tashkilot rahbari:</span> {selectedCert.CN}
-              </div>
-            )}
-            <span className="mt-1 inline-block rounded-md bg-green-100 px-2 py-1 text-xs text-green-800">
-              {isLegal ? 'Yuridik shaxs' : 'Jismoniy shaxs'}
-            </span>
-          </div>
-          <ChevronDown className="ml-2 size-4 shrink-0 opacity-50" />
-        </div>
-
-        <div className="flex justify-between gap-4 text-sm">
-          <div>
-            <div className="text-gray-500">Sertifikat raqami:</div>
-            <div className="font-semibold text-gray-700">{selectedCert.serialNumber}</div>
-          </div>
-          <div>
-            <div className="text-right text-gray-500">Amal qilish muddati:</div>
-            <div className="text-right font-semibold text-gray-700">
-              {format(new Date(selectedCert.validFrom), 'dd.MM.yyyy')} -{' '}
-              {format(new Date(selectedCert.validTo), 'dd.MM.yyyy')}
-            </div>
-          </div>
-        </div>
+      <div
+        className={cn(
+          'flex flex-col items-center gap-2 rounded-xl border border-dashed border-neutral-300 bg-neutral-50 px-6 py-8 text-center',
+          className
+        )}
+      >
+        <KeyRound className="size-6 text-neutral-400" />
+        <p className="text-sm font-medium text-neutral-700">Sertifikatlar topilmadi</p>
+        <p className="max-w-sm text-xs text-neutral-500">
+          E-IMZO dasturi ishga tushirilganini va kalitingiz ulanganini tekshiring. Ro‘yxatda faqat sizning STIR yoki
+          JSHSHIR raqamingizga tegishli kalitlar ko‘rinadi.
+        </p>
       </div>
     )
   }
 
   return (
-    <div className={cn('relative w-full', className)} ref={dropdownRef}>
-      <Button
-        variant="outline"
-        disabled={disabled}
-        onClick={() => setOpen(!open)}
-        className="h-auto w-full flex-col items-stretch bg-white p-3 font-normal disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {renderSelectedContent()}
-      </Button>
+    <div role="radiogroup" aria-label="Elektron raqamli imzo kaliti" className={cn('space-y-2', className)}>
+      {sorted.map((cert, index) => {
+        const expired = isExpired(cert.validTo)
+        const isLegal = !!(cert.O && cert.TIN)
+        const id = cert.serialNumber || String(index)
 
-      {open && !disabled && (
-        <div className="absolute top-full left-0 z-50 mt-1 max-h-80 w-full overflow-auto rounded-md border border-gray-300 bg-white shadow-md">
-          {sortedCertificates.length === 0 ? (
-            <div className="p-4 text-center text-gray-500">Sertifikatlar topilmadi</div>
-          ) : (
-            <div className="divide-y divide-gray-200">
-              {sortedCertificates.map((cert, index) => {
-                const isExpired = isCertificateExpired(cert.validTo)
+        return (
+          <label
+            key={id}
+            // The visible text sits several elements deep, so the radio is named
+            // here rather than left to the label's contents.
+            aria-label={`${isLegal ? cert.O : cert.CN}, ${cert.serialNumber}${expired ? ', muddati o‘tgan' : ''}`}
+            className={cn(
+              'flex gap-3 rounded-xl border p-3 transition-colors',
+              expired
+                ? 'cursor-not-allowed border-neutral-200 bg-neutral-50 opacity-70'
+                : 'has-checked:border-primary has-checked:bg-primary/5 cursor-pointer border-neutral-200 hover:bg-neutral-50',
+              disabled && 'pointer-events-none opacity-50'
+            )}
+          >
+            <input
+              type="radio"
+              name="signature-certificate"
+              className="accent-primary mt-1 size-4 shrink-0"
+              value={id}
+              checked={value?.serialNumber === cert.serialNumber}
+              disabled={disabled || expired}
+              onChange={() => onSelect?.(cert)}
+            />
 
-                return (
-                  <div
-                    key={cert.serialNumber || index}
-                    onClick={() => handleSelectCertificate(cert)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={onActivate(() => handleSelectCertificate(cert))}
-                    className={cn(
-                      'relative p-4 transition-colors',
-                      isExpired ? 'cursor-not-allowed bg-gray-50 opacity-60' : 'cursor-pointer hover:bg-gray-50'
-                    )}
-                  >
-                    <div className="mb-2 flex items-start justify-between">
-                      <div>
-                        <div className={cn('font-medium', isExpired ? 'text-gray-600' : 'text-blue-800')}>
-                          {cert.O && cert.TIN ? cert.O : cert.CN}
-                        </div>
-                        {cert.O && cert.TIN && (
-                          <div className="mt-1 text-xs text-gray-600">
-                            <span className="font-medium">Tashkilot rahbari:</span> {cert.CN}
-                          </div>
-                        )}
-                        <span className="mt-1 inline-block rounded-md bg-green-100 px-2 py-1 text-xs text-green-800">
-                          {cert.O && cert.TIN ? 'Yuridik shaxs' : 'Jismoniy shaxs'}
-                        </span>
-                      </div>
+            <span className="min-w-0 flex-1">
+              <span className="flex flex-wrap items-start justify-between gap-2">
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-semibold text-neutral-900">
+                    {isLegal ? cert.O : cert.CN}
+                  </span>
+                  {isLegal && <span className="mt-0.5 block truncate text-xs text-neutral-600">Rahbar: {cert.CN}</span>}
+                </span>
 
-                      {isExpired && (
-                        <span className="flex items-center rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-600">
-                          <AlertCircle className="mr-1 size-3" />
-                          Muddati o‘tgan
-                        </span>
-                      )}
-                    </div>
+                {expired ? (
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-red-100 px-2 py-0.5 text-xs font-medium text-red-600">
+                    <AlertCircle className="size-3" />
+                    Muddati o‘tgan
+                  </span>
+                ) : (
+                  <span className="shrink-0 rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
+                    {isLegal ? 'Yuridik shaxs' : 'Jismoniy shaxs'}
+                  </span>
+                )}
+              </span>
 
-                    <div className="flex justify-between gap-4 text-sm">
-                      <div>
-                        <div className="text-gray-500">Sertifikat raqami:</div>
-                        <div className="font-semibold text-gray-700">{cert.serialNumber}</div>
-                      </div>
-                      <div>
-                        <div className="text-right text-gray-500">Amal qilish muddati:</div>
-                        <div className={cn('text-right font-semibold', isExpired ? 'text-red-500' : 'text-gray-700')}>
-                          {format(new Date(cert.validFrom), 'dd.MM.yyyy')} -{' '}
-                          {format(new Date(cert.validTo), 'dd.MM.yyyy')}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </div>
-      )}
+              <span className="mt-2.5 grid grid-cols-2 gap-3">
+                <Field label="Sertifikat raqami" value={cert.serialNumber} />
+                <Field
+                  label="Amal qilish muddati"
+                  align="right"
+                  value={`${format(new Date(cert.validFrom), 'dd.MM.yyyy')} - ${format(new Date(cert.validTo), 'dd.MM.yyyy')}`}
+                />
+              </span>
+            </span>
+          </label>
+        )
+      })}
     </div>
   )
 }

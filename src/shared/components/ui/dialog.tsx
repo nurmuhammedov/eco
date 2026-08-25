@@ -178,6 +178,7 @@ const DialogDescription = React.forwardRef<
 DialogDescription.displayName = DialogPrimitive.Description.displayName
 
 export {
+  DIALOG_SIZES,
   Dialog,
   DialogPortal,
   DialogOverlay,
