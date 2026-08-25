@@ -29,6 +29,7 @@ const ApplicationPage = () => {
     paramsObject: { status = ApplicationStatus.ALL },
   } = useCustomSearchParams()
 
+  useData('/hf/locations')
   const action = useMemo(() => {
     if ([UserRoles.LEGAL, UserRoles.INDIVIDUAL]?.includes(user?.role as unknown as UserRoles)) {
       return (
