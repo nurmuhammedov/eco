@@ -1,4 +1,4 @@
-import { ComponentProps, useCallback, useMemo, useRef } from 'react'
+import { ComponentProps, useMemo } from 'react'
 import { Map, ObjectManager, YMaps } from '@pbe/react-yandex-maps'
 import { useData } from '@/shared/hooks'
 import { Skeleton } from '@/shared/components/ui/skeleton'
@@ -84,32 +84,6 @@ const buildBalloon = (facility: FacilityLocation) => {
 
 export const FacilitiesMap = () => {
   const { data, isLoading } = useData<FacilityLocation[]>('/hf/locations')
-  const mapRef = useRef<any>(null)
-
-  /**
-   * Yandex serves the country outline itself, so the border costs no payload of
-   * ours - drawing it keeps a cluster sitting near the edge readable as inside
-   * or outside the country.
-   */
-  const drawBorders = useCallback((ymaps: any) => {
-    ymaps.borders
-      ?.load('UZ', { lang: 'uz', quality: 2 })
-      .then((geo: any) => {
-        const outline = new ymaps.GeoObjectCollection(null, {
-          fill: false,
-          strokeColor: '#0b626b',
-          strokeWidth: 1.5,
-          strokeOpacity: 0.55,
-          interactivityModel: 'default#transparent',
-        })
-
-        geo.features.forEach((feature: any) => outline.add(new ymaps.GeoObject(feature)))
-        mapRef.current?.geoObjects.add(outline)
-      })
-      .catch(() => {
-        // The map is still usable without the outline.
-      })
-  }, [])
 
   /**
    * Six thousand placemarks as React children lock the tab - clustering does
@@ -167,9 +141,6 @@ export const FacilitiesMap = () => {
               width="100%"
               height="100%"
               options={{ suppressMapOpenBlock: true }}
-              modules={['borders', 'GeoObjectCollection', 'GeoObject']}
-              instanceRef={mapRef}
-              onLoad={drawBorders}
             >
               <ObjectManager
                 features={features}

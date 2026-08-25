@@ -1,6 +1,6 @@
 import { onActivate } from '@/shared/lib/on-activate'
 import { useMemo } from 'react'
-import uzGeoData from './uz.json'
+import uzGeoData from '@/shared/assets/uz-regions.json'
 import { cn } from '@/shared/lib/utils.ts'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip.tsx'
 
