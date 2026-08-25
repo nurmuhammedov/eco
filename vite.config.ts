@@ -51,7 +51,15 @@ export default defineConfig({
       deleteOriginFile: false,
     }),
     VitePWA({
-      registerType: 'prompt',
+      /**
+       * Must not be 'prompt'. A waiting worker is activated by the app calling
+       * updateServiceWorker, but the app cannot start when the cached shell it
+       * serves points at asset hashes a deploy has removed - so the only thing
+       * able to release the new worker is the very thing the old one blocks.
+       * skipWaiting lives in the incoming worker, which also frees browsers
+       * already stuck on an older release.
+       */
+      registerType: 'autoUpdate',
       injectRegister: null,
       workbox: {
         // Only the shell is precached; hashed chunks are cached on demand instead

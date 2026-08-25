@@ -1,4 +1,3 @@
-import { toast } from 'sonner'
 import { registerSW } from 'virtual:pwa-register'
 
 const RELOAD_GUARD_KEY = 'sw-chunk-reload'
@@ -6,6 +5,8 @@ const RELOAD_GUARD_KEY = 'sw-chunk-reload'
 /**
  * A cached shell can point at asset hashes that no longer exist after a deploy.
  * Vite reports those as `vite:preloadError`; reloading once picks up the new shell.
+ * This only covers chunks imported after start-up - a missing entry script is
+ * caught by the recovery guard in index.html, which runs without the bundle.
  */
 const reloadOnStaleChunk = () => {
   window.addEventListener('vite:preloadError', (event) => {
@@ -22,31 +23,7 @@ const reloadOnStaleChunk = () => {
 export const setupServiceWorker = () => {
   reloadOnStaleChunk()
 
-  const updateServiceWorker = registerSW({
-    immediate: true,
-    onNeedRefresh() {
-      toast.info('Tizimning yangi versiyasi mavjud', {
-        description: 'Oxirgi o‘zgarishlarni ko‘rish uchun sahifani yangilang.',
-        duration: Infinity,
-        // No dismiss control: the only way out is applying the update.
-        closeButton: false,
-        action: {
-          label: 'Yangilash',
-          onClick: () => void updateServiceWorker(true),
-        },
-        style: { flexDirection: 'column', alignItems: 'stretch' },
-        actionButtonStyle: {
-          backgroundColor: '#2563eb',
-          color: '#fff',
-          border: 'none',
-          padding: '8px 16px',
-          borderRadius: '6px',
-          fontWeight: 600,
-          marginTop: '8px',
-          flex: '1 0 100%',
-          cursor: 'pointer',
-        },
-      })
-    },
-  })
+  // The worker skips waiting and claims its clients, so there is no update to
+  // prompt for: the next navigation is already served by the new release.
+  registerSW({ immediate: true })
 }

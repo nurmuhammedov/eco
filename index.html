@@ -71,6 +71,70 @@
         }
       }
     </style>
+    <script>
+      /* A shell cached by an older service worker can point at asset hashes a
+         deploy has since removed. Nothing in the bundle can recover from that,
+         because none of it ever runs - so the escape hatch lives in the document.
+         Guarded per tab session, so it can clear and reload at most once. */
+      ;(function () {
+        var KEY = 'shell-recovery'
+        var running = false
+
+        function recover() {
+          if (running) return
+          try {
+            if (sessionStorage.getItem(KEY)) return
+            sessionStorage.setItem(KEY, '1')
+          } catch (e) {
+            /* Private mode: the guard just does not persist. */
+          }
+          running = true
+
+          var caches$ = window.caches
+            ? caches.keys().then(function (keys) {
+                return Promise.all(
+                  keys.map(function (key) {
+                    return caches.delete(key)
+                  })
+                )
+              })
+            : Promise.resolve()
+
+          var workers$ = navigator.serviceWorker
+            ? navigator.serviceWorker.getRegistrations().then(function (list) {
+                return Promise.all(
+                  list.map(function (registration) {
+                    return registration.unregister()
+                  })
+                )
+              })
+            : Promise.resolve()
+
+          Promise.all([caches$, workers$])
+            .catch(function () {})
+            .then(function () {
+              location.reload()
+            })
+        }
+
+        addEventListener(
+          'error',
+          function (event) {
+            var node = event.target
+            if (node && node.tagName === 'SCRIPT' && String(node.src).indexOf('/assets/') !== -1) recover()
+          },
+          true
+        )
+
+        /* The entry can also load and then throw, which fires no resource error.
+           A splash still on screen well past any reasonable load means the same. */
+        addEventListener('load', function () {
+          setTimeout(function () {
+            if (document.getElementById('app-boot')) recover()
+          }, 12000)
+        })
+      })()
+    </script>
   </head>
   <body>
     <div id="root">
