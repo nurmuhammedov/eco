@@ -34,6 +34,7 @@ import {
 } from '@/features/inquiries/ui/modals/accountant-edit-modals'
 import { AccountantCompleteModal } from '@/features/inquiries/ui/modals/accountant-complete-modal'
 import { EmptyValue } from '@/shared/components/common/empty-value'
+import { Logs } from '@/features/register/hf/ui/parts/logs'
 
 // emptyText removed
 
@@ -521,6 +522,10 @@ const InquiryDetailPage = () => {
               </div>
             </DetailCardAccordion.Item>
           )}
+
+          <DetailCardAccordion.Item value="history" title="O‘zgartirishlar tarixi">
+            <Logs url="inquiries" />
+          </DetailCardAccordion.Item>
         </DetailCardAccordion>
       </div>
     </>

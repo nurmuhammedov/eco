@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -46,6 +47,7 @@ type SimpleFormValues = z.infer<typeof formSchema>
 
 const InquiryAddPage = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [searchParams] = useSearchParams()
   const belongId = searchParams.get('belongId')
   const belongType = searchParams.get('belongType')
@@ -81,6 +83,10 @@ const InquiryAddPage = () => {
       onSuccess: (res: any) => {
         setSuccess(true)
         setRegistryNumber(res?.message || res?.data?.message || '')
+        // useAdd only raises a toast. Without this the list stays on its cached
+        // page for the whole freshness window, so the inquiry just submitted is
+        // missing from "Mening murojaatlarim".
+        queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
       },
     })
   }
@@ -101,7 +107,9 @@ const InquiryAddPage = () => {
               <p className="text-2xl font-bold tracking-wider text-blue-900">{registryNumber}</p>
             </div>
           )}
-          <Button className="mt-4 w-full" onClick={() => navigate(-1)}>
+          {/* Going back lands wherever the form was opened from - a register
+              page, for one - which is not what the button says. */}
+          <Button className="mt-4 w-full" onClick={() => navigate('/inquiries')}>
             Mening murojaatlarim
           </Button>
         </div>

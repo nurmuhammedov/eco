@@ -35,6 +35,10 @@ export const inquiryApi = {
     const { data: res } = await apiClient.post<any>(`/inquiries/${id}/accountant/complete`)
     return res.data
   },
+  changeRegion: async ({ id, data }: { id: string; data: { regionId: number } }) => {
+    const { data: res } = await apiClient.patch<any>(`/inquiries/${id}/region`, data)
+    return res.data
+  },
   deleteInquiry: async (id: string) => {
     const { data: res } = await apiClient.delete<any>(`/inquiries/${id}`)
     return res.data

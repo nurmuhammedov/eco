@@ -19,6 +19,7 @@ import { Eye } from 'lucide-react'
 import { Badge } from '@/shared/components/ui/badge'
 import { cn } from '@/shared/lib/utils'
 import { useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { ChangeRegionModal } from './modals/change-region-modal'
 
 const InquiryTable = () => {
   const { user } = useAuth()
@@ -186,12 +187,22 @@ const InquiryTable = () => {
                 ? 'irs'
                 : 'xrays'
 
+        // Up to the point real work starts: past IN_PROCESS an inspection or a
+        // court case is already under way, and moving the inquiry would strand
+        // that work in the region it left.
+        const canChangeRegion =
+          user?.role === UserRoles.REGIONAL &&
+          (row.original.status === InquiryStatus.NEW || row.original.status === InquiryStatus.IN_PROCESS)
+
         return (
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             {row.original.belongId && (
               <Button size="sm" onClick={() => navigate(`/register/${row.original.belongId}/${belongTypeStr}`)}>
                 Obyektni ko‘rish
               </Button>
+            )}
+            {canChangeRegion && (
+              <ChangeRegionModal inquiryId={row.original.id} currentRegionId={row.original.regionId} />
             )}
             <Button
               variant="ghost"

@@ -79,6 +79,17 @@ export function useAccountantComplete() {
   })
 }
 
+export function useChangeInquiryRegion() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: inquiryApi.changeRegion,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      toast.success('Hudud o‘zgartirildi!')
+    },
+  })
+}
+
 export function useDeleteInquiry() {
   const queryClient = useQueryClient()
   return useMutation({
