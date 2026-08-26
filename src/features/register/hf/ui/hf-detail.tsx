@@ -159,7 +159,7 @@ const HfDetail = () => {
           )}
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
-          <AppealMainInfo data={data} type={'HF'} address={data?.address} />
+          <AppealMainInfo data={data} type={'HF'} address={data?.address} showStaffCounts />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">
           <FilesSection appealId={data?.appealId} userRole={user?.role} register={true} files={data?.files || []} />

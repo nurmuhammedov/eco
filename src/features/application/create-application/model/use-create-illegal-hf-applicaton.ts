@@ -52,6 +52,12 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
               .optional()
               .nullable()
               .transform((val) => (val ? val : null)),
+            // The receipt is proof of the registration fee, which an edit does not repeat.
+            receiptPath: z
+              .string()
+              .optional()
+              .nullable()
+              .transform((val) => (val ? val : null)),
             managerCount: z
               .string({ required_error: 'Majburiy maydon!' })
               .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
@@ -93,6 +99,10 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
       location: '',
       extraArea: '',
       hazardousSubstance: '',
+      hazardousSign: undefined,
+      legalType: undefined,
+      cadastreNumber: '',
+      startedDate: undefined,
       identificationCardPath: undefined,
       receiptPath: undefined,
       insurancePolicyPath: undefined,
@@ -165,6 +175,10 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
         location: getValue(detail.location || ''),
         extraArea: getValue(detail.extraArea || ''),
         hazardousSubstance: getValue(detail.hazardousSubstance || ''),
+        hazardousSign: detail.hazardousSign || undefined,
+        legalType: detail.legalType || undefined,
+        cadastreNumber: getValue(detail.cadastreNumber || ''),
+        startedDate: parseDate(detail.startedDate),
         identificationCardPath: detail.files?.identificationCardPath?.path,
         receiptPath: detail.files?.receiptPath?.path,
         insurancePolicyPath: detail.files?.insurancePolicyPath?.path,

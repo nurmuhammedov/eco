@@ -10,12 +10,15 @@ import {
   stateService,
 } from '@/entities/create-application'
 import { ACCREDITATION_SPHERE_LABELS } from '@/shared/constants/accreditation-spheres'
+import { HF_HAZARDOUS_SIGN_LABELS, HF_LEGAL_TYPE_LABELS } from '@/shared/constants/hf-attributes'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 
 interface Props {
   address: any
   data: any
   isRegister?: boolean
+  /** Staff headcount lives on the registry record, not on the appeal. */
+  showStaffCounts?: boolean
   type: any
 }
 
@@ -77,6 +80,13 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'location',
     'extraArea',
     'hazardousSubstance',
+    'hazardousSign',
+    'legalType',
+    'cadastreNumber',
+    'startedDate',
+    'managerCount',
+    'engineerCount',
+    'workerCount',
     'registryNumber',
     'description',
     // 'sign',
@@ -453,7 +463,7 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
   ISSUE_ACCREDITATION_CERT: ACCREDITATION_FIELDS,
 }
 
-const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) => {
+const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, showStaffCounts = false }) => {
   const { t } = useTranslation()
 
   const serviceName =
@@ -520,6 +530,17 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false }) 
       )}
       {renderRow('extraArea', data?.extraArea)}
       {renderRow('hazardousSubstance', data?.hazardousSubstance)}
+      {renderRow('hazardousSign', HF_HAZARDOUS_SIGN_LABELS[data?.hazardousSign] || data?.hazardousSign)}
+      {renderRow('legalType', HF_LEGAL_TYPE_LABELS[data?.legalType] || data?.legalType)}
+      {renderRow('cadastreNumber', data?.cadastreNumber)}
+      {renderRow('startedDate', data?.startedDate, true)}
+      {showStaffCounts && (
+        <>
+          {renderRow('managerCount', data?.managerCount)}
+          {renderRow('engineerCount', data?.engineerCount)}
+          {renderRow('workerCount', data?.workerCount)}
+        </>
+      )}
       {renderRow('sign', data?.sign)}
 
       {/* Qurilmalar uchun umumiy maydonlar */}

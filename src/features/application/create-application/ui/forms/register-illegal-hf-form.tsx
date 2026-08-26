@@ -18,8 +18,9 @@ import {
 import { Input } from '@/shared/components/ui/input'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
+import { HF_HAZARDOUS_SIGN_OPTIONS, HF_LEGAL_TYPE_OPTIONS } from '@/shared/constants/hf-attributes'
 import { RegisterIllegalHfDTO } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
 import { useRegisterIllegalHf } from '@/features/application/create-application/model/use-create-illegal-hf-applicaton'
 import { NoteForm } from '@/features/application/create-application'
@@ -361,6 +362,87 @@ const RegisterIllegalHfForm = ({ onSubmit, isPending = false }: RegisterIllegalH
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="hazardousSign"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Xavflilik belgilari</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="3xl:w-sm w-full">
+                        <SelectValue placeholder="Xavflilik belgisini tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {HF_HAZARDOUS_SIGN_OPTIONS.map((option) => (
+                          <SelectItem key={option.id} value={option.id} className="max-w-xl">
+                            <span className="block py-1 leading-snug break-words whitespace-normal">{option.name}</span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="legalType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Tasarruf etish (egalik qilish) huquqiy shakli</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="3xl:w-sm w-full">
+                        <SelectValue placeholder="Huquqiy shaklni tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {HF_LEGAL_TYPE_OPTIONS.map((option) => (
+                          <SelectItem key={option.id} value={option.id}>
+                            {option.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="cadastreNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Kadastr raqami</FormLabel>
+                  <FormControl>
+                    <Input className="3xl:w-sm w-full" placeholder="Kadastr raqami" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="startedDate"
+              render={({ field }) => {
+                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+                return (
+                  <FormItem>
+                    <FormLabel required>Foydalanish boshlangan vaqti</FormLabel>
+                    <DatePicker
+                      className="3xl:w-sm w-full"
+                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                      onChange={field.onChange}
+                      placeholder="Sanani tanlang"
+                      disableStrategy="after"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
 
             {isUpdate && (
               <>
@@ -437,7 +519,7 @@ const RegisterIllegalHfForm = ({ onSubmit, isPending = false }: RegisterIllegalH
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
+                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi
                     </FormLabel>
                     <FormControl>

@@ -1,7 +1,9 @@
 import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { format } from 'date-fns'
 import { z } from 'zod'
+import { HfHazardousSign, HfLegalType } from '@/shared/constants/hf-attributes'
 import { HFSphereEnum } from '@/entities/create-application'
 
 export const RegisterIllegalHfBaseSchema = z.object({
@@ -34,12 +36,17 @@ export const RegisterIllegalHfBaseSchema = z.object({
   location: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
   extraArea: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
   hazardousSubstance: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  hazardousSign: z.nativeEnum(HfHazardousSign, { required_error: FORM_ERROR_MESSAGES.required }),
+  legalType: z.nativeEnum(HfLegalType, { required_error: FORM_ERROR_MESSAGES.required }),
+  cadastreNumber: z
+    .string({ required_error: FORM_ERROR_MESSAGES.required })
+    .trim()
+    .min(1, FORM_ERROR_MESSAGES.required)
+    .max(50, FORM_ERROR_MESSAGES.invalid),
+  // LocalDate on the server: an ISO datetime would not parse.
+  startedDate: z.date({ required_error: FORM_ERROR_MESSAGES.required }).transform((date) => format(date, 'yyyy-MM-dd')),
   identificationCardPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  receiptPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
+  receiptPath: z.string({ required_error: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
   insurancePolicyPath: z
     .string()
     .optional()
