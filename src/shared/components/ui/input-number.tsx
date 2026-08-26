@@ -1,6 +1,6 @@
 import { cn } from '@/shared/lib/utils'
 import { Input } from '@/shared/components/ui/input'
-import React, { ChangeEvent, forwardRef, InputHTMLAttributes, useCallback, useMemo } from 'react'
+import React, { ChangeEvent, forwardRef, InputHTMLAttributes, useCallback, useMemo, useState } from 'react'
 import { FieldPath, FieldValues, useController, UseControllerProps } from 'react-hook-form'
 
 export interface BaseNumberInputProps
@@ -69,31 +69,33 @@ function InputNumber<
     [min, max, field.value, error]
   )
 
+  /**
+   * What is on screen while typing, which is not always what the form holds.
+   * "2." parses to 2, and rendering the parsed number back would swallow the
+   * dot the moment it is typed - making decimals impossible to enter at all.
+   * The draft holds those in-between states and is dropped on blur.
+   */
+  const [draft, setDraft] = useState<string | null>(null)
+
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value
+
+      // Reject the keystroke rather than the whole value: a stray letter should
+      // leave what was already typed alone.
+      if (newValue && !validationRegex.test(newValue)) return
+
+      setDraft(newValue)
 
       if (!newValue) {
         field.onChange(undefined)
         return
       }
 
-      if (validationRegex.test(newValue)) {
-        e.target.value = newValue
-
-        const numberValue = parseFloat(newValue)
-
-        if (!isNaN(numberValue)) {
-          field.onChange(numberValue)
-        } else if (newValue === '-' && allowNegative) {
-          e.target.value = '-'
-        } else if (newValue === '.' && allowDecimals) {
-          e.target.value = '0.'
-          field.onChange(0)
-        }
-      }
+      const numberValue = parseFloat(newValue)
+      field.onChange(isNaN(numberValue) ? undefined : numberValue)
     },
-    [validationRegex, field, allowNegative, allowDecimals]
+    [validationRegex, field]
   )
 
   // Fokus yo'qolganda qiymatni formatlash
@@ -102,35 +104,24 @@ function InputNumber<
       field.onBlur()
 
       const inputValue = e.target.value
+      const numberValue = parseFloat(inputValue)
 
-      if (inputValue && inputValue !== '-' && inputValue !== '.') {
-        const numberValue = parseFloat(inputValue)
+      // Dropping the draft hands the display back to the form value, so the
+      // clamped and rounded number is what the user is left looking at.
+      setDraft(null)
 
-        if (!isNaN(numberValue)) {
-          let finalValue = numberValue
-
-          // Cheklovlarni qo'llash
-          if (min !== undefined && numberValue < min) {
-            finalValue = min
-          }
-
-          if (max !== undefined && numberValue > max) {
-            finalValue = max
-          }
-
-          if (allowDecimals && decimalPlaces !== undefined) {
-            finalValue = Number(finalValue.toFixed(decimalPlaces))
-          }
-
-          if (finalValue !== numberValue) {
-            field.onChange(finalValue)
-            e.target.value = finalValue.toString()
-          }
-        }
-      } else if (inputValue === '-' || inputValue === '.' || inputValue === '0.') {
-        e.target.value = ''
+      if (isNaN(numberValue)) {
         field.onChange(undefined)
+        return
       }
+
+      let finalValue = numberValue
+
+      if (min !== undefined && finalValue < min) finalValue = min
+      if (max !== undefined && finalValue > max) finalValue = max
+      if (allowDecimals && decimalPlaces !== undefined) finalValue = Number(finalValue.toFixed(decimalPlaces))
+
+      if (finalValue !== numberValue) field.onChange(finalValue)
     },
     [field, min, max, allowDecimals, decimalPlaces]
   )
@@ -157,7 +148,8 @@ function InputNumber<
           newValue = Number(newValue.toFixed(decimalPlaces))
         }
 
-        e.currentTarget.value = newValue.toString()
+        // The arrows produce a settled number, so the draft has nothing to hold.
+        setDraft(null)
         field.onChange(newValue)
       }
     },
@@ -165,11 +157,11 @@ function InputNumber<
   )
 
   const formatInputValue = useCallback(() => {
-    if (field.value === undefined || field.value === null) {
-      return ''
-    }
-    return field.value.toString()
-  }, [field.value])
+    if (draft !== null) return draft
+    if (field.value === undefined || field.value === null) return ''
+
+    return String(field.value)
+  }, [draft, field.value])
 
   return (
     <Input

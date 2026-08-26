@@ -61,7 +61,9 @@ function AlertDialogContent({
         {...props}
       >
         {header}
-        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">{body}</div>
+        {/* A confirmation is a title and two buttons. Rendering the body anyway
+            leaves an empty bordered strip between them. */}
+        {body.length > 0 && <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">{body}</div>}
         {footer}
       </AlertDialogPrimitive.Content>
     </AlertDialogPortal>

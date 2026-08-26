@@ -1,5 +1,6 @@
 export const FORM_ERROR_MESSAGES = {
   required: 'Majburiy maydon!',
+  invalid: 'Kiritilgan ma’lumot yaroqli emas!',
   fio: 'F.I.Sh.ni kiritish majburiy',
   position: 'Lavozimni tanlash majburiy',
   pin: 'JSHSHIR 14 ta raqamdan iborat bo‘lishi kerak',

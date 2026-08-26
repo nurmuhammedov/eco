@@ -105,9 +105,11 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
             aria-label="O‘chirish"
             className={cn(
               'flex items-center justify-center rounded p-1 transition-colors focus:outline-none',
+              // Destructive is the one row action that should read as such
+              // before it is clicked, not only in the dialog that follows.
               variant === 'outline'
                 ? 'h-8 w-8 border border-red-200 text-red-500 hover:border-red-300 hover:bg-red-50 hover:text-red-600'
-                : 'hover:bg-neutral-250'
+                : 'text-red-500 hover:bg-red-50 hover:text-red-600'
             )}
           >
             <span className="flex size-5 items-center justify-center">

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
@@ -13,27 +13,42 @@ import useAdd from '@/shared/hooks/api/useAdd'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/shared/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import { cadastreDataSchema, CadastreDataFields } from './components/cadastre-data-fields'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const schema = z.object({
-  attributeFile: z.string().min(1, 'Fayl yuklash majburiy'),
-  passportFile: z.string().min(1, 'Fayl yuklash majburiy'),
+  attributeFile: z.string().min(1, FORM_ERROR_MESSAGES.required),
+  passportFile: z.string().min(1, FORM_ERROR_MESSAGES.required),
   parentRequestNumber: z.string().optional(),
   cadastreData: cadastreDataSchema,
 })
 
+// A STIR is exactly nine digits; anything else is the schema's business rather
+// than a toast that leaves the field looking valid.
+const searchSchema = z.object({
+  stir: z
+    .string({ required_error: FORM_ERROR_MESSAGES.required })
+    .min(1, FORM_ERROR_MESSAGES.required)
+    .regex(/^\d{9}$/, FORM_ERROR_MESSAGES.invalid),
+})
+
 type FormValues = z.infer<typeof schema>
+type SearchValues = z.infer<typeof searchSchema>
 
 export default function CadastreAdd() {
   const navigate = useNavigate()
 
   const { mutate: createCadastre } = useAdd<any, any, any>('/cadastre-passports')
 
-  const [stir, setStir] = useState('')
   const [searchedStir, setSearchedStir] = useState<string | null>(null)
+
+  const searchForm = useForm<SearchValues>({
+    resolver: zodResolver(searchSchema),
+    defaultValues: { stir: '' },
+  })
 
   const {
     data: legalInfo,
@@ -51,19 +66,22 @@ export default function CadastreAdd() {
     },
   })
 
-  const handleSearch = () => {
-    if (stir.length === 9) {
-      setSearchedStir(stir)
-    } else {
-      toast.warning('STIR 9 ta raqamdan iborat bo‘lishi kerak.')
-    }
-  }
+  const handleSearch = ({ stir }: SearchValues) => setSearchedStir(stir)
 
   const handleClearSearch = () => {
-    setStir('')
     setSearchedStir(null)
+    searchForm.reset({ stir: '' })
     form.reset()
   }
+
+  /**
+   * A TIN that no organisation answers to is not a valid entry either, so it is
+   * reported on the field rather than left to a toast the user has to connect
+   * back to the input.
+   */
+  useEffect(() => {
+    if (isLegalInfoError) searchForm.setError('stir', { message: FORM_ERROR_MESSAGES.invalid })
+  }, [isLegalInfoError, searchForm])
 
   const onSubmit = (data: FormValues) => {
     createCadastre(
@@ -86,37 +104,49 @@ export default function CadastreAdd() {
   const hasLegalInfo = !!legalInfo && !isLegalInfoError
 
   return (
-    <div className="space-y-4">
-      <GoBack title="TXYZ kadastr qo'shish" />
+    <div className="space-y-4 pb-4">
+      <GoBack title="TXYZ kadastr qo‘shish" />
 
       <Card>
         <CardHeader>
           <CardTitle>Tashkilotni qidirish</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-start space-x-4">
-            <Input
-              placeholder="Tashkilot STIRini kiriting..."
-              value={stir}
-              onChange={(e) => setStir(e.target.value)}
-              disabled={hasLegalInfo || isLegalInfoLoading}
-              maxLength={9}
-            />
-            {hasLegalInfo ? (
-              <Button variant="destructive" onClick={handleClearSearch} className="w-40">
-                O‘chirish
-              </Button>
-            ) : (
-              <Button
-                onClick={handleSearch}
-                disabled={isLegalInfoLoading}
-                className="w-40"
-                loading={isLegalInfoLoading}
-              >
-                <Search className="mr-2 h-4 w-4" /> Qidirish
-              </Button>
-            )}
-          </div>
+          <Form {...searchForm}>
+            {/* A form, so Enter searches - a lone button next to an input does not. */}
+            <form onSubmit={searchForm.handleSubmit(handleSearch)} className="flex items-start gap-4">
+              <FormField
+                control={searchForm.control}
+                name="stir"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <Input
+                        placeholder="Tashkilot STIRini kiriting..."
+                        inputMode="numeric"
+                        maxLength={9}
+                        disabled={hasLegalInfo || isLegalInfoLoading}
+                        {...field}
+                        // Letters would pass the length check and 404 on the server.
+                        onChange={(event) => field.onChange(event.target.value.replace(/\D/g, ''))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {hasLegalInfo ? (
+                <Button type="button" variant="destructive" onClick={handleClearSearch} className="w-40">
+                  O‘chirish
+                </Button>
+              ) : (
+                <Button type="submit" disabled={isLegalInfoLoading} className="w-40" loading={isLegalInfoLoading}>
+                  <Search className="mr-2 h-4 w-4" /> Qidirish
+                </Button>
+              )}
+            </form>
+          </Form>
         </CardContent>
       </Card>
 
@@ -142,7 +172,8 @@ export default function CadastreAdd() {
                 <CardTitle>Kerakli hujjatlarni yuklash</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {/* Three fields in a four-column grid left a dead quarter on the right. */}
+                <div className="grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-2 lg:grid-cols-3">
                   <FormField
                     control={form.control}
                     name="attributeFile"
@@ -192,8 +223,8 @@ export default function CadastreAdd() {
             </Card>
 
             <DetailCardAccordion defaultValue={['cadastre-data']}>
-              <DetailCardAccordion.Item value="cadastre-data" title="TXYZ kadastr atributiv (tavsiflovchi) ma’lumotlar">
-                <div className="pt-2">
+              <DetailCardAccordion.Item value="cadastre-data" title="TXYZ kadastr atributiv ma’lumotlari">
+                <div className="pt-2 pb-5">
                   <CadastreDataFields control={form.control} prefix="cadastreData." />
                 </div>
               </DetailCardAccordion.Item>

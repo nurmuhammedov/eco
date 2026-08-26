@@ -9,7 +9,6 @@ import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { Button } from '@/shared/components/ui/button'
 import GoBack from '@/shared/components/common/go-back'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
 import { Accordion } from '@/shared/components/ui/accordion'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
@@ -22,25 +21,33 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { StatusBadge } from './cadastre-list'
 import { CadastreEditModal } from './components/cadastre-edit-modal'
-import { Edit2 } from 'lucide-react'
+import { Edit2, FileQuestion, Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { EmptyValue } from '@/shared/components/common/empty-value'
+import { FVV_GROUPS, SES_GROUPS, reviewDefaults, reviewShape, toReviewPayload } from '../model/review-fields'
+import { FVV_TIN, SES_TIN, isCommitteeUser, isFvvUser, isSesUser } from '../model/organizations'
+import { ReviewDataFields } from './components/review-data-fields'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
+// FVV and SES fill their attributive tables while signing, so the review fields
+// ride along with the conclusion. Only the conclusion and its file are required.
 const fvvSchema = z.object({
-  conclusion: z.string().min(1, 'Majburiy maydon!'),
-  file: z.string().min(1, 'Majburiy maydon!'),
+  conclusion: z.string().min(1, FORM_ERROR_MESSAGES.required),
+  file: z.string().min(1, FORM_ERROR_MESSAGES.required),
+  ...reviewShape(FVV_GROUPS),
 })
 const sesSchema = z.object({
-  conclusion: z.string().min(1, 'Majburiy maydon!'),
-  file: z.string().min(1, 'Majburiy maydon!'),
+  conclusion: z.string().min(1, FORM_ERROR_MESSAGES.required),
+  file: z.string().min(1, FORM_ERROR_MESSAGES.required),
+  ...reviewShape(SES_GROUPS),
 })
 const committeeSchema = z.object({
-  conclusion: z.string().min(1, 'Majburiy maydon!'),
-  file: z.string().min(1, 'Majburiy maydon!'),
+  conclusion: z.string().min(1, FORM_ERROR_MESSAGES.required),
+  file: z.string().min(1, FORM_ERROR_MESSAGES.required),
 })
 
 const actionSchema = z.object({
-  conclusion: z.string().min(1, 'Majburiy maydon!'),
+  conclusion: z.string().min(1, FORM_ERROR_MESSAGES.required),
 })
 
 type FvvFormValues = z.infer<typeof fvvSchema>
@@ -93,8 +100,8 @@ export default function CadastreDetail() {
 
   const { data: preparerInfo } = useData<any>(`/users/legal/${item?.preparerTin}`, !!item?.preparerTin)
   const { data: customerInfo } = useData<any>(`/users/legal/${item?.customerTin}`, !!item?.customerTin)
-  const { data: fvvInfo } = useData<any>('/users/legal/201862006')
-  const { data: sesInfo } = useData<any>('/users/legal/200794614')
+  const { data: fvvInfo } = useData<any>(`/users/legal/${FVV_TIN}`)
+  const { data: sesInfo } = useData<any>(`/users/legal/${SES_TIN}`)
 
   const fvvReview = item?.reviews?.find((r: any) => r.organizationType === 'FVV')
   const sesReview = item?.reviews?.find((r: any) => r.organizationType === 'SES')
@@ -121,20 +128,43 @@ export default function CadastreDetail() {
     },
   })
 
+  // One endpoint per organisation: organization-sign was withdrawn once FVV and
+  // SES started submitting different attributive tables.
   const {
-    error: orgError,
-    isLoading: isOrgEimzoLoading,
-    documentUrl: orgDocumentUrl,
-    isModalOpen: isOrgModalOpen,
-    isPdfLoading: isOrgPdfLoading,
-    handleCloseModal: handleCloseOrgModal,
-    handleCreateApplication: handleCreateOrgApplication,
-    submitApplicationMetaData: submitOrgApplicationMetaData,
+    error: fvvError,
+    isLoading: isFvvEimzoLoading,
+    documentUrl: fvvDocumentUrl,
+    isModalOpen: isFvvEimzoModalOpen,
+    isPdfLoading: isFvvPdfLoading,
+    handleCloseModal: handleCloseFvvEimzoModal,
+    handleCreateApplication: handleCreateFvvApplication,
+    submitApplicationMetaData: submitFvvApplicationMetaData,
   } = useEimzo({
     pdfEndpoint: `/cadastre-passports/${id}/preview-pdf`,
     pdfMethod: 'get',
-    submitEndpoint: `/cadastre-passports/${id}/organization-sign`,
-    successMessage: 'Tashkilot tomonidan muvaffaqiyatli imzolandi!',
+    submitEndpoint: `/cadastre-passports/${id}/fvv-sign`,
+    successMessage: 'FVV tomonidan muvaffaqiyatli imzolandi!',
+    queryKey: 'cadastre-passports',
+    transformSubmitPayload: (dto, sign, filePath) => {
+      const { signAction, ...restDto } = dto || {}
+      return { dto: restDto, signAction, sign, filePath }
+    },
+  })
+
+  const {
+    error: sesError,
+    isLoading: isSesEimzoLoading,
+    documentUrl: sesDocumentUrl,
+    isModalOpen: isSesEimzoModalOpen,
+    isPdfLoading: isSesPdfLoading,
+    handleCloseModal: handleCloseSesEimzoModal,
+    handleCreateApplication: handleCreateSesApplication,
+    submitApplicationMetaData: submitSesApplicationMetaData,
+  } = useEimzo({
+    pdfEndpoint: `/cadastre-passports/${id}/preview-pdf`,
+    pdfMethod: 'get',
+    submitEndpoint: `/cadastre-passports/${id}/ses-sign`,
+    successMessage: 'SES tomonidan muvaffaqiyatli imzolandi!',
     queryKey: 'cadastre-passports',
     transformSubmitPayload: (dto, sign, filePath) => {
       const { signAction, ...restDto } = dto || {}
@@ -166,11 +196,11 @@ export default function CadastreDetail() {
   // Forms
   const fvvForm = useForm<FvvFormValues>({
     resolver: zodResolver(fvvSchema),
-    defaultValues: { conclusion: '', file: '' },
+    defaultValues: { conclusion: '', file: '', ...reviewDefaults(FVV_GROUPS) },
   })
   const sesForm = useForm<SesFormValues>({
     resolver: zodResolver(sesSchema),
-    defaultValues: { conclusion: '', file: '' },
+    defaultValues: { conclusion: '', file: '', ...reviewDefaults(SES_GROUPS) },
   })
   const committeeForm = useForm<CommitteeFormValues>({
     resolver: zodResolver(committeeSchema),
@@ -178,31 +208,48 @@ export default function CadastreDetail() {
   })
 
   if (isLoading) {
-    return <div className="text-muted-foreground p-8 text-center">Yuklanmoqda...</div>
-  }
-
-  if (!item) {
     return (
-      <div className="text-muted-foreground p-8 text-center">
-        Hujjat topilmadi. <Button onClick={() => navigate(-1)}>Orqaga</Button>
+      <div className="flex min-h-[60vh] items-center justify-center" aria-busy="true">
+        <Loader2 className="size-6 animate-spin text-neutral-400" />
+        <span className="sr-only">Yuklanmoqda</span>
       </div>
     )
   }
 
-  const userTinOrPin = String(user?.tinOrPin || '')
-  const isFVV = userTinOrPin === '201862006' && user?.role === UserRoles.LEGAL
-  const isSES = userTinOrPin === '200794614' && user?.role === UserRoles.LEGAL
-  const isCommittee = [UserRoles.MANAGER, UserRoles.CHAIRMAN, UserRoles.ADMIN].includes(user?.role as UserRoles)
+  if (!item) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
+        <div className="flex size-12 items-center justify-center rounded-full bg-neutral-100">
+          <FileQuestion className="size-6 text-neutral-400" />
+        </div>
+        <div className="space-y-1">
+          <p className="font-medium text-neutral-900">Hujjat topilmadi</p>
+          <p className="max-w-sm text-sm text-neutral-500">
+            Hujjat o‘chirilgan bo‘lishi yoki sizda unga kirish huquqi bo‘lmasligi mumkin.
+          </p>
+        </div>
+        <Button variant="outline" onClick={() => navigate('/cadastre-passport')}>
+          Ro‘yxatga qaytish
+        </Button>
+      </div>
+    )
+  }
+
+  const isFVV = isFvvUser(user)
+  const isSES = isSesUser(user)
+  const isCommittee = isCommitteeUser(user)
 
   const handleFvvApprove = async (isReject = false) => {
     const isValid = await fvvForm.trigger()
     if (!isValid) return
-    const fvvConclusion = fvvForm.watch('conclusion')
-    const file = fvvForm.watch('file')
 
-    handleCreateOrgApplication({
-      conclusion: fvvConclusion,
-      conclusionFilePath: file,
+    const values = fvvForm.getValues()
+
+    handleCreateFvvApplication({
+      conclusion: values.conclusion,
+      conclusionFilePath: values.file,
+      // A rejection carries no table: the object is not being registered.
+      ...(isReject ? {} : toReviewPayload(FVV_GROUPS, values)),
       signAction: isReject ? 'REJECTED' : 'APPROVED',
     })
   }
@@ -210,12 +257,13 @@ export default function CadastreDetail() {
   const handleSesApprove = async (isReject = false) => {
     const isValid = await sesForm.trigger()
     if (!isValid) return
-    const sesConclusion = sesForm.watch('conclusion')
-    const file = sesForm.watch('file')
 
-    handleCreateOrgApplication({
-      conclusion: sesConclusion,
-      conclusionFilePath: file,
+    const values = sesForm.getValues()
+
+    handleCreateSesApplication({
+      conclusion: values.conclusion,
+      conclusionFilePath: values.file,
+      ...(isReject ? {} : toReviewPayload(SES_GROUPS, values)),
       signAction: isReject ? 'REJECTED' : 'APPROVED',
     })
   }
@@ -234,7 +282,7 @@ export default function CadastreDetail() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pb-4">
       <div className="flex items-start justify-between gap-4">
         <GoBack title={`Hujjat tafsiloti ${item.registryNumber ? `(${item.registryNumber})` : ''}`} />
         <div className="flex flex-wrap items-center justify-end gap-2">
@@ -355,14 +403,24 @@ export default function CadastreDetail() {
           />
         </DetailCardAccordion.Item>
 
-        <DetailCardAccordion.Item value="cadastre-data" title="TXYZ Kadastr atributiv (tavsiflovchi) ma’lumotlari">
-          <div className="mb-4 flex justify-end">
-            {item.status === 'NEW' && String(user?.tinOrPin) === String(item.customerTin) && (
-              <Button variant="outline" size="sm" onClick={() => setEditModalOpen(true)}>
-                <Edit2 className="mr-2 h-4 w-4" /> Tahrirlash
+        <DetailCardAccordion.Item
+          value="cadastre-data"
+          title="TXYZ Kadastr atributiv ma’lumotlari"
+          action={
+            item.status === 'NEW' && String(user?.tinOrPin) === String(item.customerTin) ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-8 text-neutral-600 hover:bg-white/70 hover:text-neutral-900"
+                title="Tahrirlash"
+                onClick={() => setEditModalOpen(true)}
+              >
+                <Edit2 className="size-4" />
+                <span className="sr-only">Tahrirlash</span>
               </Button>
-            )}
-          </div>
+            ) : null
+          }
+        >
           {item ? (
             <>
               <DetailRow title="Obyekt nomi" value={item.name || '-'} />
@@ -372,19 +430,23 @@ export default function CadastreDetail() {
               <DetailRow title="Koordinatasi (Y)" value={item.longitude || '-'} />
               <DetailRow title="Yer uchastkasi kadastr raqami" value={item.landCadastreNumber || '-'} />
               <DetailRow
-                title="Kadastr ro'yxatidan o'tkazilgan sana"
+                title="Kadastr ro‘yxatidan o‘tkazilgan sana"
                 value={
                   item.cadastreRegistrationDate ? format(new Date(item.cadastreRegistrationDate), 'dd.MM.yyyy') : '-'
                 }
               />
               <DetailRow
-                title="Kadastr ro'yxatidan o'tkazilgan raqami"
+                title="Kadastr ro‘yxatidan o‘tkazilgan raqami"
                 value={item.cadastreRegistrationNumber || '-'}
               />
               <DetailRow title="Umumiy maydoni (gektar)" value={item.landArea || '-'} />
               <DetailRow title="Vazifalari" value={item.purpose || '-'} />
               <DetailRow title="Moddaning nomi" value={item.substance || '-'} />
-              <DetailRow title="Hozirgi kundagi holati" value={item.status || '-'} />
+              {/* Not `status`: that one is the passport's place in the workflow. */}
+              <DetailRow
+                title="Hozirgi kundagi holati"
+                value={item.cadastreDataStatus ? <StatusBadge status={item.cadastreDataStatus} /> : <EmptyValue />}
+              />
               <DetailRow
                 title="Ekspluatatsiyaga tushirilgan sanasi"
                 value={item.exploitationDate ? format(new Date(item.exploitationDate), 'dd.MM.yyyy') : '-'}
@@ -395,17 +457,17 @@ export default function CadastreDetail() {
               <DetailRow title="Aholi yashash punktigacha masofa (km)" value={item.distanceToResidence || '-'} />
               <DetailRow title="Eng yaqin obyektlar (metr)" value={item.distanceToNearestObject || '-'} />
               <DetailRow
-                title="Yong'in xavfsizligi bo'limigacha masofa (km)"
+                title="Yong‘in xavfsizligi bo‘limigacha masofa (km)"
                 value={item.distanceToFireDepartment || '-'}
               />
-              <DetailRow title="Yong'in o'chirish texnikasi" value={item.firefightingEquipment || '-'} />
+              <DetailRow title="Yong‘in o‘chirish texnikasi" value={item.firefightingEquipment || '-'} />
               <DetailRow title="Zararlanish maydoni (metr kv)" value={item.damageArea || '-'} />
               <DetailRow title="Texnogen xavf turi" value={item.dominantHazardType || '-'} />
-              <DetailRow title="Umumiy bahosi (so'm)" value={item.estimatedValue || '-'} />
-              <DetailRow title="Salbiy ta'sir ko'rsatuvchi omillar" value={item.healthRiskFactor || '-'} />
+              <DetailRow title="Umumiy bahosi (so‘m)" value={item.estimatedValue || '-'} />
+              <DetailRow title="Salbiy ta’sir ko‘rsatuvchi omillar" value={item.healthRiskFactor || '-'} />
             </>
           ) : (
-            <div className="text-muted-foreground p-4 text-center">Ma'lumotlar mavjud emas</div>
+            <div className="text-muted-foreground p-4 text-center">Ma’lumotlar mavjud emas</div>
           )}
         </DetailCardAccordion.Item>
 
@@ -414,7 +476,7 @@ export default function CadastreDetail() {
             title="Tashkilot nomi"
             value={fvvInfo?.name || item.fvvName || 'O‘zbekiston Respublikasi Favqulodda vaziyatlar vazirligi'}
           />
-          <DetailRow title="Tashkilot STIR" value={fvvInfo?.identity || item.fvvStir || '201862006'} />
+          <DetailRow title="Tashkilot STIR" value={fvvInfo?.identity || item.fvvStir || FVV_TIN} />
           <DetailRow
             title="Tashkilot rahbari F.I.SH."
             value={fvvInfo?.directorName || item.fvvBoss || 'Ikramov Azizbek Israilovich'}
@@ -441,7 +503,7 @@ export default function CadastreDetail() {
               sesInfo?.name || item.sesName || 'Sanitariya-epidemiologik osoyishtalik va jamoat salomatligi xizmati'
             }
           />
-          <DetailRow title="Tashkilot STIR" value={sesInfo?.identity || item.sesStir || '200794614'} />
+          <DetailRow title="Tashkilot STIR" value={sesInfo?.identity || item.sesStir || SES_TIN} />
           <DetailRow
             title="Tashkilot rahbari F.I.SH."
             value={sesInfo?.directorName || item.sesBoss || 'Yusupaliyev Baxodir Qahramonovich'}
@@ -462,7 +524,6 @@ export default function CadastreDetail() {
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="committee" title="Qo‘mita ma’lumotlari">
-          <DetailRow title="Ijrochi mas’ul F.I.SH." value={committeeReview ? item.committeeBoss : <EmptyValue />} />
           <DetailRow
             title="Ijrochi mas’ul xulosasi"
             value={committeeReview ? committeeReview.conclusion : <EmptyValue />}
@@ -489,13 +550,23 @@ export default function CadastreDetail() {
       />
 
       <ApplicationModal
-        error={orgError}
-        isOpen={isOrgModalOpen}
-        isLoading={isOrgEimzoLoading}
-        documentUrl={orgDocumentUrl!}
-        onClose={handleCloseOrgModal}
-        isPdfLoading={isOrgPdfLoading}
-        submitApplicationMetaData={submitOrgApplicationMetaData}
+        error={fvvError}
+        isOpen={isFvvEimzoModalOpen}
+        isLoading={isFvvEimzoLoading}
+        documentUrl={fvvDocumentUrl!}
+        onClose={handleCloseFvvEimzoModal}
+        isPdfLoading={isFvvPdfLoading}
+        submitApplicationMetaData={submitFvvApplicationMetaData}
+      />
+
+      <ApplicationModal
+        error={sesError}
+        isOpen={isSesEimzoModalOpen}
+        isLoading={isSesEimzoLoading}
+        documentUrl={sesDocumentUrl!}
+        onClose={handleCloseSesEimzoModal}
+        isPdfLoading={isSesPdfLoading}
+        submitApplicationMetaData={submitSesApplicationMetaData}
       />
 
       <ApplicationModal
@@ -541,7 +612,7 @@ export default function CadastreDetail() {
         </DialogContent>
       </Dialog>
       <Dialog open={fvvModalOpen} onOpenChange={setFvvModalOpen}>
-        <DialogContent>
+        <DialogContent size={fvvSignAction === 'APPROVED' ? 'full' : 'md'}>
           <DialogHeader>
             <DialogTitle>{fvvSignAction === 'APPROVED' ? 'Tasdiqlash' : 'Rad etish'}</DialogTitle>
           </DialogHeader>
@@ -573,11 +644,18 @@ export default function CadastreDetail() {
                   <FormItem>
                     <FormLabel required>Xulosa fayli</FormLabel>
                     <FormControl>
-                      <InputFile name={field.name as 'file'} form={fvvForm} uploadEndpoint="/attachments/accidents" />
+                      <InputFile
+                        name={field.name as 'file'}
+                        form={fvvForm}
+                        uploadEndpoint="/attachments/cadastre-passports"
+                      />
                     </FormControl>
                   </FormItem>
                 )}
               />
+
+              {fvvSignAction === 'APPROVED' && <ReviewDataFields control={fvvForm.control} groups={FVV_GROUPS} />}
+
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setFvvModalOpen(false)}>
                   Bekor qilish
@@ -592,7 +670,7 @@ export default function CadastreDetail() {
       </Dialog>
 
       <Dialog open={sesModalOpen} onOpenChange={setSesModalOpen}>
-        <DialogContent>
+        <DialogContent size={sesSignAction === 'APPROVED' ? 'xl' : 'md'}>
           <DialogHeader>
             <DialogTitle>{sesSignAction === 'APPROVED' ? 'Tasdiqlash' : 'Rad etish'}</DialogTitle>
           </DialogHeader>
@@ -624,11 +702,18 @@ export default function CadastreDetail() {
                   <FormItem>
                     <FormLabel required>Xulosa fayli</FormLabel>
                     <FormControl>
-                      <InputFile name={field.name as 'file'} form={sesForm} uploadEndpoint="/attachments/accidents" />
+                      <InputFile
+                        name={field.name as 'file'}
+                        form={sesForm}
+                        uploadEndpoint="/attachments/cadastre-passports"
+                      />
                     </FormControl>
                   </FormItem>
                 )}
               />
+
+              {sesSignAction === 'APPROVED' && <ReviewDataFields control={sesForm.control} groups={SES_GROUPS} />}
+
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setSesModalOpen(false)}>
                   Bekor qilish

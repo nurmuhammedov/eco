@@ -8,6 +8,7 @@ import { DataTable, DataTableRowActions } from '@/shared/components/common/data-
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import useDelete from '@/shared/hooks/api/useDelete'
+import { isFvvUser, isSesUser } from '../model/organizations'
 
 export const StatusBadge = ({ status }: { status: string }) => {
   const map: Record<string, { label: string; className: string }> = {
@@ -28,6 +29,13 @@ export const StatusBadge = ({ status }: { status: string }) => {
     COMPLETED: { label: 'Yakunlangan', className: 'bg-green-100 text-green-800 hover:bg-green-200 border-transparent' },
     APPROVED: { label: 'Tasdiqlangan', className: 'bg-green-100 text-green-800 hover:bg-green-200 border-transparent' },
     REJECTED: { label: 'Rad etildi', className: 'bg-red-100 text-red-800 hover:bg-red-200 border-transparent' },
+    // The object's own state, which shares the `status` name with the workflow
+    // one in the API response.
+    ACTIVE: { label: 'Faol', className: 'bg-green-100 text-green-800 hover:bg-green-200 border-transparent' },
+    INACTIVE: {
+      label: 'To‘xtatilgan',
+      className: 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border-transparent',
+    },
   }
   const match = map[status] || { label: status, className: 'bg-gray-100 text-gray-800 border-transparent' }
   return (
@@ -54,9 +62,8 @@ export default function CadastreList() {
   const { mutate: deleteCadastre } = useDelete('/cadastre-passports')
 
   const isLegal = user?.role === UserRoles.LEGAL
-  const userTinOrPin = String(user?.tinOrPin || '')
-  const isFVV = userTinOrPin === '201862006' && user?.role === UserRoles.LEGAL
-  const isSES = userTinOrPin === '200794614' && user?.role === UserRoles.LEGAL
+  const isFVV = isFvvUser(user)
+  const isSES = isSesUser(user)
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
@@ -140,7 +147,7 @@ export default function CadastreList() {
         {isLegal && !isFVV && !isSES && (
           <Button onClick={() => navigate('/cadastre-passport/add')}>
             <Plus className="mr-2 h-4 w-4" />
-            TXYZ kadastr qo'shish
+            TXYZ kadastr qo‘shish
           </Button>
         )}
       </div>

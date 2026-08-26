@@ -21,7 +21,7 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
   const queryClient = useQueryClient()
   const { mutate: updateCadastreData, isPending } = useUpdate<any, any, any>(
     '/cadastre-passports',
-    `${cadastreId}/cadastre-data`
+    `${cadastreId}/preparer-cadastre-data`
   )
 
   const form = useForm<z.infer<typeof cadastreDataSchema>>({
@@ -39,9 +39,10 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
         formattedValues.exploitationDate = new Date(formattedValues.exploitationDate)
       }
 
-      if (formattedValues.status !== 'ACTIVE' && formattedValues.status !== 'INACTIVE') {
-        formattedValues.status = ''
-      }
+      // The response names the object's own state `cadastreDataStatus`, while
+      // the update DTO takes it back as `status` - `status` on the way in is
+      // the passport's workflow state and would land in the wrong field.
+      formattedValues.status = formattedValues.cadastreDataStatus ?? ''
 
       form.reset(formattedValues)
     }
@@ -50,7 +51,7 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
   const onSubmit = (data: z.infer<typeof cadastreDataSchema>) => {
     updateCadastreData(data, {
       onSuccess: () => {
-        toast.success("Ma'lumotlar muvaffaqiyatli saqlandi")
+        toast.success('Ma’lumotlar muvaffaqiyatli saqlandi')
         queryClient.invalidateQueries({ queryKey: ['cadastre-passports', cadastreId] })
         onClose()
       },
@@ -61,7 +62,7 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent size="xl">
         <DialogHeader>
-          <DialogTitle>TXYZ kadastr atributiv ma'lumotlarini tahrirlash</DialogTitle>
+          <DialogTitle>TXYZ kadastr atributiv ma’lumotlarini tahrirlash</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form id="cadastre-edit-form" onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-6">
