@@ -3,17 +3,17 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/shared/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { Button } from '@/shared/components/ui/button'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select'
 import { useAuth } from '@/shared/hooks/use-auth'
 import useAdd from '@/shared/hooks/api/useAdd'
 import React from 'react'
+import { useData } from '@/shared/hooks'
 
 const schema = z.object({
   mainInspectorId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
@@ -37,7 +37,9 @@ export const AccidentDecreeModal: React.FC<AccidentDecreeModalProps> = ({
   onSuccess,
 }) => {
   const { user } = useAuth()
-  const { data: inspectors } = useInspectorSelect(true, user?.isSupervisor)
+  const { data: inspectors } = useData<any[]>('/users/office-users/select', !user?.isSupervisor && !!user?.regionId, {
+    regionId: user?.regionId || '',
+  })
   const addMutation = useAdd<FormValues, any, any>(`/accidents/${accidentId}/decree`)
 
   const form = useForm<FormValues>({
