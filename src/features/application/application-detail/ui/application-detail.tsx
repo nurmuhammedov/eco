@@ -6,6 +6,7 @@ import ApplicantDocsTable from '@/features/application/application-detail/ui/par
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { MultiCategoryFiles, multiCategoryFileValue } from './parts/multi-category-files'
 import DetailRow from '@/shared/components/common/detail-row'
 import { Coordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
@@ -37,10 +38,21 @@ const ApplicationDetail = ({
   const isLegalApplication = data?.ownerType == 'LEGAL'
   const defaultDocsTab = getDefaultDocsTab(data?.status)
 
+  const multiCategoryFiles: Record<string, any[]> = data?.multiCategoryFiles || {}
+  const multiCategoryIds = Object.keys(multiCategoryFiles)
+  const hasMultiCategoryFiles = multiCategoryIds.length > 0
+
   return (
     <div className="mt-2 grid grid-cols-1 gap-2">
       <DetailCardAccordion
-        defaultValue={['general', 'appeal_docs', 'employee_list', 'appeal_files', 'appeal_location']}
+        defaultValue={[
+          'general',
+          'appeal_docs',
+          'employee_list',
+          'appeal_files',
+          'appeal_location',
+          ...multiCategoryIds.map(multiCategoryFileValue),
+        ]}
       >
         {!isLegalApplication && (
           <DetailCardAccordion.Item value="applicant_info_individual" title="Arizachi to‘g‘risida ma’lumot">
@@ -104,16 +116,26 @@ const ApplicationDetail = ({
           </Tabs>
         </DetailCardAccordion.Item>
 
-        {data?.files?.length > 0 && (
-          <DetailCardAccordion.Item value="appeal_files" title="Arizaga biriktirilgan fayllar">
-            <FilesSection
-              files={data?.files || []}
-              userRole={userRole}
-              applicationStatus={data?.status}
-              appealId={data?.id}
-              edit={true}
-            />
-          </DetailCardAccordion.Item>
+        {/* A multi-sector facility keeps one attachment set per category. */}
+        {hasMultiCategoryFiles ? (
+          <MultiCategoryFiles
+            multiCategoryFiles={multiCategoryFiles}
+            userRole={userRole}
+            applicationStatus={data?.status}
+            appealId={data?.id}
+          />
+        ) : (
+          data?.files?.length > 0 && (
+            <DetailCardAccordion.Item value="appeal_files" title="Arizaga biriktirilgan fayllar">
+              <FilesSection
+                files={data?.files || []}
+                userRole={userRole}
+                applicationStatus={data?.status}
+                appealId={data?.id}
+                edit={true}
+              />
+            </DetailCardAccordion.Item>
+          )
         )}
 
         {!!currentObjLocation?.length && (

@@ -30,9 +30,37 @@ const Select = ({
     [id, describedBy, invalid]
   )
 
+  /**
+   * A field starts as undefined and receives its value later, which flips Radix
+   * between uncontrolled and controlled. Passing an empty string keeps it on
+   * one side for its whole life.
+   */
+  const controlled = 'value' in props
+
+  /**
+   * Radix mirrors the select into a hidden native one for form submission, and
+   * keys that mirror by the joined option values. Options loaded from the
+   * server arrive after the value does, so the key changes, the mirror
+   * remounts, and the browser fires a change for a value none of its options
+   * carry yet - Radix forwards it as onValueChange(''), wiping a field that had
+   * just been filled from the record.
+   *
+   * An item may never carry an empty value, so '' cannot come from a user
+   * choosing something. Dropping it costs nothing and keeps the loaded value.
+   */
+  const handleValueChange = (next: string) => {
+    if (next === '') return
+
+    props.onValueChange?.(next)
+  }
+
   return (
     <SelectFieldContext.Provider value={field}>
-      <SelectPrimitive.Root {...props} />
+      <SelectPrimitive.Root
+        {...props}
+        {...(controlled ? { value: props.value ?? '' } : {})}
+        onValueChange={handleValueChange}
+      />
     </SelectFieldContext.Provider>
   )
 }

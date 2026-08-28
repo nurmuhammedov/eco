@@ -1,133 +1,73 @@
-import { checkExpiryDate } from '@/shared/lib/zod-helpers'
+import { format } from 'date-fns'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { HFSphere } from '@/shared/types'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
-import { format } from 'date-fns'
 import { z } from 'zod'
 import { HfHazardousSign, HfLegalType } from '@/shared/constants/hf-attributes'
+import { hfAppealFilesSchema } from './hf-appeal-files'
 
 export const HFSphereEnum = z.enum(Object.values(HFSphere) as [string, ...string[]])
 
+export const HF_CATEGORY_MODES = ['SINGLE', 'MULTI'] as const
+
+const { required, invalid } = FORM_ERROR_MESSAGES
+
 const __HFAppealDtoSchema = z.object({
   phoneNumber: z
-    .string({ required_error: 'Majburiy maydon!' })
+    .string({ required_error: required })
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  location: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  categoryId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  hfTypeId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  regionId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  districtId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  address: z.string({ required_error: required }).trim().min(1, required),
+  location: z.string({ required_error: required }).min(1, required),
+  categoryMode: z.enum(HF_CATEGORY_MODES, { required_error: required }),
+  categoryId: z.string().optional(),
+  multiCategoryIds: z.array(z.union([z.string(), z.number()])).default([]),
+  /**
+   * One attachment set per chosen category, keyed by its id. The server takes
+   * this shape whether the facility declares one sector or several.
+   */
+  hfAppealFilesDto: z.record(z.string(), hfAppealFilesSchema),
+  hfTypeId: z.string({ required_error: required }).min(1, required),
+  regionId: z.string({ required_error: required }).min(1, required),
+  districtId: z.string({ required_error: required }).min(1, required),
   upperOrganization: z
     .string()
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  name: z
-    .string({ required_error: 'Majburiy maydon!' })
-    .trim()
-    .min(1, 'Majburiy maydon!')
-    .max(250, 'Kiritilgan maʼlumot yaroqli emas'),
-  extraArea: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  hazardousSubstance: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  hazardousSign: z.nativeEnum(HfHazardousSign, { required_error: FORM_ERROR_MESSAGES.required }),
-  legalType: z.nativeEnum(HfLegalType, { required_error: FORM_ERROR_MESSAGES.required }),
-  cadastreNumber: z
-    .string({ required_error: FORM_ERROR_MESSAGES.required })
-    .trim()
-    .min(1, FORM_ERROR_MESSAGES.required)
-    .max(50, FORM_ERROR_MESSAGES.invalid),
+  name: z.string({ required_error: required }).trim().min(1, required).max(250, invalid),
+  extraArea: z.string({ required_error: required }).trim().min(1, required),
+  hazardousSubstance: z.string({ required_error: required }).trim().min(1, required),
+  hazardousSign: z.nativeEnum(HfHazardousSign, { required_error: required }),
+  legalType: z.nativeEnum(HfLegalType, { required_error: required }),
+  cadastreNumber: z.string({ required_error: required }).trim().min(1, required).max(50, invalid),
   // LocalDate on the server: an ISO datetime would not parse.
-  startedDate: z.date({ required_error: FORM_ERROR_MESSAGES.required }).transform((date) => format(date, 'yyyy-MM-dd')),
-  spheres: z.array(HFSphereEnum, { required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  identificationCardPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  receiptPath: z.string({ required_error: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
-  insurancePolicyPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  insurancePolicyExpiryDate: z.date().optional(),
-  cadastralPassportPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  projectDocumentationPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  licensePath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  licenseExpiryDate: z.date().optional(),
-  expertOpinionPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  appointmentOrderPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  permitPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  permitExpiryDate: z.date().optional(),
-  industrialSafetyDeclarationPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  regulationPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((v) => (v ? v : null)),
-  regulationExpiryDate: z
-    .date()
-    .optional()
-    .nullable()
-    .transform((v) => (v ? v : null)),
-  staffAttestationPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((v) => (v ? v : null)),
-  staffAttestationExpiryDate: z
-    .date()
-    .optional()
-    .nullable()
-    .transform((v) => (v ? v : null)),
-  managerAttestationPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((v) => (v ? v : null)),
-  managerAttestationExpiryDate: z
-    .date()
-    .optional()
-    .nullable()
-    .transform((v) => (v ? v : null)),
+  startedDate: z.date({ required_error: required }).transform((date) => format(date, 'yyyy-MM-dd')),
+  spheres: z.array(HFSphereEnum, { required_error: required }).min(1, required),
 })
 
-export const HFAppealDtoSchema = __HFAppealDtoSchema
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'insurancePolicyPath', 'insurancePolicyExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'licensePath', 'licenseExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'permitPath', 'permitExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'regulationPath', 'regulationExpiryDate'))
-  .superRefine((data: any, ctx: any) =>
-    checkExpiryDate(data, ctx, 'staffAttestationPath', 'staffAttestationExpiryDate')
-  )
-  .superRefine((data: any, ctx: any) =>
-    checkExpiryDate(data, ctx, 'managerAttestationPath', 'managerAttestationExpiryDate')
-  )
+/**
+ * A facility is either single-sector or multi-sector, and each mode validates a
+ * different field. Multi-sector means at least two - one category would be the
+ * single-sector case wearing the wrong label.
+ */
+export const checkCategoryMode = (data: any, ctx: z.RefinementCtx) => {
+  if (data.categoryMode === 'MULTI') {
+    if (!data.multiCategoryIds || data.multiCategoryIds.length < 2) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Kamida ikkita toifa tanlanishi kerak',
+        path: ['multiCategoryIds'],
+      })
+    }
+    return
+  }
+
+  if (!data.categoryId) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: required, path: ['categoryId'] })
+  }
+}
+
+export const HFAppealDtoSchema = __HFAppealDtoSchema.superRefine(checkCategoryMode)

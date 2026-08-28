@@ -534,13 +534,6 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
       {renderRow('legalType', HF_LEGAL_TYPE_LABELS[data?.legalType] || data?.legalType)}
       {renderRow('cadastreNumber', data?.cadastreNumber)}
       {renderRow('startedDate', data?.startedDate, true)}
-      {showStaffCounts && (
-        <>
-          {renderRow('managerCount', data?.managerCount)}
-          {renderRow('engineerCount', data?.engineerCount)}
-          {renderRow('workerCount', data?.workerCount)}
-        </>
-      )}
       {renderRow('sign', data?.sign)}
 
       {/* Qurilmalar uchun umumiy maydonlar */}
@@ -632,7 +625,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
       {isRegister ? renderRow('registryNumber', data?.registryNumber) : null}
 
       {/* Xodimlar */}
-      {(data?.managerCount || data?.engineerCount || data?.workerCount) && (
+      {(type !== 'HF' || showStaffCounts) && (data?.managerCount || data?.engineerCount || data?.workerCount) && (
         <>
           {isAllowed('managerCount') && renderRow('managerCount', data?.managerCount)}
           {isAllowed('engineerCount') && renderRow('engineerCount', data?.engineerCount)}

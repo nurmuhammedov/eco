@@ -16,12 +16,15 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import {
   RegisterIllegalHfDTO,
   RegisterIllegalHfSchema,
-  RegisterIllegalHfBaseSchema,
+  UpdateIllegalHfBaseSchema,
 } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
+import { checkCategoryMode } from '@/entities/create-application/schemas/register-hf.schema'
+import { hfFilesToForm } from '@/entities/create-application/schemas/hf-appeal-files'
+import { HF_CATEGORY_MODE } from '@/features/application/create-application/ui/forms/parts/hf-category-files-section'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { z } from 'zod'
 
 export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
@@ -36,7 +39,9 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
   const form = useForm<RegisterIllegalHfDTO>({
     resolver: zodResolver(
       isUpdate
-        ? RegisterIllegalHfBaseSchema.extend({
+        ? // An edit already knows the applicant, and the relaxed file set drops
+          // the identification card and the fee receipt the registration holds.
+          UpdateIllegalHfBaseSchema.extend({
             phoneNumber: z
               .string()
               .optional()
@@ -47,42 +52,19 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
               .optional()
               .nullable()
               .transform((val) => (val ? val : null)),
-            identificationCardPath: z
-              .string()
-              .optional()
-              .nullable()
-              .transform((val) => (val ? val : null)),
-            // The receipt is proof of the registration fee, which an edit does not repeat.
-            receiptPath: z
-              .string()
-              .optional()
-              .nullable()
-              .transform((val) => (val ? val : null)),
             managerCount: z
-              .string({ required_error: 'Majburiy maydon!' })
-              .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
-              .min(1, 'Majburiy maydon!'),
+              .string({ required_error: FORM_ERROR_MESSAGES.required })
+              .regex(/^\d+$/, { message: FORM_ERROR_MESSAGES.invalid })
+              .min(1, FORM_ERROR_MESSAGES.required),
             engineerCount: z
-              .string({ required_error: 'Majburiy maydon!' })
-              .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
-              .min(1, 'Majburiy maydon!'),
+              .string({ required_error: FORM_ERROR_MESSAGES.required })
+              .regex(/^\d+$/, { message: FORM_ERROR_MESSAGES.invalid })
+              .min(1, FORM_ERROR_MESSAGES.required),
             workerCount: z
-              .string({ required_error: 'Majburiy maydon!' })
-              .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
-              .min(1, 'Majburiy maydon!'),
-          })
-            .superRefine((data: any, ctx: any) =>
-              checkExpiryDate(data, ctx, 'insurancePolicyPath', 'insurancePolicyExpiryDate')
-            )
-            .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'licensePath', 'licenseExpiryDate'))
-            .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'permitPath', 'permitExpiryDate'))
-            .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'regulationPath', 'regulationExpiryDate'))
-            .superRefine((data: any, ctx: any) =>
-              checkExpiryDate(data, ctx, 'staffAttestationPath', 'staffAttestationExpiryDate')
-            )
-            .superRefine((data: any, ctx: any) =>
-              checkExpiryDate(data, ctx, 'managerAttestationPath', 'managerAttestationExpiryDate')
-            )
+              .string({ required_error: FORM_ERROR_MESSAGES.required })
+              .regex(/^\d+$/, { message: FORM_ERROR_MESSAGES.invalid })
+              .min(1, FORM_ERROR_MESSAGES.required),
+          }).superRefine(checkCategoryMode)
         : RegisterIllegalHfSchema
     ),
     defaultValues: {
@@ -103,25 +85,9 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
       legalType: undefined,
       cadastreNumber: '',
       startedDate: undefined,
-      identificationCardPath: undefined,
-      receiptPath: undefined,
-      insurancePolicyPath: undefined,
-      insurancePolicyExpiryDate: undefined,
-      cadastralPassportPath: undefined,
-      projectDocumentationPath: undefined,
-      licensePath: undefined,
-      licenseExpiryDate: undefined,
-      expertOpinionPath: undefined,
-      appointmentOrderPath: undefined,
-      permitPath: undefined,
-      permitExpiryDate: undefined,
-      industrialSafetyDeclarationPath: undefined,
-      regulationPath: undefined,
-      regulationExpiryDate: undefined,
-      staffAttestationPath: undefined,
-      staffAttestationExpiryDate: undefined,
-      managerAttestationPath: undefined,
-      managerAttestationExpiryDate: undefined,
+      categoryMode: undefined,
+      multiCategoryIds: [],
+      hfAppealFilesDto: {},
     },
     mode: 'onChange',
   })
@@ -179,25 +145,9 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
         legalType: detail.legalType || undefined,
         cadastreNumber: getValue(detail.cadastreNumber || ''),
         startedDate: parseDate(detail.startedDate),
-        identificationCardPath: detail.files?.identificationCardPath?.path,
-        receiptPath: detail.files?.receiptPath?.path,
-        insurancePolicyPath: detail.files?.insurancePolicyPath?.path,
-        insurancePolicyExpiryDate: parseDate(detail.files?.insurancePolicyPath?.expiryDate),
-        cadastralPassportPath: detail.files?.cadastralPassportPath?.path,
-        projectDocumentationPath: detail.files?.projectDocumentationPath?.path,
-        licensePath: detail.files?.licensePath?.path,
-        licenseExpiryDate: parseDate(detail.files?.licensePath?.expiryDate),
-        expertOpinionPath: detail.files?.expertOpinionPath?.path,
-        appointmentOrderPath: detail.files?.appointmentOrderPath?.path,
-        permitPath: detail.files?.permitPath?.path,
-        permitExpiryDate: parseDate(detail.files?.permitPath?.expiryDate),
-        industrialSafetyDeclarationPath: detail.files?.industrialSafetyDeclarationPath?.path,
-        regulationPath: detail.files?.regulationPath?.path,
-        regulationExpiryDate: parseDate(detail.files?.regulationPath?.expiryDate),
-        staffAttestationPath: detail.files?.staffAttestationPath?.path,
-        staffAttestationExpiryDate: parseDate(detail.files?.staffAttestationPath?.expiryDate),
-        managerAttestationPath: detail.files?.managerAttestationPath?.path,
-        managerAttestationExpiryDate: parseDate(detail.files?.managerAttestationPath?.expiryDate),
+        categoryMode: detail.multiCategoryIds?.length ? HF_CATEGORY_MODE.MULTI : HF_CATEGORY_MODE.SINGLE,
+        multiCategoryIds: detail.multiCategoryIds?.map(String) || [],
+        hfAppealFilesDto: hfFilesToForm(detail),
         managerCount: detail.managerCount ? detail.managerCount?.toString() : '',
         engineerCount: detail.engineerCount ? detail.engineerCount?.toString() : '',
         workerCount: detail.workerCount ? detail.workerCount?.toString() : '',

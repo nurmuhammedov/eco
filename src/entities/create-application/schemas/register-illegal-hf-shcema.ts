@@ -1,153 +1,79 @@
-import { checkExpiryDate } from '@/shared/lib/zod-helpers'
+import { format } from 'date-fns'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
-import { format } from 'date-fns'
 import { z } from 'zod'
 import { HfHazardousSign, HfLegalType } from '@/shared/constants/hf-attributes'
-import { HFSphereEnum } from '@/entities/create-application'
+import { HFSphereEnum, HF_CATEGORY_MODES, checkCategoryMode } from './register-hf.schema'
+import { hfAppealFilesSchema, hfAppealFilesUpdateSchema } from './hf-appeal-files'
 
-export const RegisterIllegalHfBaseSchema = z.object({
+const { required, invalid } = FORM_ERROR_MESSAGES
+
+const optionalText = () =>
+  z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val ? val : null))
+
+const baseShape = {
   identity: z
-    .string({ required_error: 'Majburiy maydon!' })
+    .string({ required_error: required })
     .length(9, 'STIR 9 ta raqamdan iborat bo‘lishi kerak')
     .regex(/^\d+$/, 'Faqat raqamlar kiritilishi kerak'),
   phoneNumber: z
-    .string({ required_error: 'Majburiy maydon!' })
+    .string({ required_error: required })
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
       message: FORM_ERROR_MESSAGES.phone,
     }),
-  upperOrganization: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  name: z
-    .string({ required_error: 'Majburiy maydon!' })
-    .trim()
-    .min(1, 'Majburiy maydon!')
-    .max(250, 'Kiritilgan maʼlumot yaroqli emas'),
-  categoryId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  hfTypeId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  spheres: z.array(HFSphereEnum, { required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  regionId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  districtId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  location: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  extraArea: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  hazardousSubstance: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  hazardousSign: z.nativeEnum(HfHazardousSign, { required_error: FORM_ERROR_MESSAGES.required }),
-  legalType: z.nativeEnum(HfLegalType, { required_error: FORM_ERROR_MESSAGES.required }),
-  cadastreNumber: z
-    .string({ required_error: FORM_ERROR_MESSAGES.required })
-    .trim()
-    .min(1, FORM_ERROR_MESSAGES.required)
-    .max(50, FORM_ERROR_MESSAGES.invalid),
+  upperOrganization: optionalText(),
+  name: z.string({ required_error: required }).trim().min(1, required).max(250, invalid),
+  categoryMode: z.enum(HF_CATEGORY_MODES, { required_error: required }),
+  categoryId: z.string().optional(),
+  multiCategoryIds: z.array(z.union([z.string(), z.number()])).default([]),
+  hfTypeId: z.string({ required_error: required }).min(1, required),
+  spheres: z.array(HFSphereEnum, { required_error: required }).min(1, required),
+  regionId: z.string({ required_error: required }).min(1, required),
+  districtId: z.string({ required_error: required }).min(1, required),
+  address: z.string({ required_error: required }).trim().min(1, required),
+  location: z.string({ required_error: required }).min(1, required),
+  extraArea: z.string({ required_error: required }).trim().min(1, required),
+  hazardousSubstance: z.string({ required_error: required }).trim().min(1, required),
+  hazardousSign: z.nativeEnum(HfHazardousSign, { required_error: required }),
+  legalType: z.nativeEnum(HfLegalType, { required_error: required }),
+  cadastreNumber: z.string({ required_error: required }).trim().min(1, required).max(50, invalid),
   // LocalDate on the server: an ISO datetime would not parse.
-  startedDate: z.date({ required_error: FORM_ERROR_MESSAGES.required }).transform((date) => format(date, 'yyyy-MM-dd')),
-  identificationCardPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  receiptPath: z.string({ required_error: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
-  insurancePolicyPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  insurancePolicyExpiryDate: z.date().optional(),
-  cadastralPassportPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  projectDocumentationPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  licensePath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  licenseExpiryDate: z.date().optional(),
-  expertOpinionPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  appointmentOrderPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  permitPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  permitExpiryDate: z.date().optional(),
-  industrialSafetyDeclarationPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  regulationPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((v) => (v ? v : null)),
-  regulationExpiryDate: z
+  startedDate: z.date({ required_error: required }).transform((date) => format(date, 'yyyy-MM-dd')),
+  managerCount: optionalText(),
+  engineerCount: optionalText(),
+  workerCount: optionalText(),
+}
+
+export const RegisterIllegalHfBaseSchema = z.object({
+  ...baseShape,
+  /** One attachment set per chosen category, keyed by its id. */
+  hfAppealFilesDto: z.record(z.string(), hfAppealFilesSchema),
+})
+
+/**
+ * Editing an already registered facility does not ask again for the
+ * identification card or the fee receipt, which the registration already holds.
+ * The four attributes added later are optional here too: records predating them
+ * would otherwise be uneditable until every one was filled in.
+ */
+export const UpdateIllegalHfBaseSchema = z.object({
+  ...baseShape,
+  hazardousSign: z.nativeEnum(HfHazardousSign).optional().nullable(),
+  legalType: z.nativeEnum(HfLegalType).optional().nullable(),
+  cadastreNumber: z.string().trim().max(50, invalid).optional().nullable(),
+  startedDate: z
     .date()
     .optional()
     .nullable()
-    .transform((v) => (v ? v : null)),
-  staffAttestationPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((v) => (v ? v : null)),
-  staffAttestationExpiryDate: z
-    .date()
-    .optional()
-    .nullable()
-    .transform((v) => (v ? v : null)),
-  managerAttestationPath: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((v) => (v ? v : null)),
-  managerAttestationExpiryDate: z
-    .date()
-    .optional()
-    .nullable()
-    .transform((v) => (v ? v : null)),
-  managerCount: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  engineerCount: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
-  workerCount: z
-    .string()
-    .optional()
-    .nullable()
-    .transform((val) => (val ? val : null)),
+    .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+  hfAppealFilesDto: z.record(z.string(), hfAppealFilesUpdateSchema),
 })
 
 export type RegisterIllegalHfDTO = z.infer<typeof RegisterIllegalHfSchema>
 
-export const RegisterIllegalHfSchema = RegisterIllegalHfBaseSchema.superRefine((data: any, ctx: any) =>
-  checkExpiryDate(data, ctx, 'insurancePolicyPath', 'insurancePolicyExpiryDate')
-)
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'licensePath', 'licenseExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'permitPath', 'permitExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'regulationPath', 'regulationExpiryDate'))
-  .superRefine((data: any, ctx: any) =>
-    checkExpiryDate(data, ctx, 'staffAttestationPath', 'staffAttestationExpiryDate')
-  )
-  .superRefine((data: any, ctx: any) =>
-    checkExpiryDate(data, ctx, 'managerAttestationPath', 'managerAttestationExpiryDate')
-  )
+export const RegisterIllegalHfSchema = RegisterIllegalHfBaseSchema.superRefine(checkCategoryMode)
