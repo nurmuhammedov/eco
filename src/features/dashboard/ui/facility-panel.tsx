@@ -126,7 +126,9 @@ const Shell = ({
     <aside
       ref={ref}
       style={style}
-      className="absolute right-4 bottom-4 left-4 z-10 flex max-h-[70%] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white/95 shadow-xl ring-1 ring-black/5 backdrop-blur-sm sm:top-16 sm:bottom-auto sm:left-auto sm:w-[360px]"
+      // From md up the region rail owns the right edge, so the card opens
+      // beside it rather than on top of it - it can still be dragged anywhere.
+      className="absolute right-4 bottom-4 left-4 z-10 flex max-h-[70%] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white/95 shadow-xl ring-1 ring-black/5 backdrop-blur-sm sm:top-16 sm:bottom-auto sm:left-auto sm:w-[360px] md:right-[21rem]"
       aria-label="Obyekt ma’lumotlari"
     >
       {accent && <div className="h-1 w-full shrink-0" style={{ backgroundColor: accent }} />}

@@ -16,10 +16,9 @@ import { cn } from '@/shared/lib/utils'
 import { useState } from 'react'
 import {
   appealTypeTranslations,
-  InquiryStatus,
-  // inquiryActionLabels,
-  inquiryResultLabels,
   inquiryBelongTypeLabels,
+  inquiryResultLabels,
+  InquiryStatus,
 } from '@/features/inquiries/model/types'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
@@ -28,9 +27,9 @@ import ExecuteInitialModal from '@/features/inquiries/ui/modals/execute-initial-
 import ExecuteCourtModal from '@/features/inquiries/ui/modals/execute-court-modal'
 import { CreateInquiryInspectionModal } from '@/features/inquiries/ui/modals/create-inquiry-inspection-modal'
 import {
-  RecoveredAmountModal,
-  PaidRewardModal,
   MibStatusModal,
+  PaidRewardModal,
+  RecoveredAmountModal,
 } from '@/features/inquiries/ui/modals/accountant-edit-modals'
 import { AccountantCompleteModal } from '@/features/inquiries/ui/modals/accountant-complete-modal'
 import { EmptyValue } from '@/shared/components/common/empty-value'
@@ -170,6 +169,19 @@ const InquiryDetailPage = () => {
 
               <DetailRow title="Murojaat matni:" value={data?.message || <EmptyValue />} />
               <DetailRow title="Ijro izohi:" value={data?.executionMessage || <EmptyValue />} />
+
+              {data?.type !== 'VIOLATION_REPORT' ? (
+                <DetailRow
+                  title={'Asos hujjat:'}
+                  value={
+                    data?.initialExecutionFilePath ? (
+                      <FileLink url={data.initialExecutionFilePath} title="Faylni ko‘rish" />
+                    ) : (
+                      <EmptyValue />
+                    )
+                  }
+                />
+              ) : null}
 
               {user?.role !== UserRoles.ACCOUNTANT && (
                 <DetailRow
