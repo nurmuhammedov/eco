@@ -56,7 +56,16 @@ const AccidentList: React.FC = () => {
   const navigate = useNavigate()
   const {
     addParams,
-    paramsObject: { type = 'INJURY', status = 'ALL', page = 1, size = 10, legalName = '', legalTin = '', hfName = '' },
+    paramsObject: {
+      type = 'INJURY',
+      status = 'ALL',
+      page = 1,
+      size = 10,
+      legalName = '',
+      legalTin = '',
+      hfName = '',
+      date = '',
+    },
   } = useCustomSearchParams()
 
   const {
@@ -69,6 +78,7 @@ const AccidentList: React.FC = () => {
     legalName,
     legalTin,
     hfName,
+    date,
     page,
     size,
   })
@@ -107,6 +117,8 @@ const AccidentList: React.FC = () => {
     {
       header: 'Sana',
       accessorKey: type === 'INJURY' ? 'date' : 'dateTime',
+      filterKey: 'date',
+      filterType: 'date',
       cell: ({ row }) => {
         const val = type === 'INJURY' ? (row.original as any).date : row.original.dateTime
         if (!val) return '-'
