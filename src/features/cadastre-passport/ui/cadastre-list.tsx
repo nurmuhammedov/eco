@@ -45,7 +45,24 @@ export const StatusBadge = ({ status }: { status: string }) => {
   )
 }
 
-export default function CadastreList() {
+/** The filters this table owns; anything else in the URL belongs to the page around it. */
+const FILTER_KEYS = [
+  'requestNumber',
+  'registryNumber',
+  'preparerName',
+  'preparerTin',
+  'customerName',
+  'customerTin',
+  'status',
+]
+
+interface CadastreListProps {
+  /** Embedded in a facility's detail: the list is locked to its owner. */
+  customerTin?: string | number | null
+  isShortView?: boolean
+}
+
+export default function CadastreList({ customerTin, isShortView }: CadastreListProps = {}) {
   const navigate = useNavigate()
   const { user } = useAuth()
 
@@ -53,10 +70,19 @@ export default function CadastreList() {
     paramsObject: { page = 1, size = 10, ...rest },
   } = useCustomSearchParams()
 
+  /**
+   * Embedded, the surrounding page keeps its own params in the URL - sending
+   * them all would filter the passports by something they know nothing about.
+   */
+  const filters = isShortView
+    ? Object.fromEntries(FILTER_KEYS.filter((key) => rest[key]).map((key) => [key, rest[key]]))
+    : rest
+
   const { data, isLoading, refetch, totalPages } = usePaginatedData<any>('/cadastre-passports', {
     page,
     size,
-    ...rest,
+    ...filters,
+    ...(customerTin ? { customerTin } : {}),
   })
 
   const { mutate: deleteCadastre } = useDelete('/cadastre-passports')
@@ -120,31 +146,35 @@ export default function CadastreList() {
         { id: 'REJECTED', name: 'Rad etildi' },
       ],
     },
-    {
-      id: 'actions',
-      header: () => <div className="text-right">Amallar</div>,
-      cell: ({ row }) => (
-        <div className="flex justify-end">
-          <DataTableRowActions
-            row={row}
-            showView
-            onView={(r) => navigate(`/cadastre-passport/${r.original.id}`)}
-            showDelete={row.original.status === 'NEW' && isLegal}
-            onDelete={(r) => {
-              deleteCadastre(r.original.id, {
-                onSuccess: () => refetch(),
-              })
-            }}
-          />
-        </div>
-      ),
-    },
+    ...(isShortView
+      ? []
+      : [
+          {
+            id: 'actions',
+            header: () => <div className="text-right">Amallar</div>,
+            cell: ({ row }: any) => (
+              <div className="flex justify-end">
+                <DataTableRowActions
+                  row={row}
+                  showView
+                  onView={(r: any) => navigate(`/cadastre-passport/${r.original.id}`)}
+                  showDelete={row.original.status === 'NEW' && isLegal}
+                  onDelete={(r: any) => {
+                    deleteCadastre(r.original.id, {
+                      onSuccess: () => refetch(),
+                    })
+                  }}
+                />
+              </div>
+            ),
+          },
+        ]),
   ]
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
       <div className="mb-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end">
-        {isLegal && !isFVV && !isSES && (
+        {!isShortView && isLegal && !isFVV && !isSES && (
           <Button onClick={() => navigate('/cadastre-passport/add')}>
             <Plus className="mr-2 h-4 w-4" />
             TXYZ kadastr qo‘shish

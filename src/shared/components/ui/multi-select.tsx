@@ -47,19 +47,29 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
   ) => {
     const [open, setOpen] = React.useState(false)
 
+    /**
+     * Ids arrive as numbers from a dictionary and as strings from a record
+     * loaded into a form, and a strict comparison between the two silently
+     * showed nothing as selected. They are matched as text instead.
+     */
+    const isSelectedId = (optionId: string | number) => value.some((id) => String(id) === String(optionId))
+
+    const withoutId = (optionId: string | number) => value.filter((id) => String(id) !== String(optionId))
+
     const handleSelect = (optionId: string | number) => {
       if (!onChange) return
-      const newValue = value.includes(optionId) ? value.filter((id) => id !== optionId) : [...value, optionId]
-      onChange(newValue)
+
+      onChange(isSelectedId(optionId) ? withoutId(optionId) : [...value, optionId])
     }
 
     const handleRemove = (e: React.MouseEvent | undefined, optionId: string | number) => {
       e?.stopPropagation()
       if (!onChange) return
-      onChange(value.filter((id) => id !== optionId))
+
+      onChange(withoutId(optionId))
     }
 
-    const selectedOptions = options.filter((option) => value.includes(option.id))
+    const selectedOptions = options.filter((option) => isSelectedId(option.id))
 
     return (
       <Popover modal={true} open={open} onOpenChange={setOpen}>
@@ -120,7 +130,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
               <CommandEmpty>{emptyText}</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => {
-                  const isSelected = value.includes(option.id)
+                  const isSelected = isSelectedId(option.id)
                   return (
                     <CommandItem key={option.id} value={option.name} onSelect={() => handleSelect(option.id)}>
                       <div

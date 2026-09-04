@@ -1,5 +1,9 @@
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
+import {
+  MultiCategoryFiles,
+  multiCategoryFileValue,
+} from '@/features/application/application-detail/ui/parts/multi-category-files'
 import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button.tsx'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
 import { useHfDetail } from '@/features/register/hf/hooks/use-hf-detail.tsx'
@@ -20,6 +24,7 @@ import { DeregisterModal } from '../../common/ui/deregister-modal'
 import { ChangeStatusModal } from '../../common/ui/change-status-modal'
 import { Badge } from '@/shared/components/ui/badge'
 import { EquipmentsList } from '@/features/register/equipments/ui/equipments-list'
+import CadastreList from '@/features/cadastre-passport/ui/cadastre-list'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 
 const HfDetail = () => {
@@ -40,6 +45,23 @@ const HfDetail = () => {
   const [searchParams] = useSearchParams()
   const { isLoading, data, refetch } = useHfDetail()
   const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
+
+  const multiCategoryFiles: Record<string, any[]> = data?.multiCategoryFiles || {}
+  const multiCategoryIds = Object.keys(multiCategoryFiles)
+
+  /**
+   * The heavy sections are closed to start with and their content is not
+   * mounted until they are opened, so a visit costs one request instead of
+   * three - the equipment list and the cadastre list each fetch their own page.
+   */
+  const [openSections, setOpenSections] = useState<string[]>([
+    'registry_info',
+    'object_info',
+    'object_files',
+    ...multiCategoryIds.map(multiCategoryFileValue),
+  ])
+
+  const isOpen = (section: string) => openSections.includes(section)
   const { user } = useAuth()
 
   const [isDeregisterModalOpen, setIsDeregisterModalOpen] = useState(false)
@@ -87,9 +109,7 @@ const HfDetail = () => {
         type="HF"
       />
 
-      <DetailCardAccordion
-        defaultValue={['registry_info', 'object_info', 'object_location', 'object_files', 'attached_equipments']}
-      >
+      <DetailCardAccordion value={openSections} onValueChange={setOpenSections}>
         <DetailCardAccordion.Item
           value="applicant_info"
           title="Arizachi to‘g‘risida ma’lumot"
@@ -161,19 +181,34 @@ const HfDetail = () => {
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
           <AppealMainInfo data={data} type={'HF'} address={data?.address} showStaffCounts />
         </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">
-          <FilesSection appealId={data?.appealId} userRole={user?.role} register={true} files={data?.files || []} />
-        </DetailCardAccordion.Item>
+        {/* A multi-sector facility keeps one attachment set per category. */}
+        {multiCategoryIds.length > 0 ? (
+          <MultiCategoryFiles
+            multiCategoryFiles={multiCategoryFiles}
+            appealId={data?.appealId}
+            userRole={user?.role}
+            register
+          />
+        ) : (
+          <DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">
+            <FilesSection appealId={data?.appealId} userRole={user?.role} register={true} files={data?.files || []} />
+          </DetailCardAccordion.Item>
+        )}
         {!!currentObjLocation?.length && (
           <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">
-            <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
+            {isOpen('object_location') && (
+              <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
+            )}
           </DetailCardAccordion.Item>
         )}
         <DetailCardAccordion.Item value="attached_equipments" title="Biriktirilgan qurilmalar">
-          <EquipmentsList hfId={id} hideTabs={true} isShortView={true} />
+          {isOpen('attached_equipments') && <EquipmentsList hfId={id} hideTabs={true} isShortView={true} />}
+        </DetailCardAccordion.Item>
+        <DetailCardAccordion.Item value="cadastre_passports" title="TXYZ kadastr">
+          {isOpen('cadastre_passports') && <CadastreList customerTin={data?.legalTin} isShortView />}
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="history" title="O‘zgartirishlar tarixi">
-          <Logs />
+          {isOpen('history') && <Logs />}
         </DetailCardAccordion.Item>
       </DetailCardAccordion>
     </div>

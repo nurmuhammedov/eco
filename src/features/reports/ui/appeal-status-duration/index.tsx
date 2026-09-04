@@ -20,6 +20,44 @@ const DURATION_MAP: Record<string, string> = {
   from6To15Days: AppealStatusDuration.FROM_6_TO_15_DAYS,
   over15Days: AppealStatusDuration.OVER_15_DAYS,
 }
+/**
+ * A number that opens something says so before it is hovered: blue with the
+ * icon, against plain text for the zeros that lead nowhere. The box fills the
+ * cell so the click target is not just the digits.
+ */
+const CountCell = ({
+  value,
+  isSummary,
+  tone,
+  onOpen,
+}: {
+  value: number
+  isSummary: boolean
+  tone?: string
+  onOpen: () => void
+}) => {
+  // A zero carries no warning and opens nothing, so it stays plain.
+  if (!value) return <span className={cn(isSummary && 'font-bold')}>{value}</span>
+
+  return (
+    <div
+      className={cn(
+        'group/link -my-2.5 flex cursor-pointer items-center justify-center gap-1 px-3 py-2.5 font-medium',
+        // The overdue column keeps its red; the icon is what marks it clickable.
+        tone ?? 'text-[#0271FF]',
+        isSummary && 'font-bold'
+      )}
+      onClick={onOpen}
+      role="button"
+      tabIndex={0}
+      onKeyDown={onActivate(onOpen)}
+    >
+      <span className="underline-offset-2 group-hover/link:underline">{value}</span>
+      <ExternalLink className="size-3 shrink-0" />
+    </div>
+  )
+}
+
 const AppealStatusDurationReport: React.FC = () => {
   const navigate = useNavigate()
   const { data: reportData, isLoading } = useData<any[]>('/reports/appeal-status/duration', true)
@@ -50,108 +88,27 @@ const AppealStatusDurationReport: React.FC = () => {
 
   const createGroup = (prefix: string, header: string) => ({
     header,
-    columns: [
-      {
-        id: `${prefix}_upTo5Days`,
-        header: '5 kungacha',
-        accessorFn: (row: any) => row[prefix]?.upTo5Days || 0,
-        className: 'text-center whitespace-nowrap',
-        cell: ({ row, getValue }: any) => {
-          const value = getValue()
-          return (
-            <div
-              className={cn(
-                'group flex items-center justify-center gap-1 transition-colors',
-                value > 0 && 'cursor-pointer hover:text-blue-600 hover:underline',
-                row.original.isSummary ? 'font-bold' : ''
-              )}
-              onClick={() => value > 0 && handleNavigate(row.original, prefix, 'upTo5Days')}
-              role="button"
-              tabIndex={0}
-              onKeyDown={onActivate(() => value > 0 && handleNavigate(row.original, prefix, 'upTo5Days'))}
-            >
-              {value}
-              {value > 0 && <ExternalLink size={12} className="opacity-0 transition-opacity group-hover:opacity-100" />}
-            </div>
-          )
-        },
-      },
-      {
-        id: `${prefix}_from6To15Days`,
-        header: '5-15 kun',
-        accessorFn: (row: any) => row[prefix]?.from6To15Days || 0,
-        className: 'text-center whitespace-nowrap',
-        cell: ({ row, getValue }: any) => {
-          const value = getValue()
-          return (
-            <div
-              className={cn(
-                'group flex items-center justify-center gap-1 transition-colors',
-                value > 0 && 'cursor-pointer hover:text-blue-600 hover:underline',
-                row.original.isSummary ? 'font-bold' : ''
-              )}
-              onClick={() => value > 0 && handleNavigate(row.original, prefix, 'from6To15Days')}
-              role="button"
-              tabIndex={0}
-              onKeyDown={onActivate(() => value > 0 && handleNavigate(row.original, prefix, 'from6To15Days'))}
-            >
-              {value}
-              {value > 0 && <ExternalLink size={12} className="opacity-0 transition-opacity group-hover:opacity-100" />}
-            </div>
-          )
-        },
-      },
-      {
-        id: `${prefix}_over15Days`,
-        header: '15 kundan ortiq',
-        accessorFn: (row: any) => row[prefix]?.over15Days || 0,
-        className: 'text-center whitespace-nowrap',
-        cell: ({ row, getValue }: any) => {
-          const value = getValue()
-          return (
-            <div
-              className={cn(
-                'group flex items-center justify-center gap-1 transition-colors',
-                value > 0 && 'cursor-pointer hover:text-blue-600 hover:underline',
-                row.original.isSummary ? 'font-bold text-red-600' : 'text-red-500'
-              )}
-              onClick={() => value > 0 && handleNavigate(row.original, prefix, 'over15Days')}
-              role="button"
-              tabIndex={0}
-              onKeyDown={onActivate(() => value > 0 && handleNavigate(row.original, prefix, 'over15Days'))}
-            >
-              {value}
-              {value > 0 && <ExternalLink size={12} className="opacity-0 transition-opacity group-hover:opacity-100" />}
-            </div>
-          )
-        },
-      },
-      {
-        id: `${prefix}_total`,
-        header: 'Jami',
-        accessorFn: (row: any) => row[prefix]?.total || 0,
-        className: 'text-center font-semibold text-slate-900 bg-slate-50/30',
-        cell: ({ row, getValue }: any) => {
-          const value = getValue()
-          return (
-            <div
-              className={cn(
-                'group flex items-center justify-center gap-1 transition-colors',
-                value > 0 && 'cursor-pointer hover:text-blue-600 hover:underline',
-                row.original.isSummary ? 'font-bold' : ''
-              )}
-              onClick={() => value > 0 && handleNavigate(row.original, prefix)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={onActivate(() => value > 0 && handleNavigate(row.original, prefix))}
-            >
-              {value}
-              {value > 0 && <ExternalLink size={12} className="opacity-0 transition-opacity group-hover:opacity-100" />}
-            </div>
-          )
-        },
-      },
-    ],
+    columns: (
+      [
+        ['upTo5Days', '5 kungacha', undefined],
+        ['from6To15Days', '5-15 kun', undefined],
+        ['over15Days', '15 kundan ortiq', 'text-red-500'],
+        ['total', 'Jami', undefined],
+      ] as const
+    ).map(([key, label, tone]) => ({
+      id: `${prefix}_${key}`,
+      header: label,
+      accessorFn: (row: any) => row[prefix]?.[key] || 0,
+      className: cn('text-center whitespace-nowrap', key === 'total' && 'bg-slate-50/30 font-semibold text-slate-900'),
+      cell: ({ row, getValue }: any) => (
+        <CountCell
+          value={getValue()}
+          isSummary={row.original.isSummary}
+          tone={tone}
+          onOpen={() => handleNavigate(row.original, prefix, key === 'total' ? undefined : key)}
+        />
+      ),
+    })),
   })
 
   const columns = [
@@ -160,7 +117,7 @@ const AppealStatusDurationReport: React.FC = () => {
       accessorKey: 'regionName',
       id: 'regionName',
       minSize: 200,
-      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
       cell: ({ row }: any) => {
         const value = row.original.regionName
         const isSummary = row.original.isSummary
@@ -185,7 +142,7 @@ const AppealStatusDurationReport: React.FC = () => {
           data={tableData}
           isLoading={isLoading}
           isPaginated={false}
-          showNumeration={true}
+          showNumeration={false}
           headerCenter={true}
           isHeaderSticky={true}
           initialState={{

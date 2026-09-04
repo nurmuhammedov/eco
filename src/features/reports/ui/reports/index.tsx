@@ -13,6 +13,7 @@ import {
   Map,
   PieChart,
   PlusSquare,
+  Radiation,
   ShieldCheck,
   Siren,
   Target,
@@ -60,20 +61,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
         url: '/reports/applications-types',
         reportType: 'MONTHLY',
       },
-      {
-        id: 'rep-appeal-execution',
-        title: 'Arizalarning ijro muddati bo‘yicha umumiy hisobot',
-        icon: Clock,
-        url: '/reports/appeal-execution',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'rep-appeal-status-duration',
-        title: 'Arizalar holati va muddati bo‘yicha hisobot',
-        icon: Clock,
-        url: '/reports/appeal-status-duration',
-        reportType: 'MONTHLY',
-      },
     ],
   },
   {
@@ -95,13 +82,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
         reportType: 'MONTHLY',
       },
       {
-        id: 'rep-5',
-        title: 'Qurilmalarning muddatlari bo‘yicha hisobot',
-        icon: CalendarClock,
-        url: '/reports/registers-equipment-terms',
-        reportType: 'OTHERS',
-      },
-      {
         id: 'rep-8',
         title: 'Reyestr maʼlumotlarini o‘zgartirish so‘rovlari bo‘yicha hisobot',
         icon: Zap,
@@ -121,6 +101,41 @@ const REPORTS_GROUPS: ReportGroup[] = [
         icon: Users,
         url: '/reports/hf-employee-stats',
         reportType: 'OTHERS',
+      },
+    ],
+  },
+  {
+    id: 'terms',
+    title: 'Muddati bo‘yicha',
+    items: [
+      {
+        id: 'rep-irs-xray-status',
+        title: 'INM va Rentgen muddati o‘tganlar',
+        icon: Radiation,
+        url: '/reports/irs-xray-status',
+        badge: 'Yangi',
+        reportType: 'OTHERS',
+      },
+      {
+        id: 'rep-5',
+        title: 'Qurilmalarning muddatlari bo‘yicha hisobot',
+        icon: CalendarClock,
+        url: '/reports/registers-equipment-terms',
+        reportType: 'OTHERS',
+      },
+      {
+        id: 'rep-appeal-execution',
+        title: 'Arizalarning ijro muddati bo‘yicha umumiy hisobot',
+        icon: Clock,
+        url: '/reports/appeal-execution',
+        reportType: 'MONTHLY',
+      },
+      {
+        id: 'rep-appeal-status-duration',
+        title: 'Arizalar holati va muddati bo‘yicha hisobot',
+        icon: Clock,
+        url: '/reports/appeal-status-duration',
+        reportType: 'MONTHLY',
       },
     ],
   },
@@ -212,7 +227,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Tekshiruvlarning chora tadbirlari bo‘yicha hisobot',
         icon: ClipboardCheck,
         url: '/reports/inspection-execution',
-        badge: 'Yangi',
         reportType: 'MONTHLY',
       },
       {
@@ -242,7 +256,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Murojaatlar holati bo‘yicha hisobot',
         icon: Map,
         url: '/reports/inquiries-status',
-        badge: 'Yangi',
         reportType: 'OTHERS',
       },
       {
@@ -272,7 +285,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Hududlarning KPI ko‘rsatkichi',
         icon: Users,
         url: '/reports/kpi-regional',
-        badge: 'Yangi',
         reportType: 'MONTHLY',
       },
       {
@@ -280,7 +292,6 @@ const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Eng ko‘p 3 toifa xodimga ega Top-100 tashkilotlar',
         icon: Users,
         url: '/reports/top-100-organizations',
-        badge: 'Yangi',
         reportType: 'OTHERS',
       },
       {

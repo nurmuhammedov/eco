@@ -7,7 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { RiskAnalysisTab } from '@/widgets/risk-analysis/types'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/lib/utils'
-import { subMonths, getMonth } from 'date-fns'
+import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
 import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-statistics-cards'
 
 const MONTHS = [
@@ -39,9 +39,8 @@ const TAB_TO_API_TYPE: Record<string, string> = {
 const RiskDateComparisonReport: React.FC = () => {
   const { t } = useTranslation('common')
 
-  const previousMonthDate = subMonths(new Date(), 1)
-  const defaultYear = previousMonthDate.getFullYear().toString()
-  const defaultMonth = MONTHS[getMonth(previousMonthDate)].id
+  // Same period the Xavf tahlili page opens on: the last month of the previous quarter.
+  const { year: defaultYear, month: defaultMonth } = getDefaultYearAndMonthForRiskAnalysis()
 
   const {
     addParams,
@@ -173,7 +172,7 @@ const RiskDateComparisonReport: React.FC = () => {
         accessorKey: 'regionName',
         id: 'regionName',
         minSize: 200,
-        className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+        className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
         cell: ({ row }: any) => {
           const value = row.original.regionName
           const isSummary = row.original.isSummary

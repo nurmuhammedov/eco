@@ -12,15 +12,29 @@ export const useApplicationDetail = () => {
     enabled: !!id,
     queryFn: () => applicationDetailApi.getApplicationDetail(id),
     select: (data) => {
-      const files = Object.entries(data.data?.files || [])
-        .filter(([key]) => key.includes('Path'))
-        .map(([key, value]) => {
-          const label = `labels.${data?.appealType?.replace('DEREGISTER_', '')?.replace('REGISTER_', '')?.replace('RE_', '')}.${key}`
-          return { label: t(label), data: value as string, fieldName: key }
-        })
+      const appealType = data?.appealType?.replace('DEREGISTER_', '')?.replace('REGISTER_', '')?.replace('RE_', '')
+
+      const toFileList = (set: Record<string, unknown> | undefined) =>
+        Object.entries(set || {})
+          .filter(([key]) => key.includes('Path'))
+          .map(([key, value]) => ({ label: t(`labels.${appealType}.${key}`), data: value as string, fieldName: key }))
+
+      /**
+       * A multi-sector facility carries one attachment set per category instead
+       * of a single one, both under the appeal payload. They are lifted to the
+       * top level in the same shape the sections render.
+       */
+      const multiCategoryFiles = Object.fromEntries(
+        Object.entries(data.data?.multiCategoryFiles || {}).map(([categoryId, set]) => [
+          categoryId,
+          toFileList(set as Record<string, unknown>),
+        ])
+      )
+
       return {
         ...data,
-        files,
+        files: toFileList(data.data?.files),
+        multiCategoryFiles,
       }
     },
   })

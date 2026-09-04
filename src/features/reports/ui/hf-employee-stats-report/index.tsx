@@ -26,7 +26,7 @@ const ReportHfEmployeeStats: React.FC = () => {
       accessorKey: 'officeName',
       id: 'officeName',
       maxSize: 120,
-      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
       cell: ({ row }: any) => {
         const value = row.original.officeName
         const isSummary = row.original.isSummary

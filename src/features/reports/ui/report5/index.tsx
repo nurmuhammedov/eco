@@ -19,7 +19,7 @@ const ALL_EQUIPMENTS = APPLICATIONS_DATA.filter(
 
 const Report5: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
-  const regionNameParam = paramsObject.regionName || 'ALL'
+  const regionIdParam = String(paramsObject.regionId || 'ALL')
   const equipmentTypeParam = paramsObject.equipmentType || 'ALL'
   const subTypeParam = paramsObject.subType || 'ALL'
 
@@ -27,7 +27,7 @@ const Report5: React.FC = () => {
   const regionOptions = useMemo(() => regionsList || [], [regionsList])
 
   const { data: subTypesList } = useChildEquipmentTypes(equipmentTypeParam !== 'ALL' ? equipmentTypeParam : '')
-  const { regionName: _rn, equipmentType, subType, ...restParams } = paramsObject
+  const { regionId: _region, equipmentType, subType, ...restParams } = paramsObject
   const apiParams: any = { ...restParams }
   if (equipmentType && equipmentType !== 'ALL') {
     apiParams.equipmentType = equipmentType
@@ -35,6 +35,15 @@ const Report5: React.FC = () => {
   if (subType && subType !== 'ALL') {
     apiParams.childEquipmentId = subType
   }
+  // The endpoint filters by region itself; it used to pull every region and
+  // drop the rest here.
+  if (regionIdParam !== 'ALL') {
+    apiParams.regionId = regionIdParam
+  }
+
+  // A single region comes back on its own - the country total is not part of
+  // that answer, so the summary row is dropped with it.
+  const showSummary = regionIdParam === 'ALL'
 
   const { data: reportData, isLoading: isReportDataLoading } = useData<Report5Item[]>(
     '/reports/registry/equipment/status',
@@ -76,18 +85,11 @@ const Report5: React.FC = () => {
       (r: any) => r.name !== 'Respublika' && r.name !== 'Respublika bo‘yicha' && r.name !== "Respublika bo'yicha"
     )
 
-    let rows = [{ id: 'ALL', name: 'Respublika bo‘yicha' }, ...filteredRegions]
-    if (regionNameParam !== 'ALL') {
-      const summaryRow = rows[0]
-      if (regionNameParam === summaryRow.name) {
-        rows = [summaryRow]
-      } else {
-        const found = rows.find((r) => r.name === regionNameParam)
-        rows = found ? [summaryRow, found] : [summaryRow]
-      }
-    }
+    const rows = showSummary
+      ? [{ id: 'ALL', name: 'Respublika bo‘yicha' }, ...filteredRegions]
+      : filteredRegions.filter((r: any) => String(r.id) === regionIdParam)
 
-    return rows.map((regionRow) => {
+    return rows.map((regionRow: any) => {
       const isSummary = regionRow.id === 'ALL'
       const row: any = {
         regionName: regionRow.name,
@@ -148,7 +150,7 @@ const Report5: React.FC = () => {
 
       return row
     })
-  }, [useDynamicData, reportData, subTypesList, regionOptions, regionNameParam, subTypeParam])
+  }, [useDynamicData, reportData, subTypesList, regionOptions, regionIdParam, showSummary, subTypeParam])
 
   const isDynamicLoading = isReportDataLoading
 
@@ -206,6 +208,11 @@ const Report5: React.FC = () => {
     })
 
     const filteredData = flattenedData.filter((r) => !r.isSummary)
+
+    // One region was asked for and one region came back; a country total on top
+    // of it would be an empty row pretending to be a sum.
+    if (!showSummary) return filteredData
+
     let backendSummary = flattenedData.find((r) => r.isSummary)
 
     if (!backendSummary) {
@@ -231,12 +238,8 @@ const Report5: React.FC = () => {
       backendSummary.regionName = 'Respublika bo‘yicha'
     }
 
-    const finalData = [backendSummary, ...filteredData]
-    if (regionNameParam !== 'ALL') {
-      return finalData.filter((r) => r.regionName === regionNameParam || r.isSummary)
-    }
-    return finalData
-  }, [reportData, useDynamicData, regionNameParam, uniqueEquipments])
+    return [backendSummary, ...filteredData]
+  }, [reportData, useDynamicData, showSummary, uniqueEquipments])
 
   const tableData = useDynamicData ? dynamicTableData : standardTableData
   const isLoading = useDynamicData ? isDynamicLoading : isReportDataLoading
@@ -248,7 +251,7 @@ const Report5: React.FC = () => {
         accessorKey: 'regionName',
         id: 'regionName',
         minSize: 200,
-        className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+        className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
         cell: ({ row }: any) => {
           const value = row.original.regionName
           return <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{value}</span>
@@ -421,7 +424,7 @@ const Report5: React.FC = () => {
         accessorKey: 'regionName',
         id: 'regionName',
         minSize: 200,
-        className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+        className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
         cell: ({ row }: any) => {
           const value = row.original.regionName
           return <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{value}</span>
@@ -519,15 +522,14 @@ const Report5: React.FC = () => {
         <GoBack title="Qurilmalarning muddatlari bo‘yicha hisobot" />
 
         <div className="flex flex-wrap items-center gap-2">
-          <Select value={regionNameParam} onValueChange={(val) => addParams({ regionName: val })}>
+          <Select value={regionIdParam} onValueChange={(val) => addParams({ regionId: val })}>
             <SelectTrigger className="h-10 w-[220px] bg-white">
               <SelectValue placeholder="Hudud" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ALL">Barchasi</SelectItem>
-              <SelectItem value="Respublika bo‘yicha">Respublika bo‘yicha</SelectItem>
               {regionOptions.map((region: any) => (
-                <SelectItem key={region.id} value={region.name}>
+                <SelectItem key={region.id} value={String(region.id)}>
                   {region.name}
                 </SelectItem>
               ))}

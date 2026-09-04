@@ -25,7 +25,7 @@ const AppealExecutionReport: React.FC = () => {
         accessorKey: 'regionName',
         id: 'regionName',
         minSize: 250,
-        className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+        className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
         cell: ({ row }: any) => {
           const value = row.original.regionName
           const isSummary = row.original.isSummary
@@ -82,7 +82,7 @@ const AppealExecutionReport: React.FC = () => {
           data={tableData}
           isLoading={isLoading}
           isPaginated={false}
-          showNumeration={true}
+          showNumeration={false}
           headerCenter={true}
           isHeaderSticky={true}
           initialState={{

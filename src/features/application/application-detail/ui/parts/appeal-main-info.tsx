@@ -1,5 +1,6 @@
 import DetailRow from '@/shared/components/common/detail-row.tsx'
 import { getDate } from '@/shared/utils/date.ts'
+import { useHazardousFacilityCategoryDictionarySelect } from '@/shared/api/dictionaries'
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -491,6 +492,20 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
 
   const isAccreditation = ACCREDITATION_TYPES.includes(type)
 
+  /**
+   * A multi-sector facility declares several categories and no single one, so
+   * categoryName comes back empty; the names are looked up from the dictionary
+   * the multi-category selector reads.
+   */
+  const multiCategoryIds: (number | string)[] = data?.multiCategoryIds || []
+  const { data: multiCategories = [] } = useHazardousFacilityCategoryDictionarySelect(multiCategoryIds.length > 0)
+
+  const categoryValue =
+    data?.categoryName ||
+    multiCategoryIds
+      .map((id) => (multiCategories as any[]).find((item) => String(item.id) === String(id))?.name || `Toifa #${id}`)
+      .join(', ')
+
   const allowedFields = ALLOWED_FIELDS[type] || []
 
   const isAllowed = (field: string) => allowedFields.includes(field)
@@ -511,7 +526,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
       {renderRow('upperOrganization', data?.upperOrganization)}
       {renderRow('name', data?.name)}
       {isAllowed('categoryId') &&
-        renderRow('categoryId', data?.categoryName || <span className="font-medium text-red-500">Tanlanmagan</span>)}
+        renderRow('categoryId', categoryValue || <span className="font-medium text-red-500">Tanlanmagan</span>)}
       {renderRow('hfTypeId', data?.hfTypeName)}
       {isAllowed('spheres') &&
         !isAccreditation &&

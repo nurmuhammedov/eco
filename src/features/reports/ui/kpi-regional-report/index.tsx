@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
+import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
@@ -27,8 +28,10 @@ const KpiRegionalReport: React.FC = () => {
   const defaultYear = previousQuarterDate.getFullYear().toString()
   const defaultQuarter = getQuarter(previousQuarterDate).toString()
 
-  const [year, setYear] = useState<string>(defaultYear)
-  const [quarter, setQuarter] = useState<string>(defaultQuarter)
+  const { paramsObject, addParams } = useCustomSearchParams()
+
+  const year = String(paramsObject.year ?? defaultYear)
+  const quarter = String(paramsObject.quarter ?? defaultQuarter)
 
   const { data: rawData, isLoading } = useData<any[]>('/reports/kpi-regional', true, {
     year: Number(year),
@@ -52,7 +55,7 @@ const KpiRegionalReport: React.FC = () => {
       accessorKey: 'regionName',
       id: 'regionName',
       minSize: 200,
-      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
       cell: ({ row }: any) => (
         <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.regionName}</span>
       ),
@@ -268,7 +271,7 @@ const KpiRegionalReport: React.FC = () => {
         <GoBack title="Hududlarning KPI ko‘rsatkichi hisoboti" />
 
         <div className="flex flex-wrap items-center gap-2">
-          <Select value={year} onValueChange={setYear}>
+          <Select value={year} onValueChange={(val) => addParams({ year: val })}>
             <SelectTrigger className="h-10 w-[120px] bg-white text-sm">
               <SelectValue placeholder="Yilni tanlang" />
             </SelectTrigger>
@@ -281,7 +284,7 @@ const KpiRegionalReport: React.FC = () => {
             </SelectContent>
           </Select>
 
-          <Select value={quarter} onValueChange={setQuarter}>
+          <Select value={quarter} onValueChange={(val) => addParams({ quarter: val })}>
             <SelectTrigger className="h-10 w-[160px] bg-white text-sm">
               <SelectValue placeholder="Chorakni tanlang" />
             </SelectTrigger>

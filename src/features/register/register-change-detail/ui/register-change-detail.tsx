@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { ArrowUpRight } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import { useDetail } from '@/shared/hooks'
 import DetailRow from '@/shared/components/common/detail-row'
@@ -111,13 +112,14 @@ const RegisterChangeDetail: FC = () => {
         <DetailCardAccordion.Item value="general" title="So‘rov va ijro to‘g‘risida ma’lumot">
           <div className="flex flex-col py-1">
             <DetailRow
-              title="Reyestrga havola:"
+              title="Reyestr ma’lumotlari:"
               value={
                 <Link
-                  className="py-4 pr-2 text-lg text-[#0271FF]"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-[#0271FF] hover:underline"
                   to={type === 'radiation-profiles' ? `/register/radiation-profiles/${id}` : `/register/${id}/${type}`}
                 >
-                  Reyestr ma’lumotlarini ko‘rish
+                  Ko‘rish
+                  <ArrowUpRight className="size-4" />
                 </Link>
               }
             />
@@ -128,7 +130,7 @@ const RegisterChangeDetail: FC = () => {
               value={
                 isDeregister ? (
                   <Badge variant="error" className="py-1">
-                    Reyestardan chiqarish uchun
+                    Reyestrdan chiqarish uchun
                   </Badge>
                 ) : isStatusChange ? (
                   <Badge variant="warning" className="py-1">

@@ -55,7 +55,7 @@ const AnimatedButton = ({
     <button
       type="button"
       onClick={handleNavigate}
-      className="group border-teal text-teal hover:bg-teal relative flex h-10 w-full items-center justify-center overflow-hidden rounded-md border bg-transparent px-4 py-2 text-sm font-medium transition-colors duration-300 hover:text-white"
+      className="group border-teal text-teal hover:bg-teal relative flex h-10 w-full cursor-pointer items-center justify-center overflow-hidden rounded-md border bg-transparent px-4 py-2 text-sm font-medium transition-colors duration-300 hover:text-white"
     >
       <span className="relative z-10 flex items-center">
         <SendSVGIcon />
@@ -72,8 +72,11 @@ function ApplicationCard({ application, url, btnTitle }: ApplicationCardProps) {
   return (
     <div
       className={cn(
-        'group relative flex flex-col justify-between overflow-hidden rounded-md border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300',
-        isDisabled ? 'opacity-60' : 'hover:shadow-md'
+        'relative flex flex-col justify-between overflow-hidden rounded-md border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300',
+        // The icon and the rule inside react to group-hover; without the group
+        // there is nothing for them to react to, so a card that cannot be opened
+        // stops behaving as if it could.
+        isDisabled ? 'opacity-60' : 'group hover:shadow-md'
       )}
     >
       <div className="mb-5 flex items-center">

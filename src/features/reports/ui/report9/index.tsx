@@ -1,8 +1,66 @@
 import React, { useMemo } from 'react'
+import { Link } from 'react-router-dom'
+import { ExternalLink } from 'lucide-react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
+import {
+  REPORT_CHANGE_BELONG_TYPE,
+  REPORT_CHANGE_STATUS,
+  ReportChangeBelongType,
+  ReportChangeStatus,
+  buildChangeReportLink,
+} from '../../model/change-report-link'
+
+const BELONG_TYPE_BY_PREFIX: Record<string, ReportChangeBelongType> = {
+  x: REPORT_CHANGE_BELONG_TYPE.HF,
+  q: REPORT_CHANGE_BELONG_TYPE.EQUIPMENT,
+  irs: REPORT_CHANGE_BELONG_TYPE.IRS,
+  xray: REPORT_CHANGE_BELONG_TYPE.XRAY,
+}
+
+/**
+ * Every count stands for a set of objects the registry can list, the country
+ * total included - it just opens without a region. Only a zero has nothing
+ * behind it.
+ */
+const CountCell = ({
+  row,
+  value,
+  prefix,
+  status,
+}: {
+  row: any
+  value: number
+  prefix: string
+  status: ReportChangeStatus
+}) => {
+  // Only a zero has nothing behind it.
+  if (!value) return <span className={cn(row.isSummary && 'font-bold')}>{value}</span>
+
+  /**
+   * The digits alone are a target a few pixels wide, so the link fills the
+   * cell; the icon is what says which numbers open something, since a count of
+   * zero and the country total stay plain text.
+   */
+  return (
+    <Link
+      to={buildChangeReportLink({
+        belongType: BELONG_TYPE_BY_PREFIX[prefix],
+        status,
+        regionId: row.isSummary ? undefined : row.regionId,
+      })}
+      className={cn(
+        'group/link -my-2.5 flex items-center justify-center gap-1 px-3 py-2.5 font-medium text-[#0271FF]',
+        row.isSummary && 'font-bold'
+      )}
+    >
+      <span className="underline-offset-2 group-hover/link:underline">{value}</span>
+      <ExternalLink className="size-3 shrink-0" />
+    </Link>
+  )
+}
 
 const Report9: React.FC = () => {
   const { data: reportData, isLoading } = useData<any[]>('/reports/change/by-deregister', true)
@@ -18,6 +76,7 @@ const Report9: React.FC = () => {
 
       return {
         officeName: item.regionName,
+        regionId: item.regionId,
         isSummary:
           item.regionName?.toLowerCase().includes("bo'yicha") || item.regionName?.toLowerCase().includes('bo‘yicha'),
         x: {
@@ -50,44 +109,22 @@ const Report9: React.FC = () => {
 
   const createGroup = (prefix: string, header: string) => ({
     header,
-    columns: [
-      {
-        id: `${prefix}_total`,
-        header: 'Umumiy',
-        accessorFn: (row: any) => row[prefix]?.total || 0,
-        className: 'text-center font-semibold text-slate-900',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
-      },
-      {
-        id: `${prefix}_not_completed`,
-        header: 'Yangi',
-        accessorFn: (row: any) => row[prefix]?.not_completed || 0,
-        className: 'text-center',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
-      },
-      {
-        id: `${prefix}_in_process`,
-        header: 'Jarayonda',
-        accessorFn: (row: any) => row[prefix]?.in_process || 0,
-        className: 'text-center',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
-      },
-      {
-        id: `${prefix}_completed`,
-        header: 'Yakunlandi',
-        accessorFn: (row: any) => row[prefix]?.completed || 0,
-        className: 'text-center',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
-      },
-    ],
+    columns: (
+      [
+        ['total', 'Umumiy', REPORT_CHANGE_STATUS.ALL],
+        ['not_completed', 'Yangi', REPORT_CHANGE_STATUS.NEW],
+        ['in_process', 'Jarayonda', REPORT_CHANGE_STATUS.IN_PROCESS],
+        ['completed', 'Yakunlandi', REPORT_CHANGE_STATUS.COMPLETED],
+      ] as const
+    ).map(([key, label, status]) => ({
+      id: `${prefix}_${key}`,
+      header: label,
+      accessorFn: (row: any) => row[prefix]?.[key] || 0,
+      className: cn('text-center', key === 'total' && 'font-semibold text-slate-900'),
+      cell: ({ row, getValue }: any) => (
+        <CountCell row={row.original} value={getValue()} prefix={prefix} status={status} />
+      ),
+    })),
   })
 
   const columns = [
@@ -96,7 +133,7 @@ const Report9: React.FC = () => {
       accessorKey: 'officeName',
       id: 'officeName',
       minSize: 200,
-      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
       cell: ({ row }: any) => {
         const value = row.original.officeName
         const isSummary = row.original.isSummary
@@ -110,8 +147,8 @@ const Report9: React.FC = () => {
   ]
 
   return (
-    <div className="flex h-full flex-col gap-1 overflow-hidden">
-      <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <GoBack title="Inspektorlar tomonidan reyestrdan chiqarish so‘rovlari bo‘yicha hisobot" />
       </div>
 

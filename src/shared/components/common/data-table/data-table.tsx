@@ -73,7 +73,9 @@ export function DataTable<TData, TValue>({
   showNumeration = true,
   showFilters = false,
   pageCount: propPageCount,
-  isHeaderSticky = false,
+  // A header that scrolls away is never what a table wants; the filter row sits
+  // inside the same thead, so it stays put along with it.
+  isHeaderSticky = true,
   initialState,
   columnPinning: propColumnPinning,
   onColumnPinningChange,
@@ -170,22 +172,32 @@ export function DataTable<TData, TValue>({
           style={fixedTableStyle}
         >
           <TableHeader
-            className={cn('p-2 font-semibold text-black', isHeaderSticky && 'sticky top-0 z-30 bg-white shadow-sm')}
+            className={cn(
+              'p-2 font-semibold text-black',
+              // Neutral, not white: the band has to read as a header against
+              // white rows, and the cells themselves are neutral-100 already.
+              isHeaderSticky && 'sticky top-0 z-30 bg-neutral-100'
+            )}
           >
             {table.getHeaderGroups().map((headerGroup, groupIdx) => {
               const isFirstRow = groupIdx === 0
-              const isLastRow = groupIdx === table.getHeaderGroups().length - 1
 
               return (
                 <TableRow key={headerGroup.id}>
-                  {showNumeration && (
+                  {/* Grouped headers repeat this row; the numbering column has
+                      no groups of its own, so it spans them instead of printing
+                      "T/R" once per level. */}
+                  {showNumeration && isFirstRow && (
                     <TableHead
+                      rowSpan={table.getHeaderGroups().length}
                       className={cn(
                         'w-[1%] whitespace-nowrap',
-                        isFirstRow && 'first:rounded-tl-lg! last:rounded-tr-lg!',
-                        !showFilters && isLastRow ? 'first:rounded-bl-lg! last:rounded-br-lg!' : '',
-                        !isFirstRow && (!isLastRow || showFilters) && 'first:rounded-none! last:rounded-none!',
-                        isFirstRow && !isLastRow && 'first:rounded-bl-none! last:rounded-br-none!'
+                        // Only the top corners are rounded; the bottom edge of
+                        // the header meets the rows, so it stays square.
+                        isFirstRow
+                          ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
+                          : 'first:rounded-none! last:rounded-none!',
+                        'first:rounded-bl-none! last:rounded-br-none!'
                       )}
                     >
                       T/R
@@ -199,10 +211,12 @@ export function DataTable<TData, TValue>({
                         key={header.id}
                         colSpan={header.colSpan}
                         className={cn(
-                          isFirstRow && 'first:rounded-tl-lg! last:rounded-tr-lg!',
-                          !showFilters && isLastRow ? 'first:rounded-bl-lg! last:rounded-br-lg!' : '',
-                          !isFirstRow && (!isLastRow || showFilters) && 'first:rounded-none! last:rounded-none!',
-                          isFirstRow && !isLastRow && 'first:rounded-bl-none! last:rounded-br-none!',
+                          // Only the top corners are rounded; the bottom edge of
+                          // the header meets the rows, so it stays square.
+                          isFirstRow
+                            ? 'first:rounded-tl-lg! last:rounded-tr-lg!'
+                            : 'first:rounded-none! last:rounded-none!',
+                          'first:rounded-bl-none! last:rounded-br-none!',
                           isActions && 'w-[1%] whitespace-nowrap',
                           header.column.getIsPinned() && 'bg-neutral-100!',
                           columnDef.headerClassName,

@@ -16,6 +16,14 @@ import { useCustomSearchParams } from '@/shared/hooks'
 import { useAccidentsStats } from '@/features/dashboard/model/use-accidents-stats'
 import { AccidentStatusCards } from './parts/accident-status-cards'
 
+/** AccidentProcessStatus on the server. */
+const STATUS_OPTIONS = [
+  { id: 'NEW', name: 'Yangi' },
+  { id: 'DECREE_UPLOADED', name: 'Hujjat yuklangan' },
+  { id: 'IN_PROCESS', name: 'Jarayonda' },
+  { id: 'COMPLETED', name: 'Yakunlangan' },
+]
+
 export const getStatusBadge = (status?: string | null) => {
   if (!status) return '-'
 
@@ -48,7 +56,7 @@ const AccidentList: React.FC = () => {
   const navigate = useNavigate()
   const {
     addParams,
-    paramsObject: { type = 'INJURY', status = 'ALL', page = 1, size = 10 },
+    paramsObject: { type = 'INJURY', status = 'ALL', page = 1, size = 10, legalName = '', legalTin = '', hfName = '' },
   } = useCustomSearchParams()
 
   const {
@@ -58,6 +66,9 @@ const AccidentList: React.FC = () => {
   } = usePaginatedData<AccidentListItem>('/accidents', {
     type,
     status: status === 'ALL' ? undefined : status,
+    legalName,
+    legalTin,
+    hfName,
     page,
     size,
   })
@@ -77,17 +88,24 @@ const AccidentList: React.FC = () => {
     {
       header: 'Tashkilot nomi',
       accessorKey: 'legalName',
+      filterKey: 'legalName',
+      filterType: 'search',
     },
     {
       header: 'Tashkilot STIR',
       accessorKey: 'legalTin',
+      filterKey: 'legalTin',
+      filterType: 'number',
+      filterMaxLength: 9,
     },
     {
       header: 'XICHO',
       accessorKey: 'hfName',
+      filterKey: 'hfName',
+      filterType: 'search',
     },
     {
-      header: type === 'INJURY' ? 'Sana' : 'Sana va vaqt',
+      header: 'Sana',
       accessorKey: type === 'INJURY' ? 'date' : 'dateTime',
       cell: ({ row }) => {
         const val = type === 'INJURY' ? (row.original as any).date : row.original.dateTime
@@ -119,6 +137,9 @@ const AccidentList: React.FC = () => {
     {
       header: 'Holati',
       accessorKey: 'status',
+      filterKey: 'status',
+      filterType: 'select',
+      filterOptions: STATUS_OPTIONS,
       cell: ({ row }) => getStatusBadge(row.original.status),
     },
     {
@@ -194,6 +215,7 @@ const AccidentList: React.FC = () => {
       />
 
       <DataTable
+        showFilters
         data={accidents || []}
         columns={columns}
         isLoading={isLoading}

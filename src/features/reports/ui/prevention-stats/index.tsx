@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
+import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
@@ -46,8 +47,10 @@ const generateYears = () => {
 }
 
 const PreventionStatsReport: React.FC = () => {
-  const [year, setYear] = useState<string>(currentYear.toString())
-  const [month, setMonth] = useState<string>(currentMonth)
+  const { paramsObject, addParams } = useCustomSearchParams()
+
+  const year = String(paramsObject.year ?? currentYear)
+  const month = String(paramsObject.month ?? currentMonth)
 
   const { data: rawData, isLoading } = useData<any[]>('/reports/prevention', true, {
     year: Number(year),
@@ -123,7 +126,7 @@ const PreventionStatsReport: React.FC = () => {
       accessorKey: 'regionName',
       id: 'regionName',
       minSize: 200,
-      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
       cell: ({ row }: any) => {
         return <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{row.original.regionName}</span>
       },
@@ -140,7 +143,7 @@ const PreventionStatsReport: React.FC = () => {
         <GoBack title="Profilaktika ishlari statistikasi" />
 
         <div className="flex flex-wrap items-center gap-2">
-          <Select value={year} onValueChange={(val) => setYear(val)}>
+          <Select value={year} onValueChange={(val) => addParams({ year: val })}>
             <SelectTrigger className="h-10 w-[120px] bg-white text-sm">
               <SelectValue placeholder="Yilni tanlang" />
             </SelectTrigger>
@@ -153,7 +156,7 @@ const PreventionStatsReport: React.FC = () => {
             </SelectContent>
           </Select>
 
-          <Select value={month} onValueChange={(val) => setMonth(val)}>
+          <Select value={month} onValueChange={(val) => addParams({ month: val })}>
             <SelectTrigger className="h-10 w-[160px] bg-white text-sm">
               <SelectValue placeholder="Oyni tanlang" />
             </SelectTrigger>

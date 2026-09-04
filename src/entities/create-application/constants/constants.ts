@@ -254,6 +254,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     category: ApplicationCategory.ILLEGAL_EQUIPMENTS,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_CRANE,
     icon: 'crane',
+    disabled: true,
   },
   {
     id: 66,

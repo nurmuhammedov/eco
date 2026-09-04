@@ -11,6 +11,8 @@ import { ApplicationStatus } from '@/entities/application'
 import { useMemo } from 'react'
 import { Badge } from '@/shared/components/ui/badge'
 import { buildRegisterQuery } from '@/features/register/model/build-register-query'
+import { canUpdateRegistryType } from '@/features/register/model/can-update-registry'
+import { TruncatedCell } from '@/shared/components/common/truncated-cell'
 import { RegisterActiveTab } from '@/widgets/register/types'
 
 interface HfListProps {
@@ -21,6 +23,9 @@ export const HfList = ({ isArchive }: HfListProps) => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { addParams, paramsObject } = useCustomSearchParams()
+
+  // Arriving from the deregistration report: the status came with the link.
+  const fromReport = !!paramsObject.reportChangeBelongType
 
   const defaultRegionId =
     (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
@@ -100,8 +105,10 @@ export const HfList = ({ isArchive }: HfListProps) => {
     {
       header: 'Tashkilot manzili',
       accessorKey: 'legalAddress',
+      className: 'max-w-[220px]',
       filterKey: 'legalAddress',
       filterType: 'search',
+      cell: ({ row }: any) => <TruncatedCell value={row.original?.legalAddress} />,
     },
     {
       header: 'STIR',
@@ -120,8 +127,10 @@ export const HfList = ({ isArchive }: HfListProps) => {
     {
       accessorKey: 'address',
       header: 'XICHO manzili',
+      className: 'max-w-[220px]',
       filterKey: 'address',
       filterType: 'search',
+      cell: ({ row }: any) => <TruncatedCell value={row.original?.address} />,
     },
     {
       header: 'XICHO turi',
@@ -172,6 +181,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
           row={row}
           showEdit={
             !isArchive &&
+            canUpdateRegistryType('HF', user?.role) &&
             currentActive === 'true' &&
             ((user?.role === UserRoles.INSPECTOR &&
               (Number(row.original.regionId) === user?.regionId || user?.isController)) ||
@@ -207,7 +217,9 @@ export const HfList = ({ isArchive }: HfListProps) => {
             {
               id: 'CHANGED',
               name: 'O‘zgartirish so‘rovlari',
-              count: changedCountData?.page?.totalElements || undefined,
+              count: fromReport
+                ? data?.page?.totalElements || undefined
+                : changedCountData?.page?.totalElements || undefined,
             },
           ]?.map((i) => ({
             ...i,
@@ -227,7 +239,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
           }}
         />
       )}
-      {!isArchive && currentActive === 'CHANGED' && (
+      {!isArchive && !fromReport && currentActive === 'CHANGED' && (
         <TabsLayout
           activeTab={currentStatus}
           tabs={applicationStatus.map((s: { id: string; name: string }) => ({

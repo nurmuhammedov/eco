@@ -16,6 +16,35 @@ export interface RegisterQuery {
 
 const normalizeRegionId = (regionId: string) => (regionId === 'ALL' ? '' : regionId)
 
+/**
+ * Arriving from the deregistration report, the two report params define the set
+ * on their own, so the tab's own change filters are left out. changed=true is
+ * what resolves the pending change onto the row, which the request type column
+ * reads.
+ *
+ * The active flag is the registry/archive divide and follows nothing but the
+ * section it is read in - true under Reyestrlar, false under Arxiv - whatever
+ * stage the report column asked for.
+ */
+interface ReportChangeFilters {
+  reportChangeBelongType: string
+  reportChangeStatus: string
+  changed: true
+  active: boolean
+}
+
+function readReportChangeFilters(paramsObject: Record<string, any>, isArchive?: boolean): ReportChangeFilters | null {
+  const belongType = paramsObject.reportChangeBelongType
+  if (!belongType) return null
+
+  return {
+    reportChangeBelongType: String(belongType),
+    reportChangeStatus: String(paramsObject.reportChangeStatus || 'ALL'),
+    changed: true,
+    active: !isArchive,
+  }
+}
+
 function buildHfQuery({ paramsObject, isArchive, defaultRegionId }: BuildRegisterQueryInput): RegisterQuery {
   const {
     mode = '',
@@ -37,6 +66,21 @@ function buildHfQuery({ paramsObject, isArchive, defaultRegionId }: BuildRegiste
 
   const currentActive = String(active)
   const currentStatus = String(status)
+  const report = readReportChangeFilters(paramsObject, isArchive)
+
+  if (report) {
+    return {
+      endpoint: '/hf',
+      params: {
+        regionId: normalizeRegionId(regionId),
+        districtId,
+        active: report.active,
+        changed: report.changed,
+        reportChangeBelongType: report.reportChangeBelongType,
+        reportChangeStatus: report.reportChangeStatus,
+      },
+    }
+  }
 
   return {
     endpoint: '/hf',
@@ -126,6 +170,22 @@ function buildEquipmentsQuery({
     }
   }
 
+  const report = readReportChangeFilters(paramsObject, isArchive)
+
+  if (report) {
+    return {
+      endpoint: '/equipments',
+      params: {
+        regionId: normalizeRegionId(regionId),
+        districtId,
+        active: report.active,
+        changed: report.changed,
+        reportChangeBelongType: report.reportChangeBelongType,
+        reportChangeStatus: report.reportChangeStatus,
+      },
+    }
+  }
+
   const isAutoCrane = type === 'AUTO_CRANE'
   const equipmentType = isAutoCrane ? 'CRANE' : type
 
@@ -211,6 +271,22 @@ function buildIrsQuery({
     }
   }
 
+  const report = readReportChangeFilters(paramsObject, isArchive)
+
+  if (report) {
+    return {
+      endpoint: '/irs',
+      params: {
+        regionId: normalizeRegionId(regionId),
+        districtId,
+        valid: report.active,
+        changed: report.changed,
+        reportChangeBelongType: report.reportChangeBelongType,
+        reportChangeStatus: report.reportChangeStatus,
+      },
+    }
+  }
+
   return {
     endpoint: '/irs',
     params: {
@@ -276,6 +352,22 @@ function buildXrayQuery({
         districtId,
         changed: currentStatus === 'CHANGED_ORGANIZATIONS' ? true : '',
         changeStatus: currentStatus === 'CHANGED_ORGANIZATIONS' && changeStatus !== 'ALL' ? changeStatus : '',
+      },
+    }
+  }
+
+  const report = readReportChangeFilters(paramsObject, isArchive)
+
+  if (report) {
+    return {
+      endpoint: '/xrays',
+      params: {
+        regionId: normalizeRegionId(regionId),
+        districtId,
+        active: report.active,
+        changed: report.changed,
+        reportChangeBelongType: report.reportChangeBelongType,
+        reportChangeStatus: report.reportChangeStatus,
       },
     }
   }

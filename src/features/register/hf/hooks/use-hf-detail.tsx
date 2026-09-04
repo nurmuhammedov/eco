@@ -12,15 +12,27 @@ export const useHfDetail = () => {
     enabled: !!id,
     queryFn: () => hfDetailApi.getDetail(id),
     select: (data) => {
-      const files = Object.entries(data?.files)
-        .filter(([label]) => label.includes('Path'))
-        .map(([key, value]) => {
-          const label = `labels.HF.${key || 'file'}`
-          return { label: t(label), data: value as string, fieldName: key }
-        })
+      const toFileList = (set: Record<string, unknown> | undefined) =>
+        Object.entries(set || {})
+          .filter(([label]) => label.includes('Path'))
+          .map(([key, value]) => ({ label: t(`labels.HF.${key || 'file'}`), data: value as string, fieldName: key }))
+
+      /**
+       * A multi-sector facility keeps one attachment set per category and leaves
+       * the single set empty, so both are brought into the shape the sections
+       * render.
+       */
+      const multiCategoryFiles = Object.fromEntries(
+        Object.entries(data?.multiCategoryFiles || {}).map(([categoryId, set]) => [
+          categoryId,
+          toFileList(set as Record<string, unknown>),
+        ])
+      )
+
       return {
         ...data,
-        files,
+        files: toFileList(data?.files),
+        multiCategoryFiles,
       }
     },
   })

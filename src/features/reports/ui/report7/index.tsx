@@ -44,7 +44,7 @@ const Report7: React.FC = () => {
       accessorKey: 'officeName',
       id: 'officeName',
       minSize: 200,
-      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
       cell: ({ row }: any) => {
         const value = row.original.officeName
         const isRespublika = value?.toLowerCase().includes('respublika')

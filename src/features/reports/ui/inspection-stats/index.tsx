@@ -1,5 +1,7 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
+import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
+import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
@@ -22,9 +24,8 @@ const MONTHS = [
 ]
 
 const currentYear = new Date().getFullYear()
-const currentMonthNumber = new Date().getMonth() + 1
-const defaultMonthValue = currentMonthNumber === 1 ? 'DECEMBER' : MONTHS[currentMonthNumber - 2].value
-const defaultYearValue = currentMonthNumber === 1 ? (currentYear - 1).toString() : currentYear.toString()
+// Same period the Tekshiruvlar page opens on: the first month of the current quarter.
+const { year: defaultYearValue, month: defaultMonthValue } = getDefaultYearAndMonthForInspections()
 
 const generateYears = () => {
   const years = []
@@ -35,9 +36,11 @@ const generateYears = () => {
 }
 
 const InspectionStatsReport: React.FC = () => {
-  const [year, setYear] = useState<string>(defaultYearValue)
-  const [month, setMonth] = useState<string>(defaultMonthValue)
-  const [regionName, setRegionName] = useState<string>('ALL')
+  const { paramsObject, addParams } = useCustomSearchParams()
+
+  const year = String(paramsObject.year ?? defaultYearValue)
+  const month = String(paramsObject.month ?? defaultMonthValue)
+  const regionName = String(paramsObject.regionName ?? 'ALL')
 
   const { data: regionsList } = useRegionSelectQuery()
 
@@ -130,7 +133,7 @@ const InspectionStatsReport: React.FC = () => {
       accessorKey: 'regionName',
       id: 'regionName',
       minSize: 200,
-      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
       cell: ({ row }: any) => {
         const value = row.original.regionName
         return <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{value}</span>
@@ -150,7 +153,7 @@ const InspectionStatsReport: React.FC = () => {
         <GoBack title="Tekshiruv holati bo‘yicha" />
 
         <div className="flex flex-wrap items-center gap-2">
-          <Select value={year} onValueChange={(val) => setYear(val)}>
+          <Select value={year} onValueChange={(val) => addParams({ year: val })}>
             <SelectTrigger className="h-10 w-[120px] bg-white text-sm">
               <SelectValue placeholder="Yilni tanlang" />
             </SelectTrigger>
@@ -163,7 +166,7 @@ const InspectionStatsReport: React.FC = () => {
             </SelectContent>
           </Select>
 
-          <Select value={month} onValueChange={setMonth}>
+          <Select value={month} onValueChange={(val) => addParams({ month: val })}>
             <SelectTrigger className="w-full bg-white md:w-[200px]">
               <SelectValue placeholder="Oyni tanlang" />
             </SelectTrigger>
@@ -176,7 +179,7 @@ const InspectionStatsReport: React.FC = () => {
             </SelectContent>
           </Select>
 
-          <Select value={regionName} onValueChange={(val) => setRegionName(val)}>
+          <Select value={regionName} onValueChange={(val) => addParams({ regionName: val })}>
             <SelectTrigger className="h-10 w-[220px] bg-white text-sm">
               <SelectValue placeholder="Hududni tanlang" />
             </SelectTrigger>

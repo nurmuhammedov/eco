@@ -3,8 +3,19 @@ import { cn } from '@/shared/lib/utils'
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    <div className="relative h-full w-full overflow-auto p-3">
-      <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
+    /**
+     * The inset belongs to the frame, not to the scrollport. A sticky header
+     * sticks to the scrollport's padding edge, so padding on the scrolling
+     * element itself left a band around the table where the scrolled rows kept
+     * showing past the frozen header and the pinned columns.
+     */
+    <div className="relative h-full w-full p-3">
+      {/* The scrollport clips whatever leaves it, so it has to carry the same
+          radius as the table's own corners - a square clip cuts the rounded
+          header and its shadow. */}
+      <div className="h-full w-full overflow-auto rounded-lg">
+        <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
+      </div>
     </div>
   )
 )

@@ -37,6 +37,7 @@ const ReportsDetail2 = lazy(() => import('@/features/reports/ui/report2'))
 const ReportsDetail3 = lazy(() => import('@/features/reports/ui/report3'))
 const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
 const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
+const ReportIrsXrayStatus = lazy(() => import('@/features/reports/ui/irs-xray-status-report'))
 const InquiriesStatusReport = lazy(() => import('@/features/reports/ui/inquiries-status'))
 const ReportsDetail6 = lazy(() => import('@/features/reports/ui/report6'))
 const ReportsDetail7 = lazy(() => import('@/features/reports/ui/report7'))
@@ -292,6 +293,11 @@ export const regionalRoutes = [
     id: 'REPORT',
     path: 'reports/registers-equipment-terms',
     element: withSuspense(ReportsDetail5),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/irs-xray-status',
+    element: withSuspense(ReportIrsXrayStatus),
   },
   {
     id: 'REPORT',

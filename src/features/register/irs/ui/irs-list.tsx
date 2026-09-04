@@ -22,6 +22,9 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
   const { user } = useAuth()
   const { paramsObject, addParams } = useCustomSearchParams()
 
+  // Arriving from the deregistration report: the status came with the link.
+  const fromReport = !!paramsObject.reportChangeBelongType
+
   const defaultRegionId =
     (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
       ? user.regionId.toString()
@@ -331,7 +334,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
         </Tabs>
       )}
 
-      {(currentValid === 'CHANGED' || currentValid === 'CHANGED_ORGANIZATIONS') && !hideTabs && (
+      {(currentValid === 'CHANGED' || currentValid === 'CHANGED_ORGANIZATIONS') && !hideTabs && !fromReport && (
         <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 })}>
           <TabsList>
             {[

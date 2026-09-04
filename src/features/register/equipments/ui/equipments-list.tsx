@@ -16,6 +16,8 @@ import { Badge } from '@/shared/components/ui/badge'
 import { useParkSelectQuery } from '@/entities/admin/park/hooks/use-park-select-query'
 import { ApplicationTypeEnum } from '@/entities/create-application/types/enums'
 import { useMemo } from 'react'
+import { canUpdateRegistryType } from '@/features/register/model/can-update-registry'
+import { TruncatedCell } from '@/shared/components/common/truncated-cell'
 import { buildRegisterQuery } from '@/features/register/model/build-register-query'
 import { RegisterActiveTab } from '@/widgets/register/types'
 
@@ -31,6 +33,9 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
   const { user } = useAuth()
 
   const { paramsObject, addParams, removeParams } = useCustomSearchParams()
+
+  // Arriving from the deregistration report: the status came with the link.
+  const fromReport = !!paramsObject.reportChangeBelongType
 
   const defaultRegionId =
     (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL) && user?.regionId
@@ -251,15 +256,19 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     {
       accessorKey: 'address',
       header: 'Qurilma manzili',
+      className: 'max-w-[220px]',
       filterKey: 'address',
       filterType: 'search',
+      cell: ({ row }: any) => <TruncatedCell value={row.original?.address} />,
     },
     {
       accessorKey: 'factoryNumber',
       header: () => <div className="whitespace-nowrap">Zavod raqami</div>,
-      className: '!w-[1%]',
+      className: 'max-w-[180px]',
       filterKey: 'factoryNumber',
       filterType: 'search',
+      // A park carries every one of its factory numbers in this one field.
+      cell: ({ row }: any) => <TruncatedCell value={row.original?.factoryNumber} />,
     },
     {
       accessorFn: (row: any) => (row.nextPartialCheckDate ? getDate(row.nextPartialCheckDate) : '-'),
@@ -333,6 +342,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
             !isShortView &&
             !isArchive &&
             !isTanker &&
+            canUpdateRegistryType(row.original?.type, user?.role) &&
             ((user?.role === UserRoles.INSPECTOR &&
               (Number(row.original.regionId) === user?.regionId || user?.isController)) ||
               user?.role === UserRoles.LEGAL ||
@@ -507,7 +517,9 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
                   {
                     id: 'CHANGED',
                     name: isAutoCrane ? 'O‘zgartirish so‘rovlari' : 'O‘zgartirish so‘rovlari',
-                    count: changedCountData?.page?.totalElements || undefined,
+                    count: fromReport
+                      ? data?.page?.totalElements || undefined
+                      : changedCountData?.page?.totalElements || undefined,
                   },
                 ]
           }
@@ -520,7 +532,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
           }}
         />
       )}
-      {!hideTabs && currentStatus === 'CHANGED' && (
+      {!hideTabs && !fromReport && currentStatus === 'CHANGED' && (
         <TabsLayout
           activeTab={changeStatus?.toString()}
           tabs={[

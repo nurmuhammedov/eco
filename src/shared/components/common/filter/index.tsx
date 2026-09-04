@@ -80,7 +80,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
     switch (key) {
       case 'startDate':
         return (
-          <FilterField key={key} className="3xl:w-auto w-auto min-w-60 flex-1">
+          <FilterField key={key} className="w-48 shrink-0">
             <FormField
               control={control}
               name="startDate"
@@ -120,7 +120,7 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
 
       case 'endDate':
         return (
-          <FilterField key={key} className="3xl:w-auto w-auto min-w-60 flex-1">
+          <FilterField key={key} className="w-48 shrink-0">
             <FormField
               control={control}
               name="endDate"
@@ -225,7 +225,9 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className={className}>
-        <FilterRow className="scrollbar-hidden -m-1 flex justify-between gap-4 overflow-x-auto overflow-y-hidden p-1">
+        {/* The fields sit next to each other; justify-between used to push a
+            "from" and "to" pair to opposite ends of whatever width it was given. */}
+        <FilterRow className="scrollbar-hidden -m-1 flex gap-1 overflow-x-auto overflow-y-hidden p-1">
           {inputKeys.map((key) => renderInput(key))}
         </FilterRow>
       </form>

@@ -104,7 +104,7 @@ const Report8: React.FC = () => {
       accessorKey: 'officeName',
       id: 'officeName',
       minSize: 200,
-      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] bg-white',
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
       cell: ({ row }: any) => {
         const value = row.original.officeName
         const isSummary = row.original.isSummary
@@ -115,10 +115,9 @@ const Report8: React.FC = () => {
     createGroup('q', 'Qurilmalar'),
   ]
 
-  useData('/reports/hf-employee')
   return (
-    <div className="flex h-full flex-col gap-1 overflow-hidden">
-      <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <GoBack title="Reyestr maʼlumotlarini o‘zgartirish so‘rovlari bo‘yicha hisobot" />
       </div>
 

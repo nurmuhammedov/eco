@@ -2,28 +2,12 @@ import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import React from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { usePaginatedData } from '@/shared/hooks'
-import { ColumnDef } from '@tanstack/react-table'
 import { ExportExcelButton, GoBack } from '@/shared/components/common'
 import { format } from 'date-fns'
-import Filter from '@/shared/components/common/filter'
 
 export enum InspectionStatus {
   LEGAL = 'LEGAL',
   INDIVIDUAL = 'INDIVIDUAL',
-}
-
-interface IReportData {
-  regionName: string
-  activeHf: number
-  inactiveHf: number
-  activeEquipment: number
-  inactiveEquipment: number
-  expiredEquipment: number
-  noDateEquipment: number
-  activeIrs: number
-  inactiveIrs: number
-
-  [key: string]: any
 }
 
 const Report3: React.FC = () => {
@@ -76,11 +60,13 @@ const Report3: React.FC = () => {
     return [summaryRow, ...data]
   }, [data, totals])
 
-  const columns: ColumnDef<IReportData>[] = [
+  const columns = [
     {
       header: 'Hududlar',
       accessorKey: 'regionName',
+      id: 'regionName',
       minSize: 250,
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
       cell: ({ row }: any) => (
         <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.regionName}</span>
       ),
@@ -101,7 +87,7 @@ const Report3: React.FC = () => {
             },
             {
               header: '%',
-              cell: ({ row }) => calcPercent(row.original.activeHf, totals.activeHf),
+              cell: ({ row }: any) => calcPercent(row.original.activeHf, totals.activeHf),
               size: 80,
             },
           ],
@@ -119,7 +105,7 @@ const Report3: React.FC = () => {
             },
             {
               header: '%',
-              cell: ({ row }) => calcPercent(row.original.inactiveHf, totals.inactiveHf),
+              cell: ({ row }: any) => calcPercent(row.original.inactiveHf, totals.inactiveHf),
               size: 80,
             },
           ],
@@ -142,7 +128,7 @@ const Report3: React.FC = () => {
             },
             {
               header: '%',
-              cell: ({ row }) => calcPercent(row.original.activeEquipment, totals.activeEquipment),
+              cell: ({ row }: any) => calcPercent(row.original.activeEquipment, totals.activeEquipment),
               size: 80,
             },
           ],
@@ -160,7 +146,7 @@ const Report3: React.FC = () => {
             },
             {
               header: '%',
-              cell: ({ row }) => calcPercent(row.original.inactiveEquipment, totals.inactiveEquipment),
+              cell: ({ row }: any) => calcPercent(row.original.inactiveEquipment, totals.inactiveEquipment),
               size: 80,
             },
           ],
@@ -178,7 +164,7 @@ const Report3: React.FC = () => {
             },
             {
               header: '%',
-              cell: ({ row }) => calcPercent(row.original.expiredEquipment, totals.expiredEquipment),
+              cell: ({ row }: any) => calcPercent(row.original.expiredEquipment, totals.expiredEquipment),
               size: 80,
             },
           ],
@@ -196,7 +182,7 @@ const Report3: React.FC = () => {
             },
             {
               header: '%',
-              cell: ({ row }) => calcPercent(row.original.noDateEquipment, totals.noDateEquipment),
+              cell: ({ row }: any) => calcPercent(row.original.noDateEquipment, totals.noDateEquipment),
               size: 80,
             },
           ],
@@ -219,7 +205,7 @@ const Report3: React.FC = () => {
             },
             {
               header: '%',
-              cell: ({ row }) => calcPercent(row.original.activeIrs, totals.activeIrs),
+              cell: ({ row }: any) => calcPercent(row.original.activeIrs, totals.activeIrs),
               size: 80,
             },
           ],
@@ -237,7 +223,7 @@ const Report3: React.FC = () => {
             },
             {
               header: '%',
-              cell: ({ row }) => calcPercent(row.original.inactiveIrs, totals.inactiveIrs),
+              cell: ({ row }: any) => calcPercent(row.original.inactiveIrs, totals.inactiveIrs),
               size: 80,
             },
           ],
@@ -247,8 +233,10 @@ const Report3: React.FC = () => {
   ]
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      {/* The row wraps as a whole rather than inside the control group, so a
+          long title never strands the export button on a line of its own. */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <GoBack
           title={
             <>
@@ -257,10 +245,7 @@ const Report3: React.FC = () => {
             </>
           }
         />
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="w-full sm:w-auto">
-            <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
-          </div>
+        <div className="flex items-center gap-2 max-xl:w-full max-xl:flex-wrap">
           <ExportExcelButton
             endpoint={'/reports/registry/export-excel'}
             params={{ date: paramsObject.endDate || format(new Date(), 'yyyy-MM-dd') }}
@@ -271,14 +256,17 @@ const Report3: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm">
+      <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
           isPaginated={false}
           showNumeration={false}
           headerCenter={true}
+          isHeaderSticky={true}
           data={tableData}
           columns={columns as unknown as any}
           isLoading={isLoading}
+          initialState={{ columnPinning: { left: ['regionName'] } }}
+          className="h-full"
         />
       </div>
     </div>

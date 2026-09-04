@@ -89,7 +89,9 @@ const Report1: React.FC = () => {
       {
         header: 'Hududlar',
         accessorKey: 'regionName',
+        id: 'regionName',
         minSize: 250,
+        className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
         cell: ({ row }) => (
           <span className={row.original.isSummary ? 'text-base font-bold' : ''}>{row.original.regionName}</span>
         ),
@@ -165,13 +167,13 @@ const Report1: React.FC = () => {
   )
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      {/* The row wraps as a whole rather than inside the control group, so a
+          long title never strands the export button on a line of its own. */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <GoBack title="Davlat ro‘yxatidan o‘tkazilgan amaldagi XICHO, Qurilmalar, INM va Rentgenlar bo‘yicha maʼlumot" />
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="w-full sm:w-auto">
-            <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
-          </div>
+        <div className="flex items-center gap-2 max-xl:w-full max-xl:flex-wrap">
+          <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
           <ExportExcelButton
             endpoint={'/reports/registry/export-excel'}
             params={{ date: paramsObject.endDate || format(new Date(), 'yyyy-MM-dd') }}
@@ -180,14 +182,17 @@ const Report1: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm">
+      <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
           isPaginated={false}
           showNumeration={false}
           headerCenter={true}
+          isHeaderSticky={true}
           data={tableData}
           columns={columns}
           isLoading={isLoading}
+          initialState={{ columnPinning: { left: ['regionName'] } }}
+          className="h-full"
         />
       </div>
     </div>

@@ -1,36 +1,14 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
 import React from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { usePaginatedData } from '@/shared/hooks'
-import { ColumnDef } from '@tanstack/react-table'
 import Filter from '@/shared/components/common/filter'
 import { ExportExcelButton, GoBack } from '@/shared/components/common'
 
 export enum InspectionStatus {
   LEGAL = 'LEGAL',
   INDIVIDUAL = 'INDIVIDUAL',
-}
-
-interface IAppealData {
-  appealType: string
-  total: number
-  karakalpakstan: number
-  andijan: number
-  bukhara: number
-  jizzakh: number
-  kashkadarya: number
-  navoi: number
-  namangan: number
-  samarkand: number
-  syrdarya: number
-  surkhandarya: number
-  tashkent: number
-  tashkentRegion: number
-  fergana: number
-  khorazm: number
-
-  [key: string]: any
 }
 
 const Report1: React.FC = () => {
@@ -115,11 +93,13 @@ const Report1: React.FC = () => {
     { header: 'Xorazm XB', key: 'khorezm' },
   ]
 
-  const columns: ColumnDef<IAppealData>[] = [
+  const columns = [
     {
       header: 'Ariza turi',
       accessorKey: 'appealType',
+      id: 'appealType',
       minSize: 350,
+      className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
       cell: ({ row }: any) => (
         <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.appealType}</span>
       ),
@@ -129,6 +109,7 @@ const Report1: React.FC = () => {
       columns: [
         {
           header: 'dona',
+          className: 'text-center',
           accessorKey: 'total',
           size: 70,
           cell: ({ row }: any) => (
@@ -137,8 +118,9 @@ const Report1: React.FC = () => {
         },
         {
           header: '%',
+          className: 'text-center',
           size: 70,
-          cell: ({ row }) => calcPercent(row.original.total, totals.total),
+          cell: ({ row }: any) => calcPercent(row.original.total, totals.total),
         },
       ],
     },
@@ -147,6 +129,7 @@ const Report1: React.FC = () => {
       columns: [
         {
           header: 'dona',
+          className: 'text-center',
           accessorKey: region.key,
           size: 70,
           cell: ({ row }: any) => (
@@ -155,6 +138,7 @@ const Report1: React.FC = () => {
         },
         {
           header: '%',
+          className: 'text-center',
           size: 70,
           cell: ({ row }: any) => calcPercent(row.original[region.key], totals[region.key as keyof typeof totals]),
         },
@@ -163,13 +147,13 @@ const Report1: React.FC = () => {
   ]
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      {/* The row wraps as a whole rather than inside the control group, so a
+          long title never strands the export button on a line of its own. */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <GoBack title="Jismoniy va yuridik shaxslardan yuborilgan arizalarni turlari bo‘yicha hududlar kesimida taqsimlanishi" />
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="w-full sm:w-auto">
-            <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
-          </div>
+        <div className="flex items-center gap-2 max-xl:w-full max-xl:flex-wrap">
+          <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
           <ExportExcelButton
             endpoint={'/reports/appeal-type/export-excel'}
             params={{ ...paramsObject, ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL }}
@@ -180,12 +164,10 @@ const Report1: React.FC = () => {
         </div>
       </div>
 
-      <Tabs
-        value={activeTab || InspectionStatus.INDIVIDUAL}
-        onValueChange={handleTabChange}
-        className="flex flex-1 flex-col overflow-hidden"
-      >
-        <TabsList className="mb-4 w-full overflow-x-auto sm:w-max">
+      {/* Both tabs read the same query, keyed by ownerType - one table serves
+          them, rather than two identical ones. */}
+      <Tabs value={activeTab || InspectionStatus.INDIVIDUAL} onValueChange={handleTabChange}>
+        <TabsList className="w-full overflow-x-auto sm:w-max">
           <TabsTrigger value={InspectionStatus.INDIVIDUAL} className="flex-1 sm:flex-none">
             Jismoniy shaxslar
           </TabsTrigger>
@@ -193,34 +175,21 @@ const Report1: React.FC = () => {
             Yuridik shaxslar
           </TabsTrigger>
         </TabsList>
-
-        <TabsContent
-          value={InspectionStatus.INDIVIDUAL}
-          className="mt-0 flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm"
-        >
-          <DataTable
-            isPaginated={false}
-            showNumeration={false}
-            headerCenter={true}
-            data={tableData}
-            columns={columns as unknown as any}
-            isLoading={isLoading}
-          />
-        </TabsContent>
-        <TabsContent
-          value={InspectionStatus.LEGAL}
-          className="mt-0 flex flex-1 flex-col overflow-hidden rounded-md border bg-white shadow-sm"
-        >
-          <DataTable
-            isPaginated={false}
-            showNumeration={false}
-            headerCenter={true}
-            data={tableData}
-            columns={columns as unknown as any}
-            isLoading={isLoading}
-          />
-        </TabsContent>
       </Tabs>
+
+      <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
+        <DataTable
+          isPaginated={false}
+          showNumeration={false}
+          headerCenter={true}
+          isHeaderSticky={true}
+          data={tableData}
+          columns={columns as unknown as any}
+          isLoading={isLoading}
+          initialState={{ columnPinning: { left: ['appealType'] } }}
+          className="h-full"
+        />
+      </div>
     </div>
   )
 }
