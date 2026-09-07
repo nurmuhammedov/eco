@@ -10,6 +10,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { TabsLayout } from '@/shared/layouts'
 import { Badge } from '@/shared/components/ui/badge'
 import { buildRegisterQuery } from '@/features/register/model/build-register-query'
+import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
 import { RegisterActiveTab } from '@/widgets/register/types'
 
 interface XrayListProps {
@@ -278,16 +279,16 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
           }
           onTabChange={(type) => {
             if (type === 'CHANGED' || type === 'CHANGED_ORGANIZATIONS') {
-              addParams({ status: type, changeStatus: 'ALL' }, 'page')
+              addParams({ status: type, changeStatus: 'ALL' }, ...RESET_KEYS)
             } else {
-              addParams({ status: type, changeStatus: '' }, 'page')
+              addParams({ status: type, changeStatus: '' }, ...RESET_KEYS)
             }
           }}
         />
       )}
 
       {(currentStatus === 'CHANGED' || currentStatus === 'CHANGED_ORGANIZATIONS') && !hideTabs && !fromReport && (
-        <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 })}>
+        <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 }, ...REPORT_KEYS)}>
           <TabsList>
             {[
               { id: 'ALL', name: 'Barchasi' },

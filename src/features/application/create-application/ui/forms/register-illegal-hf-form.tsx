@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { CardForm } from '@/entities/create-application'
 import { GoBack } from '@/shared/components/common'
 import DetailRow from '@/shared/components/common/detail-row'
@@ -20,6 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { parseISO } from 'date-fns'
 import { HF_HAZARDOUS_SIGN_OPTIONS, HF_LEGAL_TYPE_OPTIONS } from '@/shared/constants/hf-attributes'
 import { HfCategoryFilesSection } from './parts/hf-category-files-section'
+import { hfFilesSetToForm } from '@/entities/create-application/schemas/hf-appeal-files'
 import { RegisterIllegalHfDTO } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
 import { useRegisterIllegalHf } from '@/features/application/create-application/model/use-create-illegal-hf-applicaton'
 import { NoteForm } from '@/features/application/create-application'
@@ -47,6 +49,16 @@ const RegisterIllegalHfForm = ({ onSubmit, isPending = false }: RegisterIllegalH
   } = useRegisterIllegalHf(onSubmit)
 
   const identity = form.watch('identity')
+
+  /**
+   * Records filed before the categories existed keep their attachments in
+   * `files` with no category to hang them on. Built once, or the effect that
+   * reads it would run on every render.
+   */
+  const unassignedFiles = useMemo(
+    () => (isUpdate && !detail?.categoryId && detail?.files ? hfFilesSetToForm(detail.files) : undefined),
+    [isUpdate, detail]
+  )
 
   return (
     <Form {...form}>
@@ -473,7 +485,7 @@ const RegisterIllegalHfForm = ({ onSubmit, isPending = false }: RegisterIllegalH
         </CardForm>
 
         <CardForm className="mb-5">
-          <HfCategoryFilesSection form={form} requireMandatory={!isUpdate} />
+          <HfCategoryFilesSection form={form} requireMandatory={!isUpdate} unassignedFiles={unassignedFiles} />
         </CardForm>
 
         <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>

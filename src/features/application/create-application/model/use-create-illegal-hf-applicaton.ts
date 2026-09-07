@@ -178,7 +178,11 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
 
   const handleSubmit = (data: RegisterIllegalHfDTO) => {
     if (isUpdate) {
-      updateMutate(data, {
+      // The update endpoint takes the attachment map under its own name; the
+      // registration one still reads hfAppealFilesDto.
+      const { hfAppealFilesDto, ...rest } = data as RegisterIllegalHfDTO & { hfAppealFilesDto?: unknown }
+
+      updateMutate({ ...rest, categoryFilesDto: hfAppealFilesDto } as any, {
         onSuccess: () => {
           invalidateRegistryQueries(queryClient)
           toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')

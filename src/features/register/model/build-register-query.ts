@@ -17,23 +17,31 @@ export interface RegisterQuery {
 const normalizeRegionId = (regionId: string) => (regionId === 'ALL' ? '' : regionId)
 
 /**
+ * Two crane tabs are not equipment types of their own: they are cranes pinned to
+ * one child type, which is what the tab stands for.
+ */
+export const CRANE_TAB_CHILD_ID: Record<string, string | undefined> = {
+  AUTO_CRANE: '31',
+  TOWER_CRANE: '3',
+}
+
+/**
  * Arriving from the deregistration report, the two report params define the set
  * on their own, so the tab's own change filters are left out. changed=true is
  * what resolves the pending change onto the row, which the request type column
  * reads.
  *
- * The active flag is the registry/archive divide and follows nothing but the
- * section it is read in - true under Reyestrlar, false under Arxiv - whatever
- * stage the report column asked for.
+ * No active flag is sent here at all. It is the registry/archive divide, and a
+ * deregistration report counts objects on both sides of it; pinning either value
+ * dropped half of what the number stood for.
  */
 interface ReportChangeFilters {
   reportChangeBelongType: string
   reportChangeStatus: string
   changed: true
-  active: boolean
 }
 
-function readReportChangeFilters(paramsObject: Record<string, any>, isArchive?: boolean): ReportChangeFilters | null {
+function readReportChangeFilters(paramsObject: Record<string, any>): ReportChangeFilters | null {
   const belongType = paramsObject.reportChangeBelongType
   if (!belongType) return null
 
@@ -41,7 +49,6 @@ function readReportChangeFilters(paramsObject: Record<string, any>, isArchive?: 
     reportChangeBelongType: String(belongType),
     reportChangeStatus: String(paramsObject.reportChangeStatus || 'ALL'),
     changed: true,
-    active: !isArchive,
   }
 }
 
@@ -66,7 +73,7 @@ function buildHfQuery({ paramsObject, isArchive, defaultRegionId }: BuildRegiste
 
   const currentActive = String(active)
   const currentStatus = String(status)
-  const report = readReportChangeFilters(paramsObject, isArchive)
+  const report = readReportChangeFilters(paramsObject)
 
   if (report) {
     return {
@@ -74,7 +81,6 @@ function buildHfQuery({ paramsObject, isArchive, defaultRegionId }: BuildRegiste
       params: {
         regionId: normalizeRegionId(regionId),
         districtId,
-        active: report.active,
         changed: report.changed,
         reportChangeBelongType: report.reportChangeBelongType,
         reportChangeStatus: report.reportChangeStatus,
@@ -170,7 +176,7 @@ function buildEquipmentsQuery({
     }
   }
 
-  const report = readReportChangeFilters(paramsObject, isArchive)
+  const report = readReportChangeFilters(paramsObject)
 
   if (report) {
     return {
@@ -178,7 +184,6 @@ function buildEquipmentsQuery({
       params: {
         regionId: normalizeRegionId(regionId),
         districtId,
-        active: report.active,
         changed: report.changed,
         reportChangeBelongType: report.reportChangeBelongType,
         reportChangeStatus: report.reportChangeStatus,
@@ -186,14 +191,14 @@ function buildEquipmentsQuery({
     }
   }
 
-  const isAutoCrane = type === 'AUTO_CRANE'
-  const equipmentType = isAutoCrane ? 'CRANE' : type
+  const pinnedChildId = CRANE_TAB_CHILD_ID[String(type)]
+  const equipmentType = pinnedChildId ? 'CRANE' : type
 
   return {
     endpoint: '/equipments',
     params: {
       type: equipmentType !== 'ALL' ? equipmentType : '',
-      childEquipmentId: isAutoCrane ? '31' : childEquipmentId,
+      childEquipmentId: pinnedChildId ?? childEquipmentId,
       mode,
       regionId: normalizeRegionId(regionId),
       districtId,
@@ -271,7 +276,7 @@ function buildIrsQuery({
     }
   }
 
-  const report = readReportChangeFilters(paramsObject, isArchive)
+  const report = readReportChangeFilters(paramsObject)
 
   if (report) {
     return {
@@ -279,7 +284,6 @@ function buildIrsQuery({
       params: {
         regionId: normalizeRegionId(regionId),
         districtId,
-        valid: report.active,
         changed: report.changed,
         reportChangeBelongType: report.reportChangeBelongType,
         reportChangeStatus: report.reportChangeStatus,
@@ -356,7 +360,7 @@ function buildXrayQuery({
     }
   }
 
-  const report = readReportChangeFilters(paramsObject, isArchive)
+  const report = readReportChangeFilters(paramsObject)
 
   if (report) {
     return {
@@ -364,7 +368,6 @@ function buildXrayQuery({
       params: {
         regionId: normalizeRegionId(regionId),
         districtId,
-        active: report.active,
         changed: report.changed,
         reportChangeBelongType: report.reportChangeBelongType,
         reportChangeStatus: report.reportChangeStatus,

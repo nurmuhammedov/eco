@@ -82,7 +82,9 @@ const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
             'active',
             'childEquipmentId',
             'activityType',
-            'changeStatus'
+            'changeStatus',
+            'reportChangeBelongType',
+            'reportChangeStatus'
           )
         }
       >

@@ -11,6 +11,7 @@ import { ApplicationStatus } from '@/entities/application'
 import { useMemo } from 'react'
 import { Badge } from '@/shared/components/ui/badge'
 import { buildRegisterQuery } from '@/features/register/model/build-register-query'
+import { RESET_KEYS } from '@/features/register/model/report-drill-down'
 import { canUpdateRegistryType } from '@/features/register/model/can-update-registry'
 import { TruncatedCell } from '@/shared/components/common/truncated-cell'
 import { RegisterActiveTab } from '@/widgets/register/types'
@@ -51,6 +52,15 @@ export const HfList = ({ isArchive }: HfListProps) => {
   })
 
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
+
+  /**
+   * The dictionary also carries the parent tiers (1, 2, 3) and the two the
+   * registry never assigns; a facility is filed under one of these three.
+   */
+  const hfTypeOptions = useMemo(
+    () => (hazardousFacilityTypes || []).filter((item: any) => ['3.1', '3.2', '3.3'].includes(String(item.name))),
+    [hazardousFacilityTypes]
+  )
 
   const { data: changedCountData } = usePaginatedData<any>(`/hf`, {
     page: 1,
@@ -138,7 +148,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
       filterKey: 'hfTypeId',
       filterType: 'select',
       maxSize: 80,
-      filterOptions: hazardousFacilityTypes || [],
+      filterOptions: hfTypeOptions,
     },
     ...(currentActive === 'CHANGED'
       ? [
@@ -232,9 +242,9 @@ export const HfList = ({ isArchive }: HfListProps) => {
           }))}
           onTabChange={(type) => {
             if (type === 'CHANGED') {
-              addParams({ active: type, status: 'ALL' }, 'page')
+              addParams({ active: type, status: 'ALL' }, ...RESET_KEYS)
             } else {
-              addParams({ active: type, status: '' }, 'page')
+              addParams({ active: type, status: '' }, ...RESET_KEYS)
             }
           }}
         />
@@ -246,7 +256,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
             ...s,
             count: s.id === currentStatus ? (data?.page?.totalElements ?? 0) : undefined,
           }))}
-          onTabChange={(s) => addParams({ status: s }, 'page')}
+          onTabChange={(s) => addParams({ status: s }, ...RESET_KEYS)}
         />
       )}
       <DataTable

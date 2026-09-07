@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
@@ -10,9 +10,19 @@ import { HfAppealFilesFields } from './hf-appeal-files-fields'
 
 export const HF_CATEGORY_MODE = { SINGLE: 'SINGLE', MULTI: 'MULTI' } as const
 
+const hasAnyFile = (set: unknown) =>
+  !!set &&
+  Object.values(set as Record<string, unknown>).some((value) => value !== undefined && value !== null && value !== '')
+
 interface HfCategoryFilesSectionProps {
   form: UseFormReturn<any>
   requireMandatory?: boolean
+  /**
+   * A record filed before the categories existed carries its attachments with
+   * no category to hang them on. They belong to whichever single sector is
+   * picked, rather than being lost.
+   */
+  unassignedFiles?: Record<string, unknown> | null
 }
 
 /**
@@ -20,7 +30,11 @@ interface HfCategoryFilesSectionProps {
  * brings its own attachment set, which the server takes as a map keyed by
  * category id - single or multiple, the shape is the same.
  */
-export const HfCategoryFilesSection = ({ form, requireMandatory = true }: HfCategoryFilesSectionProps) => {
+export const HfCategoryFilesSection = ({
+  form,
+  requireMandatory = true,
+  unassignedFiles,
+}: HfCategoryFilesSectionProps) => {
   const mode = form.watch('categoryMode')
   const isMulti = mode === HF_CATEGORY_MODE.MULTI
 
@@ -44,17 +58,39 @@ export const HfCategoryFilesSection = ({ form, requireMandatory = true }: HfCate
    * Attachments belong to the categories currently chosen. Dropping a category
    * has to drop its set too, or the appeal carries files for a sector it no
    * longer declares - which the server rejects.
+   *
+   * The set cannot be seeded by "no key yet": mounting the file fields registers
+   * the whole path first, so by the time this runs the category always has an
+   * empty set waiting. What decides is whether anything is actually in it, and
+   * a category inherits at most once - otherwise clearing a file by hand would
+   * bring it straight back.
    */
+  const seeded = useRef(new Set<string>())
+
   useEffect(() => {
     const current = form.getValues('hfAppealFilesDto') || {}
+
+    // Only one sector can inherit the loose set; several would each claim the same files.
+    const inherited = isMulti ? undefined : unassignedFiles
+
     const next: Record<string, unknown> = {}
+    let changed = Object.keys(current).length !== selectedIds.length
 
-    for (const id of selectedIds) next[id] = current[id] ?? emptyHfAppealFiles()
+    for (const id of selectedIds) {
+      const existing = current[id]
+      const canInherit = !!inherited && !seeded.current.has(id) && !hasAnyFile(existing)
 
-    const sameKeys = Object.keys(current).length === selectedIds.length && selectedIds.every((id) => id in current)
+      if (canInherit) {
+        seeded.current.add(id)
+        next[id] = inherited
+        changed = true
+      } else {
+        next[id] = existing ?? emptyHfAppealFiles()
+      }
+    }
 
-    if (!sameKeys) form.setValue('hfAppealFilesDto', next, { shouldValidate: false })
-  }, [selectedIds, form])
+    if (changed) form.setValue('hfAppealFilesDto', next, { shouldValidate: false })
+  }, [selectedIds, isMulti, unassignedFiles, form])
 
   return (
     <>

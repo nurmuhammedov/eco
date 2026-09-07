@@ -18,7 +18,8 @@ import { ApplicationTypeEnum } from '@/entities/create-application/types/enums'
 import { useMemo } from 'react'
 import { canUpdateRegistryType } from '@/features/register/model/can-update-registry'
 import { TruncatedCell } from '@/shared/components/common/truncated-cell'
-import { buildRegisterQuery } from '@/features/register/model/build-register-query'
+import { CRANE_TAB_CHILD_ID, buildRegisterQuery } from '@/features/register/model/build-register-query'
+import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
 import { RegisterActiveTab } from '@/widgets/register/types'
 
 interface EquipmentsListProps {
@@ -55,12 +56,16 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     activityType = '',
   } = paramsObject
 
-  const isAutoCrane = type === 'AUTO_CRANE'
-  const equipmentType = isAutoCrane ? 'CRANE' : type
-  const actualChildEquipmentId = isAutoCrane ? '31' : childEquipmentId
+  // A crane tab pinned to one child type - the type filter has nothing left to offer.
+  const pinnedChildId = CRANE_TAB_CHILD_ID[String(type)]
+  const isPinnedCrane = !!pinnedChildId
+  const equipmentType = isPinnedCrane ? 'CRANE' : type
+  const actualChildEquipmentId = pinnedChildId ?? childEquipmentId
 
   const currentStatus = String(status)
   const isTanker = type === 'TANKERS'
+
+  const tabNoun = type === 'AUTO_CRANE' ? 'avtokranlar' : type === 'TOWER_CRANE' ? 'minorali kranlar' : 'qurilmalar'
 
   const { data: parks } = useParkSelectQuery(regionId, districtId)
   const parkOptions = useMemo(() => parks?.map((p: any) => ({ name: p.name, id: String(p.id) })) || [], [parks])
@@ -88,7 +93,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     !isArchive
   )
 
-  const { data: dataForNewCount } = useData<number>(`/equipments/count`, !isTanker && !isAutoCrane, {
+  const { data: dataForNewCount } = useData<number>(`/equipments/count`, !isTanker && !isPinnedCrane, {
     type: !isTanker && type !== 'ALL' ? type : '',
     active: !isArchive,
     regionId: regionId === 'ALL' ? '' : regionId,
@@ -223,7 +228,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       accessorKey: 'childEquipment',
       maxSize: 150,
       filterKey: 'childEquipmentId',
-      filterType: isAutoCrane ? undefined : 'select',
+      filterType: isPinnedCrane ? undefined : 'select',
       filterOptions: childEquipmentTypes || [],
     },
     {
@@ -397,10 +402,8 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
               }
               acc.push(item)
               if (item.id === 'CRANE') {
-                acc.push({
-                  id: 'AUTO_CRANE',
-                  name: 'Avtokranlar',
-                })
+                acc.push({ id: 'AUTO_CRANE', name: 'Avtokranlar' })
+                acc.push({ id: 'TOWER_CRANE', name: 'Minorali kranlar' })
               }
               return acc
             }, [] as any[]) || []),
@@ -416,15 +419,17 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
             ...i,
             count:
               i?.id === type
-                ? i?.id === 'AUTO_CRANE'
+                ? CRANE_TAB_CHILD_ID[String(i?.id)]
                   ? totalElements
                   : ((isTanker ? tankersCount?.allCount : dataForNewCount) ?? 0)
                 : undefined,
           }))}
-          onTabChange={(type) => addParams({ type: type }, 'page', 'childEquipmentId', 'status', 'activityType')}
+          onTabChange={(type) =>
+            addParams({ type: type }, 'page', 'childEquipmentId', 'status', 'activityType', ...REPORT_KEYS)
+          }
         />
       )}
-      {!hideTabs && !isAutoCrane && isTanker && (
+      {!hideTabs && isTanker && (
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-2">
           <div className="min-w-0 flex-1">
             <TabsLayout
@@ -491,32 +496,32 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
               : [
                   {
                     id: 'ACTIVE',
-                    name: isAutoCrane ? 'Reyestrdagi avtokranlar' : 'Reyestrdagi qurilmalar',
+                    name: `Reyestrdagi ${tabNoun}`,
                     count: currentStatus === 'ACTIVE' ? totalElements : undefined,
                   },
                   {
                     id: 'VALID',
-                    name: isAutoCrane ? 'Soz holatdagi avtokranlar' : 'Soz holatdagi qurilmalar',
+                    name: `Soz holatdagi ${tabNoun}`,
                     count: currentStatus === 'VALID' ? totalElements : undefined,
                   },
                   {
                     id: 'INVALID',
-                    name: isAutoCrane ? 'Nosoz holatdagi avtokranlar' : 'Nosoz holatdagi qurilmalar',
+                    name: `Nosoz holatdagi ${tabNoun}`,
                     count: currentStatus === 'INVALID' ? totalElements : undefined,
                   },
                   {
                     id: 'EXPIRED',
-                    name: isAutoCrane ? 'Muddati o‘tgan avtokranlar' : 'Muddati o‘tgan qurilmalar',
+                    name: `Muddati o‘tgan ${tabNoun}`,
                     count: currentStatus === 'EXPIRED' ? totalElements : undefined,
                   },
                   {
                     id: 'NO_DATE',
-                    name: isAutoCrane ? 'Muddati kiritilmagan avtokranlar' : 'Muddati kiritilmaganlar',
+                    name: isPinnedCrane ? `Muddati kiritilmagan ${tabNoun}` : 'Muddati kiritilmaganlar',
                     count: currentStatus === 'NO_DATE' ? totalElements : undefined,
                   },
                   {
                     id: 'CHANGED',
-                    name: isAutoCrane ? 'O‘zgartirish so‘rovlari' : 'O‘zgartirish so‘rovlari',
+                    name: 'O‘zgartirish so‘rovlari',
                     count: fromReport
                       ? data?.page?.totalElements || undefined
                       : changedCountData?.page?.totalElements || undefined,
@@ -525,9 +530,9 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
           }
           onTabChange={(type) => {
             if (type === 'CHANGED') {
-              addParams({ status: type, changeStatus: 'ALL' }, 'page')
+              addParams({ status: type, changeStatus: 'ALL' }, ...RESET_KEYS)
             } else {
-              addParams({ status: type, changeStatus: '' }, 'page')
+              addParams({ status: type, changeStatus: '' }, ...RESET_KEYS)
             }
           }}
         />
@@ -545,7 +550,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
             ...s,
             count: s.id === changeStatus?.toString() ? data?.page?.totalElements || undefined : undefined,
           }))}
-          onTabChange={(s) => addParams({ changeStatus: s }, 'page')}
+          onTabChange={(s) => addParams({ changeStatus: s }, ...RESET_KEYS)}
         />
       )}
       <DataTable

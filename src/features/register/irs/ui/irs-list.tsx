@@ -9,6 +9,7 @@ import { UserRoles } from '@/entities/user'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { Badge } from '@/shared/components/ui/badge'
 import { buildRegisterQuery } from '@/features/register/model/build-register-query'
+import { REPORT_KEYS } from '@/features/register/model/report-drill-down'
 import { RegisterActiveTab } from '@/widgets/register/types'
 
 interface IrsListProps {
@@ -284,7 +285,10 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
   return (
     <div className="flex h-full flex-col gap-2">
       {!isArchive && !hideTabs && user?.role !== UserRoles.PROCURATOR && (
-        <Tabs value={currentValid} onValueChange={(val) => addParams({ valid: val, page: 1, changeStatus: 'ALL' })}>
+        <Tabs
+          value={currentValid}
+          onValueChange={(val) => addParams({ valid: val, page: 1, changeStatus: 'ALL' }, ...REPORT_KEYS)}
+        >
           <div className="scrollbar-hidden flex overflow-x-auto">
             <TabsList className="min-w-max">
               <TabsTrigger value="true">
@@ -335,7 +339,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
       )}
 
       {(currentValid === 'CHANGED' || currentValid === 'CHANGED_ORGANIZATIONS') && !hideTabs && !fromReport && (
-        <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 })}>
+        <Tabs value={changeStatus} onValueChange={(val) => addParams({ changeStatus: val, page: 1 }, ...REPORT_KEYS)}>
           <TabsList>
             {[
               { id: 'ALL', name: 'Barchasi' },
