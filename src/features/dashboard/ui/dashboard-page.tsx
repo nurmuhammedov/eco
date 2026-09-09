@@ -106,7 +106,7 @@ export const DashboardPage = () => {
               <RiskCenter regionId={regionParam} />
             </div>
 
-            <DocumentsStats />
+            <DocumentsStats regionId={regionParam} />
           </>
         )}
       </div>

@@ -12,10 +12,11 @@ const TABS: { id: TabType; label: string }[] = [
   { id: 'expertises', label: 'Ekspertiza xulosalari' },
 ]
 
-export const DocumentsStats = () => {
+export const DocumentsStats = ({ regionId }: { regionId?: string }) => {
   const [activeTab, setActiveTab] = useState<TabType>('permits')
+  // PermitParamsDto carries no region, so this block stays republic-wide.
   const { data: permitsData } = useData<any>('/permits/count')
-  const { data: conclusionsData } = useData<any>('/conclusions/count')
+  const { data: conclusionsData } = useData<any>('/conclusions/count', true, regionId ? { regionId } : {})
 
   const renderCleanCard = (
     title: string,
@@ -23,10 +24,12 @@ export const DocumentsStats = () => {
     icon: ReactNode,
     colorText: string,
     bgColor: string,
-    link: string
+    link: string,
+    hint?: string
   ) => (
     <Link
       to={link}
+      title={hint ?? title}
       className="group flex flex-col rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:shadow-md"
     >
       <div className="mb-4 flex items-center justify-between">
@@ -106,44 +109,49 @@ export const DocumentsStats = () => {
           '/accreditations?tab=ALL'
         )}
         {renderCleanCard(
-          'Xavfli ishlab chiqarish obyektini qurish, kengaytirish, qayta qurish, texnik jihatdan qayta jihozlash, konservatsiyalash va tugatishga doir loyiha hujjatlari (LH)',
+          'Loyiha hujjatlari (LH)',
           expertises.lh,
           <Scroll className="h-6 w-6" />,
           'text-indigo-600',
           'bg-indigo-50',
-          '/accreditations?tab=LH'
+          '/accreditations?tab=LH',
+          'Xavfli ishlab chiqarish obyektini qurish, kengaytirish, qayta qurish, texnik jihatdan qayta jihozlash, konservatsiyalash va tugatishga doir loyiha hujjatlari (LH)'
         )}
         {renderCleanCard(
-          'Xavfli ishlab chiqarish obyektida qo‘llaniladigan texnika qurilmalari (TQ)',
+          'Texnika qurilmalari (TQ)',
           expertises.tq,
           <Settings className="h-6 w-6" />,
           'text-orange-600',
           'bg-orange-50',
-          '/accreditations?tab=TQ'
+          '/accreditations?tab=TQ',
+          'Xavfli ishlab chiqarish obyektida qo‘llaniladigan texnika qurilmalari (TQ)'
         )}
         {renderCleanCard(
-          'Xavfli ishlab chiqarish obyektidagi binolar va inshootlar (BI)',
+          'Binolar va inshootlar (BI)',
           expertises.bi,
           <Building2 className="h-6 w-6" />,
           'text-emerald-600',
           'bg-emerald-50',
-          '/accreditations?tab=BI'
+          '/accreditations?tab=BI',
+          'Xavfli ishlab chiqarish obyektidagi binolar va inshootlar (BI)'
         )}
         {renderCleanCard(
-          'Sanoat xavfsizligi deklaratsiyasi (XD)',
+          'Xavfsizlik deklaratsiyasi (XD)',
           expertises.xd,
           <ShieldAlert className="h-6 w-6" />,
           'text-red-600',
           'bg-red-50',
-          '/accreditations?tab=XD'
+          '/accreditations?tab=XD',
+          'Sanoat xavfsizligi deklaratsiyasi (XD)'
         )}
         {renderCleanCard(
-          'Xavfli ishlab chiqarish obyektlarini identifikatsiyalash (IX)',
+          'Identifikatsiyalash (IX)',
           expertises.ix,
           <Scan className="h-6 w-6" />,
           'text-purple-600',
           'bg-purple-50',
-          '/accreditations?tab=IX'
+          '/accreditations?tab=IX',
+          'Xavfli ishlab chiqarish obyektlarini identifikatsiyalash (IX)'
         )}
       </div>
     )
