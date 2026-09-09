@@ -5,7 +5,8 @@ import { Badge } from '@/shared/components/ui/badge'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { useData } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
-import { FacilityLocation, RISK_STYLE, STATUS_STYLE, markerColor } from '../model/facility-location'
+import { RISK_STYLE } from '../model/facility-location'
+import { MapPoint, pointColor, statusOf } from '../model/map-layers'
 
 interface FacilityDetail {
   address: string | null
@@ -21,11 +22,26 @@ interface FacilityDetail {
   workerCount: number | null
 }
 
-const STATUS_VARIANT = {
+interface EquipmentDetail {
+  address: string | null
+  hfName: string | null
+  childEquipmentName: string | null
+  factoryNumber: string | null
+  model: string | null
+  factory: string | null
+  country: string | null
+  registrationDate: string | null
+  servicePeriod: string | null
+  nonDestructiveCheckDate: string | null
+}
+
+const STATUS_VARIANT: Record<string, 'success' | 'warning' | 'error'> = {
   VALID: 'success',
   INVALID: 'warning',
   INACTIVE: 'error',
-} as const
+  EXPIRED: 'error',
+  NO_DATE: 'warning',
+}
 
 const clamp = (value: number, max: number) => Math.min(Math.max(value, 0), Math.max(0, max))
 
@@ -174,31 +190,41 @@ const Row = ({ label, value }: { label: string; value?: string | number | null }
     </div>
   ) : null
 
-const FacilityDetailView = ({
-  facility,
+const DetailSkeleton = () => (
+  <div className="space-y-3">
+    {[70, 90, 55, 80].map((width) => (
+      <div key={width} className="space-y-1.5">
+        <Skeleton className="h-2.5 w-16" />
+        <Skeleton className="h-3.5" style={{ width: `${width}%` }} />
+      </div>
+    ))}
+  </div>
+)
+
+const DetailShell = ({
+  point,
   onBack,
   onClose,
+  children,
 }: {
-  facility: FacilityLocation
+  point: MapPoint
   onBack?: () => void
   onClose: () => void
+  children: ReactNode
 }) => {
-  const { data: detail, isLoading } = useData<FacilityDetail>(`/hf/${facility.id}`, !!facility.id)
-
-  const risk = facility.riskLevel ? RISK_STYLE[facility.riskLevel] : null
-  const staff = [detail?.managerCount, detail?.engineerCount, detail?.workerCount]
-  const staffTotal = staff.reduce<number>((total, count) => total + (count ?? 0), 0)
+  const status = statusOf(point)
+  const risk = point.riskLevel ? RISK_STYLE[point.riskLevel] : null
 
   return (
     <Shell
-      title={facility.name?.trim()}
-      subtitle={<p className="mt-1 font-mono text-xs text-neutral-500">{facility.registryNumber}</p>}
-      accent={markerColor(facility)}
+      title={point.name?.trim()}
+      subtitle={<p className="mt-1 font-mono text-xs text-neutral-500">{point.registryNumber}</p>}
+      accent={pointColor(point)}
       onBack={onBack}
       onClose={onClose}
     >
       <div className="flex shrink-0 flex-wrap gap-1.5 px-4 pb-3">
-        <Badge variant={STATUS_VARIANT[facility.status] ?? 'secondary'}>{STATUS_STYLE[facility.status]?.label}</Badge>
+        {status && <Badge variant={STATUS_VARIANT[point.status] ?? 'secondary'}>{status.label}</Badge>}
         {risk && (
           <Badge variant="outline" className="border-current/25" style={{ color: risk.color }}>
             {risk.label}
@@ -206,35 +232,10 @@ const FacilityDetailView = ({
         )}
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto border-t border-neutral-100 px-4 py-3.5">
-        {isLoading ? (
-          <div className="space-y-3">
-            {[70, 90, 55, 80].map((width) => (
-              <div key={width} className="space-y-1.5">
-                <Skeleton className="h-2.5 w-16" />
-                <Skeleton className="h-3.5" style={{ width: `${width}%` }} />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <dl className="space-y-3">
-            <Row label="Tashkilot" value={facility.legalName?.trim()} />
-            <Row label="STIR" value={facility.legalTin} />
-            <Row
-              label="Manzil"
-              value={[detail?.regionName, detail?.districtName, detail?.address].filter(Boolean).join(', ')}
-            />
-            <Row label="Ro‘yxatga olingan" value={detail?.registrationDate ? getDate(detail.registrationDate) : null} />
-            <Row label="Xavfli modda" value={detail?.hazardousSubstance} />
-            <Row label="Toifasi" value={detail?.categoryName} />
-            <Row label="Inspektor" value={detail?.inspectorName} />
-            <Row label="Xodimlar" value={staffTotal || null} />
-          </dl>
-        )}
-      </div>
+      <div className="min-h-0 flex-1 overflow-y-auto border-t border-neutral-100 px-4 py-3.5">{children}</div>
 
       <Link
-        to={`/register/${facility.id}/hf`}
+        to={point.detailPath}
         className="text-primary flex shrink-0 items-center justify-center gap-1.5 border-t border-neutral-100 py-3 text-sm font-medium transition-colors hover:bg-neutral-50"
       >
         Batafsil ko‘rish
@@ -244,42 +245,108 @@ const FacilityDetailView = ({
   )
 }
 
+const HfDetailView = ({ point, onBack, onClose }: { point: MapPoint; onBack?: () => void; onClose: () => void }) => {
+  const { data: detail, isLoading } = useData<FacilityDetail>(`/hf/${point.id}`, !!point.id)
+
+  const staff = [detail?.managerCount, detail?.engineerCount, detail?.workerCount]
+  const staffTotal = staff.reduce<number>((total, count) => total + (count ?? 0), 0)
+
+  return (
+    <DetailShell point={point} onBack={onBack} onClose={onClose}>
+      {isLoading ? (
+        <DetailSkeleton />
+      ) : (
+        <dl className="space-y-3">
+          <Row label="Tashkilot" value={point.ownerName?.trim()} />
+          <Row label="STIR" value={point.ownerTin} />
+          <Row
+            label="Manzil"
+            value={[detail?.regionName, detail?.districtName, detail?.address].filter(Boolean).join(', ')}
+          />
+          <Row label="Ro‘yxatga olingan" value={detail?.registrationDate ? getDate(detail.registrationDate) : null} />
+          <Row label="Xavfli modda" value={detail?.hazardousSubstance} />
+          <Row label="Toifasi" value={detail?.categoryName} />
+          <Row label="Inspektor" value={detail?.inspectorName} />
+          <Row label="Xodimlar" value={staffTotal || null} />
+        </dl>
+      )}
+    </DetailShell>
+  )
+}
+
+const EquipmentDetailView = ({
+  point,
+  onBack,
+  onClose,
+}: {
+  point: MapPoint
+  onBack?: () => void
+  onClose: () => void
+}) => {
+  const { data: detail, isLoading } = useData<EquipmentDetail>(`/equipments/${point.id}`, !!point.id)
+
+  return (
+    <DetailShell point={point} onBack={onBack} onClose={onClose}>
+      {isLoading ? (
+        <DetailSkeleton />
+      ) : (
+        <dl className="space-y-3">
+          <Row label="Egasi" value={point.ownerName?.trim()} />
+          <Row label="STIR" value={point.ownerTin} />
+          <Row label="Turi" value={detail?.childEquipmentName} />
+          <Row label="Manzil" value={detail?.address} />
+          <Row label="XICHO" value={detail?.hfName} />
+          <Row label="Zavod raqami" value={detail?.factoryNumber} />
+          <Row label="Rusumi" value={[detail?.factory, detail?.model].filter(Boolean).join(', ')} />
+          <Row label="Ishlab chiqarilgan davlat" value={detail?.country} />
+          <Row label="Ro‘yxatga olingan" value={detail?.registrationDate ? getDate(detail.registrationDate) : null} />
+          <Row label="Xizmat muddati" value={detail?.servicePeriod ? getDate(detail.servicePeriod) : null} />
+          <Row
+            label="Nazorat sanasi"
+            value={detail?.nonDestructiveCheckDate ? getDate(detail.nonDestructiveCheckDate) : null}
+          />
+        </dl>
+      )}
+    </DetailShell>
+  )
+}
+
 /**
  * Some facilities sit on the same spot, or close enough that no zoom level
  * separates them. Rather than a cluster that refuses to open, the panel lists
  * what is under the pin and lets one be picked.
  */
-const FacilityListView = ({
-  facilities,
+const PointListView = ({
+  points,
   onSelect,
   onClose,
 }: {
-  facilities: FacilityLocation[]
+  points: MapPoint[]
   onSelect: (id: string) => void
   onClose: () => void
 }) => (
   <Shell
     title="Shu joydagi obyektlar"
-    subtitle={<p className="mt-1 text-xs text-neutral-500">{facilities.length} ta obyekt</p>}
+    subtitle={<p className="mt-1 text-xs text-neutral-500">{points.length} ta obyekt</p>}
     onClose={onClose}
   >
     <ul className="min-h-0 flex-1 divide-y divide-neutral-100 overflow-y-auto border-t border-neutral-100">
-      {facilities.map((facility) => (
-        <li key={facility.id}>
+      {points.map((point) => (
+        <li key={point.id}>
           <button
             type="button"
-            onClick={() => onSelect(facility.id)}
+            onClick={() => onSelect(point.id)}
             className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-left transition-colors hover:bg-neutral-50"
           >
             <span
               className="size-2.5 shrink-0 rounded-full"
-              style={{ backgroundColor: markerColor(facility) }}
+              style={{ backgroundColor: pointColor(point) }}
               aria-hidden
             />
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm text-neutral-900">{facility.name?.trim()}</span>
+              <span className="block truncate text-sm text-neutral-900">{point.name?.trim()}</span>
               <span className="mt-0.5 block truncate font-mono text-[11px] text-neutral-500">
-                {facility.registryNumber}
+                {point.registryNumber}
               </span>
             </span>
             <ChevronRight className="size-4 shrink-0 text-neutral-400" />
@@ -291,19 +358,23 @@ const FacilityListView = ({
 )
 
 interface FacilityPanelProps {
-  facilities: FacilityLocation[]
-  focused: FacilityLocation | null
+  points: MapPoint[]
+  focused: MapPoint | null
   onSelect: (id: string) => void
   onBack: () => void
   onClose: () => void
 }
 
-export const FacilityPanel = ({ facilities, focused, onSelect, onBack, onClose }: FacilityPanelProps) => {
+export const FacilityPanel = ({ points, focused, onSelect, onBack, onClose }: FacilityPanelProps) => {
   if (focused) {
-    return (
-      <FacilityDetailView facility={focused} onBack={facilities.length > 1 ? onBack : undefined} onClose={onClose} />
+    const onBackFromDetail = points.length > 1 ? onBack : undefined
+
+    return focused.layer === 'HF' ? (
+      <HfDetailView point={focused} onBack={onBackFromDetail} onClose={onClose} />
+    ) : (
+      <EquipmentDetailView point={focused} onBack={onBackFromDetail} onClose={onClose} />
     )
   }
 
-  return <FacilityListView facilities={facilities} onSelect={onSelect} onClose={onClose} />
+  return <PointListView points={points} onSelect={onSelect} onClose={onClose} />
 }

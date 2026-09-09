@@ -1,63 +1,35 @@
-import { ComponentProps, useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Map as YMap, ObjectManager, YMaps } from '@pbe/react-yandex-maps'
 import { useData } from '@/shared/hooks'
 import { Skeleton } from '@/shared/components/ui/skeleton'
-import borders from '@/shared/assets/uz-borders.json'
+import {
+  BORDER_OPTIONS,
+  COUNTRY_BOUNDS,
+  MAP_QUERY,
+  borders,
+  boundsOf,
+  escapeHtml,
+  padBounds,
+  parseCoords,
+} from '../model/map-geometry'
 import { FacilityLocation } from '../model/facility-location'
 import { FacilityPanel } from './facility-panel'
-import { RISK_FILTERS, RiskKey, facilityIconOptions, riskKeyOf } from '../model/map-icons'
+import { pointIconOptions } from '../model/map-icons'
+import {
+  EquipmentLocation,
+  MapLayerKey,
+  MapPoint,
+  bucketOf,
+  isArchived,
+  layerOf,
+  toEquipmentPoint,
+  toHfPoint,
+} from '../model/map-layers'
 import { UNKNOWN_REGION, buildRegionStats } from '../model/region-stats'
 import { MapFilters } from './map-filters'
+import { MapLayerSwitch } from './map-layer-switch'
 import { RegionStatsPanel } from './region-stats-panel'
 import { useRegionSelectQueries } from '@/shared/api/dictionaries'
-
-/**
- * The library's types predate uz_UZ, which the Yandex API itself accepts - the
- * cast is narrowed to this one value rather than silencing the whole element.
- */
-const MAP_QUERY = { load: 'package.full', lang: 'uz_UZ' } as unknown as ComponentProps<typeof YMaps>['query']
-
-/**
- * Fitting to the outline beats a hand-picked centre and zoom: the country fills
- * whatever the viewport happens to be, on a laptop and on a 5K screen alike.
- */
-const COUNTRY_BOUNDS = (() => {
-  const [[minLat, minLng], [maxLat, maxLng]] = borders.features
-    .flatMap((feature) => feature.geometry.coordinates.flat())
-    .reduce(
-      ([[south, west], [north, east]], [lat, lng]) => [
-        [Math.min(south, lat), Math.min(west, lng)],
-        [Math.max(north, lat), Math.max(east, lng)],
-      ],
-      [
-        [90, 180],
-        [-90, -180],
-      ]
-    )
-
-  // An exact fit puts the outline flush against the frame; a little slack keeps
-  // edge markers and their hints inside the map.
-  const padLat = (maxLat - minLat) * 0.04
-  const padLng = (maxLng - minLng) * 0.04
-
-  return [
-    [minLat - padLat, minLng - padLng],
-    [maxLat + padLat, maxLng + padLng],
-  ]
-})()
-
-/**
- * The outline is drawn from the region file already in the repo rather than the
- * Yandex borders service, which needs a paid key. Transparent interactivity is
- * what keeps a polygon from swallowing the click meant for a marker sitting on
- * top of it.
- */
-const BORDER_OPTIONS = {
-  fillColor: '#2563eb14',
-  strokeColor: '#2563ebbf',
-  strokeWidth: 1.5,
-  interactivityModel: 'default#transparent',
-}
 
 const MAP_CONTROLS = [
   'fullscreenControl',
@@ -67,41 +39,6 @@ const MAP_CONTROLS = [
   'typeSelector',
   'zoomControl',
 ]
-
-const parseCoords = (raw: string): [number, number] | null => {
-  const parts = raw?.split(',').map((part) => Number(part.trim()))
-  if (!parts || parts.length < 2 || parts.some(Number.isNaN)) return null
-
-  return [parts[0], parts[1]]
-}
-
-const boundsOf = (points: [number, number][]) =>
-  points.reduce(
-    ([[south, west], [north, east]], [lat, lng]) => [
-      [Math.min(south, lat), Math.min(west, lng)],
-      [Math.max(north, lat), Math.max(east, lng)],
-    ],
-    [
-      [90, 180],
-      [-90, -180],
-    ]
-  )
-
-const escapeHtml = (value: string) =>
-  value.replace(/[&<>"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[char] ?? char)
-
-/**
- * A single point has no extent, and fitting to it zooms all the way in; the
- * padding gives a lone facility a neighbourhood to sit in.
- */
-const padBounds = ([[south, west], [north, east]]: number[][]) => {
-  const pad = 0.05
-
-  return [
-    [south - pad, west - pad],
-    [north + pad, east + pad],
-  ]
-}
 
 /**
  * The right-hand rail covers the corner Yandex puts its controls in. Floating
@@ -114,13 +51,53 @@ const moveControlsLeft = (map: any) => {
   }
 }
 
+const asArray = <T,>(value: T[] | undefined): T[] => (Array.isArray(value) ? value : [])
+
 export const FacilitiesMap = () => {
-  const { data, isLoading } = useData<FacilityLocation[]>('/hf/locations')
+  const [layerKey, setLayerKey] = useState<MapLayerKey>('HF')
+  const layer = layerOf(layerKey)
+
+  /**
+   * Only the selected registry is fetched, but a query that has been switched
+   * off keeps what it already loaded - so returning to a layer is instant and
+   * its total stays on the switch.
+   */
+  const hf = useData<FacilityLocation[]>('/hf/locations', layerKey === 'HF')
+  const cranes = useData<EquipmentLocation[]>('/equipments/cranes/locations', layerKey === 'CRANE')
+  const attractions = useData<EquipmentLocation[]>('/equipments/attractions/locations', layerKey === 'ATTRACTION')
+
+  const byLayer = useMemo(
+    () => ({
+      HF: asArray(hf.data).map(toHfPoint),
+      CRANE: asArray(cranes.data).map(toEquipmentPoint('CRANE')),
+      ATTRACTION: asArray(attractions.data).map(toEquipmentPoint('ATTRACTION')),
+    }),
+    [hf.data, cranes.data, attractions.data]
+  )
+
+  const data = byLayer[layerKey]
+  const isLoading = { HF: hf.isLoading, CRANE: cranes.isLoading, ATTRACTION: attractions.isLoading }[layerKey]
+
+  // The switch advertises the live registry, matching what the map draws on
+  // arrival rather than the archive it hides.
+  const layerCounts = useMemo(
+    () =>
+      Object.fromEntries(
+        (Object.keys(byLayer) as MapLayerKey[]).map((key) => [
+          key,
+          byLayer[key].filter((point) => !isArchived(point)).length || undefined,
+        ])
+      ) as Partial<Record<MapLayerKey, number>>,
+    [byLayer]
+  )
 
   // Everything is shown until a level is switched off, so the map opens the
   // same way it always did.
-  const [activeRisks, setActiveRisks] = useState<RiskKey[]>(() => RISK_FILTERS.map((item) => item.key))
+  const [activeBuckets, setActiveBuckets] = useState<string[]>(() => layer.legend.map((item) => item.key))
   const [regionId, setRegionId] = useState('')
+  // The archive is what the registry no longer counts, so the map does not
+  // count it either until it is asked for.
+  const [showArchived, setShowArchived] = useState(false)
   const { data: regions, isLoading: regionsLoading } = useRegionSelectQueries()
 
   // A cluster the map cannot pull apart opens as a list; a single pin skips
@@ -137,25 +114,32 @@ export const FacilitiesMap = () => {
     moveControlsLeft(instance)
   }, [])
 
-  const byId = useMemo(() => new Map((Array.isArray(data) ? data : []).map((item) => [item.id, item])), [data])
+  const byId = useMemo(() => new Map(data.map((item) => [item.id, item])), [data])
 
-  // A facility without usable coordinates never reaches the map, so it is left
-  // out of the counts too - a legend that promises more than it draws is worse
-  // than no legend.
-  const placed = useMemo(
+  // A point without usable coordinates never reaches the map, so it is left out
+  // of the counts too - a legend that promises more than it draws is worse than
+  // no legend.
+  const mapped = useMemo(
     () =>
-      (Array.isArray(data) ? data : []).flatMap((facility) => {
-        const coords = parseCoords(facility.location)
+      data.flatMap((point) => {
+        const coords = parseCoords(point.location)
 
-        return coords ? [{ facility, coords }] : []
+        return coords ? [{ point, coords }] : []
       }),
     [data]
+  )
+
+  const archivedCount = useMemo(() => mapped.filter(({ point }) => isArchived(point)).length, [mapped])
+
+  const placed = useMemo(
+    () => (showArchived ? mapped : mapped.filter(({ point }) => !isArchived(point))),
+    [mapped, showArchived]
   )
 
   const regionStats = useMemo(
     () =>
       buildRegionStats(
-        placed.map(({ facility }) => facility),
+        placed.map(({ point }) => point),
         (regions ?? []) as { id: number; name: string }[]
       ),
     [placed, regions]
@@ -166,20 +150,23 @@ export const FacilitiesMap = () => {
 
     const known = new Set(regionStats.filter((stat) => stat.id !== UNKNOWN_REGION).map((stat) => stat.id))
 
-    return placed.filter(({ facility }) =>
-      regionId === UNKNOWN_REGION ? !known.has(String(facility.regionId)) : String(facility.regionId) === regionId
+    return placed.filter(({ point }) =>
+      regionId === UNKNOWN_REGION ? !known.has(String(point.regionId)) : String(point.regionId) === regionId
     )
   }, [placed, regionId, regionStats])
 
   /**
-   * Counted before the risk filter is applied, so a level switched off still
+   * Counted before the legend filter is applied, so a level switched off still
    * says how much it is hiding; counted after the region one, so the numbers
    * describe what the map is showing.
    */
   const counts = useMemo(() => {
-    const totals: Record<RiskKey, number> = { HIGH: 0, MEDIUM: 0, LOW: 0, NONE: 0 }
+    const totals: Record<string, number> = {}
 
-    for (const { facility } of inRegion) totals[riskKeyOf(facility)] += 1
+    for (const { point } of inRegion) {
+      const bucket = bucketOf(point)
+      totals[bucket] = (totals[bucket] ?? 0) + 1
+    }
 
     return totals
   }, [inRegion])
@@ -193,15 +180,15 @@ export const FacilitiesMap = () => {
   const features = useMemo(
     () =>
       inRegion
-        .filter(({ facility }) => activeRisks.includes(riskKeyOf(facility)))
-        .map(({ facility, coords }) => ({
+        .filter(({ point }) => activeBuckets.includes(bucketOf(point)))
+        .map(({ point, coords }) => ({
           type: 'Feature',
-          id: facility.id,
+          id: point.id,
           geometry: { type: 'Point', coordinates: coords },
-          properties: { hintContent: escapeHtml(facility.name?.trim() ?? '') },
-          options: facilityIconOptions(facility),
+          properties: { hintContent: escapeHtml(point.name?.trim() ?? '') },
+          options: pointIconOptions(point),
         })),
-    [inRegion, activeRisks]
+    [inRegion, activeBuckets]
   )
 
   // instanceRef fires again on every re-render; binding twice would open the
@@ -248,7 +235,7 @@ export const FacilitiesMap = () => {
   }, [])
 
   const group = useMemo(
-    () => groupIds.map((id) => byId.get(id)).filter((item): item is FacilityLocation => !!item),
+    () => groupIds.map((id) => byId.get(id)).filter((item): item is MapPoint => !!item),
     [groupIds, byId]
   )
   const focused = focusedId ? (byId.get(focusedId) ?? null) : null
@@ -265,6 +252,15 @@ export const FacilitiesMap = () => {
     change()
   }
 
+  // Each registry carries its own legend, so the buckets held from the previous
+  // one would hide everything.
+  useEffect(() => {
+    setActiveBuckets(layer.legend.map((item) => item.key))
+    setRegionId('')
+    setShowArchived(false)
+    closePanel()
+  }, [layer, closePanel])
+
   /**
    * Picking a region does more than filter: the map travels there, which is the
    * part that makes the rail worth clicking. Clearing it returns to the country
@@ -273,9 +269,7 @@ export const FacilitiesMap = () => {
   const selectRegion = (id: string) => {
     applyFilter(() => setRegionId(id))
 
-    const points = id
-      ? placed.filter(({ facility }) => String(facility.regionId) === id).map(({ coords }) => coords)
-      : []
+    const points = id ? placed.filter(({ point }) => String(point.regionId) === id).map(({ coords }) => coords) : []
 
     mapRef.current?.setBounds(points.length > 0 ? padBounds(boundsOf(points)) : COUNTRY_BOUNDS, {
       checkZoomRange: true,
@@ -283,24 +277,16 @@ export const FacilitiesMap = () => {
     })
   }
 
-  if (isLoading) {
-    return (
-      <section aria-busy="true" className="h-full">
-        <p role="status" className="sr-only">
-          Obyektlar xaritasi yuklanmoqda
-        </p>
-        <Skeleton className="h-full min-h-[420px] w-full rounded-xl" />
-      </section>
-    )
-  }
-
   return (
     <section className="flex h-full min-h-0 flex-col">
-      <h2 className="sr-only">Xavfli ishlab chiqarish obyektlari xaritasi</h2>
+      <h2 className="sr-only">{layer.heading}</h2>
 
-      {placed.length === 0 ? (
-        <div className="flex h-full min-h-[420px] items-center justify-center rounded-xl border border-neutral-200 bg-neutral-50 text-sm text-neutral-500">
-          Koordinatasi ko‘rsatilgan obyekt topilmadi
+      {isLoading ? (
+        <div aria-busy="true" className="h-full">
+          <p role="status" className="sr-only">
+            Obyektlar xaritasi yuklanmoqda
+          </p>
+          <Skeleton className="h-full min-h-[420px] w-full rounded-xl" />
         </div>
       ) : (
         <div className="relative min-h-[420px] flex-1 overflow-hidden rounded-xl border border-neutral-200">
@@ -346,25 +332,36 @@ export const FacilitiesMap = () => {
               role="status"
               className="pointer-events-none absolute inset-x-4 top-1/2 z-10 mx-auto w-fit -translate-y-1/2 rounded-lg bg-white/95 px-4 py-2 text-sm text-neutral-600 shadow-sm backdrop-blur-sm md:right-[21rem]"
             >
-              Tanlangan filtrga mos obyekt topilmadi
+              {placed.length === 0 ? layer.empty : 'Tanlangan filtrga mos obyekt topilmadi'}
             </p>
           )}
 
-          <MapFilters
-            counts={counts}
-            active={activeRisks}
-            onToggle={(key) =>
-              applyFilter(() =>
-                setActiveRisks((current) =>
-                  current.includes(key) ? current.filter((item) => item !== key) : [...current, key]
+          {/* One panel rather than two: the top-left corner belongs to Yandex's
+              own controls, and a second floating card there covered them. */}
+          <div className="absolute bottom-4 left-4 z-10 max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-neutral-200 bg-white/95 shadow-sm backdrop-blur-sm md:max-w-[calc(100%-22rem)]">
+            <MapLayerSwitch active={layerKey} counts={layerCounts} onSelect={setLayerKey} />
+
+            <MapFilters
+              legend={layer.legend}
+              counts={counts}
+              active={activeBuckets}
+              archivedCount={archivedCount}
+              showArchived={showArchived}
+              onToggleArchived={() => applyFilter(() => setShowArchived((current) => !current))}
+              onToggle={(key) =>
+                applyFilter(() =>
+                  setActiveBuckets((current) =>
+                    current.includes(key) ? current.filter((item) => item !== key) : [...current, key]
+                  )
                 )
-              )
-            }
-            onReset={() => applyFilter(() => setActiveRisks(RISK_FILTERS.map((item) => item.key)))}
-          />
+              }
+              onReset={() => applyFilter(() => setActiveBuckets(layer.legend.map((item) => item.key)))}
+            />
+          </div>
 
           <RegionStatsPanel
             stats={regionStats}
+            legend={layer.legend}
             selected={regionId}
             onSelect={selectRegion}
             isLoading={regionsLoading}
@@ -372,7 +369,7 @@ export const FacilitiesMap = () => {
 
           {group.length > 0 && (
             <FacilityPanel
-              facilities={group}
+              points={group}
               focused={focused}
               onSelect={setFocusedId}
               onBack={() => setFocusedId(null)}

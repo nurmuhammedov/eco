@@ -31,6 +31,3 @@ export const STATUS_STYLE: Record<HfStatus, { color: string; label: string }> = 
   INVALID: { color: '#94a3b8', label: 'Vaqtinchalik nofaol' },
   INACTIVE: { color: '#cbd5e1', label: 'Reyestrdan chiqarilgan' },
 }
-
-export const markerColor = (facility: Pick<FacilityLocation, 'riskLevel' | 'status'>) =>
-  (facility.riskLevel && RISK_STYLE[facility.riskLevel]?.color) || STATUS_STYLE[facility.status]?.color || '#94a3b8'

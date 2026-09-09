@@ -1,10 +1,12 @@
 import { Check } from 'lucide-react'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { cn } from '@/shared/lib/utils'
-import { RegionStat, riskShare } from '../model/region-stats'
+import { RegionStat, share } from '../model/region-stats'
+import { LegendItem } from '../model/map-layers'
 
 interface RegionStatsPanelProps {
   stats: RegionStat[]
+  legend: LegendItem[]
   selected: string
   onSelect: (id: string) => void
   isLoading?: boolean
@@ -18,9 +20,9 @@ const format = (value: number) => value.toLocaleString('ru-RU').replace(/s/g, 'Â
  * the region that is high risk, and a share is easier to read against its own
  * whole than against a scale.
  */
-const RiskBar = ({ stat }: { stat: RegionStat }) => (
+const RiskBar = ({ stat, legend }: { stat: RegionStat; legend: LegendItem[] }) => (
   <span className="mt-2 flex h-1.5 overflow-hidden rounded-full bg-neutral-100" aria-hidden>
-    {riskShare(stat).map((slice) =>
+    {share(stat, legend).map((slice) =>
       slice.count > 0 ? (
         <span key={slice.key} style={{ width: `${slice.percent}%`, backgroundColor: slice.color }} />
       ) : null
@@ -33,7 +35,7 @@ const RiskBar = ({ stat }: { stat: RegionStat }) => (
  * itself cannot - how the facilities are spread across the regions and how the
  * last risk analysis came out - and doubles as the region filter.
  */
-export const RegionStatsPanel = ({ stats, selected, onSelect, isLoading }: RegionStatsPanelProps) => {
+export const RegionStatsPanel = ({ stats, legend, selected, onSelect, isLoading }: RegionStatsPanelProps) => {
   const total = stats.reduce((sum, stat) => sum + stat.total, 0)
 
   return (
@@ -84,10 +86,10 @@ export const RegionStatsPanel = ({ stats, selected, onSelect, isLoading }: Regio
                       <span className="text-sm font-semibold text-neutral-900 tabular-nums">{format(stat.total)}</span>
                     </span>
 
-                    <RiskBar stat={stat} />
+                    <RiskBar stat={stat} legend={legend} />
 
                     <span className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
-                      {riskShare(stat).map((slice) => (
+                      {share(stat, legend).map((slice) => (
                         <span
                           key={slice.key}
                           title={slice.label}
