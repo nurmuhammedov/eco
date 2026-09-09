@@ -21,16 +21,43 @@ export const useNavigationProgress = () => useContext(NavigationProgressContext)
  * flips a flag that is cleared once the new route commits.
  */
 export const NavigationProgressProvider = ({ children }: PropsWithChildren) => {
-  const { pathname } = useLocation()
+  const { pathname, search, key } = useLocation()
   const [pendingPath, setPendingPath] = useState<string | null>(null)
 
-  const startNavigation = useCallback((path: string) => {
-    setPendingPath((current) => (current === path ? current : path))
-  }, [])
+  const current = `${pathname}${search}`
 
+  /**
+   * Menu entries carry a query string, so a click can land on the URL already
+   * showing - the same section from a different tab, or the same link twice.
+   * Nothing then changes for the bar to react to, so it never starts.
+   */
+  const startNavigation = useCallback(
+    (path: string) => {
+      if (path === current || path === pathname) return
+
+      setPendingPath((pending) => (pending === path ? pending : path))
+    },
+    [current, pathname]
+  )
+
+  // `search` and `key` belong here beside `pathname`: a navigation that only
+  // changes the query left the bar running with nothing left to clear it.
   useEffect(() => {
     setPendingPath(null)
-  }, [pathname])
+  }, [pathname, search, key])
+
+  /**
+   * Last resort. A route that redirects back where it came from, or a chunk
+   * that never resolves, would otherwise leave the bar animating for the rest
+   * of the session - it is a hint that something is loading, not a promise.
+   */
+  useEffect(() => {
+    if (pendingPath === null) return
+
+    const timer = setTimeout(() => setPendingPath(null), 10_000)
+
+    return () => clearTimeout(timer)
+  }, [pendingPath])
 
   const value = useMemo(() => ({ pendingPath, startNavigation }), [pendingPath, startNavigation])
 
