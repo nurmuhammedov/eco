@@ -1,746 +1,217 @@
-import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
-import { UzbekistanMap } from './uzbekistan-map'
-import { useDashboardStats } from '@/features/dashboard/model/use-dashboard-stats'
-import { useRiskAnalysisStats } from '@/features/dashboard/model/use-risk-analysis-stats'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { MapPin, Pause, Play, Shapes } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
-import { getRegionIdByName } from '../model/regions'
-import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
-import { InquiryStatus } from '@/features/inquiries/model/types'
-import { BrandLogo } from '@/shared/components/common'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { ClipboardCheck, Factory, Loader2, MessageSquare, Radiation, ScanLine, ShieldAlert, Wrench } from 'lucide-react'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip'
+import { PointsMap } from '@/features/dashboard/ui/points-map'
+import {
+  AVAILABLE_YEARS,
+  CATEGORIES,
+  CategoryId,
+  MONTHS,
+  MONTH_LABELS,
+  categoryOf,
+  defaultPeriod,
+} from '../model/categories'
+import { regionNameById } from '../model/regions'
+import { useCategoryData } from '../model/use-category-data'
+import { CategoryRail } from './category-rail'
+import { KioskHeader } from './kiosk-header'
+import { MetricStrip } from './metric-strip'
+import { RegionMap } from './region-map'
 
-const CATEGORIES = [
-  { id: 'hf', label: 'XICHOlar', icon: Factory },
-  { id: 'equipment', label: 'Qurilmalar', icon: Wrench },
-  { id: 'irs', label: 'INMlar', icon: Radiation },
-  { id: 'xray', label: 'Rentgenlar', icon: ScanLine },
-  { id: 'risk', label: 'Xavf tahlili', icon: ShieldAlert },
-  { id: 'inspection', label: 'Tekshiruvlar', icon: ClipboardCheck },
-  { id: 'inquiry', label: 'Murojaatlar', icon: MessageSquare },
-] as const
+/** A wall display is never touched, so it refreshes and moves on by itself. */
+const REFRESH_MS = 90_000
+const ROTATE_MS = 25_000
 
-const HF_TIP_INFO = [
-  {
-    id: 1,
-    title: '1-tip XICHO',
-    color: '#0B626B',
-    desc: 'Birinchi tipdagi xavfli ishlab chiqarish obyektlari — "Xavfli ishlab chiqarish obyektlarini identifikatsiyalash tartibi to‘g‘risida nizom"ga 2-ilovaning 1 va 2-jadvallarida ko‘rsatilgan miqdorda, ularning cheklangan me‘yoriga teng bo‘lgan yoki undan ortiq bo‘lgan xavfli moddalar foydalaniladigan, ishlab chiqariladigan, qayta ishlanadigan, hosil qilinadigan, saqlanadigan, tashlanadigan, yo‘q qilinadigan yuqori xavflilik darajasidagi obyektlar;',
-  },
-  {
-    id: 2,
-    title: '2-tip XICHO',
-    color: '#2563EB',
-    desc: 'Ikkinchi tipdagi xavfli ishlab chiqarish obyektlari — birinchi tipga tegishli bo‘lmagan, "Xavfli ishlab chiqarish obyektlarini identifikatsiyalash tartibi to‘g‘risida nizom"ga 2-ilovaning 1 va 2-jadvallarida ko‘rsatilgan miqdorda, ularning cheklangan me‘yoridan kam bo‘lgan xavfli moddalar foydalaniladigan, ishlab chiqariladigan, qayta ishlanadigan, saqlanadigan, tashlanadigan, yo‘q qilinadigan obyektlar;',
-  },
-  {
-    id: 3,
-    title: '3-tip XICHO',
-    color: '#7C3AED',
-    desc: 'Uchinchi tipdagi xavfli ishlab chiqarish obyektlari — obyektlarning birinchi va ikkinchi tiplariga tegishli bo‘lmagan, ushbu Nizomning 6-bandi 2\u20145-kichik bandlarida ko‘rsatilgan xavflilik belgilariga ega bo‘lgan obyektlar.',
-  },
-]
+const ACCENT = '#0b626b'
 
-type CategoryId = (typeof CATEGORIES)[number]['id']
+export const InteractiveServicePage = () => {
+  const [category, setCategory] = useState<CategoryId>('hf')
+  const [regionId, setRegionId] = useState<number | null>(null)
+  const [rotating, setRotating] = useState(true)
+  // Where coordinates exist the pins are the better view; the shaded regions
+  // stay a click away for reading the spread as figures.
+  const [showRegions, setShowRegions] = useState(false)
 
-const SUBTITLES: Record<CategoryId, string> = {
-  hf: 'Xavfli ishlab chiqarish obyektlari',
-  equipment: 'Qurilmalar',
-  irs: 'Ionlashtiruvchi nurlanish manbalari',
-  xray: 'Rentgen qurilmalari',
-  risk: 'Xavf tahlili natijalari',
-  inspection: 'Tekshiruvlar',
-  inquiry: 'Kelib tushgan murojaatlar',
-}
+  const period = useMemo(defaultPeriod, [])
+  const [year, setYear] = useState(period.year)
+  const [month, setMonth] = useState<string>(period.month)
 
-const UZ_MONTHS = [
-  'yanvar',
-  'fevral',
-  'mart',
-  'aprel',
-  'may',
-  'iyun',
-  'iyul',
-  'avgust',
-  'sentabr',
-  'oktabr',
-  'noyabr',
-  'dekabr',
-]
-const UZ_WEEKDAYS = ['yakshanba', 'dushanba', 'seshanba', 'chorshanba', 'payshanba', 'juma', 'shanba']
+  const meta = categoryOf(category)
+  const queryClient = useQueryClient()
 
-const formatUzDate = (d: Date) => {
-  const day = d.getDate()
-  const month = UZ_MONTHS[d.getMonth()]
-  const year = d.getFullYear()
-  const weekday = UZ_WEEKDAYS[d.getDay()]
-  return `${day}-${month} ${year}, ${weekday.charAt(0).toUpperCase() + weekday.slice(1)}`
-}
-
-const formatUzTime = (d: Date) => {
-  const h = String(d.getHours()).padStart(2, '0')
-  const m = String(d.getMinutes()).padStart(2, '0')
-  const s = String(d.getSeconds()).padStart(2, '0')
-  return `${h}:${m}:${s}`
-}
-
-const getDefaultQuarter = () => {
-  const now = new Date()
-  const currentQ = Math.ceil((now.getMonth() + 1) / 3)
-  const currentY = now.getFullYear()
-  if (currentQ === 1) return { type: 4, year: Math.max(2025, currentY - 1) }
-  return { type: currentQ - 1, year: Math.max(2025, currentY) }
-}
-
-const CURRENT_YEAR = new Date().getFullYear()
-const AVAILABLE_YEARS = Array.from({ length: Math.max(1, CURRENT_YEAR - 2025 + 1) }, (_, i) => 2025 + i)
-
-const Skeleton: React.FC<{ className?: string }> = ({ className }) => (
-  <div className={cn('animate-pulse rounded-lg bg-slate-200/60', className)} />
-)
-
-const PageLoader: React.FC = () => (
-  <div className="fixed inset-0 flex flex-col overflow-hidden bg-slate-50 select-none">
-    <header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2 lg:px-6 lg:py-3">
-      <div className="flex items-center gap-3">
-        <Skeleton className="h-8 w-8 rounded-full lg:h-10 lg:w-10" />
-        <div className="flex flex-col gap-2">
-          <Skeleton className="h-4 w-64 lg:h-5 lg:w-80" />
-          <Skeleton className="h-3 w-44 lg:w-56" />
-        </div>
-      </div>
-      <div className="flex flex-col items-end gap-1.5">
-        <Skeleton className="h-6 w-24 lg:h-7 lg:w-28" />
-        <Skeleton className="h-3 w-36 lg:w-44" />
-      </div>
-    </header>
-    <main className="flex flex-1 flex-col gap-2 overflow-hidden p-2 lg:gap-3 lg:p-4">
-      <div className="relative flex-1 overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        <div className="absolute top-1/2 left-4 z-20 flex -translate-y-1/2 flex-col gap-2 rounded-2xl border border-slate-100 bg-white/80 p-2 shadow-sm backdrop-blur-sm lg:gap-3 lg:p-3">
-          {Array.from({ length: 7 }).map((_, i) => (
-            <Skeleton key={i} className="h-10 w-10 rounded-xl lg:h-12 lg:w-12" />
-          ))}
-        </div>
-        <div className="absolute top-4 left-5 z-10 flex flex-col gap-2 lg:top-6 lg:left-8">
-          <Skeleton className="h-6 w-48 lg:h-8 lg:w-56" />
-          <Skeleton className="h-3 w-40 lg:w-52" />
-        </div>
-        <div className="absolute top-4 right-5 z-10 lg:top-6 lg:right-8">
-          <Skeleton className="h-6 w-24 rounded-lg lg:h-7 lg:w-28" />
-        </div>
-        <div className="flex h-full w-full items-center justify-center">
-          <Skeleton className="h-[75%] w-[70%] rounded-xl" />
-        </div>
-      </div>
-      <div className="flex shrink-0 flex-col gap-3 sm:h-36 sm:flex-row sm:gap-4 lg:h-40">
-        <Skeleton className="h-32 rounded-2xl sm:h-full sm:w-56 lg:w-72" />
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div
-            key={i}
-            className="flex flex-1 flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 lg:p-6"
-          >
-            <Skeleton className="h-3 w-16" />
-            <Skeleton className="h-9 w-20 lg:h-10 lg:w-24" />
-            <Skeleton className="h-1 w-full" />
-          </div>
-        ))}
-      </div>
-    </main>
-  </div>
-)
-
-const AnimatedNumber: React.FC<{
-  value: number
-  className?: string
-  style?: React.CSSProperties
-  isLoading?: boolean
-}> = ({ value, className, style, isLoading }) => {
-  const [displayed, setDisplayed] = useState(0)
-
-  useEffect(() => {
-    if (value === 0) {
-      setDisplayed(0)
-      return
-    }
-    let raf: number
-    const duration = 1000
-    const start = performance.now()
-    const animate = (now: number) => {
-      const progress = Math.min((now - start) / duration, 1)
-      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress)
-      setDisplayed(Math.round(value * eased))
-      if (progress < 1) raf = requestAnimationFrame(animate)
-    }
-    raf = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(raf)
-  }, [value])
-
-  if (isLoading) {
-    return <Skeleton className="h-9 w-20 lg:h-12 lg:w-28" />
-  }
-
-  return (
-    <span className={className} style={style}>
-      {displayed.toLocaleString()}
-    </span>
-  )
-}
-
-const ProgressBar: React.FC<{ percent: number; color: string; isLoading?: boolean }> = ({
-  percent,
-  color,
-  isLoading,
-}) => {
-  const [width, setWidth] = useState(0)
-  useEffect(() => {
-    const t = requestAnimationFrame(() => setWidth(percent))
-    return () => cancelAnimationFrame(t)
-  }, [percent])
-
-  if (isLoading) {
-    return <Skeleton className="h-1 w-full" />
-  }
-
-  return (
-    <div className="h-1 w-full overflow-hidden rounded-full bg-slate-100">
-      <div
-        className="h-full rounded-full transition-[width] duration-1000 ease-out"
-        style={{ width: `${width}%`, backgroundColor: color }}
-      />
-    </div>
-  )
-}
-
-export const InteractiveServicePage: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<CategoryId>('hf')
-  const [activeRegion, setActiveRegion] = useState<string | null>(null)
-  const [time, setTime] = useState(new Date())
-  const [transitionKey, setTransitionKey] = useState(0)
-  const [pageReady, setPageReady] = useState(false)
-
-  const MONTHS_LIST = [
-    'JANUARY',
-    'FEBRUARY',
-    'MARCH',
-    'APRIL',
-    'MAY',
-    'JUNE',
-    'JULY',
-    'AUGUST',
-    'SEPTEMBER',
-    'OCTOBER',
-    'NOVEMBER',
-    'DECEMBER',
-  ]
-  const prevMonthIndex = new Date().getMonth() === 0 ? 11 : new Date().getMonth() - 1
-  const defaultQuarter = useMemo(() => getDefaultQuarter(), [])
-  const [filterYear, setFilterYear] = useState(defaultQuarter.year)
-  const [filterMonth, setFilterMonth] = useState(MONTHS_LIST[prevMonthIndex])
-
-  useEffect(() => {
-    const timer = setTimeout(() => setPageReady(true), 600)
-    return () => clearTimeout(timer)
-  }, [])
-
-  useEffect(() => {
-    const id = setInterval(() => setTime(new Date()), 1000)
-    return () => clearInterval(id)
-  }, [])
-
-  useEffect(() => {
-    setTransitionKey((k) => k + 1)
-  }, [activeCategory])
-
-  const handleRegionClick = useCallback((name: string | null) => {
-    if (!name) {
-      setActiveRegion(null)
-      return
-    }
-    setActiveRegion((prev) => (prev === name ? null : name))
-  }, [])
-
-  const regionIdForApi = activeRegion ? getRegionIdByName(activeRegion)?.toString() : undefined
-
-  const stats = useDashboardStats(regionIdForApi, activeCategory)
-
-  const hfCommon = { page: 1, size: 1, active: true }
-
-  const { totalElements: hfT1_id1 = 0, isLoading: l1 } = usePaginatedData(
-    '/hf',
-    { ...hfCommon, hfTypeId: 1 },
-    activeCategory === 'hf'
-  )
-  const { totalElements: hfT1_id5 = 0, isLoading: l2 } = usePaginatedData(
-    '/hf',
-    { ...hfCommon, hfTypeId: 5 },
-    activeCategory === 'hf'
-  )
-  const { totalElements: hfT2_id2 = 0, isLoading: l3 } = usePaginatedData(
-    '/hf',
-    { ...hfCommon, hfTypeId: 2 },
-    activeCategory === 'hf'
-  )
-  const { totalElements: hfT2_id6 = 0, isLoading: l4 } = usePaginatedData(
-    '/hf',
-    { ...hfCommon, hfTypeId: 6 },
-    activeCategory === 'hf'
-  )
-  const { totalElements: hfT3_id10 = 0, isLoading: l5 } = usePaginatedData(
-    '/hf',
-    { ...hfCommon, hfTypeId: 10 },
-    activeCategory === 'hf'
-  )
-  const { totalElements: hfT3_id7 = 0, isLoading: l6 } = usePaginatedData(
-    '/hf',
-    { ...hfCommon, hfTypeId: 7 },
-    activeCategory === 'hf'
-  )
-  const { totalElements: hfT3_id8 = 0, isLoading: l7 } = usePaginatedData(
-    '/hf',
-    { ...hfCommon, hfTypeId: 8 },
-    activeCategory === 'hf'
-  )
-  const { totalElements: hfT3_id9 = 0, isLoading: l8 } = usePaginatedData(
-    '/hf',
-    { ...hfCommon, hfTypeId: 9 },
-    activeCategory === 'hf'
-  )
-
-  const hfType1 = (hfT1_id1 ?? 0) + (hfT1_id5 ?? 0)
-  const hfType2 = (hfT2_id2 ?? 0) + (hfT2_id6 ?? 0)
-  const hfType3 = (hfT3_id10 ?? 0) + (hfT3_id7 ?? 0) + (hfT3_id8 ?? 0) + (hfT3_id9 ?? 0)
-  const hfLoading = l1 || l2 || l3 || l4 || l5 || l6 || l7 || l8
-
-  const riskStats = useRiskAnalysisStats({
-    year: filterYear,
-    month: filterMonth,
-    regionId: regionIdForApi,
-    enabled: activeCategory === 'risk',
+  const data = useCategoryData({
+    category,
+    regionId: regionId === null ? undefined : String(regionId),
+    year,
+    month,
   })
-  const riskTotal = riskStats.highRisk + riskStats.mediumRisk + riskStats.lowRisk
 
-  const { totalElements: inspRisk = 0, isLoading: lInsp1 } = usePaginatedData(
-    '/inspections',
-    { page: 1, size: 1, year: filterYear, month: filterMonth, type: 'RISK_BASED' },
-    activeCategory === 'inspection'
-  )
-  const { totalElements: inspOther = 0, isLoading: lInsp2 } = usePaginatedData(
-    '/inspections/other',
-    { page: 1, size: 1, year: filterYear, month: filterMonth, type: 'OTHER' },
-    activeCategory === 'inspection'
-  )
-  const inspectionTotal = inspRisk + inspOther
-  const inspLoading = lInsp1 || lInsp2
+  useEffect(() => {
+    const id = setInterval(() => queryClient.invalidateQueries(), REFRESH_MS)
 
-  const inqParams = { page: 1, size: 10 }
-  const { totalElements: inqNew = 0, isLoading: lInq1 } = usePaginatedData(
-    '/inquiries',
-    { ...inqParams, status: InquiryStatus.NEW },
-    activeCategory === 'inquiry'
-  )
-  const { totalElements: inqProcess = 0, isLoading: lInq2 } = usePaginatedData(
-    '/inquiries',
-    { ...inqParams, status: InquiryStatus.IN_PROCESS },
-    activeCategory === 'inquiry'
-  )
-  const { totalElements: inqCourt = 0, isLoading: lInq3 } = usePaginatedData(
-    '/inquiries',
-    { ...inqParams, status: InquiryStatus.IN_COURT },
-    activeCategory === 'inquiry'
-  )
-  const { totalElements: inqReward = 0, isLoading: lInq4 } = usePaginatedData(
-    '/inquiries',
-    { ...inqParams, status: InquiryStatus.REWARD_PAYMENT },
-    activeCategory === 'inquiry'
-  )
-  const { totalElements: inqCompleted = 0, isLoading: lInq5 } = usePaginatedData(
-    '/inquiries',
-    { ...inqParams, status: InquiryStatus.COMPLETED },
-    activeCategory === 'inquiry'
-  )
-  const { totalElements: inqRejected = 0, isLoading: lInq6 } = usePaginatedData(
-    '/inquiries',
-    { ...inqParams, status: InquiryStatus.REJECTED },
-    activeCategory === 'inquiry'
-  )
-  const inquiryTotal = inqNew + inqProcess + inqCourt + inqReward + inqCompleted + inqRejected
-  const inqLoading = lInq1 || lInq2 || lInq3 || lInq4 || lInq5 || lInq6
+    return () => clearInterval(id)
+  }, [queryClient])
 
-  const isDataLoading = useMemo(() => {
-    switch (activeCategory) {
-      case 'hf':
-        return hfLoading
-      case 'risk':
-        return false
-      case 'inspection':
-        return inspLoading
-      case 'inquiry':
-        return inqLoading
-      default:
-        return false
-    }
-  }, [activeCategory, hfLoading, inspLoading, inqLoading])
+  // The rotation moves the section on without going through selectCategory.
+  useEffect(() => {
+    setShowRegions(false)
+    setRegionId(null)
+  }, [category])
 
-  const currentStats = useMemo(() => {
-    switch (activeCategory) {
-      case 'hf':
-        return {
-          totalLabel: 'Amaldagi XICHOlar',
-          total: stats.hf.active,
-          items: [
-            { label: '1-tip', value: hfType1, color: '#0B626B' },
-            { label: '2-tip', value: hfType2, color: '#2563EB' },
-            { label: '3-tip', value: hfType3, color: '#7C3AED' },
-          ],
-        }
-      case 'equipment':
-        return {
-          totalLabel: 'Amaldagi qurilmalar',
-          total: stats.equipment.active,
-          items: [
-            { label: 'Muddati o\u2019tgan', value: stats.equipment.expired, color: '#D97706' },
-            { label: 'Muddati kiritilmaganlar', value: stats.equipment.noDate, color: '#64748B' },
-            { label: 'Jami', value: stats.equipment.total, color: '#0D9488' },
-          ],
-        }
-      case 'irs':
-        return {
-          totalLabel: 'Amaldagi INMlar',
-          total: stats.irs.active,
-          items: [
-            { label: 'Yaroqli', value: stats.irs.active, color: '#0D9488' },
-            { label: 'Yaroqsiz', value: stats.irs.inactive, color: '#E11D48' },
-            { label: 'Umumiy', value: stats.irs.total, color: '#2563EB' },
-          ],
-        }
-      case 'xray':
-        return {
-          totalLabel: 'Amaldagi rentgenlar',
-          total: stats.xray.active,
-          items: [
-            { label: 'Muddati o\u2019tgan', value: stats.xray.expired, color: '#D97706' },
-            { label: 'Muddati kiritilmaganlar', value: stats.xray.noDate, color: '#64748B' },
-            { label: 'Jami', value: stats.xray.total, color: '#0D9488' },
-          ],
-        }
-      case 'risk':
-        return {
-          totalLabel: 'Xavf tahlili natijasi',
-          total: riskTotal,
-          items: [
-            { label: 'Xavfi past', value: riskStats.lowRisk, color: '#0D9488' },
-            { label: 'Xavfi o‘rta', value: riskStats.mediumRisk, color: '#D97706' },
-            { label: 'Xavfi yuqori', value: riskStats.highRisk, color: '#E11D48' },
-          ],
-        }
-      case 'inspection':
-        return {
-          totalLabel: 'Tekshiruvlar',
-          total: inspectionTotal,
-          items: [
-            { label: 'Xavf tahlili asosida', value: inspRisk, color: '#0B626B' },
-            { label: 'Boshqa tekshiruvlar', value: inspOther, color: '#2563EB' },
-            { label: 'Jami', value: inspectionTotal, color: '#475569' },
-          ],
-        }
-      case 'inquiry':
-        return {
-          totalLabel: 'Murojaatlar',
-          total: inquiryTotal,
-          items: [
-            { label: 'Yangi', value: inqNew, color: '#3B82F6' },
-            { label: 'Ko‘rib chiqilmoqda', value: inqProcess, color: '#F59E0B' },
-            { label: 'Sud jarayonida', value: inqCourt, color: '#8B5CF6' },
-            { label: 'Hisob jarayonida', value: inqReward, color: '#6366F1' },
-            { label: 'Yakunlangan', value: inqCompleted, color: '#10B981' },
-            { label: 'Rad etilgan', value: inqRejected, color: '#EF4444' },
-          ],
-        }
-      default:
-        return { totalLabel: '', total: 0, items: [] }
-    }
-  }, [
-    activeCategory,
-    stats,
-    hfType1,
-    hfType2,
-    hfType3,
-    riskTotal,
-    riskStats.lowRisk,
-    riskStats.mediumRisk,
-    riskStats.highRisk,
-    inspectionTotal,
-    inspRisk,
-    inspOther,
-    inquiryTotal,
-    inqNew,
-    inqProcess,
-    inqCourt,
-    inqReward,
-    inqCompleted,
-    inqRejected,
-  ])
+  useEffect(() => {
+    if (!rotating) return
 
-  const activeCategoryLabel = CATEGORIES.find((c) => c.id === activeCategory)?.label ?? ''
+    const id = setInterval(() => {
+      setCategory((current) => {
+        const index = CATEGORIES.findIndex((item) => item.id === current)
 
-  if (!pageReady) {
-    return <PageLoader />
-  }
+        return CATEGORIES[(index + 1) % CATEGORIES.length].id
+      })
+    }, ROTATE_MS)
+
+    return () => clearInterval(id)
+  }, [rotating])
+
+  // Picking a region or a section by hand means someone is standing at the
+  // screen; carrying on rotating would pull the view out from under them.
+  const selectCategory = useCallback((id: CategoryId) => {
+    setRotating(false)
+    setCategory(id)
+    setRegionId(null)
+    setShowRegions(false)
+  }, [])
+
+  const hasPins = meta.locationEndpoint !== undefined
+  const onPins = hasPins && !showRegions
+
+  const selectRegion = useCallback((id: number | null) => {
+    setRotating(false)
+    setRegionId(id)
+  }, [])
 
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-slate-50 select-none">
-      <style>{`
-        @keyframes is-fade-up {
-          from { opacity: 0; transform: translateY(12px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes is-fade-in {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
-        @keyframes is-scale-in {
-          from { opacity: 0; transform: scale(0.96); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-        .is-anim-fade-up { animation: is-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
-        .is-anim-fade-in { animation: is-fade-in 0.6s ease both; }
-        .is-anim-scale-in { animation: is-scale-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
-      `}</style>
+      <KioskHeader subtitle={meta.subtitle} regionName={regionNameById(regionId)} />
 
-      <header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2 lg:px-6 lg:py-3">
-        <div className="flex items-center gap-3 lg:gap-4">
-          <div className="relative h-8 w-8 min-w-8 lg:h-10 lg:w-10 lg:min-w-10">
-            <BrandLogo className="size-full" />
-          </div>
-          <div>
-            <h1 className="text-sm font-semibold tracking-tight text-slate-700 lg:text-lg">
-              Sanoat radiatsiya va yadro xavfsizligi qo&#x2018;mitasi ekotizimi
-            </h1>
-            <p
-              key={`subtitle-${transitionKey}`}
-              className="is-anim-fade-in mt-0.5 text-[10px] text-slate-400 lg:text-xs"
-            >
-              {SUBTITLES[activeCategory]}
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col items-end gap-0.5">
-          <span className="text-xl tracking-tight text-slate-600 tabular-nums lg:text-2xl">{formatUzTime(time)}</span>
-          <span className="text-[10px] text-slate-400 lg:text-xs">{formatUzDate(time)}</span>
-        </div>
-      </header>
+      <main className="flex min-h-0 flex-1 flex-col gap-3 p-3 lg:flex-row lg:gap-4 lg:p-5">
+        <CategoryRail active={category} onSelect={selectCategory} />
 
-      <main className="flex flex-1 flex-col gap-2 overflow-hidden p-2 lg:gap-3 lg:p-4">
-        <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white">
-          <div className="absolute top-1/2 left-4 z-30 flex -translate-y-1/2 flex-col gap-2 rounded-2xl border border-slate-100 bg-white/80 p-2 shadow-sm backdrop-blur-md lg:gap-3 lg:p-3">
-            <TooltipProvider delayDuration={100}>
-              {CATEGORIES.map((cat) => {
-                const IconComponent = cat.icon
-                const isActive = activeCategory === cat.id
-                return (
-                  <Tooltip key={cat.id}>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        onClick={() => setActiveCategory(cat.id)}
-                        className={cn(
-                          'group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl transition-all duration-300 lg:h-12 lg:w-12',
-                          isActive
-                            ? 'bg-[#0B626B] text-white shadow-md'
-                            : 'bg-white/50 text-slate-500 hover:bg-slate-100 hover:text-slate-700 hover:shadow-sm'
-                        )}
-                      >
-                        <IconComponent
-                          className={cn(
-                            'h-5 w-5 transition-transform lg:h-6 lg:w-6',
-                            isActive ? 'scale-110' : 'group-hover:scale-110'
-                          )}
-                        />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="right"
-                      sideOffset={12}
-                      className="z-[110] cursor-pointer rounded-lg border border-slate-100 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 shadow-2xl lg:px-5 lg:py-3 lg:text-base"
-                    >
-                      {cat.label}
-                    </TooltipContent>
-                  </Tooltip>
-                )
-              })}
-            </TooltipProvider>
-          </div>
-
-          <div
-            key={`region-label-${activeRegion}-${transitionKey}`}
-            className="is-anim-fade-up absolute top-4 left-5 z-20 flex flex-col gap-3 lg:top-6 lg:left-8"
-          >
-            <div>
-              <h2 className="text-lg font-semibold text-slate-700 lg:text-2xl">
-                {activeRegion || 'Respublika bo‘yicha'}
+        <div className="flex min-h-0 flex-1 flex-col gap-3 lg:gap-4">
+          <section className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="absolute top-4 left-5 z-10 max-w-[45%]">
+              <h2 className="text-lg font-semibold text-slate-800 lg:text-2xl">
+                {regionNameById(regionId) ?? 'Respublika bo‘yicha'}
               </h2>
-              <p className="mt-0.5 text-[10px] text-slate-400 lg:mt-1 lg:text-xs">
-                Batafsil ma&#x2018;lumot uchun hududni tanlang
+              <p className="mt-0.5 text-[10px] text-slate-400 lg:text-xs">
+                {onPins
+                  ? 'Ro‘yxatga olingan obyektlarning joylashuvi'
+                  : data.regionCounts
+                    ? 'Hudud rangi obyektlar soniga bog‘liq · tanlash uchun bosing'
+                    : 'Bu bo‘lim uchun hududlar kesimi mavjud emas'}
               </p>
             </div>
-          </div>
 
-          <div className="absolute top-4 right-5 z-20 flex flex-col items-end gap-3 lg:top-6 lg:right-8">
-            {['risk', 'inspection'].includes(activeCategory) && (
-              <div className="is-anim-scale-in flex items-center gap-2">
-                <Select value={filterYear.toString()} onValueChange={(val) => setFilterYear(Number(val))}>
-                  <SelectTrigger className="h-8 w-[80px] border-slate-200 bg-white !text-xs text-slate-600 focus:ring-0 focus:ring-offset-0 lg:h-9 lg:w-[100px] lg:!text-sm">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {AVAILABLE_YEARS.map((year) => (
-                      <SelectItem key={year} value={year.toString()}>
-                        {year}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={filterMonth} onValueChange={(val) => setFilterMonth(val)}>
-                  <SelectTrigger className="h-8 w-[100px] border-slate-200 bg-white !text-xs text-slate-600 focus:ring-0 focus:ring-offset-0 lg:h-9 lg:w-[120px] lg:!text-sm">
-                    <SelectValue placeholder="Oy" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {MONTHS_LIST.map((m, idx) => (
-                      <SelectItem key={m} value={m}>
-                        {
-                          [
-                            'Yanvar',
-                            'Fevral',
-                            'Mart',
-                            'Aprel',
-                            'May',
-                            'Iyun',
-                            'Iyul',
-                            'Avgust',
-                            'Sentabr',
-                            'Oktabr',
-                            'Noyabr',
-                            'Dekabr',
-                          ][idx]
-                        }
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
+            <div className="absolute top-4 right-5 z-10 flex items-center gap-2">
+              {meta.periodFiltered && (
+                <>
+                  <Select value={String(year)} onValueChange={(value) => setYear(Number(value))}>
+                    <SelectTrigger className="h-8 w-[86px] border-slate-200 bg-white !text-xs lg:h-9 lg:!text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {AVAILABLE_YEARS.map((item) => (
+                        <SelectItem key={item} value={String(item)}>
+                          {item}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-            <div className="is-anim-scale-in flex items-center gap-1.5 rounded-lg border border-[#0B626B]/10 bg-[#0B626B]/5 px-3 py-1 lg:gap-2 lg:px-4 lg:py-1.5">
-              <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#0B626B]" />
-              <span className="text-[10px] text-[#0B626B] lg:text-xs">{activeCategoryLabel}</span>
-            </div>
+                  <Select value={month} onValueChange={setMonth}>
+                    <SelectTrigger className="h-8 w-[106px] border-slate-200 bg-white !text-xs lg:h-9 lg:!text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MONTHS.map((item, index) => (
+                        <SelectItem key={item} value={item}>
+                          {MONTH_LABELS[index]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </>
+              )}
 
-            {activeCategory === 'hf' && (
-              <div className="flex w-[280px] flex-col gap-2 lg:w-[340px]">
-                <TooltipProvider delayDuration={100}>
-                  {HF_TIP_INFO.map((tip) => (
-                    <Tooltip key={tip.id}>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          className="group flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-slate-200/60 bg-white/70 p-3 text-left shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-lg"
-                        >
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="h-2.5 w-2.5 rounded-full shadow-sm"
-                              style={{ backgroundColor: tip.color }}
-                            />
-                            <span className="text-xs font-bold text-slate-700 transition-colors group-hover:text-slate-900 lg:text-sm">
-                              {tip.title}
-                            </span>
-                          </div>
-                          <p className="line-clamp-3 text-[10px] leading-relaxed text-slate-500 group-hover:text-slate-700 lg:text-xs">
-                            {tip.desc}
-                          </p>
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent
-                        side="left"
-                        className="z-[100] w-[320px] rounded-xl border border-slate-200 bg-white p-4 text-xs leading-relaxed text-slate-700 shadow-2xl lg:w-[400px]"
+              {hasPins && (
+                <div className="flex items-center rounded-lg border border-slate-200 bg-white p-0.5">
+                  {[
+                    { pins: true, icon: MapPin, label: 'Obyektlar xaritasi' },
+                    { pins: false, icon: Shapes, label: 'Hududlar kesimi' },
+                  ].map((option) => {
+                    const Icon = option.icon
+                    const isOn = onPins === option.pins
+
+                    return (
+                      <button
+                        key={option.label}
+                        type="button"
+                        onClick={() => {
+                          setRotating(false)
+                          setShowRegions(!option.pins)
+                        }}
+                        aria-pressed={isOn}
+                        className={cn(
+                          'flex size-7 cursor-pointer items-center justify-center rounded-md transition-colors lg:size-8',
+                          isOn ? 'bg-teal text-white' : 'text-slate-400 hover:text-slate-600'
+                        )}
                       >
-                        {tip.desc}
-                      </TooltipContent>
-                    </Tooltip>
-                  ))}
-                </TooltipProvider>
-              </div>
-            )}
-          </div>
-
-          <Suspense
-            fallback={
-              <div className="flex h-full w-full items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-[#0B626B]/40" />
-              </div>
-            }
-          >
-            <div className="h-[90%] w-[85%]">
-              <UzbekistanMap
-                activeRegionId={activeRegion}
-                onRegionClick={handleRegionClick}
-                className="h-full w-full"
-              />
-            </div>
-          </Suspense>
-
-          {activeRegion && (
-            <button
-              type="button"
-              onClick={() => setActiveRegion(null)}
-              className="is-anim-scale-in absolute right-5 bottom-4 z-20 rounded-lg border border-slate-200 bg-white px-3 py-1 text-[10px] text-slate-500 shadow-sm transition-colors hover:bg-slate-50 lg:right-8 lg:bottom-5 lg:px-4 lg:py-1.5 lg:text-xs"
-            >
-              Barchasini ko&#x2018;rsatish
-            </button>
-          )}
-        </div>
-
-        <div
-          key={`stats-row-${transitionKey}`}
-          className="flex shrink-0 flex-col gap-3 sm:h-36 sm:flex-row sm:gap-4 lg:h-40"
-        >
-          <div className="is-anim-fade-up relative flex flex-col justify-between overflow-hidden rounded-2xl bg-[#0B626B] p-5 sm:w-56 lg:w-72 lg:p-6">
-            <div className="absolute -right-6 -bottom-6 h-24 w-24 rounded-full bg-white/5 lg:h-28 lg:w-28" />
-            <span className="text-[10px] tracking-[0.15em] text-white/50 uppercase lg:text-[11px] lg:tracking-[0.2em]">
-              Jami
-            </span>
-            <AnimatedNumber
-              value={currentStats.total}
-              isLoading={isDataLoading}
-              className="text-4xl tracking-tight text-white tabular-nums lg:text-5xl"
-            />
-            <span className="text-[9px] tracking-wider text-white/40 lg:text-[10px]">{currentStats.totalLabel}</span>
-          </div>
-
-          {currentStats.items.map((item, idx) => {
-            const pct = currentStats.total > 0 ? Math.min(100, (item.value / currentStats.total) * 100) : 0
-            return (
-              <div
-                key={idx}
-                className="is-anim-fade-up flex flex-1 flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 lg:p-6"
-                style={{ animationDelay: `${(idx + 1) * 80}ms` }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full" style={{ backgroundColor: item.color }} />
-                  <span className="text-[10px] tracking-wider text-slate-400 uppercase lg:text-[11px]">
-                    {item.label}
-                  </span>
+                        <Icon className="size-4" />
+                        <span className="sr-only">{option.label}</span>
+                      </button>
+                    )
+                  })}
                 </div>
-                <AnimatedNumber
-                  value={item.value}
-                  isLoading={isDataLoading}
-                  className="text-3xl tracking-tight tabular-nums lg:text-4xl"
-                  style={{ color: item.color }}
+              )}
+
+              <button
+                type="button"
+                onClick={() => setRotating((current) => !current)}
+                aria-pressed={rotating}
+                className={cn(
+                  'flex size-8 cursor-pointer items-center justify-center rounded-lg border transition-colors lg:size-9',
+                  rotating
+                    ? 'border-teal/20 bg-teal/5 text-teal'
+                    : 'border-slate-200 bg-white text-slate-400 hover:text-slate-600'
+                )}
+              >
+                {rotating ? <Pause className="size-4" /> : <Play className="size-4" />}
+                <span className="sr-only">{rotating ? 'Avtomatik almashishni to‘xtatish' : 'Avtomatik almashish'}</span>
+              </button>
+            </div>
+
+            <div className={cn('h-full w-full pt-12 pb-2', onPins && 'overflow-hidden rounded-xl')}>
+              {onPins ? (
+                <PointsMap points={data.points} focusRegionId={regionId} />
+              ) : (
+                <RegionMap
+                  counts={data.regionCounts}
+                  activeRegionId={regionId}
+                  onSelect={selectRegion}
+                  accent={ACCENT}
                 />
-                <ProgressBar percent={pct} color={item.color} isLoading={isDataLoading} />
-              </div>
-            )
-          })}
+              )}
+            </div>
+          </section>
+
+          <MetricStrip
+            total={data.total}
+            totalLabel={data.totalLabel}
+            metrics={data.metrics}
+            archived={data.archived}
+            isLoading={data.isLoading}
+          />
         </div>
       </main>
     </div>
