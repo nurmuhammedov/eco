@@ -1,42 +1,31 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { MapPin, Pause, Play, Shapes } from 'lucide-react'
+import { MapPin, Shapes } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { PointsMap } from '@/features/dashboard/ui/points-map'
-import {
-  AVAILABLE_YEARS,
-  CATEGORIES,
-  CategoryId,
-  MONTHS,
-  MONTH_LABELS,
-  categoryOf,
-  defaultPeriod,
-} from '../model/categories'
-import { regionNameById } from '../model/regions'
+import { AVAILABLE_YEARS, CategoryId, MONTHS, categoryOf, defaultPeriodFor } from '../model/categories'
+import { REGIONS_SORTED as REGIONS, regionNameById } from '../model/regions'
 import { useCategoryData } from '../model/use-category-data'
 import { CategoryRail } from './category-rail'
 import { KioskHeader } from './kiosk-header'
 import { MetricStrip } from './metric-strip'
 import { RegionMap } from './region-map'
 
-/** A wall display is never touched, so it refreshes and moves on by itself. */
+/** A wall display is never touched, so it refreshes itself. */
 const REFRESH_MS = 90_000
-const ROTATE_MS = 25_000
 
 const ACCENT = '#0b626b'
+const ALL_REGIONS = 'ALL'
 
 export const InteractiveServicePage = () => {
   const [category, setCategory] = useState<CategoryId>('hf')
   const [regionId, setRegionId] = useState<number | null>(null)
-  const [rotating, setRotating] = useState(true)
   // Where coordinates exist the pins are the better view; the shaded regions
   // stay a click away for reading the spread as figures.
   const [showRegions, setShowRegions] = useState(false)
 
-  const period = useMemo(defaultPeriod, [])
-  const [year, setYear] = useState(period.year)
-  const [month, setMonth] = useState<string>(period.month)
+  const [period, setPeriod] = useState(() => defaultPeriodFor('hf'))
 
   const meta = categoryOf(category)
   const queryClient = useQueryClient()
@@ -44,8 +33,8 @@ export const InteractiveServicePage = () => {
   const data = useCategoryData({
     category,
     regionId: regionId === null ? undefined : String(regionId),
-    year,
-    month,
+    year: period.year,
+    month: period.month,
   })
 
   useEffect(() => {
@@ -54,30 +43,15 @@ export const InteractiveServicePage = () => {
     return () => clearInterval(id)
   }, [queryClient])
 
-  // The rotation moves the section on without going through selectCategory.
+  // Risk analysis closes a quarter behind and inspections open on the current
+  // one, so the period follows the section rather than carrying across it.
   useEffect(() => {
     setShowRegions(false)
     setRegionId(null)
+    setPeriod(defaultPeriodFor(category))
   }, [category])
 
-  useEffect(() => {
-    if (!rotating) return
-
-    const id = setInterval(() => {
-      setCategory((current) => {
-        const index = CATEGORIES.findIndex((item) => item.id === current)
-
-        return CATEGORIES[(index + 1) % CATEGORIES.length].id
-      })
-    }, ROTATE_MS)
-
-    return () => clearInterval(id)
-  }, [rotating])
-
-  // Picking a region or a section by hand means someone is standing at the
-  // screen; carrying on rotating would pull the view out from under them.
   const selectCategory = useCallback((id: CategoryId) => {
-    setRotating(false)
     setCategory(id)
     setRegionId(null)
     setShowRegions(false)
@@ -86,37 +60,54 @@ export const InteractiveServicePage = () => {
   const hasPins = meta.locationEndpoint !== undefined
   const onPins = hasPins && !showRegions
 
-  const selectRegion = useCallback((id: number | null) => {
-    setRotating(false)
-    setRegionId(id)
-  }, [])
+  const selectRegion = useCallback((id: number | null) => setRegionId(id), [])
 
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-slate-50 select-none">
-      <KioskHeader subtitle={meta.subtitle} regionName={regionNameById(regionId)} />
+      <KioskHeader subtitle={meta.subtitle} />
 
       <main className="flex min-h-0 flex-1 flex-col gap-3 p-3 lg:flex-row lg:gap-4 lg:p-5">
         <CategoryRail active={category} onSelect={selectCategory} />
 
         <div className="flex min-h-0 flex-1 flex-col gap-3 lg:gap-4">
           <section className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-4">
+            {/* The section is what a passer-by needs first; the region is the
+                filter applied to it, so it reads as the qualifier it is. */}
             <div className="absolute top-4 left-5 z-10 max-w-[45%]">
-              <h2 className="text-lg font-semibold text-slate-800 lg:text-2xl">
-                {regionNameById(regionId) ?? 'Respublika bo‘yicha'}
+              <h2 className="flex flex-wrap items-baseline gap-x-2 text-lg font-semibold text-slate-800 lg:text-2xl">
+                {meta.label}
+                <span className="text-sm font-normal text-slate-400 lg:text-base">
+                  · {regionNameById(regionId) ?? 'butun respublika'}
+                </span>
               </h2>
-              <p className="mt-0.5 text-[10px] text-slate-400 lg:text-xs">
-                {onPins
-                  ? 'Ro‘yxatga olingan obyektlarning joylashuvi'
-                  : data.regionCounts
-                    ? 'Hudud rangi obyektlar soniga bog‘liq · tanlash uchun bosing'
-                    : 'Bu bo‘lim uchun hududlar kesimi mavjud emas'}
-              </p>
             </div>
 
             <div className="absolute top-4 right-5 z-10 flex items-center gap-2">
+              {/* Clicking a shape only works on the region view, so the pin view
+                  needs its own way in - and both share the one control. */}
+              <Select
+                value={regionId === null ? ALL_REGIONS : String(regionId)}
+                onValueChange={(value) => selectRegion(value === ALL_REGIONS ? null : Number(value))}
+              >
+                <SelectTrigger className="h-8 w-[172px] border-slate-200 bg-white !text-xs lg:h-9 lg:!text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL_REGIONS}>Butun respublika</SelectItem>
+                  {REGIONS.map((region) => (
+                    <SelectItem key={region.id} value={String(region.id)}>
+                      {region.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
               {meta.periodFiltered && (
                 <>
-                  <Select value={String(year)} onValueChange={(value) => setYear(Number(value))}>
+                  <Select
+                    value={period.year}
+                    onValueChange={(value) => setPeriod((current) => ({ ...current, year: value }))}
+                  >
                     <SelectTrigger className="h-8 w-[86px] border-slate-200 bg-white !text-xs lg:h-9 lg:!text-sm">
                       <SelectValue />
                     </SelectTrigger>
@@ -129,14 +120,17 @@ export const InteractiveServicePage = () => {
                     </SelectContent>
                   </Select>
 
-                  <Select value={month} onValueChange={setMonth}>
+                  <Select
+                    value={period.month}
+                    onValueChange={(value) => setPeriod((current) => ({ ...current, month: value }))}
+                  >
                     <SelectTrigger className="h-8 w-[106px] border-slate-200 bg-white !text-xs lg:h-9 lg:!text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {MONTHS.map((item, index) => (
-                        <SelectItem key={item} value={item}>
-                          {MONTH_LABELS[index]}
+                      {MONTHS.map((item) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {item.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -157,10 +151,7 @@ export const InteractiveServicePage = () => {
                       <button
                         key={option.label}
                         type="button"
-                        onClick={() => {
-                          setRotating(false)
-                          setShowRegions(!option.pins)
-                        }}
+                        onClick={() => setShowRegions(!option.pins)}
                         aria-pressed={isOn}
                         className={cn(
                           'flex size-7 cursor-pointer items-center justify-center rounded-md transition-colors lg:size-8',
@@ -174,21 +165,6 @@ export const InteractiveServicePage = () => {
                   })}
                 </div>
               )}
-
-              <button
-                type="button"
-                onClick={() => setRotating((current) => !current)}
-                aria-pressed={rotating}
-                className={cn(
-                  'flex size-8 cursor-pointer items-center justify-center rounded-lg border transition-colors lg:size-9',
-                  rotating
-                    ? 'border-teal/20 bg-teal/5 text-teal'
-                    : 'border-slate-200 bg-white text-slate-400 hover:text-slate-600'
-                )}
-              >
-                {rotating ? <Pause className="size-4" /> : <Play className="size-4" />}
-                <span className="sr-only">{rotating ? 'Avtomatik almashishni to‘xtatish' : 'Avtomatik almashish'}</span>
-              </button>
             </div>
 
             <div className={cn('h-full w-full pt-12 pb-2', onPins && 'overflow-hidden rounded-xl')}>

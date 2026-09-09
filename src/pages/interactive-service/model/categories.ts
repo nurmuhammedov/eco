@@ -10,6 +10,11 @@ import {
   Radiation,
   ScanLine,
 } from 'lucide-react'
+import {
+  MONTHS,
+  getDefaultYearAndMonthForInspections,
+  getDefaultYearAndMonthForRiskAnalysis,
+} from '@/shared/utils/date'
 
 export type CategoryId =
   | 'hf'
@@ -74,45 +79,16 @@ export const CATEGORIES: Category[] = [
   { id: 'inquiry', label: 'Murojaatlar', subtitle: 'Kelib tushgan murojaatlar', icon: MessageSquare },
 ]
 
+export { MONTHS }
+
 export const categoryOf = (id: CategoryId) => CATEGORIES.find((item) => item.id === id) ?? CATEGORIES[0]
 
-export const MONTHS = [
-  'JANUARY',
-  'FEBRUARY',
-  'MARCH',
-  'APRIL',
-  'MAY',
-  'JUNE',
-  'JULY',
-  'AUGUST',
-  'SEPTEMBER',
-  'OCTOBER',
-  'NOVEMBER',
-  'DECEMBER',
-] as const
-
-export const MONTH_LABELS = [
-  'Yanvar',
-  'Fevral',
-  'Mart',
-  'Aprel',
-  'May',
-  'Iyun',
-  'Iyul',
-  'Avgust',
-  'Sentabr',
-  'Oktabr',
-  'Noyabr',
-  'Dekabr',
-]
-
-/** The registry is only complete for a month once it has closed. */
-export const defaultPeriod = () => {
-  const now = new Date()
-  const index = now.getMonth() === 0 ? 11 : now.getMonth() - 1
-
-  return { month: MONTHS[index], year: now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear() }
-}
+/**
+ * Each section reads its period from the same helper the rest of the app uses:
+ * risk analysis closes a quarter behind, inspections open on the current one.
+ */
+export const defaultPeriodFor = (id: CategoryId) =>
+  id === 'inspection' ? getDefaultYearAndMonthForInspections() : getDefaultYearAndMonthForRiskAnalysis()
 
 export const AVAILABLE_YEARS = (() => {
   const current = new Date().getFullYear()

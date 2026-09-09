@@ -1,8 +1,17 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Map as YMap, ObjectManager, YMaps } from '@pbe/react-yandex-maps'
 import { MapPoint } from '../model/map-layers'
 import { pointIconOptions } from '../model/map-icons'
-import { BORDER_OPTIONS, COUNTRY_BOUNDS, MAP_QUERY, borders, escapeHtml, parseCoords } from '../model/map-geometry'
+import {
+  BORDER_OPTIONS,
+  COUNTRY_BOUNDS,
+  MAP_QUERY,
+  borders,
+  boundsOf,
+  escapeHtml,
+  padBounds,
+  parseCoords,
+} from '../model/map-geometry'
 
 interface PointsMapProps {
   points: MapPoint[]
@@ -50,6 +59,20 @@ export const PointsMap = ({ points, focusRegionId = null }: PointsMapProps) => {
     if (!instance || mapRef.current === instance) return
     mapRef.current = instance
   }, [])
+
+  // Filtering alone leaves the camera on the whole country with a handful of
+  // pins lost in it, so the map travels to whatever is left.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+
+    const coords = visible.map(({ coords: point }) => point)
+
+    map.setBounds(coords.length > 0 ? padBounds(boundsOf(coords)) : COUNTRY_BOUNDS, {
+      checkZoomRange: true,
+      duration: 400,
+    })
+  }, [visible])
 
   return (
     <YMaps query={MAP_QUERY}>

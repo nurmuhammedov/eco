@@ -36,7 +36,7 @@ export interface CategoryData {
 interface Options {
   category: CategoryId
   regionId?: string
-  year: number
+  year: string
   month: string
 }
 
@@ -62,17 +62,31 @@ export const useCategoryData = ({ category, regionId, year, month }: Options): C
     category === 'attraction'
   )
 
-  const risk = useRiskAnalysisStats({ year, month, regionId, enabled: category === 'risk' })
+  const risk = useRiskAnalysisStats({ year: Number(year), month, regionId, enabled: category === 'risk' })
 
+  /**
+   * The inspection endpoints reject a request without `belongType`, so the
+   * period is broken down by the object type inspected rather than hiding a
+   * default of HF behind a total that would only ever cover facilities.
+   */
   const inspectionEnabled = category === 'inspection'
-  const inspectionRisk = usePaginatedData(
+  const inspectionParams = { ...base, page: 1, size: 1, year, month, type: 'RISK_BASED' }
+  const inspHf = usePaginatedData('/inspections', { ...inspectionParams, belongType: 'HF' }, inspectionEnabled)
+  const inspElevator = usePaginatedData(
     '/inspections',
-    { ...base, page: 1, size: 1, year, month, type: 'RISK_BASED' },
+    { ...inspectionParams, belongType: 'ELEVATOR' },
     inspectionEnabled
   )
-  const inspectionOther = usePaginatedData(
-    '/inspections/other',
-    { ...base, page: 1, size: 1, year, month, type: 'OTHER' },
+  const inspAttraction = usePaginatedData(
+    '/inspections',
+    { ...inspectionParams, belongType: 'ATTRACTION' },
+    inspectionEnabled
+  )
+  const inspIrs = usePaginatedData('/inspections', { ...inspectionParams, belongType: 'IRS' }, inspectionEnabled)
+  const inspXray = usePaginatedData('/inspections', { ...inspectionParams, belongType: 'XRAY' }, inspectionEnabled)
+  const inspLpg = usePaginatedData(
+    '/inspections',
+    { ...inspectionParams, belongType: 'LPG_POWERED' },
     inspectionEnabled
   )
 
@@ -112,9 +126,19 @@ export const useCategoryData = ({ category, regionId, year, month }: Options): C
 
   const archivedPoints = useMemo(() => {
     const all = category === 'hf' ? asArray(hfLocations.data).map(toHfPoint) : equipmentPoints
+    const inRegion = regionId ? all.filter((point) => String(point.regionId) === regionId) : all
 
-    return all.filter(isArchived).length
-  }, [category, hfLocations.data, equipmentPoints])
+    return inRegion.filter(isArchived).length
+  }, [category, hfLocations.data, equipmentPoints, regionId])
+
+  /**
+   * The location endpoints take no parameters, so the region filter every other
+   * section gets from the API has to be applied here before anything is counted.
+   */
+  const regionPoints = useMemo(
+    () => (regionId ? points.filter((point) => String(point.regionId) === regionId) : points),
+    [points, regionId]
+  )
 
   return useMemo<CategoryData>(() => {
     switch (category) {
@@ -134,10 +158,10 @@ export const useCategoryData = ({ category, regionId, year, month }: Options): C
 
       case 'crane':
       case 'attraction': {
-        const byStatus = (status: string) => equipmentPoints.filter((point) => point.status === status).length
+        const byStatus = (status: string) => regionPoints.filter((point) => point.status === status).length
 
         return {
-          total: points.length,
+          total: regionPoints.length,
           totalLabel: category === 'crane' ? 'Reyestrdagi kranlar' : 'Reyestrdagi attraksionlar',
           metrics: [
             { key: 'VALID', label: 'Amaldagi', value: byStatus('VALID'), color: '#0b626b' },
@@ -166,15 +190,14 @@ export const useCategoryData = ({ category, regionId, year, month }: Options): C
           isLoading: stats.equipment.isLoading,
         }
 
+      // IrsParamsDto has no status of its own, so `valid` is the whole story:
+      // what is on the register, and what has come off it.
       case 'irs':
         return {
           total: stats.irs.active,
           totalLabel: 'Reyestrdagi INMlar',
-          metrics: [
-            { key: 'active', label: 'Yaroqli', value: stats.irs.active, color: '#0d9488' },
-            { key: 'inactive', label: 'Yaroqsiz', value: stats.irs.inactive, color: '#e11d48' },
-          ],
-          archived: null,
+          metrics: [],
+          archived: stats.irs.inactive,
           points: [],
           regionCounts: null,
           isLoading: stats.irs.isLoading,
@@ -216,20 +239,29 @@ export const useCategoryData = ({ category, regionId, year, month }: Options): C
         }
 
       case 'inspection': {
-        const riskBased = inspectionRisk.totalElements ?? 0
-        const other = inspectionOther.totalElements ?? 0
+        const queries = [inspHf, inspElevator, inspAttraction, inspIrs, inspXray, inspLpg]
+        const byBelongType = [
+          { key: 'HF', label: 'XICHOlar', query: inspHf, color: '#0b626b' },
+          { key: 'ELEVATOR', label: 'Liftlar', query: inspElevator, color: '#2563eb' },
+          { key: 'ATTRACTION', label: 'Attraksionlar', query: inspAttraction, color: '#7c3aed' },
+          { key: 'IRS', label: 'INMlar', query: inspIrs, color: '#0d9488' },
+          { key: 'XRAY', label: 'Rentgenlar', query: inspXray, color: '#d97706' },
+          {
+            key: 'LPG_POWERED',
+            label: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmalar',
+            query: inspLpg,
+            color: '#64748b',
+          },
+        ].map(({ query, ...rest }) => ({ ...rest, value: Number(query.totalElements ?? 0) }))
 
         return {
-          total: riskBased + other,
-          totalLabel: 'O‘tkazilgan tekshiruvlar',
-          metrics: [
-            { key: 'risk', label: 'Xavf tahlili asosida', value: riskBased, color: '#0b626b' },
-            { key: 'other', label: 'Boshqa tekshiruvlar', value: other, color: '#2563eb' },
-          ],
+          total: byBelongType.reduce((sum, item) => sum + item.value, 0),
+          totalLabel: 'Xavf tahlili asosidagi tekshiruvlar',
+          metrics: byBelongType,
           archived: null,
           points: [],
           regionCounts: null,
-          isLoading: inspectionRisk.isLoading || inspectionOther.isLoading,
+          isLoading: queries.some((query) => query.isLoading),
         }
       }
 
@@ -277,14 +309,17 @@ export const useCategoryData = ({ category, regionId, year, month }: Options): C
     stats,
     risk,
     points,
+    regionPoints,
     archivedPoints,
     equipmentPoints,
     craneLocations.isLoading,
     attractionLocations.isLoading,
-    inspectionRisk.totalElements,
-    inspectionRisk.isLoading,
-    inspectionOther.totalElements,
-    inspectionOther.isLoading,
+    inspHf,
+    inspElevator,
+    inspAttraction,
+    inspIrs,
+    inspXray,
+    inspLpg,
     inqNew.totalElements,
     inqProcess.totalElements,
     inqCourt.totalElements,

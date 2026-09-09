@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import uzGeoData from '@/shared/assets/uz-regions.json'
-import { cn } from '@/shared/lib/utils'
 import { regionByCode } from '../model/regions'
 
 interface GeoFeature {
@@ -119,6 +118,14 @@ const ringArea = (feature: GeoFeature) => {
 const CALLOUT_AREA = 300
 const CALLOUT_OFFSET: [number, number] = [38, -30]
 
+/**
+ * The shading floor is well above zero: keyed straight to the counts, a region
+ * holding a handful of records washed out to almost nothing and the whole map
+ * read as switched off.
+ */
+const MIN_SHADE = 0.35
+const MAX_SHADE = 1
+
 const format = (value: number) => value.toLocaleString('ru-RU').replace(/\s/g, ' ')
 
 export const RegionMap = ({ counts, activeRegionId, onSelect, accent }: RegionMapProps) => {
@@ -161,18 +168,25 @@ export const RegionMap = ({ counts, activeRegionId, onSelect, accent }: RegionMa
            * registry would otherwise flatten every other shade into the same
            * pale wash.
            */
-          const intensity = counts ? Math.sqrt(count / max) : 0.45
-          const opacity = dimmed ? 0.15 : 0.2 + intensity * 0.8
+          const intensity = counts ? Math.sqrt(count / max) : 0.55
+          const opacity = dimmed ? 0.18 : isActive ? 1 : MIN_SHADE + intensity * (MAX_SHADE - MIN_SHADE)
 
           return (
             <g key={region.code}>
               <path
                 d={path}
+                // The selection is the map's own colour at full strength and its
+                // neighbours stepped back, rather than a second hue on top.
                 fill={accent}
                 fillOpacity={opacity}
                 stroke="#ffffff"
-                strokeWidth={isActive ? 2.5 : 1}
-                className="cursor-pointer transition-[fill-opacity,stroke-width] duration-300"
+                strokeWidth={1}
+                /**
+                 * The browser draws its focus ring around an SVG path's bounding
+                 * box, which lands as a black rectangle across the neighbouring
+                 * regions. The fill already says which one is selected.
+                 */
+                className="cursor-pointer transition-[fill,fill-opacity] duration-300 outline-none focus:outline-none focus-visible:outline-none"
                 onClick={() => onSelect(isActive ? null : region.id)}
                 role="button"
                 tabIndex={0}
@@ -227,13 +241,13 @@ export const RegionMap = ({ counts, activeRegionId, onSelect, accent }: RegionMa
                     dominantBaseline="central"
                     className="pointer-events-none font-semibold tabular-nums"
                     fontSize={13 + intensity * 6}
-                    fill={intensity > 0.55 ? '#ffffff' : '#0f172a'}
+                    fill={isActive || intensity > 0.45 ? '#ffffff' : '#0f172a'}
                     /**
                      * A halo in the opposite tone rather than a plate behind the
                      * figure: the number stays legible wherever the shading puts
                      * it, without fourteen boxes cluttering the outline.
                      */
-                    stroke={intensity > 0.55 ? '#0b626b' : '#ffffff'}
+                    stroke={isActive || intensity > 0.45 ? accent : '#ffffff'}
                     strokeWidth={3}
                     paintOrder="stroke"
                     strokeLinejoin="round"
@@ -246,19 +260,6 @@ export const RegionMap = ({ counts, activeRegionId, onSelect, accent }: RegionMa
           )
         })}
       </svg>
-
-      {activeRegionId !== null && (
-        <button
-          type="button"
-          onClick={() => onSelect(null)}
-          className={cn(
-            'absolute right-2 bottom-2 rounded-lg border border-slate-200 bg-white/90 px-3 py-1.5',
-            'text-xs text-slate-600 shadow-sm backdrop-blur transition-colors hover:bg-white'
-          )}
-        >
-          Butun respublika
-        </button>
-      )}
     </div>
   )
 }

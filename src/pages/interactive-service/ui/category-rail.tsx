@@ -7,6 +7,7 @@ interface CategoryRailProps {
   onSelect: (id: CategoryId) => void
 }
 
+/** Icons only: the section is already named beside the map. */
 export const CategoryRail = ({ active, onSelect }: CategoryRailProps) => (
   <TooltipProvider delayDuration={80}>
     <nav
@@ -25,8 +26,8 @@ export const CategoryRail = ({ active, onSelect }: CategoryRailProps) => (
                 onClick={() => onSelect(category.id)}
                 aria-pressed={isActive}
                 className={cn(
-                  'group flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-xl transition-all duration-200 lg:size-13',
-                  isActive ? 'bg-teal text-white shadow-md' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
+                  'flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-xl transition-colors duration-200 lg:size-13',
+                  isActive ? 'bg-teal text-white shadow-sm' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
                 )}
               >
                 <Icon className={cn('size-5 transition-transform lg:size-6', isActive && 'scale-110')} />

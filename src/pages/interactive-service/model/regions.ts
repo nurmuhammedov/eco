@@ -3,7 +3,7 @@
  * polygon to its registry region. Matching on the English `name` instead meant
  * the two Tashkents were told apart by their position in the file.
  */
-const REGIONS: { code: string; id: number; name: string }[] = [
+export const REGIONS: { code: string; id: number; name: string }[] = [
   { code: 'UZTK', id: 1, name: 'Toshkent shahri' },
   { code: 'UZSA', id: 2, name: 'Samarqand viloyati' },
   { code: 'UZNW', id: 3, name: 'Navoiy viloyati' },
@@ -19,6 +19,8 @@ const REGIONS: { code: string; id: number; name: string }[] = [
   { code: 'UZSI', id: 17, name: 'Sirdaryo viloyati' },
   { code: 'UZSU', id: 18, name: 'Surxondaryo viloyati' },
 ]
+
+export const REGIONS_SORTED = [...REGIONS].sort((a, b) => a.name.localeCompare(b.name, 'uz'))
 
 const BY_CODE = new Map(REGIONS.map((region) => [region.code, region]))
 const BY_ID = new Map(REGIONS.map((region) => [region.id, region]))
