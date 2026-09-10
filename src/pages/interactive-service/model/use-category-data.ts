@@ -162,9 +162,9 @@ export const useCategoryData = ({ category, regionId, year, month }: Options): C
 
         return {
           total: regionPoints.length,
-          totalLabel: category === 'crane' ? 'Reyestrdagi kranlar' : 'Reyestrdagi attraksionlar',
+          totalLabel: category === 'crane' ? 'Reyestrdagi minorali kranlar' : 'Reyestrdagi attraksionlar',
           metrics: [
-            { key: 'VALID', label: 'Amaldagi', value: byStatus('VALID'), color: '#0b626b' },
+            { key: 'VALID', label: 'Soz holatdagi', value: byStatus('VALID'), color: '#0b626b' },
             { key: 'EXPIRED', label: 'Muddati o‘tgan', value: byStatus('EXPIRED'), color: '#f43f5e' },
             { key: 'NO_DATE', label: 'Muddati kiritilmagan', value: byStatus('NO_DATE'), color: '#f59e0b' },
           ],

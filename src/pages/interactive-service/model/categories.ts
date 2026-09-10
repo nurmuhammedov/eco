@@ -48,8 +48,8 @@ export const CATEGORIES: Category[] = [
   },
   {
     id: 'crane',
-    label: 'Kranlar',
-    subtitle: 'Ro‘yxatga olingan kranlar',
+    label: 'Minorali kranlar',
+    subtitle: 'Ro‘yxatga olingan minorali kranlar',
     icon: Construction,
     locationEndpoint: '/equipments/cranes/locations',
   },

@@ -5,9 +5,6 @@ interface MapFiltersProps {
   legend: LegendItem[]
   counts: Record<string, number>
   active: string[]
-  archivedCount: number
-  showArchived: boolean
-  onToggleArchived: () => void
   onToggle: (key: string) => void
   onReset: () => void
 }
@@ -17,16 +14,7 @@ interface MapFiltersProps {
  * reads the same as before until a level is switched off - and the counts sit
  * where the colours are explained, which is where people look for them.
  */
-export const MapFilters = ({
-  legend,
-  counts,
-  active,
-  archivedCount,
-  showArchived,
-  onToggleArchived,
-  onToggle,
-  onReset,
-}: MapFiltersProps) => {
+export const MapFilters = ({ legend, counts, active, onToggle, onReset }: MapFiltersProps) => {
   const isFiltered = active.length < legend.length
 
   return (
@@ -56,27 +44,6 @@ export const MapFilters = ({
             </li>
           )
         })}
-
-        {archivedCount > 0 && (
-          <li className="ml-1 border-l border-neutral-200 pl-1">
-            <button
-              type="button"
-              onClick={onToggleArchived}
-              aria-pressed={showArchived}
-              className={cn(
-                'flex cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs transition-colors',
-                showArchived ? 'text-neutral-800 hover:bg-neutral-100' : 'text-neutral-400 hover:bg-neutral-50'
-              )}
-            >
-              <span
-                className={cn('size-2.5 rounded-full transition-opacity', !showArchived && 'opacity-30')}
-                style={{ backgroundColor: '#cbd5e1' }}
-              />
-              Reyestrdan chiqarilgan
-              <span className={cn('font-semibold tabular-nums', !showArchived && 'opacity-40')}>{archivedCount}</span>
-            </button>
-          </li>
-        )}
 
         {isFiltered && (
           <li>

@@ -95,9 +95,6 @@ export const FacilitiesMap = () => {
   // same way it always did.
   const [activeBuckets, setActiveBuckets] = useState<string[]>(() => layer.legend.map((item) => item.key))
   const [regionId, setRegionId] = useState('')
-  // The archive is what the registry no longer counts, so the map does not
-  // count it either until it is asked for.
-  const [showArchived, setShowArchived] = useState(false)
   const { data: regions, isLoading: regionsLoading } = useRegionSelectQueries()
 
   // A cluster the map cannot pull apart opens as a list; a single pin skips
@@ -129,12 +126,9 @@ export const FacilitiesMap = () => {
     [data]
   )
 
-  const archivedCount = useMemo(() => mapped.filter(({ point }) => isArchived(point)).length, [mapped])
-
-  const placed = useMemo(
-    () => (showArchived ? mapped : mapped.filter(({ point }) => !isArchived(point))),
-    [mapped, showArchived]
-  )
+  // The archive belongs to the archive module; the map only ever draws what is
+  // still on the register.
+  const placed = useMemo(() => mapped.filter(({ point }) => !isArchived(point)), [mapped])
 
   const regionStats = useMemo(
     () =>
@@ -257,7 +251,6 @@ export const FacilitiesMap = () => {
   useEffect(() => {
     setActiveBuckets(layer.legend.map((item) => item.key))
     setRegionId('')
-    setShowArchived(false)
     closePanel()
   }, [layer, closePanel])
 
@@ -345,9 +338,6 @@ export const FacilitiesMap = () => {
               legend={layer.legend}
               counts={counts}
               active={activeBuckets}
-              archivedCount={archivedCount}
-              showArchived={showArchived}
-              onToggleArchived={() => applyFilter(() => setShowArchived((current) => !current))}
               onToggle={(key) =>
                 applyFilter(() =>
                   setActiveBuckets((current) =>

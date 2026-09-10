@@ -40,7 +40,7 @@ export interface LegendItem {
 const FALLBACK_COLOR = '#94a3b8'
 
 export const EQUIPMENT_STATUS_STYLE: Record<EquipmentStatus, LegendItem> = {
-  VALID: { key: 'VALID', label: 'Amaldagi', color: '#0b626b' },
+  VALID: { key: 'VALID', label: 'Soz holatdagi', color: '#0b626b' },
   EXPIRED: { key: 'EXPIRED', label: 'Muddati o‘tgan', color: '#f43f5e' },
   NO_DATE: { key: 'NO_DATE', label: 'Muddati kiritilmagan', color: '#f59e0b' },
   INVALID: { key: 'INVALID', label: 'Vaqtinchalik nofaol', color: FALLBACK_COLOR },
@@ -59,9 +59,10 @@ const HF_LEGEND: LegendItem[] = [
   { key: 'NONE', label: 'Tahlil qilinmagan', color: STATUS_STYLE.VALID.color },
 ]
 
-const EQUIPMENT_LEGEND: LegendItem[] = (
-  ['VALID', 'EXPIRED', 'NO_DATE', 'INVALID', 'INACTIVE'] as EquipmentStatus[]
-).map((key) => EQUIPMENT_STATUS_STYLE[key])
+/** The archive is never drawn, so it has no place in the legend either. */
+const EQUIPMENT_LEGEND: LegendItem[] = (['VALID', 'EXPIRED', 'NO_DATE', 'INVALID'] as EquipmentStatus[]).map(
+  (key) => EQUIPMENT_STATUS_STYLE[key]
+)
 
 interface MapLayer {
   key: MapLayerKey
@@ -83,11 +84,11 @@ export const MAP_LAYERS: MapLayer[] = [
   },
   {
     key: 'CRANE',
-    label: 'Kranlar',
+    label: 'Minorali kranlar',
     endpoint: '/equipments/cranes/locations',
     legend: EQUIPMENT_LEGEND,
-    heading: 'Kranlar xaritasi',
-    empty: 'Koordinatasi ko‘rsatilgan kran topilmadi',
+    heading: 'Minorali kranlar xaritasi',
+    empty: 'Koordinatasi ko‘rsatilgan minorali kran topilmadi',
   },
   {
     key: 'ATTRACTION',
