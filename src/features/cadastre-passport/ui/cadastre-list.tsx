@@ -31,9 +31,12 @@ export const StatusBadge = ({ status }: { status: string }) => {
     REJECTED: { label: 'Rad etildi', className: 'bg-red-100 text-red-800 hover:bg-red-200 border-transparent' },
     // The object's own state, which shares the `status` name with the workflow
     // one in the API response.
-    ACTIVE: { label: 'Faol', className: 'bg-green-100 text-green-800 hover:bg-green-200 border-transparent' },
+    ACTIVE: {
+      label: 'Ishchi holatida',
+      className: 'bg-green-100 text-green-800 hover:bg-green-200 border-transparent',
+    },
     INACTIVE: {
-      label: 'To‘xtatilgan',
+      label: 'Vaqtinchalik ishsiz holatida',
       className: 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border-transparent',
     },
   }

@@ -54,6 +54,10 @@ type FvvFormValues = z.infer<typeof fvvSchema>
 type SesFormValues = z.infer<typeof sesSchema>
 type CommitteeFormValues = z.infer<typeof committeeSchema>
 
+/** A measurement reads as one thing: the number and what it is measured in. */
+const unit = (value: string | number | null | undefined, suffix: string) =>
+  value === null || value === undefined || value === '' ? '-' : `${value} ${suffix}`
+
 export default function CadastreDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -423,48 +427,60 @@ export default function CadastreDetail() {
         >
           {item ? (
             <>
-              <DetailRow title="Obyekt nomi" value={item.name || '-'} />
-              <DetailRow title="Idoraviy mansubligi" value={item.organizationalBelonging || '-'} />
+              <DetailRow title="Obyektning nomi" value={item.name || '-'} />
+              <DetailRow title="Obyektning idoraviy mansubligi" value={item.organizationalBelonging || '-'} />
               <DetailRow title="Manzil" value={item.address || '-'} />
-              <DetailRow title="Koordinatasi (X)" value={item.latitude || '-'} />
-              <DetailRow title="Koordinatasi (Y)" value={item.longitude || '-'} />
+              <DetailRow title="X koordinatasi" value={item.longitude || '-'} />
+              <DetailRow title="Y koordinatasi" value={item.latitude || '-'} />
               <DetailRow title="Yer uchastkasi kadastr raqami" value={item.landCadastreNumber || '-'} />
               <DetailRow
-                title="Kadastr ro‘yxatidan o‘tkazilgan sana"
+                title="Kadastr ro‘yxatidan o‘tkazilgan guvohnoma sanasi"
                 value={
                   item.cadastreRegistrationDate ? format(new Date(item.cadastreRegistrationDate), 'dd.MM.yyyy') : '-'
                 }
               />
               <DetailRow
-                title="Kadastr ro‘yxatidan o‘tkazilgan raqami"
+                title="Kadastr ro‘yxatidan o‘tkazilgan guvohnoma raqami"
                 value={item.cadastreRegistrationNumber || '-'}
               />
-              <DetailRow title="Umumiy maydoni (gektar)" value={item.landArea || '-'} />
-              <DetailRow title="Vazifalari" value={item.purpose || '-'} />
-              <DetailRow title="Moddaning nomi" value={item.substance || '-'} />
+              <DetailRow title="Yer uchastkasi maydoni" value={unit(item.landArea, 'ga')} />
+              <DetailRow title="Obyektning vazifasi" value={item.purpose || '-'} />
+              <DetailRow title="Foydalanish moddasining nomi" value={item.substance || '-'} />
               {/* Not `status`: that one is the passport's place in the workflow. */}
               <DetailRow
                 title="Hozirgi kundagi holati"
                 value={item.cadastreDataStatus ? <StatusBadge status={item.cadastreDataStatus} /> : <EmptyValue />}
               />
               <DetailRow
-                title="Ekspluatatsiyaga tushirilgan sanasi"
+                title="Ekspluatatsiya qilingan sanasi"
                 value={item.exploitationDate ? format(new Date(item.exploitationDate), 'dd.MM.yyyy') : '-'}
               />
-              <DetailRow title="Sanitariya himoyasi masofasi" value={item.protectionDistance || '-'} />
-              <DetailRow title="Xodimlarning umumiy soni" value={item.employeeCount || '-'} />
-              <DetailRow title="Ishlash vaqti (soat)" value={item.workingHour || '-'} />
-              <DetailRow title="Aholi yashash punktigacha masofa (km)" value={item.distanceToResidence || '-'} />
-              <DetailRow title="Eng yaqin obyektlar (metr)" value={item.distanceToNearestObject || '-'} />
+              <DetailRow title="Sanitariya muhofaza zonasi" value={item.protectionDistance || '-'} />
+              <DetailRow title="Xodimlarning soni" value={unit(item.employeeCount, 'ta')} />
+              <DetailRow title="Bir sutkada ishlash vaqti" value={unit(item.workingHour, 'soat')} />
               <DetailRow
-                title="Yong‘in xavfsizligi bo‘limigacha masofa (km)"
-                value={item.distanceToFireDepartment || '-'}
+                title="Aholi yashash punktigacha bo‘lgan masofa"
+                value={unit(item.distanceToResidence, 'km')}
               />
-              <DetailRow title="Yong‘in o‘chirish texnikasi" value={item.firefightingEquipment || '-'} />
-              <DetailRow title="Zararlanish maydoni (metr kv)" value={item.damageArea || '-'} />
-              <DetailRow title="Texnogen xavf turi" value={item.dominantHazardType || '-'} />
-              <DetailRow title="Umumiy bahosi (so‘m)" value={item.estimatedValue || '-'} />
-              <DetailRow title="Salbiy ta’sir ko‘rsatuvchi omillar" value={item.healthRiskFactor || '-'} />
+              <DetailRow
+                title="Eng yaqin boshqa obyektgacha bo‘lgan masofa"
+                value={unit(item.distanceToNearestObject, 'm')}
+              />
+              <DetailRow
+                title="Yong‘in-qutqaruv qismigacha bo‘lgan masofa"
+                value={unit(item.distanceToFireDepartment, 'km')}
+              />
+              <DetailRow title="Yong‘in o‘chirish vositasining turi" value={item.firefightingEquipment || '-'} />
+              <DetailRow
+                title="Texnogen xavf sodir bo‘lganda zararlanish maydoni"
+                value={unit(item.damageArea, 'm²')}
+              />
+              <DetailRow title="Ustunlik qiluvchi texnogen xavf turi" value={item.dominantHazardType || '-'} />
+              <DetailRow title="Sug‘urtalangan miqdori bahosi" value={unit(item.estimatedValue, 'mln so‘m')} />
+              <DetailRow
+                title="Inson salomatligi uchun salbiy ta’sir ko‘rsatuvchi omillari"
+                value={item.healthRiskFactor || '-'}
+              />
             </>
           ) : (
             <div className="text-muted-foreground p-4 text-center">Ma’lumotlar mavjud emas</div>

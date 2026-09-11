@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Form } from '@/shared/components/ui/form'
 import { Button } from '@/shared/components/ui/button'
 import { CadastreDataFields, cadastreDataSchema } from './cadastre-data-fields'
+import { splitAddress } from '../../model/txyz-options'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -43,6 +44,15 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
       // the update DTO takes it back as `status` - `status` on the way in is
       // the passport's workflow state and would land in the wrong field.
       formattedValues.status = formattedValues.cadastreDataStatus ?? ''
+
+      // The address is one string on the record and three fields on the form.
+      Object.assign(formattedValues, splitAddress(defaultValues.address))
+
+      // Coordinates come back as numbers; the masked inputs work on text.
+      for (const axis of ['latitude', 'longitude'] as const) {
+        const value = formattedValues[axis]
+        formattedValues[axis] = value === null || value === undefined ? '' : String(value)
+      }
 
       form.reset(formattedValues)
     }
