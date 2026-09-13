@@ -25,6 +25,9 @@ const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default
 const NewsFormPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsForm })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 const OrganizationsPage = lazy(() => import('@/pages/organizations'))
+const OrgWorkflowPage = lazy(() =>
+  import('@/features/admin/org-workflow').then((module) => ({ default: module.OrgWorkflowPage }))
+)
 
 export const adminRoutes = [
   {
@@ -77,6 +80,10 @@ export const adminRoutes = [
   {
     path: 'reports/kpi-regional',
     element: withSuspense(KpiRegionalReport),
+  },
+  {
+    path: 'org-workflow',
+    element: withSuspense(OrgWorkflowPage),
   },
   {
     path: 'decree-signers',

@@ -12,6 +12,7 @@ import {
   Mail,
   Trees,
   Newspaper,
+  Workflow,
 } from 'lucide-react'
 
 export default [
@@ -34,6 +35,11 @@ export default [
     url: '/decree-signers',
     title: 'Imzolovchi shaxslar',
     icon: <Signature />,
+  },
+  {
+    url: '/org-workflow',
+    title: 'TXYZ jarayoni',
+    icon: <Workflow />,
   },
   {
     url: '/hazardous-facilities',
