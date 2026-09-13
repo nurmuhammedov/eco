@@ -40,11 +40,6 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
         formattedValues.exploitationDate = new Date(formattedValues.exploitationDate)
       }
 
-      // The response names the object's own state `cadastreDataStatus`, while
-      // the update DTO takes it back as `status` - `status` on the way in is
-      // the passport's workflow state and would land in the wrong field.
-      formattedValues.status = formattedValues.cadastreDataStatus ?? ''
-
       // The address is one string on the record and three fields on the form.
       Object.assign(formattedValues, splitAddress(defaultValues.address))
 

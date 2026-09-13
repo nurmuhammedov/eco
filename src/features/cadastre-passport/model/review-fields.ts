@@ -174,10 +174,19 @@ export const fromReviewPayload = (groups: ReviewGroup[], source: Record<string, 
 
   for (const field of reviewFieldsOf(groups)) {
     const value = source?.[field.name]
+    const isEmpty = value === null || value === undefined || value === ''
 
-    if (field.type === 'date') values[field.name] = value ? new Date(value) : undefined
-    else values[field.name] = value === null || value === undefined ? '' : String(value)
+    if (field.type === 'date') values[field.name] = isEmpty ? undefined : new Date(value)
+    else if (field.type === 'int' || field.type === 'decimal') values[field.name] = isEmpty ? undefined : Number(value)
+    else values[field.name] = isEmpty ? '' : String(value)
   }
 
   return values
+}
+
+export const formatReviewValue = (field: ReviewField, value: string | number | null | undefined) => {
+  if (value === null || value === undefined || value === '') return null
+  if (field.type === 'date') return format(new Date(value), 'dd.MM.yyyy')
+
+  return String(value)
 }

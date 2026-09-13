@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
@@ -40,14 +40,19 @@ type SearchValues = z.infer<typeof searchSchema>
 
 export default function CadastreAdd() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+
+  // A resubmission must keep the rejected passport's customer, so it arrives pre-selected.
+  const resubmitTin = searchParams.get('customerTin')
+  const resubmitRequestNumber = searchParams.get('parentRequestNumber')
 
   const { mutate: createCadastre } = useAdd<any, any, any>('/cadastre-passports')
 
-  const [searchedStir, setSearchedStir] = useState<string | null>(null)
+  const [searchedStir, setSearchedStir] = useState<string | null>(resubmitTin)
 
   const searchForm = useForm<SearchValues>({
     resolver: zodResolver(searchSchema),
-    defaultValues: { stir: '' },
+    defaultValues: { stir: resubmitTin ?? '' },
   })
 
   const {
@@ -61,7 +66,7 @@ export default function CadastreAdd() {
     defaultValues: {
       attributeFile: '',
       passportFile: '',
-      parentRequestNumber: '',
+      parentRequestNumber: resubmitRequestNumber ?? '',
       cadastreData: {} as any,
     },
   })
@@ -90,7 +95,7 @@ export default function CadastreAdd() {
         detailFilePath: data.attributeFile,
         passportFilePath: data.passportFile,
         parentRequestNumber: data.parentRequestNumber?.trim() || null,
-        ...data.cadastreData,
+        preparerData: data.cadastreData,
       },
       {
         onSuccess: () => {
@@ -105,7 +110,7 @@ export default function CadastreAdd() {
 
   return (
     <div className="space-y-4 pb-4">
-      <GoBack title="TXYZ kadastr qo‘shish" />
+      <GoBack title={resubmitRequestNumber ? 'TXYZ kadastrni qayta yuborish' : 'TXYZ kadastr qo‘shish'} />
 
       <Card>
         <CardHeader>

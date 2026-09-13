@@ -1,66 +1,23 @@
-import { Button } from '@/shared/components/ui/button'
 import { Plus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
+import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { useAuth } from '@/shared/hooks/use-auth'
 import useDelete from '@/shared/hooks/api/useDelete'
-import { isFvvUser, isSesUser } from '../model/organizations'
+import { UserRoles } from '@/entities/user'
+import { useOrgMembership } from '@/entities/org-membership'
+import { CadastrePassportRow } from '../model/types'
+import { isPreparer } from '../model/permissions'
+import { STATUS_OPTIONS, StatusBadge } from './components/status-badge'
+import { MyTasksTable } from './components/my-tasks-table'
 
-export const StatusBadge = ({ status }: { status: string }) => {
-  const map: Record<string, { label: string; className: string }> = {
-    NEW: { label: 'Yangi', className: 'bg-blue-100 text-blue-800 hover:bg-blue-200 border-transparent' },
-    IN_APPROVAL: {
-      label: 'Kelishishda',
-      className: 'bg-purple-100 text-purple-800 hover:bg-purple-200 border-transparent',
-    },
-    IN_REVIEW: {
-      label: 'Kelishishda',
-      className: 'bg-purple-100 text-purple-800 hover:bg-purple-200 border-transparent',
-    },
-    IN_COMMITTEE: {
-      label: 'Qo‘mitada',
-      className: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border-transparent',
-    },
-    COMMITTEE: { label: 'Qo‘mita', className: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border-transparent' },
-    COMPLETED: { label: 'Yakunlangan', className: 'bg-green-100 text-green-800 hover:bg-green-200 border-transparent' },
-    APPROVED: { label: 'Tasdiqlangan', className: 'bg-green-100 text-green-800 hover:bg-green-200 border-transparent' },
-    REJECTED: { label: 'Rad etildi', className: 'bg-red-100 text-red-800 hover:bg-red-200 border-transparent' },
-    // The object's own state, which shares the `status` name with the workflow
-    // one in the API response.
-    ACTIVE: {
-      label: 'Ishchi holatida',
-      className: 'bg-green-100 text-green-800 hover:bg-green-200 border-transparent',
-    },
-    INACTIVE: {
-      label: 'Vaqtinchalik ishsiz holatida',
-      className: 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border-transparent',
-    },
-  }
-  const match = map[status] || { label: status, className: 'bg-gray-100 text-gray-800 border-transparent' }
-  return (
-    <Badge variant="outline" className={match.className}>
-      {match.label}
-    </Badge>
-  )
-}
-
-/** The filters this table owns; anything else in the URL belongs to the page around it. */
-const FILTER_KEYS = [
-  'requestNumber',
-  'registryNumber',
-  'preparerName',
-  'preparerTin',
-  'customerName',
-  'customerTin',
-  'status',
-]
+const FILTER_KEYS = ['requestNumber', 'registryNumber', 'preparerTin', 'customerTin', 'status']
 
 interface CadastreListProps {
-  /** Embedded in a facility's detail: the list is locked to its owner. */
   customerTin?: string | number | null
   isShortView?: boolean
 }
@@ -68,39 +25,39 @@ interface CadastreListProps {
 export default function CadastreList({ customerTin, isShortView }: CadastreListProps = {}) {
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { membership } = useOrgMembership()
 
   const {
-    paramsObject: { page = 1, size = 10, ...rest },
+    paramsObject: { page = 1, size = 10, view, ...rest },
+    addParams,
   } = useCustomSearchParams()
 
-  /**
-   * Embedded, the surrounding page keeps its own params in the URL - sending
-   * them all would filter the passports by something they know nothing about.
-   */
-  const filters = isShortView
-    ? Object.fromEntries(FILTER_KEYS.filter((key) => rest[key]).map((key) => [key, rest[key]]))
-    : rest
+  const showTasks = !isShortView && !!membership
+  const activeView = showTasks && view !== 'all' ? 'tasks' : 'all'
+  const canCreate = !isShortView && user?.role === UserRoles.LEGAL
 
-  const { data, isLoading, refetch, totalPages } = usePaginatedData<any>('/cadastre-passports', {
-    page,
-    size,
-    ...filters,
-    ...(customerTin ? { customerTin } : {}),
-  })
+  const filters = Object.fromEntries(FILTER_KEYS.filter((key) => rest[key]).map((key) => [key, rest[key]]))
+
+  const { data, isLoading, refetch, totalPages } = usePaginatedData<CadastrePassportRow>(
+    '/cadastre-passports',
+    { page, size, ...filters, ...(customerTin ? { customerTin } : {}) },
+    activeView === 'all'
+  )
 
   const { mutate: deleteCadastre } = useDelete('/cadastre-passports')
 
-  const isLegal = user?.role === UserRoles.LEGAL
-  const isFVV = isFvvUser(user)
-  const isSES = isSesUser(user)
-
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<CadastrePassportRow, any>[] = [
     {
       accessorKey: 'requestNumber',
       header: 'Ariza raqami',
       filterKey: 'requestNumber',
       filterType: 'search',
-      cell: ({ row }) => row.original.requestNumber || '-',
+      cell: ({ row }) => (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span>{row.original.requestNumber || '-'}</span>
+          {row.original.myTurn && <Badge variant="info">Sizning navbatingiz</Badge>}
+        </div>
+      ),
     },
     {
       accessorKey: 'registryNumber',
@@ -112,8 +69,6 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
     {
       accessorKey: 'preparerName',
       header: 'Ishlab chiqqan tashkilot',
-      filterKey: 'preparerName',
-      filterType: 'search',
       cell: ({ row }) => row.original.preparerName || '-',
     },
     {
@@ -125,8 +80,6 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
     {
       accessorKey: 'customerName',
       header: 'Tashkilot nomi',
-      filterKey: 'customerName',
-      filterType: 'search',
       cell: ({ row }) => row.original.customerName || '-',
     },
     {
@@ -141,13 +94,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
       cell: ({ row }) => <StatusBadge status={row.original.status} />,
       filterKey: 'status',
       filterType: 'select',
-      filterOptions: [
-        { id: 'NEW', name: 'Yangi' },
-        { id: 'IN_REVIEW', name: 'Kelishishda' },
-        { id: 'IN_COMMITTEE', name: 'Qo‘mitada' },
-        { id: 'APPROVED', name: 'Tasdiqlangan' },
-        { id: 'REJECTED', name: 'Rad etildi' },
-      ],
+      filterOptions: STATUS_OPTIONS,
     },
     ...(isShortView
       ? []
@@ -160,13 +107,9 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
                 <DataTableRowActions
                   row={row}
                   showView
-                  onView={(r: any) => navigate(`/cadastre-passport/${r.original.id}`)}
-                  showDelete={row.original.status === 'NEW' && isLegal}
-                  onDelete={(r: any) => {
-                    deleteCadastre(r.original.id, {
-                      onSuccess: () => refetch(),
-                    })
-                  }}
+                  onView={(target: any) => navigate(`/cadastre-passport/${target.original.id}`)}
+                  showDelete={row.original.status === 'NEW' && isPreparer(user, row.original)}
+                  onDelete={(target: any) => deleteCadastre(target.original.id, { onSuccess: () => refetch() })}
                 />
               </div>
             ),
@@ -176,23 +119,40 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
-      <div className="mb-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end">
-        {!isShortView && isLegal && !isFVV && !isSES && (
-          <Button onClick={() => navigate('/cadastre-passport/add')}>
-            <Plus className="mr-2 h-4 w-4" />
-            TXYZ kadastr qo‘shish
-          </Button>
-        )}
-      </div>
-      <DataTable
-        showFilters
-        isPaginated
-        data={data?.content || []}
-        columns={columns as unknown as any}
-        isLoading={isLoading}
-        pageCount={totalPages}
-        className="flex-1"
-      />
+      {(showTasks || canCreate) && (
+        <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          {showTasks ? (
+            <Tabs value={activeView} onValueChange={(value) => addParams({ view: value }, 'page')}>
+              <TabsList>
+                <TabsTrigger value="tasks">Mening ishlarim</TabsTrigger>
+                <TabsTrigger value="all">Barcha pasportlar</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          ) : (
+            <span />
+          )}
+          {canCreate && (
+            <Button onClick={() => navigate('/cadastre-passport/add')}>
+              <Plus className="mr-2 h-4 w-4" />
+              TXYZ kadastr qo‘shish
+            </Button>
+          )}
+        </div>
+      )}
+
+      {activeView === 'tasks' ? (
+        <MyTasksTable />
+      ) : (
+        <DataTable
+          showFilters
+          isPaginated
+          data={data?.content || []}
+          columns={columns as unknown as any}
+          isLoading={isLoading}
+          pageCount={totalPages}
+          className="flex-1"
+        />
+      )}
     </div>
   )
 }

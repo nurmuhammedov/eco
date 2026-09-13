@@ -3,6 +3,7 @@ import { LucideHome } from 'lucide-react'
 import { Direction, UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { usePaginatedData } from '@/shared/hooks'
+import { useOrgMembership } from '@/entities/org-membership'
 import { NAVIGATIONS } from './navigations'
 import { Navigation, NavigationItem } from './types'
 import allNavigation from './all'
@@ -19,6 +20,7 @@ const HEAD_ONLY_ATTESTATION_IDS = ['ATTESTATION_DIRECTIONS', 'ATTESTATION_QUESTI
 export const useUserNavigation = (): Navigation => {
   const { user } = useAuth()
   const isIndividual = user?.role === UserRoles.INDIVIDUAL
+  const { membership } = useOrgMembership()
 
   const { totalElements: equipmentCount = 0 } = usePaginatedData(
     '/equipments',
@@ -77,12 +79,18 @@ export const useUserNavigation = (): Navigation => {
       }, [])
     }
 
+    const cadastre = allNavigation.find((item: NavigationItem) => item.id === 'CADASTRE_PASSPORT')
+
+    if (membership && cadastre && !navigations.some((item) => item.id === cadastre.id)) {
+      navigations = [...navigations, cadastre]
+    }
+
     if (DASHBOARD_ROLES.includes(role)) {
       navigations = [{ title: 'Bosh sahifa', url: '/dashboard', icon: <LucideHome /> }, ...navigations]
     }
 
     return navigations
-  }, [user, isIndividual, equipmentCount])
+  }, [user, isIndividual, equipmentCount, membership])
 }
 
 /** First reachable page for the user, used as the landing route after sign-in. */

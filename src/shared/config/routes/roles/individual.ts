@@ -23,6 +23,8 @@ const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ defau
 const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
 const InquiryAddPage = lazy(() => import('@/pages/inquiries/ui/inquiry-add'))
 const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
+const CadastreList = lazy(() => import('@/features/cadastre-passport/ui/cadastre-list'))
+const CadastreDetail = lazy(() => import('@/features/cadastre-passport/ui/cadastre-detail'))
 
 export const individualRoutes = [
   // ELEVATORS
@@ -161,5 +163,14 @@ export const individualRoutes = [
     id: 'INQUIRY',
     path: 'inquiries/detail/:id',
     element: withSuspense(InquiryDetailPage),
+  },
+  // Partner organisation employees reach these through /org-employees/me, not a direction.
+  {
+    path: 'cadastre-passport',
+    element: withSuspense(CadastreList),
+  },
+  {
+    path: 'cadastre-passport/:id',
+    element: withSuspense(CadastreDetail),
   },
 ]
