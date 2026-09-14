@@ -2,13 +2,16 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
+import { Checkbox } from '@/shared/components/ui/checkbox'
 import { Input } from '@/shared/components/ui/input'
+import { Label } from '@/shared/components/ui/label'
 import { Search } from 'lucide-react'
 import GoBack from '@/shared/components/common/go-back'
 import DetailRow from '@/shared/components/common/detail-row'
 import { toast } from 'sonner'
 import useData from '@/shared/hooks/api/useData'
 import useAdd from '@/shared/hooks/api/useAdd'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -41,13 +44,19 @@ type SearchValues = z.infer<typeof searchSchema>
 export default function CadastreAdd() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const { user } = useAuth()
 
   // A resubmission must keep the rejected passport's customer, so it arrives pre-selected.
   const resubmitTin = searchParams.get('customerTin')
   const resubmitRequestNumber = searchParams.get('parentRequestNumber')
 
+  const ownTin = user?.tinOrPin ? String(user.tinOrPin) : null
+
   const { mutate: createCadastre } = useAdd<any, any, any>('/cadastre-passports')
 
+  // An organisation preparing its own passport is both parties, so there is
+  // nothing to look up - searching for yourself by your own TIN is busywork.
+  const [forSelf, setForSelf] = useState(!!ownTin && resubmitTin === ownTin)
   const [searchedStir, setSearchedStir] = useState<string | null>(resubmitTin)
 
   const searchForm = useForm<SearchValues>({
@@ -75,6 +84,13 @@ export default function CadastreAdd() {
 
   const handleClearSearch = () => {
     setSearchedStir(null)
+    searchForm.reset({ stir: '' })
+    form.reset()
+  }
+
+  const handleForSelf = (checked: boolean) => {
+    setForSelf(checked)
+    setSearchedStir(checked ? ownTin : null)
     searchForm.reset({ stir: '' })
     form.reset()
   }
@@ -114,44 +130,58 @@ export default function CadastreAdd() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Tashkilotni qidirish</CardTitle>
+          <CardTitle>Buyurtmachi tashkilot</CardTitle>
         </CardHeader>
-        <CardContent>
-          <Form {...searchForm}>
-            {/* A form, so Enter searches - a lone button next to an input does not. */}
-            <form onSubmit={searchForm.handleSubmit(handleSearch)} className="flex items-start gap-4">
-              <FormField
-                control={searchForm.control}
-                name="stir"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormControl>
-                      <Input
-                        placeholder="Tashkilot STIRini kiriting..."
-                        inputMode="numeric"
-                        maxLength={9}
-                        disabled={hasLegalInfo || isLegalInfoLoading}
-                        {...field}
-                        // Letters would pass the length check and 404 on the server.
-                        onChange={(event) => field.onChange(event.target.value.replace(/\D/g, ''))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <CardContent className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="cadastre-for-self"
+              checked={forSelf}
+              disabled={!ownTin}
+              onCheckedChange={(checked) => handleForSelf(checked === true)}
+            />
+            <Label htmlFor="cadastre-for-self" className="cursor-pointer font-normal">
+              Pasport o‘z tashkilotim uchun
+            </Label>
+          </div>
 
-              {hasLegalInfo ? (
-                <Button type="button" variant="destructive" onClick={handleClearSearch} className="w-40">
-                  O‘chirish
-                </Button>
-              ) : (
-                <Button type="submit" disabled={isLegalInfoLoading} className="w-40" loading={isLegalInfoLoading}>
-                  <Search className="mr-2 h-4 w-4" /> Qidirish
-                </Button>
-              )}
-            </form>
-          </Form>
+          {!forSelf && (
+            <Form {...searchForm}>
+              {/* A form, so Enter searches - a lone button next to an input does not. */}
+              <form onSubmit={searchForm.handleSubmit(handleSearch)} className="flex items-start gap-4">
+                <FormField
+                  control={searchForm.control}
+                  name="stir"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <Input
+                          placeholder="Tashkilot STIRini kiriting..."
+                          inputMode="numeric"
+                          maxLength={9}
+                          disabled={hasLegalInfo || isLegalInfoLoading}
+                          {...field}
+                          // Letters would pass the length check and 404 on the server.
+                          onChange={(event) => field.onChange(event.target.value.replace(/\D/g, ''))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {hasLegalInfo ? (
+                  <Button type="button" variant="destructive" onClick={handleClearSearch} className="w-40">
+                    O‘chirish
+                  </Button>
+                ) : (
+                  <Button type="submit" disabled={isLegalInfoLoading} className="w-40" loading={isLegalInfoLoading}>
+                    <Search className="mr-2 h-4 w-4" /> Qidirish
+                  </Button>
+                )}
+              </form>
+            </Form>
+          )}
         </CardContent>
       </Card>
 

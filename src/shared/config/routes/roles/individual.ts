@@ -164,12 +164,13 @@ export const individualRoutes = [
     path: 'inquiries/detail/:id',
     element: withSuspense(InquiryDetailPage),
   },
-  // Partner organisation employees reach these through /org-employees/me, not a direction.
   {
+    id: 'CADASTRE_PASSPORT',
     path: 'cadastre-passport',
     element: withSuspense(CadastreList),
   },
   {
+    id: 'CADASTRE_PASSPORT',
     path: 'cadastre-passport/:id',
     element: withSuspense(CadastreDetail),
   },

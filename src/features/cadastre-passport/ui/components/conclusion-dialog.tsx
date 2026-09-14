@@ -72,9 +72,10 @@ export const ConclusionDialog = ({
                 <FormItem>
                   <FormLabel required>Xulosa fayli</FormLabel>
                   <FormControl>
+                    {/* InputFile prints the field's own error, so a FormMessage
+                        here only repeats it. */}
                     <InputFile name={field.name} form={form} uploadEndpoint="/attachments/cadastre-passports" />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />

@@ -91,14 +91,13 @@ export default function CadastreDetail() {
               Qayta yuborish
             </Button>
           )}
+          {myWorkflow && <WorkflowActions passport={passport} workflow={myWorkflow} />}
           {passport.status === 'NEW' && isCustomer(user, passport) && <CustomerActions passportId={passport.id} />}
           {passport.status === 'IN_COMMITTEE' && canSignAsCommittee(user) && (
             <CommitteeActions passportId={passport.id} />
           )}
         </div>
       </div>
-
-      {myWorkflow && <WorkflowActions passport={passport} workflow={myWorkflow} />}
 
       <Accordion type="multiple" defaultValue={['txyz', 'workflows', 'cadastre-data', 'fvv', 'ses', 'reviews']}>
         <DetailCardAccordion.Item value="txyz" title="TXYZ Kadastr ma’lumotlari">

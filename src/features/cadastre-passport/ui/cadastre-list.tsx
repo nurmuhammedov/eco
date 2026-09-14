@@ -9,13 +9,14 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
 import useDelete from '@/shared/hooks/api/useDelete'
 import { UserRoles } from '@/entities/user'
-import { useOrgMembership } from '@/entities/org-membership'
 import { CadastrePassportRow } from '../model/types'
 import { isPreparer } from '../model/permissions'
 import { STATUS_OPTIONS, StatusBadge } from './components/status-badge'
 import { MyTasksTable } from './components/my-tasks-table'
 
 const FILTER_KEYS = ['requestNumber', 'registryNumber', 'preparerTin', 'customerTin', 'status']
+
+const COMMITTEE_STATUS = 'IN_COMMITTEE'
 
 interface CadastreListProps {
   customerTin?: string | number | null
@@ -25,23 +26,38 @@ interface CadastreListProps {
 export default function CadastreList({ customerTin, isShortView }: CadastreListProps = {}) {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { membership } = useOrgMembership()
 
   const {
     paramsObject: { page = 1, size = 10, view, ...rest },
     addParams,
   } = useCustomSearchParams()
 
-  const showTasks = !isShortView && !!membership
+  // A partner organisation's employee works off their own workflow queue; the
+  // committee's queue is simply the passports that have reached it, and the
+  // committee is the responsible manager.
+  const isEmployee = !isShortView && user?.role === UserRoles.INDIVIDUAL
+  const isCommittee = !isShortView && user?.role === UserRoles.MANAGER
+
+  const showTasks = isEmployee || isCommittee
   const activeView = showTasks && view !== 'all' ? 'tasks' : 'all'
   const canCreate = !isShortView && user?.role === UserRoles.LEGAL
 
-  const filters = Object.fromEntries(FILTER_KEYS.filter((key) => rest[key]).map((key) => [key, rest[key]]))
+  const committeeQueue = isCommittee && activeView === 'tasks'
+
+  const filters = Object.fromEntries(
+    FILTER_KEYS.filter((key) => rest[key] && !(committeeQueue && key === 'status')).map((key) => [key, rest[key]])
+  )
 
   const { data, isLoading, refetch, totalPages } = usePaginatedData<CadastrePassportRow>(
     '/cadastre-passports',
-    { page, size, ...filters, ...(customerTin ? { customerTin } : {}) },
-    activeView === 'all'
+    {
+      page,
+      size,
+      ...filters,
+      ...(committeeQueue ? { status: COMMITTEE_STATUS } : {}),
+      ...(customerTin ? { customerTin } : {}),
+    },
+    !(isEmployee && activeView === 'tasks')
   )
 
   const { mutate: deleteCadastre } = useDelete('/cadastre-passports')
@@ -92,9 +108,8 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
       accessorKey: 'status',
       header: 'Holati',
       cell: ({ row }) => <StatusBadge status={row.original.status} />,
-      filterKey: 'status',
-      filterType: 'select',
-      filterOptions: STATUS_OPTIONS,
+      // The committee queue is the status filter, already applied.
+      ...(committeeQueue ? {} : { filterKey: 'status', filterType: 'select', filterOptions: STATUS_OPTIONS }),
     },
     ...(isShortView
       ? []
@@ -125,7 +140,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
             <Tabs value={activeView} onValueChange={(value) => addParams({ view: value }, 'page')}>
               <TabsList>
                 <TabsTrigger value="tasks">Mening ishlarim</TabsTrigger>
-                <TabsTrigger value="all">Barcha pasportlar</TabsTrigger>
+                <TabsTrigger value="all">TXYZ Kadastr pasportlari</TabsTrigger>
               </TabsList>
             </Tabs>
           ) : (
@@ -140,7 +155,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
         </div>
       )}
 
-      {activeView === 'tasks' ? (
+      {isEmployee && activeView === 'tasks' ? (
         <MyTasksTable />
       ) : (
         <DataTable

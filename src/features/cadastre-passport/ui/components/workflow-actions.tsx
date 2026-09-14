@@ -62,46 +62,28 @@ export const WorkflowActions = ({ passport, workflow }: WorkflowActionsProps) =>
   })
 
   return (
-    <div className="border-teal/30 bg-teal/5 flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="min-w-0">
-        <p className="font-medium text-neutral-900">Sizning navbatingiz</p>
-        <p className="text-sm text-neutral-600">
-          {[workflow.orgName, `${workflow.currentStep}-pog‘ona`, workflow.currentPositionName]
-            .filter(Boolean)
-            .join(' · ')}
-        </p>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {actions.has('FILL_DATA') && (
-          <Button variant="outline" onClick={() => setDialog('FILL_DATA')}>
-            {WORKFLOW_ACTION_LABELS.FILL_DATA}
-          </Button>
-        )}
-        {actions.has('RETURN') && (
-          <Button variant="outline" onClick={() => setDialog('RETURN')}>
-            {WORKFLOW_ACTION_LABELS.RETURN}
-          </Button>
-        )}
-        {actions.has('REJECT') && (
-          <Button variant="destructive" onClick={() => setDialog('REJECT')}>
-            {WORKFLOW_ACTION_LABELS.REJECT}
-          </Button>
-        )}
-        {actions.has('ENDORSE') && (
-          <Button onClick={() => setDialog('ENDORSE')}>{WORKFLOW_ACTION_LABELS.ENDORSE}</Button>
-        )}
-        {actions.has('SUBMIT') && (
-          <Button
-            disabled={!section}
-            title={section ? undefined : 'Avval ma’lumotlarni kiriting'}
-            onClick={() => setDialog('SUBMIT')}
-          >
-            {WORKFLOW_ACTION_LABELS.SUBMIT}
-          </Button>
-        )}
-        {actions.has('SIGN') && <Button onClick={() => setDialog('SIGN')}>{WORKFLOW_ACTION_LABELS.SIGN}</Button>}
-      </div>
+    <>
+      {actions.has('FILL_DATA') && (
+        <Button variant="primaryOutline" onClick={() => setDialog('FILL_DATA')}>
+          {WORKFLOW_ACTION_LABELS.FILL_DATA}
+        </Button>
+      )}
+      {actions.has('RETURN') && (
+        <Button variant="outline" onClick={() => setDialog('RETURN')}>
+          {WORKFLOW_ACTION_LABELS.RETURN}
+        </Button>
+      )}
+      {actions.has('REJECT') && (
+        <Button variant="destructive" onClick={() => setDialog('REJECT')}>
+          {WORKFLOW_ACTION_LABELS.REJECT}
+        </Button>
+      )}
+      {actions.has('ENDORSE') && <Button onClick={() => setDialog('ENDORSE')}>{WORKFLOW_ACTION_LABELS.ENDORSE}</Button>}
+      {/* The server is the one that knows whether the section is complete; a
+          disabled button only hid the action from an executor who had filled it
+          in elsewhere. */}
+      {actions.has('SUBMIT') && <Button onClick={() => setDialog('SUBMIT')}>{WORKFLOW_ACTION_LABELS.SUBMIT}</Button>}
+      {actions.has('SIGN') && <Button onClick={() => setDialog('SIGN')}>{WORKFLOW_ACTION_LABELS.SIGN}</Button>}
 
       <SectionFormDialog
         open={dialog === 'FILL_DATA'}
@@ -207,6 +189,6 @@ export const WorkflowActions = ({ passport, workflow }: WorkflowActionsProps) =>
         isPdfLoading={eimzo.isPdfLoading}
         submitApplicationMetaData={eimzo.submitApplicationMetaData}
       />
-    </div>
+    </>
   )
 }

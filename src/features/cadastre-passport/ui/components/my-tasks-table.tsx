@@ -3,7 +3,7 @@ import { Badge } from '@/shared/components/ui/badge'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
-import { WORKFLOW_ACTION_LABELS } from '../../model/labels'
+import { WORKFLOW_ACTION_LABELS, WORKFLOW_ACTION_VARIANTS } from '../../model/labels'
 import { WorkflowInstance } from '../../model/types'
 
 export const MyTasksTable = () => {
@@ -39,7 +39,7 @@ export const MyTasksTable = () => {
       cell: ({ row }) => (
         <div className="flex flex-wrap gap-1">
           {row.original.allowedActions.map((action) => (
-            <Badge key={action} variant="outline">
+            <Badge key={action} variant={WORKFLOW_ACTION_VARIANTS[action] ?? 'secondary'}>
               {WORKFLOW_ACTION_LABELS[action] ?? action}
             </Badge>
           ))}

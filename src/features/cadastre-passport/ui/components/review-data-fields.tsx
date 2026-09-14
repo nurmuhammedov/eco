@@ -18,53 +18,60 @@ export const ReviewDataFields = ({ control, groups, prefix = '' }: ReviewDataFie
       <section key={group.title}>
         <h3 className="mb-4 text-base leading-snug font-semibold text-neutral-900">{group.title}</h3>
 
-        <div className="grid grid-cols-1 gap-x-4 gap-y-5 @lg:grid-cols-2 @3xl:grid-cols-3 @5xl:grid-cols-4 @6xl:grid-cols-5 @7xl:grid-cols-6">
+        {/* Wide cells rather than many narrow ones: these labels are whole
+            sentences, and a six-column grid wrapped them three lines deep. */}
+        <div className="grid grid-cols-1 gap-x-4 gap-y-5 @2xl:grid-cols-2 @4xl:grid-cols-3 @6xl:grid-cols-4">
           {group.fields.map((item) => (
             <FormField
               key={item.name}
               control={control}
               name={`${prefix}${item.name}`}
               render={({ field }) => (
-                <FormItem>
+                // The cell fills the row so the control can sit at its bottom:
+                // a label that wraps then grows upwards and leaves every input
+                // in the row on the same line.
+                <FormItem className="h-full">
                   <FormLabel>{item.label}</FormLabel>
-                  {item.type === 'date' ? (
-                    <DatePicker
-                      value={field.value instanceof Date && !isNaN(field.value.valueOf()) ? field.value : undefined}
-                      onChange={field.onChange}
-                      placeholder="Sanani tanlang"
-                      // 'after' bars the future, 'before' bars the past.
-                      disableStrategy={item.dates === 'past' ? 'after' : item.dates === 'future' ? 'before' : 'none'}
-                    />
-                  ) : item.type === 'select' ? (
-                    <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value ?? ''}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Tanlang" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {item.options?.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                  ) : item.type === 'text' ? (
-                    <FormControl>
-                      <Input placeholder="Kiriting" {...field} value={field.value ?? ''} />
-                    </FormControl>
-                  ) : (
-                    <FormControl>
-                      <InputNumber
-                        control={control}
-                        name={field.name}
-                        placeholder="Kiriting"
-                        allowNegative={false}
-                        allowDecimals={item.type === 'decimal'}
+                  <div className="mt-auto">
+                    {item.type === 'date' ? (
+                      <DatePicker
+                        value={field.value instanceof Date && !isNaN(field.value.valueOf()) ? field.value : undefined}
+                        onChange={field.onChange}
+                        placeholder="Sanani tanlang"
+                        // 'after' bars the future, 'before' bars the past.
+                        disableStrategy={item.dates === 'past' ? 'after' : item.dates === 'future' ? 'before' : 'none'}
                       />
-                    </FormControl>
-                  )}
+                    ) : item.type === 'select' ? (
+                      <FormControl>
+                        <Select onValueChange={field.onChange} value={field.value ?? ''}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Tanlang" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {item.options?.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                    ) : item.type === 'text' ? (
+                      <FormControl>
+                        <Input placeholder="Kiriting" {...field} value={field.value ?? ''} />
+                      </FormControl>
+                    ) : (
+                      <FormControl>
+                        <InputNumber
+                          control={control}
+                          name={field.name}
+                          placeholder="Kiriting"
+                          allowNegative={false}
+                          allowDecimals={item.type === 'decimal'}
+                        />
+                      </FormControl>
+                    )}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

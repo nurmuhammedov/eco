@@ -1,6 +1,6 @@
 import { ReviewParty, SignAction, WorkflowAction, WorkflowStatus } from './types'
 
-type BadgeVariant = 'info' | 'success' | 'error' | 'warning' | 'secondary'
+type BadgeVariant = 'default' | 'info' | 'success' | 'error' | 'warning' | 'secondary'
 
 export const PARTY_LABELS: Record<ReviewParty, string> = {
   CUSTOMER: 'Buyurtmachi',
@@ -21,6 +21,20 @@ export const WORKFLOW_ACTION_LABELS: Record<WorkflowAction, string> = {
   RETURN: 'Qaytarish',
   REJECT: 'Rad etish',
   SIGN: 'E-imzo bilan tasdiqlash',
+}
+
+/**
+ * One colour per action, so a queue row reads at a glance. The pairs that share
+ * a variant never appear together: SUBMIT belongs to the executor's step and
+ * SIGN to the head's.
+ */
+export const WORKFLOW_ACTION_VARIANTS: Record<WorkflowAction, BadgeVariant> = {
+  FILL_DATA: 'info',
+  SUBMIT: 'default',
+  ENDORSE: 'success',
+  RETURN: 'warning',
+  REJECT: 'error',
+  SIGN: 'default',
 }
 
 export const WORKFLOW_HISTORY_LABELS: Record<WorkflowAction, string> = {
