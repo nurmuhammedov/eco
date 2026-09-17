@@ -94,10 +94,30 @@ birlashtirish.
 
 `react-hook-form` + `zod`. Sxema komponent yonida, `zodResolver` bilan ulanadi.
 
-Xato matnlari faqat ikkitasi (`src/shared/validation`):
+Xato matnlari faqat ikkitasi:
 
 - `Majburiy maydon!`
 - `Kiritilgan ma’lumot yaroqli emas!`
+
+**Sxemaga matn yozilmaydi.** Ikkalasini `src/shared/validation/zod-setup.ts`
+dagi global `errorMap` o‘zi tanlaydi: bo‘shlik (`min(1)`, yo‘q qiymat, tanlanmagan
+enum) — birinchisi, format/uzunlik/diapazon — ikkinchisi.
+
+```ts
+// to‘g‘ri
+factoryNumber: z.string().trim().min(1),
+certificateNumber: z.string().regex(CERTIFICATE_NUMBER_PATTERN),
+
+// noto‘g‘ri
+factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+```
+
+`refine` / `superRefine` / `ctx.addIssue` da errorMap qoidani bilmaydi — u yerda
+`FORM_ERROR_MESSAGES.required` yoki `.invalid` aniq yoziladi.
+
+Istisno faqat foydalanuvchi taxmin qila olmaydigan biznes cheklovi uchun
+(“bitta qabul vaqtiga ko‘pi bilan 100 ta xodim”). Format namunasi xatoga emas,
+**placeholderga** yoziladi.
 
 Placeholderlar: select uchun `Tanlang`, sana uchun `Sanani tanlang`, qolgani
 uchun `Kiriting`. Maska bor maydonda namuna ko‘rsatiladi (`60.123456`).
