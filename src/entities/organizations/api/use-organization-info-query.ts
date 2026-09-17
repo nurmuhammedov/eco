@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { axiosInstance as api } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { ApiResponse } from '@/shared/types/api'
 
@@ -19,12 +20,10 @@ export interface OrganizationInfo {
 
 export const useOrganizationInfoQuery = (tin: string | null) => {
   return useQuery({
-    queryKey: ['organization-info', tin],
+    queryKey: endpointKey(API_ENDPOINTS.PROFILES_INFO, tin),
     queryFn: async () => {
       if (!tin) return null
-      const { data } = await api.get<ApiResponse<OrganizationInfo>>(API_ENDPOINTS.PROFILES_INFO, {
-        params: { tin },
-      })
+      const { data } = await apiClient.get<ApiResponse<OrganizationInfo>>(API_ENDPOINTS.PROFILES_INFO, { tin })
       return data.data
     },
     enabled: !!tin,

@@ -669,11 +669,9 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   { path: 'news/create', element: withSuspense(NewsFormPage), roles: [UserRoles.ADMIN] },
   { path: 'news/edit/:id', element: withSuspense(NewsFormPage), roles: [UserRoles.ADMIN] },
   { path: 'org-workflow', element: withSuspense(OrgWorkflowPage), roles: [UserRoles.ADMIN] },
-  {
-    path: 'organizations',
-    element: withSuspense(OrganizationsPage),
-    roles: [UserRoles.ADMIN, UserRoles.HEAD, UserRoles.REGIONAL],
-  },
+  // Not gated by a direction: the endpoint behind it is guarded by role alone
+  // (`hasAnyAuthority('REGIONAL','HEAD','CHAIRMAN')`).
+  { path: 'organizations', element: withSuspense(OrganizationsPage), roles: [UserRoles.HEAD, UserRoles.REGIONAL] },
   { path: 'parks', element: withSuspense(ParksPage), roles: [UserRoles.ADMIN] },
   {
     id: 'PERMITS',

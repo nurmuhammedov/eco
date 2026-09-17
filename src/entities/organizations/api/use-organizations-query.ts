@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { axiosInstance as api } from '@/shared/api'
+import { apiClient } from '@/shared/api/api-client'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
-import { ApiResponse, ResponseData } from '@/shared/types/api'
 
 export type LegalOwnershipType = 'STATE' | 'NON_STATE'
 
@@ -30,26 +30,27 @@ export interface FilterOrganizationDTO {
 
 export const useOrganizationsQuery = (params: FilterOrganizationDTO) => {
   return useQuery({
-    queryKey: ['organizations', params],
+    queryKey: endpointKey(API_ENDPOINTS.PROFILES_LEGALS, params),
     queryFn: async () => {
-      const { data } = await api.get<ApiResponse<ResponseData<Organization>>>(API_ENDPOINTS.PROFILES_LEGALS, {
-        params,
-      })
-      return data.data
+      const { data } = await apiClient.getWithPagination<Organization>(API_ENDPOINTS.PROFILES_LEGALS, { ...params })
+      return data
     },
   })
 }
 
 export const useOrganizationCounts = (params: FilterOrganizationDTO) => {
   const fetchCount = async (legalOwnershipType?: LegalOwnershipType) => {
-    const { data } = await api.get<ApiResponse<ResponseData<Organization>>>(API_ENDPOINTS.PROFILES_LEGALS, {
-      params: { ...params, page: 1, size: 1, legalOwnershipType },
+    const { data } = await apiClient.getWithPagination<Organization>(API_ENDPOINTS.PROFILES_LEGALS, {
+      ...params,
+      page: 1,
+      size: 1,
+      legalOwnershipType,
     })
-    return data.data.page.totalElements
+    return data.page.totalElements
   }
 
   return useQuery({
-    queryKey: ['organizations-counts', params],
+    queryKey: endpointKey(API_ENDPOINTS.PROFILES_LEGALS, 'counts', params),
     queryFn: async () => {
       const [all, state, nonState] = await Promise.all([
         fetchCount(undefined),

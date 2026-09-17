@@ -99,6 +99,12 @@ export default tslint.config(
               allowTypeImports: true,
               message: 'So‘rovlarni `apiClient` yoki `shared/hooks/api` dagi hooklar orqali yuboring.',
             },
+            {
+              // The instance is re-exported here too, which let it in unnoticed.
+              name: '@/shared/api',
+              importNames: ['axiosInstance', 'servicesAxiosInstance'],
+              message: 'Axios instansiyasi faqat `shared/api` ichida ishlatiladi; `apiClient` dan foydalaning.',
+            },
           ],
           patterns: [
             {
