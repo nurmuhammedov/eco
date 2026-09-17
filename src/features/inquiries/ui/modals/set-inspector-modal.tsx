@@ -66,7 +66,7 @@ const SetInspectorModal = () => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">Ijrochini belgilash</DialogTitle>
+          <DialogTitle className="text-blue-400">Ijrochini belgilash</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

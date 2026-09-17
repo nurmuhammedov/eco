@@ -206,7 +206,7 @@ const InspectionReports = ({
 
       <div className="mt-4 flex items-center justify-between">
         <Tabs value={currentTab} onValueChange={(val) => setCurrentTab(val as any)}>
-          <TabsList className="bg-[#EDEEEE]">
+          <TabsList className="bg-neutral-250">
             <TabsTrigger value="questions">Tekshiruv savolnoma</TabsTrigger>
             <TabsTrigger value="eliminated">Kamchilik aniqlandi</TabsTrigger>
             <TabsTrigger value="not_eliminated">Kamchilik aniqlanmadi</TabsTrigger>
@@ -217,7 +217,7 @@ const InspectionReports = ({
       <div className="my-3">
         {currentTab == 'eliminated' && (
           <Tabs value={tabulation} onValueChange={(val) => setTabulation(val as any)}>
-            <TabsList className="bg-[#EDEEEE]">
+            <TabsList className="bg-neutral-250">
               <TabsTrigger value="all">Barchasi</TabsTrigger>
               <TabsTrigger value="negative">Bartaraf etilmadi</TabsTrigger>
               <TabsTrigger value="positive">Bartaraf etildi</TabsTrigger>

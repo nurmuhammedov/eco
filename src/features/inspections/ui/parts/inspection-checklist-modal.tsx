@@ -285,7 +285,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
       >
         <DialogContent size="xl" className="flex flex-col gap-0 overflow-hidden rounded-xl! p-0">
           <DialogHeader className="shrink-0 border-b px-4 py-4 sm:px-6">
-            <DialogTitle className="pr-8 text-[#4E75FF]">Maʼlumotlarni to‘ldiring</DialogTitle>
+            <DialogTitle className="pr-8 text-blue-400">Maʼlumotlarni to‘ldiring</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
@@ -371,7 +371,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
                         >
                           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                             <div className="flex items-center gap-2">
-                              <span className="flex size-6 items-center justify-center rounded-full bg-[#DCE4FF] text-xs font-semibold text-[#4E75FF]">
+                              <span className="flex size-6 items-center justify-center rounded-full bg-[#DCE4FF] text-xs font-semibold text-blue-400">
                                 {index + 1}
                               </span>
                               <span className="text-sm font-medium text-slate-700">Huquqbuzar</span>
@@ -469,7 +469,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
                     >
                       <div className="mb-4 flex items-center justify-between border-b border-slate-200 pb-3">
                         <div className="flex items-center gap-2">
-                          <span className="flex size-6 items-center justify-center rounded-full bg-[#DCE4FF] text-xs font-semibold text-[#4E75FF]">
+                          <span className="flex size-6 items-center justify-center rounded-full bg-[#DCE4FF] text-xs font-semibold text-blue-400">
                             {index + 1}
                           </span>
                           <span className="text-sm font-medium text-slate-700">Qatnashuvchi</span>

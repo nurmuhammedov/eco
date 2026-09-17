@@ -52,7 +52,7 @@ const UpdateDescriptionModal = ({ changeId, desc = '' }: Props) => {
       </DialogTrigger>
       <DialogContent size="lg">
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">Ijro natijasi bo‘yicha izoh</DialogTitle>
+          <DialogTitle className="text-blue-400">Ijro natijasi bo‘yicha izoh</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

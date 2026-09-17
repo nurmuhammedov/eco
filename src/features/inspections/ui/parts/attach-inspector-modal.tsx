@@ -169,7 +169,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
 
         <DialogContent size="xl" className="flex flex-col gap-0 overflow-hidden rounded-xl! p-0">
           <DialogHeader className="shrink-0 border-b px-4 py-4 sm:px-6">
-            <DialogTitle className="pr-8 text-[#4E75FF]">Inspektorni(larni) belgilash</DialogTitle>
+            <DialogTitle className="pr-8 text-blue-400">Inspektorni(larni) belgilash</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>

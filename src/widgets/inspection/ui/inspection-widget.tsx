@@ -98,11 +98,9 @@ const Cards = ({ onTabChange, regionId, year, month, type, belongType }: any) =>
       id: month?.id,
       name: month?.name,
       count: month?.count || 0,
-      inactiveClass: isAll
-        ? 'bg-[#016B7B]/10 border-[#016B7B]/20 text-[#016B7B]'
-        : 'bg-slate-100 border-slate-200 text-slate-600',
+      inactiveClass: isAll ? 'bg-teal/10 border-teal/20 text-teal' : 'bg-slate-100 border-slate-200 text-slate-600',
       activeClass: isAll
-        ? 'bg-[#016B7B] border-[#015a67] text-white shadow-sm'
+        ? 'bg-teal border-[#015a67] text-white shadow-sm'
         : 'bg-slate-800 border-slate-900 text-white shadow-sm',
     }
   })

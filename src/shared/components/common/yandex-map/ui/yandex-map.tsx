@@ -1,3 +1,4 @@
+import { toast } from 'sonner'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { MAP_DEFAULTS } from '../model/yandex-map-config'
 import { Map, Placemark, YMaps } from '@pbe/react-yandex-maps'
@@ -76,13 +77,13 @@ const YandexMap: React.FC<YandexMapProps> = ({
         },
         (error) => {
           console.error('Geolocation error:', error)
-          alert('Lokatsiyani aniqlash uchun ruxsat berilmagan yoki xatolik yuz berdi.')
+          toast.error('Lokatsiyani aniqlash uchun ruxsat berilmagan yoki xatolik yuz berdi.')
           setIsLocating(false)
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       )
     } else {
-      alert('Sizning qurilmangizda geolokatsiya xizmati mavjud emas.')
+      toast.error('Sizning qurilmangizda geolokatsiya xizmati mavjud emas.')
     }
   }
 

@@ -95,7 +95,7 @@ const ApplicationDetail = ({
 
         <DetailCardAccordion.Item value="appeal_docs" title="Ariza bo‘yicha batafsil ma’lumotlar va hujjatlar">
           <Tabs key={defaultDocsTab} defaultValue={defaultDocsTab}>
-            <TabsList className="bg-[#EDEEEE]">
+            <TabsList className="bg-neutral-250">
               <TabsTrigger value="info">Ma’lumotlar</TabsTrigger>
               <TabsTrigger value="applicant_docs">Arizachi hujjatlari</TabsTrigger>
               <TabsTrigger value="response_docs">Javob hujjatlari</TabsTrigger>

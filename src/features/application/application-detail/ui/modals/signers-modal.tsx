@@ -20,7 +20,7 @@ const SignersModal: FC<Props> = ({ signers, setSigners }) => {
     <Dialog onOpenChange={handleModal} open={!!signers.length}>
       <DialogContent size="lg">
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">Imzolagan shaxslar</DialogTitle>
+          <DialogTitle className="text-blue-400">Imzolagan shaxslar</DialogTitle>
         </DialogHeader>
         <div>
           {signers.map((signer: any) => {

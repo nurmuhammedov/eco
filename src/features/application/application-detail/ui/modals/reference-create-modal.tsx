@@ -60,7 +60,7 @@ const ReferenceCreateModal = () => {
         </DialogTrigger>
         <DialogContent size="xl">
           <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Ma’lumotnoma/dalolatnoma tuzish</DialogTitle>
+            <DialogTitle className="text-blue-400">Ma’lumotnoma/dalolatnoma tuzish</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

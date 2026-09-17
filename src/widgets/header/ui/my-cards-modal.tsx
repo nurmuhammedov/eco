@@ -163,7 +163,7 @@ export function MyCardsModal({ open, onOpenChange }: Props) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">Karta ma’lumotlarim</DialogTitle>
+          <DialogTitle className="text-blue-400">Karta ma’lumotlarim</DialogTitle>
         </DialogHeader>
 
         {isFetching ? (

@@ -159,7 +159,7 @@ export const CreateOtherInspectionModal = () => {
         </DialogTrigger>
         <DialogContent size="lg" className="flex flex-col gap-0 overflow-hidden rounded-xl! p-0">
           <DialogHeader className="shrink-0 border-b px-4 py-4 sm:px-6">
-            <DialogTitle className="pr-8 text-[#4E75FF]">{t('inspections.other.create_modal.title')}</DialogTitle>
+            <DialogTitle className="pr-8 text-blue-400">{t('inspections.other.create_modal.title')}</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>

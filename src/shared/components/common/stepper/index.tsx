@@ -42,7 +42,7 @@ const Stepper: FC<StepperProps> = ({ steps, activeStep, namespace = 'application
                   'flex shrink-0 items-center justify-center rounded-full border-2 transition-all duration-300',
                   circleSize,
                   {
-                    'border-[#016B7B] bg-[#016B7B] text-white': isCompleted || isActive,
+                    'border-teal bg-teal text-white': isCompleted || isActive,
                     'border-gray-300 bg-white text-gray-300': !isActive && !isCompleted,
                   }
                 )}
@@ -64,7 +64,7 @@ const Stepper: FC<StepperProps> = ({ steps, activeStep, namespace = 'application
                   labelTop,
                   labelTextSize,
                   {
-                    'text-[#016B7B]': isActive || isCompleted,
+                    'text-teal': isActive || isCompleted,
                     'text-gray-400': !isActive && !isCompleted,
                   }
                 )}
@@ -81,7 +81,7 @@ const Stepper: FC<StepperProps> = ({ steps, activeStep, namespace = 'application
                   lineMarginLeft,
                   'lg:ml-0',
                   {
-                    'bg-[#016B7B]': isCompleted,
+                    'bg-teal': isCompleted,
                     'bg-gray-200': !isCompleted,
                   }
                 )}

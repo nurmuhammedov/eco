@@ -46,7 +46,7 @@ export const HandSignatureDialog = ({
       <DialogContent className="flex flex-col gap-0 overflow-hidden rounded-xl! p-0 lg:w-[900px]!">
         <DialogHeader className="flex-shrink-0 border-b p-4 md:p-6 md:pb-4">
           <DialogTitle className="flex items-center gap-2 text-base md:text-lg">
-            <PenLine className="size-5 text-[#4E75FF]" />
+            <PenLine className="size-5 text-blue-400" />
             Imzo qo‘yish
           </DialogTitle>
           <p className="text-muted-foreground pt-1 text-left text-sm">

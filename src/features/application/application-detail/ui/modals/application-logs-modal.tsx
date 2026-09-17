@@ -36,7 +36,7 @@ const ApplicationLogsModal = ({
         </DialogTrigger>
         <DialogContent size="xl">
           <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Amaliyotlar tarixi</DialogTitle>
+            <DialogTitle className="text-blue-400">Amaliyotlar tarixi</DialogTitle>
           </DialogHeader>
           <ApplicationLogsList id={id} type={type} isShow={isShow} />
           <DialogFooter>

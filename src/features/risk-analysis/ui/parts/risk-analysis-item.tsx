@@ -32,7 +32,7 @@ const RiskAnalysisItem: FC<Props> = ({ data, displayIndex }) => {
   return (
     <div key={data.text}>
       <div
-        className={clsx('rounded bg-[#EDEEEE] p-2.5 font-medium shadow-md', {
+        className={clsx('bg-neutral-250 rounded p-2.5 font-medium shadow-md', {
           'bg-red-200': !!data?.score && data?.score > 0,
           'bg-green-200': isConfirmed,
         })}

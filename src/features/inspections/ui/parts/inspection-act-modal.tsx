@@ -103,7 +103,7 @@ export const InspectionActModal = ({
                   onClick={() => setMobileTab(tab.id)}
                   className={cn(
                     'flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                    mobileTab === tab.id ? 'bg-white text-[#4E75FF] shadow-xs' : 'text-slate-600'
+                    mobileTab === tab.id ? 'bg-white text-blue-400 shadow-xs' : 'text-slate-600'
                   )}
                 >
                   {tab.label}

@@ -76,7 +76,7 @@ const NotifyInspectionModal = ({ inspectionId }: { inspectionId: string }) => {
 
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Xabardor qilish xatini yuborish</DialogTitle>
+            <DialogTitle className="text-blue-400">Xabardor qilish xatini yuborish</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>

@@ -60,7 +60,7 @@ const RejectApplicationModal = () => {
         </DialogTrigger>
         <DialogContent size="xl">
           <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Arizani qaytarish</DialogTitle>
+            <DialogTitle className="text-blue-400">Arizani qaytarish</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

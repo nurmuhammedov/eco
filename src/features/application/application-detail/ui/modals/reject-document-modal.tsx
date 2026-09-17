@@ -52,7 +52,7 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">Izoh</DialogTitle>
+          <DialogTitle className="text-blue-400">Izoh</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
