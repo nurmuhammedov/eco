@@ -1,6 +1,6 @@
 import { lazy, useEffect, useMemo, useState } from 'react'
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
-import { APP_ROUTES } from '@/app/routes/registry'
+import { visibleRoutes } from '@/app/routes/visible-routes'
 import { authRoutes, publicRoutes, specialComponents } from '@/app/routes'
 import { withFullPageSuspense, withSuspense } from '@/app/routes/utils'
 import {
@@ -11,16 +11,13 @@ import {
   isAtGuestLanding,
 } from '@/shared/config/navigation'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { Direction, UserRoles } from '@/shared/types/user'
+import { UserRoles } from '@/shared/types/user'
 import { BootScreen } from '@/shared/components/common'
 import StartRedirect from '@/app/layouts/start-redirect'
 import { PWAInstallPrompt } from '@/shared/components/common/pwa-install-prompt/pwa-install-prompt'
 
 const AppLayout = lazy(() => import('@/app/layouts/app-layout'))
 const AuthLayout = lazy(() => import('@/app/layouts/auth-layout'))
-
-/** Directions gate which modules a user can reach; these two are available to everyone. */
-const ALWAYS_ALLOWED_ROUTE_IDS = new Set(['INQUIRY', 'REPORT'])
 
 const GuestRedirect = () => {
   const stranded = IS_STATIC_LANDING && isAtGuestLanding()
@@ -61,12 +58,7 @@ export const useAppRoutes = () => {
       ]
     }
 
-    // Two gates: the cabinet the page belongs to, then the direction on the user.
-    const roleRoutes = APP_ROUTES.filter(({ roles, id }) => {
-      if (!roles.includes(user.role)) return false
-      if (!id || user.role === UserRoles.ADMIN) return true
-      return ALWAYS_ALLOWED_ROUTE_IDS.has(id) || user.directions.includes(id as Direction)
-    })
+    const roleRoutes = visibleRoutes(user)
 
     // The interactive service role has no sidebar or header, so its pages render outside the app layout.
     const isStandalone = user.role === UserRoles.INTERACTIVE_SERVICE
