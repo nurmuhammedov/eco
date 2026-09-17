@@ -25,6 +25,10 @@ Import faqat **pastga** qarab boradi. `shared` hech kimni bilmaydi, `entities`
 featurelarni bilmaydi va hokazo. Umumiy tip yoki konstanta ikki qatlamga kerak
 bo‘lsa — uni pastki qatlamga chiqaring, komponent fayli ichida qoldirmang.
 
+Buni ESLint tekshiradi (`no-restricted-imports`), ya’ni yuqoriga qaragan import
+commitgacha xato beradi. Xato chiqsa — importni “aylanib o‘tish” emas, faylni
+to‘g‘ri qatlamga ko‘chirish kerak.
+
 Modul o‘z `index.ts` ini import qilmaydi. Qo‘shni faylni to‘g‘ridan-to‘g‘ri
 oling (`./model/types`), aks holda aylanma bog‘lanish hosil bo‘ladi va Rollup
 modullarni noto‘g‘ri tartibda ishga tushiradi.
