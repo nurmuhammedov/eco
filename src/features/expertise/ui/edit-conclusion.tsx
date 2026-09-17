@@ -1,3 +1,4 @@
+import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
@@ -13,8 +14,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { useDetail, useUpdate } from '@/shared/hooks'
 import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
-import { useQuery } from '@tanstack/react-query'
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
@@ -44,12 +43,8 @@ export const UpdateConclusion = () => {
     'Muvaffaqiyatli yangilandi!'
   )
 
-  const { data: hfoOptions } = useQuery({
-    queryKey: ['hfoSelect', form.watch('customerTin')],
-    queryFn: () => getHfoByTinSelect(form.watch('customerTin')),
-    enabled: !!form.watch('customerTin') && form.watch('customerTin')?.length == 9,
-    retry: 1,
-  })
+  const customerTin = form.watch('customerTin')
+  const { data: hfoOptions } = useHazardousFacilityByTinQuery(customerTin, customerTin?.length === 9)
 
   const selectedRegionId = form.watch('regionId')
   const { data: regions } = useRegionSelectQuery()

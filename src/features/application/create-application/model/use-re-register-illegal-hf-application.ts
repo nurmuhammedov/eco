@@ -1,3 +1,4 @@
+import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useApplicationFormConstants, ReRegisterIllegalHFApplicationDTO } from '@/entities/create-application'
 import { ReRegisterIllegalHFSchema } from '@/entities/create-application/schemas/re-register-illegal-hf.schema'
 import {
@@ -10,8 +11,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { useQuery } from '@tanstack/react-query'
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 import { useDetail } from '@/shared/hooks'
 import { apiClient } from '@/shared/api/api-client'
 
@@ -63,12 +62,7 @@ export const useReRegisterIllegalHFApplication = () => {
   /* const { mutateAsync: searchLegal, isPending: isSearching } = useAdd<any, any, any>('/integration/iip/legal') */
   const [isSearching, setIsSearching] = useState(false)
 
-  const { data: hfoList } = useQuery({
-    queryKey: ['hfoSelect', legalTin],
-    queryFn: () => getHfoByTinSelect(legalTin),
-    enabled: !!legalTin && legalTin.length === 9 && !!orgData,
-    retry: 1,
-  })
+  const { data: hfoList } = useHazardousFacilityByTinQuery(legalTin, !!legalTin && legalTin.length === 9 && !!orgData)
 
   const { data: detail } = useDetail<any>(`/hf/`, hazardousFacilityId, !!hazardousFacilityId)
 

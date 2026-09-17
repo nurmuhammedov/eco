@@ -1,7 +1,7 @@
+import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { toast } from 'sonner'
@@ -18,7 +18,6 @@ import GoBack from '@/shared/components/common/go-back'
 import useAdd from '@/shared/hooks/api/use-add'
 import useData from '@/shared/hooks/api/use-data'
 import { accidentCreateSchema } from '@/features/accident/model/types'
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 
 export const AccidentAdd: React.FC = () => {
   const navigate = useNavigate()
@@ -42,12 +41,7 @@ export const AccidentAdd: React.FC = () => {
     isError: isLegalInfoError,
   } = useData<any>(`/users/legal/${searchedStir}`, !!searchedStir && searchedStir.length === 9)
 
-  const { data: hfoOptions, isFetching: isHfoLoading } = useQuery({
-    queryKey: ['hfoSelect', searchedStir],
-    queryFn: () => getHfoByTinSelect(searchedStir!),
-    enabled: !!searchedStir,
-    retry: 1,
-  })
+  const { data: hfoOptions, isFetching: isHfoLoading } = useHazardousFacilityByTinQuery(searchedStir, !!searchedStir)
 
   const handleSearch = () => {
     if (stir.length === 9) {

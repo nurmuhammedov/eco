@@ -1,3 +1,4 @@
+import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
   heatPipelineRefinement,
@@ -16,7 +17,6 @@ import { format } from 'date-fns'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -207,11 +207,7 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
 
-  const { data: hfoOptions } = useQuery({
-    queryKey: ['hfoSelect', identity],
-    queryFn: () => getHfoByTinSelect(identity),
-    enabled: isLegal && !!currentOwnerData,
-  })
+  const { data: hfoOptions } = useHazardousFacilityByTinQuery(identity, isLegal && !!currentOwnerData)
 
   const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
 
