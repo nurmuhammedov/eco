@@ -59,9 +59,7 @@ export const useUpdateTerritorialDepartments = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: territorialDepartmentsKeys.list('territorial-departments'),
-      })
+      queryClient.invalidateQueries({ queryKey: territorialDepartmentsKeys.root() })
     },
 
     onError: (_err, updatedData, context) => {

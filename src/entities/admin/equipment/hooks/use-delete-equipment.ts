@@ -42,10 +42,8 @@ export const useDeleteEquipment = () => {
     },
 
     onSuccess: () => {
-      // Invalidate list queries to get fresh data
-      queryClient.invalidateQueries({
-        queryKey: equipmentKeys.list('equipment'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: equipmentKeys.root() })
     },
 
     onError: (_err, id, context) => {

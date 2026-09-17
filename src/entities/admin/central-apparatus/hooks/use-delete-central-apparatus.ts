@@ -44,10 +44,8 @@ export const useDeleteCentralApparatus = () => {
     },
 
     onSuccess: () => {
-      // Invalidate list queries to get fresh data
-      queryClient.invalidateQueries({
-        queryKey: centralApparatusKeys.list('central-apparatus'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: centralApparatusKeys.root() })
     },
 
     onError: (_err, id, context) => {

@@ -48,9 +48,7 @@ export const useUpdateChecklist = () => {
         queryClient.setQueryData(checklistKeys.detail('checklist', updatedChecklist.data.id), updatedChecklist)
       }
 
-      queryClient.invalidateQueries({
-        queryKey: checklistKeys.list('checklist'),
-      })
+      queryClient.invalidateQueries({ queryKey: checklistKeys.root() })
     },
 
     onError: (_err, updatedChecklist, context) => {

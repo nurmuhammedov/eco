@@ -35,9 +35,7 @@ export const useCreateChecklist = () => {
     },
 
     onSuccess: (createdChecklist) => {
-      queryClient.invalidateQueries({
-        queryKey: checklistKeys.list('checklist'),
-      })
+      queryClient.invalidateQueries({ queryKey: checklistKeys.root() })
 
       queryClient.setQueryData(checklistKeys.detail('checklist', createdChecklist.data.id!), createdChecklist)
     },

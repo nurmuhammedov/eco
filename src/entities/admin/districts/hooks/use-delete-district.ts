@@ -44,10 +44,8 @@ export const useDeleteDistrict = () => {
     },
 
     onSuccess: () => {
-      // Invalidate list queries to get fresh data
-      queryClient.invalidateQueries({
-        queryKey: districtKeys.list('district'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: districtKeys.root() })
     },
 
     onError: (_err, districtId, context) => {

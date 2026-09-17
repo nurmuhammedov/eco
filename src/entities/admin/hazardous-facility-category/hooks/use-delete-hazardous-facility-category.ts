@@ -44,10 +44,8 @@ export const useDeleteHazardousFacilityCategory = () => {
     },
 
     onSuccess: () => {
-      // Invalidate list queries to get fresh data
-      queryClient.invalidateQueries({
-        queryKey: hazardousFacilityCategoryKeys.list('hazardous-facility-category'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: hazardousFacilityCategoryKeys.root() })
     },
 
     onError: (_err, regionId, context) => {

@@ -44,10 +44,8 @@ export const useDeleteTerritorialDepartments = () => {
     },
 
     onSuccess: () => {
-      // Invalidate list queries to get fresh data
-      queryClient.invalidateQueries({
-        queryKey: territorialDepartmentsKeys.list('territorial-departments'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: territorialDepartmentsKeys.root() })
     },
 
     onError: (_err, id, context) => {

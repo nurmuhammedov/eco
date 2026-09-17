@@ -56,9 +56,7 @@ export const useUpdateDistrict = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: districtKeys.list('district'),
-      })
+      queryClient.invalidateQueries({ queryKey: districtKeys.root() })
     },
 
     onError: (_err, updatedDistrict, context) => {

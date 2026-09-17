@@ -39,10 +39,8 @@ export const useCreateTerritorialDepartment = () => {
     },
 
     onSuccess: (createdData) => {
-      // Invalidate list queries to get fresh data with correct ID
-      queryClient.invalidateQueries({
-        queryKey: territorialDepartmentsKeys.list('territorial-departments'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: territorialDepartmentsKeys.root() })
 
       // Add the newly created territorial-departments to cache
       if (createdData.data.id) {

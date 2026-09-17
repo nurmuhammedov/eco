@@ -52,9 +52,7 @@ export const useUpdateEquipment = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: equipmentKeys.list('equipment'),
-      })
+      queryClient.invalidateQueries({ queryKey: equipmentKeys.root() })
     },
 
     onError: (_err, updatedDistrict, context) => {

@@ -37,10 +37,8 @@ export const useCreateRegion = () => {
     },
 
     onSuccess: (createdRegion) => {
-      // Invalidate list queries to get fresh data with correct ID
-      queryClient.invalidateQueries({
-        queryKey: regionKeys.list('region'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: regionKeys.root() })
 
       // Add the newly created region to cache
       queryClient.setQueryData(regionKeys.detail('region', createdRegion.data.id!), createdRegion)

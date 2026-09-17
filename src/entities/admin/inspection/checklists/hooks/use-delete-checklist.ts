@@ -44,10 +44,8 @@ export const useDeleteChecklist = () => {
     },
 
     onSuccess: () => {
-      // Invalidate list queries to get fresh data
-      queryClient.invalidateQueries({
-        queryKey: checklistKeys.list('checklist'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: checklistKeys.root() })
     },
 
     onError: (_err, checklistId, context) => {

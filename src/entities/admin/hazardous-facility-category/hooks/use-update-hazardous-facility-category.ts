@@ -60,9 +60,7 @@ export const useUpdateHazardousFacilityCategory = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: hazardousFacilityCategoryKeys.list('hazardous-facility-category'),
-      })
+      queryClient.invalidateQueries({ queryKey: hazardousFacilityCategoryKeys.root() })
     },
 
     onError: (_err, updatedData, context) => {

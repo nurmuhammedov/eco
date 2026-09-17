@@ -40,10 +40,8 @@ export const useCreateCommitteeStaff = () => {
     },
 
     onSuccess: (createdData) => {
-      // Invalidate list queries to get fresh data with correct ID
-      queryClient.invalidateQueries({
-        queryKey: committeeStaffKeys.list('committee-staff'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: committeeStaffKeys.root() })
 
       // Add the newly created committee-staff to cache
       queryClient.setQueryData(committeeStaffKeys.detail('committee-staff', createdData.data.id), createdData)

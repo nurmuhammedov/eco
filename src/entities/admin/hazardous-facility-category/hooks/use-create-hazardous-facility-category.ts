@@ -42,10 +42,8 @@ export const useCreateHazardousFacilityCategory = () => {
     },
 
     onSuccess: (createdData) => {
-      // Invalidate list queries to get fresh data with correct ID
-      queryClient.invalidateQueries({
-        queryKey: hazardousFacilityCategoryKeys.list('hazardous-facility-category'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: hazardousFacilityCategoryKeys.root() })
 
       // Add the newly created hazardous-facility-category to cache
       queryClient.setQueryData(

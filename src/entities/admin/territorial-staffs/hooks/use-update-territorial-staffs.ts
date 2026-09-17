@@ -54,9 +54,7 @@ export const useUpdateTerritorialStaff = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: territorialStaffKeys.list('territorial-staff'),
-      })
+      queryClient.invalidateQueries({ queryKey: territorialStaffKeys.root() })
     },
 
     onError: (_err, updatedData, context) => {

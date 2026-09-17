@@ -56,9 +56,7 @@ export const useUpdateCommitteeStaff = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: committeeStaffKeys.list('committee-staff'),
-      })
+      queryClient.invalidateQueries({ queryKey: committeeStaffKeys.root() })
     },
 
     onError: (_err, updatedData, context) => {

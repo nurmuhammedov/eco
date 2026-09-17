@@ -54,9 +54,7 @@ export const useUpdateCentralApparatus = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: centralApparatusKeys.list('central-apparatus'),
-      })
+      queryClient.invalidateQueries({ queryKey: centralApparatusKeys.root() })
     },
 
     onError: (_err, updatedData, context) => {

@@ -39,10 +39,8 @@ export const useCreateCategoryType = () => {
     },
 
     onSuccess: (createdCategoryType) => {
-      // Invalidate list queries to get fresh data with correct ID
-      queryClient.invalidateQueries({
-        queryKey: categoryTypeKeys.list('category-type'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: categoryTypeKeys.root() })
 
       // Add the newly created item to cache
       queryClient.setQueryData(

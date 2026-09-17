@@ -39,10 +39,8 @@ export const useCreateDistrict = () => {
     },
 
     onSuccess: (createdDistrict) => {
-      // Invalidate list queries to get fresh data with correct ID
-      queryClient.invalidateQueries({
-        queryKey: districtKeys.list('district'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: districtKeys.root() })
 
       // Add the newly created district to cache
       queryClient.setQueryData(districtKeys.detail('district', createdDistrict.data.id!), createdDistrict)

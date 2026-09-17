@@ -51,9 +51,7 @@ export const useUpdateCategoryType = () => {
         )
       }
 
-      queryClient.invalidateQueries({
-        queryKey: categoryTypeKeys.list('category-type'),
-      })
+      queryClient.invalidateQueries({ queryKey: categoryTypeKeys.root() })
     },
 
     onError: (_err, updatedCategoryType, context) => {

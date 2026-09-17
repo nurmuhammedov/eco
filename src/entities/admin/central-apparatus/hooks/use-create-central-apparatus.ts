@@ -39,10 +39,8 @@ export const useCreateCentralApparatus = () => {
     },
 
     onSuccess: (createdData) => {
-      // Invalidate list queries to get fresh data with correct ID
-      queryClient.invalidateQueries({
-        queryKey: centralApparatusKeys.list('central-apparatus'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: centralApparatusKeys.root() })
 
       // Add the newly created central-apparatus to cache
       queryClient.setQueryData(centralApparatusKeys.detail('central-apparatus', createdData.data.id!), createdData)

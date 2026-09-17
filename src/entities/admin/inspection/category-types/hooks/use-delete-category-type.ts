@@ -36,9 +36,7 @@ export const useDeleteCategoryType = () => {
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: categoryTypeKeys.list('category-type'),
-      })
+      queryClient.invalidateQueries({ queryKey: categoryTypeKeys.root() })
     },
 
     onError: (_err, categoryTypeId, context) => {

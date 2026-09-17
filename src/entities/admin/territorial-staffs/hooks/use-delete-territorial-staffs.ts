@@ -44,10 +44,8 @@ export const useDeleteTerritorialStaff = () => {
     },
 
     onSuccess: () => {
-      // Invalidate list queries to get fresh data
-      queryClient.invalidateQueries({
-        queryKey: territorialStaffKeys.list('territorial-staff'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: territorialStaffKeys.root() })
     },
 
     onError: (_err, id, context) => {

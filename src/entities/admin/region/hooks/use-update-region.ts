@@ -54,9 +54,7 @@ export const useUpdateRegion = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: regionKeys.list('region'),
-      })
+      queryClient.invalidateQueries({ queryKey: regionKeys.root() })
     },
 
     onError: (_err, updatedDistrict, context) => {
