@@ -157,8 +157,19 @@
 }
 
 @layer utilities {
+  /**
+   * The interface is drawn for a light background only. Without saying so, a
+   * browser set to dark applies its own dark `Canvas` behind everything that
+   * has no background of its own - the sign-in panel turned black with grey
+   * text on it - and flips the default text colour to match.
+   */
+  :root {
+    color-scheme: light;
+  }
+
   body {
     height: 100vh;
+    background-color: #ffffff;
     font-family:
       Golos Text,
       sans-serif;
