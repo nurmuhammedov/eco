@@ -1,3 +1,4 @@
+const EquipmentPdfLinks = lazy(() => import('@/features/register/equipments/ui/parts/equipment-pdf-links'))
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section'
 import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button'
@@ -12,12 +13,9 @@ import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
 import { getDate } from '@/shared/utils/date'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { PDFDownloadLink } from '@react-pdf/renderer'
 import { QRCodeCanvas } from 'qrcode.react'
-import { EquipmentPdfDocument } from '@/shared/components/common/equipment-pdf-document'
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info'
-import { EquipmentStickerPdf } from '@/shared/components/common/equipment-sticker-pdf'
 import { Button } from '@/shared/components/ui/button'
 import { UserRoles } from '@/entities/user'
 import { Logs } from '@/features/register/hf/ui/parts/logs'
@@ -221,69 +219,21 @@ const EquipmentsDetail = () => {
               <QRCodeCanvas value={equipmentPublicUrl} size={128} bgColor={'#ffffff'} fgColor={'#000000'} level={'L'} />
             </div>
             <div className="flex-grow">
-              <DetailRow
-                title="QR Etiketka shaklida 100x40:"
-                value={
-                  qrCodeDataUrl ? (
-                    <PDFDownloadLink
-                      document={
-                        <EquipmentStickerPdf
-                          data={{
-                            ownerName: legalData?.name || data?.ownerName,
-                            registryNumber: data.registryNumber,
-                            registrationDate: data.registrationDate,
-                            attractionName: data.attractionName,
-                            qrCodeDataUrl: qrCodeDataUrl,
-                          }}
-                        />
-                      }
-                      fileName={`etiketka-${data.registryNumber}.pdf`}
-                    >
-                      {({ loading }) =>
-                        loading ? (
-                          'Tayyorlanmoqda...'
-                        ) : (
-                          <span className="cursor-pointer text-[#0271FF] hover:underline">Chop etish</span>
-                        )
-                      }
-                    </PDFDownloadLink>
-                  ) : (
-                    <span>QR kod tayyorlanmoqda...</span>
-                  )
-                }
-              />
-
-              <DetailRow
-                title="PDF A5 formatida:"
-                value={
-                  qrCodeDataUrl ? (
-                    <PDFDownloadLink
-                      document={
-                        <EquipmentPdfDocument
-                          data={{
-                            ownerName: legalData?.name || data?.ownerName,
-                            registryNumber: data.registryNumber,
-                            registrationDate: data.registrationDate,
-                            attractionName: data.attractionName,
-                            qrCodeDataUrl: qrCodeDataUrl,
-                          }}
-                        />
-                      }
-                      fileName={`passport-${data.registryNumber}.pdf`}
-                    >
-                      {({ loading }) =>
-                        loading ? (
-                          'Tayyorlanmoqda...'
-                        ) : (
-                          <span className="cursor-pointer text-[#0271FF] hover:underline">Yuklab olish</span>
-                        )
-                      }
-                    </PDFDownloadLink>
-                  ) : (
-                    <span>QR kod generatsiya qilinmoqda...</span>
-                  )
-                }
-              />
+              {qrCodeDataUrl ? (
+                <Suspense fallback={<span className="text-sm text-neutral-500">Tayyorlanmoqda...</span>}>
+                  <EquipmentPdfLinks
+                    data={{
+                      ownerName: legalData?.name || data?.ownerName,
+                      registryNumber: data.registryNumber,
+                      registrationDate: data.registrationDate,
+                      attractionName: data.attractionName,
+                      qrCodeDataUrl,
+                    }}
+                  />
+                </Suspense>
+              ) : (
+                <span>QR kod tayyorlanmoqda...</span>
+              )}
             </div>
           </div>
         </DetailCardAccordion.Item>
