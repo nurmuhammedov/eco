@@ -11,7 +11,7 @@ export enum InspectionStatus {
   INDIVIDUAL = 'INDIVIDUAL',
 }
 
-const Report1: React.FC = () => {
+const ApplicationsByTypeReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
   const activeTab = paramsObject.ownerType
   const { data, isLoading } = usePaginatedData<any>('/reports/appeal-type', {
@@ -194,4 +194,4 @@ const Report1: React.FC = () => {
   )
 }
 
-export default Report1
+export default ApplicationsByTypeReport

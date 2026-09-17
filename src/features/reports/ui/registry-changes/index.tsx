@@ -4,7 +4,7 @@ import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
 
-const Report8: React.FC = () => {
+const RegistryChangesReport: React.FC = () => {
   const { data: reportData, isLoading } = useData<any[]>('/reports/change/by-update', true)
 
   const tableData = useMemo(() => {
@@ -142,4 +142,4 @@ const Report8: React.FC = () => {
   )
 }
 
-export default Report8
+export default RegistryChangesReport

@@ -6,7 +6,7 @@ import { cn } from '@/shared/lib/utils'
 import Filter from '@/shared/components/common/filter'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 
-const Report11: React.FC = () => {
+const ApplicationsExecutionReport: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
   const { data: regionsData, isLoading: regionsLoading } = useData<any[]>('/regions/select', true, {
     ...paramsObject,
@@ -18,24 +18,42 @@ const Report11: React.FC = () => {
     const mockRow = (officeName: string, isSummary = false) => {
       const getRandom = (max: number) => Math.floor(Math.random() * max)
       const generateGroup = () => {
-        const total = 10 + getRandom(20)
-        const completed = getRandom(total / 2)
-        const inProcess = getRandom(total / 3)
-        const notCompleted = total - completed - inProcess
-
+        const v1 = getRandom(10)
+        const v2 = getRandom(10)
+        const v3 = getRandom(10)
+        const v4 = getRandom(10)
+        const v5 = getRandom(10)
         return {
-          total,
-          not_completed: notCompleted,
-          in_process: inProcess,
-          completed,
+          '5': v1,
+          '10': v2,
+          '15': v3,
+          '30': v4,
+          more: v5,
+          total: v1 + v2 + v3 + v4 + v5,
         }
+      }
+
+      const y = generateGroup()
+      const j = generateGroup()
+      const k = generateGroup()
+      const t = generateGroup()
+      const u = {
+        '5': y['5'] + j['5'] + k['5'] + t['5'],
+        '10': y['10'] + j['10'] + k['10'] + t['10'],
+        '15': y['15'] + j['15'] + k['15'] + t['15'],
+        '30': y['30'] + j['30'] + k['30'] + t['30'],
+        more: y.more + j.more + k.more + t.more,
+        total: y.total + j.total + k.total + t.total,
       }
 
       return {
         officeName,
         isSummary,
-        x: generateGroup(),
-        q: generateGroup(),
+        y,
+        j,
+        k,
+        t,
+        u,
       }
     }
 
@@ -52,39 +70,53 @@ const Report11: React.FC = () => {
     header,
     columns: [
       {
-        header: 'Umumiy',
+        header: '5 kungacha',
+        accessorFn: (row: any) => row[prefix]['5'] || 0,
+        className: 'text-center whitespace-nowrap',
+        cell: ({ row, getValue }: any) => (
+          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
+        ),
+      },
+      {
+        header: '5-10 kun',
+        accessorFn: (row: any) => row[prefix]['10'] || 0,
+        className: 'text-center whitespace-nowrap',
+        cell: ({ row, getValue }: any) => (
+          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
+        ),
+      },
+      {
+        header: '10-15 kun',
+        accessorFn: (row: any) => row[prefix]['15'] || 0,
+        className: 'text-center whitespace-nowrap',
+        cell: ({ row, getValue }: any) => (
+          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
+        ),
+      },
+      {
+        header: '15-30 kun',
+        accessorFn: (row: any) => row[prefix]['30'] || 0,
+        className: 'text-center whitespace-nowrap',
+        cell: ({ row, getValue }: any) => (
+          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
+        ),
+      },
+      {
+        header: '30 kundan ortiq',
+        accessorFn: (row: any) => row[prefix].more || 0,
+        className: 'text-center whitespace-nowrap',
+        cell: ({ row, getValue }: any) => (
+          <span className={row.original.isSummary ? 'font-bold font-medium decoration-red-500/30' : ''}>
+            {getValue()}
+          </span>
+        ),
+      },
+      {
+        header: 'Jami',
         accessorFn: (row: any) => row[prefix].total || 0,
         className: 'text-center font-semibold text-slate-900',
         cell: ({ row, getValue }: any) => (
           <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
-      },
-      {
-        header: 'Amal bajarilmaganlar',
-        accessorFn: (row: any) => row[prefix].not_completed || 0,
-        className: 'text-center',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold underline decoration-red-500/30' : ''}>
-            {getValue()}
-          </span>
-        ),
-      },
-      {
-        header: 'Jarayonda',
-        accessorFn: (row: any) => row[prefix].in_process || 0,
-        className: 'text-center',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
-      },
-      {
-        header: 'Yakunlandi',
-        accessorFn: (row: any) => row[prefix].completed || 0,
-        className: 'text-center',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold underline decoration-emerald-500/30' : ''}>
-            {getValue()}
-          </span>
         ),
       },
     ],
@@ -107,14 +139,17 @@ const Report11: React.FC = () => {
         )
       },
     },
-    createGroup('x', 'XICHO'),
-    createGroup('q', 'Qurilmalar'),
+    createGroup('y', 'Yangi'),
+    createGroup('j', 'Jarayonda'),
+    createGroup('k', 'Kelishishda'),
+    createGroup('t', 'Tasdiqlashda'),
+    createGroup('u', 'Umumiy'),
   ]
 
   return (
     <div className="flex h-full flex-col gap-1 overflow-hidden">
       <div className="mb-2 flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
-        <GoBack title="Hududiy boshqarma tomonidan reyestrga kiritish bo‘yicha hisobot" />
+        <GoBack title="Arizalarning ijro muddati bo‘yicha umumiy hisobot" />
         <div className="w-full sm:w-auto">
           <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
         </div>
@@ -141,4 +176,4 @@ const Report11: React.FC = () => {
   )
 }
 
-export default Report11
+export default ApplicationsExecutionReport

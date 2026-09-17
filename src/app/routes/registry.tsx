@@ -103,17 +103,17 @@ const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-p
 const RegisterXrayDetail = lazy(() => import('@/features/register/xray/ui/xray-detail'))
 const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
 const ReportIrsXrayStatus = lazy(() => import('@/features/reports/ui/irs-xray-status-report'))
-const ReportsDetail1 = lazy(() => import('@/features/reports/ui/report1'))
-const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
-const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
-const ReportsDetail2 = lazy(() => import('@/features/reports/ui/report2'))
-const ReportsDetail3 = lazy(() => import('@/features/reports/ui/report3'))
-const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
-const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
-const ReportsDetail6 = lazy(() => import('@/features/reports/ui/report6'))
-const ReportsDetail7 = lazy(() => import('@/features/reports/ui/report7'))
-const ReportsDetail8 = lazy(() => import('@/features/reports/ui/report8'))
-const ReportsDetail9 = lazy(() => import('@/features/reports/ui/report9'))
+const ApplicationsByRegionReport = lazy(() => import('@/features/reports/ui/applications-by-region'))
+const ApplicationsExecutionReport = lazy(() => import('@/features/reports/ui/applications-execution'))
+const RegistryRegistrationsReport = lazy(() => import('@/features/reports/ui/registry-registrations'))
+const ApplicationsByTypeReport = lazy(() => import('@/features/reports/ui/applications-by-type'))
+const RegistryObjectsReport = lazy(() => import('@/features/reports/ui/registry-objects'))
+const RegistryNewObjectsReport = lazy(() => import('@/features/reports/ui/registry-new-objects'))
+const RegistryEquipmentTermsReport = lazy(() => import('@/features/reports/ui/registry-equipment-terms'))
+const AccidentsReport = lazy(() => import('@/features/reports/ui/accidents-report'))
+const IncidentsReport = lazy(() => import('@/features/reports/ui/incidents-report'))
+const RegistryChangesReport = lazy(() => import('@/features/reports/ui/registry-changes'))
+const RegistryDeregistrationsReport = lazy(() => import('@/features/reports/ui/registry-deregistrations'))
 const ReportsPage = lazy(() => import('@/features/reports/ui/reports'))
 const RiskAnalysisDailyPage = lazy(() => import('@/pages/risk-analysis/daily'))
 const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-info-by-id'))
@@ -871,7 +871,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'REPORT',
     path: 'reports/accidents',
-    element: withSuspense(ReportsDetail6),
+    element: withSuspense(AccidentsReport),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,
@@ -896,7 +896,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'REPORT',
     path: 'reports/applications-execution',
-    element: withSuspense(ReportsDetail10),
+    element: withSuspense(ApplicationsExecutionReport),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,
@@ -909,7 +909,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'REPORT',
     path: 'reports/applications-regions',
-    element: withSuspense(ReportsDetail1),
+    element: withSuspense(ApplicationsByRegionReport),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,
@@ -922,7 +922,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'REPORT',
     path: 'reports/applications-types',
-    element: withSuspense(ReportsDetail2),
+    element: withSuspense(ApplicationsByTypeReport),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,
@@ -935,7 +935,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'REPORT',
     path: 'reports/changes',
-    element: withSuspense(ReportsDetail8),
+    element: withSuspense(RegistryChangesReport),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,
@@ -973,7 +973,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'REPORT',
     path: 'reports/incidents',
-    element: withSuspense(ReportsDetail7),
+    element: withSuspense(IncidentsReport),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,
@@ -1064,7 +1064,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'REPORT',
     path: 'reports/registers-deregister',
-    element: withSuspense(ReportsDetail9),
+    element: withSuspense(RegistryDeregistrationsReport),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,
@@ -1077,7 +1077,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'REPORT',
     path: 'reports/registers-equipment-terms',
-    element: withSuspense(ReportsDetail5),
+    element: withSuspense(RegistryEquipmentTermsReport),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,
@@ -1090,7 +1090,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'REPORT',
     path: 'reports/registers-new-objects',
-    element: withSuspense(ReportsDetail4),
+    element: withSuspense(RegistryNewObjectsReport),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,
@@ -1103,7 +1103,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'REPORT',
     path: 'reports/registers-objects',
-    element: withSuspense(ReportsDetail3),
+    element: withSuspense(RegistryObjectsReport),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,
@@ -1116,7 +1116,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'REPORT',
     path: 'reports/registers-register',
-    element: withSuspense(ReportsDetail11),
+    element: withSuspense(RegistryRegistrationsReport),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,

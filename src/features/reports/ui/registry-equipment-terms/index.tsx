@@ -17,7 +17,7 @@ const ALL_EQUIPMENTS = APPLICATIONS_DATA.filter(
   (i) => i?.category === ApplicationCategory.EQUIPMENTS && i?.parentId === MainApplicationCategory.REGISTER
 )
 
-const Report5: React.FC = () => {
+const RegistryEquipmentTermsReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
   const regionIdParam = String(paramsObject.regionId || 'ALL')
   const equipmentTypeParam = paramsObject.equipmentType || 'ALL'
@@ -590,4 +590,4 @@ const Report5: React.FC = () => {
   )
 }
 
-export default Report5
+export default RegistryEquipmentTermsReport

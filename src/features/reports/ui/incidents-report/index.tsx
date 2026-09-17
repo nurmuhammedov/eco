@@ -5,7 +5,7 @@ import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 
-const Report7: React.FC = () => {
+const IncidentsReport: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
   const { data: regionsData, isLoading: regionsLoading } = useData<any[]>('/regions/select', true, {
     ...paramsObject,
@@ -137,4 +137,4 @@ const Report7: React.FC = () => {
   )
 }
 
-export default Report7
+export default IncidentsReport

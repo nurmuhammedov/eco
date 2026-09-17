@@ -62,7 +62,7 @@ const CountCell = ({
   )
 }
 
-const Report9: React.FC = () => {
+const RegistryDeregistrationsReport: React.FC = () => {
   const { data: reportData, isLoading } = useData<any[]>('/reports/change/by-deregister', true)
 
   const tableData = useMemo(() => {
@@ -173,4 +173,4 @@ const Report9: React.FC = () => {
   )
 }
 
-export default Report9
+export default RegistryDeregistrationsReport

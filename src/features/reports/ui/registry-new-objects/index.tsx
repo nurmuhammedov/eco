@@ -29,7 +29,7 @@ const DoubleValueCell = ({
   </div>
 )
 
-const Report1: React.FC = () => {
+const RegistryNewObjectsReport: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
   const { data: inspections, isLoading } = useData<any[]>('/reports/registry/present-and-period', true, {
     ...paramsObject,
@@ -199,4 +199,4 @@ const Report1: React.FC = () => {
   )
 }
 
-export default Report1
+export default RegistryNewObjectsReport

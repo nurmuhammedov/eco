@@ -10,7 +10,7 @@ export enum InspectionStatus {
   INDIVIDUAL = 'INDIVIDUAL',
 }
 
-const Report3: React.FC = () => {
+const RegistryObjectsReport: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
   const { data: inspections, isLoading } = usePaginatedData<any>('/reports/registry', {
     ...paramsObject,
@@ -273,4 +273,4 @@ const Report3: React.FC = () => {
   )
 }
 
-export default Report3
+export default RegistryObjectsReport
