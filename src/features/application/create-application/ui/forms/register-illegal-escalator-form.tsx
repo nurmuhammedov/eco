@@ -1,3 +1,4 @@
+import { ApplicantSearchCard } from '@/features/application/create-application/ui/forms/parts/applicant-search-card'
 import { CardForm, RegisterIllegalEscalatorDTO } from '@/entities/create-application'
 import { AppealFormSkeleton } from '../form-skeleton'
 import { NoteForm } from '../note-form'
@@ -7,7 +8,6 @@ import { FileTypes } from '@/shared/components/common/file-upload/models/file-ty
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
-import DetailRow from '@/shared/components/common/detail-row'
 import {
   Form,
   FormControl,
@@ -48,7 +48,6 @@ const RegisterIllegalEscalatorForm = ({ onSubmit, isPending = false }: RegisterI
   } = useRegisterIllegalEscalator(onSubmit)
 
   const identity = form.watch('identity')
-  const birthDateString = form.watch('birthDate')
   const isLegal = identity?.length === 9
   const isIndividual = identity?.length === 14
 
@@ -62,109 +61,16 @@ const RegisterIllegalEscalatorForm = ({ onSubmit, isPending = false }: RegisterI
         <GoBack title={isUpdate ? 'Eskalator maʼlumotlarini tahrirlash' : 'Eskalatorni ro‘yxatga olish arizasi'} />
         <NoteForm equipmentName="eskalator" />
 
-        <CardForm className="my-2">
-          {!isUpdate ? (
-            <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
-              <FormField
-                control={form.control}
-                name="identity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>STIR yoki JSHSHIR</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={!!ownerData}
-                        className="3xl:w-sm w-full"
-                        placeholder="STIR yoki JSHSHIRni kiriting"
-                        maxLength={14}
-                        {...field}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/\D/g, '')
-                          e.target.value = val
-                          if (ownerData) handleClear()
-                          if (val.length !== 14) {
-                            form.setValue('birthDate', undefined as any)
-                          }
-                          field.onChange(e)
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {isIndividual && (
-                <FormField
-                  control={form.control}
-                  name="birthDate"
-                  render={({ field }) => {
-                    const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                    return (
-                      <FormItem className="3xl:w-sm w-full">
-                        <FormLabel required>Tug‘ilgan sana</FormLabel>
-                        <DatePicker
-                          disabled={!!ownerData}
-                          className="3xl:w-sm w-full"
-                          value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                          onChange={field.onChange}
-                          placeholder="Sanani tanlang"
-                          disableStrategy="after"
-                        />
-                        <FormMessage />
-                      </FormItem>
-                    )
-                  }}
-                />
-              )}
-
-              <div className="3xl:w-sm flex w-full items-end justify-start gap-2">
-                {!ownerData ? (
-                  <Button
-                    type="button"
-                    onClick={handleSearch}
-                    disabled={isSearchLoading || !identity || (!isLegal && !(isIndividual && birthDateString))}
-                    loading={isSearchLoading}
-                  >
-                    Qidirish
-                  </Button>
-                ) : (
-                  <Button type="button" variant="destructive" onClick={handleClear}>
-                    O‘chirish
-                  </Button>
-                )}
-              </div>
-            </div>
-          ) : null}
-
-          {ownerData && (
-            <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
-              <h3 className="mb-4 text-base font-semibold text-gray-800">
-                {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
-              </h3>
-              <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
-                <DetailRow
-                  title={isLegal ? 'Tashkilot nomi:' : 'F.I.SH.:'}
-                  value={
-                    isLegal
-                      ? ownerData?.name || ownerData?.legalName || '-'
-                      : ownerData?.fullName || ownerData?.name || '-'
-                  }
-                />
-                {isLegal && (
-                  <>
-                    <DetailRow
-                      title="Tashkilot rahbari:"
-                      value={ownerData?.directorName || ownerData?.fullName || '-'}
-                    />
-                    <DetailRow title="Manzil:" value={ownerData?.address || ownerData?.legalAddress || '-'} />
-                    <DetailRow title="Telefon raqami:" value={ownerData?.phoneNumber || '-'} />
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-        </CardForm>
+        <ApplicantSearchCard
+          form={form}
+          isUpdate={isUpdate}
+          isLegal={isLegal}
+          isIndividual={isIndividual}
+          ownerData={ownerData}
+          isSearchLoading={isSearchLoading}
+          onSearch={handleSearch}
+          onClear={handleClear}
+        />
 
         <CardForm className="mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
