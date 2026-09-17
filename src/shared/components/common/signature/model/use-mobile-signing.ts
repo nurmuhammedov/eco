@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import CRC32 from 'crc-32'
 import { ozdst1106 } from './ozdst1106'
 import { getMobileSign, getMobileStatus, verifyMobileDocument } from '../api/mobile-imzo'
-import { convertPdfToBase64 } from './index'
+import { convertPdfToBase64 } from './convert-pdf-to-base64'
 
 interface UseMobileDocumentSigningProps {
   documentUrl: string

@@ -1,4 +1,4 @@
-import { CreateCraneApplicationDTO, CreateHFApplicationDTO } from '@/entities/create-application'
+import { CreateCraneApplicationDTO, CreateHFApplicationDTO } from '../types/dto'
 import { API_ENDPOINTS } from '@/shared/api'
 import { apiClient } from '@/shared/api/api-client'
 import { toast } from 'sonner'

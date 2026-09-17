@@ -1,6 +1,7 @@
 import { CardForm, CreateChemicalContainerApplicationDTO } from '@/entities/create-application'
 import { UserRoles } from '@/entities/user'
-import { NoteForm, useCreateChemicalContainerApplication } from '@/features/application/create-application'
+import { NoteForm } from '../note-form'
+import { useCreateChemicalContainerApplication } from '../../model/use-create-chemical-container-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'

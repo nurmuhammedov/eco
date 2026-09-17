@@ -2,7 +2,7 @@ import { toast } from 'sonner'
 import { apiClient } from '@/shared/api/api-client'
 import { useMutation } from '@tanstack/react-query'
 import { SignatureClient, SignatureKey } from '@/shared/types/signature'
-import { convertPdfToBase64 } from '@/shared/components/common/signature/model'
+import { convertPdfToBase64 } from './convert-pdf-to-base64'
 import { getTimeStamp } from '@/shared/components/common/signature/api/get-time-stamp'
 
 interface SignDocumentParams {

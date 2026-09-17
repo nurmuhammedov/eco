@@ -1,9 +1,6 @@
-import {
-  CreateHazardousFacilityTypeDTO,
-  hazardousFacilityTypeAPI,
-  hazardousFacilityTypeKeys,
-  HazardousFacilityTypeResponse,
-} from '@/entities/admin/hazardous-facility-type'
+import { CreateHazardousFacilityTypeDTO, HazardousFacilityTypeResponse } from '../models/hazardous-facility-type.types'
+import { hazardousFacilityTypeAPI } from '../models/hazardous-facility-type.api'
+import { hazardousFacilityTypeKeys } from '../models/hazardous-facility-type.query-keys'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 

@@ -14,7 +14,7 @@ import { useSignatureClient } from '@/shared/hooks'
 import { SignatureKey } from '@/shared/types/signature'
 import { Signature, UsbIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { SignatureSelect } from '../index'
+import { SignatureSelect } from './signature-select'
 import { apiConfig } from '@/shared/api/constants'
 import { useMobileDocumentSigning } from '../model'
 

@@ -1,5 +1,5 @@
 import { CardForm } from '@/entities/create-application'
-import { useCreateHfApplication } from '@/features/application/create-application'
+import { useCreateHfApplication } from '../../model/use-create-hf-application'
 import { GoBack } from '@/shared/components/common'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 import { Button } from '@/shared/components/ui/button.tsx'

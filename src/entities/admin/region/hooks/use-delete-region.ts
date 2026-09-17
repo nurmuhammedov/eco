@@ -1,4 +1,6 @@
-import { regionAPI, regionKeys, type RegionResponse } from '@/entities/admin/region'
+import { regionAPI } from '../models/region.api'
+import { regionKeys } from '../models/region.query-keys'
+import { type RegionResponse } from '../models/region.types'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 

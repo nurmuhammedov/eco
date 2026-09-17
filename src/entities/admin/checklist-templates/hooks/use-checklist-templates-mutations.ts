@@ -1,9 +1,6 @@
-import {
-  checklistTemplateAPI,
-  checklistTemplateKeys,
-  CreateChecklistTemplateDTO,
-  UpdateChecklistTemplateDTO,
-} from '@/entities/admin/checklist-templates'
+import { checklistTemplateAPI } from '../models/checklist-templates.api'
+import { checklistTemplateKeys } from '../models/checklist-templates.query-keys'
+import { CreateChecklistTemplateDTO, UpdateChecklistTemplateDTO } from '../models/checklist-templates.types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 

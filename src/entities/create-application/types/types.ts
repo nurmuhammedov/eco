@@ -1,4 +1,4 @@
-import { ApplicationIcons } from '@/entities/create-application'
+import { ApplicationIcons } from '../lib/application-icons'
 import { ApplicationCategory, ApplicationTypeEnum, MainApplicationCategory } from './enums'
 
 export interface ApplicationCardItem {

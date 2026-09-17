@@ -1,6 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { centralApparatusAPI, centralApparatusKeys, CentralApparatusResponse } from '@/entities/admin/central-apparatus'
+import { centralApparatusAPI } from '../models/central-apparatus.api'
+import { centralApparatusKeys } from '../models/central-apparatus.query-keys'
+import { CentralApparatusResponse } from '../models/central-apparatus.types'
 
 export const useDeleteCentralApparatus = () => {
   const queryClient = useQueryClient()

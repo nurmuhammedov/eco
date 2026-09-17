@@ -1,4 +1,6 @@
-import { ApplicationCardItem, ApplicationIcons, ApplicationTypeEnum } from '@/entities/create-application'
+import { ApplicationCardItem } from '../types/types'
+import { ApplicationIcons } from '../lib/application-icons'
+import { ApplicationTypeEnum } from '../types/enums'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/shared/lib/utils'

@@ -1,11 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  CreateCategoryTypeDTO,
-  inspectionCategoryTypeAPI,
-  categoryTypeKeys,
-  CategoryTypeResponse,
-} from '@/entities/admin/inspection'
+import { CreateCategoryTypeDTO, CategoryTypeResponse } from '../models/category-type.types'
+import { inspectionCategoryTypeAPI } from '../models/category-type.api'
+import { categoryTypeKeys } from '../models/category-type.query-keys'
 
 export const useCreateCategoryType = () => {
   const queryClient = useQueryClient()

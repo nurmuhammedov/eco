@@ -24,7 +24,7 @@ import { HfCategoryFilesSection } from './parts/hf-category-files-section'
 import { hfFilesSetToForm } from '@/entities/create-application/schemas/hf-appeal-files'
 import { RegisterIllegalHfDTO } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
 import { useRegisterIllegalHf } from '@/features/application/create-application/model/use-create-illegal-hf-applicaton'
-import { NoteForm } from '@/features/application/create-application'
+import { NoteForm } from '../note-form'
 
 interface RegisterIllegalHfFormProps {
   onSubmit: (data: RegisterIllegalHfDTO) => void

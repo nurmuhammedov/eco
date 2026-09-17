@@ -1,10 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  hazardousFacilityTypeAPI,
-  hazardousFacilityTypeKeys,
-  UpdateHazardousFacilityTypeDTO,
-} from '@/entities/admin/hazardous-facility-type'
+import { hazardousFacilityTypeAPI } from '../models/hazardous-facility-type.api'
+import { hazardousFacilityTypeKeys } from '../models/hazardous-facility-type.query-keys'
+import { UpdateHazardousFacilityTypeDTO } from '../models/hazardous-facility-type.types'
 
 export const useUpdateHazardousFacilityType = () => {
   const queryClient = useQueryClient()

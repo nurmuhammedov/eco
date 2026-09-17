@@ -1,6 +1,7 @@
 import { getTime } from '@/shared/lib/get-time'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { districtAPI, districtKeys } from '@/entities/admin/districts'
+import { districtAPI } from '../models/district.api'
+import { districtKeys } from '../models/district.query-keys'
 import { DistrictResponse, FilterDistrictDTO } from '../models/district.types'
 
 export const useDistrictsQuery = (filters: FilterDistrictDTO) => {

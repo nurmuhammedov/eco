@@ -1,6 +1,6 @@
 import { DICTIONARY_STALE_TIME } from '@/shared/lib/query/stale-time'
 import { useQuery } from '@tanstack/react-query'
-import { hazardousFacilityAPI } from '@/shared/api/dictionaries'
+import { hazardousFacilityAPI } from '../queries/hazardous-facility.api'
 
 export const useHazardousFacilityDictionarySelect = (enabled: boolean = true) => {
   return useQuery({

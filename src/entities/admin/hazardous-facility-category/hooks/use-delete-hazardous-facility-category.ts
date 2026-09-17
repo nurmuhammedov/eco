@@ -1,10 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  hazardousFacilityCategoryAPI,
-  hazardousFacilityCategoryKeys,
-  HazardousFacilityCategoryResponse,
-} from '@/entities/admin/hazardous-facility-category'
+import { hazardousFacilityCategoryAPI } from '../models/hazardous-facility-category.api'
+import { hazardousFacilityCategoryKeys } from '../models/hazardous-facility-category.query-keys'
+import { HazardousFacilityCategoryResponse } from '../models/hazardous-facility-category.types'
 
 export const useDeleteHazardousFacilityCategory = () => {
   const queryClient = useQueryClient()

@@ -1,5 +1,6 @@
 import { CardForm, CreateCraneApplicationDTO } from '@/entities/create-application'
-import { NoteForm, useCreateCraneApplication } from '@/features/application/create-application'
+import { NoteForm } from '../note-form'
+import { useCreateCraneApplication } from '../../model/use-create-crane-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'

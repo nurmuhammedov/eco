@@ -1,6 +1,7 @@
 import { CardForm, CreateEscalatorApplicationDTO } from '@/entities/create-application'
 import { UserRoles } from '@/entities/user'
-import { NoteForm, useCreateEscalatorApplication } from '@/features/application/create-application'
+import { NoteForm } from '../note-form'
+import { useCreateEscalatorApplication } from '../../model/use-create-escalator-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'

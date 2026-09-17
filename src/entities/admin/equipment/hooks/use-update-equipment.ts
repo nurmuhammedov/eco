@@ -1,6 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { equipmentAPI, equipmentKeys, UpdateEquipmentDTO } from '@/entities/admin/equipment'
+import { equipmentAPI } from '../models/equipment.api'
+import { equipmentKeys } from '../models/equipment.query-keys'
+import { UpdateEquipmentDTO } from '../models/equipment.types'
 
 export const useUpdateEquipment = () => {
   const queryClient = useQueryClient()

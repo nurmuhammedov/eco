@@ -1,5 +1,6 @@
 import { CardForm, RegisterIllegalXrayDTO } from '@/entities/create-application'
-import { AppealFormSkeleton, NoteForm } from '@/features/application/create-application'
+import { AppealFormSkeleton } from '../form-skeleton'
+import { NoteForm } from '../note-form'
 import { GoBack } from '@/shared/components/common'
 import { parseISO, addYears } from 'date-fns'
 import DetailRow from '@/shared/components/common/detail-row'

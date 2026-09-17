@@ -1,6 +1,6 @@
 import { DICTIONARY_STALE_TIME } from '@/shared/lib/query/stale-time'
 import { useQuery } from '@tanstack/react-query'
-import { regionsAPI } from '@/shared/api/dictionaries'
+import { regionsAPI } from '../queries/regions.api'
 
 export const useRegionSelectQueries = () => {
   return useQuery({

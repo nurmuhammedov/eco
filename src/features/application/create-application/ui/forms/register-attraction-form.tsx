@@ -1,5 +1,5 @@
 import { CardForm, CreateAttractionApplicationDTO } from '@/entities/create-application'
-import { useCreateAttractionApplication } from '@/features/application/create-application'
+import { useCreateAttractionApplication } from '../../model/use-create-attraction-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'

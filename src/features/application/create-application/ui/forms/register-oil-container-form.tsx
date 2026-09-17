@@ -1,6 +1,6 @@
 import { CardForm, CreateOilContainerApplicationDTO } from '@/entities/create-application'
 import { UserRoles } from '@/entities/user'
-import { NoteForm } from '@/features/application/create-application'
+import { NoteForm } from '../note-form'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'

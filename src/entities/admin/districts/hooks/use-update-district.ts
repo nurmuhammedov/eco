@@ -1,6 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { districtAPI, districtKeys, UpdateDistrictDTO } from '@/entities/admin/districts'
+import { districtAPI } from '../models/district.api'
+import { districtKeys } from '../models/district.query-keys'
+import { UpdateDistrictDTO } from '../models/district.types'
 
 export const useUpdateDistrict = () => {
   const queryClient = useQueryClient()

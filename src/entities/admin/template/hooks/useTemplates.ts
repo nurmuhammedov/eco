@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { templateAPI, TemplateFormDTO } from '@/entities/admin/template'
+import { templateAPI } from '../api/template.api'
+import { TemplateFormDTO } from '../model/types'
 import { toast } from 'sonner'
 import { useCustomSearchParams } from '@/shared/hooks'
 

@@ -1,8 +1,6 @@
-import {
-  checklistTemplateAPI,
-  checklistTemplateKeys,
-  FilterChecklistTemplateDTO,
-} from '@/entities/admin/checklist-templates'
+import { checklistTemplateAPI } from '../models/checklist-templates.api'
+import { checklistTemplateKeys } from '../models/checklist-templates.query-keys'
+import { FilterChecklistTemplateDTO } from '../models/checklist-templates.types'
 import { useQuery } from '@tanstack/react-query'
 
 export const useChecklistTemplateList = (filters?: FilterChecklistTemplateDTO) => {

@@ -1,7 +1,8 @@
 import { getTime } from '@/shared/lib/get-time'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { inspectionCategoryTypeAPI as categoryTypeAPI, categoryTypeKeys } from '@/entities/admin/inspection'
-import { CategoryTypeResponse, FilterCategoryTypeDTO } from '@/entities/admin/inspection'
+import { inspectionCategoryTypeAPI as categoryTypeAPI } from '../models/category-type.api'
+import { categoryTypeKeys } from '../models/category-type.query-keys'
+import { CategoryTypeResponse, FilterCategoryTypeDTO } from '../models/category-type.types'
 
 export const useCategoryTypesQuery = (filters: FilterCategoryTypeDTO) => {
   return useQuery({

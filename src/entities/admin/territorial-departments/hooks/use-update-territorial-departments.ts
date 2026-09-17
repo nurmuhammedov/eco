@@ -1,8 +1,6 @@
-import {
-  territorialDepartmentsAPI,
-  territorialDepartmentsKeys,
-  type UpdateTerritorialDepartmentsDTO,
-} from '@/entities/admin/territorial-departments'
+import { territorialDepartmentsAPI } from '../models/territorial-departments.api'
+import { territorialDepartmentsKeys } from '../models/territorial-departments.query-keys'
+import { type UpdateTerritorialDepartmentsDTO } from '../models/territorial-departments.types'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 

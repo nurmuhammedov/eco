@@ -1,5 +1,5 @@
 import { ApiResponse } from '@/shared/types/api.ts'
-import { API_ENDPOINTS } from '@/shared/api'
+import { API_ENDPOINTS } from '../../endpoints'
 import { apiClient } from '@/shared/api/api-client'
 
 export const officeAPI = {

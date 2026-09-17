@@ -5,7 +5,7 @@ import {
   MainApplicationCategory,
   ReRegisterEquipmentDTO,
 } from '@/entities/create-application'
-import { NoteForm } from '@/features/application/create-application'
+import { NoteForm } from '../note-form'
 import { useReRegisterEquipment } from '@/features/application/create-application/model/use-re-register-equipment'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'

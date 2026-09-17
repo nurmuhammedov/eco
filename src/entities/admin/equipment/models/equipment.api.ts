@@ -1,12 +1,7 @@
 import { ApiResponse } from '@/shared/types/api'
 import { API_ENDPOINTS } from '@/shared/api'
 import { apiClient } from '@/shared/api/api-client'
-import {
-  CreateEquipmentDTO,
-  EquipmentResponse,
-  FilterEquipmentDTO,
-  UpdateEquipmentDTO,
-} from '@/entities/admin/equipment'
+import { CreateEquipmentDTO, EquipmentResponse, FilterEquipmentDTO, UpdateEquipmentDTO } from './equipment.types'
 
 export const equipmentAPI = {
   getAll: async (params: FilterEquipmentDTO) => {

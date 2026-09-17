@@ -1,5 +1,5 @@
 import { type ApiResponse } from '@/shared/types/api'
-import { API_ENDPOINTS } from '@/shared/api'
+import { API_ENDPOINTS } from '../../endpoints'
 import { apiClient } from '@/shared/api/api-client'
 import { useQuery } from '@tanstack/react-query'
 

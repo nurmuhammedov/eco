@@ -1,5 +1,6 @@
 import { ApplicationTypeEnum, getApplicationAccess, useApplicationFactory } from '@/entities/create-application'
-import { AppealFormSkeleton, ApplicationModal } from '@/features/application/create-application'
+import { AppealFormSkeleton } from './form-skeleton'
+import { ApplicationModal } from './application-modal'
 import { Suspense } from 'react'
 import { useParams } from 'react-router-dom'
 import { getFormComponentByType, isValidApplicationType } from '../model/store'

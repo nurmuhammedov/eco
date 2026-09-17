@@ -1,6 +1,6 @@
 import { cn } from '@/shared/lib/utils'
 import { getInitials } from '@/shared/utils'
-import { TemplateType } from '@/entities/admin/template'
+import { TemplateType } from '../model/types'
 
 interface TemplateTypeStyleMap {
   [key: string]: {

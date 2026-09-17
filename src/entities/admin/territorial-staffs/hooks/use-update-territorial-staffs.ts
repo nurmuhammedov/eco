@@ -1,10 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  territorialStaffAPI,
-  territorialStaffKeys,
-  UpdateTerritorialStaffDTO,
-} from '@/entities/admin/territorial-staffs'
+import { territorialStaffAPI } from '../models/territorial-staffs.api'
+import { territorialStaffKeys } from '../models/territorial-staffs.query-keys'
+import { UpdateTerritorialStaffDTO } from '../models/territorial-staffs.types'
 
 export const useUpdateTerritorialStaff = () => {
   const queryClient = useQueryClient()

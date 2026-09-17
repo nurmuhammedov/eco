@@ -1,11 +1,8 @@
 import { getTime } from '@/shared/lib'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import {
-  FilterHazardousFacilityTypeDTO,
-  hazardousFacilityTypeAPI,
-  hazardousFacilityTypeKeys,
-  HazardousFacilityTypeResponse,
-} from '@/entities/admin/hazardous-facility-type'
+import { FilterHazardousFacilityTypeDTO, HazardousFacilityTypeResponse } from '../models/hazardous-facility-type.types'
+import { hazardousFacilityTypeAPI } from '../models/hazardous-facility-type.api'
+import { hazardousFacilityTypeKeys } from '../models/hazardous-facility-type.query-keys'
 
 export const useHazardousFacilityTypeListQuery = (filters: FilterHazardousFacilityTypeDTO) => {
   return useQuery({

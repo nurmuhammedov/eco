@@ -2,7 +2,7 @@ import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { z } from 'zod'
-import { HFSphereEnum } from '@/entities/create-application'
+import { HFSphereEnum } from './register-hf.schema'
 
 const __ReRegisterHFSchema = z.object({
   hazardousFacilityId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),

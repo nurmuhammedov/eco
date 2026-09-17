@@ -1,11 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  CreateChecklistDTO,
-  inspectionChecklistAPI as checklistAPI,
-  checklistKeys,
-  ChecklistResponse,
-} from '@/entities/admin/inspection'
+import { CreateChecklistDTO, ChecklistResponse } from '../models/checklist.types'
+import { inspectionChecklistAPI as checklistAPI } from '../models/checklist.api'
+import { checklistKeys } from '../models/checklist.query-keys'
 
 export const useCreateChecklist = () => {
   const queryClient = useQueryClient()
