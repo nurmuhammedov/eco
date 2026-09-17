@@ -1,18 +1,6 @@
 import { lazy, useEffect, useMemo, useState } from 'react'
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
-import {
-  accountantRoutes,
-  adminRoutes,
-  chairmanRoutes,
-  headRoutes,
-  hrRoutes,
-  individualRoutes,
-  inspectorRoutes,
-  interactiveServiceRoutes,
-  legalRoutes,
-  managerRoutes,
-  regionalRoutes,
-} from '@/app/routes/roles'
+import { APP_ROUTES } from '@/app/routes/registry'
 import { authRoutes, publicRoutes, specialComponents } from '@/app/routes'
 import { withFullPageSuspense } from '@/app/routes/utils'
 import {
@@ -30,21 +18,6 @@ import { PWAInstallPrompt } from '@/shared/components/common/pwa-install-prompt/
 
 const AppLayout = lazy(() => import('@/app/layouts/app-layout'))
 const AuthLayout = lazy(() => import('@/app/layouts/auth-layout'))
-
-const ROUTES_BY_ROLE: Record<UserRoles, RouteObject[]> = {
-  [UserRoles.ADMIN]: adminRoutes,
-  [UserRoles.LEGAL]: legalRoutes,
-  [UserRoles.REGIONAL]: regionalRoutes,
-  [UserRoles.INSPECTOR]: inspectorRoutes,
-  [UserRoles.CHAIRMAN]: chairmanRoutes,
-  [UserRoles.MANAGER]: managerRoutes,
-  [UserRoles.HEAD]: headRoutes,
-  [UserRoles.INDIVIDUAL]: individualRoutes,
-  [UserRoles.ACCOUNTANT]: accountantRoutes,
-  [UserRoles.PROCURATOR]: chairmanRoutes,
-  [UserRoles.INTERACTIVE_SERVICE]: interactiveServiceRoutes,
-  [UserRoles.HR]: hrRoutes,
-}
 
 /** Directions gate which modules a user can reach; these two are available to everyone. */
 const ALWAYS_ALLOWED_ROUTE_IDS = new Set(['INQUIRY', 'REPORT'])
@@ -88,8 +61,9 @@ export const useAppRoutes = () => {
       ]
     }
 
-    const allRoleRoutes = ROUTES_BY_ROLE[user.role] ?? []
-    const roleRoutes = allRoleRoutes.filter(({ id }) => {
+    // Two gates: the cabinet the page belongs to, then the direction on the user.
+    const roleRoutes = APP_ROUTES.filter(({ roles, id }) => {
+      if (!roles.includes(user.role)) return false
       if (!id || user.role === UserRoles.ADMIN) return true
       return ALWAYS_ALLOWED_ROUTE_IDS.has(id) || user.directions.includes(id as Direction)
     })
