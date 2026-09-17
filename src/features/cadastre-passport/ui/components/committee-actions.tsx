@@ -3,6 +3,7 @@ import { Button } from '@/shared/components/ui/button'
 import { ApplicationModal } from '@/features/application/create-application'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { SignAction } from '../../model/types'
+import { DEFAULT_POSITIVE_CONCLUSION } from '../../model/labels'
 import { CADASTRE_PASSPORT_KEY, useRefreshPassport } from '../../model/use-cadastre-passport'
 import { ConclusionDialog } from './conclusion-dialog'
 
@@ -39,6 +40,8 @@ export const CommitteeActions = ({ passportId }: { passportId: string }) => {
         title={isReject ? 'Rad etish' : 'Yakunlash'}
         submitLabel={isReject ? 'Rad etish' : 'Yakunlash'}
         destructive={isReject}
+        // A refusal has to be written out; only the approval has a usual wording.
+        defaultText={isReject ? '' : DEFAULT_POSITIVE_CONCLUSION}
         onSubmit={(values) => {
           eimzo.handleCreateApplication({ ...values, signAction: action })
           setAction(null)

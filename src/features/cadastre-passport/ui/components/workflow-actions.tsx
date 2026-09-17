@@ -14,7 +14,7 @@ import {
 import FileLink from '@/shared/components/common/file-link'
 import { ApplicationModal } from '@/features/application/create-application'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
-import { WORKFLOW_ACTION_LABELS } from '../../model/labels'
+import { DEFAULT_POSITIVE_CONCLUSION, WORKFLOW_ACTION_LABELS } from '../../model/labels'
 import { CadastrePassport, WorkflowAction, WorkflowInstance } from '../../model/types'
 import { CADASTRE_PASSPORT_KEY, useRefreshPassport, useWorkflowHistory } from '../../model/use-cadastre-passport'
 import { ConclusionDialog } from './conclusion-dialog'
@@ -99,6 +99,7 @@ export const WorkflowActions = ({ passport, workflow }: WorkflowActionsProps) =>
         onOpenChange={onOpenChange}
         title={WORKFLOW_ACTION_LABELS.SUBMIT}
         submitLabel="Yuborish"
+        defaultText={DEFAULT_POSITIVE_CONCLUSION}
         isPending={isPending}
         onSubmit={(values) => run({ command: 'submit', body: values })}
       />

@@ -14,6 +14,9 @@ export const SIGN_ACTION: Record<SignAction, { label: string; variant: BadgeVari
   REJECTED: { label: 'Rad etilgan', variant: 'error' },
 }
 
+/** What an executor writes nearly every time; the box stays editable. */
+export const DEFAULT_POSITIVE_CONCLUSION = 'Obyektga ijobiy xulosa berilgan'
+
 export const WORKFLOW_ACTION_LABELS: Record<WorkflowAction, string> = {
   FILL_DATA: 'Ma’lumotlarni kiritish',
   SUBMIT: 'Xulosa bilan yuborish',

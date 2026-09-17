@@ -18,6 +18,11 @@ const FILTER_KEYS = ['requestNumber', 'registryNumber', 'preparerTin', 'customer
 
 const COMMITTEE_STATUS = 'IN_COMMITTEE'
 
+const TASKS_VIEW = 'tasks'
+const ALL_VIEW = 'all'
+
+const STATUS_IDS = STATUS_OPTIONS.map((option) => option.id)
+
 interface CadastreListProps {
   customerTin?: string | number | null
   isShortView?: boolean
@@ -39,13 +44,31 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
   const isCommittee = !isShortView && user?.role === UserRoles.MANAGER
 
   const showTasks = isEmployee || isCommittee
-  const activeView = showTasks && view !== 'all' ? 'tasks' : 'all'
   const canCreate = !isShortView && user?.role === UserRoles.LEGAL
 
-  const committeeQueue = isCommittee && activeView === 'tasks'
+  /**
+   * An employee's queue sits next to one tab per status, so a passport can be
+   * found by where it stands rather than through the filter row. Everyone else
+   * keeps a single list.
+   */
+  const tabs = [
+    ...(showTasks ? [{ value: TASKS_VIEW, label: 'Mening ishlarim' }] : []),
+    ...(isEmployee
+      ? STATUS_OPTIONS.map((option) => ({ value: option.id, label: option.name }))
+      : showTasks
+        ? [{ value: ALL_VIEW, label: 'TXYUZ kadastr pasportlari' }]
+        : []),
+  ]
+
+  const activeView = tabs.some((tab) => tab.value === view) ? view : (tabs[0]?.value ?? ALL_VIEW)
+
+  const employeeQueue = isEmployee && activeView === TASKS_VIEW
+  // Whichever tab pins the status: the committee's queue, or a status tab.
+  const pinnedStatus =
+    isCommittee && activeView === TASKS_VIEW ? COMMITTEE_STATUS : STATUS_IDS.includes(activeView) ? activeView : null
 
   const filters = Object.fromEntries(
-    FILTER_KEYS.filter((key) => rest[key] && !(committeeQueue && key === 'status')).map((key) => [key, rest[key]])
+    FILTER_KEYS.filter((key) => rest[key] && !(pinnedStatus && key === 'status')).map((key) => [key, rest[key]])
   )
 
   const { data, isLoading, refetch, totalPages } = usePaginatedData<CadastrePassportRow>(
@@ -54,10 +77,10 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
       page,
       size,
       ...filters,
-      ...(committeeQueue ? { status: COMMITTEE_STATUS } : {}),
+      ...(pinnedStatus ? { status: pinnedStatus } : {}),
       ...(customerTin ? { customerTin } : {}),
     },
-    !(isEmployee && activeView === 'tasks')
+    !employeeQueue
   )
 
   const { mutate: deleteCadastre } = useDelete('/cadastre-passports')
@@ -108,8 +131,8 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
       accessorKey: 'status',
       header: 'Holati',
       cell: ({ row }) => <StatusBadge status={row.original.status} />,
-      // The committee queue is the status filter, already applied.
-      ...(committeeQueue ? {} : { filterKey: 'status', filterType: 'select', filterOptions: STATUS_OPTIONS }),
+      // The tab is the status filter whenever one pins it.
+      ...(pinnedStatus ? {} : { filterKey: 'status', filterType: 'select', filterOptions: STATUS_OPTIONS }),
     },
     ...(isShortView
       ? []
@@ -136,11 +159,14 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
     <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
       {(showTasks || canCreate) && (
         <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          {showTasks ? (
+          {tabs.length ? (
             <Tabs value={activeView} onValueChange={(value) => addParams({ view: value }, 'page')}>
               <TabsList>
-                <TabsTrigger value="tasks">Mening ishlarim</TabsTrigger>
-                <TabsTrigger value="all">TXYZ Kadastr pasportlari</TabsTrigger>
+                {tabs.map((tab) => (
+                  <TabsTrigger key={tab.value} value={tab.value}>
+                    {tab.label}
+                  </TabsTrigger>
+                ))}
               </TabsList>
             </Tabs>
           ) : (
@@ -149,13 +175,13 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
           {canCreate && (
             <Button onClick={() => navigate('/cadastre-passport/add')}>
               <Plus className="mr-2 h-4 w-4" />
-              TXYZ kadastr qo‘shish
+              TXYUZ kadastr pasporti qo‘shish
             </Button>
           )}
         </div>
       )}
 
-      {isEmployee && activeView === 'tasks' ? (
+      {employeeQueue ? (
         <MyTasksTable />
       ) : (
         <DataTable

@@ -47,6 +47,31 @@ export const TXYZ_DOMINANT_HAZARD_TYPES = [
  */
 export const LAND_CADASTRE_NUMBER_PATTERN = /^\d{2}:\d{2}:\d{2}:\d{2}:\d{2}:\d{4}$/
 
+/** Shown as the placeholder: the shape is easier to follow from an example than from a rule. */
+export const LAND_CADASTRE_NUMBER_SAMPLE = '18:01:02:03:04:0123'
+
+/** The land registry's certificate number: a two-letter series and six digits. */
+export const CERTIFICATE_NUMBER_PATTERN = /^[A-Z]{2} \d{6}$/
+
+export const CERTIFICATE_NUMBER_LENGTH = 9
+
+export const CERTIFICATE_NUMBER_SAMPLE = 'QV 123456'
+
+/** Letters first, then the space, then the digits - typed in any case. */
+export const formatCertificateNumber = (raw: string) => {
+  const cleaned = String(raw ?? '')
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, '')
+
+  const letters = cleaned.slice(0, 2).replace(/[^A-Z]/g, '')
+
+  if (letters.length < 2) return letters
+
+  const digits = cleaned.slice(2).replace(/\D/g, '').slice(0, 6)
+
+  return digits ? `${letters} ${digits}` : letters
+}
+
 const GROUPS = [2, 2, 2, 2, 2, 4]
 
 export const LAND_CADASTRE_NUMBER_LENGTH = GROUPS.reduce((sum, size) => sum + size, 0) + GROUPS.length - 1
@@ -95,6 +120,10 @@ export const splitAddress = (address?: string | null) => {
 export const COORDINATE_PATTERN = /^\d{2}\.\d{6}$/
 
 export const COORDINATE_LENGTH = 9
+
+/** The reference sheet's own example, so X and Y cannot be read the wrong way round. */
+export const LONGITUDE_SAMPLE = '60.123456'
+export const LATITUDE_SAMPLE = '40.123456'
 
 export const formatCoordinate = (raw: string) => {
   const cleaned = String(raw ?? '').replace(/[^\d.]/g, '')

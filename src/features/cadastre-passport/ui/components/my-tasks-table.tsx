@@ -1,10 +1,30 @@
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '@/shared/components/ui/badge'
+import { Skeleton } from '@/shared/components/ui/skeleton'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { EmptyValue } from '@/shared/components/common/empty-value'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { WORKFLOW_ACTION_LABELS, WORKFLOW_ACTION_VARIANTS } from '../../model/labels'
 import { WorkflowInstance } from '../../model/types'
+import { useCadastrePassport } from '../../model/use-cadastre-passport'
+import { StatusBadge } from './status-badge'
+
+/**
+ * A task only carries its passport's id, so the passport itself is fetched per
+ * row - without it every row reads the same and the executor cannot tell which
+ * document is waiting. The cells of one row share a query key, so they cost a
+ * single request between them.
+ */
+const PassportCell = ({ id, field }: { id: string; field: 'requestNumber' | 'customerTin' | 'status' }) => {
+  const { data, isPending } = useCadastrePassport(id)
+
+  if (isPending) return <Skeleton className="h-4 w-24" />
+  if (!data) return <EmptyValue />
+  if (field === 'status') return <StatusBadge status={data.status} />
+
+  return <>{data[field] || <EmptyValue />}</>
+}
 
 export const MyTasksTable = () => {
   const navigate = useNavigate()
@@ -20,6 +40,21 @@ export const MyTasksTable = () => {
   })
 
   const columns: ExtendedColumnDef<WorkflowInstance, any>[] = [
+    {
+      id: 'requestNumber',
+      header: 'Ariza raqami',
+      cell: ({ row }) => <PassportCell id={row.original.businessId} field="requestNumber" />,
+    },
+    {
+      id: 'customerTin',
+      header: 'Tashkilot STIR',
+      cell: ({ row }) => <PassportCell id={row.original.businessId} field="customerTin" />,
+    },
+    {
+      id: 'passportStatus',
+      header: 'Pasport holati',
+      cell: ({ row }) => <PassportCell id={row.original.businessId} field="status" />,
+    },
     {
       accessorKey: 'orgName',
       header: 'Tashkilot',

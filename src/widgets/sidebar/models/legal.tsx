@@ -135,7 +135,7 @@ export default [
   },
   {
     id: 'CADASTRE_PASSPORT',
-    title: 'TXYZ Kadastr',
+    title: 'TXYUZ kadastr pasportlari',
     url: '/cadastre-passport',
     icon: <FileCheck />,
   },

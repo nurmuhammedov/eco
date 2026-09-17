@@ -120,7 +120,7 @@ export function Header() {
       { path: '/elevators', title: 'Liftlar' },
       { path: '/expertise', title: 'Ekspertiza' },
       { path: '/archive', title: 'Arxiv' },
-      { path: '/cadastre-passport', title: 'TXYZ Kadastr' },
+      { path: '/cadastre-passport', title: 'TXYUZ kadastr pasportlari' },
       { path: '/user-delegation', title: 'Vazifalarni yuklash' },
       { path: '/profile', title: 'Profil' },
     ]

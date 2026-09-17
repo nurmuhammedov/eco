@@ -67,7 +67,7 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent size="xl">
         <DialogHeader>
-          <DialogTitle>TXYZ kadastr atributiv ma’lumotlarini tahrirlash</DialogTitle>
+          <DialogTitle>TXYUZ kadastr pasportining atributiv ma’lumotlarini tahrirlash</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form id="cadastre-edit-form" onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-6">

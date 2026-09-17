@@ -23,6 +23,12 @@ const STATUSES: Record<string, { label: string; className: string }> = {
     label: 'Vaqtinchalik ishsiz holatida',
     className: 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border-transparent',
   },
+  // Not the same as idle: the object has been taken out of service and sealed,
+  // so it gets its own colour rather than sharing the neutral one.
+  PRESERVATION: {
+    label: 'Konservatsiya holatida',
+    className: 'bg-amber-100 text-amber-800 hover:bg-amber-200 border-transparent',
+  },
 }
 
 export const STATUS_OPTIONS = ['NEW', 'IN_REVIEW', 'IN_COMMITTEE', 'APPROVED', 'REJECTED'].map((id) => ({

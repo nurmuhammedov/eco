@@ -23,6 +23,8 @@ interface ConclusionDialogProps {
   submitLabel: string
   destructive?: boolean
   isPending?: boolean
+  /** Prefills the text box; the usual wording, still free to edit. */
+  defaultText?: string
   onSubmit: (values: ConclusionValues) => void
 }
 
@@ -33,16 +35,17 @@ export const ConclusionDialog = ({
   submitLabel,
   destructive,
   isPending,
+  defaultText = '',
   onSubmit,
 }: ConclusionDialogProps) => {
   const form = useForm<ConclusionValues>({
     resolver: zodResolver(schema),
-    defaultValues: { conclusion: '', conclusionFilePath: '' },
+    defaultValues: { conclusion: defaultText, conclusionFilePath: '' },
   })
 
   useEffect(() => {
-    if (open) form.reset({ conclusion: '', conclusionFilePath: '' })
-  }, [open, form])
+    if (open) form.reset({ conclusion: defaultText, conclusionFilePath: '' })
+  }, [open, defaultText, form])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

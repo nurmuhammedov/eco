@@ -38,7 +38,7 @@ export default [
   },
   {
     url: '/org-workflow',
-    title: 'TXYZ jarayoni',
+    title: 'TXYUZ jarayoni',
     icon: <Workflow />,
   },
   {

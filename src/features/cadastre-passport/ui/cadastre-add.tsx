@@ -126,7 +126,9 @@ export default function CadastreAdd() {
 
   return (
     <div className="space-y-4 pb-4">
-      <GoBack title={resubmitRequestNumber ? 'TXYZ kadastrni qayta yuborish' : 'TXYZ kadastr qo‘shish'} />
+      <GoBack
+        title={resubmitRequestNumber ? 'TXYUZ kadastr pasportini qayta yuborish' : 'TXYUZ kadastr pasporti qo‘shish'}
+      />
 
       <Card>
         <CardHeader>
@@ -258,7 +260,7 @@ export default function CadastreAdd() {
             </Card>
 
             <DetailCardAccordion defaultValue={['cadastre-data']}>
-              <DetailCardAccordion.Item value="cadastre-data" title="TXYZ kadastr atributiv ma’lumotlari">
+              <DetailCardAccordion.Item value="cadastre-data" title="TXYUZ kadastr pasportining atributiv ma’lumotlari">
                 <div className="pt-2 pb-5">
                   <CadastreDataFields control={form.control} prefix="cadastreData." />
                 </div>

@@ -11,15 +11,22 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { SelectOrInput } from '@/shared/components/ui/select-or-input'
 import { useDistrictsSelectQuery, useRegionSelectQuery } from '@/entities/admin/districts'
 import {
+  CERTIFICATE_NUMBER_LENGTH,
+  CERTIFICATE_NUMBER_PATTERN,
+  CERTIFICATE_NUMBER_SAMPLE,
   COORDINATE_LENGTH,
   COORDINATE_PATTERN,
   LAND_CADASTRE_NUMBER_LENGTH,
   LAND_CADASTRE_NUMBER_PATTERN,
+  LAND_CADASTRE_NUMBER_SAMPLE,
+  LATITUDE_SAMPLE,
+  LONGITUDE_SAMPLE,
   TXYZ_DOMINANT_HAZARD_TYPES,
   TXYZ_FIREFIGHTING_EQUIPMENT,
   TXYZ_PROTECTION_DISTANCES,
   TXYZ_PURPOSES,
   TXYZ_SUBSTANCES,
+  formatCertificateNumber,
   formatCoordinate,
   formatLandCadastreNumber,
 } from '../../model/txyz-options'
@@ -50,6 +57,12 @@ const day = () =>
 /** A whole count of things - people, extinguishers, floors. */
 const whole = () => numeric().int(invalid)
 
+/**
+ * The order follows "ТХЮЗ маълумоти", the sheet this form is filled in from.
+ * Four of its rows have no column on the endpoint yet - the legal address (3),
+ * the taxpayer number (7), the hazard type (15) and the number of extinguishers
+ * (19) - so they are left out until the backend carries them.
+ */
 export const cadastreDataSchema = z
   .object({
     name: text(),
@@ -63,27 +76,27 @@ export const cadastreDataSchema = z
     districtId: text(),
     districtName: text(),
     addressLine: text(),
-    latitude: coordinate(),
     longitude: coordinate(),
-    landCadastreNumber: text().regex(LAND_CADASTRE_NUMBER_PATTERN, invalid),
+    latitude: coordinate(),
+    cadastreRegistrationNumber: text().regex(CERTIFICATE_NUMBER_PATTERN, invalid),
     cadastreRegistrationDate: day(),
-    cadastreRegistrationNumber: text(),
+    landCadastreNumber: text().regex(LAND_CADASTRE_NUMBER_PATTERN, invalid),
     landArea: numeric(),
+    exploitationDate: day(),
     purpose: text(),
     substance: text(),
-    status: text(),
-    exploitationDate: day(),
-    protectionDistance: text(),
     employeeCount: whole(),
     workingHour: whole().min(1, invalid).max(24, invalid),
-    distanceToResidence: numeric(),
-    distanceToNearestObject: numeric(),
-    distanceToFireDepartment: numeric(),
     firefightingEquipment: text(),
-    damageArea: numeric(),
+    distanceToFireDepartment: numeric(),
     dominantHazardType: text(),
-    estimatedValue: numeric(),
+    damageArea: numeric(),
     healthRiskFactor: text(),
+    distanceToNearestObject: numeric(),
+    protectionDistance: text(),
+    distanceToResidence: numeric(),
+    estimatedValue: numeric(),
+    status: text(),
   })
   .transform(({ regionId: _regionId, districtId: _districtId, regionName, districtName, addressLine, ...rest }) => ({
     ...rest,
@@ -142,7 +155,10 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
     // A container query reads the nearest ancestor container, never the element
     // it sits on - so the grid needs a wrapper to measure against.
     <div className="@container">
-      <div className="grid grid-cols-1 gap-x-4 gap-y-5 @lg:grid-cols-2 @3xl:grid-cols-3 @5xl:grid-cols-4 @6xl:grid-cols-5 @7xl:grid-cols-6">
+      {/* The labels are whole sentences from the sheet, so the cells have to be
+          wide; `items-end` keeps every input in a row on one line however many
+          lines its label takes. */}
+      <div className="grid grid-cols-1 items-end gap-x-4 gap-y-5 @2xl:grid-cols-2 @5xl:grid-cols-3">
         <FormField
           control={control}
           name={`${prefix}name`}
@@ -237,7 +253,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
           name={`${prefix}addressLine`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Manzil</FormLabel>
+              <FormLabel required>Obyektning joylashgan manzili</FormLabel>
               <FormControl>
                 <Input placeholder="Kiriting" maxLength={255} {...field} />
               </FormControl>
@@ -250,10 +266,10 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
           name={`${prefix}longitude`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>X koordinatasi</FormLabel>
+              <FormLabel required>Obyektning X koordinatasi</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Kiriting"
+                  placeholder={LONGITUDE_SAMPLE}
                   inputMode="decimal"
                   maxLength={COORDINATE_LENGTH}
                   {...field}
@@ -270,10 +286,10 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
           name={`${prefix}latitude`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Y koordinatasi</FormLabel>
+              <FormLabel required>Obyektning Y koordinatasi</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Kiriting"
+                  placeholder={LATITUDE_SAMPLE}
                   inputMode="decimal"
                   maxLength={COORDINATE_LENGTH}
                   {...field}
@@ -287,18 +303,19 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
         />
         <FormField
           control={control}
-          name={`${prefix}landCadastreNumber`}
+          name={`${prefix}cadastreRegistrationNumber`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Yer uchastkasi kadastr raqami</FormLabel>
+              <FormLabel required>
+                Obyektning yer uchastkasini kadastr ro‘yxatidan o‘tkazilgan guvohnoma raqami
+              </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Kiriting"
-                  inputMode="numeric"
-                  maxLength={LAND_CADASTRE_NUMBER_LENGTH}
+                  placeholder={CERTIFICATE_NUMBER_SAMPLE}
+                  maxLength={CERTIFICATE_NUMBER_LENGTH}
                   {...field}
                   value={field.value ?? ''}
-                  onChange={(event) => field.onChange(formatLandCadastreNumber(event.target.value))}
+                  onChange={(event) => field.onChange(formatCertificateNumber(event.target.value))}
                 />
               </FormControl>
               <FormMessage />
@@ -312,7 +329,9 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
             const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
             return (
               <FormItem>
-                <FormLabel required>Kadastr ro‘yxatidan o‘tkazilgan guvohnoma sanasi</FormLabel>
+                <FormLabel required>
+                  Obyektning yer uchastkasini kadastr ro‘yxatidan o‘tkazilgan guvohnoma sanasi
+                </FormLabel>
                 <DatePicker
                   value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                   onChange={field.onChange}
@@ -326,12 +345,19 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
         />
         <FormField
           control={control}
-          name={`${prefix}cadastreRegistrationNumber`}
+          name={`${prefix}landCadastreNumber`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Kadastr ro‘yxatidan o‘tkazilgan guvohnoma raqami</FormLabel>
+              <FormLabel required>Obyektning yer uchastkasi kadastr raqami</FormLabel>
               <FormControl>
-                <Input placeholder="Kiriting" maxLength={50} {...field} />
+                <Input
+                  placeholder={LAND_CADASTRE_NUMBER_SAMPLE}
+                  inputMode="numeric"
+                  maxLength={LAND_CADASTRE_NUMBER_LENGTH}
+                  {...field}
+                  value={field.value ?? ''}
+                  onChange={(event) => field.onChange(formatLandCadastreNumber(event.target.value))}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -342,7 +368,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
           name={`${prefix}landArea`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Yer uchastkasi maydoni (ga)</FormLabel>
+              <FormLabel required>Obyektning yer uchastkasi maydoni (gektar)</FormLabel>
               <FormControl>
                 <InputNumber
                   control={control}
@@ -357,6 +383,25 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
               <FormMessage />
             </FormItem>
           )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}exploitationDate`}
+          render={({ field }) => {
+            const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+            return (
+              <FormItem>
+                <FormLabel required>Obyektning ekspluatatsiya qilingan sanasi</FormLabel>
+                <DatePicker
+                  value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                  onChange={field.onChange}
+                  placeholder="Sanani tanlang"
+                  disableStrategy="after"
+                />
+                <FormMessage />
+              </FormItem>
+            )
+          }}
         />
         <FormField
           control={control}
@@ -376,62 +421,11 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
           name={`${prefix}substance`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Foydalanish moddasining nomi</FormLabel>
+              <FormLabel required>
+                Obyektda ishlab chiqarish, qayta ishlash, saqlash va foydalanish moddasining nomi
+              </FormLabel>
               <FormControl>
                 <SelectOrInput options={TXYZ_SUBSTANCES} value={field.value} onChange={field.onChange} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={`${prefix}status`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Hozirgi kundagi holati</FormLabel>
-              <FormControl>
-                <Select onValueChange={field.onChange} value={field.value || ''}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Tanlang" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ACTIVE">Ishchi holatida</SelectItem>
-                    <SelectItem value="INACTIVE">Vaqtinchalik ishsiz holatida</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={`${prefix}exploitationDate`}
-          render={({ field }) => {
-            const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-            return (
-              <FormItem>
-                <FormLabel required>Ekspluatatsiya qilingan sanasi</FormLabel>
-                <DatePicker
-                  value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                  onChange={field.onChange}
-                  placeholder="Sanani tanlang"
-                  disableStrategy="after"
-                />
-                <FormMessage />
-              </FormItem>
-            )
-          }}
-        />
-        <FormField
-          control={control}
-          name={`${prefix}protectionDistance`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Sanitariya muhofaza zonasi (m)</FormLabel>
-              <FormControl>
-                <SelectOrInput options={TXYZ_PROTECTION_DISTANCES} value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -442,7 +436,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
           name={`${prefix}employeeCount`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Xodimlarning soni (ta)</FormLabel>
+              <FormLabel required>Obyektda xodimlarning soni (ta)</FormLabel>
               <FormControl>
                 <InputNumber
                   control={control}
@@ -461,7 +455,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
           name={`${prefix}workingHour`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Bir sutkada xodimlarning ishlash vaqti (soat)</FormLabel>
+              <FormLabel required>Obyektda bir sutka davomida xodimlarning ishlash vaqti (soat)</FormLabel>
               <FormControl>
                 <InputNumber
                   control={control}
@@ -479,41 +473,12 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
         />
         <FormField
           control={control}
-          name={`${prefix}distanceToResidence`}
+          name={`${prefix}firefightingEquipment`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Aholi yashash punktigacha bo‘lgan masofa (km)</FormLabel>
+              <FormLabel required>Obyektda yong‘in o‘chirish vositasining turi</FormLabel>
               <FormControl>
-                <InputNumber
-                  control={control}
-                  name={field.name}
-                  min={0}
-                  allowNegative={false}
-                  allowDecimals
-                  decimalPlaces={3}
-                  placeholder="Kiriting"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={`${prefix}distanceToNearestObject`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Eng yaqin boshqa obyektgacha bo‘lgan masofa (m)</FormLabel>
-              <FormControl>
-                <InputNumber
-                  control={control}
-                  name={field.name}
-                  min={0}
-                  allowNegative={false}
-                  allowDecimals
-                  decimalPlaces={2}
-                  placeholder="Kiriting"
-                />
+                <SelectOrInput options={TXYZ_FIREFIGHTING_EQUIPMENT} value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -524,7 +489,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
           name={`${prefix}distanceToFireDepartment`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Yong‘in-qutqaruv qismigacha bo‘lgan masofa (km)</FormLabel>
+              <FormLabel required>Obyektdan yong‘in-qutqaruv qismigacha bo‘lgan masofa (km)</FormLabel>
               <FormControl>
                 <InputNumber
                   control={control}
@@ -533,40 +498,6 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
                   allowNegative={false}
                   allowDecimals
                   decimalPlaces={3}
-                  placeholder="Kiriting"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={`${prefix}firefightingEquipment`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Yong‘in o‘chirish vositasining turi</FormLabel>
-              <FormControl>
-                <SelectOrInput options={TXYZ_FIREFIGHTING_EQUIPMENT} value={field.value} onChange={field.onChange} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={`${prefix}damageArea`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Texnogen xavf sodir bo‘lganda zararlanish maydoni (m²)</FormLabel>
-              <FormControl>
-                <InputNumber
-                  control={control}
-                  name={field.name}
-                  min={0}
-                  allowNegative={false}
-                  allowDecimals
-                  decimalPlaces={2}
                   placeholder="Kiriting"
                 />
               </FormControl>
@@ -579,7 +510,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
           name={`${prefix}dominantHazardType`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Ustunlik qiluvchi texnogen xavf turi</FormLabel>
+              <FormLabel required>Obyektda texnogen xavf rivojlanishida ustunlik qiluvchi turi</FormLabel>
               <FormControl>
                 <SelectOrInput options={TXYZ_DOMINANT_HAZARD_TYPES} value={field.value} onChange={field.onChange} />
               </FormControl>
@@ -589,10 +520,10 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
         />
         <FormField
           control={control}
-          name={`${prefix}estimatedValue`}
+          name={`${prefix}damageArea`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Sug‘urtalangan miqdori bahosi (mln so‘m)</FormLabel>
+              <FormLabel required>Obyektda texnogen xavf sodir bo‘lganda zararlanish maydoni (m²)</FormLabel>
               <FormControl>
                 <InputNumber
                   control={control}
@@ -613,9 +544,109 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
           name={`${prefix}healthRiskFactor`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Inson salomatligi uchun salbiy ta’sir ko‘rsatuvchi omillari</FormLabel>
+              <FormLabel required>
+                Obyektda texnogen xavf sodir bo‘lganda inson salomatligi uchun salbiy ta’sir ko‘rsatuvchi omillari
+              </FormLabel>
               <FormControl>
                 <Input placeholder="Kiriting" maxLength={255} {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}distanceToNearestObject`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Obyektdan eng yaqin bo‘lgan boshqa obyektgacha bo‘lgan masofa (metr)</FormLabel>
+              <FormControl>
+                <InputNumber
+                  control={control}
+                  name={field.name}
+                  min={0}
+                  allowNegative={false}
+                  allowDecimals
+                  decimalPlaces={2}
+                  placeholder="Kiriting"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}protectionDistance`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Obyektning sanitariya muhofaza zonasi (metr)</FormLabel>
+              <FormControl>
+                <SelectOrInput options={TXYZ_PROTECTION_DISTANCES} value={field.value} onChange={field.onChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}distanceToResidence`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Obyektdan aholi yashash punktigacha bo‘lgan masofa (km)</FormLabel>
+              <FormControl>
+                <InputNumber
+                  control={control}
+                  name={field.name}
+                  min={0}
+                  allowNegative={false}
+                  allowDecimals
+                  decimalPlaces={3}
+                  placeholder="Kiriting"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}estimatedValue`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Obyektning sug‘urtalangan miqdori bahosi (mln so‘m)</FormLabel>
+              <FormControl>
+                <InputNumber
+                  control={control}
+                  name={field.name}
+                  min={0}
+                  allowNegative={false}
+                  allowDecimals
+                  decimalPlaces={2}
+                  placeholder="Kiriting"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}status`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Obyektning hozirgi kundagi holati</FormLabel>
+              <FormControl>
+                <Select onValueChange={field.onChange} value={field.value || ''}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Tanlang" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ACTIVE">Ishchi holatida</SelectItem>
+                    <SelectItem value="INACTIVE">Vaqtinchalik ishsiz holatida</SelectItem>
+                    <SelectItem value="PRESERVATION">Konservatsiya holatida</SelectItem>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
