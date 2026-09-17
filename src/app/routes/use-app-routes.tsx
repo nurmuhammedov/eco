@@ -2,7 +2,7 @@ import { lazy, useEffect, useMemo, useState } from 'react'
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
 import { APP_ROUTES } from '@/app/routes/registry'
 import { authRoutes, publicRoutes, specialComponents } from '@/app/routes'
-import { withFullPageSuspense } from '@/app/routes/utils'
+import { withFullPageSuspense, withSuspense } from '@/app/routes/utils'
 import {
   GUEST_LANDING_PATH,
   IS_STATIC_LANDING,
@@ -75,7 +75,13 @@ export const useAppRoutes = () => {
       {
         path: '/',
         element: withFullPageSuspense(AppLayout),
-        children: [{ index: true, element: <StartRedirect /> }, ...(isStandalone ? [] : roleRoutes.map(toRouteObject))],
+        children: [
+          { index: true, element: <StartRedirect /> },
+          ...(isStandalone ? [] : roleRoutes.map(toRouteObject)),
+          // Inside the shell: a mistyped address leaves the menu and the header
+          // in place, so the reader can simply carry on somewhere else.
+          ...(isStandalone ? [] : [{ path: '*', element: withSuspense(specialComponents.notFound) }]),
+        ],
       },
       ...(isStandalone ? roleRoutes.map(toRouteObject) : []),
       ...publicRoutes.map(toRouteObject),

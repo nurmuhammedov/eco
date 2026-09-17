@@ -1,6 +1,6 @@
+import { Loader2 } from 'lucide-react'
 import { useLoginOneId } from '@/entities/auth/models/auth.fetcher'
 import { apiConfig } from '@/shared/api/constants'
-import { BootScreen } from '@/shared/components/common'
 
 const buildOneIdAuthorizeUrl = () => {
   const { oneIdClientId, oneIdClientSecret, oneIdUrl } = apiConfig
@@ -11,9 +11,24 @@ const buildOneIdAuthorizeUrl = () => {
 export function OneIdLogin() {
   const { isPending } = useLoginOneId()
 
-  // A failed exchange is reported by the response interceptor, so the page just
-  // goes back to offering the sign-in button.
-  if (isPending) return <BootScreen />
+  /**
+   * A failed exchange is reported by the response interceptor, so the page just
+   * goes back to offering the sign-in button. While it runs the panel keeps its
+   * own shape - a boot screen here put a second brand logo beside the one the
+   * sign-in panel already shows, and said nothing about what was happening.
+   */
+  if (isPending) {
+    return (
+      <div
+        role="status"
+        aria-live="polite"
+        className="flex min-h-screen w-full flex-1 flex-col items-center justify-center gap-4 px-4"
+      >
+        <Loader2 aria-hidden className="text-teal size-9 animate-spin" />
+        <p className="text-sm text-neutral-500">Tizimga kirilmoqda...</p>
+      </div>
+    )
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-1 flex-col items-center justify-center gap-8 px-4 py-10">
