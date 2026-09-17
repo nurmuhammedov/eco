@@ -9,6 +9,7 @@ o‘zi ushlab qoladi.
 ```bash
 npm run typecheck   # tsc -b — haqiqiy tekshiruv
 npm run lint        # eslint, ogohlantirishlarga ham toqat yo‘q
+npm run test        # vitest run
 npm run build       # typecheck + vite build
 ```
 
@@ -143,3 +144,21 @@ aytib turgan narsani takrorlamang. Inglizcha, to‘liq gap bilan.
 ## Console
 
 `console.log` qolmaydi. `console.warn` va `console.error` ruxsat etilgan.
+
+## Testlar
+
+Vitest + happy-dom + Testing Library. Test fayli sinaladigan fayl yonida turadi:
+`endpoint-key.ts` → `endpoint-key.test.ts`.
+
+Nimani sinash kerak: **qoida va hisob-kitob** — kesh kaliti, format va maska,
+rol/`Direction` bo‘yicha ko‘rinish, sana yordamchilari. Bu joylar jimgina buziladi
+va ko‘zga darrov tashlanmaydi.
+
+Nimani sinamaslik kerak: kutubxonaning o‘z xatti-harakati, shadcn komponentlari,
+shunchaki “render bo‘ldimi” degan testlar.
+
+Sinash uchun mantiqni komponent yoki hook ichidan sof funksiyaga chiqarish
+ma’qul — `visible-routes.ts` shunday paydo bo‘lgan.
+
+Test nomi ingliz tilida, **nima kafolatlanayotganini** aytadi:
+`'needs the matching direction when the page declares one'`, `'returns true'` emas.
