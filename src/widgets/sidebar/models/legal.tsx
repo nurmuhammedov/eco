@@ -52,7 +52,7 @@ export default [
     items: [
       {
         id: 'INSPECTION',
-        title: 'Xavfni tahlili asosidagi tekshiruvlar',
+        title: 'Xavf tahlili asosidagi tekshiruvlar',
         url: '/inspections/risk-based',
       },
       {
@@ -100,7 +100,7 @@ export default [
   },
   {
     id: 'ACCIDENT',
-    title: 'Baxtsiz hod. va Avariyalar',
+    title: 'Baxtsiz hodisalar va Avariyalar',
     url: '/accidents',
     icon: MODULE_ICONS.ACCIDENT,
   },

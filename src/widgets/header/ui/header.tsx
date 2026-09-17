@@ -77,7 +77,7 @@ export function Header() {
 
   const title = useMemo(() => {
     const PATH_TITLES = [
-      { path: '/inspections/risk-based', title: 'Xavfni tahlili asosidagi tekshiruvlar' },
+      { path: '/inspections/risk-based', title: 'Xavf tahlili asosidagi tekshiruvlar' },
       { path: '/inspections/other', title: 'Boshqa turdagi tekshiruvlar' },
       { path: '/inspections/info', title: 'Tekshiruv ma’lumotlari' },
       { path: '/inspections', title: 'Tekshiruvlar' },
@@ -104,7 +104,7 @@ export function Header() {
       { path: '/reports', title: 'Hisobotlar' },
       { path: '/permits', title: 'Ruxsat etuvchi hujjatlar' },
       { path: '/inquiries', title: 'Murojaatlar' },
-      { path: '/accidents', title: 'Baxtsiz hod. va Avariyalar' },
+      { path: '/accidents', title: 'Baxtsiz hodisalar va Avariyalar' },
       { path: '/news', title: 'Xabarnoma' },
       { path: '/territories', title: 'Hududlar' },
       { path: '/department', title: 'Bo‘limlar' },

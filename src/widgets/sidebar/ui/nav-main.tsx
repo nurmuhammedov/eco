@@ -24,6 +24,14 @@ import {
 
 const basePath = (url: string) => url.split('?')[0]
 
+/**
+ * The sidebar truncates a label to one line, which cut several of these in half
+ * - "Xavf tahlili asosidagi tekshiruvlar" showed as "Xavfni tahlili asosida...".
+ * Uzbek section names are long enough that shortening them would cost more than
+ * the second line does, so they wrap instead.
+ */
+const WRAP = 'h-auto min-h-8 py-1.5 [&>span:last-child]:overflow-visible [&>span:last-child]:whitespace-normal'
+
 export function NavMain({ item }: { item: NavigationItem }) {
   const { pathname } = useLocation()
   const { t } = useTranslation(['common'])
@@ -74,13 +82,18 @@ export function NavMain({ item }: { item: NavigationItem }) {
         <SidebarMenuItem>
           <CollapsibleTrigger asChild>
             {subItems.length ? (
-              <SidebarMenuButton isActive={isActive} tooltip={t(item.title)}>
+              <SidebarMenuButton isActive={isActive} tooltip={t(item.title)} className={isIconOnly ? undefined : WRAP}>
                 {item.icon}
                 <span>{t(item.title)}</span>
                 <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
               </SidebarMenuButton>
             ) : (
-              <SidebarMenuButton asChild isActive={isActive} tooltip={t(item.title)}>
+              <SidebarMenuButton
+                asChild
+                isActive={isActive}
+                tooltip={t(item.title)}
+                className={isIconOnly ? undefined : WRAP}
+              >
                 <Link to={item.url} onClick={() => startNavigation(item.url)}>
                   {item.icon}
                   <span>{t(item.title)}</span>
@@ -94,7 +107,7 @@ export function NavMain({ item }: { item: NavigationItem }) {
               <SidebarMenuSub>
                 {subItems.map((subItem) => (
                   <SidebarMenuSubItem key={subItem.title}>
-                    <SidebarMenuSubButton asChild isActive={pathname === basePath(subItem.url)}>
+                    <SidebarMenuSubButton asChild isActive={pathname === basePath(subItem.url)} className={WRAP}>
                       <Link to={subItem.url} onClick={() => startNavigation(subItem.url)}>
                         <span>{t(subItem.title)}</span>
                       </Link>
