@@ -1,10 +1,10 @@
 import { useApplicationFormConstants, ReRegisterHFApplicationDTO } from '@/entities/create-application'
 import { ReRegisterHFSchema } from '@/entities/create-application/schemas/re-register-hf.schema'
 import {
-  useDistrictSelectQueries,
+  useDistrictSelectQuery,
   useHazardousFacilityDictionarySelect,
   useHazardousFacilityTypeDictionarySelect,
-  useRegionSelectQueries,
+  useRegionSelectQuery,
 } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -48,8 +48,8 @@ export const useReRegisterHFApplication = () => {
   const regionId = form.watch('regionId')
   const hazardousFacilityId = form.watch('hazardousFacilityId')
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
   const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect()
 

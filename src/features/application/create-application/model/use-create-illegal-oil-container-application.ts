@@ -1,6 +1,6 @@
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import { z } from 'zod'
-import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useChildEquipmentTypes, useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
@@ -144,8 +144,8 @@ export const useRegisterIllegalOilContainer = (
   const identity = form.watch('identity' as any) as string // Watch identity even if not in type
   const isLegal = identity?.length === 9
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: childEquipmentTypes } = useChildEquipmentTypes('OIL_CONTAINER')
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({

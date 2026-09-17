@@ -4,7 +4,7 @@ import {
   RegisterIllegalAttractionDTO,
   RegisterIllegalAttractionSchema,
 } from '@/entities/create-application'
-import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useChildEquipmentTypes, useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
@@ -173,8 +173,8 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
   const regionId = form.watch('regionId')?.toString()
   const childEquipmentId = form.watch('childEquipmentId')
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: attractionNames } = useChildEquipmentTypes('ATTRACTION')
   const { data: attractionSorts } = useData<any[]>(`/child-equipment-sorts/select`, !!childEquipmentId, {
     childEquipmentId,

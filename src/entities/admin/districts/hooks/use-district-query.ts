@@ -29,20 +29,3 @@ export const useDistrictQuery = (
     ...options,
   })
 }
-
-export const useRegionSelectQuery = () => {
-  return useQuery({
-    staleTime: getTime(1, 'week'),
-    queryFn: () => districtAPI.fetchRegionSelect(),
-    queryKey: districtKeys.entity('district-region-select'),
-  })
-}
-
-export const useDistrictsSelectQuery = (regionId: number) => {
-  return useQuery({
-    enabled: !!regionId,
-    staleTime: getTime(1, 'week'),
-    queryFn: () => districtAPI.fetchDistrictsSelect(regionId),
-    queryKey: districtKeys.entity('district-select-' + regionId),
-  })
-}

@@ -4,7 +4,7 @@ import { GoBack } from '@/shared/components/common'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useData } from '@/shared/hooks'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
-import { useRegionSelectQuery } from '@/entities/admin/districts'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { cn } from '@/shared/lib/utils'
 import { IrsXrayStatusItem } from './types'
 

@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import { CreateHazardousFacilityTypeDTO, HazardousFacilityTypeResponse } from '../models/hazardous-facility-type.types'
 import { hazardousFacilityTypeAPI } from '../models/hazardous-facility-type.api'
 import { hazardousFacilityTypeKeys } from '../models/hazardous-facility-type.query-keys'
@@ -41,6 +43,7 @@ export const useCreateHazardousFacilityType = () => {
     onSuccess: (createdData) => {
       // The whole slice: lists, details and the selects that read the same data
       queryClient.invalidateQueries({ queryKey: hazardousFacilityTypeKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES)
 
       // Add the newly created hazardous-facility-type to cache
       queryClient.setQueryData(

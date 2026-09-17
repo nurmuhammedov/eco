@@ -18,7 +18,7 @@ import { UserRoles } from '@/entities/user'
 import { Eye } from 'lucide-react'
 import { Badge } from '@/shared/components/ui/badge'
 import { cn } from '@/shared/lib/utils'
-import { useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { ChangeRegionModal } from './modals/change-region-modal'
 
 const InquiryTable = () => {
@@ -30,7 +30,7 @@ const InquiryTable = () => {
 
   const navigate = useNavigate()
 
-  const { data: regions } = useRegionSelectQueries()
+  const { data: regions } = useRegionSelectQuery()
 
   const activeTab = (belongType as InquiryBelongType | 'ALL') || 'ALL'
 

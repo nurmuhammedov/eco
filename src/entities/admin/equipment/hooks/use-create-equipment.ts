@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CreateEquipmentDTO, EquipmentResponse } from '../models/equipment.types'
@@ -41,6 +43,7 @@ export const useCreateEquipment = () => {
     onSuccess: (createdData) => {
       // The whole slice: lists, details and the selects that read the same data
       queryClient.invalidateQueries({ queryKey: equipmentKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.CHILD_EQUIPMENTS)
 
       // Add the newly created equipment to cache
       queryClient.setQueryData(equipmentKeys.detail('equipment', createdData.data.id!), createdData)

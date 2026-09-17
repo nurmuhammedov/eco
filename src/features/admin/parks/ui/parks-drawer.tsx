@@ -8,7 +8,7 @@ import { BaseDrawer } from '@/shared/components/common/base-drawer'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { useDistrictsSelectQuery, useRegionSelectQuery } from '@/entities/admin/districts'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { Park } from '@/entities/admin/park'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 
@@ -24,7 +24,7 @@ export const ParksDrawer = () => {
 
   const regionId = form.watch('regionId')
   const { data: regions } = useRegionSelectQuery()
-  const { data: districts } = useDistrictsSelectQuery(Number(regionId))
+  const { data: districts } = useDistrictSelectQuery(Number(regionId))
 
   const regionOptions = useMemo(() => getSelectOptions(regions), [regions])
   const districtOptions = useMemo(() => getSelectOptions(districts), [districts])

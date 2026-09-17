@@ -3,7 +3,7 @@ import {
   RegisterAccreditationDTO,
   RegisterAccreditationSchema,
 } from '@/entities/create-application'
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMemo } from 'react'
@@ -39,8 +39,8 @@ export const useCreateAccreditationApplication = (appealType: ApplicationTypeEnu
 
   const activityRegionId = form.watch('activityRegionId')
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: activityDistricts } = useDistrictSelectQueries(activityRegionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: activityDistricts } = useDistrictSelectQuery(activityRegionId)
 
   const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
   const activityDistrictOptions = useMemo(() => getSelectOptions(activityDistricts || []), [activityDistricts])

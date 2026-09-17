@@ -15,7 +15,7 @@ import {
 import { Button } from '@/shared/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { useRegionSelectQuery } from '@/entities/admin/districts'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { useChangeInquiryRegion } from '@/features/inquiries/hooks/use-inquiry-mutations'

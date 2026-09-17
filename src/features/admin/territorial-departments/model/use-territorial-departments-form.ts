@@ -1,4 +1,4 @@
-import { useRegionSelectQuery } from '@/entities/admin/districts'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import {
   CreateTerritorialDepartmentsDTO,
   territorialDepartmentsSchema,

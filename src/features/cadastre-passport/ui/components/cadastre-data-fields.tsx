@@ -9,7 +9,7 @@ import { Control, useFormContext, useWatch } from 'react-hook-form'
 import { InputNumber } from '@/shared/components/ui/input-number'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { SelectOrInput } from '@/shared/components/ui/select-or-input'
-import { useDistrictsSelectQuery, useRegionSelectQuery } from '@/entities/admin/districts'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import {
   CERTIFICATE_NUMBER_LENGTH,
   CERTIFICATE_NUMBER_PATTERN,
@@ -130,7 +130,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
   const districtName = useWatch({ control, name: `${prefix}districtName` })
 
   const { data: regions } = useRegionSelectQuery()
-  const { data: districts } = useDistrictsSelectQuery(Number(regionId))
+  const { data: districts } = useDistrictSelectQuery(Number(regionId))
 
   /**
    * An existing record arrives with the names only - the address it was saved

@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { GoBack } from '@/shared/components/common'
-import { useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
 import {
   InquiryBelongType,
@@ -19,7 +19,7 @@ const InquiriesStatusReport: React.FC = () => {
   const regionNameParam = paramsObject.regionName || 'ALL'
   const typeParam = paramsObject.type || 'ALL'
 
-  const { data: regionsList, isLoading: isRegionsLoading } = useRegionSelectQueries()
+  const { data: regionsList, isLoading: isRegionsLoading } = useRegionSelectQuery()
   const regionOptions = useMemo(() => regionsList || [], [regionsList])
 
   const [tableData, setTableData] = useState<any[]>([])

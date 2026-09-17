@@ -17,7 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { cleanParams } from '@/shared/lib'
 import { useNavigate } from 'react-router-dom'
@@ -77,8 +77,8 @@ export const AddOldConclusion = () => {
   })
 
   const selectedRegionId = form.watch('regionId')
-  const { data: regions, isLoading: isRegionLoading } = useRegionSelectQueries()
-  const { data: districts, isLoading: isDistrictLoading } = useDistrictSelectQueries(selectedRegionId)
+  const { data: regions, isLoading: isRegionLoading } = useRegionSelectQuery()
+  const { data: districts, isLoading: isDistrictLoading } = useDistrictSelectQuery(selectedRegionId)
 
   const { mutate, isPending: isSubmitting } = useMutation({
     mutationFn: createOldExpertiseApplication,

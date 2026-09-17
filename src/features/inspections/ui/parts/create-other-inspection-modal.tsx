@@ -34,7 +34,7 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { ApplicationModal } from '@/features/application/create-application'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
-import { useOfficeSelectQueries } from '@/shared/api/dictionaries'
+import { useOfficeSelectQuery } from '@/shared/api/dictionaries'
 
 export const CreateOtherInspectionModal = () => {
   const { t } = useTranslation()
@@ -108,7 +108,7 @@ export const CreateOtherInspectionModal = () => {
     form.setValue('inspectorIdList', [])
   }, [officeIdValue, form])
   const { data: categoryOptions } = useCategoryTypeSelectQuery(undefined, isOpen)
-  const { data: officeSelect } = useOfficeSelectQueries(isChairman && isOpen)
+  const { data: officeSelect } = useOfficeSelectQuery(isChairman && isOpen)
 
   const {
     error,

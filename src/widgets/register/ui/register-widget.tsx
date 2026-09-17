@@ -14,7 +14,7 @@ import { API_ENDPOINTS } from '@/shared/api'
 import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
+import { useDistrictSelectQuery } from '@/shared/api/dictionaries'
 import { buildRegisterExportQuery } from '@/features/register/model/build-register-query'
 
 interface RegisterWidgetProps {
@@ -64,7 +64,7 @@ const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
   })
 
   const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(`${API_ENDPOINTS.REGIONS_SELECT}`)
-  const { data: districts, isLoading: isDistrictsLoading } = useDistrictSelectQueries(regionId)
+  const { data: districts, isLoading: isDistrictsLoading } = useDistrictSelectQuery(regionId)
 
   const exportQuery = buildRegisterExportQuery({ tab, paramsObject, isArchive, defaultRegionId })
 

@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import { regionAPI } from '../models/region.api'
 import { regionKeys } from '../models/region.query-keys'
 import { type RegionResponse } from '../models/region.types'
@@ -42,6 +44,7 @@ export const useDeleteRegion = () => {
     onSuccess: () => {
       // The whole slice: lists, details and the selects that read the same data
       queryClient.invalidateQueries({ queryKey: regionKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.REGIONS)
     },
 
     onError: (_err, regionId, context) => {

@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import { CreateTerritorialDepartmentsDTO, TerritorialDepartmentResponse } from '../models/territorial-departments.types'
 import { territorialDepartmentsAPI } from '../models/territorial-departments.api'
 import { territorialDepartmentsKeys } from '../models/territorial-departments.query-keys'
@@ -41,6 +43,7 @@ export const useCreateTerritorialDepartment = () => {
     onSuccess: (createdData) => {
       // The whole slice: lists, details and the selects that read the same data
       queryClient.invalidateQueries({ queryKey: territorialDepartmentsKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.OFFICES)
 
       // Add the newly created territorial-departments to cache
       if (createdData.data.id) {

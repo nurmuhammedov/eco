@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { Badge } from '@/shared/components/ui/badge'
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
-import { useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { format } from 'date-fns'
 
 const DAYS_AGO_OPTIONS = [
@@ -18,7 +18,7 @@ const DAYS_AGO_OPTIONS = [
 
 const EmployeeDeviceLoginReport: React.FC = () => {
   const { addParams, paramsObject } = useCustomSearchParams()
-  const { data: regionsData } = useRegionSelectQueries()
+  const { data: regionsData } = useRegionSelectQuery()
 
   const { data, isLoading } = usePaginatedData<any>(API_ENDPOINTS.REPORTS_USER_LOGIN, {
     ...paramsObject,

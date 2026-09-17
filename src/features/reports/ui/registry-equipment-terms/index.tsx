@@ -7,7 +7,7 @@ import { cn } from '@/shared/lib/utils'
 import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application'
 import { Report5Item } from './types'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
-import { useRegionSelectQuery } from '@/entities/admin/districts'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
 
 const getId = (s: any) => s?.id ?? s?.value

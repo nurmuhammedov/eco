@@ -9,7 +9,7 @@ import { Eye } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserRoles } from '@/entities/user'
-import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
+import { useDistrictSelectQuery } from '@/shared/api/dictionaries'
 import { format } from 'date-fns'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
@@ -33,7 +33,7 @@ export const InspectionList: React.FC = () => {
     },
   } = useCustomSearchParams()
 
-  const { data: districts } = useDistrictSelectQueries(
+  const { data: districts } = useDistrictSelectQuery(
     isInspector || isRegional ? undefined : regionId == 'ALL' ? '' : regionId
   )
 

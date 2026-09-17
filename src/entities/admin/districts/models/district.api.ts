@@ -13,16 +13,6 @@ export const districtAPI = {
     const { data } = await apiClient.get<ApiResponse<DistrictResponse>>(`${API_ENDPOINTS.DISTRICTS}/${id}`)
     return data.data
   },
-  fetchRegionSelect: async () => {
-    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.REGIONS_SELECT}`)
-
-    return data.data
-  },
-  fetchDistrictsSelect: async (regionId: number) => {
-    const { data } = await apiClient.get<ApiResponse<any>>(API_ENDPOINTS.DISTRICT_SELECT, { regionId })
-
-    return data.data
-  },
   createDistrict: async (district: CreateDistrictDTO) => {
     return await apiClient.post<DistrictResponse, CreateDistrictDTO>(API_ENDPOINTS.DISTRICTS, district)
   },

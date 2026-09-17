@@ -6,7 +6,7 @@ import {
   RegisterIllegalEscalatorSchema,
 } from '@/entities/create-application'
 import { useParkSelectQuery } from '@/entities/admin/park'
-import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useChildEquipmentTypes, useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
@@ -170,8 +170,8 @@ export const useRegisterIllegalEscalator = (externalSubmit?: (data: RegisterIlle
   const identity = form.watch('identity')
   const isLegal = identity?.length === 9
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: childEquipmentTypes } = useChildEquipmentTypes('ESCALATOR')
   const { data: parks } = useParkSelectQuery(Number(districtId))
 

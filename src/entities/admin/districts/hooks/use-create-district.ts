@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CreateDistrictDTO, DistrictResponse } from '../models/district.types'
@@ -41,6 +43,7 @@ export const useCreateDistrict = () => {
     onSuccess: (createdDistrict) => {
       // The whole slice: lists, details and the selects that read the same data
       queryClient.invalidateQueries({ queryKey: districtKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.DISTRICTS)
 
       // Add the newly created district to cache
       queryClient.setQueryData(districtKeys.detail('district', createdDistrict.data.id!), createdDistrict)

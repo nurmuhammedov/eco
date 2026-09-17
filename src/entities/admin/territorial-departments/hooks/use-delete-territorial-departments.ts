@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { TerritorialDepartmentResponse } from '../models/territorial-departments.types'
@@ -46,6 +48,7 @@ export const useDeleteTerritorialDepartments = () => {
     onSuccess: () => {
       // The whole slice: lists, details and the selects that read the same data
       queryClient.invalidateQueries({ queryKey: territorialDepartmentsKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.OFFICES)
     },
 
     onError: (_err, id, context) => {

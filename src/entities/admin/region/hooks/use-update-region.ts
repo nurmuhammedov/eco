@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { regionAPI } from '../models/region.api'
@@ -55,6 +57,7 @@ export const useUpdateRegion = () => {
 
       // Invalidate lists to ensure they're up-to-date
       queryClient.invalidateQueries({ queryKey: regionKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.REGIONS)
     },
 
     onError: (_err, updatedDistrict, context) => {

@@ -2,9 +2,9 @@ import { CreateOilContainerApplicationDTO, OilContainerAppealDtoSchema } from '@
 import { UserRoles } from '@/entities/user'
 import {
   useChildEquipmentTypes,
-  useDistrictSelectQueries,
+  useDistrictSelectQuery,
   useHazardousFacilityDictionarySelect,
-  useRegionSelectQueries,
+  useRegionSelectQuery,
 } from '@/shared/api/dictionaries'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
@@ -43,8 +43,8 @@ export const useCreateOilContainerApplication = () => {
 
   const regionId = form.watch('regionId')
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL)
   // Assuming 'OIL_CONTAINER' is the correct key for child equipment types
   const { data: childEquipmentTypes } = useChildEquipmentTypes('OIL_CONTAINER')

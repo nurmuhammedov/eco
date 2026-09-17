@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { hazardousFacilityTypeAPI } from '../models/hazardous-facility-type.api'
@@ -46,6 +48,7 @@ export const useDeleteHazardousFacilityType = () => {
     onSuccess: () => {
       // The whole slice: lists, details and the selects that read the same data
       queryClient.invalidateQueries({ queryKey: hazardousFacilityTypeKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES)
     },
 
     onError: (_err, regionId, context) => {

@@ -5,7 +5,7 @@ import { UserRoles } from '@/entities/user'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslatedObject } from '@/shared/hooks'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { useDepartmentSelectQueries } from '@/shared/api/dictionaries'
+import { useDepartmentSelectQuery } from '@/shared/api/dictionaries'
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks'
 
 import {
@@ -59,7 +59,7 @@ const DEFAULT_FORM_VALUES: Partial<CreateCommitteeStaffDTO> = {
 export function useCommitteeStaffForm() {
   const { data, onClose, isCreate } = useCommitteeStaffsDrawer()
 
-  const { data: departmentSelect } = useDepartmentSelectQueries()
+  const { data: departmentSelect } = useDepartmentSelectQuery()
   const userRoleOptions = useTranslatedObject(
     {
       [UserRoles.HEAD]: UserRoles.HEAD,

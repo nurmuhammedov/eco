@@ -8,10 +8,9 @@ import {
   UpdateDistrictDTO,
   useCreateDistrict,
   useDistrictQuery,
-  useRegionSelectQuery,
   useUpdateDistrict,
 } from '@/entities/admin/districts'
-
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 const DEFAULT_FORM_VALUES: CreateDistrictDTO = {
   name: '',
   soato: '',

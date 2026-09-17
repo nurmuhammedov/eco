@@ -1,10 +1,10 @@
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import { useApplicationFormConstants } from '@/entities/create-application'
 import {
-  useDistrictSelectQueries,
+  useDistrictSelectQuery,
   useHazardousFacilityTypeDictionarySelect,
   useHazardousFacilityCategoryDictionarySelect,
-  useRegionSelectQueries,
+  useRegionSelectQuery,
 } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions, getHazardousFacilityTypeOptions } from '@/shared/lib/get-select-options'
@@ -101,8 +101,8 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
   const regionId = form.watch('regionId')
   const { spheres } = useApplicationFormConstants()
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
   const { data: hazardousFacilityCategories } = useHazardousFacilityCategoryDictionarySelect()
 

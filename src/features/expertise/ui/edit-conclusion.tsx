@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { useQuery } from '@tanstack/react-query'
 import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 import { Textarea } from '@/shared/components/ui/textarea'
@@ -52,8 +52,8 @@ export const UpdateConclusion = () => {
   })
 
   const selectedRegionId = form.watch('regionId')
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(selectedRegionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(selectedRegionId)
 
   const watchedType = form.watch('type')
 

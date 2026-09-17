@@ -1,6 +1,6 @@
 import { CreateIrsApplicationDTO, IrsAppealDtoSchema } from '@/entities/create-application'
 import { IrsCategory, IrsIdentifierType, IrsUsageType } from '@/entities/create-application/types/enums'
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
 import { useAuth } from '@/shared/hooks/use-auth'
@@ -91,8 +91,8 @@ export const useCreateIrsApplication = () => {
     }
   }, [profileData, form])
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
 
   const irsIdentifierTypeOptions = useMemo(
     () =>
