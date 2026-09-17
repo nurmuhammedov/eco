@@ -1,3 +1,4 @@
+import { apiClient } from '@/shared/api/api-client'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useApplicationFormConstants, ReRegisterIllegalHFApplicationDTO } from '@/entities/create-application'
 import { ReRegisterIllegalHFSchema } from '@/entities/create-application/schemas/re-register-illegal-hf.schema'
@@ -12,7 +13,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useDetail } from '@/shared/hooks'
-import { apiClient } from '@/shared/api/api-client'
 
 export const useReRegisterIllegalHFApplication = () => {
   const form = useForm<ReRegisterIllegalHFApplicationDTO>({

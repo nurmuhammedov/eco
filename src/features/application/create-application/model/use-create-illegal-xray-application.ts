@@ -1,3 +1,4 @@
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
   RegisterIllegalXrayBaseSchema,
@@ -7,13 +8,12 @@ import {
 } from '@/entities/create-application'
 import { stateService } from '@/entities/create-application/types/enums'
 import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
-import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
 import useAdd from '@/shared/hooks/api/use-add'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -33,14 +33,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
 
   const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/xrays`, id, !!id)
   const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
-  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', ownerIdentity],
-    queryFn: async () => {
-      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
-      return res.data?.data
-    },
-    enabled: !!ownerIdentity,
-  })
+  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useLegalOrganizationQuery(ownerIdentity)
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
   const identityForProfile =
