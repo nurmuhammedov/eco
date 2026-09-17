@@ -10,6 +10,7 @@ import legalNavigation from './legal'
 
 const DASHBOARD_ROLES = [UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.CHAIRMAN]
 const INQUIRY_ROLES = [UserRoles.INDIVIDUAL, UserRoles.ACCOUNTANT]
+const ORGANIZATION_ROLES = [UserRoles.HEAD, UserRoles.REGIONAL, UserRoles.CHAIRMAN]
 const HEAD_ONLY_ATTESTATION_IDS = ['ATTESTATION_DIRECTIONS', 'ATTESTATION_QUESTIONS']
 
 /**
@@ -67,8 +68,10 @@ export const useUserNavigation = (): Navigation => {
           shouldShow = equipmentCount > 0
         }
 
-        if (navItem.id === 'ORGANIZATIONS' && (role === UserRoles.HEAD || role === UserRoles.REGIONAL)) {
-          shouldShow = true
+        // Not a direction: the endpoint behind it is guarded by role alone
+        // (`hasAnyAuthority('REGIONAL','HEAD','CHAIRMAN')`).
+        if (navItem.id === 'ORGANIZATIONS') {
+          shouldShow = ORGANIZATION_ROLES.includes(role)
         }
 
         if (shouldShow) acc.push(navItem)

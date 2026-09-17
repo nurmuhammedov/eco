@@ -81,6 +81,12 @@ export default [
     ],
   },
   {
+    id: 'ORGANIZATIONS',
+    title: 'Tashkilotlar',
+    url: '/organizations',
+    icon: MODULE_ICONS.ORGANIZATIONS,
+  },
+  {
     id: 'DECLARATION',
     title: 'Deklaratsiya',
     url: '/declarations',
