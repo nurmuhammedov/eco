@@ -125,6 +125,7 @@ const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'))
 const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
 const TurniketLogsDetail = lazy(() => import('@/features/reports/ui/turniket-report-detail'))
 const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
+const UserDelegationPage = lazy(() => import('@/pages/hr/user-delegation-page'))
 const UpdateOrganizationPage = lazy(() => import('@/pages/register/update-organization-page'))
 const UserLogsPage = lazy(() => import('@/pages/admin/user-logs/page'))
 
@@ -1250,12 +1251,6 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   { path: 'staffs', element: withSuspense(StaffsPage), roles: [UserRoles.ADMIN] },
   { path: 'territories', element: withSuspense(RegionsPage), roles: [UserRoles.ADMIN] },
-  {
-    path: 'user-delegation',
-    element: withSuspense(
-      lazy(() => import('@/features/declarations/ui/edit-declaration').then((m) => ({ default: m.EditDeclaration })))
-    ),
-    roles: [UserRoles.HR],
-  },
+  { path: 'user-delegation', element: withSuspense(UserDelegationPage), roles: [UserRoles.HR] },
   { path: 'user-logs', element: withSuspense(UserLogsPage), roles: [UserRoles.ADMIN] },
 ]

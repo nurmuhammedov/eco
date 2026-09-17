@@ -25,10 +25,10 @@ export default [
     ],
   },
   {
-    id: 'USER_DELEGATION',
+    id: 'DELEGATION',
     title: 'Vazifalarni yuklash',
     url: '/user-delegation',
-    icon: MODULE_ICONS.USER_DELEGATION,
+    icon: MODULE_ICONS.DELEGATION,
   },
   {
     id: 'TURNIKET_LOGS',
