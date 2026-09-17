@@ -1,53 +1,36 @@
+import { MODULE_ICONS } from './module-icons'
 import { Navigation } from '@/widgets/sidebar/models/types'
-import {
-  BadgeCheck,
-  Activity,
-  Archive,
-  ArrowDownUp,
-  Award,
-  BarChart2,
-  Building2,
-  ClipboardList,
-  Database,
-  FileCheck,
-  FileText,
-  MessageSquareText,
-  Newspaper,
-  ScrollText,
-  ShieldCheck,
-  Siren,
-} from 'lucide-react'
 
 export default [
   {
     id: 'APPEAL',
     title: 'menu.applications',
     url: '/applications',
-    icon: <FileText />,
+    icon: MODULE_ICONS.APPEAL,
   },
   {
     id: 'REGISTRY',
     title: 'menu.register',
     url: '/register',
-    icon: <Database />,
+    icon: MODULE_ICONS.REGISTRY,
   },
   {
     id: 'ELEVATOR',
     title: 'menu.elevators',
     url: '/elevators',
-    icon: <ArrowDownUp />,
+    icon: MODULE_ICONS.ELEVATOR,
   },
   {
     id: 'PREVENTION',
     title: 'Profilaktika',
     url: '/preventions',
-    icon: <ShieldCheck />,
+    icon: MODULE_ICONS.PREVENTION,
   },
   {
     id: 'RISK_ANALYSIS',
     title: 'menu.risk_analysis',
     url: '/risk-analysis',
-    icon: <Activity />,
+    icon: MODULE_ICONS.RISK_ANALYSIS,
     items: [
       {
         id: 'RISK_ANALYSIS',
@@ -65,7 +48,7 @@ export default [
     id: 'INSPECTION',
     title: 'Tekshiruvlar',
     url: '/inspections',
-    icon: <ClipboardList />,
+    icon: MODULE_ICONS.INSPECTION,
     items: [
       {
         id: 'INSPECTION',
@@ -83,66 +66,66 @@ export default [
     id: 'ACCREDITATION',
     title: 'Ekspert tashkilotlar',
     url: '/expertise-organizations',
-    icon: <Building2 />,
+    icon: MODULE_ICONS.ACCREDITATION,
   },
   {
     id: 'CONCLUSION',
     title: 'Ekspertiza xulosalari',
     url: '/accreditations',
-    icon: <FileCheck />,
+    icon: MODULE_ICONS.CONCLUSION,
   },
   {
     id: 'DECLARATION',
     title: 'Deklaratsiya',
     url: '/declarations',
-    icon: <ScrollText />,
+    icon: MODULE_ICONS.DECLARATION,
   },
   {
     id: 'REPORT',
     title: 'Hisobotlar',
     url: '/reports',
-    icon: <BarChart2 />,
+    icon: MODULE_ICONS.REPORT,
   },
   {
     id: 'PERMITS',
     title: 'Ruxsat etuvchi hujjatlar',
     url: '/permits',
-    icon: <Award />,
+    icon: MODULE_ICONS.PERMITS,
   },
   {
     id: 'INQUIRY',
     title: 'Murojaatlar',
     url: '/inquiries',
-    icon: <MessageSquareText />,
+    icon: MODULE_ICONS.INQUIRY,
   },
   {
     id: 'ACCIDENT',
     title: 'Baxtsiz hod. va Avariyalar',
     url: '/accidents',
-    icon: <Siren />,
+    icon: MODULE_ICONS.ACCIDENT,
   },
   {
     id: 'ANNOUNCEMENT',
     title: 'Xabarnoma',
     url: '/news',
-    icon: <Newspaper />,
+    icon: MODULE_ICONS.ANNOUNCEMENT,
   },
   {
     id: 'ARCHIVE',
     title: 'Arxiv',
     url: '/archive',
-    icon: <Archive />,
+    icon: MODULE_ICONS.ARCHIVE,
   },
   {
     id: 'CADASTRE_PASSPORT',
     title: 'TXYUZ kadastr pasportlari',
     url: '/cadastre-passport',
-    icon: <FileCheck />,
+    icon: MODULE_ICONS.CADASTRE_PASSPORT,
   },
   {
     id: 'ATTESTATION',
     title: 'Attestatsiya',
     url: '/attestation-applications',
-    icon: <BadgeCheck />,
+    icon: MODULE_ICONS.ATTESTATION,
   },
 ] as Navigation
