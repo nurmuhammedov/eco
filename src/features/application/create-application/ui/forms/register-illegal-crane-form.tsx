@@ -1,7 +1,7 @@
+import { DocumentField } from '@/features/application/create-application/ui/forms/parts/equipment-fields'
 import {
   PhoneNumberField,
   ServicePeriodField,
-  UsageRightsPathField,
 } from '@/features/application/create-application/ui/forms/parts/equipment-fields'
 import { ApplicantSearchCard } from '@/features/application/create-application/ui/forms/parts/applicant-search-card'
 import { CardForm, RegisterIllegalCraneDTO } from '@/entities/create-application'
@@ -388,7 +388,7 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
 
         <CardForm className="mb-2 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <div className="border-b pb-4">
-            <UsageRightsPathField form={form} />
+            <DocumentField form={form} name="usageRightsPath" label="Ruxsatnoma" />
           </div>
 
           <div className="border-b pb-4">
@@ -411,21 +411,11 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
               name="saleContractPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Sotib olish-sotish shartnomasi
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Sotib olish-sotish shartnomasi"
+              required={!isUpdate}
             />
           </div>
 
@@ -477,95 +467,32 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
           </div>
 
           <div className="border-b pb-4">
-            <FormField
-              name="installationCertPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Montaj guvohnomasi (avtokrandan tashqari)
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <DocumentField form={form} name="installationCertPath" label="Montaj guvohnomasi (avtokrandan tashqari)" />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
               name="assignmentDecreePath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Masʼul shaxs tayinlanganligi to‘g‘risida buyruq
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Masʼul shaxs tayinlanganligi to‘g‘risida buyruq"
+              required={!isUpdate}
             />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
-              name="equipmentCertPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Qurilma sertifikati</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <DocumentField form={form} name="equipmentCertPath" label="Qurilma sertifikati" />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
-              name="passportPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Kranning pasporti
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <DocumentField form={form} name="passportPath" label="Kranning pasporti" required={!isUpdate} />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
               name="partialCheckPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Kranning qisman texnik ko‘rikdan o‘tkazilganligi
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Kranning qisman texnik ko‘rikdan o‘tkazilganligi"
+              required={!isUpdate}
             />
             <FormField
               control={form.control}
@@ -593,21 +520,11 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
               name="fullCheckPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Kranning to‘liq texnik ko‘rikdan o‘tkazilganligi
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Kranning to‘liq texnik ko‘rikdan o‘tkazilganligi"
+              required={!isUpdate}
             />
             <FormField
               control={form.control}

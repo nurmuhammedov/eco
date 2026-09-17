@@ -1,9 +1,8 @@
+import { DocumentField } from '@/features/application/create-application/ui/forms/parts/equipment-fields'
 import {
-  AssignmentDecreePathField,
   ManufacturedAtField,
   PhoneNumberField,
   ServicePeriodField,
-  UsageRightsPathField,
 } from '@/features/application/create-application/ui/forms/parts/equipment-fields'
 import { ApplicantSearchCard } from '@/features/application/create-application/ui/forms/parts/applicant-search-card'
 import { CardForm, RegisterIllegalLpgPoweredDTO } from '@/entities/create-application'
@@ -355,7 +354,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
 
         <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <div className="border-b pb-4">
-            <UsageRightsPathField form={form} />
+            <DocumentField form={form} name="usageRightsPath" label="Ruxsatnoma" />
           </div>
 
           <div className="border-b pb-4">
@@ -378,44 +377,29 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
           </div>
 
           <div className="border-b pb-4">
-            <AssignmentDecreePathField form={form} isUpdate={isUpdate} />
-          </div>
-
-          <div className="border-b pb-4">
-            <FormField
-              name="gasSupplyProjectPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Gaz ta‘minoti loyihasi
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+            <DocumentField
+              form={form}
+              name="assignmentDecreePath"
+              label="Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq"
+              required={!isUpdate}
             />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
+              name="gasSupplyProjectPath"
+              label="Gaz ta‘minoti loyihasi"
+              required={!isUpdate}
+            />
+          </div>
+
+          <div className="border-b pb-4">
+            <DocumentField
+              form={form}
               name="saleContractPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
+              required={!isUpdate}
             />
           </div>
 
@@ -467,22 +451,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
           </div>
 
           <div className="border-b pb-4">
-            <FormField
-              name="passportPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Qurilma pasporti
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <DocumentField form={form} name="passportPath" label="Qurilma pasporti" required={!isUpdate} />
           </div>
 
           <div className="border-b pb-4">
@@ -533,40 +502,15 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
           </div>
 
           <div className="border-b pb-4">
-            <FormField
-              name="installationCertPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Montaj dalolatnomasi
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <DocumentField form={form} name="installationCertPath" label="Montaj dalolatnomasi" required={!isUpdate} />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
               name="fullCheckPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Texnik ko‘rikdan o‘tkazilganligi (sinovlar)
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Texnik ko‘rikdan o‘tkazilganligi (sinovlar)"
+              required={!isUpdate}
             />
             <FormField
               control={form.control}

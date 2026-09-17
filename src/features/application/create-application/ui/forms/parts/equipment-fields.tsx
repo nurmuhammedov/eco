@@ -70,32 +70,25 @@ export const ServicePeriodField = ({ form }: FieldProps) => (
   />
 )
 
-export const UsageRightsPathField = ({ form }: FieldProps) => (
+/**
+ * A document to attach: a label on the left, the picker on the right. The forms
+ * ask for fourteen of these between them and each was written out in full, so
+ * the same document ended up with several spellings of its own name.
+ */
+export const DocumentField = ({
+  form,
+  name,
+  label,
+  required = false,
+}: FieldProps & { name: string; label: string; required?: boolean }) => (
   <FormField
-    name="usageRightsPath"
+    name={name}
     control={form.control}
     render={({ field }) => (
       <FormItem className="mb-2">
         <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-          <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
-          <FormControl>
-            <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-          </FormControl>
-        </div>
-      </FormItem>
-    )}
-  />
-)
-
-export const AssignmentDecreePathField = ({ form, isUpdate }: FieldProps & { isUpdate: boolean }) => (
-  <FormField
-    name="assignmentDecreePath"
-    control={form.control}
-    render={({ field }) => (
-      <FormItem className="mb-2">
-        <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-          <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-            Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
+          <FormLabel required={required} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
+            {label}
           </FormLabel>
           <FormControl>
             <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
