@@ -1,0 +1,121 @@
+# Kod yozish qoidalari
+
+Bu fayl — loyihada qabul qilingan yagona uslub. Yangi kod shu qoidalarga mos
+yozilishi kerak; ko‘pchiligi ESLint bilan tekshiriladi, ya’ni commit paytida
+o‘zi ushlab qoladi.
+
+## Tekshirish
+
+```bash
+npm run typecheck   # tsc -b — haqiqiy tekshiruv
+npm run lint        # eslint, ogohlantirishlarga ham toqat yo‘q
+npm run build       # typecheck + vite build
+```
+
+> `tsc --noEmit` ishlatmang: ildizdagi `tsconfig.json` solution-style, shuning
+> uchun u hech narsani tekshirmasdan muvaffaqiyat qaytaradi.
+
+## Qatlamlar (FSD)
+
+```
+app → pages → widgets → features → entities → shared
+```
+
+Import faqat **pastga** qarab boradi. `shared` hech kimni bilmaydi, `entities`
+featurelarni bilmaydi va hokazo. Umumiy tip yoki konstanta ikki qatlamga kerak
+bo‘lsa — uni pastki qatlamga chiqaring, komponent fayli ichida qoldirmang.
+
+Modul o‘z `index.ts` ini import qilmaydi. Qo‘shni faylni to‘g‘ridan-to‘g‘ri
+oling (`./model/types`), aks holda aylanma bog‘lanish hosil bo‘ladi va Rollup
+modullarni noto‘g‘ri tartibda ishga tushiradi.
+
+## Nomlash
+
+| Nima           | Qoida                   | Misol                                              |
+| -------------- | ----------------------- | -------------------------------------------------- |
+| Fayl va papka  | kebab-case              | `use-paginated-data.ts`, `cadastre-list.tsx`       |
+| Komponent      | PascalCase              | `CadastreList`                                     |
+| Hook           | `use` + kebab-case fayl | `useCadastrePassport` → `use-cadastre-passport.ts` |
+| Tip, interfeys | PascalCase              | `CadastrePassportRow`                              |
+| Konstanta      | SCREAMING_SNAKE         | `DEFAULT_STALE_TIME`                               |
+
+Nom vazifasini aytsin. `report11`, `ReportsDetail3`, `data2` kabi nomlar
+qabul qilinmaydi — marshrut yoki biznes ma’nosidan kelib chiqing
+(`registry-deregistrations`).
+
+Importda `.ts` / `.tsx` kengaytmasini yozmang.
+
+## Marshrutlar
+
+Hamma sahifa `src/app/routes/registry.tsx` da **bir marta** yoziladi:
+
+```ts
+{ id: 'REGISTRY', path: 'register/:id/hf', element: withSuspense(HfDetail), roles: [UserRoles.INSPECTOR, ...] }
+```
+
+- `roles` — qaysi kabinetlarda ko‘rinadi;
+- `id` — foydalanuvchining `directions` ida bo‘lishi shart bo‘lgan yo‘nalish;
+- yo‘l nisbiy yoziladi (`/` bilan boshlanmaydi);
+- sahifa doim `lazy` + `withSuspense` orqali ulanadi.
+
+Menyu `src/widgets/sidebar/models` da, u ham shu `directions` ga qaraydi —
+menyuda bor narsa route’da ham bo‘lishi shart.
+
+## Ma’lumot olish va yuborish
+
+**Bitta yo‘l bor: `apiClient`.** Komponent yoki hook `axios` ni to‘g‘ridan-to‘g‘ri
+chaqirmaydi — interceptorlar (xato xabarlari, 401 da chiqib ketish, parametr
+tozalash) chetlab o‘tilmasligi kerak. ESLint buni taqiqlaydi.
+
+Odatdagi holatlar uchun `src/shared/hooks/api` dagi hooklar:
+
+| Hook                                                   | Nima qiladi                                     |
+| ------------------------------------------------------ | ----------------------------------------------- |
+| `useData<T>(endpoint, enabled?, params?)`              | bitta GET                                       |
+| `useDetail<T>(endpoint, id)`                           | `endpoint/:id`, `id` bo‘lmasa so‘rov yubormaydi |
+| `usePaginatedData<T>(endpoint, params?, enabled?)`     | sahifalangan ro‘yxat, `totalPages` bilan        |
+| `useAdd<TVars, TData, TErr>(endpoint)`                 | POST                                            |
+| `useUpdate<TVars, TData, TErr>(endpoint, id, method?)` | PUT yoki PATCH                                  |
+| `useDelete(endpoint, id?)`                             | DELETE                                          |
+
+Mutatsiyalar **o‘zi invalidatsiya qiladi**: `useAdd('/accidents')` muvaffaqiyatli
+tugagach `/accidents` dan oziqlanadigan barcha so‘rovlar yangilanadi. Qo‘lda
+`invalidateQueries` yozish shart emas.
+
+Kalitlar `endpointKey(endpoint, ...)` orqali quriladi. O‘zingiz `useQuery`
+yozsangiz ham shuni ishlating — aks holda mutatsiya sizning so‘rovingizni
+topa olmaydi va ro‘yxat eskirib qoladi.
+
+`useQuery` / `useMutation` ni to‘g‘ridan-to‘g‘ri yozish faqat hooklar qamramagan
+holatlar uchun: optimistik yangilash, maxsus `select`, bir nechta so‘rovni
+birlashtirish.
+
+## Formalar
+
+`react-hook-form` + `zod`. Sxema komponent yonida, `zodResolver` bilan ulanadi.
+
+Xato matnlari faqat ikkitasi (`src/shared/validation`):
+
+- `Majburiy maydon!`
+- `Kiritilgan ma’lumot yaroqli emas!`
+
+Placeholderlar: select uchun `Tanlang`, sana uchun `Sanani tanlang`, qolgani
+uchun `Kiriting`. Maska bor maydonda namuna ko‘rsatiladi (`60.123456`).
+
+## Matnlar
+
+Interfeys o‘zbekcha. `o‘` va `g‘` da U+2018 (`‘`), tutuq belgisida U+2019 (`’`).
+Foydalanuvchiga enum nomi (`REPLY_HF_APPEAL`) yoki inglizcha texnik xabar
+ko‘rinmasligi kerak.
+
+Bo‘sh qiymat uchun `<EmptyValue />` — “Mavjud emas”. Maydonni butunlay yashirib
+yubormang: o‘quvchi ma’lumot yo‘qligini bilishi kerak.
+
+## Izohlar
+
+Izoh nima qilinayotganini emas, **nega** shunday qilinganini yozadi. Kod o‘zi
+aytib turgan narsani takrorlamang. Inglizcha, to‘liq gap bilan.
+
+## Console
+
+`console.log` qolmaydi. `console.warn` va `console.error` ruxsat etilgan.

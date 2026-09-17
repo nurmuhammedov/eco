@@ -42,9 +42,11 @@ export class ErrorBoundaryCore extends Component<
     }
 
     if (IS_DEV) {
+      // eslint-disable-next-line no-console -- grouping is dev-only diagnostics
       console.group('%c ErrorBoundary caught an error', 'color: #ff0000; font-weight: bold;')
       console.error(error)
       console.error('Component Stack:', errorInfo.componentStack)
+      // eslint-disable-next-line no-console -- closes the group above
       console.groupEnd()
     }
   }

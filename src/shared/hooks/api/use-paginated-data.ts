@@ -2,6 +2,7 @@ import { CommonService } from '@/shared/api/dictionaries/queries/comon.api'
 import { ISearchParams, ResponseData } from '@/shared/types'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { DEFAULT_STALE_TIME } from '@/shared/lib/query/stale-time'
 
 const usePaginatedData = <T>(
@@ -13,7 +14,7 @@ const usePaginatedData = <T>(
   const { user } = useAuth()
 
   const queryMethods = useQuery<ResponseData<T>, Error>({
-    queryKey: [endpoint, params, user?.role],
+    queryKey: endpointKey(endpoint, params, user?.role),
     queryFn: () => CommonService.getPaginatedData<T>(endpoint, params),
     enabled,
     staleTime,

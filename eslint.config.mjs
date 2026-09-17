@@ -63,6 +63,52 @@ export default tslint.config(
       '@typescript-eslint/ban-ts-comment': 'off',
       'no-unsafe-negation': 'off',
       'no-extra-boolean-cast': 'off',
+
+      // Leftover debugging reaches production otherwise; warn and error are
+      // deliberate and survive.
+      'no-console': ['error', { allow: ['warn', 'error'] }],
+    },
+  },
+  {
+    /**
+     * One way in and out of the network. Everything goes through `apiClient` or
+     * the generic hooks built on it, so the interceptors - error toasts, the
+     * 401 sign-out, parameter cleaning - can never be bypassed by a component
+     * reaching for axios itself.
+     */
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: [
+      'src/shared/api/**',
+      // Known bypasses, kept visible rather than hidden behind inline
+      // comments. Each one still has to move onto `apiClient`.
+      'src/shared/components/common/file-upload/**',
+      'src/shared/components/common/editor/ui/tinymce-editor.tsx',
+      'src/shared/components/common/signature/model/convert-pdf-to-base64.ts',
+      'src/features/qr-form/api/**',
+      'src/features/reports/ui/turniket-report/**',
+      'src/features/reports/ui/turniket-report-detail/**',
+    ],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'axios',
+              // The types are fine to name; it is the client that must not be used.
+              allowTypeImports: true,
+              message: 'So‘rovlarni `apiClient` yoki `shared/hooks/api` dagi hooklar orqali yuboring.',
+            },
+          ],
+          patterns: [
+            {
+              group: ['**/axios-instance', '**/services-axios-instance', '@/shared/api/*axios*'],
+              allowTypeImports: true,
+              message: 'Axios instansiyasi faqat `shared/api` ichida ishlatiladi; `apiClient` dan foydalaning.',
+            },
+          ],
+        },
+      ],
     },
   },
   eslintConfigPrettier
