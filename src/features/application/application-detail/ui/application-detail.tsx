@@ -12,7 +12,7 @@ import { Coordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { getDate } from '@/shared/utils/date'
-import { ApplicationStatusRow } from '@/shared/components/common/application-status-row'
+import { ApplicationStatusRow } from '@/entities/application/ui/application-status-row'
 import { ApplicationStatus } from '@/entities/application'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 

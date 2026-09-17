@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { UIModeEnum } from '@/shared/types/ui-types'
-import { useEquipmentTypeLabel } from '@/shared/hooks'
+import { useEquipmentTypeLabel } from '@/entities/admin/equipment/hooks/use-equipment-type-label'
 import { useFilters } from '@/shared/hooks/use-filters'
 import { useEquipmentDrawer } from '@/shared/hooks/entity-hooks'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
