@@ -1,3 +1,10 @@
+import {
+  AssignmentDecreePathField,
+  ManufacturedAtField,
+  PhoneNumberField,
+  ServicePeriodField,
+  UsageRightsPathField,
+} from '@/features/application/create-application/ui/forms/parts/equipment-fields'
 import { ApplicantSearchCard } from '@/features/application/create-application/ui/forms/parts/applicant-search-card'
 import { CardForm, RegisterIllegalLpgPoweredDTO } from '@/entities/create-application'
 import { AppealFormSkeleton } from '../form-skeleton'
@@ -18,7 +25,6 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
-import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
 import { useRegisterIllegalLpgPowered } from '@/features/application/create-application/model/use-create-illegal-lpg-powered-application'
@@ -79,21 +85,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
 
         <CardForm className="mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
-            {!isUpdate && (
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Telefon raqami</FormLabel>
-                    <FormControl>
-                      <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            {!isUpdate && <PhoneNumberField form={form} />}
 
             {isLegal && (
               <FormField
@@ -197,25 +189,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="manufacturedAt"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Ishlab chiqarilgan sana</FormLabel>
-                    <DatePicker
-                      disableStrategy={'after'}
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Ishlab chiqarilgan sana"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
+            <ManufacturedAtField form={form} />
             <FormField
               control={form.control}
               name="partialCheckDate"
@@ -254,24 +228,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
                 )
               }}
             />
-            <FormField
-              control={form.control}
-              name="servicePeriod"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Xizmat muddati</FormLabel>
-                    <DatePicker
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Sanani tanlang"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
+            <ServicePeriodField form={form} />
             <FormField
               control={form.control}
               name="capacity"
@@ -398,20 +355,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
 
         <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <div className="border-b pb-4">
-            <FormField
-              name="usageRightsPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <UsageRightsPathField form={form} />
           </div>
 
           <div className="border-b pb-4">
@@ -434,22 +378,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
           </div>
 
           <div className="border-b pb-4">
-            <FormField
-              name="assignmentDecreePath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <AssignmentDecreePathField form={form} isUpdate={isUpdate} />
           </div>
 
           <div className="border-b pb-4">

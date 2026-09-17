@@ -1,3 +1,4 @@
+import { PhoneNumberField } from '@/features/application/create-application/ui/forms/parts/equipment-fields'
 import { CardForm, RegisterIllegalXrayDTO } from '@/entities/create-application'
 import { AppealFormSkeleton } from '../form-skeleton'
 import { NoteForm } from '../note-form'
@@ -18,7 +19,6 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
-import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { FileLink } from '@/shared/components/common/file-link'
@@ -177,21 +177,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
 
         <CardForm className="mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
-            {!isUpdate && (
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Telefon raqami</FormLabel>
-                    <FormControl>
-                      <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            {!isUpdate && <PhoneNumberField form={form} />}
             <FormField
               control={form.control}
               name="licenseNumber"
