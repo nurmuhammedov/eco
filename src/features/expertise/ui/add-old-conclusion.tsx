@@ -1,10 +1,11 @@
+import { useLegalInfoByTinQuery } from '@/shared/api/dictionaries'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { getLegalInfoByTin, createOldExpertiseApplication } from '@/entities/expertise/api/expertise.api'
+import { createOldExpertiseApplication } from '@/entities/expertise/api/expertise.api'
 import { AddOldExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
 import { addOldExpertiseSchema } from '@/entities/expertise/model/expertise.schema'
 import DatePicker from '@/shared/components/ui/datepicker'
@@ -59,12 +60,7 @@ export const AddOldConclusion = () => {
     data: legalInfo,
     isFetching: isLegalInfoLoading,
     isError: isLegalInfoError,
-  } = useQuery({
-    queryKey: ['legalInfo', searchedStir],
-    queryFn: () => getLegalInfoByTin(searchedStir!),
-    enabled: !!searchedStir,
-    retry: 1,
-  })
+  } = useLegalInfoByTinQuery(searchedStir)
 
   const { data: hfoOptions, isFetching: isHfoLoading } = useHazardousFacilityByTinQuery(searchedStir, !!searchedStir)
 

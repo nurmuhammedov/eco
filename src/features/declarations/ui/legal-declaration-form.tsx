@@ -1,3 +1,4 @@
+import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -57,9 +58,7 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
 
   const { data: activeExperts } = useData<any[]>('/accreditations/active')
 
-  const { data: hfoOptions, isFetching: isHfoLoading } = useData<any[]>('/hf/by-tin/select', !!userTin, {
-    legalTin: userTin,
-  })
+  const { data: hfoOptions, isFetching: isHfoLoading } = useHazardousFacilityByTinQuery(userTin)
 
   const { data: conclusionOptions, isFetching: isConclusionsLoading } = useData<any[]>(
     '/conclusions/select',

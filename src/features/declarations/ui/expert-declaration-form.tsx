@@ -1,8 +1,7 @@
+import { useHazardousFacilityByTinQuery, useLegalInfoByTinQuery } from '@/shared/api/dictionaries'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery } from '@tanstack/react-query'
-import { getLegalInfoByTin } from '@/entities/expertise/api/expertise.api'
 import { CreateDeclarationFormValues, createDeclarationSchema } from '@/entities/declarations/model/declaration.types'
 import { Button } from '@/shared/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
@@ -48,16 +47,9 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
     data: legalInfo,
     isFetching: isLegalInfoLoading,
     isError: isLegalInfoError,
-  } = useQuery({
-    queryKey: ['legalInfo', searchedStir],
-    queryFn: () => getLegalInfoByTin(searchedStir!),
-    enabled: !!searchedStir,
-    retry: 1,
-  })
+  } = useLegalInfoByTinQuery(searchedStir)
 
-  const { data: hfoOptions, isFetching: isHfoLoading } = useData<any[]>('/hf/by-tin/select', !!searchedStir, {
-    legalTin: searchedStir,
-  })
+  const { data: hfoOptions, isFetching: isHfoLoading } = useHazardousFacilityByTinQuery(searchedStir)
 
   const { data: conclusionOptions, isFetching: isConclusionsLoading } = useData<any[]>(
     '/conclusions/select',
