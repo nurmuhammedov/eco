@@ -25,6 +25,7 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
 import { useData } from '@/shared/hooks/api'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 interface AddPermitTransportModalProps {
   trigger?: string
@@ -33,29 +34,29 @@ interface AddPermitTransportModalProps {
 const searchSchema = z.object({
   stir: z
     .string()
-    .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak' })
+    .regex(/^\d+$/)
     .refine((val) => val.length === 0 || val.length === 9 || val.length === 14, {
-      message: 'STIR (JSHSHIR) faqat 9 yoki 14 xonali bo‘lishi kerak',
+      message: FORM_ERROR_MESSAGES.invalid,
     })
     .optional()
     .or(z.literal('')),
-  regNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  regNumber: z.string().min(1),
 })
 
 const tankerItemSchema = z.object({
-  numberPlate: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  model: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  inventoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  capacity: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  capacityUnit: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  regionId: z.string({ required_error: 'Viloyatni tanlang!' }).min(1, 'Viloyatni tanlang!'),
-  checkDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  validUntil: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  numberPlate: z.string().min(1),
+  model: z.string().min(1),
+  factoryNumber: z.string().min(1),
+  inventoryNumber: z.string().min(1),
+  capacity: z.string().min(1),
+  capacityUnit: z.string().min(1),
+  regionId: z.string().min(1),
+  checkDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  validUntil: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
 const tankerFormSchema = z.object({
-  tankers: z.array(tankerItemSchema).min(1, 'Kamida bitta transport ma’lumotlari kiritilishi shart!'),
+  tankers: z.array(tankerItemSchema).min(1),
 })
 
 type SearchFormValues = z.infer<typeof searchSchema>

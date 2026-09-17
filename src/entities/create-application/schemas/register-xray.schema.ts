@@ -7,26 +7,26 @@ import { z } from 'zod'
 
 const __XrayAppealDtoSchema = z.object({
   phoneNumber: z
-    .string({ required_error: 'Majburiy maydon!' })
+    .string()
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
-      message: FORM_ERROR_MESSAGES.phone,
+      message: FORM_ERROR_MESSAGES.invalid,
     }),
-  licenseNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  model: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  licenseRegistryNumber: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  licenseDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  licenseNumber: z.string().min(1),
+  model: z.string().trim().min(1),
+  licenseRegistryNumber: z.string().trim().min(1),
+  licenseDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
   licenseExpiryDate: z
-    .date({ required_error: 'Majburiy maydon!' })
+    .date()
     .transform((date) => format(date, 'yyyy-MM-dd'))
     .optional(),
-  serialNumber: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  serialNumber: z.string().trim().min(1),
   manufacturedYear: z
-    .string({ required_error: 'Majburiy maydon!' })
+    .string()
     .trim()
-    .min(4, 'Majburiy maydon!')
-    .regex(/^\d{4}$/, 'Yil noto‘g‘ri formatda'),
-  stateService: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+    .min(4)
+    .regex(/^\d{4}$/),
+  stateService: z.string().trim().min(1),
   file5Path: z.string().trim().optional().nullable(),
   file5ExpiryDate: z
     .union([z.date(), z.string()])
@@ -45,13 +45,13 @@ const __XrayAppealDtoSchema = z.object({
     .optional()
     .nullable()
     .transform((val) => (val ? format(new Date(val), 'yyyy-MM-dd') : null)),
-  file14Path: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  file14ExpiryDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  file8Path: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  file8ExpiryDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  regionId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  districtId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  file14Path: z.string().trim().min(1),
+  file14ExpiryDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  file8Path: z.string().trim().min(1),
+  file8ExpiryDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  regionId: z.string().trim().min(1),
+  districtId: z.string().trim().min(1),
+  address: z.string().trim().min(1),
 })
 
 export const XrayAppealDtoSchema = __XrayAppealDtoSchema

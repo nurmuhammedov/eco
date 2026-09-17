@@ -8,9 +8,12 @@ import { useSetFiles } from '@/features/inspections/hooks/use-set-files'
 import { QK_INSPECTION } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const schema = z.object({
-  specialCode: z.string({ required_error: 'Majburiy maydon!', message: 'Majburiy maydon!' }).default(''),
+  specialCode: z
+    .string({ required_error: FORM_ERROR_MESSAGES.required, message: FORM_ERROR_MESSAGES.required })
+    .default(''),
 })
 
 const AddInspectionDocuments = ({ specialCode = '', resultId = '', disabled = false }: any) => {

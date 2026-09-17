@@ -15,8 +15,8 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const newsSchema = z.object({
-  title: z.string().trim().min(1, 'Majburiy maydon!'),
-  content: z.string().min(1, 'Majburiy maydon!'),
+  title: z.string().trim().min(1),
+  content: z.string().min(1),
   isActive: z.boolean(),
 })
 

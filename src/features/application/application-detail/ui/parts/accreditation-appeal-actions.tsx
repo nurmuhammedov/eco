@@ -36,7 +36,7 @@ const replySchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['spheres'],
-        message: 'Kamida bitta akkreditatsiya sohasini tanlang!',
+        message: FORM_ERROR_MESSAGES.required,
       })
     }
   })

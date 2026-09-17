@@ -57,7 +57,7 @@ export const committeeStaffSchema = z
   }))
 
 export const committeeTableItemSchema = z.object({
-  id: z.union([z.string().uuid(), z.string().regex(USER_PATTERNS.uuid, { message: 'Invalid UUID format' })]),
+  id: z.union([z.string().uuid(), z.string().regex(USER_PATTERNS.uuid)]),
   fullName: z.string().trim().min(1),
   pin: z.union([
     z.number().transform((val) => val.toString()),
@@ -66,7 +66,7 @@ export const committeeTableItemSchema = z.object({
   role: z.nativeEnum(UserRoles),
   directions: z.array(z.string()).default([]),
   department: z.string(),
-  birthDate: z.date({ required_error: 'Sana majburiy' }), // Jadvalda sana majburiy bo‘lishi mumkin
+  birthDate: z.date(), // Jadvalda sana majburiy bo‘lishi mumkin
   departmentId: z.union([z.number().int().positive(), z.string().transform((val) => parseInt(val))]),
   position: z.string(),
   phoneNumber: z.string().regex(USER_PATTERNS.phone, { message: ERROR_MESSAGES.phone }),
@@ -77,7 +77,7 @@ export const schemas = {
   // Yaratish rejimida: `committeeBaseSchema` ni olamiz va `birthDate` ni majburiy qilamiz
   create: z.object({
     ...committeeBaseSchema,
-    birthDate: z.date({ required_error: 'Tug‘ilgan sana kiritilishi shart!' }),
+    birthDate: z.date(),
   }),
   update: z.object({
     id: z

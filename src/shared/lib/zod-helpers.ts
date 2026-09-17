@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 export const checkExpiryDate = (data: any, ctx: z.RefinementCtx, pathField: string, dateField: string) => {
   const pathValue = data[pathField]
@@ -8,7 +9,7 @@ export const checkExpiryDate = (data: any, ctx: z.RefinementCtx, pathField: stri
     if (!dateValue) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Amal qilish muddatini kiritish majburiy',
+        message: FORM_ERROR_MESSAGES.required,
         path: [dateField],
       })
     }

@@ -21,28 +21,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import DateTimePicker from '@/shared/components/ui/datetimepicker'
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui/yandex-map-modal'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const formSchema = z.object({
-  type: z.enum(['APPEAL', 'VIOLATION_REPORT', 'SUGGESTION'], {
-    required_error: 'Majburiy maydon!',
-  }),
-  regionId: z.number({
-    required_error: 'Viloyatni tanlang!',
-  }),
+  type: z.enum(['APPEAL', 'VIOLATION_REPORT', 'SUGGESTION']),
+  regionId: z.number(),
   fullName: z.string().optional().nullable(),
   phoneNumber: z
     .string()
     .trim()
     .optional()
     .refine((val) => !val || val.length <= 4 || USER_PATTERNS.phone.test(val), {
-      message: 'Kiritilgan ma’lumot yaroqli emas!',
+      message: FORM_ERROR_MESSAGES.invalid,
     }),
-  message: z.string().min(1, 'Majburiy maydon!'),
-  location: z.string().min(1, 'Majburiy maydon!'),
-  occurredAt: z.date({
-    required_error: 'Majburiy maydon!',
-  }),
-  filePathList: z.array(z.string()).min(1, 'Kamida bitta rasm yuklang!'),
+  message: z.string().min(1),
+  location: z.string().min(1),
+  occurredAt: z.date(),
+  filePathList: z.array(z.string()).min(1),
 })
 
 type SimpleFormValues = z.infer<typeof formSchema>

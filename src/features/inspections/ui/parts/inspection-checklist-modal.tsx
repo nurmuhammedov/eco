@@ -19,6 +19,7 @@ import {
   toParticipantsPayload,
 } from '@/features/inspections/model/act-participants'
 import { InspectionActModal } from './inspection-act-modal'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const articleOptions = [
   { id: 'ARTICLE_55', name: 'O‘zbekiston Respublikasi MJtKning 55-modda' },
@@ -48,8 +49,8 @@ const schema = z
     users: z
       .array(
         z.object({
-          fullName: z.string({ required_error: 'Majburiy maydon' }).trim().min(1, 'Majburiy maydon'),
-          position: z.string({ required_error: 'Majburiy maydon' }).trim().min(1, 'Majburiy maydon'),
+          fullName: z.string().trim().min(1),
+          position: z.string().trim().min(1),
         })
       )
       .default([]),
@@ -58,7 +59,7 @@ const schema = z
     if (!data.isAdministrativePenalty && !data.isFinancialPenalty && !data.noViolation) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Kamida bitta variantni tanlang',
+        message: FORM_ERROR_MESSAGES.required,
         path: ['isAdministrativePenalty'],
       })
     }
@@ -67,7 +68,7 @@ const schema = z
       if (data.users.length === 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Kamida bitta qatnashuvchi qo‘shilishi kerak',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['users'],
         })
       }
@@ -75,7 +76,7 @@ const schema = z
       if (data.violators.length === 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Kamida bitta qoidabuzar qo‘shilishi kerak',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['violators'],
         })
       }
@@ -83,21 +84,21 @@ const schema = z
         if (!violator.articleList || violator.articleList.length === 0) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'Kamida bitta modda tanlang',
+            message: FORM_ERROR_MESSAGES.required,
             path: ['violators', index, 'articleList'],
           })
         }
         if (!violator.fullName || violator.fullName.trim() === '') {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'Majburiy maydon',
+            message: FORM_ERROR_MESSAGES.required,
             path: ['violators', index, 'fullName'],
           })
         }
         if (!violator.position || violator.position.trim() === '') {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'Majburiy maydon',
+            message: FORM_ERROR_MESSAGES.required,
             path: ['violators', index, 'position'],
           })
         }

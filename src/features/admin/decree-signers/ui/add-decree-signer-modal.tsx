@@ -10,8 +10,8 @@ import { apiClient } from '@/shared/api/api-client'
 import { useQuery } from '@tanstack/react-query'
 
 const schema = z.object({
-  userId: z.string({ required_error: 'Foydalanuvchini tanlang' }),
-  belongType: z.enum(['IRS_XRAY', 'OTHER', 'DECLARATION'], { required_error: 'Bo‘limni tanlang' }),
+  userId: z.string(),
+  belongType: z.enum(['IRS_XRAY', 'OTHER', 'DECLARATION']),
 })
 
 interface AddDecreeSignerModalProps {

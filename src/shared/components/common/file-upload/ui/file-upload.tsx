@@ -11,6 +11,7 @@ import { FileTypes } from '../models/file-types'
 import { useUploadFiles } from '../api/use-upload-files'
 import { FileData } from '../models/file-data.interface'
 import { formatFileSize, openFileInNewTab, truncateFilename } from '../lib/utils'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 export interface InputFileProps<T extends FieldValues> {
   name: Path<T>
@@ -252,7 +253,7 @@ function InputFileComponent<T extends FieldValues>({
       if (acceptTypes.includes(FileTypes.IMAGE) && isImage) return true
 
       if (!accept.includes(type as FileTypes) && !accept.some((t) => type.includes(t.replace('/*', '')))) {
-        setError(name, { type: 'type', message: 'Fayl formati noto‘g‘ri' })
+        setError(name, { type: 'type', message: FORM_ERROR_MESSAGES.invalid })
         return false
       }
 

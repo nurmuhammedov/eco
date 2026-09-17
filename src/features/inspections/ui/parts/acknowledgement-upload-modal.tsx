@@ -21,7 +21,7 @@ import { FileTypes } from '@/shared/components/common/file-upload/models/file-ty
 import { useAdd } from '@/shared/hooks'
 
 const schema = z.object({
-  acknowledgementPath: z.string({ required_error: 'Fayl yuklanishi shart' }).min(1, 'Fayl yuklanishi shart'),
+  acknowledgementPath: z.string().min(1),
 })
 
 type FormValues = z.infer<typeof schema>

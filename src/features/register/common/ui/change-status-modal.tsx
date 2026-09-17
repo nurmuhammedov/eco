@@ -8,10 +8,11 @@ import { Textarea } from '@/shared/components/ui/textarea'
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
 import useAdd from '@/shared/hooks/api/use-add'
 import { useNavigate } from 'react-router-dom'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const changeStatusSchema = z.object({
-  reason: z.string({ message: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  basisFilePath: z.string({ message: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  reason: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1),
+  basisFilePath: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1),
 })
 
 type ChangeStatusFormValues = z.infer<typeof changeStatusSchema>

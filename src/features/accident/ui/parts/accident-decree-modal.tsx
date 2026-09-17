@@ -16,9 +16,9 @@ import React from 'react'
 import { useData } from '@/shared/hooks'
 
 const schema = z.object({
-  mainInspectorId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  inspectorIds: z.array(z.string()).min(1, 'Kamida bitta inspektor tanlanishi shart!'),
-  accidentDecreePath: z.string({ required_error: 'Hujjat yuklanishi shart!' }).min(1, 'Hujjat yuklanishi shart!'),
+  mainInspectorId: z.string().min(1),
+  inspectorIds: z.array(z.string()).min(1),
+  accidentDecreePath: z.string().min(1),
 })
 
 type FormValues = z.infer<typeof schema>

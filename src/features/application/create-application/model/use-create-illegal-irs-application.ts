@@ -19,6 +19,7 @@ import {
   RegisterIllegalIrsSchema,
 } from '@/entities/create-application/schemas/register-illegal-irs.schema'
 import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
   const { type, id } = useParams<{ type: string; id: string }>()
@@ -74,21 +75,37 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
         const dynamicSchema = (actualSchema as z.ZodTypeAny).superRefine((data: any, ctx: z.RefinementCtx) => {
           if (isDataNull && !isUpdate) {
             if (!data.file1Path)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1Path'] })
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file1Path'] })
             if (!data.file1ExpiryDate)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1ExpiryDate'] })
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: FORM_ERROR_MESSAGES.required,
+                path: ['file1ExpiryDate'],
+              })
             if (!data.file2Path)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2Path'] })
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file2Path'] })
             if (!data.file2ExpiryDate)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2ExpiryDate'] })
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: FORM_ERROR_MESSAGES.required,
+                path: ['file2ExpiryDate'],
+              })
             if (!data.file5Path)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file5Path'] })
             if (!data.file5ExpiryDate)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: FORM_ERROR_MESSAGES.required,
+                path: ['file5ExpiryDate'],
+              })
             if (!data.file15Path)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15Path'] })
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file15Path'] })
             if (!data.file15ExpiryDate)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15ExpiryDate'] })
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: FORM_ERROR_MESSAGES.required,
+                path: ['file15ExpiryDate'],
+              })
           }
         })
         return zodResolver(dynamicSchema)(cleanedValues as any, context, options)
@@ -96,21 +113,37 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
       const dynamicSchema = (actualSchema as z.ZodTypeAny).superRefine((data: any, ctx: z.RefinementCtx) => {
         if (isDataNull) {
           if (!data.file1Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file1Path'] })
           if (!data.file1ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file1ExpiryDate'],
+            })
           if (!data.file2Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file2Path'] })
           if (!data.file2ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file2ExpiryDate'],
+            })
           if (!data.file5Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file5Path'] })
           if (!data.file5ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file5ExpiryDate'],
+            })
           if (!data.file15Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file15Path'] })
           if (!data.file15ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file15ExpiryDate'],
+            })
         }
       })
       return zodResolver(dynamicSchema)(values, context, options)

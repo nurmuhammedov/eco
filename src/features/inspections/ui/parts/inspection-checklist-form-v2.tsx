@@ -22,14 +22,13 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import AddAdditionalFileModal from '@/features/inspections/ui/parts/add-additional-file-modal'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 const itemSchema = z
   .object({
     id: z.string(),
     orderNumber: z.number(),
     question: z.string(),
-    answer: z.nativeEnum(ChecklistAnswerStatus, {
-      errorMap: () => ({ message: 'Javob tanlanishi shart' }),
-    }),
+    answer: z.nativeEnum(ChecklistAnswerStatus),
     corrective: z
       .string()
       .optional()
@@ -55,14 +54,14 @@ const itemSchema = z
       if (!data.corrective || data.corrective.trim() === '') {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Chora-tadbir matni kiritilishi shart',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['corrective'],
         })
       }
       if (!data.deadline) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Muddat belgilanilishi shart',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['deadline'],
         })
       }
@@ -70,14 +69,14 @@ const itemSchema = z
       if (!data.description || data.description.trim() === '') {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Izoh kiritilishi shart',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['description'],
         })
       }
       if (!data.basisPath) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Fayl yuklanishi shart',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['basisPath'],
         })
       }

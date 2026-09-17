@@ -3,31 +3,29 @@ import { z } from 'zod'
 import { format } from 'date-fns'
 
 const __OilContainerAppealDtoSchema = z.object({
-  phoneNumber: z.string().min(1, { message: 'Majburiy maydon!' }),
+  phoneNumber: z.string().min(1),
   hazardousFacilityId: z
     .string()
     .optional()
     .or(z.literal(''))
     .transform((v) => v || null),
-  childEquipmentId: z.number({ required_error: 'Majburiy maydon!', invalid_type_error: 'Majburiy maydon!' }),
-  regionId: z.string().min(1, { message: 'Majburiy maydon!' }),
-  districtId: z.string().min(1, { message: 'Majburiy maydon!' }),
-  address: z.string().min(1, { message: 'Majburiy maydon!' }),
-  location: z.string().min(1, { message: 'Majburiy maydon!' }),
-  capacity: z.string().min(1, { message: 'Majburiy maydon!' }),
-  nonDestructiveCheckDate: z
-    .date({ required_error: 'Majburiy maydon!' })
-    .transform((date) => format(date, 'yyyy-MM-dd')),
-  manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  childEquipmentId: z.number(),
+  regionId: z.string().min(1),
+  districtId: z.string().min(1),
+  address: z.string().min(1),
+  location: z.string().min(1),
+  capacity: z.string().min(1),
+  nonDestructiveCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  manufacturedAt: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 
-  labelPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, { message: 'Majburiy maydon!' }),
-  saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, { message: 'Majburiy maydon!' }),
+  labelPath: z.string().min(1),
+  saleContractPath: z.string().min(1),
   equipmentCertPath: z
     .string()
     .optional()
     .or(z.literal(''))
     .transform((v) => v || null),
-  assignmentDecreePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, { message: 'Majburiy maydon!' }),
+  assignmentDecreePath: z.string().min(1),
   expertisePath: z
     .string()
     .optional()
@@ -43,8 +41,8 @@ const __OilContainerAppealDtoSchema = z.object({
     .optional()
     .or(z.literal(''))
     .transform((v) => v || null),
-  passportPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, { message: 'Majburiy maydon!' }),
-  servicePeriod: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  passportPath: z.string().min(1),
+  servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
 export const OilContainerAppealDtoSchema = __OilContainerAppealDtoSchema.superRefine((data: any, ctx: any) =>

@@ -8,10 +8,11 @@ import { Textarea } from '@/shared/components/ui/textarea'
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
 import useAdd from '@/shared/hooks/api/use-add'
 import { useNavigate } from 'react-router-dom'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const deregisterSchema = z.object({
-  deregisterReason: z.string({ message: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  deregisterBasisPath: z.string({ message: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  deregisterReason: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1),
+  deregisterBasisPath: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1),
 })
 
 type DeregisterFormValues = z.infer<typeof deregisterSchema>

@@ -50,9 +50,9 @@ export const CreateOtherInspectionModal = () => {
       noticeType: z.enum(['NOTIFIED', 'AFTER_24_HOURS'], { required_error: FORM_ERROR_MESSAGES.required }),
       tin: z
         .string({ message: FORM_ERROR_MESSAGES.required })
-        .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak' })
+        .regex(/^\d+$/)
         .refine((val) => val.length === 9 || val.length === 14, {
-          message: 'STIR (JSHSHIR) faqat 9 yoki 14 xonali bo‘lishi kerak',
+          message: FORM_ERROR_MESSAGES.invalid,
         }),
       hfId: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
       inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),

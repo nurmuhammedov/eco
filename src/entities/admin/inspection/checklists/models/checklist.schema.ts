@@ -1,12 +1,12 @@
 import { z } from 'zod'
 
 export const checklistBaseSchema = {
-  category: z.string().min(1, 'Kategoriya majburiy'),
-  categoryTypeId: z.string().min(1, 'Tekshiruv turini tanlash majburiy'),
-  orderNumber: z.string().min(1, 'Navbat raqami'),
-  question: z.string().min(1, 'Savolni kiriting'),
-  negative: z.string().min(1, 'Yo‘q belgilanganda dalolatnomaga tushadigan matnni kiriting'),
-  corrective: z.string().min(1, 'Yo‘q belgilanganda qilinadigan chora-tadbir matnni kiriting'),
+  category: z.string().min(1),
+  categoryTypeId: z.string().min(1),
+  orderNumber: z.string().min(1),
+  question: z.string().min(1),
+  negative: z.string().min(1),
+  corrective: z.string().min(1),
 }
 
 export const checklistSchema = z.object({

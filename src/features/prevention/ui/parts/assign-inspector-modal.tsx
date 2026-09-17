@@ -22,7 +22,7 @@ import { UserRoles } from '@/entities/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 
 const assignInspectorSchema = z.object({
-  inspectorId: z.string({ required_error: 'Majburiy maydon! ' }).min(1, 'Inspektor tanlanishi shart'),
+  inspectorId: z.string().min(1),
 })
 
 type AssignInspectorForm = z.infer<typeof assignInspectorSchema>

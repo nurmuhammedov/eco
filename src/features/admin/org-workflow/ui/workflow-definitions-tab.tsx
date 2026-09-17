@@ -20,7 +20,7 @@ const { required } = FORM_ERROR_MESSAGES
 
 const stepSchema = z.object({
   positionId: z.string().min(1, required),
-  allowedActions: z.array(z.enum(WORKFLOW_ACTIONS)).min(1, 'Kamida bitta amalni belgilang'),
+  allowedActions: z.array(z.enum(WORKFLOW_ACTIONS)).min(1),
   returnToStep: z.string().optional(),
 })
 

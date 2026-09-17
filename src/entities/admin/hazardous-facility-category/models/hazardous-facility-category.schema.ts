@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const hazardousFacilityCategoryBaseSchema = {
-  name: z.string().min(1, 'Nomi majburiy'),
+  name: z.string().min(1),
 }
 
 export const hazardousFacilityCategorySchema = z.object({

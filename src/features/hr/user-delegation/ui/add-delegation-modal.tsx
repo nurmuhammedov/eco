@@ -27,13 +27,13 @@ export const DelegationReasonLabels: Record<string, string> = {
 }
 
 const schema = z.object({
-  employeeType: z.enum(['committee', 'office', 'regulator'], { required_error: 'Majburiy maydon' }),
-  delegatorId: z.string().min(1, 'Majburiy maydon'),
-  delegateeId: z.string().min(1, 'Majburiy maydon'),
-  startDate: z.date({ required_error: 'Majburiy maydon' }),
-  endDate: z.date({ required_error: 'Majburiy maydon' }),
-  reasonType: z.string().min(1, 'Majburiy maydon'),
-  basisPath: z.string().min(1, 'Fayl yuklash majburiy'),
+  employeeType: z.enum(['committee', 'office', 'regulator']),
+  delegatorId: z.string().min(1),
+  delegateeId: z.string().min(1),
+  startDate: z.date(),
+  endDate: z.date(),
+  reasonType: z.string().min(1),
+  basisPath: z.string().min(1),
 })
 
 type FormValues = z.infer<typeof schema>

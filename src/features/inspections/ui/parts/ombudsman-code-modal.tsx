@@ -19,7 +19,7 @@ import { Input } from '@/shared/components/ui/input'
 import { useAdd } from '@/shared/hooks'
 
 const schema = z.object({
-  specialCode: z.string({ required_error: 'Maxsus kod kiritilishi shart' }).min(1, 'Maxsus kod kiritilishi shart'),
+  specialCode: z.string().min(1),
 })
 
 type FormValues = z.infer<typeof schema>

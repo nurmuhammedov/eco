@@ -18,7 +18,7 @@ import { useAdd } from '@/shared/hooks/api'
 import { useQueryClient } from '@tanstack/react-query'
 
 const schema = z.object({
-  description: z.string().min(1, 'Majburiy maydon!'),
+  description: z.string().min(1),
 })
 
 interface Props {

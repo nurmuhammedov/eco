@@ -13,25 +13,22 @@ import DatePicker from '@/shared/components/ui/datepicker'
 import { EMPLOYEE_TYPE_OPTIONS } from '@/entities/attestation/model/labels'
 import type { AttestationCalendar } from '@/entities/attestation/model/types'
 import { useCreateCalendar, useUpdateCalendar } from '../model/use-calendars'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const schema = z
   .object({
-    date: z.date({ required_error: 'Majburiy maydon!' }),
-    start_time: z.string().min(1, 'Majburiy maydon!'),
-    end_time: z.string().min(1, 'Majburiy maydon!'),
-    employee_type: z.enum(['LEADER', 'ENGINEER'], { required_error: 'Majburiy maydon!' }),
-    capacity: z.coerce
-      .number()
-      .int('Kiritilgan ma’lumot yaroqli emas!')
-      .min(1, 'Majburiy maydon!')
-      .max(100, 'Bitta qabul vaqtiga ko‘pi bilan 100 ta xodim belgilanadi.'),
+    date: z.date(),
+    start_time: z.string().min(1),
+    end_time: z.string().min(1),
+    employee_type: z.enum(['LEADER', 'ENGINEER']),
+    capacity: z.coerce.number().int().min(1).max(100, 'Bitta qabul vaqtiga ko‘pi bilan 100 ta xodim belgilanadi.'),
   })
   .refine((data) => data.end_time > data.start_time, {
-    message: 'Kiritilgan ma’lumot yaroqli emas!',
+    message: FORM_ERROR_MESSAGES.invalid,
     path: ['end_time'],
   })
   .refine((data) => !isToday(data.date) || data.start_time > format(new Date(), 'HH:mm'), {
-    message: 'Kiritilgan ma’lumot yaroqli emas!',
+    message: FORM_ERROR_MESSAGES.invalid,
     path: ['start_time'],
   })
 

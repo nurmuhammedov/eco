@@ -14,9 +14,7 @@ import { useQueryClient } from '@tanstack/react-query'
 
 const schema = z.object({
   paramValue: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
-  result: z.enum(['true', 'false'], {
-    required_error: 'Xulosa natijasini tanlash majburiy',
-  }),
+  result: z.enum(['true', 'false']),
 })
 
 interface Props {

@@ -24,9 +24,9 @@ import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useAdd } from '@/shared/hooks'
 
 const assignInspectorSchema = z.object({
-  inspectorId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  report: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  resultPathList: z.array(z.string()).min(1, 'Kamida bitta fayl yuklash majburiy!'),
+  inspectorId: z.string().min(1),
+  report: z.string().min(1),
+  resultPathList: z.array(z.string()).min(1),
 })
 
 type AssignInspectorForm = z.infer<typeof assignInspectorSchema>

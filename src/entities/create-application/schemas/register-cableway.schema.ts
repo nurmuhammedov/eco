@@ -6,47 +6,45 @@ import { z } from 'zod'
 
 const __CablewayAppealDtoSchema = z.object({
   phoneNumber: z
-    .string({ required_error: 'Majburiy maydon!' })
+    .string()
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
-      message: FORM_ERROR_MESSAGES.phone,
+      message: FORM_ERROR_MESSAGES.invalid,
     }),
   hazardousFacilityId: z
     .string()
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  childEquipmentId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  regionId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  districtId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  model: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  factory: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  location: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  childEquipmentId: z.string().trim().min(1),
+  factoryNumber: z.string().trim().min(1),
+  regionId: z.string().trim().min(1),
+  districtId: z.string().trim().min(1),
+  address: z.string().trim().min(1),
+  model: z.string().trim().min(1),
+  factory: z.string().trim().min(1),
+  location: z.string().trim().min(1),
 
-  manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  partialCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  fullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  nonDestructiveCheckDate: z
-    .date({ required_error: 'Majburiy maydon!' })
-    .transform((date) => format(date, 'yyyy-MM-dd')),
+  manufacturedAt: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  partialCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  fullCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  nonDestructiveCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 
-  speed: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  passengerCount: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  length: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  speed: z.string().trim().min(1),
+  passengerCount: z.string().trim().min(1),
+  length: z.string().trim().min(1),
 
   usageRightsPath: z.string().trim().optional(),
-  labelPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  labelPath: z.string().trim().min(1),
 
-  assignmentDecreePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  assignmentDecreePath: z.string().trim().min(1),
 
-  passportPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  passportPath: z.string().trim().min(1),
 
-  saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  saleContractPath: z.string().trim().min(1),
 
-  expertisePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  expertiseExpiryDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  expertisePath: z.string().trim().min(1),
+  expertiseExpiryDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 
   equipmentCertPath: z
     .string()
@@ -54,11 +52,11 @@ const __CablewayAppealDtoSchema = z.object({
     .nullable()
     .transform((val) => (val ? val : null)),
 
-  installationCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  installationCertPath: z.string().trim().min(1),
 
-  fullCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  nextFullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  servicePeriod: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  fullCheckPath: z.string().trim().min(1),
+  nextFullCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
 export const CablewayAppealDtoSchema = __CablewayAppealDtoSchema.superRefine((data: any, ctx: any) =>
