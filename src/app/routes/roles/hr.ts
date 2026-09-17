@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { withSuspense } from '@/shared/config/routes/utils'
+import { withSuspense } from '@/app/routes/utils'
 
 const DepartmentsPage = lazy(() => import('@/pages/kpi/departments-page'))
 const KpiTasksPage = lazy(() => import('@/pages/kpi/kpi-tasks-page'))

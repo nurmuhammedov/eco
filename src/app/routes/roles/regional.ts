@@ -1,8 +1,11 @@
-import { withSuspense } from '@/shared/config/routes/utils'
 import { lazy } from 'react'
+import { withSuspense } from '@/app/routes/utils'
+import { DashboardSkeleton } from '@/features/dashboard/ui/dashboard-skeleton'
 
+const DashboardPage = lazy(() => import('@/pages/dashboard').then((module) => ({ default: module.DashboardPage })))
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'))
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'))
+const RiskDateComparisonReport = lazy(() => import('@/features/reports/ui/risk-date-comparison-report'))
 const RegisterPage = lazy(() => import('@/pages/register'))
 const ArchivePage = lazy(() => import('@/pages/archive'))
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'))
@@ -22,52 +25,61 @@ const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/u
 const InspectionsRiskBasedPage = lazy(() => import('@/pages/inspections/risk-based/page'))
 const InspectionsOtherPage = lazy(() => import('@/pages/inspections/other/page'))
 const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'))
+const ExpertiseOrganizations = lazy(() => import('@/pages/expertise/organizations-page'))
 const ExpertisePage = lazy(() => import('@/pages/expertise/page'))
 const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-page'))
-const AddDeclarationPage = lazy(() => import('@/pages/declarations/add-declaration-page.tsx'))
-const DeclarationDetailPage = lazy(() => import('@/pages/declarations/declaration-detail-page'))
-const DeclarationsPage = lazy(() => import('@/pages/declarations/page'))
-const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
-const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'))
-const AddConclusionPage = lazy(() => import('@/pages/expertise/add-conclusion-page'))
-const EditConclusion = lazy(() => import('@/pages/expertise/edit-conclusion-page'))
-const AddOldConclusionPage = lazy(() => import('@/pages/expertise/add-old-conclusion-page'))
 const OldConclusionDetailPage = lazy(() => import('@/pages/expertise/old-conclusion-detail-page'))
+const DeclarationsPage = lazy(() => import('@/pages/declarations/page'))
+const DeclarationDetailPage = lazy(() => import('@/pages/declarations/declaration-detail-page'))
+const ReportsPage = lazy(() => import('@/features/reports/ui/reports'))
+const ReportsDetail1 = lazy(() => import('@/features/reports/ui/report1'))
+const ReportsDetail2 = lazy(() => import('@/features/reports/ui/report2'))
+const ReportsDetail3 = lazy(() => import('@/features/reports/ui/report3'))
+const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
+const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
+const ReportIrsXrayStatus = lazy(() => import('@/features/reports/ui/irs-xray-status-report'))
+const InquiriesStatusReport = lazy(() => import('@/features/reports/ui/inquiries-status'))
+const ReportsDetail6 = lazy(() => import('@/features/reports/ui/report6'))
+const ReportsDetail7 = lazy(() => import('@/features/reports/ui/report7'))
+const ReportsDetail8 = lazy(() => import('@/features/reports/ui/report8'))
+const ReportsDetail9 = lazy(() => import('@/features/reports/ui/report9'))
+const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
+const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
+const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
+const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
+const InspectionExecutionReport = lazy(() => import('@/features/reports/ui/inspection-execution-report'))
+const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
+const AppealExecutionReport = lazy(() => import('@/features/reports/ui/appeal-execution'))
+const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
+const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
+const KpiRegionalReport = lazy(() => import('@/features/reports/ui/kpi-regional-report'))
+const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
+const TurniketLogsDetail = lazy(() => import('@/features/reports/ui/turniket-report-detail'))
+const Permits = lazy(() => import('@/widgets/permits'))
+const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
+const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
 const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
 const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
 )
-const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
-const UpdateOrganizationPage = lazy(() => import('@/pages/register/update-organization-page'))
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
-const ProfilePage = lazy(() => import('@/pages/profile/page'))
 const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
-const ExpertiseOrganizations = lazy(() => import('@/pages/expertise/organizations-page'))
+const OrganizationsPage = lazy(() => import('@/pages/organizations'))
 
-// Cadastre Passport Mocks
-const CadastreList = lazy(() => import('@/features/cadastre-passport/ui/cadastre-list'))
-const CadastreAdd = lazy(() => import('@/features/cadastre-passport/ui/cadastre-add'))
-const CadastreDetail = lazy(() => import('@/features/cadastre-passport/ui/cadastre-detail'))
-
-const AttestationMyApplicationsPage = lazy(() => import('@/pages/attestation-my-applications/ui/page'))
-
-export const legalRoutes = [
-  {
-    id: 'ATTESTATION',
-    path: 'attestation-applications',
-    element: withSuspense(AttestationMyApplicationsPage),
-  },
+export const regionalRoutes = [
   // ELEVATORS
   {
     id: 'ELEVATOR',
     path: 'elevators',
     element: withSuspense(ElevatorsPage),
   },
+
+  // DASHBOARD
   {
-    path: 'profile',
-    element: withSuspense(ProfilePage),
+    path: 'dashboard',
+    element: withSuspense(DashboardPage, DashboardSkeleton),
   },
 
   // APPEAL
@@ -80,16 +92,6 @@ export const legalRoutes = [
     id: 'APPEAL',
     path: 'applications/detail/:id',
     element: withSuspense(ApplicationDetail),
-  },
-  {
-    id: 'APPEAL',
-    path: 'applications/create',
-    element: withSuspense(CreateApplicationGrids),
-  },
-  {
-    id: 'APPEAL',
-    path: 'applications/create/:type',
-    element: withSuspense(CreateApplicationForm),
   },
 
   // REGISTRY
@@ -130,18 +132,8 @@ export const legalRoutes = [
   },
   {
     id: 'REGISTRY',
-    path: 'register/update/:type/:id',
-    element: withSuspense(RegisterUpdatePage),
-  },
-  {
-    id: 'REGISTRY',
     path: 'register/change/:id/:type',
     element: withSuspense(RegisterChangePage),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/update-organization/:type/:id',
-    element: withSuspense(UpdateOrganizationPage),
   },
 
   // ARCHIVE
@@ -237,23 +229,16 @@ export const legalRoutes = [
     element: withSuspense(InspectionsInfoPage),
   },
 
-  // ACCREDITATION
+  // ACCREDITATION / EXPERTISE
   {
     id: 'ACCREDITATION',
     path: 'expertise-organizations',
     element: withSuspense(ExpertiseOrganizations),
   },
-
-  // CONCLUSION
   {
     id: 'CONCLUSION',
     path: 'accreditations',
     element: withSuspense(ExpertisePage),
-  },
-  {
-    id: 'CONCLUSION',
-    path: 'accreditations/add',
-    element: withSuspense(AddConclusionPage),
   },
   {
     id: 'CONCLUSION',
@@ -262,17 +247,7 @@ export const legalRoutes = [
   },
   {
     id: 'CONCLUSION',
-    path: 'accreditations/edit/:id',
-    element: withSuspense(EditConclusion),
-  },
-  {
-    id: 'CONCLUSION',
-    path: 'accreditations/old/add',
-    element: withSuspense(AddOldConclusionPage),
-  },
-  {
-    id: 'CONCLUSION',
-    path: 'accreditations/old/detail/:id',
+    path: '/accreditations/old/detail/:id',
     element: withSuspense(OldConclusionDetailPage),
   },
 
@@ -284,20 +259,153 @@ export const legalRoutes = [
   },
   {
     id: 'DECLARATION',
-    path: 'declarations/add',
-    element: withSuspense(AddDeclarationPage),
-  },
-  {
-    id: 'DECLARATION',
     path: 'declarations/detail/:id',
     element: withSuspense(DeclarationDetailPage),
   },
+
+  // REPORT
   {
-    id: 'DECLARATION',
-    path: 'declarations/edit/:id',
-    element: withSuspense(
-      lazy(() => import('@/features/declarations/ui/edit-declaration').then((m) => ({ default: m.EditDeclaration })))
-    ),
+    id: 'REPORT',
+    path: 'reports',
+    element: withSuspense(ReportsPage),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/applications-regions',
+    element: withSuspense(ReportsDetail1),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/applications-types',
+    element: withSuspense(ReportsDetail2),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/registers-objects',
+    element: withSuspense(ReportsDetail3),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/registers-new-objects',
+    element: withSuspense(ReportsDetail4),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/registers-equipment-terms',
+    element: withSuspense(ReportsDetail5),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/irs-xray-status',
+    element: withSuspense(ReportIrsXrayStatus),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/inquiries-status',
+    element: withSuspense(InquiriesStatusReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/accidents',
+    element: withSuspense(ReportsDetail6),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/incidents',
+    element: withSuspense(ReportsDetail7),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/changes',
+    element: withSuspense(ReportsDetail8),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/registers-deregister',
+    element: withSuspense(ReportsDetail9),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/applications-execution',
+    element: withSuspense(ReportsDetail10),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/registers-register',
+    element: withSuspense(ReportsDetail11),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/appeal-execution',
+    element: withSuspense(AppealExecutionReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/appeal-status-duration',
+    element: withSuspense(AppealStatusDurationReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/prevention-stats',
+    element: withSuspense(PreventionStatsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/inspection-stats',
+    element: withSuspense(InspectionStatsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/inspection-execution',
+    element: withSuspense(InspectionExecutionReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/hf-employee-stats',
+    element: withSuspense(ReportHfEmployeeStats),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/top-100-organizations',
+    element: withSuspense(Top100OrganizationsReport),
+  },
+  {
+    path: 'reports/kpi-regional',
+    element: withSuspense(KpiRegionalReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/turniket-logs',
+    element: withSuspense(TurniketLogsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/turniket-logs/:id',
+    element: withSuspense(TurniketLogsDetail),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/risk-date-comparison',
+    element: withSuspense(RiskDateComparisonReport),
+  },
+
+  // PERMITS
+  {
+    id: 'PERMITS',
+    path: 'permits',
+    element: withSuspense(Permits),
+  },
+
+  // INQUIRY
+  {
+    id: 'INQUIRY',
+    path: 'inquiries',
+    element: withSuspense(InquiryListPage),
+  },
+  {
+    id: 'INQUIRY',
+    path: 'inquiries/detail/:id',
+    element: withSuspense(InquiryDetailPage),
   },
   {
     id: 'ACCIDENT',
@@ -320,18 +428,7 @@ export const legalRoutes = [
     element: withSuspense(NewsDetailPage),
   },
   {
-    id: 'CADASTRE_PASSPORT',
-    path: 'cadastre-passport',
-    element: withSuspense(CadastreList),
-  },
-  {
-    id: 'CADASTRE_PASSPORT',
-    path: 'cadastre-passport/add',
-    element: withSuspense(CadastreAdd),
-  },
-  {
-    id: 'CADASTRE_PASSPORT',
-    path: 'cadastre-passport/:id',
-    element: withSuspense(CadastreDetail),
+    path: 'organizations',
+    element: withSuspense(OrganizationsPage),
   },
 ]

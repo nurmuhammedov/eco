@@ -11,7 +11,7 @@ import { TabsLayout } from '@/shared/layouts'
 import { Badge } from '@/shared/components/ui/badge'
 import { buildRegisterQuery } from '@/features/register/model/build-register-query'
 import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
-import { RegisterActiveTab } from '@/widgets/register/types'
+import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 
 interface XrayListProps {
   isArchive?: boolean

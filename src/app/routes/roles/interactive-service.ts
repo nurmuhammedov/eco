@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { withSuspense } from '@/shared/config/routes/utils'
+import { withSuspense } from '@/app/routes/utils'
 
 const InteractiveServicePage = lazy(() =>
   import('@/pages/interactive-service').then((m) => ({ default: m.InteractiveServicePage }))

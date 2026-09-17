@@ -1,5 +1,5 @@
 import React, { Component, ErrorInfo } from 'react'
-import type { ErrorBoundaryProps, ErrorBoundaryState, ErrorFallbackProps } from '@/pages/error/types'
+import type { ErrorBoundaryProps, ErrorBoundaryState, ErrorFallbackProps } from '@/widgets/error-boundary/model'
 import { NavigateFunction } from 'react-router-dom'
 import { IS_DEV } from '@/shared/constants/general.ts'
 import { cn } from '@/shared/lib/utils.ts'

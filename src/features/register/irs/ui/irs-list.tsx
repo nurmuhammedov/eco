@@ -10,7 +10,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { Badge } from '@/shared/components/ui/badge'
 import { buildRegisterQuery } from '@/features/register/model/build-register-query'
 import { REPORT_KEYS } from '@/features/register/model/report-drill-down'
-import { RegisterActiveTab } from '@/widgets/register/types'
+import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 
 interface IrsListProps {
   isArchive?: boolean

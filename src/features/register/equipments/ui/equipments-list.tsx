@@ -20,7 +20,7 @@ import { canUpdateRegistryType } from '@/features/register/model/can-update-regi
 import { TruncatedCell } from '@/shared/components/common/truncated-cell'
 import { CRANE_TAB_CHILD_ID, buildRegisterQuery } from '@/features/register/model/build-register-query'
 import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
-import { RegisterActiveTab } from '@/widgets/register/types'
+import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 
 interface EquipmentsListProps {
   isArchive?: boolean

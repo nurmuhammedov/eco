@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { withSuspense } from '@/shared/config/routes/utils'
+import { withSuspense } from '@/app/routes/utils'
 
 const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
 const InquiryAddPage = lazy(() => import('@/pages/inquiries/ui/inquiry-add'))

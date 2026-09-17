@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { withSuspense } from '@/shared/config/routes/utils'
+import { withSuspense } from '@/app/routes/utils'
 
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'))
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'))

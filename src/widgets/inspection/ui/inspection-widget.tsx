@@ -21,7 +21,7 @@ import clsx from 'clsx'
 import { cn } from '@/shared/lib/utils'
 import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
 import { useTranslation } from 'react-i18next'
-import { RiskAnalysisTab } from '@/widgets/risk-analysis/types'
+import { RiskAnalysisTab } from '@/entities/risk-analysis/models/risk-analysis-tabs'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
 
 interface RegionCountDto {

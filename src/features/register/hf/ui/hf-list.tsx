@@ -14,7 +14,7 @@ import { buildRegisterQuery } from '@/features/register/model/build-register-que
 import { RESET_KEYS } from '@/features/register/model/report-drill-down'
 import { canUpdateRegistryType } from '@/features/register/model/can-update-registry'
 import { TruncatedCell } from '@/shared/components/common/truncated-cell'
-import { RegisterActiveTab } from '@/widgets/register/types'
+import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 
 interface HfListProps {
   isArchive?: boolean

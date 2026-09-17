@@ -12,9 +12,9 @@ import {
   legalRoutes,
   managerRoutes,
   regionalRoutes,
-} from '@/shared/config/routes/roles'
-import { authRoutes, publicRoutes, specialComponents } from '@/shared/config/routes'
-import { withFullPageSuspense } from '@/shared/config/routes/utils'
+} from '@/app/routes/roles'
+import { authRoutes, publicRoutes, specialComponents } from '@/app/routes'
+import { withFullPageSuspense } from '@/app/routes/utils'
 import {
   GUEST_LANDING_PATH,
   IS_STATIC_LANDING,
@@ -25,11 +25,11 @@ import {
 import { useAuth } from '@/shared/hooks/use-auth'
 import { Direction, UserRoles } from '@/entities/user'
 import { BootScreen } from '@/shared/components/common'
-import StartRedirect from '@/shared/layouts/ui/start-redirect'
+import StartRedirect from '@/app/layouts/start-redirect'
 import { PWAInstallPrompt } from '@/shared/components/common/pwa-install-prompt/pwa-install-prompt'
 
-const AppLayout = lazy(() => import('@/shared/layouts/ui/app-layout'))
-const AuthLayout = lazy(() => import('@/shared/layouts/ui/auth-layout'))
+const AppLayout = lazy(() => import('@/app/layouts/app-layout'))
+const AuthLayout = lazy(() => import('@/app/layouts/auth-layout'))
 
 const ROUTES_BY_ROLE: Record<UserRoles, RouteObject[]> = {
   [UserRoles.ADMIN]: adminRoutes,

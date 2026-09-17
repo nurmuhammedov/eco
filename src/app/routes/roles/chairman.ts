@@ -1,12 +1,18 @@
 import { lazy } from 'react'
-import { withSuspense } from '@/shared/config/routes/utils'
+import { withSuspense } from '@/app/routes/utils'
+import { DashboardSkeleton } from '@/features/dashboard/ui/dashboard-skeleton'
 
+const DepartmentsPage = lazy(() => import('@/pages/kpi/departments-page'))
+const KpiTasksPage = lazy(() => import('@/pages/kpi/kpi-tasks-page'))
+
+const DashboardPage = lazy(() => import('@/pages/dashboard').then((module) => ({ default: module.DashboardPage })))
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'))
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'))
 const RegisterPage = lazy(() => import('@/pages/register'))
 const ArchivePage = lazy(() => import('@/pages/archive'))
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'))
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'))
+const RegisterEquipmentAppealList = lazy(() => import('@/features/register/equipments/ui/equipments-appeal-list'))
 const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'))
 const RegisterRadiationProfileDetail = lazy(
   () => import('@/features/register/radiation-profile/ui/radiation-profile-detail')
@@ -45,39 +51,46 @@ const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
 const InspectionExecutionReport = lazy(() => import('@/features/reports/ui/inspection-execution-report'))
+const RiskComparisonReport = lazy(() => import('@/features/reports/ui/risk-comparison-report'))
+const RiskDateComparisonReport = lazy(() => import('@/features/reports/ui/risk-date-comparison-report'))
+const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
+const TurniketLogsDetail = lazy(() => import('@/features/reports/ui/turniket-report-detail'))
+const EmployeeDeviceLoginReport = lazy(() => import('@/features/reports/ui/employee-device-login-report'))
+const EmployeesDashboard = lazy(() => import('@/features/reports/ui/employees-dashboard'))
 const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
 const AppealExecutionReport = lazy(() => import('@/features/reports/ui/appeal-execution'))
 const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
 const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
 const KpiRegionalReport = lazy(() => import('@/features/reports/ui/kpi-regional-report'))
-const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
-const TurniketLogsDetail = lazy(() => import('@/features/reports/ui/turniket-report-detail'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
 const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
+const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
-const ElevatorsPage = lazy(() => import('@/pages/elevators'))
-const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
-const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
-const MyKpiPage = lazy(() => import('@/pages/kpi/my-kpi-page'))
-const AttestationQuestionsPage = lazy(() => import('@/pages/attestation-questions/ui/page'))
-const AttestationCalendarsPage = lazy(() => import('@/pages/attestation-calendars/ui/page'))
-const AttestationApplicantsPage = lazy(() => import('@/pages/attestation-applicants/ui/page'))
-const AttestationApplicationDetailPage = lazy(() => import('@/pages/attestation-application-detail/ui/page'))
-const OrganizationsPage = lazy(() => import('@/pages/organizations'))
 const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
 const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
 )
+const ElevatorsPage = lazy(() => import('@/pages/elevators'))
+const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
+const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 
-export const headRoutes = [
+// Cadastre Passport Mocks
+const CadastreList = lazy(() => import('@/features/cadastre-passport/ui/cadastre-list'))
+const CadastreAdd = lazy(() => import('@/features/cadastre-passport/ui/cadastre-add'))
+const CadastreDetail = lazy(() => import('@/features/cadastre-passport/ui/cadastre-detail'))
+
+export const chairmanRoutes = [
   // ELEVATORS
   {
     id: 'ELEVATOR',
     path: 'elevators',
     element: withSuspense(ElevatorsPage),
   },
-
+  {
+    path: 'dashboard',
+    element: withSuspense(DashboardPage, DashboardSkeleton),
+  },
   // APPEAL
   {
     id: 'APPEAL',
@@ -88,6 +101,11 @@ export const headRoutes = [
     id: 'APPEAL',
     path: 'applications/detail/:id',
     element: withSuspense(ApplicationDetail),
+  },
+  {
+    id: 'APPEAL',
+    path: 'applications/create/:type',
+    element: withSuspense(CreateApplicationForm),
   },
 
   // REGISTRY
@@ -100,31 +118,6 @@ export const headRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/hf',
     element: withSuspense(RegisterHFDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/:id/equipments',
-    element: withSuspense(RegisterEquipmentDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/:id/irs',
-    element: withSuspense(RegisterIrsDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/radiation-profiles/:id',
-    element: withSuspense(RegisterRadiationProfileDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/:id/xrays',
-    element: withSuspense(RegisterXrayDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/:id/auto',
-    element: withSuspense(RegisterAutoDetail),
   },
   {
     id: 'REGISTRY',
@@ -166,6 +159,36 @@ export const headRoutes = [
   {
     id: 'ARCHIVE',
     path: 'archive/:id/auto',
+    element: withSuspense(RegisterAutoDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/:id/equipments',
+    element: withSuspense(RegisterEquipmentDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/:id/equipments/appeals',
+    element: withSuspense(RegisterEquipmentAppealList),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/:id/irs',
+    element: withSuspense(RegisterIrsDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/radiation-profiles/:id',
+    element: withSuspense(RegisterRadiationProfileDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/:id/xrays',
+    element: withSuspense(RegisterXrayDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
   },
 
@@ -357,6 +380,36 @@ export const headRoutes = [
   },
   {
     id: 'REPORT',
+    path: 'reports/risk-comparison',
+    element: withSuspense(RiskComparisonReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/risk-date-comparison',
+    element: withSuspense(RiskDateComparisonReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/turniket-logs',
+    element: withSuspense(TurniketLogsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/turniket-logs/:id',
+    element: withSuspense(TurniketLogsDetail),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/employee-device-login',
+    element: withSuspense(EmployeeDeviceLoginReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/employees-dashboard',
+    element: withSuspense(EmployeesDashboard),
+  },
+  {
+    id: 'REPORT',
     path: 'reports/hf-employee-stats',
     element: withSuspense(ReportHfEmployeeStats),
   },
@@ -368,16 +421,6 @@ export const headRoutes = [
   {
     path: 'reports/kpi-regional',
     element: withSuspense(KpiRegionalReport),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/turniket-logs',
-    element: withSuspense(TurniketLogsReport),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/turniket-logs/:id',
-    element: withSuspense(TurniketLogsDetail),
   },
 
   // PERMITS
@@ -399,6 +442,16 @@ export const headRoutes = [
     element: withSuspense(InquiryDetailPage),
   },
   {
+    id: 'ACCIDENT',
+    path: 'accidents',
+    element: withSuspense(AccidentList),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/:id',
+    element: withSuspense(AccidentDetail),
+  },
+  {
     id: 'ANNOUNCEMENT',
     path: 'news',
     element: withSuspense(NewsListPage),
@@ -409,46 +462,26 @@ export const headRoutes = [
     element: withSuspense(NewsDetailPage),
   },
   {
-    id: 'ACCIDENT',
-    path: 'accidents',
-    element: withSuspense(AccidentList),
+    id: 'CADASTRE_PASSPORT',
+    path: 'cadastre-passport',
+    element: withSuspense(CadastreList),
   },
   {
-    id: 'ACCIDENT',
-    path: 'accidents/:id',
-    element: withSuspense(AccidentDetail),
-  },
-
-  // KPI
-  {
-    id: 'KPI',
-    path: 'kpi/my-tasks',
-    element: withSuspense(MyKpiPage),
-  },
-
-  // ATTESTATION
-  {
-    id: 'ATTESTATION',
-    path: 'attestation-questions',
-    element: withSuspense(AttestationQuestionsPage),
+    id: 'CADASTRE_PASSPORT',
+    path: 'cadastre-passport/add',
+    element: withSuspense(CadastreAdd),
   },
   {
-    id: 'ATTESTATION',
-    path: 'attestation-calendars',
-    element: withSuspense(AttestationCalendarsPage),
+    id: 'CADASTRE_PASSPORT',
+    path: 'cadastre-passport/:id',
+    element: withSuspense(CadastreDetail),
   },
   {
-    id: 'ATTESTATION',
-    path: 'attestation-calendars/:calendarId/applicants',
-    element: withSuspense(AttestationApplicantsPage),
+    path: 'kpi/departments',
+    element: withSuspense(DepartmentsPage),
   },
   {
-    id: 'ATTESTATION',
-    path: 'attestation-applications/:id',
-    element: withSuspense(AttestationApplicationDetailPage),
-  },
-  {
-    path: 'organizations',
-    element: withSuspense(OrganizationsPage),
+    path: 'kpi/tasks',
+    element: withSuspense(KpiTasksPage),
   },
 ]

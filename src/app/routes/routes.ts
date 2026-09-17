@@ -8,7 +8,7 @@ const ContactPage = lazy(() => import('@/pages/qr-form'))
 const PublicRiskAnalysisInfo = lazy(() => import('@/features/risk-analysis/ui/public-risk-analysis-info.tsx'))
 const PublicInquiryChoice = lazy(() => import('@/pages/public-inquiry/ui/public-inquiry-choice'))
 
-import { withFullPageSuspense } from '@/shared/config/routes/utils'
+import { withFullPageSuspense } from '@/app/routes/utils'
 
 export const publicRoutes = [
   {

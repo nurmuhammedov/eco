@@ -1,6 +1,8 @@
 import { lazy } from 'react'
-import { withSuspense } from '@/shared/config/routes/utils'
+import { withSuspense } from '@/app/routes/utils'
+import { DashboardSkeleton } from '@/features/dashboard/ui/dashboard-skeleton'
 
+const DashboardPage = lazy(() => import('@/pages/dashboard').then((module) => ({ default: module.DashboardPage })))
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'))
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'))
 const RegisterPage = lazy(() => import('@/pages/register'))
@@ -42,46 +44,54 @@ const ReportsDetail8 = lazy(() => import('@/features/reports/ui/report8'))
 const ReportsDetail9 = lazy(() => import('@/features/reports/ui/report9'))
 const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
 const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
+const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
+const KpiRegionalReport = lazy(() => import('@/features/reports/ui/kpi-regional-report'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
 const InspectionExecutionReport = lazy(() => import('@/features/reports/ui/inspection-execution-report'))
-const RiskComparisonReport = lazy(() => import('@/features/reports/ui/risk-comparison-report'))
-const RiskDateComparisonReport = lazy(() => import('@/features/reports/ui/risk-date-comparison-report'))
-const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
-const TurniketLogsDetail = lazy(() => import('@/features/reports/ui/turniket-report-detail'))
-const EmployeeDeviceLoginReport = lazy(() => import('@/features/reports/ui/employee-device-login-report'))
 const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
-const AppealExecutionReport = lazy(() => import('@/features/reports/ui/appeal-execution'))
-const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
-const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
-const KpiRegionalReport = lazy(() => import('@/features/reports/ui/kpi-regional-report'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
 const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
+
+// Expanded Imports
 const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
-const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
-const AccidentDetail = lazy(() =>
-  import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
-)
 const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 const UpdateOrganizationPage = lazy(() => import('@/pages/register/update-organization-page'))
+const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
+const AccidentInjuryAdd = lazy(() =>
+  import('@/features/accident/ui/accident-injury-add').then((m) => ({ default: m.AccidentAdd }))
+)
+const AccidentInjuryEdit = lazy(() =>
+  import('@/features/accident/ui/accident-injury-edit').then((m) => ({ default: m.AccidentEdit }))
+)
+const AccidentNonInjuryAdd = lazy(() =>
+  import('@/features/accident/ui/accident-non-injury-add').then((m) => ({ default: m.AccidentNonInjuryAdd }))
+)
+const AccidentNonInjuryEdit = lazy(() =>
+  import('@/features/accident/ui/accident-non-injury-edit').then((m) => ({ default: m.AccidentNonInjuryEdit }))
+)
+const AccidentDetail = lazy(() =>
+  import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
+)
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
 
-// Cadastre Passport Mocks
-const CadastreList = lazy(() => import('@/features/cadastre-passport/ui/cadastre-list'))
-const CadastreAdd = lazy(() => import('@/features/cadastre-passport/ui/cadastre-add'))
-const CadastreDetail = lazy(() => import('@/features/cadastre-passport/ui/cadastre-detail'))
-
-export const managerRoutes = [
+export const inspectorRoutes = [
   // ELEVATORS
   {
     id: 'ELEVATOR',
     path: 'elevators',
     element: withSuspense(ElevatorsPage),
+  },
+
+  // DASHBOARD
+  {
+    path: 'dashboard',
+    element: withSuspense(DashboardPage, DashboardSkeleton),
   },
 
   // APPEAL
@@ -119,6 +129,21 @@ export const managerRoutes = [
   },
   {
     id: 'REGISTRY',
+    path: 'register/update/:type/:id',
+    element: withSuspense(RegisterUpdatePage),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/change/:id/:type',
+    element: withSuspense(RegisterChangePage),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/update-organization/:type/:id',
+    element: withSuspense(UpdateOrganizationPage),
+  },
+  {
+    id: 'REGISTRY',
     path: 'register/:id/equipments',
     element: withSuspense(RegisterEquipmentDetail),
   },
@@ -141,21 +166,6 @@ export const managerRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/update/:type/:id',
-    element: withSuspense(RegisterUpdatePage),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/change/:id/:type',
-    element: withSuspense(RegisterChangePage),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/update-organization/:type/:id',
-    element: withSuspense(UpdateOrganizationPage),
   },
 
   // ARCHIVE
@@ -358,16 +368,6 @@ export const managerRoutes = [
   },
   {
     id: 'REPORT',
-    path: 'reports/appeal-execution',
-    element: withSuspense(AppealExecutionReport),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/appeal-status-duration',
-    element: withSuspense(AppealStatusDurationReport),
-  },
-  {
-    id: 'REPORT',
     path: 'reports/prevention-stats',
     element: withSuspense(PreventionStatsReport),
   },
@@ -380,31 +380,6 @@ export const managerRoutes = [
     id: 'REPORT',
     path: 'reports/inspection-execution',
     element: withSuspense(InspectionExecutionReport),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/risk-comparison',
-    element: withSuspense(RiskComparisonReport),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/risk-date-comparison',
-    element: withSuspense(RiskDateComparisonReport),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/turniket-logs',
-    element: withSuspense(TurniketLogsReport),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/turniket-logs/:id',
-    element: withSuspense(TurniketLogsDetail),
-  },
-  {
-    id: 'REPORT',
-    path: 'reports/employee-device-login',
-    element: withSuspense(EmployeeDeviceLoginReport),
   },
   {
     id: 'REPORT',
@@ -439,6 +414,7 @@ export const managerRoutes = [
     path: 'inquiries/detail/:id',
     element: withSuspense(InquiryDetailPage),
   },
+
   {
     id: 'ACCIDENT',
     path: 'accidents',
@@ -446,8 +422,28 @@ export const managerRoutes = [
   },
   {
     id: 'ACCIDENT',
+    path: 'accidents/injury/add',
+    element: withSuspense(AccidentInjuryAdd),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/non-injury/add',
+    element: withSuspense(AccidentNonInjuryAdd),
+  },
+  {
+    id: 'ACCIDENT',
     path: 'accidents/:id',
     element: withSuspense(AccidentDetail),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/injury/:id/edit',
+    element: withSuspense(AccidentInjuryEdit),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/non-injury/:id/edit',
+    element: withSuspense(AccidentNonInjuryEdit),
   },
   {
     id: 'ANNOUNCEMENT',
@@ -458,20 +454,5 @@ export const managerRoutes = [
     id: 'ANNOUNCEMENT',
     path: 'news/:id',
     element: withSuspense(NewsDetailPage),
-  },
-  {
-    id: 'CADASTRE_PASSPORT',
-    path: 'cadastre-passport',
-    element: withSuspense(CadastreList),
-  },
-  {
-    id: 'CADASTRE_PASSPORT',
-    path: 'cadastre-passport/add',
-    element: withSuspense(CadastreAdd),
-  },
-  {
-    id: 'CADASTRE_PASSPORT',
-    path: 'cadastre-passport/:id',
-    element: withSuspense(CadastreDetail),
   },
 ]

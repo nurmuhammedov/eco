@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { withSuspense } from '@/shared/config/routes/utils'
+import { withSuspense } from '@/app/routes/utils'
 
 const MetricsPage = lazy(() => import('@/pages/admin/metrics/page'))
 const StaffsPage = lazy(() => import('@/pages/admin/staffs/ui'))

@@ -1,4 +1,4 @@
-import { RegisterActiveTab } from '@/widgets/register/types'
+import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 
 export interface BuildRegisterQueryInput {
   tab: string

@@ -1,18 +1,12 @@
 import { lazy } from 'react'
-import { withSuspense } from '@/shared/config/routes/utils'
-import { DashboardSkeleton } from '@/features/dashboard/ui/dashboard-skeleton'
+import { withSuspense } from '@/app/routes/utils'
 
-const DepartmentsPage = lazy(() => import('@/pages/kpi/departments-page'))
-const KpiTasksPage = lazy(() => import('@/pages/kpi/kpi-tasks-page'))
-
-const DashboardPage = lazy(() => import('@/pages/dashboard').then((module) => ({ default: module.DashboardPage })))
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'))
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'))
 const RegisterPage = lazy(() => import('@/pages/register'))
 const ArchivePage = lazy(() => import('@/pages/archive'))
 const RegisterHFDetail = lazy(() => import('@/features/register/hf/ui/hf-detail'))
 const RegisterEquipmentDetail = lazy(() => import('@/features/register/equipments/ui/equipments-detail'))
-const RegisterEquipmentAppealList = lazy(() => import('@/features/register/equipments/ui/equipments-appeal-list'))
 const RegisterIrsDetail = lazy(() => import('@/features/register/irs/ui/irs-detail'))
 const RegisterRadiationProfileDetail = lazy(
   () => import('@/features/register/radiation-profile/ui/radiation-profile-detail')
@@ -56,7 +50,6 @@ const RiskDateComparisonReport = lazy(() => import('@/features/reports/ui/risk-d
 const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
 const TurniketLogsDetail = lazy(() => import('@/features/reports/ui/turniket-report-detail'))
 const EmployeeDeviceLoginReport = lazy(() => import('@/features/reports/ui/employee-device-login-report'))
-const EmployeesDashboard = lazy(() => import('@/features/reports/ui/employees-dashboard'))
 const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
 const AppealExecutionReport = lazy(() => import('@/features/reports/ui/appeal-execution'))
 const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
@@ -65,12 +58,15 @@ const KpiRegionalReport = lazy(() => import('@/features/reports/ui/kpi-regional-
 const Permits = lazy(() => import('@/widgets/permits'))
 const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
 const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
+const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
-const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
 const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
 const AccidentDetail = lazy(() =>
   import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
 )
+const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
+const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
+const UpdateOrganizationPage = lazy(() => import('@/pages/register/update-organization-page'))
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
@@ -80,17 +76,14 @@ const CadastreList = lazy(() => import('@/features/cadastre-passport/ui/cadastre
 const CadastreAdd = lazy(() => import('@/features/cadastre-passport/ui/cadastre-add'))
 const CadastreDetail = lazy(() => import('@/features/cadastre-passport/ui/cadastre-detail'))
 
-export const chairmanRoutes = [
+export const managerRoutes = [
   // ELEVATORS
   {
     id: 'ELEVATOR',
     path: 'elevators',
     element: withSuspense(ElevatorsPage),
   },
-  {
-    path: 'dashboard',
-    element: withSuspense(DashboardPage, DashboardSkeleton),
-  },
+
   // APPEAL
   {
     id: 'APPEAL',
@@ -101,6 +94,11 @@ export const chairmanRoutes = [
     id: 'APPEAL',
     path: 'applications/detail/:id',
     element: withSuspense(ApplicationDetail),
+  },
+  {
+    id: 'APPEAL',
+    path: 'applications/inspector/create',
+    element: withSuspense(CreateApplicationGridsIns),
   },
   {
     id: 'APPEAL',
@@ -121,8 +119,43 @@ export const chairmanRoutes = [
   },
   {
     id: 'REGISTRY',
+    path: 'register/:id/equipments',
+    element: withSuspense(RegisterEquipmentDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/:id/irs',
+    element: withSuspense(RegisterIrsDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/radiation-profiles/:id',
+    element: withSuspense(RegisterRadiationProfileDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/:id/xrays',
+    element: withSuspense(RegisterXrayDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/:id/auto',
+    element: withSuspense(RegisterAutoDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/update/:type/:id',
+    element: withSuspense(RegisterUpdatePage),
+  },
+  {
+    id: 'REGISTRY',
     path: 'register/change/:id/:type',
     element: withSuspense(RegisterChangePage),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/update-organization/:type/:id',
+    element: withSuspense(UpdateOrganizationPage),
   },
 
   // ARCHIVE
@@ -159,36 +192,6 @@ export const chairmanRoutes = [
   {
     id: 'ARCHIVE',
     path: 'archive/:id/auto',
-    element: withSuspense(RegisterAutoDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/:id/equipments',
-    element: withSuspense(RegisterEquipmentDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/:id/equipments/appeals',
-    element: withSuspense(RegisterEquipmentAppealList),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/:id/irs',
-    element: withSuspense(RegisterIrsDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/radiation-profiles/:id',
-    element: withSuspense(RegisterRadiationProfileDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/:id/xrays',
-    element: withSuspense(RegisterXrayDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
   },
 
@@ -405,11 +408,6 @@ export const chairmanRoutes = [
   },
   {
     id: 'REPORT',
-    path: 'reports/employees-dashboard',
-    element: withSuspense(EmployeesDashboard),
-  },
-  {
-    id: 'REPORT',
     path: 'reports/hf-employee-stats',
     element: withSuspense(ReportHfEmployeeStats),
   },
@@ -475,13 +473,5 @@ export const chairmanRoutes = [
     id: 'CADASTRE_PASSPORT',
     path: 'cadastre-passport/:id',
     element: withSuspense(CadastreDetail),
-  },
-  {
-    path: 'kpi/departments',
-    element: withSuspense(DepartmentsPage),
-  },
-  {
-    path: 'kpi/tasks',
-    element: withSuspense(KpiTasksPage),
   },
 ]

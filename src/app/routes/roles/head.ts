@@ -1,8 +1,6 @@
 import { lazy } from 'react'
-import { withSuspense } from '@/shared/config/routes/utils'
-import { DashboardSkeleton } from '@/features/dashboard/ui/dashboard-skeleton'
+import { withSuspense } from '@/app/routes/utils'
 
-const DashboardPage = lazy(() => import('@/pages/dashboard').then((module) => ({ default: module.DashboardPage })))
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'))
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'))
 const RegisterPage = lazy(() => import('@/pages/register'))
@@ -44,54 +42,40 @@ const ReportsDetail8 = lazy(() => import('@/features/reports/ui/report8'))
 const ReportsDetail9 = lazy(() => import('@/features/reports/ui/report9'))
 const ReportsDetail10 = lazy(() => import('@/features/reports/ui/report10'))
 const ReportsDetail11 = lazy(() => import('@/features/reports/ui/report11'))
-const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
-const KpiRegionalReport = lazy(() => import('@/features/reports/ui/kpi-regional-report'))
 const PreventionStatsReport = lazy(() => import('@/features/reports/ui/prevention-stats'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
 const InspectionExecutionReport = lazy(() => import('@/features/reports/ui/inspection-execution-report'))
 const ReportHfEmployeeStats = lazy(() => import('@/features/reports/ui/hf-employee-stats-report'))
+const AppealExecutionReport = lazy(() => import('@/features/reports/ui/appeal-execution'))
+const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appeal-status-duration'))
+const Top100OrganizationsReport = lazy(() => import('@/features/reports/ui/top-100-organizations'))
+const KpiRegionalReport = lazy(() => import('@/features/reports/ui/kpi-regional-report'))
+const TurniketLogsReport = lazy(() => import('@/features/reports/ui/turniket-report'))
+const TurniketLogsDetail = lazy(() => import('@/features/reports/ui/turniket-report-detail'))
 const Permits = lazy(() => import('@/widgets/permits'))
 const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
 const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
-
-// Expanded Imports
-const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
-const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
-const RegisterUpdatePage = lazy(() => import('@/pages/register/register-update-page'))
 const RegisterChangePage = lazy(() => import('@/pages/register/register-change-page'))
-const UpdateOrganizationPage = lazy(() => import('@/pages/register/update-organization-page'))
-const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
-const AccidentInjuryAdd = lazy(() =>
-  import('@/features/accident/ui/accident-injury-add').then((m) => ({ default: m.AccidentAdd }))
-)
-const AccidentInjuryEdit = lazy(() =>
-  import('@/features/accident/ui/accident-injury-edit').then((m) => ({ default: m.AccidentEdit }))
-)
-const AccidentNonInjuryAdd = lazy(() =>
-  import('@/features/accident/ui/accident-non-injury-add').then((m) => ({ default: m.AccidentNonInjuryAdd }))
-)
-const AccidentNonInjuryEdit = lazy(() =>
-  import('@/features/accident/ui/accident-non-injury-edit').then((m) => ({ default: m.AccidentNonInjuryEdit }))
-)
-const AccidentDetail = lazy(() =>
-  import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
-)
 const ElevatorsPage = lazy(() => import('@/pages/elevators'))
 const NewsListPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsList })))
 const NewsDetailPage = lazy(() => import('@/features/news').then((m) => ({ default: m.NewsDetail })))
+const MyKpiPage = lazy(() => import('@/pages/kpi/my-kpi-page'))
+const AttestationQuestionsPage = lazy(() => import('@/pages/attestation-questions/ui/page'))
+const AttestationCalendarsPage = lazy(() => import('@/pages/attestation-calendars/ui/page'))
+const AttestationApplicantsPage = lazy(() => import('@/pages/attestation-applicants/ui/page'))
+const AttestationApplicationDetailPage = lazy(() => import('@/pages/attestation-application-detail/ui/page'))
+const OrganizationsPage = lazy(() => import('@/pages/organizations'))
+const AccidentList = lazy(() => import('@/features/accident/ui/accident-list').then((m) => ({ default: m.default })))
+const AccidentDetail = lazy(() =>
+  import('@/features/accident/ui/accident-detail').then((m) => ({ default: m.AccidentDetail }))
+)
 
-export const inspectorRoutes = [
+export const headRoutes = [
   // ELEVATORS
   {
     id: 'ELEVATOR',
     path: 'elevators',
     element: withSuspense(ElevatorsPage),
-  },
-
-  // DASHBOARD
-  {
-    path: 'dashboard',
-    element: withSuspense(DashboardPage, DashboardSkeleton),
   },
 
   // APPEAL
@@ -105,16 +89,6 @@ export const inspectorRoutes = [
     path: 'applications/detail/:id',
     element: withSuspense(ApplicationDetail),
   },
-  {
-    id: 'APPEAL',
-    path: 'applications/inspector/create',
-    element: withSuspense(CreateApplicationGridsIns),
-  },
-  {
-    id: 'APPEAL',
-    path: 'applications/create/:type',
-    element: withSuspense(CreateApplicationForm),
-  },
 
   // REGISTRY
   {
@@ -126,21 +100,6 @@ export const inspectorRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/hf',
     element: withSuspense(RegisterHFDetail),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/update/:type/:id',
-    element: withSuspense(RegisterUpdatePage),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/change/:id/:type',
-    element: withSuspense(RegisterChangePage),
-  },
-  {
-    id: 'REGISTRY',
-    path: 'register/update-organization/:type/:id',
-    element: withSuspense(UpdateOrganizationPage),
   },
   {
     id: 'REGISTRY',
@@ -166,6 +125,11 @@ export const inspectorRoutes = [
     id: 'REGISTRY',
     path: 'register/:id/auto',
     element: withSuspense(RegisterAutoDetail),
+  },
+  {
+    id: 'REGISTRY',
+    path: 'register/change/:id/:type',
+    element: withSuspense(RegisterChangePage),
   },
 
   // ARCHIVE
@@ -368,6 +332,16 @@ export const inspectorRoutes = [
   },
   {
     id: 'REPORT',
+    path: 'reports/appeal-execution',
+    element: withSuspense(AppealExecutionReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/appeal-status-duration',
+    element: withSuspense(AppealStatusDurationReport),
+  },
+  {
+    id: 'REPORT',
     path: 'reports/prevention-stats',
     element: withSuspense(PreventionStatsReport),
   },
@@ -395,6 +369,16 @@ export const inspectorRoutes = [
     path: 'reports/kpi-regional',
     element: withSuspense(KpiRegionalReport),
   },
+  {
+    id: 'REPORT',
+    path: 'reports/turniket-logs',
+    element: withSuspense(TurniketLogsReport),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/turniket-logs/:id',
+    element: withSuspense(TurniketLogsDetail),
+  },
 
   // PERMITS
   {
@@ -414,37 +398,6 @@ export const inspectorRoutes = [
     path: 'inquiries/detail/:id',
     element: withSuspense(InquiryDetailPage),
   },
-
-  {
-    id: 'ACCIDENT',
-    path: 'accidents',
-    element: withSuspense(AccidentList),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents/injury/add',
-    element: withSuspense(AccidentInjuryAdd),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents/non-injury/add',
-    element: withSuspense(AccidentNonInjuryAdd),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents/:id',
-    element: withSuspense(AccidentDetail),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents/injury/:id/edit',
-    element: withSuspense(AccidentInjuryEdit),
-  },
-  {
-    id: 'ACCIDENT',
-    path: 'accidents/non-injury/:id/edit',
-    element: withSuspense(AccidentNonInjuryEdit),
-  },
   {
     id: 'ANNOUNCEMENT',
     path: 'news',
@@ -454,5 +407,48 @@ export const inspectorRoutes = [
     id: 'ANNOUNCEMENT',
     path: 'news/:id',
     element: withSuspense(NewsDetailPage),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents',
+    element: withSuspense(AccidentList),
+  },
+  {
+    id: 'ACCIDENT',
+    path: 'accidents/:id',
+    element: withSuspense(AccidentDetail),
+  },
+
+  // KPI
+  {
+    id: 'KPI',
+    path: 'kpi/my-tasks',
+    element: withSuspense(MyKpiPage),
+  },
+
+  // ATTESTATION
+  {
+    id: 'ATTESTATION',
+    path: 'attestation-questions',
+    element: withSuspense(AttestationQuestionsPage),
+  },
+  {
+    id: 'ATTESTATION',
+    path: 'attestation-calendars',
+    element: withSuspense(AttestationCalendarsPage),
+  },
+  {
+    id: 'ATTESTATION',
+    path: 'attestation-calendars/:calendarId/applicants',
+    element: withSuspense(AttestationApplicantsPage),
+  },
+  {
+    id: 'ATTESTATION',
+    path: 'attestation-applications/:id',
+    element: withSuspense(AttestationApplicationDetailPage),
+  },
+  {
+    path: 'organizations',
+    element: withSuspense(OrganizationsPage),
   },
 ]
