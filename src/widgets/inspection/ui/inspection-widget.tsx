@@ -1,5 +1,12 @@
 import { onActivate } from '@/shared/lib/on-activate'
 import { InspectionList } from '@/features/inspections/ui/inspection-list'
+import {
+  CountDto,
+  InspectionStatus,
+  InspectionSubMenuStatus,
+  OtherInspectionTabStatus,
+  defaultCountDto,
+} from '@/entities/inspection/models/inspection-status'
 import { OtherInspectionList } from '@/features/inspections/ui/other-inspection-list'
 import { TenDaysDecreeList } from '@/features/inspections/ten-days-decree/ui/ten-days-decree-list'
 import { CreateOtherInspectionModal } from '@/features/inspections/ui/parts/create-other-inspection-modal'
@@ -16,51 +23,6 @@ import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
 import { useTranslation } from 'react-i18next'
 import { RiskAnalysisTab } from '@/widgets/risk-analysis/types'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
-
-export enum InspectionStatus {
-  ALL = 'ALL',
-  NEW = 'NEW',
-  NOTIFIED = 'NOTIFIED',
-  ASSIGNED = 'ASSIGNED',
-  NOT_SIGNED = 'NOT_SIGNED',
-  TEN_DAYS = 'TEN_DAYS',
-}
-
-export enum InspectionNoticeType {
-  NEW = 'NEW',
-  NOTIFIED = 'NOTIFIED',
-}
-
-export enum InspectionSubMenuStatus {
-  CONDUCTED = 'CONDUCTED',
-  ASSIGNED = 'ASSIGNED',
-  COMPLETED = 'COMPLETED',
-}
-
-export enum OtherInspectionTabStatus {
-  ALL = 'ALL',
-  ASSIGNED = 'ASSIGNED',
-  CONDUCTED = 'CONDUCTED',
-  CODE_ATTACHED = 'CODE_ATTACHED',
-}
-
-export interface CountDto {
-  allCount: number
-  newCount: number
-  assignedCount: number
-  notSignedCount: number
-  conductedCount: number
-  codeAttachedCount: number
-}
-
-export const defaultCountDto: CountDto = {
-  allCount: 0,
-  newCount: 0,
-  notSignedCount: 0,
-  assignedCount: 0,
-  conductedCount: 0,
-  codeAttachedCount: 0,
-}
 
 interface RegionCountDto {
   count: number

@@ -7,7 +7,7 @@ import { Button } from '@/shared/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/shared/components/ui/card'
 import { TemplateCardProps } from '../model/types'
 import { TemplateTypeIcon } from '@/entities/admin/template/ui/template-icon'
-import { getTemplateType } from '@/features/admin/template/model/use-template-form'
+import { getTemplateType } from '../model/template-type-label'
 
 export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onEdit }) => {
   const navigate = useNavigate()

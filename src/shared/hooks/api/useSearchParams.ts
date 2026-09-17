@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { cleanParams, convertParamsToObject, isObject } from '@/shared/lib'
+import { cleanParams, isObject } from '@/shared/lib/api'
+import { convertParamsToObject } from '@/shared/lib/params'
 import { ISearchParams } from '@/shared/types'
 
 const toSearchParamsInit = (params: ISearchParams): Record<string, string> => {

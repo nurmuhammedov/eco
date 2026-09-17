@@ -1,5 +1,5 @@
 import { LoginDTO } from './auth.types'
-import { API_ENDPOINTS } from '@/shared/api'
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { apiClient } from '@/shared/api/api-client'
 import { UserRoles, UserState } from '@/entities/user'
 import { ApiResponse } from '@/shared/types'

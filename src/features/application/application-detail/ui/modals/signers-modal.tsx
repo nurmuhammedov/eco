@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/compo
 import { FC } from 'react'
 import { Badge } from '@/shared/components/ui/badge.tsx'
 import { format } from 'date-fns'
-import { signStatuses } from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx'
+import { signStatuses } from '../../model/sign-statuses'
 
 interface Props {
   signers: any

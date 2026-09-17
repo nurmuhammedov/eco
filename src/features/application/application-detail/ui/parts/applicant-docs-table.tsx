@@ -4,10 +4,8 @@ import { ISearchParams } from '@/shared/types'
 import { DataTable } from '@/shared/components/common/data-table'
 import { formatDate } from 'date-fns'
 import { Badge } from '@/shared/components/ui/badge.tsx'
-import {
-  documentTypes,
-  signStatuses,
-} from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx'
+import { documentTypes } from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx'
+import { signStatuses } from '../../model/sign-statuses'
 import FileLink from '@/shared/components/common/file-link.tsx'
 import { Eye } from 'lucide-react'
 import { useState } from 'react'

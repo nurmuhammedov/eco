@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { EquipmentTypeEnum } from './equipment.types'
+import { EquipmentTypeEnum } from './equipment.enums'
 
 export const equipmentBaseSchema = {
   name: z.string().min(1, 'Tuman nomi majburiy'),

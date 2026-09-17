@@ -1,5 +1,5 @@
 import { useData } from '@/shared/hooks'
-import { MONTHS } from '@/widgets/prevention/ui/prevention-widget'
+import { MONTHS } from '@/shared/constants/months'
 import clsx from 'clsx'
 
 interface IProps {

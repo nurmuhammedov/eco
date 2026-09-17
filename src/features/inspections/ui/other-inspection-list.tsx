@@ -9,7 +9,7 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 import { useTranslation } from 'react-i18next'
 import { format } from 'date-fns'
 import { Badge } from '@/shared/components/ui/badge'
-import { OtherInspectionTabStatus } from '@/widgets/inspection/ui/inspection-widget'
+import { OtherInspectionTabStatus } from '@/entities/inspection/models/inspection-status'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
 
 export const OtherInspectionList: React.FC = () => {

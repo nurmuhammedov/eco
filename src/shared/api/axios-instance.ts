@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { apiConfig } from '@/shared/api/constants'
-import { cleanParams } from '@/shared/lib'
+import { cleanParams } from '@/shared/lib/api'
 import { toast } from 'sonner'
 import { goToGuestLanding } from '@/shared/config/navigation'
 

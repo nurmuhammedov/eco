@@ -4,7 +4,6 @@ import { useCustomSearchParams } from '@/shared/hooks'
 import { cn } from '@/shared/lib/utils'
 import { ResponseData } from '@/shared/types/api'
 import {
-  ColumnDef,
   ColumnFiltersState,
   flexRender,
   getCoreRowModel,
@@ -23,19 +22,11 @@ import { Fragment } from 'react'
 import { DataTablePagination } from './data-table-pagination'
 import { getCommonPinningStyles } from './models/get-common-pinning'
 import { ColumnFilterInput } from '@/shared/components/common/data-table/column-filter-input'
-import { DateDisableStrategy } from '@/shared/components/ui/datepicker'
 import { DataTableLoading } from './data-table-loading'
+import { ExtendedColumnDef } from './models/column-def'
 
-export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
-  filterKey?: string
-  filterType?: 'search' | 'select' | 'date' | 'number' | 'date-range'
-  filterOptions?: { id: string; name: string }[]
-  filterDateStrategy?: DateDisableStrategy
-  filterMaxLength?: number
-  filterRangeKeys?: [string, string]
-  className?: string
-  headerClassName?: string
-}
+// Kept so the many call sites that import the type from here keep working.
+export type { ExtendedColumnDef }
 
 interface DataTableProps<TData, TValue> {
   className?: string

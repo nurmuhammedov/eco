@@ -8,24 +8,7 @@ import { TabsLayout } from '@/shared/layouts'
 import { useMemo } from 'react'
 import { cn } from '@/shared/lib/utils'
 import PreventionCards from '@/widgets/prevention/ui/parts/prevention-cards'
-
-export const getCurrentMonthEnum = () => {
-  const monthNames = [
-    'JANUARY',
-    'FEBRUARY',
-    'MARCH',
-    'APRIL',
-    'MAY',
-    'JUNE',
-    'JULY',
-    'AUGUST',
-    'SEPTEMBER',
-    'OCTOBER',
-    'NOVEMBER',
-    'DECEMBER',
-  ]
-  return monthNames[new Date().getMonth()]
-}
+import { getCurrentMonthEnum } from '@/shared/constants/months'
 
 export const getRegionLabel = (name: string) => {
   const lowerName = name.toLowerCase()
@@ -33,21 +16,6 @@ export const getRegionLabel = (name: string) => {
   if (lowerName.includes('toshkent shahri')) return 'Toshkent sh.'
   return name.split(' ')[0]
 }
-
-export const MONTHS = [
-  { value: 'JANUARY', label: 'Yanvar', count: 0 },
-  { value: 'FEBRUARY', label: 'Fevral', count: 0 },
-  { value: 'MARCH', label: 'Mart', count: 0 },
-  { value: 'APRIL', label: 'Aprel', count: 0 },
-  { value: 'MAY', label: 'May', count: 0 },
-  { value: 'JUNE', label: 'Iyun', count: 0 },
-  { value: 'JULY', label: 'Iyul', count: 0 },
-  { value: 'AUGUST', label: 'Avgust', count: 0 },
-  { value: 'SEPTEMBER', label: 'Sentabr', count: 0 },
-  { value: 'OCTOBER', label: 'Oktabr', count: 0 },
-  { value: 'NOVEMBER', label: 'Noyabr', count: 0 },
-  { value: 'DECEMBER', label: 'Dekabr', count: 0 },
-]
 
 const RISK_TYPES = [
   { value: 'HF', label: 'XICHO' },

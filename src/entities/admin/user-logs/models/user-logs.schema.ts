@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { UserLogsTypeEnum } from './user-logs.types'
+import { UserLogsTypeEnum } from './user-logs.enums'
 
 export const UserLogsBaseSchema = {
   name: z
