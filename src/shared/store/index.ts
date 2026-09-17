@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import uiSlice from '@/entities/ui/model/ui-slice'
+import uiSlice from '@/shared/store/ui-slice'
 import { IS_DEV } from '@/shared/constants/general'
 
 export const store = configureStore({

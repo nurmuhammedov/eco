@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from 'react'
 import { Provider } from 'react-redux'
-import { store } from '../store'
+import { store } from '@/shared/store'
 
 export const withStore = (Component: FC<PropsWithChildren>): FC<PropsWithChildren> => {
   const WithStore: FC<PropsWithChildren> = (props) => {

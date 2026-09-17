@@ -8,7 +8,7 @@ import { RiskAnalysisTab } from '@/entities/risk-analysis/models/risk-analysis-t
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/lib/utils'
 import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
-import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-statistics-cards'
+import { RiskStatisticsCards } from '@/entities/risk-analysis/ui/risk-statistics-cards'
 
 const MONTHS = [
   { id: 'JANUARY', name: 'Yanvar' },

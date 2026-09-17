@@ -1,4 +1,4 @@
-import { createPdf } from '@/features/application/create-application/api/create-application'
+import { createPdf } from '@/shared/api/create-pdf'
 import { apiClient } from '@/shared/api/api-client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useState } from 'react'

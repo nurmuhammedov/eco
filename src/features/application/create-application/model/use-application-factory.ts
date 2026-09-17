@@ -1,6 +1,5 @@
-import { applicationConfigs } from '../constants/config'
-import { ApplicationTypeEnum } from '../types/enums'
-import { useApplicationCreation, UseApplicationCreationProps } from '@/features/application/create-application/model'
+import { applicationConfigs, ApplicationTypeEnum } from '@/entities/create-application'
+import { useApplicationCreation, UseApplicationCreationProps } from './use-application-creation'
 
 interface UseApplicationFactoryProps extends Omit<UseApplicationCreationProps, 'pdfEndpoint' | 'submitEndpoint'> {
   applicationType: ApplicationTypeEnum

@@ -2,7 +2,7 @@ import { toast } from 'sonner'
 import { apiClient } from '@/shared/api/api-client'
 import { useCallback, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { createPdf } from '../api/create-application'
+import { createPdf } from '@/shared/api/create-pdf'
 import { useNavigate } from 'react-router-dom'
 
 export type FormData = any

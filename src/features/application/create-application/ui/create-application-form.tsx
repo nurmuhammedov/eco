@@ -1,4 +1,5 @@
-import { ApplicationTypeEnum, getApplicationAccess, useApplicationFactory } from '@/entities/create-application'
+import { ApplicationTypeEnum, getApplicationAccess } from '@/entities/create-application'
+import { useApplicationFactory } from '../model'
 import { AppealFormSkeleton } from './form-skeleton'
 import { ApplicationModal } from './application-modal'
 import { Suspense } from 'react'

@@ -55,5 +55,4 @@ export { useApplicationFormConstants } from './constants/form-constants'
 export { createApplicationsAPI } from './models/create-application.api'
 
 //mutations
-export { useApplicationFactory } from './hooks/use-application-factory'
 export { useCreateHPOApplicationMutations, useCreateCraneApplicationMutations } from './hooks/use-application.mutations'
