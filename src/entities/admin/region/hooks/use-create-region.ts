@@ -1,7 +1,7 @@
 import { CreateRegionDTO, RegionResponse } from '../models/region.types'
 import { regionKeys } from '../models/region.query-keys'
 import type { ResponseData } from '@/shared/types/api'
-import { regionAPI } from '@/entities/admin/region/models/region.api.ts'
+import { regionAPI } from '@/entities/admin/region/models/region.api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export const useCreateRegion = () => {

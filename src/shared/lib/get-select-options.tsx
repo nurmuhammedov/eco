@@ -1,5 +1,5 @@
-import { SelectItem } from '@/shared/components/ui/select.tsx'
-import { OptionItem } from '@/shared/types/general.ts'
+import { SelectItem } from '@/shared/components/ui/select'
+import { OptionItem } from '@/shared/types/general'
 import { JSX } from 'react'
 
 export function getSelectOptions<T>(list: OptionItem<T>[]): JSX.Element[] {

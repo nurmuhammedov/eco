@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useDetail } from '@/shared/hooks'
 import DetailRow from '@/shared/components/common/detail-row'
 import { formatDate } from '@/shared/utils/date'
-import ChangeLogTable from '@/features/register/register-change-detail/ui/change-log-table.tsx'
+import ChangeLogTable from '@/features/register/register-change-detail/ui/change-log-table'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import { ApplicationStatusRow } from '@/shared/components/common/application-status-row'
 import { GoBack } from '@/shared/components/common'
@@ -17,7 +17,7 @@ import ReturnChangeModal from '@/features/register/register-change-detail/modals
 import ConfirmProcessModal from '@/features/register/register-change-detail/modals/confirm-process-modal'
 import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal'
 import { Badge } from '@/shared/components/ui/badge'
-import { cn } from '@/shared/lib/utils.ts'
+import { cn } from '@/shared/lib/utils'
 
 const RegisterChangeDetail: FC = () => {
   const { id, type } = useParams<{ id: string; type: string }>()

@@ -1,4 +1,4 @@
-import { useUpdateLegalInfo } from '@/features/application/application-detail/hooks/use-update-legal-info.tsx'
+import { useUpdateLegalInfo } from '@/features/application/application-detail/hooks/use-update-legal-info'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip'
 import { cn } from '@/shared/lib/utils'
 import { RefreshCcw } from 'lucide-react'

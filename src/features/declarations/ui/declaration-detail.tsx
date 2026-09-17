@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { Card, CardContent } from '@/shared/components/ui/card'
-import useDetail from '@/shared/hooks/api/useDetail'
+import useDetail from '@/shared/hooks/api/use-detail'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import { getDate } from '@/shared/utils/date'

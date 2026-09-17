@@ -15,10 +15,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import DetailRow from '@/shared/components/common/detail-row'
 import GoBack from '@/shared/components/common/go-back'
 
-import useAdd from '@/shared/hooks/api/useAdd'
-import useData from '@/shared/hooks/api/useData'
+import useAdd from '@/shared/hooks/api/use-add'
+import useData from '@/shared/hooks/api/use-data'
 import { accidentNonInjuryCreateSchema } from '@/features/accident/model/types'
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api.ts'
+import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 import DateTimePicker from '@/shared/components/ui/datetimepicker'
 
 export const AccidentNonInjuryAdd: React.FC = () => {

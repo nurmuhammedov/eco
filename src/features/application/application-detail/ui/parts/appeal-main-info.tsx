@@ -1,5 +1,5 @@
-import DetailRow from '@/shared/components/common/detail-row.tsx'
-import { getDate } from '@/shared/utils/date.ts'
+import DetailRow from '@/shared/components/common/detail-row'
+import { getDate } from '@/shared/utils/date'
 import { useHazardousFacilityCategoryDictionarySelect } from '@/shared/api/dictionaries'
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next'

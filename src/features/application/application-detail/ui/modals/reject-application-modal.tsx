@@ -1,5 +1,5 @@
 import { ApplicationModal } from '@/features/application/create-application'
-import { Button } from '@/shared/components/ui/button.tsx'
+import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -7,10 +7,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog.tsx'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
-import { Textarea } from '@/shared/components/ui/textarea.tsx'
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts'
+} from '@/shared/components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Textarea } from '@/shared/components/ui/textarea'
+import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DialogClose } from '@radix-ui/react-dialog'

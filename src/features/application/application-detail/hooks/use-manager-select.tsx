@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { applicationDetailApi } from '../model/application-detail.api.ts'
+import { applicationDetailApi } from '../model/application-detail.api'
 
 export const useManagerSelect = () => {
   return useQuery({

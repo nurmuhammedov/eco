@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'

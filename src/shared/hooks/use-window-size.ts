@@ -1,6 +1,6 @@
 import { DeviceType } from '@/shared/types/enums'
 import { useCallback, useEffect, useState } from 'react'
-import { detectDeviceType } from '@/shared/utils/detectDeviceType'
+import { detectDeviceType } from '@/shared/utils/detect-device-type'
 
 interface WindowSize {
   width: number

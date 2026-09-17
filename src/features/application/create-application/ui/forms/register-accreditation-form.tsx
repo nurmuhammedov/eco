@@ -2,7 +2,7 @@ import { ApplicationTypeEnum, CardForm, RegisterAccreditationDTO } from '@/entit
 import { useCreateAccreditationApplication } from '@/features/application/create-application/model/use-create-accreditation-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { Button } from '@/shared/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'

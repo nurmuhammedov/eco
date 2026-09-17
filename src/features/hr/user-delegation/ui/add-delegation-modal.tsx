@@ -11,7 +11,7 @@ import { useAdd } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
 import { Combobox } from '@/shared/components/ui/combobox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import useData from '@/shared/hooks/api/useData'
+import useData from '@/shared/hooks/api/use-data'
 import { useEffect } from 'react'
 import { UserRoleLabels, UserRoles } from '@/entities/user'
 

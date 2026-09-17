@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { clsx } from 'clsx'
-import { Indicator } from '../riskAnalysis'
+import { Indicator } from '../risk-analysis'
 
 interface Props {
   number: string

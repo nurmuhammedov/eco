@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { QK_RISK_ANALYSIS } from '@/shared/constants/query-keys.ts'
+import { QK_RISK_ANALYSIS } from '@/shared/constants/query-keys'
 import { useSearchParams } from 'react-router-dom'
-import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api.ts'
+import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api'
 
 export const useFilesToFix = () => {
   const [searchParams] = useSearchParams()

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/shared/components/ui/button'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import {
   Dialog,
   DialogContent,

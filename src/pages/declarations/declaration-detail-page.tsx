@@ -4,7 +4,7 @@ import { DeclarationActions } from '@/features/declarations/ui/declaration-actio
 import { GoBack } from '@/shared/components/common'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
-import useDetail from '@/shared/hooks/api/useDetail'
+import useDetail from '@/shared/hooks/api/use-detail'
 
 const DeclarationDetailPage = () => {
   const { id } = useParams()

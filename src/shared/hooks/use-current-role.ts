@@ -1,5 +1,5 @@
 import { UserRoles } from '@/entities/user'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 export const useCurrentRole = () => {
   const { user } = useAuth()

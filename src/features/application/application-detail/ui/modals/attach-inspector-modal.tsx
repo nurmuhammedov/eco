@@ -5,26 +5,26 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog.tsx'
-import { Button } from '@/shared/components/ui/button.tsx'
+} from '@/shared/components/ui/dialog'
+import { Button } from '@/shared/components/ui/button'
 import { DialogClose } from '@radix-ui/react-dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { formatDate, parseISO } from 'date-fns'
-import DatePicker from '@/shared/components/ui/datepicker.tsx'
-import { Textarea } from '@/shared/components/ui/textarea.tsx'
-import { getSelectOptions } from '@/shared/lib/get-select-options.tsx'
-import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select.tsx'
-import { useManagerSelect } from '@/features/application/application-detail/hooks/use-manager-select.tsx'
+import DatePicker from '@/shared/components/ui/datepicker'
+import { Textarea } from '@/shared/components/ui/textarea'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select'
+import { useManagerSelect } from '@/features/application/application-detail/hooks/use-manager-select'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { useState } from 'react'
-import { useAttachInspector } from '@/features/application/application-detail/hooks/mutations/use-attach-inspector.tsx'
+import { useAttachInspector } from '@/features/application/application-detail/hooks/mutations/use-attach-inspector'
 import { useParams } from 'react-router-dom'
 import { UserRoles } from '@/entities/user'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { useAuth } from '@/shared/hooks/use-auth'
 
 const schema = z.object({
   deadline: z.date({ message: FORM_ERROR_MESSAGES.required }),

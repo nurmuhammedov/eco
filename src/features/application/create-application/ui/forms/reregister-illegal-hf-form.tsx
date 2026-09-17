@@ -2,7 +2,7 @@ import { CardForm, ReRegisterIllegalHFApplicationDTO } from '@/entities/create-a
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
-import { Button } from '@/shared/components/ui/button.tsx'
+import { Button } from '@/shared/components/ui/button'
 import {
   Form,
   FormControl,
@@ -18,7 +18,7 @@ import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useReRegisterIllegalHFApplication } from '@/features/application/create-application/model/use-re-register-illegal-hf-application'
 import DetailRow from '@/shared/components/common/detail-row'
-import DatePicker from '@/shared/components/ui/datepicker.tsx'
+import DatePicker from '@/shared/components/ui/datepicker'
 import { parseISO } from 'date-fns'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 

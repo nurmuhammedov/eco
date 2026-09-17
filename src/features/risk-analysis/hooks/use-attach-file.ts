@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { QK_RISK_ANALYSIS } from '@/shared/constants/query-keys.ts'
+import { QK_RISK_ANALYSIS } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
-import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api.ts'
+import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api'
 import { useSearchParams } from 'react-router-dom'
 
 export function useAttachFile() {

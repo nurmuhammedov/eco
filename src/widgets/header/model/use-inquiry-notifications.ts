@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
 import { InquiryStatus } from '@/features/inquiries/model/types'
-import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
+import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
 
 export interface InquiryNotificationItem {
   id: string

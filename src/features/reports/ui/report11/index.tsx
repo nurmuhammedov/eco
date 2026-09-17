@@ -4,7 +4,7 @@ import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
 import Filter from '@/shared/components/common/filter'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 
 const Report11: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()

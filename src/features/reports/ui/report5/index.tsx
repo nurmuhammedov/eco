@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/shared/lib/utils'
 import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application'
 import { Report5Item } from './types'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useRegionSelectQuery } from '@/entities/admin/districts'
 import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
 

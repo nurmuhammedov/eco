@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
-import uiSlice from '@/entities/ui/model/ui-slice.ts'
-import { IS_DEV } from '@/shared/constants/general.ts'
+import uiSlice from '@/entities/ui/model/ui-slice'
+import { IS_DEV } from '@/shared/constants/general'
 
 export const store = configureStore({
   reducer: {

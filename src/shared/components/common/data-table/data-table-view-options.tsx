@@ -9,7 +9,7 @@ import {
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from '@/shared/components/ui/dropdown-menu.tsx'
+} from '@/shared/components/ui/dropdown-menu'
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>

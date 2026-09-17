@@ -1,15 +1,15 @@
 import { UserRoles } from '@/entities/user'
 import { getAppealPermissions } from '@/features/application/application-detail/model/appeal-permissions'
 import { ApplicationDetail as ApplicationDetailFeature } from '@/features/application/application-detail'
-import { useApplicationDetail } from '@/features/application/application-detail/hooks/use-application-detail.tsx'
+import { useApplicationDetail } from '@/features/application/application-detail/hooks/use-application-detail'
 import ReferenceCreateModal from '@/features/application/application-detail/ui/modals/reference-create-modal'
-import RejectApplicationModal from '@/features/application/application-detail/ui/modals/reject-application-modal.tsx'
+import RejectApplicationModal from '@/features/application/application-detail/ui/modals/reject-application-modal'
 import { GoBack } from '@/shared/components/common'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
-import AttachInspectorModal from '@/features/application/application-detail/ui/modals/attach-inspector-modal.tsx'
-import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal.tsx'
-import { AccreditationAppealActions } from '@/features/application/application-detail/ui/parts/accreditation-appeal-actions.tsx'
-import { AppealDetailSkeleton } from '@/features/application/application-detail/ui/parts/appeal-detail-skeleton.tsx'
+import { useAuth } from '@/shared/hooks/use-auth'
+import AttachInspectorModal from '@/features/application/application-detail/ui/modals/attach-inspector-modal'
+import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal'
+import { AccreditationAppealActions } from '@/features/application/application-detail/ui/parts/accreditation-appeal-actions'
+import { AppealDetailSkeleton } from '@/features/application/application-detail/ui/parts/appeal-detail-skeleton'
 
 const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActions?: boolean }) => {
   const { data, isLoading } = useApplicationDetail()

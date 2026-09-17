@@ -6,7 +6,7 @@ import { Badge } from '@/shared/components/ui/badge'
 import { Button } from '@/shared/components/ui/button'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
-import useUpdate from '@/shared/hooks/api/useUpdate'
+import useUpdate from '@/shared/hooks/api/use-update'
 import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 

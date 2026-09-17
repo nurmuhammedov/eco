@@ -1,10 +1,10 @@
-import RiskAnalysisItem from '@/features/risk-analysis/ui/parts/risk-analysis-item.tsx'
+import RiskAnalysisItem from '@/features/risk-analysis/ui/parts/risk-analysis-item'
 import { FC } from 'react'
-import { RiskAnalysisData, RiskIndicators } from '@/features/risk-analysis/ui/riskAnalysis.ts'
+import { RiskAnalysisData, RiskIndicators } from '@/features/risk-analysis/ui/risk-analysis'
 import { useParams } from 'react-router-dom'
 import { useDetail } from '@/shared/hooks'
 import { Loader2 } from 'lucide-react'
-import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info.tsx'
+import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info'
 
 interface Props {
   data: RiskIndicators | null

@@ -1,8 +1,8 @@
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts'
+import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { applicationDetailApi } from '../model/application-detail.api.ts'
+import { applicationDetailApi } from '../model/application-detail.api'
 
 export const useApplicationDetail = () => {
   const { id } = useParams()

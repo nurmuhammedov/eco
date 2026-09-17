@@ -10,7 +10,7 @@ import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/d
 import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { useQuery, useQueryClient } from '@tanstack/react-query'

@@ -1,5 +1,5 @@
-import { irsDetailApi } from '@/features/register/irs/model/irs-detail.api.ts'
-import { QK_REGISTRY } from '@/shared/constants/query-keys.ts'
+import { irsDetailApi } from '@/features/register/irs/model/irs-detail.api'
+import { QK_REGISTRY } from '@/shared/constants/query-keys'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'

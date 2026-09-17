@@ -1,4 +1,4 @@
-import { apiConfig } from '@/shared/api/constants.ts'
+import { apiConfig } from '@/shared/api/constants'
 import { Button } from '@/shared/components/ui/button'
 import { isPDFUrl } from '@/shared/lib'
 import { cn } from '@/shared/lib/utils'

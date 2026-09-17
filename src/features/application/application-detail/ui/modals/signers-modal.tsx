@@ -1,7 +1,7 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 
 import { FC } from 'react'
-import { Badge } from '@/shared/components/ui/badge.tsx'
+import { Badge } from '@/shared/components/ui/badge'
 import { format } from 'date-fns'
 import { signStatuses } from '../../model/sign-statuses'
 

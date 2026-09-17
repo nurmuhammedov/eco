@@ -1,6 +1,6 @@
-import RiskAnalysisItem from '@/features/risk-analysis/ui/parts/risk-analysis-item.tsx'
+import RiskAnalysisItem from '@/features/risk-analysis/ui/parts/risk-analysis-item'
 import { FC } from 'react'
-import { RiskIndicators } from '../riskAnalysis'
+import { RiskIndicators } from '../risk-analysis'
 
 interface Props {
   data: RiskIndicators | null

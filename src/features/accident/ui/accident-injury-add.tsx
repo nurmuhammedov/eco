@@ -15,10 +15,10 @@ import DatePicker from '@/shared/components/ui/datepicker'
 import DetailRow from '@/shared/components/common/detail-row'
 import GoBack from '@/shared/components/common/go-back'
 
-import useAdd from '@/shared/hooks/api/useAdd'
-import useData from '@/shared/hooks/api/useData'
+import useAdd from '@/shared/hooks/api/use-add'
+import useData from '@/shared/hooks/api/use-data'
 import { accidentCreateSchema } from '@/features/accident/model/types'
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api.ts'
+import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 
 export const AccidentAdd: React.FC = () => {
   const navigate = useNavigate()

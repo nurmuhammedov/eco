@@ -1,6 +1,6 @@
 import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types'
 import { Button } from '@/shared/components/ui/button'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import React from 'react'
 
 interface AssignInspectorButtonProps {

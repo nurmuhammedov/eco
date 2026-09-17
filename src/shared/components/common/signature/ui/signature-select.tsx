@@ -3,7 +3,7 @@ import { AlertCircle, KeyRound } from 'lucide-react'
 import { format } from 'date-fns'
 import { SignatureKey } from '@/shared/types/signature'
 import { cn } from '@/shared/lib/utils'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
 
 interface SignatureSelectProps {

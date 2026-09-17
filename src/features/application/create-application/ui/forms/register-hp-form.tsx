@@ -2,7 +2,7 @@ import { CardForm } from '@/entities/create-application'
 import { useCreateHfApplication } from '../../model/use-create-hf-application'
 import { GoBack } from '@/shared/components/common'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
-import { Button } from '@/shared/components/ui/button.tsx'
+import { Button } from '@/shared/components/ui/button'
 import {
   Form,
   FormControl,
@@ -16,7 +16,7 @@ import { Input } from '@/shared/components/ui/input'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import DatePicker from '@/shared/components/ui/datepicker.tsx'
+import DatePicker from '@/shared/components/ui/datepicker'
 import { parseISO } from 'date-fns'
 import { HF_HAZARDOUS_SIGN_OPTIONS, HF_LEGAL_TYPE_OPTIONS } from '@/shared/constants/hf-attributes'
 import { HfCategoryFilesSection } from './parts/hf-category-files-section'

@@ -1,5 +1,5 @@
 import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
-import useUpdate from '@/shared/hooks/api/useUpdate'
+import useUpdate from '@/shared/hooks/api/use-update'
 import { useQueryClient } from '@tanstack/react-query'
 
 export const useUpdateLegalInfo = (tinNumber: any) => {

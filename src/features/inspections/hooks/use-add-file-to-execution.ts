@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { QK_INSPECTION } from '@/shared/constants/query-keys.ts'
+import { QK_INSPECTION } from '@/shared/constants/query-keys'
 import { toast } from 'sonner'
-import { inspectionsApi } from '@/features/inspections/model/inspections.model.ts'
+import { inspectionsApi } from '@/features/inspections/model/inspections.model'
 
 export function useAddFileToExecution(id: any) {
   const queryClient = useQueryClient()

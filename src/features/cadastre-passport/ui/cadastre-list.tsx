@@ -7,7 +7,7 @@ import { DataTable, DataTableRowActions } from '@/shared/components/common/data-
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
-import useDelete from '@/shared/hooks/api/useDelete'
+import useDelete from '@/shared/hooks/api/use-delete'
 import { UserRoles } from '@/entities/user'
 import { CadastrePassportRow } from '../model/types'
 import { isPreparer } from '../model/permissions'

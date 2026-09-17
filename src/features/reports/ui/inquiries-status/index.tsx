@@ -12,7 +12,7 @@ import {
 } from '@/features/inquiries/model/types'
 import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 
 const InquiriesStatusReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()

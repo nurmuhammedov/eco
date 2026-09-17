@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'

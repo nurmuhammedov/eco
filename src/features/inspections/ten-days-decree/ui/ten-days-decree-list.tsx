@@ -5,7 +5,7 @@ import { Button } from '@/shared/components/ui/button'
 import { Eye, Signature } from 'lucide-react'
 import { TenDaysSignModal } from './ten-days-sign-modal'
 import { useCustomSearchParams } from '@/shared/hooks'
-import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
+import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
 import { useNavigate } from 'react-router-dom'
 import { apiConfig } from '@/shared/api/constants'
 

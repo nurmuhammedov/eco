@@ -1,4 +1,4 @@
-import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
+import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
 import { ISearchParams } from '@/shared/types'
 import { DASHBOARD_STALE_TIME } from './use-dashboard-stats'
 

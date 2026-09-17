@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { CommonService } from '@/shared/api/dictionaries/queries/comon.api'
-import useData from '@/shared/hooks/api/useData'
+import useData from '@/shared/hooks/api/use-data'
 import { CadastrePassport, WorkflowHistoryEntry } from './types'
 
 export const CADASTRE_PASSPORT_KEY = 'cadastre-passports'

@@ -11,7 +11,7 @@ import { OtherInspectionList } from '@/features/inspections/ui/other-inspection-
 import { TenDaysDecreeList } from '@/features/inspections/ten-days-decree/ui/ten-days-decree-list'
 import { CreateOtherInspectionModal } from '@/features/inspections/ui/parts/create-other-inspection-modal'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { useMemo } from 'react'
 import { UserRoles } from '@/entities/user'

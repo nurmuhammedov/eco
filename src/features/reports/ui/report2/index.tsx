@@ -1,5 +1,5 @@
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import React from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { usePaginatedData } from '@/shared/hooks'

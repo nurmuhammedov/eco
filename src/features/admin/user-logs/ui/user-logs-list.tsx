@@ -3,7 +3,7 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { ColumnDef } from '@tanstack/react-table'
 import { useUserLogsList } from '@/entities/admin/user-logs'
 import { useFilters } from '@/shared/hooks/use-filters'
-import { useUserLogsTypeLabel } from '@/shared/hooks/use-user-logs-type-label.ts'
+import { useUserLogsTypeLabel } from '@/shared/hooks/use-user-logs-type-label'
 
 export function UserLogsList() {
   const { filters } = useFilters()

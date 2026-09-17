@@ -4,7 +4,7 @@ import { UseQueryResult } from '@tanstack/react-query'
 import { UserRoles } from '@/entities/user'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslatedObject } from '@/shared/hooks'
-import { getSelectOptions } from '@/shared/lib/get-select-options.tsx'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDepartmentSelectQueries } from '@/shared/api/dictionaries'
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks'
 

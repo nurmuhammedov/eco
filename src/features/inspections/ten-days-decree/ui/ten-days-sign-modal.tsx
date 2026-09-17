@@ -9,7 +9,7 @@ import {
 } from '@/shared/components/ui/dialog'
 import { FileText } from 'lucide-react'
 import { SignatureModal } from '@/shared/components/common/signature/ui/signature-modal'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import { useQueryClient } from '@tanstack/react-query'
 
 interface TenDaysSignModalProps {

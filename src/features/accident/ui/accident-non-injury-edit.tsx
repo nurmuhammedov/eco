@@ -17,9 +17,9 @@ import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 
-import useDetail from '@/shared/hooks/api/useDetail'
-import useUpdate from '@/shared/hooks/api/useUpdate'
-import useData from '@/shared/hooks/api/useData'
+import useDetail from '@/shared/hooks/api/use-detail'
+import useUpdate from '@/shared/hooks/api/use-update'
+import useData from '@/shared/hooks/api/use-data'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
 import {

@@ -11,7 +11,7 @@ import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useAuth } from '@/shared/hooks/use-auth'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import React from 'react'
 import { useData } from '@/shared/hooks'
 

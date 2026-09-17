@@ -6,8 +6,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog.tsx'
-import { Button } from '@/shared/components/ui/button.tsx'
+} from '@/shared/components/ui/dialog'
+import { Button } from '@/shared/components/ui/button'
 import React, { useState } from 'react'
 import { useAdd } from '@/shared/hooks/api'
 import { useQueryClient } from '@tanstack/react-query'

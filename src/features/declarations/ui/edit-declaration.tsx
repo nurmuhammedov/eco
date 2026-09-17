@@ -3,9 +3,9 @@ import { useDetail } from '@/shared/hooks'
 import { LegalDeclarationForm } from './legal-declaration-form'
 import { ExpertDeclarationForm } from './expert-declaration-form'
 import { Loader } from '@/shared/components/common'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
-import useData from '../../../shared/hooks/api/useData.ts'
-import { AccreditationStatus } from '@/entities/declarations/model/declaration.types.ts'
+import { useAuth } from '@/shared/hooks/use-auth'
+import useData from '../../../shared/hooks/api/use-data'
+import { AccreditationStatus } from '@/entities/declarations/model/declaration.types'
 import { UserRoles } from '@/entities/user'
 
 export const EditDeclaration = () => {

@@ -21,10 +21,10 @@ const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/ri
 const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-info-by-id'))
 const InspectionsRiskBasedPage = lazy(() => import('@/pages/inspections/risk-based/page'))
 const InspectionsOtherPage = lazy(() => import('@/pages/inspections/other/page'))
-const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info.tsx'))
+const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info'))
 const ExpertisePage = lazy(() => import('@/pages/expertise/page'))
 const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-page'))
-const AddDeclarationPage = lazy(() => import('@/pages/declarations/add-declaration-page.tsx'))
+const AddDeclarationPage = lazy(() => import('@/pages/declarations/add-declaration-page'))
 const DeclarationDetailPage = lazy(() => import('@/pages/declarations/declaration-detail-page'))
 const DeclarationsPage = lazy(() => import('@/pages/declarations/page'))
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
@@ -257,7 +257,7 @@ export const legalRoutes = [
   },
   {
     id: 'CONCLUSION',
-    path: '/accreditations/detail/:id',
+    path: 'accreditations/detail/:id',
     element: withSuspense(ConclusionDetail),
   },
   {

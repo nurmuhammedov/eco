@@ -12,7 +12,7 @@ import {
 } from '../model/types'
 import { formatDate } from 'date-fns'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button } from '@/shared/components/ui/button.tsx'
+import { Button } from '@/shared/components/ui/button'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/entities/user'
 import { Eye } from 'lucide-react'

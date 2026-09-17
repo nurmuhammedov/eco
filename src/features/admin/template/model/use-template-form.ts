@@ -11,7 +11,7 @@ import {
   useUpdateTemplateData,
 } from '@/entities/admin/template'
 import { useTranslatedObject } from '@/shared/hooks'
-import { getSelectOptions } from '@/shared/lib/get-select-options.tsx'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
 
 const DEFAULT_FORM_VALUES = {
   name: '',

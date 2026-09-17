@@ -2,7 +2,7 @@ import { ChecklistTemplatesDrawer } from '@/features/admin/checklist-templates/u
 import { ChecklistTemplatesList } from '@/features/admin/checklist-templates/ui/checklist-templates-list'
 import { Button } from '@/shared/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useChecklistTemplateDrawer } from '@/shared/hooks/entity-hooks'
 import { UIModeEnum } from '@/shared/types'
 import { PlusCircle } from 'lucide-react'

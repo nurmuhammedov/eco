@@ -4,8 +4,8 @@ import {
   useDeleteChecklistTemplate,
 } from '@/entities/admin/checklist-templates'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
-import FileLink from '@/shared/components/common/file-link.tsx'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import FileLink from '@/shared/components/common/file-link'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useChecklistTemplateDrawer } from '@/shared/hooks/entity-hooks'
 import { UIModeEnum } from '@/shared/types'
 import { ColumnDef } from '@tanstack/react-table'

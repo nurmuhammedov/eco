@@ -1,6 +1,6 @@
-import { APPLICATION_LOGS } from '@/shared/constants/query-keys.ts'
+import { APPLICATION_LOGS } from '@/shared/constants/query-keys'
 import { useQuery } from '@tanstack/react-query'
-import { applicationDetailApi } from '../model/application-detail.api.ts'
+import { applicationDetailApi } from '../model/application-detail.api'
 
 export const useExecutionLogs = (
   id: string | undefined,

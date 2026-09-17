@@ -9,7 +9,7 @@ import { cn } from '@/shared/lib/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
 import { Skeleton } from '@/shared/components/ui/skeleton'
-import useData from '@/shared/hooks/api/useData'
+import useData from '@/shared/hooks/api/use-data'
 
 export interface PaymentCard {
   id?: string

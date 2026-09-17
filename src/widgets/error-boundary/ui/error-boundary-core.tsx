@@ -1,9 +1,9 @@
 import React, { Component, ErrorInfo } from 'react'
 import type { ErrorBoundaryProps, ErrorBoundaryState, ErrorFallbackProps } from '@/widgets/error-boundary/model'
 import { NavigateFunction } from 'react-router-dom'
-import { IS_DEV } from '@/shared/constants/general.ts'
-import { cn } from '@/shared/lib/utils.ts'
-import { DefaultErrorFallback } from '@/widgets/error-boundary/ui/default-error-fallback.tsx'
+import { IS_DEV } from '@/shared/constants/general'
+import { cn } from '@/shared/lib/utils'
+import { DefaultErrorFallback } from '@/widgets/error-boundary/ui/default-error-fallback'
 
 export class ErrorBoundaryCore extends Component<
   ErrorBoundaryProps & { navigate: NavigateFunction; pathname: string },

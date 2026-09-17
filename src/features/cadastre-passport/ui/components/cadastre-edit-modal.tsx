@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useEffect } from 'react'
-import useUpdate from '@/shared/hooks/api/useUpdate'
+import useUpdate from '@/shared/hooks/api/use-update'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 

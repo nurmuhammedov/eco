@@ -5,7 +5,7 @@ const AdminLogin = lazy(() => import('@/pages/auth/ui/admin-login'))
 const OneIdLoginPage = lazy(() => import('@/pages/auth/ui/login-page'))
 const NotFound = lazy(() => import('@/pages/error/ui/page-not-found'))
 const ContactPage = lazy(() => import('@/pages/qr-form'))
-const PublicRiskAnalysisInfo = lazy(() => import('@/features/risk-analysis/ui/public-risk-analysis-info.tsx'))
+const PublicRiskAnalysisInfo = lazy(() => import('@/features/risk-analysis/ui/public-risk-analysis-info'))
 const PublicInquiryChoice = lazy(() => import('@/pages/public-inquiry/ui/public-inquiry-choice'))
 
 import { withFullPageSuspense } from '@/app/routes/utils'

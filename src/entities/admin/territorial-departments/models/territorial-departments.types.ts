@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { schemas, territorialDepartmentsSchema } from './territorial-departments.schema.ts'
+import { schemas, territorialDepartmentsSchema } from './territorial-departments.schema'
 
 export type TerritorialDepartment = z.infer<typeof territorialDepartmentsSchema>
 export type TerritorialDepartmentResponse = z.infer<typeof schemas.single>

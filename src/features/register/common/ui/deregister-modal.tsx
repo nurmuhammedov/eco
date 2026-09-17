@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import { useNavigate } from 'react-router-dom'
 
 const deregisterSchema = z.object({

@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles, UserRoleLabels } from '@/entities/user'
 import { truncateString } from '@/shared/lib'
 import { Link } from 'react-router-dom'

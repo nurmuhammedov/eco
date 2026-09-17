@@ -9,7 +9,7 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 import { useCustomSearchParams } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { getDate } from '@/shared/utils/date'
-import useData from '../../../../shared/hooks/api/useData'
+import useData from '../../../../shared/hooks/api/use-data'
 import { API_ENDPOINTS } from '@/shared/api'
 import { UserRoles } from '@/entities/user'
 

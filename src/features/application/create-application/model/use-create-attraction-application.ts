@@ -1,6 +1,6 @@
 import { AttractionAppealDtoSchema, CreateAttractionApplicationDTO } from '@/entities/create-application'
 import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
-import useData from '@/shared/hooks/api/useData'
+import useData from '@/shared/hooks/api/use-data'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMemo } from 'react'
