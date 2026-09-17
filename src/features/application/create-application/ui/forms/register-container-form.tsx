@@ -1,5 +1,5 @@
 import { CardForm, CreateContainerApplicationDTO } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { NoteForm } from '../note-form'
 import { useCreateContainerApplication } from '../../model/use-create-container-application'
 import { GoBack } from '@/shared/components/common'

@@ -1,5 +1,5 @@
 import { CardForm, CreateOilContainerApplicationDTO } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { NoteForm } from '../note-form'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'

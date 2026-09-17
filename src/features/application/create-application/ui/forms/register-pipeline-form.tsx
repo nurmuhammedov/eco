@@ -1,5 +1,5 @@
 import { CardForm, CreatePipelineApplicationDTO } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { NoteForm } from '../note-form'
 import { useCreatePipelineApplication } from '../../model/use-create-pipeline-application'
 import { GoBack } from '@/shared/components/common'

@@ -6,7 +6,7 @@ import FileLink from '@/shared/components/common/file-link'
 
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/shared/components/ui/button'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { ApplicationStatusBadge } from '@/entities/application/ui/application-status-badge'
 import { ApplicationStatus } from '@/entities/application'

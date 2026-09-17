@@ -1,5 +1,5 @@
 import { getApplicationTitle } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
 import AppealResponseDocs from '@/features/application/application-detail/ui/parts/appeal-response-docs'
 import ApplicantDocsTable from '@/features/application/application-detail/ui/parts/applicant-docs-table'

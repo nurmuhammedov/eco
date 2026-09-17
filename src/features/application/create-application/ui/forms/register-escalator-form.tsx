@@ -1,5 +1,5 @@
 import { CardForm, CreateEscalatorApplicationDTO } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { NoteForm } from '../note-form'
 import { useCreateEscalatorApplication } from '../../model/use-create-escalator-application'
 import { GoBack } from '@/shared/components/common'

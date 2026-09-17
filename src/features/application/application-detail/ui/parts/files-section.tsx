@@ -1,5 +1,5 @@
 import { ApplicationStatus } from '@/entities/application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import FileLink from '@/shared/components/common/file-link'
 import { FC } from 'react'
 import { getDate } from '@/shared/utils/date'

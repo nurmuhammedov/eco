@@ -1,7 +1,7 @@
 import { LoginDTO } from './auth.types'
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { apiClient } from '@/shared/api/api-client'
-import { UserRoles, UserState } from '@/entities/user'
+import { UserRoles, UserState } from '@/shared/types/user'
 import { ApiResponse } from '@/shared/types'
 
 const normalizeUser = (data: any): UserState => {

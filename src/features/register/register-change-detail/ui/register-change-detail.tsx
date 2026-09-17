@@ -10,7 +10,7 @@ import { ApplicationStatusRow } from '@/shared/components/common/application-sta
 import { GoBack } from '@/shared/components/common'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { ApplicationStatus } from '@/entities/application'
 import AssignExecutorModal from '@/features/register/register-change-detail/modals/assign-executor-modal'
 import ReturnChangeModal from '@/features/register/register-change-detail/modals/return-change-modal'

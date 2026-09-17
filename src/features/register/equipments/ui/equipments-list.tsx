@@ -8,7 +8,7 @@ import { AddPermitTransportModal } from '@/features/register/auto/ui/add-auto-mo
 import useData from '@/shared/hooks/api/use-data'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { AutoTabKey, tabs as autoTabs } from '@/features/register/auto/ui/auto-tabs'
 import { formatDate } from 'date-fns'

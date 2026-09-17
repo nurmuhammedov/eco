@@ -33,7 +33,7 @@ import { useHazardousFacilitySelectQuery } from '@/shared/api/dictionaries'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { ApplicationModal } from '@/features/application/create-application'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useOfficeSelectQuery } from '@/shared/api/dictionaries'
 
 export const CreateOtherInspectionModal = () => {

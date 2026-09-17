@@ -8,7 +8,7 @@ import { InspectionStatus, InspectionSubMenuStatus } from '@/entities/inspection
 import { Eye } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useDistrictSelectQuery } from '@/shared/api/dictionaries'
 import { format } from 'date-fns'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'

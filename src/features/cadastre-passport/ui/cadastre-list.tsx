@@ -8,7 +8,7 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
 import useDelete from '@/shared/hooks/api/use-delete'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { CadastrePassportRow } from '../model/types'
 import { isPreparer } from '../model/permissions'
 import { STATUS_OPTIONS, StatusBadge } from './components/status-badge'

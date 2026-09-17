@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { useMemo } from 'react'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useData, usePaginatedData } from '@/shared/hooks'
 import { Badge } from '@/shared/components/ui/badge'
 import clsx from 'clsx'

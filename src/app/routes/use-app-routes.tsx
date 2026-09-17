@@ -11,7 +11,7 @@ import {
   isAtGuestLanding,
 } from '@/shared/config/navigation'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { Direction, UserRoles } from '@/entities/user'
+import { Direction, UserRoles } from '@/shared/types/user'
 import { BootScreen } from '@/shared/components/common'
 import StartRedirect from '@/app/layouts/start-redirect'
 import { PWAInstallPrompt } from '@/shared/components/common/pwa-install-prompt/pwa-install-prompt'

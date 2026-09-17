@@ -2,7 +2,7 @@ import { DeclarationsTable } from '@/features/declarations/ui/declarations-table
 import { Button } from '@/shared/components/ui/button'
 import { AlertCircle, PlusCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { useCustomSearchParams, useData, usePaginatedData } from '@/shared/hooks'
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'

@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Direction, UserRoles } from '@/entities/user'
+import { Direction, UserRoles } from '@/shared/types/user'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslatedObject } from '@/shared/hooks'
 import { useOfficeSelectQuery } from '@/shared/api/dictionaries'

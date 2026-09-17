@@ -6,7 +6,7 @@ import { RiskAnalysisTab } from '@/entities/risk-analysis/models/risk-analysis-t
 import { Badge } from '@/shared/components/ui/badge'
 import { useData } from '@/shared/hooks/api'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types'
 import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-statistics-cards'

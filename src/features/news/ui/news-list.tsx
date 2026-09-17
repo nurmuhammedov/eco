@@ -6,7 +6,7 @@ import { Badge } from '@/shared/components/ui/badge'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { usePaginatedData, useDelete } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { getDate } from '@/shared/utils/date'
 

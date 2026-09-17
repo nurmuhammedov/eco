@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { ApplicationStatus } from '@/entities/application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import { useHazardousFacilityCategoryDictionarySelect } from '@/shared/api/dictionaries'
 import FilesSection from './files-section'

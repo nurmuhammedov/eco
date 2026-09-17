@@ -1,5 +1,5 @@
 import { CardForm, CreateLpgContainerApplicationDTO } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { NoteForm } from '../note-form'
 import { useCreateLpgContainerApplication } from '../../model/use-create-lpg-container-application'
 import { GoBack } from '@/shared/components/common'

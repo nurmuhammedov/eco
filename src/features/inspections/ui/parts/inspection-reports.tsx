@@ -7,7 +7,7 @@ import InspectionChecklistFormV2, { answerOptions } from '@/features/inspections
 import { InspectionStatus, InspectionSubMenuStatus } from '@/entities/inspection/models/inspection-status'
 import { useEffect, useState } from 'react'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { NoData } from '@/shared/components/common/no-data'
 import FileLink from '@/shared/components/common/file-link'
 import ReportExecutionModal from '@/features/inspections/ui/parts/report-execution-modal'

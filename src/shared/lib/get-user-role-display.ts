@@ -1,5 +1,5 @@
 import { TFunction } from 'i18next'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 export const getUserRoleDisplay = (
   role: UserRoles | string | null | undefined,

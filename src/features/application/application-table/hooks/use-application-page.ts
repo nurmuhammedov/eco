@@ -1,5 +1,5 @@
 import { ApplicationStatus, ApplicationStatusForInspector } from '@/entities/application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useCustomSearchParams, useData, useTranslatedObject } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { useMemo } from 'react'

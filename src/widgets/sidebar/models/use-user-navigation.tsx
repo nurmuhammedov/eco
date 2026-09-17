@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { LucideHome } from 'lucide-react'
-import { Direction, UserRoles } from '@/entities/user'
+import { Direction, UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { usePaginatedData } from '@/shared/hooks'
 import { NAVIGATIONS } from './navigations'

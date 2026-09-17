@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { InquiryStatus } from '@/features/inquiries/model/types'
 import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
 

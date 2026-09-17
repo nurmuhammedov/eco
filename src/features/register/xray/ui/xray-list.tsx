@@ -3,7 +3,7 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'

@@ -5,7 +5,7 @@ import NotifyInspectionModal from '@/features/inspections/ui/parts/notify-inspec
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import ObjectsList from '@/features/inspections/ui/parts/objects-list'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import useCustomSearchParams from '../../../shared/hooks/api/use-search-params'
 import InspectionsDetailInfo from '@/features/inspections/ui/parts/inpections-detail-info'
 import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail'

@@ -1,4 +1,4 @@
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { ExportExcelButton } from '@/shared/components/common'
 import { EquipmentsList } from '@/features/register/equipments/ui/equipments-list'
 import { HfList } from '@/features/register/hf/ui/hf-list'

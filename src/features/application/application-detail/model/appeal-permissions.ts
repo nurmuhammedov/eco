@@ -1,6 +1,6 @@
 import { ApplicationStatus } from '@/entities/application'
 import { ApplicationTypeEnum } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 export enum AppealDomain {
   HF_EQUIPMENT = 'HF_EQUIPMENT',

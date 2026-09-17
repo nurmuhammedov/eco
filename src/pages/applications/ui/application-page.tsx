@@ -1,5 +1,5 @@
 import { ApplicationStatus } from '@/entities/application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { ApplicationTable } from '@/features/application/application-table'
 import { useApplicationPage } from '@/features/application/application-table/hooks'
 import { Button } from '@/shared/components/ui/button'

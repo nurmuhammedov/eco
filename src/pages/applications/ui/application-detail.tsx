@@ -1,4 +1,4 @@
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { getAppealPermissions } from '@/features/application/application-detail/model/appeal-permissions'
 import { ApplicationDetail as ApplicationDetailFeature } from '@/features/application/application-detail'
 import { useApplicationDetail } from '@/features/application/application-detail/hooks/use-application-detail'

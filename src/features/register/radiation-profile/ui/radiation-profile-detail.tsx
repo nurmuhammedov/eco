@@ -9,7 +9,7 @@ import { useData } from '@/shared/hooks'
 import { IrsList } from '@/features/register/irs/ui/irs-list'
 import { XrayList } from '@/features/register/xray/ui/xray-list'
 import { useTranslation } from 'react-i18next'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 export const RadiationProfileDetail = () => {
   const { id } = useParams()

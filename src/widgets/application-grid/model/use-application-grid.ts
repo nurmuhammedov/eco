@@ -7,7 +7,7 @@ import {
 import { filterParsers, useFilters } from '@/shared/hooks/use-filters'
 import { useCallback, useMemo } from 'react'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 export function useApplicationGrid() {
   const { user } = useAuth()

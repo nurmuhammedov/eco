@@ -6,7 +6,7 @@ import { Loader } from '@/shared/components/common'
 import { useAuth } from '@/shared/hooks/use-auth'
 import useData from '../../../shared/hooks/api/use-data'
 import { AccreditationStatus } from '@/entities/declarations/model/declaration.types'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 export const EditDeclaration = () => {
   const { id } = useParams()

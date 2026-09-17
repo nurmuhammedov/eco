@@ -1,4 +1,4 @@
-import { Direction, UserRoles, UserState } from '@/entities/user'
+import { Direction, UserRoles, UserState } from '@/shared/types/user'
 
 interface Parties {
   preparerTin: number | null

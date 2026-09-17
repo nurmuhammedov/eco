@@ -1,5 +1,5 @@
 import { CardForm, CreateBoilerUtilizerApplicationDTO } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { NoteForm } from '../note-form'
 import { useCreateBoilerUtilizerApplication } from '../../model/use-create-boiler-utilizer-application'
 import { GoBack } from '@/shared/components/common'

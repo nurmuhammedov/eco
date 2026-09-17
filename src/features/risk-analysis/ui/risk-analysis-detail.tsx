@@ -13,7 +13,7 @@ import { DataTable, DataTableRowActions } from '@/shared/components/common/data-
 import { useCustomSearchParams, usePaginatedData, useData } from '@/shared/hooks'
 import { format, formatDate } from 'date-fns'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { IrsList } from '@/features/register/irs/ui/irs-list'
 import { XrayList } from '@/features/register/xray/ui/xray-list'
 import { useTranslation } from 'react-i18next'

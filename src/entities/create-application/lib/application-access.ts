@@ -1,4 +1,4 @@
-import { UserRoles } from '@/entities/user/model/types'
+import { UserRoles } from '@/shared/types/user'
 import { APPLICATIONS_DATA } from '../constants/constants'
 import { ApplicationCategory, ApplicationTypeEnum } from '../types/enums'
 

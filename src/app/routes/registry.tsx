@@ -1,5 +1,5 @@
 import { lazy, ReactNode } from 'react'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { withSuspense } from './utils'
 
 const AccidentDetail = lazy(() =>

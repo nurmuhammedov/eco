@@ -21,7 +21,7 @@ import {
   InquiryStatus,
 } from '@/features/inquiries/model/types'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import SetInspectorModal from '@/features/inquiries/ui/modals/set-inspector-modal'
 import ExecuteInitialModal from '@/features/inquiries/ui/modals/execute-initial-modal'
 import ExecuteCourtModal from '@/features/inquiries/ui/modals/execute-court-modal'

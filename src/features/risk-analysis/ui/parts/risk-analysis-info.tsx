@@ -1,7 +1,7 @@
 import { Tabs } from '@/shared/components/ui/tabs'
 import { FC, useEffect, useState } from 'react'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info'
 import { Badge } from '@/shared/components/ui/badge'
 import { RiskAnalysisData } from '../risk-analysis'

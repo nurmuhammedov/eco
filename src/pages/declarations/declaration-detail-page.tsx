@@ -3,7 +3,7 @@ import { DeclarationDetail } from '@/features/declarations/ui/declaration-detail
 import { DeclarationActions } from '@/features/declarations/ui/declaration-actions'
 import { GoBack } from '@/shared/components/common'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import useDetail from '@/shared/hooks/api/use-detail'
 
 const DeclarationDetailPage = () => {

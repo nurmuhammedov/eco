@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { ExecutionInspectorModal, preventionTypes } from '@/features/prevention/ui/parts/inspector-execution-modal'

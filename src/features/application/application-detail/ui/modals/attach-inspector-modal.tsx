@@ -23,7 +23,7 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { useState } from 'react'
 import { useAttachInspector } from '@/features/application/application-detail/hooks/mutations/use-attach-inspector'
 import { useParams } from 'react-router-dom'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 
 const schema = z.object({

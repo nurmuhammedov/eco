@@ -1,4 +1,4 @@
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import adminNavigation from './admin'
 import allNavigation from './all'
 import legalNavigation from './legal'

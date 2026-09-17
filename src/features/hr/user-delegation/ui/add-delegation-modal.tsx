@@ -13,7 +13,7 @@ import { Combobox } from '@/shared/components/ui/combobox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import useData from '@/shared/hooks/api/use-data'
 import { useEffect } from 'react'
-import { UserRoleLabels, UserRoles } from '@/entities/user'
+import { UserRoleLabels, UserRoles } from '@/shared/types/user'
 
 export const DelegationReasonLabels: Record<string, string> = {
   ANNUAL_LEAVE: 'Mehnat ta’tili',

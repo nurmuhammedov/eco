@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 
 const ERROR_MESSAGES = {

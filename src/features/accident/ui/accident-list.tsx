@@ -9,7 +9,7 @@ import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
 import { AccidentListItem } from '../model/types'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useCurrentRole } from '@/shared/hooks/use-current-role'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { TabsLayout } from '@/shared/layouts'
 import { useCustomSearchParams } from '@/shared/hooks'
 

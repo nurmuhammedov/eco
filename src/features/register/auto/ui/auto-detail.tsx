@@ -6,7 +6,7 @@ import { RefreshLegalInfoButton } from '@/features/application/application-detai
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { formatDate } from 'date-fns'
 import { tabs } from '@/features/register/auto/ui/auto-tabs'
 

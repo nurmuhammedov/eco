@@ -9,7 +9,7 @@ import {
   ApplicationCategory,
 } from '@/entities/create-application'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 export const ApplicationsGrid: React.FC = () => {
   const { activeTab, mainCards, selectedMainCard, handleMainCardSelect, handleChangeTab, displayedSubCards } =

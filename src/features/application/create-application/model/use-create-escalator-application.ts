@@ -1,6 +1,6 @@
 import { CreateEscalatorApplicationDTO, EscalatorAppealDtoSchema } from '@/entities/create-application'
 import { useParkSelectQuery } from '@/entities/admin/park'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import {
   useChildEquipmentTypes,
   useDistrictSelectQuery,

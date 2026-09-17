@@ -13,7 +13,7 @@ import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { parseISO } from 'date-fns'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 interface RegisterCraneFormProps {
   onSubmit: (data: CreateCraneApplicationDTO) => void

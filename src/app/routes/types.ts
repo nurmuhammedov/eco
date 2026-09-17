@@ -1,5 +1,5 @@
 import React, { ComponentType } from 'react'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 export interface RouteConfig {
   id?: string

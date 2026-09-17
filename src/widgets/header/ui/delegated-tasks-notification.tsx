@@ -1,7 +1,7 @@
 import { ArrowLeftRight, Inbox, Check } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles, UserRoleLabels } from '@/entities/user'
+import { UserRoles, UserRoleLabels } from '@/shared/types/user'
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
 import { API_ENDPOINTS } from '@/shared/api'

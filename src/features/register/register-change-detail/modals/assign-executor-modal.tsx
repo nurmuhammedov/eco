@@ -21,7 +21,7 @@ import { useState } from 'react'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { useAdd } from '@/shared/hooks/api'
 import { useQueryClient } from '@tanstack/react-query'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 const schema = z.object({
   executorId: z.string({ message: FORM_ERROR_MESSAGES.required }),

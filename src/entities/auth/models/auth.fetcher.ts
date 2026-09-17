@@ -1,6 +1,6 @@
 import { authAPI } from '@/entities/auth/models/auth.api'
 import { LoginDTO } from '@/entities/auth/models/auth.types'
-import { UserState } from '@/entities/user'
+import { UserState } from '@/shared/types/user'
 import { goToGuestLanding } from '@/shared/config/navigation'
 import { routeByRole } from '@/shared/lib/router/route-by-role'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'

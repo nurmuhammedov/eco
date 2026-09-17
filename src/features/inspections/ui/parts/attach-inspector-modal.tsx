@@ -29,7 +29,7 @@ import { Send } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { apiConfig } from '@/shared/api/constants'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 const schema = z.object({
   inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),

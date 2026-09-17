@@ -1,5 +1,5 @@
 import { CardForm, CreateHoistApplicationDTO } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { NoteForm } from '../note-form'
 import { useCreateHoistApplication } from '../../model/use-create-hoist-application'
 import { GoBack } from '@/shared/components/common'

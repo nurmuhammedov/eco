@@ -1,5 +1,5 @@
 import { CreateLpgPoweredApplicationDTO, LpgPoweredAppealDtoSchema } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import {
   useChildEquipmentTypes,
   useDistrictSelectQuery,

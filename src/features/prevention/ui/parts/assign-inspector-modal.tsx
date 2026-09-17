@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useAdd } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 
 const assignInspectorSchema = z.object({
