@@ -64,7 +64,7 @@ const RegisterIllegalBoilerUtilizerForm = ({ onSubmit, isPending = false }: Regi
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack
           title={
-            isUpdate ? 'Qozon utilizator maʼlumotlarini tahrirlash' : 'Qozon utilizatorlarini ro‘yxatga olish arizasi'
+            isUpdate ? 'Qozon utilizator ma’lumotlarini tahrirlash' : 'Qozon utilizatorlarini ro‘yxatga olish arizasi'
           }
         />
         <NoteForm equipmentName="qozon utilizatori" />
@@ -447,7 +447,7 @@ const RegisterIllegalBoilerUtilizerForm = ({ onSubmit, isPending = false }: Regi
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Qozonning birkasi bilan sur‘ati
+                      Qozonning birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -462,7 +462,7 @@ const RegisterIllegalBoilerUtilizerForm = ({ onSubmit, isPending = false }: Regi
             <DocumentField
               form={form}
               name="assignmentDecreePath"
-              label="Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq"
+              label="Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq"
               required={!isUpdate}
             />
           </div>
@@ -471,7 +471,7 @@ const RegisterIllegalBoilerUtilizerForm = ({ onSubmit, isPending = false }: Regi
             <DocumentField
               form={form}
               name="saleContractPath"
-              label="Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
+              label="Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
               required={!isUpdate}
             />
           </div>

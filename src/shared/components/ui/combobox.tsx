@@ -33,7 +33,7 @@ export function Combobox({
   onChange,
   placeholder = 'Tanlang...',
   searchPlaceholder = 'Qidirish...',
-  emptyText = 'Maʼlumot topilmadi!',
+  emptyText = 'Ma’lumot topilmadi!',
   className,
   disabled,
 }: ComboboxProps) {

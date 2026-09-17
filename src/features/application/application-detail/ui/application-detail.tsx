@@ -78,18 +78,18 @@ const ApplicationDetail = ({
           </DetailCardAccordion.Item>
         )}
 
-        <DetailCardAccordion.Item value="general" title="Ariza va ijro to‘g‘risida maʼlumot">
+        <DetailCardAccordion.Item value="general" title="Ariza va ijro to‘g‘risida ma’lumot">
           <div className="flex flex-col py-1">
             <DetailRow title="Ariza sanasi:" value={getDate(data?.createdAt)} />
             <DetailRow title="Ariza turi:" value={getApplicationTitle(data?.appealType)} />
             <ApplicationStatusRow status={data?.status} />
             <DetailRow title="Ijro muddati:" value={getDate(data?.deadline)} />
-            <DetailRow title="Ijrochi qo‘mita masʼul bo‘limi:" value={data?.departmentName || <EmptyValue />} />
+            <DetailRow title="Ijrochi qo‘mita mas’ul bo‘limi:" value={data?.departmentName || <EmptyValue />} />
             <DetailRow title="Ijrochi hududiy boshqarma nomi:" value={data?.officeName || <EmptyValue />} />
             <DetailRow title="Hududiy boshqarma boshlig‘i F.I.SH.:" value={data?.approverName || <EmptyValue />} />
             <DetailRow title="Hududiy boshqarma boshlig‘i rezolyutsiyasi:" value={data?.resolution || <EmptyValue />} />
-            <DetailRow title="Ijrochi ma‘sul F.I.SH.:" value={data?.executorName || <EmptyValue />} />
-            <DetailRow title="Ijrochi ma‘sul xulosasi:" value={data?.conclusion || <EmptyValue />} />
+            <DetailRow title="Ijrochi mas’ul F.I.SH.:" value={data?.executorName || <EmptyValue />} />
+            <DetailRow title="Ijrochi mas’ul xulosasi:" value={data?.conclusion || <EmptyValue />} />
           </div>
         </DetailCardAccordion.Item>
 

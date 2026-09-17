@@ -325,7 +325,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Attraksionning surʼati
+                      Attraksionning sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -427,8 +427,8 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Texnik shahodat sinovlari attraksiondan foydalanish qo‘llanmasi va mazkur Qoidalar talablariga
-                      muvofiq attraksionlarni soz holatda saqlash va xavfsiz foydalanish uchun masʼul bo‘lgan mutaxassis
-                      boshchiligida amalga oshiriladi. Masʼul mutaxassis buyrug‘i
+                      muvofiq attraksionlarni soz holatda saqlash va xavfsiz foydalanish uchun mas’ul bo‘lgan mutaxassis
+                      boshchiligida amalga oshiriladi. Mas’ul mutaxassis buyrug‘i
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -448,7 +448,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Mavsumiy foydalaniladigan attraksionlar to‘liq texnik shahodat sinovlaridan o‘tganligi to‘g‘risida
-                      maʼlumotlar
+                      ma’lumotlar
                     </FormLabel>
                     <FormControl>
                       <InputFile
@@ -566,7 +566,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Bog‘ xodimlarning mehnatni muhofaza qilish bo‘yicha bilimlarini sinovdan o‘tganligi to‘g‘risida
-                      maʼlumot
+                      ma’lumot
                     </FormLabel>
                     <FormControl>
                       <InputFile
@@ -660,7 +660,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className="mb-2">
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Attraksionni saqlashga qo’yish dalolatnomasi
+                      Attraksionni saqlashga qo‘yish dalolatnomasi
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -679,7 +679,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className="mb-2">
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Video kuzatuv moslamasi o’rnatilganligi surʼati
+                      Video kuzatuv moslamasi o‘rnatilganligi sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -698,7 +698,7 @@ const RegisterAttractionForm = ({ onSubmit }: RegisterAttractionFormProps) => {
                 <FormItem className="mb-2">
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Attraksionga QR kod axborot taxtachasiga o’rnatilganligi surʼati
+                      Attraksionga QR kod axborot taxtachasiga o‘rnatilganligi sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />

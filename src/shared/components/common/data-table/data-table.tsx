@@ -294,7 +294,7 @@ export function DataTable<TData, TValue>({
                 <TableCell colSpan={fullRowSpan} className="text-center">
                   <div className="flex h-80 w-full flex-col items-center justify-center gap-4">
                     <Icon name="no-data" size={160} />
-                    <p className="font-medium">Hech qanday maʼlumot topilmadi!</p>
+                    <p className="font-medium">Hech qanday ma’lumot topilmadi!</p>
                   </div>
                 </TableCell>
               </TableRow>

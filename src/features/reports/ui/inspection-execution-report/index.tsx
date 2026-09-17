@@ -55,7 +55,7 @@ const InspectionExecutionReport: React.FC = () => {
     if (!rawData) return []
     const isSummary = (name: string) => {
       const lower = name?.toLowerCase()
-      return lower === 'respublika' || lower === 'respublika bo‘yicha' || lower === "respublika bo'yicha"
+      return lower === 'respublika' || lower === 'respublika bo‘yicha' || lower === 'respublika bo‘yicha'
     }
 
     const regions = rawData.filter((r) => !isSummary(r.regionName))

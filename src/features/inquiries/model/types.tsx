@@ -43,10 +43,10 @@ export const appealTypeTranslations: Record<string, string> = {
 
 export enum InquiryStatus {
   NEW = 'NEW', // Yangi
-  IN_PROCESS = 'IN_PROCESS', // Ko'rib chiqilmoqda
+  IN_PROCESS = 'IN_PROCESS', // Ko‘rib chiqilmoqda
   UNDER_INSPECTION = 'UNDER_INSPECTION', // Tekshiruv jarayonida
   IN_COURT = 'IN_COURT', // Sud jarayonida
-  REWARD_PAYMENT = 'REWARD_PAYMENT', // Pul mukofotini to'lov qilishda
+  REWARD_PAYMENT = 'REWARD_PAYMENT', // Pul mukofotini to‘lov qilishda
   COMPLETED = 'COMPLETED', // Yakunlangan
   REJECTED = 'REJECTED', // Rad etilgan
 }
@@ -59,8 +59,8 @@ export enum InquiryAction {
 }
 
 export enum InquiryResult {
-  REWARD_PAID = 'REWARD_PAID', // Pul mukofoti to'landi
-  REWARD_NOT_PAID = 'REWARD_NOT_PAID', // Pul mukofoti to'lanmadi
+  REWARD_PAID = 'REWARD_PAID', // Pul mukofoti to‘landi
+  REWARD_NOT_PAID = 'REWARD_NOT_PAID', // Pul mukofoti to‘lanmadi
   REJECTED_BY_COURT = 'REJECTED_BY_COURT', // Sud tomonidan rad etildi
   REJECTED_BY_INSPECTOR = 'REJECTED_BY_INSPECTOR', // Inspector tomonidan rad etildi
   REDIRECTED = 'REDIRECTED', // Boshqa tashkilotga yuborildi

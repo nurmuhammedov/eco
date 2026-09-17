@@ -3,7 +3,7 @@ import { z } from 'zod'
 const ERROR_MESSAGES = {
   name_required: 'Cheklist nomi kiritilishi shart',
   path_required: 'Cheklist fayli yuklanishi shart',
-  path_invalid: 'Fayl formati faqat .pdf boʻlishi kerak',
+  path_invalid: 'Fayl formati faqat .pdf bo‘lishi kerak',
 }
 
 const pdfFileSchema = z

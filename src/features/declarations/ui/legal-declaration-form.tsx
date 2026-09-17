@@ -104,7 +104,7 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
     <div className="mt-4 space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Deklaratsiya maʼlumotlari</CardTitle>
+          <CardTitle>Deklaratsiya ma’lumotlari</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -158,7 +158,7 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
                         <SelectContent>
                           {conclusionOptions?.map((option: any) => (
                             <SelectItem key={option.id} value={option.id}>
-                              {option.registryNumber || 'Nomaʼlum xulosa'}
+                              {option.registryNumber || 'Noma’lum xulosa'}
                             </SelectItem>
                           ))}
                         </SelectContent>

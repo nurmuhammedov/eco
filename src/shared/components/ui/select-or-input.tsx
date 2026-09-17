@@ -80,7 +80,7 @@ export function SelectOrInput({
         <Command shouldFilter>
           <CommandInput value={query} onValueChange={setQuery} placeholder={searchPlaceholder} className="h-9" />
           <CommandList>
-            {!isNew && <CommandEmpty>Maʼlumot topilmadi!</CommandEmpty>}
+            {!isNew && <CommandEmpty>Ma’lumot topilmadi!</CommandEmpty>}
 
             {isNew && (
               <CommandGroup>

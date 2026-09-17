@@ -156,12 +156,12 @@ const EquipmentsDetail = () => {
           <DetailRow title="Holati:" value={renderStatus(currentStatus)} />
 
           <DetailRow
-            title="Roʻyxatga olish sanasi:"
+            title="Ro‘yxatga olish sanasi:"
             value={data?.registrationDate ? getDate(data?.registrationDate) : <EmptyValue />}
           />
 
           <DetailRow
-            title="Roʻyxatga olish raqami:"
+            title="Ro‘yxatga olish raqami:"
             value={data?.registryNumber ? data?.registryNumber : <EmptyValue />}
           />
 
@@ -207,7 +207,7 @@ const EquipmentsDetail = () => {
           />
         </DetailCardAccordion.Item>
 
-        <DetailCardAccordion.Item value="object_qr" title="Qurilma pasport ma‘lumotlari">
+        <DetailCardAccordion.Item value="object_qr" title="Qurilma pasport ma’lumotlari">
           <QRCodeCanvas
             id="pdf-qr-canvas"
             value={equipmentPublicUrl}

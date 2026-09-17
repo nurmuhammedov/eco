@@ -197,7 +197,7 @@ export const TerritorialStaffDrawer = () => {
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel required>Hududiy bo'lim</FormLabel>
+                      <FormLabel required>Hududiy bo‘lim</FormLabel>
                       <FormControl>
                         <Select
                           {...field}
@@ -209,7 +209,7 @@ export const TerritorialStaffDrawer = () => {
                           }}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Hududiy bo'limni tanlang" />
+                            <SelectValue placeholder="Hududiy bo‘limni tanlang" />
                           </SelectTrigger>
                           <SelectContent>{departmentOptions}</SelectContent>
                         </Select>

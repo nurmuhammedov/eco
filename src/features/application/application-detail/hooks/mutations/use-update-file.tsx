@@ -14,7 +14,7 @@ export function useUpdateApplicationFile() {
       await queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] })
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Faylni yangilashda nomaʼlum xatolik')
+      toast.error(error.message || 'Faylni yangilashda noma’lum xatolik')
     },
   })
 }

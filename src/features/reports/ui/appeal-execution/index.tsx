@@ -14,7 +14,7 @@ const AppealExecutionReport: React.FC = () => {
     return reportData.map((item: any) => ({
       ...item,
       isSummary:
-        item.regionName?.toLowerCase().includes("bo'yicha") || item.regionName?.toLowerCase().includes('bo‘yicha'),
+        item.regionName?.toLowerCase().includes('bo‘yicha') || item.regionName?.toLowerCase().includes('bo‘yicha'),
     }))
   }, [reportData])
 

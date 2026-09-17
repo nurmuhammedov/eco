@@ -81,7 +81,7 @@ const ReregisterIllegalHfForm = ({ onSubmit }: { onSubmit: (data: ReRegisterIlle
 
           {orgData && (
             <div className="mt-3 border-t pt-3">
-              <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
+              <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot ma’lumotlari</h3>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
                 <DetailRow title={'Tashkilot nomi:'} value={orgData?.name || orgData?.legalName || '-'} />
                 <DetailRow title="Tashkilot rahbari:" value={orgData?.directorName || orgData?.fullName || '-'} />
@@ -504,7 +504,7 @@ const ReregisterIllegalHfForm = ({ onSubmit }: { onSubmit: (data: ReRegisterIlle
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Maʼsul xodim tayinlanganligi buyrug‘i
+                      Mas’ul xodim tayinlanganligi buyrug‘i
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />

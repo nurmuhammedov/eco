@@ -64,7 +64,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'Qozon maʼlumotlarini tahrirlash' : 'Bug‘ qozonni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'Qozon ma’lumotlarini tahrirlash' : 'Bug‘ qozonni ro‘yxatga olish arizasi'} />
         <NoteForm equipmentName="qozon" />
 
         <CardForm className="my-2">
@@ -145,7 +145,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
           {ownerData && (
             <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
               <h3 className="mb-4 text-base font-semibold text-gray-800">
-                {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
+                {isLegal ? 'Tashkilot ma’lumotlari' : 'Fuqaro ma’lumotlari'}
               </h3>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
                 <DetailRow
@@ -485,7 +485,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Qozonning birkasi bilan sur‘ati
+                      Qozonning birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -500,7 +500,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
             <DocumentField
               form={form}
               name="assignmentDecreePath"
-              label="Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq"
+              label="Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq"
               required={!isUpdate}
             />
           </div>
@@ -582,7 +582,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
             <DocumentField
               form={form}
               name="partialCheckPath"
-              label="Qozonning ichki ko'rikdan o'tkazilganligi"
+              label="Qozonning ichki ko‘rikdan o‘tkazilganligi"
               required={!isUpdate}
             />
             <FormField

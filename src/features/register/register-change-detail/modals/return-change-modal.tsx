@@ -58,7 +58,7 @@ const ReturnChangeModal = ({ changeId }: Props) => {
       </DialogTrigger>
       <DialogContent size="lg">
         <DialogHeader>
-          <DialogTitle>O'zgartrishga so'rovni qaytarmoqchimisiz?</DialogTitle>
+          <DialogTitle>O‘zgartirishga so‘rovni qaytarmoqchimisiz?</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -72,7 +72,7 @@ const ReturnChangeModal = ({ changeId }: Props) => {
                     <Textarea
                       className="resize-none"
                       rows={7}
-                      placeholder="Qaytarish bo'yicha izohni kiriting"
+                      placeholder="Qaytarish bo‘yicha izohni kiriting"
                       {...field}
                     />
                   </FormControl>

@@ -17,7 +17,7 @@ const RegistryChangesReport: React.FC = () => {
       return {
         officeName: item.regionName,
         isSummary:
-          item.regionName?.toLowerCase().includes("bo'yicha") || item.regionName?.toLowerCase().includes('bo‘yicha'),
+          item.regionName?.toLowerCase().includes('bo‘yicha') || item.regionName?.toLowerCase().includes('bo‘yicha'),
         x: {
           total: hf.allCount || 0,
           entrepreneur: hf.legalCount || 0,
@@ -118,7 +118,7 @@ const RegistryChangesReport: React.FC = () => {
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <GoBack title="Reyestr maʼlumotlarini o‘zgartirish so‘rovlari bo‘yicha hisobot" />
+        <GoBack title="Reyestr ma’lumotlarini o‘zgartirish so‘rovlari bo‘yicha hisobot" />
       </div>
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">

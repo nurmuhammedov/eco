@@ -197,7 +197,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       id: 'registrationDate',
       header: () => (
         <div className="whitespace-nowrap">
-          Roʻyxatga olish <br /> sanasi
+          Ro‘yxatga olish <br /> sanasi
         </div>
       ),
       accessorFn: (row: any) => getDate(row.registrationDate),
@@ -208,7 +208,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     {
       header: () => (
         <div className="whitespace-nowrap">
-          Roʻyxatga olish <br /> raqami
+          Ro‘yxatga olish <br /> raqami
         </div>
       ),
       accessorKey: 'registryNumber',
@@ -280,7 +280,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       id: 'nextPartialCheckDate',
       header: () => (
         <div className="whitespace-nowrap">
-          Keyingi qisman <br /> texnik koʻrik <br /> sanasi
+          Keyingi qisman <br /> texnik ko‘rik <br /> sanasi
         </div>
       ),
       className: '!w-[1%]',
@@ -290,7 +290,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       accessorFn: (row: any) => (row.nextFullCheckDate ? getDate(row.nextFullCheckDate) : '-'),
       header: () => (
         <div className="whitespace-nowrap">
-          Keyingi to‘liq <br /> texnik koʻrik <br /> sanasi
+          Keyingi to‘liq <br /> texnik ko‘rik <br /> sanasi
         </div>
       ),
       className: '!w-[1%]',
@@ -315,7 +315,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
               if (type?.startsWith('UPDATE')) {
                 return (
                   <Badge variant="info" className="py-1">
-                    Maʼlumotlarni o‘zgartirish
+                    Ma’lumotlarni o‘zgartirish
                   </Badge>
                 )
               }

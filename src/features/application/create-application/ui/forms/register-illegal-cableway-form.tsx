@@ -63,7 +63,7 @@ const RegisterIllegalCablewayForm = ({ onSubmit, isPending = false }: RegisterIl
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack
-          title={isUpdate ? 'Osma yo‘l maʼlumotlarini tahrirlash' : 'Osma arqonli yuruvchi yo‘lni ro‘yxatga olish'}
+          title={isUpdate ? 'Osma yo‘l ma’lumotlarini tahrirlash' : 'Osma arqonli yuruvchi yo‘lni ro‘yxatga olish'}
         />
         <NoteForm equipmentName="osma yo‘l" />
 
@@ -400,7 +400,7 @@ const RegisterIllegalCablewayForm = ({ onSubmit, isPending = false }: RegisterIl
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Osma yo‘lning birkasi bilan sur‘ati
+                      Osma yo‘lning birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -415,7 +415,7 @@ const RegisterIllegalCablewayForm = ({ onSubmit, isPending = false }: RegisterIl
             <DocumentField
               form={form}
               name="assignmentDecreePath"
-              label="Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq"
+              label="Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq"
               required={!isUpdate}
             />
           </div>
@@ -428,7 +428,7 @@ const RegisterIllegalCablewayForm = ({ onSubmit, isPending = false }: RegisterIl
             <DocumentField
               form={form}
               name="saleContractPath"
-              label="Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
+              label="Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
               required={!isUpdate}
             />
           </div>
@@ -486,7 +486,7 @@ const RegisterIllegalCablewayForm = ({ onSubmit, isPending = false }: RegisterIl
             <DocumentField
               form={form}
               name="equipmentCertPath"
-              label="Osma yo‘lning muvofiqlik sertifikati (muqaddam foydalanishda bo'lgan osma arqonli yuruvchi yo'l uchun majburiy emas)"
+              label="Osma yo‘lning muvofiqlik sertifikati (muqaddam foydalanishda bo‘lgan osma arqonli yuruvchi yo‘l uchun majburiy emas)"
             />
           </div>
 

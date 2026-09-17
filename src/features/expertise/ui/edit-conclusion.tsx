@@ -99,7 +99,7 @@ export const UpdateConclusion = () => {
     return (
       <Card className="mt-4">
         <CardContent>
-          <p className="p-4 text-center">Maʼlumotlar topilmadi</p>
+          <p className="p-4 text-center">Ma’lumotlar topilmadi</p>
         </CardContent>
       </Card>
     )
@@ -109,7 +109,7 @@ export const UpdateConclusion = () => {
     <div className="mt-4 space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Ariza maʼlumotlari</CardTitle>
+          <CardTitle>Ariza ma’lumotlari</CardTitle>
         </CardHeader>
 
         <CardContent>

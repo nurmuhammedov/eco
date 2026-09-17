@@ -47,7 +47,7 @@ const RegisterXrayForm = ({ onSubmit }: RegisterXrayFormProps) => {
 
   const xrayOrgFiles = [
     { key: 'file5Path', label: 'Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat' },
-    { key: 'file7Path', label: 'Individual dozimetrlar va ularning karta ma‘lumotlari' },
+    { key: 'file7Path', label: 'Individual dozimetrlar va ularning karta ma’lumotlari' },
     { key: 'file9Path', label: 'Yerga ulash va ventilatsiya dalolatnomasi' },
   ]
 
@@ -373,7 +373,7 @@ const RegisterXrayForm = ({ onSubmit }: RegisterXrayFormProps) => {
           <Alert className="mb-4 border-amber-200 bg-amber-50 text-amber-800">
             <TriangleAlert className="h-4 w-4 text-amber-600" />
             <AlertDescription>
-              Tashkilotning ayrim hujjatlari mavjud emas. Reyestrlar bo‘limidan tashkilot maʼlumotlarini yangilash
+              Tashkilotning ayrim hujjatlari mavjud emas. Reyestrlar bo‘limidan tashkilot ma’lumotlarini yangilash
               imkoniyati mavjud. Arizani tashkilot hujjatlari to‘liq mavjud bo‘lganda yuborish mumkin!
             </AlertDescription>
           </Alert>
@@ -442,7 +442,7 @@ const RegisterXrayForm = ({ onSubmit }: RegisterXrayFormProps) => {
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                      <FormLabel required>Individual dozimetrlar va ularning karta ma‘lumotlari</FormLabel>
+                      <FormLabel required>Individual dozimetrlar va ularning karta ma’lumotlari</FormLabel>
                       <FormControl>
                         <InputFile
                           form={form}

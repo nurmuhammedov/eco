@@ -62,7 +62,7 @@ const PreventionStatsReport: React.FC = () => {
     const isSummaryItem = (r: any) =>
       r.regionId === null ||
       r.regionName?.toLowerCase() === 'respublika bo‘yicha' ||
-      r.regionName?.toLowerCase() === "o'zbekiston respublikasi" ||
+      r.regionName?.toLowerCase() === 'o‘zbekiston respublikasi' ||
       r.regionName?.toLowerCase().startsWith('respublika b')
 
     const regions = rawData.filter((r) => !isSummaryItem(r))

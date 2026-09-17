@@ -192,7 +192,7 @@ export default function CadastreAdd() {
           <form id="cadastre-add-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Tashkilot maʼlumotlari</CardTitle>
+                <CardTitle>Tashkilot ma’lumotlari</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">

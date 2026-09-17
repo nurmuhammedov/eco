@@ -21,10 +21,10 @@ export enum HFSphere {
   GAS = 'GAS', // Gaz
   BOILER = 'BOILER', // Qozon
   CHEMISTRY = 'CHEMISTRY', // Himiya
-  COAL = 'COAL', // Ko'mir
+  COAL = 'COAL', // Ko‘mir
   GEOLOGY = 'GEOLOGY', // Geologiya
   GRAIN = 'GRAIN', // Don
-  RAILWAY = 'RAILWAY', // Temir yo'l
+  RAILWAY = 'RAILWAY', // Temir yo‘l
   OKMK = 'OKMK', // OKMK
   NKMK = 'NKMK', // NKMK
   AGTSH = 'AGTSH', // AGTSH

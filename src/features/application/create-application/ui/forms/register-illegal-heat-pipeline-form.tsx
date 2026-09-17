@@ -64,7 +64,7 @@ const RegisterIllegalHeatPipelineForm = ({ onSubmit, isPending = false }: Regist
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack
           title={
-            isUpdate ? 'Issiqlik tarmog‘i maʼlumotlarini tahrirlash' : 'Issiqlik tarmog‘ini ro‘yxatga olish arizasi'
+            isUpdate ? 'Issiqlik tarmog‘i ma’lumotlarini tahrirlash' : 'Issiqlik tarmog‘ini ro‘yxatga olish arizasi'
           }
         />
         <NoteForm equipmentName="issiqlik tarmog‘i" />
@@ -400,7 +400,7 @@ const RegisterIllegalHeatPipelineForm = ({ onSubmit, isPending = false }: Regist
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Quvurning birkasi bilan sur‘ati
+                      Quvurning birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -415,7 +415,7 @@ const RegisterIllegalHeatPipelineForm = ({ onSubmit, isPending = false }: Regist
             <DocumentField
               form={form}
               name="saleContractPath"
-              label="Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
+              label="Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
               required={!isUpdate}
             />
           </div>
@@ -432,7 +432,7 @@ const RegisterIllegalHeatPipelineForm = ({ onSubmit, isPending = false }: Regist
             <DocumentField
               form={form}
               name="assignmentDecreePath"
-              label="Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq"
+              label="Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq"
               required={!isUpdate}
             />
           </div>

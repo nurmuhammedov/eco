@@ -97,7 +97,7 @@ const InquiryDetailPage = () => {
   }
 
   if (!data) {
-    return <div className="p-8 text-center text-slate-500">Maʼlumot topilmadi.</div>
+    return <div className="p-8 text-center text-slate-500">Ma’lumot topilmadi.</div>
   }
 
   const isCompletedEnabled =
@@ -147,7 +147,7 @@ const InquiryDetailPage = () => {
             'plastic_cards',
           ]}
         >
-          <DetailCardAccordion.Item value="general" title="Murojaat va ijro maʼlumotlari">
+          <DetailCardAccordion.Item value="general" title="Murojaat va ijro ma’lumotlari">
             <div className="flex flex-col py-1">
               <DetailRow title="Murojaat raqami:" value={data?.registryNumber || <EmptyValue />} />
               <DetailRow

@@ -64,7 +64,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack
-          title={isUpdate ? 'Maʼlumotlarni tahrirlash' : 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish arizasi'}
+          title={isUpdate ? 'Ma’lumotlarni tahrirlash' : 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish arizasi'}
         />
         <NoteForm equipmentName="neft mahsulotlari saqlovchi idish" />
 
@@ -146,7 +146,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
           {ownerData && (
             <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
               <h3 className="mb-4 text-base font-semibold text-gray-800">
-                {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
+                {isLegal ? 'Tashkilot ma’lumotlari' : 'Fuqaro ma’lumotlari'}
               </h3>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
                 <DetailRow
@@ -251,7 +251,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      // O'ZGARISH: Date obyektini stringga o'tkazamiz
+                      // O‘ZGARISH: Date obyektini stringga o‘tkazamiz
                       onChange={(date) => field.onChange(date ? date.toISOString() : undefined)}
                       placeholder="Sanani tanlang"
                     />
@@ -359,7 +359,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Idishning birkasi bilan sur‘ati
+                      Idishning birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -374,7 +374,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
             <DocumentField
               form={form}
               name="assignmentDecreePath"
-              label="Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq"
+              label="Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq"
               required={!isUpdate}
             />
           </div>

@@ -171,7 +171,7 @@ const RegistryNewObjectsReport: React.FC = () => {
       {/* The row wraps as a whole rather than inside the control group, so a
           long title never strands the export button on a line of its own. */}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <GoBack title="Davlat ro‘yxatidan o‘tkazilgan amaldagi XICHO, Qurilmalar, INM va Rentgenlar bo‘yicha maʼlumot" />
+        <GoBack title="Davlat ro‘yxatidan o‘tkazilgan amaldagi XICHO, Qurilmalar, INM va Rentgenlar bo‘yicha ma’lumot" />
         <div className="flex items-center gap-2 max-xl:w-full max-xl:flex-wrap">
           <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
           <ExportExcelButton

@@ -40,9 +40,9 @@ const DeregisterHfForm = ({ onSubmit }: DeRegisterHFFormProps) => {
               name="registryNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Roʻyxatga olish raqami</FormLabel>
+                  <FormLabel required>Ro‘yxatga olish raqami</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="XICHO roʻyxatga olish raqami" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="XICHO ro‘yxatga olish raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

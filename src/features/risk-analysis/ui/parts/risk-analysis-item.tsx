@@ -14,7 +14,7 @@ const statusMap: Record<string, string> = {
   REJECTED: 'Inspektor tomonidan rad etilgan',
   EXISTING: 'Reyestrda ushbu fayl mavjud',
   COMPLETED: 'Inspektor tomonidan qabul qilingan',
-  EXPIRED: "Faylning amal qilish muddati o'tgan",
+  EXPIRED: 'Faylning amal qilish muddati o‘tgan',
   NOT_EXISTING: 'Reyestrda ushbu fayl mavjud emas',
   NOT_EXPIRY_DATE: 'Faylning amal qilish muddati kiritilmagan',
 }

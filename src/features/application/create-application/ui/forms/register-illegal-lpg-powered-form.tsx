@@ -65,7 +65,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
         <GoBack
           title={
             isUpdate
-              ? 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma maʼlumotlarini tahrirlash'
+              ? 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma ma’lumotlarini tahrirlash'
               : 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmani ro‘yxatga olish arizasi'
           }
         />
@@ -196,7 +196,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required={!isUpdate}>Qisman texnik koʻrikdan o‘tkazilgan sana</FormLabel>
+                    <FormLabel required={!isUpdate}>Qisman texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -215,7 +215,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required={!isUpdate}>Toʻliq texnik koʻrikdan o‘tkazilgan sana</FormLabel>
+                    <FormLabel required={!isUpdate}>To‘liq texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -365,7 +365,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Qurilmaning birkasi bilan sur‘ati
+                      Qurilmaning birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -380,7 +380,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
             <DocumentField
               form={form}
               name="assignmentDecreePath"
-              label="Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq"
+              label="Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq"
               required={!isUpdate}
             />
           </div>
@@ -389,7 +389,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
             <DocumentField
               form={form}
               name="gasSupplyProjectPath"
-              label="Gaz ta‘minoti loyihasi"
+              label="Gaz ta’minoti loyihasi"
               required={!isUpdate}
             />
           </div>
@@ -398,7 +398,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
             <DocumentField
               form={form}
               name="saleContractPath"
-              label="Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
+              label="Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
               required={!isUpdate}
             />
           </div>

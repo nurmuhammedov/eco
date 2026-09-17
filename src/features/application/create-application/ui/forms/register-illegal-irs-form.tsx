@@ -79,7 +79,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit((d) => handleSubmit({ ...form.getValues(), ...d } as any))}>
-        <GoBack title={isUpdate ? 'INM maʼlumotlarini tahrirlash' : 'INMni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'INM ma’lumotlarini tahrirlash' : 'INMni ro‘yxatga olish arizasi'} />
         <NoteForm equipmentName="INM" onlyLatin={true} />
 
         <CardForm className="my-2">
@@ -159,7 +159,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
 
           {ownerData && (
             <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
-              <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
+              <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot ma’lumotlari</h3>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
                 <DetailRow title="Tashkilot nomi:" value={ownerData?.name || ownerData?.legalName || '-'} />
                 <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || ownerData?.fullName || '-'} />
@@ -205,9 +205,9 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
               name="supervisorName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Masʼul shaxsning F.I.Sh.</FormLabel>
+                  <FormLabel required>Mas’ul shaxsning F.I.Sh.</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Masʼul shaxsning F.I.Sh." {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Mas’ul shaxsning F.I.Sh." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -218,9 +218,9 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
               name="supervisorPosition"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Masʼul shaxsning lavozimi</FormLabel>
+                  <FormLabel required>Mas’ul shaxsning lavozimi</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Masʼul shaxsning lavozimi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Mas’ul shaxsning lavozimi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -232,7 +232,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>
-                    Masʼul shaxsning radiatsiya xavfsizligi bo‘yicha <br /> tayyorgarlik holati
+                    Mas’ul shaxsning radiatsiya xavfsizligi bo‘yicha <br /> tayyorgarlik holati
                   </FormLabel>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Guvohnoma, sertifikat va h.k." {...field} />
@@ -246,9 +246,9 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
               name="supervisorEducation"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Masʼul shaxsning ma‘lumoti</FormLabel>
+                  <FormLabel required>Mas’ul shaxsning ma’lumoti</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Masʼul shaxsning ma‘lumoti" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Mas’ul shaxsning ma’lumoti" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -259,7 +259,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
               name="supervisorPhoneNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Masʼul shaxsning telefon raqami</FormLabel>
+                  <FormLabel required>Mas’ul shaxsning telefon raqami</FormLabel>
                   <FormControl>
                     <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
                   </FormControl>
@@ -623,7 +623,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
           <Alert className="mb-4 border-amber-200 bg-amber-50 text-amber-800">
             <TriangleAlert className="h-4 w-4 text-amber-600" />
             <AlertDescription>
-              Tashkilotning ayrim hujjatlari to‘liq kiritilmagan. Reyestrlar bo‘limidan tashkilot ma‘lumotlarini
+              Tashkilotning ayrim hujjatlari to‘liq kiritilmagan. Reyestrlar bo‘limidan tashkilot ma’lumotlarini
               yangilash imkoniyati mavjud.{' '}
               {isUpdate
                 ? 'Tashkilot hujjatlari to‘liq mavjud bo‘lganda tahrirlash mumkin!'

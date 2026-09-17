@@ -131,7 +131,7 @@ export const UpdateOrganization: FC = () => {
 
     mutate(payload, {
       onSuccess: () => {
-        toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
+        toast.success('So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
         invalidateRegistryQueries(queryClient)
         navigate(-1)
       },
@@ -333,7 +333,7 @@ export const UpdateOrganization: FC = () => {
                       render={({ field }) => (
                         <FormItem className="mb-2">
                           <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                            <FormLabel>Individual dozimetrlar va ularning karta ma‘lumotlari</FormLabel>
+                            <FormLabel>Individual dozimetrlar va ularning karta ma’lumotlari</FormLabel>
                             <FormControl>
                               <InputFile
                                 form={form}

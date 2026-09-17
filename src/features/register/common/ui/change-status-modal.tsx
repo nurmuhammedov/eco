@@ -44,7 +44,7 @@ export const ChangeStatusModal = ({
 
   const { mutate, isPending } = useAdd<ChangeStatusFormValues & { targetStatus: string }, any, any>(
     endpoint,
-    'So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!'
+    'So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!'
   )
 
   const onSubmit = (values: ChangeStatusFormValues) => {

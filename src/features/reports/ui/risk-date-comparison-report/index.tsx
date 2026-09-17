@@ -105,7 +105,7 @@ const RiskDateComparisonReport: React.FC = () => {
       return {
         regionName: item.regionName,
         isSummary:
-          item.regionName?.toLowerCase().includes("bo'yicha") || item.regionName?.toLowerCase().includes('bo‘yicha'),
+          item.regionName?.toLowerCase().includes('bo‘yicha') || item.regionName?.toLowerCase().includes('bo‘yicha'),
         totalCapacity: item.analysisCount ?? 0,
         currentStatusValue: latest ? (latest.currentCount ?? 0) : 0,
         currentLow: latest ? (latest.lowCount ?? 0) : 0,
@@ -270,7 +270,7 @@ const RiskDateComparisonReport: React.FC = () => {
             <SelectContent>
               <SelectItem value="all">Barchasi</SelectItem>
               {regionOptions.map((name: string) => {
-                const isSummary = name.toLowerCase().includes("bo'yicha") || name.toLowerCase().includes('bo‘yicha')
+                const isSummary = name.toLowerCase().includes('bo‘yicha') || name.toLowerCase().includes('bo‘yicha')
                 return (
                   <SelectItem key={name} value={name}>
                     {isSummary ? 'Respublika bo‘yicha' : name}

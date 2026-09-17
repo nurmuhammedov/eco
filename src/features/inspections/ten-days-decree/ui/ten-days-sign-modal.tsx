@@ -53,7 +53,7 @@ export const TenDaysSignModal = ({ open, onOpenChange, data }: TenDaysSignModalP
             <FileText className="h-5 w-5 text-yellow-600" />
             Hujjatni imzolash
           </DialogTitle>
-          <DialogDescription>Imzolashdan oldin hujjat bilan to'liq tanishib chiqing.</DialogDescription>
+          <DialogDescription>Imzolashdan oldin hujjat bilan to‘liq tanishib chiqing.</DialogDescription>
         </DialogHeader>
 
         <div className="relative flex-1 overflow-hidden bg-gray-50">

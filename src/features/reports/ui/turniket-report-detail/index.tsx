@@ -132,7 +132,7 @@ const TurniketReportDetail: React.FC = () => {
   return (
     <div className="flex h-full flex-col gap-4 overflow-hidden">
       <div className="flex items-center justify-between">
-        <GoBack title="Xodimning ishga kelish maʼlumotlari" />
+        <GoBack title="Xodimning ishga kelish ma’lumotlari" />
       </div>
 
       <div className="flex flex-col gap-4 md:flex-row md:items-center">

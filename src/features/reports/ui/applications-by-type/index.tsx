@@ -77,7 +77,7 @@ const ApplicationsByTypeReport: React.FC = () => {
   }, [inspections, totals])
 
   const regionConfigs = [
-    { header: "Qoraqalpog'iston XB", key: 'karakalpakstan' },
+    { header: 'Qoraqalpog‘iston XB', key: 'karakalpakstan' },
     { header: 'Andijon XB', key: 'andijan' },
     { header: 'Buxoro XB', key: 'bukhara' },
     { header: 'Jizzax XB', key: 'jizzakh' },
@@ -89,7 +89,7 @@ const ApplicationsByTypeReport: React.FC = () => {
     { header: 'Surxondaryo XB', key: 'surkhandarya' },
     { header: 'Toshkent viloyati', key: 'tashkentRegion' },
     { header: 'Toshkent shahar (KSH)', key: 'tashkent' },
-    { header: "Farg'ona XB", key: 'fergana' },
+    { header: 'Farg‘ona XB', key: 'fergana' },
     { header: 'Xorazm XB', key: 'khorezm' },
   ]
 

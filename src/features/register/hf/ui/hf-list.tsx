@@ -94,14 +94,14 @@ export const HfList = ({ isArchive }: HfListProps) => {
 
   const columns: ExtendedColumnDef<any, any>[] = [
     {
-      header: 'Roʻyxatga olish sanasi',
+      header: 'Ro‘yxatga olish sanasi',
       accessorFn: (row) => getDate(row.registrationDate),
       maxSize: 90,
       filterKey: 'registrationDate',
       filterType: 'date-range',
     },
     {
-      header: 'Roʻyxatga olish raqami',
+      header: 'Ro‘yxatga olish raqami',
       accessorKey: 'registryNumber',
       filterKey: 'registryNumber',
       filterType: 'search',
@@ -160,7 +160,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
               if (type?.startsWith('UPDATE')) {
                 return (
                   <Badge variant="info" className="py-1">
-                    Maʼlumotlarni o‘zgartirish
+                    Ma’lumotlarni o‘zgartirish
                   </Badge>
                 )
               }

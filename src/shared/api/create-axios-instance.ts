@@ -45,7 +45,7 @@ export const createAxiosInstance = (baseURL: string) => {
         })
       } else if (status === 401 && requestUrl === '/api/v1/users/me') {
         if (!isQrPath && !isLoginPath) {
-          toast.error('Kirish maʼlumotlari topilmadi yoki noto‘g‘ri. Iltimos, tizimga qayta kiring.', {
+          toast.error('Kirish ma’lumotlari topilmadi yoki noto‘g‘ri. Iltimos, tizimga qayta kiring.', {
             richColors: true,
           })
         }

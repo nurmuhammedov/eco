@@ -21,7 +21,7 @@ export function UserLogsList() {
     {
       accessorKey: 'name',
       maxSize: -10,
-      header: "To'liq ism",
+      header: 'To‘liq ism',
     },
     {
       accessorKey: 'status',

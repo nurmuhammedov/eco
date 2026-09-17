@@ -119,7 +119,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
     return (
       <Card className="mt-4">
         <CardContent>
-          <p className="p-4 text-center">Maʼlumotlar topilmadi</p>
+          <p className="p-4 text-center">Ma’lumotlar topilmadi</p>
         </CardContent>
       </Card>
     )
@@ -128,15 +128,15 @@ export const AccidentNonInjuryEdit: React.FC = () => {
   return (
     <div className="container mx-auto space-y-4 pb-10">
       <div className="flex items-center justify-between">
-        <GoBack title="Avariya maʼlumotlarini tahrirlash" />
+        <GoBack title="Avariya ma’lumotlarini tahrirlash" />
       </div>
 
       <DetailCardAccordion defaultValue={['form_info']}>
-        <DetailCardAccordion.Item value="legal_info" title="Tashkilot to‘g‘risida maʼlumot">
+        <DetailCardAccordion.Item value="legal_info" title="Tashkilot to‘g‘risida ma’lumot">
           {accident.legalTin && <LegalApplicantInfo tinNumber={accident.legalTin} />}
         </DetailCardAccordion.Item>
 
-        <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida maʼlumot">
+        <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida ma’lumot">
           <AppealMainInfo data={hfoData} type="HF" address={hfoData?.address} />
         </DetailCardAccordion.Item>
 
@@ -182,7 +182,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                   name="economicLoss"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Avariyadan koʻrilgan iqtisodiy zarar (soʻm)</FormLabel>
+                      <FormLabel>Avariyadan ko‘rilgan iqtisodiy zarar (so‘m)</FormLabel>
                       <FormControl>
                         <Input {...field} type="number" value={field.value || ''} disabled={isFieldsDisabled} />
                       </FormControl>
@@ -196,7 +196,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                   name="stoppedFrom"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Obyektdan foydalanish toʻxtatilgan vaqt</FormLabel>
+                      <FormLabel>Obyektdan foydalanish to‘xtatilgan vaqt</FormLabel>
                       <DateTimePicker
                         value={field.value}
                         onChange={field.onChange}
@@ -233,7 +233,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Avariyaning yuz berishida aybdor boʻlgan xodimlar va ularga nisbatan qoʻllanilgan intizomiy jazo
+                        Avariyaning yuz berishida aybdor bo‘lgan xodimlar va ularga nisbatan qo‘llanilgan intizomiy jazo
                       </FormLabel>
                       <FormControl>
                         <Textarea {...field} rows={4} value={field.value || ''} disabled={isFieldsDisabled} />
@@ -251,7 +251,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Komissiya xulosasiga asosan yuz bergan avariya oqibatlarini bartaraf etish boʻyicha koʻrilgan
+                        Komissiya xulosasiga asosan yuz bergan avariya oqibatlarini bartaraf etish bo‘yicha ko‘rilgan
                         chora-tadbirlar
                       </FormLabel>
                       <FormControl>
@@ -266,7 +266,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                   name="executions"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Chora-tadbirlar rejasining bajarilishi toʻgʻrisida maʼlumotlar</FormLabel>
+                      <FormLabel>Chora-tadbirlar rejasining bajarilishi to‘g‘risida ma’lumotlar</FormLabel>
                       <FormControl>
                         <Textarea {...field} rows={5} value={field.value || ''} disabled={isFieldsDisabled} />
                       </FormControl>
@@ -325,7 +325,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
                       name="othersPath"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Avariyaga aloqador boshqa hujjatlar to'plami</FormLabel>
+                          <FormLabel>Avariyaga aloqador boshqa hujjatlar to‘plami</FormLabel>
                           <InputFile
                             form={form}
                             name={field.name}

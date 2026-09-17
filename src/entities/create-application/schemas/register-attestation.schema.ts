@@ -21,18 +21,18 @@ const employeeSchema = z.object({
 
 export const AttestationAppealFormSchema = z.object({
   hfId: z.string().min(1, { message: FORM_ERROR_MESSAGES.required }),
-  hfRegistryNumber: z.string().min(1, 'Roʻyxatga olish raqami kiritilishi majburiy'),
+  hfRegistryNumber: z.string().min(1, 'Ro‘yxatga olish raqami kiritilishi majburiy'),
   upperOrganizationName: z.string().transform((val) => (val ? val : '')),
   legalName: z.string().transform((val) => (val ? val : '')),
   legalTin: z.string().length(9, FORM_ERROR_MESSAGES.required),
-  hfName: z.string().min(1, 'XICHO nomi kiritilishi majburiy').max(250, 'Kiritilgan maʼlumot yaroqli emas'),
+  hfName: z.string().min(1, 'XICHO nomi kiritilishi majburiy').max(250, 'Kiritilgan ma’lumot yaroqli emas'),
   address: z.string().min(1, 'XICHO manzili kiritilishi majburiy'),
   regionId: z.string().min(1, 'Viloyat tanlanishi majburiy'),
   districtId: z.string().min(1, 'Tuman tanlanishi majburiy'),
   direction: z.enum(['COMMITTEE', 'REGIONAL']),
   dateOfAttestation: z
     .date({
-      invalid_type_error: "Iltimos, to'g'ri sana va vaqt kiriting",
+      invalid_type_error: 'Iltimos, to‘g‘ri sana va vaqt kiriting',
     })
     .optional()
     .nullable()
@@ -40,7 +40,7 @@ export const AttestationAppealFormSchema = z.object({
       if (data?.direction === 'REGIONAL' && !data.dateOfAttestation) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Iltimos, to'g'ri sana va vaqt kiriting",
+          message: 'Iltimos, to‘g‘ri sana va vaqt kiriting',
           path: ['dateOfAttestation'],
         })
       }

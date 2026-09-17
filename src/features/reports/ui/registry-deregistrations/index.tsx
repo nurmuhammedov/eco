@@ -78,7 +78,7 @@ const RegistryDeregistrationsReport: React.FC = () => {
         officeName: item.regionName,
         regionId: item.regionId,
         isSummary:
-          item.regionName?.toLowerCase().includes("bo'yicha") || item.regionName?.toLowerCase().includes('bo‘yicha'),
+          item.regionName?.toLowerCase().includes('bo‘yicha') || item.regionName?.toLowerCase().includes('bo‘yicha'),
         x: {
           total: hf.allCount || 0,
           not_completed: hf.newCount || 0,

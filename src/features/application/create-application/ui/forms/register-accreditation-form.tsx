@@ -45,7 +45,7 @@ const ATTACHMENTS: { name: keyof RegisterAccreditationDTO; label: string }[] = [
   },
   {
     name: 'receiptPath',
-    label: 'Davlat xizmatini koʻrsatish uchun yigʻim toʻlangani (toʻlov kvitansiyasi)',
+    label: 'Davlat xizmatini ko‘rsatish uchun yig‘im to‘langani (to‘lov kvitansiyasi)',
   },
 ]
 

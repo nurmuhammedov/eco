@@ -39,7 +39,7 @@ export const NewsDetail: FC = () => {
           <FileText className="h-10 w-10 text-gray-400" />
         </div>
         <h3 className="text-xl font-semibold text-gray-900">Xabarnoma topilmadi</h3>
-        <p className="mt-2 text-gray-500">Qidirayotgan xabarnomangiz o'chirilgan yoki mavjud emas.</p>
+        <p className="mt-2 text-gray-500">Qidirayotgan xabarnomangiz o‘chirilgan yoki mavjud emas.</p>
         <Button variant="outline" className="mt-6" onClick={() => window.history.back()}>
           Orqaga qaytish
         </Button>

@@ -71,7 +71,7 @@ const PreventionTable: FC<Props> = ({ regions }) => {
           {
             header: () => (
               <div className="whitespace-nowrap">
-                Roʻyxatga olish <br /> raqami
+                Ro‘yxatga olish <br /> raqami
               </div>
             ),
             accessorKey: 'registryNumber',

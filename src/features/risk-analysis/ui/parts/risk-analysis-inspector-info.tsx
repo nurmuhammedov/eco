@@ -9,7 +9,7 @@ interface Props {
 
 const RiskAnalysisInspectorInfo: FC<Props> = ({ data }) => {
   if (!data) {
-    return <div className={'px-5 py-5'}>Maʼlumot mavjud emas!</div>
+    return <div className={'px-5 py-5'}>Ma’lumot mavjud emas!</div>
   }
 
   return (

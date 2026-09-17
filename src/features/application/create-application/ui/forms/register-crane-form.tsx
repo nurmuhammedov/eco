@@ -27,7 +27,7 @@ const RegisterCraneForm = ({ onSubmit }: RegisterCraneFormProps) => {
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(onSubmit)}>
-        <GoBack title="Kranni roʻyxatga olish" />
+        <GoBack title="Kranni ro‘yxatga olish" />
         <NoteForm equipmentName="kran" />
         <CardForm className="mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 grid grid-cols-1 gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
@@ -141,9 +141,9 @@ const RegisterCraneForm = ({ onSubmit }: RegisterCraneFormProps) => {
               name="liftingCapacity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Yuk koʻtara olish quvvati (tonna)</FormLabel>
+                  <FormLabel required>Yuk ko‘tara olish quvvati (tonna)</FormLabel>
                   <FormControl>
-                    <Input type="text" className="3xl:w-sm w-full" placeholder="Yuk koʻtara olish quvvati" {...field} />
+                    <Input type="text" className="3xl:w-sm w-full" placeholder="Yuk ko‘tara olish quvvati" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -175,7 +175,7 @@ const RegisterCraneForm = ({ onSubmit }: RegisterCraneFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Qisman texnik koʻrikdan o‘tkazilgan sana</FormLabel>
+                    <FormLabel required>Qisman texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -203,7 +203,7 @@ const RegisterCraneForm = ({ onSubmit }: RegisterCraneFormProps) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Toʻliq texnik koʻrikdan o‘tkazilgan sana</FormLabel>
+                    <FormLabel required>To‘liq texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -349,7 +349,7 @@ const RegisterCraneForm = ({ onSubmit }: RegisterCraneFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Kranning birkasi bilan surʼati
+                      Kranning birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -368,7 +368,7 @@ const RegisterCraneForm = ({ onSubmit }: RegisterCraneFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Masʼul shaxs tayinlanganligi to‘g‘risida buyruq
+                      Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />

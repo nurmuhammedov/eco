@@ -34,7 +34,7 @@ const APPROVE_STATUSES: Record<string, { label: string; pill: string; dot: strin
 }
 
 export const documentTypes = new Map([
-  ['REPORT', 'Maʼlumotnoma'],
+  ['REPORT', 'Ma’lumotnoma'],
   ['ACT', 'Dalolatnoma'],
   ['DECREE', 'Qaror'],
   ['APPEAL', 'Ariza'],

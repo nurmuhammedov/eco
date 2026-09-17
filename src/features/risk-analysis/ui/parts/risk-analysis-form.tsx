@@ -8,7 +8,7 @@ interface Props {
 
 const RiskAnalysisForm: FC<Props> = ({ data }) => {
   if (!data || Object.keys(data).length === 0) {
-    return <div>Tahlil ko'rsatkichlari mavjud emas.</div>
+    return <div>Tahlil ko‘rsatkichlari mavjud emas.</div>
   }
 
   const indicatorsArray = Object.entries(data)

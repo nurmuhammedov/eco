@@ -99,13 +99,13 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
   const columns: ExtendedColumnDef<any, any>[] = [
     {
       id: 'registrationDate',
-      header: 'Roʻyxatga olish sanasi',
+      header: 'Ro‘yxatga olish sanasi',
       accessorFn: (row) => getDate(row.registrationDate),
       filterKey: 'registrationDate',
       filterType: 'date-range',
     },
     {
-      header: 'Roʻyxatga olish raqami',
+      header: 'Ro‘yxatga olish raqami',
       accessorKey: 'registryNumber',
       filterKey: 'registryNumber',
       filterType: 'search',
@@ -149,7 +149,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
               if (type?.startsWith('UPDATE')) {
                 return (
                   <Badge variant="warning" className="py-1">
-                    Maʼlumotlarni o‘zgartirish
+                    Ma’lumotlarni o‘zgartirish
                   </Badge>
                 )
               }

@@ -82,7 +82,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
 
     // Prepare base rows
     const filteredRegions = regionOptions.filter(
-      (r: any) => r.name !== 'Respublika' && r.name !== 'Respublika bo‘yicha' && r.name !== "Respublika bo'yicha"
+      (r: any) => r.name !== 'Respublika' && r.name !== 'Respublika bo‘yicha' && r.name !== 'Respublika bo‘yicha'
     )
 
     const rows = showSummary
@@ -102,7 +102,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
           (r: any) =>
             r.regionName === 'Respublika' ||
             r.regionName === 'Respublika bo‘yicha' ||
-            r.regionName === "Respublika bo'yicha"
+            r.regionName === 'Respublika bo‘yicha'
         )
       } else {
         regionData = reportData.find((r: any) => r.regionName === regionRow.name)
@@ -165,7 +165,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
         isSummary:
           region.regionName === 'Respublika' ||
           region.regionName === 'Respublika bo‘yicha' ||
-          region.regionName === "Respublika bo'yicha",
+          region.regionName === 'Respublika bo‘yicha',
         allEquipmentsTotalAll: 0,
         allEquipmentsTotalValid: 0,
         allEquipmentsTotalInactive: 0,

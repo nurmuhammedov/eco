@@ -83,7 +83,7 @@ const REPORTS_GROUPS: ReportGroup[] = [
       },
       {
         id: 'rep-8',
-        title: 'Reyestr maʼlumotlarini o‘zgartirish so‘rovlari bo‘yicha hisobot',
+        title: 'Reyestr ma’lumotlarini o‘zgartirish so‘rovlari bo‘yicha hisobot',
         icon: Zap,
         url: '/reports/changes',
         reportType: 'MONTHLY',

@@ -106,7 +106,7 @@ export const AccidentAdd: React.FC = () => {
         <>
           <Card>
             <CardHeader>
-              <CardTitle>Tashkilot maʼlumotlari</CardTitle>
+              <CardTitle>Tashkilot ma’lumotlari</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">

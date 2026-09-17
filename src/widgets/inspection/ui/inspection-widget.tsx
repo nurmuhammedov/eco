@@ -334,13 +334,13 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
             <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
               <TabsList>
                 <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
-                  Tekshiruv o'tkazilmagan
+                  Tekshiruv o‘tkazilmagan
                   <Badge variant="destructive" className="ml-2">
                     {countObject.assignedCount || 0}
                   </Badge>
                 </TabsTrigger>
                 <TabsTrigger value={InspectionSubMenuStatus.CONDUCTED}>
-                  Tekshiruv o'tkazilgan
+                  Tekshiruv o‘tkazilgan
                   <Badge variant="destructive" className="ml-2">
                     {countObject.conductedCount || 0}
                   </Badge>
@@ -387,7 +387,7 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
                   </Badge>
                 </TabsTrigger>
                 {isChairmanOrHead && (
-                  <TabsTrigger value={InspectionStatus.TEN_DAYS}>Imzolash kerak bo'lgan hujjatlar</TabsTrigger>
+                  <TabsTrigger value={InspectionStatus.TEN_DAYS}>Imzolash kerak bo‘lgan hujjatlar</TabsTrigger>
                 )}
               </TabsList>
             </div>
@@ -437,13 +437,13 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
                   <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
                     <TabsList>
                       <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
-                        Tekshiruv o'tkazilmagan
+                        Tekshiruv o‘tkazilmagan
                         <Badge variant="destructive" className="ml-2">
                           {countObject.assignedCount || 0}
                         </Badge>
                       </TabsTrigger>
                       <TabsTrigger value={InspectionSubMenuStatus.CONDUCTED}>
-                        Tekshiruv o'tkazilgan
+                        Tekshiruv o‘tkazilgan
                         <Badge variant="destructive" className="ml-2">
                           {countObject.conductedCount || 0}
                         </Badge>

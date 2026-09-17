@@ -26,13 +26,13 @@ export default function AutoDetail() {
       <div className="mt-4">
         <DetailCardAccordion defaultValue={['main', 'auto']}>
           {currentTin?.toString()?.length == 14 ? (
-            <DetailCardAccordion.Item value="org_info" title="Fuqaro to‘g‘risida maʼlumot">
+            <DetailCardAccordion.Item value="org_info" title="Fuqaro to‘g‘risida ma’lumot">
               <DetailRow title="Fuqaro JSHSHIR:" value={currentTin || '-'} />
             </DetailCardAccordion.Item>
           ) : (
             <DetailCardAccordion.Item
               value="org_info"
-              title="Tashkilot to‘g‘risida maʼlumot"
+              title="Tashkilot to‘g‘risida ma’lumot"
               action={
                 user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL ? (
                   <RefreshLegalInfoButton tinNumber={currentTin} />

@@ -55,7 +55,7 @@ const tankerItemSchema = z.object({
 })
 
 const tankerFormSchema = z.object({
-  tankers: z.array(tankerItemSchema).min(1, 'Kamida bitta transport maʼlumotlari kiritilishi shart!'),
+  tankers: z.array(tankerItemSchema).min(1, 'Kamida bitta transport ma’lumotlari kiritilishi shart!'),
 })
 
 type SearchFormValues = z.infer<typeof searchSchema>
@@ -259,7 +259,7 @@ export const AddPermitTransportModal = ({
                         size="icon"
                         className="absolute top-2 right-2 h-8 w-8"
                         onClick={() => remove(index)}
-                        title="O'chirish"
+                        title="O‘chirish"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

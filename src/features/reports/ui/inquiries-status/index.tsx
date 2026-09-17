@@ -54,7 +54,7 @@ const InquiriesStatusReport: React.FC = () => {
 
       // Filter out 'Respublika' from region items since we will add a summary row manually
       const filteredRegions = regionOptions.filter(
-        (r: any) => r.name !== 'Respublika' && r.name !== 'Respublika bo‘yicha' && r.name !== "Respublika bo'yicha"
+        (r: any) => r.name !== 'Respublika' && r.name !== 'Respublika bo‘yicha' && r.name !== 'Respublika bo‘yicha'
       )
 
       // The rows we want: 1 summary + all regions

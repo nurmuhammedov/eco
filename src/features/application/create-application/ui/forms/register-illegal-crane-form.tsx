@@ -61,7 +61,7 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'Kran maʼlumotlarini tahrirlash' : 'Kranni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'Kran ma’lumotlarini tahrirlash' : 'Kranni ro‘yxatga olish arizasi'} />
         <NoteForm equipmentName="kran" />
 
         <ApplicantSearchCard
@@ -204,9 +204,9 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
               name="liftingCapacity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Yuk koʻtara olish quvvati (tonna)</FormLabel>
+                  <FormLabel required>Yuk ko‘tara olish quvvati (tonna)</FormLabel>
                   <FormControl>
-                    <Input type="text" className="3xl:w-sm w-full" placeholder="Yuk koʻtara olish quvvati" {...field} />
+                    <Input type="text" className="3xl:w-sm w-full" placeholder="Yuk ko‘tara olish quvvati" {...field} />
                   </FormControl>
                   {isUpdate &&
                     detail?.parameters?.liftingCapacity &&
@@ -245,7 +245,7 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required={!isUpdate}>Qisman texnik koʻrikdan o‘tkazilgan sana</FormLabel>
+                    <FormLabel required={!isUpdate}>Qisman texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -273,7 +273,7 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                 return (
                   <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required={!isUpdate}>Toʻliq texnik koʻrikdan o‘tkazilgan sana</FormLabel>
+                    <FormLabel required={!isUpdate}>To‘liq texnik ko‘rikdan o‘tkazilgan sana</FormLabel>
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
@@ -399,7 +399,7 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Kranning birkasi bilan surʼati
+                      Kranning birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -474,7 +474,7 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
             <DocumentField
               form={form}
               name="assignmentDecreePath"
-              label="Masʼul shaxs tayinlanganligi to‘g‘risida buyruq"
+              label="Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq"
               required={!isUpdate}
             />
           </div>

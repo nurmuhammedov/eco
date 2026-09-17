@@ -92,7 +92,7 @@ export const ApplicationTable = () => {
       },
       {
         accessorKey: 'executorName',
-        header: 'Maʼsul ijrochi',
+        header: 'Mas’ul ijrochi',
         filterKey: 'executorId',
         filterType: 'select',
         filterOptions: executorOptions || [],

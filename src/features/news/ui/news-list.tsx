@@ -22,7 +22,7 @@ export const NewsList: FC = () => {
     page: 1,
   })
 
-  const { mutate: deleteNews } = useDelete('/announcements/', null, 'Muvaffaqiyatli oʻchirildi')
+  const { mutate: deleteNews } = useDelete('/announcements/', null, 'Muvaffaqiyatli o‘chirildi')
 
   const handleDelete = (id: number) => {
     deleteNews(id, {
@@ -75,7 +75,7 @@ export const NewsList: FC = () => {
         {isAdmin && (
           <Button onClick={() => navigate('/news/create')}>
             <Plus className="mr-2 h-4 w-4" />
-            Xabarnoma qoʻshish
+            Xabarnoma qo‘shish
           </Button>
         )}
       </div>

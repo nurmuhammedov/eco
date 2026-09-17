@@ -61,7 +61,7 @@ export const createApiClient = (instance: AxiosInstance) => {
         message:
           axiosError.response?.data?.message ||
           axiosError.message ||
-          'Serverda nomaʼlum xatolik yuz berdi. Xatolik haqida xabar bering!',
+          'Serverda noma’lum xatolik yuz berdi. Xatolik haqida xabar bering!',
       }
     }
   }

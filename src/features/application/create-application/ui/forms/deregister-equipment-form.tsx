@@ -21,7 +21,7 @@ const fileFields = [
   },
   {
     name: 'orderSuspensionPath',
-    label: 'Tashkilot faoliyati toʻxtatilganligi toʻgʻrisida buyruq',
+    label: 'Tashkilot faoliyati to‘xtatilganligi to‘g‘risida buyruq',
   },
   {
     name: 'laboratoryReportPath',
@@ -85,9 +85,9 @@ const DeregisterEquipmentForm = ({ onSubmit }: DeRegisterEquipmentFormProps) => 
               name="registryNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Qurilmaning roʻyxatga olish raqami</FormLabel>
+                  <FormLabel required>Qurilmaning ro‘yxatga olish raqami</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Qurilmaning roʻyxatga olish raqami" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Qurilmaning ro‘yxatga olish raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -98,7 +98,7 @@ const DeregisterEquipmentForm = ({ onSubmit }: DeRegisterEquipmentFormProps) => 
               name="description"
               render={({ field }) => (
                 <FormItem className="col-span-full w-full xl:col-span-3">
-                  <FormLabel>Qurilmani roʻyxatdan chiqarish sababi</FormLabel>
+                  <FormLabel>Qurilmani ro‘yxatdan chiqarish sababi</FormLabel>
                   <FormControl>
                     <Textarea
                       className="w-full resize-none"

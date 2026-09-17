@@ -75,7 +75,7 @@ export const AccidentNonInjuryAdd: React.FC = () => {
 
   return (
     <div className="container mx-auto space-y-4 p-4">
-      <GoBack title="Yangi avariya qo'shish" />
+      <GoBack title="Yangi avariya qo‘shish" />
 
       <Card>
         <CardHeader>
@@ -92,7 +92,7 @@ export const AccidentNonInjuryAdd: React.FC = () => {
             />
             {hasLegalInfo ? (
               <Button variant="destructive" onClick={handleClearSearch} className="w-40">
-                O'chirish
+                O‘chirish
               </Button>
             ) : (
               <Button
@@ -112,7 +112,7 @@ export const AccidentNonInjuryAdd: React.FC = () => {
         <>
           <Card>
             <CardHeader>
-              <CardTitle>Tashkilot maʼlumotlari</CardTitle>
+              <CardTitle>Tashkilot ma’lumotlari</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">

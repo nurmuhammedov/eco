@@ -63,7 +63,7 @@ const RegisterIllegalHoistForm = ({ onSubmit, isPending = false }: RegisterIlleg
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack
-          title={isUpdate ? 'Yuk ko‘targich maʼlumotlarini tahrirlash' : 'Yuk ko‘targichni ro‘yxatga olish arizasi'}
+          title={isUpdate ? 'Yuk ko‘targich ma’lumotlarini tahrirlash' : 'Yuk ko‘targichni ro‘yxatga olish arizasi'}
         />
         <NoteForm equipmentName="yuk ko‘targich" />
 
@@ -367,7 +367,7 @@ const RegisterIllegalHoistForm = ({ onSubmit, isPending = false }: RegisterIlleg
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Yuk ko‘targichning birkasi bilan sur‘ati
+                      Yuk ko‘targichning birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -382,7 +382,7 @@ const RegisterIllegalHoistForm = ({ onSubmit, isPending = false }: RegisterIlleg
             <DocumentField
               form={form}
               name="assignmentDecreePath"
-              label="Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq"
+              label="Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq"
               required={!isUpdate}
             />
           </div>
@@ -391,7 +391,7 @@ const RegisterIllegalHoistForm = ({ onSubmit, isPending = false }: RegisterIlleg
             <DocumentField
               form={form}
               name="saleContractPath"
-              label="Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
+              label="Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
               required={!isUpdate}
             />
           </div>

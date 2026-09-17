@@ -258,7 +258,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
     const dtoList = buildDtoListFromValues(values)
 
     if (dtoList.length === 0) {
-      toast.error('Hech qanday maʼlumot kiritilmadi.', { richColors: true })
+      toast.error('Hech qanday ma’lumot kiritilmadi.', { richColors: true })
       return
     }
 
@@ -359,7 +359,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
                       <span>Diqqat, qo‘shimcha fayl yuklanmagan!</span>
                     </h4>
                     <p className="mb-3 text-sm leading-relaxed text-amber-800">
-                      Qo‘shimcha faylni yuklamasdan tekshiruv ijrosini taʼminlab bo‘lmaydi!
+                      Qo‘shimcha faylni yuklamasdan tekshiruv ijrosini ta’minlab bo‘lmaydi!
                     </p>
                     <AddAdditionalFileModal
                       resultId={resultId}

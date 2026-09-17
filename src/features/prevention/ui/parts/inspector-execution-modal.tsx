@@ -108,7 +108,7 @@ export const ExecutionInspectorModal: React.FC = () => {
       </DialogTrigger>
       <DialogContent className="overflow-x-hidden">
         <DialogHeader>
-          <DialogTitle>Profilaktika ijrosini taʼminlash</DialogTitle>
+          <DialogTitle>Profilaktika ijrosini ta’minlash</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>

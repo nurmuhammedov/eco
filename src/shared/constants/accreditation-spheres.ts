@@ -192,25 +192,25 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_1,
     code: '1',
-    name: 'Xavfli ishlab chiqarish obyektlarini qurish, kengaytirish, qayta qurish, texnik jihatdan qayta jihozlash, konservatsiyalash va tugatishga doir loyiha hujjatlarini sanoat xavfsizligi ekspertizasidan oʻtkazish. Xavfli ishlab chiqarish obyektlarini identifikatsiya qilish.',
+    name: 'Xavfli ishlab chiqarish obyektlarini qurish, kengaytirish, qayta qurish, texnik jihatdan qayta jihozlash, konservatsiyalash va tugatishga doir loyiha hujjatlarini sanoat xavfsizligi ekspertizasidan o‘tkazish. Xavfli ishlab chiqarish obyektlarini identifikatsiya qilish.',
   },
-  { id: AccreditationSphere.SPHERE_1_1, code: '1.1', name: 'Koʻmir, kon, ruda va noruda sanoati obyektlari:' },
+  { id: AccreditationSphere.SPHERE_1_1, code: '1.1', name: 'Ko‘mir, kon, ruda va noruda sanoati obyektlari:' },
   { id: AccreditationSphere.SPHERE_1_1_1, code: '1.1.1', name: 'Shaxta' },
   {
     id: AccreditationSphere.SPHERE_1_1_2,
     code: '1.1.2',
-    name: 'Koʻmir va ruda konlari (yerosti va yerusti) obyektlari',
+    name: 'Ko‘mir va ruda konlari (yerosti va yerusti) obyektlari',
   },
   {
     id: AccreditationSphere.SPHERE_1_1_3,
     code: '1.1.3',
     name: 'Boyituvchi, briketlovchi, aglomeratsialovchi fabrika va zavodlar',
   },
-  { id: AccreditationSphere.SPHERE_1_1_4, code: '1.1.4', name: 'Boyitish-saralash va meʼyorlash qurilmalari' },
+  { id: AccreditationSphere.SPHERE_1_1_4, code: '1.1.4', name: 'Boyitish-saralash va me’yorlash qurilmalari' },
   {
     id: AccreditationSphere.SPHERE_1_1_5,
     code: '1.1.5',
-    name: 'Shlam toʻplovchi gidrotexnika inshootlari, chiqindilarni saqlovchi, texnik suv havzalari obyektlari',
+    name: 'Shlam to‘plovchi gidrotexnika inshootlari, chiqindilarni saqlovchi, texnik suv havzalari obyektlari',
   },
   { id: AccreditationSphere.SPHERE_1_1_6, code: '1.1.6', name: 'Oltin konlari va boshqa oltin saralash fabrikalari' },
   { id: AccreditationSphere.SPHERE_1_1_7, code: '1.1.7', name: 'Oltin saralash fabrikasi va zavodlari (qurilmalari)' },
@@ -218,12 +218,12 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_1_1_9,
     code: '1.1.9',
-    name: 'Foydali qazilma boyliklarini qazib olish bilan bogʻliq boʻlmagan ishlab chiqarish obyektlari',
+    name: 'Foydali qazilma boyliklarini qazib olish bilan bog‘liq bo‘lmagan ishlab chiqarish obyektlari',
   },
   {
     id: AccreditationSphere.SPHERE_1_1_10,
     code: '1.1.10',
-    name: 'Maxsus yerosti, transport va umumiy xoʻjalik inshootlarini qurish bilan bogʻliq boʻlgan ishlab chiqarish obyektlari',
+    name: 'Maxsus yerosti, transport va umumiy xo‘jalik inshootlarini qurish bilan bog‘liq bo‘lgan ishlab chiqarish obyektlari',
   },
   { id: AccreditationSphere.SPHERE_1_2, code: '1.2', name: 'Neft va gaz sanoati obyektlari:' },
   {
@@ -240,7 +240,7 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_1_2_4,
     code: '1.2.4',
-    name: 'Neftni, gazni va gaz kondensatini konlarda va konlar orasida tashish quvur oʻtkazgichlari',
+    name: 'Neftni, gazni va gaz kondensatini konlarda va konlar orasida tashish quvur o‘tkazgichlari',
   },
   { id: AccreditationSphere.SPHERE_1_2_5, code: '1.2.5', name: 'Magistral quvurlar' },
   {
@@ -254,7 +254,7 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
     code: '1.2.8',
     name: 'Neft mahsulotlarini, neftni va gaz kondensatini saqlash hamda vaqtincha saqlash obyektlari',
   },
-  { id: AccreditationSphere.SPHERE_1_2_9, code: '1.2.9', name: 'Avtomobillarga yoqilgʻi quyish shoxobchalari' },
+  { id: AccreditationSphere.SPHERE_1_2_9, code: '1.2.9', name: 'Avtomobillarga yoqilg‘i quyish shoxobchalari' },
   {
     id: AccreditationSphere.SPHERE_1_3,
     code: '1.3',
@@ -263,7 +263,7 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_1_3_1,
     code: '1.3.1',
-    name: 'Noorganik moddalar, ammiak, mineral oʻgʻitlar ishlab chiqarish obyektlari',
+    name: 'Noorganik moddalar, ammiak, mineral o‘g‘itlar ishlab chiqarish obyektlari',
   },
   {
     id: AccreditationSphere.SPHERE_1_3_2,
@@ -271,7 +271,7 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
     name: 'Neft va gazni qayta ishlash sanoati ishlab chiqarish va obyektlari',
   },
   { id: AccreditationSphere.SPHERE_1_3_3, code: '1.3.3', name: 'Organik sintez ishlab chiqarish obyektlari' },
-  { id: AccreditationSphere.SPHERE_1_3_4, code: '1.3.4', name: 'Sellyuloza qogʻoz ishlab chiqarish obyektlari' },
+  { id: AccreditationSphere.SPHERE_1_3_4, code: '1.3.4', name: 'Sellyuloza qog‘oz ishlab chiqarish obyektlari' },
   {
     id: AccreditationSphere.SPHERE_1_3_5,
     code: '1.3.5',
@@ -284,49 +284,49 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
     code: '1.3.8',
     name: 'Elektroliz usulida vodorod va kislorod ishlab chiqarish obyektlari',
   },
-  { id: AccreditationSphere.SPHERE_1_3_9, code: '1.3.9', name: 'Lok-boʻyoq mahsulotlari ishlab chiqarish obyektlari' },
+  { id: AccreditationSphere.SPHERE_1_3_9, code: '1.3.9', name: 'Lok-bo‘yoq mahsulotlari ishlab chiqarish obyektlari' },
   { id: AccreditationSphere.SPHERE_1_3_10, code: '1.3.10', name: 'Spirt ishlab chiqarish obyektlari' },
   { id: AccreditationSphere.SPHERE_1_3_11, code: '1.3.11', name: 'Yogʻ-moy ishlab chiqarish obyektlari' },
   {
     id: AccreditationSphere.SPHERE_1_3_12,
     code: '1.3.12',
-    name: 'Havoni parchalashda hosil boʻlgan mahsulotlarni olish va saqlash obyektlari',
+    name: 'Havoni parchalashda hosil bo‘lgan mahsulotlarni olish va saqlash obyektlari',
   },
   { id: AccreditationSphere.SPHERE_1_3_13, code: '1.3.13', name: 'Suvni xlor bilan qayta ishlash obyektlari' },
   {
     id: AccreditationSphere.SPHERE_1_3_14,
     code: '1.3.14',
-    name: 'Portlash-yonish xavfi mavjud va kimyoviy xavfli mahsulotlarni (moddalarni) quyish, toʻkish obyektlari',
+    name: 'Portlash-yonish xavfi mavjud va kimyoviy xavfli mahsulotlarni (moddalarni) quyish, to‘kish obyektlari',
   },
   {
     id: AccreditationSphere.SPHERE_1_4,
     code: '1.4',
-    name: 'Bosimi 0,05 MPa yoki suvning isitish harorati 110 °S dan yuqori boʻlgan jihozdan foydalaniladigan ishlab chiqarish obyektlari:',
+    name: 'Bosimi 0,05 MPa yoki suvning isitish harorati 110 °S dan yuqori bo‘lgan jihozdan foydalaniladigan ishlab chiqarish obyektlari:',
   },
   {
     id: AccreditationSphere.SPHERE_1_4_1,
     code: '1.4.1',
-    name: 'Bugʻ va suv isitish qozonlari (ishchi muhit turidan qatʼi nazar)',
+    name: 'Bugʻ va suv isitish qozonlari (ishchi muhit turidan qat’i nazar)',
   },
   { id: AccreditationSphere.SPHERE_1_4_2, code: '1.4.2', name: 'Bosim ostida ishlovchi idishlar' },
-  { id: AccreditationSphere.SPHERE_1_4_3, code: '1.4.3', name: 'Bugʻ va issiq suv quvur oʻtkazgichlar' },
+  { id: AccreditationSphere.SPHERE_1_4_3, code: '1.4.3', name: 'Bugʻ va issiq suv quvur o‘tkazgichlar' },
   {
     id: AccreditationSphere.SPHERE_1_5,
     code: '1.5',
-    name: 'Koʻchmas asosga oʻrnatilgan yuk koʻtarish mexanizmlari, eskalatorlar, poʻlat arqonli osma yoʻllar, funikulyorlardan foydalanadigan ishlab chiqarish obyektlari:',
+    name: 'Ko‘chmas asosga o‘rnatilgan yuk ko‘tarish mexanizmlari, eskalatorlar, po‘lat arqonli osma yo‘llar, funikulyorlardan foydalanadigan ishlab chiqarish obyektlari:',
   },
-  { id: AccreditationSphere.SPHERE_1_5_1, code: '1.5.1', name: 'Yuk koʻtarish kranlari va mexanizmlari' },
+  { id: AccreditationSphere.SPHERE_1_5_1, code: '1.5.1', name: 'Yuk ko‘tarish kranlari va mexanizmlari' },
   { id: AccreditationSphere.SPHERE_1_5_2, code: '1.5.2', name: 'Ekskalatorlar' },
   {
     id: AccreditationSphere.SPHERE_1_5_3,
     code: '1.5.3',
-    name: 'Yuk va yoʻlovchilar uchun osma poʻlat arqonli yoʻllar',
+    name: 'Yuk va yo‘lovchilar uchun osma po‘lat arqonli yo‘llar',
   },
   { id: AccreditationSphere.SPHERE_1_5_4, code: '1.5.4', name: 'Funikulyorlar' },
   {
     id: AccreditationSphere.SPHERE_1_6,
     code: '1.6',
-    name: 'Tabiiy va suyultirilgan uglevodorod gazlaridan foydalanuvchi gaz taʼminoti (gaz taqsimlash, gaz isteʼmoli) obyektlari:',
+    name: 'Tabiiy va suyultirilgan uglevodorod gazlaridan foydalanuvchi gaz ta’minoti (gaz taqsimlash, gaz iste’moli) obyektlari:',
   },
   {
     id: AccreditationSphere.SPHERE_1_6_1,
@@ -336,35 +336,35 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_1_6_2,
     code: '1.6.2',
-    name: 'Avtomobillarga suyultirilgan uglevodorod gaz toʻldirish shoxobchalari',
+    name: 'Avtomobillarga suyultirilgan uglevodorod gaz to‘ldirish shoxobchalari',
   },
   {
     id: AccreditationSphere.SPHERE_1_6_3,
     code: '1.6.3',
-    name: 'Avtomobillarga gaz toʻldirish kompressor shoxobchalari',
+    name: 'Avtomobillarga gaz to‘ldirish kompressor shoxobchalari',
   },
   {
     id: AccreditationSphere.SPHERE_1_6_4,
     code: '1.6.4',
-    name: 'Bosimi 12 kgf/kv.sm gacha boʻlgan gaz taqsimlash tizimlarining gaz tarmoqlari',
+    name: 'Bosimi 12 kgf/kv.sm gacha bo‘lgan gaz taqsimlash tizimlarining gaz tarmoqlari',
   },
-  { id: AccreditationSphere.SPHERE_1_6_5, code: '1.6.5', name: 'Gaz isteʼmoli tizimlarining gaz tarmoqlari' },
+  { id: AccreditationSphere.SPHERE_1_6_5, code: '1.6.5', name: 'Gaz iste’moli tizimlarining gaz tarmoqlari' },
   { id: AccreditationSphere.SPHERE_1_7, code: '1.7', name: 'Metallurgiya sanoati obyektlari:' },
   {
     id: AccreditationSphere.SPHERE_1_7_1,
     code: '1.7.1',
-    name: 'Qora metallar quyish sanoati, poʻlat ishlab chiqarish obyektlari',
+    name: 'Qora metallar quyish sanoati, po‘lat ishlab chiqarish obyektlari',
   },
   { id: AccreditationSphere.SPHERE_1_7_2, code: '1.7.2', name: 'Rangli metallar quyish sanoati obyektlari' },
   {
     id: AccreditationSphere.SPHERE_1_8,
     code: '1.8',
-    name: 'Oʻsimlik xomashyosini saqlash va qayta ishlash obyektlari:',
+    name: 'O‘simlik xomashyosini saqlash va qayta ishlash obyektlari:',
   },
   {
     id: AccreditationSphere.SPHERE_1_8_1,
     code: '1.8.1',
-    name: 'Qabul qilish, saqlash, quritish, qayta ishlash, alohida turuvchi qabul qilish va uzatish uskunasi, qabul qiluvchi-tozalash minorasi, alohida turuvchi don quritish uchastkalari, elevatorlar, silos tipidagi omborlar, qopsiz saqlash omborlari, solod ishlab chiqarish obyektlari, qayta ishlovchi va tayyorlovchi (maydalovchi) boʻlimlar, shu jumladan oziq-ovqat sanoati korxonalari',
+    name: 'Qabul qilish, saqlash, quritish, qayta ishlash, alohida turuvchi qabul qilish va uzatish uskunasi, qabul qiluvchi-tozalash minorasi, alohida turuvchi don quritish uchastkalari, elevatorlar, silos tipidagi omborlar, qopsiz saqlash omborlari, solod ishlab chiqarish obyektlari, qayta ishlovchi va tayyorlovchi (maydalovchi) bo‘limlar, shu jumladan oziq-ovqat sanoati korxonalari',
   },
   { id: AccreditationSphere.SPHERE_1_8_2, code: '1.8.2', name: 'Un, yorma ishlab chiqarish obyektlari' },
   { id: AccreditationSphere.SPHERE_1_8_3, code: '1.8.3', name: 'Omuxta yem ishlab chiqarish obyektlari' },
@@ -378,45 +378,45 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
     code: '1.8.5',
     name: 'Un, yorma, non va makaron ishlab chiqarish korxonalari uchun qopli idishlarni tozalash va saralash obyektlari',
   },
-  { id: AccreditationSphere.SPHERE_1_8_6, code: '1.8.6', name: 'Joʻxorini kalibrlovchi obyektlar' },
-  { id: AccreditationSphere.SPHERE_1_8_7, code: '1.8.7', name: 'Urugʻlik donlarni qayta ishlovchi obyektlar' },
+  { id: AccreditationSphere.SPHERE_1_8_6, code: '1.8.6', name: 'Jo‘xorini kalibrlovchi obyektlar' },
+  { id: AccreditationSphere.SPHERE_1_8_7, code: '1.8.7', name: 'Urug‘lik donlarni qayta ishlovchi obyektlar' },
   { id: AccreditationSphere.SPHERE_1_8_8, code: '1.8.8', name: 'Tamaki mahsulotlarini tayyorlash obyektlari' },
   {
     id: AccreditationSphere.SPHERE_1_9,
     code: '1.9',
-    name: 'Foydali qazilma konlarini qidirish va izlash bilan bogʻliq geologiya-razvedka obyektlari (uglevodorod xomashyosi boʻlmagan)',
+    name: 'Foydali qazilma konlarini qidirish va izlash bilan bog‘liq geologiya-razvedka obyektlari (uglevodorod xomashyosi bo‘lmagan)',
   },
   {
     id: AccreditationSphere.SPHERE_1_10,
     code: '1.10',
-    name: 'Sanoatda qoʻllanadigan portlovchi moddalarni ishlab chiqarish, sinash va saqlash bilan bogʻliq boʻlgan obyektlar',
+    name: 'Sanoatda qo‘llanadigan portlovchi moddalarni ishlab chiqarish, sinash va saqlash bilan bog‘liq bo‘lgan obyektlar',
   },
   {
     id: AccreditationSphere.SPHERE_2,
     code: '2',
-    name: 'Xavfli ishlab chiqarish obyektlarida qoʻllanadigan texnik qurilmalarni sanoat xavfsizligi ekspertizasidan oʻtkazish',
+    name: 'Xavfli ishlab chiqarish obyektlarida qo‘llanadigan texnik qurilmalarni sanoat xavfsizligi ekspertizasidan o‘tkazish',
   },
   {
     id: AccreditationSphere.SPHERE_2_1,
     code: '2.1',
-    name: 'Koʻmir, kon, ruda va noruda sanoatidagi texnik qurilmalar:',
+    name: 'Ko‘mir, kon, ruda va noruda sanoatidagi texnik qurilmalar:',
   },
-  { id: AccreditationSphere.SPHERE_2_1_1, code: '2.1.1', name: 'Shaxtada qoʻllanadigan qurilmalar' },
+  { id: AccreditationSphere.SPHERE_2_1_1, code: '2.1.1', name: 'Shaxtada qo‘llanadigan qurilmalar' },
   {
     id: AccreditationSphere.SPHERE_2_1_2,
     code: '2.1.2',
-    name: 'Koʻmir va ruda konlari (yerosti va yerusti) obyektlarining qurilmalari',
+    name: 'Ko‘mir va ruda konlari (yerosti va yerusti) obyektlarining qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_1_3,
     code: '2.1.3',
     name: 'Boyituvchi, briketlovchi, aglomeratsialovchi fabrika va zavodlar qurilmalari',
   },
-  { id: AccreditationSphere.SPHERE_2_1_4, code: '2.1.4', name: 'Boyitish-saralash va meʼyorlash qurilmalari' },
+  { id: AccreditationSphere.SPHERE_2_1_4, code: '2.1.4', name: 'Boyitish-saralash va me’yorlash qurilmalari' },
   {
     id: AccreditationSphere.SPHERE_2_1_5,
     code: '2.1.5',
-    name: 'Shlam toʻplovchi gidrotexnika inshootlari, chiqindilarni saqlovchi va texnik suv havzalari obyektlarining qurilmalari',
+    name: 'Shlam to‘plovchi gidrotexnika inshootlari, chiqindilarni saqlovchi va texnik suv havzalari obyektlarining qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_1_6,
@@ -428,38 +428,38 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_2_1_9,
     code: '2.1.9',
-    name: 'Foydali qazilma boyliklari qazib olish bilan bogʻliq boʻlmagan ishlab chiqarish obyektlarining qurilmalari',
+    name: 'Foydali qazilma boyliklari qazib olish bilan bog‘liq bo‘lmagan ishlab chiqarish obyektlarining qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_1_10,
     code: '2.1.10',
-    name: 'Maxsus yerosti, transport va umumiy xoʻjalik inshootlarini qurish bilan bogʻliq boʻlgan ishlab chiqarish obyektlarining qurilmalari',
+    name: 'Maxsus yerosti, transport va umumiy xo‘jalik inshootlarini qurish bilan bog‘liq bo‘lgan ishlab chiqarish obyektlarining qurilmalari',
   },
   { id: AccreditationSphere.SPHERE_2_2, code: '2.2', name: 'Neft va gaz sanoatidagi texnik qurilmalar:' },
   {
     id: AccreditationSphere.SPHERE_2_2_1,
     code: '2.2.1',
-    name: 'Quduqlarni burgʻilashda, taʼmirlashda va ishga tushirishda qoʻllanadigan qurilmalar',
+    name: 'Quduqlarni burg‘ilashda, ta’mirlashda va ishga tushirishda qo‘llanadigan qurilmalar',
   },
   {
     id: AccreditationSphere.SPHERE_2_2_2,
     code: '2.2.2',
-    name: 'Neft va gaz quduqlarini ishlatishda qoʻllanadigan qurilmalar',
+    name: 'Neft va gaz quduqlarini ishlatishda qo‘llanadigan qurilmalar',
   },
   {
     id: AccreditationSphere.SPHERE_2_2_3,
     code: '2.2.3',
-    name: 'Qatlamdagi bosimni va qatlamga hamda quduqqa taʼsir qiluvchi omillarni saqlashda qoʻllanadigan qurilmalar',
+    name: 'Qatlamdagi bosimni va qatlamga hamda quduqqa ta’sir qiluvchi omillarni saqlashda qo‘llanadigan qurilmalar',
   },
   {
     id: AccreditationSphere.SPHERE_2_2_4,
     code: '2.2.4',
-    name: 'Neft va gazni yetkazib beruvchi stansiyalarda qoʻllanadigan qurilmalar',
+    name: 'Neft va gazni yetkazib beruvchi stansiyalarda qo‘llanadigan qurilmalar',
   },
   {
     id: AccreditationSphere.SPHERE_2_2_5,
     code: '2.2.5',
-    name: 'Magistral quvurlar tizimini qurishda, ishlatishda va taʼmirlashda qoʻllanadigan qurilmalar',
+    name: 'Magistral quvurlar tizimini qurishda, ishlatishda va ta’mirlashda qo‘llanadigan qurilmalar',
   },
   {
     id: AccreditationSphere.SPHERE_2_2_6,
@@ -469,7 +469,7 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_2_2_7,
     code: '2.2.7',
-    name: 'Kompozit va poʻlat quvurlar qismlari va quvurlari, shu jumladan, tiqin (zapor), meʼyorlovchi va himoyalovchi armaturalar qismlari',
+    name: 'Kompozit va po‘lat quvurlar qismlari va quvurlari, shu jumladan, tiqin (zapor), me’yorlovchi va himoyalovchi armaturalar qismlari',
   },
   {
     id: AccreditationSphere.SPHERE_2_2_8,
@@ -481,7 +481,7 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
     code: '2.2.9',
     name: 'Kompressor, nasos va gaz taqsimlash stansiyalari qurilmalari',
   },
-  { id: AccreditationSphere.SPHERE_2_2_10, code: '2.2.10', name: 'Neft va gazni yigʻish va tayyorlash qurilmalari' },
+  { id: AccreditationSphere.SPHERE_2_2_10, code: '2.2.10', name: 'Neft va gazni yig‘ish va tayyorlash qurilmalari' },
   {
     id: AccreditationSphere.SPHERE_2_3,
     code: '2.3',
@@ -490,7 +490,7 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_2_3_1,
     code: '2.3.1',
-    name: 'Noorganik moddalar, ammiak, mineral oʻgʻitlar ishlab chiqarish obyektlari qurilmalari',
+    name: 'Noorganik moddalar, ammiak, mineral o‘g‘itlar ishlab chiqarish obyektlari qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_3_2,
@@ -505,7 +505,7 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_2_3_4,
     code: '2.3.4',
-    name: 'Sellyuloza qogʻoz ishlab chiqarish obyektlarining qurilmalari',
+    name: 'Sellyuloza qog‘oz ishlab chiqarish obyektlarining qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_3_5,
@@ -522,7 +522,7 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_2_3_9,
     code: '2.3.9',
-    name: 'Lok-boʻyoq mahsulotlari ishlab chiqarish obyektlarining qurilmalari',
+    name: 'Lok-bo‘yoq mahsulotlari ishlab chiqarish obyektlarining qurilmalari',
   },
   { id: AccreditationSphere.SPHERE_2_3_10, code: '2.3.10', name: 'Spirt ishlab chiqarish obyektlarining qurilmalari' },
   {
@@ -533,7 +533,7 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_2_3_12,
     code: '2.3.12',
-    name: 'Havoni parchalashda hosil boʻlgan mahsulotlarni olish va saqlash obyektlari qurilmalari',
+    name: 'Havoni parchalashda hosil bo‘lgan mahsulotlarni olish va saqlash obyektlari qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_3_13,
@@ -543,12 +543,12 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_2_3_14,
     code: '2.3.14',
-    name: 'Portlash-yonish xavfi mavjud va kimyoviy xavfli mahsulotlarni (moddalarni) quyish, toʻkish obyektlarining qurilmalari',
+    name: 'Portlash-yonish xavfi mavjud va kimyoviy xavfli mahsulotlarni (moddalarni) quyish, to‘kish obyektlarining qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_4,
     code: '2.4',
-    name: 'Bosimi 0,05 MPa dan yuqori boʻlgan yoki suvning harorati 110 °S dan yuqori boʻlgan sharoitda ishlaydigan texnik qurilmalar:',
+    name: 'Bosimi 0,05 MPa dan yuqori bo‘lgan yoki suvning harorati 110 °S dan yuqori bo‘lgan sharoitda ishlaydigan texnik qurilmalar:',
   },
   {
     id: AccreditationSphere.SPHERE_2_4_1,
@@ -558,43 +558,43 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_2_4_2,
     code: '2.4.2',
-    name: 'Bosim 0,05 MPa dan yuqori boʻlgan bosim ostida ishlovchi idishlar',
+    name: 'Bosim 0,05 MPa dan yuqori bo‘lgan bosim ostida ishlovchi idishlar',
   },
   {
     id: AccreditationSphere.SPHERE_2_4_3,
     code: '2.4.3',
-    name: 'Bosim 0,05 MPa dan va suvning harorati 110 °S dan yuqori boʻlgan bugʻ va issiq suv quvurlari',
+    name: 'Bosim 0,05 MPa dan va suvning harorati 110 °S dan yuqori bo‘lgan bugʻ va issiq suv quvurlari',
   },
   { id: AccreditationSphere.SPHERE_2_4_4, code: '2.4.4', name: 'Avtonom bugʻ qizdirgichlar' },
   { id: AccreditationSphere.SPHERE_2_4_5, code: '2.4.5', name: 'Avtonom ekonomayzerlar' },
   {
     id: AccreditationSphere.SPHERE_2_5,
     code: '2.5',
-    name: 'Koʻchmas asosga oʻrnatilgan yuk koʻtarish mexanizmlari, eskalatorlar, poʻlat arqonli osma yoʻllar, funikulyorlar:',
+    name: 'Ko‘chmas asosga o‘rnatilgan yuk ko‘tarish mexanizmlari, eskalatorlar, po‘lat arqonli osma yo‘llar, funikulyorlar:',
   },
-  { id: AccreditationSphere.SPHERE_2_5_1, code: '2.5.1', name: 'Yuk koʻtarish kranlari' },
+  { id: AccreditationSphere.SPHERE_2_5_1, code: '2.5.1', name: 'Yuk ko‘tarish kranlari' },
   { id: AccreditationSphere.SPHERE_2_5_2, code: '2.5.2', name: 'Kran-manipulyatorlar' },
   { id: AccreditationSphere.SPHERE_2_5_3, code: '2.5.3', name: 'Quvuryotqizgich kranlar' },
-  { id: AccreditationSphere.SPHERE_2_5_4, code: '2.5.4', name: 'Koʻtargichlar (vishkalar)' },
-  { id: AccreditationSphere.SPHERE_2_5_5, code: '2.5.5', name: 'Qurilish koʻtargichlari' },
+  { id: AccreditationSphere.SPHERE_2_5_4, code: '2.5.4', name: 'Ko‘targichlar (vishkalar)' },
+  { id: AccreditationSphere.SPHERE_2_5_5, code: '2.5.5', name: 'Qurilish ko‘targichlari' },
   { id: AccreditationSphere.SPHERE_2_5_6, code: '2.5.6', name: 'Liftlar' },
-  { id: AccreditationSphere.SPHERE_2_5_7, code: '2.5.7', name: 'Nogironlarni koʻtarishga moʻljallangan platformalar' },
+  { id: AccreditationSphere.SPHERE_2_5_7, code: '2.5.7', name: 'Nogironlarni ko‘tarishga mo‘ljallangan platformalar' },
   {
     id: AccreditationSphere.SPHERE_2_5_8,
     code: '2.5.8',
-    name: 'Yuk va yoʻlovchilar uchun osma poʻlat arqonli yoʻllar',
+    name: 'Yuk va yo‘lovchilar uchun osma po‘lat arqonli yo‘llar',
   },
   { id: AccreditationSphere.SPHERE_2_5_9, code: '2.5.9', name: 'Funikulyorlar' },
   { id: AccreditationSphere.SPHERE_2_5_10, code: '2.5.10', name: 'Ekskalatorlar' },
   {
     id: AccreditationSphere.SPHERE_2_5_11,
     code: '2.5.11',
-    name: 'Yuk koʻtarish mexanizmlari va idishlar (metallurgiyadan tashqari)',
+    name: 'Yuk ko‘tarish mexanizmlari va idishlar (metallurgiyadan tashqari)',
   },
   {
     id: AccreditationSphere.SPHERE_2_6,
     code: '2.6',
-    name: 'Tabiiy va suyultirilgan uglevodorod gazlaridan foydalanuvchi gaz taʼminoti (gaz taqsimlash, gaz isteʼmoli) obyektlarining texnik qurilmalari:',
+    name: 'Tabiiy va suyultirilgan uglevodorod gazlaridan foydalanuvchi gaz ta’minoti (gaz taqsimlash, gaz iste’moli) obyektlarining texnik qurilmalari:',
   },
   {
     id: AccreditationSphere.SPHERE_2_6_1,
@@ -604,24 +604,24 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_2_6_2,
     code: '2.6.2',
-    name: 'Avtomobillarga suyultirilgan uglevodorod gaz toʻldirish shoxobchalarining qurilmalari',
+    name: 'Avtomobillarga suyultirilgan uglevodorod gaz to‘ldirish shoxobchalarining qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_6_3,
     code: '2.6.3',
-    name: 'Avtomobillarga gaz toʻldirish kompressor shoxobchalarining qurilmalari',
+    name: 'Avtomobillarga gaz to‘ldirish kompressor shoxobchalarining qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_6_4,
     code: '2.6.4',
-    name: 'Bosimi 12 kgf/kv.sm gacha boʻlgan gaz taqsimlash tizimlari',
+    name: 'Bosimi 12 kgf/kv.sm gacha bo‘lgan gaz taqsimlash tizimlari',
   },
-  { id: AccreditationSphere.SPHERE_2_6_5, code: '2.6.5', name: 'Gaz isteʼmoli tizimlari' },
+  { id: AccreditationSphere.SPHERE_2_6_5, code: '2.6.5', name: 'Gaz iste’moli tizimlari' },
   { id: AccreditationSphere.SPHERE_2_7, code: '2.7', name: 'Metallurgiya sanoati texnik qurilmalari' },
   {
     id: AccreditationSphere.SPHERE_2_7_1,
     code: '2.7.1',
-    name: 'Qora metallar quyish, poʻlat ishlab chiqarish obyektlarining qurilmalari',
+    name: 'Qora metallar quyish, po‘lat ishlab chiqarish obyektlarining qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_7_2,
@@ -631,7 +631,7 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_2_8,
     code: '2.8',
-    name: 'Oʻsimlik xomashyosini saqlash va qayta ishlash obyektlarining texnik qurilmalari:',
+    name: 'O‘simlik xomashyosini saqlash va qayta ishlash obyektlarining texnik qurilmalari:',
   },
   { id: AccreditationSphere.SPHERE_2_8_1, code: '2.8.1', name: 'Elevator ombori qurilmalari' },
   { id: AccreditationSphere.SPHERE_2_8_2, code: '2.8.2', name: 'Un ishlab chiqarish korxonalari qurilmalari' },
@@ -649,17 +649,17 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_2_8_6,
     code: '2.8.6',
-    name: 'Oʻsimlik xomashyosini qabul qilish, saqlash, quritish, qayta ishlash, alohida turuvchi qabul qilish va uzatish uskunasi, qabul qiluvchi tozalash minorasi, alohida turuvchi don quritish uchastkalari, elevatorlar, silos tipidagi omborlar, qopsiz saqlash omborlari, solod ishlab chiqarish obyektlari, qayta ishlovchi hamda tayyorlovchi (maydalovchi) boʻlimlar, shu jumladan, oziq-ovqat sanoati korxonalari qurilmalari',
+    name: 'O‘simlik xomashyosini qabul qilish, saqlash, quritish, qayta ishlash, alohida turuvchi qabul qilish va uzatish uskunasi, qabul qiluvchi tozalash minorasi, alohida turuvchi don quritish uchastkalari, elevatorlar, silos tipidagi omborlar, qopsiz saqlash omborlari, solod ishlab chiqarish obyektlari, qayta ishlovchi hamda tayyorlovchi (maydalovchi) bo‘limlar, shu jumladan, oziq-ovqat sanoati korxonalari qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_8_7,
     code: '2.8.7',
-    name: 'Joʻxorini kalibrlovchi ishlab chiqarish obyektlarining qurilmalari',
+    name: 'Jo‘xorini kalibrlovchi ishlab chiqarish obyektlarining qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_8_8,
     code: '2.8.8',
-    name: 'Urugʻlik donlarni qayta ishlaydigan obyektlarning qurilmalari',
+    name: 'Urug‘lik donlarni qayta ishlaydigan obyektlarning qurilmalari',
   },
   {
     id: AccreditationSphere.SPHERE_2_8_9,
@@ -669,31 +669,31 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_2_9,
     code: '2.9',
-    name: 'Foydali qazilma konlarini qidirish va izlash bilan bogʻliq geologiya-razvedka obyektlaridagi texnik qurilmalar (uglevodorod xomashyosi boʻlmagan)',
+    name: 'Foydali qazilma konlarini qidirish va izlash bilan bog‘liq geologiya-razvedka obyektlaridagi texnik qurilmalar (uglevodorod xomashyosi bo‘lmagan)',
   },
   {
     id: AccreditationSphere.SPHERE_2_10,
     code: '2.10',
-    name: 'Sanoatga moʻljallangan portlovchi moddalarni ishlab chiqarish, sinash va saqlashda qoʻllanadigan texnik qurilmalar',
+    name: 'Sanoatga mo‘ljallangan portlovchi moddalarni ishlab chiqarish, sinash va saqlashda qo‘llanadigan texnik qurilmalar',
   },
   {
     id: AccreditationSphere.SPHERE_3,
     code: '3',
-    name: 'Xavfli ishlab chiqarish obyektidagi binolar va inshootlarni sanoat xavfsizligi ekspertizasidan oʻtkazish',
+    name: 'Xavfli ishlab chiqarish obyektidagi binolar va inshootlarni sanoat xavfsizligi ekspertizasidan o‘tkazish',
   },
-  { id: AccreditationSphere.SPHERE_3_1, code: '3.1', name: 'Koʻmir, kon-ruda va noruda sanoatlarida:' },
+  { id: AccreditationSphere.SPHERE_3_1, code: '3.1', name: 'Ko‘mir, kon-ruda va noruda sanoatlarida:' },
   { id: AccreditationSphere.SPHERE_3_1_1, code: '3.1.1', name: 'Yerusti kompleks bino va inshootlar' },
   { id: AccreditationSphere.SPHERE_3_1_2, code: '3.1.2', name: 'Yerosti inshootlari' },
   {
     id: AccreditationSphere.SPHERE_3_1_3,
     code: '3.1.3',
-    name: 'Foydali qazilma boyliklarini qazib olish bilan bogʻliq boʻlmagan ishlab chiqarish obyektlaridagi bino va inshootlar',
+    name: 'Foydali qazilma boyliklarini qazib olish bilan bog‘liq bo‘lmagan ishlab chiqarish obyektlaridagi bino va inshootlar',
   },
   { id: AccreditationSphere.SPHERE_3_2, code: '3.2', name: 'Neft va gaz sanoati obyektlarida:' },
   {
     id: AccreditationSphere.SPHERE_3_2_1,
     code: '3.2.1',
-    name: 'Quduqlarni qazish va taʼmirlash bilan bogʻliq boʻlgan obyektlardagi bino va inshootlar',
+    name: 'Quduqlarni qazish va ta’mirlash bilan bog‘liq bo‘lgan obyektlardagi bino va inshootlar',
   },
   {
     id: AccreditationSphere.SPHERE_3_2_2,
@@ -714,62 +714,62 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_3_4,
     code: '3.4',
-    name: 'Bosimi 0,05 MPa dan yuqori boʻlgan yoki suvning isish harorati 110 °S dan yuqori boʻlgan qurilmalar joylashgan bino va inshootlar',
+    name: 'Bosimi 0,05 MPa dan yuqori bo‘lgan yoki suvning isish harorati 110 °S dan yuqori bo‘lgan qurilmalar joylashgan bino va inshootlar',
   },
   {
     id: AccreditationSphere.SPHERE_3_5,
     code: '3.5',
-    name: 'Koʻchmas asosga oʻrnatilgan yuk koʻtarish mexanizmlari, eskalatorlar, poʻlat arqonli osma yoʻllar, funikulyorlardan foydalanadigan ishlab chiqarish obyektlaridagi bino va inshootlar',
+    name: 'Ko‘chmas asosga o‘rnatilgan yuk ko‘tarish mexanizmlari, eskalatorlar, po‘lat arqonli osma yo‘llar, funikulyorlardan foydalanadigan ishlab chiqarish obyektlaridagi bino va inshootlar',
   },
   {
     id: AccreditationSphere.SPHERE_3_6,
     code: '3.6',
-    name: 'Tabiiy va suyultirilgan uglevodorod gazlaridan foydalanuvchi gaz taʼminoti (gaz taqsimlash, gaz isteʼmoli) obyektlaridagi bino va inshootlar',
+    name: 'Tabiiy va suyultirilgan uglevodorod gazlaridan foydalanuvchi gaz ta’minoti (gaz taqsimlash, gaz iste’moli) obyektlaridagi bino va inshootlar',
   },
   {
     id: AccreditationSphere.SPHERE_3_6_1,
     code: '3.6.1',
-    name: 'Gaz jihozlari oʻrnatilgan bino va inshootlar (qozonxonalar, sexlar)',
+    name: 'Gaz jihozlari o‘rnatilgan bino va inshootlar (qozonxonalar, sexlar)',
   },
   {
     id: AccreditationSphere.SPHERE_3_6_2,
     code: '3.6.2',
-    name: 'Avtomobillarga gaz (suyultirilgan uglevodorod gaz) toʻldirish shoxobchalarining bino va inshootlari',
+    name: 'Avtomobillarga gaz (suyultirilgan uglevodorod gaz) to‘ldirish shoxobchalarining bino va inshootlari',
   },
   { id: AccreditationSphere.SPHERE_3_7, code: '3.7', name: 'Metallurgiya sanoati obyektlaridagi bino va inshootlar' },
   {
     id: AccreditationSphere.SPHERE_3_8,
     code: '3.8',
-    name: 'Oʻsimlik xomashyosini saqlash hamda qayta ishlash obyektlaridagi bino va inshootlar',
+    name: 'O‘simlik xomashyosini saqlash hamda qayta ishlash obyektlaridagi bino va inshootlar',
   },
   {
     id: AccreditationSphere.SPHERE_3_9,
     code: '3.9',
-    name: 'Foydali qazilma konlarini qidirish va izlash bilan bogʻliq geologiya-razvedka obyektlaridagi (uglevodorod xomashyosi boʻlmagan) bino va inshootlar',
+    name: 'Foydali qazilma konlarini qidirish va izlash bilan bog‘liq geologiya-razvedka obyektlaridagi (uglevodorod xomashyosi bo‘lmagan) bino va inshootlar',
   },
   {
     id: AccreditationSphere.SPHERE_3_10,
     code: '3.10',
-    name: 'Sanoatda qoʻllaniladigan portlovchi moddalarni ishlab chiqarish, sinash va saqlash bilan bogʻliq boʻlgan obyektlardagi bino va inshootlar',
+    name: 'Sanoatda qo‘llaniladigan portlovchi moddalarni ishlab chiqarish, sinash va saqlash bilan bog‘liq bo‘lgan obyektlardagi bino va inshootlar',
   },
   {
     id: AccreditationSphere.SPHERE_4,
     code: '4',
-    name: 'Sanoat xavfsizligi deklaratsiyasini ishlab chiqish. Sanoat xavfsizligi deklaratsiyasini sanoat xavfsizligi ekspertizasidan oʻtkazish.',
+    name: 'Sanoat xavfsizligi deklaratsiyasini ishlab chiqish. Sanoat xavfsizligi deklaratsiyasini sanoat xavfsizligi ekspertizasidan o‘tkazish.',
   },
-  { id: AccreditationSphere.SPHERE_4_1, code: '4.1', name: 'Koʻmir, kon, ruda va noruda sanoati obyektlari:' },
+  { id: AccreditationSphere.SPHERE_4_1, code: '4.1', name: 'Ko‘mir, kon, ruda va noruda sanoati obyektlari:' },
   { id: AccreditationSphere.SPHERE_4_1_1, code: '4.1.1', name: 'Yerusti ishlab chiqarish obyektlari' },
   { id: AccreditationSphere.SPHERE_4_1_2, code: '4.1.2', name: 'Yerosti ishlab chiqarish obyektlari' },
   {
     id: AccreditationSphere.SPHERE_4_1_3,
     code: '4.1.3',
-    name: 'Foydali qazilma boyliklarini qazib olish bilan bogʻliq boʻlmagan ishlab chiqarish obyektlari',
+    name: 'Foydali qazilma boyliklarini qazib olish bilan bog‘liq bo‘lmagan ishlab chiqarish obyektlari',
   },
   { id: AccreditationSphere.SPHERE_4_2, code: '4.2', name: 'Neft va gaz sanoati obyektlari:' },
   {
     id: AccreditationSphere.SPHERE_4_2_1,
     code: '4.2.1',
-    name: 'Quduqlarni qazish va taʼmirlash bilan bogʻliq boʻlgan obyektlar',
+    name: 'Quduqlarni qazish va ta’mirlash bilan bog‘liq bo‘lgan obyektlar',
   },
   {
     id: AccreditationSphere.SPHERE_4_2_2,
@@ -790,33 +790,33 @@ export const ACCREDITATION_SPHERES: AccreditationSphereItem[] = [
   {
     id: AccreditationSphere.SPHERE_4_4,
     code: '4.4',
-    name: 'Bosimi 0,05 MPa dan yuqori yoki suvning harorati 110 °S dan yuqori boʻlgan qurilmalardan foydalanadigan ishlab chiqarish obyektlari',
+    name: 'Bosimi 0,05 MPa dan yuqori yoki suvning harorati 110 °S dan yuqori bo‘lgan qurilmalardan foydalanadigan ishlab chiqarish obyektlari',
   },
   {
     id: AccreditationSphere.SPHERE_4_5,
     code: '4.5',
-    name: 'Koʻchmas asosga oʻrnatilgan yuk koʻtarish mexanizmlari, eskalatorlar, poʻlat arqonli osma yoʻllar, funikulyorlardan foydalanadigan ishlab chiqarish obyektlari',
+    name: 'Ko‘chmas asosga o‘rnatilgan yuk ko‘tarish mexanizmlari, eskalatorlar, po‘lat arqonli osma yo‘llar, funikulyorlardan foydalanadigan ishlab chiqarish obyektlari',
   },
   {
     id: AccreditationSphere.SPHERE_4_6,
     code: '4.6',
-    name: 'Tabiiy va suyultirilgan uglevodorod gazlaridan foydalanuvchi gaz taʼminoti (gaz taqsimlash, gaz isteʼmoli) obyektlari',
+    name: 'Tabiiy va suyultirilgan uglevodorod gazlaridan foydalanuvchi gaz ta’minoti (gaz taqsimlash, gaz iste’moli) obyektlari',
   },
   { id: AccreditationSphere.SPHERE_4_7, code: '4.7', name: 'Metallurgiya sanoati obyektlari' },
   {
     id: AccreditationSphere.SPHERE_4_8,
     code: '4.8',
-    name: 'Oʻsimlik xomashyosini saqlash va qayta ishlash obyektlari',
+    name: 'O‘simlik xomashyosini saqlash va qayta ishlash obyektlari',
   },
   {
     id: AccreditationSphere.SPHERE_4_9,
     code: '4.9',
-    name: 'Foydali qazilma konlarini qidirish va izlash bilan bogʻliq geologiya-razvedka obyektlari (uglevodorod xomashyosi boʻlmagan)',
+    name: 'Foydali qazilma konlarini qidirish va izlash bilan bog‘liq geologiya-razvedka obyektlari (uglevodorod xomashyosi bo‘lmagan)',
   },
   {
     id: AccreditationSphere.SPHERE_4_10,
     code: '4.10',
-    name: 'Sanoatda qoʻllaniladigan portlovchi moddalarni ishlab chiqarish, sinash va saqlash bilan bogʻliq boʻlgan obyektlar',
+    name: 'Sanoatda qo‘llaniladigan portlovchi moddalarni ishlab chiqarish, sinash va saqlash bilan bog‘liq bo‘lgan obyektlar',
   },
 ]
 

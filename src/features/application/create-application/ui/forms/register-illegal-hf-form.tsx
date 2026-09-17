@@ -105,7 +105,7 @@ const RegisterIllegalHfForm = ({ onSubmit, isPending = false }: RegisterIllegalH
                   </Button>
                 ) : (
                   <Button type="button" variant="destructive" onClick={handleClear}>
-                    O'chirish
+                    O‘chirish
                   </Button>
                 )}
               </div>
@@ -114,7 +114,7 @@ const RegisterIllegalHfForm = ({ onSubmit, isPending = false }: RegisterIllegalH
 
           {ownerData && (
             <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
-              <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
+              <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot ma’lumotlari</h3>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
                 <DetailRow title="Tashkilot nomi:" value={ownerData?.name || ownerData?.legalName || '-'} />
                 <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || ownerData?.fullName || '-'} />

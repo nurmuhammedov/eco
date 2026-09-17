@@ -11,7 +11,7 @@ const ERROR_MESSAGES = {
   direction: 'Kamida bitta yo‘nalish tanlash majburiy',
   department: 'Bo‘limni tanlash majburiy',
   phone: 'Telefon raqami formati +998XXXXXXXXX bo‘lishi kerak',
-  birthDateRequired: 'Tug‘ilgan sana kiritilishi shart!', // Tug'ilgan sana uchun xabar
+  birthDateRequired: 'Tug‘ilgan sana kiritilishi shart!', // Tug‘ilgan sana uchun xabar
 } as const
 
 // Bu o‘zgarmadi, `birthDate` majburiy emas

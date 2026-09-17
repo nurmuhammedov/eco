@@ -189,7 +189,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
               if (type?.startsWith('UPDATE')) {
                 return (
                   <Badge variant="info" className="py-1">
-                    Maʼlumotlarni o‘zgartirish
+                    Ma’lumotlarni o‘zgartirish
                   </Badge>
                 )
               }

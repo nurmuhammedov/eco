@@ -18,7 +18,7 @@ const ALL = 'ALL'
 const isSummaryRow = (regionName?: string) => {
   const name = regionName?.toLowerCase() ?? ''
 
-  return name.includes('bo‘yicha') || name.includes("bo'yicha") || name === 'jami'
+  return name.includes('bo‘yicha') || name.includes('bo‘yicha') || name === 'jami'
 }
 
 interface Row {

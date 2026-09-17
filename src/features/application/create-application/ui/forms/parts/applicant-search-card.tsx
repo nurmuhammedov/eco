@@ -116,7 +116,7 @@ export const ApplicantSearchCard = ({
       {ownerData && (
         <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
           <h3 className="mb-4 text-base font-semibold text-gray-800">
-            {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
+            {isLegal ? 'Tashkilot ma’lumotlari' : 'Fuqaro ma’lumotlari'}
           </h3>
           <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
             <DetailRow

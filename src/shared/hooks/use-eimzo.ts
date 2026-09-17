@@ -86,7 +86,7 @@ export function useEimzo({
     },
     onError: (error: Error) => {
       setIsPdfLoading(false)
-      handleError(error.message || 'PDF yaratishda serverda nomaʼlum xatolik yuz berdi!')
+      handleError(error.message || 'PDF yaratishda serverda noma’lum xatolik yuz berdi!')
     },
   })
 

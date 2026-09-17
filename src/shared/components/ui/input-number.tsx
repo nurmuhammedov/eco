@@ -98,7 +98,7 @@ function InputNumber<
     [validationRegex, field]
   )
 
-  // Fokus yo'qolganda qiymatni formatlash
+  // Fokus yo‘qolganda qiymatni formatlash
   const handleBlur = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
       field.onBlur()

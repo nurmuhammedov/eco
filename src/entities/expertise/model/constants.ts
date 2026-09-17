@@ -81,7 +81,7 @@ export const ExpertiseSubTypeOptions = [
   {
     value: ExpertiseSubTypeEnum.SXEX,
     label: 'Sanoat xavfsizligi ekspertizasi xulosasi',
-    type: ExpertiseTypeEnum.XD, // Rasmda "ХД" (kirillcha) turibdi, buni XD ga to'g'riladim
+    type: ExpertiseTypeEnum.XD, // Rasmda "ХД" (kirillcha) turibdi, buni XD ga to‘g‘riladim
   },
   {
     value: ExpertiseSubTypeEnum.IHEK,

@@ -62,7 +62,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'Idish (SUG) maʼlumotlarini tahrirlash' : 'Idish (SUG)ni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'Idish (SUG) ma’lumotlarini tahrirlash' : 'Idish (SUG)ni ro‘yxatga olish arizasi'} />
         <NoteForm equipmentName="idish (SUG)" />
 
         <ApplicantSearchCard
@@ -378,7 +378,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Idishning (SUG) birkasi bilan surʼati
+                      Idishning (SUG) birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -406,7 +406,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
             <DocumentField
               form={form}
               name="assignmentDecreePath"
-              label="Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq fayli"
+              label="Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq fayli"
               required={!isUpdate}
             />
           </div>

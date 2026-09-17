@@ -385,7 +385,7 @@ const RegisterHeatPipelineForm = ({ onSubmit }: RegisterHeatPipelineFormProps) =
               render={({ field }) => (
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Quvurning birkasi bilan sur‘ati</FormLabel>
+                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Quvurning birkasi bilan sur’ati</FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
                     </FormControl>
@@ -403,7 +403,7 @@ const RegisterHeatPipelineForm = ({ onSubmit }: RegisterHeatPipelineFormProps) =
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
+                      Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -441,7 +441,7 @@ const RegisterHeatPipelineForm = ({ onSubmit }: RegisterHeatPipelineFormProps) =
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
+                      Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />

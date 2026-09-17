@@ -76,7 +76,7 @@ const RegisterChangeDetail: FC = () => {
               ? 'Reyestrdan chiqarish uchun so‘rov'
               : isStatusChange
                 ? 'Holatini o‘zgartirish uchun so‘rov'
-                : 'Maʼlumotlarni o‘zgartirish uchun so‘rov'
+                : 'Ma’lumotlarni o‘zgartirish uchun so‘rov'
           }
         />
         <div className="flex gap-2">
@@ -138,12 +138,12 @@ const RegisterChangeDetail: FC = () => {
                   </Badge>
                 ) : (
                   <Badge variant="info" className="py-1">
-                    Maʼlumotlarni o‘zgartirish
+                    Ma’lumotlarni o‘zgartirish
                   </Badge>
                 )
               }
             />
-            <DetailRow title="Ijrochi ma‘sul F.I.SH.:" value={changeDetail?.executorName || '-'} />
+            <DetailRow title="Ijrochi mas’ul F.I.SH.:" value={changeDetail?.executorName || '-'} />
 
             {changeDetail?.description && (
               <div

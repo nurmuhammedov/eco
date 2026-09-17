@@ -209,7 +209,7 @@ const InquiryTable = () => {
               size="icon"
               className="h-8 w-8 text-slate-500 hover:text-slate-900"
               onClick={() => navigate(`/inquiries/detail/${row.original.id}`)}
-              title="Murojaatni ko'rish"
+              title="Murojaatni ko‘rish"
             >
               <Eye className="h-4 w-4" />
             </Button>
@@ -264,7 +264,7 @@ const InquiryTable = () => {
               ))
             ) : (
               <div className="flex flex-1 items-center justify-center p-4 text-sm text-slate-500">
-                Maʼlumot topilmadi
+                Ma’lumot topilmadi
               </div>
             )}
           </div>

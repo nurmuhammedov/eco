@@ -152,7 +152,7 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
         <>
           <Card>
             <CardHeader>
-              <CardTitle>Buyurtmachi maʼlumotlari</CardTitle>
+              <CardTitle>Buyurtmachi ma’lumotlari</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
@@ -165,7 +165,7 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Deklaratsiya maʼlumotlari</CardTitle>
+              <CardTitle>Deklaratsiya ma’lumotlari</CardTitle>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -208,7 +208,7 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
                             <SelectContent>
                               {conclusionOptions?.map((option: any) => (
                                 <SelectItem key={option.id} value={option.id}>
-                                  {option.registryNumber || 'Nomaʼlum xulosa'}
+                                  {option.registryNumber || 'Noma’lum xulosa'}
                                 </SelectItem>
                               ))}
                             </SelectContent>

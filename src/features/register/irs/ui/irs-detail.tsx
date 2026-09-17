@@ -77,12 +77,12 @@ const IrsDetail = () => {
           )}
 
           <DetailRow
-            title="Roʻyxatga olish sanasi:"
+            title="Ro‘yxatga olish sanasi:"
             value={data?.registrationDate ? getDate(data?.registrationDate) : <EmptyValue />}
           />
 
           <DetailRow
-            title="Roʻyxatga olish raqami:"
+            title="Ro‘yxatga olish raqami:"
             value={data?.registryNumber ? data?.registryNumber : <EmptyValue />}
           />
 

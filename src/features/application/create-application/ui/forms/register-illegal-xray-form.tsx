@@ -69,7 +69,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
 
   const xrayOrgFiles = [
     { key: 'file5Path', label: 'Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat' },
-    { key: 'file7Path', label: 'Individual dozimetrlar va ularning karta ma‘lumotlari' },
+    { key: 'file7Path', label: 'Individual dozimetrlar va ularning karta ma’lumotlari' },
     { key: 'file9Path', label: 'Yerga ulash va ventilatsiya dalolatnomasi' },
   ]
 
@@ -85,7 +85,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit((d) => handleSubmit({ ...form.getValues(), ...d } as any))}>
-        <GoBack title={isUpdate ? 'Rentgen maʼlumotlarini tahrirlash' : 'Rentgen uskunasini ro‘yxatga olish'} />
+        <GoBack title={isUpdate ? 'Rentgen ma’lumotlarini tahrirlash' : 'Rentgen uskunasini ro‘yxatga olish'} />
         <NoteForm equipmentName="rentgen" onlyLatin={true} />
         <CardForm className="my-2">
           {!isUpdate ? (
@@ -164,7 +164,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
 
           {ownerData && (
             <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
-              <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot maʼlumotlari</h3>
+              <h3 className="mb-4 text-base font-semibold text-gray-800">Tashkilot ma’lumotlari</h3>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
                 <DetailRow title={'Tashkilot nomi:'} value={ownerData?.name || ownerData?.legalName || '-'} />
                 <DetailRow title="Tashkilot rahbari:" value={ownerData?.directorName || '-'} />
@@ -502,7 +502,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
           <Alert className="mb-4 border-amber-200 bg-amber-50 text-amber-800">
             <TriangleAlert className="h-4 w-4 text-amber-600" />
             <AlertDescription>
-              Tashkilotning ayrim hujjatlari to‘liq kiritilmagan. Reyestrlar bo‘limidan tashkilot ma‘lumotlarini
+              Tashkilotning ayrim hujjatlari to‘liq kiritilmagan. Reyestrlar bo‘limidan tashkilot ma’lumotlarini
               yangilash imkoniyati mavjud.{' '}
               {isUpdate
                 ? 'Tashkilot hujjatlari to‘liq mavjud bo‘lganda tahrirlash mumkin!'
@@ -576,7 +576,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                      <FormLabel required>Individual dozimetrlar va ularning karta ma‘lumotlari</FormLabel>
+                      <FormLabel required>Individual dozimetrlar va ularning karta ma’lumotlari</FormLabel>
                       <FormControl>
                         <InputFile
                           form={form}

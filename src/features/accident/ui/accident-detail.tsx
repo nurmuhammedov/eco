@@ -33,7 +33,7 @@ export const AccidentDetail: React.FC = () => {
     return (
       <Card className="mt-4">
         <CardContent>
-          <p className="p-4 text-center">Maʼlumotlar topilmadi</p>
+          <p className="p-4 text-center">Ma’lumotlar topilmadi</p>
         </CardContent>
       </Card>
     )
@@ -76,11 +76,11 @@ export const AccidentDetail: React.FC = () => {
       )}
 
       <DetailCardAccordion defaultValue={isInjury ? ['accident_info', 'victims', 'files'] : ['accident_info', 'files']}>
-        <DetailCardAccordion.Item value="legal_info" title="Tashkilot to‘g‘risida maʼlumot">
+        <DetailCardAccordion.Item value="legal_info" title="Tashkilot to‘g‘risida ma’lumot">
           {accident.legalTin && <LegalApplicantInfo tinNumber={accident.legalTin} />}
         </DetailCardAccordion.Item>
 
-        <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida maʼlumot">
+        <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida ma’lumot">
           <AppealMainInfo data={hfoData} type="HF" address={hfoData?.address} />
         </DetailCardAccordion.Item>
 
@@ -97,7 +97,7 @@ export const AccidentDetail: React.FC = () => {
                 <>
                   <DetailRow title="Komissiya raisi:" value={accident.mainInspector?.name || '-'} />
                   <DetailRow
-                    title="Komissiya aʼzolari:"
+                    title="Komissiya a’zolari:"
                     value={accident.inspectors?.map((i: any) => i.name).join(', ') || '-'}
                   />
                 </>
@@ -118,7 +118,7 @@ export const AccidentDetail: React.FC = () => {
                 value={(accident as Accident).analyses || '-'}
               />
               <DetailRow
-                title="Sanoat xavfsizligi davlat qo'mitasi hay'ati va korxona tomonidan ko'rilgan profilaktik choralar:"
+                title="Sanoat xavfsizligi davlat qo‘mitasi hay'ati va korxona tomonidan ko‘rilgan profilaktik choralar:"
                 value={(accident as Accident).preventions || '-'}
               />
               <DetailRow
@@ -146,7 +146,7 @@ export const AccidentDetail: React.FC = () => {
                 <>
                   <DetailRow title="Komissiya raisi:" value={accident.mainInspector?.name || '-'} />
                   <DetailRow
-                    title="Komissiya aʼzolari:"
+                    title="Komissiya a’zolari:"
                     value={accident.inspectors?.map((i: any) => i.name).join(', ') || '-'}
                   />
                 </>
@@ -155,11 +155,11 @@ export const AccidentDetail: React.FC = () => {
                 <DetailRow title="Buyruq hujjati:" value={<FileLink url={accident.decreePath} />} />
               )}
               <DetailRow
-                title="Avariyadan koʻrilgan iqtisodiy zarar (soʻm):"
+                title="Avariyadan ko‘rilgan iqtisodiy zarar (so‘m):"
                 value={(accident as AccidentNonInjury).economicLoss || '-'}
               />
               <DetailRow
-                title="Obyektdan foydalanish toʻxtatilgan vaqt:"
+                title="Obyektdan foydalanish to‘xtatilgan vaqt:"
                 value={
                   (accident as AccidentNonInjury).stoppedFrom
                     ? format(new Date((accident as unknown as any).stoppedFrom), 'dd.MM.yyyy, HH:mm')
@@ -175,15 +175,15 @@ export const AccidentDetail: React.FC = () => {
                 }
               />
               <DetailRow
-                title="Avariyaning yuz berishida aybdor boʻlgan xodimlar va ularga nisbatan qoʻllanilgan intizomiy jazo:"
+                title="Avariyaning yuz berishida aybdor bo‘lgan xodimlar va ularga nisbatan qo‘llanilgan intizomiy jazo:"
                 value={(accident as AccidentNonInjury).guiltyEmployees || '-'}
               />
               <DetailRow
-                title="Komissiya xulosasiga asosan yuz bergan avariya oqibatlarini bartaraf etish boʻyicha koʻrilgan chora-tadbirlar:"
+                title="Komissiya xulosasiga asosan yuz bergan avariya oqibatlarini bartaraf etish bo‘yicha ko‘rilgan chora-tadbirlar:"
                 value={(accident as AccidentNonInjury).preventions || '-'}
               />
               <DetailRow
-                title="Chora-tadbirlar rejasining bajarilishi toʻgʻrisida maʼlumotlar:"
+                title="Chora-tadbirlar rejasining bajarilishi to‘g‘risida ma’lumotlar:"
                 value={(accident as AccidentNonInjury).executions || '-'}
               />
             </div>
@@ -200,7 +200,7 @@ export const AccidentDetail: React.FC = () => {
                   </h4>
                   <div className="flex flex-col gap-1">
                     <DetailRow
-                      title="Tug'ilgan sanasi:"
+                      title="Tug‘ilgan sanasi:"
                       value={victim.birthDate ? format(new Date(victim.birthDate), 'dd.MM.yyyy') : '-'}
                     />
                     <DetailRow title="Yashash manzili:" value={victim.address || '-'} />
@@ -208,7 +208,7 @@ export const AccidentDetail: React.FC = () => {
                     <DetailRow title="Ish tajribasi (yil):" value={victim.experience ? `${victim.experience}` : '-'} />
                     <DetailRow title="Oilaviy ahvoli:" value={victim.maritalStatus || '-'} />
                     <DetailRow
-                      title="Sodir bo'lgan baxtsiz hodisa oqibati:"
+                      title="Sodir bo‘lgan baxtsiz hodisa oqibati:"
                       value={<span className="font-bold">{getInjuryStatusText(victim.injuryStatus)}</span>}
                     />
                   </div>

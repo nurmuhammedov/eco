@@ -126,7 +126,7 @@ const RiskAnalysisDetail = () => {
               <DataTable data={tableData || []} columns={columns} isLoading={isTableDataLoading} />
             </>
           ) : (
-            <div>Kerakli maʼlumotlar topilmadi...</div>
+            <div>Kerakli ma’lumotlar topilmadi...</div>
           )}
         </DetailCardAccordion.Item>
         {isRadProfile ? (
@@ -160,7 +160,7 @@ const RiskAnalysisDetail = () => {
           </>
         ) : (
           <>
-            <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
+            <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida ma’lumot">
               <LegalApplicantInfo tinNumber={currentTin} />
             </DetailCardAccordion.Item>
             <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
@@ -178,8 +178,8 @@ const RiskAnalysisDetail = () => {
                   }
                 />
               )}
-              <DetailRow title="Roʻyxatga olish sanasi:" value={getDate(data?.registrationDate)} />
-              <DetailRow title="Roʻyxatga olish raqami:" value={data?.registryNumber} />
+              <DetailRow title="Ro‘yxatga olish sanasi:" value={getDate(data?.registrationDate)} />
+              <DetailRow title="Ro‘yxatga olish raqami:" value={data?.registryNumber} />
               {!!data?.registryFilePath && (
                 <DetailRow
                   title="Reyestrga qo‘yilganligi to‘g‘risidagi hujjat:"

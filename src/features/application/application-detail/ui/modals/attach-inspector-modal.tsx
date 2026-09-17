@@ -53,10 +53,10 @@ const AttachInspectorModal = () => {
 
   const selectOptions = getSelectOptions(
     isManager
-      ? managerSelectData || [] // Agar isManager rost bo'lsa, shu maʼlumotni
+      ? managerSelectData || [] // Agar isManager rost bo‘lsa, shu ma’lumotni
       : isRegional
-        ? inspectorSelectData || [] // Aks holda, agar isRegional rost bo'lsa, shu maʼlumotni
-        : [] // Agar ikkalasi ham yolg'on bo'lsa, bo'sh massivni ol
+        ? inspectorSelectData || [] // Aks holda, agar isRegional rost bo‘lsa, shu ma’lumotni
+        : [] // Agar ikkalasi ham yolg‘on bo‘lsa, bo‘sh massivni ol
   )
 
   function onSubmit(data: z.infer<typeof schema>) {

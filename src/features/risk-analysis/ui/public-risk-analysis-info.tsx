@@ -25,7 +25,7 @@ const PublicRiskAnalysisInfo: FC<Props> = () => {
   if (!data?.indicators || Object.keys(data?.indicators).length === 0) {
     return (
       <div className="text-muted-foreground mx-auto w-full max-w-4xl p-6 text-center">
-        <p>Ushbu ID bo‘yicha maʼlumotlar topilmadi.</p>
+        <p>Ushbu ID bo‘yicha ma’lumotlar topilmadi.</p>
       </div>
     )
   }

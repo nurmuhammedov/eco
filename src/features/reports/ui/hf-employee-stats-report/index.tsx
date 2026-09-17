@@ -13,7 +13,7 @@ const ReportHfEmployeeStats: React.FC = () => {
     return reportData.map((item: any) => ({
       officeName: item.regionName,
       isSummary:
-        item.regionName?.toLowerCase().includes("bo'yicha") || item.regionName?.toLowerCase().includes('bo‘yicha'),
+        item.regionName?.toLowerCase().includes('bo‘yicha') || item.regionName?.toLowerCase().includes('bo‘yicha'),
       managerCount: item.managerCount || 0,
       engineerCount: item.engineerCount || 0,
       workerCount: item.workerCount || 0,

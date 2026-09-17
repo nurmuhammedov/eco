@@ -27,7 +27,7 @@ export const NoteForm = ({
           <TriangleAlert className="size-4 !text-yellow-600" />
           <AlertTitle className="flex items-center justify-between text-yellow-700">
             <span>
-              Maʼlumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida lotinga
+              Ma’lumotlar lotinda kiritilsin, agar kirilda yozilgan bo‘lsa, tahrirlash jarayonida lotinga
               o‘zgartirilsin!
             </span>
             <a

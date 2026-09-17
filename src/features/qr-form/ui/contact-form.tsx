@@ -63,7 +63,7 @@ export const ContactForm = () => {
   if (!data) {
     return (
       <div className="text-muted-foreground mx-auto w-full max-w-4xl p-6 text-center">
-        <p>Ushbu ID bo‘yicha qurilma maʼlumotlari topilmadi.</p>
+        <p>Ushbu ID bo‘yicha qurilma ma’lumotlari topilmadi.</p>
       </div>
     )
   }
@@ -73,7 +73,7 @@ export const ContactForm = () => {
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6 pb-6">
       <div className="bg-card overflow-hidden rounded-lg border shadow-sm">
-        <SectionHeader title="Qurilma maʼlumotlari" />
+        <SectionHeader title="Qurilma ma’lumotlari" />
         <div className="p-4 sm:p-6">
           <DetailRow label="Qurilma" value={data.typeName} />
           <DetailRow label="Qurilma nomi" value={data.attractionName} />

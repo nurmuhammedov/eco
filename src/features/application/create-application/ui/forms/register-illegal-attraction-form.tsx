@@ -69,7 +69,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'Attraksion maʼlumotlarini tahrirlash' : 'Attraksionni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'Attraksion ma’lumotlarini tahrirlash' : 'Attraksionni ro‘yxatga olish arizasi'} />
         <NoteForm equipmentName="attraksion" />
 
         <ApplicantSearchCard
@@ -389,7 +389,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Attraksionning surʼati
+                      Attraksionning sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -439,7 +439,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
             <DocumentField
               form={form}
               name="technicalManualPath"
-              label="Texnik shahodat sinovlari attraksiondan foydalanish qo‘llanmasi va mazkur Qoidalar talablariga muvofiq attraksionlarni soz holatda saqlash va xavfsiz foydalanish uchun masʼul bo‘lgan mutaxassis boshchiligida amalga oshiriladi. Masʼul mutaxassis buyrug‘i"
+              label="Texnik shahodat sinovlari attraksiondan foydalanish qo‘llanmasi va mazkur Qoidalar talablariga muvofiq attraksionlarni soz holatda saqlash va xavfsiz foydalanish uchun mas’ul bo‘lgan mutaxassis boshchiligida amalga oshiriladi. Mas’ul mutaxassis buyrug‘i"
               required={!isUpdate}
             />
           </div>
@@ -453,7 +453,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Mavsumiy foydalaniladigan attraksionlar to‘liq texnik shahodat sinovlaridan o‘tganligi to‘g‘risida
-                      maʼlumotlar
+                      ma’lumotlar
                     </FormLabel>
                     <FormControl>
                       <InputFile
@@ -559,7 +559,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
                       Bog‘ xodimlarning mehnatni muhofaza qilish bo‘yicha bilimlarini sinovdan o‘tganligi to‘g‘risida
-                      maʼlumot
+                      ma’lumot
                     </FormLabel>
                     <FormControl>
                       <InputFile
@@ -649,7 +649,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
             <DocumentField
               form={form}
               name="preservationActPath"
-              label="Attraksionni saqlashga qo’yish dalolatnomasi"
+              label="Attraksionni saqlashga qo‘yish dalolatnomasi"
             />
           </div>
 
@@ -661,7 +661,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
                 <FormItem className="mb-2">
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Video kuzatuv moslamasi o’rnatilganligi surʼati
+                      Video kuzatuv moslamasi o‘rnatilganligi sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -680,7 +680,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
                 <FormItem className="mb-2">
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Attraksionga QR kod axborot taxtachasiga o’rnatilganligi surʼati
+                      Attraksionga QR kod axborot taxtachasiga o‘rnatilganligi sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />

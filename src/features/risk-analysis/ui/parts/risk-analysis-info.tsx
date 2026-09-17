@@ -50,7 +50,7 @@ const RiskAnalysisIndicator: FC<RiskAnalysisIndicatorProps> = ({ belongId }) => 
   }
 
   if (analysisError) {
-    return <div>{analysisError || 'Maʼlumotlarni yuklashda xatolik.'}</div>
+    return <div>{analysisError || 'Ma’lumotlarni yuklashda xatolik.'}</div>
   }
 
   if (!analysisData) {

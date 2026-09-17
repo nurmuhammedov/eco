@@ -96,13 +96,13 @@ export const AccidentDecreeModal: React.FC<AccidentDecreeModalProps> = ({
               name="inspectorIds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Komissiya aʼzolari</FormLabel>
+                  <FormLabel required>Komissiya a’zolari</FormLabel>
                   <FormControl>
                     <MultiSelect
                       options={(inspectors || []).map((i: any) => ({ id: i.id, name: i.name }))}
                       value={field.value}
                       onChange={(val) => field.onChange(val as string[])}
-                      placeholder="Komissiya aʼzolarini tanlang"
+                      placeholder="Komissiya a’zolarini tanlang"
                     />
                   </FormControl>
                   <FormMessage />

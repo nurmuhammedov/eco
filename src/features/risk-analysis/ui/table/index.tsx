@@ -30,7 +30,7 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
           {
             header: () => (
               <div className="whitespace-nowrap">
-                Roʻyxatga olish <br /> raqami
+                Ro‘yxatga olish <br /> raqami
               </div>
             ),
             accessorKey: 'registryNumber',

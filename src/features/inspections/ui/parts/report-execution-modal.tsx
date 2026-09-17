@@ -180,7 +180,7 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
                           control={form.control}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Aniqlangan kamchilikni bartaraf etish yuzasidan maʼlumot</FormLabel>
+                              <FormLabel>Aniqlangan kamchilikni bartaraf etish yuzasidan ma’lumot</FormLabel>
                               <FormControl>
                                 <InputFile
                                   buttonText="Faylni yuklang"
