@@ -8,7 +8,7 @@ import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import FileLink from '@/shared/components/common/file-link'
 import { EmptyValue } from '@/shared/components/common/empty-value'
-import useData from '@/shared/hooks/api/use-data'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { FVV_GROUPS, SES_GROUPS } from '../model/review-fields'
 import { canSignAsCommittee, isCustomer, isPreparer } from '../model/permissions'
@@ -33,8 +33,8 @@ export default function CadastreDetail() {
 
   const { data: passport, isLoading } = useCadastrePassport(id)
 
-  const { data: preparerInfo } = useData<any>(`/users/legal/${passport?.preparerTin}`, !!passport?.preparerTin)
-  const { data: customerInfo } = useData<any>(`/users/legal/${passport?.customerTin}`, !!passport?.customerTin)
+  const { data: preparerInfo } = useLegalOrganizationQuery(passport?.preparerTin)
+  const { data: customerInfo } = useLegalOrganizationQuery(passport?.customerTin)
 
   if (isLoading) {
     return (

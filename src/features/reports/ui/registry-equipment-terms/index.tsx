@@ -1,3 +1,4 @@
+import { OptionItem } from '@/shared/types/general'
 import React, { useMemo } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
@@ -72,7 +73,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
     if (!useDynamicData || !subTypesList || !reportData) return []
 
     // Prepare columns to know which names to look for
-    const columnsToFetch = [{ id: 'ALL_SUBTYPES', name: 'Barcha qurilmalar' }]
+    const columnsToFetch: OptionItem<string | number>[] = [{ id: 'ALL_SUBTYPES', name: 'Barcha qurilmalar' }]
     if (subTypeParam === 'ALL') {
       columnsToFetch.push(...subTypesList)
     } else {

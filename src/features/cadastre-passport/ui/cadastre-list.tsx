@@ -85,7 +85,23 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
 
   const { mutate: deleteCadastre } = useDelete('/cadastre-passports')
 
-  const columns: ExtendedColumnDef<CadastrePassportRow, any>[] = [
+  const actionsColumn: ExtendedColumnDef<CadastrePassportRow, unknown> = {
+    id: 'actions',
+    header: () => <div className="text-right">Amallar</div>,
+    cell: ({ row }) => (
+      <div className="flex justify-end">
+        <DataTableRowActions
+          row={row}
+          showView
+          onView={(target) => navigate(`/cadastre-passports/${target.original.id}`)}
+          showDelete={row.original.status === 'NEW' && isPreparer(user, row.original)}
+          onDelete={(target) => deleteCadastre(target.original.id, { onSuccess: () => refetch() })}
+        />
+      </div>
+    ),
+  }
+
+  const columns: ExtendedColumnDef<CadastrePassportRow, unknown>[] = [
     {
       accessorKey: 'requestNumber',
       header: 'Ariza raqami',
@@ -134,25 +150,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
       // The tab is the status filter whenever one pins it.
       ...(pinnedStatus ? {} : { filterKey: 'status', filterType: 'select', filterOptions: STATUS_OPTIONS }),
     },
-    ...(isShortView
-      ? []
-      : [
-          {
-            id: 'actions',
-            header: () => <div className="text-right">Amallar</div>,
-            cell: ({ row }: any) => (
-              <div className="flex justify-end">
-                <DataTableRowActions
-                  row={row}
-                  showView
-                  onView={(target: any) => navigate(`/cadastre-passports/${target.original.id}`)}
-                  showDelete={row.original.status === 'NEW' && isPreparer(user, row.original)}
-                  onDelete={(target: any) => deleteCadastre(target.original.id, { onSuccess: () => refetch() })}
-                />
-              </div>
-            ),
-          },
-        ]),
+    ...(isShortView ? [] : [actionsColumn]),
   ]
 
   return (
@@ -188,7 +186,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
           showFilters
           isPaginated
           data={data?.content || []}
-          columns={columns as unknown as any}
+          columns={columns}
           isLoading={isLoading}
           pageCount={totalPages}
           className="flex-1"

@@ -9,7 +9,7 @@ import { Search } from 'lucide-react'
 import GoBack from '@/shared/components/common/go-back'
 import DetailRow from '@/shared/components/common/detail-row'
 import { toast } from 'sonner'
-import useData from '@/shared/hooks/api/use-data'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import useAdd from '@/shared/hooks/api/use-add'
 import { useAuth } from '@/shared/hooks/use-auth'
 
@@ -68,7 +68,7 @@ export default function CadastreAdd() {
     data: legalInfo,
     isFetching: isLegalInfoLoading,
     isError: isLegalInfoError,
-  } = useData<any>(`/users/legal/${searchedStir}`, !!searchedStir && searchedStir.length === 9)
+  } = useLegalOrganizationQuery(searchedStir, searchedStir?.length === 9)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -76,7 +76,8 @@ export default function CadastreAdd() {
       attributeFile: '',
       passportFile: '',
       parentRequestNumber: resubmitRequestNumber ?? '',
-      cadastreData: {} as any,
+      // The form starts empty; the schema only has to hold at submit time.
+      cadastreData: {} as FormValues['cadastreData'],
     },
   })
 

@@ -1,4 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
+import { OptionItem } from '@/shared/types/general'
 import { DateDisableStrategy } from '@/shared/components/ui/datepicker'
 
 /**
@@ -9,7 +10,8 @@ import { DateDisableStrategy } from '@/shared/components/ui/datepicker'
 export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   filterKey?: string
   filterType?: 'search' | 'select' | 'date' | 'number' | 'date-range'
-  filterOptions?: { id: string; name: string }[]
+  // The lists come straight from the dictionaries, whose ids are numbers.
+  filterOptions?: OptionItem<string | number>[]
   filterDateStrategy?: DateDisableStrategy
   filterMaxLength?: number
   filterRangeKeys?: [string, string]
