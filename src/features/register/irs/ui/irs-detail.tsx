@@ -66,7 +66,7 @@ const IrsDetail = () => {
               title="Reyestrga kiritish uchun asos (ariza):"
               value={
                 data?.appealId ? (
-                  <Link className="text-[#0271FF]" to={'/applications/detail/' + data?.appealId}>
+                  <Link className="text-[#0271FF]" to={'/applications/' + data?.appealId}>
                     Arizani ko‘rish
                   </Link>
                 ) : (

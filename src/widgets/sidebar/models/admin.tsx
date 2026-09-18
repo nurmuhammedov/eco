@@ -22,7 +22,7 @@ export default [
     icon: <MapPin />,
   },
   {
-    url: '/department',
+    url: '/departments',
     title: 'menu.departments',
     icon: <ListTree />,
   },

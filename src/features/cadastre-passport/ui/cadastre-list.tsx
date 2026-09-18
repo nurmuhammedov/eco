@@ -145,7 +145,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
                 <DataTableRowActions
                   row={row}
                   showView
-                  onView={(target: any) => navigate(`/cadastre-passport/${target.original.id}`)}
+                  onView={(target: any) => navigate(`/cadastre-passports/${target.original.id}`)}
                   showDelete={row.original.status === 'NEW' && isPreparer(user, row.original)}
                   onDelete={(target: any) => deleteCadastre(target.original.id, { onSuccess: () => refetch() })}
                 />
@@ -173,7 +173,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
             <span />
           )}
           {canCreate && (
-            <Button onClick={() => navigate('/cadastre-passport/add')}>
+            <Button onClick={() => navigate('/cadastre-passports/add')}>
               <Plus className="mr-2 h-4 w-4" />
               TXYUZ kadastr pasporti qo‘shish
             </Button>

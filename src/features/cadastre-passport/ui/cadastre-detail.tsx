@@ -57,7 +57,7 @@ export default function CadastreDetail() {
             Hujjat o‘chirilgan bo‘lishi yoki sizda unga kirish huquqi bo‘lmasligi mumkin.
           </p>
         </div>
-        <Button variant="outline" onClick={() => navigate('/cadastre-passport')}>
+        <Button variant="outline" onClick={() => navigate('/cadastre-passports')}>
           Ro‘yxatga qaytish
         </Button>
       </div>
@@ -77,7 +77,7 @@ export default function CadastreDetail() {
       customerTin: String(passport.customerTin),
     })
 
-    navigate(`/cadastre-passport/add?${params}`)
+    navigate(`/cadastre-passports/add?${params}`)
   }
 
   return (
@@ -109,7 +109,7 @@ export default function CadastreDetail() {
               title="Oldin yuborilgan pasport"
               value={
                 <Link
-                  to={`/cadastre-passport/${passport.parentCadastrePassportId}`}
+                  to={`/cadastre-passports/${passport.parentCadastrePassportId}`}
                   className="text-teal hover:underline"
                 >
                   Ko‘rish

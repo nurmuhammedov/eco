@@ -214,7 +214,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   { id: 'CONCLUSION', path: 'accreditations/add', element: withSuspense(AddConclusionPage), roles: [UserRoles.LEGAL] },
   {
     id: 'CONCLUSION',
-    path: 'accreditations/detail/:id',
+    path: 'accreditations/:id',
     element: withSuspense(ConclusionDetail),
     roles: [
       UserRoles.CHAIRMAN,
@@ -228,7 +228,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'CONCLUSION',
-    path: 'accreditations/edit/:id',
+    path: 'accreditations/:id/edit',
     element: withSuspense(EditConclusion),
     roles: [UserRoles.LEGAL],
   },
@@ -240,7 +240,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'CONCLUSION',
-    path: 'accreditations/old/detail/:id',
+    path: 'accreditations/old/:id',
     element: withSuspense(OldConclusionDetailPage),
     roles: [
       UserRoles.CHAIRMAN,
@@ -269,13 +269,13 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'APPEAL',
-    path: 'applications/create',
+    path: 'applications/add',
     element: withSuspense(CreateApplicationGrids),
     roles: [UserRoles.INDIVIDUAL, UserRoles.LEGAL],
   },
   {
     id: 'APPEAL',
-    path: 'applications/create/:type',
+    path: 'applications/add/:type',
     element: withSuspense(CreateApplicationForm),
     roles: [
       UserRoles.CHAIRMAN,
@@ -288,7 +288,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'APPEAL',
-    path: 'applications/detail/:id',
+    path: 'applications/:id',
     element: withSuspense(ApplicationDetail),
     roles: [
       UserRoles.CHAIRMAN,
@@ -303,7 +303,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'APPEAL',
-    path: 'applications/inspector/create',
+    path: 'applications/inspector/add',
     element: withSuspense(CreateApplicationGridsIns),
     roles: [UserRoles.INSPECTOR, UserRoles.MANAGER],
   },
@@ -445,19 +445,19 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   { path: 'attraction-types', element: withSuspense(AttractionTypePage), roles: [UserRoles.ADMIN] },
   {
     id: 'CADASTRE_PASSPORT',
-    path: 'cadastre-passport',
+    path: 'cadastre-passports',
     element: withSuspense(CadastreList),
     roles: [UserRoles.CHAIRMAN, UserRoles.INDIVIDUAL, UserRoles.LEGAL, UserRoles.MANAGER, UserRoles.PROCURATOR],
   },
   {
     id: 'CADASTRE_PASSPORT',
-    path: 'cadastre-passport/:id',
+    path: 'cadastre-passports/:id',
     element: withSuspense(CadastreDetail),
     roles: [UserRoles.CHAIRMAN, UserRoles.INDIVIDUAL, UserRoles.LEGAL, UserRoles.MANAGER, UserRoles.PROCURATOR],
   },
   {
     id: 'CADASTRE_PASSPORT',
-    path: 'cadastre-passport/add',
+    path: 'cadastre-passports/add',
     element: withSuspense(CadastreAdd),
     roles: [UserRoles.CHAIRMAN, UserRoles.LEGAL, UserRoles.MANAGER, UserRoles.PROCURATOR],
   },
@@ -483,7 +483,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   { id: 'DECLARATION', path: 'declarations/add', element: withSuspense(AddDeclarationPage), roles: [UserRoles.LEGAL] },
   {
     id: 'DECLARATION',
-    path: 'declarations/detail/:id',
+    path: 'declarations/:id',
     element: withSuspense(DeclarationDetailPage),
     roles: [
       UserRoles.CHAIRMAN,
@@ -497,14 +497,14 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'DECLARATION',
-    path: 'declarations/edit/:id',
+    path: 'declarations/:id/edit',
     element: withSuspense(
       lazy(() => import('@/features/declarations/ui/edit-declaration').then((m) => ({ default: m.EditDeclaration })))
     ),
     roles: [UserRoles.LEGAL],
   },
   { path: 'decree-signers', element: withSuspense(DecreeSignerPage), roles: [UserRoles.ADMIN] },
-  { path: 'department', element: withSuspense(DepartmentPage), roles: [UserRoles.ADMIN] },
+  { path: 'departments', element: withSuspense(DepartmentPage), roles: [UserRoles.ADMIN] },
   {
     id: 'ELEVATOR',
     path: 'elevators',
@@ -560,7 +560,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'INQUIRY',
-    path: 'inquiries/detail/:id',
+    path: 'inquiries/:id',
     element: withSuspense(InquiryDetailPage),
     roles: [
       UserRoles.ACCOUNTANT,
@@ -666,8 +666,8 @@ export const APP_ROUTES: AppRouteDefinition[] = [
       UserRoles.REGIONAL,
     ],
   },
-  { path: 'news/create', element: withSuspense(NewsFormPage), roles: [UserRoles.ADMIN] },
-  { path: 'news/edit/:id', element: withSuspense(NewsFormPage), roles: [UserRoles.ADMIN] },
+  { path: 'news/add', element: withSuspense(NewsFormPage), roles: [UserRoles.ADMIN] },
+  { path: 'news/:id/edit', element: withSuspense(NewsFormPage), roles: [UserRoles.ADMIN] },
   { path: 'org-workflow', element: withSuspense(OrgWorkflowPage), roles: [UserRoles.ADMIN] },
   // Not gated by a direction: the endpoint behind it is guarded by role alone
   // (`hasAnyAuthority('REGIONAL','HEAD','CHAIRMAN')`).
@@ -706,7 +706,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'PREVENTION',
-    path: 'preventions/detail/:id',
+    path: 'preventions/:id',
     element: withSuspense(PreventionDetail),
     roles: [
       UserRoles.CHAIRMAN,

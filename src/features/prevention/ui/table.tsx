@@ -62,7 +62,7 @@ const PreventionTable: FC<Props> = ({ regions }) => {
   )
 
   const handleView = (row: any) => {
-    navigate(`/preventions/detail/${row.id}?tin=${row.identity}`)
+    navigate(`/preventions/${row.id}?tin=${row.identity}`)
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [

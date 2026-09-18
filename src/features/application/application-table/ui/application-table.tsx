@@ -121,7 +121,7 @@ export const ApplicationTable = () => {
             showView
             showDelete
             row={row}
-            onView={(row: any) => navigate(`/applications/detail/${row?.original?.id}`)}
+            onView={(row: any) => navigate(`/applications/${row?.original?.id}`)}
           />
         ),
       },

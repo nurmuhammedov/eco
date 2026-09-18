@@ -61,7 +61,7 @@ export const NewsList: FC = () => {
           showView
           onView={() => navigate(`/news/${row.original.id}`)}
           showEdit={isAdmin}
-          onEdit={() => navigate(`/news/edit/${row.original.id}`)}
+          onEdit={() => navigate(`/news/${row.original.id}/edit`)}
           showDelete={isAdmin}
           onDelete={() => handleDelete(row.original.id)}
         />
@@ -73,7 +73,7 @@ export const NewsList: FC = () => {
     <div className="flex h-full flex-col gap-4">
       <div className="flex items-center justify-end">
         {isAdmin && (
-          <Button onClick={() => navigate('/news/create')}>
+          <Button onClick={() => navigate('/news/add')}>
             <Plus className="mr-2 h-4 w-4" />
             Xabarnoma qo‘shish
           </Button>

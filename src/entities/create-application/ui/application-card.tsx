@@ -7,7 +7,6 @@ import { cn } from '@/shared/lib/utils'
 
 interface ApplicationCardProps {
   application: ApplicationCardItem
-  url?: string
   btnTitle?: string
 }
 
@@ -26,19 +25,17 @@ const SendSVGIcon = () => (
 
 const AnimatedButton = ({
   type,
-  url = 'applications',
   btnTitle = 'Ariza yuborish',
   disabled = false,
 }: {
   type: ApplicationTypeEnum
-  url?: string
   btnTitle?: string
   disabled?: boolean
 }) => {
   const navigate = useNavigate()
 
   const handleNavigate = () => {
-    navigate(`/${url}/create/${type}`)
+    navigate(`/applications/add/${type}`)
   }
 
   if (disabled) {
@@ -68,7 +65,7 @@ const AnimatedButton = ({
   )
 }
 
-function ApplicationCard({ application, url, btnTitle }: ApplicationCardProps) {
+function ApplicationCard({ application, btnTitle }: ApplicationCardProps) {
   const isDisabled = !!application.disabled
 
   return (
@@ -98,7 +95,7 @@ function ApplicationCard({ application, url, btnTitle }: ApplicationCardProps) {
       ) : (
         <div className="mb-6" />
       )}
-      <AnimatedButton url={url} type={application.type} btnTitle={btnTitle} disabled={isDisabled} />
+      <AnimatedButton type={application.type} btnTitle={btnTitle} disabled={isDisabled} />
     </div>
   )
 }

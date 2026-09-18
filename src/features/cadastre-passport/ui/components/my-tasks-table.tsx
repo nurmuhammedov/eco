@@ -89,7 +89,7 @@ export const MyTasksTable = () => {
           <DataTableRowActions
             row={row}
             showView
-            onView={(target) => navigate(`/cadastre-passport/${target.original.businessId}`)}
+            onView={(target) => navigate(`/cadastre-passports/${target.original.businessId}`)}
           />
         </div>
       ),

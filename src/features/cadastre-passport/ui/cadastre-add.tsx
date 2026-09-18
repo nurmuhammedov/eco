@@ -116,7 +116,7 @@ export default function CadastreAdd() {
       {
         onSuccess: () => {
           toast.success('So‘rov yuborildi')
-          navigate('/cadastre-passport')
+          navigate('/cadastre-passports')
         },
       }
     )
@@ -268,7 +268,7 @@ export default function CadastreAdd() {
             </DetailCardAccordion>
 
             <div className="mt-4 flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={() => navigate('/cadastre-passport')}>
+              <Button type="button" variant="outline" onClick={() => navigate('/cadastre-passports')}>
                 Bekor qilish
               </Button>
               <Button type="submit">Saqlash</Button>

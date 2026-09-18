@@ -107,7 +107,7 @@ export function Header() {
       { path: '/accidents', title: 'Baxtsiz hodisalar va Avariyalar' },
       { path: '/news', title: 'Xabarnoma' },
       { path: '/territories', title: 'Hududlar' },
-      { path: '/department', title: 'Bo‘limlar' },
+      { path: '/departments', title: 'Bo‘limlar' },
       { path: '/staffs', title: 'Xodimlar' },
       { path: '/decree-signers', title: 'Imzolovchi shaxslar' },
       { path: '/hazardous-facilities', title: 'Xavfli obyektlar' },
@@ -120,7 +120,7 @@ export function Header() {
       { path: '/elevators', title: 'Liftlar' },
       { path: '/expertise', title: 'Ekspertiza' },
       { path: '/archive', title: 'Arxiv' },
-      { path: '/cadastre-passport', title: 'TXYUZ kadastr pasportlari' },
+      { path: '/cadastre-passports', title: 'TXYUZ kadastr pasportlari' },
       { path: '/user-delegation', title: 'Vazifalarni yuklash' },
       { path: '/profile', title: 'Profil' },
     ]

@@ -208,7 +208,7 @@ const InquiryTable = () => {
               variant="ghost"
               size="icon"
               className="h-8 w-8 text-slate-500 hover:text-slate-900"
-              onClick={() => navigate(`/inquiries/detail/${row.original.id}`)}
+              onClick={() => navigate(`/inquiries/${row.original.id}`)}
               title="Murojaatni ko‘rish"
             >
               <Eye className="h-4 w-4" />
@@ -241,7 +241,7 @@ const InquiryTable = () => {
               data.content.map((item: any) => (
                 <Link
                   key={item.id}
-                  to={`/inquiries/detail/${item.id}`}
+                  to={`/inquiries/${item.id}`}
                   className="flex cursor-pointer flex-col gap-2 rounded-xl border bg-white p-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
                 >
                   <div className="flex items-center justify-between">

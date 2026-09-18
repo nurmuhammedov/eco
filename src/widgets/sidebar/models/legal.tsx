@@ -119,7 +119,7 @@ export default [
   {
     id: 'CADASTRE_PASSPORT',
     title: 'TXYUZ kadastr pasportlari',
-    url: '/cadastre-passport',
+    url: '/cadastre-passports',
     icon: MODULE_ICONS.CADASTRE_PASSPORT,
   },
   {
