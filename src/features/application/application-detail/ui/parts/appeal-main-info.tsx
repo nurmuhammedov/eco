@@ -558,7 +558,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
           value={
             data?.hfName ? (
               <Link
-                to={`/register/${data?.hfId || data?.hazardousFacilityId}/hf`}
+                to={`/register/hf/${data?.hfId || data?.hazardousFacilityId}`}
                 className="text-[#0271FF] hover:underline"
               >
                 {data.hfName}

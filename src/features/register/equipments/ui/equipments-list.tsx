@@ -111,10 +111,10 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
 
   const handleViewApplication = (id: string) => {
     if (currentStatus === 'CHANGED') {
-      navigate(`/register/change/${id}/equipments`)
+      navigate(`/register/change/equipments/${id}`)
     } else {
       const query = ['ACTIVE', 'VALID', 'INVALID'].includes(currentStatus) ? `?active=true&status=${currentStatus}` : ''
-      navigate(`${id}/equipments${query}`)
+      navigate(`equipments/${id}${query}`)
     }
   }
 
@@ -184,7 +184,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
           showDelete
           onView={(row) =>
             navigate(
-              `${row.original.id}/auto?tin=${row.original.tin ? row.original.tin : row.original.pin ? row.original.pin : null}`
+              `auto/${row.original.id}?tin=${row.original.tin ? row.original.tin : row.original.pin ? row.original.pin : null}`
             )
           }
         />

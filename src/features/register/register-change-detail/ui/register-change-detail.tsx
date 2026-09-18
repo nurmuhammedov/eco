@@ -19,8 +19,21 @@ import ApplicationLogsModal from '@/features/application/application-detail/ui/m
 import { Badge } from '@/shared/components/ui/badge'
 import { cn } from '@/shared/lib/utils'
 
+/** The register sections this page knows how to read a change request for. */
+const SECTIONS = ['hf', 'equipments', 'irs', 'xrays', 'xray', 'radiation-profiles']
+
 const RegisterChangeDetail: FC = () => {
-  const { id, type } = useParams<{ id: string; type: string }>()
+  const params = useParams<{ id: string; type: string }>()
+
+  /**
+   * The address used to read `change/:id/:type`. Both segments are free text, so
+   * a redirect cannot tell the two shapes apart - only the section name can, and
+   * it is the one segment with a known set of values.
+   */
+  const swapped = !!params.type && !SECTIONS.includes(params.type) && SECTIONS.includes(params.id ?? '')
+  const id = swapped ? params.type : params.id
+  const type = swapped ? params.id : params.type
+
   const { user } = useAuth()
 
   const { detail: changeDetail, isLoading = true } = useDetail<any>('/changes/by-belong', id, !!id)
@@ -116,7 +129,7 @@ const RegisterChangeDetail: FC = () => {
               value={
                 <Link
                   className="inline-flex items-center gap-1 text-sm font-medium text-[#0271FF] hover:underline"
-                  to={type === 'radiation-profiles' ? `/register/radiation-profiles/${id}` : `/register/${id}/${type}`}
+                  to={type === 'radiation-profiles' ? `/register/radiation-profiles/${id}` : `/register/${type}/${id}`}
                 >
                   Ko‘rish
                   <ArrowUpRight className="size-4" />

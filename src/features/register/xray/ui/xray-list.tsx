@@ -78,14 +78,14 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
 
   const handleViewApplication = (id: string) => {
     if (currentStatus === 'CHANGED') {
-      navigate(`/register/change/${id}/xrays`)
+      navigate(`/register/change/xrays/${id}`)
     } else if (currentStatus === 'CHANGED_ORGANIZATIONS') {
-      navigate(`/register/change/${id}/radiation-profiles`)
+      navigate(`/register/change/radiation-profiles/${id}`)
     } else if (isOrganizations) {
       navigate(`/register/radiation-profiles/${id}?type=XRAY`)
     } else {
       const basePath = isArchive ? '/archive' : '/register'
-      navigate(`${basePath}/${id}/xrays${currentStatus === 'ACTIVE' ? '?active=true' : ''}`)
+      navigate(`${basePath}/xrays/${id}${currentStatus === 'ACTIVE' ? '?active=true' : ''}`)
     }
   }
 

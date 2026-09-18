@@ -81,9 +81,9 @@ export const HfList = ({ isArchive }: HfListProps) => {
 
   const handleViewApplication = (id: string) => {
     if (currentActive === 'CHANGED') {
-      navigate(`/register/change/${id}/hf`)
+      navigate(`/register/change/hf/${id}`)
     } else {
-      navigate(`${id}/hf${['true', 'VALID', 'INVALID'].includes(currentActive) ? '?active=true' : ''}`)
+      navigate(`hf/${id}${['true', 'VALID', 'INVALID'].includes(currentActive) ? '?active=true' : ''}`)
     }
   }
 

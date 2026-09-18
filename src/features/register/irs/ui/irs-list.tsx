@@ -77,14 +77,14 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
 
   const handleViewApplication = (id: string) => {
     if (currentValid === 'CHANGED') {
-      navigate(`/register/change/${id}/irs`)
+      navigate(`/register/change/irs/${id}`)
     } else if (currentValid === 'CHANGED_ORGANIZATIONS') {
-      navigate(`/register/change/${id}/radiation-profiles`)
+      navigate(`/register/change/radiation-profiles/${id}`)
     } else if (isOrganizations) {
       navigate(`/register/radiation-profiles/${id}?type=IRS`)
     } else {
       const basePath = isArchive ? '/archive' : '/register'
-      navigate(`${basePath}/${id}/irs`)
+      navigate(`${basePath}/irs/${id}`)
     }
   }
 

@@ -94,7 +94,7 @@ const EquipmentsDetail = () => {
             </>
           )}
           {user?.role === UserRoles.CHAIRMAN && (
-            <Button onClick={() => navigate(`/register/${equipmentUuid}/equipments/appeals`)}>Murojaatlar</Button>
+            <Button onClick={() => navigate(`/register/equipments/${equipmentUuid}/appeals`)}>Murojaatlar</Button>
           )}
         </div>
       </div>

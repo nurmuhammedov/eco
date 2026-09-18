@@ -197,7 +197,7 @@ const InquiryTable = () => {
         return (
           <div className="flex items-center gap-2">
             {row.original.belongId && (
-              <Button size="sm" onClick={() => navigate(`/register/${row.original.belongId}/${belongTypeStr}`)}>
+              <Button size="sm" onClick={() => navigate(`/register/${belongTypeStr}/${row.original.belongId}`)}>
                 Obyektni ko‘rish
               </Button>
             )}

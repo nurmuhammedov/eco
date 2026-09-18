@@ -42,7 +42,10 @@ const ObjectsList = () => {
           variant="ghost"
           size="icon"
           onClick={() =>
-            navigate(`/risk-analysis/info/${row.original?.id}?tin=${paramsObject?.tin}&name=${paramsObject?.name}`, {})
+            navigate(
+              `/risk-analysis/objects/${row.original?.id}?tin=${paramsObject?.tin}&name=${paramsObject?.name}`,
+              {}
+            )
           }
         >
           <Eye className="h-4 w-4" />

@@ -27,7 +27,7 @@ export default [
     icon: <ListTree />,
   },
   {
-    url: '/staffs',
+    url: '/employees',
     title: 'menu.staffs',
     icon: <Users />,
   },

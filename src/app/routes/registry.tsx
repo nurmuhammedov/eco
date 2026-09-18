@@ -324,7 +324,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'ARCHIVE',
-    path: 'archive/:id/auto',
+    path: 'archive/auto/:id',
     element: withSuspense(RegisterAutoDetail),
     roles: [
       UserRoles.CHAIRMAN,
@@ -339,7 +339,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'ARCHIVE',
-    path: 'archive/:id/equipments',
+    path: 'archive/equipments/:id',
     element: withSuspense(RegisterEquipmentDetail),
     roles: [
       UserRoles.CHAIRMAN,
@@ -354,7 +354,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'ARCHIVE',
-    path: 'archive/:id/hf',
+    path: 'archive/hf/:id',
     element: withSuspense(RegisterHFDetail),
     roles: [
       UserRoles.CHAIRMAN,
@@ -369,7 +369,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'ARCHIVE',
-    path: 'archive/:id/irs',
+    path: 'archive/irs/:id',
     element: withSuspense(RegisterIrsDetail),
     roles: [
       UserRoles.CHAIRMAN,
@@ -384,7 +384,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'ARCHIVE',
-    path: 'archive/:id/xrays',
+    path: 'archive/xrays/:id',
     element: withSuspense(RegisterXrayDetail),
     roles: [
       UserRoles.CHAIRMAN,
@@ -736,7 +736,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REGISTRY',
-    path: 'register/:id/auto',
+    path: 'register/auto/:id',
     element: withSuspense(RegisterAutoDetail),
     roles: [
       UserRoles.CHAIRMAN,
@@ -751,7 +751,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REGISTRY',
-    path: 'register/:id/equipments',
+    path: 'register/equipments/:id',
     element: withSuspense(RegisterEquipmentDetail),
     roles: [
       UserRoles.CHAIRMAN,
@@ -766,13 +766,13 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REGISTRY',
-    path: 'register/:id/equipments/appeals',
+    path: 'register/equipments/:id/appeals',
     element: withSuspense(RegisterEquipmentAppealList),
     roles: [UserRoles.CHAIRMAN, UserRoles.PROCURATOR],
   },
   {
     id: 'REGISTRY',
-    path: 'register/:id/hf',
+    path: 'register/hf/:id',
     element: withSuspense(RegisterHFDetail),
     roles: [
       UserRoles.CHAIRMAN,
@@ -787,7 +787,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REGISTRY',
-    path: 'register/:id/irs',
+    path: 'register/irs/:id',
     element: withSuspense(RegisterIrsDetail),
     roles: [
       UserRoles.CHAIRMAN,
@@ -802,7 +802,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REGISTRY',
-    path: 'register/:id/xrays',
+    path: 'register/xrays/:id',
     element: withSuspense(RegisterXrayDetail),
     roles: [
       UserRoles.CHAIRMAN,
@@ -817,7 +817,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REGISTRY',
-    path: 'register/change/:id/:type',
+    path: 'register/change/:type/:id',
     element: withSuspense(RegisterChangePage),
     roles: [
       UserRoles.ADMIN,
@@ -1225,7 +1225,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'RISK_ANALYSIS',
-    path: 'risk-analysis/info/:id',
+    path: 'risk-analysis/objects/:id',
     element: withSuspense(RiskAnalysisDetailInfoPage),
     roles: [
       UserRoles.CHAIRMAN,
@@ -1251,7 +1251,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
       UserRoles.REGIONAL,
     ],
   },
-  { path: 'staffs', element: withSuspense(StaffsPage), roles: [UserRoles.ADMIN] },
+  { path: 'employees', element: withSuspense(StaffsPage), roles: [UserRoles.ADMIN] },
   { path: 'territories', element: withSuspense(RegionsPage), roles: [UserRoles.ADMIN] },
   { path: 'user-delegation', element: withSuspense(UserDelegationPage), roles: [UserRoles.HR] },
   { path: 'user-logs', element: withSuspense(UserLogsPage), roles: [UserRoles.ADMIN] },

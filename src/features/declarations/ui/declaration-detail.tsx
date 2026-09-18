@@ -65,7 +65,7 @@ export const DeclarationDetail = ({ detailData }: DeclarationDetailProps) => {
                   {detail?.hfIds && detail.hfIds.length > 0
                     ? detail.hfIds.map((hfId: string, index: number) => (
                         <div key={hfId}>
-                          <Link to={`/register/${hfId}/hf`} className="font-medium text-blue-600">
+                          <Link to={`/register/hf/${hfId}`} className="font-medium text-blue-600">
                             XICHO {index + 1}
                           </Link>
                         </div>

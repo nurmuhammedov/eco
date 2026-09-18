@@ -17,9 +17,26 @@ const LegacyRedirect = ({ to }: { to: string }) => {
  *
  * These carry no direction and every cabinet: whoever follows one arrives at
  * the real route, which does the checking. Nothing new is reachable.
+ *
+ * `register/change/:id/:type` is not here. Its old and new shapes are two free
+ * segments each, so no pattern can tell them apart; the page itself sorts the
+ * two out, since only the section name has a known set of values.
  */
 const MOVED: [from: string, to: string][] = [
   ['accreditations/detail/:id', '/accreditations/:id'],
+  ['archive/:id/auto', '/archive/auto/:id'],
+  ['archive/:id/equipments', '/archive/equipments/:id'],
+  ['archive/:id/hf', '/archive/hf/:id'],
+  ['archive/:id/irs', '/archive/irs/:id'],
+  ['archive/:id/xrays', '/archive/xrays/:id'],
+  ['register/:id/auto', '/register/auto/:id'],
+  ['register/:id/equipments', '/register/equipments/:id'],
+  ['register/:id/equipments/appeals', '/register/equipments/:id/appeals'],
+  ['register/:id/hf', '/register/hf/:id'],
+  ['register/:id/irs', '/register/irs/:id'],
+  ['register/:id/xrays', '/register/xrays/:id'],
+  ['risk-analysis/info/:id', '/risk-analysis/objects/:id'],
+  ['staffs', '/employees'],
   ['accreditations/old/detail/:id', '/accreditations/old/:id'],
   ['accreditations/edit/:id', '/accreditations/:id/edit'],
   ['applications/detail/:id', '/applications/:id'],

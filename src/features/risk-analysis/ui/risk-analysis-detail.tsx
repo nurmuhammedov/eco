@@ -58,7 +58,7 @@ const RiskAnalysisDetail = () => {
 
   const handleView = (row: any) => {
     const orgName = data?.legalName || data?.ownerName || name || ''
-    navigate(`/risk-analysis/info/${row.original.id}?tin=${tin}&name=${orgName}`)
+    navigate(`/risk-analysis/objects/${row.original.id}?tin=${tin}&name=${orgName}`)
   }
 
   const columns: ColumnDef<any>[] = [

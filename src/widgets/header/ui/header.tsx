@@ -108,7 +108,7 @@ export function Header() {
       { path: '/news', title: 'Xabarnoma' },
       { path: '/territories', title: 'Hududlar' },
       { path: '/departments', title: 'Bo‘limlar' },
-      { path: '/staffs', title: 'Xodimlar' },
+      { path: '/employees', title: 'Xodimlar' },
       { path: '/decree-signers', title: 'Imzolovchi shaxslar' },
       { path: '/hazardous-facilities', title: 'Xavfli obyektlar' },
       { path: '/equipments', title: 'Qurilma turlari' },

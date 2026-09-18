@@ -192,7 +192,7 @@ const InquiryDetailPage = () => {
                         <span className="text-sm font-medium">
                           {data?.belongType ? inquiryBelongTypeLabels[data.belongType] || data.belongType : ''}
                         </span>
-                        <Button size="sm" onClick={() => navigate(`/register/${data.belongId}/${belongTypeStr}`)}>
+                        <Button size="sm" onClick={() => navigate(`/register/${belongTypeStr}/${data.belongId}`)}>
                           Obyektni ko‘rish
                         </Button>
                       </div>
