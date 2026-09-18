@@ -140,6 +140,19 @@ const REPORTS_GROUPS: ReportGroup[] = [
     ],
   },
   {
+    id: 'cadastre-passports',
+    title: 'Kadastr pasportlari',
+    items: [
+      {
+        id: 'cadastre-passport-status',
+        title: 'Kadastr pasportlari holati hududlar kesimida',
+        icon: ClipboardCheck,
+        url: '/reports/cadastre-passport',
+        reportType: 'OTHERS',
+      },
+    ],
+  },
+  {
     id: 'accidents-and-incidents',
     title: 'Baxtsiz hodisalar va avariyalar',
     items: [
@@ -329,6 +342,11 @@ export const ReportsGrid: React.FC = () => {
 
     if (role !== UserRoles.CHAIRMAN && role !== UserRoles.ADMIN) {
       groups = groups.filter((group) => group.id !== 'employees')
+    }
+
+    // Kadastr pasportlari hisobotini backend faqat rais va hudud boshlig‘iga ochadi.
+    if (role !== UserRoles.CHAIRMAN && role !== UserRoles.REGIONAL) {
+      groups = groups.filter((group) => group.id !== 'cadastre-passports')
     }
 
     if (filterType !== 'ALL') {

@@ -41,6 +41,7 @@ const ReportsDetail3 = lazy(() => import('@/features/reports/ui/report3'))
 const ReportsDetail4 = lazy(() => import('@/features/reports/ui/report4'))
 const ReportsDetail5 = lazy(() => import('@/features/reports/ui/report5'))
 const ReportIrsXrayStatus = lazy(() => import('@/features/reports/ui/irs-xray-status-report'))
+const CadastrePassportReport = lazy(() => import('@/features/reports/ui/cadastre-passport-report'))
 const InquiriesStatusReport = lazy(() => import('@/features/reports/ui/inquiries-status'))
 const ReportsDetail6 = lazy(() => import('@/features/reports/ui/report6'))
 const ReportsDetail7 = lazy(() => import('@/features/reports/ui/report7'))
@@ -317,6 +318,11 @@ export const chairmanRoutes = [
     id: 'REPORT',
     path: 'reports/irs-xray-status',
     element: withSuspense(ReportIrsXrayStatus),
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/cadastre-passport',
+    element: withSuspense(CadastrePassportReport),
   },
   {
     id: 'REPORT',
