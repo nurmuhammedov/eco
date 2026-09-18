@@ -35,6 +35,7 @@ import { ApplicationModal } from '@/features/application/create-application'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
 import { useOfficeSelectQuery } from '@/shared/api/dictionaries'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 export const CreateOtherInspectionModal = () => {
   const { t } = useTranslation()
@@ -126,8 +127,8 @@ export const CreateOtherInspectionModal = () => {
     successMessage: t('success_saved'),
     onEnd: () => {
       setIsOpen(false)
-      queryClient.invalidateQueries({ queryKey: ['/inspections/other'] })
-      queryClient.invalidateQueries({ queryKey: ['/inspections/count'] })
+      invalidateEndpoint(queryClient, '/inspections/other')
+      invalidateEndpoint(queryClient, '/inspections/count')
     },
   })
 

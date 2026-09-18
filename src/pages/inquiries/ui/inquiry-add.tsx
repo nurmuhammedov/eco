@@ -20,6 +20,7 @@ import DateTimePicker from '@/shared/components/ui/datetimepicker'
 import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui/yandex-map-modal'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const formSchema = z.object({
   type: z.enum(['APPEAL', 'VIOLATION_REPORT', 'SUGGESTION']),
@@ -81,7 +82,7 @@ const InquiryAddPage = () => {
         // useAdd only raises a toast. Without this the list stays on its cached
         // page for the whole freshness window, so the inquiry just submitted is
         // missing from "Mening murojaatlarim".
-        queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+        invalidateEndpoint(queryClient, '/inquiries')
       },
     })
   }

@@ -22,6 +22,7 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { useAdd } from '@/shared/hooks/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { UserRoles } from '@/shared/types/user'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const schema = z.object({
   executorId: z.string({ message: FORM_ERROR_MESSAGES.required }),
@@ -54,7 +55,7 @@ const AssignExecutorModal = ({ changeId }: Props) => {
       userId: data.executorId,
     }).then(() => {
       setIsShow(false)
-      queryClient.invalidateQueries({ queryKey: ['/changes/by-belong'] })
+      invalidateEndpoint(queryClient, '/changes/by-belong')
     })
   }
 

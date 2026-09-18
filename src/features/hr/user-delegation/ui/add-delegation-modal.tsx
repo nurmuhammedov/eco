@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import useData from '@/shared/hooks/api/use-data'
 import { useEffect } from 'react'
 import { UserRoleLabels, UserRoles } from '@/shared/types/user'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 export const DelegationReasonLabels: Record<string, string> = {
   ANNUAL_LEAVE: 'Mehnat ta’tili',
@@ -125,7 +126,7 @@ export const AddDelegationModal = ({ isOpen, onClose }: AddDelegationModalProps)
 
     createDelegation(payload, {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['/user-delegation'] })
+        invalidateEndpoint(queryClient, '/user-delegation')
         form.reset()
         onClose()
       },

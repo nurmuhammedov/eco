@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from '@/shared/components/ui/dialog'
 import { Textarea } from '@/shared/components/ui/textarea'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface DeclarationActionsProps {
   id: string
@@ -49,7 +50,7 @@ export const DeclarationActions = ({ id, status }: DeclarationActionsProps) => {
       setIsRejectModalOpen(false)
       setIsCancelModalOpen(false)
       setDescription('')
-      queryClient.invalidateQueries({ queryKey: ['/declarations'] })
+      invalidateEndpoint(queryClient, '/declarations')
     }
   }, [isConfirmSuccess, isRejectSuccess, isCancelSuccess, queryClient])
 

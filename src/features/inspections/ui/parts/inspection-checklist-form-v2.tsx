@@ -23,6 +23,7 @@ import AddAdditionalFileModal from '@/features/inspections/ui/parts/add-addition
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 const itemSchema = z
   .object({
     id: z.string(),
@@ -264,7 +265,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
     postChecklists2({ dtoList, resultId }).then(() => {
       addParams({ modal: 'addUsers' })
       qc.invalidateQueries({ queryKey: [`/inspection-checklists`, { resultId }] })
-      qc.invalidateQueries({ queryKey: ['/inspection-results'] })
+      invalidateEndpoint(qc, '/inspection-results')
     })
   }
 

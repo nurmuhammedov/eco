@@ -11,6 +11,7 @@ import { Button } from '@/shared/components/ui/button'
 import { useAdd } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const schema = z.object({
   paramValue: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
@@ -46,7 +47,7 @@ const DeclarationFileUploadModal: FC<Props> = ({ id, closeModal, title = 'Deklar
       toast.success('Fayl muvaffaqiyatli yuklandi!')
       form.reset()
       closeModal()
-      await qc.invalidateQueries({ queryKey: ['/declarations'] })
+      await invalidateEndpoint(qc, '/declarations')
     })
   }
 

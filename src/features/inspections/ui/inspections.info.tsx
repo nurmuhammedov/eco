@@ -15,6 +15,7 @@ import { useData } from '@/shared/hooks'
 import InspectionReports from '@/features/inspections/ui/parts/inspection-reports'
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { useEffect, useState } from 'react'
@@ -37,12 +38,16 @@ const InspectionsInfo = () => {
   const belongId = otherDetail?.belongId
   const belongType = otherDetail?.belongType
 
+  // The object behind an inspection can be of any registered kind, so the
+  // endpoint is only known at runtime - keyed by it all the same, or a change
+  // to that register would never reach this page.
+  const belongEndpoint = belongType ? `/${belongType.toLowerCase()}` : ''
+
   const { data: belongData, isLoading: isBelongLoading } = useQuery({
-    queryKey: ['/belong-data', belongId, belongType],
+    queryKey: endpointKey(belongEndpoint, belongId),
     enabled: isOther && !!belongId && !!belongType,
     queryFn: async () => {
-      const type = belongType?.toLowerCase()
-      const { data } = await apiClient.get<any>(`/${type}/${belongId}`)
+      const { data } = await apiClient.get<any>(`${belongEndpoint}/${belongId}`)
       return data.data
     },
   })

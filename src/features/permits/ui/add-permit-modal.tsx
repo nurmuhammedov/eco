@@ -17,6 +17,7 @@ import { FileTypes } from '@/shared/components/common/file-upload/models/file-ty
 import FileLink from '@/shared/components/common/file-link'
 import { cn } from '@/shared/lib/utils'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface AddPermitModalProps {
   open: boolean
@@ -168,8 +169,8 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
     addFn(payload).then(async () => {
       handleClose()
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['/permits'] }),
-        queryClient.invalidateQueries({ queryKey: ['/permits/count'] }),
+        invalidateEndpoint(queryClient, '/permits'),
+        invalidateEndpoint(queryClient, '/permits/count'),
       ])
       toast.success('Muvaffaqiyatli qo‘shildi')
     })

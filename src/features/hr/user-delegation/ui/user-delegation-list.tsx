@@ -14,6 +14,7 @@ import DeleteConfirmationDialog from '@/shared/components/common/delete-confirm-
 import { Ban } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUpdate } from '@/shared/hooks'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const DeactivateButton = ({ row }: { row: any }) => {
   const queryClient = useQueryClient()
@@ -34,7 +35,7 @@ const DeactivateButton = ({ row }: { row: any }) => {
           {},
           {
             onSuccess: () => {
-              queryClient.invalidateQueries({ queryKey: ['/user-delegation'] })
+              invalidateEndpoint(queryClient, '/user-delegation')
             },
           }
         )

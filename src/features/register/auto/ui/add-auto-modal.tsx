@@ -26,6 +26,7 @@ import { UserRoles } from '@/shared/types/user'
 import { useData } from '@/shared/hooks/api'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface AddPermitTransportModalProps {
   trigger?: string
@@ -156,8 +157,8 @@ export const AddPermitTransportModal = ({
     apiFn(payload).then(async () => {
       toast.success('Muvaffaqiyatli saqlandi!')
       handleClose()
-      await queryClient.invalidateQueries({ queryKey: ['/tankers'] })
-      await queryClient.invalidateQueries({ queryKey: ['/tankers/count'] })
+      await invalidateEndpoint(queryClient, '/tankers')
+      await invalidateEndpoint(queryClient, '/tankers/count')
     })
   }
 

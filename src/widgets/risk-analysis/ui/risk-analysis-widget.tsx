@@ -39,6 +39,7 @@ const TAB_TO_API_TYPE: Record<string, string> = {
 }
 
 import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface RiskAnalysisWidgetProps {
   periodType: 'DAILY' | 'MONTHLY'
@@ -62,7 +63,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     onSuccess: (res: any) => {
       const message = res?.message || res?.data?.message || 'Kunlik tahlil muvaffaqiyatli ishga tushirildi!'
       toast.success(message, { richColors: true })
-      queryClient.invalidateQueries({ queryKey: ['/risk-analysis-switch'] })
+      invalidateEndpoint(queryClient, '/risk-analysis-switch')
     },
     onError: (error: any) => {
       const message = error?.response?.data?.message || error?.message || 'Xatolik yuz berdi'

@@ -20,6 +20,7 @@ import { useAdd } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const assignInspectorSchema = z.object({
   inspectorId: z.string().min(1),
@@ -57,7 +58,7 @@ export const AssignInspectorModal: React.FC = () => {
       mutate(null, {
         onSuccess: () => {
           handleClose()
-          qc?.invalidateQueries({ queryKey: ['/preventions'] }).catch((err) => console.error(err))
+          invalidateEndpoint(qc, '/preventions').catch((err) => console.error(err))
         },
       })
     }

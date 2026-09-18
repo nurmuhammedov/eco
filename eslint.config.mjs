@@ -157,5 +157,24 @@ export default tslint.config(
     },
   },
   ...importRules,
+  {
+    /**
+     * `endpointKey` drops the leading slash, and TanStack compares the key
+     * element by element - so `invalidateQueries({ queryKey: ['/inquiries'] })`
+     * matches nothing the generic hooks wrote, and fails without a sound.
+     */
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/shared/lib/query/**'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "Property[key.name='queryKey'] > ArrayExpression > Literal[value=/^\\//]",
+          message:
+            'Kalitni `endpointKey(endpoint, ...)` bilan quring; bekor qilish uchun `invalidateEndpoint(queryClient, endpoint)`.',
+        },
+      ],
+    },
+  },
   eslintConfigPrettier
 )

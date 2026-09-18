@@ -19,6 +19,7 @@ import { Form, FormField, FormItem, FormLabel } from '@/shared/components/ui/for
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { useAdd } from '@/shared/hooks'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const schema = z.object({
   reportPath: z.string().min(1),
@@ -60,7 +61,7 @@ const ReportUploadModal = ({ resultId, reportPath, onClose, trigger }: Props) =>
     uploadAct({
       reportPath: values.reportPath,
     }).then(() => {
-      qc.invalidateQueries({ queryKey: ['/inspection-results'] })
+      invalidateEndpoint(qc, '/inspection-results')
       setOpen(false)
       onClose?.()
     })

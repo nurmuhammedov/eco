@@ -27,6 +27,7 @@ import { useInspectorSelect } from '@/features/application/application-detail/ho
 import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection/category-types/hooks/use-category-type-select-query'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { ApplicationModal } from '@/features/application/create-application'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 export const CreateInquiryInspectionModal = ({ inquiry }: { inquiry: any }) => {
   const { t } = useTranslation()
@@ -73,8 +74,8 @@ export const CreateInquiryInspectionModal = ({ inquiry }: { inquiry: any }) => {
     successMessage: t('success_saved'),
     onEnd: () => {
       setIsOpen(false)
-      queryClient.invalidateQueries({ queryKey: ['/inquiries', inquiry?.id] })
-      queryClient.invalidateQueries({ queryKey: ['/inspections/by-inquiry', inquiry?.id] })
+      invalidateEndpoint(queryClient, '/inquiries')
+      invalidateEndpoint(queryClient, '/inspections/by-inquiry')
     },
   })
 

@@ -1,13 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { inquiryApi } from '@/features/inquiries/model/inquiry.api'
 import { toast } from 'sonner'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 export function useSetInspector() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: inquiryApi.setInspector,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      await invalidateEndpoint(queryClient, '/inquiries')
       toast.success('Muvaffaqiyatli saqlandi!')
     },
   })
@@ -18,7 +19,7 @@ export function useExecuteInitial() {
   return useMutation({
     mutationFn: inquiryApi.executeInitial,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      await invalidateEndpoint(queryClient, '/inquiries')
       toast.success('Muvaffaqiyatli saqlandi!')
     },
   })
@@ -29,7 +30,7 @@ export function useExecuteCourt() {
   return useMutation({
     mutationFn: inquiryApi.executeCourt,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      await invalidateEndpoint(queryClient, '/inquiries')
       toast.success('Muvaffaqiyatli saqlandi!')
     },
   })
@@ -40,7 +41,7 @@ export function useAccountantRecoveredAmount() {
   return useMutation({
     mutationFn: inquiryApi.postRecoveredAmount,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      await invalidateEndpoint(queryClient, '/inquiries')
       toast.success('Muvaffaqiyatli saqlandi!')
     },
   })
@@ -51,7 +52,7 @@ export function useAccountantPaidReward() {
   return useMutation({
     mutationFn: inquiryApi.postPaidReward,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      await invalidateEndpoint(queryClient, '/inquiries')
       toast.success('Muvaffaqiyatli saqlandi!')
     },
   })
@@ -62,7 +63,7 @@ export function useAccountantMibStatus() {
   return useMutation({
     mutationFn: inquiryApi.postMibStatus,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      await invalidateEndpoint(queryClient, '/inquiries')
       toast.success('Muvaffaqiyatli saqlandi!')
     },
   })
@@ -73,7 +74,7 @@ export function useAccountantComplete() {
   return useMutation({
     mutationFn: inquiryApi.postCompleteAccountant,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      await invalidateEndpoint(queryClient, '/inquiries')
       toast.success('Yakunlandi!')
     },
   })
@@ -84,7 +85,7 @@ export function useChangeInquiryRegion() {
   return useMutation({
     mutationFn: inquiryApi.changeRegion,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      await invalidateEndpoint(queryClient, '/inquiries')
       toast.success('Hudud o‘zgartirildi!')
     },
   })
@@ -95,7 +96,7 @@ export function useDeleteInquiry() {
   return useMutation({
     mutationFn: inquiryApi.deleteInquiry,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['/inquiries'] })
+      await invalidateEndpoint(queryClient, '/inquiries')
       toast.success('Muvaffaqiyatli o‘chirildi!')
     },
   })

@@ -11,6 +11,7 @@ import { FileTypes } from '@/shared/components/common/file-upload/models/file-ty
 import { Button } from '@/shared/components/ui/button'
 import { useAdd } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const schema = z.object({
   paramValue: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
@@ -47,7 +48,7 @@ const FileUploadModal: FC<Props> = ({ id, closeModal, title = 'Xulosa faylini yu
     mutateAsync(payload).then(async () => {
       form.reset()
       closeModal()
-      await qc.invalidateQueries({ queryKey: ['/conclusions'] })
+      await invalidateEndpoint(qc, '/conclusions')
     })
   }
 

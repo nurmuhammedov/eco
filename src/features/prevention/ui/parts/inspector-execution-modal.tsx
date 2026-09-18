@@ -22,6 +22,7 @@ import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useAdd } from '@/shared/hooks'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const assignInspectorSchema = z.object({
   inspectorId: z.string().min(1),
@@ -89,7 +90,7 @@ export const ExecutionInspectorModal: React.FC = () => {
         {
           onSuccess: async () => {
             handleClose()
-            await qc?.invalidateQueries({ queryKey: ['/preventions'] })
+            await invalidateEndpoint(qc, '/preventions')
           },
         }
       )

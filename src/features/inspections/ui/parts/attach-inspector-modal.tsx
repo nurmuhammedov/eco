@@ -30,6 +30,7 @@ import { useNavigate } from 'react-router-dom'
 import { apiConfig } from '@/shared/api/constants'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const schema = z.object({
   inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
@@ -114,7 +115,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
         handleCloseModal()
         toast.success('Muvaffaqiyatli yuborildi!')
         navigate('/inspections')
-        queryClient.invalidateQueries({ queryKey: ['/inspections'] })
+        invalidateEndpoint(queryClient, '/inspections')
       }
     },
     onError: (e: any) => {

@@ -16,6 +16,7 @@ import { Textarea } from '@/shared/components/ui/textarea'
 import { useState } from 'react'
 import { useAdd } from '@/shared/hooks/api'
 import { useQueryClient } from '@tanstack/react-query'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const schema = z.object({
   description: z.string().min(1),
@@ -41,7 +42,7 @@ const UpdateDescriptionModal = ({ changeId, desc = '' }: Props) => {
   function onSubmit(data: z.infer<typeof schema>) {
     mutateAsync(data).then(() => {
       setIsShow(false)
-      void queryClient.invalidateQueries({ queryKey: ['/changes/by-belong'] })
+      void invalidateEndpoint(queryClient, '/changes/by-belong')
     })
   }
 
