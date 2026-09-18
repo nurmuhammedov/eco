@@ -63,8 +63,25 @@ Hamma sahifa `src/app/routes/registry.tsx` da **bir marta** yoziladi:
 - yo‘l nisbiy yoziladi (`/` bilan boshlanmaydi);
 - sahifa doim `lazy` + `withSuspense` orqali ulanadi.
 
-Menyu `src/widgets/sidebar/models` da, u ham shu `directions` ga qaraydi —
-menyuda bor narsa route’da ham bo‘lishi shart.
+**Manzil sxemasi** — yangi sahifa shu shaklda yoziladi:
+
+| Nima       | Yo‘l                  | Misol                    |
+| ---------- | --------------------- | ------------------------ |
+| Ro‘yxat    | `/<toʻplam>`          | `/declarations`          |
+| Ko‘rish    | `/<toʻplam>/:id`      | `/declarations/:id`      |
+| Qo‘shish   | `/<toʻplam>/add`      | `/declarations/add`      |
+| Tahrirlash | `/<toʻplam>/:id/edit` | `/declarations/:id/edit` |
+
+To‘plam nomi **ko‘plikda** va kebab-case da (`/cadastre-passports`).
+`detail/:id`, `edit/:id`, `create` shakllari ishlatilmaydi.
+
+Mavjud manzilni o‘zgartirsangiz, eskisini `src/app/routes/legacy-redirects.tsx`
+ga qo‘shing — xatcho‘p va eski havolalar sinmasligi kerak.
+
+Menyu `src/widgets/sidebar/models` da. Kim qaysi modulga kira olishini menyu
+ham, router ham `src/shared/lib/access/module-access.ts` dan o‘qiydi —
+`isModuleInMenu` har doim `canOpenModule` ning qism to‘plami, shuning uchun
+menyudagi band hech qachon “topilmadi” sahifasiga olib bormaydi.
 
 ## Ma’lumot olish va yuborish
 
