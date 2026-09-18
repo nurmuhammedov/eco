@@ -35,14 +35,21 @@ describe('isRouteVisible', () => {
     expect(isRouteVisible({ roles: [UserRoles.LEGAL], id: Direction.INQUIRY }, viewer(UserRoles.LEGAL))).toBe(true)
     expect(isRouteVisible({ roles: [UserRoles.LEGAL], id: Direction.REPORT }, viewer(UserRoles.LEGAL))).toBe(true)
   })
+
+  it('checks the cabinet before the module, so a direction never opens another role’s page', () => {
+    const route = { roles: [UserRoles.INSPECTOR], id: Direction.REPORT }
+
+    expect(isRouteVisible(route, viewer(UserRoles.LEGAL, [Direction.REPORT]))).toBe(false)
+  })
 })
 
 describe('visibleRoutes', () => {
   it('gives a user with no directions only the pages that do not ask for one', () => {
     const routes = visibleRoutes(viewer(UserRoles.LEGAL))
+    const ungated = ['INQUIRY', 'REPORT', 'APPEAL']
 
     expect(routes.length).toBeGreaterThan(0)
-    expect(routes.every(({ id }) => !id || ['INQUIRY', 'REPORT'].includes(id))).toBe(true)
+    expect(routes.every(({ id }) => !id || ungated.includes(id))).toBe(true)
   })
 
   it('never returns a page belonging to another cabinet', () => {

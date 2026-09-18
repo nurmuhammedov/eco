@@ -1,21 +1,23 @@
 import { useMemo } from 'react'
 import { LucideHome } from 'lucide-react'
-import { Direction, UserRoles } from '@/shared/types/user'
+import { UserRoles } from '@/shared/types/user'
+import { isModuleInMenu } from '@/shared/lib/access/module-access'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { usePaginatedData } from '@/shared/hooks'
 import { NAVIGATIONS } from './navigations'
-import { Navigation, NavigationItem } from './types'
+import { Navigation } from './types'
 import allNavigation from './all'
 import legalNavigation from './legal'
 
 const DASHBOARD_ROLES = [UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.CHAIRMAN]
-const INQUIRY_ROLES = [UserRoles.INDIVIDUAL, UserRoles.ACCOUNTANT]
-const ORGANIZATION_ROLES = [UserRoles.HEAD, UserRoles.REGIONAL, UserRoles.CHAIRMAN]
-const HEAD_ONLY_ATTESTATION_IDS = ['ATTESTATION_DIRECTIONS', 'ATTESTATION_QUESTIONS']
 
 /**
  * Builds the menu a user is allowed to see. Both the sidebar and the start-page
  * redirect read from here so they can never disagree.
+ *
+ * Which modules a user may reach is decided by `isModuleInMenu`, the same rule
+ * the router consults - the two used to be written out separately and drifted,
+ * leaving entries that led straight to "page not found".
  */
 export const useUserNavigation = (): Navigation => {
   const { user } = useAuth()
@@ -30,55 +32,28 @@ export const useUserNavigation = (): Navigation => {
   return useMemo<Navigation>(() => {
     if (!user) return []
 
-    const { role, directions } = user
-    let navigations: Navigation = []
+    const { role } = user
 
-    if (role === UserRoles.ADMIN || role === UserRoles.HR) {
-      navigations = NAVIGATIONS[role]
-    } else if (role === UserRoles.LEGAL) {
-      navigations = legalNavigation.filter((item) => directions.includes(item.id as Direction))
-    } else if (directions.length === 0) {
-      const pick = (id: string) => allNavigation.find((item: NavigationItem) => item.id === id)
+    // An individual's register is empty until something is registered in it,
+    // and an empty section reads as a broken one.
+    const isVisible = ({ id }: { id?: string }) =>
+      isIndividual && id === 'REGISTRY' ? equipmentCount > 0 : isModuleInMenu(id, user)
 
-      navigations = [
-        pick('APPEAL'),
-        INQUIRY_ROLES.includes(role) ? pick('INQUIRY') : undefined,
-        isIndividual && equipmentCount > 0 ? pick('REGISTRY') : undefined,
-      ].filter(Boolean) as Navigation
-    } else {
-      const baseNavigation: Navigation = NAVIGATIONS[role] || allNavigation
+    const base: Navigation = role === UserRoles.LEGAL ? legalNavigation : NAVIGATIONS[role] || allNavigation
 
-      navigations = baseNavigation.reduce<Navigation>((acc, navItem) => {
-        if (navItem.items?.length) {
-          const items = navItem.items.filter((subItem) => {
-            if (role === UserRoles.HEAD && HEAD_ONLY_ATTESTATION_IDS.includes(subItem.id ?? '')) return true
+    let navigations = base.reduce<Navigation>((acc, navItem) => {
+      if (navItem.items?.length) {
+        const items = navItem.items.filter(isVisible)
 
-            return subItem.id ? directions.includes(subItem.id as Direction) : false
-          })
-
-          if (items.length) acc.push({ ...navItem, items })
-
-          return acc
-        }
-
-        const isSpecialInquiry = INQUIRY_ROLES.includes(role) && navItem.id === 'INQUIRY'
-        let shouldShow = directions.includes(navItem.id as Direction) || isSpecialInquiry
-
-        if (isIndividual && navItem.id === 'REGISTRY') {
-          shouldShow = equipmentCount > 0
-        }
-
-        // Not a direction: the endpoint behind it is guarded by role alone
-        // (`hasAnyAuthority('REGIONAL','HEAD','CHAIRMAN')`).
-        if (navItem.id === 'ORGANIZATIONS') {
-          shouldShow = ORGANIZATION_ROLES.includes(role)
-        }
-
-        if (shouldShow) acc.push(navItem)
+        if (items.length) acc.push({ ...navItem, items })
 
         return acc
-      }, [])
-    }
+      }
+
+      if (isVisible(navItem)) acc.push(navItem)
+
+      return acc
+    }, [])
 
     if (DASHBOARD_ROLES.includes(role)) {
       navigations = [{ title: 'Bosh sahifa', url: '/dashboard', icon: <LucideHome /> }, ...navigations]
