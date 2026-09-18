@@ -44,7 +44,7 @@ export const UpdateConclusion = () => {
   )
 
   const customerTin = form.watch('customerTin')
-  const { data: hfoOptions } = useHazardousFacilityByTinQuery(customerTin, customerTin?.length === 9)
+  const { data: hfOptions } = useHazardousFacilityByTinQuery(customerTin, customerTin?.length === 9)
 
   const selectedRegionId = form.watch('regionId')
   const { data: regions } = useRegionSelectQuery()
@@ -158,7 +158,7 @@ export const UpdateConclusion = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {hfoOptions?.map((option) => (
+                        {hfOptions?.map((option) => (
                           <SelectItem key={option.id} value={option.id}>
                             {`${option.registryNumber || 'N/A'} - ${option.name}`}
                           </SelectItem>

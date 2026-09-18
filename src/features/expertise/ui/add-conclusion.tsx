@@ -56,7 +56,7 @@ export const AddConclusion = () => {
     isError: isLegalInfoError,
   } = useLegalInfoByTinQuery(searchedStir)
 
-  const { data: hfoOptions, isFetching: isHfoLoading } = useHazardousFacilityByTinQuery(searchedStir, !!searchedStir)
+  const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(searchedStir, !!searchedStir)
 
   const selectedRegionId = form.watch('regionId')
   const { data: regions, isLoading: isRegionLoading } = useRegionSelectQuery()
@@ -85,23 +85,21 @@ export const AddConclusion = () => {
     }
   }, [legalInfo, searchedStir, form])
 
-  const selectedHfo = hfoOptions?.find((hfo) => hfo.id === watchedHfId)
+  const selectedHf = hfOptions?.find((hf) => hf.id === watchedHfId)
   useEffect(() => {
-    if (!selectedHfo) return
+    if (!selectedHf) return
 
-    form.setValue('objectName', selectedHfo.name || '')
+    form.setValue('objectName', selectedHf.name || '')
     form.setValue(
       'regionId',
-      selectedHfo.regionId ? (selectedHfo.regionId.toString() as unknown as string) : (undefined as unknown as string)
+      selectedHf.regionId ? (selectedHf.regionId.toString() as unknown as string) : (undefined as unknown as string)
     )
     form.setValue(
       'districtId',
-      selectedHfo.districtId
-        ? (selectedHfo.districtId.toString() as unknown as string)
-        : (undefined as unknown as string)
+      selectedHf.districtId ? (selectedHf.districtId.toString() as unknown as string) : (undefined as unknown as string)
     )
-    form.setValue('address', selectedHfo.address || '')
-  }, [selectedHfo, form])
+    form.setValue('address', selectedHf.address || '')
+  }, [selectedHf, form])
 
   // Qidirish
   const handleSearch = () => {
@@ -224,7 +222,7 @@ export const AddConclusion = () => {
                               field.onChange(value)
                             }
                           }}
-                          disabled={isHfoLoading}
+                          disabled={isHfLoading}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -232,7 +230,7 @@ export const AddConclusion = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {hfoOptions?.map((option) => (
+                            {hfOptions?.map((option) => (
                               <SelectItem key={option.id} value={option.id}>
                                 {`${option.registryNumber || 'N/A'} - ${option.name}`}
                               </SelectItem>
@@ -251,7 +249,7 @@ export const AddConclusion = () => {
                       <FormItem>
                         <FormLabel required>Obyekt nomi</FormLabel>
                         <FormControl>
-                          <Input {...field} disabled={!!selectedHfo?.name} placeholder="Obyekt nomini kiriting..." />
+                          <Input {...field} disabled={!!selectedHf?.name} placeholder="Obyekt nomini kiriting..." />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -270,7 +268,7 @@ export const AddConclusion = () => {
                             form.setValue('districtId', undefined as unknown as string)
                           }}
                           value={field.value}
-                          disabled={isRegionLoading || !!selectedHfo?.regionId}
+                          disabled={isRegionLoading || !!selectedHf?.regionId}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -304,7 +302,7 @@ export const AddConclusion = () => {
                               field.onChange(value)
                             }
                           }}
-                          disabled={isDistrictLoading || !watchedRegionId || !!selectedHfo?.districtId}
+                          disabled={isDistrictLoading || !watchedRegionId || !!selectedHf?.districtId}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -333,7 +331,7 @@ export const AddConclusion = () => {
                           Manzil <span className="font-normal text-red-400">(viloyat va tuman kiritilmasin)</span>
                         </FormLabel>
                         <FormControl>
-                          <Input {...field} disabled={!!selectedHfo?.address} placeholder="Manzilni kiriting..." />
+                          <Input {...field} disabled={!!selectedHf?.address} placeholder="Manzilni kiriting..." />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

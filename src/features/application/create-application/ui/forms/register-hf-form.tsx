@@ -21,7 +21,7 @@ import { parseISO } from 'date-fns'
 import { HF_HAZARDOUS_SIGN_OPTIONS, HF_LEGAL_TYPE_OPTIONS } from '@/shared/constants/hf-attributes'
 import { HfCategoryFilesSection } from './parts/hf-category-files-section'
 
-const RegisterHpForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => {
+const RegisterHfForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => {
   const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } = useCreateHfApplication()
 
   return (
@@ -314,4 +314,4 @@ const RegisterHpForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => {
   )
 }
 
-export default RegisterHpForm
+export default RegisterHfForm

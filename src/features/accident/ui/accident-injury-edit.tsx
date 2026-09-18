@@ -32,7 +32,7 @@ export const AccidentEdit: React.FC = () => {
   const { detail: accident, isLoading } = useDetail<Accident>('/accidents', id, !!id)
   const updateMutation = useUpdate<Accident, any, any>('/accidents/injury', id)
 
-  const { data: hfoData } = useData<any>(`/hf/${accident?.hfId}`, !!accident?.hfId)
+  const { data: hfData } = useData<any>(`/hf/${accident?.hfId}`, !!accident?.hfId)
 
   const isCompleted = accident?.status === 'COMPLETED'
   const isFieldsDisabled = accident?.status === AccidentProcessStatus.NEW
@@ -155,7 +155,7 @@ export const AccidentEdit: React.FC = () => {
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida ma’lumot">
-          <AppealMainInfo data={hfoData} type="HF" address={hfoData?.address} />
+          <AppealMainInfo data={hfData} type="HF" address={hfData?.address} />
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="form_info" title="Tahrirlash">

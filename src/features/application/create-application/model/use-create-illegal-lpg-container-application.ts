@@ -199,7 +199,7 @@ export const useRegisterIllegalLpgContainer = (externalSubmit?: (data: RegisterI
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
 
-  const { data: hfoOptions } = useHazardousFacilityByTinQuery(identity, isLegal && !!currentOwnerData)
+  const { data: hfOptions } = useHazardousFacilityByTinQuery(identity, isLegal && !!currentOwnerData)
 
   const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
 
@@ -308,7 +308,7 @@ export const useRegisterIllegalLpgContainer = (externalSubmit?: (data: RegisterI
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
   const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
   const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes])
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoOptions || []), [hfoOptions])
+  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfOptions || []), [hfOptions])
 
   return {
     form,

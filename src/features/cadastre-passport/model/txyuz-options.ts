@@ -5,7 +5,7 @@
  */
 
 /** Texnogen xavf yuqori bo‘lgan zona obyektining vazifasi. */
-export const TXYZ_PURPOSES = [
+export const TXYUZ_PURPOSES = [
   'Avtomobillarga gaz to‘ldirish kompressor shoxobchasi (AGTKSH)',
   'Avtomobillarga gaz quyish shoxobchasi (AGQSH)',
   'Avtomobillarga yonilg‘i quyish shoxobchasi (AYQSH)',
@@ -15,7 +15,7 @@ export const TXYZ_PURPOSES = [
 ] as const
 
 /** Ishlab chiqarish, qayta ishlash, saqlash va foydalanish moddasining nomi. */
-export const TXYZ_SUBSTANCES = [
+export const TXYUZ_SUBSTANCES = [
   'Siqilgan tabiiy gaz (metan)',
   'Suyultirilgan uglevodorod gazi (propan)',
   'Avtobenzin yonilg‘isi',
@@ -23,7 +23,7 @@ export const TXYZ_SUBSTANCES = [
 ] as const
 
 /** Yong‘in o‘chirish vositasining turi. */
-export const TXYZ_FIREFIGHTING_EQUIPMENT = [
+export const TXYUZ_FIREFIGHTING_EQUIPMENT = [
   'OP – 1',
   'OP – 2',
   'OP – 3',
@@ -34,7 +34,7 @@ export const TXYZ_FIREFIGHTING_EQUIPMENT = [
 ] as const
 
 /** Texnogen xavf rivojlanishida ustunlik qiluvchi turi. */
-export const TXYZ_DOMINANT_HAZARD_TYPES = [
+export const TXYUZ_DOMINANT_HAZARD_TYPES = [
   'Yong‘in va portlash',
   'Yong‘in',
   'Portlash',
@@ -137,4 +137,4 @@ export const formatCoordinate = (raw: string) => {
 }
 
 /** Obyektning sanitariya muhofaza zonasi (m). */
-export const TXYZ_PROTECTION_DISTANCES = ['50 metr', '100 metr', '300 metr', '500 metr', '1 000 metr'] as const
+export const TXYUZ_PROTECTION_DISTANCES = ['50 metr', '100 metr', '300 metr', '500 metr', '1 000 metr'] as const

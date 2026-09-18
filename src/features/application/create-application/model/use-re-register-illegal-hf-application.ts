@@ -62,7 +62,7 @@ export const useReRegisterIllegalHFApplication = () => {
   /* const { mutateAsync: searchLegal, isPending: isSearching } = useAdd<any, any, any>('/integration/iip/legal') */
   const [isSearching, setIsSearching] = useState(false)
 
-  const { data: hfoList } = useHazardousFacilityByTinQuery(legalTin, !!legalTin && legalTin.length === 9 && !!orgData)
+  const { data: hfList } = useHazardousFacilityByTinQuery(legalTin, !!legalTin && legalTin.length === 9 && !!orgData)
 
   const { data: detail } = useDetail<any>(`/hf/`, hazardousFacilityId, !!hazardousFacilityId)
 
@@ -130,7 +130,7 @@ export const useReRegisterIllegalHFApplication = () => {
   const districtOptions = useMemo(() => getSelectOptions(districts), [districts])
   const regionOptions = useMemo(() => getSelectOptions(regions), [regions])
   const hazardousFacilityTypeOptions = useMemo(() => getSelectOptions(hazardousFacilityTypes), [hazardousFacilityTypes])
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoList || []), [hfoList])
+  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfList || []), [hfList])
 
   return {
     form,

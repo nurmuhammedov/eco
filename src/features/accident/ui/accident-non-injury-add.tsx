@@ -42,7 +42,7 @@ export const AccidentNonInjuryAdd: React.FC = () => {
     isError: isLegalInfoError,
   } = useData<any>(`/users/legal/${searchedStir}`, !!searchedStir && searchedStir.length === 9)
 
-  const { data: hfoOptions, isFetching: isHfoLoading } = useHazardousFacilityByTinQuery(searchedStir, !!searchedStir)
+  const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(searchedStir, !!searchedStir)
 
   const handleSearch = () => {
     if (stir.length === 9) {
@@ -135,14 +135,14 @@ export const AccidentNonInjuryAdd: React.FC = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel required>XICHO</FormLabel>
-                          <Select value={field.value} onValueChange={field.onChange} disabled={isHfoLoading}>
+                          <Select value={field.value} onValueChange={field.onChange} disabled={isHfLoading}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Obyektni tanlang..." />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {hfoOptions?.map((option) => (
+                              {hfOptions?.map((option) => (
                                 <SelectItem key={option.id} value={option.id}>
                                   {`${option.registryNumber || 'N/A'} - ${option.name}`}
                                 </SelectItem>

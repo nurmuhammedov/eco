@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { CERTIFICATE_NUMBER_PATTERN, CERTIFICATE_NUMBER_SAMPLE, formatCertificateNumber } from './txyz-options'
+import { CERTIFICATE_NUMBER_PATTERN, CERTIFICATE_NUMBER_SAMPLE, formatCertificateNumber } from './txyuz-options'
 
 describe('formatCertificateNumber', () => {
   it('puts the space in for the typist', () => {

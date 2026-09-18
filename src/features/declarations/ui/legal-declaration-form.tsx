@@ -58,7 +58,7 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
 
   const { data: activeExperts } = useData<any[]>('/accreditations/active')
 
-  const { data: hfoOptions, isFetching: isHfoLoading } = useHazardousFacilityByTinQuery(userTin)
+  const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(userTin)
 
   const { data: conclusionOptions, isFetching: isConclusionsLoading } = useData<any[]>(
     '/conclusions/select',
@@ -177,14 +177,14 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
                       <FormControl>
                         <MultiSelect
                           options={
-                            hfoOptions?.map((opt: any) => ({
+                            hfOptions?.map((opt: any) => ({
                               id: opt.id,
                               name: `${opt.registryNumber || 'N/A'} - ${opt.name}`,
                             })) || []
                           }
                           value={field.value}
                           onChange={(vals) => field.onChange(vals as string[])}
-                          disabled={isHfoLoading}
+                          disabled={isHfLoading}
                           placeholder="Obyektlarni tanlang..."
                         />
                       </FormControl>

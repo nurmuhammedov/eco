@@ -49,7 +49,7 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
     isError: isLegalInfoError,
   } = useLegalInfoByTinQuery(searchedStir)
 
-  const { data: hfoOptions, isFetching: isHfoLoading } = useHazardousFacilityByTinQuery(searchedStir)
+  const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(searchedStir)
 
   const { data: conclusionOptions, isFetching: isConclusionsLoading } = useData<any[]>(
     '/conclusions/select',
@@ -227,14 +227,14 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
                           <FormControl>
                             <MultiSelect
                               options={
-                                hfoOptions?.map((opt: any) => ({
+                                hfOptions?.map((opt: any) => ({
                                   id: opt.id,
                                   name: `${opt.registryNumber || 'N/A'} - ${opt.name}`,
                                 })) || []
                               }
                               value={field.value}
                               onChange={(vals) => field.onChange(vals as string[])}
-                              disabled={isHfoLoading}
+                              disabled={isHfLoading}
                               placeholder="Obyektlarni tanlang..."
                             />
                           </FormControl>

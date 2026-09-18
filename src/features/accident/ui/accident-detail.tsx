@@ -25,7 +25,7 @@ export const AccidentDetail: React.FC = () => {
   const [isDecreeModalOpen, setIsDecreeModalOpen] = useState(false)
 
   const { detail: accident, isLoading, refetch } = useDetail<Accident | AccidentNonInjury>('/accidents', id, !!id)
-  const { data: hfoData } = useData<any>(`/hf/${accident?.hfId}`, !!accident?.hfId)
+  const { data: hfData } = useData<any>(`/hf/${accident?.hfId}`, !!accident?.hfId)
 
   if (isLoading) return <div>Yuklanmoqda...</div>
 
@@ -81,7 +81,7 @@ export const AccidentDetail: React.FC = () => {
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida ma’lumot">
-          <AppealMainInfo data={hfoData} type="HF" address={hfoData?.address} />
+          <AppealMainInfo data={hfData} type="HF" address={hfData?.address} />
         </DetailCardAccordion.Item>
 
         {isInjury && (

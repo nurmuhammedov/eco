@@ -99,8 +99,8 @@ export default function CadastreDetail() {
         </div>
       </div>
 
-      <Accordion type="multiple" defaultValue={['txyz', 'workflows', 'cadastre-data', 'fvv', 'ses', 'reviews']}>
-        <DetailCardAccordion.Item value="txyz" title="TXYUZ kadastr pasporti ma’lumotlari">
+      <Accordion type="multiple" defaultValue={['txyuz', 'workflows', 'cadastre-data', 'fvv', 'ses', 'reviews']}>
+        <DetailCardAccordion.Item value="txyuz" title="TXYUZ kadastr pasporti ma’lumotlari">
           <DetailRow title="Holati" value={<StatusBadge status={passport.status} />} />
           <DetailRow title="Ariza raqami" value={passport.requestNumber || '-'} />
           <DetailRow title="Reyestr raqami" value={passport.registryNumber || '-'} />

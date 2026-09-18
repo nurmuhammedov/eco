@@ -21,15 +21,15 @@ import {
   LAND_CADASTRE_NUMBER_SAMPLE,
   LATITUDE_SAMPLE,
   LONGITUDE_SAMPLE,
-  TXYZ_DOMINANT_HAZARD_TYPES,
-  TXYZ_FIREFIGHTING_EQUIPMENT,
-  TXYZ_PROTECTION_DISTANCES,
-  TXYZ_PURPOSES,
-  TXYZ_SUBSTANCES,
+  TXYUZ_DOMINANT_HAZARD_TYPES,
+  TXYUZ_FIREFIGHTING_EQUIPMENT,
+  TXYUZ_PROTECTION_DISTANCES,
+  TXYUZ_PURPOSES,
+  TXYUZ_SUBSTANCES,
   formatCertificateNumber,
   formatCoordinate,
   formatLandCadastreNumber,
-} from '../../model/txyz-options'
+} from '../../model/txyuz-options'
 
 const { required, invalid } = FORM_ERROR_MESSAGES
 
@@ -410,7 +410,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
             <FormItem>
               <FormLabel required>Obyektning vazifasi</FormLabel>
               <FormControl>
-                <SelectOrInput options={TXYZ_PURPOSES} value={field.value} onChange={field.onChange} />
+                <SelectOrInput options={TXYUZ_PURPOSES} value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -425,7 +425,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
                 Obyektda ishlab chiqarish, qayta ishlash, saqlash va foydalanish moddasining nomi
               </FormLabel>
               <FormControl>
-                <SelectOrInput options={TXYZ_SUBSTANCES} value={field.value} onChange={field.onChange} />
+                <SelectOrInput options={TXYUZ_SUBSTANCES} value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -478,7 +478,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
             <FormItem>
               <FormLabel required>Obyektda yong‘in o‘chirish vositasining turi</FormLabel>
               <FormControl>
-                <SelectOrInput options={TXYZ_FIREFIGHTING_EQUIPMENT} value={field.value} onChange={field.onChange} />
+                <SelectOrInput options={TXYUZ_FIREFIGHTING_EQUIPMENT} value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -512,7 +512,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
             <FormItem>
               <FormLabel required>Obyektda texnogen xavf rivojlanishida ustunlik qiluvchi turi</FormLabel>
               <FormControl>
-                <SelectOrInput options={TXYZ_DOMINANT_HAZARD_TYPES} value={field.value} onChange={field.onChange} />
+                <SelectOrInput options={TXYUZ_DOMINANT_HAZARD_TYPES} value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -582,7 +582,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
             <FormItem>
               <FormLabel required>Obyektning sanitariya muhofaza zonasi (metr)</FormLabel>
               <FormControl>
-                <SelectOrInput options={TXYZ_PROTECTION_DISTANCES} value={field.value} onChange={field.onChange} />
+                <SelectOrInput options={TXYUZ_PROTECTION_DISTANCES} value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
