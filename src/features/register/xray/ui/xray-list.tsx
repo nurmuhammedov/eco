@@ -3,6 +3,8 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { changeTypeColumn } from '@/features/register/model/change-type-column'
+import { XrayRow } from '@/features/register/model/types'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 
@@ -52,9 +54,9 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
     radiationProfileId,
   })
 
-  const { data = [], isLoading, totalElements = 0 } = usePaginatedData<any>(endpoint, { page, size, ...params })
+  const { data = [], isLoading, totalElements = 0 } = usePaginatedData<XrayRow>(endpoint, { page, size, ...params })
 
-  const { data: changedCountData } = usePaginatedData<any>(
+  const { data: changedCountData } = usePaginatedData<XrayRow>(
     `/xrays`,
     {
       changed: 'true',
@@ -65,7 +67,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
     !isArchive
   )
 
-  const { data: changedOrgCountData } = usePaginatedData<any>(
+  const { data: changedOrgCountData } = usePaginatedData<XrayRow>(
     `/radiation-profiles`,
     {
       changed: 'true',
@@ -89,14 +91,14 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
     }
   }
 
-  const handleEditApplication = (id: string, tin: string) => {
+  const handleEditApplication = (id: string, tin?: string | number) => {
     navigate(`/register/update/XRAY/${id}?tin=${tin}`)
   }
 
   const handleEditOrganization = (id: string) => {
     navigate(`/register/update-organization/XRAY/${id}`)
   }
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<XrayRow, unknown>[] = [
     {
       id: 'registrationDate',
       header: 'Ro‘yxatga olish sanasi',
@@ -139,32 +141,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
       filterKey: 'address',
       filterType: 'search',
     },
-    ...(currentStatus === 'CHANGED'
-      ? [
-          {
-            header: 'So‘rov turi',
-            accessorKey: 'changeBelongType',
-            cell: ({ row }: any) => {
-              const type = row.original.changeBelongType
-              if (type?.startsWith('UPDATE')) {
-                return (
-                  <Badge variant="warning" className="py-1">
-                    Ma’lumotlarni o‘zgartirish
-                  </Badge>
-                )
-              }
-              if (type?.startsWith('DEREGISTER')) {
-                return (
-                  <Badge variant="destructive" className="py-1">
-                    Reyestrdan chiqarish
-                  </Badge>
-                )
-              }
-              return null
-            },
-          },
-        ]
-      : []),
+    ...(currentStatus === 'CHANGED' ? [changeTypeColumn<XrayRow>()] : []),
     {
       id: 'actions',
       cell: ({ row }) => (
@@ -191,7 +168,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
     user?.isSupervisor ||
     user?.isController
 
-  const orgColumns: ExtendedColumnDef<any, any>[] = [
+  const orgColumns: ExtendedColumnDef<XrayRow, unknown>[] = [
     {
       header: 'Tashkilot nomi',
       accessorKey: 'legalName',
@@ -318,7 +295,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
         isLoading={isLoading}
         isPaginated
         data={data || []}
-        columns={(isOrganizations ? orgColumns : columns) as unknown as any}
+        columns={isOrganizations ? orgColumns : columns}
         className="min-h-0 flex-1"
       />
     </div>

@@ -4,6 +4,8 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { changeTypeColumn } from '@/features/register/model/change-type-column'
+import { IrsRow } from '@/features/register/model/types'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
@@ -51,9 +53,9 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
     radiationProfileId,
   })
 
-  const { data = [], isLoading, totalElements = 0 } = usePaginatedData<any>(endpoint, { page, size, ...params })
+  const { data = [], isLoading, totalElements = 0 } = usePaginatedData<IrsRow>(endpoint, { page, size, ...params })
 
-  const { data: changedCountData } = usePaginatedData<any>(
+  const { data: changedCountData } = usePaginatedData<IrsRow>(
     `/irs`,
     {
       changed: 'true',
@@ -64,7 +66,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
     !isArchive
   )
 
-  const { data: changedOrgCountData } = usePaginatedData<any>(
+  const { data: changedOrgCountData } = usePaginatedData<IrsRow>(
     `/radiation-profiles`,
     {
       changed: 'true',
@@ -88,7 +90,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
     }
   }
 
-  const handleEditApplication = (id: string, tin: string) => {
+  const handleEditApplication = (id: string, tin?: string | number) => {
     navigate(`/register/update/IRS/${id}?tin=${tin}`)
   }
 
@@ -96,7 +98,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
     navigate(`/register/update-organization/IRS/${id}`)
   }
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<IrsRow, unknown>[] = [
     {
       header: 'INM hisobga olish sanasi',
       accessorFn: (row) => getDate(row.registrationDate),
@@ -179,39 +181,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
         { id: IrsUsageType.STORAGE, name: 'Vaqtinchalik saqlash uchun' },
       ],
     },
-    ...(currentValid === 'CHANGED'
-      ? [
-          {
-            header: 'So‘rov turi',
-            accessorKey: 'changeBelongType',
-            cell: ({ row }: any) => {
-              const type = row.original.changeBelongType
-              if (type?.startsWith('UPDATE')) {
-                return (
-                  <Badge variant="info" className="py-1">
-                    Ma’lumotlarni o‘zgartirish
-                  </Badge>
-                )
-              }
-              if (type?.startsWith('DEREGISTER')) {
-                return (
-                  <Badge variant="destructive" className="py-1">
-                    Reyestrdan chiqarish
-                  </Badge>
-                )
-              }
-              if (type?.startsWith('CHANGE_IRS_STATUS')) {
-                return (
-                  <Badge variant="warning" className="py-1">
-                    Holatini o‘zgartirish
-                  </Badge>
-                )
-              }
-              return null
-            },
-          },
-        ]
-      : []),
+    ...(currentValid === 'CHANGED' ? [changeTypeColumn<IrsRow>()] : []),
     {
       id: 'actions',
       cell: ({ row }) => (
@@ -238,7 +208,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
     user?.isSupervisor ||
     user?.isController
 
-  const orgColumns: ExtendedColumnDef<any, any>[] = [
+  const orgColumns: ExtendedColumnDef<IrsRow, unknown>[] = [
     {
       header: 'Tashkilot nomi',
       accessorKey: 'legalName',
@@ -368,7 +338,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
         isPaginated
         isLoading={isLoading}
         data={data || []}
-        columns={(isOrganizations ? orgColumns : columns) as unknown as any}
+        columns={isOrganizations ? orgColumns : columns}
         className="min-h-0 flex-1"
       />
     </div>

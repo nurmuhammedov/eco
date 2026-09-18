@@ -2,6 +2,7 @@ import { ApiResponse } from '@/shared/types/api'
 import { API_ENDPOINTS } from '@/shared/api'
 import { apiClient } from '@/shared/api/api-client'
 import { CreateParkDTO, FilterParkDTO, Park, UpdateParkDTO } from './park.types'
+import { type OptionItem } from '@/shared/types/general'
 
 export const parkAPI = {
   fetchParks: async (params: FilterParkDTO) => {
@@ -10,7 +11,7 @@ export const parkAPI = {
   },
 
   fetchParksSelect: async (params: { regionId?: number | string | null; districtId?: number | string | null }) => {
-    const { data } = await apiClient.get<ApiResponse<any>>(API_ENDPOINTS.PARKS_SELECT, {
+    const { data } = await apiClient.get<ApiResponse<OptionItem<number>[]>>(API_ENDPOINTS.PARKS_SELECT, {
       regionId: params.regionId || null,
       districtId: params.districtId || null,
     })

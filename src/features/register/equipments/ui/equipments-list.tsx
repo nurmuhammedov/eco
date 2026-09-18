@@ -7,12 +7,13 @@ import { useNavigate } from 'react-router-dom'
 import { AddPermitTransportModal } from '@/features/register/auto/ui/add-auto-modal'
 import useData from '@/shared/hooks/api/use-data'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { changeTypeColumn } from '@/features/register/model/change-type-column'
+import { EquipmentRow } from '@/features/register/model/types'
 import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { AutoTabKey, tabs as autoTabs } from '@/features/register/auto/ui/auto-tabs'
 import { formatDate } from 'date-fns'
-import { Badge } from '@/shared/components/ui/badge'
 import { useParkSelectQuery } from '@/entities/admin/park/hooks/use-park-select-query'
 import { ApplicationTypeEnum } from '@/entities/create-application/types/enums'
 import { useMemo } from 'react'
@@ -68,7 +69,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
   const tabNoun = type === 'AUTO_CRANE' ? 'avtokranlar' : type === 'TOWER_CRANE' ? 'minorali kranlar' : 'qurilmalar'
 
   const { data: parks } = useParkSelectQuery(regionId, districtId)
-  const parkOptions = useMemo(() => parks?.map((p: any) => ({ name: p.name, id: String(p.id) })) || [], [parks])
+  const parkOptions = useMemo(() => parks?.map((p) => ({ name: p.name, id: String(p.id) })) || [], [parks])
 
   const { endpoint, params } = buildRegisterQuery({
     tab: RegisterActiveTab.EQUIPMENTS,
@@ -78,9 +79,9 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     hfId,
   })
 
-  const { data, isLoading, totalElements = 0 } = usePaginatedData<any>(endpoint, { page, size, ...params })
+  const { data, isLoading, totalElements = 0 } = usePaginatedData<EquipmentRow>(endpoint, { page, size, ...params })
 
-  const { data: changedCountData } = usePaginatedData<any>(
+  const { data: changedCountData } = usePaginatedData<EquipmentRow>(
     `/equipments`,
     {
       changed: 'true',
@@ -118,12 +119,12 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     }
   }
 
-  const handleEditApplication = (id: string, type: string, tin: string) => {
+  const handleEditApplication = (id: string, type?: string, tin?: string | number) => {
     if (isTanker) return
     navigate(`/register/update/${type}/${id}?tin=${tin}`)
   }
 
-  const tankerColumns: ExtendedColumnDef<any, any>[] = [
+  const tankerColumns: ExtendedColumnDef<EquipmentRow, unknown>[] = [
     {
       header: 'Tashkilot nomi',
       accessorKey: 'name',
@@ -192,7 +193,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     },
   ]
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const allColumns: ExtendedColumnDef<EquipmentRow, unknown>[] = [
     {
       id: 'registrationDate',
       header: () => (
@@ -200,7 +201,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
           Ro‘yxatga olish <br /> sanasi
         </div>
       ),
-      accessorFn: (row: any) => getDate(row.registrationDate),
+      accessorFn: (row) => getDate(row.registrationDate),
       className: '!w-[1%]',
       filterKey: 'registrationDate',
       filterType: 'date-range',
@@ -218,7 +219,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     },
     {
       header: 'Qurilma',
-      cell: (cell: any) =>
+      cell: (cell) =>
         cell.row.original.type == 'ELEVATOR'
           ? 'Lift'
           : APPLICATIONS_DATA?.find((i) => i?.equipmentType == cell.row.original.type)?.name || '',
@@ -264,7 +265,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       className: 'max-w-[220px]',
       filterKey: 'address',
       filterType: 'search',
-      cell: ({ row }: any) => <TruncatedCell value={row.original?.address} />,
+      cell: ({ row }) => <TruncatedCell value={row.original?.address} />,
     },
     {
       accessorKey: 'factoryNumber',
@@ -273,10 +274,10 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       filterKey: 'factoryNumber',
       filterType: 'search',
       // A park carries every one of its factory numbers in this one field.
-      cell: ({ row }: any) => <TruncatedCell value={row.original?.factoryNumber} />,
+      cell: ({ row }) => <TruncatedCell value={row.original?.factoryNumber} />,
     },
     {
-      accessorFn: (row: any) => (row.nextPartialCheckDate ? getDate(row.nextPartialCheckDate) : '-'),
+      accessorFn: (row) => (row.nextPartialCheckDate ? getDate(row.nextPartialCheckDate) : '-'),
       id: 'nextPartialCheckDate',
       header: () => (
         <div className="whitespace-nowrap">
@@ -287,7 +288,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     },
     {
       id: 'nextFullCheckDate',
-      accessorFn: (row: any) => (row.nextFullCheckDate ? getDate(row.nextFullCheckDate) : '-'),
+      accessorFn: (row) => (row.nextFullCheckDate ? getDate(row.nextFullCheckDate) : '-'),
       header: () => (
         <div className="whitespace-nowrap">
           Keyingi to‘liq <br /> texnik ko‘rik <br /> sanasi
@@ -297,7 +298,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     },
     {
       id: 'expertiseExpiryDate',
-      accessorFn: (row: any) => (row.expertiseExpiryDate ? getDate(row.expertiseExpiryDate) : '-'),
+      accessorFn: (row) => (row.expertiseExpiryDate ? getDate(row.expertiseExpiryDate) : '-'),
       header: () => (
         <div className="whitespace-nowrap">
           Ekspertiza xulosasi <br /> muddati
@@ -305,42 +306,10 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       ),
       className: '!w-[1%]',
     },
-    ...(currentStatus === 'CHANGED'
-      ? [
-          {
-            header: 'So‘rov turi',
-            accessorKey: 'changeBelongType',
-            cell: ({ row }: any) => {
-              const type = row.original.changeBelongType
-              if (type?.startsWith('UPDATE')) {
-                return (
-                  <Badge variant="info" className="py-1">
-                    Ma’lumotlarni o‘zgartirish
-                  </Badge>
-                )
-              }
-              if (type?.startsWith('DEREGISTER')) {
-                return (
-                  <Badge variant="destructive" className="py-1">
-                    Reyestrdan chiqarish
-                  </Badge>
-                )
-              }
-              if (type?.startsWith('CHANGE_EQP_STATUS')) {
-                return (
-                  <Badge variant="warning" className="py-1">
-                    Holatini o‘zgartirish
-                  </Badge>
-                )
-              }
-              return '-'
-            },
-          },
-        ]
-      : []),
+    ...(currentStatus === 'CHANGED' ? [changeTypeColumn<EquipmentRow>()] : []),
     {
       id: 'actions',
-      cell: ({ row }: any) => (
+      cell: ({ row }) => (
         <DataTableRowActions
           showView
           showEdit={
@@ -356,15 +325,18 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
           }
           row={row}
           showDelete={!isShortView}
-          onView={(row: any) => handleViewApplication(row.original?.id)}
-          onEdit={(row: any) =>
-            handleEditApplication(row.original?.id, row.original?.type, row.original?.ownerIdentity)
-          }
+          onView={(row) => handleViewApplication(row.original?.id)}
+          onEdit={(row) => handleEditApplication(row.original?.id, row.original?.type, row.original?.ownerIdentity)}
         />
       ),
     },
-  ].filter((col) => {
-    if (hfId && (col.accessorKey === 'hfName' || col.accessorKey === 'parkName')) {
+  ]
+
+  const columns = allColumns.filter((col) => {
+    // Only some members of the column union carry an accessor key.
+    const accessorKey = 'accessorKey' in col ? col.accessorKey : undefined
+
+    if (hfId && (accessorKey === 'hfName' || accessorKey === 'parkName')) {
       return false
     }
     if (type === 'OIL_CONTAINER') {
@@ -372,7 +344,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     } else {
       return col.id !== 'expertiseExpiryDate'
     }
-  }) as unknown as any
+  })
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2">
@@ -558,7 +530,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
         isLoading={isLoading}
         isPaginated
         data={data || []}
-        columns={isTanker ? tankerColumns : (columns as unknown as any)}
+        columns={isTanker ? tankerColumns : columns}
         className="flex-1"
       />
     </div>
