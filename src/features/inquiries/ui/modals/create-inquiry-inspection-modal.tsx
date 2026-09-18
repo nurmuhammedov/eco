@@ -70,7 +70,7 @@ export const CreateInquiryInspectionModal = ({ inquiry }: { inquiry: any }) => {
   } = useEimzo({
     pdfEndpoint: `/inquiries/${inquiry?.id}/inspection/generate-pdf`,
     submitEndpoint: `/inquiries/${inquiry?.id}/inspection`,
-    queryKey: '/inquiries',
+    invalidates: '/inquiries',
     successMessage: t('success_saved'),
     onEnd: () => {
       setIsOpen(false)

@@ -18,7 +18,6 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { useState } from 'react'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { ApplicationModal } from '@/features/application/create-application'
-import { QK_INSPECTION } from '@/shared/constants/query-keys'
 
 const schema = z.object({
   startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
@@ -52,7 +51,7 @@ const NotifyInspectionModal = ({ inspectionId }: { inspectionId: string }) => {
   } = useEimzo({
     pdfEndpoint: `/inspections/${inspectionId}/notify/generate-pdf`,
     submitEndpoint: `/inspections/${inspectionId}/notify`,
-    queryKey: [QK_INSPECTION, inspectionId],
+    invalidates: '/inspections',
     successMessage: 'Muvaffaqiyatli xabardor qilindi!',
     onEnd: () => {
       setIsShow(false)

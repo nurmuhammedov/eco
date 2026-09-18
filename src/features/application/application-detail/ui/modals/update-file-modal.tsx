@@ -17,7 +17,7 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui/dialog'
 import { Form, FormField, FormItem } from '@/shared/components/ui/form'
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import { useUpdateApplicationFile } from '../../hooks/mutations/use-update-file'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 
@@ -58,7 +58,7 @@ export const UpdateFileModal: React.FC<UpdateFileModalProps> = ({ appealId, fiel
         onSuccess: async () => {
           form.reset()
           setIsOpen(false)
-          await queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] })
+          await invalidateEndpoint(queryClient, '/appeals')
         },
       }
     )

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { applicationDetailApi } from '@/features/application/application-detail/model/application-detail.api'
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import { toast } from 'sonner'
 
 export function useRejectDocument() {
@@ -8,7 +8,7 @@ export function useRejectDocument() {
   return useMutation({
     mutationFn: applicationDetailApi.rejectDocument,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] })
+      await invalidateEndpoint(queryClient, '/appeals')
       toast.success('Muvaffaqiyatli saqlandi!')
     },
   })

@@ -15,7 +15,7 @@ import { Textarea } from '@/shared/components/ui/textarea'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { ACCREDITATION_SPHERE_OPTIONS } from '@/shared/constants/accreditation-spheres'
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import useAdd from '@/shared/hooks/api/use-add'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -89,7 +89,7 @@ export const AccreditationAppealActions = ({ appealId, status }: AccreditationAp
       setIsReplyOpen(false)
       setReason('')
       replyForm.reset()
-      queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS] })
+      invalidateEndpoint(queryClient, '/appeals')
     }
   }, [isProcessSuccess, isCancelSuccess, isReplySuccess, replyForm, queryClient])
 

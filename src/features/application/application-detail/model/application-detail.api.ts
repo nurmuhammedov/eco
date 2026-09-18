@@ -1,32 +1,31 @@
 import { apiClient } from '@/shared/api/api-client'
+import { type ApiResponse } from '@/shared/types/api'
+import { type OptionItem } from '@/shared/types/general'
+
+/**
+ * Request bodies here are assembled by the form that sends them, so their shape
+ * belongs to the call site rather than to this module.
+ */
+type RequestBody = Record<string, unknown>
 
 export const applicationDetailApi = {
-  getApplicantDocs: async (id: any) => {
+  getApplicantDocs: async (id: string) => {
     const { data } = await apiClient.getWithPagination(`/appeals/${id}/request-docs`)
     return data
   },
-  getResponseDocs: async (id: any) => {
+  getResponseDocs: async (id: string) => {
     const { data } = await apiClient.getWithPagination(`/appeals/${id}/reply-docs`)
     return data
   },
-  getLegalApplicantInfo: async (tin: any) => {
-    const { data } = await apiClient.get<any>(`/users/legal/${tin}`)
-    return data.data
-  },
-  getLegalIipInfo: async (tin: any) => {
-    const payload = { tin: tin }
-    const { data: res } = await apiClient.post<any>(`/integration/iip/legal`, payload)
-    return res.data
-  },
-  getApplicationDetail: async (id: any) => {
+  getApplicationDetail: async (id?: string) => {
     const { data } = await apiClient.get<any>(`/appeals/${id}`)
     return data.data
   },
-  getApplicationLogs: async (id: any) => {
+  getApplicationLogs: async (id: string) => {
     const { data } = await apiClient.get<any>(`/execution-processes/appeal/${id}`)
     return data.data
   },
-  getChangeLogs: async (id: any) => {
+  getChangeLogs: async (id: string) => {
     const { data } = await apiClient.get<any>(`/execution-processes/change/${id}`)
     return data.data
   },
@@ -35,30 +34,30 @@ export const applicationDetailApi = {
     if (officeId) {
       url += `?officeId=${officeId}`
     }
-    const { data } = await apiClient.get<any>(url)
+    const { data } = await apiClient.get<ApiResponse<OptionItem<string>[]>>(url)
     return data.data
   },
   getManagerListSelect: async () => {
-    const { data } = await apiClient.get<any>(`/users/committee-users/managers/select`)
+    const { data } = await apiClient.get<ApiResponse<OptionItem<string>[]>>(`/users/committee-users/managers/select`)
     return data.data
   },
-  attachInspector: async (data: any) => {
+  attachInspector: async (data: RequestBody) => {
     const { data: res } = await apiClient.post<any>(`/appeals/set-inspector`, data)
     return res.data
   },
-  rejectDocument: async (data: any) => {
+  rejectDocument: async (data: RequestBody) => {
     const { data: res } = await apiClient.post<any>(`/appeals/rejection`, data)
     return res.data
   },
-  confirmDocument: async (data: { appealId: any; documentId: any; shouldRegister?: boolean }) => {
+  confirmDocument: async (data: { appealId?: string; documentId?: string; shouldRegister?: boolean }) => {
     const { data: res } = await apiClient.post<any>(`/appeals/confirmation`, data)
     return res.data
   },
-  uploadFile: async (payload: any, url = '/appeals/upload-file') => {
+  uploadFile: async (payload: RequestBody, url = '/appeals/upload-file') => {
     const { data: res } = await apiClient.post<any>(url, payload)
     return res.data
   },
-  updateFile: async (id: string, payload: any, url = 'hf') => {
+  updateFile: async (id: string, payload: RequestBody, url = 'hf') => {
     const { data: res } = await apiClient.patch<any>(`/${url}/${id}`, payload)
     return res.data
   },

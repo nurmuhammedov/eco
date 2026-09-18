@@ -17,7 +17,6 @@ import { useState } from 'react'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { ApplicationModal } from '@/features/application/create-application'
 import { useParams } from 'react-router-dom'
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
 
 const schema = z.object({
   conclusion: z.string(),
@@ -39,7 +38,7 @@ const ReferenceCreateModal = () => {
     pdfEndpoint: '/appeals/reply/generate-pdf',
     submitEndpoint: '/appeals/reply',
     successMessage: 'Muvaffaqiyatli saqlandi!',
-    queryKey: QK_APPLICATIONS,
+    invalidates: '/appeals',
   })
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),

@@ -4,7 +4,7 @@ import { ApplicationModal } from '@/features/application/create-application'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { SignAction } from '../../model/types'
 import { DEFAULT_POSITIVE_CONCLUSION } from '../../model/labels'
-import { CADASTRE_PASSPORT_KEY, useRefreshPassport } from '../../model/use-cadastre-passport'
+import { useRefreshPassport } from '../../model/use-cadastre-passport'
 import { ConclusionDialog } from './conclusion-dialog'
 
 export const CommitteeActions = ({ passportId }: { passportId: string }) => {
@@ -16,7 +16,7 @@ export const CommitteeActions = ({ passportId }: { passportId: string }) => {
     pdfMethod: 'get',
     submitEndpoint: `/cadastre-passports/${passportId}/committee-sign`,
     successMessage: 'Qo‘mita tomonidan muvaffaqiyatli imzolandi',
-    queryKey: CADASTRE_PASSPORT_KEY,
+    invalidates: '/cadastre-passports',
     transformSubmitPayload: (dto, sign, filePath) => {
       const { signAction, ...rest } = dto || {}
 

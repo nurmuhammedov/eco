@@ -1,4 +1,4 @@
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import useUpdate from '@/shared/hooks/api/use-update'
 import { useQueryClient } from '@tanstack/react-query'
 
@@ -11,7 +11,7 @@ export const useUpdateLegalInfo = (tinNumber: any) => {
       {},
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS, 'APPLICANT_INFO', tinNumber] })
+          invalidateEndpoint(queryClient, '/users/legal')
         },
       }
     )

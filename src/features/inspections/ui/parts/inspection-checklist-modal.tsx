@@ -139,7 +139,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
   } = useEimzo({
     pdfEndpoint: `/inspection-results/act/generate-pdf`,
     submitEndpoint: '/inspection-results/act',
-    queryKey: '/inspection-results',
+    invalidates: '/inspection-results',
     successMessage: 'Muvaffaqiyatli saqlandi!',
     onEnd: () => {
       removeParams('modal')

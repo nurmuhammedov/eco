@@ -140,7 +140,7 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
   } = useEimzo({
     pdfEndpoint: `/inquiries/${id}/generate-pdf`,
     submitEndpoint: `/inquiries/${id}/set-belonging`,
-    queryKey: '/inquiries',
+    invalidates: '/inquiries',
     onEnd: () => {
       setIsShow(false)
       form.reset()

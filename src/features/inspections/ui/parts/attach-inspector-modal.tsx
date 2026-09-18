@@ -99,7 +99,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
   } = useEimzo({
     pdfEndpoint: '/inspections/decree/generate-pdf',
     submitEndpoint: '/inspections/decree/one-day',
-    queryKey: '/inspections',
+    invalidates: '/inspections',
     successMessage: 'Muvaffaqiyatli saqlandi!',
     onSuccessNavigateTo: `/inspections`,
   })

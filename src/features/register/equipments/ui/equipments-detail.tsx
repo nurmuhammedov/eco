@@ -15,7 +15,7 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { QRCodeCanvas } from 'qrcode.react'
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { Button } from '@/shared/components/ui/button'
 import { UserRoles } from '@/shared/types/user'
 import { Logs } from '@/features/register/hf/ui/parts/logs'
@@ -47,7 +47,7 @@ const EquipmentsDetail = () => {
   const { id: equipmentUuid } = useParams<{ id: string }>()
   const [searchParams] = useSearchParams()
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('')
-  const { data: legalData } = useLegalApplicantInfo(data?.ownerIdentity)
+  const { data: legalData } = useLegalOrganizationQuery(data?.ownerIdentity)
   const navigate = useNavigate()
 
   const [isDeregisterModalOpen, setIsDeregisterModalOpen] = useState(false)

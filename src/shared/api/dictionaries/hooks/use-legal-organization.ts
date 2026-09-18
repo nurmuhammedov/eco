@@ -1,12 +1,14 @@
 import useDetail from '@/shared/hooks/api/use-detail'
 
 export interface LegalOrganization {
+  identity?: string | number
   name?: string
   directorName?: string
   address?: string
   phoneNumber?: string
   regionId?: number
   districtId?: number
+  isActive?: boolean
   [key: string]: unknown
 }
 
