@@ -78,7 +78,7 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
             <CadastreDataFields control={form.control} prefix="" />
             <div>
               <h6 className="mb-4 text-sm font-semibold text-gray-700">
-                Davlat reestridan o‘tkazilgan obyekt to‘g‘risida ma’lumotlar
+                TXYUZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar
               </h6>
               <CadastreRegistryFields control={form.control} prefix="" />
             </div>

@@ -106,7 +106,7 @@ export const cadastreDataSchema = z
     distanceToResidence: numeric(),
     estimatedValue: numeric(),
     status: text(),
-    // "Davlat reestridan o‘tkazilgan obyekt to‘g‘risida ma’lumotlar" - the
+    // "TXYUZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar" - the
     // second sheet of the passport, filled in by the same customer.
     stateRegistryCertNumber: text(),
     stateRegistryCertDate: day(),

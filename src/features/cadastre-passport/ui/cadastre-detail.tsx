@@ -158,7 +158,7 @@ export default function CadastreDetail() {
 
         <DetailCardAccordion.Item
           value="registry-data"
-          title="Davlat reestridan o‘tkazilgan obyekt to‘g‘risida ma’lumotlar"
+          title="TXYUZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar"
         >
           <RegistryDataRows data={data?.preparerData} />
         </DetailCardAccordion.Item>

@@ -247,7 +247,7 @@ export default function CadastreAdd() {
               </DetailCardAccordion.Item>
               <DetailCardAccordion.Item
                 value="registry-data"
-                title="Davlat reestridan o‘tkazilgan obyekt to‘g‘risida ma’lumotlar"
+                title="TXYUZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar"
               >
                 <div className="pt-2 pb-5">
                   <CadastreRegistryFields control={form.control} prefix="cadastreData." />
