@@ -31,7 +31,7 @@ interface RegionCountDto {
 }
 
 const TAB_TO_API_TYPE: Record<string, string> = {
-  [RiskAnalysisTab.XICHO]: 'HF',
+  [RiskAnalysisTab.HF]: 'HF',
   [RiskAnalysisTab.INM]: 'IRS',
   [RiskAnalysisTab.LIFT]: 'ELEVATOR',
   [RiskAnalysisTab.ATTRACTION]: 'ATTRACTION',
@@ -85,7 +85,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const {
     addParams,
     paramsObject: {
-      mainTab = RiskAnalysisTab.XICHO,
+      mainTab = RiskAnalysisTab.HF,
       riskLevel = 'ALL',
       year = defaultYear,
       month = defaultMonth,
@@ -220,7 +220,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
       >
         <div className={cn('scrollbar-hidden mb-2 flex justify-between overflow-x-auto overflow-y-hidden')}>
           <TabsList>
-            <TabsTrigger value={RiskAnalysisTab.XICHO}>
+            <TabsTrigger value={RiskAnalysisTab.HF}>
               {t('risk_analysis_tabs.XICHO')}
               <Badge variant="destructive" className="ml-2">
                 {hfTotalCount}

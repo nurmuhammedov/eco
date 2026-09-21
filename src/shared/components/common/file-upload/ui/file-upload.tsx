@@ -1,7 +1,7 @@
 import { onActivate } from '@/shared/lib/on-activate'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
-import { AxiosProgressEvent } from 'axios'
+import type { AxiosProgressEvent } from 'axios'
 import { Camera, Paperclip } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { Input } from '@/shared/components/ui/input'

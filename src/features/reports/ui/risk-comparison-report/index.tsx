@@ -28,7 +28,7 @@ const RiskComparisonReport: React.FC = () => {
 
   const {
     addParams,
-    paramsObject: { mainTab = RiskAnalysisTab.XICHO, year = defaultYear, quarter = defaultQuarter },
+    paramsObject: { mainTab = RiskAnalysisTab.HF, year = defaultYear, quarter = defaultQuarter },
   } = useCustomSearchParams()
 
   const { data: regionsData, isLoading: regionsLoading } = useData<any[]>('/regions/select', true)
@@ -253,7 +253,7 @@ const RiskComparisonReport: React.FC = () => {
       <Tabs value={mainTab} onValueChange={(tab) => addParams({ mainTab: tab })} className="w-full">
         <div className={cn('scrollbar-hidden mb-2 flex justify-between overflow-x-auto overflow-y-hidden')}>
           <TabsList>
-            <TabsTrigger value={RiskAnalysisTab.XICHO}>{t('risk_analysis_tabs.XICHO')}</TabsTrigger>
+            <TabsTrigger value={RiskAnalysisTab.HF}>{t('risk_analysis_tabs.XICHO')}</TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.INM}>{t('risk_analysis_tabs.INM')}</TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.LIFT}>{t('risk_analysis_tabs.LIFT')}</TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.ATTRACTION}>{t('risk_analysis_tabs.ATTRACTION')}</TabsTrigger>

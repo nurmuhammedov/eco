@@ -16,7 +16,7 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
   const navigate = useNavigate()
   const { paramsObject } = useCustomSearchParams()
   const { t } = useTranslation('common')
-  const type = paramsObject.mainTab || RiskAnalysisTab.XICHO
+  const type = paramsObject.mainTab || RiskAnalysisTab.HF
   const handleView = (row: RiskAnalysisItem) => {
     navigate(
       `/risk-analysis/detail?tin=${row.legalTin}&id=${row.belongId}&type=${type}&name=${row.legalName || row.name || ''}`

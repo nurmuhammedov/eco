@@ -12,7 +12,7 @@ interface AssignInspectorPayload {
 
 const getEndpoint = (type: RiskAnalysisTab) => {
   switch (type) {
-    case RiskAnalysisTab.XICHO:
+    case RiskAnalysisTab.HF:
       return {
         id: API_ENDPOINTS.RISK_ASSESSMENT_HF,
         url: '/assign-inspector-hf',
@@ -43,7 +43,7 @@ const getEndpoint = (type: RiskAnalysisTab) => {
 export const useAssignInspector = () => {
   const queryClient = useQueryClient()
   const { paramsObject } = useCustomSearchParams()
-  const type = paramsObject.mainTab ?? (RiskAnalysisTab.XICHO as RiskAnalysisTab)
+  const type = paramsObject.mainTab ?? (RiskAnalysisTab.HF as RiskAnalysisTab)
 
   return useMutation({
     mutationFn: (payload: AssignInspectorPayload) => {

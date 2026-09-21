@@ -1,6 +1,6 @@
 /** Tab values the risk-analysis pages and the inspection widget both read. */
 export enum RiskAnalysisTab {
-  XICHO = 'HF',
+  HF = 'HF',
   INM = 'IRS',
   LIFT = 'ELEVATOR',
   ATTRACTION = 'ATTRACTION',

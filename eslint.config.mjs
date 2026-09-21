@@ -46,10 +46,11 @@ const AXIOS_ALLOWED = [
   'src/shared/api/**',
   // Known bypasses, kept visible rather than hidden behind inline comments.
   // Each one still has to move onto `apiClient`.
-  'src/shared/components/common/file-upload/**',
   'src/shared/components/common/editor/ui/tinymce-editor.tsx',
   'src/shared/components/common/signature/model/convert-pdf-to-base64.ts',
+  // `AxiosError` is checked with `instanceof`, so the class itself is needed.
   'src/features/qr-form/api/**',
+  // A separate service on another host; `apiClient` speaks only to this one.
   'src/features/reports/ui/turniket-report/**',
   'src/features/reports/ui/turniket-report-detail/**',
 ]

@@ -147,7 +147,7 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
   const isChairmanOrHead = user?.role === UserRoles.HEAD
 
   const inspectionType = type || paramsObject.type || 'RISK_BASED'
-  const belongType = paramsObject.belongType || RiskAnalysisTab.XICHO
+  const belongType = paramsObject.belongType || RiskAnalysisTab.HF
 
   const activeTab = paramsObject.status
   const activeSubTab = paramsObject.subStatus
@@ -292,7 +292,7 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
           <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
             <TabsList>
               <BelongTypeTabsTrigger
-                value={RiskAnalysisTab.XICHO}
+                value={RiskAnalysisTab.HF}
                 label={t('risk_analysis_tabs.XICHO')}
                 queryParams={queryParams}
                 type={inspectionType}

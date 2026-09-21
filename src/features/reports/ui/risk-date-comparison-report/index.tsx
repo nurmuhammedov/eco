@@ -28,7 +28,7 @@ const MONTHS = [
 const currentYear = new Date().getFullYear()
 
 const TAB_TO_API_TYPE: Record<string, string> = {
-  [RiskAnalysisTab.XICHO]: 'HF',
+  [RiskAnalysisTab.HF]: 'HF',
   [RiskAnalysisTab.INM]: 'IRS',
   [RiskAnalysisTab.LIFT]: 'ELEVATOR',
   [RiskAnalysisTab.ATTRACTION]: 'ATTRACTION',
@@ -45,7 +45,7 @@ const RiskDateComparisonReport: React.FC = () => {
   const {
     addParams,
     paramsObject: {
-      mainTab = RiskAnalysisTab.XICHO,
+      mainTab = RiskAnalysisTab.HF,
       year = defaultYear,
       month = defaultMonth,
       riskLevel = 'LOW',
@@ -311,7 +311,7 @@ const RiskDateComparisonReport: React.FC = () => {
       <Tabs value={mainTab} onValueChange={(tab) => addParams({ mainTab: tab })} className="w-full">
         <div className={cn('scrollbar-hidden mb-2 flex justify-between overflow-x-auto overflow-y-hidden')}>
           <TabsList>
-            <TabsTrigger value={RiskAnalysisTab.XICHO}>{t('risk_analysis_tabs.XICHO')}</TabsTrigger>
+            <TabsTrigger value={RiskAnalysisTab.HF}>{t('risk_analysis_tabs.XICHO')}</TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.INM}>{t('risk_analysis_tabs.INM')}</TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.LIFT}>{t('risk_analysis_tabs.LIFT')}</TabsTrigger>
             <TabsTrigger value={RiskAnalysisTab.ATTRACTION}>{t('risk_analysis_tabs.ATTRACTION')}</TabsTrigger>
