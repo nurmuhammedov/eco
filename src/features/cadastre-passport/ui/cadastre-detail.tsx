@@ -125,7 +125,7 @@ export default function CadastreDetail() {
           <DetailRow title="Tashkilot nomi" value={customerInfo?.name || '-'} />
           <DetailRow title="Tashkilot STIR" value={passport.customerTin || '-'} />
           <DetailRow title="Titul fayli" value={fileValue(passport.titlePagePath)} />
-          <DetailRow title="Atribut fayli" value={fileValue(passport.detailFilePath)} />
+          <DetailRow title="Atribut fayli" value={fileValue(passport.dataPagePath)} />
           <DetailRow title="Kadastr passporti fayli" value={fileValue(passport.passportFilePath)} />
         </DetailCardAccordion.Item>
 

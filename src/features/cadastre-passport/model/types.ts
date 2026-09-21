@@ -60,7 +60,8 @@ export interface CadastrePassport {
   preparerTin: number
   customerProfileId: string
   customerTin: number
-  detailFilePath: string | null
+  /** Atribut sahifasi - pasport tasdiqlanganda serverda generatsiya qilinadi. */
+  dataPagePath: string | null
   passportFilePath: string | null
   titlePagePath: string | null
   status: CadastrePassportStatus

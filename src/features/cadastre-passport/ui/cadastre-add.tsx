@@ -51,7 +51,7 @@ export default function CadastreAdd() {
 
   const ownTin = user?.tinOrPin ? String(user.tinOrPin) : null
 
-  const { mutate: createCadastre } = useAdd<any, any, any>('/cadastre-passports')
+  const { mutate: createCadastre, isPending: isCreating } = useAdd<any, any, any>('/cadastre-passports')
 
   // An organisation preparing its own passport is both parties, so there is
   // nothing to look up - searching for yourself by your own TIN is busywork.
@@ -256,10 +256,18 @@ export default function CadastreAdd() {
             </DetailCardAccordion>
 
             <div className="mt-4 flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={() => navigate('/cadastre-passport')}>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isCreating}
+                onClick={() => navigate('/cadastre-passport')}
+              >
                 Bekor qilish
               </Button>
-              <Button type="submit">Saqlash</Button>
+              {/* Qayta bosish ikkinchi arizani yaratadi - orqaga qaytarib bo'lmaydi. */}
+              <Button type="submit" disabled={isCreating} loading={isCreating}>
+                Saqlash
+              </Button>
             </div>
           </form>
         </Form>
