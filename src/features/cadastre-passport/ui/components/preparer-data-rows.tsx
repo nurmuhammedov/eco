@@ -87,3 +87,26 @@ export const PreparerDataRows = ({ data }: { data: CadastreSection | null | unde
     </>
   )
 }
+
+/** Pasportning ikkinchi varag'i - davlat reestri va litsenziya ma'lumotlari. */
+export const RegistryDataRows = ({ data }: { data: CadastreSection | null | undefined }) => {
+  const values = data ?? {}
+
+  return (
+    <>
+      <DetailRow
+        title="Obyektning davlat ro‘yxatidan o‘tkazilganligi to‘g‘risidagi guvohnoma raqami"
+        value={text(values.stateRegistryCertNumber)}
+      />
+      <DetailRow
+        title="Obyektning davlat ro‘yxatidan o‘tkazilganligi to‘g‘risidagi guvohnoma sanasi"
+        value={day(values.stateRegistryCertDate)}
+      />
+      <DetailRow title="Obyektning litsenziya raqami" value={text(values.licenseNumber)} />
+      <DetailRow title="Obyektning litsenziya sanasi" value={day(values.licenseDate)} />
+      <DetailRow title="Korxona va tashkilotning umumdavlat tasnifi raqami (KTUT, OKPO)" value={text(values.okpo)} />
+      <DetailRow title="Filiallararo aylanma pul muomalalarining xos raqami (YBK, MFO)" value={text(values.bankMfo)} />
+      <DetailRow title="Telefon raqami" value={text(values.phoneNumber)} />
+    </>
+  )
+}

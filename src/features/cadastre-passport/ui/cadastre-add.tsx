@@ -19,11 +19,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
-import { cadastreDataSchema, CadastreDataFields } from './components/cadastre-data-fields'
+import { cadastreDataSchema, CadastreDataFields, CadastreRegistryFields } from './components/cadastre-data-fields'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const schema = z.object({
-  attributeFile: z.string().min(1, FORM_ERROR_MESSAGES.required),
   passportFile: z.string().min(1, FORM_ERROR_MESSAGES.required),
   parentRequestNumber: z.string().optional(),
   cadastreData: cadastreDataSchema,
@@ -52,7 +51,7 @@ export default function CadastreAdd() {
 
   const ownTin = user?.tinOrPin ? String(user.tinOrPin) : null
 
-  const { mutate: createCadastre } = useAdd<any, any, any>('/cadastre-passports')
+  const { mutate: createCadastre, isPending: isCreating } = useAdd<any, any, any>('/cadastre-passports')
 
   // An organisation preparing its own passport is both parties, so there is
   // nothing to look up - searching for yourself by your own TIN is busywork.
@@ -73,7 +72,6 @@ export default function CadastreAdd() {
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      attributeFile: '',
       passportFile: '',
       parentRequestNumber: resubmitRequestNumber ?? '',
       // The form starts empty; the schema only has to hold at submit time.
@@ -109,7 +107,6 @@ export default function CadastreAdd() {
     createCadastre(
       {
         customerTin: Number(searchedStir),
-        detailFilePath: data.attributeFile,
         passportFilePath: data.passportFile,
         parentRequestNumber: data.parentRequestNumber?.trim() || null,
         preparerData: data.cadastreData,
@@ -210,24 +207,7 @@ export default function CadastreAdd() {
                 <CardTitle>Kerakli hujjatlarni yuklash</CardTitle>
               </CardHeader>
               <CardContent>
-                {/* Three fields in a four-column grid left a dead quarter on the right. */}
-                <div className="grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-2 lg:grid-cols-3">
-                  <FormField
-                    control={form.control}
-                    name="attributeFile"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel required>Atribut fayli</FormLabel>
-                        <FormControl>
-                          <InputFile
-                            name={field.name as 'attributeFile'}
-                            form={form}
-                            uploadEndpoint="/attachments/cadastre-passports"
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                <div className="grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="passportFile"
@@ -260,19 +240,35 @@ export default function CadastreAdd() {
               </CardContent>
             </Card>
 
-            <DetailCardAccordion defaultValue={['cadastre-data']}>
+            <DetailCardAccordion defaultValue={['cadastre-data', 'registry-data']}>
               <DetailCardAccordion.Item value="cadastre-data" title="TXYUZ kadastr pasportining atributiv ma’lumotlari">
                 <div className="pt-2 pb-5">
                   <CadastreDataFields control={form.control} prefix="cadastreData." />
                 </div>
               </DetailCardAccordion.Item>
+              <DetailCardAccordion.Item
+                value="registry-data"
+                title="TXYUZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar"
+              >
+                <div className="pt-2 pb-5">
+                  <CadastreRegistryFields control={form.control} prefix="cadastreData." />
+                </div>
+              </DetailCardAccordion.Item>
             </DetailCardAccordion>
 
             <div className="mt-4 flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={() => navigate('/cadastre-passports')}>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isCreating}
+                onClick={() => navigate('/cadastre-passports')}
+              >
                 Bekor qilish
               </Button>
-              <Button type="submit">Saqlash</Button>
+              {/* Qayta bosish ikkinchi arizani yaratadi - orqaga qaytarib bo'lmaydi. */}
+              <Button type="submit" disabled={isCreating} loading={isCreating}>
+                Saqlash
+              </Button>
             </div>
           </form>
         </Form>
