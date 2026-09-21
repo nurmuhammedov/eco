@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Form } from '@/shared/components/ui/form'
 import { Button } from '@/shared/components/ui/button'
-import { CadastreDataFields, cadastreDataSchema } from './cadastre-data-fields'
+import { CadastreDataFields, CadastreRegistryFields, cadastreDataSchema } from './cadastre-data-fields'
 import { splitAddress } from '../../model/txyz-options'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -33,11 +33,15 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
   useEffect(() => {
     if (defaultValues && isOpen) {
       const formattedValues = { ...defaultValues }
-      if (formattedValues.cadastreRegistrationDate) {
-        formattedValues.cadastreRegistrationDate = new Date(formattedValues.cadastreRegistrationDate)
-      }
-      if (formattedValues.exploitationDate) {
-        formattedValues.exploitationDate = new Date(formattedValues.exploitationDate)
+
+      // The record keeps dates as 'yyyy-MM-dd'; the picker works on Date.
+      for (const key of [
+        'cadastreRegistrationDate',
+        'exploitationDate',
+        'stateRegistryCertDate',
+        'licenseDate',
+      ] as const) {
+        if (formattedValues[key]) formattedValues[key] = new Date(formattedValues[key])
       }
 
       // The address is one string on the record and three fields on the form.
@@ -72,6 +76,12 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
         <Form {...form}>
           <form id="cadastre-edit-form" onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-6">
             <CadastreDataFields control={form.control} prefix="" />
+            <div>
+              <h6 className="mb-4 text-sm font-semibold text-gray-700">
+                Davlat reestridan o‘tkazilgan obyekt to‘g‘risida ma’lumotlar
+              </h6>
+              <CadastreRegistryFields control={form.control} prefix="" />
+            </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
                 Bekor qilish

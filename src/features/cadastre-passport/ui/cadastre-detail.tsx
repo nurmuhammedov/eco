@@ -16,7 +16,7 @@ import { useCadastrePassport } from '../model/use-cadastre-passport'
 import { CadastreEditModal } from './components/cadastre-edit-modal'
 import { CommitteeActions } from './components/committee-actions'
 import { CustomerActions } from './components/customer-actions'
-import { PreparerDataRows } from './components/preparer-data-rows'
+import { PreparerDataRows, RegistryDataRows } from './components/preparer-data-rows'
 import { ReviewsList } from './components/reviews-list'
 import { SectionRows } from './components/section-rows'
 import { StatusBadge } from './components/status-badge'
@@ -99,7 +99,10 @@ export default function CadastreDetail() {
         </div>
       </div>
 
-      <Accordion type="multiple" defaultValue={['txyz', 'workflows', 'cadastre-data', 'fvv', 'ses', 'reviews']}>
+      <Accordion
+        type="multiple"
+        defaultValue={['txyz', 'workflows', 'cadastre-data', 'registry-data', 'fvv', 'ses', 'reviews']}
+      >
         <DetailCardAccordion.Item value="txyz" title="TXYUZ kadastr pasporti ma’lumotlari">
           <DetailRow title="Holati" value={<StatusBadge status={passport.status} />} />
           <DetailRow title="Ariza raqami" value={passport.requestNumber || '-'} />
@@ -151,6 +154,13 @@ export default function CadastreDetail() {
           }
         >
           <PreparerDataRows data={data?.preparerData} />
+        </DetailCardAccordion.Item>
+
+        <DetailCardAccordion.Item
+          value="registry-data"
+          title="Davlat reestridan o‘tkazilgan obyekt to‘g‘risida ma’lumotlar"
+        >
+          <RegistryDataRows data={data?.preparerData} />
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="fvv" title="Favqulodda vaziyatlar vazirligi ma’lumotlari">

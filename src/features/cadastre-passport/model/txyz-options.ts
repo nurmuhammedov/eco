@@ -138,3 +138,24 @@ export const formatCoordinate = (raw: string) => {
 
 /** Obyektning sanitariya muhofaza zonasi (m). */
 export const TXYZ_PROTECTION_DISTANCES = ['50 metr', '100 metr', '300 metr', '500 metr', '1 000 metr'] as const
+
+/**
+ * The state registry certificate and the licence are issued as a two-letter
+ * series and six digits, the same shape the land registry uses.
+ */
+export const STATE_REGISTRY_CERT_NUMBER_SAMPLE = 'QSH 12345'
+
+export const LICENSE_NUMBER_SAMPLE = 'AB 001234'
+
+/** KTUT (OKPO) - eight digits. */
+export const OKPO_PATTERN = /^\d{8}$/
+export const OKPO_LENGTH = 8
+
+/** YBK (MFO) - five digits. */
+export const BANK_MFO_PATTERN = /^\d{5}$/
+export const BANK_MFO_LENGTH = 5
+
+export const onlyDigits = (raw: string, max: number) =>
+  String(raw ?? '')
+    .replace(/\D/g, '')
+    .slice(0, max)
