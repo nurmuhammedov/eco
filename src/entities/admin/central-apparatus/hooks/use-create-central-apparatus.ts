@@ -1,11 +1,10 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  centralApparatusAPI,
-  centralApparatusKeys,
-  CentralApparatusResponse,
-  CreateCentralApparatusDTO,
-} from '@/entities/admin/central-apparatus'
+import { centralApparatusAPI } from '../models/central-apparatus.api'
+import { centralApparatusKeys } from '../models/central-apparatus.query-keys'
+import { CentralApparatusResponse, CreateCentralApparatusDTO } from '../models/central-apparatus.types'
 
 export const useCreateCentralApparatus = () => {
   const queryClient = useQueryClient()
@@ -42,10 +41,9 @@ export const useCreateCentralApparatus = () => {
     },
 
     onSuccess: (createdData) => {
-      // Invalidate list queries to get fresh data with correct ID
-      queryClient.invalidateQueries({
-        queryKey: centralApparatusKeys.list('central-apparatus'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: centralApparatusKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.DEPARTMENTS)
 
       // Add the newly created central-apparatus to cache
       queryClient.setQueryData(centralApparatusKeys.detail('central-apparatus', createdData.data.id!), createdData)

@@ -3,7 +3,7 @@ import { Button } from '@/shared/components/ui/button'
 import { ApplicationModal } from '@/features/application/create-application'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { SignAction } from '../../model/types'
-import { CADASTRE_PASSPORT_KEY, useRefreshPassport } from '../../model/use-cadastre-passport'
+import { useRefreshPassport } from '../../model/use-cadastre-passport'
 import { TextDialog } from './text-dialog'
 
 export const CustomerActions = ({ passportId }: { passportId: string }) => {
@@ -15,7 +15,7 @@ export const CustomerActions = ({ passportId }: { passportId: string }) => {
     pdfMethod: 'get',
     submitEndpoint: `/cadastre-passports/${passportId}/customer-sign`,
     successMessage: 'Muvaffaqiyatli bajarildi',
-    queryKey: CADASTRE_PASSPORT_KEY,
+    invalidates: '/cadastre-passports',
     transformSubmitPayload: (dto, sign, filePath) => {
       const { signAction, ...rest } = dto || {}
 

@@ -6,7 +6,7 @@ import {
   FilterHazardousFacilityTypeDTO,
   HazardousFacilityTypeResponse,
   UpdateHazardousFacilityTypeDTO,
-} from './hazardous-facility-type.types.ts'
+} from './hazardous-facility-type.types'
 
 export const hazardousFacilityTypeAPI = {
   list: async (params: FilterHazardousFacilityTypeDTO) => {

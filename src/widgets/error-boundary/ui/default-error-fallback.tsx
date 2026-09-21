@@ -3,7 +3,7 @@ import { RefreshCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import Icon from '@/shared/components/common/icon'
 import { Button } from '@/shared/components/ui/button'
-import { ErrorAction, ErrorFallbackProps } from '@/pages/error/types'
+import { ErrorAction, ErrorFallbackProps } from '@/widgets/error-boundary/model'
 
 const DEFAULT_ERROR_MESSAGE = 'errors.unexpected_error'
 const DEFAULT_SOMETHING_WENT_WRONG = 'errors.something_went_wrong'

@@ -1,11 +1,9 @@
 import { z } from 'zod'
-import { EquipmentTypeEnum } from './equipment.types'
+import { EquipmentTypeEnum } from './equipment.enums'
 
 export const equipmentBaseSchema = {
-  name: z.string().min(1, 'Tuman nomi majburiy'),
-  equipmentType: z.nativeEnum(EquipmentTypeEnum, {
-    errorMap: () => ({ message: 'Jihozlar turini tanlash majburiy' }),
-  }),
+  name: z.string().min(1),
+  equipmentType: z.nativeEnum(EquipmentTypeEnum),
 }
 
 export const equipmentSchema = z.object({

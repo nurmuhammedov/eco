@@ -1,6 +1,6 @@
 import React from 'react'
-import { cn } from '@/shared/lib/utils.ts'
-import { Card } from '@/shared/components/ui/card.tsx'
+import { cn } from '@/shared/lib/utils'
+import { Card } from '@/shared/components/ui/card'
 
 type CardFormProps = {
   className?: string

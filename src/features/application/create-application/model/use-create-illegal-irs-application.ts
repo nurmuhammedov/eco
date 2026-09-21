@@ -1,13 +1,13 @@
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import { IrsCategory, IrsIdentifierType, IrsUsageType } from '@/entities/create-application/types/enums'
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
-import { apiClient } from '@/shared/api/api-client'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import { format } from 'date-fns'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -19,6 +19,7 @@ import {
   RegisterIllegalIrsSchema,
 } from '@/entities/create-application/schemas/register-illegal-irs.schema'
 import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
   const { type, id } = useParams<{ type: string; id: string }>()
@@ -32,14 +33,7 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
 
   const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/irs/`, id, !!id)
   const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
-  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', ownerIdentity],
-    queryFn: async () => {
-      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
-      return res.data?.data
-    },
-    enabled: !!ownerIdentity,
-  })
+  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useLegalOrganizationQuery(ownerIdentity)
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
   const identityForProfile =
@@ -81,21 +75,37 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
         const dynamicSchema = (actualSchema as z.ZodTypeAny).superRefine((data: any, ctx: z.RefinementCtx) => {
           if (isDataNull && !isUpdate) {
             if (!data.file1Path)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1Path'] })
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file1Path'] })
             if (!data.file1ExpiryDate)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1ExpiryDate'] })
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: FORM_ERROR_MESSAGES.required,
+                path: ['file1ExpiryDate'],
+              })
             if (!data.file2Path)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2Path'] })
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file2Path'] })
             if (!data.file2ExpiryDate)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2ExpiryDate'] })
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: FORM_ERROR_MESSAGES.required,
+                path: ['file2ExpiryDate'],
+              })
             if (!data.file5Path)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file5Path'] })
             if (!data.file5ExpiryDate)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: FORM_ERROR_MESSAGES.required,
+                path: ['file5ExpiryDate'],
+              })
             if (!data.file15Path)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15Path'] })
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file15Path'] })
             if (!data.file15ExpiryDate)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15ExpiryDate'] })
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: FORM_ERROR_MESSAGES.required,
+                path: ['file15ExpiryDate'],
+              })
           }
         })
         return zodResolver(dynamicSchema)(cleanedValues as any, context, options)
@@ -103,21 +113,37 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
       const dynamicSchema = (actualSchema as z.ZodTypeAny).superRefine((data: any, ctx: z.RefinementCtx) => {
         if (isDataNull) {
           if (!data.file1Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file1Path'] })
           if (!data.file1ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file1ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file1ExpiryDate'],
+            })
           if (!data.file2Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file2Path'] })
           if (!data.file2ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file2ExpiryDate'],
+            })
           if (!data.file5Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file5Path'] })
           if (!data.file5ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file5ExpiryDate'],
+            })
           if (!data.file15Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file15Path'] })
           if (!data.file15ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file15ExpiryDate'],
+            })
         }
       })
       return zodResolver(dynamicSchema)(values, context, options)
@@ -171,8 +197,8 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
   )
 
   const regionId = form.watch('regionId')
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
 
   useEffect(() => {
@@ -278,7 +304,7 @@ export const useRegisterIllegalIrs = (externalSubmit?: (data: any) => void) => {
       updateMutate(cleanedData, {
         onSuccess: () => {
           invalidateRegistryQueries(queryClient)
-          toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
+          toast.success('So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },
       })

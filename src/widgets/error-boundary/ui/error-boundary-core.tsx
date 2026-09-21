@@ -1,9 +1,9 @@
 import React, { Component, ErrorInfo } from 'react'
-import type { ErrorBoundaryProps, ErrorBoundaryState, ErrorFallbackProps } from '@/pages/error/types'
+import type { ErrorBoundaryProps, ErrorBoundaryState, ErrorFallbackProps } from '@/widgets/error-boundary/model'
 import { NavigateFunction } from 'react-router-dom'
-import { IS_DEV } from '@/shared/constants/general.ts'
-import { cn } from '@/shared/lib/utils.ts'
-import { DefaultErrorFallback } from '@/widgets/error-boundary/ui/default-error-fallback.tsx'
+import { IS_DEV } from '@/shared/constants/general'
+import { cn } from '@/shared/lib/utils'
+import { DefaultErrorFallback } from '@/widgets/error-boundary/ui/default-error-fallback'
 
 export class ErrorBoundaryCore extends Component<
   ErrorBoundaryProps & { navigate: NavigateFunction; pathname: string },
@@ -42,9 +42,11 @@ export class ErrorBoundaryCore extends Component<
     }
 
     if (IS_DEV) {
+      // eslint-disable-next-line no-console -- grouping is dev-only diagnostics
       console.group('%c ErrorBoundary caught an error', 'color: #ff0000; font-weight: bold;')
       console.error(error)
       console.error('Component Stack:', errorInfo.componentStack)
+      // eslint-disable-next-line no-console -- closes the group above
       console.groupEnd()
     }
   }

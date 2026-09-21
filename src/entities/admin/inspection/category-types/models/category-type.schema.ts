@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
 export const categoryTypeBaseSchema = {
-  category: z.string().min(1, 'Kategoriya majburiy'),
-  type: z.string().min(1, 'Tekshiruv turi majburiy'),
+  category: z.string().min(1),
+  type: z.string().min(1),
 }
 
 export const categoryTypeSchema = z.object({

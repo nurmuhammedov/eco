@@ -776,7 +776,7 @@ export const applicationsList = [
     title: 'Akkreditatsiya attestatini qayta rasmiylashtirish',
     type: ApplicationTypeEnum.RE_ISSUE_ACCREDITATION_CERT,
   },
-  // Java shu turlarni ham yuborishi mumkin, lekin ular arizalar ro'yxatida
+  // Java shu turlarni ham yuborishi mumkin, lekin ular arizalar ro‘yxatida
   // uchramaydi: nomi kerak, filtrda esa ortiqcha
   {
     id: 200,

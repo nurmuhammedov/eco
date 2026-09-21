@@ -51,11 +51,11 @@ const ElevatorsWidget = () => {
       accessorKey: 'kadastr_number',
     },
     {
-      header: 'Texnik koʻrik sanasi',
+      header: 'Texnik ko‘rik sanasi',
       accessorKey: 'texnik_korik_sana',
     },
     {
-      header: 'Keyingi texnik koʻrik sanasi',
+      header: 'Keyingi texnik ko‘rik sanasi',
       accessorKey: 'keyingi_korik_sana',
     },
   ]

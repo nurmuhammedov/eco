@@ -4,11 +4,11 @@ import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
-import { RiskAnalysisTab } from '@/widgets/risk-analysis/types'
+import { RiskAnalysisTab } from '@/entities/risk-analysis/models/risk-analysis-tabs'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/lib/utils'
 import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
-import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-statistics-cards'
+import { RiskStatisticsCards } from '@/entities/risk-analysis/ui/risk-statistics-cards'
 
 const MONTHS = [
   { id: 'JANUARY', name: 'Yanvar' },
@@ -105,7 +105,7 @@ const RiskDateComparisonReport: React.FC = () => {
       return {
         regionName: item.regionName,
         isSummary:
-          item.regionName?.toLowerCase().includes("bo'yicha") || item.regionName?.toLowerCase().includes('bo‘yicha'),
+          item.regionName?.toLowerCase().includes('bo‘yicha') || item.regionName?.toLowerCase().includes('bo‘yicha'),
         totalCapacity: item.analysisCount ?? 0,
         currentStatusValue: latest ? (latest.currentCount ?? 0) : 0,
         currentLow: latest ? (latest.lowCount ?? 0) : 0,
@@ -270,7 +270,7 @@ const RiskDateComparisonReport: React.FC = () => {
             <SelectContent>
               <SelectItem value="all">Barchasi</SelectItem>
               {regionOptions.map((name: string) => {
-                const isSummary = name.toLowerCase().includes("bo'yicha") || name.toLowerCase().includes('bo‘yicha')
+                const isSummary = name.toLowerCase().includes('bo‘yicha') || name.toLowerCase().includes('bo‘yicha')
                 return (
                   <SelectItem key={name} value={name}>
                     {isSummary ? 'Respublika bo‘yicha' : name}

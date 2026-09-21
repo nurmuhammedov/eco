@@ -1,5 +1,5 @@
+import { MODULE_ICONS } from './module-icons'
 import { Navigation } from '@/widgets/sidebar/models/types'
-import { PieChart, UsersRound, CalendarClock } from 'lucide-react'
 
 const currentDate = new Date()
 const currentYear = currentDate.getFullYear()
@@ -10,7 +10,7 @@ export default [
     id: 'KPI',
     title: 'KPI',
     url: '/kpi',
-    icon: <PieChart />,
+    icon: MODULE_ICONS.KPI,
     items: [
       {
         id: 'KPI',
@@ -25,15 +25,15 @@ export default [
     ],
   },
   {
-    id: 'USER_DELEGATION',
+    id: 'DELEGATION',
     title: 'Vazifalarni yuklash',
     url: '/user-delegation',
-    icon: <UsersRound />,
+    icon: MODULE_ICONS.DELEGATION,
   },
   {
     id: 'TURNIKET_LOGS',
     title: 'Davomat (Kelish va ketish)',
     url: `/reports/turniket-logs?year=${currentYear}&month=${currentMonth}`,
-    icon: <CalendarClock />,
+    icon: MODULE_ICONS.TURNIKET_LOGS,
   },
 ] as Navigation

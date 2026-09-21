@@ -138,8 +138,8 @@ export function DataTablePagination<T>({
           pageClassName="rounded-md"
           pageLinkClassName="flex h-9 min-w-9 w-auto px-3 items-center justify-center rounded-md border border-input bg-white text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-all"
           // Active Page
-          activeClassName="!bg-[#016b7b] !border-[#016b7b] !text-white hover:!bg-[#016b7b]/90"
-          activeLinkClassName="!bg-[#016b7b] !border-[#016b7b] !text-white hover:!bg-[#016b7b]/90"
+          activeClassName="!bg-teal !border-teal !text-white hover:!bg-teal/90"
+          activeLinkClassName="!bg-teal !border-teal !text-white hover:!bg-teal/90"
           // Navigation (Prev/Next)
           previousClassName="rounded-md"
           nextClassName="rounded-md"

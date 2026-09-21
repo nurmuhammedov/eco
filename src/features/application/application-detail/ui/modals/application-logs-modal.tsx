@@ -6,8 +6,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog.tsx'
-import { Button } from '@/shared/components/ui/button.tsx'
+} from '@/shared/components/ui/dialog'
+import { Button } from '@/shared/components/ui/button'
 import React, { useState } from 'react'
 import { ApplicationLogsList } from '@/features/application/application-logs'
 
@@ -36,7 +36,7 @@ const ApplicationLogsModal = ({
         </DialogTrigger>
         <DialogContent size="xl">
           <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Amaliyotlar tarixi</DialogTitle>
+            <DialogTitle className="text-blue-400">Amaliyotlar tarixi</DialogTitle>
           </DialogHeader>
           <ApplicationLogsList id={id} type={type} isShow={isShow} />
           <DialogFooter>

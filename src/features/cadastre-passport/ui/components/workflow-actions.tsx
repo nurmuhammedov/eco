@@ -16,7 +16,7 @@ import { ApplicationModal } from '@/features/application/create-application'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { DEFAULT_POSITIVE_CONCLUSION, WORKFLOW_ACTION_LABELS } from '../../model/labels'
 import { CadastrePassport, WorkflowAction, WorkflowInstance } from '../../model/types'
-import { CADASTRE_PASSPORT_KEY, useRefreshPassport, useWorkflowHistory } from '../../model/use-cadastre-passport'
+import { useRefreshPassport, useWorkflowHistory } from '../../model/use-cadastre-passport'
 import { ConclusionDialog } from './conclusion-dialog'
 import { SectionFormDialog } from './section-form-dialog'
 import { TextDialog } from './text-dialog'
@@ -56,7 +56,7 @@ export const WorkflowActions = ({ passport, workflow }: WorkflowActionsProps) =>
     pdfMethod: 'get',
     submitEndpoint: `/cadastre-passports/${passport.id}/workflow/sign`,
     successMessage: 'E-imzo bilan tasdiqlandi',
-    queryKey: CADASTRE_PASSPORT_KEY,
+    invalidates: '/cadastre-passports',
     transformSubmitPayload: (_dto, sign) => ({ sign }),
     onEnd: refresh,
   })

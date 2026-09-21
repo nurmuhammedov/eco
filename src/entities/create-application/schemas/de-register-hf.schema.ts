@@ -4,13 +4,13 @@ import { z } from 'zod'
 
 export const DeRegisterHFSchema = z.object({
   phoneNumber: z
-    .string({ required_error: 'Majburiy maydon!' })
+    .string()
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
-      message: FORM_ERROR_MESSAGES.phone,
+      message: FORM_ERROR_MESSAGES.invalid,
     }),
-  registryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  reasons: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  justifiedDocumentPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  handoverActPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  registryNumber: z.string().min(1),
+  reasons: z.string().min(1),
+  justifiedDocumentPath: z.string().min(1),
+  handoverActPath: z.string().min(1),
 })

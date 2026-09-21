@@ -1,3 +1,4 @@
+import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,8 +12,8 @@ import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '@/shared/hooks/use-auth'
-import useData from '@/shared/hooks/api/useData'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useData from '@/shared/hooks/api/use-data'
+import useAdd from '@/shared/hooks/api/use-add'
 import { useUpdate } from '@/shared/hooks'
 import { CreateDeclarationFormValues, createDeclarationSchema } from '@/entities/declarations/model/declaration.types'
 
@@ -57,9 +58,7 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
 
   const { data: activeExperts } = useData<any[]>('/accreditations/active')
 
-  const { data: hfoOptions, isFetching: isHfoLoading } = useData<any[]>('/hf/by-tin/select', !!userTin, {
-    legalTin: userTin,
-  })
+  const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(userTin)
 
   const { data: conclusionOptions, isFetching: isConclusionsLoading } = useData<any[]>(
     '/conclusions/select',
@@ -105,7 +104,7 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
     <div className="mt-4 space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Deklaratsiya maʼlumotlari</CardTitle>
+          <CardTitle>Deklaratsiya ma’lumotlari</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -159,7 +158,7 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
                         <SelectContent>
                           {conclusionOptions?.map((option: any) => (
                             <SelectItem key={option.id} value={option.id}>
-                              {option.registryNumber || 'Nomaʼlum xulosa'}
+                              {option.registryNumber || 'Noma’lum xulosa'}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -178,14 +177,14 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
                       <FormControl>
                         <MultiSelect
                           options={
-                            hfoOptions?.map((opt: any) => ({
+                            hfOptions?.map((opt: any) => ({
                               id: opt.id,
                               name: `${opt.registryNumber || 'N/A'} - ${opt.name}`,
                             })) || []
                           }
                           value={field.value}
                           onChange={(vals) => field.onChange(vals as string[])}
-                          disabled={isHfoLoading}
+                          disabled={isHfLoading}
                           placeholder="Obyektlarni tanlang..."
                         />
                       </FormControl>

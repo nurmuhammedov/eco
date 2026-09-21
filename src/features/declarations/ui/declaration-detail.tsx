@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { Card, CardContent } from '@/shared/components/ui/card'
-import useDetail from '@/shared/hooks/api/useDetail'
+import useDetail from '@/shared/hooks/api/use-detail'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import { getDate } from '@/shared/utils/date'
@@ -32,7 +32,7 @@ export const DeclarationDetail = ({ detailData }: DeclarationDetailProps) => {
     return (
       <Card className="mt-4">
         <CardContent>
-          <p className="p-4 text-center">Maʼlumotlar topilmadi</p>
+          <p className="p-4 text-center">Ma’lumotlar topilmadi</p>
         </CardContent>
       </Card>
     )
@@ -65,7 +65,7 @@ export const DeclarationDetail = ({ detailData }: DeclarationDetailProps) => {
                   {detail?.hfIds && detail.hfIds.length > 0
                     ? detail.hfIds.map((hfId: string, index: number) => (
                         <div key={hfId}>
-                          <Link to={`/register/${hfId}/hf`} className="font-medium text-blue-600">
+                          <Link to={`/register/hf/${hfId}`} className="font-medium text-blue-600">
                             XICHO {index + 1}
                           </Link>
                         </div>

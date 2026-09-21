@@ -37,7 +37,7 @@ export const MyTasksTable = () => {
     processType: 'CADASTRE_PASSPORT_REVIEW',
   })
 
-  const columns: ExtendedColumnDef<WorkflowInstance, any>[] = [
+  const columns: ExtendedColumnDef<WorkflowInstance, unknown>[] = [
     {
       id: 'requestNumber',
       header: 'Ariza raqami',
@@ -74,7 +74,7 @@ export const MyTasksTable = () => {
           <DataTableRowActions
             row={row}
             showView
-            onView={(target) => navigate(`/cadastre-passport/${target.original.businessId}`)}
+            onView={(target) => navigate(`/cadastre-passports/${target.original.businessId}`)}
           />
         </div>
       ),
@@ -85,7 +85,7 @@ export const MyTasksTable = () => {
     <DataTable
       isPaginated
       data={data?.content || []}
-      columns={columns as unknown as any}
+      columns={columns}
       isLoading={isLoading}
       pageCount={totalPages}
       className="flex-1"

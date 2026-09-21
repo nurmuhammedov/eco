@@ -1,21 +1,22 @@
 import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
-import AttachInspectorModal from '@/features/inspections/ui/parts/attach-inspector-modal.tsx'
-import NotifyInspectionModal from '@/features/inspections/ui/parts/notify-inspection-modal.tsx'
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
-import ObjectsList from '@/features/inspections/ui/parts/objects-list.tsx'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
-import { UserRoles } from '@/entities/user'
-import useCustomSearchParams from '../../../shared/hooks/api/useSearchParams.ts'
-import InspectionsDetailInfo from '@/features/inspections/ui/parts/inpections-detail-info.tsx'
-import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail.ts'
-import { InspectionStatus } from '@/widgets/inspection/ui/inspection-widget.tsx'
+import AttachInspectorModal from '@/features/inspections/ui/parts/attach-inspector-modal'
+import NotifyInspectionModal from '@/features/inspections/ui/parts/notify-inspection-modal'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
+import ObjectsList from '@/features/inspections/ui/parts/objects-list'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/shared/types/user'
+import useCustomSearchParams from '../../../shared/hooks/api/use-search-params'
+import InspectionsDetailInfo from '@/features/inspections/ui/parts/inpections-detail-info'
+import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail'
+import { InspectionStatus } from '@/entities/inspection/models/inspection-status'
 import { useObjectList } from '@/features/inspections/hooks/use-object-list'
 import { useData } from '@/shared/hooks'
-import InspectionReports from '@/features/inspections/ui/parts/inspection-reports.tsx'
+import InspectionReports from '@/features/inspections/ui/parts/inspection-reports'
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
-import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
+import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { useEffect, useState } from 'react'
 
@@ -37,12 +38,16 @@ const InspectionsInfo = () => {
   const belongId = otherDetail?.belongId
   const belongType = otherDetail?.belongType
 
+  // The object behind an inspection can be of any registered kind, so the
+  // endpoint is only known at runtime - keyed by it all the same, or a change
+  // to that register would never reach this page.
+  const belongEndpoint = belongType ? `/${belongType.toLowerCase()}` : ''
+
   const { data: belongData, isLoading: isBelongLoading } = useQuery({
-    queryKey: ['/belong-data', belongId, belongType],
+    queryKey: endpointKey(belongEndpoint, belongId),
     enabled: isOther && !!belongId && !!belongType,
     queryFn: async () => {
-      const type = belongType?.toLowerCase()
-      const { data } = await apiClient.get<any>(`/${type}/${belongId}`)
+      const { data } = await apiClient.get<any>(`${belongEndpoint}/${belongId}`)
       return data.data
     },
   })

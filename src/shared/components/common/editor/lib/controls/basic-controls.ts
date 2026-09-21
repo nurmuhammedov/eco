@@ -1,4 +1,4 @@
-import { BorderStyleType } from '../../model/types.ts'
+import { BorderStyleType } from '../../model/types'
 
 /**
  * Registers basic editor controls like border styling

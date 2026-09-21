@@ -1,8 +1,8 @@
 import { CardForm, DeRegisterHFDTO } from '@/entities/create-application'
-import { useDeRegisterHFApplication } from '@/features/application/create-application/model/use-deregister-hf-application.ts'
+import { useDeRegisterHFApplication } from '@/features/application/create-application/model/use-deregister-hf-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { Button } from '@/shared/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
@@ -40,9 +40,9 @@ const DeregisterHfForm = ({ onSubmit }: DeRegisterHFFormProps) => {
               name="registryNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Roʻyxatga olish raqami</FormLabel>
+                  <FormLabel required>Ro‘yxatga olish raqami</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="XICHO roʻyxatga olish raqami" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="XICHO ro‘yxatga olish raqami" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -1,6 +1,6 @@
 import { CreateIrsApplicationDTO, IrsAppealDtoSchema } from '@/entities/create-application'
 import { IrsCategory, IrsIdentifierType, IrsUsageType } from '@/entities/create-application/types/enums'
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
 import { useAuth } from '@/shared/hooks/use-auth'
@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 export const useCreateIrsApplication = () => {
   const { user } = useAuth()
@@ -20,19 +21,31 @@ export const useCreateIrsApplication = () => {
       const dynamicSchema = IrsAppealDtoSchema.superRefine((data: any, ctx: any) => {
         if (isDataNull) {
           if (!data.file17Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file17Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file17Path'] })
           if (!data.file2Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file2Path'] })
           if (!data.file2ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file2ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file2ExpiryDate'],
+            })
           if (!data.file5Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file5Path'] })
           if (!data.file5ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file5ExpiryDate'],
+            })
           if (!data.file15Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file15Path'] })
           if (!data.file15ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file15ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file15ExpiryDate'],
+            })
         }
       })
       return zodResolver(dynamicSchema)(values, context, options)
@@ -91,8 +104,8 @@ export const useCreateIrsApplication = () => {
     }
   }, [profileData, form])
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
 
   const irsIdentifierTypeOptions = useMemo(
     () =>

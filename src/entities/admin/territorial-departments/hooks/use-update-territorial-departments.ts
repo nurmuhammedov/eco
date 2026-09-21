@@ -1,8 +1,8 @@
-import {
-  territorialDepartmentsAPI,
-  territorialDepartmentsKeys,
-  type UpdateTerritorialDepartmentsDTO,
-} from '@/entities/admin/territorial-departments'
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
+import { territorialDepartmentsAPI } from '../models/territorial-departments.api'
+import { territorialDepartmentsKeys } from '../models/territorial-departments.query-keys'
+import { type UpdateTerritorialDepartmentsDTO } from '../models/territorial-departments.types'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -61,9 +61,8 @@ export const useUpdateTerritorialDepartments = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: territorialDepartmentsKeys.list('territorial-departments'),
-      })
+      queryClient.invalidateQueries({ queryKey: territorialDepartmentsKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.OFFICES)
     },
 
     onError: (_err, updatedData, context) => {

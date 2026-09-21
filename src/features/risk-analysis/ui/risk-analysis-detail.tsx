@@ -1,19 +1,19 @@
-import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
-import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button.tsx'
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
-import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info.ts'
+import FilesSection from '@/features/application/application-detail/ui/parts/files-section'
+import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
+import { useObjectInfo } from '@/features/risk-analysis/hooks/use-object-info'
 import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
-import DetailRow from '@/shared/components/common/detail-row.tsx'
-import FileLink from '@/shared/components/common/file-link.tsx'
-import { getDate } from '@/shared/utils/date.ts'
+import DetailRow from '@/shared/components/common/detail-row'
+import FileLink from '@/shared/components/common/file-link'
+import { getDate } from '@/shared/utils/date'
 import { Link, useNavigate } from 'react-router-dom'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { useCustomSearchParams, usePaginatedData, useData } from '@/shared/hooks'
 import { format, formatDate } from 'date-fns'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { IrsList } from '@/features/register/irs/ui/irs-list'
 import { XrayList } from '@/features/register/xray/ui/xray-list'
 import { useTranslation } from 'react-i18next'
@@ -58,7 +58,7 @@ const RiskAnalysisDetail = () => {
 
   const handleView = (row: any) => {
     const orgName = data?.legalName || data?.ownerName || name || ''
-    navigate(`/risk-analysis/info/${row.original.id}?tin=${tin}&name=${orgName}`)
+    navigate(`/risk-analysis/objects/${row.original.id}?tin=${tin}&name=${orgName}`)
   }
 
   const columns: ColumnDef<any>[] = [
@@ -126,7 +126,7 @@ const RiskAnalysisDetail = () => {
               <DataTable data={tableData || []} columns={columns} isLoading={isTableDataLoading} />
             </>
           ) : (
-            <div>Kerakli maʼlumotlar topilmadi...</div>
+            <div>Kerakli ma’lumotlar topilmadi...</div>
           )}
         </DetailCardAccordion.Item>
         {isRadProfile ? (
@@ -160,7 +160,7 @@ const RiskAnalysisDetail = () => {
           </>
         ) : (
           <>
-            <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
+            <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida ma’lumot">
               <LegalApplicantInfo tinNumber={currentTin} />
             </DetailCardAccordion.Item>
             <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
@@ -169,7 +169,7 @@ const RiskAnalysisDetail = () => {
                   title="Reyestrga kiritish uchun asos (ariza):"
                   value={
                     data?.appealId ? (
-                      <Link className="text-[#0271FF]" to={'/applications/detail/' + data?.appealId}>
+                      <Link className="text-[#0271FF]" to={'/applications/' + data?.appealId}>
                         Arizani ko‘rish
                       </Link>
                     ) : (
@@ -178,8 +178,8 @@ const RiskAnalysisDetail = () => {
                   }
                 />
               )}
-              <DetailRow title="Roʻyxatga olish sanasi:" value={getDate(data?.registrationDate)} />
-              <DetailRow title="Roʻyxatga olish raqami:" value={data?.registryNumber} />
+              <DetailRow title="Ro‘yxatga olish sanasi:" value={getDate(data?.registrationDate)} />
+              <DetailRow title="Ro‘yxatga olish raqami:" value={data?.registryNumber} />
               {!!data?.registryFilePath && (
                 <DetailRow
                   title="Reyestrga qo‘yilganligi to‘g‘risidagi hujjat:"

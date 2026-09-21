@@ -1,6 +1,6 @@
-import { APPLICATION_LOGS } from '@/shared/constants/query-keys.ts'
 import { useQuery } from '@tanstack/react-query'
-import { applicationDetailApi } from '../model/application-detail.api.ts'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
+import { applicationDetailApi } from '../model/application-detail.api'
 
 export const useExecutionLogs = (
   id: string | undefined,
@@ -8,9 +8,9 @@ export const useExecutionLogs = (
   isShow: boolean = true
 ) => {
   return useQuery({
-    queryKey: [APPLICATION_LOGS, id, type],
+    queryKey: endpointKey(`/execution-processes/${type}`, id),
     enabled: !!id && isShow,
     queryFn: () =>
-      type === 'appeal' ? applicationDetailApi.getApplicationLogs(id) : applicationDetailApi.getChangeLogs(id),
+      type === 'appeal' ? applicationDetailApi.getApplicationLogs(id!) : applicationDetailApi.getChangeLogs(id!),
   })
 }

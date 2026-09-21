@@ -1,17 +1,18 @@
+import { apiClient } from '@/shared/api/api-client'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
   RegisterIllegalAttractionBaseSchema,
   RegisterIllegalAttractionDTO,
   RegisterIllegalAttractionSchema,
 } from '@/entities/create-application'
-import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
-import { apiClient } from '@/shared/api/api-client'
+import { useChildEquipmentTypes, useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import useData from '@/shared/hooks/api/useData'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useData from '@/shared/hooks/api/use-data'
+import useAdd from '@/shared/hooks/api/use-add'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -173,21 +174,14 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
   const regionId = form.watch('regionId')?.toString()
   const childEquipmentId = form.watch('childEquipmentId')
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: attractionNames } = useChildEquipmentTypes('ATTRACTION')
   const { data: attractionSorts } = useData<any[]>(`/child-equipment-sorts/select`, !!childEquipmentId, {
     childEquipmentId,
   })
 
-  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', ownerIdentity],
-    queryFn: async () => {
-      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
-      return res.data?.data
-    },
-    enabled: !!ownerIdentity,
-  })
+  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useLegalOrganizationQuery(ownerIdentity)
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
 
@@ -277,7 +271,7 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
       updateMutate(data, {
         onSuccess: () => {
           invalidateRegistryQueries(queryClient)
-          toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
+          toast.success('So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },
       })

@@ -1,7 +1,7 @@
 import { ArrowLeftRight, Inbox, Check } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles, UserRoleLabels } from '@/entities/user'
+import { UserRoles, UserRoleLabels } from '@/shared/types/user'
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
 import { API_ENDPOINTS } from '@/shared/api'
@@ -113,7 +113,7 @@ export const DelegatedTasksNotification = () => {
                 className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-200 disabled:opacity-50"
               >
                 <ArrowLeftRight className="h-4 w-4" />
-                O'z rolimga o'tish
+                O‘z rolimga o‘tish
               </button>
             </div>
           )}

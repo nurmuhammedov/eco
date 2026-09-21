@@ -1,5 +1,5 @@
 import { useData } from '@/shared/hooks'
-import { MONTHS } from '@/widgets/prevention/ui/prevention-widget'
+import { MONTHS } from '@/shared/constants/months'
 import clsx from 'clsx'
 
 interface IProps {
@@ -23,8 +23,8 @@ export const PreventionCards = ({ activeRiskLevel, onTabChange, year, type }: IP
       name: month.label,
       year: year,
       count: monthCount?.[key] || '0',
-      inactiveClass: 'bg-[#016B7B]/10 border-[#016B7B]/20 text-[#016B7B]',
-      activeClass: 'bg-[#016B7B] border-[#015a67] text-white shadow-sm',
+      inactiveClass: 'bg-teal/10 border-teal/20 text-teal',
+      activeClass: 'bg-teal border-[#015a67] text-white shadow-sm',
     }
   })
 

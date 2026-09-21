@@ -61,7 +61,7 @@ export function useFilters(moduleFilters: FilterParsers = {}, config: UseFilters
   const setFilters = useCallback(
     (newFilters: Record<string, any>) => {
       if (debug) {
-        console.log('Setting filters:', newFilters)
+        console.warn('Setting filters:', newFilters)
       }
 
       const options = {

@@ -1,13 +1,11 @@
+import { useLegalInfoByTinQuery } from '@/shared/api/dictionaries'
+import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import {
-  getHfoByTinSelect,
-  getLegalInfoByTin,
-  createOldExpertiseApplication,
-} from '@/entities/expertise/api/expertise.api'
+import { createOldExpertiseApplication } from '@/entities/expertise/api/expertise.api'
 import { AddOldExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
 import { addOldExpertiseSchema } from '@/entities/expertise/model/expertise.schema'
 import DatePicker from '@/shared/components/ui/datepicker'
@@ -17,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { cleanParams } from '@/shared/lib'
 import { useNavigate } from 'react-router-dom'
@@ -62,23 +60,13 @@ export const AddOldConclusion = () => {
     data: legalInfo,
     isFetching: isLegalInfoLoading,
     isError: isLegalInfoError,
-  } = useQuery({
-    queryKey: ['legalInfo', searchedStir],
-    queryFn: () => getLegalInfoByTin(searchedStir!),
-    enabled: !!searchedStir,
-    retry: 1,
-  })
+  } = useLegalInfoByTinQuery(searchedStir)
 
-  const { data: hfoOptions, isFetching: isHfoLoading } = useQuery({
-    queryKey: ['hfoSelect', searchedStir],
-    queryFn: () => getHfoByTinSelect(searchedStir!),
-    enabled: !!searchedStir,
-    retry: 1,
-  })
+  const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(searchedStir, !!searchedStir)
 
   const selectedRegionId = form.watch('regionId')
-  const { data: regions, isLoading: isRegionLoading } = useRegionSelectQueries()
-  const { data: districts, isLoading: isDistrictLoading } = useDistrictSelectQueries(selectedRegionId)
+  const { data: regions, isLoading: isRegionLoading } = useRegionSelectQuery()
+  const { data: districts, isLoading: isDistrictLoading } = useDistrictSelectQuery(selectedRegionId)
 
   const { mutate, isPending: isSubmitting } = useMutation({
     mutationFn: createOldExpertiseApplication,
@@ -103,23 +91,21 @@ export const AddOldConclusion = () => {
     }
   }, [legalInfo, searchedStir, form])
 
-  const selectedHfo = hfoOptions?.find((hfo) => hfo.id === watchedHfId)
+  const selectedHf = hfOptions?.find((hf) => hf.id === watchedHfId)
   useEffect(() => {
-    if (!selectedHfo) return
+    if (!selectedHf) return
 
-    form.setValue('objectName', selectedHfo.name || '')
+    form.setValue('objectName', selectedHf.name || '')
     form.setValue(
       'regionId',
-      selectedHfo.regionId ? (selectedHfo.regionId.toString() as unknown as string) : (undefined as unknown as string)
+      selectedHf.regionId ? (selectedHf.regionId.toString() as unknown as string) : (undefined as unknown as string)
     )
     form.setValue(
       'districtId',
-      selectedHfo.districtId
-        ? (selectedHfo.districtId.toString() as unknown as string)
-        : (undefined as unknown as string)
+      selectedHf.districtId ? (selectedHf.districtId.toString() as unknown as string) : (undefined as unknown as string)
     )
-    form.setValue('address', selectedHfo.address || '')
-  }, [selectedHfo, form])
+    form.setValue('address', selectedHf.address || '')
+  }, [selectedHf, form])
 
   // Qidirish
   const handleSearch = () => {
@@ -188,7 +174,7 @@ export const AddOldConclusion = () => {
         <>
           <Card>
             <CardHeader>
-              <CardTitle>Tashkilot maʼlumotlari</CardTitle>
+              <CardTitle>Tashkilot ma’lumotlari</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
@@ -201,7 +187,7 @@ export const AddOldConclusion = () => {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Ariza maʼlumotlari</CardTitle>
+              <CardTitle>Ariza ma’lumotlari</CardTitle>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -236,7 +222,7 @@ export const AddOldConclusion = () => {
                               field.onChange(value)
                             }
                           }}
-                          disabled={isHfoLoading}
+                          disabled={isHfLoading}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -244,7 +230,7 @@ export const AddOldConclusion = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {hfoOptions?.map((option) => (
+                            {hfOptions?.map((option) => (
                               <SelectItem key={option.id} value={option.id}>
                                 {`${option.registryNumber || 'N/A'} - ${option.name}`}
                               </SelectItem>
@@ -263,7 +249,7 @@ export const AddOldConclusion = () => {
                       <FormItem>
                         <FormLabel required>Obyekt nomi</FormLabel>
                         <FormControl>
-                          <Input {...field} disabled={!!selectedHfo?.name} placeholder="Obyekt nomini kiriting..." />
+                          <Input {...field} disabled={!!selectedHf?.name} placeholder="Obyekt nomini kiriting..." />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -282,7 +268,7 @@ export const AddOldConclusion = () => {
                             form.setValue('districtId', undefined as unknown as string)
                           }}
                           value={field.value}
-                          disabled={isRegionLoading || !!selectedHfo?.regionId}
+                          disabled={isRegionLoading || !!selectedHf?.regionId}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -316,7 +302,7 @@ export const AddOldConclusion = () => {
                               field.onChange(value)
                             }
                           }}
-                          disabled={isDistrictLoading || !watchedRegionId || !!selectedHfo?.districtId}
+                          disabled={isDistrictLoading || !watchedRegionId || !!selectedHf?.districtId}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -345,7 +331,7 @@ export const AddOldConclusion = () => {
                           Manzil <span className="font-normal text-red-400">(viloyat va tuman kiritilmasin)</span>
                         </FormLabel>
                         <FormControl>
-                          <Input {...field} disabled={!!selectedHfo?.address} placeholder="Manzilni kiriting..." />
+                          <Input {...field} disabled={!!selectedHf?.address} placeholder="Manzilni kiriting..." />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

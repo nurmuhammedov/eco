@@ -1,4 +1,4 @@
-import { RegisterActiveTab } from '@/widgets/register/types'
+import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 
 /** Mirrors ReportChangeBelongType on the server. */
 export const REPORT_CHANGE_BELONG_TYPE = {

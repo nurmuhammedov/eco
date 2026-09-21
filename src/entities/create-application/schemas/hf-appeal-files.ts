@@ -25,7 +25,7 @@ export const HF_APPEAL_FILE_FIELDS: HfAppealFileField[] = [
   { name: 'projectDocumentationPath', label: 'Loyiha hujjatlari' },
   { name: 'licensePath', label: 'Litsenziya', expiry: 'licenseExpiryDate' },
   { name: 'expertOpinionPath', label: 'Loyiha ekspertiza xulosasi (LH)' },
-  { name: 'appointmentOrderPath', label: 'Ma’sul xodim tayinlanganligi buyrug‘i' },
+  { name: 'appointmentOrderPath', label: 'Mas’ul xodim tayinlanganligi buyrug‘i' },
   { name: 'permitPath', label: 'Ruxsatnoma', expiry: 'permitExpiryDate' },
   { name: 'industrialSafetyDeclarationPath', label: 'Sanoat xavfsizligi deklaratsiyasi' },
   { name: 'regulationPath', label: 'Ishlab chiqarish nazorati nizomi', expiry: 'regulationExpiryDate' },

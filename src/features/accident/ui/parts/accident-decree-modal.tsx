@@ -11,14 +11,14 @@ import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useAuth } from '@/shared/hooks/use-auth'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import React from 'react'
 import { useData } from '@/shared/hooks'
 
 const schema = z.object({
-  mainInspectorId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  inspectorIds: z.array(z.string()).min(1, 'Kamida bitta inspektor tanlanishi shart!'),
-  accidentDecreePath: z.string({ required_error: 'Hujjat yuklanishi shart!' }).min(1, 'Hujjat yuklanishi shart!'),
+  mainInspectorId: z.string().min(1),
+  inspectorIds: z.array(z.string()).min(1),
+  accidentDecreePath: z.string().min(1),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -96,13 +96,13 @@ export const AccidentDecreeModal: React.FC<AccidentDecreeModalProps> = ({
               name="inspectorIds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Komissiya aʼzolari</FormLabel>
+                  <FormLabel required>Komissiya a’zolari</FormLabel>
                   <FormControl>
                     <MultiSelect
                       options={(inspectors || []).map((i: any) => ({ id: i.id, name: i.name }))}
                       value={field.value}
                       onChange={(val) => field.onChange(val as string[])}
-                      placeholder="Komissiya aʼzolarini tanlang"
+                      placeholder="Komissiya a’zolarini tanlang"
                     />
                   </FormControl>
                   <FormMessage />

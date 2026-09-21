@@ -1,5 +1,12 @@
+import { DocumentField } from '@/features/application/create-application/ui/forms/parts/equipment-fields'
+import {
+  ManufacturedAtField,
+  PhoneNumberField,
+  ServicePeriodField,
+} from '@/features/application/create-application/ui/forms/parts/equipment-fields'
 import { CardForm } from '@/entities/create-application'
-import { AppealFormSkeleton, NoteForm } from '@/features/application/create-application'
+import { AppealFormSkeleton } from '../form-skeleton'
+import { NoteForm } from '../note-form'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
@@ -17,7 +24,6 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
-import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
 import { useRegisterIllegalBoiler } from '@/features/application/create-application/model/use-create-illegal-boiler-application'
@@ -58,7 +64,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'Qozon maʼlumotlarini tahrirlash' : 'Bug‘ qozonni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'Qozon ma’lumotlarini tahrirlash' : 'Bug‘ qozonni ro‘yxatga olish arizasi'} />
         <NoteForm equipmentName="qozon" />
 
         <CardForm className="my-2">
@@ -139,7 +145,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
           {ownerData && (
             <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
               <h3 className="mb-4 text-base font-semibold text-gray-800">
-                {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
+                {isLegal ? 'Tashkilot ma’lumotlari' : 'Fuqaro ma’lumotlari'}
               </h3>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
                 <DetailRow
@@ -163,21 +169,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
 
         <CardForm className="mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
-            {!isUpdate && (
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Telefon raqami</FormLabel>
-                    <FormControl>
-                      <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            {!isUpdate && <PhoneNumberField form={form} />}
 
             {isLegal && (
               <FormField
@@ -279,25 +271,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="manufacturedAt"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Ishlab chiqarilgan sana</FormLabel>
-                    <DatePicker
-                      disableStrategy={'after'}
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Ishlab chiqarilgan sana"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
+            <ManufacturedAtField form={form} />
             <FormField
               control={form.control}
               name="partialCheckDate"
@@ -355,24 +329,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
                 )
               }}
             />
-            <FormField
-              control={form.control}
-              name="servicePeriod"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Xizmat muddati</FormLabel>
-                    <DatePicker
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Sanani tanlang"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
+            <ServicePeriodField form={form} />
             <FormField
               control={form.control}
               name="capacity"
@@ -517,20 +474,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
 
         <CardForm className="mb-2 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
           <div className="border-b pb-4">
-            <FormField
-              name="usageRightsPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Ruxsatnoma</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <DocumentField form={form} name="usageRightsPath" label="Ruxsatnoma" />
           </div>
 
           <div className="border-b pb-4">
@@ -541,7 +485,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Qozonning birkasi bilan sur‘ati
+                      Qozonning birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -553,40 +497,20 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
               name="assignmentDecreePath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq"
+              required={!isUpdate}
             />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
               name="saleContractPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
+              required={!isUpdate}
             />
           </div>
 
@@ -639,78 +563,27 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
               name="equipmentCertPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Qozonning muvofiqlik sertifikati (muqaddam foydalanishda bo‘lgan bug‘qozon uchun majburiy emas)
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Qozonning muvofiqlik sertifikati (muqaddam foydalanishda bo‘lgan bug‘qozon uchun majburiy emas)"
             />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
-              name="installationCertPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Montaj dalolatnomasi
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <DocumentField form={form} name="installationCertPath" label="Montaj dalolatnomasi" required={!isUpdate} />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
-              name="passportPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Qozonning pasporti
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <DocumentField form={form} name="passportPath" label="Qozonning pasporti" required={!isUpdate} />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
               name="partialCheckPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Qozonning ichki ko'rikdan o'tkazilganligi
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Qozonning ichki ko‘rikdan o‘tkazilganligi"
+              required={!isUpdate}
             />
             <FormField
               control={form.control}
@@ -737,21 +610,11 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
               name="fullCheckPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Qozonning gidravlik sinovdan o‘tkazilganligi
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Qozonning gidravlik sinovdan o‘tkazilganligi"
+              required={!isUpdate}
             />
             <FormField
               control={form.control}

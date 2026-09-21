@@ -6,7 +6,7 @@ import { Badge } from '@/shared/components/ui/badge'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { usePaginatedData, useDelete } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { getDate } from '@/shared/utils/date'
 
@@ -22,7 +22,7 @@ export const NewsList: FC = () => {
     page: 1,
   })
 
-  const { mutate: deleteNews } = useDelete('/announcements/', null, 'Muvaffaqiyatli oʻchirildi')
+  const { mutate: deleteNews } = useDelete('/announcements/', null, 'Muvaffaqiyatli o‘chirildi')
 
   const handleDelete = (id: number) => {
     deleteNews(id, {
@@ -61,7 +61,7 @@ export const NewsList: FC = () => {
           showView
           onView={() => navigate(`/news/${row.original.id}`)}
           showEdit={isAdmin}
-          onEdit={() => navigate(`/news/edit/${row.original.id}`)}
+          onEdit={() => navigate(`/news/${row.original.id}/edit`)}
           showDelete={isAdmin}
           onDelete={() => handleDelete(row.original.id)}
         />
@@ -73,9 +73,9 @@ export const NewsList: FC = () => {
     <div className="flex h-full flex-col gap-4">
       <div className="flex items-center justify-end">
         {isAdmin && (
-          <Button onClick={() => navigate('/news/create')}>
+          <Button onClick={() => navigate('/news/add')}>
             <Plus className="mr-2 h-4 w-4" />
-            Xabarnoma qoʻshish
+            Xabarnoma qo‘shish
           </Button>
         )}
       </div>

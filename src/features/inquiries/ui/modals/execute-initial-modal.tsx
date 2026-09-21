@@ -140,7 +140,7 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
   } = useEimzo({
     pdfEndpoint: `/inquiries/${id}/generate-pdf`,
     submitEndpoint: `/inquiries/${id}/set-belonging`,
-    queryKey: '/inquiries',
+    invalidates: '/inquiries',
     onEnd: () => {
       setIsShow(false)
       form.reset()
@@ -177,7 +177,7 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Ijro etish</DialogTitle>
+            <DialogTitle className="text-blue-400">Ijro etish</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

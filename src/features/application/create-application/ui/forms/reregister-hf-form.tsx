@@ -4,8 +4,8 @@ import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
-import { Button } from '@/shared/components/ui/button.tsx'
-import DatePicker from '@/shared/components/ui/datepicker.tsx'
+import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker'
 import {
   Form,
   FormControl,
@@ -450,7 +450,7 @@ const ReregisterHfForm = ({ onSubmit }: ReRegisterHFFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Maʼsul xodim tayinlanganligi buyrug‘i
+                      Mas’ul xodim tayinlanganligi buyrug‘i
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />

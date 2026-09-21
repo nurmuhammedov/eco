@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
-import { useRegionSelectQuery } from '@/entities/admin/districts'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 
 const MONTHS = [
@@ -53,7 +53,7 @@ const InspectionStatsReport: React.FC = () => {
     if (!rawData) return []
     const isSummary = (name: string) => {
       const lower = name?.toLowerCase()
-      return lower === 'respublika' || lower === 'respublika bo‘yicha' || lower === "respublika bo'yicha"
+      return lower === 'respublika' || lower === 'respublika bo‘yicha' || lower === 'respublika bo‘yicha'
     }
 
     const regions = rawData.filter((r) => !isSummary(r.regionName))

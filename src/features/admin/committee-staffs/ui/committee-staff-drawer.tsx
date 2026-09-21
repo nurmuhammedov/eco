@@ -196,7 +196,7 @@ export const CommitteeStaffDrawer = () => {
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel required>Qo'mita va departament</FormLabel>
+                      <FormLabel required>Qo‘mita va departament</FormLabel>
                       <FormControl>
                         <Select
                           {...field}
@@ -208,7 +208,7 @@ export const CommitteeStaffDrawer = () => {
                           }}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Qo'mita yoki departamentni tanlang" />
+                            <SelectValue placeholder="Qo‘mita yoki departamentni tanlang" />
                           </SelectTrigger>
                           <SelectContent>{departmentOptions}</SelectContent>
                         </Select>

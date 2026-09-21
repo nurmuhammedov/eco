@@ -4,12 +4,12 @@ import { cn } from '@/shared/lib/utils'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Button } from '@/shared/components/ui/button.tsx'
-import { Checkbox } from '@/shared/components/ui/checkbox.tsx'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx'
+import { Button } from '@/shared/components/ui/button'
+import { Checkbox } from '@/shared/components/ui/checkbox'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Input } from '@/shared/components/ui/input'
-import { MultiSelect } from '@/shared/components/ui/multi-select.tsx'
+import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { useCustomSearchParams } from '@/shared/hooks'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import {
@@ -19,6 +19,7 @@ import {
   toParticipantsPayload,
 } from '@/features/inspections/model/act-participants'
 import { InspectionActModal } from './inspection-act-modal'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const articleOptions = [
   { id: 'ARTICLE_55', name: 'O‘zbekiston Respublikasi MJtKning 55-modda' },
@@ -48,8 +49,8 @@ const schema = z
     users: z
       .array(
         z.object({
-          fullName: z.string({ required_error: 'Majburiy maydon' }).trim().min(1, 'Majburiy maydon'),
-          position: z.string({ required_error: 'Majburiy maydon' }).trim().min(1, 'Majburiy maydon'),
+          fullName: z.string().trim().min(1),
+          position: z.string().trim().min(1),
         })
       )
       .default([]),
@@ -58,7 +59,7 @@ const schema = z
     if (!data.isAdministrativePenalty && !data.isFinancialPenalty && !data.noViolation) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Kamida bitta variantni tanlang',
+        message: FORM_ERROR_MESSAGES.required,
         path: ['isAdministrativePenalty'],
       })
     }
@@ -67,7 +68,7 @@ const schema = z
       if (data.users.length === 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Kamida bitta qatnashuvchi qo‘shilishi kerak',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['users'],
         })
       }
@@ -75,7 +76,7 @@ const schema = z
       if (data.violators.length === 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Kamida bitta qoidabuzar qo‘shilishi kerak',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['violators'],
         })
       }
@@ -83,21 +84,21 @@ const schema = z
         if (!violator.articleList || violator.articleList.length === 0) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'Kamida bitta modda tanlang',
+            message: FORM_ERROR_MESSAGES.required,
             path: ['violators', index, 'articleList'],
           })
         }
         if (!violator.fullName || violator.fullName.trim() === '') {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'Majburiy maydon',
+            message: FORM_ERROR_MESSAGES.required,
             path: ['violators', index, 'fullName'],
           })
         }
         if (!violator.position || violator.position.trim() === '') {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'Majburiy maydon',
+            message: FORM_ERROR_MESSAGES.required,
             path: ['violators', index, 'position'],
           })
         }
@@ -138,7 +139,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
   } = useEimzo({
     pdfEndpoint: `/inspection-results/act/generate-pdf`,
     submitEndpoint: '/inspection-results/act',
-    queryKey: '/inspection-results',
+    invalidates: '/inspection-results',
     successMessage: 'Muvaffaqiyatli saqlandi!',
     onEnd: () => {
       removeParams('modal')
@@ -285,7 +286,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
       >
         <DialogContent size="xl" className="flex flex-col gap-0 overflow-hidden rounded-xl! p-0">
           <DialogHeader className="shrink-0 border-b px-4 py-4 sm:px-6">
-            <DialogTitle className="pr-8 text-[#4E75FF]">Maʼlumotlarni to‘ldiring</DialogTitle>
+            <DialogTitle className="pr-8 text-blue-400">Ma’lumotlarni to‘ldiring</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
@@ -371,7 +372,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
                         >
                           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                             <div className="flex items-center gap-2">
-                              <span className="flex size-6 items-center justify-center rounded-full bg-[#DCE4FF] text-xs font-semibold text-[#4E75FF]">
+                              <span className="flex size-6 items-center justify-center rounded-full bg-[#DCE4FF] text-xs font-semibold text-blue-400">
                                 {index + 1}
                               </span>
                               <span className="text-sm font-medium text-slate-700">Huquqbuzar</span>
@@ -469,7 +470,7 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
                     >
                       <div className="mb-4 flex items-center justify-between border-b border-slate-200 pb-3">
                         <div className="flex items-center gap-2">
-                          <span className="flex size-6 items-center justify-center rounded-full bg-[#DCE4FF] text-xs font-semibold text-[#4E75FF]">
+                          <span className="flex size-6 items-center justify-center rounded-full bg-[#DCE4FF] text-xs font-semibold text-blue-400">
                             {index + 1}
                           </span>
                           <span className="text-sm font-medium text-slate-700">Qatnashuvchi</span>

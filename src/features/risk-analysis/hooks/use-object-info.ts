@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { QK_RISK_ANALYSIS } from '@/shared/constants/query-keys.ts'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api.ts'
+import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api'
 
 export const useObjectInfo = () => {
   const { t } = useTranslation()
@@ -17,7 +17,7 @@ export const useObjectInfo = () => {
   }
 
   return useQuery({
-    queryKey: [QK_RISK_ANALYSIS, 'INFO', currentId, currentType],
+    queryKey: endpointKey(`/${currentType.toLowerCase()}`, currentId),
     enabled: !!currentId && !isRadProfile,
     queryFn: () => riskAnalysisDetailApi.getObjectInfo({ type: currentType?.toLowerCase(), id: currentId }),
     select: (data) => {

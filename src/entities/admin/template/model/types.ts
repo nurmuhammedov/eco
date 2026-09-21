@@ -36,7 +36,7 @@ export enum TemplateType {
   REGISTRY_ATTRACTION = 'REGISTRY_ATTRACTION',
   REGISTRY_ATTRACTION_PASSPORT = 'REGISTRY_ATTRACTION_PASSPORT',
 
-  // Inspektor javob xati ( Maʼlumotnoma )
+  // Inspektor javob xati ( Ma’lumotnoma )
   REPLY_HF_APPEAL = 'REPLY_HF_APPEAL',
   REPLY_IRS_APPEAL = 'REPLY_IRS_APPEAL',
   REPLY_EQUIPMENT_APPEAL = 'REPLY_EQUIPMENT_APPEAL',
@@ -46,11 +46,11 @@ export enum TemplateType {
   // Arizani rad etish
   REJECT_APPEAL = 'REJECT_APPEAL',
 
-  // Attestatsiyaga Qo'mita va Huduiy bo'lim javob xati
+  // Attestatsiyaga Qo‘mita va Huduiy bo‘lim javob xati
   REPLY_COMMITTEE_TO_APPEAL = 'REPLY_COMMITTEE_TO_APPEAL',
   REPLY_REGIONAL_TO_APPEAL = 'REPLY_REGIONAL_TO_APPEAL',
 
-  //Kadastrga qo'mita javob xati
+  //Kadastrga qo‘mita javob xati
   REPLY_ACCEPT_CADASTRE_PASSPORT_APPEAL = 'REPLY_ACCEPT_CADASTRE_PASSPORT_APPEAL',
   REPLY_ACCEPT_DECLARATION_APPEAL = 'REPLY_ACCEPT_DECLARATION_APPEAL',
   REPLY_REJECT_CADASTRE_PASSPORT_APPEAL = 'REPLY_REJECT_CADASTRE_PASSPORT_APPEAL',

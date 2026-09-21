@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react'
 import { Badge } from '../ui/badge'
-import { cn } from '@/shared/lib/utils.ts'
-import { Skeleton } from '@/shared/components/ui/skeleton.tsx'
-import { Separator } from '@/shared/components/ui/separator.tsx'
+import { cn } from '@/shared/lib/utils'
+import { Skeleton } from '@/shared/components/ui/skeleton'
+import { Separator } from '@/shared/components/ui/separator'
 
 // Description Item component for displaying each field
 export const DescriptionItem = React.forwardRef<

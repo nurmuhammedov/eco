@@ -1,6 +1,10 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { equipmentAPI, equipmentKeys, UpdateEquipmentDTO } from '@/entities/admin/equipment'
+import { equipmentAPI } from '../models/equipment.api'
+import { equipmentKeys } from '../models/equipment.query-keys'
+import { UpdateEquipmentDTO } from '../models/equipment.types'
 
 export const useUpdateEquipment = () => {
   const queryClient = useQueryClient()
@@ -50,9 +54,8 @@ export const useUpdateEquipment = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: equipmentKeys.list('equipment'),
-      })
+      queryClient.invalidateQueries({ queryKey: equipmentKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.CHILD_EQUIPMENTS)
     },
 
     onError: (_err, updatedDistrict, context) => {

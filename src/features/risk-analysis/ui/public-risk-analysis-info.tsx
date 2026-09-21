@@ -1,10 +1,10 @@
-import RiskAnalysisItem from '@/features/risk-analysis/ui/parts/risk-analysis-item.tsx'
+import RiskAnalysisItem from '@/features/risk-analysis/ui/parts/risk-analysis-item'
 import { FC } from 'react'
-import { RiskAnalysisData, RiskIndicators } from '@/features/risk-analysis/ui/riskAnalysis.ts'
+import { RiskAnalysisData, RiskIndicators } from '@/features/risk-analysis/ui/risk-analysis'
 import { useParams } from 'react-router-dom'
 import { useDetail } from '@/shared/hooks'
 import { Loader2 } from 'lucide-react'
-import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info.tsx'
+import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info'
 
 interface Props {
   data: RiskIndicators | null
@@ -25,7 +25,7 @@ const PublicRiskAnalysisInfo: FC<Props> = () => {
   if (!data?.indicators || Object.keys(data?.indicators).length === 0) {
     return (
       <div className="text-muted-foreground mx-auto w-full max-w-4xl p-6 text-center">
-        <p>Ushbu ID bo‘yicha maʼlumotlar topilmadi.</p>
+        <p>Ushbu ID bo‘yicha ma’lumotlar topilmadi.</p>
       </div>
     )
   }

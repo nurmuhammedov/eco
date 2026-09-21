@@ -5,9 +5,9 @@ import { Card, CardContent } from '@/shared/components/ui/card'
 import { Badge } from '@/shared/components/ui/badge'
 import { Button } from '@/shared/components/ui/button'
 import { Skeleton } from '@/shared/components/ui/skeleton'
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys'
-import useUpdate from '@/shared/hooks/api/useUpdate'
-import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
+import useUpdate from '@/shared/hooks/api/use-update'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 
 interface InfoItemProps {
@@ -31,7 +31,7 @@ const InfoItem = ({ icon: Icon, label, children }: InfoItemProps) => (
 export default function ProfilePage() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
-  const { data, isLoading } = useLegalApplicantInfo(user?.tinOrPin)
+  const { data, isLoading } = useLegalOrganizationQuery(user?.tinOrPin)
 
   const { mutate, isPending } = useUpdate(
     '/users/legal',
@@ -45,7 +45,7 @@ export default function ProfilePage() {
       {},
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: [QK_APPLICATIONS, 'APPLICANT_INFO', user?.tinOrPin] })
+          invalidateEndpoint(queryClient, '/users/legal')
         },
       }
     )

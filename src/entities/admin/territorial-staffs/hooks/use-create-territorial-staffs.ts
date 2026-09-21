@@ -1,11 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  CreateTerritorialStaffDTO,
-  territorialStaffAPI,
-  territorialStaffKeys,
-  TerritorialStaffResponse,
-} from '@/entities/admin/territorial-staffs'
+import { CreateTerritorialStaffDTO, TerritorialStaffResponse } from '../models/territorial-staffs.types'
+import { territorialStaffAPI } from '../models/territorial-staffs.api'
+import { territorialStaffKeys } from '../models/territorial-staffs.query-keys'
 
 export const useCreateTerritorialStaff = () => {
   const queryClient = useQueryClient()
@@ -42,10 +39,8 @@ export const useCreateTerritorialStaff = () => {
     },
 
     onSuccess: (createdData) => {
-      // Invalidate list queries to get fresh data with correct ID
-      queryClient.invalidateQueries({
-        queryKey: territorialStaffKeys.list('territorial-staff'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: territorialStaffKeys.root() })
 
       // Add the newly created territorial-staff to cache
       queryClient.setQueryData(territorialStaffKeys.detail('territorial-staff', createdData.data.id), createdData)

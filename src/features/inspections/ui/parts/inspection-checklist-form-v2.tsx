@@ -15,21 +15,21 @@ import InspectionChecklistModal from '@/features/inspections/ui/parts/inspection
 import AcknowledgementUploadModal from '@/features/inspections/ui/parts/acknowledgement-upload-modal'
 import { useAdd, useCustomSearchParams } from '@/shared/hooks'
 import { ChecklistAnswerStatus } from '../../model/inspection-checklist.schema'
-import { Badge } from '@/shared/components/ui/badge.tsx'
-import FileLink from '@/shared/components/common/file-link.tsx'
-import { UserRoles } from '@/entities/user'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
-import AddAdditionalFileModal from '@/features/inspections/ui/parts/add-additional-file-modal.tsx'
+import { Badge } from '@/shared/components/ui/badge'
+import FileLink from '@/shared/components/common/file-link'
+import { UserRoles } from '@/shared/types/user'
+import { useAuth } from '@/shared/hooks/use-auth'
+import AddAdditionalFileModal from '@/features/inspections/ui/parts/add-additional-file-modal'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 const itemSchema = z
   .object({
     id: z.string(),
     orderNumber: z.number(),
     question: z.string(),
-    answer: z.nativeEnum(ChecklistAnswerStatus, {
-      errorMap: () => ({ message: 'Javob tanlanishi shart' }),
-    }),
+    answer: z.nativeEnum(ChecklistAnswerStatus),
     corrective: z
       .string()
       .optional()
@@ -55,14 +55,14 @@ const itemSchema = z
       if (!data.corrective || data.corrective.trim() === '') {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Chora-tadbir matni kiritilishi shart',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['corrective'],
         })
       }
       if (!data.deadline) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Muddat belgilanilishi shart',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['deadline'],
         })
       }
@@ -70,14 +70,14 @@ const itemSchema = z
       if (!data.description || data.description.trim() === '') {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Izoh kiritilishi shart',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['description'],
         })
       }
       if (!data.basisPath) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Fayl yuklanishi shart',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['basisPath'],
         })
       }
@@ -250,7 +250,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
 
     postChecklists({ dtoList, resultId }).then(() => {
       // toast?.success('Muvaffaqiyatli saqlandi!', { richColors: true })
-      qc.invalidateQueries({ queryKey: [`/inspection-checklists`, { resultId }] })
+      void invalidateEndpoint(qc, '/inspection-checklists')
     })
   }
 
@@ -258,14 +258,14 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
     const dtoList = buildDtoListFromValues(values)
 
     if (dtoList.length === 0) {
-      toast.error('Hech qanday maʼlumot kiritilmadi.', { richColors: true })
+      toast.error('Hech qanday ma’lumot kiritilmadi.', { richColors: true })
       return
     }
 
     postChecklists2({ dtoList, resultId }).then(() => {
       addParams({ modal: 'addUsers' })
-      qc.invalidateQueries({ queryKey: [`/inspection-checklists`, { resultId }] })
-      qc.invalidateQueries({ queryKey: ['/inspection-results'] })
+      void invalidateEndpoint(qc, '/inspection-checklists')
+      invalidateEndpoint(qc, '/inspection-results')
     })
   }
 
@@ -359,7 +359,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
                       <span>Diqqat, qo‘shimcha fayl yuklanmagan!</span>
                     </h4>
                     <p className="mb-3 text-sm leading-relaxed text-amber-800">
-                      Qo‘shimcha faylni yuklamasdan tekshiruv ijrosini taʼminlab bo‘lmaydi!
+                      Qo‘shimcha faylni yuklamasdan tekshiruv ijrosini ta’minlab bo‘lmaydi!
                     </p>
                     <AddAdditionalFileModal
                       resultId={resultId}

@@ -6,7 +6,7 @@ import { Button } from '@/shared/components/ui/button'
 import { DialogDescription } from '@/shared/components/ui/dialog'
 import React, { Fragment, memo, useCallback, useMemo } from 'react'
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/shared/components/ui/drawer'
-import { useAppSelector } from '@/shared/hooks/use-store.ts'
+import { useAppSelector } from '@/shared/hooks/use-store'
 import { UIModeEnum } from '@/shared/types'
 
 export const BaseDrawer = memo(function BaseDrawer({

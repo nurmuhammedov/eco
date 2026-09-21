@@ -74,7 +74,7 @@ const ExecuteCourtModal = () => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">Sud ijrosini kiritish</DialogTitle>
+          <DialogTitle className="text-blue-400">Sud ijrosini kiritish</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

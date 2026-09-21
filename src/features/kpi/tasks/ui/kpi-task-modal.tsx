@@ -12,6 +12,7 @@ import { useCreateKpiTask, useUpdateKpiTask } from '../model/use-kpi-tasks'
 import { useGetDepartments } from '@/features/kpi/departments/model/use-departments'
 import { KPI_CALCULATION_TYPE, type KpiIndicator, type KpiTaskDetail } from '@/entities/kpi'
 import { cn } from '@/shared/lib/utils'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 export const CALC_TYPE_OPTIONS = [
   { value: 'PLAN', label: KPI_CALCULATION_TYPE.PLAN.label },
@@ -23,10 +24,10 @@ export type CalcType = 'PLAN' | 'PENALTY'
 // ─── Schema ──────────────────────────────────────────────────────────────────
 const indicatorSchema = z
   .object({
-    name: z.string().min(1, 'Majburiy maydon!'),
-    calculation_type: z.enum(['PLAN', 'PENALTY'], { required_error: 'Majburiy maydon!' }),
-    target: z.coerce.number().min(0, 'Kiritilgan ma’lumot yaroqli emas!'),
-    penalty_per_unit: z.coerce.number().min(0.01, 'Kiritilgan ma’lumot yaroqli emas!').max(100).optional().nullable(),
+    name: z.string().min(1),
+    calculation_type: z.enum(['PLAN', 'PENALTY']),
+    target: z.coerce.number().min(0),
+    penalty_per_unit: z.coerce.number().min(0.01).max(100).optional().nullable(),
     weight: z.coerce.number().min(1).max(100),
   })
   .superRefine((data, ctx) => {
@@ -35,7 +36,7 @@ const indicatorSchema = z
       if (v === undefined || v === null || isNaN(Number(v))) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Majburiy maydon!',
+          message: FORM_ERROR_MESSAGES.required,
           path: ['penalty_per_unit'],
         })
       } else if (Number(v) > 100) {
@@ -44,7 +45,7 @@ const indicatorSchema = z
           maximum: 100,
           type: 'number',
           inclusive: true,
-          message: 'Kiritilgan ma’lumot yaroqli emas!',
+          message: FORM_ERROR_MESSAGES.invalid,
           path: ['penalty_per_unit'],
         })
       }
@@ -54,8 +55,8 @@ const indicatorSchema = z
 const taskSchema = z.object({
   year: z.coerce.number().min(2020).max(2100),
   quarter: z.coerce.number().min(1).max(4),
-  kpi_department_id: z.string().min(1, 'Majburiy maydon!'),
-  indicators: z.array(indicatorSchema).min(1, 'Majburiy maydon!'),
+  kpi_department_id: z.string().min(1),
+  indicators: z.array(indicatorSchema).min(1),
 })
 
 type TaskFormValues = z.infer<typeof taskSchema>

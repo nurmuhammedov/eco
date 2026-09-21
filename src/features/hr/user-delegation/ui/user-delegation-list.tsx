@@ -8,12 +8,13 @@ import { TabsLayout } from '@/shared/layouts'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { AddDelegationModal, DelegationReasonLabels } from './add-delegation-modal'
 import { Badge } from '@/shared/components/ui/badge'
-import { UserRoles, UserRoleLabels } from '@/entities/user'
+import { UserRoles, UserRoleLabels } from '@/shared/types/user'
 import FileLink from '@/shared/components/common/file-link'
 import DeleteConfirmationDialog from '@/shared/components/common/delete-confirm-dialog'
 import { Ban } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUpdate } from '@/shared/hooks'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const DeactivateButton = ({ row }: { row: any }) => {
   const queryClient = useQueryClient()
@@ -34,7 +35,7 @@ const DeactivateButton = ({ row }: { row: any }) => {
           {},
           {
             onSuccess: () => {
-              queryClient.invalidateQueries({ queryKey: ['/user-delegation'] })
+              invalidateEndpoint(queryClient, '/user-delegation')
             },
           }
         )

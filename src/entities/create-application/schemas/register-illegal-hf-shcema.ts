@@ -16,15 +16,12 @@ const optionalText = () =>
     .transform((val) => (val ? val : null))
 
 const baseShape = {
-  identity: z
-    .string({ required_error: required })
-    .length(9, 'STIR 9 ta raqamdan iborat bo‘lishi kerak')
-    .regex(/^\d+$/, 'Faqat raqamlar kiritilishi kerak'),
+  identity: z.string({ required_error: required }).length(9).regex(/^\d+$/),
   phoneNumber: z
     .string({ required_error: required })
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
-      message: FORM_ERROR_MESSAGES.phone,
+      message: FORM_ERROR_MESSAGES.invalid,
     }),
   upperOrganization: optionalText(),
   name: z.string({ required_error: required }).trim().min(1, required).max(250, invalid),

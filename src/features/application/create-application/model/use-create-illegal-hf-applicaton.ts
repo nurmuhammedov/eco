@@ -1,17 +1,17 @@
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import { useApplicationFormConstants } from '@/entities/create-application'
 import {
-  useDistrictSelectQueries,
+  useDistrictSelectQuery,
   useHazardousFacilityTypeDictionarySelect,
   useHazardousFacilityCategoryDictionarySelect,
-  useRegionSelectQueries,
+  useRegionSelectQuery,
 } from '@/shared/api/dictionaries'
-import { apiClient } from '@/shared/api/api-client'
 import { getSelectOptions, getHazardousFacilityTypeOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -101,20 +101,12 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
   const regionId = form.watch('regionId')
   const { spheres } = useApplicationFormConstants()
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
   const { data: hazardousFacilityCategories } = useHazardousFacilityCategoryDictionarySelect()
 
-  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', ownerIdentity],
-    queryFn: async () => {
-      if (!ownerIdentity) return null
-      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
-      return res.data?.data
-    },
-    enabled: !!ownerIdentity,
-  })
+  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useLegalOrganizationQuery(ownerIdentity)
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
   const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
@@ -185,7 +177,7 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
       updateMutate({ ...rest, categoryFilesDto: hfAppealFilesDto } as any, {
         onSuccess: () => {
           invalidateRegistryQueries(queryClient)
-          toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
+          toast.success('So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },
       })

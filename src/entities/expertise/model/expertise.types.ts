@@ -8,7 +8,7 @@ export interface LegalInfo {
   phoneNumber: string
 }
 
-export interface HfoSelectOption {
+export interface HfSelectOption {
   id: string
   name: string
   registryNumber: string

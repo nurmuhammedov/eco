@@ -1,6 +1,6 @@
 import type { Navigation } from '@/widgets/sidebar/models/types'
 import {
-  Activity,
+  History,
   AlertTriangle,
   Clipboard,
   Cog,
@@ -22,12 +22,12 @@ export default [
     icon: <MapPin />,
   },
   {
-    url: '/department',
+    url: '/departments',
     title: 'menu.departments',
     icon: <ListTree />,
   },
   {
-    url: '/staffs',
+    url: '/employees',
     title: 'menu.staffs',
     icon: <Users />,
   },
@@ -64,7 +64,7 @@ export default [
   {
     url: '/user-logs',
     title: 'menu.user-logs',
-    icon: <Activity />,
+    icon: <History />,
   },
   {
     url: '/hybrid-mail',

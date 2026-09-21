@@ -18,9 +18,9 @@ import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 
-import useDetail from '@/shared/hooks/api/useDetail'
-import useUpdate from '@/shared/hooks/api/useUpdate'
-import useData from '@/shared/hooks/api/useData'
+import useDetail from '@/shared/hooks/api/use-detail'
+import useUpdate from '@/shared/hooks/api/use-update'
+import useData from '@/shared/hooks/api/use-data'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
 import { Accident, AccidentFormValues, accidentEditSchema, InjuryStatus, AccidentProcessStatus } from '../model/types'
@@ -32,7 +32,7 @@ export const AccidentEdit: React.FC = () => {
   const { detail: accident, isLoading } = useDetail<Accident>('/accidents', id, !!id)
   const updateMutation = useUpdate<Accident, any, any>('/accidents/injury', id)
 
-  const { data: hfoData } = useData<any>(`/hf/${accident?.hfId}`, !!accident?.hfId)
+  const { data: hfData } = useData<any>(`/hf/${accident?.hfId}`, !!accident?.hfId)
 
   const isCompleted = accident?.status === 'COMPLETED'
   const isFieldsDisabled = accident?.status === AccidentProcessStatus.NEW
@@ -137,7 +137,7 @@ export const AccidentEdit: React.FC = () => {
     return (
       <Card className="mt-4">
         <CardContent>
-          <p className="p-4 text-center">Maʼlumotlar topilmadi</p>
+          <p className="p-4 text-center">Ma’lumotlar topilmadi</p>
         </CardContent>
       </Card>
     )
@@ -155,7 +155,7 @@ export const AccidentEdit: React.FC = () => {
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida ma’lumot">
-          <AppealMainInfo data={hfoData} type="HF" address={hfoData?.address} />
+          <AppealMainInfo data={hfData} type="HF" address={hfData?.address} />
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="form_info" title="Tahrirlash">

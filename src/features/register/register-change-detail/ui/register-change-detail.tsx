@@ -4,23 +4,36 @@ import { Link, useParams } from 'react-router-dom'
 import { useDetail } from '@/shared/hooks'
 import DetailRow from '@/shared/components/common/detail-row'
 import { formatDate } from '@/shared/utils/date'
-import ChangeLogTable from '@/features/register/register-change-detail/ui/change-log-table.tsx'
+import ChangeLogTable from '@/features/register/register-change-detail/ui/change-log-table'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
-import { ApplicationStatusRow } from '@/shared/components/common/application-status-row'
+import { ApplicationStatusRow } from '@/entities/application/ui/application-status-row'
 import { GoBack } from '@/shared/components/common'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { ApplicationStatus } from '@/entities/application'
 import AssignExecutorModal from '@/features/register/register-change-detail/modals/assign-executor-modal'
 import ReturnChangeModal from '@/features/register/register-change-detail/modals/return-change-modal'
 import ConfirmProcessModal from '@/features/register/register-change-detail/modals/confirm-process-modal'
 import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal'
 import { Badge } from '@/shared/components/ui/badge'
-import { cn } from '@/shared/lib/utils.ts'
+import { cn } from '@/shared/lib/utils'
+
+/** The register sections this page knows how to read a change request for. */
+const SECTIONS = ['hf', 'equipments', 'irs', 'xrays', 'xray', 'radiation-profiles']
 
 const RegisterChangeDetail: FC = () => {
-  const { id, type } = useParams<{ id: string; type: string }>()
+  const params = useParams<{ id: string; type: string }>()
+
+  /**
+   * The address used to read `change/:id/:type`. Both segments are free text, so
+   * a redirect cannot tell the two shapes apart - only the section name can, and
+   * it is the one segment with a known set of values.
+   */
+  const swapped = !!params.type && !SECTIONS.includes(params.type) && SECTIONS.includes(params.id ?? '')
+  const id = swapped ? params.type : params.id
+  const type = swapped ? params.id : params.type
+
   const { user } = useAuth()
 
   const { detail: changeDetail, isLoading = true } = useDetail<any>('/changes/by-belong', id, !!id)
@@ -76,7 +89,7 @@ const RegisterChangeDetail: FC = () => {
               ? 'Reyestrdan chiqarish uchun so‘rov'
               : isStatusChange
                 ? 'Holatini o‘zgartirish uchun so‘rov'
-                : 'Maʼlumotlarni o‘zgartirish uchun so‘rov'
+                : 'Ma’lumotlarni o‘zgartirish uchun so‘rov'
           }
         />
         <div className="flex gap-2">
@@ -116,7 +129,7 @@ const RegisterChangeDetail: FC = () => {
               value={
                 <Link
                   className="inline-flex items-center gap-1 text-sm font-medium text-[#0271FF] hover:underline"
-                  to={type === 'radiation-profiles' ? `/register/radiation-profiles/${id}` : `/register/${id}/${type}`}
+                  to={type === 'radiation-profiles' ? `/register/radiation-profiles/${id}` : `/register/${type}/${id}`}
                 >
                   Ko‘rish
                   <ArrowUpRight className="size-4" />
@@ -138,12 +151,12 @@ const RegisterChangeDetail: FC = () => {
                   </Badge>
                 ) : (
                   <Badge variant="info" className="py-1">
-                    Maʼlumotlarni o‘zgartirish
+                    Ma’lumotlarni o‘zgartirish
                   </Badge>
                 )
               }
             />
-            <DetailRow title="Ijrochi ma‘sul F.I.SH.:" value={changeDetail?.executorName || '-'} />
+            <DetailRow title="Ijrochi mas’ul F.I.SH.:" value={changeDetail?.executorName || '-'} />
 
             {changeDetail?.description && (
               <div

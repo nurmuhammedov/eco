@@ -22,14 +22,15 @@ import {
   useAccountantPaidReward,
   useAccountantMibStatus,
 } from '@/features/inquiries/hooks/use-inquiry-mutations'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const getRecoveredSchema = (maxAmount?: number) =>
   z.object({
     recoveredAmount: z
-      .number({ required_error: 'Majburiy maydon!' })
-      .min(0, 'Manfiy bo‘lishi mumkin emas')
+      .number()
+      .min(0)
       .refine((val) => maxAmount === undefined || val <= maxAmount, {
-        message: 'Kiritilgan ma’lumot yaroqli emas',
+        message: FORM_ERROR_MESSAGES.invalid,
       }),
   })
 
@@ -105,12 +106,12 @@ export const RecoveredAmountModal = ({
 const getPaidRewardSchema = (maxAmount?: number) =>
   z.object({
     paidRewardAmount: z
-      .number({ required_error: 'Majburiy maydon!' })
-      .min(0, 'Manfiy bo‘lishi mumkin emas')
+      .number()
+      .min(0)
       .refine((val) => maxAmount === undefined || val <= maxAmount, {
-        message: 'Kiritilgan ma’lumot yaroqli emas',
+        message: FORM_ERROR_MESSAGES.invalid,
       }),
-    paymentExecutionFilePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Fayl yuklang!'),
+    paymentExecutionFilePath: z.string().min(1),
   })
 
 export const PaidRewardModal = ({
@@ -199,7 +200,7 @@ export const PaidRewardModal = ({
 }
 
 const mibStatusSchema = z.object({
-  isMib: z.boolean({ required_error: 'Majburiy maydon!' }),
+  isMib: z.boolean(),
 })
 
 export const MibStatusModal = ({ inquiryId, defaultValue }: { inquiryId: string; defaultValue?: boolean }) => {

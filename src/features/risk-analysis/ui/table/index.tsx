@@ -1,7 +1,7 @@
 import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { useCustomSearchParams } from '@/shared/hooks'
-import { RiskAnalysisTab } from '@/widgets/risk-analysis/types'
+import { RiskAnalysisTab } from '@/entities/risk-analysis/models/risk-analysis-tabs'
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -30,7 +30,7 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
           {
             header: () => (
               <div className="whitespace-nowrap">
-                Roʻyxatga olish <br /> raqami
+                Ro‘yxatga olish <br /> raqami
               </div>
             ),
             accessorKey: 'registryNumber',

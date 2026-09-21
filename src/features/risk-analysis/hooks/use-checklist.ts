@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { QK_CHECKLIST } from '@/shared/constants/query-keys.ts'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { useSearchParams } from 'react-router-dom'
-import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api.ts'
+import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api'
 
 export const useChecklist = () => {
   const [searchParams] = useSearchParams()
@@ -10,7 +10,7 @@ export const useChecklist = () => {
   const tin = searchParams.get('tin') || ''
 
   return useQuery({
-    queryKey: [QK_CHECKLIST, intervalId, objectId, tin],
+    queryKey: endpointKey('/checklists', { intervalId, objectId, tin }),
     queryFn: () => riskAnalysisDetailApi.getChecklist({ intervalId, objectId, tin }),
   })
 }

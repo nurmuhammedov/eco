@@ -1,4 +1,4 @@
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 /**
  * Registry records an inspector may not edit directly - the change has to go

@@ -29,12 +29,13 @@ import { Input } from '@/shared/components/ui/input'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select'
 import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection/category-types/hooks/use-category-type-select-query'
-import { useHazardousFacilitySelectQuery } from '@/features/inspections/hooks/use-hf-select-query'
+import { useHazardousFacilitySelectQuery } from '@/shared/api/dictionaries'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { ApplicationModal } from '@/features/application/create-application'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
-import { useOfficeSelectQueries } from '@/shared/api/dictionaries'
+import { UserRoles } from '@/shared/types/user'
+import { useOfficeSelectQuery } from '@/shared/api/dictionaries'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 export const CreateOtherInspectionModal = () => {
   const { t } = useTranslation()
@@ -50,9 +51,9 @@ export const CreateOtherInspectionModal = () => {
       noticeType: z.enum(['NOTIFIED', 'AFTER_24_HOURS'], { required_error: FORM_ERROR_MESSAGES.required }),
       tin: z
         .string({ message: FORM_ERROR_MESSAGES.required })
-        .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak' })
+        .regex(/^\d+$/)
         .refine((val) => val.length === 9 || val.length === 14, {
-          message: 'STIR (JSHSHIR) faqat 9 yoki 14 xonali bo‘lishi kerak',
+          message: FORM_ERROR_MESSAGES.invalid,
         }),
       hfId: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
       inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
@@ -108,7 +109,7 @@ export const CreateOtherInspectionModal = () => {
     form.setValue('inspectorIdList', [])
   }, [officeIdValue, form])
   const { data: categoryOptions } = useCategoryTypeSelectQuery(undefined, isOpen)
-  const { data: officeSelect } = useOfficeSelectQueries(isChairman && isOpen)
+  const { data: officeSelect } = useOfficeSelectQuery(isChairman && isOpen)
 
   const {
     error,
@@ -122,12 +123,12 @@ export const CreateOtherInspectionModal = () => {
   } = useEimzo({
     pdfEndpoint: '/inspections/decree/other/generate-pdf',
     submitEndpoint: '/inspections/decree/other',
-    queryKey: '/inspections/other',
+    invalidates: '/inspections/other',
     successMessage: t('success_saved'),
     onEnd: () => {
       setIsOpen(false)
-      queryClient.invalidateQueries({ queryKey: ['/inspections/other'] })
-      queryClient.invalidateQueries({ queryKey: ['/inspections/count'] })
+      invalidateEndpoint(queryClient, '/inspections/other')
+      invalidateEndpoint(queryClient, '/inspections/count')
     },
   })
 
@@ -159,7 +160,7 @@ export const CreateOtherInspectionModal = () => {
         </DialogTrigger>
         <DialogContent size="lg" className="flex flex-col gap-0 overflow-hidden rounded-xl! p-0">
           <DialogHeader className="shrink-0 border-b px-4 py-4 sm:px-6">
-            <DialogTitle className="pr-8 text-[#4E75FF]">{t('inspections.other.create_modal.title')}</DialogTitle>
+            <DialogTitle className="pr-8 text-blue-400">{t('inspections.other.create_modal.title')}</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>

@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
 export const territorialDepartmentsBaseSchema = {
-  name: z.string().min(1, 'Nomi majburiy'),
-  regionId: z.number().int().positive('Viloyatni tanlang'),
+  name: z.string().min(1),
+  regionId: z.number().int().positive(),
 }
 
 export const territorialDepartmentsSchema = z.object({

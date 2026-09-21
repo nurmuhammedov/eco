@@ -3,8 +3,8 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { GoBack } from '@/shared/components/common'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useData } from '@/shared/hooks'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
-import { useRegionSelectQuery } from '@/entities/admin/districts'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { cn } from '@/shared/lib/utils'
 import { IrsXrayStatusItem } from './types'
 
@@ -18,7 +18,7 @@ const ALL = 'ALL'
 const isSummaryRow = (regionName?: string) => {
   const name = regionName?.toLowerCase() ?? ''
 
-  return name.includes('bo‘yicha') || name.includes("bo'yicha") || name === 'jami'
+  return name.includes('bo‘yicha') || name.includes('bo‘yicha') || name === 'jami'
 }
 
 interface Row {

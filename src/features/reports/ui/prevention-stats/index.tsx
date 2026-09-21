@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
@@ -62,7 +62,7 @@ const PreventionStatsReport: React.FC = () => {
     const isSummaryItem = (r: any) =>
       r.regionId === null ||
       r.regionName?.toLowerCase() === 'respublika bo‘yicha' ||
-      r.regionName?.toLowerCase() === "o'zbekiston respublikasi" ||
+      r.regionName?.toLowerCase() === 'o‘zbekiston respublikasi' ||
       r.regionName?.toLowerCase().startsWith('respublika b')
 
     const regions = rawData.filter((r) => !isSummaryItem(r))

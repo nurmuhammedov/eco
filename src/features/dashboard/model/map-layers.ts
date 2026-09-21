@@ -113,7 +113,7 @@ export const toHfPoint = (item: FacilityLocation): MapPoint => ({
   regionId: item.regionId,
   status: item.status,
   riskLevel: item.riskLevel,
-  detailPath: `/register/${item.id}/hf`,
+  detailPath: `/register/hf/${item.id}`,
 })
 
 export const toEquipmentPoint =
@@ -129,7 +129,7 @@ export const toEquipmentPoint =
     regionId: item.regionId,
     status: item.status,
     riskLevel: null,
-    detailPath: `/register/${item.id}/equipments`,
+    detailPath: `/register/equipments/${item.id}`,
   })
 
 export const bucketOf = (point: MapPoint) => (point.layer === 'HF' ? (point.riskLevel ?? 'NONE') : point.status)

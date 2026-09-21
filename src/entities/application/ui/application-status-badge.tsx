@@ -1,4 +1,4 @@
-import { ApplicationStatus } from '@/entities/application'
+import { ApplicationStatus } from '../types/types'
 import { cn } from '@/shared/lib/utils'
 import { useTranslation } from 'react-i18next'
 

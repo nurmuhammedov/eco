@@ -1,6 +1,7 @@
 import { getTime } from '@/shared/lib/get-time'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { inspectionChecklistAPI as checklistAPI, checklistKeys } from '@/entities/admin/inspection'
+import { inspectionChecklistAPI as checklistAPI } from '../models/checklist.api'
+import { checklistKeys } from '../models/checklist.query-keys'
 import { ChecklistResponse, FilterChecklistDTO } from '../models/checklist.types'
 
 export const useChecklistsQuery = (filters: FilterChecklistDTO) => {

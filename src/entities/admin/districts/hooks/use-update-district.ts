@@ -1,6 +1,10 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { districtAPI, districtKeys, UpdateDistrictDTO } from '@/entities/admin/districts'
+import { districtAPI } from '../models/district.api'
+import { districtKeys } from '../models/district.query-keys'
+import { UpdateDistrictDTO } from '../models/district.types'
 
 export const useUpdateDistrict = () => {
   const queryClient = useQueryClient()
@@ -54,9 +58,8 @@ export const useUpdateDistrict = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: districtKeys.list('district'),
-      })
+      queryClient.invalidateQueries({ queryKey: districtKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.DISTRICTS)
     },
 
     onError: (_err, updatedDistrict, context) => {

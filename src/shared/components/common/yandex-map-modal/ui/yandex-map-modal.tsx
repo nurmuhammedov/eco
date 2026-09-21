@@ -24,12 +24,12 @@ const REGION_ZOOM = 12
 
 const coordinateSchema = z.object({
   lat: z.coerce
-    .number({ invalid_type_error: 'Raqam bo‘lishi kerak', required_error: 'Majburiy maydon!' })
+    .number()
     .min(37, 'Joylashuv O‘zbekiston Respublikasi hududan tashqarida')
     .max(46, 'Joylashuv O‘zbekiston Respublikasi hududan tashqarida')
     .transform((val) => (val ? val : 0)),
   lng: z.coerce
-    .number({ invalid_type_error: 'Raqam bo‘lishi kerak', required_error: 'Majburiy maydon!' })
+    .number()
     .min(56, 'Joylashuv O‘zbekiston Respublikasi hududan tashqarida')
     .max(73, 'Joylashuv O‘zbekiston Respublikasi hududan tashqarida')
     .transform((val) => (val ? val : 0)),

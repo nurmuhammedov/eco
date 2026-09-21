@@ -6,7 +6,7 @@ export interface FormComponentProps {
 }
 
 const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormComponentProps>>> = {
-  [ApplicationTypeEnum.REGISTER_HF]: lazy(() => import('../ui/forms/register-hp-form')),
+  [ApplicationTypeEnum.REGISTER_HF]: lazy(() => import('../ui/forms/register-hf-form')),
   [ApplicationTypeEnum.DEREGISTER_HF]: lazy(() => import('../ui/forms/deregister-hf-form')),
   [ApplicationTypeEnum.RE_REGISTER_HF]: lazy(() => import('../ui/forms/reregister-hf-form')),
   [ApplicationTypeEnum.RE_REGISTER_ILLEGAL_HF]: lazy(() => import('../ui/forms/reregister-illegal-hf-form')),
@@ -31,7 +31,7 @@ const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormCo
   [ApplicationTypeEnum.ILLEGAL_REGISTER_XRAY]: lazy(() => import('../ui/forms/register-illegal-xray-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_CRANE]: lazy(() => import('../ui/forms/register-illegal-crane-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_CONTAINER]: lazy(() => import('../ui/forms/register-illegal-container-form')),
-  [ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER]: lazy(() => import('../ui/forms/register-illegal-boiler-form.tsx')),
+  [ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER]: lazy(() => import('../ui/forms/register-illegal-boiler-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_ESCALATOR]: lazy(() => import('../ui/forms/register-illegal-escalator-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_PIPELINE]: lazy(() => import('../ui/forms/register-illegal-pipeline-form')),
   [ApplicationTypeEnum.ILLEGAL_REGISTER_HOIST]: lazy(() => import('../ui/forms/register-illegal-hoist-form')),

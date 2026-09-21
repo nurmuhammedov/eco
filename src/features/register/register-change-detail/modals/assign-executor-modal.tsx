@@ -5,23 +5,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog.tsx'
-import { Button } from '@/shared/components/ui/button.tsx'
+} from '@/shared/components/ui/dialog'
+import { Button } from '@/shared/components/ui/button'
 import { DialogClose } from '@radix-ui/react-dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
-import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { getSelectOptions } from '@/shared/lib/get-select-options.tsx'
-import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select.tsx'
-import { useManagerSelect } from '@/features/application/application-detail/hooks/use-manager-select.tsx'
+import { getSelectOptions } from '@/shared/lib/get-select-options'
+import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select'
+import { useManagerSelect } from '@/features/application/application-detail/hooks/use-manager-select'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { useState } from 'react'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { useAuth } from '@/shared/hooks/use-auth'
 import { useAdd } from '@/shared/hooks/api'
 import { useQueryClient } from '@tanstack/react-query'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const schema = z.object({
   executorId: z.string({ message: FORM_ERROR_MESSAGES.required }),
@@ -54,7 +55,7 @@ const AssignExecutorModal = ({ changeId }: Props) => {
       userId: data.executorId,
     }).then(() => {
       setIsShow(false)
-      queryClient.invalidateQueries({ queryKey: ['/changes/by-belong'] })
+      invalidateEndpoint(queryClient, '/changes/by-belong')
     })
   }
 
@@ -65,7 +66,7 @@ const AssignExecutorModal = ({ changeId }: Props) => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">Ijrochini belgilash</DialogTitle>
+          <DialogTitle className="text-blue-400">Ijrochini belgilash</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

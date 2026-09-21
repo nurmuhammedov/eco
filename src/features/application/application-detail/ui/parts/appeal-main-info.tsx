@@ -1,5 +1,5 @@
-import DetailRow from '@/shared/components/common/detail-row.tsx'
-import { getDate } from '@/shared/utils/date.ts'
+import DetailRow from '@/shared/components/common/detail-row'
+import { getDate } from '@/shared/utils/date'
 import { useHazardousFacilityCategoryDictionarySelect } from '@/shared/api/dictionaries'
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -520,7 +520,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
 
   return (
     <div className="flex flex-col py-1">
-      {/* Umumiy maʼlumotlar */}
+      {/* Umumiy ma’lumotlar */}
 
       {/* XICHO (HF) maydonlari */}
       {renderRow('upperOrganization', data?.upperOrganization)}
@@ -558,7 +558,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
           value={
             data?.hfName ? (
               <Link
-                to={`/register/${data?.hfId || data?.hazardousFacilityId}/hf`}
+                to={`/register/hf/${data?.hfId || data?.hazardousFacilityId}`}
                 className="text-[#0271FF] hover:underline"
               >
                 {data.hfName}
@@ -635,7 +635,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
       {renderRow('parkName', data?.parkName)}
       {renderRow('address', address)}
 
-      {/* Umumiy meta maʼlumotlar */}
+      {/* Umumiy meta ma’lumotlar */}
       {type == 'IRS' ? renderRow('type', data?.type || '') : renderRow('type', t(`equipment_types.${type}`) || type)}
       {isRegister ? renderRow('registryNumber', data?.registryNumber) : null}
 

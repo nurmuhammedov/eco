@@ -11,7 +11,7 @@ import { ComponentPropsWithoutRef, useState } from 'react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 
 const adminLoginFormSchema = z.object({
-  username: z.string().min(1, 'Login kiritilishi shart'),
+  username: z.string().min(1),
   password: z.string().min(8, 'Parol kamida 8 ta belgidan iborat bo‘lishi kerak'),
 })
 

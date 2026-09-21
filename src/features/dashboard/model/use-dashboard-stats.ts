@@ -1,5 +1,5 @@
 import { useData } from '@/shared/hooks/api'
-import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
+import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
 import { ISearchParams } from '@/shared/types'
 
 /** Registry totals move slowly, so a tab switch should not refetch them. */

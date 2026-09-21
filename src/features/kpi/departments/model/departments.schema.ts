@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const departmentSchema = z.object({
-  name: z.string().min(1, 'Majburiy maydon!'),
+  name: z.string().min(1),
   is_active: z.boolean().default(true),
   responsible_id: z.string().nullable().optional(),
   responsible_username: z.string().nullable().optional(),

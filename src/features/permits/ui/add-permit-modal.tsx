@@ -16,6 +16,8 @@ import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import FileLink from '@/shared/components/common/file-link'
 import { cn } from '@/shared/lib/utils'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface AddPermitModalProps {
   open: boolean
@@ -24,16 +26,16 @@ interface AddPermitModalProps {
 
 const searchSchema = z.object({
   stir: z
-    .string({ required_error: 'Majburiy maydon!' })
-    .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak' })
+    .string()
+    .regex(/^\d+$/)
     .refine((val) => val.length === 9 || val.length === 14, {
-      message: 'STIR (JSHSHIR) faqat 9 yoki 14 xonali bo‘lishi kerak',
+      message: FORM_ERROR_MESSAGES.invalid,
     }),
-  regNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  regNumber: z.string().min(1),
 })
 
 const fileSchema = z.object({
-  filePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Fayl yuklash majburiy!'),
+  filePath: z.string().min(1),
 })
 
 type SearchFormValues = z.infer<typeof searchSchema>
@@ -167,8 +169,8 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
     addFn(payload).then(async () => {
       handleClose()
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['/permits'] }),
-        queryClient.invalidateQueries({ queryKey: ['/permits/count'] }),
+        invalidateEndpoint(queryClient, '/permits'),
+        invalidateEndpoint(queryClient, '/permits/count'),
       ])
       toast.success('Muvaffaqiyatli qo‘shildi')
     })

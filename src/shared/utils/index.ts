@@ -9,5 +9,5 @@ export {
   clearSessionStorage,
   removeSessionStorage,
 } from './storage'
-export { getUserData } from './getUserData'
+export { getUserData } from './get-user-data'
 export { getInitials } from './get-initial-letter'

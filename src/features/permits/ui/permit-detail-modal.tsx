@@ -31,7 +31,7 @@ export const PermitDetailModal = () => {
               License.gov.uz
               <ExternalLink className="h-4 w-4 opacity-70 transition-opacity group-hover:opacity-100" />
             </a>
-            <span>dan kelgan maʼlumotlar</span>
+            <span>dan kelgan ma’lumotlar</span>
           </DialogTitle>
         </DialogHeader>
         {isLoading ? (

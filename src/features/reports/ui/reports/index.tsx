@@ -24,7 +24,7 @@ import {
 import { Card } from '@/shared/components/ui/card'
 import { Link } from 'react-router-dom'
 import { useCurrentRole } from '@/shared/hooks/use-current-role'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 
 interface ReportItem {
@@ -83,7 +83,7 @@ const REPORTS_GROUPS: ReportGroup[] = [
       },
       {
         id: 'rep-8',
-        title: 'Reyestr maʼlumotlarini o‘zgartirish so‘rovlari bo‘yicha hisobot',
+        title: 'Reyestr ma’lumotlarini o‘zgartirish so‘rovlari bo‘yicha hisobot',
         icon: Zap,
         url: '/reports/changes',
         reportType: 'MONTHLY',

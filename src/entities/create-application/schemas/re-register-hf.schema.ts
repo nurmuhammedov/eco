@@ -2,35 +2,31 @@ import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { z } from 'zod'
-import { HFSphereEnum } from '@/entities/create-application'
+import { HFSphereEnum } from './register-hf.schema'
 
 const __ReRegisterHFSchema = z.object({
-  hazardousFacilityId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  hazardousFacilityId: z.string().min(1),
   phoneNumber: z
-    .string({ required_error: 'Majburiy maydon!' })
+    .string()
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
-      message: FORM_ERROR_MESSAGES.phone,
+      message: FORM_ERROR_MESSAGES.invalid,
     }),
-  address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  location: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  hfTypeId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  regionId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  districtId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  address: z.string().trim().min(1),
+  location: z.string().min(1),
+  hfTypeId: z.string().min(1),
+  regionId: z.string().min(1),
+  districtId: z.string().min(1),
   upperOrganization: z
     .string()
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  name: z
-    .string({ required_error: 'Majburiy maydon!' })
-    .trim()
-    .min(1, 'Majburiy maydon!')
-    .max(250, 'Kiritilgan maʼlumot yaroqli emas'),
-  extraArea: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  hazardousSubstance: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  spheres: z.array(HFSphereEnum, { required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  identificationCardPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  name: z.string().trim().min(1).max(250),
+  extraArea: z.string().trim().min(1),
+  hazardousSubstance: z.string().trim().min(1),
+  spheres: z.array(HFSphereEnum).min(1),
+  identificationCardPath: z.string().min(1),
   receiptPath: z
     .string()
     .optional()

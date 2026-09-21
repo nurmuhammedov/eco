@@ -1,8 +1,7 @@
+import { useHazardousFacilityByTinQuery, useLegalInfoByTinQuery } from '@/shared/api/dictionaries'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery } from '@tanstack/react-query'
-import { getLegalInfoByTin } from '@/entities/expertise/api/expertise.api'
 import { CreateDeclarationFormValues, createDeclarationSchema } from '@/entities/declarations/model/declaration.types'
 import { Button } from '@/shared/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
@@ -15,8 +14,8 @@ import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { useNavigate, useParams } from 'react-router-dom'
 import DetailRow from '@/shared/components/common/detail-row'
-import useData from '@/shared/hooks/api/useData'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useData from '@/shared/hooks/api/use-data'
+import useAdd from '@/shared/hooks/api/use-add'
 import { useUpdate } from '@/shared/hooks'
 import { toast } from 'sonner'
 
@@ -48,16 +47,9 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
     data: legalInfo,
     isFetching: isLegalInfoLoading,
     isError: isLegalInfoError,
-  } = useQuery({
-    queryKey: ['legalInfo', searchedStir],
-    queryFn: () => getLegalInfoByTin(searchedStir!),
-    enabled: !!searchedStir,
-    retry: 1,
-  })
+  } = useLegalInfoByTinQuery(searchedStir)
 
-  const { data: hfoOptions, isFetching: isHfoLoading } = useData<any[]>('/hf/by-tin/select', !!searchedStir, {
-    legalTin: searchedStir,
-  })
+  const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(searchedStir)
 
   const { data: conclusionOptions, isFetching: isConclusionsLoading } = useData<any[]>(
     '/conclusions/select',
@@ -160,7 +152,7 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
         <>
           <Card>
             <CardHeader>
-              <CardTitle>Buyurtmachi maʼlumotlari</CardTitle>
+              <CardTitle>Buyurtmachi ma’lumotlari</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
@@ -173,7 +165,7 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Deklaratsiya maʼlumotlari</CardTitle>
+              <CardTitle>Deklaratsiya ma’lumotlari</CardTitle>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -216,7 +208,7 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
                             <SelectContent>
                               {conclusionOptions?.map((option: any) => (
                                 <SelectItem key={option.id} value={option.id}>
-                                  {option.registryNumber || 'Nomaʼlum xulosa'}
+                                  {option.registryNumber || 'Noma’lum xulosa'}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -235,14 +227,14 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
                           <FormControl>
                             <MultiSelect
                               options={
-                                hfoOptions?.map((opt: any) => ({
+                                hfOptions?.map((opt: any) => ({
                                   id: opt.id,
                                   name: `${opt.registryNumber || 'N/A'} - ${opt.name}`,
                                 })) || []
                               }
                               value={field.value}
                               onChange={(vals) => field.onChange(vals as string[])}
-                              disabled={isHfoLoading}
+                              disabled={isHfLoading}
                               placeholder="Obyektlarni tanlang..."
                             />
                           </FormControl>

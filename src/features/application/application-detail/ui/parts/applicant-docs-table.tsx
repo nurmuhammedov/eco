@@ -1,17 +1,15 @@
-import { useApplicantDocs } from '@/features/application/application-detail/hooks/use-applicant-docs.tsx'
+import { useApplicantDocs } from '@/features/application/application-detail/hooks/use-applicant-docs'
 import { ColumnDef } from '@tanstack/react-table'
 import { ISearchParams } from '@/shared/types'
 import { DataTable } from '@/shared/components/common/data-table'
 import { formatDate } from 'date-fns'
-import { Badge } from '@/shared/components/ui/badge.tsx'
-import {
-  documentTypes,
-  signStatuses,
-} from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx'
-import FileLink from '@/shared/components/common/file-link.tsx'
+import { Badge } from '@/shared/components/ui/badge'
+import { documentTypes } from '@/features/application/application-detail/ui/parts/appeal-response-docs'
+import { signStatuses } from '../../model/sign-statuses'
+import FileLink from '@/shared/components/common/file-link'
 import { Eye } from 'lucide-react'
 import { useState } from 'react'
-import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx'
+import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal'
 
 const ApplicantDocsTable = () => {
   const { data, isLoading } = useApplicantDocs()

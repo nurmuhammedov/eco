@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
-import { RootState } from '@/app/store'
+import { RootState } from '@/shared/store'
 import { useSelector } from 'react-redux'
 import { createSelector } from '@reduxjs/toolkit'
 import { useAppDispatch } from '@/shared/hooks/use-store'
-import { closeUI, openUI } from '@/entities/ui/model/ui-slice'
+import { closeUI, openUI } from '@/shared/store/ui-slice'
 import { UIComponentDataMap, UIComponentName, UIModeEnum } from '@/shared/types/ui-types'
 
 export function createEntityDrawerHook<T extends UIComponentName>(componentName: T) {

@@ -15,8 +15,8 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const newsSchema = z.object({
-  title: z.string().trim().min(1, 'Majburiy maydon!'),
-  content: z.string().min(1, 'Majburiy maydon!'),
+  title: z.string().trim().min(1),
+  content: z.string().min(1),
   isActive: z.boolean(),
 })
 
@@ -38,7 +38,7 @@ export const NewsForm: FC = () => {
 
   const { data: newsDetail, isLoading: isDetailLoading } = useDetail<any>('/announcements/', id, isEdit)
 
-  const { mutate: addNews } = useAdd<NewsFormValues, any, any>('/announcements', 'Xabarnoma muvaffaqiyatli qoʻshildi')
+  const { mutate: addNews } = useAdd<NewsFormValues, any, any>('/announcements', 'Xabarnoma muvaffaqiyatli qo‘shildi')
 
   const { mutate: updateNews } = useUpdate<NewsFormValues, any, any>(
     '/announcements/',
@@ -93,7 +93,7 @@ export const NewsForm: FC = () => {
   return (
     <div className="flex flex-col gap-3 pb-5">
       <div className="flex items-center justify-between">
-        <GoBack title={isEdit ? 'Xabarnomani tahrirlash' : 'Yangi xabarnoma qoʻshish'} fallbackPath="/news" />
+        <GoBack title={isEdit ? 'Xabarnomani tahrirlash' : 'Yangi xabarnoma qo‘shish'} fallbackPath="/news" />
       </div>
 
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>

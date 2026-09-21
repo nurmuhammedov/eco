@@ -1,15 +1,15 @@
-import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
+import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
 import { Inspection } from '@/entities/inspection/models/inspection.types'
 import { DataTable } from '@/shared/components/common/data-table'
 import { Button } from '@/shared/components/ui/button'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { InspectionStatus, InspectionSubMenuStatus } from '@/widgets/inspection/ui/inspection-widget'
+import { InspectionStatus, InspectionSubMenuStatus } from '@/entities/inspection/models/inspection-status'
 import { Eye } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { UserRoles } from '@/entities/user'
-import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
+import { UserRoles } from '@/shared/types/user'
+import { useDistrictSelectQuery } from '@/shared/api/dictionaries'
 import { format } from 'date-fns'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
@@ -33,7 +33,7 @@ export const InspectionList: React.FC = () => {
     },
   } = useCustomSearchParams()
 
-  const { data: districts } = useDistrictSelectQueries(
+  const { data: districts } = useDistrictSelectQuery(
     isInspector || isRegional ? undefined : regionId == 'ALL' ? '' : regionId
   )
 

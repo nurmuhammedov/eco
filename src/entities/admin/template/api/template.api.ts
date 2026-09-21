@@ -1,7 +1,7 @@
 import { ApiResponse, ResponseData } from '@/shared/types'
 import { API_ENDPOINTS } from '@/shared/api'
 import { apiClient } from '@/shared/api/api-client'
-import { Template, TemplateFormDTO } from '@/entities/admin/template'
+import { Template, TemplateFormDTO } from '../model/types'
 
 export const templateAPI = {
   list: async (filters: any) => {

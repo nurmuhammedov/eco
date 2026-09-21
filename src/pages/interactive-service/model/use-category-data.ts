@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useData } from '@/shared/hooks'
-import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
+import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
 import { InquiryStatus } from '@/features/inquiries/model/types'
 import { useDashboardStats } from '@/features/dashboard/model/use-dashboard-stats'
 import { useRiskAnalysisStats } from '@/features/dashboard/model/use-risk-analysis-stats'

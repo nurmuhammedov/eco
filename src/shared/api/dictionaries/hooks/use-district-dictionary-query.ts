@@ -1,12 +1,13 @@
-import { DICTIONARY_STALE_TIME } from '@/shared/lib/query/stale-time'
 import { useQuery } from '@tanstack/react-query'
-import { districtsAPI } from '@/shared/api/dictionaries'
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
+import { DICTIONARY_STALE_TIME } from '@/shared/lib/query/stale-time'
+import { districtsAPI } from '../queries/districts.api'
 
-export const useDistrictSelectQueries = (regionId?: string) => {
-  return useQuery({
+export const useDistrictSelectQuery = (regionId?: string | number) =>
+  useQuery({
     enabled: !!regionId && regionId !== 'ALL',
-    queryKey: ['district-select', regionId],
     staleTime: DICTIONARY_STALE_TIME,
-    queryFn: () => districtsAPI.list(regionId),
+    queryKey: endpointKey(API_ENDPOINTS.DISTRICT_SELECT, regionId),
+    queryFn: () => districtsAPI.list(regionId === undefined ? undefined : String(regionId)),
   })
-}

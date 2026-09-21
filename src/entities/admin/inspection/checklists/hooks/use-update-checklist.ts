@@ -1,6 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { inspectionChecklistAPI as checklistAPI, checklistKeys, UpdateChecklistDTO } from '@/entities/admin/inspection'
+import { inspectionChecklistAPI as checklistAPI } from '../models/checklist.api'
+import { checklistKeys } from '../models/checklist.query-keys'
+import { UpdateChecklistDTO } from '../models/checklist.types'
 
 export const useUpdateChecklist = () => {
   const queryClient = useQueryClient()
@@ -46,9 +48,7 @@ export const useUpdateChecklist = () => {
         queryClient.setQueryData(checklistKeys.detail('checklist', updatedChecklist.data.id), updatedChecklist)
       }
 
-      queryClient.invalidateQueries({
-        queryKey: checklistKeys.list('checklist'),
-      })
+      queryClient.invalidateQueries({ queryKey: checklistKeys.root() })
     },
 
     onError: (_err, updatedChecklist, context) => {

@@ -13,6 +13,7 @@ import { cn } from '@/shared/lib/utils'
 import { DIRECTION_OPTIONS, EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
 import type { Direction } from '@/entities/attestation/model/types'
 import { useAvailableDates, useCreateApplication, useOrganizationEmployees } from '../model/use-applications'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 interface Props {
   isOpen: boolean
@@ -70,7 +71,7 @@ export function CreateApplicationModal({ isOpen, onClose }: Props) {
 
   const handleSubmit = () => {
     if (!calendar) {
-      setError('Majburiy maydon!')
+      setError(FORM_ERROR_MESSAGES.required)
       return
     }
 

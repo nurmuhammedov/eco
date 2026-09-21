@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { GoBack } from '@/shared/components/common'
-import { useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { apiClient } from '@/shared/api/api-client'
 import {
   InquiryBelongType,
@@ -12,14 +12,14 @@ import {
 } from '@/features/inquiries/model/types'
 import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 
 const InquiriesStatusReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
   const regionNameParam = paramsObject.regionName || 'ALL'
   const typeParam = paramsObject.type || 'ALL'
 
-  const { data: regionsList, isLoading: isRegionsLoading } = useRegionSelectQueries()
+  const { data: regionsList, isLoading: isRegionsLoading } = useRegionSelectQuery()
   const regionOptions = useMemo(() => regionsList || [], [regionsList])
 
   const [tableData, setTableData] = useState<any[]>([])
@@ -54,7 +54,7 @@ const InquiriesStatusReport: React.FC = () => {
 
       // Filter out 'Respublika' from region items since we will add a summary row manually
       const filteredRegions = regionOptions.filter(
-        (r: any) => r.name !== 'Respublika' && r.name !== 'Respublika bo‘yicha' && r.name !== "Respublika bo'yicha"
+        (r: any) => r.name !== 'Respublika' && r.name !== 'Respublika bo‘yicha' && r.name !== 'Respublika bo‘yicha'
       )
 
       // The rows we want: 1 summary + all regions

@@ -1,6 +1,7 @@
 import { getTime } from '@/shared/lib/get-time'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { districtAPI, districtKeys } from '@/entities/admin/districts'
+import { districtAPI } from '../models/district.api'
+import { districtKeys } from '../models/district.query-keys'
 import { DistrictResponse, FilterDistrictDTO } from '../models/district.types'
 
 export const useDistrictsQuery = (filters: FilterDistrictDTO) => {
@@ -26,22 +27,5 @@ export const useDistrictQuery = (
     queryKey: districtKeys.detail('district', id),
     placeholderData: (previousData) => previousData,
     ...options,
-  })
-}
-
-export const useRegionSelectQuery = () => {
-  return useQuery({
-    staleTime: getTime(1, 'week'),
-    queryFn: () => districtAPI.fetchRegionSelect(),
-    queryKey: districtKeys.entity('district-region-select'),
-  })
-}
-
-export const useDistrictsSelectQuery = (regionId: number) => {
-  return useQuery({
-    enabled: !!regionId,
-    staleTime: getTime(1, 'week'),
-    queryFn: () => districtAPI.fetchDistrictsSelect(regionId),
-    queryKey: districtKeys.entity('district-select-' + regionId),
   })
 }

@@ -1,4 +1,4 @@
-import { apiConfig } from '@/shared/api/constants.ts'
+import { apiConfig } from '@/shared/api/constants'
 import { Button } from '@/shared/components/ui/button'
 import { isPDFUrl } from '@/shared/lib'
 import { cn } from '@/shared/lib/utils'
@@ -100,7 +100,7 @@ export const PDFViewer = ({
 
   if (hasError) {
     return (
-      <div className="rounded-lg border bg-red-100 p-6 text-red-800 dark:bg-red-200/50">
+      <div className="rounded-lg border bg-red-100 p-6 text-red-800">
         <h3 className="mb-2 text-lg font-semibold">Xatolik yuz berdi</h3>
         <p>{errorMessage}</p>
         {documentUrl && isPDFUrl(documentUrl) && (
@@ -116,15 +116,12 @@ export const PDFViewer = ({
   }
 
   return (
-    <div
-      className={cn('relative h-full w-full overflow-hidden rounded-md dark:border-gray-600', className)}
-      style={{ width }}
-    >
+    <div className={cn('relative h-full w-full overflow-hidden rounded-md', className)} style={{ width }}>
       {isLoading && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-sm dark:bg-gray-900/70">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-sm">
           <div className="text-center">
             <div className="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
-            <p className="text-sm text-gray-600 dark:text-gray-300">PDF yuklanmoqda...</p>
+            <p className="text-sm text-gray-600">PDF yuklanmoqda...</p>
           </div>
         </div>
       )}

@@ -6,60 +6,54 @@ import { z } from 'zod'
 
 export const RegisterIllegalAttractionBaseSchema = z.object({
   phoneNumber: z
-    .string({ required_error: 'Majburiy maydon!' })
+    .string()
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
-      message: FORM_ERROR_MESSAGES.phone,
+      message: FORM_ERROR_MESSAGES.invalid,
     }),
-  identity: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  identity: z.string().min(1),
   birthDate: z
     .date()
     .optional()
     .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
 
-  attractionName: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  childEquipmentId: z.coerce.number({ required_error: 'Majburiy maydon!' }),
-  childEquipmentSortId: z.coerce.number({ required_error: 'Majburiy maydon!' }),
-  factory: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  acceptedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  servicePeriod: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  country: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  regionId: z.coerce.number({ required_error: 'Majburiy maydon!' }),
-  districtId: z.coerce.number({ required_error: 'Majburiy maydon!' }),
+  attractionName: z.string().min(1),
+  childEquipmentId: z.coerce.number(),
+  childEquipmentSortId: z.coerce.number(),
+  factory: z.string().min(1),
+  manufacturedAt: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  acceptedAt: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  factoryNumber: z.string().min(1),
+  country: z.string().min(1),
+  regionId: z.coerce.number(),
+  districtId: z.coerce.number(),
   parkId: z.coerce.number().optional().nullable(),
-  address: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  location: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  riskLevel: z.enum(['I', 'II', 'III', 'IV'], { required_error: 'Majburiy maydon!' }),
+  address: z.string().min(1),
+  location: z.string().min(1),
+  riskLevel: z.enum(['I', 'II', 'III', 'IV']),
 
-  passportPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  labelPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  passportPath: z.string().min(1),
+  labelPath: z.string().min(1),
   conformityCertPath: z
     .string()
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  technicalJournalPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  servicePlanPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  technicalManualPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  seasonalInspectionPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  seasonalInspectionExpiryDate: z
-    .date({ required_error: 'Majburiy maydon!' })
-    .transform((date) => format(date, 'yyyy-MM-dd')),
-  seasonalReadinessActPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  seasonalReadinessActExpiryDate: z
-    .date({ required_error: 'Majburiy maydon!' })
-    .transform((date) => format(date, 'yyyy-MM-dd')),
+  technicalJournalPath: z.string().min(1),
+  servicePlanPath: z.string().min(1),
+  technicalManualPath: z.string().min(1),
+  seasonalInspectionPath: z.string().min(1),
+  seasonalInspectionExpiryDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  seasonalReadinessActPath: z.string().min(1),
+  seasonalReadinessActExpiryDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
   technicalReadinessActPath: z
     .string()
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  employeeSafetyKnowledgePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  employeeSafetyKnowledgeExpiryDate: z
-    .date({ required_error: 'Majburiy maydon!' })
-    .transform((date) => format(date, 'yyyy-MM-dd')),
+  employeeSafetyKnowledgePath: z.string().min(1),
+  employeeSafetyKnowledgeExpiryDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
   usageRightsPath: z.string().optional(),
   usageRightsExpiryDate: z
     .date()
@@ -71,7 +65,7 @@ export const RegisterIllegalAttractionBaseSchema = z.object({
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  cctvInstallationPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  cctvInstallationPath: z.string().min(1),
   qrPath: z
     .string()
     .optional()
@@ -85,7 +79,7 @@ export const attractionRefinement = (data: any, ctx: z.RefinementCtx) => {
     if (!data.birthDate) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Majburiy maydon!',
+        message: FORM_ERROR_MESSAGES.required,
         path: ['birthDate'],
       })
     }

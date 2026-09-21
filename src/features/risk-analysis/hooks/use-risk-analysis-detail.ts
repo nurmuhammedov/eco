@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api.ts'
+import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api'
 import { useSearchParams } from 'react-router-dom'
-import { QK_RISK_ANALYSIS } from '@/shared/constants/query-keys.ts'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
+import { riskIndicatorsEndpoint } from '@/features/risk-analysis/model/risk-analysis-endpoints'
 
 export const useRiskAnalysisDetail = () => {
   const [searchParams] = useSearchParams()
@@ -11,7 +12,7 @@ export const useRiskAnalysisDetail = () => {
   const intervalId = searchParams.get('intervalId')
 
   return useQuery({
-    queryKey: [QK_RISK_ANALYSIS, intervalId, id, tin, type],
+    queryKey: endpointKey(`${riskIndicatorsEndpoint(type)}/for-one`, { intervalId, id, tin }),
     queryFn: () =>
       riskAnalysisDetailApi.getRiskItems(
         {

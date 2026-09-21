@@ -1,5 +1,12 @@
+import { DocumentField } from '@/features/application/create-application/ui/forms/parts/equipment-fields'
+import {
+  ManufacturedAtField,
+  PhoneNumberField,
+  ServicePeriodField,
+} from '@/features/application/create-application/ui/forms/parts/equipment-fields'
 import { CardForm, CreateIllegalOilContainerApplicationDTO } from '@/entities/create-application'
-import { AppealFormSkeleton, NoteForm } from '@/features/application/create-application'
+import { AppealFormSkeleton } from '../form-skeleton'
+import { NoteForm } from '../note-form'
 import { GoBack } from '@/shared/components/common'
 import DetailRow from '@/shared/components/common/detail-row'
 import { InputFile } from '@/shared/components/common/file-upload'
@@ -17,7 +24,6 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
-import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { parseISO } from 'date-fns'
 import { useRegisterIllegalOilContainer } from '@/features/application/create-application/model/use-create-illegal-oil-container-application'
@@ -58,7 +64,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack
-          title={isUpdate ? 'Maʼlumotlarni tahrirlash' : 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish arizasi'}
+          title={isUpdate ? 'Ma’lumotlarni tahrirlash' : 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish arizasi'}
         />
         <NoteForm equipmentName="neft mahsulotlari saqlovchi idish" />
 
@@ -140,7 +146,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
           {ownerData && (
             <div className={`${!isUpdate ? 'mt-4 border-t pt-4' : ''}`}>
               <h3 className="mb-4 text-base font-semibold text-gray-800">
-                {isLegal ? 'Tashkilot maʼlumotlari' : 'Fuqaro maʼlumotlari'}
+                {isLegal ? 'Tashkilot ma’lumotlari' : 'Fuqaro ma’lumotlari'}
               </h3>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
                 <DetailRow
@@ -168,21 +174,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
 
         <CardForm className="mb-2">
           <div className="3xl:flex 3xl:flex-wrap 4xl:w-5/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
-            {!isUpdate && (
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Telefon raqami</FormLabel>
-                    <FormControl>
-                      <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            {!isUpdate && <PhoneNumberField form={form} />}
 
             {isLegal && (
               <FormField
@@ -259,7 +251,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      // O'ZGARISH: Date obyektini stringga o'tkazamiz
+                      // O‘ZGARISH: Date obyektini stringga o‘tkazamiz
                       onChange={(date) => field.onChange(date ? date.toISOString() : undefined)}
                       placeholder="Sanani tanlang"
                     />
@@ -269,44 +261,9 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
               }}
             />
 
-            <FormField
-              control={form.control}
-              name="manufacturedAt"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Ishlab chiqarilgan sana</FormLabel>
-                    <DatePicker
-                      disableStrategy={'after'}
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Ishlab chiqarilgan sana"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
+            <ManufacturedAtField form={form} />
 
-            <FormField
-              control={form.control}
-              name="servicePeriod"
-              render={({ field }) => {
-                const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-                return (
-                  <FormItem className="3xl:w-sm w-full">
-                    <FormLabel required>Xizmat muddati</FormLabel>
-                    <DatePicker
-                      value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      onChange={field.onChange}
-                      placeholder="Sanani tanlang"
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
+            <ServicePeriodField form={form} />
             <FormField
               control={form.control}
               name="regionId"
@@ -402,7 +359,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Idishning birkasi bilan sur‘ati
+                      Idishning birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -414,40 +371,20 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
               name="assignmentDecreePath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq"
+              required={!isUpdate}
             />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
+            <DocumentField
+              form={form}
               name="saleContractPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
+              label="Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)"
+              required={!isUpdate}
             />
           </div>
 
@@ -498,58 +435,15 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
           </div>
 
           <div className="border-b pb-4">
-            <FormField
-              name="equipmentCertPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Idishning muvofiqlik sertifikati
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <DocumentField form={form} name="equipmentCertPath" label="Idishning muvofiqlik sertifikati" />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
-              name="installationCertPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">Montaj dalolatnomasi</FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <DocumentField form={form} name="installationCertPath" label="Montaj dalolatnomasi" />
           </div>
 
           <div className="border-b pb-4">
-            <FormField
-              name="passportPath"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className={'mb-2'}>
-                  <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                    <FormLabel required={!isUpdate} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Idishning pasporti
-                    </FormLabel>
-                    <FormControl>
-                      <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
+            <DocumentField form={form} name="passportPath" label="Idishning pasporti" required={!isUpdate} />
           </div>
         </CardForm>
 

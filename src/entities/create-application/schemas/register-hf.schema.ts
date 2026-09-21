@@ -17,7 +17,7 @@ const __HFAppealDtoSchema = z.object({
     .string({ required_error: required })
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
-      message: FORM_ERROR_MESSAGES.phone,
+      message: FORM_ERROR_MESSAGES.invalid,
     }),
   address: z.string({ required_error: required }).trim().min(1, required),
   location: z.string({ required_error: required }).min(1, required),

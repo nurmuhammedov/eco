@@ -2,13 +2,13 @@ import { CardForm, CreateIrsApplicationDTO } from '@/entities/create-application
 import { useCreateIrsApplication } from '@/features/application/create-application/model/use-create-irs-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { InputNumber } from '@/shared/components/ui/input-number'
-import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
+import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { FileLink } from '@/shared/components/common/file-link'
@@ -95,9 +95,9 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
               name="supervisorName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Masʼul shaxsning F.I.Sh.</FormLabel>
+                  <FormLabel required>Mas’ul shaxsning F.I.Sh.</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Masʼul shaxsning F.I.Sh." {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Mas’ul shaxsning F.I.Sh." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -108,9 +108,9 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
               name="supervisorPosition"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Masʼul shaxsning lavozimi</FormLabel>
+                  <FormLabel required>Mas’ul shaxsning lavozimi</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Masʼul shaxsning lavozimi" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Mas’ul shaxsning lavozimi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -122,7 +122,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>
-                    Masʼul shaxsning radiatsiya xavfsizligi bo‘yicha <br /> tayyorgarlik holati
+                    Mas’ul shaxsning radiatsiya xavfsizligi bo‘yicha <br /> tayyorgarlik holati
                   </FormLabel>
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Guvohnoma, sertifikat va h.k." {...field} />
@@ -136,9 +136,9 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
               name="supervisorEducation"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Masʼul shaxsning ma‘lumoti</FormLabel>
+                  <FormLabel required>Mas’ul shaxsning ma’lumoti</FormLabel>
                   <FormControl>
-                    <Input className="3xl:w-sm w-full" placeholder="Masʼul shaxsning ma‘lumoti" {...field} />
+                    <Input className="3xl:w-sm w-full" placeholder="Mas’ul shaxsning ma’lumoti" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -149,7 +149,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
               name="supervisorPhoneNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Masʼul shaxsning telefon raqami</FormLabel>
+                  <FormLabel required>Mas’ul shaxsning telefon raqami</FormLabel>
                   <FormControl>
                     <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
                   </FormControl>
@@ -494,7 +494,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
           <Alert className="mb-4 border-amber-200 bg-amber-50 text-amber-800">
             <TriangleAlert className="h-4 w-4 text-amber-600" />
             <AlertDescription>
-              Tashkilotning ayrim hujjatlari mavjud emas. Reyestrlar bo‘limidan tashkilot maʼlumotlarini yangilash
+              Tashkilotning ayrim hujjatlari mavjud emas. Reyestrlar bo‘limidan tashkilot ma’lumotlarini yangilash
               imkoniyati mavjud. Arizani tashkilot hujjatlari to‘liq mavjud bo‘lganda yuborish mumkin!
             </AlertDescription>
           </Alert>

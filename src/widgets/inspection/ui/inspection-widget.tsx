@@ -1,66 +1,28 @@
 import { onActivate } from '@/shared/lib/on-activate'
 import { InspectionList } from '@/features/inspections/ui/inspection-list'
+import {
+  CountDto,
+  InspectionStatus,
+  InspectionSubMenuStatus,
+  OtherInspectionTabStatus,
+  defaultCountDto,
+} from '@/entities/inspection/models/inspection-status'
 import { OtherInspectionList } from '@/features/inspections/ui/other-inspection-list'
 import { TenDaysDecreeList } from '@/features/inspections/ten-days-decree/ui/ten-days-decree-list'
 import { CreateOtherInspectionModal } from '@/features/inspections/ui/parts/create-other-inspection-modal'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { useMemo } from 'react'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useData, usePaginatedData } from '@/shared/hooks'
 import { Badge } from '@/shared/components/ui/badge'
 import clsx from 'clsx'
 import { cn } from '@/shared/lib/utils'
 import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
 import { useTranslation } from 'react-i18next'
-import { RiskAnalysisTab } from '@/widgets/risk-analysis/types'
+import { RiskAnalysisTab } from '@/entities/risk-analysis/models/risk-analysis-tabs'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
-
-export enum InspectionStatus {
-  ALL = 'ALL',
-  NEW = 'NEW',
-  NOTIFIED = 'NOTIFIED',
-  ASSIGNED = 'ASSIGNED',
-  NOT_SIGNED = 'NOT_SIGNED',
-  TEN_DAYS = 'TEN_DAYS',
-}
-
-export enum InspectionNoticeType {
-  NEW = 'NEW',
-  NOTIFIED = 'NOTIFIED',
-}
-
-export enum InspectionSubMenuStatus {
-  CONDUCTED = 'CONDUCTED',
-  ASSIGNED = 'ASSIGNED',
-  COMPLETED = 'COMPLETED',
-}
-
-export enum OtherInspectionTabStatus {
-  ALL = 'ALL',
-  ASSIGNED = 'ASSIGNED',
-  CONDUCTED = 'CONDUCTED',
-  CODE_ATTACHED = 'CODE_ATTACHED',
-}
-
-export interface CountDto {
-  allCount: number
-  newCount: number
-  assignedCount: number
-  notSignedCount: number
-  conductedCount: number
-  codeAttachedCount: number
-}
-
-export const defaultCountDto: CountDto = {
-  allCount: 0,
-  newCount: 0,
-  notSignedCount: 0,
-  assignedCount: 0,
-  conductedCount: 0,
-  codeAttachedCount: 0,
-}
 
 interface RegionCountDto {
   count: number
@@ -136,11 +98,9 @@ const Cards = ({ onTabChange, regionId, year, month, type, belongType }: any) =>
       id: month?.id,
       name: month?.name,
       count: month?.count || 0,
-      inactiveClass: isAll
-        ? 'bg-[#016B7B]/10 border-[#016B7B]/20 text-[#016B7B]'
-        : 'bg-slate-100 border-slate-200 text-slate-600',
+      inactiveClass: isAll ? 'bg-teal/10 border-teal/20 text-teal' : 'bg-slate-100 border-slate-200 text-slate-600',
       activeClass: isAll
-        ? 'bg-[#016B7B] border-[#015a67] text-white shadow-sm'
+        ? 'bg-teal border-[#015a67] text-white shadow-sm'
         : 'bg-slate-800 border-slate-900 text-white shadow-sm',
     }
   })
@@ -374,13 +334,13 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
             <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
               <TabsList>
                 <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
-                  Tekshiruv o'tkazilmagan
+                  Tekshiruv o‘tkazilmagan
                   <Badge variant="destructive" className="ml-2">
                     {countObject.assignedCount || 0}
                   </Badge>
                 </TabsTrigger>
                 <TabsTrigger value={InspectionSubMenuStatus.CONDUCTED}>
-                  Tekshiruv o'tkazilgan
+                  Tekshiruv o‘tkazilgan
                   <Badge variant="destructive" className="ml-2">
                     {countObject.conductedCount || 0}
                   </Badge>
@@ -427,7 +387,7 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
                   </Badge>
                 </TabsTrigger>
                 {isChairmanOrHead && (
-                  <TabsTrigger value={InspectionStatus.TEN_DAYS}>Imzolash kerak bo'lgan hujjatlar</TabsTrigger>
+                  <TabsTrigger value={InspectionStatus.TEN_DAYS}>Imzolash kerak bo‘lgan hujjatlar</TabsTrigger>
                 )}
               </TabsList>
             </div>
@@ -477,13 +437,13 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
                   <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
                     <TabsList>
                       <TabsTrigger value={InspectionSubMenuStatus.ASSIGNED}>
-                        Tekshiruv o'tkazilmagan
+                        Tekshiruv o‘tkazilmagan
                         <Badge variant="destructive" className="ml-2">
                           {countObject.assignedCount || 0}
                         </Badge>
                       </TabsTrigger>
                       <TabsTrigger value={InspectionSubMenuStatus.CONDUCTED}>
-                        Tekshiruv o'tkazilgan
+                        Tekshiruv o‘tkazilgan
                         <Badge variant="destructive" className="ml-2">
                           {countObject.conductedCount || 0}
                         </Badge>

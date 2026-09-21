@@ -3,34 +3,34 @@ import { z } from 'zod'
 import { format } from 'date-fns'
 
 export const IllegalOilContainerAppealDtoBaseSchema = z.object({
-  phoneNumber: z.string().min(1, { message: 'Majburiy maydon!' }),
+  phoneNumber: z.string().min(1),
   hazardousFacilityId: z
     .string()
     .optional()
     .nullable()
     .transform((v) => (v ? v : null)),
-  childEquipmentId: z.string({ required_error: 'Majburiy maydon!', invalid_type_error: 'Majburiy maydon!' }),
-  regionId: z.string().min(1, { message: 'Majburiy maydon!' }),
-  districtId: z.string().min(1, { message: 'Majburiy maydon!' }),
-  address: z.string().min(1, { message: 'Majburiy maydon!' }),
-  location: z.string().min(1, { message: 'Majburiy maydon!' }),
-  capacity: z.string().min(1, { message: 'Majburiy maydon!' }),
+  childEquipmentId: z.string(),
+  regionId: z.string().min(1),
+  districtId: z.string().min(1),
+  address: z.string().min(1),
+  location: z.string().min(1),
+  capacity: z.string().min(1),
   nonDestructiveCheckDate: z
     .string()
-    .min(1, { message: 'Majburiy maydon' })
+    .min(1)
     .transform((v) => format(new Date(v), 'yyyy-MM-dd')),
 
-  // manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  // manufacturedAt: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  manufacturedAt: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 
-  labelPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, { message: 'Majburiy maydon!' }),
-  saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, { message: 'Majburiy maydon!' }),
+  labelPath: z.string().min(1),
+  saleContractPath: z.string().min(1),
   equipmentCertPath: z
     .string()
     .optional()
     .or(z.literal(''))
     .transform((v) => v || null),
-  assignmentDecreePath: z.string({ required_error: 'Majburiy maydon!' }).min(1, { message: 'Majburiy maydon!' }),
+  assignmentDecreePath: z.string().min(1),
   expertisePath: z
     .string()
     .optional()
@@ -46,14 +46,14 @@ export const IllegalOilContainerAppealDtoBaseSchema = z.object({
     .optional()
     .or(z.literal(''))
     .transform((v) => v || null),
-  passportPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, { message: 'Majburiy maydon!' }),
+  passportPath: z.string().min(1),
   identity: z.string().optional(),
   birthDate: z
     .union([z.string(), z.date()])
     .optional()
     .or(z.literal(''))
     .transform((v) => (v ? format(new Date(v), 'yyyy-MM-dd') : undefined)),
-  servicePeriod: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
 export const IllegalOilContainerAppealDtoSchema = IllegalOilContainerAppealDtoBaseSchema.superRefine(

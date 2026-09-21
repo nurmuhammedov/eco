@@ -57,7 +57,7 @@ export const NotificationsMenu = () => {
 
   const handleInquirySelect = (id: string) => {
     setOpen(false)
-    navigate(`/inquiries/detail/${id}`)
+    navigate(`/inquiries/${id}`)
   }
 
   return (

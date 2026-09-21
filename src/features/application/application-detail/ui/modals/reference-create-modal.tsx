@@ -5,19 +5,18 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog.tsx'
-import { Button } from '@/shared/components/ui/button.tsx'
+} from '@/shared/components/ui/dialog'
+import { Button } from '@/shared/components/ui/button'
 import { DialogClose } from '@radix-ui/react-dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Textarea } from '@/shared/components/ui/textarea.tsx'
+import { Textarea } from '@/shared/components/ui/textarea'
 import { useState } from 'react'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { ApplicationModal } from '@/features/application/create-application'
 import { useParams } from 'react-router-dom'
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts'
 
 const schema = z.object({
   conclusion: z.string(),
@@ -39,7 +38,7 @@ const ReferenceCreateModal = () => {
     pdfEndpoint: '/appeals/reply/generate-pdf',
     submitEndpoint: '/appeals/reply',
     successMessage: 'Muvaffaqiyatli saqlandi!',
-    queryKey: QK_APPLICATIONS,
+    invalidates: '/appeals',
   })
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -60,7 +59,7 @@ const ReferenceCreateModal = () => {
         </DialogTrigger>
         <DialogContent size="xl">
           <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Ma’lumotnoma/dalolatnoma tuzish</DialogTitle>
+            <DialogTitle className="text-blue-400">Ma’lumotnoma/dalolatnoma tuzish</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

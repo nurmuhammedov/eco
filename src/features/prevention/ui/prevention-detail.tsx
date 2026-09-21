@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { ExecutionInspectorModal, preventionTypes } from '@/features/prevention/ui/parts/inspector-execution-modal'
@@ -68,7 +68,7 @@ const PreventionDetail = () => {
 
       <div className="mt-4">
         <DetailCardAccordion defaultValue={['org_info', 'main']}>
-          <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida maʼlumot">
+          <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida ma’lumot">
             <LegalApplicantInfo tinNumber={tin} />
           </DetailCardAccordion.Item>
 
@@ -90,9 +90,9 @@ const PreventionDetail = () => {
             </DetailCardAccordion.Item>
           )}
 
-          <DetailCardAccordion.Item value="main" title="Profilaktika maʼlumotlari">
+          <DetailCardAccordion.Item value="main" title="Profilaktika ma’lumotlari">
             {details?.belongType !== 'IRS' && details?.belongType !== 'XRAY' && (
-              <DetailRow title="Roʻyxatga olish raqami" value={details?.registryNumber} />
+              <DetailRow title="Ro‘yxatga olish raqami" value={details?.registryNumber} />
             )}
             <DetailRow title="Hudud" value={details?.regionName} />
             <DetailRow title="Tashkilot nomi" value={details?.ownerName} />

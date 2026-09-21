@@ -60,7 +60,7 @@ export const CategoryTypeView = ({ data, checklistsData = [], isChecklistsLoadin
       </Description>
 
       <div className="flex flex-col gap-2">
-        <h3 className="text-lg font-medium">Savollar ro'yxati</h3>
+        <h3 className="text-lg font-medium">Savollar ro‘yxati</h3>
         <DataTable data={checklistsData || []} isLoading={isChecklistsLoading} columns={columns} />
       </div>
     </div>

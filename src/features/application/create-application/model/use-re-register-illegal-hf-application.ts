@@ -1,19 +1,18 @@
+import { apiClient } from '@/shared/api/api-client'
+import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useApplicationFormConstants, ReRegisterIllegalHFApplicationDTO } from '@/entities/create-application'
 import { ReRegisterIllegalHFSchema } from '@/entities/create-application/schemas/re-register-illegal-hf.schema'
 import {
-  useDistrictSelectQueries,
+  useDistrictSelectQuery,
   useHazardousFacilityTypeDictionarySelect,
-  useRegionSelectQueries,
+  useRegionSelectQuery,
 } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { useQuery } from '@tanstack/react-query'
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 import { useDetail } from '@/shared/hooks'
-import { apiClient } from '@/shared/api/api-client'
 
 export const useReRegisterIllegalHFApplication = () => {
   const form = useForm<ReRegisterIllegalHFApplicationDTO>({
@@ -56,19 +55,14 @@ export const useReRegisterIllegalHFApplication = () => {
 
   const { spheres } = useApplicationFormConstants()
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
 
   /* const { mutateAsync: searchLegal, isPending: isSearching } = useAdd<any, any, any>('/integration/iip/legal') */
   const [isSearching, setIsSearching] = useState(false)
 
-  const { data: hfoList } = useQuery({
-    queryKey: ['hfoSelect', legalTin],
-    queryFn: () => getHfoByTinSelect(legalTin),
-    enabled: !!legalTin && legalTin.length === 9 && !!orgData,
-    retry: 1,
-  })
+  const { data: hfList } = useHazardousFacilityByTinQuery(legalTin, !!legalTin && legalTin.length === 9 && !!orgData)
 
   const { data: detail } = useDetail<any>(`/hf/`, hazardousFacilityId, !!hazardousFacilityId)
 
@@ -136,7 +130,7 @@ export const useReRegisterIllegalHFApplication = () => {
   const districtOptions = useMemo(() => getSelectOptions(districts), [districts])
   const regionOptions = useMemo(() => getSelectOptions(regions), [regions])
   const hazardousFacilityTypeOptions = useMemo(() => getSelectOptions(hazardousFacilityTypes), [hazardousFacilityTypes])
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoList || []), [hfoList])
+  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfList || []), [hfList])
 
   return {
     form,

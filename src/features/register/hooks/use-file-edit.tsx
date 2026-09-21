@@ -1,4 +1,4 @@
-import { applicationDetailApi } from '@/features/application/application-detail/model/application-detail.api.ts'
+import { applicationDetailApi } from '@/features/application/application-detail/model/application-detail.api'
 import { useMutation } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 

@@ -1,13 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
-import { applicationDetailApi } from '../model/application-detail.api.ts'
 import { useParams } from 'react-router-dom'
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
+import { applicationDetailApi } from '../model/application-detail.api'
 
 export const useResponseDocs = () => {
   const { id } = useParams()
+
   return useQuery({
-    queryKey: [QK_APPLICATIONS, 'RESPONSE_DOCS', id],
+    queryKey: endpointKey('/appeals', id, 'reply-docs'),
+    enabled: !!id,
     staleTime: 0,
-    queryFn: () => applicationDetailApi.getResponseDocs(id),
+    queryFn: () => applicationDetailApi.getResponseDocs(id!),
   })
 }

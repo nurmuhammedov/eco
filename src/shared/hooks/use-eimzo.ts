@@ -1,9 +1,10 @@
-import { createPdf } from '@/features/application/create-application/api/create-application'
+import { createPdf } from '@/shared/api/create-pdf'
 import { apiClient } from '@/shared/api/api-client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 export type FormData = any
 
@@ -14,7 +15,8 @@ export interface UseApplicationCreationProps {
   onSuccessNavigateTo?: string
   successMessage?: string
   onEnd?: () => void
-  queryKey: string | any[]
+  /** The endpoint whose lists and details go stale once the document is signed. */
+  invalidates: string
   transformSubmitPayload?: (dto: any, sign: string, filePath: string | null) => any
 }
 
@@ -25,7 +27,7 @@ export function useEimzo({
   onSuccessNavigateTo,
   successMessage,
   onEnd,
-  queryKey,
+  invalidates,
   transformSubmitPayload,
 }: UseApplicationCreationProps) {
   const navigate = useNavigate()
@@ -86,7 +88,7 @@ export function useEimzo({
     },
     onError: (error: Error) => {
       setIsPdfLoading(false)
-      handleError(error.message || 'PDF yaratishda serverda nomaʼlum xatolik yuz berdi!')
+      handleError(error.message || 'PDF yaratishda serverda noma’lum xatolik yuz berdi!')
     },
   })
 
@@ -141,7 +143,7 @@ export function useEimzo({
         }
         toast.success(successMessage || 'Muvaffaqiyatli saqlandi!')
         onEnd?.()
-        queryClient.invalidateQueries({ queryKey: Array.isArray(queryKey) ? queryKey : [queryKey] })
+        void invalidateEndpoint(queryClient, invalidates)
       }
     },
     mutationKey: ['submit-application'],

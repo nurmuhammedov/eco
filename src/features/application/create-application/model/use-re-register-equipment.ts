@@ -1,9 +1,9 @@
 import { ReRegisterEquipmentDTO } from '@/entities/create-application'
 import { ReRegisterEquipmentSchema } from '@/entities/create-application/schemas/re-register-equipment.schema'
 import {
-  useDistrictSelectQueries,
+  useDistrictSelectQuery,
   useHazardousFacilityDictionarySelect,
-  useRegionSelectQueries,
+  useRegionSelectQuery,
 } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -36,8 +36,8 @@ export const useReRegisterEquipment = () => {
 
   const regionId = form.watch('regionId')
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect()
 
   const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities || []), [hazardousFacilities])

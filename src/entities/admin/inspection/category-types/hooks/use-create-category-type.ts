@@ -1,11 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  CreateCategoryTypeDTO,
-  inspectionCategoryTypeAPI,
-  categoryTypeKeys,
-  CategoryTypeResponse,
-} from '@/entities/admin/inspection'
+import { CreateCategoryTypeDTO, CategoryTypeResponse } from '../models/category-type.types'
+import { inspectionCategoryTypeAPI } from '../models/category-type.api'
+import { categoryTypeKeys } from '../models/category-type.query-keys'
 
 export const useCreateCategoryType = () => {
   const queryClient = useQueryClient()
@@ -42,10 +39,8 @@ export const useCreateCategoryType = () => {
     },
 
     onSuccess: (createdCategoryType) => {
-      // Invalidate list queries to get fresh data with correct ID
-      queryClient.invalidateQueries({
-        queryKey: categoryTypeKeys.list('category-type'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: categoryTypeKeys.root() })
 
       // Add the newly created item to cache
       queryClient.setQueryData(

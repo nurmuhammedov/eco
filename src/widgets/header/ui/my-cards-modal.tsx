@@ -9,7 +9,8 @@ import { cn } from '@/shared/lib/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
 import { Skeleton } from '@/shared/components/ui/skeleton'
-import useData from '@/shared/hooks/api/useData'
+import useData from '@/shared/hooks/api/use-data'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 export interface PaymentCard {
   id?: string
@@ -94,7 +95,7 @@ export function MyCardsModal({ open, onOpenChange }: Props) {
       return data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/plastic-cards/my'] })
+      invalidateEndpoint(queryClient, '/plastic-cards/my')
       setIsAdding(false)
       setCardNumber('')
       setExpiryDate('')
@@ -163,7 +164,7 @@ export function MyCardsModal({ open, onOpenChange }: Props) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">Karta ma’lumotlarim</DialogTitle>
+          <DialogTitle className="text-blue-400">Karta ma’lumotlarim</DialogTitle>
         </DialogHeader>
 
         {isFetching ? (

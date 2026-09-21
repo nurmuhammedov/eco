@@ -47,12 +47,12 @@ export const PermitTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) 
               isNearingExpiry &&
                 (isActive
                   ? 'bg-yellow-500/70 text-white ring-1 ring-yellow-500/70'
-                  : 'border-yellow-300 bg-yellow-50 text-yellow-900 hover:bg-yellow-100 dark:border-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300 dark:hover:bg-yellow-900/40'),
+                  : 'border-yellow-300 bg-yellow-50 text-yellow-900 hover:bg-yellow-100'),
 
               isExpired &&
                 (isActive
                   ? 'bg-red-600/70 text-white ring-1 ring-red-600/70'
-                  : 'border-red-300 bg-red-50 text-red-900 hover:bg-red-100 dark:border-red-700 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/40')
+                  : 'border-red-300 bg-red-50 text-red-900 hover:bg-red-100')
             )}
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-0 px-4 pt-1 pb-2">
@@ -62,8 +62,8 @@ export const PermitTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) 
               <span
                 className={cn(
                   !isSpecial && !isActive && 'text-muted-foreground',
-                  isNearingExpiry && !isActive && 'text-yellow-600 dark:text-yellow-400',
-                  isExpired && !isActive && 'text-red-600 dark:text-red-400'
+                  isNearingExpiry && !isActive && 'text-yellow-600',
+                  isExpired && !isActive && 'text-red-600'
                 )}
               >
                 {tabIcons[tab.key as unknown as PermitTabKey]}

@@ -17,7 +17,7 @@ export const topEmployees = [
   { name: 'Sotvoliyev Mirzo', logins: 19 },
   { name: 'Xolmatova Sarvinoz', logins: 17 },
   { name: 'Tursunova Nodira', logins: 11 },
-  { name: "Jo'rayev Bekzod", logins: 19 },
+  { name: 'Jo‘rayev Bekzod', logins: 19 },
   { name: 'Bakirov Jahongir', logins: 14 },
   { name: 'Tursunova Kamola', logins: 13 },
 ]
@@ -69,7 +69,7 @@ export const heatmapData = [
   { name: 'Sotvaly', hours: [0, 1, 2, 4, 4, 4, 2, 1] },
   { name: 'Xolmati', hours: [0, 0, 0, 4, 3, 4, 3, 0] },
   { name: 'Ergashe', hours: [0, 1, 3, 2, 4, 3, 1, 0] },
-  { name: "Po'latv", hours: [0, 0, 1, 4, 4, 4, 2, 0] },
+  { name: 'Po‘latv', hours: [0, 0, 1, 4, 4, 4, 2, 0] },
 ]
 
 export const securityLogs = [
@@ -91,16 +91,16 @@ export const securityLogs = [
   {
     type: 'info',
     name: 'Hasanov Nodir',
-    device: "IP manzil o'zgargan",
+    device: 'IP manzil o‘zgargan',
     time: '18:25 PM',
-    reason: "Ketma-ket IP o'zgarishi",
+    reason: 'Ketma-ket IP o‘zgarishi',
   },
 ]
 
 export const regionalActivityData = [
   { region: 'Toshkent sh.', active: 647, percent: 76 },
   { region: 'Samarqand', active: 278, percent: 64 },
-  { region: "Farg'ona", active: 216, percent: 54 },
+  { region: 'Farg‘ona', active: 216, percent: 54 },
   { region: 'Buxoro', active: 108, percent: 33 },
   { region: 'Xorazm', active: 63, percent: 52 },
 ]

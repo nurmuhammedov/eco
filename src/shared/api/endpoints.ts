@@ -101,8 +101,8 @@ export const API_ENDPOINTS: Record<string, string> = {
 
   ATTESTATION: '/attestation',
   REPORTS_USER_LOGIN: '/reports/user-login',
-  PROFILES_LEGALS: '/api/v1/profiles/legals',
-  PROFILES_INFO: '/api/v1/profiles/info',
+  PROFILES_LEGALS: '/profiles/legals',
+  PROFILES_INFO: '/profiles/info',
 }
 
 export const SERVICES_API_ENDPOINTS = {

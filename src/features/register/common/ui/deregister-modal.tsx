@@ -6,12 +6,13 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import { useNavigate } from 'react-router-dom'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const deregisterSchema = z.object({
-  deregisterReason: z.string({ message: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  deregisterBasisPath: z.string({ message: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  deregisterReason: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1),
+  deregisterBasisPath: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1),
 })
 
 type DeregisterFormValues = z.infer<typeof deregisterSchema>
@@ -35,7 +36,7 @@ export const DeregisterModal = ({ isOpen, onClose, endpoint, onSuccess }: Deregi
 
   const { mutate, isPending } = useAdd<DeregisterFormValues, any, any>(
     endpoint,
-    'So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!'
+    'So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!'
   )
 
   const onSubmit = (values: DeregisterFormValues) => {

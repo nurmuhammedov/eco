@@ -37,7 +37,7 @@ export const AppealDetailSkeleton = () => {
             <div className="h-5 w-96 max-w-full rounded bg-blue-300/60" />
           </div>
           <div className="rounded-b-lg bg-white px-4 py-3">
-            <div className="mb-3 flex w-fit gap-2 rounded-md bg-[#EDEEEE] p-1">
+            <div className="bg-neutral-250 mb-3 flex w-fit gap-2 rounded-md p-1">
               <div className="h-8 w-28 rounded bg-gray-200" />
               <div className="h-8 w-36 rounded bg-gray-200" />
               <div className="h-8 w-32 rounded bg-gray-200" />

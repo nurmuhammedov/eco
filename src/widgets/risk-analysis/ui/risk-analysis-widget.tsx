@@ -2,14 +2,14 @@ import Table from '@/features/risk-analysis/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { RiskAnalysisTab } from '../types'
+import { RiskAnalysisTab } from '@/entities/risk-analysis/models/risk-analysis-tabs'
 import { Badge } from '@/shared/components/ui/badge'
 import { useData } from '@/shared/hooks/api'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { RiskAnalysisItem } from '@/entities/risk-analysis/models/risk-analysis.types'
-import { RiskStatisticsCards } from '@/widgets/risk-analysis/ui/parts/risk-statistics-cards'
+import { RiskStatisticsCards } from '@/entities/risk-analysis/ui/risk-statistics-cards'
 import { cn } from '@/shared/lib/utils'
 import { TabsLayout } from '@/shared/layouts'
 import { subDays, format } from 'date-fns'
@@ -39,6 +39,7 @@ const TAB_TO_API_TYPE: Record<string, string> = {
 }
 
 import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface RiskAnalysisWidgetProps {
   periodType: 'DAILY' | 'MONTHLY'
@@ -62,7 +63,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     onSuccess: (res: any) => {
       const message = res?.message || res?.data?.message || 'Kunlik tahlil muvaffaqiyatli ishga tushirildi!'
       toast.success(message, { richColors: true })
-      queryClient.invalidateQueries({ queryKey: ['/risk-analysis-switch'] })
+      invalidateEndpoint(queryClient, '/risk-analysis-switch')
     },
     onError: (error: any) => {
       const message = error?.response?.data?.message || error?.message || 'Xatolik yuz berdi'

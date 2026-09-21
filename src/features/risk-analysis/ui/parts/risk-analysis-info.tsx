@@ -1,10 +1,10 @@
-import { Tabs } from '@/shared/components/ui/tabs.tsx'
+import { Tabs } from '@/shared/components/ui/tabs'
 import { FC, useEffect, useState } from 'react'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
-import { UserRoles } from '@/entities/user'
-import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info.tsx'
-import { Badge } from '@/shared/components/ui/badge.tsx'
-import { RiskAnalysisData } from '../riskAnalysis'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/shared/types/user'
+import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info'
+import { Badge } from '@/shared/components/ui/badge'
+import { RiskAnalysisData } from '../risk-analysis'
 import { apiClient } from '@/shared/api/api-client'
 import RiskAnalysisForm from '@/features/risk-analysis/ui/parts/risk-analysis-form'
 
@@ -50,7 +50,7 @@ const RiskAnalysisIndicator: FC<RiskAnalysisIndicatorProps> = ({ belongId }) => 
   }
 
   if (analysisError) {
-    return <div>{analysisError || 'Maʼlumotlarni yuklashda xatolik.'}</div>
+    return <div>{analysisError || 'Ma’lumotlarni yuklashda xatolik.'}</div>
   }
 
   if (!analysisData) {

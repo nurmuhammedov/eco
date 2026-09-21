@@ -3,7 +3,9 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
-import { UserRoles } from '@/entities/user'
+import { changeTypeColumn } from '@/features/register/model/change-type-column'
+import { XrayRow } from '@/features/register/model/types'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
@@ -11,7 +13,7 @@ import { TabsLayout } from '@/shared/layouts'
 import { Badge } from '@/shared/components/ui/badge'
 import { buildRegisterQuery } from '@/features/register/model/build-register-query'
 import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
-import { RegisterActiveTab } from '@/widgets/register/types'
+import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 
 interface XrayListProps {
   isArchive?: boolean
@@ -52,9 +54,9 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
     radiationProfileId,
   })
 
-  const { data = [], isLoading, totalElements = 0 } = usePaginatedData<any>(endpoint, { page, size, ...params })
+  const { data = [], isLoading, totalElements = 0 } = usePaginatedData<XrayRow>(endpoint, { page, size, ...params })
 
-  const { data: changedCountData } = usePaginatedData<any>(
+  const { data: changedCountData } = usePaginatedData<XrayRow>(
     `/xrays`,
     {
       changed: 'true',
@@ -65,7 +67,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
     !isArchive
   )
 
-  const { data: changedOrgCountData } = usePaginatedData<any>(
+  const { data: changedOrgCountData } = usePaginatedData<XrayRow>(
     `/radiation-profiles`,
     {
       changed: 'true',
@@ -78,34 +80,34 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
 
   const handleViewApplication = (id: string) => {
     if (currentStatus === 'CHANGED') {
-      navigate(`/register/change/${id}/xrays`)
+      navigate(`/register/change/xrays/${id}`)
     } else if (currentStatus === 'CHANGED_ORGANIZATIONS') {
-      navigate(`/register/change/${id}/radiation-profiles`)
+      navigate(`/register/change/radiation-profiles/${id}`)
     } else if (isOrganizations) {
       navigate(`/register/radiation-profiles/${id}?type=XRAY`)
     } else {
       const basePath = isArchive ? '/archive' : '/register'
-      navigate(`${basePath}/${id}/xrays${currentStatus === 'ACTIVE' ? '?active=true' : ''}`)
+      navigate(`${basePath}/xrays/${id}${currentStatus === 'ACTIVE' ? '?active=true' : ''}`)
     }
   }
 
-  const handleEditApplication = (id: string, tin: string) => {
+  const handleEditApplication = (id: string, tin?: string | number) => {
     navigate(`/register/update/XRAY/${id}?tin=${tin}`)
   }
 
   const handleEditOrganization = (id: string) => {
     navigate(`/register/update-organization/XRAY/${id}`)
   }
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<XrayRow, unknown>[] = [
     {
       id: 'registrationDate',
-      header: 'Roʻyxatga olish sanasi',
+      header: 'Ro‘yxatga olish sanasi',
       accessorFn: (row) => getDate(row.registrationDate),
       filterKey: 'registrationDate',
       filterType: 'date-range',
     },
     {
-      header: 'Roʻyxatga olish raqami',
+      header: 'Ro‘yxatga olish raqami',
       accessorKey: 'registryNumber',
       filterKey: 'registryNumber',
       filterType: 'search',
@@ -139,32 +141,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
       filterKey: 'address',
       filterType: 'search',
     },
-    ...(currentStatus === 'CHANGED'
-      ? [
-          {
-            header: 'So‘rov turi',
-            accessorKey: 'changeBelongType',
-            cell: ({ row }: any) => {
-              const type = row.original.changeBelongType
-              if (type?.startsWith('UPDATE')) {
-                return (
-                  <Badge variant="warning" className="py-1">
-                    Maʼlumotlarni o‘zgartirish
-                  </Badge>
-                )
-              }
-              if (type?.startsWith('DEREGISTER')) {
-                return (
-                  <Badge variant="destructive" className="py-1">
-                    Reyestrdan chiqarish
-                  </Badge>
-                )
-              }
-              return null
-            },
-          },
-        ]
-      : []),
+    ...(currentStatus === 'CHANGED' ? [changeTypeColumn<XrayRow>()] : []),
     {
       id: 'actions',
       cell: ({ row }) => (
@@ -191,7 +168,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
     user?.isSupervisor ||
     user?.isController
 
-  const orgColumns: ExtendedColumnDef<any, any>[] = [
+  const orgColumns: ExtendedColumnDef<XrayRow, unknown>[] = [
     {
       header: 'Tashkilot nomi',
       accessorKey: 'legalName',
@@ -318,7 +295,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
         isLoading={isLoading}
         isPaginated
         data={data || []}
-        columns={(isOrganizations ? orgColumns : columns) as unknown as any}
+        columns={isOrganizations ? orgColumns : columns}
         className="min-h-0 flex-1"
       />
     </div>

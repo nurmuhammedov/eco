@@ -1,26 +1,22 @@
 import { ApplicationTypeEnum } from '@/entities/create-application'
-import { useResponseDocs } from '@/features/application/application-detail/hooks/use-response-docs.tsx'
-import { RejectAppealModal } from '@/features/application/application-detail/ui/modals/reject-appeal-modal.tsx'
-import RejectDocumentModal from '@/features/application/application-detail/ui/modals/reject-document-modal.tsx'
-import RejectMessageModal from '@/features/application/application-detail/ui/modals/reject-message-modal.tsx'
-import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal.tsx'
+import { useResponseDocs } from '@/features/application/application-detail/hooks/use-response-docs'
+import { RejectAppealModal } from '@/features/application/application-detail/ui/modals/reject-appeal-modal'
+import RejectDocumentModal from '@/features/application/application-detail/ui/modals/reject-document-modal'
+import RejectMessageModal from '@/features/application/application-detail/ui/modals/reject-message-modal'
+import SignersModal from '@/features/application/application-detail/ui/modals/signers-modal'
+import { signStatuses } from '../../model/sign-statuses'
 import { DataTable } from '@/shared/components/common/data-table'
-import FileLink from '@/shared/components/common/file-link.tsx'
-import { Badge } from '@/shared/components/ui/badge.tsx'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
+import FileLink from '@/shared/components/common/file-link'
+import { Badge } from '@/shared/components/ui/badge'
+import { useAuth } from '@/shared/hooks/use-auth'
 import { ColumnDef } from '@tanstack/react-table'
 import { formatDate } from 'date-fns'
 import { Eye, Info } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip'
 import React, { useState } from 'react'
-import ConfirmWithRegistryModal from '../modals/confirm-with-registry-modal.tsx'
+import ConfirmWithRegistryModal from '../modals/confirm-with-registry-modal'
 import { getAppealPermissions } from '@/features/application/application-detail/model/appeal-permissions'
-
-export const signStatuses = new Map([
-  [true, { label: 'Imzolangan', variant: 'info' }],
-  [false, { label: 'Imzolanmagan', variant: 'warning' }],
-] as const)
 
 const APPROVE_STATUSES: Record<string, { label: string; pill: string; dot: string }> = {
   AGREED: { label: 'Kelishildi', pill: 'border-sky-200 bg-sky-50 text-sky-700', dot: 'bg-sky-500' },
@@ -38,7 +34,7 @@ const APPROVE_STATUSES: Record<string, { label: string; pill: string; dot: strin
 }
 
 export const documentTypes = new Map([
-  ['REPORT', 'Maʼlumotnoma'],
+  ['REPORT', 'Ma’lumotnoma'],
   ['ACT', 'Dalolatnoma'],
   ['DECREE', 'Qaror'],
   ['APPEAL', 'Ariza'],

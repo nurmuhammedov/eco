@@ -9,8 +9,8 @@ import {
 } from '@/shared/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import useData from '@/shared/hooks/api/useData'
-import useCustomSearchParams from '@/shared/hooks/api/useSearchParams'
+import useData from '@/shared/hooks/api/use-data'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
@@ -18,11 +18,12 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useAdd } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const assignInspectorSchema = z.object({
-  inspectorId: z.string({ required_error: 'Majburiy maydon! ' }).min(1, 'Inspektor tanlanishi shart'),
+  inspectorId: z.string().min(1),
 })
 
 type AssignInspectorForm = z.infer<typeof assignInspectorSchema>
@@ -57,7 +58,7 @@ export const AssignInspectorModal: React.FC = () => {
       mutate(null, {
         onSuccess: () => {
           handleClose()
-          qc?.invalidateQueries({ queryKey: ['/preventions'] }).catch((err) => console.error(err))
+          invalidateEndpoint(qc, '/preventions').catch((err) => console.error(err))
         },
       })
     }

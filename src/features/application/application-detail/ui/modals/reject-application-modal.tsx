@@ -1,5 +1,5 @@
 import { ApplicationModal } from '@/features/application/create-application'
-import { Button } from '@/shared/components/ui/button.tsx'
+import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -7,10 +7,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog.tsx'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
-import { Textarea } from '@/shared/components/ui/textarea.tsx'
-import { QK_APPLICATIONS } from '@/shared/constants/query-keys.ts'
+} from '@/shared/components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Textarea } from '@/shared/components/ui/textarea'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DialogClose } from '@radix-ui/react-dialog'
@@ -39,7 +38,7 @@ const RejectApplicationModal = () => {
     pdfEndpoint: '/appeals/reply/reject/generate-pdf',
     submitEndpoint: '/appeals/reply/reject',
     successMessage: 'Ariza muvaffaqiyatli qaytarildi!',
-    queryKey: QK_APPLICATIONS,
+    invalidates: '/appeals',
   })
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -60,7 +59,7 @@ const RejectApplicationModal = () => {
         </DialogTrigger>
         <DialogContent size="xl">
           <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Arizani qaytarish</DialogTitle>
+            <DialogTitle className="text-blue-400">Arizani qaytarish</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

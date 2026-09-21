@@ -9,8 +9,8 @@ import { Search } from 'lucide-react'
 import GoBack from '@/shared/components/common/go-back'
 import DetailRow from '@/shared/components/common/detail-row'
 import { toast } from 'sonner'
-import useData from '@/shared/hooks/api/useData'
-import useAdd from '@/shared/hooks/api/useAdd'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
+import useAdd from '@/shared/hooks/api/use-add'
 import { useAuth } from '@/shared/hooks/use-auth'
 
 import { z } from 'zod'
@@ -67,14 +67,15 @@ export default function CadastreAdd() {
     data: legalInfo,
     isFetching: isLegalInfoLoading,
     isError: isLegalInfoError,
-  } = useData<any>(`/users/legal/${searchedStir}`, !!searchedStir && searchedStir.length === 9)
+  } = useLegalOrganizationQuery(searchedStir, searchedStir?.length === 9)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       passportFile: '',
       parentRequestNumber: resubmitRequestNumber ?? '',
-      cadastreData: {} as any,
+      // The form starts empty; the schema only has to hold at submit time.
+      cadastreData: {} as FormValues['cadastreData'],
     },
   })
 
@@ -113,7 +114,7 @@ export default function CadastreAdd() {
       {
         onSuccess: () => {
           toast.success('So‘rov yuborildi')
-          navigate('/cadastre-passport')
+          navigate('/cadastre-passports')
         },
       }
     )
@@ -189,7 +190,7 @@ export default function CadastreAdd() {
           <form id="cadastre-add-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Tashkilot maʼlumotlari</CardTitle>
+                <CardTitle>Tashkilot ma’lumotlari</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
@@ -260,7 +261,7 @@ export default function CadastreAdd() {
                 type="button"
                 variant="outline"
                 disabled={isCreating}
-                onClick={() => navigate('/cadastre-passport')}
+                onClick={() => navigate('/cadastre-passports')}
               >
                 Bekor qilish
               </Button>

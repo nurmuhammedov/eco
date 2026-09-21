@@ -9,8 +9,9 @@ import {
 } from '@/shared/components/ui/dialog'
 import { FileText } from 'lucide-react'
 import { SignatureModal } from '@/shared/components/common/signature/ui/signature-modal'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import { useQueryClient } from '@tanstack/react-query'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface TenDaysSignModalProps {
   open: boolean
@@ -38,7 +39,7 @@ export const TenDaysSignModal = ({ open, onOpenChange, data }: TenDaysSignModalP
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['/inspections/decree/ten-days'] })
+          invalidateEndpoint(queryClient, '/inspections/decree/ten-days')
           onOpenChange(false)
         },
       }
@@ -53,7 +54,7 @@ export const TenDaysSignModal = ({ open, onOpenChange, data }: TenDaysSignModalP
             <FileText className="h-5 w-5 text-yellow-600" />
             Hujjatni imzolash
           </DialogTitle>
-          <DialogDescription>Imzolashdan oldin hujjat bilan to'liq tanishib chiqing.</DialogDescription>
+          <DialogDescription>Imzolashdan oldin hujjat bilan to‘liq tanishib chiqing.</DialogDescription>
         </DialogHeader>
 
         <div className="relative flex-1 overflow-hidden bg-gray-50">

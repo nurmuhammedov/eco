@@ -17,9 +17,10 @@ import { Button } from '@/shared/components/ui/button'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { useAdd } from '@/shared/hooks'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const schema = z.object({
-  specialCode: z.string({ required_error: 'Maxsus kod kiritilishi shart' }).min(1, 'Maxsus kod kiritilishi shart'),
+  specialCode: z.string().min(1),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -50,7 +51,7 @@ const OmbudsmanCodeModal = ({ resultId, onClose, trigger }: Props) => {
     saveCode({
       specialCode: values.specialCode,
     }).then(() => {
-      qc.invalidateQueries({ queryKey: ['/inspection-results'] })
+      invalidateEndpoint(qc, '/inspection-results')
       setOpen(false)
       form.reset()
       onClose?.()

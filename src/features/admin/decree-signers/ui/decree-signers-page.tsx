@@ -26,7 +26,7 @@ const DecreeSignersPage = () => {
   const { page = 1, size = 10, tab = 'IRS_XRAY' } = paramsObject
 
   // Hozirda backend declaration uchun alohida tipga ega emas, shuning uchun OTHER ishlatiladi
-  // Ammo kelajakda API o‘zgarsa, bu yerni to‘g'irlash oson bo‘ladi
+  // Ammo kelajakda API o‘zgarsa, bu yerni to‘g‘irlash oson bo‘ladi
   const queryBelongType: any = tab === 'DECLARATION' ? 'OTHER' : tab
 
   const { data: signersData, isLoading } = useDecreeSigners({

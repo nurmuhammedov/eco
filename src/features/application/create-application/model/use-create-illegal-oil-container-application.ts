@@ -1,17 +1,18 @@
+import { apiClient } from '@/shared/api/api-client'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
+import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import { z } from 'zod'
-import { useChildEquipmentTypes, useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
-import { apiClient } from '@/shared/api/api-client'
+import { useChildEquipmentTypes, useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
 import { toast } from 'sonner'
 import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import {
@@ -144,26 +145,15 @@ export const useRegisterIllegalOilContainer = (
   const identity = form.watch('identity' as any) as string // Watch identity even if not in type
   const isLegal = identity?.length === 9
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: childEquipmentTypes } = useChildEquipmentTypes('OIL_CONTAINER')
 
-  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', ownerIdentity],
-    queryFn: async () => {
-      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
-      return res.data?.data
-    },
-    enabled: !!ownerIdentity,
-  })
+  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useLegalOrganizationQuery(ownerIdentity)
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
 
-  const { data: hfoOptions } = useQuery({
-    queryKey: ['hfoSelect', identity],
-    queryFn: () => getHfoByTinSelect(identity),
-    enabled: isLegal && !!currentOwnerData,
-  })
+  const { data: hfOptions } = useHazardousFacilityByTinQuery(identity, isLegal && !!currentOwnerData)
 
   const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
 
@@ -255,7 +245,7 @@ export const useRegisterIllegalOilContainer = (
       updateMutate(payload, {
         onSuccess: () => {
           invalidateRegistryQueries(queryClient)
-          toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
+          toast.success('So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },
       })
@@ -269,7 +259,7 @@ export const useRegisterIllegalOilContainer = (
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
   const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
   const childEquipmentOptions = useMemo(() => getSelectOptions(childEquipmentTypes || []), [childEquipmentTypes])
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfoOptions || []), [hfoOptions])
+  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfOptions || []), [hfOptions])
 
   return {
     form,

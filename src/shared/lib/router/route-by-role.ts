@@ -1,4 +1,4 @@
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 export const routeByRole = (role: UserRoles | undefined | null): string => {
   switch (role) {

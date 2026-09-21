@@ -4,7 +4,7 @@ import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { AddPermitModal } from '@/features/permits/ui/add-permit-modal'
 import { useState } from 'react'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 export const PermitsWidget = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)

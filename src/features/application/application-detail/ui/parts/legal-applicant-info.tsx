@@ -1,10 +1,10 @@
-import { useLegalApplicantInfo } from '@/features/application/application-detail/hooks/use-legal-applicant-info.tsx'
-import DetailRow from '@/shared/components/common/detail-row.tsx'
-import { Skeleton } from '@/shared/components/ui/skeleton.tsx'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
+import DetailRow from '@/shared/components/common/detail-row'
+import { Skeleton } from '@/shared/components/ui/skeleton'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 
 const LegalApplicantInfo = ({ tinNumber, phoneNumber, isShowPhoneNumber = false }: any) => {
-  const { data, isLoading } = useLegalApplicantInfo(tinNumber)
+  const { data, isLoading } = useLegalOrganizationQuery(tinNumber)
 
   if (isLoading) {
     return (

@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { ErrorBoundaryCore } from './error-boundary-core'
 import { useLocation, useNavigate } from 'react-router-dom'
-import type { ErrorBoundaryProps } from '@/pages/error/types'
+import type { ErrorBoundaryProps } from '@/widgets/error-boundary/model'
 
 const RouterErrorBoundary = memo((props: ErrorBoundaryProps) => {
   const location = useLocation()

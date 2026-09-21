@@ -5,20 +5,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog.tsx'
-import { Button } from '@/shared/components/ui/button.tsx'
+} from '@/shared/components/ui/dialog'
+import { Button } from '@/shared/components/ui/button'
 import { DialogClose } from '@radix-ui/react-dialog'
-import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { formatDate, parseISO } from 'date-fns'
-import DatePicker from '@/shared/components/ui/datepicker.tsx'
+import DatePicker from '@/shared/components/ui/datepicker'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { useState } from 'react'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { ApplicationModal } from '@/features/application/create-application'
-import { QK_INSPECTION } from '@/shared/constants/query-keys.ts'
 
 const schema = z.object({
   startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
@@ -52,7 +51,7 @@ const NotifyInspectionModal = ({ inspectionId }: { inspectionId: string }) => {
   } = useEimzo({
     pdfEndpoint: `/inspections/${inspectionId}/notify/generate-pdf`,
     submitEndpoint: `/inspections/${inspectionId}/notify`,
-    queryKey: [QK_INSPECTION, inspectionId],
+    invalidates: '/inspections',
     successMessage: 'Muvaffaqiyatli xabardor qilindi!',
     onEnd: () => {
       setIsShow(false)
@@ -76,7 +75,7 @@ const NotifyInspectionModal = ({ inspectionId }: { inspectionId: string }) => {
 
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Xabardor qilish xatini yuborish</DialogTitle>
+            <DialogTitle className="text-blue-400">Xabardor qilish xatini yuborish</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>

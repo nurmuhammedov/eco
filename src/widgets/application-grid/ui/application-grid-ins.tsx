@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
 import { MainCardsList } from './main-card-application'
 import TabsLayout from '@/shared/layouts/ui/tabs-layout'
-import { useApplicationGrid } from '@/widgets/application-grid'
+import { useApplicationGrid } from '../model/use-application-grid'
 import ApplicationCard from '@/entities/create-application/ui/application-card'
 import { APPLICATION_CATEGORIES, ApplicationCategory } from '@/entities/create-application'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 export const ApplicationsGridIns: React.FC = () => {
   const { activeTab, mainCards, selectedMainCard, handleMainCardSelect, handleChangeTab, displayedSubCards } =

@@ -1,9 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 
 import { FC } from 'react'
-import { Badge } from '@/shared/components/ui/badge.tsx'
+import { Badge } from '@/shared/components/ui/badge'
 import { format } from 'date-fns'
-import { signStatuses } from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx'
+import { signStatuses } from '../../model/sign-statuses'
 
 interface Props {
   signers: any
@@ -20,7 +20,7 @@ const SignersModal: FC<Props> = ({ signers, setSigners }) => {
     <Dialog onOpenChange={handleModal} open={!!signers.length}>
       <DialogContent size="lg">
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">Imzolagan shaxslar</DialogTitle>
+          <DialogTitle className="text-blue-400">Imzolagan shaxslar</DialogTitle>
         </DialogHeader>
         <div>
           {signers.map((signer: any) => {

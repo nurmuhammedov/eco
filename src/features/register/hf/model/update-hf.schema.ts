@@ -1,37 +1,25 @@
 import { z } from 'zod'
 
 export const UpdateHFSchema = z.object({
-  name: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  name: z.string().trim().min(1),
   upperOrganization: z
     .string()
     .optional()
     .transform((v) => (v ? v : null)),
-  regionId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  districtId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  location: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  regionId: z.string().min(1),
+  districtId: z.string().min(1),
+  address: z.string().trim().min(1),
+  location: z.string().min(1),
 
-  hfTypeId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  extraArea: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  hazardousSubstance: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  spheres: z
-    .array(z.string({ required_error: 'Majburiy maydon!' }))
-    .min(1, 'Majburiy maydon!')
-    .default([]),
-  managerCount: z
-    .string({ required_error: 'Majburiy maydon!' })
-    .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
-    .min(1, 'Majburiy maydon!'),
-  engineerCount: z
-    .string({ required_error: 'Majburiy maydon!' })
-    .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
-    .min(1, 'Majburiy maydon!'),
-  workerCount: z
-    .string({ required_error: 'Majburiy maydon!' })
-    .regex(/^\d+$/, { message: 'Faqat raqamlar kiritilishi kerak!' })
-    .min(1, 'Majburiy maydon!'),
+  hfTypeId: z.string().min(1),
+  extraArea: z.string().trim().min(1),
+  hazardousSubstance: z.string().trim().min(1),
+  spheres: z.array(z.string()).min(1).default([]),
+  managerCount: z.string().regex(/^\d+$/).min(1),
+  engineerCount: z.string().regex(/^\d+$/).min(1),
+  workerCount: z.string().regex(/^\d+$/).min(1),
 
-  identificationCardPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  identificationCardPath: z.string().min(1),
   receiptPath: z
     .string()
     .optional()

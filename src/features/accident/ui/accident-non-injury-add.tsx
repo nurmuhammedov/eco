@@ -1,7 +1,7 @@
+import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { toast } from 'sonner'
@@ -15,10 +15,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import DetailRow from '@/shared/components/common/detail-row'
 import GoBack from '@/shared/components/common/go-back'
 
-import useAdd from '@/shared/hooks/api/useAdd'
-import useData from '@/shared/hooks/api/useData'
+import useAdd from '@/shared/hooks/api/use-add'
+import useData from '@/shared/hooks/api/use-data'
 import { accidentNonInjuryCreateSchema } from '@/features/accident/model/types'
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api.ts'
 import DateTimePicker from '@/shared/components/ui/datetimepicker'
 
 export const AccidentNonInjuryAdd: React.FC = () => {
@@ -43,12 +42,7 @@ export const AccidentNonInjuryAdd: React.FC = () => {
     isError: isLegalInfoError,
   } = useData<any>(`/users/legal/${searchedStir}`, !!searchedStir && searchedStir.length === 9)
 
-  const { data: hfoOptions, isFetching: isHfoLoading } = useQuery({
-    queryKey: ['hfoSelect', searchedStir],
-    queryFn: () => getHfoByTinSelect(searchedStir!),
-    enabled: !!searchedStir,
-    retry: 1,
-  })
+  const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(searchedStir, !!searchedStir)
 
   const handleSearch = () => {
     if (stir.length === 9) {
@@ -81,7 +75,7 @@ export const AccidentNonInjuryAdd: React.FC = () => {
 
   return (
     <div className="container mx-auto space-y-4 p-4">
-      <GoBack title="Yangi avariya qo'shish" />
+      <GoBack title="Yangi avariya qo‘shish" />
 
       <Card>
         <CardHeader>
@@ -98,7 +92,7 @@ export const AccidentNonInjuryAdd: React.FC = () => {
             />
             {hasLegalInfo ? (
               <Button variant="destructive" onClick={handleClearSearch} className="w-40">
-                O'chirish
+                O‘chirish
               </Button>
             ) : (
               <Button
@@ -118,7 +112,7 @@ export const AccidentNonInjuryAdd: React.FC = () => {
         <>
           <Card>
             <CardHeader>
-              <CardTitle>Tashkilot maʼlumotlari</CardTitle>
+              <CardTitle>Tashkilot ma’lumotlari</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
@@ -141,14 +135,14 @@ export const AccidentNonInjuryAdd: React.FC = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel required>XICHO</FormLabel>
-                          <Select value={field.value} onValueChange={field.onChange} disabled={isHfoLoading}>
+                          <Select value={field.value} onValueChange={field.onChange} disabled={isHfLoading}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Obyektni tanlang..." />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {hfoOptions?.map((option) => (
+                              {hfOptions?.map((option) => (
                                 <SelectItem key={option.id} value={option.id}>
                                   {`${option.registryNumber || 'N/A'} - ${option.name}`}
                                 </SelectItem>

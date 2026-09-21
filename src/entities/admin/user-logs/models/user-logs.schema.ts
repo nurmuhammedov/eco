@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { UserLogsTypeEnum } from '@/entities/admin/user-logs'
+import { UserLogsTypeEnum } from './user-logs.enums'
 
 export const UserLogsBaseSchema = {
   name: z

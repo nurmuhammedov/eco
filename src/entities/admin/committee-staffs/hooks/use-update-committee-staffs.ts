@@ -1,7 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 // Asosiy exportlarni eski yo‘ldan qoldiramiz
-import { committeeStaffAPI, committeeStaffKeys } from '@/entities/admin/committee-staffs'
+import { committeeStaffAPI } from '../models/committee-staffs.api'
+import { committeeStaffKeys } from '../models/committee-staffs.query-keys'
 
 import type { UpdateCommitteeStaffDTO } from '../models/committee-staffs.schema'
 
@@ -55,9 +56,7 @@ export const useUpdateCommitteeStaff = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: committeeStaffKeys.list('committee-staff'),
-      })
+      queryClient.invalidateQueries({ queryKey: committeeStaffKeys.root() })
     },
 
     onError: (_err, updatedData, context) => {

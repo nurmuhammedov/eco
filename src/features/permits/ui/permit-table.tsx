@@ -7,7 +7,7 @@ import { PermitDetailModal } from '@/features/permits/ui/permit-detail-modal'
 import { tabs } from '@/features/permits/ui/permit-tabs'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { Button } from '@/shared/components/ui/button'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { Badge } from '@/shared/components/ui/badge'
 

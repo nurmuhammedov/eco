@@ -6,12 +6,12 @@ import { z } from 'zod'
 
 export const RegisterIllegalPipelineBaseSchema = z.object({
   phoneNumber: z
-    .string({ required_error: 'Majburiy maydon!' })
+    .string()
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
-      message: FORM_ERROR_MESSAGES.phone,
+      message: FORM_ERROR_MESSAGES.invalid,
     }),
-  identity: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  identity: z.string().min(1),
   birthDate: z
     .date()
     .optional()
@@ -22,25 +22,23 @@ export const RegisterIllegalPipelineBaseSchema = z.object({
     .nullable()
     .optional()
     .transform((val) => (val ? val : null)),
-  childEquipmentId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  regionId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  districtId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  model: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  factory: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  location: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  partialCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  fullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  nonDestructiveCheckDate: z
-    .date({ required_error: 'Majburiy maydon!' })
-    .transform((date) => format(date, 'yyyy-MM-dd')),
-  diameter: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  thickness: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  length: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  pressure: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  environment: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  childEquipmentId: z.string().trim().min(1),
+  factoryNumber: z.string().trim().min(1),
+  regionId: z.string().trim().min(1),
+  districtId: z.string().trim().min(1),
+  address: z.string().trim().min(1),
+  model: z.string().trim().min(1),
+  factory: z.string().trim().min(1),
+  location: z.string().trim().min(1),
+  manufacturedAt: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  partialCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  fullCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  nonDestructiveCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  diameter: z.string().trim().min(1),
+  thickness: z.string().trim().min(1),
+  length: z.string().trim().min(1),
+  pressure: z.string().trim().min(1),
+  environment: z.string().trim().min(1),
 
   usageRightsPath: z.string().trim().optional(),
   labelPath: z
@@ -48,7 +46,7 @@ export const RegisterIllegalPipelineBaseSchema = z.object({
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  saleContractPath: z.string().trim().min(1),
   equipmentCertPath: z
     .string()
     .optional()
@@ -59,7 +57,7 @@ export const RegisterIllegalPipelineBaseSchema = z.object({
     .nullable()
     .optional()
     .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-  assignmentDecreePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  assignmentDecreePath: z.string().trim().min(1),
   expertisePath: z
     .string()
     .optional()
@@ -70,13 +68,13 @@ export const RegisterIllegalPipelineBaseSchema = z.object({
     .nullable()
     .optional()
     .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-  installationCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  passportPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  partialCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  nextPartialCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  fullCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  nextFullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  servicePeriod: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  installationCertPath: z.string().trim().min(1),
+  passportPath: z.string().trim().min(1),
+  partialCheckPath: z.string().trim().min(1),
+  nextPartialCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  fullCheckPath: z.string().trim().min(1),
+  nextFullCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
 export const pipelineRefinement = (data: any, ctx: z.RefinementCtx) => {
@@ -84,7 +82,7 @@ export const pipelineRefinement = (data: any, ctx: z.RefinementCtx) => {
     if (!data.birthDate) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Majburiy maydon!',
+        message: FORM_ERROR_MESSAGES.required,
         path: ['birthDate'],
       })
     }

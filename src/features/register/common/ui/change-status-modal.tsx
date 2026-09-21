@@ -6,12 +6,13 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import { useNavigate } from 'react-router-dom'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const changeStatusSchema = z.object({
-  reason: z.string({ message: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  basisFilePath: z.string({ message: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  reason: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1),
+  basisFilePath: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1),
 })
 
 type ChangeStatusFormValues = z.infer<typeof changeStatusSchema>
@@ -44,7 +45,7 @@ export const ChangeStatusModal = ({
 
   const { mutate, isPending } = useAdd<ChangeStatusFormValues & { targetStatus: string }, any, any>(
     endpoint,
-    'So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!'
+    'So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!'
   )
 
   const onSubmit = (values: ChangeStatusFormValues) => {

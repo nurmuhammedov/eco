@@ -1,6 +1,10 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { districtAPI, districtKeys, DistrictResponse } from '@/entities/admin/districts'
+import { districtAPI } from '../models/district.api'
+import { districtKeys } from '../models/district.query-keys'
+import { DistrictResponse } from '../models/district.types'
 
 export const useDeleteDistrict = () => {
   const queryClient = useQueryClient()
@@ -42,10 +46,9 @@ export const useDeleteDistrict = () => {
     },
 
     onSuccess: () => {
-      // Invalidate list queries to get fresh data
-      queryClient.invalidateQueries({
-        queryKey: districtKeys.list('district'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: districtKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.DISTRICTS)
     },
 
     onError: (_err, districtId, context) => {

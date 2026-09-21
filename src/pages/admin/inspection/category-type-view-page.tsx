@@ -43,7 +43,7 @@ export default function CategoryTypeViewPage() {
         </div>
         <Button onClick={handleAddChecklist}>
           <Plus className="mr-2 h-4 w-4" />
-          Yangi cheklist qo'shish
+          Yangi cheklist qo‘shish
         </Button>
       </div>
 

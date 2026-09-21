@@ -1,8 +1,13 @@
-import { SelectItem } from '@/shared/components/ui/select.tsx'
-import { OptionItem } from '@/shared/types/general.ts'
+import { SelectItem } from '@/shared/components/ui/select'
+import { OptionItem } from '@/shared/types/general'
 import { JSX } from 'react'
 
-export function getSelectOptions<T>(list: OptionItem<T>[]): JSX.Element[] {
+/** The category list names its entries `3.1`, `3.2` and explains each in `description`. */
+interface HazardousFacilityTypeOption extends OptionItem<number> {
+  description?: string
+}
+
+export function getSelectOptions<T>(list: OptionItem<T>[] | undefined): JSX.Element[] {
   if (!Array.isArray(list) || list.length === 0) {
     return [
       <SelectItem value="notSelected" key="no-options" disabled={true}>
@@ -28,7 +33,7 @@ export function getSelectOptions<T>(list: OptionItem<T>[]): JSX.Element[] {
     .filter(Boolean) as JSX.Element[]
 }
 
-export function getSelectOptionsByType<T>(list: OptionItem<T>[]): JSX.Element[] {
+export function getSelectOptionsByType<T>(list: OptionItem<T>[] | undefined): JSX.Element[] {
   if (!Array.isArray(list) || list.length === 0) {
     return [
       <SelectItem value="notSelected" key="no-options" disabled={true}>
@@ -48,7 +53,7 @@ export function getSelectOptionsByType<T>(list: OptionItem<T>[]): JSX.Element[] 
     .filter(Boolean) as JSX.Element[]
 }
 
-export function getHazardousFacilityTypeOptions(list: any[]): JSX.Element[] {
+export function getHazardousFacilityTypeOptions(list: HazardousFacilityTypeOption[] | undefined): JSX.Element[] {
   if (!Array.isArray(list) || list.length === 0) {
     return [
       <SelectItem value="notSelected" key="no-options" disabled={true}>

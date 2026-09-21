@@ -1,9 +1,9 @@
 import { FC } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { usePaginatedData, useCustomSearchParams } from '@/shared/hooks'
-import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table.tsx'
-import { formatDate } from '@/shared/utils/date.ts'
-import FileLink from '@/shared/components/common/file-link.tsx'
+import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { formatDate } from '@/shared/utils/date'
+import FileLink from '@/shared/components/common/file-link'
 
 interface Props {
   changeId?: string

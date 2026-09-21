@@ -2,11 +2,11 @@ import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import { useParams } from 'react-router-dom'
-import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button.tsx'
+import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { formatDate } from 'date-fns'
 import { tabs } from '@/features/register/auto/ui/auto-tabs'
 
@@ -26,13 +26,13 @@ export default function AutoDetail() {
       <div className="mt-4">
         <DetailCardAccordion defaultValue={['main', 'auto']}>
           {currentTin?.toString()?.length == 14 ? (
-            <DetailCardAccordion.Item value="org_info" title="Fuqaro to‘g‘risida maʼlumot">
+            <DetailCardAccordion.Item value="org_info" title="Fuqaro to‘g‘risida ma’lumot">
               <DetailRow title="Fuqaro JSHSHIR:" value={currentTin || '-'} />
             </DetailCardAccordion.Item>
           ) : (
             <DetailCardAccordion.Item
               value="org_info"
-              title="Tashkilot to‘g‘risida maʼlumot"
+              title="Tashkilot to‘g‘risida ma’lumot"
               action={
                 user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL ? (
                   <RefreshLegalInfoButton tinNumber={currentTin} />

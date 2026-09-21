@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const centralApparatusBaseSchema = {
-  name: z.string().min(1, 'Viloyat nomi majburiy'),
+  name: z.string().min(1),
 }
 
 export const centralApparatusSchema = z.object({

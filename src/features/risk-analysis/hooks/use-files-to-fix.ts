@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { QK_RISK_ANALYSIS } from '@/shared/constants/query-keys.ts'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
+import { riskIndicatorsEndpoint } from '@/features/risk-analysis/model/risk-analysis-endpoints'
 import { useSearchParams } from 'react-router-dom'
-import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api.ts'
+import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api'
 
 export const useFilesToFix = () => {
   const [searchParams] = useSearchParams()
@@ -11,7 +12,7 @@ export const useFilesToFix = () => {
   const intervalId = searchParams.get('intervalId') || ''
 
   return useQuery({
-    queryKey: [QK_RISK_ANALYSIS, 'FILES_TO_FIX', id, tin, intervalId],
+    queryKey: endpointKey(`${riskIndicatorsEndpoint(currentType)}/to-fix`, { id, tin, intervalId }),
     queryFn: () => riskAnalysisDetailApi.getFilesToFix({ type: currentType, params: { id, tin, intervalId } }),
   })
 }

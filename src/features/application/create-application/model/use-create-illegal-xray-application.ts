@@ -1,3 +1,4 @@
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
   RegisterIllegalXrayBaseSchema,
@@ -6,20 +7,20 @@ import {
   xrayRefinement,
 } from '@/entities/create-application'
 import { stateService } from '@/entities/create-application/types/enums'
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
-import { apiClient } from '@/shared/api/api-client'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import useAdd from '@/shared/hooks/api/useAdd'
+import useAdd from '@/shared/hooks/api/use-add'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => {
   const { type, id } = useParams<{ type: string; id: string }>()
@@ -33,14 +34,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
 
   const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/xrays`, id, !!id)
   const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
-  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useQuery({
-    queryKey: ['owner-data', ownerIdentity],
-    queryFn: async () => {
-      const res = await apiClient.get<any>('/users/legal/' + ownerIdentity)
-      return res.data?.data
-    },
-    enabled: !!ownerIdentity,
-  })
+  const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useLegalOrganizationQuery(ownerIdentity)
 
   const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
   const identityForProfile =
@@ -106,17 +100,29 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
         const dynamicSchema = (actualSchema as z.ZodTypeAny).superRefine((data: any, ctx: z.RefinementCtx) => {
           if (isDataNull && !isUpdate) {
             if (!data.file5Path)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file5Path'] })
             if (!data.file5ExpiryDate)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: FORM_ERROR_MESSAGES.required,
+                path: ['file5ExpiryDate'],
+              })
             if (!data.file7Path)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file7Path'] })
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file7Path'] })
             if (!data.file7ExpiryDate)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file7ExpiryDate'] })
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: FORM_ERROR_MESSAGES.required,
+                path: ['file7ExpiryDate'],
+              })
             if (!data.file9Path)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file9Path'] })
+              ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file9Path'] })
             if (!data.file9ExpiryDate)
-              ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file9ExpiryDate'] })
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: FORM_ERROR_MESSAGES.required,
+                path: ['file9ExpiryDate'],
+              })
           }
         })
         return zodResolver(dynamicSchema)(cleanedValues as any, context, options)
@@ -124,17 +130,29 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
       const dynamicSchema = (actualSchema as z.ZodTypeAny).superRefine((data: any, ctx: z.RefinementCtx) => {
         if (isDataNull) {
           if (!data.file5Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file5Path'] })
           if (!data.file5ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file5ExpiryDate'],
+            })
           if (!data.file7Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file7Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file7Path'] })
           if (!data.file7ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file7ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file7ExpiryDate'],
+            })
           if (!data.file9Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file9Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file9Path'] })
           if (!data.file9ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file9ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file9ExpiryDate'],
+            })
         }
       })
       return zodResolver(dynamicSchema)(values, context, options)
@@ -174,8 +192,8 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
   )
 
   const regionId = form.watch('regionId')
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
 
   const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
 
@@ -270,7 +288,7 @@ export const useRegisterIllegalXray = (externalSubmit?: (data: any) => void) => 
       updateMutate(cleanedData, {
         onSuccess: () => {
           invalidateRegistryQueries(queryClient)
-          toast.success('So‘rov masʼul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
+          toast.success('So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
           navigate(-1)
         },
       })

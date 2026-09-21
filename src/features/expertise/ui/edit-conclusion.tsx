@@ -1,3 +1,4 @@
+import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
@@ -12,11 +13,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
-import { useQuery } from '@tanstack/react-query'
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { Textarea } from '@/shared/components/ui/textarea'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
@@ -44,16 +43,12 @@ export const UpdateConclusion = () => {
     'Muvaffaqiyatli yangilandi!'
   )
 
-  const { data: hfoOptions } = useQuery({
-    queryKey: ['hfoSelect', form.watch('customerTin')],
-    queryFn: () => getHfoByTinSelect(form.watch('customerTin')),
-    enabled: !!form.watch('customerTin') && form.watch('customerTin')?.length == 9,
-    retry: 1,
-  })
+  const customerTin = form.watch('customerTin')
+  const { data: hfOptions } = useHazardousFacilityByTinQuery(customerTin, customerTin?.length === 9)
 
   const selectedRegionId = form.watch('regionId')
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(selectedRegionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(selectedRegionId)
 
   const watchedType = form.watch('type')
 
@@ -104,7 +99,7 @@ export const UpdateConclusion = () => {
     return (
       <Card className="mt-4">
         <CardContent>
-          <p className="p-4 text-center">Maʼlumotlar topilmadi</p>
+          <p className="p-4 text-center">Ma’lumotlar topilmadi</p>
         </CardContent>
       </Card>
     )
@@ -114,7 +109,7 @@ export const UpdateConclusion = () => {
     <div className="mt-4 space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Ariza maʼlumotlari</CardTitle>
+          <CardTitle>Ariza ma’lumotlari</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -163,7 +158,7 @@ export const UpdateConclusion = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {hfoOptions?.map((option) => (
+                        {hfOptions?.map((option) => (
                           <SelectItem key={option.id} value={option.id}>
                             {`${option.registryNumber || 'N/A'} - ${option.name}`}
                           </SelectItem>

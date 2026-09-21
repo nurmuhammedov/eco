@@ -1,15 +1,16 @@
 import { CardForm, CreateCablewayApplicationDTO } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
-import { NoteForm, useCreateCablewayApplication } from '@/features/application/create-application'
+import { UserRoles } from '@/shared/types/user'
+import { NoteForm } from '../note-form'
+import { useCreateCablewayApplication } from '../../model/use-create-cableway-application'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
-import { PhoneInput } from '@/shared/components/ui/phone-input.tsx'
+import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { parseISO } from 'date-fns'
@@ -363,7 +364,7 @@ const RegisterCablewayForm = ({ onSubmit }: RegisterCablewayFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Osma yo‘lning birkasi bilan sur‘ati
+                      Osma yo‘lning birkasi bilan sur’ati
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.IMAGE, FileTypes.PDF]} />
@@ -382,7 +383,7 @@ const RegisterCablewayForm = ({ onSubmit }: RegisterCablewayFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Mas‘ul shaxs tayinlanganligi to‘g‘risida buyruq
+                      Mas’ul shaxs tayinlanganligi to‘g‘risida buyruq
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -420,7 +421,7 @@ const RegisterCablewayForm = ({ onSubmit }: RegisterCablewayFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel required className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Odli-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
+                      Oldi-sotdi shartnomasi (egalik huquqini beruvchi hujjat)
                     </FormLabel>
                     <FormControl>
                       <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
@@ -487,7 +488,7 @@ const RegisterCablewayForm = ({ onSubmit }: RegisterCablewayFormProps) => {
                 <FormItem className={'mb-2'}>
                   <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
                     <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">
-                      Osma yo‘lning muvofiqlik sertifikati (muqaddam foydalanishda bo'lgan osma arqonli yuruvchi yo'l
+                      Osma yo‘lning muvofiqlik sertifikati (muqaddam foydalanishda bo‘lgan osma arqonli yuruvchi yo‘l
                       uchun majburiy emas)
                     </FormLabel>
                     <FormControl>

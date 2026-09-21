@@ -1,7 +1,7 @@
-import { useObjectListByPagination } from '@/features/inspections/hooks/use-object-list.ts'
-import useCustomSearchParams from '../../../../shared/hooks/api/useSearchParams.ts'
+import { useObjectListByPagination } from '@/features/inspections/hooks/use-object-list'
+import useCustomSearchParams from '../../../../shared/hooks/api/use-search-params'
 import { ColumnDef } from '@tanstack/react-table'
-import { Button } from '@/shared/components/ui/button.tsx'
+import { Button } from '@/shared/components/ui/button'
 import { Eye } from 'lucide-react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useNavigate } from 'react-router-dom'
@@ -42,7 +42,10 @@ const ObjectsList = () => {
           variant="ghost"
           size="icon"
           onClick={() =>
-            navigate(`/risk-analysis/info/${row.original?.id}?tin=${paramsObject?.tin}&name=${paramsObject?.name}`, {})
+            navigate(
+              `/risk-analysis/objects/${row.original?.id}?tin=${paramsObject?.tin}&name=${paramsObject?.name}`,
+              {}
+            )
           }
         >
           <Eye className="h-4 w-4" />

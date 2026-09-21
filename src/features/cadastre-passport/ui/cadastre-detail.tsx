@@ -8,7 +8,7 @@ import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import FileLink from '@/shared/components/common/file-link'
 import { EmptyValue } from '@/shared/components/common/empty-value'
-import useData from '@/shared/hooks/api/useData'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { FVV_GROUPS, SES_GROUPS } from '../model/review-fields'
 import { canSignAsCommittee, isCustomer, isPreparer } from '../model/permissions'
@@ -33,8 +33,8 @@ export default function CadastreDetail() {
 
   const { data: passport, isLoading } = useCadastrePassport(id)
 
-  const { data: preparerInfo } = useData<any>(`/users/legal/${passport?.preparerTin}`, !!passport?.preparerTin)
-  const { data: customerInfo } = useData<any>(`/users/legal/${passport?.customerTin}`, !!passport?.customerTin)
+  const { data: preparerInfo } = useLegalOrganizationQuery(passport?.preparerTin)
+  const { data: customerInfo } = useLegalOrganizationQuery(passport?.customerTin)
 
   if (isLoading) {
     return (
@@ -57,7 +57,7 @@ export default function CadastreDetail() {
             Hujjat o‘chirilgan bo‘lishi yoki sizda unga kirish huquqi bo‘lmasligi mumkin.
           </p>
         </div>
-        <Button variant="outline" onClick={() => navigate('/cadastre-passport')}>
+        <Button variant="outline" onClick={() => navigate('/cadastre-passports')}>
           Ro‘yxatga qaytish
         </Button>
       </div>
@@ -77,7 +77,7 @@ export default function CadastreDetail() {
       customerTin: String(passport.customerTin),
     })
 
-    navigate(`/cadastre-passport/add?${params}`)
+    navigate(`/cadastre-passports/add?${params}`)
   }
 
   return (
@@ -101,9 +101,9 @@ export default function CadastreDetail() {
 
       <Accordion
         type="multiple"
-        defaultValue={['txyz', 'workflows', 'cadastre-data', 'registry-data', 'fvv', 'ses', 'reviews']}
+        defaultValue={['txyuz', 'workflows', 'cadastre-data', 'registry-data', 'fvv', 'ses', 'reviews']}
       >
-        <DetailCardAccordion.Item value="txyz" title="TXYUZ kadastr pasporti ma’lumotlari">
+        <DetailCardAccordion.Item value="txyuz" title="TXYUZ kadastr pasporti ma’lumotlari">
           <DetailRow title="Holati" value={<StatusBadge status={passport.status} />} />
           <DetailRow title="Ariza raqami" value={passport.requestNumber || '-'} />
           <DetailRow title="Reyestr raqami" value={passport.registryNumber || '-'} />
@@ -112,7 +112,7 @@ export default function CadastreDetail() {
               title="Oldin yuborilgan pasport"
               value={
                 <Link
-                  to={`/cadastre-passport/${passport.parentCadastrePassportId}`}
+                  to={`/cadastre-passports/${passport.parentCadastrePassportId}`}
                   className="text-teal hover:underline"
                 >
                   Ko‘rish

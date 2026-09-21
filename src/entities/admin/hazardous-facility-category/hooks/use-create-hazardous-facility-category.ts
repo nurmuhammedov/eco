@@ -1,9 +1,11 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import {
   CreateHazardousFacilityCategoryDTO,
-  hazardousFacilityCategoryAPI,
-  hazardousFacilityCategoryKeys,
   HazardousFacilityCategoryResponse,
-} from '@/entities/admin/hazardous-facility-category'
+} from '../models/hazardous-facility-category.types'
+import { hazardousFacilityCategoryAPI } from '../models/hazardous-facility-category.api'
+import { hazardousFacilityCategoryKeys } from '../models/hazardous-facility-category.query-keys'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -42,10 +44,9 @@ export const useCreateHazardousFacilityCategory = () => {
     },
 
     onSuccess: (createdData) => {
-      // Invalidate list queries to get fresh data with correct ID
-      queryClient.invalidateQueries({
-        queryKey: hazardousFacilityCategoryKeys.list('hazardous-facility-category'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: hazardousFacilityCategoryKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.HAZARDOUS_FACILITY_CATEGORIES)
 
       // Add the newly created hazardous-facility-category to cache
       queryClient.setQueryData(

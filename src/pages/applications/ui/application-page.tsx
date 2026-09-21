@@ -1,5 +1,5 @@
 import { ApplicationStatus } from '@/entities/application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { ApplicationTable } from '@/features/application/application-table'
 import { useApplicationPage } from '@/features/application/application-table/hooks'
 import { Button } from '@/shared/components/ui/button'
@@ -33,7 +33,7 @@ const ApplicationPage = () => {
   const action = useMemo(() => {
     if ([UserRoles.LEGAL, UserRoles.INDIVIDUAL]?.includes(user?.role as unknown as UserRoles)) {
       return (
-        <Button onClick={() => navigate('/applications/create')}>
+        <Button onClick={() => navigate('/applications/add')}>
           <PlusCircle /> Ariza yaratish
         </Button>
       )
@@ -41,7 +41,7 @@ const ApplicationPage = () => {
 
     if (UserRoles.INSPECTOR === user?.role || UserRoles.MANAGER === user?.role) {
       return (
-        <Button onClick={() => navigate('/applications/inspector/create')}>
+        <Button onClick={() => navigate('/applications/inspector/add')}>
           <PlusCircle /> Ariza yaratish
         </Button>
       )

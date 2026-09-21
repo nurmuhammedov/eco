@@ -1,18 +1,18 @@
 import { getApplicationTitle } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
-import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
-import AppealResponseDocs from '@/features/application/application-detail/ui/parts/appeal-response-docs.tsx'
-import ApplicantDocsTable from '@/features/application/application-detail/ui/parts/applicant-docs-table.tsx'
-import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
+import { UserRoles } from '@/shared/types/user'
+import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
+import AppealResponseDocs from '@/features/application/application-detail/ui/parts/appeal-response-docs'
+import ApplicantDocsTable from '@/features/application/application-detail/ui/parts/applicant-docs-table'
+import FilesSection from '@/features/application/application-detail/ui/parts/files-section'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import { MultiCategoryFiles, multiCategoryFileValue } from './parts/multi-category-files'
 import DetailRow from '@/shared/components/common/detail-row'
 import { Coordinate } from '@/shared/components/common/yandex-map'
-import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs.tsx'
+import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { getDate } from '@/shared/utils/date'
-import { ApplicationStatusRow } from '@/shared/components/common/application-status-row'
+import { ApplicationStatusRow } from '@/entities/application/ui/application-status-row'
 import { ApplicationStatus } from '@/entities/application'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 
@@ -78,24 +78,24 @@ const ApplicationDetail = ({
           </DetailCardAccordion.Item>
         )}
 
-        <DetailCardAccordion.Item value="general" title="Ariza va ijro to‘g‘risida maʼlumot">
+        <DetailCardAccordion.Item value="general" title="Ariza va ijro to‘g‘risida ma’lumot">
           <div className="flex flex-col py-1">
             <DetailRow title="Ariza sanasi:" value={getDate(data?.createdAt)} />
             <DetailRow title="Ariza turi:" value={getApplicationTitle(data?.appealType)} />
             <ApplicationStatusRow status={data?.status} />
             <DetailRow title="Ijro muddati:" value={getDate(data?.deadline)} />
-            <DetailRow title="Ijrochi qo‘mita masʼul bo‘limi:" value={data?.departmentName || <EmptyValue />} />
+            <DetailRow title="Ijrochi qo‘mita mas’ul bo‘limi:" value={data?.departmentName || <EmptyValue />} />
             <DetailRow title="Ijrochi hududiy boshqarma nomi:" value={data?.officeName || <EmptyValue />} />
             <DetailRow title="Hududiy boshqarma boshlig‘i F.I.SH.:" value={data?.approverName || <EmptyValue />} />
             <DetailRow title="Hududiy boshqarma boshlig‘i rezolyutsiyasi:" value={data?.resolution || <EmptyValue />} />
-            <DetailRow title="Ijrochi ma‘sul F.I.SH.:" value={data?.executorName || <EmptyValue />} />
-            <DetailRow title="Ijrochi ma‘sul xulosasi:" value={data?.conclusion || <EmptyValue />} />
+            <DetailRow title="Ijrochi mas’ul F.I.SH.:" value={data?.executorName || <EmptyValue />} />
+            <DetailRow title="Ijrochi mas’ul xulosasi:" value={data?.conclusion || <EmptyValue />} />
           </div>
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="appeal_docs" title="Ariza bo‘yicha batafsil ma’lumotlar va hujjatlar">
           <Tabs key={defaultDocsTab} defaultValue={defaultDocsTab}>
-            <TabsList className="bg-[#EDEEEE]">
+            <TabsList className="bg-neutral-250">
               <TabsTrigger value="info">Ma’lumotlar</TabsTrigger>
               <TabsTrigger value="applicant_docs">Arizachi hujjatlari</TabsTrigger>
               <TabsTrigger value="response_docs">Javob hujjatlari</TabsTrigger>

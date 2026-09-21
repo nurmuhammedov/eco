@@ -8,7 +8,7 @@ import { Button } from '@/shared/components/ui/button'
 import { useState } from 'react'
 import ExpertiseFileUploadModal from '@/features/expertise/ui/parts/expertise-file-upload-modal'
 import FileLink from '@/shared/components/common/file-link'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UploadCloud } from 'lucide-react'
 

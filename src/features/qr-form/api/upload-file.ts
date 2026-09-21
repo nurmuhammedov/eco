@@ -19,6 +19,6 @@ export const uploadFile = async (file: File): Promise<UploadApiResponse> => {
     if (error instanceof AxiosError && error.response?.data?.message) {
       throw new Error(error.response.data.message)
     }
-    throw new Error("Faylni yuklash imkonsiz bo'ldi. Internetni tekshiring yoki qaytadan urining.")
+    throw new Error('Faylni yuklash imkonsiz bo‘ldi. Internetni tekshiring yoki qaytadan urining.')
   }
 }

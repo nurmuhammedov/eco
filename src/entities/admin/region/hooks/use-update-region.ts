@@ -1,6 +1,10 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { regionAPI, regionKeys, type UpdateRegionDTO } from '@/entities/admin/region'
+import { regionAPI } from '../models/region.api'
+import { regionKeys } from '../models/region.query-keys'
+import { type UpdateRegionDTO } from '../models/region.types'
 
 export const useUpdateRegion = () => {
   const queryClient = useQueryClient()
@@ -52,9 +56,8 @@ export const useUpdateRegion = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: regionKeys.list('region'),
-      })
+      queryClient.invalidateQueries({ queryKey: regionKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.REGIONS)
     },
 
     onError: (_err, updatedDistrict, context) => {

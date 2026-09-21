@@ -1,10 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  territorialStaffAPI,
-  territorialStaffKeys,
-  TerritorialStaffResponse,
-} from '@/entities/admin/territorial-staffs'
+import { territorialStaffAPI } from '../models/territorial-staffs.api'
+import { territorialStaffKeys } from '../models/territorial-staffs.query-keys'
+import { TerritorialStaffResponse } from '../models/territorial-staffs.types'
 
 export const useDeleteTerritorialStaff = () => {
   const queryClient = useQueryClient()
@@ -46,10 +44,8 @@ export const useDeleteTerritorialStaff = () => {
     },
 
     onSuccess: () => {
-      // Invalidate list queries to get fresh data
-      queryClient.invalidateQueries({
-        queryKey: territorialStaffKeys.list('territorial-staff'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: territorialStaffKeys.root() })
     },
 
     onError: (_err, id, context) => {

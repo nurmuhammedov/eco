@@ -11,9 +11,10 @@ import { useAdd } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
 import { Combobox } from '@/shared/components/ui/combobox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import useData from '@/shared/hooks/api/useData'
+import useData from '@/shared/hooks/api/use-data'
 import { useEffect } from 'react'
-import { UserRoleLabels, UserRoles } from '@/entities/user'
+import { UserRoleLabels, UserRoles } from '@/shared/types/user'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 export const DelegationReasonLabels: Record<string, string> = {
   ANNUAL_LEAVE: 'Mehnat ta’tili',
@@ -27,13 +28,13 @@ export const DelegationReasonLabels: Record<string, string> = {
 }
 
 const schema = z.object({
-  employeeType: z.enum(['committee', 'office', 'regulator'], { required_error: 'Majburiy maydon' }),
-  delegatorId: z.string().min(1, 'Majburiy maydon'),
-  delegateeId: z.string().min(1, 'Majburiy maydon'),
-  startDate: z.date({ required_error: 'Majburiy maydon' }),
-  endDate: z.date({ required_error: 'Majburiy maydon' }),
-  reasonType: z.string().min(1, 'Majburiy maydon'),
-  basisPath: z.string().min(1, 'Fayl yuklash majburiy'),
+  employeeType: z.enum(['committee', 'office', 'regulator']),
+  delegatorId: z.string().min(1),
+  delegateeId: z.string().min(1),
+  startDate: z.date(),
+  endDate: z.date(),
+  reasonType: z.string().min(1),
+  basisPath: z.string().min(1),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -125,7 +126,7 @@ export const AddDelegationModal = ({ isOpen, onClose }: AddDelegationModalProps)
 
     createDelegation(payload, {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['/user-delegation'] })
+        invalidateEndpoint(queryClient, '/user-delegation')
         form.reset()
         onClose()
       },

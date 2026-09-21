@@ -3,18 +3,19 @@ import { useCustomSearchParams, usePaginatedData, useTranslatedObject } from '@/
 import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { changeTypeColumn } from '@/features/register/model/change-type-column'
 import { useHazardousFacilityTypeDictionarySelect } from '@/shared/api/dictionaries'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { TabsLayout } from '@/shared/layouts'
 import { ApplicationStatus } from '@/entities/application'
 import { useMemo } from 'react'
-import { Badge } from '@/shared/components/ui/badge'
 import { buildRegisterQuery } from '@/features/register/model/build-register-query'
 import { RESET_KEYS } from '@/features/register/model/report-drill-down'
 import { canUpdateRegistryType } from '@/features/register/model/can-update-registry'
 import { TruncatedCell } from '@/shared/components/common/truncated-cell'
-import { RegisterActiveTab } from '@/widgets/register/types'
+import { HazardousFacilityRow } from '@/features/register/model/types'
+import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 
 interface HfListProps {
   isArchive?: boolean
@@ -58,11 +59,11 @@ export const HfList = ({ isArchive }: HfListProps) => {
    * registry never assigns; a facility is filed under one of these three.
    */
   const hfTypeOptions = useMemo(
-    () => (hazardousFacilityTypes || []).filter((item: any) => ['3.1', '3.2', '3.3'].includes(String(item.name))),
+    () => (hazardousFacilityTypes || []).filter((item) => ['3.1', '3.2', '3.3'].includes(String(item.name))),
     [hazardousFacilityTypes]
   )
 
-  const { data: changedCountData } = usePaginatedData<any>(`/hf`, {
+  const { data: changedCountData } = usePaginatedData<HazardousFacilityRow>(`/hf`, {
     page: 1,
     size: 1,
     changed: 'true',
@@ -70,7 +71,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
     regionId: regionId === 'ALL' ? '' : regionId,
   })
 
-  const { data, isLoading } = usePaginatedData<any>(endpoint, { page, size, ...params })
+  const { data, isLoading } = usePaginatedData<HazardousFacilityRow>(endpoint, { page, size, ...params })
 
   const applicationStatusList = useTranslatedObject(ApplicationStatus, 'application_status', false)
   const applicationStatus = useMemo(() => {
@@ -81,27 +82,27 @@ export const HfList = ({ isArchive }: HfListProps) => {
 
   const handleViewApplication = (id: string) => {
     if (currentActive === 'CHANGED') {
-      navigate(`/register/change/${id}/hf`)
+      navigate(`/register/change/hf/${id}`)
     } else {
-      navigate(`${id}/hf${['true', 'VALID', 'INVALID'].includes(currentActive) ? '?active=true' : ''}`)
+      navigate(`hf/${id}${['true', 'VALID', 'INVALID'].includes(currentActive) ? '?active=true' : ''}`)
     }
   }
 
-  const handleEditApplication = (data: any) => {
+  const handleEditApplication = (data: HazardousFacilityRow) => {
     const tinQuery = data?.legalTin ? `?tin=${data.legalTin}` : ''
     navigate(`/register/update/HF/${data?.id}${tinQuery}`)
   }
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<HazardousFacilityRow, unknown>[] = [
     {
-      header: 'Roʻyxatga olish sanasi',
+      header: 'Ro‘yxatga olish sanasi',
       accessorFn: (row) => getDate(row.registrationDate),
       maxSize: 90,
       filterKey: 'registrationDate',
       filterType: 'date-range',
     },
     {
-      header: 'Roʻyxatga olish raqami',
+      header: 'Ro‘yxatga olish raqami',
       accessorKey: 'registryNumber',
       filterKey: 'registryNumber',
       filterType: 'search',
@@ -118,7 +119,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
       className: 'max-w-[220px]',
       filterKey: 'legalAddress',
       filterType: 'search',
-      cell: ({ row }: any) => <TruncatedCell value={row.original?.legalAddress} />,
+      cell: ({ row }) => <TruncatedCell value={row.original?.legalAddress} />,
     },
     {
       header: 'STIR',
@@ -140,7 +141,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
       className: 'max-w-[220px]',
       filterKey: 'address',
       filterType: 'search',
-      cell: ({ row }: any) => <TruncatedCell value={row.original?.address} />,
+      cell: ({ row }) => <TruncatedCell value={row.original?.address} />,
     },
     {
       header: 'XICHO turi',
@@ -150,39 +151,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
       maxSize: 80,
       filterOptions: hfTypeOptions,
     },
-    ...(currentActive === 'CHANGED'
-      ? [
-          {
-            header: 'So‘rov turi',
-            accessorKey: 'changeBelongType',
-            cell: ({ row }: any) => {
-              const type = row.original.changeBelongType
-              if (type?.startsWith('UPDATE')) {
-                return (
-                  <Badge variant="info" className="py-1">
-                    Maʼlumotlarni o‘zgartirish
-                  </Badge>
-                )
-              }
-              if (type?.startsWith('DEREGISTER')) {
-                return (
-                  <Badge variant="destructive" className="py-1">
-                    Reyestrdan chiqarish
-                  </Badge>
-                )
-              }
-              if (type?.startsWith('CHANGE_HF_STATUS')) {
-                return (
-                  <Badge variant="warning" className="py-1">
-                    Holatini o‘zgartirish
-                  </Badge>
-                )
-              }
-              return '-'
-            },
-          },
-        ]
-      : []),
+    ...(currentActive === 'CHANGED' ? [changeTypeColumn<HazardousFacilityRow>()] : []),
     {
       id: 'actions',
       cell: ({ row }) => (
@@ -264,7 +233,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
         isLoading={isLoading}
         isPaginated
         data={data || []}
-        columns={columns as unknown as any}
+        columns={columns}
         className="min-h-0 flex-1"
       />
     </div>

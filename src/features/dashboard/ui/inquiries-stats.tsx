@@ -1,6 +1,6 @@
 import { FileText, PlusCircle, Clock, Gavel, HandCoins, CheckCircle, XCircle } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
-import usePaginatedData from '@/shared/hooks/api/usePaginatedData'
+import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
 import { InquiryStatus } from '@/features/inquiries/model/types'
 import { DASHBOARD_STALE_TIME } from '../model/use-dashboard-stats'
 import { StatValue } from './stat-value'

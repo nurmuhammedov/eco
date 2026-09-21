@@ -1,7 +1,7 @@
 import { FC } from 'react'
-import { RiskAnalysisData } from '../riskAnalysis'
+import { RiskAnalysisData } from '../risk-analysis'
 import { format } from 'date-fns'
-import { cn } from '@/shared/lib/utils.ts'
+import { cn } from '@/shared/lib/utils'
 
 interface Props {
   data: RiskAnalysisData | null
@@ -9,7 +9,7 @@ interface Props {
 
 const RiskAnalysisInspectorInfo: FC<Props> = ({ data }) => {
   if (!data) {
-    return <div className={'px-5 py-5'}>Maʼlumot mavjud emas!</div>
+    return <div className={'px-5 py-5'}>Ma’lumot mavjud emas!</div>
   }
 
   return (

@@ -26,6 +26,7 @@ import {
   type KpiIndicator,
 } from '@/entities/kpi'
 import { useGetMyKpiTask, useCreateResult, useUpdateResult, useSubmitKpiTask } from '../model/use-my-kpi'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -50,11 +51,11 @@ const previewPercent = (indicator: KpiIndicator, achieved: number): number => {
 const resultSchema = z.object({
   achieved_value: z
     .union([z.number(), z.string()])
-    .refine((v) => v !== '' && v !== null && v !== undefined, 'Majburiy maydon!')
-    .refine((v) => !isNaN(Number(v)), 'Kiritilgan ma’lumot yaroqli emas!')
-    .refine((v) => Number(v) >= 0, 'Kiritilgan ma’lumot yaroqli emas!')
+    .refine((v) => v !== '' && v !== null && v !== undefined, FORM_ERROR_MESSAGES.required)
+    .refine((v) => !isNaN(Number(v)), FORM_ERROR_MESSAGES.invalid)
+    .refine((v) => Number(v) >= 0, FORM_ERROR_MESSAGES.invalid)
     .transform(Number),
-  note: z.string().max(2000, 'Kiritilgan ma’lumot yaroqli emas!').optional(),
+  note: z.string().max(2000).optional(),
   file_url: z.string().max(500).nullable().optional(),
 })
 

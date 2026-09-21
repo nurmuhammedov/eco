@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { clsx } from 'clsx'
-import { Indicator } from '../riskAnalysis'
+import { Indicator } from '../risk-analysis'
 
 interface Props {
   number: string
@@ -14,7 +14,7 @@ const statusMap: Record<string, string> = {
   REJECTED: 'Inspektor tomonidan rad etilgan',
   EXISTING: 'Reyestrda ushbu fayl mavjud',
   COMPLETED: 'Inspektor tomonidan qabul qilingan',
-  EXPIRED: "Faylning amal qilish muddati o'tgan",
+  EXPIRED: 'Faylning amal qilish muddati o‘tgan',
   NOT_EXISTING: 'Reyestrda ushbu fayl mavjud emas',
   NOT_EXPIRY_DATE: 'Faylning amal qilish muddati kiritilmagan',
 }
@@ -32,7 +32,7 @@ const RiskAnalysisItem: FC<Props> = ({ data, displayIndex }) => {
   return (
     <div key={data.text}>
       <div
-        className={clsx('rounded bg-[#EDEEEE] p-2.5 font-medium shadow-md', {
+        className={clsx('bg-neutral-250 rounded p-2.5 font-medium shadow-md', {
           'bg-red-200': !!data?.score && data?.score > 0,
           'bg-green-200': isConfirmed,
         })}

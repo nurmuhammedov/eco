@@ -2,14 +2,15 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Form } from '@/shared/components/ui/form'
 import { Button } from '@/shared/components/ui/button'
 import { CadastreDataFields, CadastreRegistryFields, cadastreDataSchema } from './cadastre-data-fields'
-import { splitAddress } from '../../model/txyz-options'
+import { splitAddress } from '../../model/txyuz-options'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useEffect } from 'react'
-import useUpdate from '@/shared/hooks/api/useUpdate'
+import useUpdate from '@/shared/hooks/api/use-update'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface CadastreEditModalProps {
   isOpen: boolean
@@ -61,7 +62,7 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
     updateCadastreData(data, {
       onSuccess: () => {
         toast.success('Ma’lumotlar muvaffaqiyatli saqlandi')
-        queryClient.invalidateQueries({ queryKey: ['cadastre-passports', cadastreId] })
+        void invalidateEndpoint(queryClient, '/cadastre-passports')
         onClose()
       },
     })

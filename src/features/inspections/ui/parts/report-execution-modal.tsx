@@ -5,28 +5,28 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/shared/components/ui/dialog.tsx'
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/shared/components/ui/form.tsx'
+} from '@/shared/components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/shared/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { FC } from 'react'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
-import { Button } from '@/shared/components/ui/button.tsx'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { Button } from '@/shared/components/ui/button'
 import { CircleAlert, SendHorizontal } from 'lucide-react'
-import { useExecutionList } from '@/features/inspections/hooks/use-execution-list.ts'
-import { useAddFileToExecution } from '@/features/inspections/hooks/use-add-file-to-execution.ts'
-import FileLink from '@/shared/components/common/file-link.tsx'
-import { getDate } from '@/shared/utils/date.ts'
-import { Badge } from '@/shared/components/ui/badge.tsx'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
-import { UserRoles } from '@/entities/user'
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover.tsx'
-import { Textarea } from '@/shared/components/ui/textarea.tsx'
-import { useAcceptExecutionReport } from '@/features/inspections/hooks/use-accept-execution-report.ts'
-import { useRejectExecutionReport } from '@/features/inspections/hooks/use-reject-execution-report.ts'
+import { useExecutionList } from '@/features/inspections/hooks/use-execution-list'
+import { useAddFileToExecution } from '@/features/inspections/hooks/use-add-file-to-execution'
+import FileLink from '@/shared/components/common/file-link'
+import { getDate } from '@/shared/utils/date'
+import { Badge } from '@/shared/components/ui/badge'
+import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/shared/types/user'
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
+import { Textarea } from '@/shared/components/ui/textarea'
+import { useAcceptExecutionReport } from '@/features/inspections/hooks/use-accept-execution-report'
+import { useRejectExecutionReport } from '@/features/inspections/hooks/use-reject-execution-report'
 import { toast } from 'sonner'
 
 export const executionReportStatuses = new Map([
@@ -180,7 +180,7 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
                           control={form.control}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Aniqlangan kamchilikni bartaraf etish yuzasidan maʼlumot</FormLabel>
+                              <FormLabel>Aniqlangan kamchilikni bartaraf etish yuzasidan ma’lumot</FormLabel>
                               <FormControl>
                                 <InputFile
                                   buttonText="Faylni yuklang"

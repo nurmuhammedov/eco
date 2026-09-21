@@ -5,17 +5,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog.tsx'
-import { Button } from '@/shared/components/ui/button.tsx'
+} from '@/shared/components/ui/dialog'
+import { Button } from '@/shared/components/ui/button'
 import { DialogClose } from '@radix-ui/react-dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select.tsx'
+import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { useMemo, useState } from 'react'
-import { MultiSelect } from '@/shared/components/ui/multi-select.tsx'
+import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection/category-types/hooks/use-category-type-select-query'
 import { useCustomSearchParams } from '@/shared/hooks'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
@@ -27,9 +27,10 @@ import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Send } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { apiConfig } from '@/shared/api/constants.ts'
+import { apiConfig } from '@/shared/api/constants'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const schema = z.object({
   inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
@@ -98,7 +99,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
   } = useEimzo({
     pdfEndpoint: '/inspections/decree/generate-pdf',
     submitEndpoint: '/inspections/decree/one-day',
-    queryKey: '/inspections',
+    invalidates: '/inspections',
     successMessage: 'Muvaffaqiyatli saqlandi!',
     onSuccessNavigateTo: `/inspections`,
   })
@@ -114,7 +115,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
         handleCloseModal()
         toast.success('Muvaffaqiyatli yuborildi!')
         navigate('/inspections')
-        queryClient.invalidateQueries({ queryKey: ['/inspections'] })
+        invalidateEndpoint(queryClient, '/inspections')
       }
     },
     onError: (e: any) => {
@@ -169,7 +170,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
 
         <DialogContent size="xl" className="flex flex-col gap-0 overflow-hidden rounded-xl! p-0">
           <DialogHeader className="shrink-0 border-b px-4 py-4 sm:px-6">
-            <DialogTitle className="pr-8 text-[#4E75FF]">Inspektorni(larni) belgilash</DialogTitle>
+            <DialogTitle className="pr-8 text-blue-400">Inspektorni(larni) belgilash</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
@@ -222,7 +223,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                               options={inspectorSelectData || []}
                               value={field.value}
                               onChange={field.onChange}
-                              placeholder="Komissiya aʼzolarini tanlang"
+                              placeholder="Komissiya a’zolarini tanlang"
                             />
                           </FormControl>
                           <FormMessage />

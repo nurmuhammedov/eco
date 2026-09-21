@@ -1,4 +1,4 @@
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { AssignInspectorModal } from '@/features/prevention/ui/parts/assign-inspector-modal'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
@@ -6,7 +6,7 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AssignInspectorButton } from '@/features/risk-analysis/ui/assign-inspector-button'
-import { getCurrentMonthEnum } from '@/widgets/prevention/ui/prevention-widget'
+import { getCurrentMonthEnum } from '@/shared/constants/months'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '@/shared/components/ui/badge'
@@ -62,7 +62,7 @@ const PreventionTable: FC<Props> = ({ regions }) => {
   )
 
   const handleView = (row: any) => {
-    navigate(`/preventions/detail/${row.id}?tin=${row.identity}`)
+    navigate(`/preventions/${row.id}?tin=${row.identity}`)
   }
 
   const columns: ExtendedColumnDef<any, any>[] = [
@@ -71,7 +71,7 @@ const PreventionTable: FC<Props> = ({ regions }) => {
           {
             header: () => (
               <div className="whitespace-nowrap">
-                Roʻyxatga olish <br /> raqami
+                Ro‘yxatga olish <br /> raqami
               </div>
             ),
             accessorKey: 'registryNumber',

@@ -1,6 +1,6 @@
 import { DataTable } from '@/shared/components/common/data-table'
 import { ColumnDef } from '@tanstack/react-table'
-import { useUserLogsTypeLabel } from '@/shared/hooks/use-user-logs-type-label.ts'
+import { useUserLogsTypeLabel } from '@/entities/admin/user-logs/hooks/use-user-logs-type-label'
 import { ISearchParams } from '@/shared/types'
 import { formatDate } from 'date-fns'
 import { useExecutionLogs } from '@/features/application/application-detail/hooks/use-execution-logs'

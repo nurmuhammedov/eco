@@ -1,16 +1,17 @@
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog.tsx'
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/shared/components/ui/form.tsx'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/shared/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { FC } from 'react'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types.ts'
-import { Button } from '@/shared/components/ui/button.tsx'
+import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { Button } from '@/shared/components/ui/button'
 import { useAdd } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const schema = z.object({
   paramValue: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
@@ -46,7 +47,7 @@ const DeclarationFileUploadModal: FC<Props> = ({ id, closeModal, title = 'Deklar
       toast.success('Fayl muvaffaqiyatli yuklandi!')
       form.reset()
       closeModal()
-      await qc.invalidateQueries({ queryKey: ['/declarations'] })
+      await invalidateEndpoint(qc, '/declarations')
     })
   }
 

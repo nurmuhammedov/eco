@@ -6,11 +6,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog.tsx'
-import { Button } from '@/shared/components/ui/button.tsx'
+} from '@/shared/components/ui/dialog'
+import { Button } from '@/shared/components/ui/button'
 import React, { useState } from 'react'
 import { useAdd } from '@/shared/hooks/api'
 import { useQueryClient } from '@tanstack/react-query'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface Props {
   changeId: string
@@ -29,7 +30,7 @@ const ConfirmProcessModal: React.FC<Props> = ({ changeId, title, buttonText }) =
       {
         onSuccess: () => {
           setIsOpen(false)
-          queryClient.invalidateQueries({ queryKey: ['/changes/by-belong'] })
+          invalidateEndpoint(queryClient, '/changes/by-belong')
         },
       }
     )

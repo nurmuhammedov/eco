@@ -1,10 +1,10 @@
 import { CreateHeatPipelineApplicationDTO, HeatPipelineAppealDtoSchema } from '@/entities/create-application'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import {
   useChildEquipmentTypes,
-  useDistrictSelectQueries,
+  useDistrictSelectQuery,
   useHazardousFacilityDictionarySelect,
-  useRegionSelectQueries,
+  useRegionSelectQuery,
 } from '@/shared/api/dictionaries'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
@@ -57,8 +57,8 @@ export const useCreateHeatPipelineApplication = () => {
 
   const regionId = form.watch('regionId')
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect(user?.role !== UserRoles.INDIVIDUAL)
   const { data: childEquipmentTypes } = useChildEquipmentTypes('HEAT_PIPELINE')
 

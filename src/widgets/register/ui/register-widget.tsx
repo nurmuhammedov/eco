@@ -1,4 +1,4 @@
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { ExportExcelButton } from '@/shared/components/common'
 import { EquipmentsList } from '@/features/register/equipments/ui/equipments-list'
 import { HfList } from '@/features/register/hf/ui/hf-list'
@@ -8,13 +8,13 @@ import { Badge } from '@/shared/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { useAuth } from '@/shared/hooks/use-auth'
 import React from 'react'
-import { RegisterActiveTab } from '../types'
+import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { API_ENDPOINTS } from '@/shared/api'
 import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { useDistrictSelectQueries } from '@/shared/api/dictionaries'
+import { useDistrictSelectQuery } from '@/shared/api/dictionaries'
 import { buildRegisterExportQuery } from '@/features/register/model/build-register-query'
 
 interface RegisterWidgetProps {
@@ -64,7 +64,7 @@ const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
   })
 
   const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(`${API_ENDPOINTS.REGIONS_SELECT}`)
-  const { data: districts, isLoading: isDistrictsLoading } = useDistrictSelectQueries(regionId)
+  const { data: districts, isLoading: isDistrictsLoading } = useDistrictSelectQuery(regionId)
 
   const exportQuery = buildRegisterExportQuery({ tab, paramsObject, isArchive, defaultRegionId })
 

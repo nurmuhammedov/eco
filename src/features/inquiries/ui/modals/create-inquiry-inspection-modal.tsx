@@ -27,6 +27,7 @@ import { useInspectorSelect } from '@/features/application/application-detail/ho
 import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection/category-types/hooks/use-category-type-select-query'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { ApplicationModal } from '@/features/application/create-application'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 export const CreateInquiryInspectionModal = ({ inquiry }: { inquiry: any }) => {
   const { t } = useTranslation()
@@ -69,12 +70,12 @@ export const CreateInquiryInspectionModal = ({ inquiry }: { inquiry: any }) => {
   } = useEimzo({
     pdfEndpoint: `/inquiries/${inquiry?.id}/inspection/generate-pdf`,
     submitEndpoint: `/inquiries/${inquiry?.id}/inspection`,
-    queryKey: '/inquiries',
+    invalidates: '/inquiries',
     successMessage: t('success_saved'),
     onEnd: () => {
       setIsOpen(false)
-      queryClient.invalidateQueries({ queryKey: ['/inquiries', inquiry?.id] })
-      queryClient.invalidateQueries({ queryKey: ['/inspections/by-inquiry', inquiry?.id] })
+      invalidateEndpoint(queryClient, '/inquiries')
+      invalidateEndpoint(queryClient, '/inspections/by-inquiry')
     },
   })
 
@@ -100,7 +101,7 @@ export const CreateInquiryInspectionModal = ({ inquiry }: { inquiry: any }) => {
         </DialogTrigger>
         <DialogContent size="lg">
           <DialogHeader>
-            <DialogTitle className="text-[#4E75FF]">Tekshiruv yaratish</DialogTitle>
+            <DialogTitle className="text-blue-400">Tekshiruv yaratish</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>

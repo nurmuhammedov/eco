@@ -1,16 +1,19 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
-import { Input } from '@/shared/components/ui/input.tsx'
-import { Button } from '@/shared/components/ui/button.tsx'
-import { useSetFiles } from '@/features/inspections/hooks/use-set-files.ts'
-import { QK_INSPECTION } from '@/shared/constants/query-keys'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
+import { Input } from '@/shared/components/ui/input'
+import { Button } from '@/shared/components/ui/button'
+import { useSetFiles } from '@/features/inspections/hooks/use-set-files'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const schema = z.object({
-  specialCode: z.string({ required_error: 'Majburiy maydon!', message: 'Majburiy maydon!' }).default(''),
+  specialCode: z
+    .string({ required_error: FORM_ERROR_MESSAGES.required, message: FORM_ERROR_MESSAGES.required })
+    .default(''),
 })
 
 const AddInspectionDocuments = ({ specialCode = '', resultId = '', disabled = false }: any) => {
@@ -29,7 +32,7 @@ const AddInspectionDocuments = ({ specialCode = '', resultId = '', disabled = fa
       resultId: resultId,
     }).then(async () => {
       toast.success('Muvaffaqiyatli saqlandi!')
-      await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] })
+      await invalidateEndpoint(queryClient, '/inspections')
     })
   }
 

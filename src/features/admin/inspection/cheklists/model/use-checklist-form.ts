@@ -12,6 +12,7 @@ import {
 } from '@/entities/admin/inspection'
 import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection/category-types/hooks/use-category-type-select-query'
 import { useQueryClient } from '@tanstack/react-query'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const DEFAULT_VALUES: CreateChecklistDTO = {
   category: '',
@@ -79,7 +80,7 @@ export function useChecklistForm() {
         if (response.success) {
           handleClose()
           if (payload.categoryId) {
-            queryClient.invalidateQueries({ queryKey: [`/checklists/by-category/${payload.categoryId}`] })
+            void invalidateEndpoint(queryClient, `/checklists/by-category/${payload.categoryId}`)
           }
           return true
         }

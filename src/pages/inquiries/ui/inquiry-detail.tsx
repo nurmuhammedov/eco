@@ -5,12 +5,12 @@ import { apiConfig } from '@/shared/api/constants'
 import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
-import { InquiryStatusRow } from '@/shared/components/common/inquiry-status-row'
+import { InquiryStatusRow } from '@/features/inquiries/ui/inquiry-status-row'
 import FileLink from '@/shared/components/common/file-link'
-import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
+import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
 import { Coordinate } from '@/shared/components/common/yandex-map'
-import useDetail from '@/shared/hooks/api/useDetail'
-import useData from '@/shared/hooks/api/useData'
+import useDetail from '@/shared/hooks/api/use-detail'
+import useData from '@/shared/hooks/api/use-data'
 import { formatDate } from 'date-fns'
 import { cn } from '@/shared/lib/utils'
 import { useState } from 'react'
@@ -21,7 +21,7 @@ import {
   InquiryStatus,
 } from '@/features/inquiries/model/types'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import SetInspectorModal from '@/features/inquiries/ui/modals/set-inspector-modal'
 import ExecuteInitialModal from '@/features/inquiries/ui/modals/execute-initial-modal'
 import ExecuteCourtModal from '@/features/inquiries/ui/modals/execute-court-modal'
@@ -97,7 +97,7 @@ const InquiryDetailPage = () => {
   }
 
   if (!data) {
-    return <div className="p-8 text-center text-slate-500">Maʼlumot topilmadi.</div>
+    return <div className="p-8 text-center text-slate-500">Ma’lumot topilmadi.</div>
   }
 
   const isCompletedEnabled =
@@ -147,7 +147,7 @@ const InquiryDetailPage = () => {
             'plastic_cards',
           ]}
         >
-          <DetailCardAccordion.Item value="general" title="Murojaat va ijro maʼlumotlari">
+          <DetailCardAccordion.Item value="general" title="Murojaat va ijro ma’lumotlari">
             <div className="flex flex-col py-1">
               <DetailRow title="Murojaat raqami:" value={data?.registryNumber || <EmptyValue />} />
               <DetailRow
@@ -192,7 +192,7 @@ const InquiryDetailPage = () => {
                         <span className="text-sm font-medium">
                           {data?.belongType ? inquiryBelongTypeLabels[data.belongType] || data.belongType : ''}
                         </span>
-                        <Button size="sm" onClick={() => navigate(`/register/${data.belongId}/${belongTypeStr}`)}>
+                        <Button size="sm" onClick={() => navigate(`/register/${belongTypeStr}/${data.belongId}`)}>
                           Obyektni ko‘rish
                         </Button>
                       </div>

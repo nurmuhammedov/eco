@@ -1,6 +1,6 @@
 import { XrayAppealDtoSchema } from '@/entities/create-application'
 import { stateService } from '@/entities/create-application/types/enums'
-import { useDistrictSelectQueries, useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 export const useCreateXrayApplication = () => {
   const { user } = useAuth()
@@ -20,17 +21,29 @@ export const useCreateXrayApplication = () => {
       const dynamicSchema = XrayAppealDtoSchema.superRefine((data, ctx) => {
         if (isDataNull) {
           if (!data.file5Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file5Path'] })
           if (!data.file5ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file5ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file5ExpiryDate'],
+            })
           if (!data.file7Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file7Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file7Path'] })
           if (!data.file7ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file7ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file7ExpiryDate'],
+            })
           if (!data.file9Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file9Path'] })
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file9Path'] })
           if (!data.file9ExpiryDate)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Majburiy maydon!', path: ['file9ExpiryDate'] })
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: FORM_ERROR_MESSAGES.required,
+              path: ['file9ExpiryDate'],
+            })
         }
       })
       return zodResolver(dynamicSchema)(values, context, options)
@@ -75,8 +88,8 @@ export const useCreateXrayApplication = () => {
     }
   }, [profileData, form])
 
-  const { data: regions } = useRegionSelectQueries()
-  const { data: districts } = useDistrictSelectQueries(regionId)
+  const { data: regions } = useRegionSelectQuery()
+  const { data: districts } = useDistrictSelectQuery(regionId)
   const districtOptions = useMemo(() => getSelectOptions(districts || []), [districts])
   const regionOptions = useMemo(() => getSelectOptions(regions || []), [regions])
 

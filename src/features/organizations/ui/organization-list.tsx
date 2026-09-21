@@ -62,7 +62,7 @@ export function OrganizationList() {
   const tabs = [
     { id: 'ALL', name: 'Barchasi', count: counts?.ALL || 0 },
     { id: 'STATE', name: 'Davlat tashkilotlari', count: counts?.STATE || 0 },
-    { id: 'NON_STATE', name: "Davlat tashkilot bo'lmaganlar", count: counts?.NON_STATE || 0 },
+    { id: 'NON_STATE', name: 'Davlat tashkilot bo‘lmaganlar', count: counts?.NON_STATE || 0 },
   ]
 
   const columns: ExtendedColumnDef<Organization, any>[] = useMemo(

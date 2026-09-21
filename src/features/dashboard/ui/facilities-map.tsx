@@ -29,7 +29,7 @@ import { UNKNOWN_REGION, buildRegionStats } from '../model/region-stats'
 import { MapFilters } from './map-filters'
 import { MapLayerSwitch } from './map-layer-switch'
 import { RegionStatsPanel } from './region-stats-panel'
-import { useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 
 const MAP_CONTROLS = [
   'fullscreenControl',
@@ -95,7 +95,7 @@ export const FacilitiesMap = () => {
   // same way it always did.
   const [activeBuckets, setActiveBuckets] = useState<string[]>(() => layer.legend.map((item) => item.key))
   const [regionId, setRegionId] = useState('')
-  const { data: regions, isLoading: regionsLoading } = useRegionSelectQueries()
+  const { data: regions, isLoading: regionsLoading } = useRegionSelectQuery()
 
   // A cluster the map cannot pull apart opens as a list; a single pin skips
   // straight to the detail. Both live in the same panel.

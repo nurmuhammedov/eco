@@ -5,18 +5,18 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog.tsx'
-import { Button } from '@/shared/components/ui/button.tsx'
+} from '@/shared/components/ui/dialog'
+import { Button } from '@/shared/components/ui/button'
 import { DialogClose } from '@radix-ui/react-dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Textarea } from '@/shared/components/ui/textarea.tsx'
+import { Textarea } from '@/shared/components/ui/textarea'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { FC, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useRejectDocument } from '@/features/application/application-detail/hooks/mutations/use-reject-document.tsx'
+import { useRejectDocument } from '@/features/application/application-detail/hooks/mutations/use-reject-document'
 
 const schema = z.object({
   description: z.string({ message: FORM_ERROR_MESSAGES.required }),
@@ -52,7 +52,7 @@ const RejectDocumentModal: FC<Props> = ({ documentId, label }) => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">Izoh</DialogTitle>
+          <DialogTitle className="text-blue-400">Izoh</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

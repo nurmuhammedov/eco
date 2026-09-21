@@ -1,10 +1,10 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  hazardousFacilityTypeAPI,
-  hazardousFacilityTypeKeys,
-  UpdateHazardousFacilityTypeDTO,
-} from '@/entities/admin/hazardous-facility-type'
+import { hazardousFacilityTypeAPI } from '../models/hazardous-facility-type.api'
+import { hazardousFacilityTypeKeys } from '../models/hazardous-facility-type.query-keys'
+import { UpdateHazardousFacilityTypeDTO } from '../models/hazardous-facility-type.types'
 
 export const useUpdateHazardousFacilityType = () => {
   const queryClient = useQueryClient()
@@ -62,9 +62,8 @@ export const useUpdateHazardousFacilityType = () => {
       }
 
       // Invalidate lists to ensure they're up-to-date
-      queryClient.invalidateQueries({
-        queryKey: hazardousFacilityTypeKeys.list('hazardous-facility-type'),
-      })
+      queryClient.invalidateQueries({ queryKey: hazardousFacilityTypeKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.HAZARDOUS_FACILITY_TYPES)
     },
 
     onError: (_err, updatedData, context) => {

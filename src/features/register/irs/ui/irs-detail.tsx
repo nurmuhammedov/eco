@@ -1,19 +1,19 @@
-import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info.tsx'
+import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
 
-import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button.tsx'
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
-import { useIrsDetail } from '@/features/register/irs/hooks/use-irs-detail.tsx'
+import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
+import { useIrsDetail } from '@/features/register/irs/hooks/use-irs-detail'
 import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
-import DetailRow from '@/shared/components/common/detail-row.tsx'
-import FileLink from '@/shared/components/common/file-link.tsx'
+import DetailRow from '@/shared/components/common/detail-row'
+import FileLink from '@/shared/components/common/file-link'
 import { Coordinate } from '@/shared/components/common/yandex-map'
-import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
-import { getDate } from '@/shared/utils/date.ts'
+import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
+import { getDate } from '@/shared/utils/date'
 import { Link, useParams } from 'react-router-dom'
 import { Logs } from '@/features/register/hf/ui/parts/logs'
-import { UserRoles } from '@/entities/user'
-import { useAuth } from '@/shared/hooks/use-auth.ts'
+import { UserRoles } from '@/shared/types/user'
+import { useAuth } from '@/shared/hooks/use-auth'
 import { useState } from 'react'
 import { Button } from '@/shared/components/ui/button'
 import { DeregisterModal } from '../../common/ui/deregister-modal'
@@ -66,7 +66,7 @@ const IrsDetail = () => {
               title="Reyestrga kiritish uchun asos (ariza):"
               value={
                 data?.appealId ? (
-                  <Link className="text-[#0271FF]" to={'/applications/detail/' + data?.appealId}>
+                  <Link className="text-[#0271FF]" to={'/applications/' + data?.appealId}>
                     Arizani ko‘rish
                   </Link>
                 ) : (
@@ -77,12 +77,12 @@ const IrsDetail = () => {
           )}
 
           <DetailRow
-            title="Roʻyxatga olish sanasi:"
+            title="Ro‘yxatga olish sanasi:"
             value={data?.registrationDate ? getDate(data?.registrationDate) : <EmptyValue />}
           />
 
           <DetailRow
-            title="Roʻyxatga olish raqami:"
+            title="Ro‘yxatga olish raqami:"
             value={data?.registryNumber ? data?.registryNumber : <EmptyValue />}
           />
 

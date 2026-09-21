@@ -14,23 +14,23 @@ export enum AccidentProcessStatus {
 }
 
 export const victimSchema = z.object({
-  fullName: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!').trim(),
-  birthDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => date.toISOString().split('T')[0]),
-  address: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!').trim(),
-  position: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!').trim(),
+  fullName: z.string().min(1).trim(),
+  birthDate: z.date().transform((date) => date.toISOString().split('T')[0]),
+  address: z.string().min(1).trim(),
+  position: z.string().min(1).trim(),
   experience: z
-    .string({ required_error: 'Majburiy maydon!' })
-    .min(1, 'Majburiy maydon!')
+    .string()
+    .min(1)
     .transform((val) => val),
-  maritalStatus: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!').trim(),
-  injuryStatus: z.nativeEnum(InjuryStatus, { required_error: 'Majburiy maydon!' }),
+  maritalStatus: z.string().min(1).trim(),
+  injuryStatus: z.nativeEnum(InjuryStatus),
 })
 
 // Schema for Creating an Accident (Only 3 fields required)
 export const accidentCreateSchema = z.object({
-  hfId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  date: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => date.toISOString().split('T')[0]),
-  shortDetail: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!').trim(),
+  hfId: z.string().min(1),
+  date: z.date().transform((date) => date.toISOString().split('T')[0]),
+  shortDetail: z.string().min(1).trim(),
 })
 
 // Schema for Editing an Accident (All fields with logic)
@@ -85,7 +85,7 @@ export const accidentEditSchema = accidentCreateSchema.extend({
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  victims: z.array(victimSchema).min(1, 'Kamida bitta jabrlanuvchi bo‘lishi shart!'),
+  victims: z.array(victimSchema).min(1),
 })
 
 export interface AccidentListItem {
@@ -116,9 +116,9 @@ export type AccidentFormValues = z.input<typeof accidentEditSchema> & {
 }
 
 export const accidentNonInjuryCreateSchema = z.object({
-  hfId: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  dateTime: z.date({ required_error: 'Majburiy maydon!' }),
-  shortDetail: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!').trim(),
+  hfId: z.string().min(1),
+  dateTime: z.date(),
+  shortDetail: z.string().min(1).trim(),
 })
 
 export const accidentNonInjuryEditSchema = accidentNonInjuryCreateSchema.extend({

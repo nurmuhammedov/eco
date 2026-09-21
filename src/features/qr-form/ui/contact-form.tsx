@@ -2,9 +2,9 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams, Link } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
-import { usePublicEquipmentDetail } from '../hooks/usePublicEquipmentDetail'
-import { getDate } from '@/shared/utils/date.ts'
-import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map.tsx'
+import { usePublicEquipmentDetail } from '../hooks/use-public-equipment-detail'
+import { getDate } from '@/shared/utils/date'
+import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
 import { Button } from '@/shared/components/ui/button'
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/components/ui/badge'
@@ -63,7 +63,7 @@ export const ContactForm = () => {
   if (!data) {
     return (
       <div className="text-muted-foreground mx-auto w-full max-w-4xl p-6 text-center">
-        <p>Ushbu ID bo‘yicha qurilma maʼlumotlari topilmadi.</p>
+        <p>Ushbu ID bo‘yicha qurilma ma’lumotlari topilmadi.</p>
       </div>
     )
   }
@@ -73,7 +73,7 @@ export const ContactForm = () => {
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6 pb-6">
       <div className="bg-card overflow-hidden rounded-lg border shadow-sm">
-        <SectionHeader title="Qurilma maʼlumotlari" />
+        <SectionHeader title="Qurilma ma’lumotlari" />
         <div className="p-4 sm:p-6">
           <DetailRow label="Qurilma" value={data.typeName} />
           <DetailRow label="Qurilma nomi" value={data.attractionName} />

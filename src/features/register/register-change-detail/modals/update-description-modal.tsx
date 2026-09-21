@@ -5,20 +5,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/shared/components/ui/dialog.tsx'
-import { Button } from '@/shared/components/ui/button.tsx'
+} from '@/shared/components/ui/dialog'
+import { Button } from '@/shared/components/ui/button'
 import { DialogClose } from '@radix-ui/react-dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form.tsx'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Textarea } from '@/shared/components/ui/textarea.tsx'
+import { Textarea } from '@/shared/components/ui/textarea'
 import { useState } from 'react'
 import { useAdd } from '@/shared/hooks/api'
 import { useQueryClient } from '@tanstack/react-query'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const schema = z.object({
-  description: z.string().min(1, 'Majburiy maydon!'),
+  description: z.string().min(1),
 })
 
 interface Props {
@@ -41,7 +42,7 @@ const UpdateDescriptionModal = ({ changeId, desc = '' }: Props) => {
   function onSubmit(data: z.infer<typeof schema>) {
     mutateAsync(data).then(() => {
       setIsShow(false)
-      void queryClient.invalidateQueries({ queryKey: ['/changes/by-belong'] })
+      void invalidateEndpoint(queryClient, '/changes/by-belong')
     })
   }
 
@@ -52,7 +53,7 @@ const UpdateDescriptionModal = ({ changeId, desc = '' }: Props) => {
       </DialogTrigger>
       <DialogContent size="lg">
         <DialogHeader>
-          <DialogTitle className="text-[#4E75FF]">Ijro natijasi bo‘yicha izoh</DialogTitle>
+          <DialogTitle className="text-blue-400">Ijro natijasi bo‘yicha izoh</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

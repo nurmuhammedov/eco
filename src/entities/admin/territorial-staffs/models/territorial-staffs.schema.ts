@@ -1,16 +1,16 @@
 import { z } from 'zod'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 
 const ERROR_MESSAGES = {
-  required: "Bu maydonni to'ldirish majburiy",
+  required: 'Bu maydonni to‘ldirish majburiy',
   fio: 'FIO ni kiritish majburiy',
   position: 'Lavozimni tanlash majburiy',
-  pin: "JSHSHIR 14 ta raqamdan iborat bo'lishi kerak",
+  pin: 'JSHSHIR 14 ta raqamdan iborat bo‘lishi kerak',
   role: 'Rolni tanlash majburiy',
   direction: 'Kamida bitta yo‘nalish tanlash majburiy',
-  department: "Bo'limni tanlash majburiy",
-  phone: "Telefon raqami formati +998XXXXXXXXX bo'lishi kerak",
+  department: 'Bo‘limni tanlash majburiy',
+  phone: 'Telefon raqami formati +998XXXXXXXXX bo‘lishi kerak',
 } as const
 
 export const territorialBaseSchema = {
@@ -19,7 +19,7 @@ export const territorialBaseSchema = {
     .string({ message: ERROR_MESSAGES.position })
 
     .min(1, ERROR_MESSAGES.required),
-  birthDate: z.date({ required_error: 'Sana majburiy' }),
+  birthDate: z.date(),
   pin: z.coerce
     .string({ message: ERROR_MESSAGES.pin })
     .transform((val) => val.toString())
@@ -63,8 +63,8 @@ export const territorialStaffSchema = z
   }))
 
 export const territorialTableItemSchema = z.object({
-  id: z.union([z.string().uuid(), z.string().regex(USER_PATTERNS.uuid, { message: 'Invalid UUID format' })]),
-  birthDate: z.date({ required_error: 'Sana majburiy' }),
+  id: z.union([z.string().uuid(), z.string().regex(USER_PATTERNS.uuid)]),
+  birthDate: z.date(),
   fullName: z.string().trim().min(1),
   pin: z.union([
     z.number().transform((val) => val.toString()),

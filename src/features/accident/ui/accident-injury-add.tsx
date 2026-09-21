@@ -1,7 +1,7 @@
+import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { toast } from 'sonner'
@@ -15,10 +15,9 @@ import DatePicker from '@/shared/components/ui/datepicker'
 import DetailRow from '@/shared/components/common/detail-row'
 import GoBack from '@/shared/components/common/go-back'
 
-import useAdd from '@/shared/hooks/api/useAdd'
-import useData from '@/shared/hooks/api/useData'
+import useAdd from '@/shared/hooks/api/use-add'
+import useData from '@/shared/hooks/api/use-data'
 import { accidentCreateSchema } from '@/features/accident/model/types'
-import { getHfoByTinSelect } from '@/entities/expertise/api/expertise.api.ts'
 
 export const AccidentAdd: React.FC = () => {
   const navigate = useNavigate()
@@ -42,12 +41,7 @@ export const AccidentAdd: React.FC = () => {
     isError: isLegalInfoError,
   } = useData<any>(`/users/legal/${searchedStir}`, !!searchedStir && searchedStir.length === 9)
 
-  const { data: hfoOptions, isFetching: isHfoLoading } = useQuery({
-    queryKey: ['hfoSelect', searchedStir],
-    queryFn: () => getHfoByTinSelect(searchedStir!),
-    enabled: !!searchedStir,
-    retry: 1,
-  })
+  const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(searchedStir, !!searchedStir)
 
   const handleSearch = () => {
     if (stir.length === 9) {
@@ -112,7 +106,7 @@ export const AccidentAdd: React.FC = () => {
         <>
           <Card>
             <CardHeader>
-              <CardTitle>Tashkilot maʼlumotlari</CardTitle>
+              <CardTitle>Tashkilot ma’lumotlari</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
@@ -135,14 +129,14 @@ export const AccidentAdd: React.FC = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel required>XICHO</FormLabel>
-                          <Select value={field.value} onValueChange={field.onChange} disabled={isHfoLoading}>
+                          <Select value={field.value} onValueChange={field.onChange} disabled={isHfLoading}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Obyektni tanlang..." />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {hfoOptions?.map((option) => (
+                              {hfOptions?.map((option) => (
                                 <SelectItem key={option.id} value={option.id}>
                                   {`${option.registryNumber || 'N/A'} - ${option.name}`}
                                 </SelectItem>

@@ -1,6 +1,9 @@
-import { CreateRegionDTO, regionKeys, RegionResponse } from '@/entities/admin/region'
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
+import { CreateRegionDTO, RegionResponse } from '../models/region.types'
+import { regionKeys } from '../models/region.query-keys'
 import type { ResponseData } from '@/shared/types/api'
-import { regionAPI } from '@/entities/admin/region/models/region.api.ts'
+import { regionAPI } from '@/entities/admin/region/models/region.api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export const useCreateRegion = () => {
@@ -36,10 +39,9 @@ export const useCreateRegion = () => {
     },
 
     onSuccess: (createdRegion) => {
-      // Invalidate list queries to get fresh data with correct ID
-      queryClient.invalidateQueries({
-        queryKey: regionKeys.list('region'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: regionKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.REGIONS)
 
       // Add the newly created region to cache
       queryClient.setQueryData(regionKeys.detail('region', createdRegion.data.id!), createdRegion)

@@ -7,20 +7,16 @@ export const DeRegisterEquipmentSchema = z.object({
     .string({ required_error: FORM_ERROR_MESSAGES.required })
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
-      message: FORM_ERROR_MESSAGES.phone,
+      message: FORM_ERROR_MESSAGES.invalid,
     }),
-  type: z
-    .string({
-      required_error: 'Majburiy maydon!',
-    })
-    .min(1, 'Majburiy maydon!'),
+  type: z.string().min(1),
   description: z
     .string()
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  registryNumber: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
-  purchaseAgreementPath: z.string({ required_error: 'Majburiy maydon!' }).min(1, 'Majburiy maydon!'),
+  registryNumber: z.string().min(1),
+  purchaseAgreementPath: z.string().min(1),
   orderSuspensionPath: z
     .string()
     .optional()

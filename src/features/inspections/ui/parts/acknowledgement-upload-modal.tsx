@@ -19,9 +19,10 @@ import { Form, FormField, FormItem, FormLabel } from '@/shared/components/ui/for
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
 import { useAdd } from '@/shared/hooks'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 const schema = z.object({
-  acknowledgementPath: z.string({ required_error: 'Fayl yuklanishi shart' }).min(1, 'Fayl yuklanishi shart'),
+  acknowledgementPath: z.string().min(1),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -58,7 +59,7 @@ const AcknowledgementUploadModal = ({ resultId, acknowledgementPath, onClose, tr
       acknowledgementPath: values.acknowledgementPath,
     }).then(() => {
       toast.success('Tilxat muvaffaqiyatli saqlandi!', { richColors: true })
-      qc.invalidateQueries({ queryKey: ['/inspection-results'] })
+      invalidateEndpoint(qc, '/inspection-results')
       setOpen(false)
       onClose?.()
     })

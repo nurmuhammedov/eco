@@ -1,15 +1,15 @@
 import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
-import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button.tsx'
-import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info.tsx'
+import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button'
+import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { useAuth } from '@/shared/hooks/use-auth'
-import FilesSection from '@/features/application/application-detail/ui/parts/files-section.tsx'
+import FilesSection from '@/features/application/application-detail/ui/parts/files-section'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useData } from '@/shared/hooks'
 import { IrsList } from '@/features/register/irs/ui/irs-list'
 import { XrayList } from '@/features/register/xray/ui/xray-list'
 import { useTranslation } from 'react-i18next'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 
 export const RadiationProfileDetail = () => {
   const { id } = useParams()
@@ -36,7 +36,7 @@ export const RadiationProfileDetail = () => {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <GoBack title={`Tashkilot maʼlumotlari`} />
+        <GoBack title={`Tashkilot ma’lumotlari`} />
       </div>
 
       <DetailCardAccordion defaultValue={['object_files', 'devices']}>

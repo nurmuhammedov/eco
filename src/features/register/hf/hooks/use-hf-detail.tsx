@@ -1,5 +1,5 @@
-import { hfDetailApi } from '@/features/register/hf/model/hf-detail.api.ts'
-import { QK_REGISTRY } from '@/shared/constants/query-keys.ts'
+import { hfDetailApi } from '@/features/register/hf/model/hf-detail.api'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
@@ -8,7 +8,7 @@ export const useHfDetail = () => {
   const { id } = useParams()
   const { t } = useTranslation()
   return useQuery({
-    queryKey: [QK_REGISTRY, 'HF', id],
+    queryKey: endpointKey('/hf', id),
     enabled: !!id,
     queryFn: () => hfDetailApi.getDetail(id),
     select: (data) => {

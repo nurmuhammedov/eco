@@ -1,27 +1,8 @@
 import { LoginDTO } from './auth.types'
-import { API_ENDPOINTS } from '@/shared/api'
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { apiClient } from '@/shared/api/api-client'
-import { UserRoles, UserState } from '@/entities/user'
-import { ApiResponse } from '@/shared/types'
-
-const normalizeUser = (data: any): UserState => {
-  if (!data) return data
-
-  if (data.role === 'SUPERVISOR') {
-    data.role = UserRoles.REGIONAL
-    data.isSupervisor = true
-    data.isController = false
-  } else if (data.role === 'CONTROLLER') {
-    data.role = UserRoles.INSPECTOR
-    data.isSupervisor = false
-    data.isController = true
-  } else {
-    data.isSupervisor = false
-    data.isController = false
-  }
-
-  return data as UserState
-}
+import { UserState } from '@/shared/types/user'
+import { normalizeUser } from '@/shared/api/session'
 
 export const authAPI = {
   login: async (data: LoginDTO): Promise<UserState> => {
@@ -49,15 +30,6 @@ export const authAPI = {
       throw new Error(response.message)
     }
     return response.data
-  },
-  getMe: async (): Promise<UserState> => {
-    const response = await apiClient.get<ApiResponse<UserState>>(API_ENDPOINTS.USER_ME)
-
-    if (!response.success) {
-      throw new Error(response.message)
-    }
-
-    return normalizeUser(response.data.data)
   },
   switchOther: async (delegatorId: string) => {
     const response = await apiClient.post(`${API_ENDPOINTS.SWITCH_OTHER}?delegatorId=${delegatorId}`)

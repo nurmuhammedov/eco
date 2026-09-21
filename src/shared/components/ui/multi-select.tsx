@@ -39,7 +39,7 @@ const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
       className,
       placeholder = 'Tanlang...',
       searchPlaceholder = 'Qidirish...',
-      emptyText = 'Maʼlumot topilmadi.',
+      emptyText = 'Ma’lumot topilmadi.',
       maxDisplayItems = 3,
       disabled,
     },

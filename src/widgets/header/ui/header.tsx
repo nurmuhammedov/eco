@@ -77,7 +77,7 @@ export function Header() {
 
   const title = useMemo(() => {
     const PATH_TITLES = [
-      { path: '/inspections/risk-based', title: 'Xavfni tahlili asosidagi tekshiruvlar' },
+      { path: '/inspections/risk-based', title: 'Xavf tahlili asosidagi tekshiruvlar' },
       { path: '/inspections/other', title: 'Boshqa turdagi tekshiruvlar' },
       { path: '/inspections/info', title: 'Tekshiruv ma’lumotlari' },
       { path: '/inspections', title: 'Tekshiruvlar' },
@@ -104,11 +104,11 @@ export function Header() {
       { path: '/reports', title: 'Hisobotlar' },
       { path: '/permits', title: 'Ruxsat etuvchi hujjatlar' },
       { path: '/inquiries', title: 'Murojaatlar' },
-      { path: '/accidents', title: 'Baxtsiz hod. va Avariyalar' },
+      { path: '/accidents', title: 'Baxtsiz hodisalar va Avariyalar' },
       { path: '/news', title: 'Xabarnoma' },
       { path: '/territories', title: 'Hududlar' },
-      { path: '/department', title: 'Bo‘limlar' },
-      { path: '/staffs', title: 'Xodimlar' },
+      { path: '/departments', title: 'Bo‘limlar' },
+      { path: '/employees', title: 'Xodimlar' },
       { path: '/decree-signers', title: 'Imzolovchi shaxslar' },
       { path: '/hazardous-facilities', title: 'Xavfli obyektlar' },
       { path: '/equipments', title: 'Qurilma turlari' },
@@ -120,7 +120,7 @@ export function Header() {
       { path: '/elevators', title: 'Liftlar' },
       { path: '/expertise', title: 'Ekspertiza' },
       { path: '/archive', title: 'Arxiv' },
-      { path: '/cadastre-passport', title: 'TXYUZ kadastr pasportlari' },
+      { path: '/cadastre-passports', title: 'TXYUZ kadastr pasportlari' },
       { path: '/user-delegation', title: 'Vazifalarni yuklash' },
       { path: '/profile', title: 'Profil' },
     ]
@@ -129,15 +129,22 @@ export function Header() {
     return match ? match.title : ''
   }, [pathname])
 
+  /**
+   * The bar wraps rather than overflows. On a phone the date filters pushed
+   * the notifications and the account menu past the right edge, and the page
+   * does not scroll sideways - so there was no way to reach them at all, and
+   * no way to sign out. A second row costs nothing on a wide screen, where
+   * everything still fits on one.
+   */
   return (
-    <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b bg-white px-4 shadow-sm transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-      <div className="flex items-center gap-2">
+    <header className="sticky top-0 z-10 flex min-h-16 shrink-0 flex-wrap items-center gap-2 border-b bg-white px-4 py-2 shadow-sm transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:min-h-12">
+      <div className="flex min-w-0 items-center gap-2">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 h-4" />
         {title && <h1 className="text-foreground line-clamp-2 text-base leading-tight font-medium">{title}</h1>}
       </div>
 
-      <div className="ml-auto flex items-center gap-4">
+      <div className="ml-auto flex flex-wrap items-center justify-end gap-2 sm:gap-4">
         {showDailyCalendar && (
           <div className="flex w-[200px] items-center">
             <DatePicker

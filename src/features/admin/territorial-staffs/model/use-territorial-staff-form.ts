@@ -1,9 +1,9 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Direction, UserRoles } from '@/entities/user'
+import { Direction, UserRoles } from '@/shared/types/user'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslatedObject } from '@/shared/hooks'
-import { useOfficeSelectQueries } from '@/shared/api/dictionaries'
+import { useOfficeSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks'
 import {
@@ -30,7 +30,7 @@ const DEFAULT_FORM_VALUES: CreateTerritorialStaffDTO = {
 export function useTerritorialStaffForm() {
   const { data, onClose, isCreate } = useTerritorialStaffsDrawer()
 
-  const { data: officeSelect } = useOfficeSelectQueries()
+  const { data: officeSelect } = useOfficeSelectQuery()
 
   const userRoleOptions = useTranslatedObject(
     {

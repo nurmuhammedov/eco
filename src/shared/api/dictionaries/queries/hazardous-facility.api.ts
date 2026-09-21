@@ -1,18 +1,13 @@
 import { type ApiResponse } from '@/shared/types/api'
-import { API_ENDPOINTS } from '@/shared/api'
+import { type OptionItem } from '@/shared/types/general'
+import { API_ENDPOINTS } from '../../endpoints'
 import { apiClient } from '@/shared/api/api-client'
-import { useQuery } from '@tanstack/react-query'
 
 export const hazardousFacilityAPI = {
   list: async () => {
-    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.HAZARDOUS_FACILITY_SELECT}`)
+    const { data } = await apiClient.get<ApiResponse<OptionItem<number>[]>>(
+      `${API_ENDPOINTS.HAZARDOUS_FACILITY_SELECT}`
+    )
     return data.data
   },
 }
-
-export const useGetHazardousFacilitiesByTinQuery = (tin: string) =>
-  useQuery({
-    queryKey: ['hf-by-tin', tin],
-    queryFn: () => apiClient.get(`/hf/by-tin/select`, { params: { tin } }),
-    enabled: !!tin && tin.length === 9,
-  })

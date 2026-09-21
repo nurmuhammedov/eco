@@ -3,7 +3,7 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { ColumnDef } from '@tanstack/react-table'
 import { useUserLogsList } from '@/entities/admin/user-logs'
 import { useFilters } from '@/shared/hooks/use-filters'
-import { useUserLogsTypeLabel } from '@/shared/hooks/use-user-logs-type-label.ts'
+import { useUserLogsTypeLabel } from '@/entities/admin/user-logs/hooks/use-user-logs-type-label'
 
 export function UserLogsList() {
   const { filters } = useFilters()
@@ -21,7 +21,7 @@ export function UserLogsList() {
     {
       accessorKey: 'name',
       maxSize: -10,
-      header: "To'liq ism",
+      header: 'To‘liq ism',
     },
     {
       accessorKey: 'status',

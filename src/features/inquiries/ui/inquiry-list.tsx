@@ -12,13 +12,13 @@ import {
 } from '../model/types'
 import { formatDate } from 'date-fns'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button } from '@/shared/components/ui/button.tsx'
+import { Button } from '@/shared/components/ui/button'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/entities/user'
+import { UserRoles } from '@/shared/types/user'
 import { Eye } from 'lucide-react'
 import { Badge } from '@/shared/components/ui/badge'
 import { cn } from '@/shared/lib/utils'
-import { useRegionSelectQueries } from '@/shared/api/dictionaries'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { ChangeRegionModal } from './modals/change-region-modal'
 
 const InquiryTable = () => {
@@ -30,7 +30,7 @@ const InquiryTable = () => {
 
   const navigate = useNavigate()
 
-  const { data: regions } = useRegionSelectQueries()
+  const { data: regions } = useRegionSelectQuery()
 
   const activeTab = (belongType as InquiryBelongType | 'ALL') || 'ALL'
 
@@ -197,7 +197,7 @@ const InquiryTable = () => {
         return (
           <div className="flex items-center gap-2">
             {row.original.belongId && (
-              <Button size="sm" onClick={() => navigate(`/register/${row.original.belongId}/${belongTypeStr}`)}>
+              <Button size="sm" onClick={() => navigate(`/register/${belongTypeStr}/${row.original.belongId}`)}>
                 Obyektni ko‘rish
               </Button>
             )}
@@ -208,8 +208,8 @@ const InquiryTable = () => {
               variant="ghost"
               size="icon"
               className="h-8 w-8 text-slate-500 hover:text-slate-900"
-              onClick={() => navigate(`/inquiries/detail/${row.original.id}`)}
-              title="Murojaatni ko'rish"
+              onClick={() => navigate(`/inquiries/${row.original.id}`)}
+              title="Murojaatni ko‘rish"
             >
               <Eye className="h-4 w-4" />
             </Button>
@@ -241,7 +241,7 @@ const InquiryTable = () => {
               data.content.map((item: any) => (
                 <Link
                   key={item.id}
-                  to={`/inquiries/detail/${item.id}`}
+                  to={`/inquiries/${item.id}`}
                   className="flex cursor-pointer flex-col gap-2 rounded-xl border bg-white p-4 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
                 >
                   <div className="flex items-center justify-between">
@@ -264,7 +264,7 @@ const InquiryTable = () => {
               ))
             ) : (
               <div className="flex flex-1 items-center justify-center p-4 text-sm text-slate-500">
-                Maʼlumot topilmadi
+                Ma’lumot topilmadi
               </div>
             )}
           </div>

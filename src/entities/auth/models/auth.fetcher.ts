@@ -1,30 +1,12 @@
 import { authAPI } from '@/entities/auth/models/auth.api'
 import { LoginDTO } from '@/entities/auth/models/auth.types'
-import { UserState } from '@/entities/user'
+import { UserState } from '@/shared/types/user'
 import { goToGuestLanding } from '@/shared/config/navigation'
 import { routeByRole } from '@/shared/lib/router/route-by-role'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { SESSION_QUERY_KEY, fetchCurrentUser } from '@/shared/api/session'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useRef } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
-
-export const CURRENT_USER_QUERY_KEY = ['me'] as const
-
-export const useCurrentUser = () => {
-  const {
-    data: user,
-    isPending,
-    isSuccess,
-    error,
-  } = useQuery({
-    queryKey: CURRENT_USER_QUERY_KEY,
-    queryFn: authAPI.getMe,
-    retry: 0,
-    staleTime: Infinity,
-    refetchOnMount: false,
-  })
-
-  return { user, error, isPending, isSuccess, isAuth: Boolean(user) && !error }
-}
 
 const resolveRedirectPath = (from: string | undefined, user: UserState) =>
   from && from !== '/' ? from : routeByRole(user?.role)
@@ -37,7 +19,7 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (data: LoginDTO) => authAPI.login(data),
     onSuccess: (user: UserState) => {
-      queryClient.setQueryData(CURRENT_USER_QUERY_KEY, user)
+      queryClient.setQueryData(SESSION_QUERY_KEY, user)
       navigate(resolveRedirectPath(state?.from, user), { replace: true })
     },
   })
@@ -63,7 +45,7 @@ export const useLoginOneId = (options?: UseLoginOneIdOptions) => {
     retry: false,
     mutationFn: authAPI.loginOneId,
     onSuccess: (user: UserState) => {
-      queryClient.setQueryData(CURRENT_USER_QUERY_KEY, user)
+      queryClient.setQueryData(SESSION_QUERY_KEY, user)
 
       if (options?.customRedirect) {
         options.customRedirect(user)
@@ -108,8 +90,8 @@ const useRoleSwitch = <TVariables>(mutationFn: (variables: TVariables) => Promis
     mutationFn,
     onSuccess: async () => {
       const user = await queryClient.fetchQuery({
-        queryKey: CURRENT_USER_QUERY_KEY,
-        queryFn: authAPI.getMe,
+        queryKey: SESSION_QUERY_KEY,
+        queryFn: fetchCurrentUser,
         staleTime: 0,
       })
 

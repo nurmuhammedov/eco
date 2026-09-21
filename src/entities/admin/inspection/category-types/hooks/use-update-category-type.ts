@@ -1,10 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  inspectionCategoryTypeAPI as categoryTypeAPI,
-  categoryTypeKeys,
-  UpdateCategoryTypeDTO,
-} from '@/entities/admin/inspection'
+import { inspectionCategoryTypeAPI as categoryTypeAPI } from '../models/category-type.api'
+import { categoryTypeKeys } from '../models/category-type.query-keys'
+import { UpdateCategoryTypeDTO } from '../models/category-type.types'
 
 export const useUpdateCategoryType = () => {
   const queryClient = useQueryClient()
@@ -53,9 +51,7 @@ export const useUpdateCategoryType = () => {
         )
       }
 
-      queryClient.invalidateQueries({
-        queryKey: categoryTypeKeys.list('category-type'),
-      })
+      queryClient.invalidateQueries({ queryKey: categoryTypeKeys.root() })
     },
 
     onError: (_err, updatedCategoryType, context) => {

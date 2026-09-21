@@ -2,10 +2,10 @@ import { getTime } from '@/shared/lib'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import {
   FilterHazardousFacilityCategoryDTO,
-  hazardousFacilityCategoryAPI,
-  hazardousFacilityCategoryKeys,
   HazardousFacilityCategoryResponse,
-} from '@/entities/admin/hazardous-facility-category'
+} from '../models/hazardous-facility-category.types'
+import { hazardousFacilityCategoryAPI } from '../models/hazardous-facility-category.api'
+import { hazardousFacilityCategoryKeys } from '../models/hazardous-facility-category.query-keys'
 
 export const useHazardousFacilityCategoryListQuery = (filters: FilterHazardousFacilityCategoryDTO) => {
   return useQuery({

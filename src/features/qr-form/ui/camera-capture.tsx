@@ -1,3 +1,4 @@
+import { toast } from 'sonner'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Aperture, Camera, X } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
@@ -39,7 +40,7 @@ export const CameraCapture = ({ onCapture }: CameraCaptureProps) => {
       setIsCameraOpen(true)
     } catch (error) {
       console.error('Kameraga kirishda xatolik:', error)
-      alert('Kameraga ulanib bo‘lmadi. Qurilma sozlamalarini tekshiring.')
+      toast.error('Kameraga ulanib bo‘lmadi. Qurilma sozlamalarini tekshiring.')
     }
   }
 

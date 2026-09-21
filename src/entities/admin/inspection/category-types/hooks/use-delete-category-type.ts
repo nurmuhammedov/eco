@@ -1,10 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  inspectionCategoryTypeAPI as categoryTypeAPI,
-  categoryTypeKeys,
-  CategoryTypeResponse,
-} from '@/entities/admin/inspection'
+import { inspectionCategoryTypeAPI as categoryTypeAPI } from '../models/category-type.api'
+import { categoryTypeKeys } from '../models/category-type.query-keys'
+import { CategoryTypeResponse } from '../models/category-type.types'
 
 export const useDeleteCategoryType = () => {
   const queryClient = useQueryClient()
@@ -38,9 +36,7 @@ export const useDeleteCategoryType = () => {
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: categoryTypeKeys.list('category-type'),
-      })
+      queryClient.invalidateQueries({ queryKey: categoryTypeKeys.root() })
     },
 
     onError: (_err, categoryTypeId, context) => {

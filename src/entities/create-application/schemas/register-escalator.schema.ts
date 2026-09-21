@@ -6,39 +6,39 @@ import { z } from 'zod'
 
 const __EscalatorAppealDtoSchema = z.object({
   phoneNumber: z
-    .string({ required_error: 'Majburiy maydon!' })
+    .string()
     .trim()
     .refine((val) => USER_PATTERNS.phone.test(val), {
-      message: FORM_ERROR_MESSAGES.phone,
+      message: FORM_ERROR_MESSAGES.invalid,
     }),
   hazardousFacilityId: z
     .string()
     .optional()
     .nullable()
     .transform((val) => (val ? val : null)),
-  childEquipmentId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  factoryNumber: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  regionId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  districtId: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  childEquipmentId: z.string().trim().min(1),
+  factoryNumber: z.string().trim().min(1),
+  regionId: z.string().trim().min(1),
+  districtId: z.string().trim().min(1),
   parkId: z.union([z.number(), z.string()]).nullable().optional(),
-  address: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  model: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  factory: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  location: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  manufacturedAt: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  partialCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  servicePeriod: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  fullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
-  passengersPerMinute: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  length: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  speed: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  height: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  labelPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  assignmentDecreePath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  saleContractPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  equipmentCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  installationCertPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  passportPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
+  address: z.string().trim().min(1),
+  model: z.string().trim().min(1),
+  factory: z.string().trim().min(1),
+  location: z.string().trim().min(1),
+  manufacturedAt: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  partialCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  fullCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  passengersPerMinute: z.string().trim().min(1),
+  length: z.string().trim().min(1),
+  speed: z.string().trim().min(1),
+  height: z.string().trim().min(1),
+  labelPath: z.string().trim().min(1),
+  assignmentDecreePath: z.string().trim().min(1),
+  saleContractPath: z.string().trim().min(1),
+  equipmentCertPath: z.string().trim().min(1),
+  installationCertPath: z.string().trim().min(1),
+  passportPath: z.string().trim().min(1),
   expertisePath: z
     .string()
     .optional()
@@ -49,8 +49,8 @@ const __EscalatorAppealDtoSchema = z.object({
     .nullable()
     .optional()
     .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-  fullCheckPath: z.string({ required_error: 'Majburiy maydon!' }).trim().min(1, 'Majburiy maydon!'),
-  nextFullCheckDate: z.date({ required_error: 'Majburiy maydon!' }).transform((date) => format(date, 'yyyy-MM-dd')),
+  fullCheckPath: z.string().trim().min(1),
+  nextFullCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
 export const EscalatorAppealDtoSchema = __EscalatorAppealDtoSchema.superRefine((data: any, ctx: any) =>

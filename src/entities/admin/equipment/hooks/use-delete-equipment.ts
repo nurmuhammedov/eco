@@ -1,6 +1,10 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { equipmentAPI, equipmentKeys, EquipmentResponse } from '@/entities/admin/equipment'
+import { equipmentAPI } from '../models/equipment.api'
+import { equipmentKeys } from '../models/equipment.query-keys'
+import { EquipmentResponse } from '../models/equipment.types'
 
 export const useDeleteEquipment = () => {
   const queryClient = useQueryClient()
@@ -40,10 +44,9 @@ export const useDeleteEquipment = () => {
     },
 
     onSuccess: () => {
-      // Invalidate list queries to get fresh data
-      queryClient.invalidateQueries({
-        queryKey: equipmentKeys.list('equipment'),
-      })
+      // The whole slice: lists, details and the selects that read the same data
+      queryClient.invalidateQueries({ queryKey: equipmentKeys.root() })
+      invalidateEndpoint(queryClient, API_ENDPOINTS.CHILD_EQUIPMENTS)
     },
 
     onError: (_err, id, context) => {
