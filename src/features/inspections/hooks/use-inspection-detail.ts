@@ -1,15 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
 import { inspectionsApi } from '@/features/inspections/model/inspections.model'
-import { QK_INSPECTION } from '@/shared/constants/query-keys'
-import useCustomSearchParams from '../../../shared/hooks/api/use-search-params'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 
 export const useInspectionDetail = () => {
   const { paramsObject } = useCustomSearchParams()
   const inspectionId = paramsObject?.inspectionId
 
   return useQuery({
-    queryKey: [QK_INSPECTION, inspectionId],
+    queryKey: endpointKey('/inspections', inspectionId),
     queryFn: () => inspectionsApi.getInspectionDetail(inspectionId),
+    enabled: !!inspectionId,
     staleTime: 6000,
   })
 }

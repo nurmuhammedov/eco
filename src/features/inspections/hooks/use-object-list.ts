@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { inspectionsApi } from '@/features/inspections/model/inspections.model'
-import { QK_INSPECTION } from '@/shared/constants/query-keys'
-import useCustomSearchParams from '../../../shared/hooks/api/use-search-params'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
+import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 
 export const useObjectList = (enabled = true) => {
   const {
@@ -9,7 +9,7 @@ export const useObjectList = (enabled = true) => {
   } = useCustomSearchParams()
 
   return useQuery({
-    queryKey: [QK_INSPECTION, inspectionId, 'list'],
+    queryKey: endpointKey('/inspections', inspectionId, 'objects'),
     queryFn: () => inspectionsApi.getObjectList(inspectionId),
     enabled: enabled && !!inspectionId,
   })
@@ -21,7 +21,7 @@ export const useObjectListByPagination = () => {
   } = useCustomSearchParams()
 
   return useQuery({
-    queryKey: [QK_INSPECTION, inspectionId, page, size],
+    queryKey: endpointKey('/risk-analyses/by-inspection', inspectionId, { page, size }),
     queryFn: () => inspectionsApi.getObjectListByPagination({ page, size }, inspectionId),
     enabled: !!inspectionId,
   })

@@ -5,7 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/components/ui/input'
 import { Button } from '@/shared/components/ui/button'
 import { useSetFiles } from '@/features/inspections/hooks/use-set-files'
-import { QK_INSPECTION } from '@/shared/constants/query-keys'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
@@ -32,7 +32,7 @@ const AddInspectionDocuments = ({ specialCode = '', resultId = '', disabled = fa
       resultId: resultId,
     }).then(async () => {
       toast.success('Muvaffaqiyatli saqlandi!')
-      await queryClient.invalidateQueries({ queryKey: [QK_INSPECTION] })
+      await invalidateEndpoint(queryClient, '/inspections')
     })
   }
 

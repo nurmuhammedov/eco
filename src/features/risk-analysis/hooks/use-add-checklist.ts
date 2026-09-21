@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { QK_CHECKLIST } from '@/shared/constants/query-keys'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import { toast } from 'sonner'
 import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api'
 import { useSearchParams } from 'react-router-dom'
@@ -18,7 +18,7 @@ export function useAddChecklist() {
         objectId,
       }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [QK_CHECKLIST] })
+      await invalidateEndpoint(queryClient, '/checklists')
       toast.success('Muvaffaqiyatli saqlandi!')
     },
   })

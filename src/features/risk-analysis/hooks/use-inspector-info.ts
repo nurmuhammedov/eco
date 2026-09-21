@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { QK_RISK_ANALYSIS } from '@/shared/constants/query-keys'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { useSearchParams } from 'react-router-dom'
 import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api'
 
@@ -20,7 +20,7 @@ export const useInspectorInfo = () => {
   }
 
   return useQuery({
-    queryKey: [QK_RISK_ANALYSIS, 'INSPECTOR_INFO', currentAssignId, currentType],
+    queryKey: endpointKey(`/assign-inspector-${currentType}`, currentAssignId),
     queryFn: () => riskAnalysisDetailApi.getInspectorInfo({ type: currentType, id: currentAssignId }),
     enabled: !!currentAssignId,
   })

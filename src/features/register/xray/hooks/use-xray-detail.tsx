@@ -1,5 +1,5 @@
 import { xrayDetailApi } from '@/features/register/xray/model/xray-detail.api'
-import { QK_REGISTRY } from '@/shared/constants/query-keys'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
@@ -8,7 +8,7 @@ export const useXrayDetail = () => {
   const { id } = useParams()
   const { t } = useTranslation()
   return useQuery({
-    queryKey: [QK_REGISTRY, 'xray', id],
+    queryKey: endpointKey('/xrays', id),
     enabled: !!id,
     queryFn: () => xrayDetailApi.getDetail(id),
     select: (data) => {

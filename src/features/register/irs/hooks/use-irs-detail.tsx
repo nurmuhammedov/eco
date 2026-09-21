@@ -1,5 +1,5 @@
 import { irsDetailApi } from '@/features/register/irs/model/irs-detail.api'
-import { QK_REGISTRY } from '@/shared/constants/query-keys'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
@@ -8,7 +8,7 @@ export const useIrsDetail = () => {
   const { id } = useParams()
   const { t } = useTranslation()
   return useQuery({
-    queryKey: [QK_REGISTRY, 'irs', id],
+    queryKey: endpointKey('/irs', id),
     enabled: !!id,
     queryFn: () => irsDetailApi.getDetail(id),
     select: (data) => {

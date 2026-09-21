@@ -250,7 +250,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
 
     postChecklists({ dtoList, resultId }).then(() => {
       // toast?.success('Muvaffaqiyatli saqlandi!', { richColors: true })
-      qc.invalidateQueries({ queryKey: [`/inspection-checklists`, { resultId }] })
+      void invalidateEndpoint(qc, '/inspection-checklists')
     })
   }
 
@@ -264,7 +264,7 @@ const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementP
 
     postChecklists2({ dtoList, resultId }).then(() => {
       addParams({ modal: 'addUsers' })
-      qc.invalidateQueries({ queryKey: [`/inspection-checklists`, { resultId }] })
+      void invalidateEndpoint(qc, '/inspection-checklists')
       invalidateEndpoint(qc, '/inspection-results')
     })
   }

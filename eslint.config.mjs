@@ -173,6 +173,14 @@ export default tslint.config(
           message:
             'Kalitni `endpointKey(endpoint, ...)` bilan quring; bekor qilish uchun `invalidateEndpoint(queryClient, endpoint)`.',
         },
+        {
+          // The same address written with backticks is a TemplateLiteral, not a
+          // Literal, and slipped past the rule above.
+          selector:
+            "Property[key.name='queryKey'] > ArrayExpression > TemplateLiteral > TemplateElement:first-child[value.raw=/^\\//]",
+          message:
+            'Kalitni `endpointKey(endpoint, ...)` bilan quring; bekor qilish uchun `invalidateEndpoint(queryClient, endpoint)`.',
+        },
       ],
     },
   },

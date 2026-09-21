@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 import useUpdate from '@/shared/hooks/api/use-update'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
+import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface CadastreEditModalProps {
   isOpen: boolean
@@ -61,7 +62,7 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
     updateCadastreData(data, {
       onSuccess: () => {
         toast.success('Ma’lumotlar muvaffaqiyatli saqlandi')
-        queryClient.invalidateQueries({ queryKey: ['cadastre-passports', cadastreId] })
+        void invalidateEndpoint(queryClient, '/cadastre-passports')
         onClose()
       },
     })

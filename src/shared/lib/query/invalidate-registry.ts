@@ -1,21 +1,14 @@
 import { QueryClient } from '@tanstack/react-query'
-import { QK_REGISTRY } from '@/shared/constants/query-keys'
+import { belongsToEndpoint } from './endpoint-key'
 
-/** Endpoints backing the registry list pages; see build-register-query.ts. */
+/** Endpoints backing the registry pages; see build-register-query.ts. */
 const REGISTRY_ENDPOINTS = ['/hf', '/equipments', '/irs', '/xrays', '/tankers', '/radiation-profiles']
 
 /**
- * Detail pages are keyed by QK_REGISTRY, but list pages are keyed by their endpoint
- * (see usePaginatedData). Invalidating only QK_REGISTRY left every list stale.
+ * Registering an object can add it to any of the registers, and the page that
+ * shows it may be a list or a detail, so all of them are refetched at once.
  */
 export const invalidateRegistryQueries = (queryClient: QueryClient) =>
   queryClient.invalidateQueries({
-    predicate: ({ queryKey }) => {
-      const [root] = queryKey
-
-      if (root === QK_REGISTRY) return true
-      if (typeof root !== 'string') return false
-
-      return REGISTRY_ENDPOINTS.some((base) => root === base || root.startsWith(`${base}/`))
-    },
+    predicate: ({ queryKey }) => REGISTRY_ENDPOINTS.some((endpoint) => belongsToEndpoint(queryKey, endpoint)),
   })
