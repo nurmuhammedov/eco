@@ -124,8 +124,11 @@ export default function CadastreDetail() {
           <DetailRow title="Ishlab chiqqan tashkilot STIR" value={passport.preparerTin || '-'} />
           <DetailRow title="Tashkilot nomi" value={customerInfo?.name || '-'} />
           <DetailRow title="Tashkilot STIR" value={passport.customerTin || '-'} />
-          <DetailRow title="Titul fayli" value={fileValue(passport.titlePagePath)} />
-          <DetailRow title="Atribut fayli" value={fileValue(passport.dataPagePath)} />
+          <DetailRow title="Titul va Davlat reyestri fayli" value={fileValue(passport.titlePagePath)} />
+          <DetailRow
+            title="TXYUZ kadastr pasportining atributiv ma’lumotlari fayli"
+            value={fileValue(passport.dataPagePath)}
+          />
           <DetailRow title="Kadastr passporti fayli" value={fileValue(passport.passportFilePath)} />
         </DetailCardAccordion.Item>
 
