@@ -105,6 +105,10 @@ const ApplicationDetail = ({
                 data={data?.data}
                 type={data?.appealType?.replace('DEREGISTER_', '')?.replace('REGISTER_', '')?.replace('RE_', '')}
                 address={data?.address}
+                number={data?.number}
+                deadline={data?.deadline}
+                resolution={data?.resolution}
+                basisPath={data?.basisPath}
               />
             </TabsContent>
             <TabsContent value="applicant_docs">

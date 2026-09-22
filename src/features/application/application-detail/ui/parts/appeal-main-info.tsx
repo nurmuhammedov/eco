@@ -13,9 +13,15 @@ import {
 import { ACCREDITATION_SPHERE_LABELS } from '@/shared/constants/accreditation-spheres'
 import { HF_HAZARDOUS_SIGN_LABELS, HF_LEGAL_TYPE_LABELS } from '@/shared/constants/hf-attributes'
 import { EmptyValue } from '@/shared/components/common/empty-value'
+import FileLink from '@/shared/components/common/file-link'
 
 interface Props {
   address: any
+  /** Kept on the appeal itself rather than in its payload. */
+  number?: string
+  deadline?: string
+  resolution?: string
+  basisPath?: string
   data: any
   isRegister?: boolean
   /** Staff headcount lives on the registry record, not on the appeal. */
@@ -459,13 +465,33 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'address',
     'registryNumber',
   ],
-  CHECK_DECLARATION: ['legalTin', 'phoneNumber', 'hfRegistryNumber', 'sourceType', 'address'],
+  CHECK_DECLARATION: [
+    'number',
+    'legalTin',
+    'hfRegistryNumber',
+    'phoneNumber',
+    'sourceType',
+    'deadline',
+    'resolution',
+    'basisPath',
+    'address',
+  ],
   ACCREDIT_EXPERT: ACCREDITATION_FIELDS,
   EXPEND_ACCREDITATION_SCOPE: ACCREDITATION_FIELDS,
   ISSUE_ACCREDITATION_CERT: ACCREDITATION_FIELDS,
 }
 
-const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, showStaffCounts = false }) => {
+const AppealMainInfo: FC<Props> = ({
+  type,
+  data,
+  address,
+  number,
+  deadline,
+  resolution,
+  basisPath,
+  isRegister = false,
+  showStaffCounts = false,
+}) => {
   const { t } = useTranslation()
 
   const serviceName =
@@ -535,10 +561,15 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
       {/* XICHO (HF) maydonlari */}
       {isDeclarationCheck && (
         <>
+          {renderRow('number', number)}
           {renderRow('legalTin', data?.legalTin)}
           {renderRow('hfRegistryNumber', data?.hfRegistryNumber)}
           {renderRow('phoneNumber', data?.phoneNumber)}
           {renderRow('sourceType', SOURCE_TYPE_MAP[data?.sourceType] || data?.sourceType)}
+          {renderRow('deadline', getDate(deadline))}
+          {renderRow('address', address)}
+          {renderRow('resolution', resolution)}
+          {renderRow('basisPath', basisPath ? <FileLink url={basisPath} /> : null)}
         </>
       )}
 
@@ -652,7 +683,7 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
       {renderRow('riskLevel', RISK_LEVEL_MAP[data?.riskLevel] || data?.riskLevel)}
 
       {renderRow('parkName', data?.parkName)}
-      {renderRow('address', address)}
+      {!isDeclarationCheck && renderRow('address', address)}
 
       {/* Umumiy meta ma’lumotlar */}
       {type == 'IRS' ? renderRow('type', data?.type || '') : renderRow('type', t(`equipment_types.${type}`) || type)}

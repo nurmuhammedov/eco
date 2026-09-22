@@ -1090,7 +1090,11 @@
       "phoneNumber": "Telefon raqami",
       "hfRegistryNumber": "XICHO ro‘yxatga olish raqami",
       "sourceType": "Ariza manbasi",
-      "address": "Manzil"
+      "address": "Manzil",
+      "number": "Deklaratsiya ro‘yxat raqami",
+      "deadline": "Ijro muddati",
+      "resolution": "Rezolyutsiya",
+      "basisPath": "Asos hujjat"
     }
   },
   "user-logs": {
