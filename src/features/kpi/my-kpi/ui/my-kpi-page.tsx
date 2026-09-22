@@ -225,6 +225,42 @@ function ResultModal({ indicator, year, quarter, onClose }: ResultModalProps) {
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 
+/** A number with its label, sized to be read at a glance rather than studied. */
+const StatTile = ({
+  label,
+  value,
+  hint,
+  tone = 'default',
+}: {
+  label: string
+  value: string
+  hint?: string
+  tone?: 'default' | 'success' | 'warning' | 'danger'
+}) => (
+  <div className="bg-card rounded-xl border p-4 shadow-sm">
+    <p className="text-muted-foreground text-xs tracking-wide uppercase">{label}</p>
+    <p
+      className={cn(
+        'mt-1 text-2xl font-bold',
+        tone === 'success' && 'text-green-600',
+        tone === 'warning' && 'text-amber-500',
+        tone === 'danger' && 'text-red-600'
+      )}
+    >
+      {value}
+    </p>
+    {hint && <p className="text-muted-foreground mt-0.5 text-xs">{hint}</p>}
+  </div>
+)
+
+/** The stripe down the left of a card, so the list can be scanned by colour. */
+const STATUS_STRIPE: Record<string, string> = {
+  APPROVED: 'bg-green-500',
+  REJECTED: 'bg-red-500',
+  PENDING: 'bg-blue-500',
+  DRAFT: 'bg-amber-400',
+}
+
 export function MyKpiPage() {
   const currentYear = new Date().getFullYear()
   const currentQuarter = Math.ceil((new Date().getMonth() + 1) / 3)
@@ -238,46 +274,54 @@ export function MyKpiPage() {
 
   const years = useMemo(() => Array.from({ length: 5 }, (_, i) => currentYear - 1 + i), [currentYear])
 
-  const indicators = task?.indicators ?? []
+  const indicators = useMemo(() => task?.indicators ?? [], [task])
   const allFilled = indicators.length > 0 && indicators.every((ind) => ind.result !== null)
 
   // Submit is offered once every indicator is filled and at least one is still editable.
   const hasSubmittable = indicators.some((ind) => ind.result && isResultEditable(ind.result.status))
   const canSubmit = allFilled && hasSubmittable
 
+  const counts = useMemo(() => {
+    const by = (status: string) => indicators.filter((ind) => ind.result?.status === status).length
+
+    return {
+      filled: indicators.filter((ind) => ind.result).length,
+      approved: by('APPROVED'),
+      rejected: by('REJECTED'),
+      pending: by('PENDING'),
+    }
+  }, [indicators])
+
   const taskStatusCfg = task ? KPI_TASK_STATUS[task.status] : null
 
   return (
     <div className="container mx-auto space-y-4">
-      {/* Filters */}
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-        <div className="flex items-center gap-3">
-          <Select value={String(year)} onValueChange={(v) => setYear(Number(v))}>
-            <SelectTrigger className="h-9 w-28 text-sm">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {years.map((y) => (
-                <SelectItem key={y} value={String(y)}>
-                  {y}-yil
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+        <Select value={String(year)} onValueChange={(v) => setYear(Number(v))}>
+          <SelectTrigger className="h-9 w-28 text-sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {years.map((y) => (
+              <SelectItem key={y} value={String(y)}>
+                {y}-yil
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-          <Select value={String(quarter)} onValueChange={(v) => setQuarter(Number(v))}>
-            <SelectTrigger className="h-9 w-32 text-sm">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {[1, 2, 3, 4].map((q) => (
-                <SelectItem key={q} value={String(q)}>
-                  {q}-chorak
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <Select value={String(quarter)} onValueChange={(v) => setQuarter(Number(v))}>
+          <SelectTrigger className="h-9 w-32 text-sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {[1, 2, 3, 4].map((q) => (
+              <SelectItem key={q} value={String(q)}>
+                {q}-chorak
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {isLoading && (
@@ -290,7 +334,6 @@ export function MyKpiPage() {
 
       {!isLoading && task && (
         <div className="space-y-4">
-          {/* Summary */}
           <div className="bg-card rounded-xl border p-5 shadow-sm">
             <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
               <div>
@@ -321,33 +364,50 @@ export function MyKpiPage() {
                 value={task.completion_rate}
                 className={cn('h-2.5', completionBarColor(task.completion_rate))}
               />
-              <p className="text-muted-foreground mt-2 text-xs">
-                {task.submitted_count} / {task.indicator_count} indikatorga natija kiritilgan
-              </p>
             </div>
-
-            {canSubmit && (
-              <div className="mt-4 border-t pt-4">
-                <Button
-                  className="w-full gap-2"
-                  onClick={() => submitTask.mutate(task.id)}
-                  disabled={submitTask.isPending}
-                >
-                  {submitTask.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                  Tekshiruvga topshirish
-                </Button>
-              </div>
-            )}
-
-            {!allFilled && (
-              <div className="mt-3 flex items-center gap-2 rounded-md border border-amber-200 bg-amber-50 p-2.5 text-sm text-amber-700">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                Topshirish uchun barcha indikatorlarga natija kiritilishi shart.
-              </div>
-            )}
           </div>
 
-          {/* Indicators */}
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <StatTile
+              label="Kiritilgan"
+              value={`${counts.filled} / ${indicators.length}`}
+              hint={allFilled ? 'Barchasi to‘ldirilgan' : 'To‘ldirilishi kutilmoqda'}
+              tone={allFilled ? 'success' : 'warning'}
+            />
+            <StatTile label="Tekshiruvda" value={String(counts.pending)} hint="Tasdiqlovchilarda" />
+            <StatTile
+              label="Tasdiqlangan"
+              value={String(counts.approved)}
+              tone={counts.approved ? 'success' : 'default'}
+            />
+            <StatTile
+              label="Qaytarilgan"
+              value={String(counts.rejected)}
+              hint={counts.rejected ? 'Tuzatish kerak' : undefined}
+              tone={counts.rejected ? 'danger' : 'default'}
+            />
+          </div>
+
+          {canSubmit && (
+            <div className="border-teal/40 bg-teal/[0.04] flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="font-medium">Barcha natijalar kiritildi</p>
+                <p className="text-muted-foreground text-sm">Topshirgandan keyin tahrirlab bo‘lmaydi.</p>
+              </div>
+              <Button className="gap-2" onClick={() => submitTask.mutate(task.id)} disabled={submitTask.isPending}>
+                {submitTask.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                Tekshiruvga topshirish
+              </Button>
+            </div>
+          )}
+
+          {!allFilled && (
+            <div className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              Topshirish uchun barcha indikatorlarga natija kiritilishi shart.
+            </div>
+          )}
+
           <div className="space-y-2">
             <h2 className="text-muted-foreground text-sm font-semibold tracking-wide uppercase">
               Indikatorlar ({indicators.length} ta)
@@ -361,82 +421,99 @@ export function MyKpiPage() {
               return (
                 <div
                   key={ind.id}
-                  className="bg-card flex flex-col gap-4 rounded-xl border p-4 shadow-sm transition-colors sm:flex-row sm:items-center"
+                  className="bg-card relative overflow-hidden rounded-xl border shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <div className="flex min-w-0 flex-1 items-start gap-3">
-                    <span className="text-muted-foreground mt-0.5 w-6 shrink-0 text-sm font-bold">{idx + 1}</span>
+                  <span
+                    className={cn(
+                      'absolute inset-y-0 left-0 w-1.5',
+                      result ? STATUS_STRIPE[result.status] : 'bg-neutral-200'
+                    )}
+                  />
 
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium">{ind.name}</p>
+                  <div className="flex flex-col gap-4 p-4 pl-5 sm:flex-row sm:items-center">
+                    <div className="flex min-w-0 flex-1 items-start gap-3">
+                      <span className="text-muted-foreground mt-0.5 w-6 shrink-0 text-sm font-bold">{idx + 1}</span>
 
-                      <div className="text-muted-foreground mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-                        <span>Reja: {ind.target}</span>
-                        <span>Vazn: {ind.weight}</span>
-                        <span>
-                          Tur:{' '}
-                          <span className="text-foreground font-medium">
-                            {KPI_CALCULATION_TYPE[ind.calculation_type].short}
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium">{ind.name}</p>
+
+                        <div className="text-muted-foreground mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+                          <span>Reja: {ind.target}</span>
+                          <span>Vazn: {ind.weight}</span>
+                          <span>
+                            Tur:{' '}
+                            <span className="text-foreground font-medium">
+                              {KPI_CALCULATION_TYPE[ind.calculation_type].short}
+                            </span>
                           </span>
-                        </span>
-                        {ind.calculation_type === 'PENALTY' && (
-                          <span className="font-medium text-red-500">
-                            Har bir xatolik −{ind.penalty_per_unit ?? 100}%
-                          </span>
+                          {ind.calculation_type === 'PENALTY' && (
+                            <span className="font-medium text-red-500">
+                              Har bir xatolik −{ind.penalty_per_unit ?? 100}%
+                            </span>
+                          )}
+                        </div>
+
+                        {result && (
+                          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t pt-3">
+                            <div className="flex w-[150px] items-center gap-2">
+                              <Progress
+                                value={result.completion_percent}
+                                className={cn('h-1.5 flex-1', completionBarColor(result.completion_percent))}
+                              />
+                              <span className="shrink-0 text-xs font-semibold">{result.completion_percent}%</span>
+                            </div>
+
+                            {result.achieved_value !== null && (
+                              <span className="text-muted-foreground text-xs">
+                                {valueLabel(ind)}:{' '}
+                                <span className="text-foreground font-medium">{result.achieved_value}</span>
+                              </span>
+                            )}
+
+                            {result.status === 'PENDING' && <ApprovalTrail approvals={result.approvals} />}
+
+                            {result.note && (
+                              <span
+                                className="text-muted-foreground max-w-[220px] truncate text-xs"
+                                title={result.note}
+                              >
+                                Izoh: {result.note}
+                              </span>
+                            )}
+
+                            {result.file_url && <FileLink url={result.file_url} title="Hujjat" isSmall />}
+                          </div>
+                        )}
+
+                        {result?.status === 'REJECTED' && result.hr_comment && (
+                          <div className="mt-2 rounded-md border border-red-200 bg-red-50 p-2 text-xs text-red-700">
+                            <span className="font-semibold">Qaytarilish sababi: </span>
+                            {result.hr_comment}
+                          </div>
                         )}
                       </div>
-
-                      {result && (
-                        <div className="mt-3 flex flex-wrap items-center gap-3 border-t pt-3">
-                          <div className="flex w-[140px] items-center gap-2">
-                            <Progress
-                              value={result.completion_percent}
-                              className={cn('h-1.5 flex-1', completionBarColor(result.completion_percent))}
-                            />
-                            <span className="shrink-0 text-xs font-semibold">{result.completion_percent}%</span>
-                          </div>
-
-                          {result.achieved_value !== null && (
-                            <span className="text-muted-foreground text-xs">
-                              {valueLabel(ind)}:{' '}
-                              <span className="text-foreground font-medium">{result.achieved_value}</span>
-                            </span>
-                          )}
-
-                          {result.note && (
-                            <span className="text-muted-foreground max-w-[220px] truncate text-xs" title={result.note}>
-                              Izoh: {result.note}
-                            </span>
-                          )}
-
-                          {result.file_url && <FileLink url={result.file_url} title="Hujjat" isSmall />}
-                        </div>
-                      )}
-
-                      {result?.status === 'REJECTED' && result.hr_comment && (
-                        <div className="mt-2 rounded-md border border-red-200 bg-red-50 p-2 text-xs text-red-700">
-                          <span className="font-semibold">Qaytarilish sababi: </span>
-                          {result.hr_comment}
-                        </div>
-                      )}
                     </div>
-                  </div>
 
-                  <div className="ml-9 flex shrink-0 items-center gap-3 sm:ml-0">
-                    {statusCfg ? (
-                      <Badge variant={statusCfg.variant}>{statusCfg.label}</Badge>
-                    ) : (
-                      <Badge variant="secondary">Kiritilmagan</Badge>
-                    )}
+                    <div className="ml-9 flex shrink-0 items-center gap-3 sm:ml-0">
+                      {statusCfg ? (
+                        <Badge variant={statusCfg.variant} className="gap-1">
+                          <statusCfg.icon className="h-3.5 w-3.5" />
+                          {statusCfg.label}
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary">Kiritilmagan</Badge>
+                      )}
 
-                    {/* Opens read-only too, so the reviewer comment stays visible */}
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setSelectedIndicator(ind)}
-                      className="h-8 shrink-0 text-xs"
-                    >
-                      {!result ? 'Natija kiritish' : canEdit ? 'Tahrirlash' : 'Ko‘rish'}
-                    </Button>
+                      {/* Opens read-only too, so the reviewer comment stays visible */}
+                      <Button
+                        size="sm"
+                        variant={result ? 'outline' : 'default'}
+                        onClick={() => setSelectedIndicator(ind)}
+                        className="h-8 shrink-0 text-xs"
+                      >
+                        {!result ? 'Natija kiritish' : canEdit ? 'Tahrirlash' : 'Ko‘rish'}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )
