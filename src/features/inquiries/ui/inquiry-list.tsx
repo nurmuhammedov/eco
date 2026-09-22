@@ -20,6 +20,7 @@ import { Badge } from '@/shared/components/ui/badge'
 import { cn } from '@/shared/lib/utils'
 import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { ChangeRegionModal } from './modals/change-region-modal'
+import { TruncatedCell } from '@/shared/components/common/truncated-cell'
 
 const InquiryTable = () => {
   const { user } = useAuth()
@@ -155,7 +156,8 @@ const InquiryTable = () => {
     {
       accessorKey: 'message',
       header: 'Murojaat matni',
-      cell: ({ row }) => <span title={row.original.message}>{row.original.message}</span>,
+      className: 'max-w-[320px]',
+      cell: ({ row }) => <TruncatedCell expandable lines={2} value={row.original.message} />,
     },
     {
       accessorKey: 'status',

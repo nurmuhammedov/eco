@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip'
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 import { cn } from '@/shared/lib/utils'
 
@@ -17,6 +18,12 @@ interface TruncatedCellProps {
   /** Below this length the text is short enough to need no tooltip. */
   threshold?: number
   className?: string
+  /**
+   * Opens the full text on click instead of on hover. Worth it where the value
+   * runs to paragraphs - an enquiry, a comment - because the reader can scroll
+   * it, select it and copy it, none of which a tooltip allows.
+   */
+  expandable?: boolean
 }
 
 /**
@@ -25,7 +32,13 @@ interface TruncatedCellProps {
  * row to a screenful. The cell keeps a couple of lines and hands the rest to a
  * tooltip, so the table stays readable without losing anything.
  */
-export const TruncatedCell: FC<TruncatedCellProps> = ({ value, lines = 2, threshold = 40, className }) => {
+export const TruncatedCell: FC<TruncatedCellProps> = ({
+  value,
+  lines = 2,
+  threshold = 40,
+  className,
+  expandable = false,
+}) => {
   const text = value === null || value === undefined || value === '' ? '' : String(value)
 
   if (!text) return <EmptyValue />
@@ -33,6 +46,29 @@ export const TruncatedCell: FC<TruncatedCellProps> = ({ value, lines = 2, thresh
   const clamped = cn('break-words', CLAMP[lines], className)
 
   if (text.length <= threshold) return <span className={className}>{text}</span>
+
+  if (expandable) {
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            title="To‘liq matnni ochish"
+            className={cn(clamped, 'cursor-pointer text-left hover:underline')}
+          >
+            {text}
+          </button>
+        </PopoverTrigger>
+        <PopoverContent
+          side="top"
+          align="start"
+          className="max-h-80 w-[min(28rem,90vw)] overflow-y-auto text-sm break-words whitespace-pre-wrap"
+        >
+          {text}
+        </PopoverContent>
+      </Popover>
+    )
+  }
 
   return (
     <TooltipProvider delayDuration={200}>
