@@ -6,6 +6,23 @@ export type KpiTaskStatus = 'NOT_STARTED' | 'IN_PROGRESS' | 'PENDING' | 'REJECTE
 
 export type KpiCalculationType = 'PLAN' | 'PENALTY'
 
+export type KpiApprovalDecision = 'APPROVED' | 'REJECTED'
+
+export interface KpiApprovalEntry {
+  approver_user_id: string
+  approver_name: string
+  decision: KpiApprovalDecision
+  comment: string | null
+  created_at: string | null
+}
+
+/** A result needs two signatures; this is how many it has and from whom. */
+export interface KpiApprovalSummary {
+  required: number
+  approved: number
+  entries: KpiApprovalEntry[]
+}
+
 export interface KpiResult {
   id: string
   achieved_value: number | null
@@ -16,6 +33,7 @@ export interface KpiResult {
   file_url: string | null
   status: KpiResultStatus
   hr_comment: string | null
+  approvals: KpiApprovalSummary
   reviewed_by_name: string | null
   submitted_at: string | null
   reviewed_at: string | null

@@ -24,6 +24,7 @@ import {
   KPI_RESULT_STATUS,
   KPI_TASK_STATUS,
   type KpiIndicator,
+  ApprovalTrail,
 } from '@/entities/kpi'
 import { useGetMyKpiTask, useCreateResult, useUpdateResult, useSubmitKpiTask } from '../model/use-my-kpi'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
@@ -119,6 +120,7 @@ function ResultModal({ indicator, year, quarter, onClose }: ResultModalProps) {
                 <statusCfg.icon className="h-3.5 w-3.5" />
                 {statusCfg.label}
               </Badge>
+              {result?.status === 'PENDING' && <ApprovalTrail approvals={result.approvals} />}
             </div>
 
             {result?.hr_comment && (

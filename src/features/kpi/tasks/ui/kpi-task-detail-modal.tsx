@@ -14,7 +14,9 @@ import {
   KPI_RESULT_STATUS,
   KPI_TASK_STATUS,
   type KpiIndicator,
+  ApprovalTrail,
 } from '@/entities/kpi'
+import { useAuth } from '@/shared/hooks/use-auth'
 import { useGetKpiTask, useApproveResult, useRejectResult } from '../model/use-kpi-tasks'
 
 interface Props {
@@ -30,6 +32,7 @@ function ResultCell({ indicator }: { indicator: KpiIndicator }) {
 
   const approveMutation = useApproveResult()
   const rejectMutation = useRejectResult()
+  const { user } = useAuth()
 
   const result = indicator.result
 
@@ -38,7 +41,10 @@ function ResultCell({ indicator }: { indicator: KpiIndicator }) {
   }
 
   const statusCfg = KPI_RESULT_STATUS[result.status]
-  const isPending = result.status === 'PENDING'
+  // Already signed by this reviewer: the second signature has to come from the
+  // other one, so offering the button again would only produce a refusal.
+  const hasSigned = result.approvals?.entries.some((entry) => entry.approver_user_id === user?.id)
+  const isPending = result.status === 'PENDING' && !hasSigned
 
   const handleReject = () => {
     if (!comment.trim()) return
@@ -72,6 +78,8 @@ function ResultCell({ indicator }: { indicator: KpiIndicator }) {
         </span>
       )}
 
+      <ApprovalTrail approvals={result.approvals} />
+
       {result.file_url && <FileLink url={result.file_url} title="Hujjat" isSmall />}
 
       {result.note && (
@@ -93,6 +101,10 @@ function ResultCell({ indicator }: { indicator: KpiIndicator }) {
           </span>
           {result.hr_comment}
         </div>
+      )}
+
+      {result.status === 'PENDING' && hasSigned && (
+        <span className="text-muted-foreground text-[11px]">Siz imzoladingiz — ikkinchi tasdiqlovchi kutilmoqda</span>
       )}
 
       {isPending && !rejectMode && (
