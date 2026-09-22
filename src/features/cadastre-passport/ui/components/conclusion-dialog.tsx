@@ -7,11 +7,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Textarea } from '@/shared/components/ui/textarea'
 import { Button } from '@/shared/components/ui/button'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+
+/** The backend refuses more than this, so the picker stops before the request does. */
+const MAX_FILES = 10
 
 const schema = z.object({
-  conclusion: z.string().trim().min(1, FORM_ERROR_MESSAGES.required),
-  conclusionFilePath: z.string().min(1, FORM_ERROR_MESSAGES.required),
+  conclusion: z.string().trim().min(1),
+  conclusionFilePaths: z.array(z.string()).min(1).max(MAX_FILES),
 })
 
 export type ConclusionValues = z.infer<typeof schema>
@@ -40,11 +42,11 @@ export const ConclusionDialog = ({
 }: ConclusionDialogProps) => {
   const form = useForm<ConclusionValues>({
     resolver: zodResolver(schema),
-    defaultValues: { conclusion: defaultText, conclusionFilePath: '' },
+    defaultValues: { conclusion: defaultText, conclusionFilePaths: [] },
   })
 
   useEffect(() => {
-    if (open) form.reset({ conclusion: defaultText, conclusionFilePath: '' })
+    if (open) form.reset({ conclusion: defaultText, conclusionFilePaths: [] })
   }, [open, defaultText, form])
 
   return (
@@ -70,14 +72,20 @@ export const ConclusionDialog = ({
             />
             <FormField
               control={form.control}
-              name="conclusionFilePath"
+              name="conclusionFilePaths"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Xulosa fayli</FormLabel>
+                  <FormLabel required>Xulosa</FormLabel>
                   <FormControl>
                     {/* InputFile prints the field's own error, so a FormMessage
                         here only repeats it. */}
-                    <InputFile name={field.name} form={form} uploadEndpoint="/attachments/cadastre-passports" />
+                    <InputFile
+                      multiple
+                      maxFiles={MAX_FILES}
+                      name={field.name}
+                      form={form}
+                      uploadEndpoint="/attachments/cadastre-passports"
+                    />
                   </FormControl>
                 </FormItem>
               )}

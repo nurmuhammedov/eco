@@ -29,7 +29,18 @@ export const ReviewsList = ({ reviews }: { reviews: CadastreReview[] }) => {
                 {review.conclusion}
               </p>
             )}
-            {review.conclusionFilePath && <FileLink url={review.conclusionFilePath} title="Xulosa fayli" />}
+            {!!review.conclusionFilePaths?.length && (
+              <ul className="space-y-1">
+                {review.conclusionFilePaths.map((path, fileIndex) => (
+                  <li key={path}>
+                    <FileLink
+                      url={path}
+                      title={review.conclusionFilePaths!.length > 1 ? `Xulosa ${fileIndex + 1}` : 'Xulosa'}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         )
       })}

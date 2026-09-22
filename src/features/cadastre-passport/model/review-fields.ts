@@ -99,7 +99,6 @@ export const SES_GROUPS: ReviewGroup[] = [
         label: 'Ishlab chiqarish, qayta ishlash, saqlash va foydalanish moddalarining bir yillik quvvati',
         type: 'text',
       },
-      { name: 'hazardLevel', label: 'Xavflilik darajasi', type: 'text' },
       { name: 'productStorageLocation', label: 'Mahsulot saqlanadigan joyi', type: 'text' },
       { name: 'sanitaryPassportDate', label: 'Sanitariya pasporti berilgan sana', type: 'date', dates: 'past' },
       {

@@ -94,6 +94,7 @@ export const cadastreDataSchema = z
     exploitationDate: day(),
     purpose: text(),
     substance: text(),
+    hazardLevel: text(),
     employeeCount: whole(),
     workingHour: whole().min(1, invalid).max(24, invalid),
     firefightingEquipment: text(),
@@ -444,6 +445,19 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
               </FormLabel>
               <FormControl>
                 <SelectOrInput options={TXYUZ_SUBSTANCES} value={field.value} onChange={field.onChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}hazardLevel`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Xavflilik darajasi</FormLabel>
+              <FormControl>
+                <Input placeholder="Kiriting" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

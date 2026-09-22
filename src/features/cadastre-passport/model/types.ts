@@ -16,7 +16,7 @@ export interface CadastreReview {
   party: ReviewParty
   signAction: SignAction
   conclusion: string | null
-  conclusionFilePath: string | null
+  conclusionFilePaths: string[] | null
   reviewerProfileId: string | null
   reviewerName: string | null
   createdAt: string | null
@@ -46,7 +46,7 @@ export interface WorkflowHistoryEntry {
   actorName: string | null
   positionName: string | null
   comment: string | null
-  filePath: string | null
+  filePaths: string[] | null
   signatureId: string | null
   createdAt: string | null
 }

@@ -159,7 +159,18 @@ export const WorkflowActions = ({ passport, workflow }: WorkflowActionsProps) =>
                     {submission.comment}
                   </p>
                 )}
-                {submission.filePath && <FileLink url={submission.filePath} title="Xulosa fayli" />}
+                {!!submission.filePaths?.length && (
+                  <ul className="space-y-1">
+                    {submission.filePaths.map((path, index) => (
+                      <li key={path}>
+                        <FileLink
+                          url={path}
+                          title={submission.filePaths!.length > 1 ? `Xulosa ${index + 1}` : 'Xulosa'}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </>
             ) : (
               <p className="text-muted-foreground text-sm">Xulosa topilmadi</p>

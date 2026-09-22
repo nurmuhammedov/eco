@@ -41,7 +41,15 @@ const HistoryTimeline = ({ instanceId }: { instanceId: string }) => {
               {entry.comment}
             </p>
           )}
-          {entry.filePath && <FileLink url={entry.filePath} title="Faylni ko‘rish" />}
+          {!!entry.filePaths?.length && (
+            <ul className="space-y-1">
+              {entry.filePaths.map((path, index) => (
+                <li key={path}>
+                  <FileLink url={path} title={entry.filePaths!.length > 1 ? `Fayl ${index + 1}` : 'Faylni ko‘rish'} />
+                </li>
+              ))}
+            </ul>
+          )}
         </li>
       ))}
     </ol>
