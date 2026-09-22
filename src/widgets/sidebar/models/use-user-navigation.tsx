@@ -4,12 +4,19 @@ import { UserRoles } from '@/shared/types/user'
 import { isModuleInMenu } from '@/shared/lib/access/module-access'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { usePaginatedData } from '@/shared/hooks'
+import { useKpiAccess } from '@/entities/kpi'
 import { NAVIGATIONS } from './navigations'
 import { Navigation } from './types'
 import allNavigation from './all'
 import legalNavigation from './legal'
 
 const DASHBOARD_ROLES = [UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.CHAIRMAN]
+
+/** What the two designated approvers see under KPI instead of their own scorecard. */
+export const KPI_APPROVER_ITEMS = [
+  { id: 'KPI', title: 'Boshqarma va bo‘limlar', url: '/kpi/departments' },
+  { id: 'KPI', title: 'KPI vazifalar', url: '/kpi/tasks' },
+]
 
 /**
  * Builds the menu a user is allowed to see. Both the sidebar and the start-page
@@ -28,6 +35,10 @@ export const useUserNavigation = (): Navigation => {
     { page: 1, size: 1, active: true },
     isIndividual
   )
+
+  // Approving is given to two named people, not to a role, so the menu has to
+  // ask the server which of the heads they are.
+  const { access } = useKpiAccess()
 
   return useMemo<Navigation>(() => {
     if (!user) return []
@@ -55,12 +66,18 @@ export const useUserNavigation = (): Navigation => {
       return acc
     }, [])
 
+    // An approver signs off on other departments and files no scorecard of
+    // their own, so their KPI section is a different pair of pages.
+    if (access.is_approver) {
+      navigations = navigations.map((item) => (item.id === 'KPI' ? { ...item, items: KPI_APPROVER_ITEMS } : item))
+    }
+
     if (DASHBOARD_ROLES.includes(role)) {
       navigations = [{ title: 'Bosh sahifa', url: '/dashboard', icon: <LucideHome /> }, ...navigations]
     }
 
     return navigations
-  }, [user, isIndividual, equipmentCount])
+  }, [user, isIndividual, equipmentCount, access.is_approver])
 }
 
 /** First reachable page for the user, used as the landing route after sign-in. */

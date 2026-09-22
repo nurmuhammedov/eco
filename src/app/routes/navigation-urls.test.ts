@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { APP_ROUTES } from './registry'
 import { NAVIGATIONS } from '@/widgets/sidebar/models/navigations'
 import { Navigation } from '@/widgets/sidebar/models/types'
+import { KPI_APPROVER_ITEMS } from '@/widgets/sidebar/models/use-user-navigation'
 
 const KNOWN_PATHS = new Set(APP_ROUTES.map(({ path }) => `/${path}`))
 
@@ -25,6 +26,12 @@ describe('sidebar navigation', () => {
       expect(missing).toEqual([])
     })
   }
+
+  it('knows the pages it swaps in for a KPI approver', () => {
+    const missing = KPI_APPROVER_ITEMS.map(({ url }) => pathnameOf(url)).filter((url) => !KNOWN_PATHS.has(url))
+
+    expect(missing).toEqual([])
+  })
 
   it('does not send two entries of one menu to the same page', () => {
     for (const [role, navigation] of Object.entries(NAVIGATIONS)) {

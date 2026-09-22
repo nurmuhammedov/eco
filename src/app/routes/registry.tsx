@@ -626,13 +626,13 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     path: 'kpi/departments',
     element: withSuspense(DepartmentsPage),
-    roles: [UserRoles.CHAIRMAN, UserRoles.HR, UserRoles.PROCURATOR],
+    roles: [UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.PROCURATOR],
   },
   { id: 'KPI', path: 'kpi/my-tasks', element: withSuspense(MyKpiPage), roles: [UserRoles.HEAD] },
   {
     path: 'kpi/tasks',
     element: withSuspense(KpiTasksPage),
-    roles: [UserRoles.CHAIRMAN, UserRoles.HR, UserRoles.PROCURATOR],
+    roles: [UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.PROCURATOR],
   },
   { path: 'metrics', element: withSuspense(MetricsPage), roles: [UserRoles.ADMIN] },
   {

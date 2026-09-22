@@ -7,24 +7,6 @@ const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0')
 
 export default [
   {
-    id: 'KPI',
-    title: 'KPI',
-    url: '/kpi',
-    icon: MODULE_ICONS.KPI,
-    items: [
-      {
-        id: 'KPI',
-        title: 'Boshqarma va bo‘limlar',
-        url: '/kpi/departments',
-      },
-      {
-        id: 'KPI',
-        title: 'KPI vazifalar',
-        url: '/kpi/tasks',
-      },
-    ],
-  },
-  {
     id: 'DELEGATION',
     title: 'Vazifalarni yuklash',
     url: '/user-delegation',
