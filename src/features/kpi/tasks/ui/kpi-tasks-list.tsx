@@ -3,6 +3,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Plus, Edit2, Eye, Loader2 } from 'lucide-react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { Button } from '@/shared/components/ui/button'
+import { useKpiAccess } from '@/entities/kpi'
 import { Badge } from '@/shared/components/ui/badge'
 import { Progress } from '@/shared/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
@@ -21,6 +22,8 @@ export function KpiTasksList() {
   const [quarter, setQuarter] = useState(currentQuarter)
 
   const { data = [], isLoading } = useGetKpiTasks(year, quarter)
+  // Both approvers read this page; only one of them draws up the tasks.
+  const { access } = useKpiAccess()
   const deleteMutation = useDeleteKpiTask()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -113,7 +116,7 @@ export function KpiTasksList() {
               <Eye className="h-4 w-4" />
             </Button>
 
-            {!isLocked && (
+            {!isLocked && access.can_assign && (
               <>
                 <Button
                   variant="ghost"
@@ -147,9 +150,11 @@ export function KpiTasksList() {
   return (
     <div className="flex h-full flex-col overflow-hidden">
       <div className="mb-4 flex flex-col gap-2 pt-0.5 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
-        <Button onClick={handleAdd}>
-          <Plus className="mr-2 h-4 w-4" /> Vazifa qo‘shish
-        </Button>
+        {access.can_assign && (
+          <Button onClick={handleAdd}>
+            <Plus className="mr-2 h-4 w-4" /> Vazifa qo‘shish
+          </Button>
+        )}
 
         <Select value={String(year)} onValueChange={(v) => setYear(Number(v))}>
           <SelectTrigger className="h-9 w-28 text-sm">

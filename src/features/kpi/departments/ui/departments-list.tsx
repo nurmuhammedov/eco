@@ -4,6 +4,7 @@ import { Plus, Edit2, UserCheck } from 'lucide-react'
 import { format } from 'date-fns'
 import { DataTable } from '@/shared/components/common/data-table'
 import { Button } from '@/shared/components/ui/button'
+import { useKpiAccess } from '@/entities/kpi'
 import { Badge } from '@/shared/components/ui/badge'
 import { Department } from '../api/departments.api'
 import { useGetDepartments, useDeleteDepartment } from '../model/use-departments'
@@ -12,6 +13,8 @@ import DeleteConfirmationDialog from '@/shared/components/common/delete-confirm-
 
 export function DepartmentsList() {
   const { data, isLoading } = useGetDepartments()
+  // Only the approver who was given the assigning duty may change these.
+  const { access } = useKpiAccess()
   const deleteMutation = useDeleteDepartment()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -67,35 +70,46 @@ export function DepartmentsList() {
         return format(new Date(row.original.created_at), 'dd.MM.yyyy HH:mm')
       },
     },
-    {
-      id: 'actions',
-      header: 'Amallar',
-      cell: ({ row }) => {
-        const dept = row.original
-        return (
-          <div className="flex gap-2">
-            <Button variant="ghost" size="icon" onClick={() => handleEdit(dept)} className="h-8 w-8 text-blue-500">
-              <Edit2 className="h-4 w-4" />
-            </Button>
-            <DeleteConfirmationDialog
-              variant="outline"
-              onConfirm={() => deleteMutation.mutate(dept.id)}
-              title="Bo‘limni o‘chirish"
-              description={`Haqiqatan ham "${dept.name}" bo‘limini o‘chirmoqchimisiz?`}
-            />
-          </div>
-        )
-      },
-    },
+    ...(access.can_assign
+      ? [
+          {
+            id: 'actions',
+            header: 'Amallar',
+            cell: ({ row }) => {
+              const dept = row.original
+              return (
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleEdit(dept)}
+                    className="h-8 w-8 text-blue-500"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                  <DeleteConfirmationDialog
+                    variant="outline"
+                    onConfirm={() => deleteMutation.mutate(dept.id)}
+                    title="Bo‘limni o‘chirish"
+                    description={`Haqiqatan ham "${dept.name}" bo‘limini o‘chirmoqchimisiz?`}
+                  />
+                </div>
+              )
+            },
+          } as ColumnDef<Department>,
+        ]
+      : []),
   ]
 
   return (
     <div className="flex h-full flex-col gap-4 overflow-hidden">
-      <div className="mb-2 flex items-center justify-end">
-        <Button onClick={handleAdd}>
-          <Plus className="mr-2 h-4 w-4" /> Qo‘shish
-        </Button>
-      </div>
+      {access.can_assign && (
+        <div className="mb-2 flex items-center justify-end">
+          <Button onClick={handleAdd}>
+            <Plus className="mr-2 h-4 w-4" /> Qo‘shish
+          </Button>
+        </div>
+      )}
 
       <DataTable data={data || []} columns={columns} isLoading={isLoading} className="flex-1" />
 
