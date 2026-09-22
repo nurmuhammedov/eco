@@ -13,6 +13,7 @@ import {
   Trees,
   Newspaper,
   Workflow,
+  ShieldCheck,
 } from 'lucide-react'
 
 export default [
@@ -40,6 +41,11 @@ export default [
     url: '/org-workflow',
     title: 'TXYUZ jarayoni',
     icon: <Workflow />,
+  },
+  {
+    url: '/kpi/approvers',
+    title: 'KPI tasdiqlovchilari',
+    icon: <ShieldCheck />,
   },
   {
     url: '/hazardous-facilities',

@@ -71,6 +71,7 @@ const InspectionSurveys = lazy(() => import('@/pages/admin/inspection/ui'))
 const InteractiveServicePage = lazy(() =>
   import('@/pages/interactive-service').then((m) => ({ default: m.InteractiveServicePage }))
 )
+const KpiApproversPage = lazy(() => import('@/pages/kpi/kpi-approvers-page'))
 const KpiRegionalReport = lazy(() => import('@/features/reports/ui/kpi-regional-report'))
 const KpiTasksPage = lazy(() => import('@/pages/kpi/kpi-tasks-page'))
 const MetricsPage = lazy(() => import('@/pages/admin/metrics/page'))
@@ -628,6 +629,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
     element: withSuspense(DepartmentsPage),
     roles: [UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.PROCURATOR],
   },
+  { path: 'kpi/approvers', element: withSuspense(KpiApproversPage), roles: [UserRoles.ADMIN] },
   { id: 'KPI', path: 'kpi/my-tasks', element: withSuspense(MyKpiPage), roles: [UserRoles.HEAD] },
   {
     path: 'kpi/tasks',
