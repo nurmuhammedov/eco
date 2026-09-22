@@ -1084,6 +1084,13 @@
       "qmsCertificatePath": "Talabgorning sifatni boshqarish tizimining muvofiqlik sertifikati",
       "basisPath": "Ijro asos fayli",
       "receiptPath": "Davlat xizmatini ko‘rsatish uchun yig‘im to‘langani (to‘lov kvitansiyasi)"
+    },
+    "CHECK_DECLARATION": {
+      "legalTin": "Tashkilot STIR",
+      "phoneNumber": "Telefon raqami",
+      "hfRegistryNumber": "XICHO ro‘yxatga olish raqami",
+      "sourceType": "Ariza manbasi",
+      "address": "Manzil"
     }
   },
   "user-logs": {

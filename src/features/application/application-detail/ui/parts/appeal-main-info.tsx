@@ -459,6 +459,7 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'address',
     'registryNumber',
   ],
+  CHECK_DECLARATION: ['legalTin', 'phoneNumber', 'hfRegistryNumber', 'sourceType', 'address'],
   ACCREDIT_EXPERT: ACCREDITATION_FIELDS,
   EXPEND_ACCREDITATION_SCOPE: ACCREDITATION_FIELDS,
   ISSUE_ACCREDITATION_CERT: ACCREDITATION_FIELDS,
@@ -481,6 +482,11 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
     [IrsUsageType.STORAGE]: 'Vaqtinchalik saqlash uchun',
   }
 
+  const SOURCE_TYPE_MAP: Record<string, string> = {
+    MY_GOV: 'MyGov portali',
+    CABINET: 'Shaxsiy kabinet',
+  }
+
   const RISK_LEVEL_MAP: Record<string, string> = {
     I: 'I daraja',
     II: 'II daraja',
@@ -491,6 +497,10 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
   const usageTypeName = USAGE_TYPE_MAP[data?.usageType]
 
   const isAccreditation = ACCREDITATION_TYPES.includes(type)
+
+  // A declaration check carries the applicant's own details rather than an
+  // object of its own, so it has nothing in common with the rows below.
+  const isDeclarationCheck = type === 'CHECK_DECLARATION'
 
   /**
    * A multi-sector facility declares several categories and no single one, so
@@ -523,6 +533,15 @@ const AppealMainInfo: FC<Props> = ({ type, data, address, isRegister = false, sh
       {/* Umumiy ma’lumotlar */}
 
       {/* XICHO (HF) maydonlari */}
+      {isDeclarationCheck && (
+        <>
+          {renderRow('legalTin', data?.legalTin)}
+          {renderRow('hfRegistryNumber', data?.hfRegistryNumber)}
+          {renderRow('phoneNumber', data?.phoneNumber)}
+          {renderRow('sourceType', SOURCE_TYPE_MAP[data?.sourceType] || data?.sourceType)}
+        </>
+      )}
+
       {renderRow('upperOrganization', data?.upperOrganization)}
       {renderRow('name', data?.name)}
       {isAllowed('categoryId') &&

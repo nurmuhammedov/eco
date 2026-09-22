@@ -15,6 +15,7 @@ import {
   KPI_TASK_STATUS,
   type KpiIndicator,
   ApprovalTrail,
+  useKpiAccess,
 } from '@/entities/kpi'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { useGetKpiTask, useApproveResult, useRejectResult } from '../model/use-kpi-tasks'
@@ -33,6 +34,8 @@ function ResultCell({ indicator }: { indicator: KpiIndicator }) {
   const approveMutation = useApproveResult()
   const rejectMutation = useRejectResult()
   const { user } = useAuth()
+  // Oversight roles read this page but take no part in the workflow.
+  const { access } = useKpiAccess()
 
   const result = indicator.result
 
@@ -44,7 +47,7 @@ function ResultCell({ indicator }: { indicator: KpiIndicator }) {
   // Already signed by this reviewer: the second signature has to come from the
   // other one, so offering the button again would only produce a refusal.
   const hasSigned = result.approvals?.entries.some((entry) => entry.approver_user_id === user?.id)
-  const isPending = result.status === 'PENDING' && !hasSigned
+  const isPending = result.status === 'PENDING' && !hasSigned && access.is_approver
 
   const handleReject = () => {
     if (!comment.trim()) return
@@ -103,7 +106,7 @@ function ResultCell({ indicator }: { indicator: KpiIndicator }) {
         </div>
       )}
 
-      {result.status === 'PENDING' && hasSigned && (
+      {result.status === 'PENDING' && hasSigned && access.is_approver && (
         <span className="text-muted-foreground text-[11px]">Siz imzoladingiz — ikkinchi tasdiqlovchi kutilmoqda</span>
       )}
 
