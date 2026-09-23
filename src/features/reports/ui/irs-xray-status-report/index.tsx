@@ -6,7 +6,7 @@ import { useData } from '@/shared/hooks'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { cn } from '@/shared/lib/utils'
-import { IrsXrayStatusItem } from './types'
+import { IrsXrayStatusItem, OrganizationCount } from './types'
 
 const ALL = 'ALL'
 
@@ -18,25 +18,68 @@ const ALL = 'ALL'
 const isSummaryRow = (regionName?: string) => {
   const name = regionName?.toLowerCase() ?? ''
 
-  return name.includes('bo‘yicha') || name.includes('bo‘yicha') || name === 'jami'
+  return name.includes('bo‘yicha') || name.includes('bo’yicha') || name.includes("bo'yicha") || name === 'jami'
+}
+
+interface Organizations {
+  all: number
+  state: number
+  nonState: number
 }
 
 interface Row {
   regionName: string
   isSummary: boolean
-  irsAll: number
   irsActive: number
   irsInactive: number
-  xrayAll: number
+  irsOrg: Organizations
+  xrayActive: number
   xrayValid: number
   xrayExpired: number
   xrayNoDate: number
   xrayInactive: number
+  xrayOrg: Organizations
 }
 
 const Count = ({ row, value, tone }: { row: Row; value: number; tone?: string }) => (
   <span className={cn('tabular-nums', tone, row.isSummary && 'font-bold')}>{value}</span>
 )
+
+const toOrganizations = (count?: OrganizationCount | null): Organizations => ({
+  all: count?.allCount ?? 0,
+  state: count?.stateCount ?? 0,
+  nonState: count?.nonStateCount ?? 0,
+})
+
+const organizationColumns = (prefix: 'irs' | 'xray') => {
+  const key = `${prefix}Org` as const
+  const column = (id: keyof Organizations, header: React.ReactNode) => ({
+    header: () => <div className="text-center whitespace-nowrap">{header}</div>,
+    id: `${prefix}-org-${id}`,
+    className: 'text-center',
+    cell: ({ row }: any) => <Count row={row.original} value={row.original[key][id]} />,
+  })
+
+  return {
+    header: 'Tashkilotlar',
+    id: `${prefix}-organizations`,
+    columns: [
+      column('all', 'Barchasi'),
+      column(
+        'state',
+        <>
+          Davlat <br /> tashkilotlari
+        </>
+      ),
+      column(
+        'nonState',
+        <>
+          Davlat tashkiloti <br /> bo‘lmaganlar
+        </>
+      ),
+    ],
+  }
+}
 
 const IrsXrayStatusReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
@@ -56,10 +99,11 @@ const IrsXrayStatusReport: React.FC = () => {
     const rows = data.map((item) => ({
       regionName: item.regionName,
       isSummary: isSummaryRow(item.regionName),
-      irsAll: item.irs?.allCount ?? 0,
       irsActive: item.irs?.activeCount ?? 0,
       irsInactive: item.irs?.inactiveCount ?? 0,
-      xrayAll: item.xray?.allCount ?? 0,
+      irsOrg: toOrganizations(item.irs?.organization),
+      xrayActive: item.xray?.activeCount ?? 0,
+      xrayOrg: toOrganizations(item.xray?.organization),
       xrayValid: item.xray?.validCount ?? 0,
       xrayExpired: item.xray?.expiredCount ?? 0,
       xrayNoDate: item.xray?.noDateCount ?? 0,
@@ -89,15 +133,9 @@ const IrsXrayStatusReport: React.FC = () => {
         columns: [
           {
             header: 'Reyestrda',
-            accessorKey: 'irsAll',
-            className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.irsAll} />,
-          },
-          {
-            header: 'Amaldagi',
             accessorKey: 'irsActive',
             className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.irsActive} tone="text-green-600" />,
+            cell: ({ row }: any) => <Count row={row.original} value={row.original.irsActive} />,
           },
           {
             header: () => (
@@ -109,6 +147,7 @@ const IrsXrayStatusReport: React.FC = () => {
             className: 'text-center',
             cell: ({ row }: any) => <Count row={row.original} value={row.original.irsInactive} tone="text-red-500" />,
           },
+          organizationColumns('irs'),
         ],
       },
       {
@@ -117,9 +156,9 @@ const IrsXrayStatusReport: React.FC = () => {
         columns: [
           {
             header: 'Reyestrda',
-            accessorKey: 'xrayAll',
+            accessorKey: 'xrayActive',
             className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.xrayAll} />,
+            cell: ({ row }: any) => <Count row={row.original} value={row.original.xrayActive} />,
           },
           {
             header: () => (
@@ -161,6 +200,7 @@ const IrsXrayStatusReport: React.FC = () => {
             className: 'text-center',
             cell: ({ row }: any) => <Count row={row.original} value={row.original.xrayInactive} tone="text-red-500" />,
           },
+          organizationColumns('xray'),
         ],
       },
     ],
