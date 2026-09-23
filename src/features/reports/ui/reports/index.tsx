@@ -290,6 +290,19 @@ const REPORTS_GROUPS: ReportGroup[] = [
     ],
   },
   {
+    id: 'kpi',
+    title: 'KPI',
+    items: [
+      {
+        id: 'kpi-departments',
+        title: 'Bo‘limlarning KPI ko‘rsatkichi',
+        icon: Target,
+        url: '/reports/kpi-departments',
+        reportType: 'OTHERS',
+      },
+    ],
+  },
+  {
     id: 'employees',
     title: 'Xodimlar',
     items: [
@@ -342,6 +355,11 @@ export const ReportsGrid: React.FC = () => {
 
     if (role !== UserRoles.CHAIRMAN && role !== UserRoles.ADMIN) {
       groups = groups.filter((group) => group.id !== 'employees')
+    }
+
+    // Answered by the KPI service only for the chairman and department heads
+    if (role !== UserRoles.CHAIRMAN && role !== UserRoles.HEAD) {
+      groups = groups.filter((group) => group.id !== 'kpi')
     }
 
     // Kadastr pasportlari hisobotini backend faqat rais va hudud boshlig‘iga ochadi.
