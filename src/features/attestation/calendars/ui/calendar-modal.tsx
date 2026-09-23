@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { format, isToday, parseISO } from 'date-fns'
+import { addDays, format, isToday, parseISO, startOfToday } from 'date-fns'
 import { Loader2, Users } from 'lucide-react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
@@ -45,7 +45,10 @@ type Props = {
   | { editData: AttestationCalendar | null; applications?: never; onCreated?: never }
 )
 
-const DEFAULT_VALUES = { start_time: '10:00', end_time: '12:00' }
+const DEFAULT_TIMES = { start_time: '10:00', end_time: '12:00' }
+
+// Tomorrow, so the form does not open already invalid in the afternoon
+const defaultValues = (): FormValues => ({ date: addDays(startOfToday(), 1), ...DEFAULT_TIMES })
 
 // The API takes full timestamps, the form collects a date and two times.
 const toIso = (date: Date, time: string) => `${format(date, 'yyyy-MM-dd')} ${time}:00`
@@ -58,7 +61,7 @@ export function CalendarModal({ isOpen, onClose, editData, applications, onCreat
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { date: new Date(), ...DEFAULT_VALUES },
+    defaultValues: defaultValues(),
   })
 
   useEffect(() => {
@@ -70,7 +73,7 @@ export function CalendarModal({ isOpen, onClose, editData, applications, onCreat
 
       form.reset({ date: start, start_time: format(start, 'HH:mm'), end_time: format(end, 'HH:mm') })
     } else {
-      form.reset({ date: new Date(), ...DEFAULT_VALUES })
+      form.reset(defaultValues())
     }
   }, [isOpen, editData, form])
 
