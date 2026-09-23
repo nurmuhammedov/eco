@@ -6,7 +6,7 @@ import { GoBack } from '@/shared/components/common'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import { InquiryStatusRow } from '@/features/inquiries/ui/inquiry-status-row'
-import { InquiryStatusHistory, type InquiryStatusStep } from '@/features/inquiries/ui/inquiry-status-history'
+import { InquiryStatusHistoryModal, type InquiryStatusStep } from '@/features/inquiries/ui/inquiry-status-history'
 import FileLink from '@/shared/components/common/file-link'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
 import { Coordinate } from '@/shared/components/common/yandex-map'
@@ -115,6 +115,8 @@ const InquiryDetailPage = () => {
       <div className="flex items-center justify-between">
         <GoBack title={`Murojaat raqami: ${data?.registryNumber || ''}`} />
         <div className="flex gap-2">
+          <InquiryStatusHistoryModal steps={statusHistory} submittedAt={data?.createdAt} />
+
           {user?.role === UserRoles.REGIONAL && data?.status === InquiryStatus.NEW && (
             <>
               <SetInspectorModal />
@@ -141,7 +143,6 @@ const InquiryDetailPage = () => {
         <DetailCardAccordion
           defaultValue={[
             'general',
-            'status_history',
             'applicant_info',
             'administrative_info',
             'inspection_info',
@@ -206,10 +207,6 @@ const InquiryDetailPage = () => {
                 />
               )}
             </div>
-          </DetailCardAccordion.Item>
-
-          <DetailCardAccordion.Item value="status_history" title="Holatlar tarixi">
-            <InquiryStatusHistory steps={statusHistory} submittedAt={data?.createdAt} />
           </DetailCardAccordion.Item>
 
           {data?.type === 'VIOLATION_REPORT' && (

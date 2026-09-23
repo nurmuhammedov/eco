@@ -1,5 +1,7 @@
 import { differenceInMinutes, format, parseISO } from 'date-fns'
-import { Clock, UserRound } from 'lucide-react'
+import { Clock, History, UserRound } from 'lucide-react'
+import { Button } from '@/shared/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog'
 import { cn } from '@/shared/lib/utils'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 import { InquiryStatus, inquiryStatusLabels } from '../model/types'
@@ -91,3 +93,21 @@ export const InquiryStatusHistory = ({ steps = [], submittedAt }: Props) => {
     </ol>
   )
 }
+
+/** The history behind a header button, so it stays at hand without taking room on the page. */
+export const InquiryStatusHistoryModal = (props: Props) => (
+  <Dialog>
+    <DialogTrigger asChild>
+      <Button variant="outline">
+        <History className="mr-2 h-4 w-4" />
+        Amallar tarixi
+      </Button>
+    </DialogTrigger>
+    <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-xl">
+      <DialogHeader>
+        <DialogTitle>Amallar tarixi</DialogTitle>
+      </DialogHeader>
+      <InquiryStatusHistory {...props} />
+    </DialogContent>
+  </Dialog>
+)
