@@ -98,7 +98,7 @@ export const InquiryStatusHistory = ({ steps = [], submittedAt }: Props) => {
 export const InquiryStatusHistoryModal = (props: Props) => (
   <Dialog>
     <DialogTrigger asChild>
-      <Button variant="outline">
+      <Button variant="outline" className="border-primary text-primary hover:bg-primary/10 hover:text-primary">
         <History className="mr-2 h-4 w-4" />
         Amallar tarixi
       </Button>
