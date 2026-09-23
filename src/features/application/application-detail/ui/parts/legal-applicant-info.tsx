@@ -2,8 +2,39 @@ import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import DetailRow from '@/shared/components/common/detail-row'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { EmptyValue } from '@/shared/components/common/empty-value'
+import { useData } from '@/shared/hooks'
 
-const LegalApplicantInfo = ({ tinNumber, phoneNumber, isShowPhoneNumber = false }: any) => {
+interface TrainedEmployees {
+  managerCount: number | null
+  engineerCount: number | null
+}
+
+/** Staff the organization has had trained at the partner training centre */
+const TrainedEmployeesRows = ({ tinNumber }: { tinNumber: string }) => {
+  const { data } = useData<TrainedEmployees>('/integration/ktnu/trained-employees', !!tinNumber, {
+    legalTin: tinNumber,
+  })
+
+  return (
+    <>
+      <DetailRow
+        title="“Kontexnazoratoʻquv” DMda malaka oshirgan rahbar xodimlar soni:"
+        value={data?.managerCount ?? <EmptyValue />}
+      />
+      <DetailRow
+        title="“Kontexnazoratoʻquv” DMda malaka oshirgan muhandis-texnik xodimlar soni:"
+        value={data?.engineerCount ?? <EmptyValue />}
+      />
+    </>
+  )
+}
+
+const LegalApplicantInfo = ({
+  tinNumber,
+  phoneNumber,
+  isShowPhoneNumber = false,
+  showTrainedEmployees = false,
+}: any) => {
   const { data, isLoading } = useLegalOrganizationQuery(tinNumber)
 
   if (isLoading) {
@@ -45,6 +76,7 @@ const LegalApplicantInfo = ({ tinNumber, phoneNumber, isShowPhoneNumber = false 
           )
         }
       />
+      {showTrainedEmployees && <TrainedEmployeesRows tinNumber={data?.identity ?? tinNumber} />}
       {isShowPhoneNumber ? (
         <DetailRow title="Arizada bog‘lanish uchun ko‘rsatilgan telefon raqam:" value={phoneNumber || <EmptyValue />} />
       ) : null}

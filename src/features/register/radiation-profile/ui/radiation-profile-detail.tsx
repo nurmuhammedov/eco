@@ -49,7 +49,7 @@ export const RadiationProfileDetail = () => {
             ) : null
           }
         >
-          <LegalApplicantInfo tinNumber={data?.legalTin} />
+          <LegalApplicantInfo showTrainedEmployees tinNumber={data?.legalTin} />
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="object_files" title="Tashkilotga biriktirilgan fayllar">

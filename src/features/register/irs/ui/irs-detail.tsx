@@ -58,7 +58,7 @@ const IrsDetail = () => {
             ) : null
           }
         >
-          <LegalApplicantInfo tinNumber={data?.legalTin} />
+          <LegalApplicantInfo showTrainedEmployees tinNumber={data?.legalTin} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
           {user?.role !== UserRoles.PROCURATOR && (

@@ -71,6 +71,7 @@ const ApplicationDetail = ({
         {isLegalApplication && (
           <DetailCardAccordion.Item value="applicant_info_legal" title="Arizachi to‘g‘risida ma’lumot">
             <LegalApplicantInfo
+              showTrainedEmployees
               isShowPhoneNumber={true}
               tinNumber={data?.ownerIdentity}
               phoneNumber={data?.phoneNumber}

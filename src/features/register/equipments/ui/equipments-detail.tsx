@@ -132,7 +132,7 @@ const EquipmentsDetail = () => {
               ) : null
             }
           >
-            <LegalApplicantInfo tinNumber={data?.ownerIdentity} />
+            <LegalApplicantInfo showTrainedEmployees tinNumber={data?.ownerIdentity} />
           </DetailCardAccordion.Item>
         )}
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
