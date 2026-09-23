@@ -1,10 +1,12 @@
-import { Cpu, Factory, Scan, Zap, Layers } from 'lucide-react'
+import { Cpu, Factory, Scan, Zap, Layers, Shapes } from 'lucide-react'
 
 export enum InquiryBelongType {
   HF = 'HF',
   EQUIPMENT = 'EQUIPMENT',
   IRS = 'IRS',
   XRAY = 'XRAY',
+  /** Not tied to any registry object */
+  OTHER = 'OTHER',
 }
 
 export const inquiryTabsConfig = [
@@ -32,6 +34,11 @@ export const inquiryTabsConfig = [
     key: InquiryBelongType.XRAY,
     label: 'Rentgen',
     icon: <Scan className="h-5 w-5" />,
+  },
+  {
+    key: InquiryBelongType.OTHER,
+    label: 'Boshqalar',
+    icon: <Shapes className="h-5 w-5" />,
   },
 ]
 
@@ -108,4 +115,5 @@ export const inquiryBelongTypeLabels: Record<string, string> = {
   [InquiryBelongType.EQUIPMENT]: 'Qurilmalar',
   [InquiryBelongType.IRS]: 'INM',
   [InquiryBelongType.XRAY]: 'Rentgen',
+  [InquiryBelongType.OTHER]: 'Boshqalar',
 }

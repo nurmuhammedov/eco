@@ -88,6 +88,17 @@ const InquiryTable = () => {
     60000
   )
 
+  const { data: otherData } = usePaginatedData<any>(
+    '/inquiries',
+    {
+      page: 1,
+      size: 1,
+      belongType: InquiryBelongType.OTHER,
+    },
+    true,
+    60000
+  )
+
   const { data: allDataCount } = usePaginatedData<any>(
     '/inquiries',
     {
@@ -104,6 +115,7 @@ const InquiryTable = () => {
     [InquiryBelongType.EQUIPMENT]: equipmentsData?.page?.totalElements ?? 0,
     [InquiryBelongType.IRS]: irsData?.page?.totalElements ?? 0,
     [InquiryBelongType.XRAY]: xrayData?.page?.totalElements ?? 0,
+    [InquiryBelongType.OTHER]: otherData?.page?.totalElements ?? 0,
   }
 
   const handleTabChange = (tab: InquiryBelongType | 'ALL') => {
@@ -180,14 +192,8 @@ const InquiryTable = () => {
       header: 'Amallar',
       accessorKey: 'actions',
       cell: ({ row }) => {
-        const belongTypeStr =
-          row.original.belongType === 'HF'
-            ? 'hf'
-            : row.original.belongType === 'EQUIPMENT'
-              ? 'equipments'
-              : row.original.belongType === 'IRS'
-                ? 'irs'
-                : 'xrays'
+        // OTHER has no registry object behind it, so there is nothing to open
+        const belongTypeStr = REGISTRY_PATH[row.original.belongType as string]
 
         // Up to the point real work starts: past IN_PROCESS an inspection or a
         // court case is already under way, and moving the inquiry would strand
@@ -198,7 +204,7 @@ const InquiryTable = () => {
 
         return (
           <div className="flex items-center gap-2">
-            {row.original.belongId && (
+            {row.original.belongId && belongTypeStr && (
               <Button size="sm" onClick={() => navigate(`/register/${belongTypeStr}/${row.original.belongId}`)}>
                 Obyektni ko‘rish
               </Button>
@@ -296,6 +302,13 @@ const InquiryTable = () => {
       </div>
     </div>
   )
+}
+
+const REGISTRY_PATH: Record<string, string> = {
+  HF: 'hf',
+  EQUIPMENT: 'equipments',
+  IRS: 'irs',
+  XRAY: 'xrays',
 }
 
 export default InquiryTable

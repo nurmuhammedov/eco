@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { cn } from '@/shared/lib/utils'
 import { InquiryBelongType, inquiryTabsConfig } from '../model/types'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
@@ -43,24 +42,35 @@ export const InquiryTabs = ({ activeTab, onTabChange, counts = {}, isMobileIndiv
           const isActive = String(activeTab) === tab.key
 
           return (
-            <Card
+            <button
               key={tab.key}
+              type="button"
               onClick={() => onTabChange(tab.key as InquiryBelongType | 'ALL')}
+              aria-pressed={isActive}
               className={cn(
-                'flex min-w-[220px] flex-1 cursor-pointer flex-col py-3 transition-all hover:shadow-md',
-                isActive ? 'bg-teal text-white shadow' : 'bg-card text-card-foreground border-border'
+                'group flex min-w-[170px] flex-1 items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all',
+                isActive
+                  ? 'border-teal bg-teal text-white shadow-md'
+                  : 'bg-card text-card-foreground border-border hover:border-teal/40 hover:shadow-sm'
               )}
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 p-0 px-4 pt-1 pb-2">
-                <CardTitle className="text-[15px] leading-tight font-medium">
-                  <div className="line-clamp-2">{tab.label}</div>
-                </CardTitle>
-                <span className={cn(isActive && 'text-white')}>{tab.icon}</span>
-              </CardHeader>
-              <CardContent className="p-0 px-4 pt-1 pb-1">
-                <div className="text-2xl font-bold">{counts[tab.key] || 0}</div>
-              </CardContent>
-            </Card>
+              <span
+                className={cn(
+                  'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors',
+                  isActive ? 'bg-white/20 text-white' : 'bg-teal/10 text-teal group-hover:bg-teal/15'
+                )}
+              >
+                {tab.icon}
+              </span>
+              <span className="min-w-0">
+                <span className={cn('block truncate text-sm', isActive ? 'text-white/85' : 'text-muted-foreground')}>
+                  {tab.label}
+                </span>
+                <span className="block text-2xl leading-tight font-bold tabular-nums">
+                  {(counts[tab.key] || 0).toLocaleString('ru-RU')}
+                </span>
+              </span>
+            </button>
           )
         })}
       </div>
