@@ -58,7 +58,7 @@ const IrsDetail = () => {
             ) : null
           }
         >
-          <LegalApplicantInfo showTrainedEmployees tinNumber={data?.legalTin} />
+          <LegalApplicantInfo tinNumber={data?.legalTin} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
           {user?.role !== UserRoles.PROCURATOR && (
@@ -106,7 +106,7 @@ const IrsDetail = () => {
           )}
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
-          <AppealMainInfo data={data} type={'IRS'} address={data?.address} />
+          <AppealMainInfo trainedEmployeesTin={data?.legalTin} data={data} type={'IRS'} address={data?.address} />
         </DetailCardAccordion.Item>
         {!!currentObjLocation?.length && (
           <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">

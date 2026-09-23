@@ -119,7 +119,7 @@ const HfDetail = () => {
             ) : null
           }
         >
-          <LegalApplicantInfo showTrainedEmployees tinNumber={data?.legalTin} />
+          <LegalApplicantInfo tinNumber={data?.legalTin} />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
           {user?.role !== UserRoles.PROCURATOR && (
@@ -179,7 +179,13 @@ const HfDetail = () => {
           )}
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
-          <AppealMainInfo data={data} type={'HF'} address={data?.address} showStaffCounts />
+          <AppealMainInfo
+            trainedEmployeesTin={data?.legalTin}
+            data={data}
+            type={'HF'}
+            address={data?.address}
+            showStaffCounts
+          />
         </DetailCardAccordion.Item>
         {/* A multi-sector facility keeps one attachment set per category. */}
         {multiCategoryIds.length > 0 ? (

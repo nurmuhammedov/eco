@@ -39,7 +39,7 @@ export default function AutoDetail() {
                 ) : null
               }
             >
-              <LegalApplicantInfo showTrainedEmployees tinNumber={currentTin} />
+              <LegalApplicantInfo tinNumber={currentTin} />
             </DetailCardAccordion.Item>
           )}
 

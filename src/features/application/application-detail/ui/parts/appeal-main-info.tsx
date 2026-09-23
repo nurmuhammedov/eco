@@ -14,6 +14,7 @@ import { ACCREDITATION_SPHERE_LABELS } from '@/shared/constants/accreditation-sp
 import { HF_HAZARDOUS_SIGN_LABELS, HF_LEGAL_TYPE_LABELS } from '@/shared/constants/hf-attributes'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 import FileLink from '@/shared/components/common/file-link'
+import { TrainedEmployeesRows } from './trained-employees-rows'
 
 interface Props {
   address: any
@@ -26,6 +27,8 @@ interface Props {
   isRegister?: boolean
   /** Staff headcount lives on the registry record, not on the appeal. */
   showStaffCounts?: boolean
+  /** Organization whose staff trained at the partner training centre is shown */
+  trainedEmployeesTin?: string
   type: any
 }
 
@@ -491,6 +494,7 @@ const AppealMainInfo: FC<Props> = ({
   basisPath,
   isRegister = false,
   showStaffCounts = false,
+  trainedEmployeesTin,
 }) => {
   const { t } = useTranslation()
 
@@ -697,6 +701,8 @@ const AppealMainInfo: FC<Props> = ({
           {isAllowed('workerCount') && renderRow('workerCount', data?.workerCount)}
         </>
       )}
+
+      {trainedEmployeesTin && <TrainedEmployeesRows tinNumber={trainedEmployeesTin} />}
     </div>
   )
 }

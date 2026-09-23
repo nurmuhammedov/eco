@@ -103,6 +103,7 @@ const ApplicationDetail = ({
             </TabsList>
             <TabsContent value="info">
               <AppealMainInfo
+                trainedEmployeesTin={data?.ownerIdentity}
                 data={data?.data}
                 type={data?.appealType?.replace('DEREGISTER_', '')?.replace('REGISTER_', '')?.replace('RE_', '')}
                 address={data?.address}

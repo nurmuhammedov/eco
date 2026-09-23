@@ -132,7 +132,7 @@ const EquipmentsDetail = () => {
               ) : null
             }
           >
-            <LegalApplicantInfo showTrainedEmployees tinNumber={data?.ownerIdentity} />
+            <LegalApplicantInfo tinNumber={data?.ownerIdentity} />
           </DetailCardAccordion.Item>
         )}
         <DetailCardAccordion.Item value="registry_info" title="Reyestr ma’lumotlari">
@@ -193,7 +193,12 @@ const EquipmentsDetail = () => {
           )}
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
-          <AppealMainInfo data={data} type={data?.type} address={data?.address} />
+          <AppealMainInfo
+            trainedEmployeesTin={data?.ownerIdentity}
+            data={data}
+            type={data?.type}
+            address={data?.address}
+          />
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">
           <FilesSection
