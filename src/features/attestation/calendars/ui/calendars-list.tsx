@@ -1,18 +1,16 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { format, parseISO } from 'date-fns'
-import { Edit2, Lock, Plus, Users, Video } from 'lucide-react'
+import { CalendarPlus, Edit2, Users, Video } from 'lucide-react'
 import { DataTable, ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
-import { Progress } from '@/shared/components/ui/progress'
 import DeleteConfirmationDialog from '@/shared/components/common/delete-confirm-dialog'
 import { useServicesPaginatedData, useCustomSearchParams } from '@/shared/hooks/api'
 import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
-import { cn } from '@/shared/lib/utils'
 import { CALENDAR_STATUS, EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
 import type { AttestationCalendar } from '@/entities/attestation/model/types'
-import { useCloseCalendar, useDeleteCalendar } from '../model/use-calendars'
+import { formatExamDate, formatExamHours } from '@/entities/attestation/lib/exam-time'
+import { useDeleteExam } from '../model/use-calendars'
 import { CalendarModal } from './calendar-modal'
 
 export const CalendarsList = () => {
@@ -22,18 +20,12 @@ export const CalendarsList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editItem, setEditItem] = useState<AttestationCalendar | null>(null)
 
-  const deleteMutation = useDeleteCalendar()
-  const closeMutation = useCloseCalendar()
+  const deleteMutation = useDeleteExam()
 
   const { data, isLoading, totalPages } = useServicesPaginatedData<AttestationCalendar>(
     SERVICES_API_ENDPOINTS.CALENDARS,
     { ...paramsObject }
   )
-
-  const openCreate = () => {
-    setEditItem(null)
-    setIsModalOpen(true)
-  }
 
   const columns: ExtendedColumnDef<AttestationCalendar, unknown>[] = [
     {
@@ -41,16 +33,12 @@ export const CalendarsList = () => {
       accessorKey: 'start_date',
       filterKey: 'startDate',
       filterType: 'date-range',
-      cell: ({ row }) => <span className="font-medium">{format(parseISO(row.original.start_date), 'dd.MM.yyyy')}</span>,
+      cell: ({ row }) => <span className="font-medium">{formatExamDate(row.original)}</span>,
     },
     {
       header: 'Vaqti',
       accessorKey: 'end_date',
-      cell: ({ row }) => (
-        <span>
-          {format(parseISO(row.original.start_date), 'HH:mm')} – {format(parseISO(row.original.end_date), 'HH:mm')}
-        </span>
-      ),
+      cell: ({ row }) => <span>{formatExamHours(row.original)}</span>,
     },
     {
       header: 'Xodim turi',
@@ -72,24 +60,9 @@ export const CalendarsList = () => {
       },
     },
     {
-      header: 'Band joylar',
-      accessorKey: 'capacity',
-      cell: ({ row }) => {
-        const taken = row.original.capacity - row.original.remaining_capacity
-        const filled = row.original.capacity > 0 ? (taken / row.original.capacity) * 100 : 0
-
-        return (
-          <div className="flex w-[140px] items-center gap-2">
-            <Progress
-              value={filled}
-              className={cn('h-1.5 flex-1', filled >= 100 ? '[&>div]:bg-red-500' : '[&>div]:bg-green-600')}
-            />
-            <span className="shrink-0 text-xs font-medium">
-              {taken} / {row.original.capacity}
-            </span>
-          </div>
-        )
-      },
+      header: 'Ishtirokchilar',
+      accessorKey: 'applications_count',
+      cell: ({ row }) => <span className="font-medium">{row.original.applications_count ?? 0} ta</span>,
     },
     {
       header: 'Holati',
@@ -112,9 +85,8 @@ export const CalendarsList = () => {
       header: 'Amallar',
       cell: ({ row }) => {
         const calendar = row.original
-        const taken = calendar.capacity - calendar.remaining_capacity
-        // Once an application is in, the session may only be closed
-        const isEditable = calendar.status === 'OPEN' && taken === 0
+        // Once an interview has started the exam stays as it is
+        const isEditable = calendar.status === 'OPEN'
 
         return (
           <div className="flex items-center gap-1">
@@ -122,7 +94,7 @@ export const CalendarsList = () => {
               variant="ghost"
               size="icon"
               className="h-8 w-8"
-              title="Arizachilar"
+              title="Ishtirokchilar"
               onClick={() => navigate(`/attestation-calendars/${calendar.id}/applicants`)}
             >
               <Users className="h-4 w-4" />
@@ -151,24 +123,10 @@ export const CalendarsList = () => {
               </Button>
             )}
 
-            {calendar.status === 'OPEN' && (
-              <DeleteConfirmationDialog
-                title="Qabulni yopish"
-                description="Yopilgandan keyin bu vaqtga yangi ariza qabul qilinmaydi."
-                confirmText="Yopish"
-                onConfirm={() => closeMutation.mutate(calendar.id)}
-                trigger={
-                  <Button variant="ghost" size="icon" className="h-8 w-8" title="Qabulni yopish">
-                    <Lock className="h-4 w-4" />
-                  </Button>
-                }
-              />
-            )}
-
             {isEditable && (
               <DeleteConfirmationDialog
-                title="Qabul vaqtini o‘chirish"
-                description="Ushbu qabul vaqtini o‘chirmoqchimisiz? Zoom uchrashuvi ham bekor qilinadi."
+                title="Imtihonni o‘chirish"
+                description="Zoom uchrashuvi bekor qilinadi, arizalar esa navbatga qaytadi."
                 onConfirm={() => deleteMutation.mutate(calendar.id)}
               />
             )}
@@ -181,9 +139,10 @@ export const CalendarsList = () => {
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
       <div className="mb-2 flex justify-end">
-        <Button onClick={openCreate}>
-          <Plus className="mr-2 h-4 w-4" />
-          Yangi qo‘shish
+        {/* An exam is built from queued applications, so it starts from the queue */}
+        <Button onClick={() => navigate('/attestation-queue')}>
+          <CalendarPlus className="mr-2 h-4 w-4" />
+          Imtihon belgilash
         </Button>
       </div>
 

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { format, parseISO } from 'date-fns'
 import { Plus, Video } from 'lucide-react'
 import { DataTable, ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { Button } from '@/shared/components/ui/button'
@@ -8,6 +7,7 @@ import { useServicesPaginatedData, useCustomSearchParams } from '@/shared/hooks/
 import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
 import { APPLICATION_STATUS, DIRECTION, DIRECTION_OPTIONS, EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
 import type { AttestationApplication } from '@/entities/attestation/model/types'
+import { formatExamDate, formatExamHours } from '@/entities/attestation/lib/exam-time'
 import { CreateApplicationModal } from './create-application-modal'
 
 export const MyApplicationsList = () => {
@@ -59,19 +59,18 @@ export const MyApplicationsList = () => {
       cell: ({ row }) => DIRECTION[row.original.direction] ?? row.original.direction,
     },
     {
-      header: 'Qabul vaqti',
+      header: 'Imtihon vaqti',
       accessorKey: 'attestation_calendar_id',
       cell: ({ row }) => {
         const calendar = row.original.calendar
 
-        if (!calendar) return '-'
+        // Set by the department once it puts the application into an exam
+        if (!calendar) return <span className="text-muted-foreground text-xs">Belgilanmagan</span>
 
         return (
           <div>
-            <p>{format(parseISO(calendar.start_date), 'dd.MM.yyyy')}</p>
-            <p className="text-muted-foreground text-xs">
-              {format(parseISO(calendar.start_date), 'HH:mm')}–{format(parseISO(calendar.end_date), 'HH:mm')}
-            </p>
+            <p>{formatExamDate(calendar)}</p>
+            <p className="text-muted-foreground text-xs">{formatExamHours(calendar)}</p>
           </div>
         )
       },
@@ -96,7 +95,8 @@ export const MyApplicationsList = () => {
 
         return (
           <div className="flex items-center gap-1">
-            {calendar?.zoom_join_url && row.original.status === 'NEW' && (
+            {/* Kept through the interview too, in case the employee drops out of the call */}
+            {calendar?.zoom_join_url && ['ASSIGNED', 'SCHEDULED'].includes(row.original.status) && (
               <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-500" title="Zoomga kirish" asChild>
                 <a href={calendar.zoom_join_url} target="_blank" rel="noreferrer">
                   <Video className="h-4 w-4" />

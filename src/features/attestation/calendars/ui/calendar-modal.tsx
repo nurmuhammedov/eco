@@ -3,16 +3,16 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { format, isToday, parseISO } from 'date-fns'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Users } from 'lucide-react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { Button } from '@/shared/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { Badge } from '@/shared/components/ui/badge'
 import DatePicker from '@/shared/components/ui/datepicker'
-import { EMPLOYEE_TYPE_OPTIONS } from '@/entities/attestation/model/labels'
-import type { AttestationCalendar } from '@/entities/attestation/model/types'
-import { useCreateCalendar, useUpdateCalendar } from '../model/use-calendars'
+import { EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
+import type { AttestationApplication, AttestationCalendar } from '@/entities/attestation/model/types'
+import { useCreateExam, useUpdateExam } from '../model/use-calendars'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const schema = z
@@ -20,8 +20,6 @@ const schema = z
     date: z.date(),
     start_time: z.string().min(1),
     end_time: z.string().min(1),
-    employee_type: z.enum(['LEADER', 'ENGINEER']),
-    capacity: z.coerce.number().int().min(1).max(100, 'Bitta qabul vaqtiga ko‘pi bilan 100 ta xodim belgilanadi.'),
   })
   .refine((data) => data.end_time > data.start_time, {
     message: FORM_ERROR_MESSAGES.invalid,
@@ -34,31 +32,33 @@ const schema = z
 
 type FormValues = z.infer<typeof schema>
 
-interface Props {
+type Props = {
   isOpen: boolean
   onClose: () => void
-  editData?: AttestationCalendar | null
-  defaultDate?: Date
-}
+} & (
+  | {
+      /** Queued applications the new exam is built from */
+      applications: AttestationApplication[]
+      editData?: never
+      onCreated?: () => void
+    }
+  | { editData: AttestationCalendar | null; applications?: never; onCreated?: never }
+)
+
+const DEFAULT_VALUES = { start_time: '10:00', end_time: '12:00' }
 
 // The API takes full timestamps, the form collects a date and two times.
 const toIso = (date: Date, time: string) => `${format(date, 'yyyy-MM-dd')} ${time}:00`
 
-export function CalendarModal({ isOpen, onClose, editData, defaultDate }: Props) {
+export function CalendarModal({ isOpen, onClose, editData, applications, onCreated }: Props) {
   const isEditing = !!editData
-  const createMutation = useCreateCalendar()
-  const updateMutation = useUpdateCalendar()
+  const createMutation = useCreateExam()
+  const updateMutation = useUpdateExam()
   const isPending = createMutation.isPending || updateMutation.isPending
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      date: defaultDate ?? new Date(),
-      start_time: '10:00',
-      end_time: '12:00',
-      employee_type: 'LEADER',
-      capacity: 1,
-    },
+    defaultValues: { date: new Date(), ...DEFAULT_VALUES },
   })
 
   useEffect(() => {
@@ -68,46 +68,33 @@ export function CalendarModal({ isOpen, onClose, editData, defaultDate }: Props)
       const start = parseISO(editData.start_date)
       const end = parseISO(editData.end_date)
 
-      form.reset({
-        date: start,
-        start_time: format(start, 'HH:mm'),
-        end_time: format(end, 'HH:mm'),
-        employee_type: editData.employee_type,
-        capacity: editData.capacity,
-      })
+      form.reset({ date: start, start_time: format(start, 'HH:mm'), end_time: format(end, 'HH:mm') })
     } else {
-      form.reset({
-        date: defaultDate ?? new Date(),
-        start_time: '10:00',
-        end_time: '12:00',
-        employee_type: 'LEADER',
-        capacity: 1,
-      })
+      form.reset({ date: new Date(), ...DEFAULT_VALUES })
     }
-  }, [isOpen, editData, defaultDate, form])
+  }, [isOpen, editData, form])
 
-  const takenSeats = editData ? editData.capacity - editData.remaining_capacity : 0
+  // The picked applications share one type; the queue refuses a mixed selection
+  const employeeType = applications?.[0]?.employee_type ?? editData?.employee_type
 
   const onSubmit = (values: FormValues) => {
-    if (values.capacity < takenSeats) {
-      form.setError('capacity', {
-        message: `Kamida ${takenSeats} ta bo‘lishi kerak — shuncha joy allaqachon band.`,
-      })
-
-      return
-    }
-
-    const payload = {
+    const dates = {
       start_date: toIso(values.date, values.start_time),
       end_date: toIso(values.date, values.end_time),
-      employee_type: values.employee_type,
-      capacity: values.capacity,
     }
 
     if (isEditing && editData) {
-      updateMutation.mutate({ id: editData.id, data: payload }, { onSuccess: onClose })
-    } else {
-      createMutation.mutate(payload, { onSuccess: onClose })
+      updateMutation.mutate({ id: editData.id, data: dates }, { onSuccess: onClose })
+    } else if (applications) {
+      createMutation.mutate(
+        { ...dates, application_ids: applications.map((application) => application.id) },
+        {
+          onSuccess: () => {
+            onCreated?.()
+            onClose()
+          },
+        }
+      )
     }
   }
 
@@ -115,11 +102,21 @@ export function CalendarModal({ isOpen, onClose, editData, defaultDate }: Props)
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{isEditing ? 'Qabul vaqtini tahrirlash' : 'Yangi qabul vaqti'}</DialogTitle>
+          <DialogTitle>{isEditing ? 'Imtihon vaqtini o‘zgartirish' : 'Imtihon belgilash'}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {applications && employeeType && (
+              <div className="bg-muted/50 flex flex-wrap items-center gap-2 rounded-md p-3 text-sm">
+                <Users className="text-muted-foreground h-4 w-4" />
+                <span className="font-medium">{applications.length} ta xodim</span>
+                <Badge variant="outline" className={EMPLOYEE_TYPE[employeeType].className}>
+                  {EMPLOYEE_TYPE[employeeType].label}
+                </Badge>
+              </div>
+            )}
+
             <FormField
               control={form.control}
               name="date"
@@ -162,52 +159,10 @@ export function CalendarModal({ isOpen, onClose, editData, defaultDate }: Props)
               />
             </div>
 
-            <FormField
-              control={form.control}
-              name="employee_type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Xodim turi</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {EMPLOYEE_TYPE_OPTIONS.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="capacity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Nechta xodim qabul qilinadi</FormLabel>
-                  <FormControl>
-                    <Input type="number" inputMode="numeric" {...field} />
-                  </FormControl>
-                  {takenSeats > 0 && (
-                    <p className="text-muted-foreground text-xs">
-                      Ayni paytda {takenSeats} ta joy band — undan kam qilib bo‘lmaydi.
-                    </p>
-                  )}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <p className="text-muted-foreground text-xs">
-              Saqlangach ushbu vaqt uchun Zoom havolasi avtomatik yaratiladi.
+              {isEditing
+                ? 'Zoom uchrashuvi vaqti ham shunga moslab o‘zgartiriladi.'
+                : 'Saqlangach Zoom uchrashuvi ochiladi, sana va havola tashkilotlarning arizalarida ko‘rinadi.'}
             </p>
 
             <DialogFooter>

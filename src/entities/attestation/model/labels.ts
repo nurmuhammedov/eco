@@ -25,13 +25,14 @@ export const DIRECTION_OPTIONS = (Object.keys(DIRECTION) as Direction[]).map((va
 }))
 
 export const CALENDAR_STATUS: Record<CalendarStatus, { label: string; variant: BadgeVariant }> = {
-  OPEN: { label: 'Ochiq', variant: 'success' },
-  IN_PROGRESS: { label: 'Jarayonda', variant: 'info' },
-  CLOSED: { label: 'Yopilgan', variant: 'error' },
+  OPEN: { label: 'Rejalashtirilgan', variant: 'info' },
+  IN_PROGRESS: { label: 'Jarayonda', variant: 'warning' },
+  CLOSED: { label: 'Yakunlangan', variant: 'secondary' },
 }
 
 export const APPLICATION_STATUS: Record<ApplicationStatus, { label: string; variant: BadgeVariant }> = {
-  NEW: { label: 'Navbatda', variant: 'info' },
+  NEW: { label: 'Navbatda', variant: 'secondary' },
+  ASSIGNED: { label: 'Imtihon belgilandi', variant: 'info' },
   SCHEDULED: { label: 'Suhbatda', variant: 'warning' },
   PASSED: { label: 'O‘tdi', variant: 'success' },
   FAILED: { label: 'O‘tmadi', variant: 'error' },

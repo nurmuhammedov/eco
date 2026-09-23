@@ -8,7 +8,7 @@ import { Input } from '@/shared/components/ui/input'
 import { FileIcon } from './file-icon'
 import { FileControls } from './file-controls'
 import { FileTypes } from '../models/file-types'
-import { useUploadFiles } from '../api/use-upload-files'
+import { useUploadFiles, type UploadClient } from '../api/use-upload-files'
 import { FileData } from '../models/file-data.interface'
 import { formatFileSize, openFileInNewTab, truncateFilename } from '../lib/utils'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
@@ -25,6 +25,7 @@ export interface InputFileProps<T extends FieldValues> {
   showDownload?: boolean
   showCameraOption?: boolean
   uploadEndpoint?: string
+  uploadClient?: UploadClient
   multiple?: boolean
   maxFiles?: number
   buttonText?: string
@@ -134,6 +135,7 @@ function InputFileComponent<T extends FieldValues>({
   showCameraOption = false,
   accept = [FileTypes.PDF],
   uploadEndpoint,
+  uploadClient,
   multiple = false,
   maxFiles = 10,
   buttonText = 'Fayl biriktirish',
@@ -219,6 +221,7 @@ function InputFileComponent<T extends FieldValues>({
 
   const { mutate, isPending } = useUploadFiles({
     endpoint: uploadEndpoint,
+    client: uploadClient,
     onUploadProgress: handleUploadProgress,
   })
 

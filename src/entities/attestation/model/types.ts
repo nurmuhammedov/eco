@@ -23,13 +23,12 @@ export interface QuestionPayload {
   is_active: boolean
 }
 
+/** One exam: the department groups queued applications into it and sets its date */
 export interface AttestationCalendar {
   id: string
   start_date: string
   end_date: string
   employee_type: EmployeeType
-  capacity: number
-  remaining_capacity: number
   zoom_meeting_id: string | null
   zoom_join_url: string | null
   zoom_start_url?: string | null
@@ -46,16 +45,19 @@ export interface AttestationCalendar {
 export interface CalendarPayload {
   start_date: string
   end_date: string
-  employee_type: EmployeeType
-  capacity: number
 }
 
-export type ApplicationStatus = 'NEW' | 'SCHEDULED' | 'PASSED' | 'FAILED'
+export interface CreateExamPayload extends CalendarPayload {
+  application_ids: string[]
+}
+
+/** NEW waits in the queue, ASSIGNED has an exam date, SCHEDULED is being interviewed */
+export type ApplicationStatus = 'NEW' | 'ASSIGNED' | 'SCHEDULED' | 'PASSED' | 'FAILED'
 
 export interface AttestationApplication {
   id: string
-  attestation_calendar_id: string
-  calendar?: AttestationCalendar
+  attestation_calendar_id: string | null
+  calendar?: AttestationCalendar | null
   organization_tin: number
   organization_name: string
   employee_pin: number
@@ -95,7 +97,6 @@ export interface ApplicationEmployeePayload {
 }
 
 export interface CreateApplicationPayload {
-  attestation_calendar_id: string
   employees: ApplicationEmployeePayload[]
 }
 

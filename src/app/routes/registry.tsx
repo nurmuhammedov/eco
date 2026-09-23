@@ -30,6 +30,7 @@ const AttestationApplicantsPage = lazy(() => import('@/pages/attestation-applica
 const AttestationApplicationDetailPage = lazy(() => import('@/pages/attestation-application-detail/ui/page'))
 const AttestationCalendarsPage = lazy(() => import('@/pages/attestation-calendars/ui/page'))
 const AttestationMyApplicationsPage = lazy(() => import('@/pages/attestation-my-applications/ui/page'))
+const AttestationQueuePage = lazy(() => import('@/pages/attestation-queue/ui/page'))
 const AttestationQuestionsPage = lazy(() => import('@/pages/attestation-questions/ui/page'))
 const AttractionTypePage = lazy(() => import('@/pages/admin/attraction-type/page'))
 const CadastreAdd = lazy(() => import('@/features/cadastre-passport/ui/cadastre-add'))
@@ -436,6 +437,12 @@ export const APP_ROUTES: AppRouteDefinition[] = [
     id: 'ATTESTATION',
     path: 'attestation-calendars/:calendarId/applicants',
     element: withSuspense(AttestationApplicantsPage),
+    roles: [UserRoles.HEAD],
+  },
+  {
+    id: 'ATTESTATION',
+    path: 'attestation-queue',
+    element: withSuspense(AttestationQueuePage),
     roles: [UserRoles.HEAD],
   },
   {

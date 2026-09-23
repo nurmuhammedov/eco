@@ -149,13 +149,18 @@ export default [
     items: [
       {
         id: 'ATTESTATION',
-        title: 'Imtihon savollari',
-        url: '/attestation-questions',
+        title: 'Arizalar navbati',
+        url: '/attestation-queue',
       },
       {
         id: 'ATTESTATION',
-        title: 'Qabul vaqtlari',
+        title: 'Imtihonlar',
         url: '/attestation-calendars',
+      },
+      {
+        id: 'ATTESTATION',
+        title: 'Imtihon savollari',
+        url: '/attestation-questions',
       },
     ],
   },

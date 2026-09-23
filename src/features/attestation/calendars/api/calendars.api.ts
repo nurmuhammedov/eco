@@ -1,19 +1,9 @@
 import { servicesApiClient } from '@/shared/api/services-api-client'
 import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
-import type { AttestationCalendar, CalendarPayload, EmployeeType } from '@/entities/attestation/model/types'
-
-export type CalendarFilters = {
-  from?: string
-  to?: string
-  employee_type?: EmployeeType
-  status?: string
-}
+import type { AttestationCalendar, CalendarPayload, CreateExamPayload } from '@/entities/attestation/model/types'
 
 export const calendarsAPI = {
-  getAll: (params: CalendarFilters) =>
-    servicesApiClient.get<AttestationCalendar[]>(SERVICES_API_ENDPOINTS.CALENDARS, params),
-
-  create: (data: CalendarPayload) =>
+  create: (data: CreateExamPayload) =>
     servicesApiClient.post<AttestationCalendar>(SERVICES_API_ENDPOINTS.CALENDARS, data),
 
   update: (id: string, data: CalendarPayload) =>
@@ -21,5 +11,9 @@ export const calendarsAPI = {
 
   remove: (id: string) => servicesApiClient.delete(SERVICES_API_ENDPOINTS.CALENDAR_BY_ID(id)),
 
-  close: (id: string) => servicesApiClient.patch(SERVICES_API_ENDPOINTS.CALENDAR_CLOSE(id), {}),
+  attach: (id: string, applicationIds: string[]) =>
+    servicesApiClient.post(SERVICES_API_ENDPOINTS.CALENDAR_APPLICATIONS(id), { application_ids: applicationIds }),
+
+  detach: (id: string, applicationId: string) =>
+    servicesApiClient.delete(SERVICES_API_ENDPOINTS.CALENDAR_APPLICATION(id, applicationId)),
 }

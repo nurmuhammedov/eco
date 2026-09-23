@@ -7,6 +7,7 @@ import type {
   AttestationCalendar,
   AttestationExamSession,
 } from '@/entities/attestation/model/types'
+import { invalidateAttestation } from '@/entities/attestation/lib/invalidate'
 
 const unwrapList = <T>(response: { data: unknown }): T => {
   const payload = response.data as any
@@ -60,10 +61,7 @@ const useApplicantMutation = <TVariables>(
     mutationFn,
     onSuccess: () => {
       toast.success(successMessage)
-      queryClient.invalidateQueries({ queryKey: ['attestation-application'] })
-      queryClient.invalidateQueries({ queryKey: ['attestation-exam'] })
-      queryClient.invalidateQueries({ queryKey: ['attestation-calendar'] })
-      queryClient.invalidateQueries({ queryKey: ['services'] })
+      invalidateAttestation(queryClient)
     },
   })
 }
@@ -81,13 +79,9 @@ export const useSetResult = () =>
     'Natija belgilandi'
   )
 
-/** One recording covers the whole session */
-export const useUploadSessionVideo = () =>
-  useApplicantMutation<{ calendarId: string; file: File }>(({ calendarId, file }) => {
-    const formData = new FormData()
-    formData.append('video', file)
-
-    return servicesApiClient.post(SERVICES_API_ENDPOINTS.CALENDAR_VIDEO(calendarId), formData as any, {
-      'Content-Type': 'multipart/form-data',
-    })
-  }, 'Video yuklandi')
+/** The upload itself goes through the shared file field; only removal is ours */
+export const useDeleteSessionVideo = () =>
+  useApplicantMutation<string>(
+    (calendarId) => servicesApiClient.delete(SERVICES_API_ENDPOINTS.CALENDAR_VIDEO(calendarId)),
+    'Video o‘chirildi'
+  )

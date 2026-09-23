@@ -8,6 +8,7 @@ import { Skeleton } from '@/shared/components/ui/skeleton'
 import { NoData } from '@/shared/components/common/no-data'
 import GoBack from '@/shared/components/common/go-back'
 import { APPLICATION_STATUS, DIRECTION, EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
+import { formatExamTime } from '@/entities/attestation/lib/exam-time'
 import { useApplication, useExamQuestions, useGenerateExam, useSetResult } from '../model/use-applicants'
 
 const InfoItem = ({ label, value }: { label: string; value: React.ReactNode }) => (
@@ -44,7 +45,14 @@ export const ApplicantDetail = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <GoBack title={application.employee_name} fallbackPath="/attestation-calendars" />
+      <GoBack
+        title={application.employee_name}
+        fallbackPath={
+          application.attestation_calendar_id
+            ? `/attestation-calendars/${application.attestation_calendar_id}/applicants`
+            : '/attestation-queue'
+        }
+      />
 
       <Card>
         <CardContent className="p-4">
@@ -62,15 +70,10 @@ export const ApplicantDetail = () => {
             <InfoItem label="Yo‘nalish" value={DIRECTION[application.direction] ?? application.direction} />
             <InfoItem label="Tashkilot" value={application.organization_name} />
 
-            {application.calendar && (
-              <InfoItem
-                label="Qabul vaqti"
-                value={`${format(parseISO(application.calendar.start_date), 'dd.MM.yyyy HH:mm')}–${format(
-                  parseISO(application.calendar.end_date),
-                  'HH:mm'
-                )}`}
-              />
-            )}
+            <InfoItem
+              label="Imtihon vaqti"
+              value={application.calendar ? formatExamTime(application.calendar) : 'Belgilanmagan'}
+            />
 
             {isFinished && (
               <>
@@ -90,7 +93,7 @@ export const ApplicantDetail = () => {
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <h3 className="font-semibold">Imtihon savollari</h3>
 
-            {application.status === 'NEW' && (
+            {application.status === 'ASSIGNED' && (
               <Button
                 size="sm"
                 className="ml-auto"
@@ -109,7 +112,9 @@ export const ApplicantDetail = () => {
 
           {!application.has_exam && (
             <p className="text-muted-foreground text-sm">
-              Savollar hali generatsiya qilinmagan. Suhbat boshlanganda savollar tasodifiy tanlanadi.
+              {application.status === 'NEW'
+                ? 'Ariza hali imtihonga kiritilmagan. Savollar imtihon belgilangach generatsiya qilinadi.'
+                : 'Savollar hali generatsiya qilinmagan. Suhbat boshlanganda savollar tasodifiy tanlanadi.'}
             </p>
           )}
 

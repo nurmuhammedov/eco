@@ -109,19 +109,20 @@ export const SERVICES_API_ENDPOINTS = {
   // Questions (Savollar)
   QUESTIONS: '/attestation/questions',
   QUESTION_BY_ID: (id: string) => `/attestation/questions/${id}`,
-  // Calendars (Qabul vaqtlari)
+  // Calendars (Imtihonlar) — navbatdagi arizalardan tuziladi
   CALENDARS: '/attestation/calendars',
   CALENDAR_BY_ID: (id: string) => `/attestation/calendars/${id}`,
-  CALENDAR_CLOSE: (id: string) => `/attestation/calendars/${id}/close`,
   CALENDAR_APPLICANTS: (id: string) => `/attestation/calendars/${id}/applicants`,
+  CALENDAR_APPLICATIONS: (id: string) => `/attestation/calendars/${id}/applications`,
+  CALENDAR_APPLICATION: (id: string, applicationId: string) =>
+    `/attestation/calendars/${id}/applications/${applicationId}`,
+  CALENDAR_VIDEO: (id: string) => `/attestation/calendars/${id}/video`,
   // Applications (Arizalar)
   APPLICATIONS: '/attestation/applications',
   MY_APPLICATIONS: '/attestation/my-applications',
-  AVAILABLE_DATES: '/attestation/available-dates',
   EMPLOYEES: '/attestation/employees',
   APPLICATION_BY_ID: (id: string) => `/attestation/applications/${id}`,
   APPLICATION_RESULT: (id: string) => `/attestation/applications/${id}/result`,
-  CALENDAR_VIDEO: (id: string) => `/attestation/calendars/${id}/video`,
   // Exams (Imtihon savollari)
   EXAM_GENERATE: (applicationId: string) => `/attestation/exams/generate/${applicationId}`,
   EXAM_BY_APPLICATION: (applicationId: string) => `/attestation/exams/${applicationId}`,
