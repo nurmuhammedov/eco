@@ -1,5 +1,5 @@
 import { differenceInMinutes, format, parseISO } from 'date-fns'
-import { Clock, History, UserRound } from 'lucide-react'
+import { Clock, UserRound } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog'
 import { cn } from '@/shared/lib/utils'
@@ -98,14 +98,13 @@ export const InquiryStatusHistory = ({ steps = [], submittedAt }: Props) => {
 export const InquiryStatusHistoryModal = (props: Props) => (
   <Dialog>
     <DialogTrigger asChild>
-      <Button variant="outline" className="border-primary text-primary hover:bg-primary/10 hover:text-primary">
-        <History className="mr-2 h-4 w-4" />
+      <Button type="button" variant="primaryOutline">
         Amallar tarixi
       </Button>
     </DialogTrigger>
     <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-xl">
       <DialogHeader>
-        <DialogTitle>Amallar tarixi</DialogTitle>
+        <DialogTitle className="text-blue-400">Amallar tarixi</DialogTitle>
       </DialogHeader>
       <InquiryStatusHistory {...props} />
     </DialogContent>
