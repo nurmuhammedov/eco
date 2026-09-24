@@ -62,6 +62,7 @@ const InspectionHfCategoryReport: React.FC = () => {
             onChange={setDate('startDate')}
             maxDate={parseISO(endDate)}
             className="w-[160px]"
+            isForm={false}
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -71,6 +72,7 @@ const InspectionHfCategoryReport: React.FC = () => {
             onChange={setDate('endDate')}
             minDate={parseISO(startDate)}
             className="w-[160px]"
+            isForm={false}
           />
         </div>
         <div className="flex min-w-[260px] flex-1 flex-col gap-1">
