@@ -419,37 +419,37 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'ATTESTATION',
-    path: 'attestation-applications',
+    path: 'attestation/applications',
     element: withSuspense(AttestationMyApplicationsPage),
     roles: [UserRoles.LEGAL],
   },
   {
     id: 'ATTESTATION',
-    path: 'attestation-applications/:id',
+    path: 'attestation/applications/:id',
     element: withSuspense(AttestationApplicationDetailPage),
     roles: [UserRoles.HEAD],
   },
   {
     id: 'ATTESTATION',
-    path: 'attestation-calendars',
+    path: 'attestation/exams',
     element: withSuspense(AttestationCalendarsPage),
     roles: [UserRoles.HEAD],
   },
   {
     id: 'ATTESTATION',
-    path: 'attestation-calendars/:calendarId/applicants',
+    path: 'attestation/exams/:examId',
     element: withSuspense(AttestationApplicantsPage),
     roles: [UserRoles.HEAD],
   },
   {
     id: 'ATTESTATION',
-    path: 'attestation-queue',
+    path: 'attestation/queue',
     element: withSuspense(AttestationQueuePage),
     roles: [UserRoles.HEAD],
   },
   {
     id: 'ATTESTATION',
-    path: 'attestation-questions',
+    path: 'attestation/questions',
     element: withSuspense(AttestationQuestionsPage),
     roles: [UserRoles.HEAD],
   },
@@ -923,7 +923,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REPORT',
-    path: 'reports/applications-regions',
+    path: 'reports/applications-by-region',
     element: withSuspense(ApplicationsByRegionReport),
     roles: [
       UserRoles.CHAIRMAN,
@@ -936,7 +936,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REPORT',
-    path: 'reports/applications-types',
+    path: 'reports/applications-by-type',
     element: withSuspense(ApplicationsByTypeReport),
     roles: [
       UserRoles.CHAIRMAN,
@@ -955,7 +955,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REPORT',
-    path: 'reports/changes',
+    path: 'reports/registry-changes',
     element: withSuspense(RegistryChangesReport),
     roles: [
       UserRoles.CHAIRMAN,
@@ -1102,7 +1102,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REPORT',
-    path: 'reports/registers-deregister',
+    path: 'reports/registry-deregistrations',
     element: withSuspense(RegistryDeregistrationsReport),
     roles: [
       UserRoles.CHAIRMAN,
@@ -1115,7 +1115,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REPORT',
-    path: 'reports/registers-equipment-terms',
+    path: 'reports/registry-equipment-terms',
     element: withSuspense(RegistryEquipmentTermsReport),
     roles: [
       UserRoles.CHAIRMAN,
@@ -1128,7 +1128,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REPORT',
-    path: 'reports/registers-new-objects',
+    path: 'reports/registry-new-objects',
     element: withSuspense(RegistryNewObjectsReport),
     roles: [
       UserRoles.CHAIRMAN,
@@ -1141,7 +1141,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REPORT',
-    path: 'reports/registers-objects',
+    path: 'reports/registry-objects',
     element: withSuspense(RegistryObjectsReport),
     roles: [
       UserRoles.CHAIRMAN,
@@ -1154,7 +1154,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REPORT',
-    path: 'reports/registers-register',
+    path: 'reports/registry-registrations',
     element: withSuspense(RegistryRegistrationsReport),
     roles: [
       UserRoles.CHAIRMAN,

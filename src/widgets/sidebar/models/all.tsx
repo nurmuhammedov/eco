@@ -150,17 +150,17 @@ export default [
       {
         id: 'ATTESTATION',
         title: 'Arizalar navbati',
-        url: '/attestation-queue',
+        url: '/attestation/queue',
       },
       {
         id: 'ATTESTATION',
         title: 'Imtihonlar',
-        url: '/attestation-calendars',
+        url: '/attestation/exams',
       },
       {
         id: 'ATTESTATION',
         title: 'Imtihon savollari',
-        url: '/attestation-questions',
+        url: '/attestation/questions',
       },
     ],
   },

@@ -125,7 +125,7 @@ export default [
   {
     id: 'ATTESTATION',
     title: 'Attestatsiya',
-    url: '/attestation-applications',
+    url: '/attestation/applications',
     icon: MODULE_ICONS.ATTESTATION,
   },
 ] as Navigation

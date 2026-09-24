@@ -49,8 +49,8 @@ export const ApplicantDetail = () => {
         title={application.employee_name}
         fallbackPath={
           application.attestation_calendar_id
-            ? `/attestation-calendars/${application.attestation_calendar_id}/applicants`
-            : '/attestation-queue'
+            ? `/attestation/exams/${application.attestation_calendar_id}`
+            : '/attestation/queue'
         }
       />
 

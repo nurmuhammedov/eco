@@ -17,7 +17,7 @@ import { AddApplicationsDialog } from './add-applications-dialog'
 import { ExamVideo } from './exam-video'
 
 export const ApplicantsList = () => {
-  const { calendarId = '' } = useParams()
+  const { examId: calendarId = '' } = useParams()
   const navigate = useNavigate()
   const { paramsObject } = useCustomSearchParams()
   const [isAddOpen, setIsAddOpen] = useState(false)
@@ -88,7 +88,7 @@ export const ApplicantsList = () => {
             size="icon"
             className="h-8 w-8 text-blue-500"
             title="Suhbat sahifasi"
-            onClick={() => navigate(`/attestation-applications/${row.original.id}`)}
+            onClick={() => navigate(`/attestation/applications/${row.original.id}`)}
           >
             <Eye className="h-4 w-4" />
           </Button>
@@ -117,7 +117,7 @@ export const ApplicantsList = () => {
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
       <div className="mb-2 flex flex-wrap items-center gap-2">
-        <GoBack title={calendar ? formatExamTime(calendar) : 'Imtihon'} fallbackPath="/attestation-calendars" />
+        <GoBack title={calendar ? formatExamTime(calendar) : 'Imtihon'} fallbackPath="/attestation/exams" />
 
         {calendar && (
           <div className="flex flex-wrap items-center gap-2">

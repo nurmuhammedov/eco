@@ -53,6 +53,20 @@ const MOVED: [from: string, to: string][] = [
   ['news/create', '/news/add'],
   ['news/edit/:id', '/news/:id/edit'],
   ['preventions/detail/:id', '/preventions/:id'],
+  ['attestation-applications', '/attestation/applications'],
+  ['attestation-applications/:id', '/attestation/applications/:id'],
+  ['attestation-calendars', '/attestation/exams'],
+  ['attestation-calendars/:examId/applicants', '/attestation/exams/:examId'],
+  ['attestation-queue', '/attestation/queue'],
+  ['attestation-questions', '/attestation/questions'],
+  ['reports/applications-regions', '/reports/applications-by-region'],
+  ['reports/applications-types', '/reports/applications-by-type'],
+  ['reports/changes', '/reports/registry-changes'],
+  ['reports/registers-deregister', '/reports/registry-deregistrations'],
+  ['reports/registers-equipment-terms', '/reports/registry-equipment-terms'],
+  ['reports/registers-new-objects', '/reports/registry-new-objects'],
+  ['reports/registers-objects', '/reports/registry-objects'],
+  ['reports/registers-register', '/reports/registry-registrations'],
 ]
 
 export const LEGACY_ROUTES: AppRouteDefinition[] = MOVED.map(([from, to]) => ({

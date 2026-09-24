@@ -95,7 +95,7 @@ export const CalendarsList = () => {
               size="icon"
               className="h-8 w-8"
               title="Ishtirokchilar"
-              onClick={() => navigate(`/attestation-calendars/${calendar.id}/applicants`)}
+              onClick={() => navigate(`/attestation/exams/${calendar.id}`)}
             >
               <Users className="h-4 w-4" />
             </Button>
@@ -140,7 +140,7 @@ export const CalendarsList = () => {
     <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
       <div className="mb-2 flex justify-end">
         {/* An exam is built from queued applications, so it starts from the queue */}
-        <Button onClick={() => navigate('/attestation-queue')}>
+        <Button onClick={() => navigate('/attestation/queue')}>
           <CalendarPlus className="mr-2 h-4 w-4" />
           Imtihon belgilash
         </Button>
