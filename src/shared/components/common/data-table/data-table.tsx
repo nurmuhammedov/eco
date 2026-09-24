@@ -20,10 +20,10 @@ import {
 import * as React from 'react'
 import { Fragment } from 'react'
 import { DataTablePagination } from './data-table-pagination'
-import { getCommonPinningStyles } from './models/get-common-pinning'
+import { getCommonPinningStyles } from './model/get-common-pinning'
 import { ColumnFilterInput } from '@/shared/components/common/data-table/column-filter-input'
 import { DataTableLoading } from './data-table-loading'
-import { ExtendedColumnDef } from './models/column-def'
+import { ExtendedColumnDef } from './model/column-def'
 
 // Kept so the many call sites that import the type from here keep working.
 export type { ExtendedColumnDef }

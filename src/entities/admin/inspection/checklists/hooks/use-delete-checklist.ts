@@ -1,8 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { inspectionChecklistAPI as checklistAPI } from '../models/checklist.api'
-import { checklistKeys } from '../models/checklist.query-keys'
-import { ChecklistResponse } from '../models/checklist.types'
+import { inspectionChecklistAPI as checklistAPI } from '../model/checklist.api'
+import { checklistKeys } from '../model/checklist.query-keys'
+import { ChecklistResponse } from '../model/checklist.types'
 
 export const useDeleteChecklist = () => {
   const queryClient = useQueryClient()

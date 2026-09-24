@@ -64,7 +64,7 @@ const InquiryAddPage = lazy(() => import('@/pages/inquiries/ui/inquiry-add'))
 const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
 const InquiryListPage = lazy(() => import('@/features/inquiries/ui/inquiry-list'))
 const InspectionExecutionReport = lazy(() => import('@/features/reports/ui/inspection-execution-report'))
-const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspections.info'))
+const InspectionDetailPage = lazy(() => import('@/features/inspections/ui/inspection-detail'))
 const InspectionsOtherPage = lazy(() => import('@/pages/inspections/other/page'))
 const InspectionsRiskBasedPage = lazy(() => import('@/pages/inspections/risk-based/page'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
@@ -589,7 +589,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'INSPECTION',
     path: 'inspections/info',
-    element: withSuspense(InspectionsInfoPage),
+    element: withSuspense(InspectionDetailPage),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,

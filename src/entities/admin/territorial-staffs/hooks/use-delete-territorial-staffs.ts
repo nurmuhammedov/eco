@@ -1,8 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { territorialStaffAPI } from '../models/territorial-staffs.api'
-import { territorialStaffKeys } from '../models/territorial-staffs.query-keys'
-import { TerritorialStaffResponse } from '../models/territorial-staffs.types'
+import { territorialStaffAPI } from '../model/territorial-staffs.api'
+import { territorialStaffKeys } from '../model/territorial-staffs.query-keys'
+import { TerritorialStaffResponse } from '../model/territorial-staffs.types'
 
 export const useDeleteTerritorialStaff = () => {
   const queryClient = useQueryClient()

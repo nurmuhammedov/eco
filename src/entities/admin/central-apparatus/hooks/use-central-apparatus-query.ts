@@ -1,8 +1,8 @@
 import { getTime } from '@/shared/lib/get-time'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { centralApparatusAPI } from '../models/central-apparatus.api'
-import { centralApparatusKeys } from '../models/central-apparatus.query-keys'
-import { CentralApparatusResponse, FilterCentralApparatusDTO } from '../models/central-apparatus.types'
+import { centralApparatusAPI } from '../model/central-apparatus.api'
+import { centralApparatusKeys } from '../model/central-apparatus.query-keys'
+import { CentralApparatusResponse, FilterCentralApparatusDTO } from '../model/central-apparatus.types'
 
 export const useCentralApparatusListQuery = (filters: FilterCentralApparatusDTO) => {
   return useQuery({

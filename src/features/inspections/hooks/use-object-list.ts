@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { inspectionsApi } from '@/features/inspections/model/inspections.model'
+import { inspectionsApi } from '@/features/inspections/model/inspections.api'
 import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 

@@ -9,7 +9,7 @@ import { UserRoles } from '@/shared/types/user'
 import useCustomSearchParams from '../../../shared/hooks/api/use-search-params'
 import InspectionsDetailInfo from '@/features/inspections/ui/parts/inspection-detail-info'
 import { useInspectionDetail } from '@/features/inspections/hooks/use-inspection-detail'
-import { InspectionStatus } from '@/entities/inspection/models/inspection-status'
+import { InspectionStatus } from '@/entities/inspection/model/inspection-status'
 import { useObjectList } from '@/features/inspections/hooks/use-object-list'
 import { useData } from '@/shared/hooks'
 import InspectionReports from '@/features/inspections/ui/parts/inspection-reports'
@@ -20,7 +20,7 @@ import AppealMainInfo from '@/features/application/application-detail/ui/parts/a
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { useEffect, useState } from 'react'
 
-const InspectionsInfo = () => {
+const InspectionDetail = () => {
   const {
     paramsObject: { tin: currentTin = '', name = '', inspectionId = '', inspectionType = '' },
   } = useCustomSearchParams()
@@ -187,4 +187,4 @@ const InspectionsInfo = () => {
   )
 }
 
-export default InspectionsInfo
+export default InspectionDetail

@@ -1,8 +1,8 @@
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
-import { CreateTerritorialDepartmentsDTO, TerritorialDepartmentResponse } from '../models/territorial-departments.types'
-import { territorialDepartmentsAPI } from '../models/territorial-departments.api'
-import { territorialDepartmentsKeys } from '../models/territorial-departments.query-keys'
+import { CreateTerritorialDepartmentsDTO, TerritorialDepartmentResponse } from '../model/territorial-departments.types'
+import { territorialDepartmentsAPI } from '../model/territorial-departments.api'
+import { territorialDepartmentsKeys } from '../model/territorial-departments.query-keys'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 

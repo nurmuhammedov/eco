@@ -1,8 +1,8 @@
 import { getTime } from '@/shared/lib/get-time'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { equipmentAPI } from '../models/equipment.api'
-import { equipmentKeys } from '../models/equipment.query-keys'
-import { EquipmentResponse, FilterEquipmentDTO } from '../models/equipment.types'
+import { equipmentAPI } from '../model/equipment.api'
+import { equipmentKeys } from '../model/equipment.query-keys'
+import { EquipmentResponse, FilterEquipmentDTO } from '../model/equipment.types'
 
 export const useEquipmentList = (params: FilterEquipmentDTO) => {
   return useQuery({

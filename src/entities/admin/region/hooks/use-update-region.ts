@@ -2,9 +2,9 @@ import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { regionAPI } from '../models/region.api'
-import { regionKeys } from '../models/region.query-keys'
-import { type UpdateRegionDTO } from '../models/region.types'
+import { regionAPI } from '../model/region.api'
+import { regionKeys } from '../model/region.query-keys'
+import { type UpdateRegionDTO } from '../model/region.types'
 
 export const useUpdateRegion = () => {
   const queryClient = useQueryClient()

@@ -1,5 +1,5 @@
 import { MODULE_ICONS } from './module-icons'
-import { Navigation } from '@/widgets/sidebar/models/types'
+import { Navigation } from '@/widgets/sidebar/model/types'
 
 const currentDate = new Date()
 const currentYear = currentDate.getFullYear()

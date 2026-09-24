@@ -14,7 +14,7 @@ import DateTimePicker from '@/shared/components/ui/datetimepicker'
 
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 
 import useDetail from '@/shared/hooks/api/use-detail'

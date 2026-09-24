@@ -1,5 +1,5 @@
 import { MODULE_ICONS } from './module-icons'
-import { Navigation } from '@/widgets/sidebar/models/types'
+import { Navigation } from '@/widgets/sidebar/model/types'
 
 export default [
   {
@@ -64,27 +64,15 @@ export default [
   },
   {
     id: 'ACCREDITATION',
-    title: 'menu.accreditation',
+    title: 'Ekspert tashkilotlar',
     url: '/expertise-organizations',
     icon: MODULE_ICONS.ACCREDITATION,
-    items: [
-      {
-        id: 'ACCREDITATION',
-        url: '/expertise-organizations',
-        title: 'Ekspert tashkilotlar',
-      },
-      {
-        id: 'CONCLUSION',
-        url: '/accreditations',
-        title: 'Ekspertiza xulosalari',
-      },
-    ],
   },
   {
-    id: 'ORGANIZATIONS',
-    title: 'Tashkilotlar',
-    url: '/organizations',
-    icon: MODULE_ICONS.ORGANIZATIONS,
+    id: 'CONCLUSION',
+    title: 'Ekspertiza xulosalari',
+    url: '/accreditations',
+    icon: MODULE_ICONS.CONCLUSION,
   },
   {
     id: 'DECLARATION',
@@ -135,21 +123,9 @@ export default [
     icon: MODULE_ICONS.CADASTRE_PASSPORT,
   },
   {
-    id: 'KPI',
-    title: 'KPI',
-    url: '/kpi',
-    icon: MODULE_ICONS.KPI,
-    items: [
-      {
-        id: 'KPI',
-        title: 'Boshqarma va bo‘limlar',
-        url: '/kpi/departments',
-      },
-      {
-        id: 'KPI',
-        title: 'KPI vazifalar',
-        url: '/kpi/tasks',
-      },
-    ],
+    id: 'ATTESTATION',
+    title: 'Attestatsiya',
+    url: '/attestation/applications',
+    icon: MODULE_ICONS.ATTESTATION,
   },
 ] as Navigation

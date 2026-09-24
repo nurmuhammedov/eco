@@ -1,5 +1,5 @@
 import { Loader2 } from 'lucide-react'
-import { useLoginOneId } from '@/entities/auth/models/auth.fetcher'
+import { useLoginOneId } from '@/entities/auth/model/auth.fetcher'
 import { apiConfig } from '@/shared/api/constants'
 
 const buildOneIdAuthorizeUrl = () => {

@@ -1,8 +1,8 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { committeeStaffAPI } from '../models/committee-staffs.api'
-import { committeeStaffKeys } from '../models/committee-staffs.query-keys'
-import { CommitteeStaffResponse } from '../models/committee-staffs.types'
+import { committeeStaffAPI } from '../model/committee-staffs.api'
+import { committeeStaffKeys } from '../model/committee-staffs.query-keys'
+import { CommitteeStaffResponse } from '../model/committee-staffs.types'
 
 export const useDeleteCommitteeStaff = () => {
   const queryClient = useQueryClient()

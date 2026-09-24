@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { routeByRole } from '@/shared/lib/router/route-by-role'
-import { useStartPath } from '@/widgets/sidebar/models/use-user-navigation'
+import { useStartPath } from '@/widgets/sidebar/model/use-user-navigation'
 
 /**
  * Sends the user to the first page their menu actually offers. The per-role default

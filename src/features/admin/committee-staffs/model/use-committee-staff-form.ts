@@ -18,7 +18,7 @@ import {
   type CreateCommitteeStaffDTO,
   schemas,
   type UpdateCommitteeStaffDTO,
-} from '@/entities/admin/committee-staffs/models/committee-staffs.schema'
+} from '@/entities/admin/committee-staffs/model/committee-staffs.schema'
 import { format, parseISO } from 'date-fns'
 
 const PERMISSIONS = {

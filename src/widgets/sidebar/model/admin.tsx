@@ -1,4 +1,4 @@
-import type { Navigation } from '@/widgets/sidebar/models/types'
+import type { Navigation } from '@/widgets/sidebar/model/types'
 import {
   History,
   AlertTriangle,

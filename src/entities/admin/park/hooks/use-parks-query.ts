@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { parkAPI } from '../models/park.api'
-import { parkKeys } from '../models/park.query-keys'
-import { FilterParkDTO } from '../models/park.types'
+import { parkAPI } from '../model/park.api'
+import { parkKeys } from '../model/park.query-keys'
+import { FilterParkDTO } from '../model/park.types'
 
 export const useParksQuery = (params: FilterParkDTO) => {
   return useQuery({

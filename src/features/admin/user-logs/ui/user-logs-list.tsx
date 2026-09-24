@@ -1,4 +1,4 @@
-import { FilterUserLogsDTO, UserLogs } from '@/entities/admin/user-logs/models/user-logs.types'
+import { FilterUserLogsDTO, UserLogs } from '@/entities/admin/user-logs/model/user-logs.types'
 import { DataTable } from '@/shared/components/common/data-table'
 import { ColumnDef } from '@tanstack/react-table'
 import { useUserLogsList } from '@/entities/admin/user-logs'

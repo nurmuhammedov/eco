@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom'
 import { Textarea } from '@/shared/components/ui/textarea'
 import DetailRow from '@/shared/components/common/detail-row'
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 
 export const AddOldConclusion = () => {
   const [stir, setStir] = useState('')

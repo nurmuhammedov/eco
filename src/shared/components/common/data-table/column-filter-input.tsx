@@ -16,7 +16,7 @@ import {
   CommandList,
 } from '@/shared/components/ui/command'
 import { cn } from '@/shared/lib/utils'
-import { ExtendedColumnDef } from './models/column-def'
+import { ExtendedColumnDef } from './model/column-def'
 
 const ICON_STYLE = 'absolute left-2 top-1/2 -translate-y-1/2 text-neutral-400 size-4 pointer-events-none'
 const CLEAR_BUTTON_STYLE =

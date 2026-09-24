@@ -1,8 +1,8 @@
 import { getTime } from '@/shared/lib/get-time'
 import { useQuery } from '@tanstack/react-query'
-import { FilterUserLogsDTO } from '../models/user-logs.types'
-import { userLogsAPI } from '../models/user-logs.api'
-import { userLogsKeys } from '../models/user-logs.query-keys'
+import { FilterUserLogsDTO } from '../model/user-logs.types'
+import { userLogsAPI } from '../model/user-logs.api'
+import { userLogsKeys } from '../model/user-logs.query-keys'
 
 export const useUserLogsList = (params: FilterUserLogsDTO) => {
   return useQuery({

@@ -1,5 +1,5 @@
-import { authAPI } from '@/entities/auth/models/auth.api'
-import { LoginDTO } from '@/entities/auth/models/auth.types'
+import { authAPI } from '@/entities/auth/model/auth.api'
+import { LoginDTO } from '@/entities/auth/model/auth.types'
 import { UserState } from '@/shared/types/user'
 import { goToGuestLanding } from '@/shared/config/navigation'
 import { routeByRole } from '@/shared/lib/router/route-by-role'

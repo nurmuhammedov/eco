@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import { toast } from 'sonner'
-import { inspectionsApi } from '@/features/inspections/model/inspections.model'
+import { inspectionsApi } from '@/features/inspections/model/inspections.api'
 
 export function useAcceptExecutionReport() {
   const queryClient = useQueryClient()

@@ -1,10 +1,10 @@
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 // Asosiy exportlarni eski yo‘ldan qoldiramiz
-import { committeeStaffAPI } from '../models/committee-staffs.api'
-import { committeeStaffKeys } from '../models/committee-staffs.query-keys'
+import { committeeStaffAPI } from '../model/committee-staffs.api'
+import { committeeStaffKeys } from '../model/committee-staffs.query-keys'
 
-import type { UpdateCommitteeStaffDTO } from '../models/committee-staffs.schema'
+import type { UpdateCommitteeStaffDTO } from '../model/committee-staffs.schema'
 
 export const useUpdateCommitteeStaff = () => {
   const queryClient = useQueryClient()

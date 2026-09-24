@@ -2,9 +2,9 @@ import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { equipmentAPI } from '../models/equipment.api'
-import { equipmentKeys } from '../models/equipment.query-keys'
-import { UpdateEquipmentDTO } from '../models/equipment.types'
+import { equipmentAPI } from '../model/equipment.api'
+import { equipmentKeys } from '../model/equipment.query-keys'
+import { UpdateEquipmentDTO } from '../model/equipment.types'
 
 export const useUpdateEquipment = () => {
   const queryClient = useQueryClient()

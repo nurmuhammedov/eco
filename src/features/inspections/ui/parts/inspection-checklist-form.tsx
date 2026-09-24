@@ -21,7 +21,7 @@ import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import AddAdditionalFileModal from '@/features/inspections/ui/parts/add-additional-file-modal'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 const itemSchema = z

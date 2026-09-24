@@ -16,7 +16,7 @@ import { Button } from '@/shared/components/ui/button'
 import { InputCurrency } from '@/shared/components/ui/input-currency'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import {
   useAccountantRecoveredAmount,
   useAccountantPaidReward,

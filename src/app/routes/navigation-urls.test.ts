@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { APP_ROUTES } from './registry'
-import { NAVIGATIONS } from '@/widgets/sidebar/models/navigations'
-import { Navigation } from '@/widgets/sidebar/models/types'
-import { KPI_APPROVER_ITEMS } from '@/widgets/sidebar/models/use-user-navigation'
+import { NAVIGATIONS } from '@/widgets/sidebar/model/navigations'
+import { Navigation } from '@/widgets/sidebar/model/types'
+import { KPI_APPROVER_ITEMS } from '@/widgets/sidebar/model/use-user-navigation'
 
 const KNOWN_PATHS = new Set(APP_ROUTES.map(({ path }) => `/${path}`))
 

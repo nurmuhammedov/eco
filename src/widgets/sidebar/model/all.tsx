@@ -1,5 +1,5 @@
 import { MODULE_ICONS } from './module-icons'
-import { Navigation } from '@/widgets/sidebar/models/types'
+import { Navigation } from '@/widgets/sidebar/model/types'
 
 export default [
   {
@@ -69,6 +69,12 @@ export default [
     icon: MODULE_ICONS.ACCREDITATION,
   },
   {
+    id: 'ORGANIZATIONS',
+    title: 'Tashkilotlar',
+    url: '/organizations',
+    icon: MODULE_ICONS.ORGANIZATIONS,
+  },
+  {
     id: 'CONCLUSION',
     title: 'Ekspertiza xulosalari',
     url: '/accreditations',
@@ -94,8 +100,8 @@ export default [
   },
   {
     id: 'INQUIRY',
-    title: 'Murojaatlar',
     url: '/inquiries',
+    title: 'Murojaatlar',
     icon: MODULE_ICONS.INQUIRY,
   },
   {
@@ -123,9 +129,39 @@ export default [
     icon: MODULE_ICONS.CADASTRE_PASSPORT,
   },
   {
+    id: 'KPI',
+    title: 'KPI',
+    url: '/kpi',
+    icon: MODULE_ICONS.KPI,
+    items: [
+      {
+        id: 'KPI',
+        title: 'Mening KPIlarim',
+        url: '/kpi/my-tasks',
+      },
+    ],
+  },
+  {
     id: 'ATTESTATION',
     title: 'Attestatsiya',
-    url: '/attestation/applications',
+    url: '/attestation',
     icon: MODULE_ICONS.ATTESTATION,
+    items: [
+      {
+        id: 'ATTESTATION',
+        title: 'Arizalar navbati',
+        url: '/attestation/queue',
+      },
+      {
+        id: 'ATTESTATION',
+        title: 'Imtihonlar',
+        url: '/attestation/exams',
+      },
+      {
+        id: 'ATTESTATION',
+        title: 'Imtihon savollari',
+        url: '/attestation/questions',
+      },
+    ],
   },
 ] as Navigation

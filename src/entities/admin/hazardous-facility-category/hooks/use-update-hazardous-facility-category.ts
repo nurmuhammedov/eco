@@ -2,9 +2,9 @@ import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { hazardousFacilityCategoryAPI } from '../models/hazardous-facility-category.api'
-import { hazardousFacilityCategoryKeys } from '../models/hazardous-facility-category.query-keys'
-import { UpdateHazardousFacilityCategoryDTO } from '../models/hazardous-facility-category.types'
+import { hazardousFacilityCategoryAPI } from '../model/hazardous-facility-category.api'
+import { hazardousFacilityCategoryKeys } from '../model/hazardous-facility-category.query-keys'
+import { UpdateHazardousFacilityCategoryDTO } from '../model/hazardous-facility-category.types'
 
 export const useUpdateHazardousFacilityCategory = () => {
   const queryClient = useQueryClient()

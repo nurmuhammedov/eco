@@ -1,8 +1,8 @@
 import { getTime } from '@/shared/lib/get-time'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { FilterTerritorialDepartmentsDTO, TerritorialDepartmentResponse } from '../models/territorial-departments.types'
-import { territorialDepartmentsAPI } from '../models/territorial-departments.api'
-import { territorialDepartmentsKeys } from '../models/territorial-departments.query-keys'
+import { FilterTerritorialDepartmentsDTO, TerritorialDepartmentResponse } from '../model/territorial-departments.types'
+import { territorialDepartmentsAPI } from '../model/territorial-departments.api'
+import { territorialDepartmentsKeys } from '../model/territorial-departments.query-keys'
 
 export const useTerritorialDepartmentsQuery = (filters: FilterTerritorialDepartmentsDTO) => {
   return useQuery({

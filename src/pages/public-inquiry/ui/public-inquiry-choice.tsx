@@ -4,7 +4,7 @@ import { Button } from '@/shared/components/ui/button'
 import { Loader2, ShieldCheck } from 'lucide-react'
 import { BrandLogo } from '@/shared/components/common'
 import { apiConfig } from '@/shared/api/constants'
-import { useLoginOneId } from '@/entities/auth/models/auth.fetcher'
+import { useLoginOneId } from '@/entities/auth/model/auth.fetcher'
 
 const PublicInquiryChoice = () => {
   const navigate = useNavigate()

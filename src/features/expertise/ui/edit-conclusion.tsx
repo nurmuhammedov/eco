@@ -18,7 +18,7 @@ import { Textarea } from '@/shared/components/ui/textarea'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 
 export const UpdateConclusion = () => {
   const { id } = useParams()

@@ -1,24 +1,21 @@
-import { apiClient } from '@/shared/api/api-client'
-import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
-import { useApplicationFormConstants, ReRegisterIllegalHFApplicationDTO } from '@/entities/create-application'
-import { ReRegisterIllegalHFSchema } from '@/entities/create-application/schemas/re-register-illegal-hf.schema'
+import { useApplicationFormConstants, ReRegisterHFApplicationDTO } from '@/entities/create-application'
+import { ReRegisterHFSchema } from '@/entities/create-application/schemas/reregister-hf.schema'
 import {
   useDistrictSelectQuery,
+  useHazardousFacilityDictionarySelect,
   useHazardousFacilityTypeDictionarySelect,
   useRegionSelectQuery,
 } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-
 import { useDetail } from '@/shared/hooks'
 
-export const useReRegisterIllegalHFApplication = () => {
-  const form = useForm<ReRegisterIllegalHFApplicationDTO>({
-    resolver: zodResolver(ReRegisterIllegalHFSchema),
+export const useReRegisterHFApplication = () => {
+  const form = useForm<ReRegisterHFApplicationDTO>({
+    resolver: zodResolver(ReRegisterHFSchema),
     defaultValues: {
-      legalTin: '',
       hazardousFacilityId: undefined,
       phoneNumber: '',
       upperOrganization: '',
@@ -47,35 +44,22 @@ export const useReRegisterIllegalHFApplication = () => {
     },
   })
 
-  const [orgData, setOrgData] = useState<any>(undefined)
-
-  const regionId = form.watch('regionId')
-  const legalTin = form.watch('legalTin')
-  const hazardousFacilityId = form.watch('hazardousFacilityId')
-
   const { spheres } = useApplicationFormConstants()
+  const regionId = form.watch('regionId')
+  const hazardousFacilityId = form.watch('hazardousFacilityId')
 
   const { data: regions } = useRegionSelectQuery()
   const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
-
-  /* const { mutateAsync: searchLegal, isPending: isSearching } = useAdd<any, any, any>('/integration/iip/legal') */
-  const [isSearching, setIsSearching] = useState(false)
-
-  const { data: hfList } = useHazardousFacilityByTinQuery(legalTin, !!legalTin && legalTin.length === 9 && !!orgData)
+  const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect()
 
   const { data: detail } = useDetail<any>(`/hf/`, hazardousFacilityId, !!hazardousFacilityId)
 
   useEffect(() => {
     if (detail) {
-      const currentTin = form.getValues('legalTin')
-      const currentId = form.getValues('hazardousFacilityId')
       const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
-
       form.reset((p) => ({
         ...p,
-        legalTin: currentTin,
-        hazardousFacilityId: currentId,
         name: detail.name || '',
         phoneNumber: detail.phoneNumber || '',
         upperOrganization: detail.upperOrganization || '',
@@ -107,30 +91,10 @@ export const useReRegisterIllegalHFApplication = () => {
     }
   }, [detail, form])
 
-  const handleSearch = () => {
-    if (legalTin?.length === 9 && !form.formState.errors.legalTin) {
-      setIsSearching(true)
-      apiClient
-        .post<any>('/integration/iip/legal', { tin: legalTin })
-        .then((res) => {
-          setOrgData(res.data?.data || res.data)
-          form.setValue('hazardousFacilityId', undefined as any)
-        })
-        .finally(() => setIsSearching(false))
-    } else {
-      void form.trigger('legalTin')
-    }
-  }
-
-  const handleClear = () => {
-    setOrgData(undefined)
-    form.reset({ legalTin: '' })
-  }
-
   const districtOptions = useMemo(() => getSelectOptions(districts), [districts])
   const regionOptions = useMemo(() => getSelectOptions(regions), [regions])
   const hazardousFacilityTypeOptions = useMemo(() => getSelectOptions(hazardousFacilityTypes), [hazardousFacilityTypes])
-  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hfList || []), [hfList])
+  const hazardousFacilitiesOptions = useMemo(() => getSelectOptions(hazardousFacilities), [hazardousFacilities])
 
   return {
     form,
@@ -139,9 +103,5 @@ export const useReRegisterIllegalHFApplication = () => {
     districtOptions,
     hazardousFacilityTypeOptions,
     hazardousFacilitiesOptions,
-    handleSearch,
-    handleClear,
-    orgData,
-    isSearching,
   }
 }

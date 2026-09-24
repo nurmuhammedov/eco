@@ -16,11 +16,11 @@ import { Input } from '@/shared/components/ui/input'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { useReRegisterIllegalHFApplication } from '@/features/application/create-application/model/use-re-register-illegal-hf-application'
+import { useReRegisterIllegalHFApplication } from '@/features/application/create-application/model/use-reregister-illegal-hf-application'
 import DetailRow from '@/shared/components/common/detail-row'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { parseISO } from 'date-fns'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 
 const ReregisterIllegalHfForm = ({ onSubmit }: { onSubmit: (data: ReRegisterIllegalHFApplicationDTO) => void }) => {
   const {

@@ -1,5 +1,5 @@
 import { ReRegisterEquipmentDTO } from '@/entities/create-application'
-import { ReRegisterEquipmentSchema } from '@/entities/create-application/schemas/re-register-equipment.schema'
+import { ReRegisterEquipmentSchema } from '@/entities/create-application/schemas/reregister-equipment.schema'
 import {
   useDistrictSelectQuery,
   useHazardousFacilityDictionarySelect,

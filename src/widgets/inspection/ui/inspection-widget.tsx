@@ -6,7 +6,7 @@ import {
   InspectionSubMenuStatus,
   OtherInspectionTabStatus,
   defaultCountDto,
-} from '@/entities/inspection/models/inspection-status'
+} from '@/entities/inspection/model/inspection-status'
 import { OtherInspectionList } from '@/features/inspections/ui/other-inspection-list'
 import { TenDaysDecreeList } from '@/features/inspections/ten-days-decree/ui/ten-days-decree-list'
 import { CreateOtherInspectionModal } from '@/features/inspections/ui/parts/create-other-inspection-modal'
@@ -21,7 +21,7 @@ import clsx from 'clsx'
 import { cn } from '@/shared/lib/utils'
 import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
 import { useTranslation } from 'react-i18next'
-import { RiskAnalysisTab } from '@/entities/risk-analysis/models/risk-analysis-tabs'
+import { RiskAnalysisTab } from '@/entities/risk-analysis/model/risk-analysis-tabs'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
 
 interface RegionCountDto {

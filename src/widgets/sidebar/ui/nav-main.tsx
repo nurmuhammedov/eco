@@ -1,7 +1,7 @@
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
-import { NavigationItem } from '@/widgets/sidebar/models/types'
+import { NavigationItem } from '@/widgets/sidebar/model/types'
 import { useNavigationProgress } from '@/shared/components/common'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/shared/components/ui/collapsible'
 import {

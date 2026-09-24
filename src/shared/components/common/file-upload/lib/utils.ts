@@ -1,5 +1,5 @@
 // Truncate file name
-import { FileData } from '../models/file-data.interface'
+import { FileData } from '../model/file-data.types'
 
 export const truncateFilename = (filename: string, maxLength: number): string => {
   if (filename.length <= maxLength) return filename

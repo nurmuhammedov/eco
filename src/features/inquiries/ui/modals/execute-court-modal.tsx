@@ -19,7 +19,7 @@ import { Textarea } from '@/shared/components/ui/textarea'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { useExecuteCourt } from '@/features/inquiries/hooks/use-inquiry-mutations'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import { InputCurrency } from '@/shared/components/ui/input-currency'
 
 const schema = z

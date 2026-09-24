@@ -1,8 +1,8 @@
 import { getTime } from '@/shared/lib/get-time'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { FilterTerritorialStaffDTO, TerritorialStaffResponse } from '../models/territorial-staffs.types'
-import { territorialStaffAPI } from '../models/territorial-staffs.api'
-import { territorialStaffKeys } from '../models/territorial-staffs.query-keys'
+import { FilterTerritorialStaffDTO, TerritorialStaffResponse } from '../model/territorial-staffs.types'
+import { territorialStaffAPI } from '../model/territorial-staffs.api'
+import { territorialStaffKeys } from '../model/territorial-staffs.query-keys'
 
 export const useTerritorialStaffListQuery = (filters: FilterTerritorialStaffDTO) => {
   return useQuery({

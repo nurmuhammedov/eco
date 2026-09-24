@@ -2,9 +2,9 @@ import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { districtAPI } from '../models/district.api'
-import { districtKeys } from '../models/district.query-keys'
-import { DistrictResponse } from '../models/district.types'
+import { districtAPI } from '../model/district.api'
+import { districtKeys } from '../model/district.query-keys'
+import { DistrictResponse } from '../model/district.types'
 
 export const useDeleteDistrict = () => {
   const queryClient = useQueryClient()

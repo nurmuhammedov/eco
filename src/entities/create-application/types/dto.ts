@@ -16,12 +16,12 @@ import {
   XrayAppealDtoSchema,
 } from '@/entities/create-application/schemas'
 import { z } from 'zod'
-import { DeRegisterEquipmentSchema } from '@/entities/create-application/schemas/de-register-equipment'
-import { ReRegisterEquipmentSchema } from '@/entities/create-application/schemas/re-register-equipment.schema'
+import { DeRegisterEquipmentSchema } from '@/entities/create-application/schemas/deregister-equipment.schema'
+import { ReRegisterEquipmentSchema } from '@/entities/create-application/schemas/reregister-equipment.schema'
 import { AttractionAppealDtoSchema } from '../schemas/register-attraction.schema'
-import { DeRegisterHFSchema } from '@/entities/create-application/schemas/de-register-hf.schema'
-import { ReRegisterHFSchema } from '@/entities/create-application/schemas/re-register-hf.schema'
-import { ReRegisterIllegalHFSchema } from '@/entities/create-application/schemas/re-register-illegal-hf.schema'
+import { DeRegisterHFSchema } from '@/entities/create-application/schemas/deregister-hf.schema'
+import { ReRegisterHFSchema } from '@/entities/create-application/schemas/reregister-hf.schema'
+import { ReRegisterIllegalHFSchema } from '@/entities/create-application/schemas/reregister-illegal-hf.schema'
 import { OilContainerAppealDtoSchema } from '@/entities/create-application/schemas/oil-container.schema'
 import { IllegalOilContainerAppealDtoSchema } from '@/entities/create-application/schemas/illegal-oil-container.schema'
 

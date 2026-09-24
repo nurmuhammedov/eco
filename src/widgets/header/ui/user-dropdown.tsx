@@ -1,4 +1,4 @@
-import { useLogout } from '@/entities/auth/models/auth.fetcher'
+import { useLogout } from '@/entities/auth/model/auth.fetcher'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, CreditCard, Loader2, LogOut, User } from 'lucide-react'
 import { useState } from 'react'

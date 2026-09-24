@@ -3,9 +3,9 @@ import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import {
   CreateHazardousFacilityCategoryDTO,
   HazardousFacilityCategoryResponse,
-} from '../models/hazardous-facility-category.types'
-import { hazardousFacilityCategoryAPI } from '../models/hazardous-facility-category.api'
-import { hazardousFacilityCategoryKeys } from '../models/hazardous-facility-category.query-keys'
+} from '../model/hazardous-facility-category.types'
+import { hazardousFacilityCategoryAPI } from '../model/hazardous-facility-category.api'
+import { hazardousFacilityCategoryKeys } from '../model/hazardous-facility-category.query-keys'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 

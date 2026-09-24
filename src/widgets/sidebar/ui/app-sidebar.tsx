@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
 } from '@/shared/components/ui/sidebar'
 
-import { useUserNavigation } from '@/widgets/sidebar/models/use-user-navigation'
+import { useUserNavigation } from '@/widgets/sidebar/model/use-user-navigation'
 import { NavMain } from '@/widgets/sidebar/ui/nav-main'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { AppLogo } from './app-logo'

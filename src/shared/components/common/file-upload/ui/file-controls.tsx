@@ -1,7 +1,7 @@
 import React from 'react'
 import { cn } from '@/shared/lib/utils'
 import { Download, Eye, Trash2 } from 'lucide-react'
-import { FileData } from '../models/file-data.interface'
+import { FileData } from '../model/file-data.types'
 
 interface FileControlsProps {
   fileData: FileData | null

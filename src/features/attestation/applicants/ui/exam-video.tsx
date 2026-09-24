@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import {
   AlertDialog,
   AlertDialogAction,

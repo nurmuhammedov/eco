@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { attractionTypeAPI } from '../models/attraction-type.api'
+import { attractionTypeAPI } from '../model/attraction-type.api'
 
 const ATTRACTION_TYPE_QUERY_KEY = 'attraction-type'
 

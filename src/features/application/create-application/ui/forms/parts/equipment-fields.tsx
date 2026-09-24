@@ -1,7 +1,7 @@
 import { parseISO } from 'date-fns'
 import { UseFormReturn } from 'react-hook-form'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { PhoneInput } from '@/shared/components/ui/phone-input'

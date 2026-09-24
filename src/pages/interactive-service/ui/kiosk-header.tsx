@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader2, LogOut } from 'lucide-react'
-import { useLogout } from '@/entities/auth/models/auth.fetcher'
+import { useLogout } from '@/entities/auth/model/auth.fetcher'
 import { BrandLogo } from '@/shared/components/common'
 
 const MONTHS = [

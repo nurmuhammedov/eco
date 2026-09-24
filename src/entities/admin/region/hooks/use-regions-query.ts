@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { type FilterRegionDTO, type RegionResponse } from '../models/region.types'
-import { regionAPI } from '../models/region.api'
-import { regionKeys } from '../models/region.query-keys'
+import { type FilterRegionDTO, type RegionResponse } from '../model/region.types'
+import { regionAPI } from '../model/region.api'
+import { regionKeys } from '../model/region.query-keys'
 
 const DISTRICT_STALE_TIME = 10 * 60 * 1000 // 10 minutes
 

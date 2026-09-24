@@ -2,7 +2,7 @@ import { UseFormReturn } from 'react-hook-form'
 import { parseISO } from 'date-fns'
 import { FormControl, FormField, FormItem, FormLabel } from '@/shared/components/ui/form'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { HF_APPEAL_FILE_FIELDS } from '@/entities/create-application/schemas/hf-appeal-files'
 

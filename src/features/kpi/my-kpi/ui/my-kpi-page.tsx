@@ -14,7 +14,7 @@ import { Progress } from '@/shared/components/ui/progress'
 import { NoData } from '@/shared/components/common/no-data'
 import { FileLink } from '@/shared/components/common/file-link'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import { cn } from '@/shared/lib/utils'
 import {
   completionBarColor,

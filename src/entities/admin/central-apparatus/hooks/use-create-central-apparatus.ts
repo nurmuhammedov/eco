@@ -2,9 +2,9 @@ import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import type { ResponseData } from '@/shared/types/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { centralApparatusAPI } from '../models/central-apparatus.api'
-import { centralApparatusKeys } from '../models/central-apparatus.query-keys'
-import { CentralApparatusResponse, CreateCentralApparatusDTO } from '../models/central-apparatus.types'
+import { centralApparatusAPI } from '../model/central-apparatus.api'
+import { centralApparatusKeys } from '../model/central-apparatus.query-keys'
+import { CentralApparatusResponse, CreateCentralApparatusDTO } from '../model/central-apparatus.types'
 
 export const useCreateCentralApparatus = () => {
   const queryClient = useQueryClient()

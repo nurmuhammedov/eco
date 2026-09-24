@@ -5,8 +5,8 @@ import { UserRoles, UserRoleLabels } from '@/shared/types/user'
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
 import { API_ENDPOINTS } from '@/shared/api'
-import { useSwitchOtherRole } from '@/entities/auth/models/auth.fetcher'
-import { useSwitchBackRole } from '@/entities/auth/models/auth.fetcher'
+import { useSwitchOtherRole } from '@/entities/auth/model/auth.fetcher'
+import { useSwitchBackRole } from '@/entities/auth/model/auth.fetcher'
 
 export const DelegatedTasksNotification = () => {
   const { user } = useAuth()

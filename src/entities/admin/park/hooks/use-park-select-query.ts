@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { parkAPI } from '../models/park.api'
-import { parkKeys } from '../models/park.query-keys'
+import { parkAPI } from '../model/park.api'
+import { parkKeys } from '../model/park.query-keys'
 
 export const useParkSelectQuery = (regionId?: number | string | null, districtId?: number | string | null) => {
   return useQuery({

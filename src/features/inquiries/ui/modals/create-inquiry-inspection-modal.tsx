@@ -20,7 +20,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import DatePicker from '@/shared/components/ui/datepicker'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { useInspectorSelect } from '@/features/application/application-detail/hooks/use-inspector-select'

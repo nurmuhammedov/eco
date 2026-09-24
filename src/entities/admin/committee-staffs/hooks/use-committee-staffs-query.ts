@@ -1,8 +1,8 @@
 import { getTime } from '@/shared/lib/get-time'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { committeeStaffAPI } from '../models/committee-staffs.api'
-import { committeeStaffKeys } from '../models/committee-staffs.query-keys'
-import { CommitteeStaffResponse, FilterCommitteeStaffDTO } from '../models/committee-staffs.types'
+import { committeeStaffAPI } from '../model/committee-staffs.api'
+import { committeeStaffKeys } from '../model/committee-staffs.query-keys'
+import { CommitteeStaffResponse, FilterCommitteeStaffDTO } from '../model/committee-staffs.types'
 
 export const useCommitteeStaffListQuery = (filters: FilterCommitteeStaffDTO) => {
   return useQuery({

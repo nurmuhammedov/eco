@@ -1,6 +1,6 @@
 import { useDeleteAttractionType } from '@/entities/admin/attraction-type/hooks/use-attraction-type-mutations'
 import { useAttractionTypeList } from '@/entities/admin/attraction-type/hooks/use-attraction-type-query'
-import { AttractionType } from '@/entities/admin/attraction-type/models/attraction-type.types'
+import { AttractionType } from '@/entities/admin/attraction-type/model/attraction-type.types'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { useAttractionTypeDrawer } from '@/shared/hooks/entity-hooks'
 import { UIModeEnum } from '@/shared/types/ui-types'

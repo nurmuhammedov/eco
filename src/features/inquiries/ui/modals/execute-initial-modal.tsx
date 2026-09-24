@@ -26,7 +26,7 @@ import {
   inquiryBelongTypeLabels,
 } from '@/features/inquiries/model/types'
 import { InputFile } from '@/shared/components/common/file-upload'
-import { FileTypes } from '@/shared/components/common/file-upload/models/file-types'
+import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import { ApplicationModal } from '@/features/application/create-application'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { apiClient } from '@/shared/api/api-client'

@@ -6,8 +6,8 @@ import {
   useAttractionsSelect,
   useAttractionTypeDetail,
 } from '@/entities/admin/attraction-type/hooks/use-attraction-type-query'
-import { schemas } from '@/entities/admin/attraction-type/models/attraction-type.schema'
-import { CreateAttractionTypeDTO } from '@/entities/admin/attraction-type/models/attraction-type.types'
+import { schemas } from '@/entities/admin/attraction-type/model/attraction-type.schema'
+import { CreateAttractionTypeDTO } from '@/entities/admin/attraction-type/model/attraction-type.types'
 import { useAttractionTypeDrawer } from '@/shared/hooks/entity-hooks'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
