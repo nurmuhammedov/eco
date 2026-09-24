@@ -7,6 +7,7 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { useCustomSearchParams, useData, usePaginatedData } from '@/shared/hooks'
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { DeclarationTabKey, DeclarationTabs } from '@/features/declarations/ui/declaration-tabs'
+import { paramText } from '@/shared/lib/url-params'
 
 const DeclarationsWidget = () => {
   const { user } = useAuth()
@@ -19,7 +20,7 @@ const DeclarationsWidget = () => {
   const canAdd = user?.role === UserRoles.LEGAL
 
   const { paramsObject, addParams } = useCustomSearchParams()
-  const { status: tabStatus = 'ALL' } = paramsObject
+  const tabStatus = paramText(paramsObject.status, 'ALL')
 
   const { totalElements: allCount } = usePaginatedData<any>('/declarations', { page: 1, size: 1 })
   const { totalElements: inProcessCount } = usePaginatedData<any>('/declarations', {

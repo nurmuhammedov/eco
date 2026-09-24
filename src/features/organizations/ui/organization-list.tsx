@@ -15,21 +15,18 @@ import {
   useOrganizationCounts,
   useUpdateOwnershipType,
 } from '@/entities/organizations'
+import { paramText } from '@/shared/lib/url-params'
 
 export function OrganizationList() {
   const { paramsObject, addParams, removeParams } = useCustomSearchParams()
 
-  const {
-    page = 1,
-    size = 20,
-    identity = '',
-    name = '',
-    address = '',
-    regionId = '',
-    legalForm = '',
-    legalOwnership = '',
-    legalOwnershipType = 'ALL',
-  } = paramsObject
+  const { page = 1, size = 20, legalOwnershipType = 'ALL' } = paramsObject
+  const identity = paramText(paramsObject.identity)
+  const name = paramText(paramsObject.name)
+  const address = paramText(paramsObject.address)
+  const regionId = paramText(paramsObject.regionId)
+  const legalForm = paramText(paramsObject.legalForm)
+  const legalOwnership = paramText(paramsObject.legalOwnership)
 
   const baseParams: FilterOrganizationDTO = {
     page: Number(page),

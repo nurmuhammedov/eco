@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/lib/utils'
 import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
 import { RiskStatisticsCards } from '@/entities/risk-analysis/ui/risk-statistics-cards'
+import { paramText } from '@/shared/lib/url-params'
 
 const MONTHS = [
   { id: 'JANUARY', name: 'Yanvar' },
@@ -42,16 +43,12 @@ const RiskDateComparisonReport: React.FC = () => {
   // Same period the Xavf tahlili page opens on: the last month of the previous quarter.
   const { year: defaultYear, month: defaultMonth } = getDefaultYearAndMonthForRiskAnalysis()
 
-  const {
-    addParams,
-    paramsObject: {
-      mainTab = RiskAnalysisTab.HF,
-      year = defaultYear,
-      month = defaultMonth,
-      riskLevel = 'LOW',
-      regionName = 'all',
-    },
-  } = useCustomSearchParams()
+  const { addParams, paramsObject } = useCustomSearchParams()
+  const mainTab = paramText(paramsObject.mainTab, RiskAnalysisTab.HF)
+  const year = paramText(paramsObject.year, String(defaultYear))
+  const month = paramText(paramsObject.month, defaultMonth)
+  const riskLevel = paramText(paramsObject.riskLevel, 'LOW')
+  const regionName = paramText(paramsObject.regionName, 'all')
 
   const { data: dynamicsData, isLoading: dynamicsLoading } = useData<any[]>('/reports/risk-analysis/dynamic', true, {
     year: Number(year),

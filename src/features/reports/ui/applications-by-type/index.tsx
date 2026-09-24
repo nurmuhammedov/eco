@@ -5,6 +5,7 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { usePaginatedData } from '@/shared/hooks'
 import Filter from '@/shared/components/common/filter'
 import { ExportExcelButton, GoBack } from '@/shared/components/common'
+import { paramText } from '@/shared/lib/url-params'
 
 export enum InspectionStatus {
   LEGAL = 'LEGAL',
@@ -13,7 +14,7 @@ export enum InspectionStatus {
 
 const ApplicationsByTypeReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
-  const activeTab = paramsObject.ownerType
+  const activeTab = paramText(paramsObject.ownerType)
   const { data, isLoading } = usePaginatedData<any>('/reports/appeal-type', {
     ...paramsObject,
     ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,

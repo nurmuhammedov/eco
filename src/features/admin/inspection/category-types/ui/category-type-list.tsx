@@ -6,13 +6,14 @@ import { useCategoryTypesQuery, useDeleteCategoryType, CategoryType } from '@/en
 import { useCustomSearchParams } from '@/shared/hooks'
 import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options'
 import { useNavigate } from 'react-router-dom'
+import { paramNumber } from '@/shared/lib/url-params'
 
 export function CategoryTypeList() {
   const { onOpen } = useCategoryTypeDrawer()
   const { paramsObject } = useCustomSearchParams()
   const { data, isLoading } = useCategoryTypesQuery({
-    page: paramsObject?.page || 1,
-    size: paramsObject?.size || 10,
+    page: paramNumber(paramsObject.page, 1),
+    size: paramNumber(paramsObject.size, 10),
   })
   const deleteItem = useDeleteCategoryType()
   const navigate = useNavigate()

@@ -19,11 +19,16 @@ import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { useEffect, useState } from 'react'
+import { paramText } from '@/shared/lib/url-params'
 
 const InspectionDetail = () => {
   const {
-    paramsObject: { tin: currentTin = '', name = '', inspectionId = '', inspectionType = '' },
+    paramsObject: { tin, name: nameParam, inspectionId: inspectionIdParam, inspectionType: inspectionTypeParam },
   } = useCustomSearchParams()
+  const currentTin = paramText(tin)
+  const name = paramText(nameParam)
+  const inspectionId = paramText(inspectionIdParam)
+  const inspectionType = paramText(inspectionTypeParam)
   const { user } = useAuth()
 
   const isOther = inspectionType === 'other'

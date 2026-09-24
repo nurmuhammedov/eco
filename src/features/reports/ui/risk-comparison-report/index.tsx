@@ -9,6 +9,7 @@ import { RiskAnalysisTab } from '@/entities/risk-analysis/model/risk-analysis-ta
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/lib/utils'
 import { getQuarter, subQuarters } from 'date-fns'
+import { paramText } from '@/shared/lib/url-params'
 
 const QUARTERS = [
   { value: '1', label: '1-chorak' },
@@ -26,10 +27,10 @@ const RiskComparisonReport: React.FC = () => {
   const defaultYear = previousQuarterDate.getFullYear().toString()
   const defaultQuarter = getQuarter(previousQuarterDate).toString()
 
-  const {
-    addParams,
-    paramsObject: { mainTab = RiskAnalysisTab.HF, year = defaultYear, quarter = defaultQuarter },
-  } = useCustomSearchParams()
+  const { addParams, paramsObject } = useCustomSearchParams()
+  const mainTab = paramText(paramsObject.mainTab, RiskAnalysisTab.HF)
+  const year = paramText(paramsObject.year, defaultYear)
+  const quarter = paramText(paramsObject.quarter, defaultQuarter)
 
   const { data: regionsData, isLoading: regionsLoading } = useData<any[]>('/regions/select', true)
 

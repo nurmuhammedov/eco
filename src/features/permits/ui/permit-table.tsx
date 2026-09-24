@@ -10,6 +10,7 @@ import { Button } from '@/shared/components/ui/button'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { Badge } from '@/shared/components/ui/badge'
+import { paramText } from '@/shared/lib/url-params'
 
 export const PermitTable = ({ setIsModalOpen }: any) => {
   const { user } = useAuth()
@@ -17,7 +18,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
   const {
     addParams,
     paramsObject: {
-      currentTab = 'ALL',
+      currentTab: currentTabParam,
       page = 1,
       size = 10,
       tab = 'ALL',
@@ -27,6 +28,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
       documentName = '',
     },
   } = useCustomSearchParams()
+  const currentTab = paramText(currentTabParam, 'ALL')
 
   const { data: names } = useData<any>('/permits/document-names', true, {
     type: tab === 'ALL' ? undefined : tab,

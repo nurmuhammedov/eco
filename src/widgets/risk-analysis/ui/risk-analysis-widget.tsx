@@ -39,6 +39,7 @@ const TAB_TO_API_TYPE: Record<string, string> = {
 }
 
 import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
+import { paramText } from '@/shared/lib/url-params'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface RiskAnalysisWidgetProps {
@@ -85,11 +86,11 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const {
     addParams,
     paramsObject: {
-      mainTab = RiskAnalysisTab.HF,
+      mainTab: mainTabParam,
       riskLevel = 'ALL',
-      year = defaultYear,
-      month = defaultMonth,
-      date = defaultDate,
+      year: yearParam,
+      month: monthParam,
+      date: dateParam,
       size = 10,
       page = 1,
       regionId,
@@ -104,6 +105,11 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     },
   } = useCustomSearchParams()
 
+  const mainTab = paramText(mainTabParam, RiskAnalysisTab.HF)
+  const year = paramText(yearParam, String(defaultYear))
+  const month = paramText(monthParam, defaultMonth)
+  const date = paramText(dateParam, defaultDate)
+
   const isRestrictedRole = [UserRoles.INSPECTOR, UserRoles.REGIONAL].includes(user?.role as unknown as UserRoles)
   const isSupervisorOrController = user?.isSupervisor || user?.isController
   const shouldShowRegions = !isRestrictedRole || isSupervisorOrController
@@ -114,7 +120,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     ? regionId?.toString() || (regions.length > 0 ? regions[0].id.toString() : '')
     : undefined
 
-  const currentApiType = TAB_TO_API_TYPE[mainTab as string] || 'HF'
+  const currentApiType = TAB_TO_API_TYPE[mainTab] || 'HF'
 
   const apiParams = {
     type: currentApiType,
@@ -269,7 +275,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
         <TabsLayout
           className="mb-2"
           tabs={regionTabs}
-          activeTab={activeRegion}
+          activeTab={activeRegion ?? ''}
           onTabChange={(val) => addParams({ regionId: val, page: 1 })}
           outlineInactiveCount={true}
           showArrows={true}

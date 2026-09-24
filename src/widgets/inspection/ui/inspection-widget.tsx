@@ -19,6 +19,7 @@ import { useData, usePaginatedData } from '@/shared/hooks'
 import { Badge } from '@/shared/components/ui/badge'
 import clsx from 'clsx'
 import { cn } from '@/shared/lib/utils'
+import { paramOneOf, paramText } from '@/shared/lib/url-params'
 import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
 import { useTranslation } from 'react-i18next'
 import { RiskAnalysisTab } from '@/entities/risk-analysis/model/risk-analysis-tabs'
@@ -146,11 +147,13 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
   const isChairman = user?.role === UserRoles.CHAIRMAN
   const isChairmanOrHead = user?.role === UserRoles.HEAD
 
-  const inspectionType = type || paramsObject.type || 'RISK_BASED'
-  const belongType = paramsObject.belongType || RiskAnalysisTab.HF
+  const inspectionType = type || paramOneOf(paramsObject.type, ['RISK_BASED', 'OTHER'] as const, 'RISK_BASED')
+  const belongType = paramText(paramsObject.belongType, RiskAnalysisTab.HF)
 
-  const activeTab = paramsObject.status
-  const activeSubTab = paramsObject.subStatus
+  const activeTab = paramText(paramsObject.status)
+  const activeSubTab = paramText(paramsObject.subStatus)
+  // Notified inspections are shown under the New tab, split by a sub-toggle
+  const isNotifiedTab = activeTab === String(InspectionStatus.NOTIFIED)
   const regionId = paramsObject.regionId
 
   const activeRegion = regionId?.toString() || 'ALL'
@@ -356,7 +359,7 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
           </Tabs>
         ) : (
           <Tabs
-            value={activeTab === InspectionStatus.NOTIFIED ? InspectionStatus.NEW : activeTab || InspectionStatus.ALL}
+            value={isNotifiedTab ? InspectionStatus.NEW : activeTab || InspectionStatus.ALL}
             onValueChange={handleTabChange}
             className="flex flex-1 flex-col overflow-hidden"
           >
@@ -397,7 +400,7 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
             <TabsContent value={InspectionStatus.NEW} className="mt-2 flex flex-1 flex-col overflow-hidden">
               <div className="mb-3">
                 <Tabs
-                  value={activeTab === InspectionStatus.NOTIFIED ? InspectionStatus.NOTIFIED : InspectionStatus.NEW}
+                  value={isNotifiedTab ? InspectionStatus.NOTIFIED : InspectionStatus.NEW}
                   onValueChange={(value) => {
                     addParams({ status: value, page: 1 })
                   }}

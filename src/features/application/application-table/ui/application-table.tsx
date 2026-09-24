@@ -25,7 +25,7 @@ export const ApplicationTable = () => {
   // An old link may carry a type the backend no longer accepts, and it would
   // fail the whole request, so unknown values are dropped
   const { appealType, ...restParams } = rest as Record<string, unknown>
-  const safeAppealType = isKnownAppealType(appealType as string) ? appealType : undefined
+  const safeAppealType = typeof appealType === 'string' && isKnownAppealType(appealType) ? appealType : undefined
 
   const { data: applications = [], isLoading } = useApplicationList({
     ...restParams,

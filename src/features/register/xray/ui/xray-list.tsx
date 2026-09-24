@@ -14,6 +14,7 @@ import { Badge } from '@/shared/components/ui/badge'
 import { buildRegisterQuery } from '@/features/register/model/build-register-query'
 import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
 import { RegisterActiveTab } from '@/features/register/model/register-tabs'
+import { paramText } from '@/shared/lib/url-params'
 
 interface XrayListProps {
   isArchive?: boolean
@@ -34,13 +35,8 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
       ? user.regionId.toString()
       : 'ALL'
 
-  const {
-    page = 1,
-    size = 10,
-    regionId = defaultRegionId,
-    status = isArchive ? 'INACTIVE' : 'ACTIVE',
-    changeStatus = 'ALL',
-  } = paramsObject
+  const { page = 1, size = 10, regionId = defaultRegionId, status = isArchive ? 'INACTIVE' : 'ACTIVE' } = paramsObject
+  const changeStatus = paramText(paramsObject.changeStatus, 'ALL')
 
   const currentStatus = String(status)
 

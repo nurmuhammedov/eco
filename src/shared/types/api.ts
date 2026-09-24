@@ -18,4 +18,12 @@ export interface ApiResponse<T> {
   errors?: Record<string, string>
 }
 
-export type ISearchParams = Record<string, any>
+/** What a query string can carry: scalars, lists of them, or nothing */
+export type SearchParamValue = string | number | boolean | null | undefined | ReadonlyArray<string | number>
+
+export type ISearchParams = Record<string, SearchParamValue>
+
+/** What reading the address bar can yield: numbers and booleans are parsed back, the rest stays text */
+export type UrlParamValue = string | number | boolean
+
+export type UrlParams = Record<string, UrlParamValue | undefined>

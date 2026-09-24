@@ -8,12 +8,12 @@ import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { TabsLayout } from '@/shared/layouts'
+import { paramOneOf, paramText } from '@/shared/lib/url-params'
 
 const ExpertiseWidget = () => {
-  const {
-    paramsObject: { tab = TabKey.ALL, periodType = 'CURRENT' },
-    addParams,
-  } = useCustomSearchParams()
+  const { paramsObject, addParams } = useCustomSearchParams()
+  const tab = paramOneOf(paramsObject.tab, Object.values(TabKey), TabKey.ALL)
+  const periodType = paramText(paramsObject.periodType, 'CURRENT')
   const { user } = useAuth()
   const navigate = useNavigate()
   const handleTabChange = (tabKey: string) => {

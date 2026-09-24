@@ -13,6 +13,7 @@ import { CadastrePassportRow } from '../model/types'
 import { isPreparer } from '../model/permissions'
 import { STATUS_OPTIONS, StatusBadge } from './components/status-badge'
 import { MyTasksTable } from './components/my-tasks-table'
+import { paramText } from '@/shared/lib/url-params'
 
 const FILTER_KEYS = ['requestNumber', 'registryNumber', 'preparerTin', 'customerTin', 'status']
 
@@ -33,7 +34,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
   const { user } = useAuth()
 
   const {
-    paramsObject: { page = 1, size = 10, view, ...rest },
+    paramsObject: { page = 1, size = 10, view: viewParam, ...rest },
     addParams,
   } = useCustomSearchParams()
 
@@ -60,6 +61,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
         : []),
   ]
 
+  const view = paramText(viewParam)
   const activeView = tabs.some((tab) => tab.value === view) ? view : (tabs[0]?.value ?? ALL_VIEW)
 
   const employeeQueue = isEmployee && activeView === TASKS_VIEW

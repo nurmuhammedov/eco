@@ -18,6 +18,7 @@ import { IrsList } from '@/features/register/irs/ui/irs-list'
 import { XrayList } from '@/features/register/xray/ui/xray-list'
 import { useTranslation } from 'react-i18next'
 import { EmptyValue } from '@/shared/components/common/empty-value'
+import { paramText } from '@/shared/lib/url-params'
 
 const RiskAnalysisDetail = () => {
   const { data: objectData } = useObjectInfo()
@@ -27,8 +28,8 @@ const RiskAnalysisDetail = () => {
   const {
     paramsObject: { tin, id, type, name, ...rest },
   } = useCustomSearchParams()
-  const currentTin = tin
-  const objectId = id
+  const currentTin = paramText(tin)
+  const objectId = paramText(id)
 
   const { data: tableData, isLoading: isTableDataLoading } = usePaginatedData<any>(`/risk-analyses/belongings`, {
     ...rest,

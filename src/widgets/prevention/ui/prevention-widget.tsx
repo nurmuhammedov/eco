@@ -9,6 +9,7 @@ import { useMemo } from 'react'
 import { cn } from '@/shared/lib/utils'
 import PreventionCards from '@/widgets/prevention/ui/parts/prevention-cards'
 import { getCurrentMonthEnum } from '@/shared/constants/months'
+import { paramText } from '@/shared/lib/url-params'
 
 export const getRegionLabel = (name: string) => {
   const lowerName = name.toLowerCase()
@@ -34,8 +35,8 @@ const ASSIGNMENT_STATUSES = [
 const PreventionWidget = () => {
   const { user } = useAuth()
   const { paramsObject, addParams } = useCustomSearchParams()
-  const activeMonth = paramsObject.month || getCurrentMonthEnum()
-  const activeType = paramsObject.belongType || 'HF'
+  const activeMonth = paramText(paramsObject.month, getCurrentMonthEnum())
+  const activeType = paramText(paramsObject.belongType, 'HF')
   const year = paramsObject.year || new Date().getFullYear()
 
   const isRegional = user?.role === UserRoles.REGIONAL
@@ -70,7 +71,7 @@ const PreventionWidget = () => {
   )
 
   const activeRegion = paramsObject.regionId?.toString() || (data && data.length > 0 ? data[0].id?.toString() : '')
-  const activeAssignment = paramsObject.assignment || (isInspector ? 'ASSIGNED' : 'ALL')
+  const activeAssignment = paramText(paramsObject.assignment, isInspector ? 'ASSIGNED' : 'ALL')
 
   const regionTabs = useMemo(() => {
     return (

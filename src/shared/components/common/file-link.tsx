@@ -4,7 +4,8 @@ import { cn } from '@/shared/lib/utils'
 import { apiConfig } from '@/shared/api/constants'
 
 interface FileLinkProps {
-  url: string
+  /** Nothing is rendered without one */
+  url?: string | null
   title?: string
   isSmall?: boolean
   className?: string

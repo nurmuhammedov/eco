@@ -13,6 +13,7 @@ import { useDistrictSelectQuery } from '@/shared/api/dictionaries'
 import { format } from 'date-fns'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { paramText } from '@/shared/lib/url-params'
 
 export const InspectionList: React.FC = () => {
   const navigate = useNavigate()
@@ -25,13 +26,14 @@ export const InspectionList: React.FC = () => {
       status = InspectionStatus.ALL,
       subStatus = InspectionSubMenuStatus.ASSIGNED,
       year = getDefaultYearAndMonthForInspections().year,
-      regionId = 'ALL',
+      regionId: regionIdParam,
       month = getDefaultYearAndMonthForInspections().month,
       belongType = 'HF',
       type = 'RISK_BASED',
       ...rest
     },
   } = useCustomSearchParams()
+  const regionId = paramText(regionIdParam, 'ALL')
 
   const { data: districts } = useDistrictSelectQuery(
     isInspector || isRegional ? undefined : regionId == 'ALL' ? '' : regionId

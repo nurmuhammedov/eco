@@ -12,22 +12,22 @@ import { useNavigate } from 'react-router-dom'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { API_ENDPOINTS } from '@/shared/api'
+import { paramText } from '@/shared/lib/url-params'
 
 const ApplicationPage = () => {
   const navigate = useNavigate()
   const {
-    paramsObject: { mode = '', ...rest },
+    paramsObject: { mode: modeParam, ...rest },
     addParams,
     removeParams,
   } = useCustomSearchParams()
+  const mode = paramText(modeParam)
   const { user } = useAuth()
 
   const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(`${API_ENDPOINTS.REGIONS_SELECT}`)
 
   const { handleChangeTab, applicationStatus } = useApplicationPage()
-  const {
-    paramsObject: { status = ApplicationStatus.ALL },
-  } = useCustomSearchParams()
+  const status = paramText(useCustomSearchParams().paramsObject.status, ApplicationStatus.ALL)
 
   useData('/hf/locations')
   const action = useMemo(() => {

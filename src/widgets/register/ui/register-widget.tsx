@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDistrictSelectQuery } from '@/shared/api/dictionaries'
 import { buildRegisterExportQuery } from '@/features/register/model/build-register-query'
+import { paramText } from '@/shared/lib/url-params'
 
 interface RegisterWidgetProps {
   isArchive?: boolean
@@ -30,12 +31,13 @@ const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
       ? user.regionId.toString()
       : 'ALL'
 
-  const {
-    mode = '',
-    tab = user?.role != UserRoles.INDIVIDUAL ? RegisterActiveTab.HF : RegisterActiveTab.EQUIPMENTS,
-    regionId = defaultRegionId,
-    districtId = '',
-  } = paramsObject
+  const mode = paramText(paramsObject.mode)
+  const tab = paramText(
+    paramsObject.tab,
+    user?.role != UserRoles.INDIVIDUAL ? RegisterActiveTab.HF : RegisterActiveTab.EQUIPMENTS
+  )
+  const regionId = paramText(paramsObject.regionId, defaultRegionId)
+  const districtId = paramText(paramsObject.districtId)
 
   const { data: page } = useData<any>('/hf/count', user?.role != UserRoles.INDIVIDUAL, {
     mode,

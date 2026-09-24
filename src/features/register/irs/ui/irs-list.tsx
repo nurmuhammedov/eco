@@ -13,6 +13,7 @@ import { Badge } from '@/shared/components/ui/badge'
 import { buildRegisterQuery } from '@/features/register/model/build-register-query'
 import { REPORT_KEYS } from '@/features/register/model/report-drill-down'
 import { RegisterActiveTab } from '@/features/register/model/register-tabs'
+import { paramText } from '@/shared/lib/url-params'
 
 interface IrsListProps {
   isArchive?: boolean
@@ -33,13 +34,8 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
       ? user.regionId.toString()
       : 'ALL'
 
-  const {
-    size = 10,
-    page = 1,
-    regionId = defaultRegionId,
-    valid = isArchive ? 'false' : 'true',
-    changeStatus = 'ALL',
-  } = paramsObject
+  const { size = 10, page = 1, regionId = defaultRegionId, valid = isArchive ? 'false' : 'true' } = paramsObject
+  const changeStatus = paramText(paramsObject.changeStatus, 'ALL')
 
   const currentValid = String(valid)
 

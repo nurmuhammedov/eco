@@ -1,3 +1,4 @@
+import type { ApplicationDocument, ExecutionLog } from './document-types'
 import { apiClient } from '@/shared/api/api-client'
 import { type ApiResponse } from '@/shared/types/api'
 import { type OptionItem } from '@/shared/types/general'
@@ -10,11 +11,11 @@ type RequestBody = Record<string, unknown>
 
 export const applicationDetailApi = {
   getApplicantDocs: async (id: string) => {
-    const { data } = await apiClient.getWithPagination(`/appeals/${id}/request-docs`)
+    const { data } = await apiClient.getWithPagination<ApplicationDocument>(`/appeals/${id}/request-docs`)
     return data
   },
   getResponseDocs: async (id: string) => {
-    const { data } = await apiClient.getWithPagination(`/appeals/${id}/reply-docs`)
+    const { data } = await apiClient.getWithPagination<ApplicationDocument>(`/appeals/${id}/reply-docs`)
     return data
   },
   getApplicationDetail: async (id?: string) => {
@@ -22,11 +23,11 @@ export const applicationDetailApi = {
     return data.data
   },
   getApplicationLogs: async (id: string) => {
-    const { data } = await apiClient.get<any>(`/execution-processes/appeal/${id}`)
+    const { data } = await apiClient.get<ApiResponse<ExecutionLog[]>>(`/execution-processes/appeal/${id}`)
     return data.data
   },
   getChangeLogs: async (id: string) => {
-    const { data } = await apiClient.get<any>(`/execution-processes/change/${id}`)
+    const { data } = await apiClient.get<ApiResponse<ExecutionLog[]>>(`/execution-processes/change/${id}`)
     return data.data
   },
   getInspectorListSelect: async (isSupervisor?: boolean, officeId?: string | number) => {

@@ -6,6 +6,7 @@ import { useCustomSearchParams } from '@/shared/hooks'
 import { format, getQuarter } from 'date-fns'
 import React, { useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { paramText } from '@/shared/lib/url-params'
 
 const QUARTERS = [
   { id: '1', name: '1-chorak' },
@@ -34,8 +35,8 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
 
   const form = useForm<ApplicationFiltersFormValues>({
     defaultValues: {
-      startDate: paramsObject.startDate ? new Date(paramsObject.startDate) : undefined,
-      endDate: paramsObject.endDate ? new Date(paramsObject.endDate) : undefined,
+      startDate: paramsObject.startDate ? new Date(paramText(paramsObject.startDate)) : undefined,
+      endDate: paramsObject.endDate ? new Date(paramText(paramsObject.endDate)) : undefined,
       year: paramsObject.year?.toString() || currentYear,
       quarter: paramsObject.quarter?.toString() || currentQuarter,
     },

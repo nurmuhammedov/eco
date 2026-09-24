@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { cleanParams, isObject } from '@/shared/lib/api'
 import { convertParamsToObject } from '@/shared/lib/params'
-import { ISearchParams } from '@/shared/types'
+import { ISearchParams, UrlParams } from '@/shared/types'
 
 const toSearchParamsInit = (params: ISearchParams): Record<string, string> => {
   const init: Record<string, string> = {}
@@ -19,7 +19,7 @@ function useCustomSearchParams() {
   const paramsString = searchParams.toString()
 
   // Rebuilding this every render would invalidate every dependency array that reads it.
-  const paramsObject = useMemo<ISearchParams>(
+  const paramsObject = useMemo<UrlParams>(
     () => convertParamsToObject(new URLSearchParams(paramsString)),
     [paramsString]
   )

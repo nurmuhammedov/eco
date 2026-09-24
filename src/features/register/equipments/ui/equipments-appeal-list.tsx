@@ -7,6 +7,7 @@ import { GoBack } from '@/shared/components/common'
 import { TabsLayout } from '@/shared/layouts'
 import { useCustomSearchParams } from '@/shared/hooks'
 import FileLink from '@/shared/components/common/file-link'
+import { paramText } from '@/shared/lib/url-params'
 
 interface IEquipmentAppeal {
   id: string
@@ -28,7 +29,7 @@ const appealTypeTranslations = {
 export const RegisterEquipmentAppealList = () => {
   const { id: equipmentId } = useParams<{ id: string }>()
   const { paramsObject, addParams } = useCustomSearchParams()
-  const activeTab = paramsObject.type || 'ALL'
+  const activeTab = paramText(paramsObject.type, 'ALL')
 
   const { data, isLoading } = usePaginatedData<IEquipmentAppeal>('/inquiries', {
     ...paramsObject,

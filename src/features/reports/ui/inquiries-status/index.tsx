@@ -13,11 +13,12 @@ import {
 import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
+import { paramText } from '@/shared/lib/url-params'
 
 const InquiriesStatusReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
-  const regionNameParam = paramsObject.regionName || 'ALL'
-  const typeParam = paramsObject.type || 'ALL'
+  const regionNameParam = paramText(paramsObject.regionName, 'ALL')
+  const typeParam = paramText(paramsObject.type, 'ALL')
 
   const { data: regionsList, isLoading: isRegionsLoading } = useRegionSelectQuery()
   const regionOptions = useMemo(() => regionsList || [], [regionsList])

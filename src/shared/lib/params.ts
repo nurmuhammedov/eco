@@ -1,4 +1,4 @@
-import { ISearchParams } from '@/shared/types'
+import { UrlParams } from '@/shared/types'
 
 /**
  * Only converts values that survive a round trip through `Number`. This keeps
@@ -13,8 +13,8 @@ function _toNumberIfLossless(value: string): number | null {
   return Number.isFinite(parsed) && String(parsed) === value ? parsed : null
 }
 
-function _correctParamsDataType(paramsObj: Record<string, string>): ISearchParams {
-  const result: ISearchParams = {}
+function _correctParamsDataType(paramsObj: Record<string, string>): UrlParams {
+  const result: UrlParams = {}
 
   for (const [key, rawValue] of Object.entries(paramsObj)) {
     const value = rawValue.trim()
@@ -38,7 +38,7 @@ function _correctParamsDataType(paramsObj: Record<string, string>): ISearchParam
   return result
 }
 
-function convertParamsToObject(params: URLSearchParams): ISearchParams {
+function convertParamsToObject(params: URLSearchParams): UrlParams {
   return _correctParamsDataType(Object.fromEntries(params))
 }
 

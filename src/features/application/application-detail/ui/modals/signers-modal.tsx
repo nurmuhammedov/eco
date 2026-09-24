@@ -1,3 +1,4 @@
+import type { DocumentSigner } from '../../model/document-types'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 
 import { FC } from 'react'
@@ -6,8 +7,8 @@ import { format } from 'date-fns'
 import { signStatuses } from '../../model/sign-statuses'
 
 interface Props {
-  signers: any
-  setSigners: (signers: any[]) => void
+  signers: DocumentSigner[]
+  setSigners: (signers: DocumentSigner[]) => void
 }
 
 const SignersModal: FC<Props> = ({ signers, setSigners }) => {
@@ -23,7 +24,7 @@ const SignersModal: FC<Props> = ({ signers, setSigners }) => {
           <DialogTitle className="text-blue-400">Imzolagan shaxslar</DialogTitle>
         </DialogHeader>
         <div>
-          {signers.map((signer: any) => {
+          {signers.map((signer) => {
             const currentLabel = signStatuses.get(signer.isSigned)
 
             return (

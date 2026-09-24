@@ -1,12 +1,11 @@
 import { ExpertiseTable } from '@/features/expertise/ui/expertise-table'
 import { ExpertiseTabKey, ExpertiseTabs } from '@/features/expertise/ui/expertise-tabs'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { paramOneOf } from '@/shared/lib/url-params'
 
 const OrganizationsPage = () => {
-  const {
-    paramsObject: { status: activeTab = ExpertiseTabKey.ALL },
-    addParams,
-  } = useCustomSearchParams()
+  const { paramsObject, addParams } = useCustomSearchParams()
+  const activeTab = paramOneOf(paramsObject.status, Object.values(ExpertiseTabKey), ExpertiseTabKey.ALL)
 
   const handleTabChange = (tabKey: string) => {
     addParams({ status: tabKey, page: '1' })

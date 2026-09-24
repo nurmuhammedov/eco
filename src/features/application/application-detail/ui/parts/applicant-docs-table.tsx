@@ -1,6 +1,6 @@
 import { useApplicantDocs } from '@/features/application/application-detail/hooks/use-applicant-docs'
 import { ColumnDef } from '@tanstack/react-table'
-import { ISearchParams } from '@/shared/types'
+import type { ApplicationDocument, DocumentSigner } from '../../model/document-types'
 import { DataTable } from '@/shared/components/common/data-table'
 import { formatDate } from 'date-fns'
 import { Badge } from '@/shared/components/ui/badge'
@@ -13,9 +13,9 @@ import SignersModal from '@/features/application/application-detail/ui/modals/si
 
 const ApplicantDocsTable = () => {
   const { data, isLoading } = useApplicantDocs()
-  const [signers, setSigners] = useState<any[]>([])
+  const [signers, setSigners] = useState<DocumentSigner[]>([])
 
-  const columns: ColumnDef<ISearchParams>[] = [
+  const columns: ColumnDef<ApplicationDocument>[] = [
     {
       accessorKey: 'createdAt',
       header: 'Sana',
@@ -29,10 +29,10 @@ const ApplicantDocsTable = () => {
     {
       accessorKey: 'isFullySigned',
       header: 'Imzo holati',
-      cell: (cell: any) => {
-        const status = cell.row.original?.isFullySigned
+      cell: (cell) => {
+        const status = cell.row.original.isFullySigned
         const currentLabel = signStatuses.get(status)
-        const signersList = cell.row.original?.signers as any[]
+        const signersList = cell.row.original.signers ?? []
         if (currentLabel) {
           return (
             <div className="flex items-center gap-2">
@@ -62,13 +62,7 @@ const ApplicantDocsTable = () => {
 
   return (
     <>
-      <DataTable
-        showNumeration={false}
-        isPaginated
-        isLoading={isLoading}
-        data={data || []}
-        columns={columns as unknown as any}
-      />
+      <DataTable showNumeration={false} isPaginated isLoading={isLoading} data={data || []} columns={columns} />
       <SignersModal setSigners={setSigners} signers={signers} />
     </>
   )

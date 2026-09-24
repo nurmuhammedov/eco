@@ -22,6 +22,7 @@ import { TruncatedCell } from '@/shared/components/common/truncated-cell'
 import { CRANE_TAB_CHILD_ID, buildRegisterQuery } from '@/features/register/model/build-register-query'
 import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
 import { RegisterActiveTab } from '@/features/register/model/register-tabs'
+import { paramText } from '@/shared/lib/url-params'
 
 interface EquipmentsListProps {
   isArchive?: boolean
@@ -29,6 +30,9 @@ interface EquipmentsListProps {
   hideTabs?: boolean
   isShortView?: boolean
 }
+
+/** Attractions and escalators stand in parks rather than on a hazardous facility */
+const PARK_TYPES: string[] = [ApplicationTypeEnum.ATTRACTION, ApplicationTypeEnum.ESCALATOR]
 
 export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: EquipmentsListProps) => {
   const navigate = useNavigate()
@@ -44,18 +48,16 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       ? user.regionId.toString()
       : 'ALL'
 
-  const {
-    status = isArchive ? 'INACTIVE' : 'ACTIVE',
-    type = 'ALL',
-    page = 1,
-    size = 10,
-    regionId = defaultRegionId,
-    districtId = '',
-    childEquipmentId = '',
-    changeStatus = 'ALL',
-    mode = '',
-    activityType = '',
-  } = paramsObject
+  const { page = 1, size = 10 } = paramsObject
+  const status = paramText(paramsObject.status, isArchive ? 'INACTIVE' : 'ACTIVE')
+  const type = paramText(paramsObject.type, 'ALL')
+  const regionId = paramText(paramsObject.regionId, defaultRegionId)
+  const districtId = paramText(paramsObject.districtId)
+  const childEquipmentId = paramText(paramsObject.childEquipmentId)
+  const changeStatus = paramText(paramsObject.changeStatus, 'ALL')
+  const mode = paramText(paramsObject.mode)
+  const activityType = paramText(paramsObject.activityType)
+  const isParkType = PARK_TYPES.includes(type)
 
   // A crane tab pinned to one child type - the type filter has nothing left to offer.
   const pinnedChildId = CRANE_TAB_CHILD_ID[String(type)]
@@ -247,17 +249,11 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       filterMaxLength: 14,
     },
     {
-      header: [ApplicationTypeEnum.ATTRACTION, ApplicationTypeEnum.ESCALATOR].includes(type)
-        ? 'Park/Maskan nomi'
-        : 'XICHO nomi',
-      accessorKey: [ApplicationTypeEnum.ATTRACTION, ApplicationTypeEnum.ESCALATOR].includes(type)
-        ? 'parkName'
-        : 'hfName',
-      filterKey: [ApplicationTypeEnum.ATTRACTION, ApplicationTypeEnum.ESCALATOR].includes(type) ? 'parkId' : 'hfName',
-      filterType: [ApplicationTypeEnum.ATTRACTION, ApplicationTypeEnum.ESCALATOR].includes(type) ? 'select' : 'search',
-      filterOptions: [ApplicationTypeEnum.ATTRACTION, ApplicationTypeEnum.ESCALATOR].includes(type)
-        ? parkOptions
-        : undefined,
+      header: isParkType ? 'Park/Maskan nomi' : 'XICHO nomi',
+      accessorKey: isParkType ? 'parkName' : 'hfName',
+      filterKey: isParkType ? 'parkId' : 'hfName',
+      filterType: isParkType ? 'select' : 'search',
+      filterOptions: isParkType ? parkOptions : undefined,
     },
     {
       accessorKey: 'address',

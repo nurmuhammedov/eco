@@ -10,6 +10,7 @@ import { Report5Item } from './types'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
+import { paramText } from '@/shared/lib/url-params'
 
 const getId = (s: any) => s?.id ?? s?.value
 const getName = (s: any) => s?.name ?? s?.label
@@ -38,7 +39,7 @@ const organizationsColumn = (accessorKey: string) => ({
 const RegistryEquipmentTermsReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
   const regionIdParam = String(paramsObject.regionId || 'ALL')
-  const equipmentTypeParam = paramsObject.equipmentType || 'ALL'
+  const equipmentTypeParam = paramText(paramsObject.equipmentType, 'ALL')
   const subTypeParam = paramsObject.subType || 'ALL'
 
   const { data: regionsList } = useRegionSelectQuery()

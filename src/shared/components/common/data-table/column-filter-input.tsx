@@ -17,6 +17,7 @@ import {
 } from '@/shared/components/ui/command'
 import { cn } from '@/shared/lib/utils'
 import { ExtendedColumnDef } from './model/column-def'
+import { paramText } from '@/shared/lib/url-params'
 
 const ICON_STYLE = 'absolute left-2 top-1/2 -translate-y-1/2 text-neutral-400 size-4 pointer-events-none'
 const CLEAR_BUTTON_STYLE =
@@ -118,14 +119,14 @@ const ValueFilter = <TData, TValue>({ column, filterKey }: ValueFilterProps<TDat
   const { paramsObject, addParams } = useCustomSearchParams()
 
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState(paramsObject[filterKey] || '')
+  const [value, setValue] = useState(paramText(paramsObject[filterKey]))
   const debouncedValue = useDebounce(value, 800)
 
   useEffect(() => {
     if (filterType !== 'search' && filterType !== 'number') return
 
     // Skip the push when the debounced value already matches the URL.
-    if (debouncedValue !== (paramsObject[filterKey] || '')) {
+    if (debouncedValue !== paramText(paramsObject[filterKey])) {
       addParams({ [filterKey]: debouncedValue }, 'page', 'p')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

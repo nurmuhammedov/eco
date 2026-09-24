@@ -5,13 +5,12 @@ import { AddPermitModal } from '@/features/permits/ui/add-permit-modal'
 import { useState } from 'react'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
+import { paramOneOf } from '@/shared/lib/url-params'
 
 export const PermitsWidget = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const {
-    paramsObject: { tab: activeTab = PermitTabKey.ALL },
-    addParams,
-  } = useCustomSearchParams()
+  const { paramsObject, addParams } = useCustomSearchParams()
+  const activeTab = paramOneOf(paramsObject.tab, Object.values(PermitTabKey), PermitTabKey.ALL)
   const { user } = useAuth()
 
   const handleTabChange = (tabKey: string) => {
