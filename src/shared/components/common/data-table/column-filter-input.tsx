@@ -141,8 +141,8 @@ const ValueFilter = <TData, TValue>({ column, filterKey }: ValueFilterProps<TDat
     return label.length > 70 ? `${label.slice(0, 70)}...` : label
   }, [filterOptions, value])
 
-  const handleImmediateChange = (val: any) => {
-    setValue(val)
+  const handleImmediateChange = (val: string | null) => {
+    setValue(val ?? '')
     addParams({ [filterKey]: val }, 'page', 'p')
   }
 

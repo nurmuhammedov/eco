@@ -10,7 +10,8 @@ interface SignDocumentParams {
   hashCode?: string | null
   Client: SignatureClient
   signature: SignatureKey | string | null
-  onSuccess?: (result: any) => void
+  /** Receives the attached signature, or false when signing did not go through */
+  onSuccess?: (result: Awaited<ReturnType<typeof signDocumentWithMetadata>>) => void
 }
 
 export function useDocumentSigning() {

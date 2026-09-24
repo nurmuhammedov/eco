@@ -1,13 +1,14 @@
 import * as React from 'react'
 import { cn } from '@/shared/lib/utils'
 
-interface InputProps extends React.ComponentProps<'input'> {
+interface InputProps extends Omit<React.ComponentProps<'input'>, 'value'> {
   allowCyrillic?: boolean
-  value?: any
+  /** Form fields hold null for "empty"; it is shown as an empty box */
+  value?: React.ComponentProps<'input'>['value'] | null
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, onChange, allowCyrillic = false, ...props }, ref) => {
+  ({ className, type, onChange, allowCyrillic = false, value, ...props }, ref) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!allowCyrillic) {
         const originalValue = e.target.value
@@ -29,6 +30,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className
         )}
         ref={ref}
+        value={value === null ? '' : value}
         {...props}
       />
     )

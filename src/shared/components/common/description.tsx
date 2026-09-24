@@ -12,7 +12,7 @@ export const DescriptionItem = React.forwardRef<
     children?: React.ReactNode
     span?: number
     valueType?: 'text' | 'date' | 'status' | 'tags' | 'email' | 'phone'
-    formatter?: (value: any) => React.ReactNode
+    formatter?: (value: React.ReactNode) => React.ReactNode
     className?: string
   }
 >(({ label, children, span = 1, valueType = 'text', formatter, className }, ref) => {

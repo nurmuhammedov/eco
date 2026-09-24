@@ -4,6 +4,14 @@ import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { DEFAULT_STALE_TIME } from '@/shared/lib/query/stale-time'
 
+/** Some endpoints still put the counts at the top level instead of under `page` */
+type LooseEnvelope = Partial<ResponseData<unknown>> & {
+  totalElements?: number
+  totalPages?: number
+  total?: number
+  count?: number
+}
+
 const useServicesPaginatedData = <T>(
   endpoint: string,
   params?: ISearchParams,
@@ -25,7 +33,7 @@ const useServicesPaginatedData = <T>(
     placeholderData: (previous) => previous,
   })
 
-  const responseData: any = queryMethods.data || {}
+  const responseData: LooseEnvelope = queryMethods.data ?? {}
   const page = responseData.page
 
   const size = page?.size || params?.size || 10

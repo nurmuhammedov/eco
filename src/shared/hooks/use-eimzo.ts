@@ -6,9 +6,31 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
-export type FormData = any
+/** The form values rendered into the document and sent along with its signature */
+export type SignablePayload = Record<string, unknown>
 
-export interface UseApplicationCreationProps {
+const asRecord = (value: unknown): Record<string, unknown> | null =>
+  typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : null
+
+/** Endpoints disagree on where the generated file's address sits, so it is looked for by name at any depth */
+const findString = (value: unknown, keys: string[]): string | null => {
+  const record = asRecord(value)
+  if (!record) return null
+
+  for (const key of keys) {
+    const found = record[key]
+    if (typeof found === 'string' && found) return found
+  }
+
+  for (const nested of Object.values(record)) {
+    const found = findString(nested, keys)
+    if (found) return found
+  }
+
+  return null
+}
+
+export interface UseApplicationCreationProps<TPayload extends object = SignablePayload> {
   pdfEndpoint: string
   pdfMethod?: 'get' | 'post'
   submitEndpoint: string
@@ -17,10 +39,10 @@ export interface UseApplicationCreationProps {
   onEnd?: () => void
   /** The endpoint whose lists and details go stale once the document is signed. */
   invalidates: string
-  transformSubmitPayload?: (dto: any, sign: string, filePath: string | null) => any
+  transformSubmitPayload?: (dto: TPayload | null, sign: string, filePath: string | null) => object
 }
 
-export function useEimzo({
+export function useEimzo<TPayload extends object = SignablePayload>({
   pdfEndpoint,
   pdfMethod = 'post',
   submitEndpoint,
@@ -29,14 +51,14 @@ export function useEimzo({
   onEnd,
   invalidates,
   transformSubmitPayload,
-}: UseApplicationCreationProps) {
+}: UseApplicationCreationProps<TPayload>) {
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const [documentUrl, setDocumentUrl] = useState<string | null>(null)
   const [hashCode, setHashCode] = useState<string | null>(null)
-  const [formData, setFormData] = useState<FormData>(null)
+  const [formData, setFormData] = useState<TPayload | null>(null)
 
   const [isPdfLoading, setIsPdfLoading] = useState(false)
   const queryClient = useQueryClient()
@@ -47,41 +69,28 @@ export function useEimzo({
   }, [])
 
   const createPdfMutation = useMutation({
-    mutationFn: (data: FormData) => createPdf(data, pdfEndpoint, pdfMethod),
+    mutationFn: (data: TPayload) => createPdf(data, pdfEndpoint, pdfMethod),
     onSuccess: (response) => {
       setIsPdfLoading(false)
-      const findKey = (obj: any, keys: string[]): any => {
-        if (typeof obj !== 'object' || obj === null) return null
-        for (const key of keys) {
-          if (key in obj && obj[key]) return obj[key]
-        }
-        for (const k in obj) {
-          const val = findKey(obj[k], keys)
-          if (val) return val
-        }
-        return null
-      }
+      const body = asRecord(response.data)
+      const bodyMessage = typeof body?.message === 'string' ? body.message : undefined
 
-      let url = findKey(response.data, ['filePath', 'url', 'documentUrl'])
+      let url = findString(response.data, ['filePath', 'url', 'documentUrl'])
       if (!url && typeof response.data === 'string') url = response.data
-      if (!url && typeof response.data?.data === 'string') url = response.data.data
+      if (!url && typeof body?.data === 'string') url = body.data
 
-      // Ba'zi endpointlar (masalan, notification) URL manzilini message ichida qaytaradi
-      if (
-        !url &&
-        typeof response.data?.message === 'string' &&
-        (response.data.message.includes('/') || response.data.message.endsWith('.pdf'))
-      ) {
-        url = response.data.message
+      // Some endpoints (notifications, for one) put the address in the message
+      if (!url && bodyMessage && (bodyMessage.includes('/') || bodyMessage.endsWith('.pdf'))) {
+        url = bodyMessage
       }
 
       if (!response.success || !response.data || !url) {
-        handleError(response.message || response.data?.message || 'PDF yaratishda xatolik!')
+        handleError(response.message || bodyMessage || 'PDF yaratishda xatolik!')
         return
       }
       try {
         setDocumentUrl(url)
-        setHashCode(findKey(response.data, ['hashCode']))
+        setHashCode(findString(response.data, ['hashCode']))
       } catch (_error) {
         handleError('Hujjat URL ini olishda xatolik!')
       }
@@ -93,7 +102,7 @@ export function useEimzo({
   })
 
   const handleCreateApplication = useCallback(
-    (data: FormData) => {
+    (data: TPayload) => {
       setFormData(data)
       setIsModalOpen(true)
       setIsPdfLoading(true)
@@ -104,7 +113,7 @@ export function useEimzo({
   )
 
   const handleAsyncCreateApplication = useCallback(
-    async (data: FormData) => {
+    async (data: TPayload) => {
       setFormData(data)
       setIsModalOpen(true)
       setIsPdfLoading(true)
@@ -135,8 +144,8 @@ export function useEimzo({
 
       return apiClient.post(submitEndpoint, payload)
     },
-    onSuccess: (response: any) => {
-      if (response && response.success) {
+    onSuccess: (response) => {
+      if (response.success) {
         resetState()
         if (onSuccessNavigateTo) {
           navigate(onSuccessNavigateTo)

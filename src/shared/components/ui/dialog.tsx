@@ -91,7 +91,7 @@ const DialogContent = React.forwardRef<
         {...props}
       >
         {React.isValidElement(header)
-          ? React.cloneElement(header as React.ReactElement<any>, { 'data-pinned': '' })
+          ? React.cloneElement(header as React.ReactElement<{ 'data-pinned'?: string }>, { 'data-pinned': '' })
           : header}
         {/* A dialog that is only a title and two buttons has no body to lay out;
             rendering one leaves an empty bordered strip between them. */}
@@ -99,7 +99,7 @@ const DialogContent = React.forwardRef<
           <div className={cn('flex min-h-0 flex-1 flex-col', !selfLaidOut && 'overflow-y-auto px-6 py-4')}>{body}</div>
         )}
         {footer && React.isValidElement(footer)
-          ? React.cloneElement(footer as React.ReactElement<any>, { 'data-pinned': '' })
+          ? React.cloneElement(footer as React.ReactElement<{ 'data-pinned'?: string }>, { 'data-pinned': '' })
           : footer}
       </DialogPrimitive.Content>
     </DialogPortal>

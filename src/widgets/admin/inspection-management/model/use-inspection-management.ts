@@ -15,7 +15,7 @@ export const useInspectionManagement = () => {
   const activeTab = useMemo<ActiveTab>(() => filters['active-tab'] as ActiveTab, [filters])
 
   const handleChangeTab = useCallback(
-    (tab: ActiveTab) => setFilters((prev: any) => ({ ...prev, 'active-tab': tab })),
+    (tab: ActiveTab) => setFilters((prev) => ({ ...prev, 'active-tab': tab })),
     [setFilters]
   )
 

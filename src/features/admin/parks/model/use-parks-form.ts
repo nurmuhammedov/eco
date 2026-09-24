@@ -1,3 +1,4 @@
+import { getErrorMessage } from '@/shared/lib/error-message'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
@@ -64,8 +65,8 @@ export const useParksForm = ({ onSuccess, initialData }: UseParksFormProps) => {
       }
       form.reset()
       onSuccess()
-    } catch (error: any) {
-      toast.error(error.message || t('something_went_wrong'))
+    } catch (error) {
+      toast.error(getErrorMessage(error, t('something_went_wrong')))
     }
   }
 

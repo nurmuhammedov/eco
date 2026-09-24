@@ -23,7 +23,7 @@ export const CommonService = {
   },
 
   async deleteData(endpoint: string, id: string | number): Promise<void> {
-    const response = await apiClient.delete<any>(`${endpoint}/${id}`)
+    const response = await apiClient.delete<void>(`${endpoint}/${id}`)
     return response.data
   },
 

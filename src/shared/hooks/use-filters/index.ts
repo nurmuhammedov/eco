@@ -1,88 +1,74 @@
-import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, type Parser, useQueryStates } from 'nuqs'
+import {
+  parseAsArrayOf,
+  parseAsBoolean,
+  parseAsInteger,
+  parseAsString,
+  type SetValues,
+  type UseQueryStatesKeysMap,
+  type Values,
+  useQueryStates,
+} from 'nuqs'
 import { useCallback, useMemo } from 'react'
 
-export type FilterParser<T = any> = Parser<T>
+export type FilterParsers = UseQueryStatesKeysMap
 
-export type FilterParsers = Record<string, FilterParser>
+type NoFilters = Record<never, never>
 
-export type FilterValues = Record<string, any>
+const pagingParsers = (page: number, size: number) => ({
+  page: parseAsInteger.withDefault(page),
+  size: parseAsInteger.withDefault(size),
+})
 
-export interface UseFiltersConfig {
-  baseFilters?: FilterParsers
+type PagingParsers = ReturnType<typeof pagingParsers>
+
+export interface UseFiltersConfig<B extends FilterParsers = NoFilters> {
+  baseFilters?: B
   defaultPage?: number
   defaultSize?: number
-  preserveParams?: boolean
-  onFiltersChange?: (filters: FilterValues) => void
+  onFiltersChange?: (filters: Values<PagingParsers & B>) => void
   debug?: boolean
 }
 
-export interface UseFiltersResult {
-  filters: FilterValues
-  setFilters: (newFilters: Record<string, any>) => void
-  clearFilter: (key: string) => void
-  clearAllFilters: () => void
-  resetFilters: () => void
-  metadata: {
-    hasFilters: boolean
-    filterKeys: string[]
-    activeFiltersCount: number
-  }
-}
+/**
+ * Filters kept in the query string, typed from their parsers: page and size
+ * always, plus whatever the module adds.
+ */
+export function useFilters<M extends FilterParsers = NoFilters, B extends FilterParsers = NoFilters>(
+  moduleFilters: M = {} as M,
+  config: UseFiltersConfig<B> = {}
+) {
+  const { baseFilters = {} as B, defaultPage = 1, defaultSize = 20, onFiltersChange, debug = false } = config
 
-export function useFilters(moduleFilters: FilterParsers = {}, config: UseFiltersConfig = {}): UseFiltersResult {
-  const {
-    baseFilters = {},
-    defaultPage = 1,
-    defaultSize = 20,
-    preserveParams = true,
-    onFiltersChange,
-    debug = false,
-  } = config
+  type Parsers = PagingParsers & B & M
 
-  const commonFilters: FilterParsers = useMemo(
-    () => ({
-      page: parseAsInteger.withDefault(defaultPage),
-      size: parseAsInteger.withDefault(defaultSize),
-    }),
-    [defaultPage, defaultSize]
-  )
-
-  const mergedFilters: FilterParsers = useMemo(
-    () => ({
-      ...commonFilters,
-      ...baseFilters,
-      ...moduleFilters,
-    }),
-    [commonFilters, baseFilters, moduleFilters]
+  const mergedFilters = useMemo(
+    () => ({ ...pagingParsers(defaultPage, defaultSize), ...baseFilters, ...moduleFilters }) as Parsers,
+    [defaultPage, defaultSize, baseFilters, moduleFilters]
   )
 
   const [filters, setFiltersBase] = useQueryStates(mergedFilters)
 
   const setFilters = useCallback(
-    (newFilters: Record<string, any>) => {
+    (newFilters: Parameters<SetValues<Parsers>>[0]) => {
       if (debug) {
         console.warn('Setting filters:', newFilters)
       }
 
-      const options = {
-        shallow: true,
-        preserveParams,
-      }
-
-      setFiltersBase(newFilters, options)
+      void setFiltersBase(newFilters, { shallow: true })
 
       if (onFiltersChange) {
-        const updatedFilters = { ...filters, ...newFilters }
-        onFiltersChange(updatedFilters)
+        // An updater has to be run to know what the filters become
+        const patch = typeof newFilters === 'function' ? newFilters(filters) : newFilters
+        onFiltersChange({ ...filters, ...patch } as Values<PagingParsers & B>)
       }
     },
-    [setFiltersBase, preserveParams, filters, onFiltersChange, debug]
+    [setFiltersBase, filters, onFiltersChange, debug]
   )
 
   const clearFilter = useCallback(
     (key: string) => {
       if (key in mergedFilters) {
-        setFilters({ [key]: null })
+        setFilters({ [key]: null } as Parameters<SetValues<Parsers>>[0])
       } else if (debug) {
         console.warn(`Filter key "${key}" not found in defined filters`)
       }
@@ -91,16 +77,13 @@ export function useFilters(moduleFilters: FilterParsers = {}, config: UseFilters
   )
 
   const clearAllFilters = useCallback(() => {
-    const resetFilters = Object.keys(mergedFilters).reduce<Record<string, null>>((acc, key) => {
-      acc[key] = null
-      return acc
-    }, {})
+    const cleared = Object.fromEntries(Object.keys(mergedFilters).map((key) => [key, null]))
 
-    setFilters(resetFilters)
+    setFilters(cleared as Parameters<SetValues<Parsers>>[0])
   }, [mergedFilters, setFilters])
 
   const resetFilters = useCallback(() => {
-    setFiltersBase({}, { clearOnDefault: true })
+    void setFiltersBase({}, { clearOnDefault: true })
   }, [setFiltersBase])
 
   const metadata = useMemo(
@@ -123,15 +106,13 @@ export function useFilters(moduleFilters: FilterParsers = {}, config: UseFilters
 }
 
 export const filterParsers = {
-  integer: (defaultValue?: number): FilterParser<number> => parseAsInteger.withDefault(defaultValue ?? 0),
+  integer: (defaultValue?: number) => parseAsInteger.withDefault(defaultValue ?? 0),
 
-  string: (defaultValue?: string): FilterParser<string> => parseAsString.withDefault(defaultValue ?? ''),
+  string: (defaultValue?: string) => parseAsString.withDefault(defaultValue ?? ''),
 
-  boolean: (defaultValue?: boolean): FilterParser<boolean> => parseAsBoolean.withDefault(defaultValue ?? false),
+  boolean: (defaultValue?: boolean) => parseAsBoolean.withDefault(defaultValue ?? false),
 
-  integerArray: (defaultValue?: number[]): FilterParser<number[]> =>
-    parseAsArrayOf(parseAsInteger).withDefault(defaultValue ?? []),
+  integerArray: (defaultValue?: number[]) => parseAsArrayOf(parseAsInteger).withDefault(defaultValue ?? []),
 
-  stringArray: (defaultValue?: string[]): FilterParser<string[]> =>
-    parseAsArrayOf(parseAsString).withDefault(defaultValue ?? []),
+  stringArray: (defaultValue?: string[]) => parseAsArrayOf(parseAsString).withDefault(defaultValue ?? []),
 }

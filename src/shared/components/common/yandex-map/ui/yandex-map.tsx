@@ -2,9 +2,20 @@ import { toast } from 'sonner'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { MAP_DEFAULTS } from '../model/yandex-map-config'
 import { Map, Placemark, YMaps } from '@pbe/react-yandex-maps'
+import type { YMapsApi } from '@pbe/react-yandex-maps/typings/util/typing'
 import type { Coordinate, YandexMapProps } from '../model/yandex-map-types'
 import { MapPin } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
+
+/** `borders` ships with the full package but is missing from @types/yandex-maps */
+type YMapsWithBorders = YMapsApi & {
+  borders: {
+    load: (
+      region: string,
+      options: { lang: string; quality: number }
+    ) => Promise<{ features: (ymaps.IGeoObjectFeature & { properties: { iso3166: string } })[] }>
+  }
+}
 
 const YandexMap: React.FC<YandexMapProps> = ({
   onMapClick,
@@ -19,8 +30,9 @@ const YandexMap: React.FC<YandexMapProps> = ({
 
   const normalizedCoords = React.useMemo(() => {
     if (!coords || !Array.isArray(coords)) return []
-    return coords
-      .map((c: any) => {
+    // Older records keep the point as "lat, lng" text
+    return (coords as unknown[])
+      .map((c) => {
         if (typeof c === 'string') {
           const parts = c.split(',').map((v) => Number(v.trim()))
           if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) return parts as Coordinate
@@ -87,12 +99,14 @@ const YandexMap: React.FC<YandexMapProps> = ({
     }
   }
 
-  const handleApiLoad = (ymaps: any) => {
-    ymaps.borders.load('001', { lang: 'uz', quality: 1 }).then((geojson: any) => {
-      const regions = geojson.features.filter((feature: any) => feature.properties.iso3166 === 'UZ')
+  const handleApiLoad = (api: YMapsApi) => {
+    const ymaps = api as YMapsWithBorders
+
+    void ymaps.borders.load('001', { lang: 'uz', quality: 1 }).then((geojson) => {
+      const regions = geojson.features.filter((feature) => feature.properties.iso3166 === 'UZ')
 
       if (regions.length > 0) {
-        const collection = new ymaps.GeoObjectCollection(null, {
+        const collection = new ymaps.GeoObjectCollection(undefined, {
           strokeColor: '#3b82f6',
           strokeWidth: 2,
           fillColor: 'rgba(59,130,246,0.02)',

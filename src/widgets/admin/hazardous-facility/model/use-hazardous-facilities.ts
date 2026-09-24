@@ -19,7 +19,7 @@ export const useHazardousFacility = () => {
   )
 
   const handleChangeTab = useCallback(
-    (tab: HazardousFacilityActiveTab) => setFilters((prev: any) => ({ ...prev, 'active-tab': tab })),
+    (tab: HazardousFacilityActiveTab) => setFilters((prev) => ({ ...prev, 'active-tab': tab })),
     [setFilters]
   )
 

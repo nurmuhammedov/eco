@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-r
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import ReactPaginate from 'react-paginate'
 
-interface PaginationProps<T = any> {
+interface PaginationProps<T = unknown> {
   data?: ResponseData<T>
   className?: string
   showTotal?: boolean

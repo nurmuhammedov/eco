@@ -1,3 +1,4 @@
+import { getErrorMessage } from '@/shared/lib/error-message'
 import { useState } from 'react'
 import { format } from 'date-fns'
 import { Download } from 'lucide-react'
@@ -37,8 +38,8 @@ export const ExportExcelButton = ({
     try {
       const response = await apiClient.downloadFile<Blob>(endpoint, params)
       saveBlob(response.data, `${fileName} (${format(new Date(), 'dd.MM.yyyy')}).xlsx`)
-    } catch (error: any) {
-      toast.error(error?.message || 'Faylni yuklab olishda xatolik', { richColors: true })
+    } catch (error) {
+      toast.error(getErrorMessage(error, 'Faylni yuklab olishda xatolik'), { richColors: true })
     } finally {
       setIsExporting(false)
     }

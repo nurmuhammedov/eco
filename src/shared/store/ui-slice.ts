@@ -13,7 +13,7 @@ const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    openUI(state, action: PayloadAction<PayloadUI<any>>) {
+    openUI(state, action: PayloadAction<PayloadUI<UIComponentName>>) {
       state.isOpen = true
       state.mode = action.payload.mode
       state.data = action.payload.data ?? null

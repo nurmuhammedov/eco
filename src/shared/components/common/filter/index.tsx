@@ -58,15 +58,14 @@ const Filter: React.FC<ApplicationFiltersProps> = ({ inputKeys, className = 'mb-
   }, [])
 
   const onSubmit = (data: ApplicationFiltersFormValues) => {
-    const formattedData: any = { ...data }
-    if (data.startDate) {
-      formattedData.startDate = format(data.startDate, 'yyyy-MM-dd')
-    }
-    if (data.endDate) {
-      formattedData.endDate = format(data.endDate, 'yyyy-MM-dd')
-    }
-
-    addParams(formattedData, 'page')
+    addParams(
+      {
+        ...data,
+        startDate: data.startDate ? format(data.startDate, 'yyyy-MM-dd') : undefined,
+        endDate: data.endDate ? format(data.endDate, 'yyyy-MM-dd') : undefined,
+      },
+      'page'
+    )
   }
 
   const customDisabledFn = (date: Date) => {

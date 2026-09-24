@@ -5,6 +5,14 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { DEFAULT_STALE_TIME } from '@/shared/lib/query/stale-time'
 
+/** Some endpoints still put the counts at the top level instead of under `page` */
+type LooseEnvelope = Partial<ResponseData<unknown>> & {
+  totalElements?: number
+  totalPages?: number
+  total?: number
+  count?: number
+}
+
 const usePaginatedData = <T>(
   endpoint: string,
   params?: ISearchParams,
@@ -23,7 +31,7 @@ const usePaginatedData = <T>(
     placeholderData: (previous) => previous,
   })
 
-  const responseData: any = queryMethods.data || {}
+  const responseData: LooseEnvelope = queryMethods.data ?? {}
   const page = responseData.page
 
   const size = page?.size || params?.size || 10

@@ -51,8 +51,8 @@ export const createAxiosInstance = (baseURL: string) => {
         }
       } else if (status >= 400 && status < 600) {
         if (validationErrors && Object.keys(validationErrors).length > 0) {
-          Object.values(validationErrors).forEach((errMessage: any) => {
-            const message = Array.isArray(errMessage) ? errMessage.join(', ') : errMessage
+          Object.values(validationErrors as Record<string, unknown>).forEach((errMessage) => {
+            const message = Array.isArray(errMessage) ? errMessage.join(', ') : String(errMessage)
             toast.error(message, { richColors: true })
           })
         } else {

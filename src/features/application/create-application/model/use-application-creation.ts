@@ -5,7 +5,8 @@ import { useMutation } from '@tanstack/react-query'
 import { createPdf } from '@/shared/api/create-pdf'
 import { useNavigate } from 'react-router-dom'
 
-export type FormData = any
+/** The form values rendered into the document and sent along with its signature */
+export type ApplicationPayload = object
 
 export interface UseApplicationCreationProps {
   pdfEndpoint: string
@@ -19,7 +20,7 @@ export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }:
   const [error, setError] = useState<string | null>(null)
 
   const [documentUrl, setDocumentUrl] = useState<string | null>(null)
-  const [formData, setFormData] = useState<FormData>(null)
+  const [formData, setFormData] = useState<ApplicationPayload | null>(null)
 
   const [isPdfLoading, setIsPdfLoading] = useState(false)
 
@@ -35,7 +36,7 @@ export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }:
 
   // Generate PDF by form data
   const createPdfMutation = useMutation({
-    mutationFn: (data: FormData) => createPdf(data, pdfEndpoint),
+    mutationFn: (data: ApplicationPayload) => createPdf(data, pdfEndpoint),
     onSuccess: (response) => {
       if (!response.success || !response.data) {
         handleError('PDF yaratishda xatolik!')
@@ -48,7 +49,10 @@ export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }:
           throw new Error('Hujjat URL ini olishda xatolik!')
         }
 
-        setDocumentUrl(response.data.data)
+        const body = response.data as { data?: unknown }
+        if (typeof body.data !== 'string') throw new Error('Hujjat URL ini olishda xatolik!')
+
+        setDocumentUrl(body.data)
       } finally {
         setIsPdfLoading(false)
       }
@@ -60,7 +64,7 @@ export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }:
   })
 
   const handleCreateApplication = useCallback(
-    (data: FormData) => {
+    (data: ApplicationPayload) => {
       setFormData(data)
       setIsModalOpen(true)
       setIsPdfLoading(true)

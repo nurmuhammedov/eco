@@ -185,10 +185,10 @@ function InputFileComponent<T extends FieldValues>({
     }
 
     const next = currentUrls.map(
-      (url: any) =>
+      (url: unknown) =>
         previous.find((file) => file.url === url) ??
         ({
-          url,
+          url: typeof url === 'string' ? url : String(url),
           originalName: typeof url === 'string' ? url.split('/').pop() || 'Nomsiz fayl' : 'Fayl',
         } as FileData)
     )

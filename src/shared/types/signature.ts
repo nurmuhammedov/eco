@@ -37,6 +37,8 @@ export interface SignatureClient {
   getTimestampToken: (signature: string) => Promise<string>
   install: () => Promise<void>
   listAllUserKeys: () => Promise<SignatureKey[]>
+  /** Whether a USB token (CKC) is plugged in and logged in */
+  isCKCPLuggedIn: () => Promise<boolean>
   loadKey: (cert: SignatureKey) => Promise<SignatureCert>
   signPkcs7: (cert: SignatureCert, content: string) => Promise<string>
 }

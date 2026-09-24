@@ -37,7 +37,7 @@ export function useApplicationGrid() {
 
   const handleChangeTab = useCallback(
     (tab: ApplicationCategory) =>
-      setFilters((prev: any) => ({
+      setFilters((prev) => ({
         ...prev,
         'active-application-tab': tab,
         'selected-main-card': null,

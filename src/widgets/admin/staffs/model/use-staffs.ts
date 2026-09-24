@@ -16,7 +16,7 @@ export const useStaffs = () => {
   const activeTab = useMemo<StaffsActiveTab>(() => filters['active-tab'] as StaffsActiveTab, [filters])
 
   const handleChangeTab = useCallback(
-    (tab: StaffsActiveTab) => setFilters((prev: any) => ({ ...prev, 'active-tab': tab })),
+    (tab: StaffsActiveTab) => setFilters((prev) => ({ ...prev, 'active-tab': tab })),
     [setFilters]
   )
 

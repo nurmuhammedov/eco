@@ -9,8 +9,4 @@ export const departmentsAPI = {
 
     return data.data
   },
-  getById: async (id: number) => {
-    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.DEPARTMENTS}/${id}`)
-    return data.data
-  },
 }

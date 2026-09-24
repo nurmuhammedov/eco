@@ -1,10 +1,11 @@
 import { toast } from 'sonner'
 import { useEffect, useState } from 'react'
 import { useSignatureClient } from '@/shared/hooks/use-signature-client'
+import type { SignatureKey } from '@/shared/types/signature'
 
 export function useSignatureKeys() {
   const { Client, isScriptLoaded } = useSignatureClient()
-  const [signatureKeys, setSignatureKeys] = useState([])
+  const [signatureKeys, setSignatureKeys] = useState<SignatureKey[]>([])
   const [isCKCPLuggedIn, setIsCKCPLuggedIn] = useState<boolean>(false)
 
   useEffect(() => {
@@ -14,10 +15,10 @@ export function useSignatureKeys() {
       Client.install()
         .then(() => {
           Client.listAllUserKeys()
-            .then((res: any) => setSignatureKeys(res))
+            .then((res) => setSignatureKeys(res))
             .catch(() => toast.error('Error connecting to E-IMZO'))
           Client.isCKCPLuggedIn()
-            .then((res: any) => setIsCKCPLuggedIn(res))
+            .then((res) => setIsCKCPLuggedIn(res))
             .catch(() => toast.error('Error connecting to E-IMZO'))
         })
         .catch(() => toast.error('Error connecting to E-IMZO'))

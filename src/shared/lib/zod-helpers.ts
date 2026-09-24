@@ -1,7 +1,12 @@
 import { z } from 'zod'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
-export const checkExpiryDate = (data: any, ctx: z.RefinementCtx, pathField: string, dateField: string) => {
+export const checkExpiryDate = (
+  data: Record<string, unknown>,
+  ctx: z.RefinementCtx,
+  pathField: string,
+  dateField: string
+) => {
   const pathValue = data[pathField]
   const dateValue = data[dateField]
 

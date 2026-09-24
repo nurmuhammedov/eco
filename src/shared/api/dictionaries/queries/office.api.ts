@@ -9,8 +9,4 @@ export const officeAPI = {
 
     return data.data
   },
-  getById: async (id: number) => {
-    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.OFFICES}/${id}`)
-    return data.data
-  },
 }

@@ -134,12 +134,7 @@ export const NewsForm: FC = () => {
             control={control}
             render={({ field, fieldState }) => (
               <>
-                <TinyMCEEditor
-                  value={field.value}
-                  onChange={(content) => field.onChange(content)}
-                  height={910}
-                  isPageLayout={false}
-                />
+                <TinyMCEEditor value={field.value} onChange={(content) => field.onChange(content)} height={910} />
                 {fieldState.error && <span className="text-sm text-red-500">{fieldState.error.message}</span>}
               </>
             )}

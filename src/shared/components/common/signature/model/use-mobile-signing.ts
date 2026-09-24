@@ -2,12 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import CRC32 from 'crc-32'
 import { ozdst1106 } from './ozdst1106'
-import { getMobileSign, getMobileStatus, verifyMobileDocument } from '../api/mobile-imzo'
+import { getMobileSign, getMobileStatus, verifyMobileDocument, type MobileVerifyResult } from '../api/mobile-imzo'
+import { getErrorMessage } from '@/shared/lib/error-message'
 import { convertPdfToBase64 } from './convert-pdf-to-base64'
 
 interface UseMobileDocumentSigningProps {
   documentUrl: string
-  onSuccess?: (result: any) => void
+  /** Receives the attached PKCS#7 signature */
+  onSuccess?: (pkcs7: string) => void
 }
 
 const POLL_INTERVAL_MS = 5000
@@ -51,7 +53,7 @@ const buildQrCode = (siteId: string, documentId: string, documentBase64: string)
   return body + crc
 }
 
-const extractPkcs7 = (payload: any): string | undefined => {
+const extractPkcs7 = (payload: MobileVerifyResult | null | undefined): string | undefined => {
   const value = payload?.pkcs7Attached || payload?.pkcs7b64 || payload?.pkcs7 || payload?.pkcs7Info?.documentBase64
 
   return typeof value === 'string' ? value.replace(/\s/g, '') : undefined
@@ -190,8 +192,8 @@ export function useMobileDocumentSigning({ documentUrl, onSuccess }: UseMobileDo
 
             if (pkcs7) onSuccess?.(pkcs7)
             else toast.error('Imzo olinmadi. Iltimos, qaytadan urinib ko‘ring')
-          } catch (error: any) {
-            const message: string = error?.message || ''
+          } catch (error) {
+            const message = getErrorMessage(error)
 
             setIsSigning(false)
             toast.error(
@@ -214,8 +216,8 @@ export function useMobileDocumentSigning({ documentUrl, onSuccess }: UseMobileDo
 
       pollRef.current = poll
       pollTimerRef.current = setTimeout(() => void poll(), POLL_INTERVAL_MS)
-    } catch (error: any) {
-      toast.error(error?.message || 'Mobil imzolashda xatolik yuz berdi')
+    } catch (error) {
+      toast.error(getErrorMessage(error, 'Mobil imzolashda xatolik yuz berdi'))
       setIsStarting(false)
       setIsSigning(false)
     }

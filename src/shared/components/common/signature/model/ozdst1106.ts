@@ -121,7 +121,7 @@ export class OzDSt1106Digest {
     this.M.set(inBuf.subarray(inOff, inOff + 32))
 
     const U = new Uint8Array(this.H)
-    let V: any = new Uint8Array(this.M)
+    let V: Uint8Array = new Uint8Array(this.M)
     const W = new Uint8Array(32)
 
     for (let j = 0; j < 32; j++) {

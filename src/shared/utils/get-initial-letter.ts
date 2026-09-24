@@ -1,4 +1,4 @@
-export function getInitials(input: any, maxLength = 1, fallback = '?'): string {
+export function getInitials(input: string | number | null | undefined, maxLength = 1, fallback = '?'): string {
   if (input === null || input === undefined) {
     return fallback
   }

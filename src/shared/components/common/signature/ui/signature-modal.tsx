@@ -22,7 +22,7 @@ interface SignatureModalProps {
   isLoading: boolean
   documentUrl: string
   hashCode?: string | null
-  error: any
+  error: string | null
   onCancel?: () => void
   submitApplicationMetaData: (sign: string) => void
   onConfirm?: (certificate: SignatureKey | null) => void
@@ -76,7 +76,10 @@ export const SignatureModal = ({
         documentUrl,
         hashCode,
         signature: ckc ? 'ckc' : selectedCertificate,
-        onSuccess: (result) => submitApplicationMetaData(result),
+        // Signing that fell through has already told the user why; there is nothing to submit
+        onSuccess: (result) => {
+          if (result) submitApplicationMetaData(result)
+        },
       })
     }
 
