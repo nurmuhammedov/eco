@@ -65,9 +65,9 @@ export const ApplicationTable = () => {
         // longest text in the table was living in the narrowest column and
         // stretching every row to five lines.
         cell: (cell: any) => (
-          <div className="flex min-w-[165px] items-start justify-between gap-2">
-            <span>{getApplicationTitle(cell.row.original.appealType)}</span>
+          <div className="flex min-w-[165px] flex-col items-start gap-1">
             <SourceTypeBadge sourceType={cell.row.original.sourceType} />
+            <span>{getApplicationTitle(cell.row.original.appealType)}</span>
           </div>
         ),
       },
