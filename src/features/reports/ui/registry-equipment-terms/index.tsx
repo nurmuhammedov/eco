@@ -18,6 +18,23 @@ const ALL_EQUIPMENTS = APPLICATIONS_DATA.filter(
   (i) => i?.category === ApplicationCategory.EQUIPMENTS && i?.parentId === MainApplicationCategory.REGISTER
 )
 
+/** The backend spells the country total with any of three apostrophes */
+const isCountryTotal = (name?: string) => !!name && (name === 'Respublika' || /^Respublika bo['‘’]yicha$/.test(name))
+
+/** How many organizations own the devices counted in the group it opens */
+const organizationsColumn = (accessorKey: string) => ({
+  header: () => (
+    <div className="text-center whitespace-nowrap">
+      Tashkilotlar <br /> soni
+    </div>
+  ),
+  accessorKey,
+  className: 'text-center',
+  cell: ({ row }: any) => (
+    <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[accessorKey] ?? 0}</span>
+  ),
+})
+
 const RegistryEquipmentTermsReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
   const regionIdParam = String(paramsObject.regionId || 'ALL')
@@ -82,9 +99,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
     }
 
     // Prepare base rows
-    const filteredRegions = regionOptions.filter(
-      (r: any) => r.name !== 'Respublika' && r.name !== 'Respublika bo‘yicha' && r.name !== 'Respublika bo‘yicha'
-    )
+    const filteredRegions = regionOptions.filter((r: any) => !isCountryTotal(r.name))
 
     const rows = showSummary
       ? [{ id: 'ALL', name: 'Respublika bo‘yicha' }, ...filteredRegions]
@@ -99,12 +114,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
 
       let regionData
       if (isSummary) {
-        regionData = reportData.find(
-          (r: any) =>
-            r.regionName === 'Respublika' ||
-            r.regionName === 'Respublika bo‘yicha' ||
-            r.regionName === 'Respublika bo‘yicha'
-        )
+        regionData = reportData.find((r: any) => isCountryTotal(r.regionName))
       } else {
         regionData = reportData.find((r: any) => r.regionName === regionRow.name)
       }
@@ -119,9 +129,12 @@ const RegistryEquipmentTermsReport: React.FC = () => {
           expiredCount = 0,
           noDateCount = 0,
           inactiveCount = 0,
-          validCount = 0
+          validCount = 0,
+          organizationCount = 0
 
         if (colId === 'ALL_SUBTYPES') {
+          // Organizations cannot be summed over types: one may own several kinds
+          organizationCount = regionData?.allOrganizationCount ?? 0
           // Sum all items
           itemsArray.forEach((t: any) => {
             activeCount += t.activeCount || 0
@@ -139,6 +152,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
             noDateCount = matchedItem.noDateCount || 0
             inactiveCount = matchedItem.inactiveCount || 0
             validCount = matchedItem.validCount || 0
+            organizationCount = matchedItem.organizationCount || 0
           }
         }
 
@@ -147,6 +161,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
         row[`${baseKey}NoDate`] = noDateCount
         row[`${baseKey}Inactive`] = inactiveCount
         row[`${baseKey}Valid`] = validCount
+        row[`${baseKey}Org`] = organizationCount
       })
 
       return row
@@ -163,15 +178,13 @@ const RegistryEquipmentTermsReport: React.FC = () => {
     const flattenedData = reportData.map((region) => {
       const row: any = {
         regionName: region.regionName,
-        isSummary:
-          region.regionName === 'Respublika' ||
-          region.regionName === 'Respublika bo‘yicha' ||
-          region.regionName === 'Respublika bo‘yicha',
+        isSummary: isCountryTotal(region.regionName),
         allEquipmentsTotalAll: 0,
         allEquipmentsTotalValid: 0,
         allEquipmentsTotalInactive: 0,
         allEquipmentsTotalExpired: 0,
         allEquipmentsTotalNoDate: 0,
+        allEquipmentsTotalOrg: region.allOrganizationCount ?? 0,
       }
 
       const typesArray: any[] = region.types || region.items || []
@@ -186,6 +199,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
         row[`${baseKey}_Inactive`] = typeItem.inactiveCount || 0
         row[`${baseKey}_Expired`] = typeItem.expiredCount || 0
         row[`${baseKey}_NoDate`] = typeItem.noDateCount || 0
+        row[`${baseKey}_Org`] = typeItem.organizationCount || 0
 
         row.allEquipmentsTotalAll += typeItem.activeCount || 0
         row.allEquipmentsTotalValid += typeItem.validCount || 0
@@ -203,6 +217,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
         if (row[`${baseKey}_Inactive`] === undefined) row[`${baseKey}_Inactive`] = 0
         if (row[`${baseKey}_Expired`] === undefined) row[`${baseKey}_Expired`] = 0
         if (row[`${baseKey}_NoDate`] === undefined) row[`${baseKey}_NoDate`] = 0
+        if (row[`${baseKey}_Org`] === undefined) row[`${baseKey}_Org`] = 0
       })
 
       return row
@@ -226,6 +241,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
         allEquipmentsTotalInactive: 0,
         allEquipmentsTotalExpired: 0,
         allEquipmentsTotalNoDate: 0,
+        allEquipmentsTotalOrg: 0,
       }
       uniqueEquipments.forEach((name) => {
         const baseKey = name
@@ -234,6 +250,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
         backendSummary[`${baseKey}_Inactive`] = 0
         backendSummary[`${baseKey}_Expired`] = 0
         backendSummary[`${baseKey}_NoDate`] = 0
+        backendSummary[`${baseKey}_Org`] = 0
       })
     } else {
       backendSummary.regionName = 'Respublika bo‘yicha'
@@ -262,6 +279,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
         header: 'Barcha qurilmalar',
         id: 'col_group_AllEquipmentsTotal',
         columns: [
+          organizationsColumn('allEquipmentsTotalOrg'),
           {
             header: 'Reyestrda',
             accessorKey: 'allEquipmentsTotalAll',
@@ -340,6 +358,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
         return {
           header: name,
           columns: [
+            organizationsColumn(`${baseKey}_Org`),
             {
               header: 'Reyestrda',
               accessorKey: allKey,
@@ -445,6 +464,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
           id: `col_group_${colId}`,
           header: getName(i) || '',
           columns: [
+            organizationsColumn(`${baseKey}Org`),
             {
               header: 'Reyestrda',
               accessorKey: allKey,
