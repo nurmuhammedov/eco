@@ -1,9 +1,7 @@
 import React, { useMemo } from 'react'
 import { format, parseISO, startOfMonth } from 'date-fns'
+import { DataTable } from '@/shared/components/common/data-table'
 import { GoBack } from '@/shared/components/common'
-import { NoData } from '@/shared/components/common/no-data'
-import { Card } from '@/shared/components/ui/card'
-import { Skeleton } from '@/shared/components/ui/skeleton'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useData } from '@/shared/hooks'
@@ -22,7 +20,9 @@ interface Row {
 const ALL = 'ALL'
 const API_DATE = 'yyyy-MM-dd'
 
-const share = (part: number, total: number) => (total > 0 ? Math.round((part / total) * 100) : 0)
+const Count = ({ row, value }: { row: Row; value: number }) => (
+  <span className={cn('tabular-nums', row.regionId === null && 'font-bold')}>{value}</span>
+)
 
 const InspectionHfCategoryReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
@@ -40,49 +40,84 @@ const InspectionHfCategoryReport: React.FC = () => {
     ...(categoryId !== ALL && { categoryId: Number(categoryId) }),
   })
 
-  // The backend marks the country total by a null region; it is read first
-  const { total, regions } = useMemo(() => {
+  // The backend marks the country total by a null region; it belongs on top
+  const tableData = useMemo<Row[]>(() => {
     const rows = Array.isArray(data) ? data : []
 
-    return { total: rows.find((row) => row.regionId === null), regions: rows.filter((row) => row.regionId !== null) }
+    return [
+      ...rows.filter((row) => row.regionId === null).map((row) => ({ ...row, regionName: 'Respublika bo‘yicha' })),
+      ...rows.filter((row) => row.regionId !== null),
+    ]
   }, [data])
 
-  const setDate = (key: 'startDate' | 'endDate') => (value?: Date) =>
-    value && addParams({ [key]: format(value, API_DATE) })
+  const columns = useMemo(
+    () => [
+      {
+        header: 'Hududlar',
+        accessorKey: 'regionName',
+        id: 'regionName',
+        minSize: 220,
+        className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
+        cell: ({ row }: any) => (
+          <span className={cn(row.original.regionId === null && 'font-bold')}>{row.original.regionName}</span>
+        ),
+      },
+      {
+        header: 'O‘tkazilgan tekshiruvlar',
+        accessorKey: 'totalCount',
+        className: 'text-center',
+        cell: ({ row }: any) => <Count row={row.original} value={row.original.totalCount} />,
+      },
+      {
+        header: 'shundan',
+        id: 'breakdown',
+        columns: [
+          {
+            header: 'xavf tahlili asosida',
+            accessorKey: 'riskBasedCount',
+            className: 'text-center',
+            cell: ({ row }: any) => <Count row={row.original} value={row.original.riskBasedCount} />,
+          },
+          {
+            header: 'boshqa turdagi',
+            accessorKey: 'otherCount',
+            className: 'text-center',
+            cell: ({ row }: any) => <Count row={row.original} value={row.original.otherCount} />,
+          },
+        ],
+      },
+    ],
+    []
+  )
 
   return (
-    <div className="flex flex-col gap-3">
-      <GoBack title="XICHO toifalari bo‘yicha o‘tkazilgan tekshiruvlar" fallbackPath="/reports" />
+    <div className="flex h-full flex-col gap-2 overflow-hidden">
+      <div className="flex flex-col justify-between gap-2 xl:flex-row xl:items-center">
+        <GoBack title="XICHO toifalari bo‘yicha o‘tkazilgan tekshiruvlar" />
 
-      <Card className="flex flex-wrap items-end gap-3 p-3">
-        <div className="flex flex-col gap-1">
-          <span className="text-muted-foreground text-xs">Dan</span>
+        <div className="flex flex-wrap items-center gap-2">
           <DatePicker
             value={parseISO(startDate)}
-            onChange={setDate('startDate')}
+            onChange={(value) => value && addParams({ startDate: format(value, API_DATE) })}
             maxDate={parseISO(endDate)}
-            className="w-[160px]"
+            placeholder="Dan"
+            className="h-10 w-[150px] bg-white"
             isForm={false}
           />
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-muted-foreground text-xs">Gacha</span>
           <DatePicker
             value={parseISO(endDate)}
-            onChange={setDate('endDate')}
+            onChange={(value) => value && addParams({ endDate: format(value, API_DATE) })}
             minDate={parseISO(startDate)}
-            className="w-[160px]"
+            placeholder="Gacha"
+            className="h-10 w-[150px] bg-white"
             isForm={false}
           />
-        </div>
-        <div className="flex min-w-[260px] flex-1 flex-col gap-1">
-          <span className="text-muted-foreground text-xs">XICHO toifasi</span>
           <Select
             value={categoryId}
             onValueChange={(value) => addParams({ categoryId: value === ALL ? undefined : value })}
           >
-            <SelectTrigger className="bg-white [&>span]:truncate">
-              <SelectValue />
+            <SelectTrigger className="h-10 w-[280px] bg-white [&>span]:truncate">
+              <SelectValue placeholder="XICHO toifasi" />
             </SelectTrigger>
             <SelectContent className="max-w-[min(640px,90vw)]">
               <SelectItem value={ALL}>Barcha toifalar</SelectItem>
@@ -94,97 +129,21 @@ const InspectionHfCategoryReport: React.FC = () => {
             </SelectContent>
           </Select>
         </div>
-      </Card>
+      </div>
 
-      {isLoading && <Skeleton className="h-96 w-full rounded-xl" />}
-
-      {!isLoading && !total && regions.length === 0 && <NoData text="Ma’lumot topilmadi" />}
-
-      {!isLoading && (total || regions.length > 0) && (
-        <>
-          <div className="grid gap-3 sm:grid-cols-3">
-            <Card className="p-4">
-              <p className="text-muted-foreground text-xs">O‘tkazilgan tekshiruvlar</p>
-              <p className="text-2xl font-semibold tabular-nums">{total?.totalCount ?? 0}</p>
-            </Card>
-            <Card className="p-4">
-              <p className="text-muted-foreground text-xs">Xavf tahlili asosida</p>
-              <p className="text-teal text-2xl font-semibold tabular-nums">
-                {total?.riskBasedCount ?? 0}
-                <span className="text-muted-foreground ml-2 text-sm font-normal">
-                  {share(total?.riskBasedCount ?? 0, total?.totalCount ?? 0)}%
-                </span>
-              </p>
-            </Card>
-            <Card className="p-4">
-              <p className="text-muted-foreground text-xs">Boshqa turdagi</p>
-              <p className="text-2xl font-semibold text-amber-600 tabular-nums">
-                {total?.otherCount ?? 0}
-                <span className="text-muted-foreground ml-2 text-sm font-normal">
-                  {share(total?.otherCount ?? 0, total?.totalCount ?? 0)}%
-                </span>
-              </p>
-            </Card>
-          </div>
-
-          <Card className="overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-neutral-100">
-                <tr>
-                  <th rowSpan={2} className="border-b px-4 py-2 text-left font-medium">
-                    Hududlar
-                  </th>
-                  <th rowSpan={2} className="border-b border-l px-4 py-2 text-center font-medium">
-                    O‘tkazilgan tekshiruvlar
-                  </th>
-                  <th colSpan={2} className="border-l px-4 py-1.5 text-center font-medium">
-                    shundan
-                  </th>
-                  <th rowSpan={2} className="hidden border-b border-l px-4 py-2 text-left font-medium md:table-cell">
-                    Xavf tahlili ulushi
-                  </th>
-                </tr>
-                <tr>
-                  <th className="border-t border-b border-l px-4 py-1.5 text-center font-medium">
-                    xavf tahlili asosida
-                  </th>
-                  <th className="border-t border-b border-l px-4 py-1.5 text-center font-medium">boshqa turdagi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[...(total ? [{ ...total, regionName: 'Respublika bo‘yicha' }] : []), ...regions].map((row) => {
-                  const isTotal = row.regionId === null
-                  const percent = share(row.riskBasedCount, row.totalCount)
-
-                  return (
-                    <tr
-                      key={row.regionId ?? 'total'}
-                      className={cn('border-t', isTotal ? 'bg-teal/5 font-semibold' : 'hover:bg-muted/40')}
-                    >
-                      <td className="px-4 py-2">{row.regionName}</td>
-                      <td className="border-l px-4 py-2 text-center tabular-nums">{row.totalCount}</td>
-                      <td className="text-teal border-l px-4 py-2 text-center tabular-nums">{row.riskBasedCount}</td>
-                      <td className="border-l px-4 py-2 text-center text-amber-600 tabular-nums">{row.otherCount}</td>
-                      <td className="hidden border-l px-4 py-2 md:table-cell">
-                        {row.totalCount > 0 ? (
-                          <div className="flex items-center gap-2">
-                            <div className="h-1.5 w-full max-w-[140px] overflow-hidden rounded-full bg-amber-100">
-                              <div className="bg-teal h-full rounded-full" style={{ width: `${percent}%` }} />
-                            </div>
-                            <span className="text-muted-foreground w-9 text-xs tabular-nums">{percent}%</span>
-                          </div>
-                        ) : (
-                          <span className="text-muted-foreground text-xs">—</span>
-                        )}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </Card>
-        </>
-      )}
+      <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
+        <DataTable
+          columns={columns as any}
+          data={tableData}
+          isLoading={isLoading}
+          isPaginated={false}
+          showNumeration={false}
+          headerCenter={true}
+          isHeaderSticky={true}
+          initialState={{ columnPinning: { left: ['regionName'] } }}
+          className="h-full"
+        />
+      </div>
     </div>
   )
 }
