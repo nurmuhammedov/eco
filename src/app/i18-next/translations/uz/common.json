@@ -425,6 +425,7 @@
       "regulationPath": "Ishlab chiqarish nazorati nizomi",
       "staffAttestationPath": "Xodimlarining sanoat xavfsizligi bo‘yicha attestatsiyadan o‘tganligi",
       "managerAttestationPath": "Rahbar va muhandis-texnik xodimlarni sanoat xavfsizligi bo‘yicha attestatsiyadan o‘tkazilganligi",
+      "photoPath": "Xavfli ishlab chiqarish obyektining umumiy ko‘rinishidagi fotosuratlar",
       "sign": "Belgisi",
       "reasons": "Reyestrdan chiqarish sababi",
       "deregisterReason": "Reyestrdan chiqarish sababi",
