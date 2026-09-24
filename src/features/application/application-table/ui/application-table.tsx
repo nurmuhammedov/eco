@@ -1,3 +1,4 @@
+import { SourceTypeBadge } from '@/entities/application/ui/source-type-badge'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application'
@@ -63,7 +64,12 @@ export const ApplicationTable = () => {
         // Auto layout shrinks a wrapping column to its longest word, so the
         // longest text in the table was living in the narrowest column and
         // stretching every row to five lines.
-        cell: (cell: any) => <div className="min-w-[165px]">{getApplicationTitle(cell.row.original.appealType)}</div>,
+        cell: (cell: any) => (
+          <div className="flex min-w-[165px] items-start justify-between gap-2">
+            <span>{getApplicationTitle(cell.row.original.appealType)}</span>
+            <SourceTypeBadge sourceType={cell.row.original.sourceType} />
+          </div>
+        ),
       },
       ...((user?.role !== UserRoles.LEGAL && user?.role !== UserRoles.INDIVIDUAL
         ? [

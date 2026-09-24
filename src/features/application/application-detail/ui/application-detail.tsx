@@ -1,3 +1,4 @@
+import { SourceTypeBadge } from '@/entities/application/ui/source-type-badge'
 import { getApplicationTitle } from '@/entities/create-application'
 import { UserRoles } from '@/shared/types/user'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
@@ -82,7 +83,15 @@ const ApplicationDetail = ({
         <DetailCardAccordion.Item value="general" title="Ariza va ijro to‘g‘risida ma’lumot">
           <div className="flex flex-col py-1">
             <DetailRow title="Ariza sanasi:" value={getDate(data?.createdAt)} />
-            <DetailRow title="Ariza turi:" value={getApplicationTitle(data?.appealType)} />
+            <DetailRow
+              title="Ariza turi:"
+              value={
+                <span className="flex items-center justify-between gap-2">
+                  <span>{getApplicationTitle(data?.appealType)}</span>
+                  <SourceTypeBadge sourceType={data?.sourceType} />
+                </span>
+              }
+            />
             <ApplicationStatusRow status={data?.status} />
             <DetailRow title="Ijro muddati:" value={getDate(data?.deadline)} />
             <DetailRow title="Ijrochi qo‘mita mas’ul bo‘limi:" value={data?.departmentName || <EmptyValue />} />

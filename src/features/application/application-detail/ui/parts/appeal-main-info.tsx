@@ -514,6 +514,7 @@ const AppealMainInfo: FC<Props> = ({
 
   const SOURCE_TYPE_MAP: Record<string, string> = {
     MY_GOV: 'MyGov portali',
+    SYSTEM: 'Tizim',
     CABINET: 'Shaxsiy kabinet',
   }
 
