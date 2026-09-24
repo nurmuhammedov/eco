@@ -8,7 +8,6 @@ export enum UIModeEnum {
 export const UI_COMPONENTS = {
   REGION_DRAWER: 'region-drawer',
   DISTRICT_DRAWER: 'regions-drawer',
-  TEMPLATE_DRAWER: 'template-drawer',
   EQUIPMENT_DRAWER: 'equipment-drawer',
   CENTRAL_APPARATUS_DRAWER: 'central-apparatus',
   TERRITORIAL_DEPARTMENTS_DRAWER: 'territorial-departments',
@@ -17,7 +16,6 @@ export const UI_COMPONENTS = {
   HAZARDOUS_FACILITY_TYPE_DRAWER: 'hazardous-facility-type',
   HAZARDOUS_FACILITY_CATEGORY_DRAWER: 'hazardous-facility-category',
   ATTRACTION_TYPE_DRAWER: 'attraction-type-drawer',
-  CHECKLIST_TEMPLATES_DRAWER: 'checklist-templates-drawer',
   CHECKLISTS: 'checklist',
   CATEGORY_TYPES: 'category-types',
   PARK_DRAWER: 'park-drawer',
@@ -57,16 +55,10 @@ export interface UIComponentDataMap {
   [UI_COMPONENTS.HAZARDOUS_FACILITY_CATEGORY_DRAWER]: {
     id: number
   }
-  [UI_COMPONENTS.TEMPLATE_DRAWER]: {
-    id: number
-  }
   [UI_COMPONENTS.EQUIPMENT_DRAWER]: {
     id: number
   }
   [UI_COMPONENTS.ATTRACTION_TYPE_DRAWER]: {
-    id: number
-  }
-  [UI_COMPONENTS.CHECKLIST_TEMPLATES_DRAWER]: {
     id: number
   }
   [UI_COMPONENTS.CHECKLISTS]: {

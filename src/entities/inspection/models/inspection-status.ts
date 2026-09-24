@@ -12,11 +12,6 @@ export enum InspectionStatus {
   TEN_DAYS = 'TEN_DAYS',
 }
 
-export enum InspectionNoticeType {
-  NEW = 'NEW',
-  NOTIFIED = 'NOTIFIED',
-}
-
 export enum InspectionSubMenuStatus {
   CONDUCTED = 'CONDUCTED',
   ASSIGNED = 'ASSIGNED',

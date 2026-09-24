@@ -90,14 +90,3 @@ export function useChangeInquiryRegion() {
     },
   })
 }
-
-export function useDeleteInquiry() {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: inquiryApi.deleteInquiry,
-    onSuccess: async () => {
-      await invalidateEndpoint(queryClient, '/inquiries')
-      toast.success('Muvaffaqiyatli o‘chirildi!')
-    },
-  })
-}

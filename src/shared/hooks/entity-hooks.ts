@@ -3,8 +3,6 @@ import { UI_COMPONENTS } from '@/shared/types/ui-types'
 
 export const useRegionDrawer = createEntityDrawerHook(UI_COMPONENTS.REGION_DRAWER)
 
-export const useTemplateDrawer = createEntityDrawerHook(UI_COMPONENTS.REGION_DRAWER)
-
 export const useDistrictDrawer = createEntityDrawerHook(UI_COMPONENTS.DISTRICT_DRAWER)
 
 export const useCentralApparatusDrawer = createEntityDrawerHook(UI_COMPONENTS.CENTRAL_APPARATUS_DRAWER)
@@ -24,8 +22,6 @@ export const useHazardousFacilityCategoryDrawer = createEntityDrawerHook(
 export const useEquipmentDrawer = createEntityDrawerHook(UI_COMPONENTS.EQUIPMENT_DRAWER)
 
 export const useAttractionTypeDrawer = createEntityDrawerHook(UI_COMPONENTS.ATTRACTION_TYPE_DRAWER)
-
-export const useChecklistTemplateDrawer = createEntityDrawerHook(UI_COMPONENTS.CHECKLIST_TEMPLATES_DRAWER)
 
 export const useChecklistDrawer = createEntityDrawerHook(UI_COMPONENTS.CHECKLISTS)
 

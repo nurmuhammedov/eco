@@ -133,14 +133,6 @@ export const reviewShape = (groups: ReviewGroup[]) =>
     z.ZodTypeAny
   >
 
-export const reviewDefaults = (groups: ReviewGroup[]) =>
-  Object.fromEntries(
-    reviewFieldsOf(groups).map((field) => [
-      field.name,
-      field.type === 'text' || field.type === 'select' ? '' : undefined,
-    ])
-  )
-
 /**
  * Blank optionals are left out rather than sent as empty strings, which the
  * integer and decimal columns would reject.

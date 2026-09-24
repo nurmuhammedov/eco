@@ -103,13 +103,6 @@ export interface AccidentListItem {
   dateTime?: string | null
 }
 
-export type Victim = z.infer<typeof victimSchema> & {
-  id?: string
-  createdAt?: string
-  updatedAt?: string
-  accidentId?: string
-}
-
 export type AccidentFormValues = z.input<typeof accidentEditSchema> & {
   id?: string
   status?: string
