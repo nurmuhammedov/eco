@@ -22,8 +22,8 @@ import { parseISO } from 'date-fns'
 import { HF_HAZARDOUS_SIGN_OPTIONS, HF_LEGAL_TYPE_OPTIONS } from '@/shared/constants/hf-attributes'
 import { HfCategoryFilesSection } from './parts/hf-category-files-section'
 import { hfFilesSetToForm } from '@/entities/create-application/schemas/hf-appeal-files'
-import { RegisterIllegalHfDTO } from '@/entities/create-application/schemas/register-illegal-hf-shcema'
-import { useRegisterIllegalHf } from '@/features/application/create-application/model/use-create-illegal-hf-applicaton'
+import { RegisterIllegalHfDTO } from '@/entities/create-application/schemas/register-illegal-hf.schema'
+import { useRegisterIllegalHf } from '@/features/application/create-application/model/use-create-illegal-hf-application'
 import { NoteForm } from '../note-form'
 
 interface RegisterIllegalHfFormProps {

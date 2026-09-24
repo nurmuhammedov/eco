@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { CommonService } from '@/shared/api/dictionaries/queries/comon.api'
+import { CommonService } from '@/shared/api/dictionaries/queries/common.api'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 type DeleteId = string | number

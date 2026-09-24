@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { apiClient } from '@/shared/api/api-client'
-import { CommonService } from '@/shared/api/dictionaries/queries/comon.api'
+import { CommonService } from '@/shared/api/dictionaries/queries/common.api'
 import { OrgPosition, PartnerOrg, ProcessParticipant, WorkflowDefinition } from '../model/types'
 
 const KEY = 'org-workflow'

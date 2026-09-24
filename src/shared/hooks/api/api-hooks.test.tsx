@@ -20,7 +20,7 @@ const api = vi.hoisted(() => ({
   getWithPagination: vi.fn(),
 }))
 
-vi.mock('@/shared/api/dictionaries/queries/comon.api', () => ({ CommonService: api }))
+vi.mock('@/shared/api/dictionaries/queries/common.api', () => ({ CommonService: api }))
 vi.mock('@/shared/api/services-api-client', () => ({
   servicesApiClient: { getWithPagination: api.getWithPagination },
 }))

@@ -7,7 +7,7 @@ import { useChecklistDrawer } from '@/shared/hooks/entity-hooks'
 import { UIModeEnum } from '@/shared/types'
 import { useData } from '@/shared/hooks/api'
 import { Checklist } from '@/entities/admin/inspection'
-import { ChecklistDrawer } from '@/features/admin/inspection/cheklists/ui/checklist-drawer'
+import { ChecklistDrawer } from '@/features/admin/inspection/checklists/ui/checklist-drawer'
 
 export default function CategoryTypeViewPage() {
   const { id } = useParams()

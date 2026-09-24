@@ -8,7 +8,7 @@ import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { Textarea } from '@/shared/components/ui/textarea'
-import { useDeRegisterEquipmentApplication } from '@/features/application/create-application/model/used-de-register-equipment'
+import { useDeRegisterEquipmentApplication } from '@/features/application/create-application/model/use-deregister-equipment-application'
 
 interface DeRegisterEquipmentFormProps {
   onSubmit: (data: DeRegisterEquipmentDTO) => void

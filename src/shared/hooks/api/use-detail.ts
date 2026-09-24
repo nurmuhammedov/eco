@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { CommonService } from '@/shared/api/dictionaries/queries/comon.api'
+import { CommonService } from '@/shared/api/dictionaries/queries/common.api'
 import { ISearchParams } from '@/shared/types'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { endpointKey } from '@/shared/lib/query/endpoint-key'

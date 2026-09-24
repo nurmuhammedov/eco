@@ -3,7 +3,7 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { ColumnDef } from '@tanstack/react-table'
 import { format, formatDate } from 'date-fns'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
-import InspectionChecklistFormV2, { answerOptions } from '@/features/inspections/ui/parts/inspection-checklist-form-v2'
+import InspectionChecklistForm, { answerOptions } from '@/features/inspections/ui/parts/inspection-checklist-form'
 import { InspectionStatus, InspectionSubMenuStatus } from '@/entities/inspection/models/inspection-status'
 import { useEffect, useState } from 'react'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
@@ -236,7 +236,7 @@ const InspectionReports = ({
             {currentTab == 'questions' &&
             (user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.MANAGER) &&
             status == InspectionStatus.ASSIGNED ? (
-              <InspectionChecklistFormV2
+              <InspectionChecklistForm
                 categories={categories}
                 resultId={resultId}
                 acknowledgementPath={acknowledgementPath}

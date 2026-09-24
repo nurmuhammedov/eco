@@ -1,4 +1,4 @@
-import { useConfirmDocument } from '@/features/application/application-detail/hooks/mutations/se-confirm-document'
+import { useConfirmDocument } from '@/features/application/application-detail/hooks/mutations/use-confirm-document'
 import { useApplicationDetail } from '@/features/application/application-detail/hooks/use-application-detail'
 import { Button } from '@/shared/components/ui/button'
 import {

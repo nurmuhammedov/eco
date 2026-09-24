@@ -1,4 +1,4 @@
-import { CommonService } from '@/shared/api/dictionaries/queries/comon.api'
+import { CommonService } from '@/shared/api/dictionaries/queries/common.api'
 import { ISearchParams, ResponseData } from '@/shared/types'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/shared/hooks/use-auth'

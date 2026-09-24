@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { I18nextProvider } from 'react-i18next'
-import i18n from '@/app/i18-next'
+import i18n from '@/app/i18n'
 
 export const withLanguage = (Component: FC) => {
   const WithLanguage: FC = () => (

@@ -1,3 +1,3 @@
-import QrFrom from './ui/qr-from'
+import QrFrom from './ui/qr-form'
 
 export default QrFrom

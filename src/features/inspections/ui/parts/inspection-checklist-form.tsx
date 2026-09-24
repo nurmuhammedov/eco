@@ -126,7 +126,7 @@ interface Props {
   disabled?: boolean
 }
 
-const InspectionChecklistFormV2 = ({ categories = [], resultId, acknowledgementPath, additionalFilePath }: Props) => {
+const InspectionChecklistForm = ({ categories = [], resultId, acknowledgementPath, additionalFilePath }: Props) => {
   const qc = useQueryClient()
   const { mutateAsync: postChecklists, isPending: isLoading } = useAdd('/inspection-checklists')
   const { mutateAsync: postChecklists2, isPending: isLoading2 } = useAdd('/inspection-checklists')
@@ -655,4 +655,4 @@ const CategoryItemsList = ({
   )
 }
 
-export default InspectionChecklistFormV2
+export default InspectionChecklistForm

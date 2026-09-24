@@ -5,7 +5,7 @@ import { Button } from '@/shared/components/ui/button'
 import { useTranslation } from 'react-i18next'
 import { useInspectionManagement } from '../model/use-inspection-management'
 
-import { ChecklistDrawer } from '@/features/admin/inspection/cheklists/ui/checklist-drawer'
+import { ChecklistDrawer } from '@/features/admin/inspection/checklists/ui/checklist-drawer'
 
 const InspectionManagement = () => {
   const { t } = useTranslation('common')

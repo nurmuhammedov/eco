@@ -9,7 +9,7 @@ import { useChecklistForm } from '../model/use-checklist-form'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
-import { ChecklistView } from '@/features/admin/inspection/cheklists/ui/checklist-view'
+import { ChecklistView } from '@/features/admin/inspection/checklists/ui/checklist-view'
 import { UIModeEnum } from '@/shared/types'
 import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options'
 

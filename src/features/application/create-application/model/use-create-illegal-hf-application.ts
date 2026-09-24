@@ -20,7 +20,7 @@ import {
   RegisterIllegalHfDTO,
   RegisterIllegalHfSchema,
   UpdateIllegalHfBaseSchema,
-} from '@/entities/create-application/schemas/register-illegal-hf-shcema'
+} from '@/entities/create-application/schemas/register-illegal-hf.schema'
 import { checkCategoryMode } from '@/entities/create-application/schemas/register-hf.schema'
 import { hfFilesToForm } from '@/entities/create-application/schemas/hf-appeal-files'
 import { HF_CATEGORY_MODE } from '@/features/application/create-application/ui/forms/parts/hf-category-files-section'
