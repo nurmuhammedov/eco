@@ -7,7 +7,9 @@ import { DateDisableStrategy } from '@/shared/components/ui/datepicker'
  * the table component because the filter row needs it too, and having the two
  * components import each other left them in a dependency cycle.
  */
-export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
+export type ExtendedColumnDef<TData, TValue = unknown> = ColumnDef<TData, TValue> & {
+  /** A header group; its columns take the same extras as any other */
+  columns?: ExtendedColumnDef<TData, TValue>[]
   filterKey?: string
   filterType?: 'search' | 'select' | 'date' | 'number' | 'date-range'
   // The lists come straight from the dictionaries, whose ids are numbers.

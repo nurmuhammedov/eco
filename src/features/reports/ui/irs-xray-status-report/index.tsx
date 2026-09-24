@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
 import { GoBack } from '@/shared/components/common'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useData } from '@/shared/hooks'
@@ -51,13 +52,13 @@ const toOrganizations = (count?: OrganizationCount | null): Organizations => ({
   nonState: count?.nonStateCount ?? 0,
 })
 
-const organizationColumns = (prefix: 'irs' | 'xray') => {
+const organizationColumns = (prefix: 'irs' | 'xray'): ExtendedColumnDef<Row> => {
   const key = `${prefix}Org` as const
-  const column = (id: keyof Organizations, header: React.ReactNode) => ({
+  const column = (id: keyof Organizations, header: React.ReactNode): ExtendedColumnDef<Row> => ({
     header: () => <div className="text-center whitespace-nowrap">{header}</div>,
     id: `${prefix}-org-${id}`,
     className: 'text-center',
-    cell: ({ row }: any) => <Count row={row.original} value={row.original[key][id]} />,
+    cell: ({ row }) => <Count row={row.original} value={row.original[key][id]} />,
   })
 
   return {
@@ -115,7 +116,7 @@ const IrsXrayStatusReport: React.FC = () => {
     return [...rows.filter((row) => row.isSummary), ...rows.filter((row) => !row.isSummary)]
   }, [data])
 
-  const columns = useMemo(
+  const columns = useMemo<ExtendedColumnDef<Row>[]>(
     () => [
       {
         header: 'Hududlar',
@@ -123,9 +124,7 @@ const IrsXrayStatusReport: React.FC = () => {
         id: 'regionName',
         minSize: 220,
         className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-        cell: ({ row }: any) => (
-          <span className={cn(row.original.isSummary && 'font-bold')}>{row.original.regionName}</span>
-        ),
+        cell: ({ row }) => <span className={cn(row.original.isSummary && 'font-bold')}>{row.original.regionName}</span>,
       },
       {
         header: 'Ionlashtiruvchi nurlanish manbalari (INM)',
@@ -135,7 +134,7 @@ const IrsXrayStatusReport: React.FC = () => {
             header: 'Reyestrda',
             accessorKey: 'irsActive',
             className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.irsActive} />,
+            cell: ({ row }) => <Count row={row.original} value={row.original.irsActive} />,
           },
           {
             header: () => (
@@ -145,7 +144,7 @@ const IrsXrayStatusReport: React.FC = () => {
             ),
             accessorKey: 'irsInactive',
             className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.irsInactive} tone="text-red-500" />,
+            cell: ({ row }) => <Count row={row.original} value={row.original.irsInactive} tone="text-red-500" />,
           },
           organizationColumns('irs'),
         ],
@@ -158,7 +157,7 @@ const IrsXrayStatusReport: React.FC = () => {
             header: 'Reyestrda',
             accessorKey: 'xrayActive',
             className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.xrayActive} />,
+            cell: ({ row }) => <Count row={row.original} value={row.original.xrayActive} />,
           },
           {
             header: () => (
@@ -168,7 +167,7 @@ const IrsXrayStatusReport: React.FC = () => {
             ),
             accessorKey: 'xrayValid',
             className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.xrayValid} tone="text-green-600" />,
+            cell: ({ row }) => <Count row={row.original} value={row.original.xrayValid} tone="text-green-600" />,
           },
           {
             header: () => (
@@ -178,7 +177,7 @@ const IrsXrayStatusReport: React.FC = () => {
             ),
             accessorKey: 'xrayExpired',
             className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.xrayExpired} tone="text-red-500" />,
+            cell: ({ row }) => <Count row={row.original} value={row.original.xrayExpired} tone="text-red-500" />,
           },
           {
             header: () => (
@@ -188,7 +187,7 @@ const IrsXrayStatusReport: React.FC = () => {
             ),
             accessorKey: 'xrayNoDate',
             className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.xrayNoDate} tone="text-amber-600" />,
+            cell: ({ row }) => <Count row={row.original} value={row.original.xrayNoDate} tone="text-amber-600" />,
           },
           {
             header: () => (
@@ -198,7 +197,7 @@ const IrsXrayStatusReport: React.FC = () => {
             ),
             accessorKey: 'xrayInactive',
             className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.xrayInactive} tone="text-red-500" />,
+            cell: ({ row }) => <Count row={row.original} value={row.original.xrayInactive} tone="text-red-500" />,
           },
           organizationColumns('xray'),
         ],
@@ -218,7 +217,7 @@ const IrsXrayStatusReport: React.FC = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={ALL}>Barcha hududlar</SelectItem>
-            {(regions ?? []).map((region: any) => (
+            {(regions ?? []).map((region) => (
               <SelectItem key={region.id} value={String(region.id)}>
                 {region.name}
               </SelectItem>
@@ -229,7 +228,7 @@ const IrsXrayStatusReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData}
           isLoading={isLoading}
           isPaginated={false}

@@ -11,9 +11,26 @@ import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
 import { paramText } from '@/shared/lib/url-params'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+import type { ISearchParams } from '@/shared/types'
 
-const getId = (s: any) => s?.id ?? s?.value
-const getName = (s: any) => s?.name ?? s?.label
+type Option = OptionItem<string | number>
+
+const getId = (option: Option) => option.id
+const getName = (option: Option) => option.name
+
+/** One region's line; the per-type columns are keyed by the type's name */
+type TermsRow = { regionName: string; isSummary: boolean; [column: string]: string | number | boolean }
+
+/** The all-types view also carries the totals across types */
+type StandardTermsRow = TermsRow & {
+  allEquipmentsTotalAll: number
+  allEquipmentsTotalValid: number
+  allEquipmentsTotalInactive: number
+  allEquipmentsTotalExpired: number
+  allEquipmentsTotalNoDate: number
+  allEquipmentsTotalOrg: number
+}
 
 const ALL_EQUIPMENTS = APPLICATIONS_DATA.filter(
   (i) => i?.category === ApplicationCategory.EQUIPMENTS && i?.parentId === MainApplicationCategory.REGISTER
@@ -23,7 +40,7 @@ const ALL_EQUIPMENTS = APPLICATIONS_DATA.filter(
 const isCountryTotal = (name?: string) => !!name && (name === 'Respublika' || /^Respublika bo['‘’]yicha$/.test(name))
 
 /** How many organizations own the devices counted in the group it opens */
-const organizationsColumn = (accessorKey: string) => ({
+const organizationsColumn = (accessorKey: string): ExtendedColumnDef<TermsRow> => ({
   header: () => (
     <div className="text-center whitespace-nowrap">
       Tashkilotlar <br /> soni
@@ -31,7 +48,7 @@ const organizationsColumn = (accessorKey: string) => ({
   ),
   accessorKey,
   className: 'text-center',
-  cell: ({ row }: any) => (
+  cell: ({ row }) => (
     <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[accessorKey] ?? 0}</span>
   ),
 })
@@ -47,7 +64,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
 
   const { data: subTypesList } = useChildEquipmentTypes(equipmentTypeParam !== 'ALL' ? equipmentTypeParam : '')
   const { regionId: _region, equipmentType, subType, ...restParams } = paramsObject
-  const apiParams: any = { ...restParams }
+  const apiParams: ISearchParams = { ...restParams }
   if (equipmentType && equipmentType !== 'ALL') {
     apiParams.equipmentType = equipmentType
   }
@@ -75,9 +92,9 @@ const RegistryEquipmentTermsReport: React.FC = () => {
   const uniqueEquipments = useMemo(() => {
     if (!reportData) return []
     const names = new Set<string>()
-    reportData.forEach((region: any) => {
+    reportData.forEach((region) => {
       const items = region.types || region.items || []
-      items.forEach((item: any) => {
+      items.forEach((item) => {
         if (item.name && item.name !== 'Elevator' && item.name !== 'ELEVATOR') {
           names.add(item.name)
         }
@@ -95,29 +112,29 @@ const RegistryEquipmentTermsReport: React.FC = () => {
     if (subTypeParam === 'ALL') {
       columnsToFetch.push(...subTypesList)
     } else {
-      const found = subTypesList.find((s: any) => String(s.id) === String(subTypeParam))
+      const found = subTypesList.find((s) => String(s.id) === String(subTypeParam))
       if (found) columnsToFetch.push(found)
     }
 
     // Prepare base rows
-    const filteredRegions = regionOptions.filter((r: any) => !isCountryTotal(r.name))
+    const filteredRegions = regionOptions.filter((r) => !isCountryTotal(r.name))
 
     const rows = showSummary
       ? [{ id: 'ALL', name: 'Respublika bo‘yicha' }, ...filteredRegions]
-      : filteredRegions.filter((r: any) => String(r.id) === regionIdParam)
+      : filteredRegions.filter((r) => String(r.id) === regionIdParam)
 
-    return rows.map((regionRow: any) => {
+    return rows.map((regionRow) => {
       const isSummary = regionRow.id === 'ALL'
-      const row: any = {
+      const row: TermsRow = {
         regionName: regionRow.name,
         isSummary,
       }
 
       let regionData
       if (isSummary) {
-        regionData = reportData.find((r: any) => isCountryTotal(r.regionName))
+        regionData = reportData.find((r) => isCountryTotal(r.regionName))
       } else {
-        regionData = reportData.find((r: any) => r.regionName === regionRow.name)
+        regionData = reportData.find((r) => r.regionName === regionRow.name)
       }
 
       const itemsArray = regionData?.types || regionData?.items || []
@@ -137,7 +154,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
           // Organizations cannot be summed over types: one may own several kinds
           organizationCount = regionData?.allOrganizationCount ?? 0
           // Sum all items
-          itemsArray.forEach((t: any) => {
+          itemsArray.forEach((t) => {
             activeCount += t.activeCount || 0
             expiredCount += t.expiredCount || 0
             noDateCount += t.noDateCount || 0
@@ -146,7 +163,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
           })
         } else {
           // Find specific subtype by matching name with subTypesList name
-          const matchedItem = itemsArray.find((t: any) => t.name === col.name)
+          const matchedItem = itemsArray.find((t) => t.name === col.name)
           if (matchedItem) {
             activeCount = matchedItem.activeCount || 0
             expiredCount = matchedItem.expiredCount || 0
@@ -177,7 +194,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
     if (!reportData) return []
 
     const flattenedData = reportData.map((region) => {
-      const row: any = {
+      const row: StandardTermsRow = {
         regionName: region.regionName,
         isSummary: isCountryTotal(region.regionName),
         allEquipmentsTotalAll: 0,
@@ -188,7 +205,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
         allEquipmentsTotalOrg: region.allOrganizationCount ?? 0,
       }
 
-      const typesArray: any[] = region.types || region.items || []
+      const typesArray = region.types || region.items || []
       typesArray.forEach((typeItem) => {
         const name = typeItem.name
         if (!name || name === 'ELEVATOR' || name === 'Elevator') return
@@ -234,7 +251,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
 
     if (!backendSummary) {
       // Fallback just in case backend doesn't return it
-      backendSummary = {
+      const emptySummary: StandardTermsRow = {
         regionName: 'Respublika bo‘yicha',
         isSummary: true,
         allEquipmentsTotalAll: 0,
@@ -244,15 +261,15 @@ const RegistryEquipmentTermsReport: React.FC = () => {
         allEquipmentsTotalNoDate: 0,
         allEquipmentsTotalOrg: 0,
       }
-      uniqueEquipments.forEach((name) => {
-        const baseKey = name
-        backendSummary[`${baseKey}_All`] = 0
-        backendSummary[`${baseKey}_Valid`] = 0
-        backendSummary[`${baseKey}_Inactive`] = 0
-        backendSummary[`${baseKey}_Expired`] = 0
-        backendSummary[`${baseKey}_NoDate`] = 0
-        backendSummary[`${baseKey}_Org`] = 0
+      uniqueEquipments.forEach((baseKey) => {
+        emptySummary[`${baseKey}_All`] = 0
+        emptySummary[`${baseKey}_Valid`] = 0
+        emptySummary[`${baseKey}_Inactive`] = 0
+        emptySummary[`${baseKey}_Expired`] = 0
+        emptySummary[`${baseKey}_NoDate`] = 0
+        emptySummary[`${baseKey}_Org`] = 0
       })
+      backendSummary = emptySummary
     } else {
       backendSummary.regionName = 'Respublika bo‘yicha'
     }
@@ -263,7 +280,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
   const tableData = useDynamicData ? dynamicTableData : standardTableData
   const isLoading = useDynamicData ? isDynamicLoading : isReportDataLoading
 
-  const standardColumns = useMemo(
+  const standardColumns = useMemo<ExtendedColumnDef<TermsRow>[]>(
     () => [
       {
         header: 'Hududlar',
@@ -271,7 +288,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
         id: 'regionName',
         minSize: 200,
         className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
           const value = row.original.regionName
           return <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{value}</span>
         },
@@ -285,7 +302,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
             header: 'Reyestrda',
             accessorKey: 'allEquipmentsTotalAll',
             className: 'text-center',
-            cell: ({ row }: any) => (
+            cell: ({ row }) => (
               <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.allEquipmentsTotalAll}</span>
             ),
           },
@@ -297,7 +314,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
             ),
             accessorKey: 'allEquipmentsTotalValid',
             className: 'text-center',
-            cell: ({ row }: any) => (
+            cell: ({ row }) => (
               <span
                 className={cn('text-green-500', row.original.isSummary ? 'font-bold decoration-emerald-500/30' : '')}
               >
@@ -313,7 +330,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
             ),
             accessorKey: 'allEquipmentsTotalExpired',
             className: 'text-center',
-            cell: ({ row }: any) => (
+            cell: ({ row }) => (
               <span className={row.original.isSummary ? 'font-bold' : ''}>
                 {row.original.allEquipmentsTotalExpired}
               </span>
@@ -327,7 +344,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
             ),
             accessorKey: 'allEquipmentsTotalNoDate',
             className: 'text-center',
-            cell: ({ row }: any) => (
+            cell: ({ row }) => (
               <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.allEquipmentsTotalNoDate}</span>
             ),
           },
@@ -339,7 +356,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
             ),
             accessorKey: 'allEquipmentsTotalInactive',
             className: 'text-center',
-            cell: ({ row }: any) => (
+            cell: ({ row }) => (
               <span className={cn('text-red-500', row.original.isSummary ? 'font-bold' : '')}>
                 {row.original.allEquipmentsTotalInactive}
               </span>
@@ -347,7 +364,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
           },
         ],
       },
-      ...uniqueEquipments.map((name) => {
+      ...uniqueEquipments.map((name): ExtendedColumnDef<TermsRow> => {
         const baseKey = name
 
         const allKey = `${baseKey}_All`
@@ -364,7 +381,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
               header: 'Reyestrda',
               accessorKey: allKey,
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[allKey]}</span>
               ),
             },
@@ -376,7 +393,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
               ),
               accessorKey: validKey,
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span
                   className={cn('text-green-500', row.original.isSummary ? 'font-bold decoration-emerald-500/30' : '')}
                 >
@@ -392,7 +409,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
               ),
               accessorKey: expiredKey,
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold decoration-red-500/30' : ''}>
                   {row.original[expiredKey]}
                 </span>
@@ -406,7 +423,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
               ),
               accessorKey: noDateKey,
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[noDateKey]}</span>
               ),
             },
@@ -418,7 +435,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
               ),
               accessorKey: inactiveKey,
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={cn('text-red-500', row.original.isSummary ? 'font-bold' : '')}>
                   {row.original[inactiveKey]}
                 </span>
@@ -431,10 +448,10 @@ const RegistryEquipmentTermsReport: React.FC = () => {
     [uniqueEquipments]
   )
 
-  const dynamicColumns = useMemo(() => {
-    let subTypesToRender: any[] = []
+  const dynamicColumns = useMemo((): ExtendedColumnDef<TermsRow>[] => {
+    let subTypesToRender: Option[] = []
     if (subTypeParam !== 'ALL') {
-      subTypesToRender = subTypesList?.filter((s: any) => getId(s)?.toString() === subTypeParam?.toString()) || []
+      subTypesToRender = subTypesList?.filter((s) => getId(s)?.toString() === subTypeParam?.toString()) || []
     } else {
       subTypesToRender = [{ id: 'ALL_SUBTYPES', name: 'Barchasi' }, ...(subTypesList || [])]
     }
@@ -446,12 +463,12 @@ const RegistryEquipmentTermsReport: React.FC = () => {
         id: 'regionName',
         minSize: 200,
         className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
           const value = row.original.regionName
           return <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{value}</span>
         },
       },
-      ...subTypesToRender.map((i: any) => {
+      ...subTypesToRender.map((i): ExtendedColumnDef<TermsRow> => {
         const colId = getId(i)
         const baseKey = `col_${colId}`
 
@@ -470,7 +487,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
               header: 'Reyestrda',
               accessorKey: allKey,
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[allKey]}</span>
               ),
             },
@@ -482,7 +499,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
               ),
               accessorKey: validKey,
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span
                   className={cn('text-green-500', row.original.isSummary ? 'font-bold decoration-emerald-500/30' : '')}
                 >
@@ -498,7 +515,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
               ),
               accessorKey: expiredKey,
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold decoration-red-500/30' : ''}>
                   {row.original[expiredKey]}
                 </span>
@@ -512,7 +529,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
               ),
               accessorKey: noDateKey,
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[noDateKey]}</span>
               ),
             },
@@ -524,7 +541,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
               ),
               accessorKey: inactiveKey,
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={cn('text-red-500', row.original.isSummary ? 'font-bold' : '')}>
                   {row.original[inactiveKey]}
                 </span>
@@ -550,7 +567,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ALL">Barchasi</SelectItem>
-              {regionOptions.map((region: any) => (
+              {regionOptions.map((region) => (
                 <SelectItem key={region.id} value={String(region.id)}>
                   {region.name}
                 </SelectItem>
@@ -581,7 +598,7 @@ const RegistryEquipmentTermsReport: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ALL">Barchasi</SelectItem>
-              {subTypesList?.map((subType: any) => (
+              {subTypesList?.map((subType) => (
                 <SelectItem key={getId(subType)?.toString()} value={getId(subType)?.toString()}>
                   {getName(subType)}
                 </SelectItem>
