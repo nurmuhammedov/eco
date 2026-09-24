@@ -1,7 +1,0 @@
-import RiskAnalysisWidget from '@/widgets/risk-analysis/ui/risk-analysis-widget'
-
-const RiskAnalysisPage = () => {
-  return <RiskAnalysisWidget periodType="MONTHLY" />
-}
-
-export default RiskAnalysisPage
