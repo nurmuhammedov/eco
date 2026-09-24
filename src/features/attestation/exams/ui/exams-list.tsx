@@ -10,10 +10,10 @@ import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
 import { CALENDAR_STATUS, EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
 import type { AttestationCalendar } from '@/entities/attestation/model/types'
 import { formatExamDate, formatExamHours } from '@/entities/attestation/lib/exam-time'
-import { useDeleteExam } from '../model/use-calendars'
-import { CalendarModal } from './calendar-modal'
+import { useDeleteExam } from '../model/use-exams'
+import { ExamModal } from './exam-modal'
 
-export const CalendarsList = () => {
+export const ExamsList = () => {
   const navigate = useNavigate()
   const { paramsObject } = useCustomSearchParams()
 
@@ -156,7 +156,7 @@ export const CalendarsList = () => {
         className="flex-1"
       />
 
-      <CalendarModal
+      <ExamModal
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false)

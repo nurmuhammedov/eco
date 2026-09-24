@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import type { CalendarPayload, CreateExamPayload } from '@/entities/attestation/model/types'
 import { invalidateAttestation } from '@/entities/attestation/lib/invalidate'
-import { calendarsAPI } from '../api/calendars.api'
+import { examsAPI } from '../api/exams.api'
 
 const useExamMutation = <TVariables>(
   mutationFn: (variables: TVariables) => Promise<unknown>,
@@ -20,25 +20,25 @@ const useExamMutation = <TVariables>(
 }
 
 export const useCreateExam = () =>
-  useExamMutation<CreateExamPayload>((data) => calendarsAPI.create(data), 'Imtihon belgilandi')
+  useExamMutation<CreateExamPayload>((data) => examsAPI.create(data), 'Imtihon belgilandi')
 
 export const useUpdateExam = () =>
   useExamMutation<{ id: string; data: CalendarPayload }>(
-    ({ id, data }) => calendarsAPI.update(id, data),
+    ({ id, data }) => examsAPI.update(id, data),
     'Imtihon vaqti yangilandi'
   )
 
 export const useDeleteExam = () =>
-  useExamMutation<string>((id) => calendarsAPI.remove(id), 'Imtihon o‘chirildi, arizalar navbatga qaytdi')
+  useExamMutation<string>((id) => examsAPI.remove(id), 'Imtihon o‘chirildi, arizalar navbatga qaytdi')
 
 export const useAttachApplications = () =>
   useExamMutation<{ id: string; applicationIds: string[] }>(
-    ({ id, applicationIds }) => calendarsAPI.attach(id, applicationIds),
+    ({ id, applicationIds }) => examsAPI.attach(id, applicationIds),
     'Arizalar imtihonga qo‘shildi'
   )
 
 export const useDetachApplication = () =>
   useExamMutation<{ id: string; applicationId: string }>(
-    ({ id, applicationId }) => calendarsAPI.detach(id, applicationId),
+    ({ id, applicationId }) => examsAPI.detach(id, applicationId),
     'Ariza navbatga qaytarildi'
   )

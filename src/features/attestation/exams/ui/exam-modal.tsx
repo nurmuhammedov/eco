@@ -12,7 +12,7 @@ import { Badge } from '@/shared/components/ui/badge'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
 import type { AttestationApplication, AttestationCalendar } from '@/entities/attestation/model/types'
-import { useCreateExam, useUpdateExam } from '../model/use-calendars'
+import { useCreateExam, useUpdateExam } from '../model/use-exams'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const schema = z
@@ -53,7 +53,7 @@ const defaultValues = (): FormValues => ({ date: addDays(startOfToday(), 1), ...
 // The API takes full timestamps, the form collects a date and two times.
 const toIso = (date: Date, time: string) => `${format(date, 'yyyy-MM-dd')} ${time}:00`
 
-export function CalendarModal({ isOpen, onClose, editData, applications, onCreated }: Props) {
+export function ExamModal({ isOpen, onClose, editData, applications, onCreated }: Props) {
   const isEditing = !!editData
   const createMutation = useCreateExam()
   const updateMutation = useUpdateExam()

@@ -12,7 +12,7 @@ import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
 import { cn } from '@/shared/lib/utils'
 import { DIRECTION, EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
 import type { AttestationApplication, AttestationCalendar } from '@/entities/attestation/model/types'
-import { useAttachApplications } from '@/features/attestation/calendars/model/use-calendars'
+import { useAttachApplications } from '@/features/attestation/exams/model/use-exams'
 
 /** More than one exam day can hold, so the whole matching queue fits in one page */
 const QUEUE_PAGE_SIZE = 100

@@ -26,12 +26,12 @@ const AppealStatusDurationReport = lazy(() => import('@/features/reports/ui/appe
 const ApplicationDetail = lazy(() => import('@/pages/applications/ui/application-detail'))
 const Applications = lazy(() => import('@/pages/applications/ui/application-page'))
 const ArchivePage = lazy(() => import('@/pages/archive'))
-const AttestationApplicantsPage = lazy(() => import('@/pages/attestation-applicants/ui/page'))
-const AttestationApplicationDetailPage = lazy(() => import('@/pages/attestation-application-detail/ui/page'))
-const AttestationCalendarsPage = lazy(() => import('@/pages/attestation-calendars/ui/page'))
-const AttestationMyApplicationsPage = lazy(() => import('@/pages/attestation-my-applications/ui/page'))
-const AttestationQueuePage = lazy(() => import('@/pages/attestation-queue/ui/page'))
-const AttestationQuestionsPage = lazy(() => import('@/pages/attestation-questions/ui/page'))
+const AttestationExamPage = lazy(() => import('@/pages/attestation/exam-page'))
+const AttestationApplicationDetailPage = lazy(() => import('@/pages/attestation/application-detail-page'))
+const AttestationExamsPage = lazy(() => import('@/pages/attestation/exams-page'))
+const AttestationMyApplicationsPage = lazy(() => import('@/pages/attestation/my-applications-page'))
+const AttestationQueuePage = lazy(() => import('@/pages/attestation/queue-page'))
+const AttestationQuestionsPage = lazy(() => import('@/pages/attestation/questions-page'))
 const AttractionTypePage = lazy(() => import('@/pages/admin/attraction-type/page'))
 const CadastreAdd = lazy(() => import('@/features/cadastre-passport/ui/cadastre-add'))
 const CadastreDetail = lazy(() => import('@/features/cadastre-passport/ui/cadastre-detail'))
@@ -432,13 +432,13 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     id: 'ATTESTATION',
     path: 'attestation/exams',
-    element: withSuspense(AttestationCalendarsPage),
+    element: withSuspense(AttestationExamsPage),
     roles: [UserRoles.HEAD],
   },
   {
     id: 'ATTESTATION',
     path: 'attestation/exams/:examId',
-    element: withSuspense(AttestationApplicantsPage),
+    element: withSuspense(AttestationExamPage),
     roles: [UserRoles.HEAD],
   },
   {

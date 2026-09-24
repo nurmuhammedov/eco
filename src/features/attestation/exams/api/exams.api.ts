@@ -2,7 +2,7 @@ import { servicesApiClient } from '@/shared/api/services-api-client'
 import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
 import type { AttestationCalendar, CalendarPayload, CreateExamPayload } from '@/entities/attestation/model/types'
 
-export const calendarsAPI = {
+export const examsAPI = {
   create: (data: CreateExamPayload) =>
     servicesApiClient.post<AttestationCalendar>(SERVICES_API_ENDPOINTS.CALENDARS, data),
 

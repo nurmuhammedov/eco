@@ -9,7 +9,7 @@ import { useServicesPaginatedData, useCustomSearchParams } from '@/shared/hooks/
 import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
 import { DIRECTION, DIRECTION_OPTIONS, EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
 import type { AttestationApplication } from '@/entities/attestation/model/types'
-import { CalendarModal } from '@/features/attestation/calendars/ui/calendar-modal'
+import { ExamModal } from '@/features/attestation/exams/ui/exam-modal'
 
 /**
  * Applications waiting for an exam. The department picks several - across
@@ -164,7 +164,7 @@ export const QueueList = () => {
         className="flex-1"
       />
 
-      <CalendarModal
+      <ExamModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         applications={picked}

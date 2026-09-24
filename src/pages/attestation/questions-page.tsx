@@ -1,4 +1,4 @@
-import { QuestionsList } from '@/features/attestation/ui/questions/questions-list'
+import { QuestionsList } from '@/features/attestation/questions/ui/questions-list'
 
 const AttestationQuestionsPage = () => <QuestionsList />
 
