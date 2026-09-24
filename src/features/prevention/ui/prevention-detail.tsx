@@ -1,3 +1,4 @@
+import { SafeHtml } from '@/shared/components/common/safe-html'
 import { useParams } from 'react-router-dom'
 import { UserRoles } from '@/shared/types/user'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
@@ -119,9 +120,11 @@ const PreventionDetail = () => {
 
             <div className="grid grid-cols-2 content-center items-center gap-1 rounded-lg px-2.5 py-2 odd:bg-neutral-50">
               <h2 className="text-normal font-normal text-gray-700">Bajarilgan ishlar ro‘yxati</h2>
-              <p
+              <SafeHtml
+                as="p"
+                html={details?.report}
+                fallback="-"
                 className="text-normal font-normal whitespace-pre-wrap text-gray-900"
-                dangerouslySetInnerHTML={{ __html: details?.report || '-' }}
               />
             </div>
 

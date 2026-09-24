@@ -1,3 +1,4 @@
+import { SafeHtml } from '@/shared/components/common/safe-html'
 import { FC } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
@@ -166,10 +167,11 @@ const RegisterChangeDetail: FC = () => {
               >
                 <span className={cn('text-sm font-medium text-gray-500')}>Qaytarish sababi:</span>
 
-                <div
+                <SafeHtml
+                  html={changeDetail?.description}
+                  fallback="-"
                   className="text-sm font-medium break-words text-gray-900"
-                  dangerouslySetInnerHTML={{ __html: changeDetail?.description || '-' }}
-                ></div>
+                />
               </div>
             )}
           </div>

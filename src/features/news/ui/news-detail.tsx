@@ -1,3 +1,4 @@
+import { SafeHtml } from '@/shared/components/common/safe-html'
 import { FC } from 'react'
 import { useParams } from 'react-router-dom'
 import { Calendar, Clock, FileText } from 'lucide-react'
@@ -74,10 +75,10 @@ export const NewsDetail: FC = () => {
             <h1 className="text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">{news.title}</h1>
           </header>
 
-          <div
+          <SafeHtml
+            html={news.content}
             className="prose prose-blue max-w-none text-gray-800"
             style={{ fontFamily: "'Golos Text', sans-serif" }}
-            dangerouslySetInnerHTML={{ __html: news.content }}
           />
         </div>
       </article>
