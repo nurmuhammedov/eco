@@ -88,6 +88,7 @@ export function Header() {
       { path: '/kpi/my-tasks', title: 'Mening KPIlarim' },
       { path: '/kpi/tasks', title: 'KPI vazifalar' },
       { path: '/kpi/report', title: 'KPI hisoboti' },
+      { path: '/reports/inspection-hf-category', title: 'XICHO toifalari bo‘yicha o‘tkazilgan tekshiruvlar' },
       { path: '/reports/kpi-departments', title: 'Bo‘limlarning KPI ko‘rsatkichi' },
       { path: '/attestation-calendars/', title: 'Imtihon ishtirokchilari' },
       { path: '/attestation-calendars', title: 'Imtihonlar' },

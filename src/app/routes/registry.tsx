@@ -68,6 +68,7 @@ const InspectionsInfoPage = lazy(() => import('@/features/inspections/ui/inspect
 const InspectionsOtherPage = lazy(() => import('@/pages/inspections/other/page'))
 const InspectionsRiskBasedPage = lazy(() => import('@/pages/inspections/risk-based/page'))
 const InspectionStatsReport = lazy(() => import('@/features/reports/ui/inspection-stats'))
+const InspectionHfCategoryReport = lazy(() => import('@/features/reports/ui/inspection-hf-category-report'))
 const InspectionSurveys = lazy(() => import('@/pages/admin/inspection/ui'))
 const InteractiveServicePage = lazy(() =>
   import('@/pages/interactive-service').then((m) => ({ default: m.InteractiveServicePage }))
@@ -1020,6 +1021,19 @@ export const APP_ROUTES: AppRouteDefinition[] = [
     id: 'REPORT',
     path: 'reports/inspection-execution',
     element: withSuspense(InspectionExecutionReport),
+    roles: [
+      UserRoles.CHAIRMAN,
+      UserRoles.HEAD,
+      UserRoles.INSPECTOR,
+      UserRoles.MANAGER,
+      UserRoles.PROCURATOR,
+      UserRoles.REGIONAL,
+    ],
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/inspection-hf-category',
+    element: withSuspense(InspectionHfCategoryReport),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,

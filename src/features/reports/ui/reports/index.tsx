@@ -7,6 +7,7 @@ import {
   ClipboardCheck,
   Clock,
   FileSearch,
+  Factory,
   FileText,
   Flame,
   LineChart,
@@ -241,6 +242,13 @@ const REPORTS_GROUPS: ReportGroup[] = [
         icon: ClipboardCheck,
         url: '/reports/inspection-execution',
         reportType: 'MONTHLY',
+      },
+      {
+        id: 'insp-hf-category',
+        title: 'XICHO toifalari bo‘yicha o‘tkazilgan tekshiruvlar',
+        icon: Factory,
+        url: '/reports/inspection-hf-category',
+        reportType: 'OTHERS',
       },
       {
         id: 'insp-types',
