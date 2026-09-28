@@ -27,3 +27,11 @@ export type ISearchParams = Record<string, SearchParamValue>
 export type UrlParamValue = string | number | boolean
 
 export type UrlParams = Record<string, UrlParamValue | undefined>
+
+/** A stored file with the registry details attached to it (backend FileDto) */
+export interface FileDto {
+  path: string | null
+  number: string | null
+  expiryDate: string | null
+  uploadDate: string | null
+}

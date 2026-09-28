@@ -13,9 +13,10 @@ import { FileData } from '../model/file-data.types'
 import { formatFileSize, openFileInNewTab, truncateFilename } from '../lib/utils'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
-export interface InputFileProps<T extends FieldValues> {
+/** `TSubmitted` is what the form hands to submit when its schema transforms the values */
+export interface InputFileProps<T extends FieldValues, TSubmitted = T> {
   name: Path<T>
-  form: UseFormReturn<T>
+  form: UseFormReturn<T, unknown, TSubmitted>
   accept?: FileTypes[]
   className?: string
   maxSize?: number
@@ -123,7 +124,7 @@ const FileRow = memo(
 )
 FileRow.displayName = 'FileRow'
 
-function InputFileComponent<T extends FieldValues>({
+function InputFileComponent<T extends FieldValues, TSubmitted = T>({
   name,
   form,
   className,
@@ -146,7 +147,7 @@ function InputFileComponent<T extends FieldValues>({
   onUploadError,
   onUploadProgress,
   onRemove,
-}: InputFileProps<T>) {
+}: InputFileProps<T, TSubmitted>) {
   const {
     setValue,
     watch,

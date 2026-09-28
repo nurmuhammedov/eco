@@ -1,4 +1,3 @@
-import { apiClient } from '@/shared/api/api-client'
 import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
@@ -11,15 +10,16 @@ import {
 import { useChildEquipmentTypes, useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import useAdd from '@/shared/hooks/api/use-add'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { useOwnerLookup } from './use-owner-lookup'
+import { EquipmentDetail, KEPT_OWNER_BIRTH_DATE, latinOrEmpty } from './equipment-detail'
 
 export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIllegalLpgPoweredDTO) => void) => {
   const { type, id } = useParams<{ type: string; id: string }>()
@@ -29,8 +29,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const [manualOwnerData, setManualOwnerData] = useState<any>(null)
-  const [isManualSearchLoading, setIsManualSearchLoading] = useState(false)
+  const ownerLookup = useOwnerLookup()
 
   const formSchema = isUpdate
     ? RegisterIllegalLpgPoweredBaseSchema.extend({
@@ -122,10 +121,10 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
           .nullable()
           .transform((val) => (val ? val : null)),
         birthDate: z
-          .string()
+          .date()
           .optional()
           .nullable()
-          .transform((val) => (val ? val : null)),
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
         servicePeriod: z
           .date()
           .optional()
@@ -134,8 +133,10 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
       }).superRefine(lpgPoweredRefinement)
     : RegisterIllegalLpgPoweredSchema
 
-  const form = useForm<RegisterIllegalLpgPoweredDTO>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<FormDraft<typeof RegisterIllegalLpgPoweredSchema>, unknown, RegisterIllegalLpgPoweredDTO>({
+    resolver: zodFormResolver<FormDraft<typeof RegisterIllegalLpgPoweredSchema>, RegisterIllegalLpgPoweredDTO>(
+      formSchema
+    ),
     defaultValues: {
       phoneNumber: '',
       identity: '',
@@ -172,13 +173,9 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
     mode: 'onChange',
   })
 
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/equipments/`, id, !!id)
+  const { data: detail, isLoading: isDetailLoading } = useDetail<EquipmentDetail>(`/equipments/`, id, !!id)
 
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/equipments/lpg-powered/', id)
-
-  const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
-    '/integration/iip/individual'
-  )
 
   const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
   const regionId = form.watch('regionId')
@@ -191,7 +188,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useLegalOrganizationQuery(ownerIdentity)
 
-  const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
+  const currentOwnerData = isUpdate ? fetchedOwnerData : ownerLookup.owner
 
   const { data: hfOptions } = useHazardousFacilityByTinQuery(identity, isLegal && !!currentOwnerData)
 
@@ -199,43 +196,41 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
 
   useEffect(() => {
     if (detail && isUpdate) {
-      const getValue = (val: any) => (typeof val === 'string' && /[\u0400-\u04FF]/.test(val) ? '' : val)
-
       form.reset({
-        phoneNumber: detail.phoneNumber || '',
+        phoneNumber: '',
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
-        birthDate: isUpdate ? '1900-01-01' : parseDate(detail.birthDate),
+        birthDate: KEPT_OWNER_BIRTH_DATE,
         hazardousFacilityId: detail.hfId,
         childEquipmentId: detail.childEquipmentId ? String(detail.childEquipmentId) : '',
-        factoryNumber: getValue(detail.factoryNumber || ''),
+        factoryNumber: latinOrEmpty(detail.factoryNumber || ''),
         regionId: detail.regionId ? String(detail.regionId) : '',
-        address: getValue(detail.address || ''),
-        model: getValue(detail.model || ''),
-        factory: getValue(detail.factory || ''),
-        location: getValue(detail.location || ''),
+        address: latinOrEmpty(detail.address || ''),
+        model: latinOrEmpty(detail.model || ''),
+        factory: latinOrEmpty(detail.factory || ''),
+        location: latinOrEmpty(detail.location || ''),
         manufacturedAt: parseDate(detail.manufacturedAt),
         servicePeriod: parseDate(detail.servicePeriod),
         partialCheckDate: parseDate(detail.partialCheckDate),
         fullCheckDate: parseDate(detail.fullCheckDate),
         nextFullCheckDate: parseDate(detail.nextFullCheckDate),
 
-        capacity: getValue(detail.parameters?.capacity || ''),
-        pressure: getValue(detail.parameters?.pressure || ''),
-        fuel: getValue(detail.parameters?.fuel || ''),
+        capacity: latinOrEmpty(detail.parameters?.capacity || ''),
+        pressure: latinOrEmpty(detail.parameters?.pressure || ''),
+        fuel: latinOrEmpty(detail.parameters?.fuel || ''),
 
-        usageRightsPath: detail.files?.usageRightsPath?.path,
-        labelPath: detail.files?.labelPath?.path,
-        saleContractPath: detail.files?.saleContractPath?.path,
-        equipmentCertPath: detail.files?.equipmentCertPath?.path,
+        usageRightsPath: detail.files?.usageRightsPath?.path ?? undefined,
+        labelPath: detail.files?.labelPath?.path ?? undefined,
+        saleContractPath: detail.files?.saleContractPath?.path ?? undefined,
+        equipmentCertPath: detail.files?.equipmentCertPath?.path ?? undefined,
         equipmentCertExpiryDate: parseDate(detail.files?.equipmentCertPath?.expiryDate),
-        assignmentDecreePath: detail.files?.assignmentDecreePath?.path,
-        expertisePath: detail.files?.expertisePath?.path,
+        assignmentDecreePath: detail.files?.assignmentDecreePath?.path ?? undefined,
+        expertisePath: detail.files?.expertisePath?.path ?? undefined,
         expertiseExpiryDate: parseDate(detail.files?.expertisePath?.expiryDate),
-        installationCertPath: detail.files?.installationCertPath?.path,
-        passportPath: detail.files?.passportPath?.path, // Mapped to passportPath
-        gasSupplyProjectPath: detail.files?.gasSupplyProjectPath?.path,
-        fullCheckPath: detail.files?.fullCheckPath?.path,
-      } as any)
+        installationCertPath: detail.files?.installationCertPath?.path ?? undefined,
+        passportPath: detail.files?.passportPath?.path ?? undefined, // Mapped to passportPath
+        gasSupplyProjectPath: detail.files?.gasSupplyProjectPath?.path ?? undefined,
+        fullCheckPath: detail.files?.fullCheckPath?.path ?? undefined,
+      })
 
       setTimeout(() => {
         form.setValue('districtId', detail.districtId ? String(detail.districtId) : '')
@@ -245,34 +240,19 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
 
   const handleSearch = () => {
     const identity = form.getValues('identity')?.trim()
-    const birthDate = form.getValues('birthDate')
 
     if (!identity) return
 
-    if (identity.length === 9) {
-      setIsManualSearchLoading(true)
-      apiClient
-        .post<any>('/integration/iip/legal', { tin: identity })
-        .then((res) => setManualOwnerData(res.data?.data || res.data))
-        .catch(() => setManualOwnerData(null))
-        .finally(() => setIsManualSearchLoading(false))
-    } else if (identity.length === 14 && birthDate) {
-      individualMutateAsync({
-        pin: identity,
-        birthDate: format(birthDate as unknown as Date, 'yyyy-MM-dd'),
-      })
-        .then((res) => setManualOwnerData(res.data?.data || res.data))
-        .catch(() => setManualOwnerData(null))
-    } else {
+    if (!ownerLookup.search(identity, form.getValues('birthDate'))) {
       form.trigger(['identity', 'birthDate'])
     }
   }
 
   const handleClear = () => {
-    setManualOwnerData(null)
+    ownerLookup.clear()
     form.setValue('identity', '')
-    form.setValue('birthDate', undefined as any)
-    form.setValue('hazardousFacilityId', undefined as any)
+    form.setValue('birthDate', undefined)
+    form.setValue('hazardousFacilityId', undefined)
   }
 
   const handleSubmit = (data: RegisterIllegalLpgPoweredDTO) => {
@@ -311,7 +291,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
     ownerData: currentOwnerData,
     detail,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isIndividualPending || isManualSearchLoading,
+    isSearchLoading: ownerLookup.isSearching,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,

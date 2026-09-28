@@ -1,14 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
-import type { ApiResponse } from '@/shared/types'
-
-/** A stored file with the registry details attached to it (backend FileDto) */
-export interface FileDto {
-  path: string | null
-  number: string | null
-  expiryDate: string | null
-  uploadDate: string | null
-}
+import type { ApiResponse, FileDto } from '@/shared/types'
 
 /** The organization's radiation profile for one kind of device (RadiationProfileResById), or null when it has none */
 export type RadiationProfileCheck = {

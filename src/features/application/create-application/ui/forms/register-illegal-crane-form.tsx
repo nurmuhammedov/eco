@@ -254,9 +254,9 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
                         if (date) {
                           const nextDate = new Date(date)
                           nextDate.setFullYear(nextDate.getFullYear() + 1)
-                          form.setValue('nextPartialCheckDate', nextDate as any, { shouldValidate: true })
+                          form.setValue('nextPartialCheckDate', nextDate, { shouldValidate: true })
                         } else {
-                          form.setValue('nextPartialCheckDate', undefined as any, { shouldValidate: true })
+                          form.setValue('nextPartialCheckDate', undefined, { shouldValidate: true })
                         }
                       }}
                       placeholder="Sanani tanlang"
@@ -282,9 +282,9 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
                         if (date) {
                           const nextDate = new Date(date)
                           nextDate.setFullYear(nextDate.getFullYear() + 3)
-                          form.setValue('nextFullCheckDate', nextDate as any, { shouldValidate: true })
+                          form.setValue('nextFullCheckDate', nextDate, { shouldValidate: true })
                         } else {
-                          form.setValue('nextFullCheckDate', undefined as any, { shouldValidate: true })
+                          form.setValue('nextFullCheckDate', undefined, { shouldValidate: true })
                         }
                       }}
                       placeholder="Sanani tanlang"
@@ -432,9 +432,7 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() =>
-                          form.setValue('expertiseExpiryDate', undefined as any, { shouldValidate: true })
-                        }
+                        onRemove={() => form.setValue('expertiseExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>
