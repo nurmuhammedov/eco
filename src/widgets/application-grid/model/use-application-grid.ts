@@ -55,16 +55,14 @@ export function useApplicationGrid() {
 
   const mainCards = useMemo(() => {
     if (!activeTab) return []
-    // @ts-ignore
-    return MAIN_APPLICATION_BY_CATEGORY[activeTab] || []
+    return MAIN_APPLICATION_BY_CATEGORY[activeTab] ?? []
   }, [activeTab])
 
   const displayedSubCards = useMemo(() => {
     if (!activeTab) return []
 
     // If there are main cards for this category
-    // @ts-ignore
-    if (MAIN_APPLICATION_BY_CATEGORY[activeTab]?.length > 0) {
+    if (mainCards.length > 0) {
       // If a main card is selected, show its sub applications
       if (selectedMainCard) {
         return APPLICATIONS_DATA.filter((card) => card.category === activeTab && card.parentId === selectedMainCard)
@@ -74,7 +72,7 @@ export function useApplicationGrid() {
 
     // If no main cards for this category, show all applications for the category with no parent
     return APPLICATIONS_DATA.filter((card) => card.category === activeTab && !card.parentId)
-  }, [activeTab, selectedMainCard])
+  }, [activeTab, selectedMainCard, mainCards])
 
   return {
     mainCards,

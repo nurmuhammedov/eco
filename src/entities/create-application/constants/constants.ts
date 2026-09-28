@@ -1,5 +1,5 @@
 import { ApplicationCategory, ApplicationTypeEnum, MainApplicationCategory } from '../types/enums'
-import { ApplicationCardItem } from '../types/types'
+import { ApplicationCardItem, MainApplicationCard } from '../types/types'
 import { FileInput, FileOutput, FilePlus } from 'lucide-react'
 
 export const APPLICATION_CATEGORIES = [
@@ -26,7 +26,7 @@ export const ACCREDITATION_APPLICATION_CATEGORY = {
   name: 'Akkreditatsiya',
 }
 
-export const MAIN_APPLICATION_BY_CATEGORY = {
+export const MAIN_APPLICATION_BY_CATEGORY: Partial<Record<ApplicationCategory, MainApplicationCard[]>> = {
   [ApplicationCategory.HF]: [],
   [ApplicationCategory.EQUIPMENTS]: [
     {
