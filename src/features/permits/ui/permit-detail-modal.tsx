@@ -2,13 +2,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/compo
 import { useCustomSearchParams, useDetail } from '@/shared/hooks'
 import { SearchResultDisplay } from '@/features/permits/ui/add-permit-modal'
 import { ExternalLink, Loader2 } from 'lucide-react'
+import type { PermitSearchResult } from '@/features/permits/model/types'
 
 export const PermitDetailModal = () => {
   const {
     removeParams,
     paramsObject: { detailId = '' },
   } = useCustomSearchParams()
-  const { data: searchResult, isLoading } = useDetail<any>('/permits', detailId, !!detailId)
+  const { data: searchResult, isLoading } = useDetail<PermitSearchResult>('/permits', detailId, !!detailId)
 
   return (
     <Dialog

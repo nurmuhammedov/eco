@@ -5,7 +5,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { PermitSearchResult } from '@/features/permits/model/types'
+import type { LicenseSearch, PermitPayload, PermitSearchResult } from '@/features/permits/model/types'
+import type { ApiResponse } from '@/shared/types/api'
 import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -50,7 +51,7 @@ export const SearchResultDisplay = ({
 }) => {
   const isDetail = type === 'detail'
 
-  const getStatusBadge = (status: string | undefined, isSystemStatus: boolean = false) => {
+  const getStatusBadge = (status: string | null | undefined, isSystemStatus: boolean = false) => {
     if (status === 'ACTIVE') return <span className="font-medium text-green-600">Faol</span>
     if (status === 'EXPIRED') return <span className="font-medium text-red-600">Faol emas</span>
     if (isSystemStatus && status === 'EXPIRING_SOON')
@@ -81,7 +82,10 @@ export const SearchResultDisplay = ({
     { label: 'Vakolatli tashkilot', value: data.organizationName, fullWidth: true },
     {
       label: 'Faoliyat turi',
-      value: data.activityTypes?.length ? data.activityTypes.map((i) => i?.name).join(' | ') : 'Ko‘rsatilmagan',
+      // The register lists the activities as objects, the saved permit by name only
+      value:
+        (data.activityTypes?.map((activity) => activity.name) ?? data.activityTypeNames ?? []).join(' | ') ||
+        'Ko‘rsatilmagan',
       fullWidth: true,
     },
     ...(isDetail
@@ -117,17 +121,18 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
     defaultValues: { filePath: '' },
   })
 
-  const { mutateAsync: searchPermit, isPending: isSearchPending } = useAdd<any, any, any>(
+  const { mutate: searchPermit, isPending: isSearchPending } = useAdd<LicenseSearch, ApiResponse<PermitSearchResult>>(
     '/integration/iip/individual/license',
     ''
   )
-  const { mutateAsync: searchPermitLegal, isPending: isSearchLegalPending } = useAdd<any, any, any>(
-    '/integration/iip/legal/license',
-    ''
-  )
+  const { mutate: searchPermitLegal, isPending: isSearchLegalPending } = useAdd<
+    LicenseSearch,
+    ApiResponse<PermitSearchResult>
+  >('/integration/iip/legal/license', '')
 
-  const { mutateAsync: addPermit, isPending: isAddPending } = useAdd<any, any, any>('/permits/individual')
-  const { mutateAsync: addLegalPermit, isPending: isAddLegalPending } = useAdd<any, any, any>('/permits/legal')
+  // The toast below says what happened, so the hooks stay quiet
+  const { mutate: addPermit, isPending: isAddPending } = useAdd<PermitPayload>('/permits/individual', '')
+  const { mutate: addLegalPermit, isPending: isAddLegalPending } = useAdd<PermitPayload>('/permits/legal', '')
 
   const isAnySearchPending = isSearchPending || isSearchLegalPending
   const isAnyAddPending = isAddPending || isAddLegalPending
@@ -140,13 +145,15 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
       ? { tin: values.stir, registerNumber: values.regNumber }
       : { pin: values.stir, registerNumber: values.regNumber }
 
-    searchFn(payload).then((res) => {
-      if (res?.data) {
-        setSearchResult(res.data)
-        toast.success('Muvaffaqiyatli topildi!')
-      } else {
-        toast.error('Ma’lumot topilmadi')
-      }
+    searchFn(payload, {
+      onSuccess: (response) => {
+        if (response?.data) {
+          setSearchResult(response.data)
+          toast.success('Muvaffaqiyatli topildi!')
+        } else {
+          toast.error('Ma’lumot topilmadi')
+        }
+      },
     })
   }
 
@@ -166,13 +173,12 @@ export const AddPermitModal = ({ open, onOpenChange }: AddPermitModalProps) => {
       ? { tin: searchValues.stir, registerNumber: searchValues.regNumber, filePath }
       : { pin: searchValues.stir, registerNumber: searchValues.regNumber, filePath }
 
-    addFn(payload).then(async () => {
-      handleClose()
-      await Promise.all([
-        invalidateEndpoint(queryClient, '/permits'),
-        invalidateEndpoint(queryClient, '/permits/count'),
-      ])
-      toast.success('Muvaffaqiyatli qo‘shildi')
+    addFn(payload, {
+      onSuccess: () => {
+        handleClose()
+        toast.success('Muvaffaqiyatli qo‘shildi')
+        return invalidateEndpoint(queryClient, '/permits')
+      },
     })
   }
 

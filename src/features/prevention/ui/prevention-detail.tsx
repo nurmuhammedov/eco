@@ -16,12 +16,13 @@ import FileLink from '@/shared/components/common/file-link'
 import { IrsList } from '@/features/register/irs/ui/irs-list'
 import { XrayList } from '@/features/register/xray/ui/xray-list'
 import { Skeleton } from '@/shared/components/ui/skeleton'
+import type { PreventionDetail as PreventionDetailData } from '../model/types'
 
 const PreventionDetail = () => {
   const { id } = useParams<{ id: string }>()
   const { user } = useAuth()
   const { paramsObject } = useCustomSearchParams()
-  const { data: details, isLoading } = useDetail<any>('/preventions/', id)
+  const { data: details, isLoading } = useDetail<PreventionDetailData>('/preventions', id)
 
   const tin = paramText(paramsObject.tin)
 
@@ -43,7 +44,7 @@ const PreventionDetail = () => {
     details?.status === 'NEW' &&
     ((user?.role === UserRoles.MANAGER && (details?.belongType === 'IRS' || details?.belongType === 'XRAY')) ||
       (user?.role === UserRoles.INSPECTOR && details?.belongType !== 'IRS' && details?.belongType !== 'XRAY'))
-  const hasFiles = details?.resultPathList && details.resultPathList.length > 0
+  const resultFiles = details?.resultPathList ?? []
 
   if (isLoading) {
     return (
@@ -83,13 +84,13 @@ const PreventionDetail = () => {
 
           {details?.belongType === 'IRS' && (
             <DetailCardAccordion.Item value="irs_list" title="Ionlashtiruvchi nurlanish manbalari">
-              <IrsList radiationProfileId={details?.belongId} hideTabs />
+              <IrsList radiationProfileId={details.belongId ?? undefined} hideTabs />
             </DetailCardAccordion.Item>
           )}
 
           {details?.belongType === 'XRAY' && (
             <DetailCardAccordion.Item value="xray_list" title="Rentgen qurilmalari">
-              <XrayList radiationProfileId={details?.belongId} hideTabs />
+              <XrayList radiationProfileId={details.belongId ?? undefined} hideTabs />
             </DetailCardAccordion.Item>
           )}
 
@@ -130,11 +131,11 @@ const PreventionDetail = () => {
               />
             </div>
 
-            {hasFiles && (
+            {resultFiles.length > 0 && (
               <div className="grid grid-cols-2 content-center items-center gap-1 rounded-lg px-2.5 py-2 odd:bg-neutral-50">
                 <h2 className="text-normal font-normal text-gray-700">Bajarilgan ishlar bo‘yicha fayllar</h2>
                 <div className="flex flex-wrap gap-2">
-                  {details.resultPathList.map((path: string, index: number) => (
+                  {resultFiles.map((path, index) => (
                     <FileLink key={index} url={path} />
                   ))}
                 </div>

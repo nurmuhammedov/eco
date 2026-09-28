@@ -1,5 +1,5 @@
 import { PermitTable, PermitTabs } from '@/features/permits'
-import { PermitTabKey } from '@/features/permits/model/types'
+import { type PermitCount, PermitTabKey } from '@/features/permits/model/types'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { AddPermitModal } from '@/features/permits/ui/add-permit-modal'
 import { useState } from 'react'
@@ -17,7 +17,7 @@ export const PermitsWidget = () => {
     addParams({ tab: tabKey, page: '1' })
   }
 
-  const { data } = useData<any>('/permits/count', true, {}, [], 10 * 24 * 60 * 60)
+  const { data } = useData<PermitCount>('/permits/count', true, {}, [], 10 * 24 * 60 * 60)
 
   const tabCounts = {
     [PermitTabKey.ALL]: data?.allCount ?? 0,

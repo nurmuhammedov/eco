@@ -1,3 +1,4 @@
+import type { Dispatch, SetStateAction } from 'react'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { ExportExcelButton } from '@/shared/components/common'
 import { useCustomSearchParams, useData, usePaginatedData } from '@/shared/hooks'
@@ -11,8 +12,13 @@ import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { Badge } from '@/shared/components/ui/badge'
 import { paramText } from '@/shared/lib/url-params'
+import type { PermitRow } from '@/features/permits/model/types'
 
-export const PermitTable = ({ setIsModalOpen }: any) => {
+interface PermitTableProps {
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>
+}
+
+export const PermitTable = ({ setIsModalOpen }: PermitTableProps) => {
   const { user } = useAuth()
 
   const {
@@ -30,10 +36,10 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
   } = useCustomSearchParams()
   const currentTab = paramText(currentTabParam, 'ALL')
 
-  const { data: names } = useData<any>('/permits/document-names', true, {
+  const { data: names } = useData<string[]>('/permits/document-names', true, {
     type: tab === 'ALL' ? undefined : tab,
   })
-  const { data, isLoading } = usePaginatedData<any>('/permits', {
+  const { data, isLoading } = usePaginatedData<PermitRow>('/permits', {
     page: page,
     size: size,
     tin: tin,
@@ -44,7 +50,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
     status: currentTab == 'ALL' ? null : currentTab,
   })
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<PermitRow, unknown>[] = [
     {
       accessorKey: 'tin',
       header: () => <div className="whitespace-nowrap">Tashkilot STIR</div>,
@@ -72,10 +78,7 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
       className: 'max-w-[300px]',
       filterKey: 'documentName',
       filterType: 'select',
-      filterOptions: names?.map((name: string) => ({
-        id: name,
-        name: name,
-      })),
+      filterOptions: names?.map((name) => ({ id: name, name })),
     },
     {
       accessorKey: 'registerNumber',
@@ -101,11 +104,11 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
       accessorKey: 'status',
       header: 'License.gov.uzdagi holati',
       cell: ({ row }) =>
-        row.original?.licenseStatus == 'ACTIVE' ? (
+        row.original.licenseStatus === 'ACTIVE' ? (
           <span className="text-green-600">Faol</span>
-        ) : row.original?.licenseStatus == 'EXPIRED' ? (
+        ) : row.original.licenseStatus === 'EXPIRED' ? (
           <span className="text-red-600">Faol emas</span>
-        ) : row.original?.licenseStatus == 'CANCELED' ? (
+        ) : row.original.licenseStatus === 'CANCELED' ? (
           <span className="text-red-600">Bekor qilingan</span>
         ) : (
           '-'
@@ -114,19 +117,11 @@ export const PermitTable = ({ setIsModalOpen }: any) => {
     {
       id: 'actions',
       size: 40,
-      cell: ({ row }: any) => {
-        return (
-          <div className="flex gap-2">
-            <DataTableRowActions
-              row={row}
-              showView
-              onView={() => {
-                addParams({ detailId: row.original.id })
-              }}
-            />
-          </div>
-        )
-      },
+      cell: ({ row }) => (
+        <div className="flex gap-2">
+          <DataTableRowActions row={row} showView onView={() => addParams({ detailId: row.original.id })} />
+        </div>
+      ),
     },
   ]
 

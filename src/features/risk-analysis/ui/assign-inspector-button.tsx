@@ -1,10 +1,10 @@
-import { RiskAnalysisItem } from '@/entities/risk-analysis/model/risk-analysis.types'
 import { Button } from '@/shared/components/ui/button'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import React from 'react'
 
 interface AssignInspectorButtonProps {
-  row: RiskAnalysisItem
+  /** The record an inspector is being assigned to */
+  row: { id: string }
   disabled?: boolean
 }
 

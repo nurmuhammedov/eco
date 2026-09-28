@@ -5,16 +5,9 @@ import { Link } from 'react-router-dom'
 import { useData } from '@/shared/hooks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import type { ConclusionCount } from '@/entities/expertise/model/conclusion.types'
+import type { PermitCount } from '@/features/permits/model/types'
 
 type TabType = 'permits' | 'expertises'
-
-/** PermitCountView (`GET /permits/count`) */
-interface PermitCount {
-  allCount: number | null
-  permissionCount: number | null
-  licenseCount: number | null
-  conclusionCount: number | null
-}
 
 const TABS: { id: TabType; label: string }[] = [
   { id: 'permits', label: 'Ruxsat etuvchi hujjatlar' },

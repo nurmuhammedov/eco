@@ -23,14 +23,15 @@ import { FileTypes } from '@/shared/components/common/file-upload/model/file-typ
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useAdd } from '@/shared/hooks'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
+import type { PreventionExecution } from '../../model/types'
 
-const assignInspectorSchema = z.object({
-  inspectorId: z.string().min(1),
+const executionSchema = z.object({
+  type: z.string().min(1),
   report: z.string().min(1),
   resultPathList: z.array(z.string()).min(1),
 })
 
-type AssignInspectorForm = z.infer<typeof assignInspectorSchema>
+type ExecutionForm = z.infer<typeof executionSchema>
 
 export const preventionTypes = [
   {
@@ -68,33 +69,25 @@ export const ExecutionInspectorModal: React.FC = () => {
   const [isShow, setIsShow] = useState(false)
   const qc = useQueryClient()
 
-  const form = useForm<AssignInspectorForm>({
-    resolver: zodResolver(assignInspectorSchema),
+  const form = useForm<ExecutionForm>({
+    resolver: zodResolver(executionSchema),
     defaultValues: {
-      inspectorId: '',
+      type: '',
       report: '',
       resultPathList: [],
     },
   })
 
-  const { mutate, isPending } = useAdd<any, any, any>(`/preventions/${id}/execution`)
+  const { mutate, isPending } = useAdd<PreventionExecution>(`/preventions/${id}/execution`)
 
-  const onSubmit = (data: AssignInspectorForm) => {
-    if (id) {
-      mutate(
-        {
-          report: data.report,
-          type: data.inspectorId,
-          resultPathList: data.resultPathList,
-        },
-        {
-          onSuccess: async () => {
-            handleClose()
-            await invalidateEndpoint(qc, '/preventions')
-          },
-        }
-      )
-    }
+  const onSubmit = (execution: ExecutionForm) => {
+    if (!id) return
+    mutate(execution, {
+      onSuccess: () => {
+        handleClose()
+        return invalidateEndpoint(qc, '/preventions')
+      },
+    })
   }
 
   const handleClose = () => {
@@ -116,7 +109,7 @@ export const ExecutionInspectorModal: React.FC = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="inspectorId"
+              name="type"
               render={({ field }) => (
                 <FormItem className="max-w-115">
                   <FormLabel required={true}>Profilaktika turi</FormLabel>

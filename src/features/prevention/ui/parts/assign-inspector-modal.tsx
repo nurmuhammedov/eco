@@ -16,8 +16,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { useAdd } from '@/shared/hooks'
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { apiClient } from '@/shared/api/api-client'
+import { toast } from 'sonner'
+import type { OptionItem } from '@/shared/types/general'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
@@ -35,7 +37,7 @@ export const AssignInspectorModal: React.FC = () => {
   const isRegional = user?.role === UserRoles.REGIONAL
   const isSupervisor = !!user?.isSupervisor
 
-  const { data: inspectors, isLoading: inspectorsLoading } = useData<any[]>(
+  const { data: inspectors, isLoading: inspectorsLoading } = useData<OptionItem<string>[]>(
     isSupervisor
       ? '/users/regulator-users/controllers/select'
       : isHead
@@ -49,19 +51,18 @@ export const AssignInspectorModal: React.FC = () => {
     resolver: zodResolver(assignInspectorSchema),
   })
 
-  const { mutate, isPending } = useAdd<any, any, any>(
-    `/preventions/${objectId}/set-executor?executorId=${form.watch('inspectorId')}`
-  )
+  const { mutate, isPending } = useMutation({
+    mutationFn: (executorId: string) =>
+      apiClient.post(`/preventions/${objectId}/set-executor?${new URLSearchParams({ executorId })}`),
+    onSuccess: () => {
+      toast.success('Muvaffaqiyatli saqlandi!', { richColors: true })
+      handleClose()
+      return invalidateEndpoint(qc, '/preventions')
+    },
+  })
 
-  const onSubmit = () => {
-    if (objectId) {
-      mutate(null, {
-        onSuccess: () => {
-          handleClose()
-          invalidateEndpoint(qc, '/preventions').catch((err) => console.error(err))
-        },
-      })
-    }
+  const onSubmit = ({ inspectorId }: AssignInspectorForm) => {
+    if (objectId) mutate(inspectorId)
   }
 
   const handleClose = () => {

@@ -1,22 +1,23 @@
 import { useData } from '@/shared/hooks'
 import { MONTHS } from '@/shared/constants/months'
 import clsx from 'clsx'
+import type { PreventionCountByMonth } from '@/features/prevention/model/types'
 
 interface IProps {
   activeRiskLevel: string
-  year?: any
-  type?: any
+  year?: string | number
+  type?: string
   onTabChange: (level: string) => void
 }
 
 export const PreventionCards = ({ activeRiskLevel, onTabChange, year, type }: IProps) => {
-  const { data: monthCount = {} } = useData<any>('/preventions/count/by-month', !!year && !!type, {
+  const { data: monthCount } = useData<PreventionCountByMonth>('/preventions/count/by-month', !!year && !!type, {
     year,
     type,
   })
 
   const data = MONTHS.map((month) => {
-    const key = `${month.value.toLowerCase()}Count`
+    const key = `${month.value.toLowerCase()}Count` as keyof PreventionCountByMonth
 
     return {
       id: month.value,

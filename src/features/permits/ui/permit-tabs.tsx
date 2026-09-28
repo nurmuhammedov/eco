@@ -66,7 +66,7 @@ export const PermitTabs = ({ activeTab, onTabChange, counts }: PermitTabsProps) 
                   isExpired && !isActive && 'text-red-600'
                 )}
               >
-                {tabIcons[tab.key as unknown as PermitTabKey]}
+                {tabIcons[tab.key]}
               </span>
             </CardHeader>
             <CardContent className="p-0 px-4 pt-1 pb-1">

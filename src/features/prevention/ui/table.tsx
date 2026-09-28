@@ -4,15 +4,18 @@ import { DataTable, DataTableRowActions } from '@/shared/components/common/data-
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { FC } from 'react'
+import type { Row } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { AssignInspectorButton } from '@/features/risk-analysis/ui/assign-inspector-button'
 import { getCurrentMonthEnum } from '@/shared/constants/months'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '@/shared/components/ui/badge'
+import type { OptionItem } from '@/shared/types/general'
+import type { PreventionRow } from '../model/types'
 
 interface Props {
-  regions?: any
+  regions?: OptionItem<number>[]
 }
 
 const PreventionTable: FC<Props> = ({ regions }) => {
@@ -42,7 +45,7 @@ const PreventionTable: FC<Props> = ({ regions }) => {
   const isHead = user?.role === UserRoles.HEAD
   const canAssign = belongType === 'IRS' || belongType === 'XRAY' ? isHead : isRegional
 
-  const { data, isLoading } = usePaginatedData<any>(
+  const { data, isLoading } = usePaginatedData<PreventionRow>(
     '/preventions',
     {
       belongType,
@@ -61,11 +64,9 @@ const PreventionTable: FC<Props> = ({ regions }) => {
     !!month && !!belongType && !!year
   )
 
-  const handleView = (row: any) => {
-    navigate(`/preventions/${row.id}?tin=${row.identity}`)
-  }
+  const handleView = (row: PreventionRow) => navigate(`/preventions/${row.id}?tin=${row.identity ?? ''}`)
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<PreventionRow, unknown>[] = [
     ...(belongType !== 'IRS' && belongType !== 'XRAY'
       ? [
           {
@@ -112,17 +113,17 @@ const PreventionTable: FC<Props> = ({ regions }) => {
             id: 'assignInspector',
             className: '!w-[1%]',
             header: 'Inspektorni belgilash',
-            cell: ({ row }: any) => <AssignInspectorButton row={row.original} />,
+            cell: ({ row }: { row: Row<PreventionRow> }) => <AssignInspectorButton row={row.original} />,
           },
         ]
       : [
           {
             header: 'Inspektor',
             accessorKey: 'executorName',
-            cell: ({ row }: any) =>
-              row?.original?.executorName ? (
-                row?.original?.executorName
-              ) : row?.original?.status === 'CANCELLED' ? (
+            cell: ({ row }: { row: Row<PreventionRow> }) =>
+              row.original.executorName ? (
+                row.original.executorName
+              ) : row.original.status === 'CANCELLED' ? (
                 '-'
               ) : canAssign ? (
                 <AssignInspectorButton row={row.original} />
@@ -135,8 +136,8 @@ const PreventionTable: FC<Props> = ({ regions }) => {
       id: 'status',
       header: 'Holati',
       className: '!w-[1%]',
-      cell: ({ row }: any) => {
-        const status = row.original?.status
+      cell: ({ row }) => {
+        const { status } = row.original
         if (status === 'CONDUCTED') {
           return <Badge variant="success">Bajarilgan</Badge>
         }
@@ -154,7 +155,7 @@ const PreventionTable: FC<Props> = ({ regions }) => {
     },
     {
       id: 'actions',
-      cell: ({ row }: any) => <DataTableRowActions showView onView={() => handleView(row.original)} row={row} />,
+      cell: ({ row }) => <DataTableRowActions showView onView={() => handleView(row.original)} row={row} />,
     },
   ]
 

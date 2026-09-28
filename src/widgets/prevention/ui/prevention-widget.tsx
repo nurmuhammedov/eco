@@ -2,6 +2,8 @@ import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { Badge } from '@/shared/components/ui/badge'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
+import type { PreventionCount } from '@/features/prevention/model/types'
 import { UserRoles } from '@/shared/types/user'
 import { PreventionTable } from '@/features/prevention'
 import { TabsLayout } from '@/shared/layouts'
@@ -18,12 +20,12 @@ export const getRegionLabel = (name: string) => {
   return name.split(' ')[0]
 }
 
-const RISK_TYPES = [
-  { value: 'HF', label: 'XICHO' },
-  { value: 'IRS', label: 'INM' },
-  // { value: 'ELEVATOR', label: 'Lift' },
-  { value: 'XRAY', label: 'Rentgen' },
-  { value: 'ATTRACTION', label: 'Attraksion' },
+/** The prevention tabs and the figure of `/preventions/count` each one shows */
+const RISK_TYPES: { value: string; label: string; countKey: keyof PreventionCount }[] = [
+  { value: 'HF', label: 'XICHO', countKey: 'hfCount' },
+  { value: 'IRS', label: 'INM', countKey: 'irsCount' },
+  { value: 'XRAY', label: 'Rentgen', countKey: 'xrayCount' },
+  { value: 'ATTRACTION', label: 'Attraksion', countKey: 'attractionCount' },
 ]
 
 const ASSIGNMENT_STATUSES = [
@@ -37,13 +39,13 @@ const PreventionWidget = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
   const activeMonth = paramText(paramsObject.month, getCurrentMonthEnum())
   const activeType = paramText(paramsObject.belongType, 'HF')
-  const year = paramsObject.year || new Date().getFullYear()
+  const year = paramText(paramsObject.year, String(new Date().getFullYear()))
 
   const isRegional = user?.role === UserRoles.REGIONAL
   const isInspector = user?.role === UserRoles.INSPECTOR
 
-  const { data = [] } = useData<{ id: number; name: string }[]>('/regions/select', !isInspector && !isRegional)
-  const { data: counts = {} } = useData<any>('/preventions/count', !!year && !!activeMonth, {
+  const { data = [] } = useRegionSelectQuery(!isInspector && !isRegional)
+  const { data: counts } = useData<PreventionCount>('/preventions/count', !!year && !!activeMonth, {
     year,
     month: activeMonth,
   })
@@ -87,13 +89,11 @@ const PreventionWidget = () => {
   }, [data, regionCounts])
 
   const riskTypes = useMemo(() => {
-    return (
-      RISK_TYPES?.map((item) => ({
-        value: item?.value,
-        label: item.label,
-        count: counts?.[`${item.value?.toString()?.toLowerCase()}Count`] || 0,
-      })) || []
-    )
+    return RISK_TYPES.map((item) => ({
+      value: item.value,
+      label: item.label,
+      count: counts?.[item.countKey] || 0,
+    }))
   }, [counts])
 
   return (
